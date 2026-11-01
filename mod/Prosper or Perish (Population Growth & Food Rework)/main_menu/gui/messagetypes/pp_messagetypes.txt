@@ -1,0 +1,22 @@
+﻿# Prosper or Perish: message types of the mod's AI generic actions. The game looks up "PERFORM_" + action key +
+# "_ACTION" whenever an action runs (generic_actions/readme.txt) and logs "Failed to find message type" without it.
+# Both actions are AI housekeeping (market founding, enclave release), so nothing is shown.
+PERFORM_pp_found_market_ACTION={
+log=no
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = economy
+}
+
+PERFORM_pp_release_enclave_independence_ACTION={
+log=no
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}

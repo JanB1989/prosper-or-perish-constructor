@@ -1124,7 +1124,7 @@ def _localization_entries(
             entries[desc_key] = str(loc[desc_key])
     for index, slot in enumerate(slots):
         slot_key = f"{building}_slot_{index}"
-        entries[slot_key] = str(loc.get(slot_key) or f"{_title_from_key(building)} Work")
+        entries[slot_key] = str(loc.get(slot_key) or f"[ShowBuildingTypeName('{building}')|e] Work")
         for method in slot.get("methods") or []:
             original = reverse.get(str(method), str(method))
             entries[str(method)] = str(

@@ -6,7 +6,7 @@ from pathlib import Path
 
 from eu5gameparser.clausewitz.parser import parse_file
 from eu5gameparser.clausewitz.syntax import CList, Value
-from eu5gameparser.load_order import load_merged_directory, load_profile
+from eu5gameparser.load_order import LoadOrderConfig, load_merged_directory, load_profile
 from prosper_or_perish_constructor.rgo_cost_redirects import (
     RGO_BUILDING_COST_GROUPS,
     RGO_COST_MODIFIERS,
@@ -258,6 +258,30 @@ def test_efficient_mining_is_redirected_by_hand_and_never_replaced_twice() -> No
     for scope, collection in RGO_COST_REDIRECT_COLLECTIONS:
         replaced = _mod_replaced_keys(profile, scope, collection)
         assert replaced.isdisjoint(generated.get((scope, collection), {})), (scope, collection)
+
+
+def test_mod_replaces_keep_what_dlcs_inject() -> None:
+    # DLC folders load before the mod and INJECT into vanilla blocks (Across the Pillars adds legal code policies); a
+    # (TRY_)REPLACE of such a block, by hand or generated, drops them unless it carries every injected entry itself.
+    dlc_root = LoadOrderConfig.load(LOAD_ORDER).vanilla_root / "game" / "dlc"
+    injected: dict[tuple[str, str], set[str]] = defaultdict(set)
+    for path in dlc_root.glob("*/*/common/*/*.txt"):
+        folder = path.parent.relative_to(path.parents[3]).as_posix()
+        for entry in parse_file(path).entries:
+            prefix, _, key = entry.key.rpartition(":")
+            if prefix in {"INJECT", "TRY_INJECT"} and isinstance(entry.value, CList):
+                injected[(folder, key)].update(child.key for child in entry.value.entries)
+    assert injected, f"no DLC injects found under {dlc_root}"
+
+    dropped = []
+    for path in MOD_ROOT.glob("*/common/*/*.txt"):
+        folder = path.parent.relative_to(MOD_ROOT).as_posix()
+        for entry in parse_file(path).entries:
+            prefix, _, key = entry.key.rpartition(":")
+            if prefix in {"REPLACE", "TRY_REPLACE"} and (folder, key) in injected:
+                carried = {child.key for child in entry.value.entries}
+                dropped += [f"{folder}/{key}: {child}" for child in sorted(injected[(folder, key)] - carried)]
+    assert not dropped
 
 
 def test_generated_redirects_write_each_modifier_once_per_block() -> None:

@@ -156,7 +156,7 @@ advancements:
 localization:
   entries:
     pomological_orchard: Grafted Orchard
-    pomological_orchard_desc: Grafted orchards use nursery stock, pruning, trellises, and cultivar records to raise more reliable fruit crops.
+    pomological_orchard_desc: "Grafted orchards use nursery stock, pruning, trellises, and cultivar records to raise more reliable fruit crops. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
     pomological_orchard_slot_0: Fruit Trees
     pomological_orchard_slot_1: Beekeeping
     pomological_orchard_slot_2: Grafted Rows

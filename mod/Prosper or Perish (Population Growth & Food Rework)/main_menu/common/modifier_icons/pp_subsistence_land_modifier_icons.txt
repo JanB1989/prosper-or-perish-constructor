@@ -1,0 +1,5 @@
+﻿# Icon for the marker of pp_subsistence_land (pp_subsistence_land_modifier_types.txt): the arable land icon.
+# Without one the engine logs "Missing Icon for Modifier".
+pp_subsistence_land_size = {
+	positive = "gfx/interface/icons/pp_arable_land/available.dds"
+}

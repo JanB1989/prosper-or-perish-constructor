@@ -55,6 +55,13 @@ CROP_TABLE = Path(__file__).resolve().parents[2] / "config" / "crop_farms.toml"
 
 PROVINCE_FOOD_GOOD = "local_food"
 SLOT_LABEL = "Provisioning"
+# The sentence every staple food maker's description ends with (Jan, 2026-10-28): what the store curve does to
+# its output. crop_farms.py appends it to the crop farm tiers; the other makers carry it in their blueprints
+# (tests/test_staple_foods.py checks all of them).
+STORE_DESC = (
+    "When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; "
+    "when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
+)
 PROVISION_DESC = (
     "The household buys its own {noun} back and cooks for the province. The lower the province store is, the more "
     "food it makes of it."

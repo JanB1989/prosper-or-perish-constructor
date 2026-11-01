@@ -86,6 +86,25 @@ def test_set_capacity_creates_replaces_and_merges_raw_modifier() -> None:
     assert fp.set_capacity(replaced, "0.5") == replaced
 
 
+def test_zero_share_removes_the_capacity_line() -> None:
+    kept = fp.set_capacity("\n\traw_modifier = {\n\t\tlocal_population_capacity = 3\n\t\tx = 1\n\t}\n", "0")
+    assert "local_population_capacity" not in kept and "\t\tx = 1\n" in kept
+    assert fp.set_capacity("\n\ttown = yes\n\traw_modifier = {\n\t\tlocal_population_capacity = 3\n\t}\n", "0") == "\n\ttown = yes\n"
+    assert fp.set_capacity("\n\ttown = yes\n\traw_modifier = { local_population_capacity = 1 }\n", "0") == "\n\ttown = yes\n"
+    assert fp.set_capacity("\n\ttown = yes\n", "0") == "\n\ttown = yes\n"
+    nested = fp.set_capacity("\n\tpm = {\n\t\traw_modifier = { local_population_capacity = 7 }\n\t}\n", "0")
+    assert "local_population_capacity = 7" in nested
+
+
+def test_apply_with_zero_share_strips_the_line_and_is_idempotent(world: dict[str, Path]) -> None:
+    project = world["project"]
+    project.write_text(project.read_text(encoding="utf-8").replace("mining = 0.15", "mining = 0"), encoding="utf-8")
+    fp.apply(world["repo"], world["mod"], project, world["vanilla"])
+    mine = (world["types"] / "zz_pp_mine.txt").read_text(encoding="utf-8-sig")
+    assert "local_population_capacity" not in mine and "pp_x = 1" in mine
+    assert fp.apply(world["repo"], world["mod"], project, world["vanilla"]).files_changed == 0
+
+
 def test_apply_writes_owner_blocks_and_is_idempotent(world: dict[str, Path]) -> None:
     result = fp.apply(world["repo"], world["mod"], world["project"], world["vanilla"])
     types = world["types"]
@@ -123,6 +142,40 @@ def test_validate_reports_missing_and_unknown_classes(world: dict[str, Path]) ->
     assert any("new_wonder has no blueprint" in e for e in errors)
     with pytest.raises(ValueError, match="building footprint"):
         fp.apply(world["repo"], world["mod"], world["project"], world["vanilla"])
+
+
+def _dlc_building(world: dict[str, Path]) -> None:
+    """A building only a DLC folder defines (UTF-8 BOM like the game's DLC files), its employment a DLC script value."""
+    dlc = world["vanilla"] / "game/dlc/D999_test_pack"
+    (dlc / fp.BUILDING_TYPES_RELATIVE).mkdir(parents=True)
+    (dlc / fp.BUILDING_TYPES_RELATIVE / "d999_forts.txt").write_text(
+        "﻿dlc_fort = {\n\temployment_size = dlc_fort_employment\n}\n", encoding="utf-8"
+    )
+    (dlc / "in_game/common/script_values").mkdir(parents=True)
+    (dlc / "in_game/common/script_values/d999_values.txt").write_text("dlc_fort_employment = 2\n", encoding="utf-8")
+
+
+def test_dlc_buildings_need_a_blueprint_in_a_skip_if_missing_mode(world: dict[str, Path]) -> None:
+    _dlc_building(world)
+    config = fp.load_config(world["project"])
+    assert fp.dlc_only_buildings(world["vanilla"]) == {"dlc_fort"}
+    assert any("dlc_fort has no blueprint" in e for e in fp.validate(world["repo"], config, world["vanilla"]))
+    for mode in ("INJECT", "REPLACE", "CREATE", "INJECT_OR_CREATE"):
+        _blueprint(world["repo"], "dlc_fort", "urban_workshop", mode)
+        errors = fp.validate(world["repo"], config, world["vanilla"])
+        assert any("dlc_fort.yml: dlc_fort is defined only in a DLC folder" in e and mode in e for e in errors), mode
+    for mode in sorted(fp.DLC_SAFE_MODES):
+        _blueprint(world["repo"], "dlc_fort", "urban_workshop", mode)
+        assert fp.validate(world["repo"], config, world["vanilla"]) == []
+
+
+def test_apply_reads_the_dlc_definition_for_a_try_inject_owner(world: dict[str, Path]) -> None:
+    _dlc_building(world)
+    _blueprint(world["repo"], "dlc_fort", "urban_workshop", "TRY_INJECT")
+    (world["types"] / "zz_pp_dlc_fort.txt").write_text("TRY_INJECT:dlc_fort = {\n# x\n}\n", encoding="utf-8")
+    fp.apply(world["repo"], world["mod"], world["project"], world["vanilla"])
+    # employment from the DLC definition and the DLC script value: 0.75 x 2
+    assert "local_population_capacity = 1.5" in (world["types"] / "zz_pp_dlc_fort.txt").read_text(encoding="utf-8-sig")
 
 
 def test_every_accepted_blueprint_has_a_configured_footprint_class() -> None:

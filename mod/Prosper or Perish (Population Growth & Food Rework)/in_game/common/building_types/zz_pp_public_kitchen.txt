@@ -312,9 +312,6 @@ increase_per_level_cost = 0.10
 			category = building_maintenance
 		}
 	}
-	raw_modifier = {
-		local_population_capacity = 0.55
-	}
 
 	modifier = {
 		# the kitchen's food (2026-10-03: was 15 plus about 43 Province Food from the recipes), scaled by staffing

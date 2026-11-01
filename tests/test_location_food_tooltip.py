@@ -51,8 +51,10 @@ def test_location_food_tooltip_rows_add_up_to_food_production() -> None:
         assert f"ScriptValue('{key}')" in text or f"ScriptValue('{key}')" in loc
         assert f"{key} = {{" in values
     assert "value = food_production" in values
-    assert "unemployed_pops_of_pop_type_in_location(pop_type:peasants)" in values
-    assert "unemployed_pops_of_pop_type_in_location(pop_type:slaves)" in values
+    # subsistence never below 0 (the idle count goes negative where jobs exceed pops), at the define's rate
+    assert "value = pp_subsistence_peasants" in values
+    assert 'add = { value = "unemployed_pops_of_pop_type_in_location(pop_type:slaves)" min = 0 }' in values
+    assert "multiply = define:NLocation|SUBSISTENCE_AGRICULTURE" in values
     assert "value = modifier:local_monthly_food" in values
     assert "Location.GetModifierValue('local_monthly_food')" in text
     assert "Location.GetFoodsOutputModifiers" in text

@@ -4418,6 +4418,7 @@ template religion_breakdown_tooltip {
 lateralview = {
 	name = "location_window"
 	widgetid = "location_window"
+	size = { 600 100% } # PP: wider than the vanilla left panel (570), location_view.py
 
 	widget = {
 		visible = "[TutorialIsRunning]"
@@ -5759,7 +5760,7 @@ lateralview = {
 						# PP STATUS CHIPS: top right, mirroring the geography card at the bottom left
 						widget = {
 							name = "pp_location_status_row"
-							size = { 120 46 }
+							size = { 85 46 }
 							parentanchor = right|top
 							hbox = {
 								margin = { 10 8 }
@@ -5775,18 +5776,24 @@ widget = {
         tooltipwidget = {
         ContextualTooltipType = {
             blockoverride "title_text" { text = "PP_FOOD_CHIP_TITLE" }
-            blockoverride "concept_link" { visible = yes text = "[pp_food_storage|E]" }
+            blockoverride "concept_link" { visible = yes text = "[provincial_food|E]" }
             blockoverride "title_icon" {
                 widget = {
                     using = tooltip_title_icon_size
-                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
+        icon = { size = { 100% 100% } texture = "gfx/interface/icons/pp_harvest/frame_abysmal.dds" visible = "[LessThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_province_food_storage_months')), '(float)6')]" }
+        icon = { size = { 100% 100% } texture = "gfx/interface/icons/pp_harvest/frame_poor.dds" visible = "[And(Not(LessThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_province_food_storage_months')), '(float)6')), LessThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_province_food_storage_months')), '(float)12'))]" }
+        icon = { size = { 100% 100% } texture = "gfx/interface/icons/pp_harvest/frame_very_good.dds" visible = "[Not(LessThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_province_food_storage_months')), '(float)12'))]" }
                     icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" }
                 }
             }
             blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_FOOD_CHIP_STORED" } } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)-0.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)0.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_0')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)0.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)1.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_1')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)1.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)2.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_2')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)2.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)3.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_3')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)3.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)4.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_4')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)4.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)5.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_5')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)5.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)6.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_6')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)6.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)7.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_7')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)7.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)8.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_8')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)8.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)9.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_9')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)9.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)10.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_10')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)10.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)11.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_11')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)11.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)12.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_12')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)12.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)13.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_13')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)13.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)14.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_14')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)14.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)15.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_15')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)15.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)16.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_16')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)16.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)17.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_17')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)17.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)18.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_18')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)18.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)19.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_19')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)19.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)20.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_20')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)20.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)21.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_21')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)21.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)22.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_22')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)22.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)23.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_23')]" } TooltipStringPairList = { visible = "[And(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)23.5'), Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)24.5')))]" textcontext = "[ShowModifierEffect('pp_food_store_24')]" } TooltipTextBlock = { visible = "[Not(GreaterThan_CFixedPoint(LocationView.GetLocation.MakeScope.ScriptValue('pp_stored_food_step'), '(CFixedPoint)-0.5'))]" blockoverride "text" { text = "PP_FOOD_CHIP_NO_TIER" } } }
         }
     }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
+        icon = { size = { 100% 100% } texture = "gfx/interface/icons/pp_harvest/frame_abysmal.dds" visible = "[LessThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_province_food_storage_months')), '(float)6')]" }
+        icon = { size = { 100% 100% } texture = "gfx/interface/icons/pp_harvest/frame_poor.dds" visible = "[And(Not(LessThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_province_food_storage_months')), '(float)6')), LessThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_province_food_storage_months')), '(float)12'))]" }
+        icon = { size = { 100% 100% } texture = "gfx/interface/icons/pp_harvest/frame_very_good.dds" visible = "[Not(LessThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_province_food_storage_months')), '(float)12'))]" }
         icon = { size = { 30 30 } texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" }
         text_single = { position = { 13 18 } size = { 17 12 }
             autoresize = no fontsize = 11 align = center
@@ -5801,107 +5808,19 @@ widget = {
         tooltipwidget = {
         ContextualTooltipType = {
             blockoverride "title_text" { text = "PP_FOOD_CHIP_STARVING_TITLE" }
-            blockoverride "concept_link" { visible = yes text = "[pp_starvation|E]" }
+            blockoverride "concept_link" { visible = yes text = "[starving|E]" }
             blockoverride "title_icon" {
                 widget = {
                     using = tooltip_title_icon_size
-                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    background = { texture = "gfx/interface/icons/pp_harvest/frame_abysmal.dds" }
                     icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/alerts_icons/starving_provinces.dds" }
                 }
             }
             blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_FOOD_CHIP_STARVING" } } TooltipStringPairList = { textcontext = "[ShowModifierEffect('province_starving')]" } }
         }
     }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        background = { texture = "gfx/interface/icons/pp_harvest/frame_abysmal.dds" }
         icon = { size = { 30 30 } texture = "gfx/interface/icons/alerts_icons/starving_provinces.dds" }
-    }
-widget = {
-        name = "pp_status_land_overpopulation"
-        size = { 30 30 }
-        visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')]"
-        datacontext = "[LocationView.GetLocation]"
-        tooltipwidget = {
-        ContextualTooltipType = {
-            blockoverride "title_text" { text = "PP_LAND_CHIP_OVERPOPULATION_TITLE" }
-            blockoverride "concept_link" { visible = yes text = "[pp_overused_arable_land|E]" }
-            blockoverride "title_icon" {
-                widget = {
-                    using = tooltip_title_icon_size
-                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
-                    icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/pp_arable_land/overused.dds" }
-                }
-            }
-            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_LAND_CHIP_OVERPOPULATION" } } TooltipScrolledContentSection = { blockoverride "block_scrollarea" { maximumsize = { -1 420 } } blockoverride "section_content" { vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding spacing = 10 ignoreinvisible = yes TooltipListBase = { blockoverride "block_title" { text = "PP_LAND_CHIP_OVERPOPULATION_STRENGTH" } TooltipTableField = { blockoverride "field_background" {} blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_pop_demotion_speed_modifier')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation'), '(CFixedPoint)1')|1%-]" } } } TooltipTableField = { blockoverride "field_background" { background = { using = tooltip_table_field_texture } } blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_mercenaries_modifier')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation'), '(CFixedPoint)0.5')|1%]" } } } TooltipTableField = { blockoverride "field_background" {} blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_peasants_food_consumption')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation'), '(CFixedPoint)0.25')|1%-]" } } } TooltipTableField = { blockoverride "field_background" { background = { using = tooltip_table_field_texture } } blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_disease_resistance')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation'), '(CFixedPoint)-0.03')|1%+]" } } } TooltipTableField = { blockoverride "field_background" {} blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_migration_attraction')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation'), '(CFixedPoint)-0.25')|2+]" } } } TooltipTableField = { blockoverride "field_background" { background = { using = tooltip_table_field_texture } } blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_migration_speed')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation'), '(CFixedPoint)0.0025')|4+]" } } } } } } } }
-        }
-    }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
-        icon = { size = { 30 30 } texture = "gfx/interface/icons/pp_arable_land/overused.dds" }
-    }
-widget = {
-        name = "pp_status_land_abundant"
-        size = { 30 30 }
-        visible = "[And(Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant')), '(float)0'))]"
-        datacontext = "[LocationView.GetLocation]"
-        tooltipwidget = {
-        ContextualTooltipType = {
-            blockoverride "title_text" { text = "PP_LAND_CHIP_ABUNDANT_TITLE" }
-            blockoverride "concept_link" { visible = yes text = "[pp_abundant_free_land|E]" }
-            blockoverride "title_icon" {
-                widget = {
-                    using = tooltip_title_icon_size
-                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
-                    icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/pp_arable_land/abundant.dds" }
-                }
-            }
-            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_LAND_CHIP_ABUNDANT" } } TooltipScrolledContentSection = { blockoverride "block_scrollarea" { maximumsize = { -1 420 } } blockoverride "section_content" { vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding spacing = 10 ignoreinvisible = yes TooltipListBase = { blockoverride "block_title" { text = "PP_LAND_CHIP_ABUNDANT_STRENGTH" } TooltipTableField = { blockoverride "field_background" {} blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_tribesmen_pop_growth')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)0.75')|1%+]" } } } TooltipTableField = { blockoverride "field_background" { background = { using = tooltip_table_field_texture } } blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_peasants_food_consumption')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)-0.5')|1%-]" } } } TooltipTableField = { blockoverride "field_background" {} blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[Localize('PP_LAND_CHIP_GOODS_OUTPUT')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)0.40')|1%+]" } } } TooltipTableField = { blockoverride "field_background" {} spacing = 3 blockoverride "field_content" { icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_chili.dds" tooltip = "[ShowGoodsName('chili')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cloves.dds" tooltip = "[ShowGoodsName('cloves')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cocoa.dds" tooltip = "[ShowGoodsName('cocoa')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_coffee.dds" tooltip = "[ShowGoodsName('coffee')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cotton.dds" tooltip = "[ShowGoodsName('cotton')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_dyes.dds" tooltip = "[ShowGoodsName('dyes')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fiber_crops.dds" tooltip = "[ShowGoodsName('fiber_crops')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fruit.dds" tooltip = "[ShowGoodsName('fruit')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_incense.dds" tooltip = "[ShowGoodsName('incense')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_legumes.dds" tooltip = "[ShowGoodsName('legumes')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_lumber.dds" tooltip = "[ShowGoodsName('lumber')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_maize.dds" tooltip = "[ShowGoodsName('maize')]" } expand = {} } } TooltipTableField = { blockoverride "field_background" {} spacing = 3 blockoverride "field_content" { icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_medicaments.dds" tooltip = "[ShowGoodsName('medicaments')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_millet.dds" tooltip = "[ShowGoodsName('millet')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_olives.dds" tooltip = "[ShowGoodsName('olives')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_pepper.dds" tooltip = "[ShowGoodsName('pepper')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_potato.dds" tooltip = "[ShowGoodsName('potato')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_rice.dds" tooltip = "[ShowGoodsName('rice')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_saffron.dds" tooltip = "[ShowGoodsName('saffron')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_sugar.dds" tooltip = "[ShowGoodsName('sugar')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_tea.dds" tooltip = "[ShowGoodsName('tea')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_tobacco.dds" tooltip = "[ShowGoodsName('tobacco')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" tooltip = "[ShowGoodsName('wheat')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wine.dds" tooltip = "[ShowGoodsName('wine')]" } expand = {} } } TooltipTableField = { blockoverride "field_background" {} spacing = 3 blockoverride "field_content" { icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_beeswax.dds" tooltip = "[ShowGoodsName('beeswax')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_elephants.dds" tooltip = "[ShowGoodsName('elephants')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fish.dds" tooltip = "[ShowGoodsName('fish')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fur.dds" tooltip = "[ShowGoodsName('fur')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_horses.dds" tooltip = "[ShowGoodsName('horses')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_ivory.dds" tooltip = "[ShowGoodsName('ivory')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_livestock.dds" tooltip = "[ShowGoodsName('livestock')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_silk.dds" tooltip = "[ShowGoodsName('silk')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wild_game.dds" tooltip = "[ShowGoodsName('wild_game')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wool.dds" tooltip = "[ShowGoodsName('wool')]" } expand = {} } } TooltipTableField = { blockoverride "field_background" { background = { using = tooltip_table_field_texture } } blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_migration_attraction')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)2')|1+]" } } } TooltipTableField = { blockoverride "field_background" {} blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_monthly_food')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)1')|1+]" } } } } } } } }
-        }
-    }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
-        icon = { size = { 30 30 } texture = "gfx/interface/icons/pp_arable_land/abundant.dds" }
-    }
-widget = {
-        name = "pp_status_land_available"
-        size = { 30 30 }
-        visible = "[And3(Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant')), '(float)0')), GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_available')), '(float)0'))]"
-        datacontext = "[LocationView.GetLocation]"
-        tooltipwidget = {
-        ContextualTooltipType = {
-            blockoverride "title_text" { text = "PP_LAND_CHIP_AVAILABLE_TITLE" }
-            blockoverride "concept_link" { visible = yes text = "[pp_available_free_land|E]" }
-            blockoverride "title_icon" {
-                widget = {
-                    using = tooltip_title_icon_size
-                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
-                    icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/pp_arable_land/available.dds" }
-                }
-            }
-            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_LAND_CHIP_AVAILABLE" } } TooltipScrolledContentSection = { blockoverride "block_scrollarea" { maximumsize = { -1 420 } } blockoverride "section_content" { vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding spacing = 10 ignoreinvisible = yes TooltipListBase = { blockoverride "block_title" { text = "PP_LAND_CHIP_AVAILABLE_STRENGTH" } TooltipTableField = { blockoverride "field_background" {} blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_tribesmen_pop_growth')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_available'), '(CFixedPoint)0.75')|1%+]" } } } TooltipTableField = { blockoverride "field_background" { background = { using = tooltip_table_field_texture } } blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_peasants_food_consumption')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_available'), '(CFixedPoint)-0.32')|1%-]" } } } TooltipTableField = { blockoverride "field_background" {} blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[Localize('PP_LAND_CHIP_GOODS_OUTPUT')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_available'), '(CFixedPoint)0.30')|1%+]" } } } TooltipTableField = { blockoverride "field_background" {} spacing = 3 blockoverride "field_content" { icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_chili.dds" tooltip = "[ShowGoodsName('chili')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cloves.dds" tooltip = "[ShowGoodsName('cloves')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cocoa.dds" tooltip = "[ShowGoodsName('cocoa')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_coffee.dds" tooltip = "[ShowGoodsName('coffee')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cotton.dds" tooltip = "[ShowGoodsName('cotton')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_dyes.dds" tooltip = "[ShowGoodsName('dyes')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fiber_crops.dds" tooltip = "[ShowGoodsName('fiber_crops')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fruit.dds" tooltip = "[ShowGoodsName('fruit')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_incense.dds" tooltip = "[ShowGoodsName('incense')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_legumes.dds" tooltip = "[ShowGoodsName('legumes')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_lumber.dds" tooltip = "[ShowGoodsName('lumber')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_maize.dds" tooltip = "[ShowGoodsName('maize')]" } expand = {} } } TooltipTableField = { blockoverride "field_background" {} spacing = 3 blockoverride "field_content" { icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_medicaments.dds" tooltip = "[ShowGoodsName('medicaments')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_millet.dds" tooltip = "[ShowGoodsName('millet')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_olives.dds" tooltip = "[ShowGoodsName('olives')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_pepper.dds" tooltip = "[ShowGoodsName('pepper')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_potato.dds" tooltip = "[ShowGoodsName('potato')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_rice.dds" tooltip = "[ShowGoodsName('rice')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_saffron.dds" tooltip = "[ShowGoodsName('saffron')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_sugar.dds" tooltip = "[ShowGoodsName('sugar')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_tea.dds" tooltip = "[ShowGoodsName('tea')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_tobacco.dds" tooltip = "[ShowGoodsName('tobacco')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" tooltip = "[ShowGoodsName('wheat')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wine.dds" tooltip = "[ShowGoodsName('wine')]" } expand = {} } } TooltipTableField = { blockoverride "field_background" {} spacing = 3 blockoverride "field_content" { icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_beeswax.dds" tooltip = "[ShowGoodsName('beeswax')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_elephants.dds" tooltip = "[ShowGoodsName('elephants')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fish.dds" tooltip = "[ShowGoodsName('fish')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fur.dds" tooltip = "[ShowGoodsName('fur')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_horses.dds" tooltip = "[ShowGoodsName('horses')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_ivory.dds" tooltip = "[ShowGoodsName('ivory')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_livestock.dds" tooltip = "[ShowGoodsName('livestock')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_silk.dds" tooltip = "[ShowGoodsName('silk')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wild_game.dds" tooltip = "[ShowGoodsName('wild_game')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wool.dds" tooltip = "[ShowGoodsName('wool')]" } expand = {} } } TooltipTableField = { blockoverride "field_background" { background = { using = tooltip_table_field_texture } } blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_migration_attraction')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_available'), '(CFixedPoint)1')|1+]" } } } } } } } }
-        }
-    }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
-        icon = { size = { 30 30 } texture = "gfx/interface/icons/pp_arable_land/available.dds" }
-    }
-widget = {
-        name = "pp_status_land_settled"
-        size = { 30 30 }
-        visible = "[And3(Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_available')), '(float)0')))]"
-        datacontext = "[LocationView.GetLocation]"
-        tooltipwidget = {
-        ContextualTooltipType = {
-            blockoverride "title_text" { text = "PP_LAND_CHIP_SETTLED_TITLE" }
-            blockoverride "concept_link" { visible = yes text = "[population_capacity|E]" }
-            blockoverride "title_icon" {
-                widget = {
-                    using = tooltip_title_icon_size
-                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
-                    icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/location_icons/population.dds" }
-                }
-            }
-            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_LAND_CHIP_SETTLED" } } }
-        }
-    }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
-        icon = { size = { 30 30 } texture = "gfx/interface/icons/location_icons/population.dds" }
     }
 widget = {
         name = "pp_status_harvest"
@@ -5910,11 +5829,11 @@ widget = {
         tooltipwidget = {
         ContextualTooltipType = {
             blockoverride "title_text" { text = "[LocationView.GetLocation.Custom('pp_harvest_state')]" }
-            blockoverride "concept_link" { visible = yes text = "[pp_variable_harvests|E]" }
+            blockoverride "concept_link" { visible = yes text = "[ShowSituationName('harvest_situation')]" }
             blockoverride "title_icon" {
                 widget = {
                     using = tooltip_title_icon_size
-                    background = { texture = "gfx/interface/icons/climate/brown_frame.dds" }
+                    background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
         icon = { size = { 100% 100% } parentanchor = center texture = "gfx/interface/icons/pp_harvest/frame_poor.dds" visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_POOR'))]" }
         icon = { size = { 100% 100% } parentanchor = center texture = "gfx/interface/icons/pp_harvest/frame_very_poor.dds" visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_POOR'))]" }
         icon = { size = { 100% 100% } parentanchor = center texture = "gfx/interface/icons/pp_harvest/frame_abysmal.dds" visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_ABYSMAL'))]" }
@@ -5944,7 +5863,7 @@ widget = {
             blockoverride "tooltip_content" { TooltipTextBlock = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_trend'), Localize('PP_HARVEST_TREND_GOOD'))]" blockoverride "text" { text = "PP_HARVEST_CHIP_GOOD" } } TooltipTextBlock = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_trend'), Localize('PP_HARVEST_TREND_BAD'))]" blockoverride "text" { text = "PP_HARVEST_CHIP_BAD" } } TooltipTextBlock = { visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_trend'), Localize('PP_HARVEST_TREND_AVERAGE'))]" blockoverride "text" { text = "PP_HARVEST_CHIP_AVERAGE" } } TooltipScrolledContentSection = { blockoverride "block_scrollarea" { maximumsize = { -1 420 } } blockoverride "section_content" { vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding spacing = 10 ignoreinvisible = yes pp_attribute_view_harvest = {} } } } }
         }
     }
-        background = { texture = "gfx/interface/icons/climate/brown_frame.dds" }
+        background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
         icon = { size = { 30 30 } parentanchor = center texture = "gfx/interface/icons/pp_harvest/frame_poor.dds" visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_POOR'))]" }
         icon = { size = { 30 30 } parentanchor = center texture = "gfx/interface/icons/pp_harvest/frame_very_poor.dds" visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_VERY_POOR'))]" }
         icon = { size = { 30 30 } parentanchor = center texture = "gfx/interface/icons/pp_harvest/frame_abysmal.dds" visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_severity'), Localize('PP_HARVEST_SEVERITY_ABYSMAL'))]" }
@@ -6008,7 +5927,7 @@ widget = {
         size = { 30 30 }
         datacontext = "[LocationView.GetLocation.GetTopography]"
         tooltipwidget = { using = pp_attribute_tooltip_topography }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
         icon = { size = { 30 30 } texture = "[GetTopographyIcon(LocationView.GetLocation.GetTopography)]" }
         
     }
@@ -6017,7 +5936,7 @@ widget = {
         size = { 30 30 }
         datacontext = "[LocationView.GetLocation.GetClimate]"
         tooltipwidget = { using = pp_attribute_tooltip_climate }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
         icon = { size = { 30 30 } texture = "[GetClimateIcon(LocationView.GetLocation.GetClimate)]" }
         
     }
@@ -6026,7 +5945,7 @@ widget = {
         size = { 30 30 }
         datacontext = "[LocationView.GetLocation.GetVegetation]"
         tooltipwidget = { using = pp_attribute_tooltip_vegetation }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
         icon = { size = { 30 30 } texture = "[GetVegetationIcon(LocationView.GetLocation.GetVegetation)]" }
         
     }
@@ -6035,7 +5954,7 @@ widget = {
         size = { 30 30 }
         datacontext = "[LocationView.GetLocation]"
         tooltipwidget = { using = RiverModifier_tooltip }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
         icon = { size = { 30 30 } texture = "[GetConceptTexture('river')]" }
         text_single = { position = { 17 17 } size = { 12 12 }
             autoresize = no fontsize = 11 align = center
@@ -6078,7 +5997,7 @@ widget = {
             blockoverride "title_icon" {
                 widget = {
                     using = tooltip_title_icon_size
-                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
                     icon = { using = tooltip_title_icon_size texture = "gfx/interface/topography/lakes.dds" }
                 }
             }
@@ -6086,7 +6005,7 @@ widget = {
             blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "HA1300_LAKE_HELP" } } pp_attribute_view_lake = {} }
         }
     }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
         icon = { size = { 30 30 } texture = "gfx/interface/topography/lakes.dds"
                     visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_native_lake'), Localize('HA1300_LAKESIDE'))]" }
                  icon = { size = { 30 30 } texture = "gfx/interface/topography/lakes.dds" alpha = 0.3
@@ -6102,7 +6021,7 @@ widget = {
             blockoverride "title_text" { text = "[LocationView.GetLocation.Custom('pp_water_access')]" }
             blockoverride "concept_link" { visible = yes text = "[coastal|E]" }
             blockoverride "title_icon" {
-                widget = { using = tooltip_title_icon_size background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" } icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/location_icons/coastal.dds" visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_water_access'), Localize('PP_WATER_SEA_COAST'))]" } icon = { using = tooltip_title_icon_size texture = "gfx/interface/topography/pp_river_channel.dds" visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_water_access'), Localize('PP_WATER_WATERWAY'))]" } icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/location_icons/inland.dds" visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_water_access'), Localize('PP_WATER_INLAND'))]" } }
+                widget = { using = tooltip_title_icon_size background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" } icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/location_icons/coastal.dds" visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_water_access'), Localize('PP_WATER_SEA_COAST'))]" } icon = { using = tooltip_title_icon_size texture = "gfx/interface/topography/pp_river_channel.dds" visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_water_access'), Localize('PP_WATER_WATERWAY'))]" } icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/location_icons/inland.dds" visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_water_access'), Localize('PP_WATER_INLAND'))]" } }
             }
             blockoverride "tooltip_content" {
                 TooltipTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('pp_water_access_help')]" } }
@@ -6112,7 +6031,7 @@ widget = {
             }
         }
     }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
         icon = { size = { 30 30 } texture = "gfx/interface/icons/location_icons/coastal.dds" visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_water_access'), Localize('PP_WATER_SEA_COAST'))]" } icon = { size = { 30 30 } texture = "gfx/interface/topography/pp_river_channel.dds" visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_water_access'), Localize('PP_WATER_WATERWAY'))]" } icon = { size = { 30 30 } texture = "gfx/interface/icons/location_icons/inland.dds" visible = "[EqualTo_string(LocationView.GetLocation.Custom('pp_water_access'), Localize('PP_WATER_INLAND'))]" }
     }
 widget = {
@@ -6124,7 +6043,7 @@ widget = {
             blockoverride "title_text" { text = "[SelectLocalization(LocationView.GetLocation.HasPort, 'PP_PORT', 'PP_NO_PORT')]" }
             blockoverride "concept_link" { visible = yes text = "[port|E]" }
             blockoverride "title_icon" {
-                widget = { using = tooltip_title_icon_size background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" } icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/modifier_types/natural_harbor_suitability.dds" } }
+                widget = { using = tooltip_title_icon_size background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" } icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/modifier_types/natural_harbor_suitability.dds" } }
             }
             blockoverride "title_button" {
                 mapmode_tooltip_button = { datacontext = "[GetMapMode('natural_harbor_suitability')]" }
@@ -6145,7 +6064,7 @@ widget = {
             }
         }
     }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
         piechart = { name = "pp_port_harbor_ring" visible = "[LocationView.GetLocation.IsCoastal]" size = { 100% 100% } parentanchor = center using = bg_circle using = piechart_angles using = bg_circle_piechart icon = { texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds" size = { 97% 97% } parentanchor = center color = { 0 0 0 1 } } pieslice_no_highlight = { texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds" value = "[FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('harbor_suitability'))]" color = { 0.3 0.8 0.3 1 } alpha = 0.8 } pieslice_no_highlight = { texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds" value = "[Max_float(Subtract_float('(float)1.0', FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('harbor_suitability'))), '(float)0')]" color = { 0.8 0.3 0.3 1 } alpha = 0.8 } }
         icon = { size = { 20 20 } parentanchor = center texture = "gfx/interface/icons/modifier_types/natural_harbor_suitability.dds" visible = "[And(LocationView.GetLocation.IsCoastal, LocationView.GetLocation.HasPort)]" }
         icon = { size = { 20 20 } parentanchor = center texture = "gfx/interface/icons/modifier_types/natural_harbor_suitability.dds" alpha = 0.4 visible = "[And(LocationView.GetLocation.IsCoastal, Not(LocationView.GetLocation.HasPort))]" }
@@ -6163,7 +6082,7 @@ widget = {
             blockoverride "title_icon" {
                 widget = {
                     using = tooltip_title_icon_size
-                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
                     icon = { using = tooltip_title_icon_size texture = "gfx/interface/soil_types/sand.dds" }
                 }
             }
@@ -6171,7 +6090,7 @@ widget = {
             blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_soil_type_description')]" } } pp_attribute_view_soil = {} }
         }
     }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
         icon = { size = { 30 30 } texture = "gfx/interface/soil_types/sand.dds" }
         visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_SAND_TITLE'))]"
     }
@@ -6186,7 +6105,7 @@ widget = {
             blockoverride "title_icon" {
                 widget = {
                     using = tooltip_title_icon_size
-                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
                     icon = { using = tooltip_title_icon_size texture = "gfx/interface/soil_types/loam.dds" }
                 }
             }
@@ -6194,7 +6113,7 @@ widget = {
             blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_soil_type_description')]" } } pp_attribute_view_soil = {} }
         }
     }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
         icon = { size = { 30 30 } texture = "gfx/interface/soil_types/loam.dds" }
         visible = "[Or(EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_LOAM_TITLE')), EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_UNKNOWN')))]"
     }
@@ -6209,7 +6128,7 @@ widget = {
             blockoverride "title_icon" {
                 widget = {
                     using = tooltip_title_icon_size
-                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
                     icon = { using = tooltip_title_icon_size texture = "gfx/interface/soil_types/silt.dds" }
                 }
             }
@@ -6217,7 +6136,7 @@ widget = {
             blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_soil_type_description')]" } } pp_attribute_view_soil = {} }
         }
     }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
         icon = { size = { 30 30 } texture = "gfx/interface/soil_types/silt.dds" }
         visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_SILT_TITLE'))]"
     }
@@ -6232,7 +6151,7 @@ widget = {
             blockoverride "title_icon" {
                 widget = {
                     using = tooltip_title_icon_size
-                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
                     icon = { using = tooltip_title_icon_size texture = "gfx/interface/soil_types/clay.dds" }
                 }
             }
@@ -6240,7 +6159,7 @@ widget = {
             blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_soil_type_description')]" } } pp_attribute_view_soil = {} }
         }
     }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
         icon = { size = { 30 30 } texture = "gfx/interface/soil_types/clay.dds" }
         visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_CLAY_TITLE'))]"
     }
@@ -6255,7 +6174,7 @@ widget = {
             blockoverride "title_icon" {
                 widget = {
                     using = tooltip_title_icon_size
-                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
                     icon = { using = tooltip_title_icon_size texture = "gfx/interface/soil_types/peat.dds" }
                 }
             }
@@ -6263,7 +6182,7 @@ widget = {
             blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_soil_type_description')]" } } pp_attribute_view_soil = {} }
         }
     }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
         icon = { size = { 30 30 } texture = "gfx/interface/soil_types/peat.dds" }
         visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_PEAT_TITLE'))]"
     }
@@ -6278,7 +6197,7 @@ widget = {
             blockoverride "title_icon" {
                 widget = {
                     using = tooltip_title_icon_size
-                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
                     icon = { using = tooltip_title_icon_size texture = "gfx/interface/soil_types/stony.dds" }
                 }
             }
@@ -6286,7 +6205,7 @@ widget = {
             blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_soil_type_description')]" } } pp_attribute_view_soil = {} }
         }
     }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
         icon = { size = { 30 30 } texture = "gfx/interface/soil_types/stony.dds" }
         visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_soil_type_name'), Localize('HA1300_SOIL_STONY_TITLE'))]"
     }
@@ -6303,7 +6222,7 @@ widget = {
             blockoverride "title_icon" {
                 widget = {
                     using = tooltip_title_icon_size
-                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    background = { texture = "gfx/interface/icons/pp_harvest/frame_abysmal.dds" }
                     icon = { using = tooltip_title_icon_size texture = "gfx/interface/fertility/very_low.dds" }
                 }
             }
@@ -6311,7 +6230,7 @@ widget = {
             blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_fertility_desc')]" } } pp_attribute_view_fertility = {} }
         }
     }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        background = { texture = "gfx/interface/icons/pp_harvest/frame_abysmal.dds" }
         icon = { size = { 30 30 } texture = "gfx/interface/fertility/very_low.dds" }
         visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_VERY_LOW'))]"
     }
@@ -6326,7 +6245,7 @@ widget = {
             blockoverride "title_icon" {
                 widget = {
                     using = tooltip_title_icon_size
-                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    background = { texture = "gfx/interface/icons/pp_harvest/frame_very_poor.dds" }
                     icon = { using = tooltip_title_icon_size texture = "gfx/interface/fertility/low.dds" }
                 }
             }
@@ -6334,7 +6253,7 @@ widget = {
             blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_fertility_desc')]" } } pp_attribute_view_fertility = {} }
         }
     }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        background = { texture = "gfx/interface/icons/pp_harvest/frame_very_poor.dds" }
         icon = { size = { 30 30 } texture = "gfx/interface/fertility/low.dds" }
         visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_LOW'))]"
     }
@@ -6349,7 +6268,7 @@ widget = {
             blockoverride "title_icon" {
                 widget = {
                     using = tooltip_title_icon_size
-                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    background = { texture = "gfx/interface/icons/pp_harvest/frame_poor.dds" }
                     icon = { using = tooltip_title_icon_size texture = "gfx/interface/fertility/moderate.dds" }
                 }
             }
@@ -6357,7 +6276,7 @@ widget = {
             blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_fertility_desc')]" } } pp_attribute_view_fertility = {} }
         }
     }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        background = { texture = "gfx/interface/icons/pp_harvest/frame_poor.dds" }
         icon = { size = { 30 30 } texture = "gfx/interface/fertility/moderate.dds" }
         visible = "[Or(EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_MODERATE')), EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_UNKNOWN')))]"
     }
@@ -6372,7 +6291,7 @@ widget = {
             blockoverride "title_icon" {
                 widget = {
                     using = tooltip_title_icon_size
-                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    background = { texture = "gfx/interface/icons/pp_harvest/frame_good.dds" }
                     icon = { using = tooltip_title_icon_size texture = "gfx/interface/fertility/high.dds" }
                 }
             }
@@ -6380,7 +6299,7 @@ widget = {
             blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_fertility_desc')]" } } pp_attribute_view_fertility = {} }
         }
     }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        background = { texture = "gfx/interface/icons/pp_harvest/frame_good.dds" }
         icon = { size = { 30 30 } texture = "gfx/interface/fertility/high.dds" }
         visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_HIGH'))]"
     }
@@ -6395,7 +6314,7 @@ widget = {
             blockoverride "title_icon" {
                 widget = {
                     using = tooltip_title_icon_size
-                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    background = { texture = "gfx/interface/icons/pp_harvest/frame_very_good.dds" }
                     icon = { using = tooltip_title_icon_size texture = "gfx/interface/fertility/very_high.dds" }
                 }
             }
@@ -6403,7 +6322,7 @@ widget = {
             blockoverride "tooltip_content" { TooltipFlavorTextBlock = { blockoverride "text" { text = "[LocationView.GetLocation.Custom('ha1300_fertility_desc')]" } } pp_attribute_view_fertility = {} }
         }
     }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        background = { texture = "gfx/interface/icons/pp_harvest/frame_very_good.dds" }
         icon = { size = { 30 30 } texture = "gfx/interface/fertility/very_high.dds" }
         visible = "[EqualTo_string(LocationView.GetLocation.Custom('ha1300_fertility_name'), Localize('HA1300_FERTILITY_VERY_HIGH'))]"
     }
@@ -6420,7 +6339,7 @@ widget = {
             blockoverride "title_icon" {
                 widget = {
                     using = tooltip_title_icon_size
-                    background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+                    background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
                     icon = { using = tooltip_title_icon_size texture = "[GetGoodsIcon(LocationView.GetLocation.GetRawMaterial)]" }
                 }
             }
@@ -6428,7 +6347,7 @@ widget = {
             blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_RGO_CHIP_HELP" } } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'beeswax')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_beeswax')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'camels')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_camels')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'chili')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_chili')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'cloves')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_cloves')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'cocoa')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_cocoa')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'coffee')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_coffee')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'cotton')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_cotton')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'dyes')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_dyes')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'elephants')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_elephants')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'fiber_crops')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_fiber_crops')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'fruit')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_fruit')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'horses')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_horses')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'incense')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_incense')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'legumes')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_legumes')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'livestock')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_livestock')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'maize')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_maize')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'millet')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_millet')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'olives')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_olives')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'pepper')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_pepper')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'potato')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_potato')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'rice')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_rice')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'saffron')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_saffron')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'silk')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_silk')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'sugar')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_sugar')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'tea')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_tea')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'tobacco')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_tobacco')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'wheat')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_wheat')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'wine')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_wine')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'wool')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_wool')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'lumber')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_lumber')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'amber')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_amber')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'clay')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_clay')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'fish')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_fish')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'medicaments')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_medicaments')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'pearls')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_pearls')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'salt')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_salt')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'sand')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_sand')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'fur')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_fur')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'ivory')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_ivory')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'wild_game')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_wild_game')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'coal')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_coal')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'iron')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_iron')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'copper')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_copper')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'goods_gold')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_goods_gold')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'silver')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_silver')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'stone')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_stone')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'tin')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_tin')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'lead')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_lead')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'gems')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_gems')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'saltpeter')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_saltpeter')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'alum')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_alum')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'marble')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_marble')]" } TooltipStringPairList = { visible = "[EqualTo_string(LocationView.GetLocation.GetRawMaterial.GetKey, 'mercury')]" textcontext = "[ShowModifierEffect('pp_rgo_bonus_mercury')]" } }
         }
     }
-        background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" }
+        background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
         icon = { size = { 24 24 } parentanchor = center texture = "[GetGoodsIcon(LocationView.GetLocation.GetRawMaterial)]" }
     }
 pp_land_potential_chip = {}
@@ -6460,7 +6379,7 @@ pp_land_potential_chip = {}
 										}
 									}
 									background =  {
-										texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]"
+										texture = "gfx/interface/icons/pp_harvest/frame_abysmal.dds"
 									}
 									icon = {
 										size = { 30 30 }
@@ -6921,6 +6840,295 @@ pp_land_potential_chip = {}
 						}
 						expand = {}
 					}
+				}
+			}
+
+			# PP: population and capacity bars (arable_land_bar.py): the population on its capacity, one scale, and right of
+			# them the land state the two make (the location view's only arable land chip)
+			vbox = {
+				name = "pp_arable_land_bar"
+				layoutpolicy_horizontal = expanding
+				margin = { 12 6 }
+				spacing = 4
+				background = { using = color_dark_blue_texture alpha = 0.85 }
+
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					spacing = 8
+					widget = {
+						size = { 448 56 }
+						tooltipwidget = {
+							ContextualTooltipType = {
+								blockoverride "title_text" { text = "PP_LAND_BAR_TT_TITLE" }
+								blockoverride "concept_link" { visible = yes text = "[population_capacity|E]" }
+								blockoverride "title_icon" { icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/modifier_types/total_population_capacity_modifier.dds" } }
+								blockoverride "tooltip_content" {
+									vbox = { layoutpolicy_horizontal = expanding spacing = 10 TooltipListBase = { blockoverride "block_title" { text = "PP_LAND_BAR_POPULATION" } TooltipTableField = { blockoverride "field_background" {} spacing = 6 blockoverride "field_content" { widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/pp_land_bar_townsfolk.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline text = "PP_LAND_BAR_TOWNSFOLK" } text_single = { align = right|nobaseline raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_townsfolk')|0]K" } } } TooltipTableField = { blockoverride "field_background" { background = { using = tooltip_table_field_texture } } spacing = 6 blockoverride "field_content" { widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_yellow.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline text = "PP_LAND_BAR_SUBSISTENCE" } text_single = { align = right|nobaseline raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_subsistence')|0]K" } } } TooltipTableField = { blockoverride "field_background" {} spacing = 6 blockoverride "field_content" { widget = { size = { 14 10 } } text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline text = "PP_LAND_BAR_TT_TOTAL" default_format = "#yellow_titles" } text_single = { align = right|nobaseline raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_population')|0]K" default_format = "#yellow_titles" } } } TooltipTableField = { blockoverride "visibility" { visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_population')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_capacity'))), '(float)0'), '(float)0')]" } blockoverride "field_background" { background = { using = tooltip_table_field_texture } } spacing = 6 blockoverride "field_content" { widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_yellow.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } widget = { size = { 100% 100% } icon = { size = { 100% 1 } texture = "gfx/interface/progressbars/progress_bar_red.dds" } icon = { size = { 100% 1 } parentanchor = bottom texture = "gfx/interface/progressbars/progress_bar_red.dds" } icon = { size = { 1 100% } texture = "gfx/interface/progressbars/progress_bar_red.dds" } icon = { size = { 1 100% } parentanchor = right texture = "gfx/interface/progressbars/progress_bar_red.dds" } } } text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline text = "PP_LAND_BAR_TT_OVER" } text_single = { align = right|nobaseline raw_text = "[Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_population')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_capacity'))), '(float)0')|0]K" } } } } TooltipListBase = { blockoverride "block_title" { text = "PP_LAND_BAR_CAPACITY" } TooltipTableField = { blockoverride "field_background" {} spacing = 6 blockoverride "field_content" { widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/pp_land_bar_townsfolk.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline text = "PP_LAND_BAR_TOWNSFOLK" } text_single = { align = right|nobaseline raw_text = "+[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_townsfolk_room')|0]K" } } } TooltipTableField = { blockoverride "field_background" { background = { using = tooltip_table_field_texture } } spacing = 6 blockoverride "field_content" { widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_green_alt.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline text = "PP_LAND_BAR_TT_NATURAL" } text_single = { align = right|nobaseline raw_text = "+[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_natural')|0]K" } } } TooltipTableField = { blockoverride "field_background" {} spacing = 6 blockoverride "field_content" { widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_green_alt.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline text = "PP_LAND_BAR_TT_IMPROVEMENTS" } text_single = { align = right|nobaseline raw_text = "+[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_improvements')|0]K" } } } TooltipTableField = { blockoverride "field_background" { background = { using = tooltip_table_field_texture } } spacing = 6 blockoverride "field_content" { widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/pp_land_bar_farms.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline text = "PP_LAND_BAR_FARMS" } text_single = { align = right|nobaseline raw_text = "-[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_farms')|0]K" } } } TooltipTableField = { blockoverride "field_background" {} spacing = 6 blockoverride "field_content" { widget = { size = { 14 10 } } text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline text = "PP_LAND_BAR_TT_TOTAL" default_format = "#yellow_titles" } text_single = { align = right|nobaseline raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_capacity')|0]K" default_format = "#yellow_titles" } } } TooltipTableField = { blockoverride "visibility" { visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_room')), '(float)0')]" } blockoverride "field_background" { background = { using = tooltip_table_field_texture } } spacing = 6 blockoverride "field_content" { widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_green_alt.dds" noprogresstexture = "gfx/interface/icons/unit_view/moral_bar_transparent.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal alpha = 0.2 } widget = { size = { 100% 100% } icon = { size = { 100% 1 } texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } icon = { size = { 100% 1 } parentanchor = bottom texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } icon = { size = { 1 100% } texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } icon = { size = { 1 100% } parentanchor = right texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } } } text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline text = "PP_LAND_BAR_ROOM" } text_single = { align = right|nobaseline raw_text = "+[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_room')|0]K" } } } } TooltipListBase = { TooltipTableField = { blockoverride "row_size" { minimumsize = { -1 30 } } blockoverride "field_background" {} blockoverride "field_content" { spacing = 8 icon = { size = { 20 20 } texture = "gfx/interface/icons/pp_arable_land/abundant.dds" } textbox = { using = tooltip_text_block_template minimumsize = { 330 -1 } margin = { 0 4 } text = "PP_LAND_BAR_TT_DEF_ABUNDANT" } } } TooltipTableField = { blockoverride "row_size" { minimumsize = { -1 30 } } blockoverride "field_background" { background = { using = tooltip_table_field_texture } } blockoverride "field_content" { spacing = 8 icon = { size = { 20 20 } texture = "gfx/interface/icons/pp_arable_land/available.dds" } textbox = { using = tooltip_text_block_template minimumsize = { 330 -1 } margin = { 0 4 } text = "PP_LAND_BAR_TT_DEF_AVAILABLE" } } } TooltipTableField = { blockoverride "row_size" { minimumsize = { -1 30 } } blockoverride "field_background" {} blockoverride "field_content" { spacing = 8 icon = { size = { 20 20 } texture = "gfx/interface/icons/pp_arable_land/overused.dds" } textbox = { using = tooltip_text_block_template minimumsize = { 330 -1 } margin = { 0 4 } text = "PP_LAND_BAR_TT_DEF_OVERUSED" } } } } }
+								}
+							}
+						}
+						hbox = {
+							spacing = 8
+							vbox = {
+								spacing = 4
+								widget = { size = { 100 12 } }
+								widget = { size = { 100 18 } text_single = { text = "PP_LAND_BAR_POPULATION" parentanchor = vcenter fontsize = 14 default_format = "#yellow_titles" } }
+								widget = { size = { 100 18 } text_single = { text = "PP_LAND_BAR_CAPACITY" parentanchor = vcenter fontsize = 14 default_format = "#yellow_titles" } }
+							}
+							widget = {
+								size = { 340 56 }
+								widget = {
+									position = { 0 0 }
+									size = { 340 12 }
+									visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)0')]"
+									widget = { position = "[ToVector2f(Subtract_float(Multiply_float(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)0.1'), '(float)340'), '(float)17.0'), '(float)0')]" size = { 34 12 } text_single = { visible = "[GreaterThan_float(Multiply_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)0.1')), '(float)340'), '(float)34')]" parentanchor = center fontsize = 11 raw_text = "10%" } }
+									widget = { position = "[ToVector2f(Subtract_float(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)340'), '(float)17.0'), '(float)0')]" size = { 34 12 } text_single = { parentanchor = center fontsize = 11 raw_text = "100%" } }
+								}
+								widget = {
+									position = { 0 16 }
+									size = { 340 40 }
+									vbox = {
+										size = { 100% 100% }
+										spacing = 4
+										widget = {
+											size = { 340 18 }
+											background = { texture = "gfx/interface/progressbars/progress_black.dds" alpha = 0.6 }
+											hbox = {
+												size = { 100% 100% }
+												widget = {
+													size = "[ToVector2f(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk')), '(float)340'), '(float)18')]"
+													visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk')), '(float)0')]"
+													progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/pp_land_bar_townsfolk.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal }
+												}
+												widget = {
+													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_population')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk'))), '(float)0'), '(float)340'), '(float)18')]"
+													visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_population')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk'))), '(float)0'), '(float)0')]"
+													progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_yellow.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal }
+												}
+												expand = {}
+											}
+											hbox = {
+												size = { 100% 100% }
+												widget = { size = "[ToVector2f(Max_float(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_within')), '(float)340'), '(float)0'), '(float)18')]" }
+												widget = {
+													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_population')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_within'))), '(float)0'), '(float)340'), '(float)18')]"
+													visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_population')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_within'))), '(float)0'), '(float)0')]"
+													icon = { size = { 100% 2 } texture = "gfx/interface/progressbars/progress_bar_red.dds" } icon = { size = { 100% 2 } parentanchor = bottom texture = "gfx/interface/progressbars/progress_bar_red.dds" } icon = { size = { 2 100% } texture = "gfx/interface/progressbars/progress_bar_red.dds" } icon = { size = { 2 100% } parentanchor = right texture = "gfx/interface/progressbars/progress_bar_red.dds" }
+												}
+												expand = {}
+											}
+										}
+										widget = {
+											size = { 340 18 }
+											background = { texture = "gfx/interface/progressbars/progress_black.dds" alpha = 0.6 }
+											hbox = {
+												size = { 100% 100% }
+												widget = {
+													size = "[ToVector2f(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room')), '(float)340'), '(float)18')]"
+													visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room')), '(float)0')]"
+													progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/pp_land_bar_townsfolk.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal }
+												}
+												widget = {
+													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room'))), '(float)0'), '(float)340'), '(float)18')]"
+													visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room'))), '(float)0'), '(float)0')]"
+													progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_green_alt.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal }
+												}
+												widget = {
+													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity'))), '(float)0'), '(float)340'), '(float)18')]"
+													visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity'))), '(float)0'), '(float)0')]"
+													progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/pp_land_bar_farms.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal }
+												}
+												widget = {
+													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_land')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held'))), '(float)0'), '(float)340'), '(float)18')]"
+													visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_land')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held'))), '(float)0'), '(float)0')]"
+													progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_green_alt.dds" noprogresstexture = "gfx/interface/icons/unit_view/moral_bar_transparent.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal alpha = 0.2 } widget = { size = { 100% 100% } icon = { size = { 100% 2 } texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } icon = { size = { 100% 2 } parentanchor = bottom texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } icon = { size = { 2 100% } texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } icon = { size = { 2 100% } parentanchor = right texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } }
+												}
+												expand = {}
+											}
+										}
+									}
+									hbox = {
+										position = { 0 -2 }
+										size = { 100% 44 }
+										visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)0')]"
+										widget = { size = "[ToVector2f(Max_float(Subtract_float(Multiply_float(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)0.1'), '(float)340'), '(float)1.5'), '(float)0'), '(float)44')]" }
+										widget = { size = { 3 44 } background = { texture = "gfx/interface/progressbars/progress_black.dds" alpha = 0.9 } icon = { size = { 1 100% } parentanchor = hcenter texture = "gfx/interface/progressbars/progress_bar_whiteish.dds" } }
+										widget = { size = "[ToVector2f(Max_float(Subtract_float(Multiply_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), '(float)0.1')), '(float)340'), '(float)3'), '(float)0'), '(float)44')]" }
+										widget = { size = { 3 44 } background = { texture = "gfx/interface/progressbars/progress_black.dds" alpha = 0.9 } icon = { size = { 1 100% } parentanchor = hcenter texture = "gfx/interface/progressbars/progress_bar_whiteish.dds" } }
+										expand = {}
+									}
+									vbox = {
+										size = { 100% 100% }
+										spacing = 4
+										widget = {
+											size = { 340 18 }
+											hbox = {
+												size = { 100% 100% }
+												widget = {
+													size = "[ToVector2f(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk')), '(float)340'), '(float)18')]"
+													visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk')), '(float)0')]"
+													text_single = { parentanchor = center fontsize = 12 raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_townsfolk')|0]K" visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk')), '(float)0.06')]" }
+												}
+												widget = {
+													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_population')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk'))), '(float)0'), '(float)340'), '(float)18')]"
+													visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_population')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk'))), '(float)0'), '(float)0')]"
+													text_single = { parentanchor = center fontsize = 12 raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_subsistence')|0]K" visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_population')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk'))), '(float)0'), '(float)0.06')]" }
+												}
+												expand = {}
+											}
+										}
+										widget = {
+											size = { 340 18 }
+											hbox = {
+												size = { 100% 100% }
+												widget = {
+													size = "[ToVector2f(Multiply_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room')), '(float)340'), '(float)18')]"
+													visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room')), '(float)0')]"
+													text_single = { parentanchor = center fontsize = 12 raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_townsfolk_room')|0]K" visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room')), '(float)0.06')]" }
+												}
+												widget = {
+													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room'))), '(float)0'), '(float)340'), '(float)18')]"
+													visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room'))), '(float)0'), '(float)0')]"
+													text_single = { parentanchor = center fontsize = 12 raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_left_shown')|0]K" visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_townsfolk_room'))), '(float)0'), '(float)0.06')]" }
+												}
+												widget = {
+													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity'))), '(float)0'), '(float)340'), '(float)18')]"
+													visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity'))), '(float)0'), '(float)0')]"
+													text_single = { parentanchor = center fontsize = 12 raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_farms_shown')|0]K" visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_capacity'))), '(float)0'), '(float)0.06')]" }
+												}
+												widget = {
+													size = "[ToVector2f(Multiply_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_land')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held'))), '(float)0'), '(float)340'), '(float)18')]"
+													visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_land')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held'))), '(float)0'), '(float)0')]"
+													text_single = { parentanchor = center fontsize = 12 raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_room')|0]K" visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_land')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_f_held'))), '(float)0'), '(float)0.06')]" }
+												}
+												expand = {}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+					expand = {}
+					hbox = { visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')]" spacing = 4
+					widget = {
+					        name = "pp_land_bar_state_overpopulation"
+					        size = { 30 30 }
+					        visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')]"
+					        datacontext = "[LocationView.GetLocation]"
+					        tooltipwidget = {
+					        ContextualTooltipType = {
+					            blockoverride "title_text" { text = "PP_LAND_CHIP_OVERPOPULATION_TITLE" }
+					            blockoverride "concept_link" { visible = yes text = "[ShowModifier('overpopulation')]" }
+					            blockoverride "title_icon" {
+					                widget = {
+					                    using = tooltip_title_icon_size
+					                    background = { texture = "gfx/interface/icons/pp_harvest/frame_abysmal.dds" }
+					                    icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/pp_arable_land/overused.dds" }
+					                }
+					            }
+					            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_LAND_CHIP_OVERPOPULATION" } } TooltipScrolledContentSection = { blockoverride "block_scrollarea" { maximumsize = { -1 420 } } blockoverride "section_content" { vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding spacing = 10 ignoreinvisible = yes TooltipListBase = { blockoverride "block_title" { text = "PP_LAND_CHIP_OVERPOPULATION_STRENGTH" } TooltipTableField = { blockoverride "field_background" {} blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_pop_demotion_speed_modifier')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation'), '(CFixedPoint)1')|1%-]" } } } TooltipTableField = { blockoverride "field_background" { background = { using = tooltip_table_field_texture } } blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_mercenaries_modifier')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation'), '(CFixedPoint)0.5')|1%]" } } } TooltipTableField = { blockoverride "field_background" {} blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_peasants_food_consumption')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation'), '(CFixedPoint)0.25')|1%-]" } } } TooltipTableField = { blockoverride "field_background" { background = { using = tooltip_table_field_texture } } blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_disease_resistance')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation'), '(CFixedPoint)-0.03')|1%+]" } } } TooltipTableField = { blockoverride "field_background" {} blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_migration_attraction')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation'), '(CFixedPoint)-0.25')|2+]" } } } TooltipTableField = { blockoverride "field_background" { background = { using = tooltip_table_field_texture } } blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_migration_speed')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation'), '(CFixedPoint)0.0025')|4+]" } } } } } } } }
+					        }
+					    }
+					        background = { texture = "gfx/interface/icons/pp_harvest/frame_abysmal.dds" }
+					        icon = { size = { 30 30 } texture = "gfx/interface/icons/pp_arable_land/overused.dds" }
+					    }
+					 text_single = { raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation'), '(CFixedPoint)1')|0%]" fontsize = 14 default_format = "#yellow_titles" minimumsize = { 40 -1 } maximumsize = { 40 -1 } } }
+					hbox = { visible = "[And(Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant')), '(float)0'))]" spacing = 4
+					widget = {
+					        name = "pp_land_bar_state_abundant"
+					        size = { 30 30 }
+					        visible = "[And(Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant')), '(float)0'))]"
+					        datacontext = "[LocationView.GetLocation]"
+					        tooltipwidget = {
+					        ContextualTooltipType = {
+					            blockoverride "title_text" { text = "PP_LAND_CHIP_ABUNDANT_TITLE" }
+					            blockoverride "concept_link" { visible = yes text = "[ShowModifier('abundant_free_land')]" }
+					            blockoverride "title_icon" {
+					                widget = {
+					                    using = tooltip_title_icon_size
+					                    background = { texture = "gfx/interface/icons/pp_harvest/frame_very_good.dds" }
+					                    icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/pp_arable_land/abundant.dds" }
+					                }
+					            }
+					            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_LAND_CHIP_ABUNDANT" } } TooltipScrolledContentSection = { blockoverride "block_scrollarea" { maximumsize = { -1 420 } } blockoverride "section_content" { vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding spacing = 10 ignoreinvisible = yes TooltipListBase = { blockoverride "block_title" { text = "PP_LAND_CHIP_ABUNDANT_STRENGTH" } TooltipTableField = { blockoverride "field_background" {} blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_tribesmen_pop_growth')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)0.75')|1%+]" } } } TooltipTableField = { blockoverride "field_background" { background = { using = tooltip_table_field_texture } } blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_peasants_food_consumption')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)-0.4')|1%-]" } } } TooltipTableField = { blockoverride "field_background" {} blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[Localize('PP_LAND_CHIP_GOODS_OUTPUT')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)0.40')|1%+]" } } } TooltipTableField = { blockoverride "field_background" {} spacing = 3 blockoverride "field_content" { icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_chili.dds" tooltip = "[ShowGoodsName('chili')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cloves.dds" tooltip = "[ShowGoodsName('cloves')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cocoa.dds" tooltip = "[ShowGoodsName('cocoa')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_coffee.dds" tooltip = "[ShowGoodsName('coffee')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cotton.dds" tooltip = "[ShowGoodsName('cotton')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_dyes.dds" tooltip = "[ShowGoodsName('dyes')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fiber_crops.dds" tooltip = "[ShowGoodsName('fiber_crops')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fruit.dds" tooltip = "[ShowGoodsName('fruit')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_incense.dds" tooltip = "[ShowGoodsName('incense')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_legumes.dds" tooltip = "[ShowGoodsName('legumes')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_lumber.dds" tooltip = "[ShowGoodsName('lumber')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_maize.dds" tooltip = "[ShowGoodsName('maize')]" } expand = {} } } TooltipTableField = { blockoverride "field_background" {} spacing = 3 blockoverride "field_content" { icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_medicaments.dds" tooltip = "[ShowGoodsName('medicaments')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_millet.dds" tooltip = "[ShowGoodsName('millet')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_olives.dds" tooltip = "[ShowGoodsName('olives')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_pepper.dds" tooltip = "[ShowGoodsName('pepper')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_potato.dds" tooltip = "[ShowGoodsName('potato')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_rice.dds" tooltip = "[ShowGoodsName('rice')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_saffron.dds" tooltip = "[ShowGoodsName('saffron')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_sugar.dds" tooltip = "[ShowGoodsName('sugar')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_tea.dds" tooltip = "[ShowGoodsName('tea')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_tobacco.dds" tooltip = "[ShowGoodsName('tobacco')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" tooltip = "[ShowGoodsName('wheat')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wine.dds" tooltip = "[ShowGoodsName('wine')]" } expand = {} } } TooltipTableField = { blockoverride "field_background" {} spacing = 3 blockoverride "field_content" { icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_beeswax.dds" tooltip = "[ShowGoodsName('beeswax')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_elephants.dds" tooltip = "[ShowGoodsName('elephants')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fish.dds" tooltip = "[ShowGoodsName('fish')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fur.dds" tooltip = "[ShowGoodsName('fur')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_horses.dds" tooltip = "[ShowGoodsName('horses')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_ivory.dds" tooltip = "[ShowGoodsName('ivory')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_livestock.dds" tooltip = "[ShowGoodsName('livestock')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_silk.dds" tooltip = "[ShowGoodsName('silk')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wild_game.dds" tooltip = "[ShowGoodsName('wild_game')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wool.dds" tooltip = "[ShowGoodsName('wool')]" } expand = {} } } TooltipTableField = { blockoverride "field_background" { background = { using = tooltip_table_field_texture } } blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_migration_attraction')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)2')|1+]" } } } TooltipTableField = { blockoverride "field_background" {} blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_monthly_food')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)1')|1+]" } } } } } } } }
+					        }
+					    }
+					        background = { texture = "gfx/interface/icons/pp_harvest/frame_very_good.dds" }
+					        icon = { size = { 30 30 } texture = "gfx/interface/icons/pp_arable_land/abundant.dds" }
+					    }
+					 text_single = { raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant'), '(CFixedPoint)1')|0%]" fontsize = 14 default_format = "#yellow_titles" minimumsize = { 40 -1 } maximumsize = { 40 -1 } } }
+					hbox = { visible = "[And3(Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant')), '(float)0')), GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_available')), '(float)0'))]" spacing = 4
+					widget = {
+					        name = "pp_land_bar_state_available"
+					        size = { 30 30 }
+					        visible = "[And3(Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant')), '(float)0')), GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_available')), '(float)0'))]"
+					        datacontext = "[LocationView.GetLocation]"
+					        tooltipwidget = {
+					        ContextualTooltipType = {
+					            blockoverride "title_text" { text = "PP_LAND_CHIP_AVAILABLE_TITLE" }
+					            blockoverride "concept_link" { visible = yes text = "[ShowModifier('available_free_land')]" }
+					            blockoverride "title_icon" {
+					                widget = {
+					                    using = tooltip_title_icon_size
+					                    background = { texture = "gfx/interface/icons/pp_harvest/frame_poor.dds" }
+					                    icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/pp_arable_land/available.dds" }
+					                }
+					            }
+					            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_LAND_CHIP_AVAILABLE" } } TooltipScrolledContentSection = { blockoverride "block_scrollarea" { maximumsize = { -1 420 } } blockoverride "section_content" { vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding spacing = 10 ignoreinvisible = yes TooltipListBase = { blockoverride "block_title" { text = "PP_LAND_CHIP_AVAILABLE_STRENGTH" } TooltipTableField = { blockoverride "field_background" {} blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_tribesmen_pop_growth')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_available'), '(CFixedPoint)0.75')|1%+]" } } } TooltipTableField = { blockoverride "field_background" { background = { using = tooltip_table_field_texture } } blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[Localize('PP_LAND_CHIP_GOODS_OUTPUT')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_available'), '(CFixedPoint)0.30')|1%+]" } } } TooltipTableField = { blockoverride "field_background" { background = { using = tooltip_table_field_texture } } spacing = 3 blockoverride "field_content" { icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_chili.dds" tooltip = "[ShowGoodsName('chili')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cloves.dds" tooltip = "[ShowGoodsName('cloves')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cocoa.dds" tooltip = "[ShowGoodsName('cocoa')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_coffee.dds" tooltip = "[ShowGoodsName('coffee')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_cotton.dds" tooltip = "[ShowGoodsName('cotton')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_dyes.dds" tooltip = "[ShowGoodsName('dyes')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fiber_crops.dds" tooltip = "[ShowGoodsName('fiber_crops')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fruit.dds" tooltip = "[ShowGoodsName('fruit')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_incense.dds" tooltip = "[ShowGoodsName('incense')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_legumes.dds" tooltip = "[ShowGoodsName('legumes')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_lumber.dds" tooltip = "[ShowGoodsName('lumber')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_maize.dds" tooltip = "[ShowGoodsName('maize')]" } expand = {} } } TooltipTableField = { blockoverride "field_background" { background = { using = tooltip_table_field_texture } } spacing = 3 blockoverride "field_content" { icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_medicaments.dds" tooltip = "[ShowGoodsName('medicaments')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_millet.dds" tooltip = "[ShowGoodsName('millet')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_olives.dds" tooltip = "[ShowGoodsName('olives')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_pepper.dds" tooltip = "[ShowGoodsName('pepper')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_potato.dds" tooltip = "[ShowGoodsName('potato')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_rice.dds" tooltip = "[ShowGoodsName('rice')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_saffron.dds" tooltip = "[ShowGoodsName('saffron')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_sugar.dds" tooltip = "[ShowGoodsName('sugar')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_tea.dds" tooltip = "[ShowGoodsName('tea')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_tobacco.dds" tooltip = "[ShowGoodsName('tobacco')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" tooltip = "[ShowGoodsName('wheat')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wine.dds" tooltip = "[ShowGoodsName('wine')]" } expand = {} } } TooltipTableField = { blockoverride "field_background" { background = { using = tooltip_table_field_texture } } spacing = 3 blockoverride "field_content" { icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_beeswax.dds" tooltip = "[ShowGoodsName('beeswax')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_elephants.dds" tooltip = "[ShowGoodsName('elephants')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fish.dds" tooltip = "[ShowGoodsName('fish')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_fur.dds" tooltip = "[ShowGoodsName('fur')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_horses.dds" tooltip = "[ShowGoodsName('horses')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_ivory.dds" tooltip = "[ShowGoodsName('ivory')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_livestock.dds" tooltip = "[ShowGoodsName('livestock')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_silk.dds" tooltip = "[ShowGoodsName('silk')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wild_game.dds" tooltip = "[ShowGoodsName('wild_game')]" } icon = { size = { 26 26 } texture = "gfx/interface/icons/trade_goods/icon_goods_wool.dds" tooltip = "[ShowGoodsName('wool')]" } expand = {} } } TooltipTableField = { blockoverride "field_background" {} blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_peasants_food_consumption')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_available'), '(CFixedPoint)-0.25')|1%-]" } } } TooltipTableField = { blockoverride "field_background" { background = { using = tooltip_table_field_texture } } blockoverride "field_content" { text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline raw_text = "[ShowModifierTypeName('local_migration_attraction')]" } text_single = { align = right|nobaseline raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_available'), '(CFixedPoint)1')|1+]" } } } } } } } }
+					        }
+					    }
+					        background = { texture = "gfx/interface/icons/pp_harvest/frame_poor.dds" }
+					        icon = { size = { 30 30 } texture = "gfx/interface/icons/pp_arable_land/available.dds" }
+					    }
+					 text_single = { raw_text = "[Multiply_CFixedPoint(LocationView.GetLocation.GetModifierValueFixed('pp_land_available'), '(CFixedPoint)1')|0%]" fontsize = 14 default_format = "#yellow_titles" minimumsize = { 40 -1 } maximumsize = { 40 -1 } } }
+					hbox = { visible = "[And3(Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_available')), '(float)0')))]" spacing = 4
+					widget = {
+					        name = "pp_land_bar_state_settled"
+					        size = { 30 30 }
+					        visible = "[And3(Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_overpopulation')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_abundant')), '(float)0')), Not(GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.GetModifierValueFixed('pp_land_available')), '(float)0')))]"
+					        datacontext = "[LocationView.GetLocation]"
+					        tooltipwidget = {
+					        ContextualTooltipType = {
+					            blockoverride "title_text" { text = "PP_LAND_CHIP_SETTLED_TITLE" }
+					            blockoverride "concept_link" { visible = yes text = "[population_capacity|E]" }
+					            blockoverride "title_icon" {
+					                widget = {
+					                    using = tooltip_title_icon_size
+					                    background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
+					                    icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/location_icons/population.dds" }
+					                }
+					            }
+					            blockoverride "tooltip_content" { TooltipTextBlock = { blockoverride "text" { text = "PP_LAND_CHIP_SETTLED" } } }
+					        }
+					    }
+					        background = { texture = "gfx/interface/icons/pp_harvest/frame_neutral.dds" }
+					        icon = { size = { 30 30 } texture = "gfx/interface/icons/location_icons/population.dds" }
+					    }
+					 }
+				}
+
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					tooltipwidget = {
+						ContextualTooltipType = {
+							blockoverride "title_text" { text = "PP_LAND_BAR_TT_TITLE" }
+							blockoverride "concept_link" { visible = yes text = "[population_capacity|E]" }
+							blockoverride "title_icon" { icon = { using = tooltip_title_icon_size texture = "gfx/interface/icons/modifier_types/total_population_capacity_modifier.dds" } }
+							blockoverride "tooltip_content" {
+								vbox = { layoutpolicy_horizontal = expanding spacing = 10 TooltipListBase = { blockoverride "block_title" { text = "PP_LAND_BAR_POPULATION" } TooltipTableField = { blockoverride "field_background" {} spacing = 6 blockoverride "field_content" { widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/pp_land_bar_townsfolk.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline text = "PP_LAND_BAR_TOWNSFOLK" } text_single = { align = right|nobaseline raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_townsfolk')|0]K" } } } TooltipTableField = { blockoverride "field_background" { background = { using = tooltip_table_field_texture } } spacing = 6 blockoverride "field_content" { widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_yellow.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline text = "PP_LAND_BAR_SUBSISTENCE" } text_single = { align = right|nobaseline raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_subsistence')|0]K" } } } TooltipTableField = { blockoverride "field_background" {} spacing = 6 blockoverride "field_content" { widget = { size = { 14 10 } } text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline text = "PP_LAND_BAR_TT_TOTAL" default_format = "#yellow_titles" } text_single = { align = right|nobaseline raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_population')|0]K" default_format = "#yellow_titles" } } } TooltipTableField = { blockoverride "visibility" { visible = "[GreaterThan_float(Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_population')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_capacity'))), '(float)0'), '(float)0')]" } blockoverride "field_background" { background = { using = tooltip_table_field_texture } } spacing = 6 blockoverride "field_content" { widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_yellow.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } widget = { size = { 100% 100% } icon = { size = { 100% 1 } texture = "gfx/interface/progressbars/progress_bar_red.dds" } icon = { size = { 100% 1 } parentanchor = bottom texture = "gfx/interface/progressbars/progress_bar_red.dds" } icon = { size = { 1 100% } texture = "gfx/interface/progressbars/progress_bar_red.dds" } icon = { size = { 1 100% } parentanchor = right texture = "gfx/interface/progressbars/progress_bar_red.dds" } } } text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline text = "PP_LAND_BAR_TT_OVER" } text_single = { align = right|nobaseline raw_text = "[Max_float(Subtract_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_population')), FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_capacity'))), '(float)0')|0]K" } } } } TooltipListBase = { blockoverride "block_title" { text = "PP_LAND_BAR_CAPACITY" } TooltipTableField = { blockoverride "field_background" {} spacing = 6 blockoverride "field_content" { widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/pp_land_bar_townsfolk.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline text = "PP_LAND_BAR_TOWNSFOLK" } text_single = { align = right|nobaseline raw_text = "+[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_townsfolk_room')|0]K" } } } TooltipTableField = { blockoverride "field_background" { background = { using = tooltip_table_field_texture } } spacing = 6 blockoverride "field_content" { widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_green_alt.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline text = "PP_LAND_BAR_TT_NATURAL" } text_single = { align = right|nobaseline raw_text = "+[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_natural')|0]K" } } } TooltipTableField = { blockoverride "field_background" {} spacing = 6 blockoverride "field_content" { widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_green_alt.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline text = "PP_LAND_BAR_TT_IMPROVEMENTS" } text_single = { align = right|nobaseline raw_text = "+[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_improvements')|0]K" } } } TooltipTableField = { blockoverride "field_background" { background = { using = tooltip_table_field_texture } } spacing = 6 blockoverride "field_content" { widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/pp_land_bar_farms.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline text = "PP_LAND_BAR_FARMS" } text_single = { align = right|nobaseline raw_text = "-[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_farms')|0]K" } } } TooltipTableField = { blockoverride "field_background" {} spacing = 6 blockoverride "field_content" { widget = { size = { 14 10 } } text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline text = "PP_LAND_BAR_TT_TOTAL" default_format = "#yellow_titles" } text_single = { align = right|nobaseline raw_text = "[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_capacity')|0]K" default_format = "#yellow_titles" } } } TooltipTableField = { blockoverride "visibility" { visible = "[GreaterThan_float(FixedPointToFloat(LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_room')), '(float)0')]" } blockoverride "field_background" { background = { using = tooltip_table_field_texture } } spacing = 6 blockoverride "field_content" { widget = { size = { 14 10 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_green_alt.dds" noprogresstexture = "gfx/interface/icons/unit_view/moral_bar_transparent.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal alpha = 0.2 } widget = { size = { 100% 100% } icon = { size = { 100% 1 } texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } icon = { size = { 100% 1 } parentanchor = bottom texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } icon = { size = { 1 100% } texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } icon = { size = { 1 100% } parentanchor = right texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } } } text_single = { layoutpolicy_horizontal = expanding align = left|nobaseline text = "PP_LAND_BAR_ROOM" } text_single = { align = right|nobaseline raw_text = "+[LocationView.GetLocation.MakeScope.ScriptValue('pp_land_bar_room')|0]K" } } } } TooltipListBase = { TooltipTableField = { blockoverride "row_size" { minimumsize = { -1 30 } } blockoverride "field_background" {} blockoverride "field_content" { spacing = 8 icon = { size = { 20 20 } texture = "gfx/interface/icons/pp_arable_land/abundant.dds" } textbox = { using = tooltip_text_block_template minimumsize = { 330 -1 } margin = { 0 4 } text = "PP_LAND_BAR_TT_DEF_ABUNDANT" } } } TooltipTableField = { blockoverride "row_size" { minimumsize = { -1 30 } } blockoverride "field_background" { background = { using = tooltip_table_field_texture } } blockoverride "field_content" { spacing = 8 icon = { size = { 20 20 } texture = "gfx/interface/icons/pp_arable_land/available.dds" } textbox = { using = tooltip_text_block_template minimumsize = { 330 -1 } margin = { 0 4 } text = "PP_LAND_BAR_TT_DEF_AVAILABLE" } } } TooltipTableField = { blockoverride "row_size" { minimumsize = { -1 30 } } blockoverride "field_background" {} blockoverride "field_content" { spacing = 8 icon = { size = { 20 20 } texture = "gfx/interface/icons/pp_arable_land/overused.dds" } textbox = { using = tooltip_text_block_template minimumsize = { 330 -1 } margin = { 0 4 } text = "PP_LAND_BAR_TT_DEF_OVERUSED" } } } } }
+							}
+						}
+					}
+					hbox = {
+						spacing = 5
+						hbox = { spacing = 2 widget = { size = { 8 8 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/pp_land_bar_townsfolk.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_TOWNSFOLK" fontsize = 12 } }
+						hbox = { spacing = 2 widget = { size = { 8 8 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_yellow.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_SUBSISTENCE" fontsize = 12 } }
+						hbox = { spacing = 2 widget = { size = { 8 8 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_green_alt.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_LAND" fontsize = 12 } }
+						hbox = { spacing = 2 widget = { size = { 8 8 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/pp_land_bar_farms.dds" noprogresstexture = "gfx/interface/progressbars/progress_black.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal } } text_single = { text = "PP_LAND_BAR_FARMS" fontsize = 12 } }
+						hbox = { spacing = 2 widget = { size = { 8 8 } progressbar = { size = { 100% 100% } progresstexture = "gfx/interface/progressbars/progress_bar_green_alt.dds" noprogresstexture = "gfx/interface/icons/unit_view/moral_bar_transparent.dds" texture_density = 2 spriteType = Corneredstretched spriteborder = { 12 0 } min = 0 max = 1 value = 1 direction = horizontal alpha = 0.2 } widget = { size = { 100% 100% } icon = { size = { 100% 1 } texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } icon = { size = { 100% 1 } parentanchor = bottom texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } icon = { size = { 1 100% } texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } icon = { size = { 1 100% } parentanchor = right texture = "gfx/interface/progressbars/progress_bar_green_alt.dds" } } } text_single = { text = "PP_LAND_BAR_ROOM" fontsize = 12 } }
+					}
+					expand = {}
 				}
 			}
 

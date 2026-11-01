@@ -188,6 +188,13 @@ class Rules:
             return float(ctx.get("buildings", {}).get(match[1], 0))
         if key == "total_building_levels":
             return sum(ctx.get("buildings", {}).values())
+        if key == "pp_townsfolk_capacity":
+            # the farm caps take the townsfolk's own capacity (total_population +1, unemployed_peasants -1) back out
+            # of the flat; the simulated flat is land only and never had it
+            return 0.0
+        if key.startswith("pp_farm_land_queued_outside_"):
+            # land of the farm levels under construction: nothing is under construction at the game start
+            return 0.0
         if key in self.values:
             return self.value(self.values[key], ctx, depth + 1)
         raise Unresolved("value " + key)
@@ -330,7 +337,10 @@ class Rules:
             if key in ctx and not isinstance(v, CList):
                 actual = ctx[key]
                 expected = str(v).split(":")[-1] if isinstance(v, str) else v
-            elif key.startswith(("modifier:", "var:", "owner.modifier:")):
+                if op != "=" and isinstance(actual, (int, float)):   # a number compared (development > 450)
+                    expected = self.value(v, ctx, depth + 1)
+            elif key.startswith(("modifier:", "var:", "owner.modifier:")) or key in self.values:
+                # a script value compared (the cap clamps: pp_wb_cap_<key>_open < 0)
                 actual = self.value(key, ctx, depth + 1)
                 expected = self.value(v, ctx, depth + 1)
             else:

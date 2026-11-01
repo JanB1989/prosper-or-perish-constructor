@@ -139,7 +139,7 @@ building:
 localization:
   entries:
     millet_rotations: Millet Rotation Farm
-    millet_rotations_desc: Millet takes turns with fallow and pulses to keep thin soils working.
+    millet_rotations_desc: Millet takes turns with fallow and pulses to keep thin soils working. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market.
     millet_rotations_slot_0: Fields
     millet_rotations_slot_1: Cultivation
     millet_rotations_slot_2: Provisioning

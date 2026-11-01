@@ -150,6 +150,15 @@ def test_terrain_lines_word_the_engine_fields_with_vanilla_localization():
     assert tt.terrain_lines({"movement_cost": "1.0"}, loc) == []   # normal ground says nothing
 
 
+def test_topography_proximity_block_reads_as_its_default(tmp_path):
+    path = tmp_path / "t.txt"
+    path.write_text("wetlands = { movement_cost = 1.5 proximity = { default = -0.25 } }\nforest = { proximity = -0.125 }\n", encoding="utf-8")
+    defs = tt.definitions([path])
+    loc = {"TERRAIN_PROXIMITY_COST": "Proximity: $VALUE|+=%$"}
+    assert tt.terrain_lines(tt.terrain_fields(defs["wetlands"]), loc) == ["Proximity: #N -25%#!"]   # EU5 1.4 topography block
+    assert tt.terrain_lines(tt.terrain_fields(defs["forest"]), loc) == ["Proximity: #N -12.5%#!"]   # vegetation's plain line
+
+
 def test_write_builds_views_that_hold_effects_and_goods_apart(trees):
     vanilla, mod = trees
     counts = tt.write(mod, vanilla)
@@ -190,6 +199,32 @@ def test_write_builds_views_that_hold_effects_and_goods_apart(trees):
     assert ' STATIC_MODIFIER_NAME_pp_tt_vegetation_forest: "$forest$"' in loc
     assert ' PP_TT_EXTRAS_VEGETATION_FOREST: "Movement Cost for [units|e]: #N +25%#!\\nAttacker Penalty in [combat|e]: #N +1#!"' in loc
     assert "PP_TT_EXTRAS_CLIMATE_ARID: \"[winter_level_max|e]: [ShowModifier('winter_mild')]\"" in loc
+
+
+def test_attribute_views_list_the_levels_their_class_adds_to_improvement_caps(trees):
+    vanilla, mod = trees
+    add = lambda limit, value: f"\t{limit}\n\t\tadd = {{\n\t\t\tdesc = \"X\"\n\t\t\tvalue = {value}\n\t\t}}\n\t}}\n"
+    _write(mod / tt.CAPS_PATH, (
+        "pp_wb_cap_water_shared = {\n\tadd = {\n\t\tdesc = \"BUILDING_LEVEL_WB_BASE\"\n\t\tvalue = 1\n\t}\n"
+        + add("if = {\n\t\tlimit = { vegetation = forest }", -1) + add("else_if = {\n\t\tlimit = { vegetation = sparse }", 2)
+        + add("if = {\n\t\tlimit = { has_location_modifier = pp_wb_fertility_high }", 1) + "}\n"
+        # a member cap: its conditional rows are not class terms
+        "pp_wb_cap_bund = {\n\tadd = pp_wb_cap_water_shared\n\tif = { limit = { modifier:pp_wb_levels_x > 0 } subtract = { desc = \"Y\" value = modifier:pp_wb_levels_x } }\n}\n"
+        "pp_wb_cap_clearing_terms = {\n" + add("if = {\n\t\tlimit = { vegetation = forest }", 3) + "}\n"
+    ))
+    tt.write(mod, vanilla)
+    modifiers = (mod / tt.MODIFIERS_PATH).read_text(encoding="utf-8-sig")
+
+    def block(name: str) -> str:
+        text = modifiers[modifiers.index(f"{name} = {{"):]
+        return text[:text.index("\n}\n") + 2]
+
+    # after the class's other effects, as the river lists its capacity lines
+    forest = block("pp_tt_vegetation_forest")
+    assert forest.index("local_road_building_time") < forest.index("pp_wb_capacity_water = -1") < forest.index("pp_wb_capacity_clearing = 3")
+    assert "local_population_capacity = 2\n\tpp_wb_capacity_water = 2\n}" in block("pp_tt_vegetation_sparse")
+    assert "pp_wb_capacity_water = 1" in block("pp_tt_fertility_high")
+    assert "pp_wb_levels_x" not in modifiers and "pp_tt_soil_loam" not in modifiers   # loam adds no levels: goods only
 
 
 def test_winter_and_harvest_views_come_from_both_static_modifier_folders(trees):

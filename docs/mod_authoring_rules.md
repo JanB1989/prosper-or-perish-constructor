@@ -55,6 +55,17 @@ The local output modifier map modes (`M/in_game/gfx/map/map_modes/pp_local_outpu
 `tools/generate_pp_goods_output_map_modes.py` writes `pp_goods_output_map_modes_generated.txt`. Edit the generators,
 not the files.
 
+## Buttons that change the game, and observers
+
+A GUI button changes the game only through a game command (a scripted GUI's `Execute`, every vanilla action). The
+game drops every game command an observer sends, without an error (verified 2026-10-24: the welcome situation's
+dismiss button closed the panel and left the situation running). A button an observer needs gets an observer twin
+(`visible = "[IsPlayerObserver]"`, the player's button `visible = "[Not(IsPlayerObserver)]"`, the box
+`ignoreinvisible = yes`) that runs the effect through the console:
+`onclick = "[ExecuteConsoleCommand('effect <effect>')]"`. The console's effect runs at once on this machine only, so
+never use it for players (not synced in multiplayer; blocked in multiplayer and ironman). Example:
+`M/in_game/gui/panels/situation/pp_mod_welcome_situation.gui`.
+
 ## Europedia (in-game documentation)
 
 GUI: `M/in_game/gui/encyclopedia_lateralview.gui` (filter buttons and cards), card types in
@@ -79,8 +90,8 @@ A card is the usual header tab, then:
    paintings are in `assets/europedia_paintings/` (its README has the brief they were painted from);
    `tools/build_europedia_banners.py` cuts each card's strip (start row set per painting so faces stay in frame) and
    writes the DDS. Override `blockoverride "banner_texture"` with the card's banner.
-2. `pp_eu_lead` - one short paragraph in the flavour type: what the mechanic is, in plain words. It is also the
-   concept's own tooltip text, so it must read well alone. It is the first text of the card (the web export starts
+2. `pp_eu_lead` - one short paragraph in the flavour type: what the mechanic is, in plain words. It is the
+   description of the card's object (concept, good, situation), so it must read well alone. It is the first text of the card (the web export starts
    there).
 3. Optional live line (`visible = "[GetPlayer.IsValid]"`): the mechanic in the player's own game, e.g. the capital's
    harvest medallion. The web export leaves texts that read `GetPlayer` out.
@@ -120,50 +131,59 @@ banners differ and that the text has no numbers; add a new card to its `CARDS` w
 Keep the GUI's filter buttons and cards in this order (more may be added):
 
 1. All
-2. Getting Started
-3. F.A.Q.
-4. Overview
-5. Food (was Food in EU5)
-6. Food Production
-7. Food Consumption
-8. New Trade Goods
-9. Logistics (Market Access) (was Building Limits)
-10. Navigable Rivers
-11. Rural Capacities (was Building Capacity)
-12. Labor
-13. Variable Harvests
-14. Arable Land (was Population Capacity)
-15. Population Growth
-16. Other Changes
+2. Overview
+3. Food (was Food in EU5)
+4. Food Production
+5. Food Consumption
+6. New Trade Goods
+7. Logistics (Market Access) (was Building Limits)
+8. Navigable Rivers
+9. Rural Capacities (was Building Capacity)
+10. Labor
+11. Variable Harvests
+12. Arable Land (was Population Capacity)
+13. Population Growth
+14. Other Changes
 
 The Update 0.9 changelog card and the Other Changes cards Cheap Food, Expensive Food (the market food price, switched
-off) and Province Current Food Storage (now in Province Food Growth from Storage) were removed 2026-10-24.
+off) and Province Current Food Storage (now in Province Food Growth from Storage) were removed 2026-10-24, the Getting
+Started and F.A.Q. cards the same day (out of date). The Other Changes cards Starvation (only vanilla's Starving text),
+Abundant Arable Land and Available Arable Land (the Arable Land card's states again) were removed 2026-10-28; links to
+the modifiers and the vanilla concept still open them.
 
-### Concept files
+### Concept files and entries
 
-Each card has exactly one game concept file in `M/main_menu/common/game_concepts/`, named after the card (snake_case,
-`pp_` prefix; older cards keep their first name):
+One thing, one entry, one text (Jan, 2026-10-28): a card shows its object's own name and description, so nothing is
+written twice. Where a game object exists, the text lives on it and every link opens it:
 
-| Card | File |
+- a good: `<good>_desc`, linked `[ShowGoodsName('x')|e]`;
+- a building: `<building>_desc`, `[ShowBuildingTypeName('x')|e]`;
+- a static modifier: `STATIC_MODIFIER_DESC_<key>` (plain text: the modifier tooltip shows no links), `[ShowModifier('x')]`;
+- a situation: `<situation>_desc` (plain text, it is also the situation's tooltip), `[ShowSituationName('x')]`;
+- a vanilla concept: its `game_concept_<key>_desc`, overridden in `localization/replace/english`, `[key|e]`.
+
+A `pp_` concept exists only for a topic no game object covers: a card about a whole mechanic, a group of goods, a map
+mode's own entry. Never add a "P&P:" concept beside a good, building, modifier, situation or vanilla concept (the 2026-10-28
+cleanup removed Labor, Food, Food Consumption, Food Storage, Population Growth, Arable Land and its three states,
+Starvation, Prosperity, Devastation, Buildings in Location, Province Food Growth from Storage, Variable Harvests and
+the Offset, Logistics and Surplus Sales concepts).
+
+| Card | Title and lead |
 |---|---|
 | All | (filter only) |
-| Getting Started | `pp_getting_started.txt` |
-| F.A.Q. | `pp_faq.txt` |
-| Overview | `pp_overview.txt` |
-| Food | `pp_food_in_eu5.txt` |
-| Food Production | `pp_food_production.txt` |
-| Food Consumption | `pp_food_consumption.txt` |
-| New Trade Goods | `pp_new_trade_goods.txt` |
-| Logistics (Market Access) | `pp_building_limits.txt` |
-| Navigable Rivers | `pp_navigable_rivers.txt` (also the map mode's concept and icon) |
-| Rural Capacities | `pp_farm_capacity.txt` (farms on Arable Land; fishing and forest capacity) |
-| Labor | `pp_labor.txt` |
-| Variable Harvests | `pp_variable_harvests.txt` |
-| Arable Land | `pp_population_capacity.txt` (card concept, also the map mode icon; plus Overused Arable Land) |
-| Population Growth | `pp_population_growth.txt` |
-| Other Changes | `other_changes_pp_buildings_in_location.txt`, `other_changes_pp_available_free_land.txt`, `other_changes_pp_abundant_free_land.txt`, `other_changes_pp_prosperity.txt`, `other_changes_pp_devastation.txt`, `other_changes_pp_starvation.txt` |
-
-Other Changes sub-cards use the `other_changes_` prefix so they group together in the folder.
+| Overview | concept `prosper_perish_mod` (`pp_overview.txt`) |
+| Food | vanilla concept `food` |
+| Food Production | concept `pp_food` (`pp_food_production.txt`) |
+| Food Consumption | vanilla concept `pop_food_consumption` |
+| New Trade Goods | concept `pp_victuals` (`pp_new_trade_goods.txt`); its entries show the goods' own names and descriptions |
+| Logistics (Market Access) | concept `pp_building_limits` (`pp_building_limits.txt`) |
+| Navigable Rivers | concept `pp_navigable_rivers` (`pp_navigable_rivers.txt`, also the map mode's concept and icon) |
+| Rural Capacities | concept `pp_farm_capacity` (`pp_farm_capacity.txt`: farms on Arable Land; fishing and forest capacity) |
+| Labor | the good `manual_labor` |
+| Variable Harvests | the situation `harvest_situation` |
+| Arable Land | vanilla concept `population_capacity` |
+| Population Growth | vanilla concept `population_growth` |
+| Other Changes | the static modifiers `building_levels`, `devastation` and the vanilla concept `prosperity`: each body is the object's own text and its effects (`PP_EU_OTHER_*`) |
 
 Linked support concepts without a card of their own:
 
@@ -171,10 +191,10 @@ Linked support concepts without a card of their own:
 |---|---|
 | Fishing Capacity | `pp_fish_capacity.txt` |
 | Forest Capacity | `pp_forest_capacity.txt` |
-| Province Food Growth from Storage | `pp_positive_province_food_growth.txt` |
 | Staple Foods (the goods list follows `config/goods_categories.csv` `staple_group`; a test keeps them equal) | `pp_staple_foods.txt` |
-| Food Storage | `pp_food_storage.txt` |
-| Location Potential | `pp_location_potential.txt` |
+| Natural Arable Land (also the land panel's tooltip row; "Location's Land" merged into it 2026-10-28) | `pp_location_potential.txt` |
+| Urban Land, Land Improvements, Farm Land Usage (the land panel's parts; its Subsistence Land is the static modifier `pp_subsistence_land`, no concept since 2026-10-28) | `pp_arable_land_bar.txt` (generated by `arable_land_bar.py`) |
+| The harvest scale (Failed to Exceptional Harvest) | `pp_variable_harvests.txt` |
 
 Map mode concepts are `*_map_mode.txt` (see Map modes above); the World Builder's soil and fertility concepts
 (`ha1300_*.txt`) come with the geography sync.

@@ -133,7 +133,7 @@ building:
 localization:
   entries:
     olive_farmstead: Olive Farmstead
-    olive_farmstead_desc: Manured groves and a small press turn the harvest into stored oil.
+    olive_farmstead_desc: Manured groves and a small press turn the harvest into stored oil. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market.
     olive_farmstead_slot_0: Groves
     olive_farmstead_slot_1: Cultivation
     olive_farmstead_slot_2: Provisioning

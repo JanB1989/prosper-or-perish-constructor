@@ -399,10 +399,12 @@ def test_every_market_good_building_gates_on_its_leg_and_no_gate_buys_its_main_g
     assert by_name["mason"].gate == "pp_mason_market_sales"  # masonry no longer skips the check (2026-10-09)
 
 
-def test_no_good_skips_the_margin_check() -> None:
+def test_only_iron_and_lumber_skip_the_margin_check() -> None:
     """Engine (1.4 decompile 2026-10-09): a building that outputs a good with ai_rgo_expansion_priority > 0 skips the
     profit-margin check and gets a construction-shortage bonus; vanilla gives it to seven goods. pp_goods_adjustments
-    sets them to 0, so every producer follows its Market leg. The last entry wins (TRY_INJECT replaces scalars)."""
+    sets them to 0 (masonry glut, 10-09), so every producer follows its Market leg, except iron and lumber, which keep
+    vanilla's 0.025 since 2026-10-28 (Jan: the AI answers their shortages). The last entry wins (TRY_INJECT replaces
+    scalars)."""
     import json
 
     from eu5gameparser.domain.eu5 import load_eu5_data
@@ -412,5 +414,5 @@ def test_no_good_skips_the_margin_check() -> None:
     for name, raw in data.goods.select("name", "data").iter_rows():
         values = [e["value"] for e in json.loads(raw or "{}").get("entries", []) if e["key"] == "ai_rgo_expansion_priority"]
         if values and float(values[-1]) > 0:
-            exempt[name] = values[-1]
-    assert exempt == {}
+            exempt[name] = float(values[-1])
+    assert exempt == {"iron": 0.025, "lumber": 0.025}

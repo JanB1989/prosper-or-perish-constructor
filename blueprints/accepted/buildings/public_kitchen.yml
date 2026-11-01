@@ -337,7 +337,7 @@ advancements:
 localization:
   entries:
     public_kitchen: Public Kitchen
-    public_kitchen_desc: A large town kitchen that feeds workers, the poor and the garrison from the farms' produce and sells meals and drink at its door. The more farm land the province works, the more kitchens it can hold. What it serves adds to the province's food, less food spoils while people eat it fresh, and a fed town is a calmer one.
+    public_kitchen_desc: "A large town kitchen at the [province_capital|e] that replaces the [ShowBuildingTypeName('cookshop')|e] and feeds workers and the poor; the more [Concept('pp_staple_foods', 'staple food')|e] farms and [ShowBuildingTypeName('victualling_yard')|e] levels the province has, the more levels its kitchens can have. It is almost always worth building: it adds food, makes the province's food consumption more efficient and keeps the town calmer."
     public_kitchen_slot_0: Main Dish
     public_kitchen_slot_1: Drink
     pp_public_kitchen: Public Kitchens

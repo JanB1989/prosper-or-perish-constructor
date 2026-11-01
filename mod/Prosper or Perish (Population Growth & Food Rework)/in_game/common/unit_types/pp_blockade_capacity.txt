@@ -40,6 +40,9 @@ TRY_INJECT:n_catalan_galley = {
 TRY_INJECT:n_early_turtle_ship = {
 	blockade_capacity = 2  # vanilla 0.2
 }
+TRY_INJECT:n_galeota_andalusi = {
+	blockade_capacity = 1  # vanilla 0.1
+}
 TRY_INJECT:n_galiot = {
 	blockade_capacity = 2  # vanilla 0.2
 }
@@ -47,6 +50,9 @@ TRY_INJECT:n_galleass = {
 	blockade_capacity = 4  # vanilla 0.4
 }
 TRY_INJECT:n_genoese_galley = {
+	blockade_capacity = 1  # vanilla 0.1
+}
+TRY_INJECT:n_ghurab_maghribi = {
 	blockade_capacity = 1  # vanilla 0.1
 }
 TRY_INJECT:n_greek_fire_galley_discovery = {
@@ -115,6 +121,9 @@ TRY_INJECT:n_age_6_revolutions_heavy_ship = {
 TRY_INJECT:n_baochuan = {
 	blockade_capacity = 7.5  # vanilla 0.75
 }
+TRY_INJECT:n_carraca_portuguesa = {
+	blockade_capacity = 7.5  # vanilla 0.75
+}
 TRY_INJECT:n_carrack = {
 	blockade_capacity = 7.5  # vanilla 0.75
 }
@@ -129,6 +138,9 @@ TRY_INJECT:n_galleon = {
 }
 TRY_INJECT:n_iberian_galleon = {
 	blockade_capacity = 10  # vanilla 1
+}
+TRY_INJECT:n_nao_castellana = {
+	blockade_capacity = 7.5  # vanilla 0.75
 }
 TRY_INJECT:n_ship_of_the_line = {
 	blockade_capacity = 15  # vanilla 1.5
@@ -198,6 +210,9 @@ TRY_INJECT:n_mtepe = {
 }
 TRY_INJECT:n_pinnace = {
 	blockade_capacity = 20  # vanilla 2
+}
+TRY_INJECT:n_sale_rover = {
+	blockade_capacity = 15  # vanilla 1.5
 }
 TRY_INJECT:n_square_rigged_caravel = {
 	blockade_capacity = 15  # vanilla 1.5

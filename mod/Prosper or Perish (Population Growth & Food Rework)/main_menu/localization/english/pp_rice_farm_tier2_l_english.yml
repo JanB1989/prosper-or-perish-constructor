@@ -2,7 +2,7 @@
 
 # >>> eu5-building-pipeline:rice_rotations:localization
   rice_rotations: "Rice Paddy Estate"
-  rice_rotations_desc: "Bunded paddies carry more than one crop of rice in a year."
+  rice_rotations_desc: "Bunded paddies carry more than one crop of rice in a year. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   rice_rotations_slot_0: "Paddies"
   rice_rotations_slot_1: "Cultivation"
   rice_rotations_slot_2: "Provisioning"

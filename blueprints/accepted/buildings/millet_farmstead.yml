@@ -127,7 +127,7 @@ building:
 localization:
   entries:
     millet_farmstead: Millet Farmstead
-    millet_farmstead_desc: Manured plots and sealed seed stores steady the millet harvest.
+    millet_farmstead_desc: Manured plots and sealed seed stores steady the millet harvest. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market.
     millet_farmstead_slot_0: Fields
     millet_farmstead_slot_1: Cultivation
     millet_farmstead_slot_2: Provisioning

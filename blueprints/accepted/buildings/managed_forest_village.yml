@@ -195,7 +195,7 @@ advancements:
 localization:
   entries:
     managed_forest_village: Managed Forest Village
-    managed_forest_village_desc: Managed forest villages use ordinances, marked stands, and recorded rights to organize woodland work. Hides, game, fur, and wax move through the same forest yards.
+    managed_forest_village_desc: "Managed forest villages use ordinances, marked stands, and recorded rights to organize woodland work. Hides, game, fur, and wax move through the same forest yards. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
     managed_forest_village_slot_0: Managed Forest
     managed_forest_village_slot_1: Forest Work
     managed_forest_village_slot_2: Provisioning
@@ -211,7 +211,7 @@ localization:
     pp_managed_forest_village_no_primary: No Managed Forest Work
     pp_managed_forest_village_provision: Provision with Game
     pp_managed_forest_village_provision_desc: The household buys its own game back and cooks for the province. The lower the province store is, the more food it makes of it.
-    pp_managed_forest_village_tannery: Managed Forest Tannery
+    pp_managed_forest_village_tannery: Managed Forest Tanning
     pp_managed_forest_village_market_sales: Market Sales
     pp_managed_forest_village_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
     managed_forest_village_slot_3: Market

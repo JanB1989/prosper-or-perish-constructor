@@ -669,7 +669,8 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
     labour_methods[provision] = "keep"
 
     # ---- localization
-    entries: dict[str, str] = {building: crop.names[tier], f"{building}_desc": crop.descs[tier]}
+    entries: dict[str, str] = {building: crop.names[tier],
+                               f"{building}_desc": f"{crop.descs[tier]} {provisioning.STORE_DESC}"}
     slot_labels = {
         "base": crop.slot0_name,
         "cultivation": str(loc.get("slot_cultivation", "Cultivation")),

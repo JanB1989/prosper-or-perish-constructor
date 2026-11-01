@@ -3,5 +3,5 @@
 # >>> eu5-building-pipeline:khmer_baray:localization
   khmer_baray_slot_0: "Upkeep"
   pp_khmer_baray_upkeep: "Village Upkeep"
-  pp_khmer_baray_price: "Khmer Baray Price"
+  pp_khmer_baray_price: "[ShowBuildingTypeName('khmer_baray')|e] Price"
 # <<< eu5-building-pipeline:khmer_baray:localization

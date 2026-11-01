@@ -64,7 +64,7 @@ def test_harvest_chip_layers_crop_in_a_severity_frame_with_a_signed_badge():
     assert chip.count("PP_HARVEST_REGION_WESTERN_EUROPE')") == 2
     assert chip.count("icon_goods_wheat.dds") == 2 and chip.count("PP_HARVEST_REGION_NONE')") == 2
     # round frames only: the neutral brown one under a recoloured one per severity, no square tints or climate frame
-    assert chip.count("climate/brown_frame.dds") == 2 and "GetClimateFrame" not in chip and "gfx/interface/colors/" not in chip
+    assert chip.count(location_status.NEUTRAL_FRAME) == 2 and "GetClimateFrame" not in chip and "gfx/interface/colors/" not in chip
     for sev in location_status.SEVERITY_COLOURS:
         assert chip.count(f"pp_harvest/frame_{sev}.dds") == 2
     # one badge per severity, in the stored-food chip's number box
@@ -88,14 +88,18 @@ def test_status_row_sits_after_the_top_row_spacer_with_exclusive_states():
     # outside the button row's hbox, pinned to the top-right corner (mirrors the bottom-left geography card)
     assert "expand = {}\n\t\t\t\t\t\t}\n\t\t\t\t\t\t# PP STATUS CHIPS" in out and "parentanchor = right|top" in out
     names = re.findall(r'name = "(pp_status_\w+)"', out)
-    assert names == ["pp_status_food_stored", "pp_status_food_starving", "pp_status_land_overpopulation", "pp_status_land_abundant",
-                     "pp_status_land_available", "pp_status_land_settled", "pp_status_harvest"]
+    # the land state left the card for the population bars (2026-10-27, Jan: show it once)
+    assert names == ["pp_status_food_stored", "pp_status_food_starving", "pp_status_harvest"]
     # each harvest view is gated on its own modifier's name
     assert location_status.harvest_gate("pp_harvest_y_bountiful") == "EqualTo_string(LocationView.GetLocation.Custom('pp_harvest_state'), Localize('STATIC_MODIFIER_NAME_pp_harvest_y_bountiful'))"
     assert "positive_province_food_growth" not in out   # EU5 1.4: no stored-food modifier, the chip reads script values
     assert "ScriptValue('pp_province_food_storage_months')" in out
-    for key in ("province_starving", "overpopulation", "abundant_free_land", "available_free_land"):
-        assert f"ShowModifierEffect('{key}')" in out
+    assert "ShowModifierEffect('province_starving')" in out
+    land = location_status.land_state(None, "pp_land_bar_state")
+    for key in ("overpopulation", "abundant_free_land", "available_free_land"):
+        assert f"ShowModifierEffect('{key}')" in land and f"ShowModifierEffect('{key}')" not in out
+    assert re.findall(r'name = "(pp_land_bar_state_\w+)"', land) == [
+        "pp_land_bar_state_overpopulation", "pp_land_bar_state_abundant", "pp_land_bar_state_available", "pp_land_bar_state_settled"]
     with pytest.raises(ValueError, match="status chips"):
         location_status.add_status_row(_window() + _window(), HARVESTS)
 
@@ -130,8 +134,8 @@ def test_land_rows_show_scaled_values_largest_first_in_a_scroll_area():
     # ... with the affected goods as icons under it, in file order
     icons = re.findall(r"trade_goods/icon_goods_(\w+)\.dds", abundant)
     assert icons == ["wheat", "rice", "fish"] and "[ShowGoodsName('rice')]" in abundant and abundant.count("{") == abundant.count("}")
-    out = location_status.status_row(HARVESTS, rows)
-    assert out.count("TooltipScrolledContentSection") == 4 and "ShowModifierEffect('overpopulation')" not in out
+    out = location_status.land_state(rows, "pp_land_bar_state")
+    assert out.count("TooltipScrolledContentSection") == 3 and "ShowModifierEffect('overpopulation')" not in out
     # 2026-10-05 (Jan): drawn like vanilla's modifier lists (the Port tooltip), not a boxed block per line: one list headed
     # by the strength line, a table row per effect (name left, value right), every second row shaded
     assert "TooltipTextBlock" not in over and over.count("TooltipListBase = {") == 1
@@ -293,3 +297,44 @@ def test_modifiers_the_chips_show_get_no_top_row_icon():
     assert window.count(f'visible = "[Not({loc})]"') == 1
     assert window.count(f'visible = "[Not({hidden["province_modifier"]})]"') == 1
     assert "STATIC_MODIFIER_NAME_pp_river_canal_open" not in window
+
+
+def test_no_chip_takes_its_frame_from_the_climate():
+    """2026-10-27 (Jan): chips with a quality scale draw the state colour, descriptive chips the neutral frame."""
+    from prosper_or_perish_constructor import location_view
+
+    window = (MOD_ROOT / "in_game/gui/location_window.gui").read_text(encoding="utf-8-sig")
+    shared = (MOD_ROOT / "in_game/gui/shared/pp_attribute_tooltips.gui").read_text(encoding="utf-8-sig")
+    chip = shared[shared.index("type pp_land_potential_chip"):]
+    chip = chip[:chip.index("\n\t}") + 3]
+    # vanilla's own climate tooltip templates (copied into the shared file) keep the climate's frame for its icon
+    assert "GetClimateFrame" not in window and "GetClimateFrame" not in chip and location_status.NEUTRAL_FRAME in chip
+    # the frame is chosen by the icon drawn on it: fertility red ... green, everything else neutral
+    sample = ('background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" } '
+              'icon = { texture = "gfx/interface/fertility/very_high.dds" } '
+              'background = { texture = "[GetClimateFrame(LocationView.GetLocation.GetClimate)]" } '
+              'icon = { texture = "gfx/interface/soil_types/sand.dds" }')
+    assert location_view.chip_frames(sample).count(location_status.FRAME_GREEN) == 1
+    assert location_view.chip_frames(sample).count(location_status.NEUTRAL_FRAME) == 1
+    for level, frame in (("very_low", "FRAME_RED"), ("moderate", "FRAME_GOLD"), ("very_high", "FRAME_GREEN")):
+        assert re.search(rf'"{getattr(location_status, frame)}" \}}\s*icon = \{{ size = \{{ 30 30 \}} texture = "gfx/interface/fertility/{level}\.dds"', window)
+    # stored food: one frame layer per band; starving red
+    assert window.count("ScriptValue('pp_province_food_storage_months'))") >= 3
+    assert f'background = {{ texture = "{location_status.FRAME_RED}" }}' in window
+
+
+def test_location_view_texts_carry_no_list_meta_text():
+    """2026-10-27 (Jan): a tooltip says what a thing is and how it is defined; never what its list shows, how it is
+    sorted or where else to look ("This is documentation. We don't ever want to have this.")."""
+    english = MOD_ROOT / "main_menu/localization/english"
+    meta = re.compile(r"largest first|best first|at this strength|sorted|listed below|shown on|is highlighted|"
+                      r"Current strength|the list (?:shows|below)", re.IGNORECASE)
+    for name in ("pp_location_status_l_english.yml", "pp_water_access_l_english.yml", "pp_attribute_tooltips_l_english.yml",
+                 "pp_arable_land_bar_l_english.yml", "pp_location_status_harvest_l_english.yml"):
+        found = [line.strip() for line in (english / name).read_text(encoding="utf-8-sig").splitlines()
+                 if not line.lstrip().startswith("#") and meta.search(line)]
+        assert not found, (name, found)
+    # each land chip: its one-line definition, then its effects headed by the strength alone
+    status = (english / "pp_location_status_l_english.yml").read_text(encoding="utf-8-sig")
+    for marker in ("pp_land_overpopulation", "pp_land_abundant", "pp_land_available"):
+        assert f"\"Strength: #V [Location.GetModifierValue('{marker}')|0%]#!\"" in status

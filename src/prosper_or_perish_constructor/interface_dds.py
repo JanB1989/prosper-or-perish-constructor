@@ -6,13 +6,24 @@ with a plain ``Image.save(format="DDS")`` are uncompressed RGBA without mips (th
 each, half the mod). The finalize step of ``ppc build`` / ``ppc sync`` runs :func:`apply` over
 ``<layer>/gfx/interface/**/*.dds`` of the mod:
 
-- a compliant file (compressed, full mip chain, within its folder's size) is left alone, byte for byte;
+- a compliant file is left alone, byte for byte: compressed, full mip chain, within its folder's size; a picture (below
+  an ``illustrations`` folder: the Europedia banners, situation and goods pictures) BC7 in one level;
+- a picture in any other form is decoded and written as BC7 in one level;
 - a DXT1/DXT3/DXT5 file of the right size that only lacks mips keeps its first level byte for byte and gets the chain
   appended (no second compression pass);
 - anything else (uncompressed, oversized, BCn Pillow cannot encode) is decoded, scaled to its folder's limit (aspect
   kept) and written as DXT5 with a full mip chain.
 
-The writer is ``eu5_building_pipeline.dds`` (the building pipeline writes its icons the same way).
+Pictures are stored at twice the size they are shown (vanilla's ``texture_density = 2``: 1080 x 440 situation and goods
+pictures in 220 px high frames; the Europedia banners 2900 x 500 at 1450 x 250), so with a mip chain the game draws
+their half-size second level at UI scale 1 and blends the two levels between UI scales 1 and 2. After the 2026-10-24
+cleanup appended DXT5 mips to the banners they looked soft and blocky. Measured against the uncompressed banner at the
+shown size (UI scale 0.75 / 1 / 1.33 / 2): DXT5 with mips 31 / 31 / 32 / 32 dB, BC7 with mips 33 / 39 / 34 / 41, BC7
+in one level 33 / 40 / 40 / 41. BC7 (like vanilla's painted location-view illustrations and tutorial pictures) costs
+a byte per pixel like DXT5; one level saves the chain's third. Write a picture from its source with
+:func:`encode_bc7` (``tools/build_europedia_banners.py``, ``tools/build_harvest_situation_art.py``, ``good_icons``).
+
+The DXT writer is ``eu5_building_pipeline.dds`` (the building pipeline writes its icons the same way).
 """
 
 from __future__ import annotations
@@ -20,12 +31,15 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 import io
 from pathlib import Path
+import struct
 
 INTERFACE = ("gfx", "interface")
 # only <layer>/gfx/interface is walked, so gfx/map, gfx/terrain2 and map_data stay out; .metadata is no game layer
 EXCLUDED_LAYERS = frozenset({".metadata"})
 ICON_MAX_SIDE = 128
 ADVANCE_MAX_SIDE = 256
+PICTURE_FORMAT = "BC7"
+DXGI_FORMAT_BC7_UNORM = 98   # the DX10 header format of vanilla's BC7 illustrations
 
 
 @dataclass
@@ -63,10 +77,48 @@ def max_side(relative: Path) -> int | None:
     return None
 
 
+def is_picture(relative: Path) -> bool:
+    """Below an ``illustrations`` folder, vanilla's place for pictures (situations, events, goods, our banners)."""
+    return "illustrations" in relative.parts
+
+
+def is_picture_format(source: Path | bytes) -> bool:
+    """BC7 in one level, the picture format."""
+    from eu5_building_pipeline.dds import dds_info
+
+    info = dds_info(source)
+    return info is not None and info.format == PICTURE_FORMAT and info.mip_count == 1
+
+
 def is_compliant(path: Path, relative: Path | None = None) -> bool:
     from eu5_building_pipeline.dds import is_game_format
 
-    return is_game_format(path, max_side=max_side(relative or path))
+    relative = relative or path
+    return is_picture_format(path) if is_picture(relative) else is_game_format(path, max_side=max_side(relative))
+
+
+def encode_bc7(image) -> bytes:
+    """``image`` (a PIL image) as a BC7 DDS in one level, the picture format: etcpak's bc7enc (~41 dB on a banner
+    painting, 0.5 s), DX10 header like vanilla's BC7 illustrations."""
+    import etcpak
+    import numpy as np
+
+    image = image.convert("RGBA")
+    # whole 4x4 blocks, edges padded by repetition (the decoder crops them)
+    rgba = np.pad(np.asarray(image), ((0, -image.height % 4), (0, -image.width % 4), (0, 0)), mode="edge")
+    params = etcpak.BC7CompressBlockParams()
+    if image.getextrema()[3][0] == 255:
+        # opaque: modes 0-5 keep alpha at 255 at the same quality; bc7enc's mode 6 stored 254 in a quarter of the blocks
+        params.m_mode_mask = 0x3F
+    blocks = etcpak.compress_bc7(rgba.tobytes(), rgba.shape[1], rgba.shape[0], params)
+    flags = 0x1 | 0x2 | 0x4 | 0x1000 | 0x20000 | 0x80000   # caps, height, width, pixel format, mip count, linear size
+    return (
+        b"DDS " + struct.pack("<7I", 124, flags, image.height, image.width, len(blocks), 0, 1) + bytes(44)
+        + struct.pack("<8I", 32, 0x4, int.from_bytes(b"DX10", "little"), 0, 0, 0, 0, 0)   # FourCC DX10
+        + struct.pack("<5I", 0x1000, 0, 0, 0, 0)                                           # a plain texture
+        + struct.pack("<5I", DXGI_FORMAT_BC7_UNORM, 3, 0, 1, 0)                            # 2D, array size 1
+        + blocks
+    )
 
 
 def normalized(data: bytes, relative: Path) -> bytes:
@@ -76,13 +128,16 @@ def normalized(data: bytes, relative: Path) -> bytes:
     from eu5_building_pipeline.dds import ENCODABLE, add_mips, dds_info, encode_dds, fit, is_game_format
 
     limit = max_side(relative)
-    if is_game_format(data, max_side=limit):
+    picture = is_picture(relative)
+    if (is_picture_format(data) if picture else is_game_format(data, max_side=limit)):
         return data
     info = dds_info(data)
     if info is None:
         raise ValueError("not a DDS file")
     with Image.open(io.BytesIO(data)) as source:
         image = source.convert("RGBA")
+    if picture:
+        return encode_bc7(image)
     oversized = limit is not None and max(image.size) > limit
     if info.compressed and info.format in ENCODABLE and not oversized:
         # DXT1 has no alpha to speak of: one with transparent pixels is re-encoded as DXT5 rather than risk the mips
@@ -121,9 +176,9 @@ def apply(mod_root: Path, *, skip: frozenset[str] = frozenset()) -> NormalizeRes
 def summary(result: NormalizeResult) -> str:
     failed = f"; {len(result.failed)} unreadable: " + ", ".join(f"{p} ({e})" for p, e in result.failed) if result.failed else ""
     if not result.converted:
-        return f"Interface DDS: {result.checked} files in game format (DXT, full mips), none converted{failed}."
+        return f"Interface DDS: {result.checked} files in game format (DXT, full mips; pictures BC7), none converted{failed}."
     return (
         f"Interface DDS: converted {len(result.converted)} of {result.checked} files to the game format "
-        f"(DXT, full mips, icons <= {ICON_MAX_SIDE} px), {result.bytes_before / 1e6:.1f} MB -> "
+        f"(DXT, full mips, icons <= {ICON_MAX_SIDE} px; pictures BC7), {result.bytes_before / 1e6:.1f} MB -> "
         f"{result.bytes_after / 1e6:.1f} MB{failed}."
     )

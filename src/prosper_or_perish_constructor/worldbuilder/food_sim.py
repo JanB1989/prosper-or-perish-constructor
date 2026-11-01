@@ -9,8 +9,8 @@ Per pool and month (rules calibrated on the pre-plague saves 1337.4 / 1341.3 / 1
 
 * jobs = jobs0 x (N / N0) ^ 0.5; jobless = peasants and slaves - jobs; subsistence = jobless x yield;
 * consumption = demand0 x N / N0 + overpopulation (+0.25 peasant food per unit of pop / capacity - 1, location by
-  location) + the free-land modifiers (peasants -50 % on abundant land, below 10 % of capacity and 10k people,
-  else -32 % on available land, each x 1 - pop / capacity per location; abundant land also forages +1 food; the
+  location) + the free-land modifiers (peasants -40 % on abundant land, below 10 % of capacity and 10k people,
+  else -25 % on available land, each x 1 - pop / capacity per location; abundant land also forages +1 food; the
   fitted stand-in ``free_land`` of -0.4 x the drop below the start size is 0 since 2026-09-26), less the share the
   tribe feeds (``tribal_feeding`` x the demand-weighted
   tribal share of the pool's locations, scaled with the pool's tribal share), plus the tribesmen's own food
@@ -152,8 +152,8 @@ class SimRules:
     emp_elasticity: float = 0.5
     free_land: float = 0.0              # fitted stand-in (0.4 x the drop below the start size) before the free-land modifiers below
     # free-land modifiers (pp_capacity_pressure_effects.txt), engine-scaled per location (migration.free_land_scales)
-    abundant_peasant_food: float = -0.5     # abundant_free_land local_peasants_food_consumption
-    available_peasant_food: float = -0.32   # available_free_land local_peasants_food_consumption
+    abundant_peasant_food: float = -0.4     # abundant_free_land local_peasants_food_consumption (-0.5 until 2026-10-28)
+    available_peasant_food: float = -0.25   # available_free_land local_peasants_food_consumption (-0.32 until 2026-10-28)
     abundant_food: float = 1.0              # abundant_free_land local_monthly_food (foraging)
     # prosperity (0..1 per location; the mod's prosperity inject: every settled pop type +40 % food at 100 %), dynamics
     # fitted on the 100-year run 1342-1437 (saves r7bee, 249k location pairs): dP/yr = +0.0181 x stored years

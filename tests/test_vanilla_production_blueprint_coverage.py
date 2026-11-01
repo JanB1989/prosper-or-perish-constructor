@@ -370,7 +370,7 @@ def test_localization_entries_copy_vanilla_method_names() -> None:
 
     assert entries["pp_brewery_wheat_brewery_maintenance"] == "Wheat Breweries"
     assert "brewery" not in entries
-    assert entries["brewery_slot_0"] == "Brewery Work"
+    assert entries["brewery_slot_0"] == "[ShowBuildingTypeName('brewery')|e] Work"   # a named building is a link
 
 
 def test_enable_manifest_entries_appends_missing_paths(tmp_path: Path) -> None:

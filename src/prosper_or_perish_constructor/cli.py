@@ -134,7 +134,6 @@ BOM_TEXT_RELATIVE_PATHS = (
     Path("main_menu/common/game_concepts/pp_location_potential.txt"),
     Path("main_menu/common/game_concepts/pp_fish_capacity.txt"),
     Path("main_menu/common/game_concepts/pp_forest_capacity.txt"),
-    Path("main_menu/common/game_concepts/pp_population_capacity.txt"),
     Path("main_menu/common/static_modifiers/pp_capacity_pressure_effects.txt"),
     Path("main_menu/common/static_modifiers/pp_location_modifier_adjustments.txt"),
     Path("main_menu/common/static_modifiers/pp_location_modifiers.txt"),
@@ -657,7 +656,16 @@ def _build_parser() -> argparse.ArgumentParser:
     report.add_argument("--yes", action="store_true", help="With --publish: push the staged site (the run becomes public).")
     report.add_argument("--create-site", action="store_true", help="Create the public site repository and enable GitHub Pages.")
     report.add_argument("--site-repo", default=None, help="owner/name of the preview site repository (default [report] site_repo).")
-    report.add_argument("--keep", type=int, default=None, help="Runs kept on the site, newest first (default [report] keep, 5).")
+    report.add_argument(
+        "--keep", type=int, default=None,
+        help="Unpinned runs kept on the site, newest first (default [report] keep, 5); pinned runs always stay.",
+    )
+    pinning = report.add_mutually_exclusive_group()
+    pinning.add_argument(
+        "--pin", default=None, metavar="LABEL",
+        help="With --publish: pin this run under LABEL (e.g. 0.10); it stays online, listed first as an example game.",
+    )
+    pinning.add_argument("--unpin", action="store_true", help="With --publish: remove this run's pin.")
     publish_wip = _add_command(
         subcommands,
         "publish-wip",
@@ -1404,12 +1412,14 @@ def _normalize_interface_dds(mod_root: Path) -> None:
 
 
 def _install_good_icons(repo: Path, project: Path, mod_root: Path) -> None:
-    """DDS icons of the internal goods whose art lives in assets/icons/trade_goods (logistics so far)."""
+    """DDS icons of the internal goods whose art lives in assets/icons/trade_goods (logistics so far) and the market
+    illustration of every good that has one there."""
     from prosper_or_perish_constructor import good_icons, logistics
 
     result = good_icons.install(repo, mod_root, [logistics.load_config(project).good])
+    pictures = good_icons.install(repo, mod_root, good_icons.illustration_goods(repo), illustrations_only=True)
     missing = f"; missing art {', '.join(str(p) for p in result.missing)}" if result.missing else ""
-    print(f"Internal good icons: {len(result.written)} DDS written{missing}.", flush=True)
+    print(f"Internal good icons: {len(result.written) + len(pictures.written)} DDS written{missing}.", flush=True)
 
 
 def _legacy(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
@@ -1649,6 +1659,11 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
     view = location_view.apply(repo, project, mod_root, vanilla_root(repo, project))
     print("Location view: " + ("skipped, no geography export." if view.get("skipped") else
                                "location window and geography chip tooltips rebuilt."), flush=True)
+    from prosper_or_perish_constructor import arable_land_bar
+
+    land_bar = arable_land_bar.write(mod_root, cap_tooltips.game_root(vanilla_root(repo, project)))
+    print("Arable Land bar: " + ", ".join(f"{n} {what}" for what, n in land_bar.counts.items())
+          + (f" ({len(land_bar.changed)} files rewritten)." if land_bar.changed else " (unchanged)."), flush=True)
     gui_compat.strip(mod_root)   # the food-storage compile counts its gauge lines per file
     food_storage_gui_result = compile_food_storage_gui(
         repo=repo,
@@ -1707,6 +1722,15 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
             f"{'; removed ' + ', '.join(nil.removed) if nil.removed else ''}).",
             flush=True,
         )
+    from prosper_or_perish_constructor import food_level_counts
+
+    counts = food_level_counts.write(mod_root)
+    print(
+        "Cookshop cap counts whole levels: "
+        + ", ".join(f"{name} {n} building types" for name, n in counts.counted.items())
+        + (" (rewritten)." if counts.changed else " (unchanged)."),
+        flush=True,
+    )
     from prosper_or_perish_constructor import loc_replace
 
     overrides = loc_replace.apply(mod_root, cap_tooltips.game_root(vanilla_root(repo, project)))
@@ -1726,6 +1750,12 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         f"{Path(seasonal_harvests.SHARED_LOCALIZATION).name} ({moved} moved from other English files).",
         flush=True,
     )
+    from prosper_or_perish_constructor import loc_languages   # last text pass: copies every English file
+
+    standalone = mod_root.parent / seasonal_harvests.STANDALONE_FOLDER
+    shipped = [p for p in (*seasonal_harvests.COPIED, seasonal_harvests.SHARED_LOCALIZATION) if p.endswith("_l_english.yml")]
+    print(loc_languages.summary({"main mod": loc_languages.apply(mod_root, separate=shipped),
+                                 **({"Seasonal Harvests": loc_languages.apply(standalone, separate=shipped)} if standalone.is_dir() else {})}), flush=True)
     _normalize_interface_dds(mod_root)
     _ensure_constructor_text_boms(mod_root)
 
@@ -1885,9 +1915,10 @@ def _write_farming_capacity_modifier_localization(
         "  # Farm level counters (generated by ppc finalize)",
     ]
     for modifier_key, building in building_modifiers.items():
-        lines.append(f'  MODIFIER_TYPE_NAME_{modifier_key}: "${building}$ levels"')
+        link = f"[ShowBuildingTypeName('{building}')|e]"   # every building a text names is a link
+        lines.append(f'  MODIFIER_TYPE_NAME_{modifier_key}: "{link} levels"')
         lines.append(
-            f'  MODIFIER_TYPE_DESC_{modifier_key}: "Levels of ${building}$ in this location. Its maximum level counts them back in on top of the free [population_capacity|e]."'
+            f'  MODIFIER_TYPE_DESC_{modifier_key}: "Levels of {link} in this [location|e]. Its maximum level counts them back in on top of the free [population_capacity|e]."'
         )
     _write_text_if_changed(
         mod_root / FARMING_CAPACITY_MODIFIER_LOCALIZATION,
@@ -2093,19 +2124,24 @@ def _append_missing_price_cost_modifier_localization(
             target.read_text(encoding="utf-8-sig"),
             set(modifier_keys),
         ).rstrip()
+        # the names this file holds are rewritten every build: a name typed by hand ("Tavern Cost") becomes the link
+        text = re.sub(
+            r'(?m)^(?P<lead>\s*MODIFIER_TYPE_NAME_(?P<key>pp_[A-Za-z0-9_]+_price_cost_modifier):).*$',
+            lambda m: f'{m["lead"]} "{_price_cost_modifier_name(m["key"])}"' if m["key"] in modifier_keys else m[0],
+            text,
+        )
     else:
         text = "l_english:"
 
     lines: list[str] = []
     for modifier_key in modifier_keys:
-        building_key = modifier_key.removeprefix("pp_").removesuffix("_price_cost_modifier")
-        display_name = _title_from_key(building_key)
+        building_key = _price_cost_modifier_building(modifier_key)
         if modifier_key not in existing_desc_keys:
             lines.append(
                 f'  MODIFIER_TYPE_DESC_{modifier_key}: "Affects the cost of building [ShowBuildingTypeName(\'{building_key}\')|e]."'
             )
         if modifier_key not in existing_name_keys:
-            lines.append(f'  MODIFIER_TYPE_NAME_{modifier_key}: "{display_name} Cost"')
+            lines.append(f'  MODIFIER_TYPE_NAME_{modifier_key}: "{_price_cost_modifier_name(modifier_key)}"')
 
     if not lines:
         if target.is_file():
@@ -2130,8 +2166,13 @@ def _prune_stale_price_cost_modifier_localization_lines(text: str, allowed_keys:
     return re.sub(r"\n{3,}", "\n\n", updated).rstrip()
 
 
-def _title_from_key(key: str) -> str:
-    return " ".join(part.capitalize() for part in key.split("_"))
+def _price_cost_modifier_building(modifier_key: str) -> str:
+    return modifier_key.removeprefix("pp_").removesuffix("_price_cost_modifier")
+
+
+def _price_cost_modifier_name(modifier_key: str) -> str:
+    """``pp_<building>_price_cost_modifier`` -> "<building link> Cost": every building a text names is a link."""
+    return f"[ShowBuildingTypeName('{_price_cost_modifier_building(modifier_key)}')|e] Cost"
 
 
 def _top_level_keys(text: str) -> set[str]:
@@ -3469,6 +3510,11 @@ def _savegame(args: argparse.Namespace, extra: Sequence[str], repo: Path, projec
 def _report(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
     if extra:
         raise SystemExit("report does not accept extra arguments.")
+    if (args.pin is not None or args.unpin) and not args.publish:
+        raise SystemExit("--pin and --unpin need --publish.")
+    pin = args.pin.strip() if args.pin is not None else None
+    if pin == "":
+        raise SystemExit("--pin needs a label, e.g. --pin 0.10.")
     from prosper_or_perish_constructor import run_report
 
     with project.open("rb") as handle:
@@ -3497,13 +3543,16 @@ def _report(args: argparse.Namespace, extra: Sequence[str], repo: Path, project:
     if not args.publish:
         return 0
 
-    plan = run_report.prepare_publish(report_dir, site_repo=site_repo, work_root=repo / "artifacts" / "report_site", keep=keep)
+    plan = run_report.prepare_publish(
+        report_dir, site_repo=site_repo, work_root=repo / "artifacts" / "report_site", keep=keep, pin=pin, unpin=args.unpin
+    )
     print(f"site {site_repo} -> {plan.url}", flush=True)
     for run in plan.runs:
         marker = "+" if run["playthrough_id"] == plan.added else " "
-        print(f"  {marker} {run['name']} ({run['years'][0]}-{run['years'][1]}, {run['saves']} saves)", flush=True)
+        pinned = f" [pinned {run['pinned']}]" if run.get("pinned") else ""
+        print(f"  {marker} {run['name']} ({run['years'][0]}-{run['years'][1]}, {run['saves']} saves){pinned}", flush=True)
     for dropped in plan.dropped:
-        print(f"  - {dropped} (removed: only the newest {keep} runs stay online)", flush=True)
+        print(f"  - {dropped} (removed: only the newest {keep} unpinned runs stay online)", flush=True)
     if not args.yes:
         print("dry run: nothing was pushed. Add --yes to make this public.", flush=True)
         return 0
@@ -3553,12 +3602,20 @@ def _europedia(args: argparse.Namespace, extra: Sequence[str], repo: Path, proje
         write_europedia_export,
     )
 
+    from prosper_or_perish_constructor.cap_tooltips import game_root
+    from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
+
     mod_root = _project_mod_root(repo, project)
+    try:   # cards may show vanilla keys (a vanilla concept's name and text)
+        vanilla = game_root(vanilla_root(repo, project))
+    except (OSError, KeyError):
+        vanilla = None   # no load order: the mod's own keys only
     try:
         html_path, json_path = write_europedia_export(
             mod_root,
             repo / EUROPEDIA_EXPORT,
             repo / EUROPEDIA_ENTRIES,
+            vanilla,
         )
     except EuropediaExportError as error:
         raise SystemExit(str(error)) from error

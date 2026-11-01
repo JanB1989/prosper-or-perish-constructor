@@ -908,10 +908,12 @@ buildings = { wheat = "wheat_farm", rice = "rice_farm", millet = "millet_farm", 
 # irrigation systems 2, which let irrigated fields stack to 160 levels).
 
 [worldbuilder.farm_land]
-# capacity units (1 unit = 1,000 people) a farm level takes from subsistence land, and the land that must stay
-arable = { land = 5, reserve = 5 }
-plantation = { land = 10, reserve = 5 }
-herd = { land = 2, reserve = 1 }
+# capacity units (1 unit = 1,000 people) a farm level takes from subsistence land, and the land that must stay.
+# Reserve 0 since 2026-10-27 (Jan): everyone but the subsistence peasants brings their own capacity (total_population
+# +1, unemployed_peasants -1), so farms can take all the arable land without capacity ever reaching zero (was 5 / 5 / 1).
+arable = { land = 5, reserve = 0 }
+plantation = { land = 10, reserve = 0 }
+herd = { land = 2, reserve = 0 }
 
 [worldbuilder.farm_land.classes]
 # cash crops take twice the land of grain; their methods carry the throughput to pay for it (2026-09-26: outputs x4)
@@ -921,40 +923,45 @@ plantation = [
     "tea_garden", "tea_sorting_garden", "sugarcane_farm", "trapiche_sugarcane_farm", "cotton_farm", "market_cotton_farm",
     "clove_grove", "pepper_garden", "managed_pepper_garden", "saffron_croft", "saffron_kiln_croft",
 ]
-herd = ["sheep_farms", "hurdled_sheepcotes", "enclosed_sheep_walks", "horse_breeders", "stud_farm", "elephant_kraal", "camel_herders", "camel_stud", "cattle_farm", "cattle_farmstead", "cattle_rotations", "cattle_model_farm"]
+# the English royal forest and the elephant hunting grounds produce on the land too (2026-10-27, Jan; were the
+# land_reserve footprint class)
+herd = ["sheep_farms", "hurdled_sheepcotes", "enclosed_sheep_walks", "horse_breeders", "stud_farm", "elephant_kraal", "camel_herders", "camel_stud", "cattle_farm", "cattle_farmstead", "cattle_rotations", "cattle_model_farm", "eng_royal_forest", "elephant_hunting_grounds"]
 
 [building_footprint]
 # Every accepted blueprint carries `footprint: <class>`. ppc build/sync writes
 # raw_modifier local_population_capacity = share x employment_size per level (rounded to whole people) into the block
 # that owns the building in the compiled mod. A building with a large footprint houses few of its workers (low share);
-# a negative share takes land like a farm. "ignore" leaves the building untouched.
+# a negative share takes land like a farm. "ignore" leaves the building untouched; a share of 0 removes the line.
+# 2026-10-27 (Jan): every share that gave capacity is 0. The pop capacity redesign gives every person one capacity
+# (total_population) and takes it back from every unemployed peasant (unemployed_peasants), so workers house
+# themselves and only land lines stay on buildings. Old shares in the comments. The land_reserve class (-0.25) is gone
+# the same day: its two producers became land farms (herd), the four others (no output) moved to a class at 0.
 [building_footprint.classes]
 farm_land = "ignore"          # farms that take land (worldbuilder.farm_land)
 capacity_source = "ignore"    # improvement buildings and other buildings with their own capacity line
 technical = "ignore"          # dummy buildings
-urban_workshop = 0.75         # guilds, workshops, craft shops
-urban_district = 0.75         # quarters and districts that are housing
-administration = 0.70         # chanceries, councils, courts, offices
-institutional = 0.60          # schools, academies, libraries, theatres, hospitals, missions
-trade = 0.60                  # markets, trade offices, banks, trade company buildings, toll posts
-religious = 0.55              # temples, monasteries, madrasas, churches
-manufactory = 0.55            # urban manufactories and food works
-barracks = 0.50               # barracks, armories, garrisons
-rural_village = 0.50          # fishing, forest and market villages, settlements
-mill_works = 0.40             # mills, foundries, factories, smelters
-fishery = 0.40                # offshore fisheries
-infrastructure = 0.40         # roads, transport, bridges, construction
-maritime = 0.40               # docks, shipyards, admiralties, harbours
-rural_processing = 0.35       # windmills, washmills, stamp mills, granaries
-palace_grounds = 0.30         # palaces, residences and villas with grounds
-monument = 0.20               # monument complexes, festival grounds
-forestry = 0.20               # lumber, charcoal, tar, forest camps
-fortification = 0.20          # walls, castles, forts
-mining = 0.15                 # mines and mining villages
-military_grounds = 0.10       # training fields, camps
-estate_land = 0.10            # manors and estates that hold land
-extractive_open = 0.05        # quarries, pits, diggings, salt pans
-land_reserve = -0.25          # hunting grounds, royal forests and gardens, cattle enclosures
+urban_workshop = 0            # 0.75 guilds, workshops, craft shops
+urban_district = 0            # 0.75 quarters and districts that are housing
+administration = 0            # 0.70 chanceries, councils, courts, offices
+institutional = 0             # 0.60 schools, academies, libraries, theatres, hospitals, missions
+trade = 0                     # 0.60 markets, trade offices, banks, trade company buildings, toll posts
+religious = 0                 # 0.55 temples, monasteries, madrasas, churches
+manufactory = 0               # 0.55 urban manufactories and food works
+barracks = 0                  # 0.50 barracks, armories, garrisons
+rural_village = 0             # 0.50 fishing, forest and market villages, settlements
+mill_works = 0                # 0.40 mills, foundries, factories, smelters
+fishery = 0                   # 0.40 offshore fisheries
+infrastructure = 0            # 0.40 roads, transport, bridges, construction
+maritime = 0                  # 0.40 docks, shipyards, admiralties, harbours
+rural_processing = 0          # 0.35 windmills, washmills, stamp mills, granaries
+palace_grounds = 0            # 0.30 palaces, residences and villas with grounds
+monument = 0                  # 0.20 monument complexes, festival grounds
+forestry = 0                  # 0.20 lumber, charcoal, tar, forest camps
+fortification = 0             # 0.20 walls, castles, forts
+mining = 0                    # 0.15 mines and mining villages
+military_grounds = 0          # 0.10 training fields, camps
+estate_land = 0               # 0.10 manors and estates that hold land
+extractive_open = 0           # 0.05 quarries, pits, diggings, salt pans
 
 # Which buildings WITHOUT goods output may be closed (2026-10-05, Jan): "never" writes can_close = no and
 # ai_forbid_shutdown = yes into the building (finalize step, building_shutdown.py; ppc shutdown apply|check), "keep"
@@ -988,7 +995,6 @@ mining = "never"
 military_grounds = "keep"
 estate_land = "never"
 extractive_open = "never"
-land_reserve = "never"
 
 [age_food]
 # Food relief by age (2026-10-03, Jan: age 2 stays tough, age 3 brings decent relief, later ages keep the progression;
@@ -1218,7 +1224,7 @@ pp_caravanserai = { slot = "Caravan Network", method = "Caravan Network", desc =
 pp_oasis_caravan_station = { slot = "Desert Network", method = "Well Keepers", desc = "Families who keep the wells clear and the palms watered make the station a sure halt, so some camel trains keep crossing even when its own stores run dry." }
 pp_yam_station = { slot = "Relay Network", method = "Relay Post", desc = "The station keeps its place in the courier relay, passing news and small loads from stage to stage even when its own horses and sledges are wanting." }
 pp_banjara_tanda = { slot = "Clan Network", method = "Tanda Network", desc = "Kinship ties between the camps let loads pass from one tanda to the next along the grazing routes, even when the camp's own herds are thin." }
-pp_llama_caravan_post = { slot = "Mountain Network", method = "Tambo Relay", desc = "Runners and storekeepers of the tambos pass loads along the mountain roads from one post to the next, even when the post's own llama trains are wanting." }
+pp_llama_caravan_post = { slot = "Mountain Network", method = "Chasqui Relay", desc = "Runners and storekeepers of the tambos pass loads along the mountain roads from one post to the next, even when the post's own llama trains are wanting." }
 
 [stored_food]
 # Stored-food effect carrier (EU5 1.4, stored_food.py; docs/historical_growth_calibration.md 6.2). EU5 1.4 deleted the

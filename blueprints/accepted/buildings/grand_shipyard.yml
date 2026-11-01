@@ -58,7 +58,7 @@ building:
         }
 localization:
   entries:
-    pp_grand_shipyard_maintenance: Grand Shipyard Maintenance
+    pp_grand_shipyard_maintenance: "[ShowBuildingTypeName('grand_shipyard')|e] Maintenance"
 
 evaluation:
   allow_rules:

@@ -12,6 +12,13 @@ ROOT = Path(__file__).resolve().parents[1]
 MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 
 
+def test_river_areas_never_name_a_country():
+    # the navigation river areas share names with countries ("Rhine", PAL): geography sync flags them like vanilla's
+    text = (MOD_ROOT / "in_game/map_data/definitions.txt").read_text(encoding="utf-8-sig")
+    areas = re.findall(r"^pp_nav_\w+_area = \{.*$", text, re.MULTILINE)
+    assert areas and all("not_eligible_for_dynamic_country_name = yes" in line for line in areas)
+
+
 def _contract(tmp_path, navigation=True):
     if navigation:
         (tmp_path / "navigation").mkdir()

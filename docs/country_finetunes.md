@@ -2,6 +2,26 @@
 
 Hand-tuned changes for single countries, one entry each: what and why.
 
+- **Ottomans: a little more towards the Mamluks, North Africa and Arabia, a little less northeast** (2026-11-01, Jan, not
+  tested in game). `area_preferences/pp_conquest_preferences.txt` REPLACEs vanilla's aims, which keep vanilla's steps: Levant
+  + Egypt, Maghreb, Hejaz + Yemen modifier 1 -> 2; Caucasus and Pontic shore 1 -> 0.5. New `pp_ottoman_less_northeast`
+  (-0.25 on the steppe, Russia, Ruthenia, the Urals, West Siberia), given at start in `on_action/pp_country_finetunes.txt`.
+  Why: run 67859be2, 1,429 locations by 1819, mostly north and east, none in Egypt or the Maghreb. Jan: minor numbers
+  only, no new gates, so the late `pp_ottoman_power_base` switch stays as it is.
+- **Prussia is easier to form** (2026-10-28, Jan, not tested in game). `formable_countries/pp_formable_adjustments.txt`
+  TRY_REPLACEs vanilla `PRU_f`: no nobles' Land Rights privilege required, nobles estate power above 10 % (vanilla
+  20 %), clergy estate power below 35 % (vanilla 20 %); German culture, 75 % of `prussia_area`, peace and the military
+  order / Powerful Dioceses rule stay. Why: in run 060ad1de Brandenburg owned all 44 Prussian locations in 1823 and
+  failed only these three (seen in game). Jan: "very annoying".
+- **Brandenburg aims at the Prussian lands too** (2026-10-28, Jan, not tested in game). Beside its marches aim (lucky
+  nations, below) and as strong: the conquest preference `pp_brandenburg_prussia` (x3 on `prussia_area`, given at start
+  next to `pp_brandenburg_marches` in `on_action/pp_country_finetunes.txt`); BRA/PRU +30 target score on every country
+  ruling from the Prussia area (the Teutonic Order and the Prussian bishoprics;
+  `ai_scripted_expansion_score/pp_lucky_nations.txt`), and those countries are war targets even where they are not
+  neighbours, after 36 months of peace (`ai_scripted_expansion_target/pp_lucky_nations.txt`). The lucky-nation rules
+  still hold (a stronger target counts x0.25, one war at a time). Why: forming Prussia (PRU_f) needs 75 % of
+  `prussia_area` (33 of its 44 locations; no religion required), and across the observer runs Brandenburg held at
+  most 20 of them; Pomerania-Wolgast or Bohemia took them. Jan: "giving Prussia its historic aims. Good."
 - **France bonuses removed** (2026-10-22, Jan): Great Offices of the Crown back to vanilla (no +10 % noble max tax, no +3 diplomatic reputation; `pp_estate_privilege_adjustments.txt`) and no +500 starting gold (`on_action/pp_country_finetunes.txt`). Why: EU5 1.4.3; see whether France holds together without help. Supersedes the France entries of 2026-10-05 and 2026-10-06 below; France's lucky-nation aims stay.
 - **France** (2026-10-05, `pp_estate_privilege_adjustments.txt`): Great Offices of the Crown +10 points noble max tax.
   Why: its powerful nobles were taxable at only 4-5 %, so the crown went bankrupt and France fell apart in observer runs.

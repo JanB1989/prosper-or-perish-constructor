@@ -41,6 +41,8 @@ HARVEST_LOCALIZATION = "main_menu/localization/english/pp_location_status_harves
 # encyclopedia_lateralview.gui, card types in pp_europedia_style.gui).
 EUROPEDIA_HARVEST_GUI = "in_game/gui/shared/pp_europedia_harvest.gui"
 _CAPITAL = "GetPlayer.GetCapital"
+# the land state's strength beside the population bars ("100%" at fontsize 14 fits)
+STATE_TEXT_WIDTH = 40
 GOOD_HARVESTS = ("good", "very_good", "bountiful")
 BAD_HARVESTS = ("abysmal", "very_poor", "poor")
 # Severity at a glance: the colour of the round frame around the crop (recoloured vanilla frames, written by
@@ -51,7 +53,9 @@ SEVERITY_COLOURS = {
 }
 SEVERITY_BADGES = {"poor": "-1", "very_poor": "-2", "abysmal": "-3", "good": "+1", "very_good": "+2", "bountiful": "+3"}
 HARVEST_FRAMES = "gfx/interface/icons/pp_harvest/frame_{severity}.dds"
-NEUTRAL_FRAME = "gfx/interface/icons/climate/brown_frame.dds"
+# the neutral chip frame: slate blue (2026-10-27, Jan: vanilla's brown frame melted into the brown card around it)
+NEUTRAL_COLOUR = (92, 112, 140)
+NEUTRAL_FRAME = HARVEST_FRAMES.format(severity="neutral")
 # One recognisable crop per harvest region; plain wheat outside every harvest region.
 REGION_GOODS = {
     "western_europe": "wine", "eastern_europe": "wheat", "north_asia": "wild_game", "central_asia": "cotton",
@@ -67,10 +71,18 @@ STORED_FOOD_STEP = "pp_stored_food_step"   # the carried step, -1 without one (s
 _ANCHOR = "\t\t\t\t\t\t\texpand = {}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t\t# BOTTOM CONDITIONS\n"
 _SPLIT = len("\t\t\t\t\t\t\texpand = {}\n\t\t\t\t\t\t}\n")   # after the IO/periphora hbox, inside the row widget
 # Three visible chips of 30 px, 5 px apart, inside the card's 10/8 px margins (the bottom card's sizes).
-_CARD_SIZE = "{ 120 46 }"
+_CARD_SIZE = "{ 85 46 }"   # two 30 px chips (food, harvest), 5 apart, 10 margin each side (the land chip left 2026-10-27)
 _LOC = "LocationView.GetLocation"
 _ICONS = "gfx/interface/icons"
 LAND_ICONS = "pp_arable_land"   # abundant / available / overused .dds under _ICONS (tools/build_arable_land_icons.py)
+# No chip takes its round frame from the climate (2026-10-27, Jan): a chip with a quality scale draws the state colour
+# (the harvest chip's recoloured frames: red, orange, gold, light green, green), a descriptive chip vanilla's neutral
+# slate frame (location_view.chip_frames does the same for the exported and vanilla chips).
+FRAME_RED, FRAME_ORANGE, FRAME_GOLD, FRAME_LIGHT_GREEN, FRAME_GREEN = (
+    HARVEST_FRAMES.format(severity=s) for s in ("abysmal", "very_poor", "poor", "good", "very_good"))
+LAND_FRAMES = {"abundant": FRAME_GREEN, "available": FRAME_GOLD, "overpopulation": FRAME_RED}
+# stored food: under 6 months red, 6 to 12 gold, 12 and more green (12 months = the store lever's neutral point)
+STORED_FOOD_BANDS = ((None, 6, FRAME_RED), (6, 12, FRAME_GOLD), (12, None, FRAME_GREEN))
 
 
 def harvest_modifiers(text: str) -> list[str]:
@@ -204,7 +216,11 @@ def _row(modifier: str, visible: str | None = None) -> str:
     return f'TooltipStringPairList = {{ {test}textcontext = "[ShowModifierEffect(\'{modifier}\')]" }}'
 
 
-def _chip(name: str, visible: str, icon: str, title: str, concept: str, content: str, overlay: str = "") -> str:
+def _chip(name: str, visible: str, icon: str, title: str, concept: str, content: str, overlay: str = "",
+          frame: str = NEUTRAL_FRAME, layers: str = "") -> str:
+    """A 30 px status chip on a round ``frame``; ``layers`` (frame icons with their own visibility) sit over it.
+    ``concept`` is the link under the title: a concept key, or a whole link such as ``[ShowModifier('x')]``."""
+    link = concept if concept.startswith("[") else f"[{concept}|E]"
     return f"""widget = {{
         name = "{name}"
         size = {{ 30 30 }}
@@ -213,18 +229,18 @@ def _chip(name: str, visible: str, icon: str, title: str, concept: str, content:
         tooltipwidget = {{
         ContextualTooltipType = {{
             blockoverride "title_text" {{ text = "{title}" }}
-            blockoverride "concept_link" {{ visible = yes text = "[{concept}|E]" }}
+            blockoverride "concept_link" {{ visible = yes text = "{link}" }}
             blockoverride "title_icon" {{
                 widget = {{
                     using = tooltip_title_icon_size
-                    background = {{ texture = "[GetClimateFrame({_LOC}.GetClimate)]" }}
+                    background = {{ texture = "{frame}" }}{layers}
                     icon = {{ using = tooltip_title_icon_size texture = "{icon}" }}
                 }}
             }}
             blockoverride "tooltip_content" {{ {content} }}
         }}
     }}
-        background = {{ texture = "[GetClimateFrame({_LOC}.GetClimate)]" }}
+        background = {{ texture = "{frame}" }}{layers}
         icon = {{ size = {{ 30 30 }} texture = "{icon}" }}{overlay}
     }}
 """
@@ -462,7 +478,7 @@ def harvest_chip(harvests: Harvests) -> str:
         tooltipwidget = {{
         ContextualTooltipType = {{
             blockoverride "title_text" {{ text = "[{state}]" }}
-            blockoverride "concept_link" {{ visible = yes text = "[pp_variable_harvests|E]" }}
+            blockoverride "concept_link" {{ visible = yes text = "[ShowSituationName('harvest_situation')]" }}
             blockoverride "title_icon" {{
                 widget = {{
                     using = tooltip_title_icon_size
@@ -480,9 +496,55 @@ def harvest_chip(harvests: Harvests) -> str:
 """
 
 
-def status_row(harvests: Harvests, land_rows: dict[str, str] | None = None, stored_rows: str | None = None) -> str:
-    # Without the modifier types the land chips fall back to the full-strength effects.
+def land_chips(land_rows: dict[str, str] | None, prefix: str) -> list[tuple[str, str, str]]:
+    """The four arable land states as chips, exactly one visible: (title key, strength marker or "", chip)."""
     land_rows = land_rows or {name: _text(LAND_STRENGTH_TEXT[name]) + " " + _scrolled(_row(name)) for name in LAND_MODIFIERS.values()}
+    over, abundant, available = (_marker(key) for key in LAND_MARKERS)
+    # the arable land states' own icons (tools/build_arable_land_icons.py)
+    states = [
+        ("overpopulation", over, "overused.dds", "PP_LAND_CHIP_OVERPOPULATION", "[ShowModifier('overpopulation')]", "pp_land_overpopulation"),
+        ("abundant", f"And(Not({over}), {abundant})", "abundant.dds", "PP_LAND_CHIP_ABUNDANT", "[ShowModifier('abundant_free_land')]", "pp_land_abundant"),
+        ("available", f"And3(Not({over}), Not({abundant}), {available})", "available.dds", "PP_LAND_CHIP_AVAILABLE",
+         "[ShowModifier('available_free_land')]", "pp_land_available"),
+    ]
+    rows = {"overpopulation": "overpopulation", "abundant": "abundant_free_land", "available": "available_free_land"}
+    chips = [(f"{key}_TITLE", marker, _chip(f"{prefix}_{name}", visible, f"{_ICONS}/{LAND_ICONS}/{icon}", f"{key}_TITLE", concept,
+                                           _text(key) + " " + land_rows[rows[name]], frame=LAND_FRAMES[name]))
+             for name, visible, icon, key, concept, marker in states]
+    chips.append(("PP_LAND_CHIP_SETTLED_TITLE", "",
+                  _chip(f"{prefix}_settled", f"And3(Not({over}), Not({abundant}), Not({available}))",
+                        f"{_ICONS}/location_icons/population.dds", "PP_LAND_CHIP_SETTLED_TITLE", "population_capacity",
+                        _text("PP_LAND_CHIP_SETTLED"))))
+    return chips
+
+
+def land_state(land_rows: dict[str, str] | None, prefix: str) -> str:
+    """The land state the population bars make: its chip (name, effects and strength in the tooltip) and its strength.
+    Since 2026-10-27 the only place the location view shows it (Jan: show it once, beside the bars)."""
+    parts = []
+    for _, marker, chip in land_chips(land_rows, prefix):
+        visible = re.search(r'^\s*visible = "([^"]*)"', chip, re.M).group(1)
+        # a fixed width ("5%" to "100%"): a text-sized chip widened the location view from location to location
+        strength = (f' text_single = {{ raw_text = "[Multiply_CFixedPoint({_LOC}.GetModifierValueFixed(\'{marker}\'), '
+                    f"'(CFixedPoint)1')|0%]\" fontsize = 14 default_format = \"#yellow_titles\" "
+                    f"minimumsize = {{ {STATE_TEXT_WIDTH} -1 }} maximumsize = {{ {STATE_TEXT_WIDTH} -1 }} }}" if marker else "")
+        parts.append(f'hbox = {{ visible = "{visible}" spacing = 4\n{chip}{strength} }}')
+    return "\n".join(parts)
+
+
+def stored_food_frames() -> str:
+    """The stored food chip's frame by the province's stored months (STORED_FOOD_BANDS), one layer per band."""
+    months = f"FixedPointToFloat({_LOC}.MakeScope.ScriptValue('pp_province_food_storage_months'))"
+    layers = []
+    for low, high, frame in STORED_FOOD_BANDS:
+        tests = ([f"Not(LessThan_float({months}, '(float){low}'))"] if low is not None else []) + \
+                ([f"LessThan_float({months}, '(float){high}')"] if high is not None else [])
+        test = tests[0] if len(tests) == 1 else f"And({tests[0]}, {tests[1]})"
+        layers.append(f'icon = {{ size = {{ 100% 100% }} texture = "{frame}" visible = "[{test}]" }}')
+    return "\n        " + "\n        ".join(layers)
+
+
+def status_row(harvests: Harvests, stored_rows: str | None = None) -> str:
     starving = f"{_LOC}.GetProvince.IsStarving"
     months = f"[{_LOC}.MakeScope.ScriptValue('pp_province_food_storage_months')|0]"
     overlay = f"""
@@ -491,28 +553,14 @@ def status_row(harvests: Harvests, land_rows: dict[str, str] | None = None, stor
             using = bg_number_container_bckg
             raw_text = "{months}" }}"""
     food = _chip("pp_status_food_stored", f"Not({starving})", f"{_ICONS}/flat_icons/trade_market/food_stockpile.dds",
-                 "PP_FOOD_CHIP_TITLE", "pp_food_storage",
-                 _text("PP_FOOD_CHIP_STORED") + " " + (stored_rows or stored_food_rows(())), overlay)
+                 "PP_FOOD_CHIP_TITLE", "provincial_food",
+                 _text("PP_FOOD_CHIP_STORED") + " " + (stored_rows or stored_food_rows(())), overlay,
+                 layers=stored_food_frames())
     food += _chip("pp_status_food_starving", starving, f"{_ICONS}/alerts_icons/starving_provinces.dds",
-                  "PP_FOOD_CHIP_STARVING_TITLE", "pp_starvation",
-                  _text("PP_FOOD_CHIP_STARVING") + " " + _row("province_starving"))
+                  "PP_FOOD_CHIP_STARVING_TITLE", "starving",
+                  _text("PP_FOOD_CHIP_STARVING") + " " + _row("province_starving"), frame=FRAME_RED)
 
-    over, abundant, available = (_marker(key) for key in LAND_MARKERS)
-    # the arable land states' own icons (tools/build_arable_land_icons.py)
-    land = _chip("pp_status_land_overpopulation", over, f"{_ICONS}/{LAND_ICONS}/overused.dds",
-                 "PP_LAND_CHIP_OVERPOPULATION_TITLE", "pp_overused_arable_land",
-                 _text("PP_LAND_CHIP_OVERPOPULATION") + " " + land_rows["overpopulation"])
-    land += _chip("pp_status_land_abundant", f"And(Not({over}), {abundant})", f"{_ICONS}/{LAND_ICONS}/abundant.dds",
-                  "PP_LAND_CHIP_ABUNDANT_TITLE", "pp_abundant_free_land",
-                  _text("PP_LAND_CHIP_ABUNDANT") + " " + land_rows["abundant_free_land"])
-    land += _chip("pp_status_land_available", f"And3(Not({over}), Not({abundant}), {available})",
-                  f"{_ICONS}/{LAND_ICONS}/available.dds",
-                  "PP_LAND_CHIP_AVAILABLE_TITLE", "pp_available_free_land",
-                  _text("PP_LAND_CHIP_AVAILABLE") + " " + land_rows["available_free_land"])
-    land += _chip("pp_status_land_settled", f"And3(Not({over}), Not({abundant}), Not({available}))",
-                  f"{_ICONS}/location_icons/population.dds",
-                  "PP_LAND_CHIP_SETTLED_TITLE", "population_capacity", _text("PP_LAND_CHIP_SETTLED"))
-
+    # the land state sits beside the population bars (arable_land_bar.py, land_state), not in this card
     harvest = harvest_chip(harvests)
 
     return f"""\t\t\t\t\t\t# PP STATUS CHIPS: top right, mirroring the geography card at the bottom left
@@ -526,18 +574,18 @@ def status_row(harvests: Harvests, land_rows: dict[str, str] | None = None, stor
 \t\t\t\t\t\t\t\tusing = bg_cabinet_card_frame
 \t\t\t\t\t\t\t\thbox = {{
 \t\t\t\t\t\t\t\t\tspacing = 5
-{food}{land}{harvest}\t\t\t\t\t\t\t\t}}
+{food}{harvest}\t\t\t\t\t\t\t\t}}
 \t\t\t\t\t\t\t}}
 \t\t\t\t\t\t}}
 """
 
 
-def add_status_row(text: str, harvests: Harvests, land_rows: dict[str, str] | None = None, stored_rows: str | None = None) -> str:
+def add_status_row(text: str, harvests: Harvests, stored_rows: str | None = None) -> str:
     """Anchor the status card to the top-right corner of the scene, beside the IO and periphora buttons' row."""
     found = text.count(_ANCHOR)
     if found != 1:
         raise ValueError(f"location_window.gui: expected 1 top-row anchor for the status chips, found {found}")
-    return text.replace(_ANCHOR, _ANCHOR[:_SPLIT] + status_row(harvests, land_rows, stored_rows) + _ANCHOR[_SPLIT:])
+    return text.replace(_ANCHOR, _ANCHOR[:_SPLIT] + status_row(harvests, stored_rows) + _ANCHOR[_SPLIT:])
 
 
 def write_harvest_files(mod_root: Path, harvests: Harvests) -> int:

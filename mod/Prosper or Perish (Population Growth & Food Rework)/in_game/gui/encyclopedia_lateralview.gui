@@ -369,7 +369,7 @@
                             layoutpolicy_vertical = expanding
                             visible = "[GetVariableSystem.HasValue('pp_encyclopedia_active', 'yes')]"
 
-                            # Filter buttons — row 1 (target order 1-8)
+                            # Filter buttons — row 1 (target order 1-5)
                             hbox = {
                                 layoutpolicy_horizontal = expanding
                                 margin = { 10 3 }
@@ -385,26 +385,6 @@
 
                                     blockoverride "background" {}
                                 }
-	                                button_regular = {
-	                                    layoutpolicy_horizontal = expanding
-	                                    raw_text = "Getting Started"
-	                                    onclick = "[GetVariableSystem.Set('pp_filter', 'getting_started')]"
-	                                    down = "[GetVariableSystem.HasValue('pp_filter', 'getting_started')]"
-                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
-                                    tooltipwidget = { BasicFunctionalTooltip = {} }
-	
-	                                    blockoverride "background" {}
-	                                }
-	                                button_regular = {
-	                                    layoutpolicy_horizontal = expanding
-	                                    raw_text = "F.A.Q."
-	                                    onclick = "[GetVariableSystem.Set('pp_filter', 'faq')]"
-	                                    down = "[GetVariableSystem.HasValue('pp_filter', 'faq')]"
-                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
-                                    tooltipwidget = { BasicFunctionalTooltip = {} }
-	
-	                                    blockoverride "background" {}
-	                                }
                                 button_regular = {
                                     layoutpolicy_horizontal = expanding
 	                                    raw_text = "Overview"
@@ -447,7 +427,7 @@
                                 }
                             }
 
-                            # Filter buttons — row 2 (target order 9-12)
+                            # Filter buttons — row 2 (target order 6-10)
                             hbox = {
                                 layoutpolicy_horizontal = expanding
                                 margin = { 10 3 }
@@ -505,7 +485,7 @@
                                 }
                             }
 
-                            # Filter buttons — row 3 (target order 13-16)
+                            # Filter buttons — row 3 (target order 11-14)
                             hbox = {
                                 layoutpolicy_horizontal = expanding
                                 margin = { 10 3 }
@@ -560,86 +540,16 @@
                                 blockoverride "scrollbox_content" {
                                     vbox = {
 
-	                                        # ---- Getting Started ----
-	                                        vbox = {
-	                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'getting_started'))]"
-	                                            set_parent_size_to_minimum = yes
-	                                            margin = { 0 10 }
-	                                            vbox = {
-	                                                layoutpolicy_horizontal = expanding
-	                                                spacing = 10
-	                                                using = bg_paper_card
-	                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
-	                                                max_width = 1450
-	                                                min_width = 1450
-	                                                icon = {
-	                                                    layoutpolicy_horizontal = expanding
-	                                                    using = button_main_tab_texture
-	                                                    frame = 4
-	                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
-	                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
-	                                                    hbox = {
-	                                                        margin = { 40 0 }
-	                                                        margin_top = 8
-	                                                        icon = { texture = "gfx/interface/icons/flat_icons/effect.dds" size = { 45 45 } }
-	                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_getting_started" }
-	                                                    }
-	                                                }
-	                                                TooltipListScrollArea = {
-	                                                    blockoverride "scrollarea_content" {
-	                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-	                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_getting_started_desc" margin = { 40 10 } }
-	                                                        }
-	                                                    }
-	                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
-	                                                }
-	                                            }
-	                                        }
-
-	                                        # ---- F.A.Q. ----
-	                                        vbox = {
-	                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'faq'))]"
-	                                            set_parent_size_to_minimum = yes
-	                                            margin = { 0 10 }
-	                                            vbox = {
-	                                                layoutpolicy_horizontal = expanding
-	                                                spacing = 10
-	                                                using = bg_paper_card
-	                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
-	                                                max_width = 1450
-	                                                min_width = 1450
-	                                                icon = {
-	                                                    layoutpolicy_horizontal = expanding
-	                                                    using = button_main_tab_texture
-	                                                    frame = 4
-	                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
-	                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
-	                                                    hbox = {
-	                                                        margin = { 40 0 }
-	                                                        margin_top = 8
-	                                                        icon = { texture = "gfx/interface/icons/flat_icons/effect.dds" size = { 45 45 } }
-	                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_faq" }
-	                                                    }
-	                                                }
-	                                                TooltipListScrollArea = {
-	                                                    blockoverride "scrollarea_content" {
-	                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-	                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_faq_desc" margin = { 40 10 } }
-	                                                        }
-	                                                    }
-	                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
-	                                                }
-	                                            }
-	                                        }
-
-	                                        # ---- Overview (Prosper or Perish Mod) ----
-	                                        vbox = {
+                                        # ---- Overview (Prosper or Perish Mod) ----
+                                        # Card style: in_game/gui/shared/pp_europedia_style.gui (rules: docs/mod_authoring_rules.md)
+                                        vbox = {
                                             visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'overview'))]"
                                             set_parent_size_to_minimum = yes
                                             margin = { 0 10 }
                                             vbox = {
                                                 layoutpolicy_horizontal = expanding
                                                 spacing = 10
+                                                margin_bottom = 24
                                                 using = bg_paper_card
                                                 blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
                                                 max_width = 1450
@@ -657,14 +567,40 @@
                                                         text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_prosper_perish_mod" }
                                                     }
                                                 }
-                                                TooltipListScrollArea = {
-                                                    blockoverride "scrollarea_content" {
-                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_prosper_perish_mod_desc" margin = { 40 10 } }
-                                                        }
-                                                    }
-                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+
+                                                pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_overview.dds" } }
+                                                pp_eu_lead = { text = "game_concept_prosper_perish_mod_desc" }
+
+                                                # ---- What else the mod changes: one line each, linking its page ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/flat_icons/europedia_flat_icon.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_OV_CHANGES" }
                                                 }
+                                                pp_eu_text = { text = "PP_EU_OV_CHANGES_DESC" }
+
+                                                # ---- Game rules ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/flat_icons/laws.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_OV_RULES" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_OV_RULES_DESC" }
+
+                                                # ---- Feedback, how features get in, thanks (the author's own words) ----
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/flat_icons/parliament_request.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_OV_FEEDBACK" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_OV_FEEDBACK_DESC" }
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/flat_icons/objectives.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_OV_FEATURES" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_OV_FEATURES_DESC" }
+                                                pp_eu_section = {
+                                                    blockoverride "section_icon" { texture = "gfx/interface/icons/flat_icons/happy.dds" }
+                                                    blockoverride "section_title" { text = "PP_EU_OV_THANKS" }
+                                                }
+                                                pp_eu_text = { text = "PP_EU_OV_THANKS_DESC" }
                                             }
                                         }
 
@@ -692,12 +628,12 @@
                                                         margin = { 40 0 }
                                                         margin_top = 8
                                                         icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_food_in_eu5" }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_food" }
                                                     }
                                                 }
 
                                                 pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_food.dds" } }
-                                                pp_eu_lead = { text = "game_concept_pp_food_in_eu5_desc" }
+                                                pp_eu_lead = { text = "game_concept_food_desc" }
 
                                                 # Your capital's province store (the stored food chip's script value)
                                                 hbox = {
@@ -783,7 +719,7 @@
                                                         blockoverride "panel_icons" {
                                                             pp_eu_item = {
                                                                 blockoverride "item_icon" { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" }
-                                                                blockoverride "item_link" { raw_text = "[Concept('pp_food_storage', 'Province Store')|e]" }
+                                                                blockoverride "item_link" { raw_text = "[Concept('provincial_food', 'Province Store')|e]" }
                                                             }
                                                             pp_eu_item = {
                                                                 blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_local_food.dds" }
@@ -1031,8 +967,8 @@
                                                                 blockoverride "item_link" { raw_text = "[ShowGoodsName('local_food')|e]" }
                                                             }
                                                         }
-                                                        blockoverride "entry_title" { text = "PP_EU_PROD_COOKSHOPS" }
-                                                        blockoverride "entry_text" { text = "PP_EU_PROD_COOKSHOPS_DESC" }
+                                                        blockoverride "entry_title" { text = "cookshop" }
+                                                        blockoverride "entry_text" { text = "cookshop_desc" }
                                                     }
                                                     pp_eu_entry = {
                                                         blockoverride "entry_icons" {
@@ -1051,8 +987,8 @@
                                                                 blockoverride "item_link" { raw_text = "[ShowGoodsName('victuals')|e]" }
                                                             }
                                                         }
-                                                        blockoverride "entry_title" { text = "PP_EU_PROD_GRANGES" }
-                                                        blockoverride "entry_text" { text = "PP_EU_PROD_GRANGES_DESC" }
+                                                        blockoverride "entry_title" { text = "grange" }
+                                                        blockoverride "entry_text" { text = "grange_desc" }
                                                     }
                                                     pp_eu_entry = {
                                                         blockoverride "entry_icons" {
@@ -1071,8 +1007,8 @@
                                                                 blockoverride "item_link" { raw_text = "[ShowGoodsName('victuals')|e]" }
                                                             }
                                                         }
-                                                        blockoverride "entry_title" { text = "PP_EU_PROD_YARDS" }
-                                                        blockoverride "entry_text" { text = "PP_EU_PROD_YARDS_DESC" }
+                                                        blockoverride "entry_title" { text = "victualling_yard" }
+                                                        blockoverride "entry_text" { text = "victualling_yard_desc" }
                                                     }
                                                     pp_eu_entry = {
                                                         blockoverride "entry_icons" {
@@ -1091,8 +1027,8 @@
                                                                 blockoverride "item_link" { raw_text = "[ShowGoodsName('local_food')|e]" }
                                                             }
                                                         }
-                                                        blockoverride "entry_title" { text = "PP_EU_PROD_TAVERNS" }
-                                                        blockoverride "entry_text" { text = "PP_EU_PROD_TAVERNS_DESC" }
+                                                        blockoverride "entry_title" { text = "tavern" }
+                                                        blockoverride "entry_text" { text = "tavern_desc" }
                                                     }
                                                 }
                                             }
@@ -1122,12 +1058,12 @@
                                                         margin = { 40 0 }
                                                         margin_top = 8
                                                         icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_food_consumption" }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pop_food_consumption" }
                                                     }
                                                 }
 
                                                 pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_food_consumption.dds" } }
-                                                pp_eu_lead = { text = "game_concept_pp_food_consumption_desc" }
+                                                pp_eu_lead = { text = "game_concept_pop_food_consumption_desc" }
 
                                                 # Your capital's province: what it eats a month and how many months of that its store holds
                                                 hbox = {
@@ -1158,7 +1094,7 @@
                                                     pp_eu_arrow = {}
                                                     pp_eu_step = {
                                                         blockoverride "step_icon" { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" }
-                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[Concept('pp_food_storage', 'Province Store')|e]" } }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[Concept('provincial_food', 'Province Store')|e]" } }
                                                         blockoverride "step_title" { text = "PP_EU_CONS_STEP_STORE" }
                                                         blockoverride "step_text" { text = "PP_EU_CONS_STEP_STORE_DESC" }
                                                     }
@@ -1531,7 +1467,7 @@
                                                             pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/production_methods/_default.dds" } blockoverride "item_link" { raw_text = "[production_method|e]" } }
                                                         }
                                                         blockoverride "entry_title" { text = "PP_EU_GOODS_LABOR_TITLE" }
-                                                        blockoverride "entry_text" { text = "PP_EU_GOODS_LABOR_DESC" }
+                                                        blockoverride "entry_text" { text = "manual_labor_desc" }
                                                     }
                                                 }
 
@@ -1550,8 +1486,8 @@
                                                             pp_eu_item_arrow = {}
                                                             pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_offset.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('offset')|e]" } }
                                                         }
-                                                        blockoverride "entry_title" { text = "PP_EU_GOODS_DUMMY_OFFSET" }
-                                                        blockoverride "entry_text" { text = "PP_EU_GOODS_DUMMY_OFFSET_DESC" }
+                                                        blockoverride "entry_title" { text = "offset" }
+                                                        blockoverride "entry_text" { text = "offset_desc" }
                                                     }
                                                     pp_eu_entry = {
                                                         blockoverride "entry_icons" {
@@ -1559,8 +1495,8 @@
                                                             pp_eu_item_arrow = {}
                                                             pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_logistics.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('logistics')|e]" } }
                                                         }
-                                                        blockoverride "entry_title" { text = "PP_EU_GOODS_DUMMY_LOGISTICS" }
-                                                        blockoverride "entry_text" { text = "PP_EU_GOODS_DUMMY_LOGISTICS_DESC" }
+                                                        blockoverride "entry_title" { text = "logistics" }
+                                                        blockoverride "entry_text" { text = "logistics_desc" }
                                                     }
                                                     pp_eu_entry = {
                                                         blockoverride "entry_icons" {
@@ -1568,8 +1504,8 @@
                                                             pp_eu_item_arrow = {}
                                                             pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_province_food_sales.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('province_food_sales')|e]" } }
                                                         }
-                                                        blockoverride "entry_title" { text = "PP_EU_GOODS_DUMMY_SALES" }
-                                                        blockoverride "entry_text" { text = "PP_EU_GOODS_DUMMY_SALES_DESC" }
+                                                        blockoverride "entry_title" { text = "province_food_sales" }
+                                                        blockoverride "entry_text" { text = "province_food_sales_desc" }
                                                     }
                                                 }
 
@@ -2208,6 +2144,8 @@
                                                             pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/horse_breeders.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('horse_breeders')|e]" } }
                                                             pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/camel_herders.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('camel_herders')|e]" } }
                                                             pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/elephant_kraal.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('elephant_kraal')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/elephant_hunting_grounds.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('elephant_hunting_grounds')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/eng_royal_forest.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('eng_royal_forest')|e]" } }
                                                         }
                                                     }
                                                     pp_eu_goods_row = {
@@ -2369,12 +2307,12 @@
                                                         margin = { 40 0 }
                                                         margin_top = 8
                                                         icon = { texture = "gfx/interface/icons/trade_goods/icon_goods_manual_labor.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_labor" }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "manual_labor" }
                                                     }
                                                 }
 
                                                 pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_labor.dds" } }
-                                                pp_eu_lead = { text = "game_concept_pp_labor_desc" }
+                                                pp_eu_lead = { text = "manual_labor_desc" }
 
                                                 # Your capital's market: the labor price (the Manual Labor Price map mode's script value)
                                                 hbox = {
@@ -2572,12 +2510,12 @@
                                                         margin = { 40 0 }
                                                         margin_top = 8
                                                         icon = { texture = "gfx/interface/icons/alerts_icons/weather_system.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_variable_harvests" }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "harvest_situation" }
                                                     }
                                                 }
 
                                                 pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_harvest.dds" } }
-                                                pp_eu_lead = { text = "game_concept_pp_variable_harvests_desc" }
+                                                pp_eu_lead = { text = "harvest_situation_desc" }
 
                                                 # This year at the player's capital (medallion generated by location_status.py)
                                                 hbox = {
@@ -2597,14 +2535,14 @@
                                                     spacing = 8
                                                     pp_eu_step = {
                                                         blockoverride "step_icon" { texture = "gfx/interface/icons/alerts_icons/weather_system.dds" }
-                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[Concept('harvest_situation', 'Variable Harvests')|e]" } }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[ShowSituationName('harvest_situation')]" } }
                                                         blockoverride "step_title" { text = "PP_EU_HARVEST_STEP_SEPTEMBER" }
                                                         blockoverride "step_text" { text = "PP_EU_HARVEST_STEP_SEPTEMBER_DESC" }
                                                     }
                                                     pp_eu_arrow = {}
                                                     pp_eu_step = {
                                                         blockoverride "step_icon" { texture = "gfx/interface/icons/map_modes/continent.dds" }
-                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[Concept('harvest_situation', 'Broad Harvest Areas')|e]" } }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[Concept('sub_continent', 'Broad Harvest Areas')|e]" } }
                                                         blockoverride "step_title" { text = "PP_EU_HARVEST_STEP_AREA" }
                                                         blockoverride "step_text" { text = "PP_EU_HARVEST_STEP_AREA_DESC" }
                                                     }
@@ -2747,6 +2685,7 @@
                                                             pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_horses.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('horses')|e]" } }
                                                             pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_elephants.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('elephants')|e]" } }
                                                             pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_fur.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('fur')|e]" } }
+                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/trade_goods/icon_goods_ivory.dds" } blockoverride "item_link" { raw_text = "[ShowGoodsName('ivory')|e]" } }
                                                         }
                                                     }
                                                     pp_eu_goods_row = {
@@ -2802,12 +2741,12 @@
                                                         margin = { 40 0 }
                                                         margin_top = 8
                                                         icon = { texture = "gfx/interface/icons/map_modes/pp_population_capacity.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_population_capacity" }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_population_capacity" }
                                                     }
                                                 }
 
                                                 pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_arable_land.dds" } }
-                                                pp_eu_lead = { text = "game_concept_pp_population_capacity_desc" }
+                                                pp_eu_lead = { text = "game_concept_population_capacity_desc" }
 
                                                 # Your capital's arable land: the location view's land chip states (markers in pp_capacity_pressure_effects.txt)
                                                 hbox = {
@@ -3010,11 +2949,11 @@
                                                         margin = { 40 0 }
                                                         margin_top = 8
                                                         icon = { texture = "gfx/interface/icons/location_icons/new/population_growth.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_population_growth" }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_population_growth" }
                                                     }
                                                 }
                                                 pp_eu_banner = { blockoverride "banner_texture" { texture = "gfx/interface/illustrations/pp_europedia/banner_population_growth.dds" } }
-                                                pp_eu_lead = { text = "game_concept_pp_population_growth_desc" }
+                                                pp_eu_lead = { text = "game_concept_population_growth_desc" }
 
                                                 # Your capital's province: its store (the Food card's months value, the store's fill) and the capital's growth
                                                 # (the population growth map mode's value)
@@ -3054,14 +2993,14 @@
                                                     pp_eu_sign = { blockoverride "sign_text" { raw_text = "–" } }
                                                     pp_eu_step = {
                                                         blockoverride "step_icon" { texture = "gfx/interface/icons/location_icons/food.dds" }
-                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[Concept('pp_food_consumption', 'Food Consumption')|e]" } }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[Concept('pop_food_consumption', 'Food Consumption')|e]" } }
                                                         blockoverride "step_title" { text = "PP_EU_GROWTH_EATEN" }
                                                         blockoverride "step_text" { text = "PP_EU_GROWTH_EATEN_DESC" }
                                                     }
                                                     pp_eu_sign = { blockoverride "sign_text" { raw_text = "=" } }
                                                     pp_eu_step = {
                                                         blockoverride "step_icon" { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" }
-                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[Concept('pp_food_storage', 'Province Store')|e]" } }
+                                                        blockoverride "step_link" { pp_eu_link = { raw_text = "[Concept('provincial_food', 'Province Store')|e]" } }
                                                         blockoverride "step_title" { text = "PP_EU_GROWTH_MONTHS" }
                                                         blockoverride "step_text" { text = "PP_EU_GROWTH_MONTHS_DESC" }
                                                     }
@@ -3192,85 +3131,13 @@
                                                         margin = { 40 0 }
                                                         margin_top = 8
                                                         icon = { texture = "gfx/interface/icons/flat_icons/balance/trade.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_buildings_in_location" }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "STATIC_MODIFIER_NAME_building_levels" }
                                                     }
                                                 }
                                                 TooltipListScrollArea = {
                                                     blockoverride "scrollarea_content" {
                                                         vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_buildings_in_location_desc" margin = { 40 10 } }
-                                                        }
-                                                    }
-                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
-                                                }
-                                            }
-                                        }
-
-                                        # ---- Available Arable Land (Other Changes) ----
-                                        vbox = {
-                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'other_changes'))]"
-                                            set_parent_size_to_minimum = yes
-                                            margin = { 0 10 }
-                                            vbox = {
-                                                layoutpolicy_horizontal = expanding
-                                                spacing = 10
-                                                using = bg_paper_card
-                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
-                                                max_width = 1450
-                                                min_width = 1450
-                                                icon = {
-                                                    layoutpolicy_horizontal = expanding
-                                                    using = button_main_tab_texture
-                                                    frame = 4
-                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
-                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
-                                                    hbox = {
-                                                        margin = { 40 0 }
-                                                        margin_top = 8
-                                                        icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_available_free_land" }
-                                                    }
-                                                }
-                                                TooltipListScrollArea = {
-                                                    blockoverride "scrollarea_content" {
-                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_available_free_land_desc" margin = { 40 10 } }
-                                                        }
-                                                    }
-                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
-                                                }
-                                            }
-                                        }
-
-                                        # ---- Abundant Arable Land (Other Changes) ----
-                                        vbox = {
-                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'other_changes'))]"
-                                            set_parent_size_to_minimum = yes
-                                            margin = { 0 10 }
-                                            vbox = {
-                                                layoutpolicy_horizontal = expanding
-                                                spacing = 10
-                                                using = bg_paper_card
-                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
-                                                max_width = 1450
-                                                min_width = 1450
-                                                icon = {
-                                                    layoutpolicy_horizontal = expanding
-                                                    using = button_main_tab_texture
-                                                    frame = 4
-                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
-                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
-                                                    hbox = {
-                                                        margin = { 40 0 }
-                                                        margin_top = 8
-                                                        icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_abundant_free_land" }
-                                                    }
-                                                }
-                                                TooltipListScrollArea = {
-                                                    blockoverride "scrollarea_content" {
-                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_abundant_free_land_desc" margin = { 40 10 } }
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "PP_EU_OTHER_BUILDINGS_DESC" margin = { 40 10 } }
                                                         }
                                                     }
                                                     block "block_scrollarea" { maximumsize = { -1 800 } }
@@ -3300,13 +3167,13 @@
                                                         margin = { 40 0 }
                                                         margin_top = 8
                                                         icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_prosperity" }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_prosperity" }
                                                     }
                                                 }
                                                 TooltipListScrollArea = {
                                                     blockoverride "scrollarea_content" {
                                                         vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_prosperity_desc" margin = { 40 10 } }
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "PP_EU_OTHER_PROSPERITY_DESC" margin = { 40 10 } }
                                                         }
                                                     }
                                                     block "block_scrollarea" { maximumsize = { -1 800 } }
@@ -3336,49 +3203,13 @@
                                                         margin = { 40 0 }
                                                         margin_top = 8
                                                         icon = { texture = "gfx/interface/icons/flat_icons/military/bankruptcy.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_devastation" }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "STATIC_MODIFIER_NAME_devastation" }
                                                     }
                                                 }
                                                 TooltipListScrollArea = {
                                                     blockoverride "scrollarea_content" {
                                                         vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_devastation_desc" margin = { 40 10 } }
-                                                        }
-                                                    }
-                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
-                                                }
-                                            }
-                                        }
-
-                                        # ---- Starvation (Other Changes) ----
-                                        vbox = {
-                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'other_changes'))]"
-                                            set_parent_size_to_minimum = yes
-                                            margin = { 0 10 }
-                                            vbox = {
-                                                layoutpolicy_horizontal = expanding
-                                                spacing = 10
-                                                using = bg_paper_card
-                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
-                                                max_width = 1450
-                                                min_width = 1450
-                                                icon = {
-                                                    layoutpolicy_horizontal = expanding
-                                                    using = button_main_tab_texture
-                                                    frame = 4
-                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
-                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
-                                                    hbox = {
-                                                        margin = { 40 0 }
-                                                        margin_top = 8
-                                                        icon = { texture = "gfx/interface/icons/flat_icons/military/bankruptcy.dds" size = { 45 45 } }
-                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_starvation" }
-                                                    }
-                                                }
-                                                TooltipListScrollArea = {
-                                                    blockoverride "scrollarea_content" {
-                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
-                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_starvation_desc" margin = { 40 10 } }
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "PP_EU_OTHER_DEVASTATION_DESC" margin = { 40 10 } }
                                                         }
                                                     }
                                                     block "block_scrollarea" { maximumsize = { -1 800 } }

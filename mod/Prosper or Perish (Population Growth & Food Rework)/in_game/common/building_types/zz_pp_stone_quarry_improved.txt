@@ -18,16 +18,9 @@ build_time = workshop_build_time
 location_potential = {
     OR = {
         raw_material = goods:stone
-        AND = {
-            OR = {
-                topography = mountains
-                topography = plateau
-                topography = hills
-            }
-            NOT = {
-                raw_material = goods:stone
-            }
-        }
+        topography = mountains
+        topography = plateau
+        topography = hills
     }
 }
 construction_demand = workshop_construction
@@ -105,9 +98,6 @@ unique_production_methods = {
     }
 }
 
-raw_modifier = {
-	local_population_capacity = 0.05
-}
 
 modifier = {
     local_population_growth = -0.00015

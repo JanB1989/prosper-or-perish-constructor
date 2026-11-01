@@ -143,7 +143,7 @@ building:
 localization:
   entries:
     cattle_rotations: Cattle Ley Farm
-    cattle_rotations_desc: Sown leys and fodder crops let the herd graze fields that rest from grain.
+    cattle_rotations_desc: Sown leys and fodder crops let the herd graze fields that rest from grain. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market.
     cattle_rotations_slot_0: Pastures
     cattle_rotations_slot_1: Cultivation
     cattle_rotations_slot_2: Provisioning

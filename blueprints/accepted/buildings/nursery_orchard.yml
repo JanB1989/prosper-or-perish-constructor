@@ -153,7 +153,7 @@ advancements:
 localization:
   entries:
     nursery_orchard: Nursery Orchard
-    nursery_orchard_desc: Nursery orchards use young tree rows, waxed grafts, baskets, and storage crocks to replace poor trees and steady fruit harvests.
+    nursery_orchard_desc: "Nursery orchards use young tree rows, waxed grafts, baskets, and storage crocks to replace poor trees and steady fruit harvests. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
     nursery_orchard_slot_0: Fruit Trees
     nursery_orchard_slot_1: Beekeeping
     nursery_orchard_slot_2: Nursery Rows

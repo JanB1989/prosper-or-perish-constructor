@@ -14,7 +14,7 @@ from pathlib import Path
 
 from eu5gameparser.load_order import LoadOrderConfig
 
-from prosper_or_perish_constructor import gui_blocks, location_status, stored_food
+from prosper_or_perish_constructor import arable_land_bar, gui_blocks, location_status, stored_food
 
 ROOT = Path(__file__).resolve().parents[1]
 MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
@@ -104,14 +104,16 @@ def test_a_renamed_block_is_reported_where_the_old_one_was_overridden():
 
 def test_status_chips_override_only_blocks_the_game_types_have():
     row = _status_row()
-    assert "scrollarea_content" not in row and row.count('blockoverride "section_content"') == 4
+    assert "scrollarea_content" not in row and row.count('blockoverride "section_content"') == 1
     assert not gui_blocks.dead_overrides(row, _index())
     # the generator itself, with the real land-pressure rows, agrees with the deployed window
     land = location_status.load_land_effect_rows(MOD_ROOT, _vanilla().parent)
     assert land is not None
     stored = location_status.load_stored_food_rows(MOD_ROOT, _vanilla().parent, stored_food.load_config(PROJECT).per_year)
-    generated = location_status.status_row(location_status.load_harvests(MOD_ROOT), land, stored)
+    generated = location_status.status_row(location_status.load_harvests(MOD_ROOT), stored)
     assert not gui_blocks.dead_overrides(generated, _index())
+    # the land state beside the population bars (since 2026-10-27) uses the same chips
+    assert not gui_blocks.dead_overrides(location_status.land_state(land, "pp_land_bar_state"), _index())
 
 
 def test_mod_gui_files_add_no_dead_overrides_beyond_vanilla():
@@ -139,8 +141,14 @@ def test_chip_data_functions_exist_in_the_game():
     """Every function the status chips, their texts and the attribute tooltips call is one vanilla's GUI or
     localization calls too (the game has no list of its own; a 1.3 name gone in 1.4 would fail here)."""
     used = _calls(_status_row()) | _calls(STATUS_LOC.read_text(encoding="utf-8-sig"))
+    used |= _calls(location_status.land_state(location_status.load_land_effect_rows(MOD_ROOT, _vanilla().parent), "pp_land_bar_state"))
     used |= _calls(ATTRIBUTE_TOOLTIPS.read_text(encoding="utf-8-sig"))
-    assert {"ShowModifierEffect", "GetModifierValueFixed", "Custom", "ScriptValue", "ShowModifierTypeName"} <= used
+    # the population and capacity bars (arable_land_bar.py): data-bound sizes, shares, the over-capacity row
+    window = WINDOW.read_text(encoding="utf-8-sig")
+    start = window.rindex("vbox = {", 0, window.index('name = "pp_arable_land_bar"'))
+    used |= _calls(window[start:arable_land_bar._block_end(window, window.index("{", start)) + 1])
+    assert {"ShowModifierEffect", "GetModifierValueFixed", "Custom", "ScriptValue", "ShowModifierTypeName",
+            "ToVector2f", "Multiply_float", "Subtract_float", "Max_float"} <= used
     vanilla = set()
     for path in [*_vanilla().glob("*/gui/**/*.gui"), *_vanilla().glob("main_menu/localization/english/**/*.yml")]:
         vanilla |= _calls(path.read_text(encoding="utf-8-sig", errors="replace"))

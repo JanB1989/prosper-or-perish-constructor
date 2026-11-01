@@ -137,19 +137,19 @@ advancements:
     unlock_production_method = pp_distiller_mill_scottish_whisky_distillery_mill_maintenance
 localization:
   entries:
-    distiller_mill_slot_0: Distiller Mill Work
-    pp_distiller_mill_sugar_distillery_mill_maintenance: Distiller Mill Sugar Distillery Mill Maintenance
-    pp_distiller_mill_rice_distillery_mill_maintenance: Distiller Mill Rice Distillery Mill Maintenance
-    pp_distiller_mill_potato_distillery_mill_maintenance: Distiller Mill Potato Distillery Mill Maintenance
-    pp_distiller_mill_wheat_distillery_mill_maintenance: Distiller Mill Wheat Distillery Mill Maintenance
-    pp_distiller_mill_scottish_whisky_distillery_mill_maintenance: Distiller Mill Scottish Whisky Distillery Mill Maintenance
+    distiller_mill_slot_0: "[ShowBuildingTypeName('distiller_mill')|e] Work"
+    pp_distiller_mill_sugar_distillery_mill_maintenance: Distill Sugar
+    pp_distiller_mill_rice_distillery_mill_maintenance: Distill Rice
+    pp_distiller_mill_potato_distillery_mill_maintenance: Distill Potatoes
+    pp_distiller_mill_wheat_distillery_mill_maintenance: Distill Wheat
+    pp_distiller_mill_scottish_whisky_distillery_mill_maintenance: Scotch Whisky
     pp_distiller_mill_market_sales: Market Sales
     pp_distiller_mill_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
     distiller_mill_slot_1: Market
     pp_distiller_mill_legacy_beer_liquor_workshop_maintenance: "$beer_liquor_workshop_maintenance$ (Old Ways)"
-    pp_distiller_mill_legacy_beer_liquor_workshop_maintenance_desc: "An older way of working, kept from the $distillers_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
+    pp_distiller_mill_legacy_beer_liquor_workshop_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('distillers_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
     pp_distiller_mill_legacy_wine_liquor_workshop_maintenance: "$wine_liquor_workshop_maintenance$ (Old Ways)"
-    pp_distiller_mill_legacy_wine_liquor_workshop_maintenance_desc: "An older way of working, kept from the $distillers_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
+    pp_distiller_mill_legacy_wine_liquor_workshop_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('distillers_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
 evaluation:
   allow_rules:
     profit_percent: Converted vanilla producer balanced by profit per building against the farming benchmark; throughput and margin bands are advisory here.

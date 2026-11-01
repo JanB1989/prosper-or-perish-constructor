@@ -191,3 +191,21 @@ pp_brandenburg_marches_focus = {
 		add = 30
 	}
 }
+
+# Brandenburg wants the Prussian lands as much as its marches: the Teutonic Order and the Prussian bishoprics (forming
+# Prussia needs them).
+pp_brandenburg_prussia_focus = {
+	attacker_potential = {
+		OR = {
+			tag = BRA
+			tag = PRU
+		}
+	}
+	target_trigger = {
+		NOT = { is_subject_of = scope:attacker }
+		capital ?= { area = area:prussia_area }
+	}
+	score = {
+		add = 30
+	}
+}

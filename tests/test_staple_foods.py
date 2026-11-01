@@ -81,6 +81,14 @@ def test_every_staple_food_maker_provisions_counts_and_is_staffed_as_food() -> N
     assert set(provisioning.PROVISIONED_GOOD_BY_BUILDING.values()) == set(staple_foods.staple_foods())
 
 
+def test_every_staple_food_maker_says_what_the_store_does() -> None:
+    """Every staple food maker's description ends with the one store sentence (Jan, 2026-10-28): a high store means
+    more goods for the market, a low one more Province Food."""
+    for building in provisioning.PROVISIONING_BUILDINGS:
+        raw = yaml.safe_load((BLUEPRINTS / f"{building}.yml").read_text(encoding="utf-8-sig"))
+        assert raw["localization"]["entries"][f"{building}_desc"].endswith(f" {provisioning.STORE_DESC}"), building
+
+
 def test_every_staple_food_is_on_the_store_curve() -> None:
     config = stored_food.load_config(PROJECT)
     assert config.staple_goods == staple_foods.staple_foods()
@@ -153,7 +161,11 @@ def test_victualling_yard_ships_salt_beef_and_raises_the_cookshop_cap() -> None:
     cap = caps[caps.index("cookshop_max_level = {"):]
     assert "this.cookshop_max_level_pp_building_level_province_victualling_yards" in cap[:cap.index("\n}")]
     values = (MOD_ROOT / "in_game/common/script_values/pp_food_building_values.txt").read_text(encoding="utf-8-sig")
-    assert "add = modifier:local_pp_victualling_yard_levels" in values
+    # whole Yard levels, not the input-scaled raw_modifier counter (food_level_counts.py, 2026-10-24)
+    assert "add = pp_location_victualling_yard_building_levels" in values
+    assert "add = modifier:local_pp_victualling_yard_levels" not in values
+    counts = (MOD_ROOT / "in_game/common/script_values/pp_food_building_level_counts.txt").read_text(encoding="utf-8-sig")
+    assert "location_building_level(building_type:victualling_yard)" in counts
     types = (MOD_ROOT / "main_menu/common/modifier_type_definitions/pp_food_building_modifier_types.txt").read_text(
         encoding="utf-8-sig")
     assert "local_pp_victualling_yard_levels = {" in types

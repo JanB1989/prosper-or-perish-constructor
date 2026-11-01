@@ -53,18 +53,8 @@
 						}
 					}
 
-					widget = {
-						size = {15 22}
-
-						progressbar_framed = {
-							parentanchor = center
-							size = { 5 22 }
-							using = progress_bar_green_alt
-							value = "[FixedPointToFloat(Divide_CFixedPoint(GoodsMarketEntry.GetStockpile, GoodsMarketEntry.GetMarket.GetCenterLocation.GetModifierValueFixed('maximum_stockpile_capacity')))]"
-							min = 0
-							max = 1
-							direction = vertical
-						}
+					widget = { # PP: the stockpile as a wide bar with its fill in whole percent and the amount (vanilla: a 5 px bar)
+						size = { 100 22 }
 						datacontext = "[SelectedMarketLateralView.GetMarket]"
 						tooltipwidget = {
 							using = GoodsMarketEntry_template
@@ -72,6 +62,53 @@
 
 						sort_by_small_highlight = {
 							name = "stockpile"
+						}
+
+						hbox = {
+							using = layoutpolicy_expanding
+							spacing = 4
+							margin_right = 8
+
+							widget = {
+								size = { 46 20 }
+
+								progressbar_framed = {
+									size = { 100% 100% }
+									using = progress_bar_green_alt
+									value = "[GoodsMarketEntry.GetStockpilePercentage]"
+									min = 0
+									max = 100
+								}
+
+								text_single = {
+									size = { 100% 100% }
+									autoresize = no
+									align = center|nobaseline
+									using = Font_Size_Small
+									raw_text = "[GoodsMarketEntry.GetStockpilePercentage|0]%"
+								}
+							}
+
+							text_single = {
+								visible = "[GreaterThan_CFixedPoint(GoodsMarketEntry.GetStockpile, '(CFixedPoint)0')]"
+								layoutpolicy_horizontal = expanding
+								autoresize = no
+								size = { -1 20 }
+								align = right|nobaseline
+								using = Font_Size_Small
+								text = "[GoodsMarketEntry.GetStockpile|0]"
+							}
+
+							text_single = {
+								visible = "[Not(GreaterThan_CFixedPoint(GoodsMarketEntry.GetStockpile, '(CFixedPoint)0'))]"
+								layoutpolicy_horizontal = expanding
+								autoresize = no
+								size = { -1 20 }
+								align = right|nobaseline
+								using = Font_Size_Small
+								text = "[GoodsMarketEntry.GetStockpile|0]"
+								default_format = "#weak"
+							}
 						}
 					}
 				}
@@ -270,221 +307,211 @@
 					}
 
 					# PRICE
-					widget = {
+					widget = { # PP: the price (vanilla: one 50-wide cell with its difference icon)
 						tooltipmeta = {
-							texture =  "[GetGoodsIcon(GoodsMarketEntry.GetGoods)]"
+							texture = "[GetGoodsIcon(GoodsMarketEntry.GetGoods)]"
 						}
-						# size = { 68 20 }
-						size = { 50 20 }
+						size = { 44 20 }
 						datacontext = "[SelectedMarketLateralView.GetMarket]"
 						tooltipwidget = {
 							using = goods_market_price_tooltip
 						}
+
 						hbox = {
-							# spacing = 1
-							# text_single = {
-							# 	maximumsize = { 30 20 }
-							# 	align = right|nobaseline
-							# 	using = Font_Size_Small
-							# 	text = "[GoodsMarketEntry.GetGoods.GetDefaultMarketPrice|2S]"
-							# 	datacontext = "[SelectedMarketLateralView.GetMarket]"
-
-							# }
-							# icon = {
-							# 	# parentanchor = center
-							# 	size = { 12 12 }
-							# 	texture = "gfx/interface/icons/outliner/arrow_right.dds"
-							# }
-							# icon = {
-							# 	size = {12 12}
-							# 	texture = "gfx/interface/buttons/flats/button_simple.dds"						
-							# 	modify_texture = {
-							# 		using = color_new_gold_texture
-							# 	}
-							# }
 							expand = {}
-							hbox = {
 
-								# expand = {}
-								
-								spacing = 2
+							text_single = {
+								maximumsize = { 38 20 }
+								align = right|nobaseline
+								using = Font_Size_Small
+								text = "[GoodsMarketEntry.GetPrice|2]"
 
-								text_single = {
-									maximumsize = { 30 20 }
-									align = center|nobaseline
-									using = Font_Size_Small
-									text = "[GoodsMarketEntry.GetPrice|2]"
-									datacontext = "[SelectedMarketLateralView.GetMarket]"
-				
-									sort_by_small_highlight = {
-										name = "market_price"
-									}
-								}
-	
-								text_single = {
-									maximumsize = { 20 20 }
-									align = right|nobaseline
-									using = Font_Size_Small
-									raw_text = "@[GoodsMarketEntry.GetGoods.GetPriceDifferenceIconName(GoodsMarketEntry.GetPrice)]!"
-									datacontext = "[SelectedMarketLateralView.GetMarket]"
-				
-									sort_by_small_highlight = {
-										name = "market_price_diff"
-									}
+								sort_by_small_highlight = {
+									name = "market_price"
 								}
 							}
 						}
 					}
+
+					widget = { # PP: the price against its default in percent, red above, green below (vanilla: coin icons)
+						size = { 52 20 }
+						datacontext = "[SelectedMarketLateralView.GetMarket]"
+						tooltipwidget = {
+							using = goods_market_price_tooltip
+						}
+
+						hbox = {
+							expand = {}
+
+							text_single = {
+								maximumsize = { 46 20 }
+								align = right|nobaseline
+								using = Font_Size_Small
+								text = "[Subtract_CFixedPoint(Divide_CFixedPoint(GoodsMarketEntry.GetPrice, GoodsMarketEntry.GetGoods.GetDefaultMarketPrice), '(CFixedPoint)1')|-=0%]"
+
+								sort_by_small_highlight = {
+									name = "market_price_diff"
+								}
+							}
+						}
+					}
+
+					expand = {} # PP: the cells side by side from the left, under their header buttons
 				}
 
-				hbox = {
-					spacing = 3
-					header_button_left = {
-						size = { 30 30 }
-						blockoverride "button_icon_stretch_sprite" {}
-						blockoverride "header_button_frame_inner" {visible = no}
-						blockoverride "header_button_icon_size" { size = { 30 30 } }
-						blockoverride "header_button_text_layout" {}
-						blockoverride "icon_overlay" {}
-						blockoverride "icon_texture" {
-							texture = "[GetConceptTexture('building')]"
-							texture_density = 2
-						}
+				widget = { # PP: the actions only for a player (an observer's empty country fails their checks)
+					size = { 129 30 }
 
-						enabled = "[And(CanGoodGetProduced(GoodsMarketEntry.GetGoods), GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
+					hbox = {
+						visible = "[Not(IsPlayerObserver)]"
+						spacing = 3
+						header_button_left = {
+							size = { 30 30 }
+							blockoverride "button_icon_stretch_sprite" {}
+							blockoverride "header_button_frame_inner" {visible = no}
+							blockoverride "header_button_icon_size" { size = { 30 30 } }
+							blockoverride "header_button_text_layout" {}
+							blockoverride "icon_overlay" {}
+							blockoverride "icon_texture" {
+								texture = "[GetConceptTexture('building')]"
+								texture_density = 2
+							}
+
+							enabled = "[And(CanGoodGetProduced(GoodsMarketEntry.GetGoods), GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
 					
-						tooltipwidget = {
-							BasicFunctionalTooltip = {}
-						}
-						action_tooltip = {
-							click_type = left
-							click_mode = single
-							visible = "[CanGoodGetProduced(GoodsMarketEntry.GetGoods)]"
-							enabled = "[CanGoodGetProduced(GoodsMarketEntry.GetGoods)]"
-							title = "MARKET_BUILDING_SHORTCUT"
-							on_action = "[SetUIFocusMarket(SelectedMarketLateralView.GetMarket.Self)]"
-							on_action = "[OpenLateralViewWithFilter('production', GoodsMarketEntry.GetGoods.GetKey)]"
-						}
-						action_tooltip = {
-							click_type = left
-							click_mode = single
-							visible = "[Not(CanGoodGetProduced(GoodsMarketEntry.GetGoods))]"
-							enabled = no
-							title = "MARKET_BUILDING_SHORTCUT_DISABLED"
-						}
-
-						action_tooltip = {
-							click_type = left
-							click_mode = single
-							visible = "[Not(GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
-							enabled = no
-							title = "MARKET_BUILDING_SHORTCUT_FOREIGN"
-						}
-					}
-
-					# expand raw goods NEW
-					header_button_left = {
-						size = { 30 30 }
-						blockoverride "button_icon_stretch_sprite" {}
-						blockoverride "header_button_frame_inner" {visible = no}
-						blockoverride "header_button_icon_size" { size = { 30 30 } }
-						blockoverride "header_button_text_layout" {}
-						blockoverride "icon_overlay" {}
-						blockoverride "icon_texture" {
-							texture = "gfx/interface/icons/map_modes/raw_material.dds"
-							texture_density = 2
-						}
-
-						enabled = "[And(SelectedMarketLateralView.CanExpandRGO(GoodsMarketEntry.GetGoods), GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
-					
-						tooltipwidget = {
-							BasicFunctionalTooltip = {}
-						}
-						action_tooltip = {
-							click_type = left
-							click_mode = single
-							visible = "[And(GoodsMarketEntry.GetGoods.IsRawMaterial, GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
-							enabled = "[SelectedMarketLateralView.CanExpandRGO(GoodsMarketEntry.GetGoods)]"
-							title = "MARKET_RGO_SHORTCUT"
-							on_action = "[ShowExpandRawGoodLocationsViewWithMarketAndGoods(SelectedMarketLateralView.GetMarket.Self, GoodsMarketEntry.GetGoods, '(bool)yes')]"
-						}
-
-						action_tooltip = {
-							click_type = left
-							click_mode = single
-							visible = "[And(Not(GoodsMarketEntry.GetGoods.IsRawMaterial), GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
-							enabled = no
-							title = "MARKET_RGO_SHORTCUT_DISABLED"
-						}
-
-						action_tooltip = {
-							click_type = left
-							click_mode = single
-							visible = "[Not(GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
-							enabled = no
-							title = "MARKET_BUILDING_SHORTCUT_FOREIGN"
-						}
-					}
-
-			
-					# import button new
-					header_button_left = {
-						size = { 30 30 }
-						blockoverride "button_icon_stretch_sprite" {}
-						blockoverride "header_button_frame_inner" {visible = no}
-						blockoverride "header_button_icon_size" { size = { 30 30 } }
-						blockoverride "header_button_text_layout" {}
-						blockoverride "icon_overlay" {}
-						blockoverride "icon_texture" {
-							texture = "gfx/interface/icons/flat_icons/trade_market/import.dds"
-							texture_density = 2
-						}
-
-						datacontext = "[SelectedMarketLateralView.GetMarket]"
-
-						enabled = "[HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)]"
-
-						tooltipwidget = {
-							BasicFunctionalTooltip = {}
-						}
-						action_tooltip = {
+							tooltipwidget = {
+								BasicFunctionalTooltip = {}
+							}
+							action_tooltip = {
 								click_type = left
 								click_mode = single
-								title = "MARKET_CTXMENU_CREATE_IMPORT_ORDER"
+								visible = "[CanGoodGetProduced(GoodsMarketEntry.GetGoods)]"
+								enabled = "[CanGoodGetProduced(GoodsMarketEntry.GetGoods)]"
+								title = "MARKET_BUILDING_SHORTCUT"
+								on_action = "[SetUIFocusMarket(SelectedMarketLateralView.GetMarket.Self)]"
+								on_action = "[OpenLateralViewWithFilter('production', GoodsMarketEntry.GetGoods.GetKey)]"
+							}
+							action_tooltip = {
+								click_type = left
+								click_mode = single
+								visible = "[Not(CanGoodGetProduced(GoodsMarketEntry.GetGoods))]"
+								enabled = no
+								title = "MARKET_BUILDING_SHORTCUT_DISABLED"
+							}
+
+							action_tooltip = {
+								click_type = left
+								click_mode = single
+								visible = "[Not(GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
+								enabled = no
+								title = "MARKET_BUILDING_SHORTCUT_FOREIGN"
+							}
+						}
+
+						# expand raw goods NEW
+						header_button_left = {
+							size = { 30 30 }
+							blockoverride "button_icon_stretch_sprite" {}
+							blockoverride "header_button_frame_inner" {visible = no}
+							blockoverride "header_button_icon_size" { size = { 30 30 } }
+							blockoverride "header_button_text_layout" {}
+							blockoverride "icon_overlay" {}
+							blockoverride "icon_texture" {
+								texture = "gfx/interface/icons/map_modes/raw_material.dds"
+								texture_density = 2
+							}
+
+							enabled = "[And(SelectedMarketLateralView.CanExpandRGO(GoodsMarketEntry.GetGoods), GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
+					
+							tooltipwidget = {
+								BasicFunctionalTooltip = {}
+							}
+							action_tooltip = {
+								click_type = left
+								click_mode = single
+								visible = "[And(GoodsMarketEntry.GetGoods.IsRawMaterial, GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
+								enabled = "[SelectedMarketLateralView.CanExpandRGO(GoodsMarketEntry.GetGoods)]"
+								title = "MARKET_RGO_SHORTCUT"
+								on_action = "[ShowExpandRawGoodLocationsViewWithMarketAndGoods(SelectedMarketLateralView.GetMarket.Self, GoodsMarketEntry.GetGoods, '(bool)yes')]"
+							}
+
+							action_tooltip = {
+								click_type = left
+								click_mode = single
+								visible = "[And(Not(GoodsMarketEntry.GetGoods.IsRawMaterial), GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
+								enabled = no
+								title = "MARKET_RGO_SHORTCUT_DISABLED"
+							}
+
+							action_tooltip = {
+								click_type = left
+								click_mode = single
+								visible = "[Not(GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
+								enabled = no
+								title = "MARKET_BUILDING_SHORTCUT_FOREIGN"
+							}
+						}
+
+			
+						# import button new
+						header_button_left = {
+							size = { 30 30 }
+							blockoverride "button_icon_stretch_sprite" {}
+							blockoverride "header_button_frame_inner" {visible = no}
+							blockoverride "header_button_icon_size" { size = { 30 30 } }
+							blockoverride "header_button_text_layout" {}
+							blockoverride "icon_overlay" {}
+							blockoverride "icon_texture" {
+								texture = "gfx/interface/icons/flat_icons/trade_market/import.dds"
+								texture_density = 2
+							}
+
+							datacontext = "[SelectedMarketLateralView.GetMarket]"
+
+							enabled = "[HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)]"
+
+							tooltipwidget = {
+								BasicFunctionalTooltip = {}
+							}
+							action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "MARKET_CTXMENU_CREATE_IMPORT_ORDER"
+									enabled = "[HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)]"
+									conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
+									on_action = "[CreateImportOrderForGoodInMarket(GoodsMarketEntry.GetGoods,SelectedMarketLateralView.GetMarket.Self)]"
+
+							}
+						}
+
+						# export button new
+						header_button_left = {
+							size = { 30 30 }
+							blockoverride "button_icon_stretch_sprite" {}
+							blockoverride "header_button_frame_inner" {visible = no}
+							blockoverride "header_button_icon_size" { size = { 30 30 } }
+							blockoverride "header_button_text_layout" {}
+							blockoverride "icon_overlay" {}
+							blockoverride "icon_texture" {
+								texture = "gfx/interface/icons/flat_icons/trade_market/export.dds"
+								texture_density = 2
+							}
+
+							datacontext = "[SelectedMarketLateralView.GetMarket]"
+
+							enabled = "[HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)]"
+
+							tooltipwidget = {
+								BasicFunctionalTooltip = {}
+							}
+							action_tooltip = {
+								click_type = left
+								click_mode = single
+								title = "MARKET_CTXMENU_CREATE_EXPORT_ORDER"
 								enabled = "[HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)]"
 								conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
-								on_action = "[CreateImportOrderForGoodInMarket(GoodsMarketEntry.GetGoods,SelectedMarketLateralView.GetMarket.Self)]"
-
-						}
-					}
-
-					# export button new
-					header_button_left = {
-						size = { 30 30 }
-						blockoverride "button_icon_stretch_sprite" {}
-						blockoverride "header_button_frame_inner" {visible = no}
-						blockoverride "header_button_icon_size" { size = { 30 30 } }
-						blockoverride "header_button_text_layout" {}
-						blockoverride "icon_overlay" {}
-						blockoverride "icon_texture" {
-							texture = "gfx/interface/icons/flat_icons/trade_market/export.dds"
-							texture_density = 2
-						}
-
-						datacontext = "[SelectedMarketLateralView.GetMarket]"
-
-						enabled = "[HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)]"
-
-						tooltipwidget = {
-							BasicFunctionalTooltip = {}
-						}
-						action_tooltip = {
-							click_type = left
-							click_mode = single
-							title = "MARKET_CTXMENU_CREATE_EXPORT_ORDER"
-							enabled = "[HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)]"
-							conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(SelectedMarketLateralView.GetMarket.Self)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
-							on_action = "[CreateExportOrderForGoodInMarket(GoodsMarketEntry.GetGoods,SelectedMarketLateralView.GetMarket.Self)]"
+								on_action = "[CreateExportOrderForGoodInMarket(GoodsMarketEntry.GetGoods,SelectedMarketLateralView.GetMarket.Self)]"
+							}
 						}
 					}
 				}
@@ -816,6 +843,8 @@ template goods_in_range_entry {
 							}
 						}
 					}					
+
+					expand = {} # PP: the cells side by side from the left, under their header buttons
 				}
 
             }
@@ -989,53 +1018,60 @@ types MarketOverview {
 				}
 			}
 
-			blockoverride "sort_buttons_filtered_list" {
+			blockoverride "sort_buttons_filtered_list" { # PP: each button as wide as its cell in the rows below
 				sort_by_key_button = {
 					name = "name"
 					layoutpolicy_vertical = expanding
-					size = { 35 -1 }
+					size = { 36 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "stockpile"
 					layoutpolicy_vertical = expanding
-					size = { 35 -1 }
+					size = { 100 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "goods_local_balance"
 					layoutpolicy_vertical = expanding
-					size = { 55 -1 }
+					size = { 62 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "goods_imports"
 					layoutpolicy_vertical = expanding
-					size = { 70 -1 }
+					size = { 62 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "goods_exports"
 					layoutpolicy_vertical = expanding
-					size = { 70 -1 }
+					size = { 62 -1 }
+				}
+
+				widget = { # the rows' arrow between exports and balance
+					size = { 15 1 }
 				}
 
 				sort_by_key_button = {
 					name = "goods_balance"
 					layoutpolicy_vertical = expanding
-					size = { 75 -1 }
+					size = { 62 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "market_price"
 					layoutpolicy_vertical = expanding
-					size = { 45 -1 }
+					size = { 44 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "market_price_diff"
-					using = layoutpolicy_expanding
+					layoutpolicy_vertical = expanding
+					size = { 52 -1 }
 				}
+
+				expand = {}
 			}
 
 			blockoverride "scroll_list_layout" {
@@ -1139,47 +1175,54 @@ types MarketsInRangeOverview {
 				}
 			}
 
-			blockoverride "sort_buttons_filtered_list" {
+			blockoverride "sort_buttons_filtered_list" { # PP: each button as wide as its cell in the rows below
 				sort_by_key_button = {
 					name = "name"
 					layoutpolicy_vertical = expanding
-					size = { 25 -1 }
+					size = { 36 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "in_range_produced"
 					layoutpolicy_vertical = expanding
-					size = { 55 -1 }
+					size = { 62 -1 }
 				}
+
 				sort_by_key_button = {
 					name = "in_range_locally_demanded"
 					layoutpolicy_vertical = expanding
-					size = { 55 -1 }
+					size = { 62 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "in_range_local_balance"
 					layoutpolicy_vertical = expanding
-					size = { 55 -1 }
+					size = { 62 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "in_range_imports"
 					layoutpolicy_vertical = expanding
-					size = { 70 -1 }
+					size = { 62 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "in_range_exports"
 					layoutpolicy_vertical = expanding
-					size = { 70 -1 }
+					size = { 62 -1 }
+				}
+
+				widget = { # the rows' arrow between exports and balance
+					size = { 15 1 }
 				}
 
 				sort_by_key_button = {
 					name = "in_range_balance"
 					layoutpolicy_vertical = expanding
-					size = { 75 -1 }
+					size = { 62 -1 }
 				}
+
+				expand = {}
 			}
 
 			blockoverride "scroll_list_layout" {

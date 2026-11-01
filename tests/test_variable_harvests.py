@@ -382,8 +382,6 @@ def _parser_confirmed_farmed_goods() -> set[str]:
 
 def _harvest_localization_lines(path: Path) -> list[str]:
     prefixes = (
-        "game_concept_harvest_situation_desc:",
-        "game_concept_pp_variable_harvests_desc:",
         "harvest_situation_desc:",
         "harvest_situation_monthly:",
         "game_concept_abysmal_harvest_desc:",

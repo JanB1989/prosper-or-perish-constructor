@@ -133,13 +133,14 @@ building:
         }
 localization:
   entries:
+    fruit_orchard_desc: "Fruits are a bountiful gift from nature, providing our population with a bountiful source of food. Orchards would serve as a steady production of fruit, fulfilling the needs of our people. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
     fruit_orchard_slot_0: Fruit Trees
     fruit_orchard_slot_1: Beekeeping
     fruit_orchard_slot_2: Orchard Work
     fruit_orchard_slot_3: Provisioning
     fruit_orchard_slot_4: Market
     pp_fruit_orchard_base_fruit: Fruit Trees
-    pp_fruit_orchard_maintenance: Fruit Orchard Maintenance
+    pp_fruit_orchard_maintenance: "[ShowBuildingTypeName('fruit_orchard')|e] Maintenance"
     pp_fruit_orchard_no_primary: No Orchard Work
     pp_fruit_orchard_no_beekeeping: No Beekeeping
     pp_fruit_orchard_cottage_hives: Cottage Hives

@@ -106,4 +106,4 @@ def test_food_page_reads_its_data_files() -> None:
     from prosper_or_perish_constructor.run_report_food_page import food_page_html
 
     page = food_page_html("Run x", (1337, 1400))
-    assert "food/index.json" in page and "goods/index.json" in page and "type: 'sankey'" in page and "data-v=recipes" in page
+    assert "food/index.js" in page and "goods/index.js" in page and "type: 'sankey'" in page and "data-v=recipes" in page

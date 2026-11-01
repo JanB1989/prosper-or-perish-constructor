@@ -139,7 +139,7 @@ building:
 localization:
   entries:
     cattle_farm: Cattle Farm
-    cattle_farm_desc: Households graze cattle on common pasture and bring them in at night.
+    cattle_farm_desc: Households graze cattle on common pasture and bring them in at night. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market.
     cattle_farm_slot_0: Pastures
     cattle_farm_slot_1: Cultivation
     cattle_farm_slot_2: Provisioning

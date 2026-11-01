@@ -28,8 +28,8 @@ difference is their `local_<pop>_food_consumption` x staffed levels x the locati
 overpopulation, devastation and country modifiers).
 
 Written next to the goods data (the page reads both; building, method, region and good indices are the goods
-page's): `food/index.json`, `food/<n>.json` per save (pools, makers per world region, consumption per pop type,
-food buildings), `food/summary.json` (world and region series over the run) and `food/provinces.json` (series per
+page's): `food/index.js`, `food/<n>.js` per save (pools, makers per world region, consumption per pop type,
+food buildings), `food/summary.js` (world and region series over the run) and `food/provinces.js` (series per
 province, loaded when one province is opened).
 """
 
@@ -43,6 +43,7 @@ from typing import TYPE_CHECKING, Any, Callable
 import numpy as np
 import polars as pl
 
+from prosper_or_perish_constructor.run_report_data import write_data
 from prosper_or_perish_constructor.run_report_charts import DUMMY_GOODS, land_region_expr, titleize
 
 if TYPE_CHECKING:
@@ -401,8 +402,8 @@ def build_food_data(run: RunData, dataset: Path, out: Path, food: FoodRecipes, i
             world.append(None)
             map_frames.append(None)
             continue
-        name = f"food/{n:03d}.json"
-        (out / name).write_text(json.dumps(encode_food(flows, index, provinces), separators=(",", ":"), allow_nan=False), encoding="utf-8")
+        name = f"food/{n:03d}.js"
+        write_data(out, name, encode_food(flows, index, provinces))
         saves.append(name)
         pools = flows["pools"]
         world.append(_series_row(pools))
@@ -430,7 +431,7 @@ def build_food_data(run: RunData, dataset: Path, out: Path, food: FoodRecipes, i
     summary = {"world": series(world),
                "regions": {str(index.of("region", region)): series([rows.get(i) for i in range(count)])
                            for region, rows in regions.items()}}
-    (folder / "summary.json").write_text(json.dumps(summary, separators=(",", ":"), allow_nan=False), encoding="utf-8")
+    write_data(out, "food/summary.js", summary)
     province_series = {}
     for slug, rows in per_province.items():
         def col(key: str) -> list[Any]:
@@ -438,7 +439,7 @@ def build_food_data(run: RunData, dataset: Path, out: Path, food: FoodRecipes, i
         months = [None if i not in rows or not rows[i]["base"] else _sig(rows[i]["stock"] / rows[i]["base"], 3) for i in range(count)]
         province_series[str(provinces.of("province", slug))] = {"months": months, "stock": col("stock"), "cap": col("cap"),
                                                                 "made": col("made"), "eaten": col("base")}
-    (folder / "provinces.json").write_text(json.dumps(province_series, separators=(",", ":"), allow_nan=False), encoding="utf-8")
+    write_data(out, "food/provinces.js", province_series)
     for region in regions:
         index.of("region", region)
     index.of("region", OTHER_REGION)
@@ -525,7 +526,7 @@ def write_food(run: RunData, out: Path, *, repo: Path, project: Path, dataset: P
     if canvas is not None:
         video = render_food_map(run, canvas, out / "maps", built["map"], fps=fps, log=log)
         payload["video"] = video
-    (out / "food" / "index.json").write_text(json.dumps(payload, separators=(",", ":"), allow_nan=False), encoding="utf-8")
+    write_data(out, "food/index.js", payload)
     from prosper_or_perish_constructor.run_report_food_page import food_page_html
 
     path = out / "food.html"

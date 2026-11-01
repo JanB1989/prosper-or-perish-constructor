@@ -39,6 +39,7 @@ building:
     	city = yes
     	megalopolis = yes
     	
+    	important_for_AI = yes
     	build_time = soldier_building
     	
     	raw_modifier = {
@@ -64,7 +65,7 @@ building:
     	construction_demand = soldier_building_construction
 localization:
   entries:
-    pp_conscription_center_maintenance: Conscription Center Maintenance
+    pp_conscription_center_maintenance: "[ShowBuildingTypeName('conscription_center')|e] Maintenance"
 
 evaluation:
   allow_rules:

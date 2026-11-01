@@ -67,8 +67,9 @@ def write_europedia_export(
     mod_root: Path,
     html_path: Path,
     json_path: Path,
+    vanilla_root: Path | None = None,
 ) -> tuple[Path, Path]:
-    payload = build_europedia_payload(mod_root)
+    payload = build_europedia_payload(mod_root, vanilla_root)
     html_path.parent.mkdir(parents=True, exist_ok=True)
     json_path.parent.mkdir(parents=True, exist_ok=True)
     json_path.write_text(
@@ -79,7 +80,10 @@ def write_europedia_export(
     return html_path, json_path
 
 
-def build_europedia_payload(mod_root: Path) -> dict[str, Any]:
+def build_europedia_payload(mod_root: Path, vanilla_root: Path | None = None) -> dict[str, Any]:
+    """The cards of the mod's Europedia. A card shows a game object's own name and text (a good, a situation, a static
+    modifier, a vanilla concept), so keys the mod does not define are read from ``vanilla_root`` (the folder holding
+    main_menu/) when given."""
     gui_path = mod_root / EUROPEDIA_GUI
     localization_path = mod_root / EUROPEDIA_LOCALIZATION
     concepts_root = mod_root / EUROPEDIA_CONCEPTS
@@ -98,14 +102,18 @@ def build_europedia_payload(mod_root: Path) -> dict[str, Any]:
         if path != localization_path:
             for key, value in _read_localization(path).items():
                 localization.setdefault(key, value)
+    if vanilla_root is not None:
+        for path in sorted((vanilla_root / "main_menu" / "localization" / "english").rglob("*_l_english.yml")):
+            for key, value in _read_localization(path, strict=False).items():
+                localization.setdefault(key, value)
     concepts = _read_concepts(concepts_root, mod_root)
     filter_labels = _extract_filter_labels(gui_path.read_text(encoding="utf-8-sig"))
 
     entries: list[dict[str, Any]] = []
     missing_keys: list[str] = []
     for card in cards:
-        title = localization.get(card.title_key)
-        body = localization.get(card.body_key)
+        title = _expand(localization.get(card.title_key), localization)
+        body = _expand(localization.get(card.body_key), localization)
         if title is None:
             missing_keys.append(card.title_key)
         if body is None:
@@ -114,7 +122,7 @@ def build_europedia_payload(mod_root: Path) -> dict[str, Any]:
         if title is None or body is None:
             continue
         # live lines (the player's own game) have nothing to show outside it
-        body = _join_parts(body, [(role, localization[key]) for role, key in card.parts
+        body = _join_parts(body, [(role, _expand(localization[key], localization)) for role, key in card.parts
                                   if key in localization and "GetPlayer" not in localization[key]])
 
         concept_key = _concept_key_from_title_key(card.title_key)
@@ -240,7 +248,8 @@ def _extract_filter_labels(text: str) -> dict[str, str]:
     return labels
 
 
-def _read_localization(path: Path) -> dict[str, str]:
+def _read_localization(path: Path, strict: bool = True) -> dict[str, str]:
+    """Key -> text; ``strict=False`` skips texts this reader cannot decode (vanilla's own escapes)."""
     text = path.read_text(encoding="utf-8-sig")
     entries: dict[str, str] = {}
     pattern = re.compile(
@@ -251,6 +260,8 @@ def _read_localization(path: Path) -> dict[str, str]:
         try:
             entries[match.group("key")] = json.loads(f'"{match.group("value")}"')
         except json.JSONDecodeError as error:
+            if not strict:
+                continue
             raise EuropediaExportError(
                 f"Cannot decode localization value {match.group('key')!r} in {path}: {error}"
             ) from error
@@ -298,7 +309,21 @@ def _string_items(value: Value | None) -> list[str]:
 
 
 def _concept_key_from_title_key(title_key: str) -> str:
-    return title_key.removeprefix("game_concept_")
+    return title_key.removeprefix("game_concept_").removeprefix("STATIC_MODIFIER_NAME_")
+
+
+_EMBEDDED = re.compile(r"\$(\w+)\$")
+
+
+def _expand(text: str | None, localization: dict[str, str], depth: int = 5) -> str | None:
+    """``$key$`` replaced by that key's text (the game does the same); $BULLET$ stays for the renderer."""
+    if text is None or depth == 0:
+        return text
+    return _EMBEDDED.sub(
+        lambda m: m.group(0) if m.group(1) == "BULLET" or m.group(1) not in localization
+        else _expand(localization[m.group(1)], localization, depth - 1),
+        text,
+    )
 
 
 def _entry_anchors(
@@ -356,11 +381,12 @@ _INLINE_FUNCTIONS = (
     "ShowModifierEffect",
     "ShowPopTypeName",
     "ShowModifierTypeName",
+    "ShowSituationName",
     "ScriptValue",
     "GetVariable",
 )
 _INLINE_FUNCTION_PATTERN = "|".join(_INLINE_FUNCTIONS)
-# a concept link with its own text: [Concept('pp_abundant_free_land', 'Abundant Arable Land')|e]
+# a concept link with its own text: [Concept('provincial_food', 'store')|e]
 _NAMED_CONCEPT = re.compile(r"\[Concept\('([A-Za-z0-9_]+)',\s*'([^']+)'\)\|[eE]\]")
 _INLINE_TOKEN = re.compile(
     rf"(?P<bracket_func>\[(?P<bracket_func_name>{_INLINE_FUNCTION_PATTERN})"

@@ -148,7 +148,7 @@ advancements:
 localization:
   entries:
     wheat_model_farm: Wheat Model Farm
-    wheat_model_farm_desc: Surveyed fields, seed drills and hired hands raise wheat on a larger managed farm.
+    wheat_model_farm_desc: Surveyed fields, seed drills and hired hands raise wheat on a larger managed farm. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market.
     wheat_model_farm_slot_0: Fields
     wheat_model_farm_slot_1: Cultivation
     wheat_model_farm_slot_2: Provisioning

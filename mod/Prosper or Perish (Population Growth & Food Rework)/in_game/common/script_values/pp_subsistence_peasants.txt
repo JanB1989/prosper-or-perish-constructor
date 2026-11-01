@@ -1,0 +1,9 @@
+﻿# Location scope: the subsistence peasants (idle peasants) in thousands, never below 0 (2026-10-27, Jan).
+# The game counts idle peasants as peasants minus peasant jobs, so the count goes negative where buildings offer more
+# peasant jobs than there are peasants (Figueira da Foz 1837: 491 peasants, 3,750 Net Curing Yard jobs, -3,258). Such a
+# location has no subsistence peasants: they take no land (pp_subsistence_land, the farm cap, the population bars) and
+# grow no food (the food tooltip; the engine floors its subsistence food at 0 itself).
+pp_subsistence_peasants = {
+	value = "unemployed_pops_of_pop_type_in_location(pop_type:peasants)"
+	min = 0
+}

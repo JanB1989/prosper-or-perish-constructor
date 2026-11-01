@@ -76,32 +76,37 @@ def _strip(key: str) -> str:
 
 
 def _blocks(folder: Path) -> dict[str, CList]:
+    return _blocks_of(sorted(folder.glob("*.txt")) if folder.is_dir() else [])
+
+
+def _blocks_of(paths: list[Path]) -> dict[str, CList]:
     out: dict[str, CList] = {}
-    for path in sorted(folder.glob("*.txt")) if folder.is_dir() else []:
+    for path in paths:
         for entry in parse_file(path).entries:
             if isinstance(entry.value, CList):
                 out[_strip(entry.key)] = entry.value
     return out
 
 
-def _vanilla_common(repo: Path, project: Path) -> Path:
+def _vanilla_blocks(repo: Path, project: Path, folder: str) -> dict[str, CList]:
+    """One common folder of the base game and its DLC folders, in load order (Across the Pillars adds navy units)."""
+    from prosper_or_perish_constructor.building_footprint import vanilla_files
     from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
-    return Path(vanilla_root(repo, project)) / "game" / "in_game" / "common"
+    return _blocks_of(vanilla_files(Path(vanilla_root(repo, project)), Path("in_game/common") / folder))
 
 
 def plan(repo: Path, project: Path, prices: dict[str, float] | None = None) -> list[Ship]:
     """One entry per navy unit type, from vanilla unit types, ages, goods demands and unit prices."""
     from prosper_or_perish_constructor import production_labour
 
-    common = _vanilla_common(repo, project)
     mod_common = Path(repo) / "mod" / MOD_FOLDER / "in_game" / "common"
     prices = prices if prices is not None else production_labour.load_prices(repo, project)
-    units = _blocks(common / "unit_types")
-    categories = _blocks(common / "unit_categories")
-    demands = {**_blocks(common / "goods_demand"), **_blocks(mod_common / "goods_demand")}
-    vanilla_prices = _blocks(common / "prices")
-    ages = sorted(_blocks(common / "age").items(), key=lambda item: _number(item[1].first("year")))
+    units = _vanilla_blocks(repo, project, "unit_types")
+    categories = _vanilla_blocks(repo, project, "unit_categories")
+    demands = {**_vanilla_blocks(repo, project, "goods_demand"), **_blocks(mod_common / "goods_demand")}
+    vanilla_prices = _vanilla_blocks(repo, project, "prices")
+    ages = sorted(_vanilla_blocks(repo, project, "age").items(), key=lambda item: _number(item[1].first("year")))
     age_index = {name: i for i, (name, _) in enumerate(ages)}
 
     def field(unit: str, key: str, seen: tuple[str, ...] = ()) -> object:

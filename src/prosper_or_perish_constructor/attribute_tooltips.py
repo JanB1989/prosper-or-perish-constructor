@@ -64,6 +64,8 @@ ICONS_PER_GROUP_ROW = 12
 # composed by tools/build_land_potential_icon.py
 LAND_POTENTIAL_ICON = "gfx/interface/icons/location_icons/pp_land_potential.dds"
 LOCATION_TEMPLATES = Path("in_game/map_data/location_templates.txt")
+CAPS_PATH = Path("in_game/common/script_values/pp_wb_building_caps.txt")   # worldbuilder/buildings.py
+_CAP_EQUATION = re.compile(r"pp_wb_cap_(\w+?)_(?:terms|shared)")
 SETUP_MODIFIERS = SETUP_DIR / "21_pp_wb_attribute_modifiers.txt"
 
 
@@ -219,6 +221,16 @@ def scalars(body: Block) -> dict[str, str]:
     return {key: value for key, value in body if key is not None and isinstance(value, str)}
 
 
+def terrain_fields(body: Block) -> dict[str, str]:
+    """A terrain class's scalar fields; a topography's ``proximity = { default = X }`` block (EU5 1.4) reads as ``X``,
+    like a vegetation's plain ``proximity = X``. Costs toward a specific topography are not shown (vanilla sets none)."""
+    fields = scalars(body)
+    for key, value in body:
+        if key == "proximity" and isinstance(value, list) and "default" in (block := scalars(value)):
+            fields["proximity"] = block["default"]
+    return fields
+
+
 def goods_keys(vanilla_root: Path | None, mod_root: Path) -> set[str]:
     return set(definitions(game_files(vanilla_root, mod_root, "in_game/common/goods")))
 
@@ -326,7 +338,7 @@ def class_views(vanilla_root: Path | None, mod_root: Path, goods: set[str], loc:
         views[attribute] = []
         for key, body in definitions(game_files(vanilla_root, mod_root, f"in_game/common/{directory}")).items():
             effects, output = split_goods(modifier_lines(body, "location_modifier"), goods)
-            views[attribute].append(View(attribute, key, class_gate(attribute, key), f"${key}$", effects, output, terrain_lines(scalars(body), loc), f"{attribute} = {key}"))
+            views[attribute].append(View(attribute, key, class_gate(attribute, key), f"${key}$", effects, output, terrain_lines(terrain_fields(body), loc), f"{attribute} = {key}"))
     return views
 
 
@@ -697,7 +709,7 @@ def land_potential_chip(occupied: Mapping[str, set[int]]) -> str:
 \t\t\t\tblockoverride "title_icon" {{
 \t\t\t\t\twidget = {{
 \t\t\t\t\t\tusing = tooltip_title_icon_size
-\t\t\t\t\t\tbackground = {{ texture = "[GetClimateFrame({_LOC}.GetClimate)]" }}
+\t\t\t\t\t\tbackground = {{ texture = "{location_status.NEUTRAL_FRAME}" }}
 \t\t\t\t\t\ticon = {{ using = tooltip_title_icon_size texture = "{LAND_POTENTIAL_ICON}" }}
 \t\t\t\t\t}}
 \t\t\t\t}}
@@ -711,7 +723,7 @@ def land_potential_chip(occupied: Mapping[str, set[int]]) -> str:
 \t\t\t\t}}
 \t\t\t}}
 \t\t}}
-\t\tbackground = {{ texture = "[GetClimateFrame({_LOC}.GetClimate)]" }}
+\t\tbackground = {{ texture = "{location_status.NEUTRAL_FRAME}" }}
 \t\ticon = {{ size = {{ 24 24 }} parentanchor = center texture = "{LAND_POTENTIAL_ICON}" }}
 \t}}"""
 
@@ -781,7 +793,7 @@ def render_localization(views: Mapping[str, list[View]]) -> str:
         ' PP_TT_GOODS_OUTPUT: "Goods Output"',
         ' PP_TT_KEY_NONE: "none"',
         ' PP_LAND_POTENTIAL_TITLE: "Land Potential"',
-        ' PP_LAND_POTENTIAL_HELP: "How well the land here suits each good, from its [climate|e], [vegetation|e], [topography|e], soil and fertility, and a coast or lake shore; best first in each row. [winter|e], harvests and the raw material bonus come on top. The raw material produced here is highlighted."',
+        ' PP_LAND_POTENTIAL_HELP: "How well the land here suits each good, from its [climate|e], [vegetation|e], [topography|e], soil and fertility, and a coast or lake shore. [winter|e], harvests and the raw material bonus come on top."',
         *(f' PP_LAND_TIER_{tier.key.upper()}: "{tier_label(tier)}"' for tier in TIERS),
     ]
     for attribute_views in views.values():
@@ -795,12 +807,42 @@ def render_localization(views: Mapping[str, list[View]]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def capacity_rows(mod_root: Path) -> dict[str, dict[str, str]]:
+    """Trigger -> {``pp_wb_capacity_<cap>``: levels}: what each attribute class adds to an improvement building's cap,
+    read from the cap equations the game loads (``pp_wb_cap_<cap>_terms`` / ``_shared``, worldbuilder/buildings.py).
+    The class tooltips list them with the class's effects, like the river's capacity lines; the modifier types are
+    display only."""
+    path = Path(mod_root) / CAPS_PATH
+    rows: dict[str, dict[str, str]] = {}
+    if not path.is_file():
+        return rows
+    for name, body in parse(path.read_text(encoding="utf-8-sig")):
+        match = _CAP_EQUATION.fullmatch(name or "")
+        if match is None or not isinstance(body, list):
+            continue
+        for key, branch in body:
+            if key not in ("if", "else_if") or not isinstance(branch, list):
+                continue
+            limit = next((v for k, v in branch if k == "limit"), None)
+            add = next((v for k, v in branch if k == "add"), None)
+            if not isinstance(limit, list) or len(limit) != 1 or isinstance(limit[0][1], list) or not isinstance(add, list):
+                continue
+            levels = _number(next((v for k, v in add if k == "value"), ""))
+            if levels:
+                rows.setdefault(f"{limit[0][0]} = {limit[0][1]}", {})[f"pp_wb_capacity_{match[1]}"] = _fmt(levels)
+    return rows
+
+
 def build_views(vanilla_root: Path | None, mod_root: Path) -> dict[str, list[View]]:
     goods = goods_keys(vanilla_root, mod_root)
     loc = vanilla_localization(vanilla_root, EXTRA_KEYS)
     harvest_file = Path(mod_root) / location_status.HARVEST_MODIFIERS
     harvests = location_status.harvest_modifiers(harvest_file.read_text(encoding="utf-8-sig")) if harvest_file.is_file() else []
-    return {**class_views(vanilla_root, mod_root, goods, loc), **static_views(static_modifier_definitions(vanilla_root, mod_root), goods, harvests)}
+    views = {**class_views(vanilla_root, mod_root, goods, loc), **static_views(static_modifier_definitions(vanilla_root, mod_root), goods, harvests)}
+    capacities = capacity_rows(mod_root)
+    for view in (view for attribute_views in views.values() for view in attribute_views):
+        view.effects.update(capacities.get(view.trigger or "", {}))   # after the effects, as the river lists them
+    return views
 
 
 def write(mod_root: Path, vanilla_root: Path | None) -> dict[str, int]:

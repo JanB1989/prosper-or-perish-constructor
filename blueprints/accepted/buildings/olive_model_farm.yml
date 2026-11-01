@@ -131,7 +131,7 @@ building:
 localization:
   entries:
     olive_model_farm: Olive Model Estate
-    olive_model_farm_desc: Beam presses, oil stores and hired hands work the groves as one managed estate.
+    olive_model_farm_desc: Beam presses, oil stores and hired hands work the groves as one managed estate. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market.
     olive_model_farm_slot_0: Groves
     olive_model_farm_slot_1: Cultivation
     olive_model_farm_slot_2: Provisioning

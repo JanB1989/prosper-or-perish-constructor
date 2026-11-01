@@ -158,7 +158,7 @@ advancements:
 localization:
   entries:
     maize_farm: Maize Field
-    maize_farm_desc: Households plant maize in hills worked with the hoe.
+    maize_farm_desc: Households plant maize in hills worked with the hoe. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market.
     maize_farm_slot_0: Fields
     maize_farm_slot_1: Cultivation
     maize_farm_slot_2: Provisioning

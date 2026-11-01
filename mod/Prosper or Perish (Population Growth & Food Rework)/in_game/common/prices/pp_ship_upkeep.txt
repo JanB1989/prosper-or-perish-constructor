@@ -28,7 +28,17 @@ n_catalan_galley_maintenance = {
 	sailors = 0
 }
 # navy_galley age_1_traditions: galley_1_maintenance 0.84 gold (was 0.5)
+n_galeota_andalusi_maintenance = {
+	gold = 0.34
+	sailors = 0
+}
+# navy_galley age_1_traditions: galley_1_maintenance 0.84 gold (was 0.5)
 n_genoese_galley_maintenance = {
+	gold = 0.34
+	sailors = 0
+}
+# navy_galley age_1_traditions: galley_1_maintenance 0.84 gold (was 0.5)
+n_ghurab_maghribi_maintenance = {
 	gold = 0.34
 	sailors = 0
 }
@@ -188,12 +198,22 @@ n_baochuan_maintenance = {
 	sailors = 0
 }
 # navy_heavy_ship age_3_discovery: heavy_ship_3_maintenance 5.65 gold (was 4)
+n_carraca_portuguesa_maintenance = {
+	gold = 0.4125
+	sailors = 0
+}
+# navy_heavy_ship age_3_discovery: heavy_ship_3_maintenance 5.65 gold (was 4)
 n_carrack_maintenance = {
 	gold = 0.4125
 	sailors = 0
 }
 # navy_heavy_ship age_3_discovery: heavy_ship_3_maintenance 5.65 gold (was 4)
 n_early_iberian_galleon_maintenance = {
+	gold = 0.4125
+	sailors = 0
+}
+# navy_heavy_ship age_3_discovery: heavy_ship_3_maintenance 5.65 gold (was 4)
+n_nao_castellana_maintenance = {
 	gold = 0.4125
 	sailors = 0
 }
@@ -294,6 +314,11 @@ n_age_3_discovery_light_ship_maintenance = {
 }
 # navy_light_ship age_3_discovery: light_ship_3_maintenance 2.21 gold (was 2)
 n_caravel_maintenance = {
+	gold = 0.0525
+	sailors = 0
+}
+# navy_light_ship age_3_discovery: light_ship_3_maintenance 2.21 gold (was 2)
+n_sale_rover_maintenance = {
 	gold = 0.0525
 	sailors = 0
 }

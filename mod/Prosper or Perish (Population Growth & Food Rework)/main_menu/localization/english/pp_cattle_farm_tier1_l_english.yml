@@ -2,7 +2,7 @@
 
 # >>> eu5-building-pipeline:cattle_farmstead:localization
   cattle_farmstead: "Cattle Farmstead"
-  cattle_farmstead_desc: "Stall feeding and manure yards carry the herd through the lean months."
+  cattle_farmstead_desc: "Stall feeding and manure yards carry the herd through the lean months. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   cattle_farmstead_slot_0: "Pastures"
   cattle_farmstead_slot_1: "Cultivation"
   cattle_farmstead_slot_2: "Provisioning"

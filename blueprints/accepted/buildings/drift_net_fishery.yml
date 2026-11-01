@@ -134,7 +134,7 @@ advancements:
 localization:
   entries:
     drift_net_fishery: Drift-Net Fishery
-    drift_net_fishery_desc: Drift-net fisheries organize hemp and flax nets, small sailcloth, shore brining, and light boat repairs for seasonal coastal shoals.
+    drift_net_fishery_desc: "Drift-net fisheries organize hemp and flax nets, small sailcloth, shore brining, and light boat repairs for seasonal coastal shoals. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
     drift_net_fishery_slot_0: Coastal Waters
     drift_net_fishery_slot_1: Coastal Drift Nets
     drift_net_fishery_slot_2: Provisioning

@@ -143,7 +143,6 @@ REPLACE:fishing_village = {
     }
     construction_demand = village_construction
     raw_modifier = {
-      local_population_capacity = 0.625
     local_pp_staple_levels = 1  # counts toward the province's Cookshop cap like a farm level (a staple food maker)
     }
 

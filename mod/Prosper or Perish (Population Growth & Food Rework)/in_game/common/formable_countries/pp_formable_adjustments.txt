@@ -1,0 +1,52 @@
+﻿# Prosper or Perish - formable adjustments: vanilla blocks (formable_countries/00_formable_countries.txt) with
+# the changes marked PP (docs/country_finetunes.md).
+
+TRY_REPLACE:PRU_f = { #Prussia
+	content_priority = 800
+	level = 2
+	required_locations_fraction = 0.75
+	rule = historical
+
+	capital_required = no
+
+	potential = {
+		culture = { has_culture_group = culture_group:german_group }
+	}
+	allow = {
+		NOT = {
+			has_reform = government_reform:military_order_reform 
+			has_estate_privilege = estate_privilege:clergy_powerful_dioceses
+		}
+		# PP: no nobles_land_rights requirement (2026-10-28, Jan: Brandenburg held all of Prussia in 1823 and failed only these)
+
+		"estate_power(estate_type:clergy_estate)" < 0.35 # PP: vanilla 0.20 (2026-10-28, Jan: Brandenburg held all of Prussia in 1823 and failed only these)
+		"estate_power(estate_type:nobles_estate)" > 0.10 # PP: vanilla 0.20 (2026-10-28, Jan: Brandenburg held all of Prussia in 1823 and failed only these)
+		at_war = no
+	}
+	name = PRU
+	flag = PRU
+	adjective = PRU_ADJ
+	tag = PRU
+	color = map_PRU
+	
+	
+	areas = {
+		prussia_area
+	}
+	form_effect = {
+		if = {
+			limit = {
+				government_type != government_type:republic
+				government_type != government_type:monarchy
+			}
+			change_government_type = government_type:monarchy
+			add_legitimacy = legitimacy_radical_bonus
+		}
+		if = {
+			limit = {
+				NOT = { is_member_of_international_organization = international_organization:hre }
+			}
+			set_country_rank_effect = { rank = country_rank:rank_kingdom }
+		}
+	}
+}

@@ -56,7 +56,7 @@ localization:
     pp_paddy_water_control_upkeep: Village Upkeep
     paddy_water_control: Paddy Water Control
     paddy_water_control_desc: Sluices, feeder canals, dikes and water gates bring water onto the wet-rice fields and drain it off again at the right time of the crop. Village crews keep the channels open.
-    pp_paddy_water_control_price: Paddy Water Control Price
+    pp_paddy_water_control_price: '[ShowBuildingTypeName(''paddy_water_control'')|e] Price'
 prices:
 - key: pp_paddy_water_control_price
   body: '{gold = 160}'

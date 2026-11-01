@@ -19,14 +19,6 @@ REPLACE:granary = {
     allow = {
         is_province_capital = yes
     }
-    location_potential = {
-        OR = {
-            location_rank = location_rank:rural_settlement
-            location_rank = location_rank:town
-            location_rank = location_rank:city
-            location_rank = location_rank:megalopolis
-        }
-    }
     important_for_AI = yes
     build_time = government_build_time
     unique_production_methods = {
@@ -39,9 +31,6 @@ REPLACE:granary = {
         }
     }
     construction_demand = granary_construction
-    raw_modifier = {
-      local_population_capacity = 0.088
-    }
 
     modifier = {
         local_food_preservation_efficiency_modifier = 0.03   # 2026-10-03: was 0.0002 (1:1 port slip; vanilla 0.05). Province decay = rate / (1 + summed preservation)

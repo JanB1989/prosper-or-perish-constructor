@@ -7,8 +7,11 @@ For a good ``g`` with ``assets/icons/trade_goods/icon_goods_g.png`` (128 px) and
 - ``main_menu/gfx/interface/icons/modifier_types/g_positive.dds`` (the icon of its modifier types),
 - ``main_menu/gfx/interface/icons/trade_goods/illustrations/icon_goods_g.dds`` (the market illustration),
 
-as DXT5 with a full mip chain, the layout of the hand-converted offset icons. A missing PNG is skipped (the build runs
-before the art exists); a DDS newer than its PNG is left alone.
+the icons as DXT5 with a full mip chain (the layout of the hand-converted offset icons), the illustration as BC7 in one
+level (the picture format, interface_dds). A missing PNG is skipped (the build runs before the art exists); a DDS newer
+than its PNG is left alone. The build installs all three for logistics and the illustration of every good that has
+one (:func:`illustration_goods`; the other goods' icons were converted by hand). An illustration PNG is stored at
+1080 x 440 already, so the resize never stretches it (the painted ones are cropped from wider paintings, README there).
 """
 
 from __future__ import annotations
@@ -39,10 +42,17 @@ def targets(good: str) -> list[tuple[Path, Path, tuple[int, int]]]:
     ]
 
 
-def install(repo: Path, mod_root: Path, goods: Iterable[str]) -> IconResult:
+def illustration_goods(repo: Path) -> list[str]:
+    """Every good with a market illustration PNG in ``assets/icons/trade_goods/illustrations``."""
+    return sorted(p.stem.removeprefix("icon_goods_") for p in (repo / ASSET_ROOT / "illustrations").glob("icon_goods_*.png"))
+
+
+def install(repo: Path, mod_root: Path, goods: Iterable[str], *, illustrations_only: bool = False) -> IconResult:
     result = IconResult()
     for good in goods:
         for source, relative, size in targets(good):
+            if illustrations_only and size != ILLUSTRATION_SIZE:
+                continue
             png = repo / source
             dds = mod_root / relative
             if not png.is_file():
@@ -50,19 +60,25 @@ def install(repo: Path, mod_root: Path, goods: Iterable[str]) -> IconResult:
                 continue
             if dds.is_file() and dds.stat().st_mtime >= png.stat().st_mtime:
                 continue
-            write_dxt5(png, dds, size)
+            write_dds(png, dds, size)
             result.written.append(relative)
     return result
 
 
-def write_dxt5(png: Path, dds: Path, size: tuple[int, int]) -> None:
-    """DXT5 DDS with a full mip chain (``floor(log2(max side)) + 1`` levels), the shared game-format writer."""
+def write_dds(png: Path, dds: Path, size: tuple[int, int]) -> None:
+    """Game-format DDS: a picture (illustrations folder) BC7 in one level, an icon DXT5 with a full mip chain
+    (``floor(log2(max side)) + 1`` levels, the shared game-format writer)."""
     from PIL import Image
 
     from eu5_building_pipeline.dds import write_game_dds
+    from prosper_or_perish_constructor.interface_dds import encode_bc7, is_picture
 
     with Image.open(png) as source:
         image = source.convert("RGBA")
     if image.size != size:
         image = image.resize(size, Image.Resampling.LANCZOS)
-    write_game_dds(image, dds)
+    if is_picture(dds):
+        dds.parent.mkdir(parents=True, exist_ok=True)
+        dds.write_bytes(encode_bc7(image))
+    else:
+        write_game_dds(image, dds)

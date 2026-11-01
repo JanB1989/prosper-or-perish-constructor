@@ -367,6 +367,20 @@ per person, world and world regions, and the share of the world's people living 
 and the "Institutions per person" tile. Snapshots whose save was overwritten before the dataset kept the table have
 no institution data.
 
+Land improvements (`src/prosper_or_perish_constructor/improvement_room.py`): the Buildings section's chart "Land
+improvements: built and possible" and the "Land improvements built" tile show, world-wide per save, the levels of the
+World Builder capacity buildings that stand, the levels still possible and the two together, in levels (the cost unit),
+in land (people of arable land) and as the share built per cap (land clearance, field management with its upgrades,
+water control, irrigated fields, paddy water control). A cap is the game's max-level script value: base + the
+location's class terms (handover `cap_equation_json`) + levels per development point x the save's development, clamped
+at 15, floored, 0 where no member's location gate passes; a shared cap holds its members' levels together. Land is
+valued at full research: the best generally available member whose location gate passes; a regional member (every
+unlocking advance in a culture_/country_/region_/religion_/government_/estate_ advance file: incamisana, bund, polders)
+or a culture-locked niche (Khmer baray, Jiangnan works) counts only where it stands. Only owned
+locations count; caps come from today's built mod and handover, so a run played with other caps shows levels above
+them (the caption gives how many). `tests/test_improvement_room.py` checks the caps against the game's own script
+values and gates (`worldbuilder/start_rules.py`) and against the handover's `cap_at_start` / `cap_at_reference_development`.
+
 #### Building investment
 
 The build also keeps the derived table `graphs/dataset/tables/building_investment/playthrough_id=<id>/<snapshot>.parquet`
@@ -412,14 +426,19 @@ change only when a version merges into main; the preview can be overwritten at w
 
 - site root: a work-in-progress copy of `docs/` from the current branch (uncommitted changes included),
   with a banner naming branch and commit;
-- `runs/`: the observer-run reports, newest 5 kept.
+- `runs/`: the observer-run reports, newest 5 kept, plus the pinned example games.
 
 ```bash
 uv run ppc publish-wip                     # dry run: shows what would go online
 uv run ppc publish-wip --yes               # replace the WIP docs (runs/ stays)
 uv run ppc report --no-build --publish     # dry run for the newest run report
 uv run ppc report --no-build --publish --yes
+uv run ppc report --no-build --publish --playthrough <id> --pin 0.10 --yes   # pin as an example game
+uv run ppc report --no-build --publish --playthrough <id> --unpin --yes      # back to the newest-5 rule
 ```
+
+A pinned run never drops off and does not count against `keep`; the runs page lists it first under
+"Example games (0.10)". Re-publishing it keeps the pin; publishing other runs never touches it.
 
 Each publish replaces only its own part and pushes one fresh commit, so the repository never grows. The
 pages carry `noindex`. `--create-site` (on either command) creates the repository once.

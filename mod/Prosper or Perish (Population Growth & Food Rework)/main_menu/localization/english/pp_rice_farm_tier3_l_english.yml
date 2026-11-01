@@ -2,7 +2,7 @@
 
 # >>> eu5-building-pipeline:rice_model_farm:localization
   rice_model_farm: "Rice Model Farm"
-  rice_model_farm_desc: "Levelled paddies, planned channels and hired hands raise rice on a large managed estate."
+  rice_model_farm_desc: "Levelled paddies, planned channels and hired hands raise rice on a large managed estate. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   rice_model_farm_slot_0: "Paddies"
   rice_model_farm_slot_1: "Cultivation"
   rice_model_farm_slot_2: "Provisioning"

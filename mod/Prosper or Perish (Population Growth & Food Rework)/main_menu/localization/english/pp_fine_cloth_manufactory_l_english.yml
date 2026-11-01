@@ -1,15 +1,15 @@
 ﻿l_english:
 
 # >>> eu5-building-pipeline:fine_cloth_manufactory:localization
-  pp_fine_cloth_manufactory_silk_cloth_manufactory_maintenance: "Fine Cloth Manufactory Silk Cloth Manufactory Maintenance"
-  pp_fine_cloth_manufactory_fine_cloth_manufactory_maintenance: "Fine Cloth Manufactory Fine Cloth Manufactory Maintenance"
-  pp_fine_cloth_manufactory_standard_cloth_manufactory_maintenance: "Fine Cloth Manufactory Standard Cloth Manufactory Maintenance"
-  pp_fine_cloth_manufactory_alum_fine_cloth_manufactory_maintenance: "Fine Cloth Manufactory Alum Fine Cloth Manufactory Maintenance"
+  pp_fine_cloth_manufactory_silk_cloth_manufactory_maintenance: "Silk Cloth"
+  pp_fine_cloth_manufactory_fine_cloth_manufactory_maintenance: "Cloth Finishing"
+  pp_fine_cloth_manufactory_standard_cloth_manufactory_maintenance: "Standard Dyeing"
+  pp_fine_cloth_manufactory_alum_fine_cloth_manufactory_maintenance: "Dyes with Alum"
   pp_fine_cloth_manufactory_market_sales: "Market Sales"
   pp_fine_cloth_manufactory_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
   fine_cloth_manufactory_slot_2: "Market"
   pp_fine_cloth_manufactory_legacy_fur_trim_workshop_maintenance: "$fur_trim_workshop_maintenance$ (Old Ways)"
-  pp_fine_cloth_manufactory_legacy_fur_trim_workshop_maintenance_desc: "An older way of working, kept from the $fine_cloth_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
+  pp_fine_cloth_manufactory_legacy_fur_trim_workshop_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('fine_cloth_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
   pp_fine_cloth_manufactory_legacy_wool_weavers_workshop_maintenance: "$wool_weavers_workshop_maintenance$ (Old Ways)"
-  pp_fine_cloth_manufactory_legacy_wool_weavers_workshop_maintenance_desc: "An older way of working, kept from the $fine_cloth_workshop$. It still runs on its old materials, but turns out less per level than the methods of this age."
+  pp_fine_cloth_manufactory_legacy_wool_weavers_workshop_maintenance_desc: "An older way of working, kept from the [ShowBuildingTypeName('fine_cloth_workshop')|e]. It still runs on its old materials, but turns out less per level than the methods of this age."
 # <<< eu5-building-pipeline:fine_cloth_manufactory:localization

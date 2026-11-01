@@ -131,7 +131,7 @@ building:
 localization:
   entries:
     camel_herders: Camel Herders
-    camel_herders_desc: Herding families drive their camels between desert wells and thorn-scrub grazing, raising calves for the caravans, the armies and the saddle.
+    camel_herders_desc: "Herding families drive their camels between desert wells and thorn-scrub grazing, raising calves for the caravans, the armies and the saddle. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
     camel_herders_slot_0: Desert Grazing
     camel_herders_slot_1: Herding and Feeding
     camel_herders_slot_2: Provisioning

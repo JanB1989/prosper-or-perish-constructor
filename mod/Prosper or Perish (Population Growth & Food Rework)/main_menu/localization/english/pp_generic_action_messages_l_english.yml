@@ -1,0 +1,19 @@
+﻿l_english:
+ # Message types of the mod's generic actions (main_menu/gui/messagetypes/pp_messagetypes.txt); the game checks
+ # these keys for every message type, shown or not.
+ PERFORM_pp_found_market_ACTION: "Market Founded"
+ PERFORM_pp_found_market_ACTION_HEADER: "$MESSENGER$"
+ PERFORM_pp_found_market_ACTION_TITLE: "Market Founded"
+ PERFORM_pp_found_market_ACTION_DESC: "A new [market|e] has been founded in our capital."
+ PERFORM_pp_found_market_ACTION_EFFECTS: "$EFFECT$"
+ PERFORM_pp_found_market_ACTION_LOG: "Founded a new [market|e] in the capital"
+ PERFORM_pp_found_market_ACTION_MAP: "Founded a new market"
+ PERFORM_pp_found_market_ACTION_SETUP: "When a country far from every market founds one in its capital."
+ PERFORM_pp_release_enclave_independence_ACTION: "Enclave Released"
+ PERFORM_pp_release_enclave_independence_ACTION_HEADER: "$MESSENGER$"
+ PERFORM_pp_release_enclave_independence_ACTION_TITLE: "Enclave Released"
+ PERFORM_pp_release_enclave_independence_ACTION_DESC: "Land we could never govern has been released as a new [country|e]."
+ PERFORM_pp_release_enclave_independence_ACTION_EFFECTS: "$EFFECT$"
+ PERFORM_pp_release_enclave_independence_ACTION_LOG: "Released an enclave it could never govern"
+ PERFORM_pp_release_enclave_independence_ACTION_MAP: "Released an enclave"
+ PERFORM_pp_release_enclave_independence_ACTION_SETUP: "When a subject or union partner releases land it can never govern."

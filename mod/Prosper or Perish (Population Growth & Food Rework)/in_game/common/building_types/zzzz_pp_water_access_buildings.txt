@@ -51,9 +51,6 @@ REPLACE:pirate_stronghold = {
 	}
 
 	capital_country_modifier = { monthly_gold_income = 20 }
-	raw_modifier = {
-		local_population_capacity = 0.4
-	}
 }
 
 REPLACE:pirate_haven = {
@@ -109,9 +106,6 @@ REPLACE:pirate_haven = {
 	modifier = {
 		local_pirate_spawn_chance = 1		
 	}
-	raw_modifier = {
-		local_population_capacity = 0.025
-	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
 }
@@ -151,9 +145,6 @@ REPLACE:black_market = {
 		scaled_gold_to_building_owner = 0.05
 		merchant_capacity_from_building = 2
 	}
-	raw_modifier = {
-		local_population_capacity = 0.06
-	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
 }
@@ -188,9 +179,6 @@ REPLACE:smuggler_cove = {
 	modifier = {
 		building_owner_maritime_presence = 0.05
 		harbor_suitability = 0.01
-	}
-	raw_modifier = {
-		local_population_capacity = 0.06
 	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
@@ -227,9 +215,6 @@ REPLACE:brothel = {
 	modifier = {
 		local_disease_resistance = -0.05
 		local_population_growth = 0.0005
-	}
-	raw_modifier = {
-		local_population_capacity = 0.06
 	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
@@ -268,9 +253,6 @@ REPLACE:pirate_tavern = {
 		local_manpower = 0.001
 		local_pop_join_rebel_threshold = -0.02
 	}
-	raw_modifier = {
-		local_population_capacity = 0.5
-	}
 }
 
 REPLACE:lazaretto = {
@@ -302,9 +284,6 @@ REPLACE:lazaretto = {
 	construction_demand = town_building_construction
 	modifier = {
 		local_disease_resistance = 0.25
-	}
-	raw_modifier = {
-		local_population_capacity = 0.06
 	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
@@ -388,9 +367,6 @@ REPLACE:trade_company_harbor = {
 			}
 		}
 	}
-	raw_modifier = {
-		local_population_capacity = 0.12
-	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
 }
@@ -448,9 +424,6 @@ REPLACE:por_feitoria = {
 		merchant_capacity_from_building = 1
 		merchant_power_from_building = 1
 	}
-	raw_modifier = {
-		local_population_capacity = 0.06
-	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
 }
@@ -498,9 +471,6 @@ REPLACE:cinque_port = {
 		local_navy_levy_size_modifier = 1.0
 		local_sailors = 0.002
 		local_burghers_estate_power = 1.0
-	}
-	raw_modifier = {
-		local_population_capacity = 0.08
 	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
@@ -554,9 +524,6 @@ REPLACE:north_sea_shipyards = {
 		}
 	}
 	construction_demand = port_building_construction
-	raw_modifier = {
-		local_population_capacity = 1.2
-	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
 }
@@ -593,9 +560,6 @@ REPLACE:kilwan_shipwrights = {
 	modifier = {
 		local_sailors = 0.01
 		harbor_suitability = 0.05
-	}
-	raw_modifier = {
-		local_population_capacity = 0.4
 	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
@@ -662,9 +626,6 @@ REPLACE:brethren_marsh = {
 
 	}
 	construction_demand = port_building_construction
-	raw_modifier = {
-		local_population_capacity = 0.4
-	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
 }
@@ -695,9 +656,6 @@ REPLACE:korean_gunnery_coastal_defense = {
 		hostile_disembark_time_modifier = 1.0
 		hostile_fleet_attrition = 1
 		building_owner_maritime_presence = 0.025
-	}
-	raw_modifier = {
-		local_population_capacity = 0.1
 	}
 }
 
@@ -747,9 +705,6 @@ REPLACE:coastal_settlements = {
 	modifier = {
 		local_migration_attraction = 1.5
 		local_pop_promotion_speed_modifier = 0.1
-	}
-	raw_modifier = {
-		local_population_capacity = 0.5
 	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown

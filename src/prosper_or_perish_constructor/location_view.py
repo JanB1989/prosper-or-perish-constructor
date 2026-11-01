@@ -2,7 +2,8 @@
 
 The window is the World Builder export's (vanilla plus its native geography chips), re-patched with the mod's
 stored-food gauge, population-capacity readout, Water Access and Port chips, RGO and land-potential chips, the status
-chips (location_status.py) and the condition icons moved to the top left. The chip tooltips (attribute_tooltips.py)
+chips (location_status.py), the condition icons moved to the top left and the Arable Land bar under the scene
+(arable_land_bar.py). The chip tooltips (attribute_tooltips.py)
 read back the class injects and static modifiers the World Builder stage writes.
 
 Nothing here changes a game value, so it runs in the constructor's finalize step (every ``ppc build`` and ``ppc sync``)
@@ -15,12 +16,26 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from prosper_or_perish_constructor import attribute_tooltips, location_status
+from prosper_or_perish_constructor import arable_land_bar, attribute_tooltips, location_status
 from prosper_or_perish_constructor.worldbuilder.geography import EXPORT_BUILD_FILE, LOCATION_WINDOW
 
 _FOOD_PERCENT = 'value = "[FixedPointToFloat(Province.GetFoodCapacityPercent)]"'
 _FOOD_PERCENT_REST = 'value = "[Subtract_float(\'(float)100.0\', FixedPointToFloat(Province.GetFoodCapacityPercent))]"'
 _FOOD_SCOPES = ("LocationView", "LocationViewSelectProvince.Parent")
+# The view's width: vanilla's left panel is 570, and the population bars' row did not fit it, so the body spilled past
+# the header, its close and arrow buttons (Jan, 2026-10-28). The panel content keeps vanilla's 15 margins
+# (window_main_tabs_margin_alt); the row must fit what is left (tests/test_location_view_width.py).
+WINDOW_WIDTH = 600
+CONTENT_MARGINS = 2 * 15
+_WINDOW_ID = '\twidgetid = "location_window"\n'
+
+
+def widen_window(text: str) -> str:
+    """Give the location view its width, as the build panel does (an instance size past the 570 left layer)."""
+    if text.count(_WINDOW_ID) != 1:
+        raise ValueError("location window: widgetid line not found once")
+    size = f"\tsize = {{ {WINDOW_WIDTH} 100% }} # PP: wider than the vanilla left panel (570), location_view.py\n"
+    return text.replace(_WINDOW_ID, _WINDOW_ID + size)
 
 
 def merge_location_window(text: str) -> str:
@@ -555,6 +570,32 @@ def water_access_chips(text: str) -> str:
     return text.replace(_SOIL_CHIP, water_access_chip() + _SOIL_CHIP)
 
 
+CLIMATE_FRAME = f'"[GetClimateFrame({_LOC}.GetClimate)]"'
+# the chips the export and vanilla draw on the climate frame, by the icon drawn on the frame (the next texture after it)
+QUALITY_FRAMES = {
+    "gfx/interface/fertility/very_low.dds": location_status.FRAME_RED,
+    "gfx/interface/fertility/low.dds": location_status.FRAME_ORANGE,
+    "gfx/interface/fertility/moderate.dds": location_status.FRAME_GOLD,
+    "gfx/interface/fertility/high.dds": location_status.FRAME_LIGHT_GREEN,
+    "gfx/interface/fertility/very_high.dds": location_status.FRAME_GREEN,
+    "gfx/interface/icons/location_icons/blockade_byice.dds": location_status.FRAME_RED,
+}
+_NEXT_TEXTURE = re.compile(r'texture = "([^"]+)"')
+
+
+def chip_frames(text: str) -> str:
+    """No chip in the location view takes its round frame from the climate (2026-10-27, Jan): the fertility chips and
+    the ice blockade draw their state colour (location_status frames), every other chip (topography, climate,
+    vegetation, soil, river, lake, water access, port, RGO) vanilla's neutral brown frame."""
+    out, pos = [], 0
+    while (start := text.find(CLIMATE_FRAME, pos)) >= 0:
+        icon = _NEXT_TEXTURE.search(text, start + len(CLIMATE_FRAME))
+        frame = QUALITY_FRAMES.get(icon.group(1) if icon else "", location_status.NEUTRAL_FRAME)
+        out += [text[pos:start], f'"{frame}"']
+        pos = start + len(CLIMATE_FRAME)
+    return "".join(out) + text[pos:]
+
+
 def build_window(export_text: str, mod_root: Path, vanilla: Path | None, stored_food: tuple[tuple[str, float], ...] = ()) -> str:
     """The mod's location window from the export's; writes the harvest chip's localization files on the way.
 
@@ -565,10 +606,14 @@ def build_window(export_text: str, mod_root: Path, vanilla: Path | None, stored_
     goods = rgo_bonus_goods(bonuses.read_text(encoding="utf-8-sig")) if bonuses.is_file() else []
     merged = add_land_potential_chip(add_rgo_chip(merge_population_capacity(water_access_chips(merge_location_window(export_text))), goods))
     harvests = location_status.load_harvests(mod_root)
-    merged = location_status.add_status_row(merged, harvests, location_status.load_land_effect_rows(mod_root, vanilla),
+    land_rows = location_status.load_land_effect_rows(mod_root, vanilla)
+    merged = location_status.add_status_row(merged, harvests,
                                             location_status.load_stored_food_rows(mod_root, vanilla, stored_food))
     location_status.write_harvest_files(mod_root, harvests)
-    return show_every_timed_modifier(move_modifier_row(merged), shown_by_chips(mod_root, vanilla, goods, bool(harvests.keys)))
+    merged = show_every_timed_modifier(move_modifier_row(merged), shown_by_chips(mod_root, vanilla, goods, bool(harvests.keys)))
+    # the land state (abundant / available / overused, with its strength) sits beside the population bars only
+    merged = arable_land_bar.add_to_window(merged, location_status.land_state(land_rows, "pp_land_bar_state"))
+    return widen_window(chip_frames(merged))
 
 
 def apply(repo: Path, project: Path, mod_root: Path, vanilla: Path) -> dict[str, object]:

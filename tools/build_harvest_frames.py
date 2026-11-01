@@ -2,7 +2,8 @@
 
 The location view's harvest chip (location_status.py) shows the region's crop inside the frame; the frame's colour
 says how the harvest went (red, orange, yellow for failed, bad, weak; light green, green, teal for strong, excellent,
-exceptional). Average years use vanilla's neutral brown frame. Rerun after changing a colour:
+exceptional). Average years and every descriptive chip of the location view use the neutral slate frame
+(frame_neutral, NEUTRAL_COLOUR). Rerun after changing a colour:
 
     uv run python tools/build_harvest_frames.py
 """
@@ -12,7 +13,7 @@ from pathlib import Path
 from PIL import Image, ImageOps
 from eu5_building_pipeline.dds import write_game_dds
 
-from prosper_or_perish_constructor.location_status import HARVEST_FRAMES, SEVERITY_COLOURS
+from prosper_or_perish_constructor.location_status import HARVEST_FRAMES, NEUTRAL_COLOUR, SEVERITY_COLOURS
 from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -30,7 +31,7 @@ def recolour(frame: Image.Image, colour: tuple[int, int, int]) -> Image.Image:
 def main() -> None:
     with Image.open(vanilla_root(ROOT, ROOT / "constructor.toml") / SOURCE) as source:
         frame = source.convert("RGBA")
-    for severity, colour in SEVERITY_COLOURS.items():
+    for severity, colour in {**SEVERITY_COLOURS, "neutral": NEUTRAL_COLOUR}.items():
         target = MOD / "in_game" / HARVEST_FRAMES.format(severity=severity)
         target.parent.mkdir(parents=True, exist_ok=True)
         write_game_dds(recolour(frame, colour), target)   # DXT5 + full mips (eu5_building_pipeline.dds)

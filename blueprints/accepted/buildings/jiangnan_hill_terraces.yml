@@ -28,7 +28,6 @@ building:
     megalopolis = yes
     build_time = infrastructure_build_time
     location_potential = {
-      always = yes
       OR = { dominant_culture ?= culture:wu_culture dominant_culture ?= culture:yue_wu_culture dominant_culture ?= culture:wuzhou_culture dominant_culture ?= culture:xuanzhou_culture dominant_culture ?= culture:jixi_culture }
       OR = { province_definition = province_definition:ningguo_province province_definition = province_definition:huizhou_province province_definition = province_definition:hangzhou_province province_definition = province_definition:huzhou_province province_definition = province_definition:jinhua_province province_definition = province_definition:chuzhou_province province_definition = province_definition:shaoxing_province province_definition = province_definition:ningbo_province province_definition = province_definition:taizhou_province }
       OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
@@ -50,10 +49,10 @@ building:
 localization:
   entries:
     jiangnan_hill_terraces: Jiangnan Hill Terraces
-    jiangnan_hill_terraces_desc: Contour walls and carefully graded channels hold soil and water on the cultivated slopes of Jiangnan. Peasant crews repair the banks and clear the channels. Its levels share the available land with Marled Fields.
+    jiangnan_hill_terraces_desc: Contour walls and carefully graded channels hold soil and water on the cultivated slopes of Jiangnan. Peasant crews repair the banks and clear the channels. Its levels share the available land with [ShowBuildingTypeName('field_management')|e].
     jiangnan_hill_terraces_slot_0: Maintenance
     pp_jiangnan_hill_terraces_maintenance: Terrace Maintenance Crews
-    pp_jiangnan_hill_terraces_price: Jiangnan Hill Terraces Price
+    pp_jiangnan_hill_terraces_price: '[ShowBuildingTypeName(''jiangnan_hill_terraces'')|e] Price'
 prices:
 - key: pp_jiangnan_hill_terraces_price
   body: '{gold = 600}'

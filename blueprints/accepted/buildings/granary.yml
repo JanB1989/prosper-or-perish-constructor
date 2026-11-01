@@ -30,14 +30,6 @@ building:
         allow = {
             is_province_capital = yes
         }
-        location_potential = {
-            OR = {
-                location_rank = location_rank:rural_settlement
-                location_rank = location_rank:town
-                location_rank = location_rank:city
-                location_rank = location_rank:megalopolis
-            }
-        }
         important_for_AI = yes
         build_time = government_build_time
         unique_production_methods = {
@@ -73,7 +65,7 @@ prices:
       {gold = 75}
 localization:
   entries:
-    pp_granary_price: Granary Price
+    pp_granary_price: "[ShowBuildingTypeName('granary')|e] Price"
 
 evaluation:
   allow_rules:

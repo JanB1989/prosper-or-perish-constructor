@@ -484,4 +484,4 @@ def test_the_scripted_logistics_builder_is_gone() -> None:
     for path in (MOD_ROOT / "in_game").rglob("*.txt"):
         text = path.read_text(encoding="utf-8-sig", errors="replace")
         assert "pp_ai_logistics" not in text, path
-    assert not (MOD_ROOT / "main_menu/localization/english/pp_debug_l_english.yml").exists()   # debug loc removed 2026-10-24
+    assert "pp_ai_logistics" not in (MOD_ROOT / "main_menu/localization/english/pp_debug_l_english.yml").read_text(encoding="utf-8-sig")

@@ -53,6 +53,37 @@ def test_rows_use_the_build_panel_layout():
     assert "widget = { # profit/income/upkeep" not in rows and "widget = { #profit / income" not in rows
 
 
+def test_widest_built_row_fits_the_row():
+    """A five- or six-slot built row (three columns of circles and efficiencies) with its value columns and level
+    buttons inside the row; the icon column is fixed, vanilla's stretch factor gave it a ninth of the row and pushed
+    the level buttons out of it (Jan, 2026-10-26)."""
+    tool = _tool()
+    columns = 3
+    row = (2 + 4 + tool.LOCATION_ICON_WIDTH + 3 + 3            # card margins, building icon, name bar margins
+           + 120 + 2 * 6                                       # name, spacing around its expand
+           + 30 + 4                                            # own-building checkboxes
+           + columns * 24 + (columns - 1) * 2 + 4              # slot circles
+           + 6 + columns * tool.BUILD_EFFICIENCY_WIDTH + (columns - 1) * 6 + 4   # production efficiencies
+           + sum(tool.BUILD_VALUE_WIDTHS) + 2 * tool.BUILD_VALUE_MARGIN + 4      # build cost, payback, profit, tax
+           + 120)                                              # builder
+    assert row <= tool.BUILD_ROW_WIDTH
+    rows = _mod(tool.LOCATION_ROWS_GUI)
+    built = rows[:rows.index("type pp_location_filtered_header_no_candidate")]
+    assert "layoutstretchfactor_horizontal = 1\n" not in built
+    assert built.count(f"imumsize = {{ {tool.LOCATION_ICON_WIDTH} -1 }}") == 2
+
+
+def test_header_buttons_sit_over_the_row_columns():
+    """The list is the panel minus the window margins; the header ends with a spacer so its level button ends 6 inside
+    the row's right edge, over the builder."""
+    tool = _tool()
+    text = _mod(tool.LOCATION_PRODUCTION)
+    spacer = tool.LOCATION_HEADER_SPACER
+    assert tool.BUILD_PANEL_WIDTH - 2 * tool.LIST_MARGIN - spacer == tool.BUILD_ROW_WIDTH - 6
+    assert re.search(r'name = "level"\n[ \t]*layoutpolicy_vertical = expanding\n[ \t]*size = \{ 125 -1 \}\n[ \t]*\}\n\n'
+                     rf'[ \t]*widget = \{{ # PP: [^\n]*\n[ \t]*size = \{{ {spacer} -1 \}}\n', text)
+
+
 def test_rows_record_their_payback_band():
     """Built rows record from the candidate (built and unbuilt branch x construction parity), unbuilt rows from the
     building type; the variable is the build panel's, so both views share it."""

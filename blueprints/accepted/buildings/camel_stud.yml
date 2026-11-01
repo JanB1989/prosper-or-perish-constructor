@@ -131,7 +131,7 @@ advancements:
 localization:
   entries:
     camel_stud: Camel Stud
-    camel_stud_desc: Walled breeding yards with picked sires, fodder stores and trained handlers raise strong baggage camels and swift riding camels for the caravans and the armies.
+    camel_stud_desc: "Walled breeding yards with picked sires, fodder stores and trained handlers raise strong baggage camels and swift riding camels for the caravans and the armies. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
     camel_stud_slot_0: Desert Grazing
     camel_stud_slot_1: Stud Work
     camel_stud_slot_2: Provisioning

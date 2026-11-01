@@ -270,10 +270,10 @@ def test_free_land_cuts_peasant_food_by_the_engine_scales():
     p = tribal_pool(tribesmen=0.0, pop0=10.0, demand0=10.0, overpop=[(10.0, 0.2, 50.0), (5.0, 0.05, 100.0)])
     rules = fs.SimRules()
     cons, forage = fs.free_land(p, 1.0, rules)
-    # 10k peasants at 20 % of capacity: available land, -0.32 x 0.8; 5k at 5 % of 100k (pop 5k < 10k): abundant, -0.5 x 0.95
-    assert abs(cons - (10.0 * -0.32 * 0.8 + 5.0 * -0.5 * 0.95)) < 1e-9 and abs(forage - 0.95) < 1e-9
+    # 10k peasants at 20 % of capacity: available land, -0.25 x 0.8; 5k at 5 % of 100k (pop 5k < 10k): abundant, -0.4 x 0.95
+    assert abs(cons - (10.0 * -0.25 * 0.8 + 5.0 * -0.4 * 0.95)) < 1e-9 and abs(forage - 0.95) < 1e-9
     cons5, forage5 = fs.free_land(p, 5.0, rules)                    # 5x the people: the first location is full,
-    assert abs(cons5 - 25.0 * -0.32 * 0.75) < 1e-9 and forage5 == 0.0  # the second at 25 % (25k): available, x 0.75
+    assert abs(cons5 - 25.0 * -0.25 * 0.75) < 1e-9 and forage5 == 0.0  # the second at 25 % (25k): available, x 0.75
     assert fs.free_land(replace_overpop(p, [(10.0, 0.2)]), 1.0, rules) == (0.0, 0.0)             # no capacity known: no effect
 
 

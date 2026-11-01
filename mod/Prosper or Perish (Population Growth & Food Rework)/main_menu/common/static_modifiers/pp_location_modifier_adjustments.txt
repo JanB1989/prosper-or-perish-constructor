@@ -141,6 +141,9 @@ TRY_REPLACE:total_population = {
 	# 7 on 2026-10-06 (af413ddc), 10 the same day: start validator world -0.40 % -> +1.02 % over 96 months.
 	local_food_capacity = 10
 	# local_food_capacity = 300
+	# 2026-10-27 (Jan): every person brings 1 capacity (strength = population in thousands, exact); unemployed_peasants
+	# takes it back from the subsistence peasants, who live on the arable land.
+	local_population_capacity = 1
 }
 # capped at max 100 this value
 TRY_REPLACE:location_exports = {
@@ -246,6 +249,8 @@ TRY_REPLACE:unemployed_peasants = {
 	local_institution_growth_modifier = -0.0050
 	local_construction_speed = 0.0001
 	local_migration_attraction = -0.001
+	# The -1 capacity per subsistence peasant is NOT here: the growth pass applies this modifier after it computes free
+	# land and overpopulation. It is the script-added pp_subsistence_land (2026-10-27, branch subsistence-land-script).
 }
 
 TRY_INJECT:market_center = {
@@ -464,9 +469,11 @@ TRY_INJECT:is_port = {
 }
 TRY_INJECT:capital = {
 	free_building_levels = 1
+	local_population_capacity_modifier = -0.10   # vanilla 0.10: no capacity % (2026-10-27, Jan: capacity is farmland)
 }
 TRY_INJECT:province_capital = {
 	free_building_levels = 2
+	local_population_capacity_modifier = -0.05   # vanilla 0.05: no capacity % (2026-10-27, Jan: capacity is farmland)
 }
 
 # Vanilla defines this static modifier in main_menu/common/static_modifiers/location.txt.

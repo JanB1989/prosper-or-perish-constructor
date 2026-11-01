@@ -39,7 +39,7 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable, Mapping
+from typing import TYPE_CHECKING, Any, Callable, Mapping
 
 import numpy as np
 import polars as pl
@@ -49,6 +49,7 @@ from prosper_or_perish_constructor.run_report_charts import (
     DUMMY_GOODS,
     GOODS_GROUPS,
     build_payload,
+    burgher_trade_share,
     goods_group_expr,
     land_region_expr,
     region_trade,
@@ -60,6 +61,9 @@ from prosper_or_perish_constructor.run_report_charts import (
     xaxis,
 )
 from prosper_or_perish_constructor.run_report_urban import UrbanCatalog, industry_colours, industry_label, load_urban_catalog
+
+if TYPE_CHECKING:
+    from prosper_or_perish_constructor.improvement_room import RoomModel
 
 POP_TYPES = ("nobles", "clergy", "burghers", "laborers", "soldiers", "peasants", "slaves", "tribesmen")
 MAP_THREADS = 4  # map videos rendered at a time
@@ -152,6 +156,8 @@ class RunData:
     # when the run has town rights or promotions
     production: pl.DataFrame = field(default_factory=pl.DataFrame)  # snapshot_id, location_id, good_id, value
     urban: UrbanCatalog = field(default_factory=UrbanCatalog)  # town right and industry type definitions
+    # land improvements built and possible per snapshot and cap (improvement_room.room); empty without the model
+    improvements: pl.DataFrame = field(default_factory=pl.DataFrame)
 
     @property
     def investment_prices(self) -> str:
@@ -197,7 +203,10 @@ def run_snapshots(dataset: Path, playthrough: str) -> pl.DataFrame:
     )
 
 
-def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | None = None) -> RunData:
+def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | None = None,
+             improvements: RoomModel | None = None) -> RunData:
+    """``improvements``: the improvement caps of the built mod (improvement_room.load_model); None leaves the
+    improvements chart out."""
     playthrough = playthrough or latest_playthrough(dataset)
     snapshots = run_snapshots(dataset, playthrough)
     # the game writes playthrough_name only for some starts (e.g. "England #7558ddce"); else the id's first block
@@ -298,6 +307,12 @@ def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | Non
         labels.goods = {**{g: n for g, n in names.iter_rows() if n}, **labels.goods}
     run = RunData(playthrough, str(name), snapshots, locations, building_levels, buildings_by_category, countries,
                   market_goods, markets, trades, economy, labels, institutions=institutions)
+    if improvements is not None:
+        from prosper_or_perish_constructor.improvement_room import room
+
+        standing = buildings.filter(pl.col("snapshot_id").is_in(wanted)
+                                    & pl.col("building_type").is_in(improvements.members["building_type"].to_list()))
+        run.improvements = room(improvements, locations, standing.collect())
     _load_investment(run, dataset, wanted)
     _load_urban(run, dataset, wanted)
     return run
@@ -1354,6 +1369,7 @@ def _summary(run: RunData) -> dict[str, object]:
         if not run.investment_by_category.is_empty() else {}
     )
     trade = world_trade_share(run)
+    burgher = burgher_trade_share(run)
     urban: dict[str, int] = {}
     if run.urban_saves and last in run.urban_saves:
         def count(frame: pl.DataFrame, snapshot: str) -> int:
@@ -1362,11 +1378,20 @@ def _summary(run: RunData) -> dict[str, object]:
         urban = {"rights_last": count(run.town_rights, last), "rights_first": count(run.town_rights, run.urban_saves[0]),
                  "promotions_last": count(run.promotions, last)}
     per_person = institutions_per_person(run.locations, run.snapshots["snapshot_id"].to_list())
+    improvements: dict[str, float] = {}
+    if not run.improvements.is_empty():
+        from prosper_or_perish_constructor.improvement_room import world
+
+        by = {r["snapshot_id"]: r for r in world(run.improvements).to_dicts()}
+        if first in by and last in by and by[last]["total"]:
+            improvements = {"improvements_built": by[last]["built"], "improvements_total": by[last]["total"],
+                            "improvements_first": by[first]["built"] / by[first]["total"] if by[first]["total"] else 0.0}
     return {"first": at.get(first, {}), "last": at.get(last, {}), "levels_first": lv.get(first, 0), "levels_last": lv.get(last, 0),
             "investment_first": world_investment.get(first), "investment_last": world_investment.get(last),
             "institutions_first": per_person[0] if per_person else None,
             "institutions_last": per_person[-1] if per_person else None,
-            "trade_first": trade.get(first), "trade_last": trade.get(last), "leaders": leaders, **urban}
+            "trade_first": trade.get(first), "trade_last": trade.get(last),
+            "burgher_first": burgher.get(first), "burgher_last": burgher.get(last), "leaders": leaders, **urban, **improvements}
 
 
 SECTIONS = (
@@ -1376,7 +1401,8 @@ SECTIONS = (
     ("trade", "Trade", "What moved between markets and what did not: the routes and the trade balance of every market "
                        "as videos, then trade per goods group, per good and per market."),
     ("prices", "Prices", "Every good's price against its base price, and whether the world uses more than it makes."),
-    ("buildings", "Buildings", "Building levels and what they cost to build."),
+    ("buildings", "Buildings", "Building levels, what they cost to build, and how much of the possible land "
+                               "improvement stands."),
     ("towns", "Town rights & industry", "Which town rights and industry promotions the AI grants, where, and whether they "
                                         "sit where their goods are made."),
     ("countries", "Countries", "The largest countries by population and by income."),
@@ -1685,6 +1711,9 @@ def write_page(run: RunData, out: Path, maps: list[dict[str, str]], payload: dic
     if summary.get("trade_last") is not None:
         tiles.insert(3, ("Imported share", f"{float(summary['trade_last']) * 100:.1f}%",  # type: ignore[arg-type]
                          f"{float(summary['trade_first'] or 0) * 100:.1f}% in {start}"))  # type: ignore[arg-type]
+    if summary.get("burgher_last") is not None:
+        tiles.insert(4, ("Burgher share of trade", f"{float(summary['burgher_last']) * 100:.0f}%",  # type: ignore[arg-type]
+                         f"{float(summary['burgher_first'] or 0) * 100:.0f}% in {start}"))  # type: ignore[arg-type]
     if summary.get("institutions_last") is not None:
         tiles.insert(3, ("Institutions per person", f"{float(summary['institutions_last']):.1f}",  # type: ignore[arg-type]
                          f"{float(summary['institutions_first'] or 0):.1f} in {start}"))  # type: ignore[arg-type]
@@ -1694,6 +1723,11 @@ def write_page(run: RunData, out: Path, maps: list[dict[str, str]], payload: dic
     if summary.get("investment_last") is not None:
         tiles.insert(-1, ("Building investment", f"{_format_number(float(summary['investment_last']))} gold",  # type: ignore[arg-type]
                           f"{_format_number(float(summary['investment_first'] or 0))} in {start}"))  # type: ignore[arg-type]
+    if summary.get("improvements_total"):
+        built, total = float(summary["improvements_built"]), float(summary["improvements_total"])  # type: ignore[arg-type]
+        tiles.insert(-1, ("Land improvements built", f"{built / total * 100:.0f}%",
+                          f"{_format_number(built)} of {_format_number(total)} levels · "
+                          f"{float(summary['improvements_first']) * 100:.0f}% in {start}"))  # type: ignore[arg-type]
     tile_html = "".join(f"<div class=tile><div class=label>{esc(a)}</div><div class=value>{esc(b)}</div><div class=sub>{esc(c)}</div></div>"
                         for a, b, c in tiles)
     section_videos = {"trade": TRADE_VIDEOS, "towns": PROMOTION_VIDEOS}
@@ -1755,6 +1789,20 @@ def _backfill_engine_tables(repo: Path, project: Path, dataset: Path, playthroug
         log(f"engine tables added to {done} snapshots")
 
 
+def _improvement_model(repo: Path, project: Path, log: Callable[[str], None]) -> RoomModel | None:
+    """The improvement caps of the built mod and its World Builder handover; None (no chart) when either is missing."""
+    from prosper_or_perish_constructor.improvement_room import load_model
+
+    started = time.perf_counter()
+    try:
+        model = load_model(repo, project)
+    except (OSError, KeyError, ValueError) as exc:
+        log(f"improvements: left out ({exc})")
+        return None
+    log(f"improvements: {len(model.units)} caps, {model.members.height} buildings ({time.perf_counter() - started:.1f}s)")
+    return model
+
+
 def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, playthrough: str | None = None,
                  width: int = 1920, fps: int = 6, log: Callable[[str], None] = print) -> Path:
     if shutil.which("ffmpeg") is None:
@@ -1779,7 +1827,7 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
     goods_cache = out_root / ".goods_cache" / playthrough
     prepared = prepare_goods_flows(playthrough, run_snapshots(dataset, playthrough)["snapshot_id"].to_list(), repo=repo,
                                    project=project, dataset=dataset, cache=goods_cache, log=log)
-    run = load_run(dataset, playthrough, labels=load_labels(repo, project))
+    run = load_run(dataset, playthrough, labels=load_labels(repo, project), improvements=_improvement_model(repo, project, log))
     if run.urban_saves:
         run.urban = load_urban_catalog(repo, project)
     log(f"run {run.name} ({run.playthrough_id}): {run.snapshots.height} saves {run.years[0]}-{run.years[1]}")
@@ -1821,6 +1869,8 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
 # released docs on main: the site root holds a work-in-progress copy of docs/ (`ppc publish-wip`), runs/
 # the observer-run reports (`ppc report --publish`). Each command replaces only its own part and pushes one
 # fresh commit, so the repository never accumulates history. Both are dry runs unless --yes.
+# A run published with `--pin LABEL` carries `"pinned": LABEL` in its site report.json: it stays online, does
+# not count against `keep` and leads the runs page under "Example games (LABEL)".
 
 DEFAULT_SITE_REPO = "JanB1989/prosper-or-perish-preview"
 RELEASED_DOCS_URL = "https://janb1989.github.io/prosper-or-perish-constructor/"
@@ -1878,25 +1928,52 @@ def _published_runs(runs_dir: Path) -> list[dict[str, object]]:
     return sorted(runs, key=lambda r: str(r.get("published_at", "")), reverse=True)
 
 
+def _pinned_groups(runs: list[dict[str, object]]) -> list[tuple[str, list[dict[str, object]]]]:
+    """Pinned runs by label, the highest label first (0.11 before 0.10 before 0.9); runs keep their order."""
+    groups: dict[str, list[dict[str, object]]] = {}
+    for run in runs:
+        if run.get("pinned"):
+            groups.setdefault(str(run["pinned"]), []).append(run)
+
+    def natural(label: str) -> list[tuple[int, str]]:
+        return [(int(part), "") if part.isdigit() else (-1, part) for part in re.split(r"(\d+)", label)]
+
+    return sorted(groups.items(), key=lambda item: natural(item[0]), reverse=True)
+
+
 def _site_index(runs: list[dict[str, object]], title: str) -> str:
     esc = html.escape
-    cards = "".join(
-        f"<a class=card href='{esc(str(r['playthrough_id']))}/'>"
-        f"<img loading=lazy src='{esc(str(r['playthrough_id']))}/maps/political.png' alt=''>"
-        f"<div><b>{esc(str(r['name']))}</b><br><span>{r['years'][0]}–{r['years'][1]} · {r['saves']} saves</span></div></a>"
-        for r in runs
-    )
+
+    def grid(group: list[dict[str, object]]) -> str:
+        cards = "".join(
+            f"<a class=card href='{esc(str(r['playthrough_id']))}/'>"
+            f"<img loading=lazy src='{esc(str(r['playthrough_id']))}/maps/political.png' alt=''>"
+            f"<div><b>{esc(str(r['name']))}</b><br><span>{r['years'][0]}–{r['years'][1]} · {r['saves']} saves</span></div></a>"
+            for r in group
+        )
+        return f"<div class=grid>{cards}</div>"
+
+    pinned = _pinned_groups(runs)
+    newest = [r for r in runs if not r.get("pinned")]
+    if pinned:
+        sections = "\n".join(f"<h2>Example games ({esc(label)})</h2>{grid(group)}" for label, group in pinned)
+        if newest:
+            sections += f"\n<h2>Newest runs</h2>{grid(newest)}"
+        order = "."
+    else:
+        sections, order = grid(newest), ", newest first."
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex"><title>{esc(title)}</title><style>
 :root{{--bg:#f6f6f4;--card:#fcfcfb;--ink:#1d1d1b;--muted:#6b6b67;--line:#e2e2de}}
 @media (prefers-color-scheme: dark){{:root{{--bg:#121418;--card:#1a1d22;--ink:#eceef0;--muted:#a0a6b0;--line:#2c3038}}}}
 body{{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,sans-serif}} main{{max-width:1100px;margin:0 auto;padding:28px 16px}}
 a{{color:inherit}} .grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:20px}}
+h2{{margin:32px 0 0;font-size:20px}}
 .card{{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;color:inherit;text-decoration:none}}
 .card img{{display:block;width:100%;background:#12161c}} .card div{{padding:10px 14px}} .card span{{color:var(--muted);font-size:13px}}
 </style></head><body><main><p><a href="../">← Work-in-progress docs</a></p><h1>{esc(title)}</h1>
-<p style="color:var(--muted)">Observer runs of the Prosper or Perish mod for Europa Universalis V: map videos and progression charts, newest first.</p>
-<div class=grid>{cards}</div></main></body></html>
+<p style="color:var(--muted)">Observer runs of the Prosper or Perish mod for Europa Universalis V: map videos and progression charts{order}</p>
+{sections}</main></body></html>
 """
 
 
@@ -1917,18 +1994,30 @@ def prepare_publish(
     keep: int = 5,
     remote: str | None = None,
     title: str = "Prosper or Perish runs",
+    pin: str | None = None,
+    unpin: bool = False,
 ) -> PublishPlan:
-    """Stage a site checkout with this run added under runs/ (newest `keep` runs kept); nothing is pushed yet."""
+    """Stage a site checkout with this run added under runs/; nothing is pushed yet.
+
+    Pinned runs always stay and do not count against `keep` (the newest `keep` unpinned runs stay). `pin` pins this
+    run under that label, `unpin` removes its pin; without either it keeps the pin its site copy had.
+    """
     report = json.loads((report_dir / "report.json").read_text(encoding="utf-8"))
     site, remote, url = _clone_site(site_repo, work_root, remote)
     runs_dir = site / "runs"
     runs_dir.mkdir(exist_ok=True)
     run_id = str(report["playthrough_id"])
     target = runs_dir / run_id
+    site_meta = target / "report.json"
+    old_pin = json.loads(site_meta.read_text(encoding="utf-8")).get("pinned") if site_meta.is_file() else None
     if target.exists():
         shutil.rmtree(target)
     shutil.copytree(report_dir, target)
     report["published_at"] = datetime.now().isoformat(timespec="microseconds")
+    report.pop("pinned", None)
+    pinned = None if unpin else pin or old_pin
+    if pinned:
+        report["pinned"] = pinned
     (target / "report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     # absolute preview image for link unfurls (Discord and other chat apps)
     page = target / "index.html"
@@ -1940,12 +2029,13 @@ def prepare_publish(
         ),
         encoding="utf-8",
     )
-    # newest first; the run being published always leads
+    # newest first; the run being published always leads its group; pinned runs first and never dropped
     runs = sorted(_published_runs(runs_dir), key=lambda r: str(r["playthrough_id"]) == run_id, reverse=True)
-    dropped = [str(r["playthrough_id"]) for r in runs[keep:]]
+    unpinned = [r for r in runs if not r.get("pinned")]
+    dropped = [str(r["playthrough_id"]) for r in unpinned[keep:]]
     for old in dropped:
         shutil.rmtree(runs_dir / old, ignore_errors=True)
-    runs = runs[:keep]
+    runs = [r for _, group in _pinned_groups(runs) for r in group] + unpinned[:keep]
     (runs_dir / "index.html").write_text(_site_index(runs, title), encoding="utf-8")
     _placeholder_root(site)
     (site / ".nojekyll").write_text("", encoding="utf-8")

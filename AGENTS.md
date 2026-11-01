@@ -44,9 +44,10 @@
   updates the leg (body block, slot list, localization, evaluation allow rules); the labour pass skips it. Buildings
   without a market good, gates on a store-following good (the Grange's Surplus Sales, the Tavern's Common Table: 0.1 offset -> 0.852 Province Food, so it passes 1.05 up to ~6 stored
   months whatever victuals cost, 2026-10-04),
-  buildings that sell only for `offset` (the Cookshop line) get none. No good carries `ai_rgo_expansion_priority` > 0
-  (`pp_goods_adjustments.txt` sets vanilla's seven to 0, 2026-10-09; a test guards it): an output good with it skips
-  the margin check, so masons and quarries were built against the price. Never gate on a method that
+  buildings that sell only for `offset` (the Cookshop line) get none. Only iron and lumber carry `ai_rgo_expansion_priority` > 0
+  (vanilla's 0.025, back on 2026-10-28 for their shortage term; `pp_goods_adjustments.txt` sets vanilla's other five
+  to 0, 2026-10-09; a test guards it): an output good with it skips the margin check, so masons and quarries were
+  built against the price. Never gate on a method that
   buys the building's own main good (inverts the AI's price response), except a token amount:
 - Crop farms (farm v3, 2026-10-02): Provision takes a token of the crop (`crop_provision_input_gold` in
   `[building_scaling]`) and makes a fixed Province Food amount per level, so it is the farm's gate (margin about 15 at
@@ -248,6 +249,9 @@
   of salt; colonial nations lose their camel bonus) and the Maghreb palm groves and the English royal forest at
   reference size (one-level specials without a base slot). `tests/test_staple_foods.py` pins the list, the makers (Provision,
   tag, counters), the curve factors, the bulk shares, the Yard's salt beef and the Cookshop cap's Yard term.
+- Every staple food maker's description ends with one sentence, `provisioning.STORE_DESC` (2026-10-28, Jan: a high
+  store means more goods for the market, a low one more Province Food): crop_farms.py appends it to the tiers, the
+  other makers carry it in their blueprints, `tests/test_staple_foods.py` checks all of them.
 - The crop farm tier advances' `crop_farm_output` (was `staple_output`) stays on the crop farm goods: farming advances.
 
 ## Logistics
@@ -330,11 +334,15 @@
 ## Interface DDS Format
 
 - Every DDS under `<layer>/gfx/interface/` is in vanilla's format: DXT5 (or DXT1) with a full mip chain, icons at most
-  128 px (building icons 128, from the 512 px blueprint PNGs), advance icons at most 256, illustrations at their size.
-  Write them with `eu5_building_pipeline.dds.write_game_dds` / `encode_dds`, never `Image.save(format="DDS")` (raw
-  RGBA, no mips; Pillow's own DXT5 alpha is lossy). The last finalize pass of `ppc build` / `ppc sync`
-  (`interface_dds.py`) converts anything else in place and leaves compliant files byte-identical;
-  `tests/test_interface_dds.py` enforces it. Map mode picker icons live only in `main_menu/gfx/interface/icons/map_modes`.
+  128 px (building icons 128, from the 512 px blueprint PNGs), advance icons at most 256. Write them with
+  `eu5_building_pipeline.dds.write_game_dds` / `encode_dds`, never `Image.save(format="DDS")` (raw RGBA, no mips;
+  Pillow's own DXT5 alpha is lossy). Pictures (anything below an `illustrations` folder: Europedia banners, situation
+  and goods pictures) are BC7 in ONE level at their size, written from their source with `interface_dds.encode_bc7`
+  (etcpak): they are stored at twice the shown size, so a mip chain made the game draw a blurred half-size level
+  (2026-10-24, Jan: "low res" banners; BC7 one level 40 dB vs DXT5 with mips 31 dB at the shown size). The last
+  finalize pass of `ppc build` / `ppc sync` (`interface_dds.py`) converts anything else in place and leaves compliant
+  files byte-identical; `tests/test_interface_dds.py` enforces it. Map mode picker icons live only in
+  `main_menu/gfx/interface/icons/map_modes`.
 
 ## Script Value Overrides (EU5 1.4)
 
@@ -365,10 +373,24 @@
   A labelled `floor = { ... }` breaks the cap to 0; keep floors inside helpers. The start planner's evaluator
   (`start_rules.py`) reads `this.`/`root.` as the same location.
 - Farm max levels speak in levels of that farm (`scripts/generate_rural_capacity_values.py`): "Free Arable Land"
-  (floor((flat - reserve) / land)) plus "This farm and the lower tiers it replaces" (their level counters
-  `raw_modifier pp_levels_<farm> = 1`, scaled like the land they take, so the cap is exact). A farm shows its land once,
-  as Arable Land (`local_population_capacity = -land`); no second land record (2026-10-23, Jan: `local_pp_farmland_used`
-  and the old "Farming Capacity from X" counters are gone, a test blocks them).
+  (floor((flat - townsfolk capacity - reserve) / land)) plus "This farm and the lower tiers it replaces" (their level
+  counters `raw_modifier pp_levels_<farm> = 1`, scaled like the land they take, so the cap is exact). A farm shows its
+  land once, as Arable Land (`local_population_capacity = -land`); no second land record (2026-10-23, Jan:
+  `local_pp_farmland_used` and the old "Farming Capacity from X" counters are gone, a test blocks them).
+- Shared land (2026-10-28, Jan, branch `improvement-room-farm-caps`, tested in game): the engine counts a building's own
+  levels under construction against its max level, but not another farm's, so two farms could start levels on the same
+  free land (Sanlorenzo 1554: Cattle Farm 21/25 and Horse Breeders 13/17 on land for 4 levels). Every farm max has the
+  row "Farm Land Usage of other farms under construction": the land of the farm levels under construction in the location outside the
+  farm's own upgrade line (`pp_farm_land_queued_outside_<line>`, `building_levels_under_construction` stepped to 5 per
+  building, land classes as scripted triggers `pp_farm_land_class_<land>`), only where land is free (a construction
+  never lowers a cap below the standing levels). The townsfolk capacity reads `pp_subsistence_land` at its applied
+  size (marker `pp_subsistence_land_size`): the modifier refreshes once a year, so today's subsistence count took a
+  hiring farm's peasants' land twice until the refresh. The location view's bars read the same land. Cost (script
+  profiler, Jan's 1554 observer save, 27 game months at speed): the new farm cap parts ~1.1 s of 89 s script time
+  (~1.2 %); the bars with possible improvements ~2.8 ms script time per frame while a location view is open (were ~8 ms
+  before one candidate per upgrade line, `arable_land_bar.candidate_groups`).
+- `script_eval.py` evaluates the generated location script values offline (farm caps, improvement caps, the bars);
+  `tests/test_land_script_values.py` checks them by what they compute, anchored on numbers read in game.
 
 ## Deleted Vanilla Objects and Start Exceptions (2026-10-23, Jan)
 
@@ -389,6 +411,18 @@
   the building country (`BUILDER_TRIGGERS`, scope:actor) hold for the setup's owner. A rule it cannot read fails the
   build. No game-start culls: the random estate cull, its vanilla location lists and the invalid-building culls are
   deleted. `tests/test_building_effects.py`: every building the game loads has an effect.
+
+## DLC Content (2026-10-28)
+
+- The game mounts every `game/dlc/<folder>/` like `game/` (after it, before mods). The parser's vanilla layer reads them
+  the same way (eu5-game-parser `dlc_roots`: one file list sorted by name, a DLC file replacing vanilla's same-name
+  file); `building_footprint.vanilla_files` does it for the footprint, shutdown, ship upkeep and blockade passes (Across
+  the Pillars adds 5 ships). Other direct readers of `game/in_game` (cap tooltips, the start simulation's setup rows)
+  still see the base game only.
+- Buildings only a DLC folder defines (Across the Pillars: 9) have footprint blueprints like every vanilla building, in
+  a skip-if-missing mode only (`TRY_INJECT`/`TRY_REPLACE`, never CREATE or plain INJECT/REPLACE), and no DLC-only key
+  may appear outside their own block. `ppc footprint check` fails otherwise; `tests/test_dlc_buildings.py`,
+  `test_inject_targets_exist_in_constructor_load_order` and `tests/test_building_type_references.py` guard it.
 
 ## Ship Upkeep (2026-10-11, Jan)
 
@@ -439,13 +473,26 @@
 - Explain what the player should understand and where to inspect effects; let modifiers carry exact changing numbers.
 - When a linked modifier or concept tooltip already displays food-storage modifier effects, do not restate those values in Europedia prose.
 - Player-facing names of the population capacity (Jan, 2026-10-10): **Arable Land** (the total: what a location's land
-  can feed, in people; farms take from it, improvements and buildings add to it); its states **Abundant Arable Land**
+  can feed, in people; farms take from it, improvements add to it); its states **Abundant Arable Land**
   (`abundant_free_land`), **Available Arable Land** (`available_free_land`), **Overused Arable Land** (`overpopulation`);
-  the World Builder baseline is **Natural Arable Land**. Engine and script keys stay. Link Arable Land in text with
-  `[population_capacity|e]` (vanilla concept, no prefix); the card concept is `pp_population_capacity` (it also gives the
-  arable land map mode its icon). "Subsistence Land", "Farmland" (as a capacity term), "Free Land", "Overpopulation"
-  and "Settled Land" are retired; `tests/test_europedia_style.py` fails if they come back. State icons:
+  the location's own land (World Builder baseline, the land panel's tooltip row) is **Natural Arable Land**, one concept
+  (`pp_location_potential`, hand-kept; "Location's Land" merged into it 2026-10-28). Engine and script keys stay. Link
+  Arable Land in text with `[population_capacity|e]` (vanilla concept, no prefix; its description, in
+  `localization/replace`, is also the Arable Land card's lead). "Farmland" (as a capacity term), "Free Land",
+  "Overpopulation" and "Settled Land" are retired; `tests/test_europedia_style.py` fails if they come back. State icons:
   `tools/build_arable_land_icons.py`.
+- The location view's land panel (`arable_land_bar.py`, names 2026-10-28, Jan): the top bar is the **Land Usage**
+  (`[Concept('population', 'Land Usage')|E]`) = **Urban Land** (`pp_townsfolk`: everyone but the subsistence
+  peasants; brings its own capacity) + **Subsistence Land** (the static modifier `pp_subsistence_land`, no concept:
+  its name and `STATIC_MODIFIER_DESC_` are the text, links are `[ShowModifier('pp_subsistence_land')]`); the bottom bar
+  the **Land Capacity** (`[Concept('population_capacity', 'Land Capacity')|E]`)
+  = Urban Land + **Free Arable Land**, then past its end **Farm Land Usage** (`pp_farm_land`) and **Unimproved Land**
+  (links Land Improvements). The land states' one-line definitions (`PP_LAND_CHIP_*`, chip and tooltip) read Land Usage
+  against Land Capacity. The legend is one unwrapped line: keep it within the panel's 546 px (game font, 12 px).
+- One thing, one entry, one text (Jan, 2026-10-28): the text sits on the game object (a good's or building's `_desc`,
+  `STATIC_MODIFIER_DESC_`, a situation's `_desc`, a vanilla concept's desc in `localization/replace`) and links open
+  the object; never a "P&P:" concept beside it. A Europedia card shows its object's own name and text
+  (`docs/mod_authoring_rules.md`, "Concept files and entries").
 - Europedia cards use the card style in `in_game/gui/shared/pp_europedia_style.gui` (banner, lead, sections with flows,
   scales and goods rows; rules in `docs/mod_authoring_rules.md`, first card Variable
   Harvests, 2026-10-09). Their text has no numbers at all: values sit behind concept, modifier and goods links.

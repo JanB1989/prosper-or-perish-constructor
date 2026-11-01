@@ -4,7 +4,6 @@ INJECT:trade_office = {
 # Foreign building (2026-10-01): each level supports itself, so the levels foreign countries open never count as
 # unsupported building levels of the location.
 raw_modifier = {
-	local_population_capacity = 0.06
   free_building_levels = 1
 }
 	can_close = no # building_shutdown

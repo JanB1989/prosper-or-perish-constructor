@@ -1,0 +1,8 @@
+﻿# >>> eu5-building-pipeline:saharan_trade_house:building
+TRY_INJECT:saharan_trade_house = {
+# Across the Pillars (DLC) building; TRY_INJECT does nothing where the DLC folder is absent.
+# ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
+}
+# <<< eu5-building-pipeline:saharan_trade_house:building

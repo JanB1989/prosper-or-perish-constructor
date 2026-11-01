@@ -13,7 +13,8 @@ README for where they come from and how to add one); this tool cuts the banner s
 - food_consumption: an Aztec market feast, nobles served on the terrace;
 - rural_capacities: woodcutters, net menders and boats on a Norwegian fjord coast;
 - trade_goods: a Portuguese victualling yard, casks and biscuit rolled aboard (New Trade Goods);
-- population_growth: a growing Ashanti town, new houses, a crowded market, newcomers.
+- population_growth: a growing Ashanti town, new houses, a crowded market, newcomers;
+- overview: a Tuscan crossroads in the 1340s, the road up to a thriving hill town and the road away past a deserted farm.
 
     uv run python tools/build_europedia_banners.py                    # write every banner into the mod
     uv run python tools/build_europedia_banners.py labor --preview DIR
@@ -26,7 +27,7 @@ from pathlib import Path
 
 from PIL import Image, ImageFilter
 
-from eu5_building_pipeline.dds import write_game_dds
+from prosper_or_perish_constructor.interface_dds import encode_bc7
 
 ROOT = Path(__file__).resolve().parents[1]
 MOD = ROOT / "mod/Prosper or Perish (Population Growth & Food Rework)"
@@ -48,6 +49,7 @@ PAINTINGS: dict[str, int] = {
     "trade_goods": 165,
     "population_growth": 165,
     "navigable_rivers": 140,   # the haulers on the towpath, the river running into the distance
+    "overview": 190,           # the father's hat and the daughter's face both stay in frame
 }
 
 
@@ -81,7 +83,7 @@ def main(argv: list[str] | None = None) -> int:
         if not args.no_write:
             target = MOD / "main_menu" / BANNERS_DIR / f"banner_{name}.dds"
             target.parent.mkdir(parents=True, exist_ok=True)
-            write_game_dds(image, target)   # DXT5 + full mips (eu5_building_pipeline.dds)
+            target.write_bytes(encode_bc7(image))   # BC7 in one level, the picture format (interface_dds)
             print(target.relative_to(ROOT))
     return 0
 

@@ -1,6 +1,6 @@
 """The goods page of the run report (`goods.html`): one good at a time, what makes it and what uses it.
 
-Static HTML + one script; the data comes from `goods/index.json`, `goods/summary.json` and one `goods/<n>.json` per
+Static HTML + one script; the data comes from `goods/index.js`, `goods/summary.js` and one `goods/<n>.js` per
 save (written by `run_report_goods`), fetched when needed, so the page itself stays small. Layout: the goods list on
 the left (grouped, searchable, price badge), save / region / detail pickers on top, then for the chosen good its
 figures, a flow chart (inputs -> producers -> good -> users -> products, by value at base price; any good in it
@@ -13,6 +13,7 @@ from __future__ import annotations
 import html
 
 from prosper_or_perish_constructor.run_report import ECHARTS_URL, PAGE_CSS
+from prosper_or_perish_constructor.run_report_data import LOADER_JS
 
 GOODS_CSS = r"""
 body{margin:0}
@@ -118,7 +119,7 @@ GOODS_JS = r"""
     return {by, mIn, mOut, price};
   }
   function loadSave(i) {
-    if (!SAVES.has(i)) SAVES.set(i, fetch(IX.saves[i].file).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }).then(prepare));
+    if (!SAVES.has(i)) SAVES.set(i, loadData(IX.saves[i].file).then(prepare));
     return SAVES.get(i);
   }
   const inRegion = reg => S.r < 0 || reg === S.r;
@@ -594,7 +595,7 @@ GOODS_JS = r"""
 
   async function init() {
     try {
-      IX = await fetch('goods/index.json').then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
+      IX = await loadData('goods/index.js');
     } catch (err) {
       $('#head').innerHTML = '<div class=empty>The goods data did not load. This page reads files next to it, so open it from the published site or over a local web server (not as a file).</div>';
       return;
@@ -644,7 +645,7 @@ GOODS_JS = r"""
     window.addEventListener('popstate', () => { readHash(); render(); });
     window.addEventListener('hashchange', () => { readHash(); render(); });
     render();
-    fetch('goods/summary.json').then(r => r.json()).then(s => { SUM = s; const opt = timeOption(S.g); if (opt) chart('time').setOption(opt, true); }).catch(() => {});
+    loadData('goods/summary.js').then(s => { SUM = s; const opt = timeOption(S.g); if (opt) chart('time').setOption(opt, true); }).catch(() => {});
   }
   init();
 })();
@@ -696,6 +697,6 @@ def goods_page_html(run_name: str, years: tuple[int, int]) -> str:
 </div>
 </div>
 <script src="{ECHARTS_URL}"></script>
-<script>{GOODS_JS}</script>
+<script>{LOADER_JS}{GOODS_JS}</script>
 </body></html>
 """

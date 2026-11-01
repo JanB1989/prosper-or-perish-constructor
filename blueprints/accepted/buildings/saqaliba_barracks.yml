@@ -1,0 +1,12 @@
+version: 2
+tag: saqaliba_barracks
+footprint: barracks
+building:
+  key: saqaliba_barracks
+  mode: TRY_INJECT
+  source: pp_building_footprint.txt
+  production_method_slots: []
+  possible_production_methods: []
+  body: |-
+    # Across the Pillars (DLC) building; TRY_INJECT does nothing where the DLC folder is absent.
+    # ppc build fills in raw_modifier local_population_capacity from the footprint class.

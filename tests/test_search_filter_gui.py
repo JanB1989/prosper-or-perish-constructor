@@ -38,7 +38,7 @@ def test_menu_opens_at_the_width_its_panel_wrote():
     tool = _tool()
     text = _mod(tool.SEARCH_FILTER)
     assert 'name = "select_search_filter_left"' in text and "select_menu_left = {" not in text
-    for width in (tool.BUILD_PANEL_WIDTH, tool.BUILDING_VIEW_WIDTH):
+    for width in (tool.BUILD_PANEL_WIDTH, tool.BUILDING_VIEW_WIDTH, tool.MARKET_PANEL_WIDTH):
         assert f"HasValue('{tool.PANEL_WIDTH_VARIABLE}', '{width}'), '(CVector2f){width},180'" in text
     assert "'(CVector2f)570,180'" in text
     assert "position_x" not in text[text.index('name = "select_search_filter_left"'):]   # states keep the position
@@ -48,7 +48,8 @@ def test_wide_panels_write_their_width():
     tool = _tool()
     for rel, view, width in ((tool.BUILD_LOCATION, "BuildInLocationLateralView", tool.BUILD_PANEL_WIDTH),
                              (tool.LOCATION_PRODUCTION, "LocationProductionView", tool.BUILD_PANEL_WIDTH),
-                             (tool.BUILDING_VIEW, "BuildingView", tool.BUILDING_VIEW_WIDTH)):
+                             (tool.BUILDING_VIEW, "BuildingView", tool.BUILDING_VIEW_WIDTH),
+                             (tool.MARKET_VIEW, "SelectedMarketLateralView", tool.MARKET_PANEL_WIDTH)):
         text = _mod(rel)
         assert f"\tsize = {{ {width} 100% }}" in text, rel
         assert f"on_start = \"[{view}.Vars.Set('{tool.PANEL_WIDTH_VARIABLE}', '{width}')]\"" in text, rel

@@ -6,9 +6,6 @@ market_center_modifier = {
 }
 # no Printing Press gate (2026-10-18, Jan): vanilla unlocks the entrepot in the Age of Renaissance, Printing Press
 # spreads only in the Age of Discovery, so the gate blocked a researched building for a whole age.
-	raw_modifier = {
-		local_population_capacity = 0.06
-	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
 }

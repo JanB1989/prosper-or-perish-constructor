@@ -17,9 +17,18 @@
  pp_peace_sack_market_entry: "Destroy the [market|e] of [target_market.GetName]"
  pp_peace_sack_market_entry_short: "Sack [target_market.GetName]"
  pp_peace_sack_market_select_market: "Select the coastal [market|e] to sack:"
- pp_peace_sack_market_no_markets: "They hold no coastal [market|e]."
+ pp_peace_sack_market_no_markets: "@trigger_no! They hold no coastal [market|e]."
 
  pp_open_harbours_relation: "Open Harbours"
+ # the relation's own texts (vanilla Trade Access names them the same way); first = the winner who owns the markets
+ pp_open_harbours_effect_text: "[SCOPE.sCountry('actor').GetName] draw the [locations|E] of [SCOPE.sCountry('recipient').GetName] into their [markets|E]"
+ pp_open_harbours_effect_text_past: "[SCOPE.sCountry('actor').GetName] drew the [locations|E] of [SCOPE.sCountry('recipient').GetName] into their [markets|E]"
+ diplomatic_status_giving_pp_open_harbours_name: "Harbours Opened to Us"
+ diplomatic_status_giving_pp_open_harbours_tooltip: "#T Harbours Opened to Us#!\nThe [locations|E] of these [countries|e] must trade with this country's [markets|E], imposed at the end of a Sea Raid."
+ giving_pp_open_harbours_list_who_tt: "$WHO$ draws the harbours of $LIST$ into its markets."
+ diplomatic_status_receiving_pp_open_harbours_name: "Open Harbours"
+ diplomatic_status_receiving_pp_open_harbours_tooltip: "#T Open Harbours#!\nThis country's [locations|E] must trade with the [markets|E] of these [countries|e], imposed at the end of a Sea Raid."
+ receiving_pp_open_harbours_list_who_tt: "$WHO$ must open its harbours to $LIST$."
  pp_open_harbours_relation_desc: "A [country|e] must let another country's [markets|e] draw in its [locations|e], imposed at the end of a Sea Raid."
 
  pp_coastal_raid: "Coastal Raid"

@@ -207,7 +207,7 @@ FOLDER_READERS = {
     "src/prosper_or_perish_constructor/vanilla_food_productivity.py": 4,        # plain-number values by name; finalize
     "src/prosper_or_perish_constructor/building_footprint.py": 2,               # finalize only
     "src/prosper_or_perish_constructor/worldbuilder/start_simulation.py": 1,    # a comment
-    "scripts/generate_rural_capacity_values.py": 1,                             # writes its own files
+    "scripts/generate_rural_capacity_values.py": 2,                             # writes its own files (+ land classes)
 }
 
 

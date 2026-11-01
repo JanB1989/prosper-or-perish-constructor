@@ -183,7 +183,7 @@ goods = ["cocoa", "coffee", "tea", "sugar", "silk", "incense", "saffron", "peppe
 goods = ["potato", "livestock", "wool", "beeswax", "horses", "elephants", "camels"]
 
 [families.wild_coastal]
-goods = ["fish", "fur", "wild_game"]
+goods = ["fish", "fur", "ivory", "wild_game"]
 
 [goods]
 wheat = { family = "dry_cereals", sensitivity = "high" }
@@ -218,6 +218,7 @@ elephants = { family = "resilient", sensitivity = "low" }
 camels = { family = "resilient", sensitivity = "low" }
 fish = { family = "wild_coastal", sensitivity = "fallback" }
 fur = { family = "wild_coastal", sensitivity = "fallback" }
+ivory = { family = "wild_coastal", sensitivity = "fallback" }
 wild_game = { family = "wild_coastal", sensitivity = "fallback" }
 
 [reviewed_tier_overrides.western_europe]

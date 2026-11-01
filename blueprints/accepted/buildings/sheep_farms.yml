@@ -113,6 +113,7 @@ building:
         construction_demand = farm_constructions
 localization:
   entries:
+    sheep_farms_desc: "While our shepherds already breed sheep in our meadows and hills, we need a more farm-like approach to increase productivity. Sheep farms will breed larger numbers of sheep for greater output. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
     sheep_farms_slot_0: Wool Pasture
     sheep_farms_slot_1: Sheep Work
     sheep_farms_slot_2: Provisioning

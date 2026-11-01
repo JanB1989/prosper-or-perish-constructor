@@ -2,11 +2,8 @@
 
 Drawn in code with ``eu5_building_pipeline.iconkit`` like the building icons, but finished as a goods icon
 (vanilla ``icons/trade_goods`` format: 128 px, content ~121 px wide, ~4 px margins, soft black outline,
-more saturated than building icons). Writes both files the build turns into DDS (``good_icons.py``):
-
-- ``assets/icons/trade_goods/icon_goods_logistics.png`` (128 x 128)
-- ``assets/icons/trade_goods/illustrations/icon_goods_logistics.png`` (1080 x 440, the icon at 400 px centred
-  on a transparent strip, like the offset and manual_labor illustrations)
+more saturated than building icons). Writes ``assets/icons/trade_goods/icon_goods_logistics.png`` (128 x 128), which
+the build turns into DDS (``good_icons.py``). The good's market picture is a painting (``assets/goods_paintings``).
 
 Run (from eu5-building-pipeline, which provides the kit):
   uv run python ../ProsperOrPerishConstructor/assets/icons/trade_goods/drawings/logistics.py
@@ -29,7 +26,6 @@ from eu5_building_pipeline.iconkit.finalize import grade, outline, soften
 SEED = 7
 ROOT = Path(__file__).resolve().parents[1]  # assets/icons/trade_goods
 ICON_PNG = ROOT / "icon_goods_logistics.png"
-ILLUSTRATION_PNG = ROOT / "illustrations" / "icon_goods_logistics.png"
 IRON = (46, 44, 42)
 
 
@@ -239,12 +235,7 @@ def main() -> None:
     icon = full.resize((128, 128), Image.LANCZOS).filter(ImageFilter.UnsharpMask(0.8, 70, 2))
     ICON_PNG.parent.mkdir(parents=True, exist_ok=True)
     icon.save(ICON_PNG)
-    ill = Image.new("RGBA", (1080, 440), (0, 0, 0, 0))
-    art = full.resize((400, 400), Image.LANCZOS).filter(ImageFilter.UnsharpMask(1.0, 50, 2))
-    ill.alpha_composite(art, ((1080 - 400) // 2, (440 - 400) // 2))
-    ILLUSTRATION_PNG.parent.mkdir(parents=True, exist_ok=True)
-    ill.save(ILLUSTRATION_PNG)
-    print("wrote", ICON_PNG, ILLUSTRATION_PNG)
+    print("wrote", ICON_PNG)
     if args.preview:
         args.preview.mkdir(parents=True, exist_ok=True)
         full.save(args.preview / "logistics_1024.png")

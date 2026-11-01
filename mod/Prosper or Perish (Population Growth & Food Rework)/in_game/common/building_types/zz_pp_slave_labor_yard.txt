@@ -74,9 +74,6 @@ unique_production_methods = {
     category = building_maintenance
   }
 }
-raw_modifier = {
-	local_population_capacity = 0.1
-}
 modifier = {
   local_slave_pop_satisfaction = -0.01
 }

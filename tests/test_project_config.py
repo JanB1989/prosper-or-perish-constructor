@@ -147,6 +147,8 @@ LAND_FARM_BUILDINGS = (
     "horse_breeders",
     "stud_farm",
     "elephant_kraal",
+    "elephant_hunting_grounds",
+    "eng_royal_forest",
     "camel_herders",
     "camel_stud",
     "fiber_crops_farm",
@@ -471,11 +473,11 @@ def test_granary_storage_and_startup_placement_are_compatible() -> None:
     assert "value = pp_granary_ai_weight" in granary_text
     # the capital test sits in allow: the engine removes buildings whose location_potential fails after a change of
     # owner (run 31ef07ce: half of the conquered capital Granaries gone), allow only gates new levels
-    potential = granary_text.split("location_potential = {", 1)[1].split("\n        }", 1)[0]
+    potential = granary_text.partition("location_potential = {")[2].split("\n        }", 1)[0]
     assert "is_province_capital" not in potential
     assert "allow = {\n            is_province_capital = yes" in granary_text
-    for rank in ("rural_settlement", "town", "city", "megalopolis"):
-        assert f"location_rank = location_rank:{rank}" in granary_text
+    for rank in ("rural_settlement", "town", "city", "megalopolis"):   # every rank (the flags; no rank test needed)
+        assert f"\n        {rank} = yes" in granary_text
 
 
 def test_no_blueprint_tests_the_province_capital_in_location_potential() -> None:
@@ -1197,9 +1199,10 @@ def test_land_farm_blueprints_use_shared_capacity_pool() -> None:
 
     for blueprint in LAND_FARM_BLUEPRINTS:
         text = blueprint.read_text(encoding="utf-8-sig")
-        expected_max = f"max_levels = farm_capacity_max_{blueprint.stem}"
+        # the cap itself, or a block whose value is the cap (the royal forest keeps one level, Ori's +2 elephant grounds)
+        expected_max = rf"max_levels = (?:\{{\s*value = )?farm_capacity_max_{blueprint.stem}\b"
 
-        assert expected_max in text
+        assert re.search(expected_max, text), blueprint.stem
         assert re.search(r"^\s*max_levels\s*=\s*farm_capacity\s*$", text, flags=re.M) is None
         assert "fruit_orchard_max_level" not in text
         assert "farm_space_used" not in text
@@ -1412,7 +1415,7 @@ def test_current_invalid_building_rows_are_covered_by_blueprint_potentials() -> 
     assert "is_coastal" in fishing_potential
     assert "is_province_capital = yes" in granary_text   # one Granary site per province (2026-10-06)
     for rank in ("rural_settlement", "town", "city", "megalopolis"):
-        assert f"location_rank = location_rank:{rank}" in granary_text
+        assert f"\n        {rank} = yes" in granary_text
     _assert_absent_or_cost_only_building_inject(winery_blueprint)
     _assert_absent_or_cost_only_building_inject(winery_manufactory_blueprint)
     assert "NOT = { raw_material = goods:wine }" not in winery_text
@@ -1904,7 +1907,8 @@ def test_yearly_closed_building_review_is_removed() -> None:
     assert not (MOD_ROOT / "in_game" / "events" / "debug" / "pp_ai_building_review_debug.txt").exists()
     assert not (SCRIPT_VALUES_ROOT / "pp_ai_building_review.txt").exists()
     assert not VICTUALS_IMPORT_TRIGGERS.exists()
-    assert not (LOCALIZATION_ROOT / "pp_debug_l_english.yml").exists()   # debug loc removed 2026-10-24
+    # the debug loc holds only the population baseline events of the pop-delta map modes (back 2026-10-24)
+    assert "pp_ai_building_review" not in (LOCALIZATION_ROOT / "pp_debug_l_english.yml").read_text(encoding="utf-8-sig")
     scripts = [*(MOD_ROOT / "in_game" / "common").rglob("*.txt"), *(MOD_ROOT / "in_game" / "events").rglob("*.txt")]
     for path in scripts:
         text = path.read_text(encoding="utf-8-sig", errors="replace")
@@ -2004,7 +2008,8 @@ def test_console_debug_events_and_market_food_topup_are_gone() -> None:
     assert not MARKET_FOOD_PRICE_EXTREMES.exists()
     assert not CAPACITY_CULLING_DEBUG_EVENT.exists()
     assert not COLUMBIAN_EXCHANGE_DEBUG_EVENT.exists()
-    assert not (MOD_ROOT / "in_game" / "events" / "debug" / "pp_population_baseline_debug.txt").exists()
+    # the population baseline events stay: the pop-delta map modes name them (restored 2026-10-24)
+    assert sorted(p.name for p in (MOD_ROOT / "in_game" / "events" / "debug").iterdir()) == ["pp_population_baseline_debug.txt"]
 
 
 def test_capacity_culling_v2_calls_helper_for_each_capacity_building() -> None:
@@ -2237,6 +2242,10 @@ def test_dhimmi_satisfaction_is_not_overridden_by_estate_adjustments() -> None:
 
 
 def test_inject_targets_exist_in_constructor_load_order() -> None:
+    """Every inject names an existing object. A plain INJECT needs one of the base game (or the mod); an object only a
+    DLC folder (game/dlc/<folder>) defines takes a TRY_INJECT only, which does nothing where that folder is absent."""
+    from eu5gameparser.load_order import dlc_roots
+
     load_order = LoadOrderConfig.load(ROOT / "constructor.load_order.toml")
     vanilla_root = load_order.vanilla_root
     offenders: list[str] = []
@@ -2251,12 +2260,20 @@ def test_inject_targets_exist_in_constructor_load_order() -> None:
             existing = _database_keys(vanilla_common / collection)
             if collection == Path("static_modifiers"):
                 existing |= _database_keys(vanilla_root / "game" / "main_menu" / "common" / collection)
+            dlc_only = set()
+            for dlc in dlc_roots(vanilla_root):
+                dlc_only |= _database_keys(dlc / relative_common / collection)
+                if collection == Path("static_modifiers"):
+                    dlc_only |= _database_keys(dlc / "main_menu" / "common" / collection)
+            dlc_only -= existing
 
             for path in sorted(collection_dir.rglob("*.txt")):
                 for entry in parse_file(path).entries:
                     if not isinstance(entry.value, CList):
                         continue
                     mode, key = _entry_mode(entry.key)
+                    if mode == "TRY_INJECT" and key in dlc_only:
+                        continue
                     if mode in {"INJECT", "TRY_INJECT"} and key not in existing:
                         offenders.append(
                             f"{path.relative_to(ROOT)}:{entry.location.line} {mode}:{key}"
@@ -2502,7 +2519,7 @@ def test_pp_law_adjustments_use_existing_modifier_types() -> None:
     assert "trade_sea_efficiency = small_trade_efficiency_bonus" in text
 
 
-def test_prosperity_advances_keep_capacity_without_global_goods_output() -> None:
+def test_prosperity_advances_cut_peasant_food_consumption_without_capacity_or_goods_output() -> None:
     entries = {entry.key: entry.value for entry in parse_file(PROSPERITY_ADVANCES).entries}
     checked_advances = (
         "TRY_INJECT:fertile_lands",
@@ -2513,13 +2530,15 @@ def test_prosperity_advances_keep_capacity_without_global_goods_output() -> None
         "TRY_INJECT:food_advance_absolutism",
         "TRY_INJECT:rotherham_plough",
     )
-    expected_capacity = {
-        "TRY_INJECT:fertile_lands": 0.05,
-        "TRY_INJECT:food_advance_renaissance": 0.05,
-        "TRY_INJECT:new_world_crops": 0.06,
-        "TRY_INJECT:food_advance_reformation": 0.07,
-        "TRY_INJECT:food_advance_absolutism": 0.08,
-        "TRY_INJECT:rotherham_plough": 0.09,
+    # 2026-10-27 (Jan): the former capacity % (5/5/6/7/8/9) at half size (-3/-3/-3/-4/-4/-5), then a third of that
+    # (world 1.39 bn by 1837 in run 3f8fec0a), rounded to whole percent
+    expected_consumption = {
+        "TRY_INJECT:fertile_lands": -0.01,
+        "TRY_INJECT:food_advance_renaissance": -0.01,
+        "TRY_INJECT:new_world_crops": -0.01,
+        "TRY_INJECT:food_advance_reformation": -0.01,
+        "TRY_INJECT:food_advance_absolutism": -0.01,
+        "TRY_INJECT:rotherham_plough": -0.02,
     }
 
     for advance in checked_advances:
@@ -2532,9 +2551,23 @@ def test_prosperity_advances_keep_capacity_without_global_goods_output() -> None
             if key.startswith("global_") and key.endswith("_output_modifier")
         ]
         assert output_keys == []
-        assert "global_peasants_food_consumption" not in values
-        if advance in expected_capacity:
-            assert values["global_population_capacity_modifier"] == expected_capacity[advance]
+        assert "global_population_capacity_modifier" not in values
+        assert values.get("global_peasants_food_consumption") == expected_consumption.get(advance), advance
+
+
+def test_capitals_colonial_nations_and_ville_franche_give_no_population_capacity_percent() -> None:
+    profile = LoadOrderConfig.load(ROOT / "constructor.load_order.toml").profile("constructor")
+    rights = {entry.key: entry.value for entry in load_merged_directory(profile, "town_rights").entries}
+    ville_franche = [e for block in rights["ville_franche_town_rights"].values("location_modifier") for e in block.entries]
+    assert abs(sum(e.value for e in ville_franche if e.key == "local_population_capacity_modifier")) < 1e-9
+    assert sum(e.value for e in ville_franche if e.key == "local_population_capacity") == 20   # flat housing instead
+    statics = {entry.key: entry.value for entry in load_merged_directory(profile, "static_modifiers", scope="main_menu").entries}
+    for name in ("capital", "province_capital"):
+        net = sum(e.value for e in statics[name].entries if e.key == "local_population_capacity_modifier")
+        assert abs(net) < 1e-9, (name, net)
+    subjects = {entry.key: entry.value for entry in load_merged_directory(profile, "subject_types").entries}
+    subject_modifier = _entry_values(subjects["colonial_nation"])["subject_modifier"]
+    assert "global_population_capacity_modifier" not in _entry_values(subject_modifier)
 
 
 def test_land_vs_naval_output_modifiers_are_capped_and_targeted() -> None:
@@ -2708,6 +2741,30 @@ def test_price_cost_modifier_finalizer_prunes_stale_generated_assets(tmp_path: P
     assert "MODIFIER_TYPE_NAME_pp_current_price_cost_modifier:" in localization_text
 
 
+def test_price_cost_modifier_names_are_building_links(tmp_path: Path) -> None:
+    """A price cost modifier's name links its building, whether it is new or was typed by hand ("Tavern Cost")."""
+    mod_root = tmp_path / "mod"
+    prices = mod_root / "in_game" / "common" / "prices"
+    prices.mkdir(parents=True)
+    (prices / "pp_x.txt").write_text("pp_tavern_price = { gold = 1 }\npp_grange_price = { gold = 1 }\n", encoding="utf-8")
+    localization = mod_root / cli.PRICE_MODIFIER_LOCALIZATION
+    localization.parent.mkdir(parents=True)
+    localization.write_text(
+        'l_english:\n'
+        '  MODIFIER_TYPE_DESC_pp_tavern_price_cost_modifier: "Affects the cost of building [ShowBuildingTypeName(\'tavern\')|e]."\n'
+        '  MODIFIER_TYPE_NAME_pp_tavern_price_cost_modifier: "Tavern Cost"\n',
+        encoding="utf-8-sig",
+    )
+
+    cli._ensure_price_cost_modifier_assets(mod_root)
+
+    text = localization.read_text(encoding="utf-8-sig")
+    assert '  MODIFIER_TYPE_NAME_pp_tavern_price_cost_modifier: "[ShowBuildingTypeName(\'tavern\')|e] Cost"\n' in text
+    assert '  MODIFIER_TYPE_NAME_pp_grange_price_cost_modifier: "[ShowBuildingTypeName(\'grange\')|e] Cost"\n' in text
+    assert "Tavern Cost" not in text
+    assert text.count("MODIFIER_TYPE_NAME_pp_tavern_price_cost_modifier") == 1
+
+
 def test_victuals_pop_demand_modifier_type_is_registered() -> None:
     modifier_types = _database_keys(MODIFIER_TYPE_DEFINITIONS)
     modifier_icons = _database_keys(MODIFIER_ICONS)
@@ -2850,7 +2907,7 @@ def test_internal_trade_good_icons_use_game_compatible_dds_layout() -> None:
     for path in paths:
         data = path.read_bytes()
         assert data[:4] == b"DDS ", path
-        assert data[84:88] == b"DXT5", path
+        assert data[84:88] == (b"DX10" if "illustrations" in path.parts else b"DXT5"), path   # pictures BC7
         dimensions = (
             int.from_bytes(data[16:20], "little"),
             int.from_bytes(data[12:16], "little"),
@@ -2858,10 +2915,25 @@ def test_internal_trade_good_icons_use_game_compatible_dds_layout() -> None:
         mip_count = int.from_bytes(data[28:32], "little")
         if "illustrations" in path.parts:
             assert dimensions == (1080, 440), path
-            assert mip_count == 11, path
+            assert mip_count <= 1, path   # one level (2641cae9)
         else:
             assert dimensions == (128, 128), path
             assert mip_count == 8, path
+
+
+def test_good_illustrations_are_stored_at_game_size() -> None:
+    """Every market illustration PNG is 1080 x 440 (good_icons resizes, it never crops) and the build installs it."""
+    from PIL import Image
+
+    from prosper_or_perish_constructor import good_icons
+
+    goods = good_icons.illustration_goods(ROOT)
+    assert {"offset", "logistics", "manual_labor", "province_food_sales", "local_food", "victuals"} <= set(goods)
+    for good in goods:
+        with Image.open(ROOT / good_icons.ASSET_ROOT / "illustrations" / f"icon_goods_{good}.png") as image:
+            assert image.size == good_icons.ILLUSTRATION_SIZE, good
+        dds = MOD_ROOT / good_icons.ICON_ROOT / "trade_goods" / "illustrations" / f"icon_goods_{good}.dds"
+        assert dds.read_bytes()[84:88] == b"DX10", good   # BC7, the picture format
 
 
 def test_current_megalopolis_buildings_allow_megalopolis() -> None:

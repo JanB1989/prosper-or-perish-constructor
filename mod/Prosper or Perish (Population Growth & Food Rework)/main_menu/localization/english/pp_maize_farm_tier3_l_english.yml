@@ -2,7 +2,7 @@
 
 # >>> eu5-building-pipeline:maize_model_farm:localization
   maize_model_farm: "Maize Model Farm"
-  maize_model_farm_desc: "Horse-hoes, planned cribs and hired hands raise maize on a larger managed farm."
+  maize_model_farm_desc: "Horse-hoes, planned cribs and hired hands raise maize on a larger managed farm. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
   maize_model_farm_slot_0: "Fields"
   maize_model_farm_slot_1: "Cultivation"
   maize_model_farm_slot_2: "Provisioning"

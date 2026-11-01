@@ -4,8 +4,5 @@ INJECT:city_walls = {
 market_center_modifier = {
 	local_trade_center_power = -0.1   # vanilla 0.1 per level: net 0
 }
-	raw_modifier = {
-		local_population_capacity = 0.1
-	}
 }
 # <<< eu5-building-pipeline:city_walls:building

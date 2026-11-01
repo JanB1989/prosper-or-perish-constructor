@@ -1,0 +1,10 @@
+﻿# Location scope: pp_subsistence_land at size = the location's subsistence peasants (thousands, never below 0:
+# pp_subsistence_peasants; see pp_subsistence_land.txt).
+pp_refresh_subsistence_land = {
+	add_location_modifier = {
+		modifier = pp_subsistence_land
+		years = -1
+		mode = replace
+		size = pp_subsistence_peasants
+	}
+}

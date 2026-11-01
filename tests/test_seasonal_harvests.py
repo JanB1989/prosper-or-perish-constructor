@@ -10,7 +10,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from prosper_or_perish_constructor import loc_replace, seasonal_harvests
+from prosper_or_perish_constructor import loc_languages, loc_replace, seasonal_harvests
 from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,11 +24,16 @@ def _vanilla_game() -> Path:
     return vanilla_root(ROOT, ROOT / "constructor.toml") / "game"
 
 
+def _derived(path: Path) -> bool:
+    """A copy of an English file for another game language (loc_languages.py; tests/test_loc_languages.py checks them)."""
+    return any(part in loc_languages.LANGUAGES for part in path.parts)
+
+
 def _standalone_files() -> list[str]:
     return sorted(
         p.relative_to(STANDALONE).as_posix()
         for p in STANDALONE.rglob("*")
-        if p.is_file() and p.relative_to(STANDALONE).parts[0] in ("in_game", "main_menu")
+        if p.is_file() and p.relative_to(STANDALONE).parts[0] in ("in_game", "main_menu") and not _derived(p)
     )
 
 
@@ -58,6 +63,8 @@ def test_no_key_is_defined_twice_when_both_mods_load() -> None:
                 standalone_keys[key] = rel
     clashes = []
     for path in sorted((MOD_ROOT / "main_menu" / "localization").rglob("*.yml")):
+        if _derived(path):
+            continue   # the language copies mirror the English files key for key
         rel = path.relative_to(MOD_ROOT).as_posix()
         for key in loc_replace.read_entries(path):
             if key in standalone_keys and standalone_keys[key] != rel:

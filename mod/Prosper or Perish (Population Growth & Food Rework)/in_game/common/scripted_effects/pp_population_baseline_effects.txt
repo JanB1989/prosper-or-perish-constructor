@@ -1,0 +1,33 @@
+﻿# Snapshot current population at every ownable location for pop-delta debug map modes.
+# Stores location population plus parent-scope aggregates so higher map modes paint uniformly.
+# Re-run via: event pp_population_baseline_debug.1
+
+pp_snapshot_population_baselines = {
+	every_location_in_the_world = {
+		limit = { is_ownable = yes }
+		set_variable = {
+			name = pp_pop_baseline
+			value = population
+		}
+		set_variable = {
+			name = pp_province_pop_baseline
+			value = province.population
+		}
+		set_variable = {
+			name = pp_area_pop_baseline
+			value = area.population
+		}
+		set_variable = {
+			name = pp_region_pop_baseline
+			value = region.population
+		}
+		set_variable = {
+			name = pp_macro_region_pop_baseline
+			value = sub_continent.population
+		}
+		set_variable = {
+			name = pp_super_region_pop_baseline
+			value = continent.population
+		}
+	}
+}

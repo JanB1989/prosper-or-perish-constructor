@@ -111,9 +111,9 @@ MARKET_GOODS = "panels/market/market_goods.gui"
 MARKET_VIEW = "selected_market_view.gui"
 # the market panel (port_market_view): wider than the vanilla left panel (570) for the stockpile column and the split
 # price cell below. A row's cells get the panel's width less MARKET_ROW_LOSS (measured in game 2026-11-01: 568 at
-# 650) and need 586: icon 30, stockpile 92, local balance/imports/exports 3 x 62, arrow 15, balance 62, price 40 + 30,
+# 650) and need 598: icon 30, stockpile 92, local balance/imports/exports 3 x 62, arrow 15, balance 62, price 40 + 42,
 # margin 2, actions 129
-MARKET_PANEL_WIDTH = 690
+MARKET_PANEL_WIDTH = 700
 MARKET_ROW_LOSS = 82
 # the market's stockpile column (port_market_stockpile): cell = bar + 4 spacing + amount (vanilla: 15)
 STOCKPILE_CELL_WIDTH = 92
@@ -124,7 +124,10 @@ MARKET_ACTIONS_WIDTH = 4 * 30 + 3 * 3   # the row's four action buttons (build, 
 # spread the row's cells over the free room while the header buttons kept fixed widths, so they never lined up.
 MARKET_ROW_LEAD = 3 + 3                 # the row card's inset (99 % of the row, centred) and its margin
 MARKET_PRICE_WIDTH = 40                 # vanilla's 50-wide price cell split: price, then its difference icon
-MARKET_PRICE_DIFF_WIDTH = 30            # the narrowest sort button (its icon and arrows are 30 wide)
+MARKET_PRICE_DIFF_WIDTH = 42            # the price against its default, up to "+200%" (a sort button needs 30)
+# price / default price - 1, shown as a percentage: what vanilla's coin icons (copper/silver/gold) only hinted at
+PRICE_AGAINST_DEFAULT = ("Subtract_CFixedPoint(Divide_CFixedPoint(GoodsMarketEntry.GetPrice, "
+                         "GoodsMarketEntry.GetGoods.GetDefaultMarketPrice), '(CFixedPoint)1')")
 # header buttons in row order; None = the rows' arrow between exports and balance (no sort key)
 MARKET_COLUMNS = ("stockpile", "goods_local_balance", "goods_imports", "goods_exports", None, "goods_balance",
                   "market_price", "market_price_diff")
@@ -1092,7 +1095,7 @@ def _row_cells(text: str, start: int, end: int, ind: str) -> list[tuple[int, int
 
 def _price_cells(cell: str, ind: str, what: str) -> str:
     """Vanilla's price cell (the price and its difference icon in one 50-wide box) as two cells, each under its own
-    header button."""
+    header button; the difference as a number (Jan, 2026-11-01: the gold/silver/copper coins were unreadable)."""
     for key in ('text = "[GoodsMarketEntry.GetPrice|2]"', "GetPriceDifferenceIconName(GoodsMarketEntry.GetPrice)",
                 "using = goods_market_price_tooltip"):
         if key not in cell:
@@ -1106,11 +1109,12 @@ def _price_cells(cell: str, ind: str, what: str) -> str:
              f"\t\t\tmaximumsize = {{ {MARKET_PRICE_WIDTH} 20 }}\n\t\t\talign = right|nobaseline\n"
              "\t\t\tusing = Font_Size_Small\n\t\t\ttext = \"[GoodsMarketEntry.GetPrice|2]\"\n\n"
              "\t\t\tsort_by_small_highlight = {\n\t\t\t\tname = \"market_price\"\n\t\t\t}\n\t\t}\n\t}\n}\n\n"
-             "widget = { # PP: the price against its default\n"
+             "widget = { # PP: the price against its default in percent, red above, green below (vanilla: coin icons)\n"
              f"\tsize = {{ {MARKET_PRICE_DIFF_WIDTH} 20 }}\n" + tooltip +
-             "\ttext_single = {\n\t\tparentanchor = center\n\t\talign = center|nobaseline\n\t\tusing = Font_Size_Small\n"
-             "\t\traw_text = \"@[GoodsMarketEntry.GetGoods.GetPriceDifferenceIconName(GoodsMarketEntry.GetPrice)]!\"\n\n"
-             "\t\tsort_by_small_highlight = {\n\t\t\tname = \"market_price_diff\"\n\t\t}\n\t}\n}\n")
+             "\thbox = {\n\t\texpand = {}\n\n\t\ttext_single = {\n"
+             f"\t\t\tmaximumsize = {{ {MARKET_PRICE_DIFF_WIDTH} 20 }}\n\t\t\talign = right|nobaseline\n"
+             f"\t\t\tusing = Font_Size_Small\n\t\t\ttext = \"[{PRICE_AGAINST_DEFAULT}|-=0%]\"\n\n"
+             "\t\t\tsort_by_small_highlight = {\n\t\t\t\tname = \"market_price_diff\"\n\t\t\t}\n\t\t}\n\t}\n}\n")
     return _indent(cells, len(ind) + 1).rstrip("\n")
 
 

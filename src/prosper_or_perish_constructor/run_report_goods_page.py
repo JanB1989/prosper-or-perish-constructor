@@ -2,7 +2,7 @@
 
 Static HTML + one script; the data comes from `goods/index.js`, `goods/summary.js` and one `goods/<n>.js` per
 save (written by `run_report_goods`), fetched when needed, so the page itself stays small. Layout: the goods list on
-the left (grouped, searchable, price badge), save / region / detail pickers on top, then for the chosen good its
+the left (grouped, searchable, share, stock and price), save / region / detail pickers on top, then for the chosen good its
 figures, a flow chart (inputs -> producers -> good -> users -> products, by value at base price; any good in it
 opens that good), producer and user tables (buildings that open into their production methods, with the recipe per
 level), the run over time and the split by world region. State lives in the URL hash (#g=cloth&s=12&r=...&d=method).
@@ -17,7 +17,7 @@ from prosper_or_perish_constructor.run_report_data import LOADER_JS
 
 GOODS_CSS = r"""
 body{margin:0}
-.app{display:grid;grid-template-columns:272px minmax(0,1fr);min-height:100vh}
+.app{display:grid;grid-template-columns:308px minmax(0,1fr);min-height:100vh}
 .side{position:sticky;top:0;height:100vh;overflow:auto;border-right:1px solid var(--line);background:var(--card);padding:14px 10px 30px}
 .side .back{display:block;font-size:13px;margin:0 6px 4px;text-decoration:none}
 .side .run{font-size:12px;color:var(--muted);margin:0 6px 10px}
@@ -30,8 +30,9 @@ body{margin:0}
 .glist h4 .gshare{margin-left:auto;font-variant-numeric:tabular-nums;letter-spacing:0;text-transform:none}
 .glist .share{margin-left:auto;font-size:11px;font-variant-numeric:tabular-nums;color:var(--ink);min-width:38px;text-align:right}
 .glist .badge{font-size:11px;font-variant-numeric:tabular-nums;color:var(--muted);min-width:36px;text-align:right}
-.glist a.on .share{color:#fff} .glist .legend{display:flex;gap:6px;font-size:11px;color:var(--muted);margin:8px 6px 0}
-.glist .legend span:first-child{margin-left:auto;min-width:38px;text-align:right} .glist .legend span:last-child{min-width:36px;text-align:right}
+.glist .fill{font-size:11px;font-variant-numeric:tabular-nums;min-width:30px;text-align:right}
+.glist a.on .share{color:#fff} .glist a.on .fill{color:#fff!important} .glist .legend{display:flex;gap:8px;font-size:11px;color:var(--muted);margin:8px 6px 0}
+.glist .legend span:first-child{margin-left:auto;min-width:38px;text-align:right} .glist .legend span:nth-child(2){min-width:30px;text-align:right} .glist .legend span:last-child{min-width:36px;text-align:right}
 .badge.hi{color:var(--neg)!important} .badge.lo{color:var(--pos)!important}
 .main{padding:0 22px 48px;min-width:0}
 .bar{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;position:sticky;top:0;background:var(--bg);padding:12px 0 10px;z-index:5;border-bottom:1px solid var(--line);margin-bottom:16px;font-size:13px;color:var(--muted)}
@@ -525,24 +526,29 @@ GOODS_JS = r"""
   }
   // each good's share of all output (production value at base price) and its price ÷ base, in the chosen region
   function outputShares(D) {
-    const n = IX.goods.length, made = new Array(n).fill(0), price = new Array(n).fill(null);
+    const n = IX.goods.length, made = new Array(n).fill(0), price = new Array(n).fill(null), fill = new Array(n).fill(null);
     let total = 0;
     for (let g = 0; g < n; g++) {
       const pg = goodPrice(g);
       for (const r of D.by[g].p) if (inRegion(r[3])) made[g] += (r[4] || 0) * pg;
       total += made[g];
-      let pv = 0, vol = 0;
-      for (const r of D.by[g].m) if (inRegion(r[1])) { pv += r[2] || 0; vol += r[3] || 0; }
+      let pv = 0, vol = 0, fv = null;
+      for (const r of D.by[g].m) if (inRegion(r[1])) { pv += r[2] || 0; vol += r[3] || 0; if (r[10] != null) fv = (fv || 0) + r[10]; }
       if (vol > 0) price[g] = pv / vol / pg;
+      if (vol > 0 && fv != null) fill[g] = fv / vol;
     }
-    return {share: made.map(v => total > 0 ? v / total : 0), price, total};
+    return {share: made.map(v => total > 0 ? v / total : 0), price, fill, total};
   }
+  const fillText = f => f < 0.005 ? '<1%' : Math.round(f * 100) + '%';
+  // like the price beside it: red = scarce (0 % empty), neutral at 50 %, blue = glut (100 % full)
+  const fillColor = f => f < 0.5 ? `color-mix(in srgb,var(--neg) ${Math.round((1 - 2 * f) * 100)}%,var(--muted))`
+    : `color-mix(in srgb,var(--pos) ${Math.round((2 * f - 1) * 100)}%,var(--muted))`;
   const shareText = f => f >= 0.0995 ? (f * 100).toFixed(0) + '%' : f >= 0.00095 ? (f * 100).toFixed(1) + '%' : f > 0 ? '<0.1%' : '–';
   function buildList(D) {
     const q = $('#search').value.trim().toLowerCase();
     const where = S.r >= 0 ? IX.regions[S.r].name : 'the world';
     const O = D ? outputShares(D) : null;
-    let h = `<div class=legend title="Share: the good's production value at base price ÷ the value of everything produced in ${esc(where)}. Price: price ÷ base price."><span>share</span><span>price</span></div>`;
+    let h = `<div class=legend title="Share: the good's production value at base price ÷ the value of everything produced in ${esc(where)}. Stock: the markets' stock of the good ÷ their stockpile cap, on average, each market weighted by its supply + demand of the good; 0 % empty (red), 100 % full (blue). Price: price ÷ base price, weighted the same way."><span>share</span><span>stock</span><span>price</span></div>`;
     for (const grp of IX.groups) {
       let items = IX.goodOrder.filter(i => IX.goods[i].group === grp.key && (!q || IX.goods[i].name.toLowerCase().includes(q)));
       if (!items.length) continue;
@@ -550,10 +556,10 @@ GOODS_JS = r"""
       const gshare = O ? IX.goodOrder.filter(i => IX.goods[i].group === grp.key).reduce((a, i) => a + O.share[i], 0) : null;
       h += `<h4><i style="background:${grp.color}"></i>${esc(grp.label)}<span class=gshare title="share of all output in ${esc(where)}">${gshare == null ? '' : shareText(gshare)}</span></h4>`;
       for (const i of items) {
-        const pr = O ? O.price[i] : null, sh = O ? O.share[i] : null;
+        const pr = O ? O.price[i] : null, sh = O ? O.share[i] : null, fl = O ? O.fill[i] : null;
         const cls = pr == null ? '' : pr > 1.25 ? ' hi' : pr < 0.8 ? ' lo' : '';
-        h += `<a href="#" data-i="${i}" class="${i === S.g ? 'on' : ''}" title="${esc(goodName(i))}: ${sh == null ? '' : shareText(sh) + ' of all output in ' + esc(where) + ', '}price ${pr == null ? '–' : pr.toFixed(2) + '× base'}">` +
-          `${imgHtml(i) || '<span class=noicon></span>'}<span>${esc(IX.goods[i].name)}</span><span class=share>${sh == null ? '' : shareText(sh)}</span><span class="badge${cls}">${pr == null ? '' : pr.toFixed(2) + '×'}</span></a>`;
+        h += `<a href="#" data-i="${i}" class="${i === S.g ? 'on' : ''}" title="${esc(goodName(i))}: ${sh == null ? '' : shareText(sh) + ' of all output in ' + esc(where) + ', '}${fl == null ? '' : 'stock ' + fillText(fl) + ' of the cap, '}price ${pr == null ? '–' : pr.toFixed(2) + '× base'}">` +
+          `${imgHtml(i) || '<span class=noicon></span>'}<span>${esc(IX.goods[i].name)}</span><span class=share>${sh == null ? '' : shareText(sh)}</span><span class=fill${fl == null ? '' : ` style="color:${fillColor(fl)}"`}>${fl == null ? '' : fillText(fl)}</span><span class="badge${cls}">${pr == null ? '' : pr.toFixed(2) + '×'}</span></a>`;
       }
     }
     $('#goodlist').innerHTML = h || '<div class=empty>No good matches.</div>';

@@ -116,6 +116,23 @@ def test_goods_page_reads_its_data_files() -> None:
     page = goods_page_html("Run x", (1337, 1400))
     assert "goods/index.js" in page and "goods/summary.js" in page and "id=goodlist" in page and "type: 'sankey'" in page
     assert "Price across markets" in page and "Stock across markets" in page and "e.bands.fill" in page and "&tv=${S.tv}" in page
+    assert "<span>stock</span>" in page and "O.fill[i]" in page
+
+
+def test_market_figures_carry_the_stock_fill(tmp_path: Path) -> None:
+    """Stock ÷ the market's cap x volume per good and region (the page adds regions up, then divides by the volume); the
+    cap is the bookkeeping goods' largest stock, and without one the fill stays unknown instead of reading empty."""
+    dataset = _dataset(tmp_path)
+    assert rg.save_flows(dataset, "run", "s1", _recipes())["market"]["fv"].null_count() == 4
+    path = dataset / "tables" / "market_goods" / "playthrough_id=run" / "s1.parquet"
+    goods = pl.read_parquet(path)
+    offset = goods.filter(pl.col("good_id") == "cloth").with_columns(pl.lit("offset").alias("good_id"), pl.Series("stockpile", [20.0, 40.0]))
+    pl.concat([goods, offset]).write_parquet(path)
+    flows = rg.save_flows(dataset, "run", "s1", _recipes())
+    market = {(r["good_id"], r["region"]): r["fv"] for r in flows["market"].iter_rows(named=True)}
+    assert market[("cloth", "western_europe")] == pytest.approx(5 / 20 * 5)  # Paris: 5 cloth, cap 20, volume 5
+    assert market[("wool", "western_europe")] == 0 and ("offset", "western_europe") not in market
+    assert all(len(row) == 11 for row in rg.encode_save(flows, rg.Index())["m"])
 
 
 def test_market_bands_weight_markets_by_volume_and_read_the_stock_cap() -> None:

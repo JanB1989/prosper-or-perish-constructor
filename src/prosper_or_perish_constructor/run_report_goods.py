@@ -8,7 +8,7 @@
   recipe], building inputs ``c`` [good, building, method, region, wanted, received, recipe], other demand ``d``
   [good, bucket, region, wanted, received], trade and other supply ``s`` [good, bucket, region, amount], market
   figures ``m`` [good, region, price x volume, volume, supply, demand, stockpile, markets short, markets in surplus,
-  markets] and trade between world regions ``x`` [good, region, imports, exports] (the trade routes that ran and
+  markets, stock fill x volume] and trade between world regions ``x`` [good, region, imports, exports] (the trade routes that ran and
   cross the region's border); amounts are goods per month, indices point into the index lists (-1 = none);
 - `goods/summary.js`: per good and save the world production, use and price, production / use by building type,
   and the spread over markets of the price and the stock fill (`market_bands`), for the charts over the run.
@@ -48,7 +48,7 @@ from prosper_or_perish_constructor.run_report_charts import (
 if TYPE_CHECKING:
     from prosper_or_perish_constructor.run_report import RunData
 
-CACHE_VERSION = "goods-5"
+CACHE_VERSION = "goods-6"
 RGO = "rgo"  # pseudo building of the RGO rows
 OTHER = "_other"  # pseudo building for market totals no recipe explains
 IDLE = "_idle"  # pseudo building of the goods' base production by idle peasants
@@ -194,6 +194,9 @@ def save_flows(dataset: Path, playthrough: str, snapshot: str, recipes: Recipes)
         "market_id", "good_id", "price", "default_price", "supply", "demand", "stockpile", "supplied_Production",
         "demanded_Building", "taken_Building", *[f"demanded_{b}" for b in buckets], *[f"taken_{b}" for b in buckets],
         *[f"supplied_{b}" for b in supplies]])
+    # the save keeps no stockpile cap, but the bookkeeping goods always sit at it (as in run_report.load_run)
+    stock_caps = goods.filter(pl.col("good_id").is_in(sorted(DUMMY_GOODS))).group_by("market_id").agg(
+        pl.col("stockpile").max().cast(pl.Float64).alias("stock_cap"))
     goods = goods.filter(~pl.col("good_id").is_in(sorted(DUMMY_GOODS)) & (pl.col("default_price") > 0)).with_columns(
         pl.exclude("market_id", "good_id").cast(pl.Float64).fill_null(0.0))
     locations = read("locations", ["location_id", "slug", "market_id", "raw_material", "rgo_employed", "macro_region",
@@ -305,12 +308,15 @@ def save_flows(dataset: Path, playthrough: str, snapshot: str, recipes: Recipes)
     supply = pl.concat([
         regional.group_by("good_id", "region").agg(pl.col(f"supplied_{b}").sum().alias("amount")).with_columns(pl.lit(b).alias("bucket"))
         for b in supplies]).filter(pl.col("amount") > 0)
-    market = regional.with_columns((pl.col("supply") + pl.col("demand")).alias("volume")).group_by("good_id", "region").agg(
+    market = regional.join(stock_caps, on="market_id", how="left").with_columns((pl.col("supply") + pl.col("demand")).alias("volume")).with_columns(
+        pl.when(pl.col("stock_cap") > 0).then((pl.col("stockpile") / pl.col("stock_cap")).clip(0.0, 1.0) * pl.col("volume")).alias("fv")
+    ).group_by("good_id", "region").agg(
         (pl.col("price") * pl.col("volume")).sum().alias("pv"), pl.col("volume").sum(), pl.col("supply").sum(), pl.col("demand").sum(),
         pl.col("stockpile").sum(),
         ((pl.col("demand") > 0.01) & (pl.col("supply") < 0.9 * pl.col("demand"))).sum().alias("short"),
         ((pl.col("supplied_Production") > 0.01) & (pl.col("supply") > 1.1 * pl.col("demand"))).sum().alias("surplus"),
-        ((pl.col("supply") + pl.col("demand")) > 0).sum().alias("markets"))
+        ((pl.col("supply") + pl.col("demand")) > 0).sum().alias("markets"),
+        pl.when(pl.col("fv").is_not_null().any()).then(pl.col("fv").sum()).alias("fv"))
     # trade between world regions: the routes that ran, by the regions of their two markets
     routes = read("trades", ["good_id", "from_market", "to_market", "cached", "happened"])
     trade = pl.DataFrame(schema={"good_id": pl.String, "region": pl.String, "imports": pl.Float64, "exports": pl.Float64})
@@ -374,7 +380,7 @@ def encode_save(flows: dict[str, Any], index: Index) -> dict[str, list[list[Any]
     s = [[of("good", r["good_id"]), supplies[r["bucket"]], of("region", r["region"]), _sig(r["amount"])]
          for r in flows["supply"].iter_rows(named=True)]
     m = [[of("good", r["good_id"]), of("region", r["region"]), _sig(r["pv"]), _sig(r["volume"]), _sig(r["supply"]), _sig(r["demand"]),
-          _sig(r["stockpile"]), r["short"], r["surplus"], r["markets"]]
+          _sig(r["stockpile"]), r["short"], r["surplus"], r["markets"], _sig(r["fv"])]
          for r in flows["market"].iter_rows(named=True)]
     x = [[of("good", r["good_id"]), of("region", r["region"]), _sig(r["imports"]), _sig(r["exports"])]
          for r in flows["trade"].iter_rows(named=True)]

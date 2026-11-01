@@ -7,7 +7,8 @@ file), for the build panel a layout that fits PP's many-slot, many-input buildin
 same for the location view's rows (``port_location_rows``, ``port_location_production``) and the building window's
 header (``port_building_view``), and
 for the market, the goods and markets ledgers and the trade-order goods picker the internal goods hidden
-(``port_internal_goods``). Everything else is vanilla, so whatever the game adds to these windows stays visible.
+(``port_internal_goods``), and in the market's goods rows a readable stockpile column (``port_market_stockpile``).
+Everything else is vanilla, so whatever the game adds to these windows stays visible.
 
 ``location_window.gui`` is not handled here: it is generated from the World Builder export by the finalize step of
 ``ppc build`` / ``ppc sync`` (location_view.py), followed by the finalize GUI steps ``gui_compat.strip`` ->
@@ -106,9 +107,16 @@ BUILD_PAYBACK_MIN_PROFIT = 0.05   # profit per level per month counted at least 
 INTERNAL_GOODS = ("offset", "logistics", "local_food", "province_food_sales")
 INTERNAL_GOODS_TEMPLATE = "pp_hide_internal_goods"
 INTERNAL_GOODS_GUI = "shared/pp_internal_goods.gui"
+MARKET_GOODS = "panels/market/market_goods.gui"
+# the market's stockpile column (port_market_stockpile): cell = bar + 4 spacing + amount; it grows by 77 over vanilla's
+# 15, and the header buttons after it give that back so each stays over its column (the row's columns spread the
+# space left, so the far ones barely move)
+STOCKPILE_CELL_WIDTH = 92
+STOCKPILE_BAR_WIDTH = 46
+STOCKPILE_HEADER_WIDTHS = {"stockpile": 105, "goods_local_balance": 40, "goods_exports": 48, "goods_balance": 53}
 # file -> (datamodel of a goods list, context that gives the row its Goods; "" when the items are Goods)
 INTERNAL_GOODS_LISTS: dict[str, tuple[tuple[str, str], ...]] = {
-    "panels/market/market_goods.gui": (
+    MARKET_GOODS: (
         ("SelectedMarketLateralView.GetGoodsMarketEntries", "GoodsMarketEntry.GetGoods"),
         ("SelectedMarketLateralView.GetInRangeGoodsEntries", "GoodsMarketEntry.GetGoods"),
     ),
@@ -983,8 +991,49 @@ def _hide_table(text: str, model: str, what: str) -> str:
     return text[:opener.start()] + table + text[end:]
 
 
+def port_market_stockpile(text: str, what: str = f"vanilla {MARKET_GOODS}") -> str:
+    """The market's goods rows: vanilla's 5 px vertical stockpile bar becomes a wide bar with the fill in whole percent
+    on it and the stockpile amount beside it (Jan, 2026-11-01: the thin bar was unreadable). The header buttons after
+    it give back what the wider column takes (STOCKPILE_HEADER_WIDTHS)."""
+    opener = list(re.finditer(r"(?m)^([ \t]*)widget = \{\n[ \t]*size = \{15 22\}\n", text))
+    if len(opener) != 1:
+        raise ValueError(f"{what}: expected 1 stockpile bar widget, found {len(opener)}")
+    ind = opener[0].group(1)
+    end = _block_end(text, text.index("{", opener[0].start()))
+    old = text[opener[0].start():end]
+    if 'name = "stockpile"' not in old or "progressbar_framed" not in old:
+        raise ValueError(f"{what}: the 15 x 22 widget is not the stockpile bar")
+    percent = "GoodsMarketEntry.GetStockpilePercentage"   # 0..100, what the vanilla stockpile tooltip's pie shows
+    amount = "GoodsMarketEntry.GetStockpile"
+    stocked = f"GreaterThan_CFixedPoint({amount}, '(CFixedPoint)0')"
+    cell = (f"widget = {{ # PP: the stockpile as a wide bar with its fill in whole percent and the amount (vanilla: a 5 px bar)\n"
+            f"\tsize = {{ {STOCKPILE_CELL_WIDTH} 22 }}\n"
+            "\tdatacontext = \"[SelectedMarketLateralView.GetMarket]\"\n"
+            "\ttooltipwidget = {\n\t\tusing = GoodsMarketEntry_template\n\t}\n\n"
+            "\tsort_by_small_highlight = {\n\t\tname = \"stockpile\"\n\t}\n\n"
+            "\thbox = {\n\t\tusing = layoutpolicy_expanding\n\t\tspacing = 4\n\n"
+            f"\t\twidget = {{\n\t\t\tsize = {{ {STOCKPILE_BAR_WIDTH} 20 }}\n\n"
+            "\t\t\tprogressbar_framed = {\n\t\t\t\tsize = { 100% 100% }\n\t\t\t\tusing = progress_bar_green_alt\n"
+            f"\t\t\t\tvalue = \"[{percent}]\"\n\t\t\t\tmin = 0\n\t\t\t\tmax = 100\n\t\t\t}}\n\n"
+            "\t\t\ttext_single = {\n\t\t\t\tsize = { 100% 100% }\n\t\t\t\tautoresize = no\n"
+            "\t\t\t\talign = center|nobaseline\n\t\t\t\tusing = Font_Size_Small\n"
+            f"\t\t\t\traw_text = \"[{percent}|0]%\"\n\t\t\t}}\n\t\t}}\n\n"
+            f"\t\ttext_single = {{\n\t\t\tvisible = \"[{stocked}]\"\n\t\t\tlayoutpolicy_horizontal = expanding\n"
+            "\t\t\tautoresize = no\n\t\t\tsize = { -1 20 }\n\t\t\talign = right|nobaseline\n\t\t\tusing = Font_Size_Small\n"
+            f"\t\t\ttext = \"[{amount}|0]\"\n\t\t}}\n\n"
+            f"\t\ttext_single = {{\n\t\t\tvisible = \"[Not({stocked})]\"\n\t\t\tlayoutpolicy_horizontal = expanding\n"
+            "\t\t\tautoresize = no\n\t\t\tsize = { -1 20 }\n\t\t\talign = right|nobaseline\n\t\t\tusing = Font_Size_Small\n"
+            f"\t\t\ttext = \"[{amount}|0]\"\n\t\t\tdefault_format = \"#weak\"\n\t\t}}\n\t}}\n}}\n")
+    text = text[:opener[0].start()] + _indent(cell, len(ind)).rstrip("\n") + text[end:]
+    for name, width in STOCKPILE_HEADER_WIDTHS.items():
+        text = _once(rf'(name = "{name}"\n[ \t]*layoutpolicy_vertical = expanding\n[ \t]*size = \{{ )\d+( -1 \}})',
+                     rf"\g<1>{width}\g<2>", text, what)
+    return text
+
+
 def port_internal_goods(vanilla: str, rel: str) -> str:
-    """Vanilla goods lists of ``rel`` without the internal goods (INTERNAL_GOODS_LISTS, _ICONS, _TABLES)."""
+    """Vanilla goods lists of ``rel`` without the internal goods (INTERNAL_GOODS_LISTS, _ICONS, _TABLES); the market's
+    goods rows also get the readable stockpile column (port_market_stockpile)."""
     what = f"vanilla {rel}"
     t = vanilla
     for model, context in INTERNAL_GOODS_LISTS.get(rel, ()):
@@ -993,6 +1042,8 @@ def port_internal_goods(vanilla: str, rel: str) -> str:
         t = _hide_icons(t, model, what)
     for model in INTERNAL_GOODS_TABLES.get(rel, ()):
         t = _hide_table(t, model, what)
+    if rel == MARKET_GOODS:
+        t = port_market_stockpile(t, what)
     return t
 
 

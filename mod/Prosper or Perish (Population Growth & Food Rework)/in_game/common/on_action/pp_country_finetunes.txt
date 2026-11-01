@@ -195,6 +195,10 @@ pp_country_finetune_area_preferences = {
 		c:BUL ?= {
 			add_area_preference = pp_balkans_go_north
 		}
+		# Ottomans: a little less pull to the steppe and Russia (pp_conquest_preferences.txt).
+		c:TUR ?= {
+			add_area_preference = pp_ottoman_less_northeast
+		}
 	}
 }
 

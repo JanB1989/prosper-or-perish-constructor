@@ -43,6 +43,63 @@ pp_ottoman_crush_mamluks = {
 	region = crescent_region
 }
 
+# Ottomans (docs/country_finetunes.md): vanilla's aims at vanilla's steps (ai_area_conqest_events), a little more towards
+# the Mamluks, North Africa and Arabia (modifier 1 -> 2), a little less to the northeast (1 -> 0.5). Re-check after a
+# game update.
+REPLACE:ottoman_expansion_crescent_egypt = {
+	preference_type = conquest
+	modifier = 2
+
+	region = crescent_region
+	region = egypt_region
+}
+
+REPLACE:ottoman_expansion_maghreb = {
+	preference_type = conquest
+	modifier = 2
+
+	region = maghreb_region
+}
+
+REPLACE:ottoman_expansion_arabia = {
+	preference_type = conquest
+	modifier = 2
+
+	area = hedjaz_area
+	area = north_yemen_area
+	area = south_yemen_area
+}
+
+REPLACE:ottoman_expansion_caucasus = {
+	preference_type = conquest
+	modifier = 0.5
+
+	region = caucasus_region
+}
+
+REPLACE:ottoman_expansion_pontic = {
+	preference_type = conquest
+	modifier = 0.5
+
+	area = crimea_area
+	area = yedisan_area
+	area = pryazovia_area
+	area = azov_area
+	area = matrega_area
+}
+
+# Ottomans, from the start: a little less pull to the steppe and Russia, which have no vanilla aim to lower.
+pp_ottoman_less_northeast = {
+	preference_type = conquest
+	modifier = -0.25
+
+	region = steppes_region
+	region = russian_region
+	region = ruthenia_region
+	region = ural_region
+	region = west_siberia_region
+}
+
 # England: instead of vanilla's england_conquer_france (x15 on all of France, removed at start), only the old Angevin
 # lands, and only an area where England or its subjects still hold land (the Hundred Years' War front).
 pp_england_french_claims = {

@@ -40,16 +40,6 @@ unique_production_methods = {
         icon = cinnabar_pit
         category = building_maintenance
     }
-    pp_cinnabar_pit_dyes = {
-        icon_type = building_type
-        icon = cinnabar_pit
-        lumber = 0.041 # grinding troughs
-        tools = 0.004 # mortars, shovels
-        manual_labor = 0.032
-        produced = dyes
-        output = 0.03
-        category = building_maintenance
-    }
     pp_cinnabar_pit_stone = {
         icon_type = building_type
         icon = cinnabar_pit

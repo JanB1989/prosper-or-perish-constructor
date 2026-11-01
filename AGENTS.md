@@ -65,6 +65,11 @@
   Workers are laid off whenever profit at full staffing is negative unless the AI subsidises; `can_close` /
   `ai_forbid_shutdown` do not stop that.
 - A slot's first method is what new and game-start buildings run, so reordering can change defaults.
+- Rural producers next to a town (`docs/ai_building_rulebook.md` 2.5b): a rural-capable building (`rural_settlement = yes`)
+  that can make any good a town-only building also makes gets no AI levels at rural locations with a town in the province
+  once the evaluating country has both (for most goods from day 1), whatever the weight or price. Every method counts, so
+  check a new method's good first. `tests/test_rural_town_goods.py` fails on a pair not listed in
+  `[rural_town_goods.allowed]` (`constructor.toml`) and on a listed pair that no longer holds.
 
 ## Legacy Methods
 

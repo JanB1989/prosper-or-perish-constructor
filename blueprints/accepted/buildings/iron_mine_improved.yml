@@ -22,16 +22,12 @@ building:
         - pp_iron_mine_improved_base_iron
     - name: slot_1
       methods:
-        - pp_iron_mine_improved_no_secondary
-        - pp_iron_mine_improved_ochre
-    - name: slot_2
-      methods:
         - pp_iron_mine_improved_no_primary
         - pp_iron_mine_improved_ore_dressing_floors
         - pp_iron_mine_improved_horse_whim_haulage
         - pp_iron_mine_improved_iron
         - pp_iron_mine_improved_slitting_dressed_ore
-    - name: slot_3
+    - name: slot_2
       methods:
         - pp_iron_mine_improved_market_sales
   possible_production_methods: []
@@ -65,20 +61,6 @@ building:
             manual_labor = 0.056
             produced = iron
             output = 0.08
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
-        pp_iron_mine_improved_no_secondary = {
-            category = building_maintenance
-        }
-        pp_iron_mine_improved_ochre = {
-            lumber = 0.046 # washing troughs, drying racks
-            tools = 0.006 # sieves, shovels
-            fiber_crops = 0.014 # sieve cloths, sacks
-            manual_labor = 0.04
-            produced = dyes
-            output = 0.040
             category = building_maintenance
         }
     }
@@ -145,25 +127,22 @@ building:
 localization:
   entries:
     iron_mine_improved_slot_0: Iron Deposit
-    iron_mine_improved_slot_1: Ochre Recovery
-    iron_mine_improved_slot_2: Ore Workings
+    iron_mine_improved_slot_1: Ore Workings
     iron_mine_improved: Iron Mine
-    iron_mine_improved_desc: Timbered workings use dressing floors, haulage, and gangue sorting to prepare cleaner iron ore. Ochre washers recover small amounts of pigment earth.
+    iron_mine_improved_desc: Timbered workings use dressing floors, haulage, and gangue sorting to prepare cleaner iron ore.
     pp_iron_mine_improved_base_iron: Surveyed Iron Ore
     pp_iron_mine_improved_no_primary: No Iron Mining
     pp_iron_mine_improved_iron: Timbered Ore Workings
     pp_iron_mine_improved_slitting_dressed_ore: Slitting-Mill Ore Dressing
     pp_iron_mine_improved_horse_whim_haulage: Horse-Whim Haulage
     pp_iron_mine_improved_ore_dressing_floors: Ore Dressing Floors
-    pp_iron_mine_improved_no_secondary: No Ochre Recovery
-    pp_iron_mine_improved_ochre: Ochre Washing
     efficient_mining: Ore Dressing
     efficient_mining_desc: Better mine surveys, timbering, haulage, and dressing floors separate useful iron ore from silica-rich gangue and other waste before smelting.
     slitting_mills: Slitting Mills
     slitting_mills_desc: Water-powered slitting mills turn smelted blooms and bars into more regular wrought iron, increasing demand for cleaner dressed ore.
     pp_iron_mine_improved_market_sales: Market Sales
     pp_iron_mine_improved_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
-    iron_mine_improved_slot_3: Market
+    iron_mine_improved_slot_2: Market
 icon:
   source_png: ../assets/icons/iron_mine_improved.png
   output_dds: iron_mine_improved.dds
@@ -200,13 +179,6 @@ evaluation:
         profit_percent: Ore dressing floors are accepted above the generic margin band as a loop-breaking iron fallback.
         input_throughput: Ore dressing floors are a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
         output_throughput: Ore dressing floors are a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
-    pp_iron_mine_improved_no_secondary:
-      production_efficiency: 1.00
-    pp_iron_mine_improved_ochre:
-      production_efficiency: 0.75
-      allow_rules:
-        input_throughput: Ochre washing is an ancillary iron ore byproduct, intentionally less profitable than primary iron extraction.
-        output_throughput: Ochre washing is an ancillary iron ore byproduct, intentionally less profitable than primary iron extraction.
     pp_iron_mine_improved_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

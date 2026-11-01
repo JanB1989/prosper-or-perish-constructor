@@ -41,16 +41,6 @@ unique_production_methods = {
         icon = quicksilver_retort
         category = building_maintenance
     }
-    pp_quicksilver_retort_dyes = {
-        icon_type = building_type
-        icon = quicksilver_retort
-        lumber = 0.046 # grinding troughs
-        tools = 0.004 # mortars, shovels
-        manual_labor = 0.024
-        produced = dyes
-        output = 0.027
-        category = building_maintenance
-    }
     pp_quicksilver_retort_stone = {
         icon_type = building_type
         icon = quicksilver_retort

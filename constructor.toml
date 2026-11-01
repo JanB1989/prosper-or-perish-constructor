@@ -1116,6 +1116,47 @@ slot_label = "Market"
 method_name = "Market Sales"
 method_desc = "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
 
+[rural_town_goods]
+# The AI does not build a rural-capable producer (rural_settlement = yes) at a rural location whose province has a town of
+# the same owner while the country evaluating it also has a town-only producer of ANY good that building can make (researched
+# if an advance unlocks it, country_potential passes): every method counts, active or not, main good or side good, and no
+# weight, price or shortage opens it (docs/ai_building_rulebook.md 2.5b).
+# So a side method can shut a whole building out of most of the map: check the good against the town-only producers before
+# giving a rural building a method. tests/test_rural_town_goods.py fails on a pair (building, good) that is not listed
+# below and on a listed pair that no longer holds. A pair counts whatever advance the town-only producer needs, because a
+# country can research it later.
+
+[rural_town_goods.allowed]
+# Meant so: the town has the real workshop, the rural one is for provinces without a town.
+market_village = ["beer", "jewelry", "pottery", "tools", "weaponry"]
+rural_clothmaker = ["cloth"]
+rural_glassmaker = ["glass"]
+# Labour sits at its price floor: no need for more of it at these sites.
+rural_daywork_yard = ["manual_labor"]
+# Rare culture or colonial buildings.
+tatara = ["tools", "weaponry"]
+pounamou_carver = ["jewelry"]
+slave_center = ["slaves_goods"]
+# Undecided (Jan, 2026-11-01): the good is the building's purpose, a town workshop happens to make it too.
+dye_plantation = ["dyes"]
+incense_grove = ["incense"]
+regulated_sericulture_farm = ["silk"]
+saltpeter_beds = ["saltpeter"]
+sericulture_farm = ["silk"]
+simplers_grove = ["medicaments"]
+vineyard_estate = ["wine"]
+# Undecided (Jan, 2026-11-01): one of several goods of the building.
+forest_village = ["leather"]
+managed_forest_village = ["leather"]
+# Undecided (Jan, 2026-11-01): the town offices make logistics too; opening these changes market access across the map.
+carrier_inn = ["logistics"]
+pp_banjara_tanda = ["logistics"]
+pp_caravanserai = ["logistics"]
+pp_llama_caravan_post = ["logistics"]
+pp_oasis_caravan_station = ["logistics"]
+pp_yam_station = ["logistics"]
+river_boatmen_yard = ["logistics"]
+
 [tier_lines]
 # Upgrade lines whose lowest tier needs a raw material, + extra_lines - exclude_lines (tier_lines.py, finalize pass; 2026-11-01,
 # Jan, from run 6ee05b7e). A researched successor freezes the old tier, and upper tiers cost 4-24x the base for 1.0-1.5x its

@@ -22,15 +22,11 @@ building:
         - pp_iron_mine_base_iron
     - name: slot_1
       methods:
-        - pp_iron_mine_no_secondary
-        - pp_iron_mine_ochre
-    - name: slot_2
-      methods:
         - pp_iron_mine_no_primary
         - pp_iron_mine_ore_dressing_floors
         - pp_iron_mine_horse_whim_haulage
         - pp_iron_mine_iron
-    - name: slot_3
+    - name: slot_2
       methods:
         - pp_iron_mine_market_sales
   possible_production_methods: []
@@ -63,20 +59,6 @@ building:
             manual_labor = 0.056
             produced = iron
             output = 0.08
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
-        pp_iron_mine_no_secondary = {
-            category = building_maintenance
-        }
-        pp_iron_mine_ochre = {
-            lumber = 0.044 # washing troughs, drying racks
-            tools = 0.006 # sieves, shovels
-            fiber_crops = 0.012 # sieve cloths, sacks
-            manual_labor = 0.046
-            produced = dyes
-            output = 0.042
             category = building_maintenance
         }
     }
@@ -133,20 +115,17 @@ building:
 localization:
   entries:
     iron_mine_slot_0: Iron Deposit
-    iron_mine_slot_1: Ochre Recovery
-    iron_mine_slot_2: Ore Workings
+    iron_mine_slot_1: Ore Workings
     iron_mine: Iron Ore Pit
-    iron_mine_desc: Shallow pits and short adits work exposed iron ores. Ore is broken and washed by hand, with red and yellow ochre saved for pigments.
+    iron_mine_desc: Shallow pits and short adits work exposed iron ores. Ore is broken and washed by hand.
     pp_iron_mine_base_iron: Exposed Iron Ore
     pp_iron_mine_no_primary: No Iron Mining
     pp_iron_mine_iron: Open Ore Workings
     pp_iron_mine_horse_whim_haulage: Horse-Whim Haulage
     pp_iron_mine_ore_dressing_floors: Ore Dressing Floors
-    pp_iron_mine_no_secondary: No Ochre Recovery
-    pp_iron_mine_ochre: Ochre Washing
     pp_iron_mine_market_sales: Market Sales
     pp_iron_mine_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
-    iron_mine_slot_3: Market
+    iron_mine_slot_2: Market
 icon:
   source_png: ../assets/icons/iron_mine.png
   output_dds: iron_mine.dds
@@ -181,13 +160,6 @@ evaluation:
         input_throughput: Ore dressing floors are a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
         output_throughput: Ore dressing floors are a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
         amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
-    pp_iron_mine_no_secondary:
-      production_efficiency: 1.00
-    pp_iron_mine_ochre:
-      production_efficiency: 0.75
-      allow_rules:
-        input_throughput: Ochre washing is an ancillary iron ore byproduct, intentionally less profitable than primary iron extraction.
-        output_throughput: Ochre washing is an ancillary iron ore byproduct, intentionally less profitable than primary iron extraction.
     pp_iron_mine_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

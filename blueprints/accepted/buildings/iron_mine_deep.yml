@@ -23,16 +23,12 @@ building:
         - pp_iron_mine_deep_base_iron
     - name: slot_1
       methods:
-        - pp_iron_mine_deep_no_secondary
-        - pp_iron_mine_deep_ochre
-    - name: slot_2
-      methods:
         - pp_iron_mine_deep_no_primary
         - pp_iron_mine_deep_ore_dressing_floors
         - pp_iron_mine_deep_horse_whim_haulage
         - pp_iron_mine_deep_drainage_workings
         - pp_iron_mine_deep_slitting_ore
-    - name: slot_3
+    - name: slot_2
       methods:
         - pp_iron_mine_deep_market_sales
   possible_production_methods: []
@@ -66,20 +62,6 @@ building:
             manual_labor = 0.056
             produced = iron
             output = 0.08
-            category = building_maintenance
-        }
-    }
-    unique_production_methods = {
-        pp_iron_mine_deep_no_secondary = {
-            category = building_maintenance
-        }
-        pp_iron_mine_deep_ochre = {
-            lumber = 0.043 # washing troughs, drying racks
-            tools = 0.005 # sieves, shovels
-            fiber_crops = 0.008 # sieve cloths, sacks
-            manual_labor = 0.028
-            produced = dyes
-            output = 0.04
             category = building_maintenance
         }
     }
@@ -146,8 +128,7 @@ building:
 localization:
   entries:
     iron_mine_deep_slot_0: Iron Vein
-    iron_mine_deep_slot_1: Ochre Recovery
-    iron_mine_deep_slot_2: Deep Workings
+    iron_mine_deep_slot_1: Deep Workings
     iron_mine_deep: Deep Iron Mine
     iron_mine_deep_desc: Drained shafts, stronger timbering, and regular ore dressing let iron mines work deeper veins with larger crews.
     pp_iron_mine_deep_base_iron: Surveyed Deep Iron Vein
@@ -156,11 +137,9 @@ localization:
     pp_iron_mine_deep_slitting_ore: Slitting-Mill Ore Supply
     pp_iron_mine_deep_horse_whim_haulage: Horse-Whim Haulage
     pp_iron_mine_deep_ore_dressing_floors: Ore Dressing Floors
-    pp_iron_mine_deep_no_secondary: No Ochre Recovery
-    pp_iron_mine_deep_ochre: Deep Ochre Washing
     pp_iron_mine_deep_market_sales: Market Sales
     pp_iron_mine_deep_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
-    iron_mine_deep_slot_3: Market
+    iron_mine_deep_slot_2: Market
 icon:
   source_png: ../assets/icons/iron_mine_deep.png
   output_dds: iron_mine_deep.dds
@@ -200,13 +179,6 @@ evaluation:
         input_throughput: Ore dressing floors are a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
         output_throughput: Ore dressing floors are a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
         amortization_months: Ore dressing floors are a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
-    pp_iron_mine_deep_no_secondary:
-      production_efficiency: 1.00
-    pp_iron_mine_deep_ochre:
-      production_efficiency: 0.75
-      allow_rules:
-        input_throughput: Ochre washing is an ancillary iron ore byproduct, intentionally less profitable than primary iron extraction.
-        output_throughput: Ochre washing is an ancillary iron ore byproduct, intentionally less profitable than primary iron extraction.
     pp_iron_mine_deep_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

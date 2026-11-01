@@ -23,7 +23,6 @@ building:
     - name: slot_1
       methods:
         - pp_cinnabar_pit_no_secondary
-        - pp_cinnabar_pit_dyes
         - pp_cinnabar_pit_stone
     - name: slot_2
       methods:
@@ -67,14 +66,6 @@ building:
     }
     unique_production_methods = {
         pp_cinnabar_pit_no_secondary = {
-            category = building_maintenance
-        }
-        pp_cinnabar_pit_dyes = {
-            lumber = 0.041 # grinding troughs
-            tools = 0.004 # mortars, shovels
-            manual_labor = 0.032
-            produced = dyes
-            output = 0.03
             category = building_maintenance
         }
         pp_cinnabar_pit_stone = {
@@ -124,13 +115,12 @@ localization:
     cinnabar_pit_slot_1: Gangue Sorting
     cinnabar_pit_slot_2: Cinnabar Workings
     cinnabar_pit: Cinnabar Pit
-    cinnabar_pit_desc: Shallow pits and galleries follow red cinnabar seams for quicksilver ore. Workers sort pigment stone by hand and send the richest ore for roasting.
+    cinnabar_pit_desc: Shallow pits and galleries follow red cinnabar seams for quicksilver ore. Workers sort waste stone by hand and send the richest ore for roasting.
     pp_cinnabar_pit_base_mercury: Exposed Cinnabar Seam
     pp_cinnabar_pit_no_primary: No Mercury Extraction
     pp_cinnabar_pit_mercury: Cinnabar Vein Workings
     pp_cinnabar_pit_no_secondary: No Gangue Sorting
     pp_cinnabar_pit_stone: Gangue Stone Sorting
-    pp_cinnabar_pit_dyes: Cinnabar Pigment Sorting
     pp_cinnabar_pit_market_sales: Market Sales
     pp_cinnabar_pit_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
     cinnabar_pit_slot_3: Market
@@ -162,12 +152,6 @@ evaluation:
         profit_percent: Gangue stone sorting is an ancillary cinnabar byproduct, intentionally less profitable than primary mercury extraction.
         input_throughput: Gangue stone sorting is an ancillary cinnabar byproduct, intentionally less profitable than primary mercury extraction.
         output_throughput: Gangue stone sorting is an ancillary cinnabar byproduct, intentionally less profitable than primary mercury extraction.
-    pp_cinnabar_pit_dyes:
-      production_efficiency: 0.75
-      allow_rules:
-        profit_percent: Cinnabar pigment sorting is an ancillary mercury-ore byproduct, intentionally less profitable than primary mercury extraction.
-        input_throughput: Cinnabar pigment sorting is an ancillary mercury-ore byproduct, intentionally less profitable than primary mercury extraction.
-        output_throughput: Cinnabar pigment sorting is an ancillary mercury-ore byproduct, intentionally less profitable than primary mercury extraction.
     pp_cinnabar_pit_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

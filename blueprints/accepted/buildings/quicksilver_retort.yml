@@ -23,7 +23,6 @@ building:
     - name: slot_1
       methods:
         - pp_quicksilver_retort_no_secondary
-        - pp_quicksilver_retort_dyes
         - pp_quicksilver_retort_stone
     - name: slot_2
       methods:
@@ -68,14 +67,6 @@ building:
     }
     unique_production_methods = {
         pp_quicksilver_retort_no_secondary = {
-            category = building_maintenance
-        }
-        pp_quicksilver_retort_dyes = {
-            lumber = 0.046 # grinding troughs
-            tools = 0.004 # mortars, shovels
-            manual_labor = 0.024
-            produced = dyes
-            output = 0.027
             category = building_maintenance
         }
         pp_quicksilver_retort_stone = {
@@ -131,7 +122,6 @@ localization:
     pp_quicksilver_retort_mercury: Retort Furnace Works
     pp_quicksilver_retort_no_secondary: No Gangue Sorting
     pp_quicksilver_retort_stone: Gangue Stone Sorting
-    pp_quicksilver_retort_dyes: Cinnabar Pigment Sorting
     pp_quicksilver_retort_market_sales: Market Sales
     pp_quicksilver_retort_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
     quicksilver_retort_slot_3: Market
@@ -161,12 +151,6 @@ evaluation:
         profit_percent: Gangue stone sorting is an ancillary quicksilver byproduct, intentionally less profitable than primary mercury retorting.
         input_throughput: Gangue stone sorting is an ancillary quicksilver byproduct, intentionally less profitable than primary mercury retorting.
         output_throughput: Gangue stone sorting is an ancillary quicksilver byproduct, intentionally less profitable than primary mercury retorting.
-    pp_quicksilver_retort_dyes:
-      production_efficiency: 0.75
-      allow_rules:
-        profit_percent: Cinnabar pigment sorting is an ancillary quicksilver byproduct, intentionally less profitable than primary mercury retorting.
-        input_throughput: Cinnabar pigment sorting is an ancillary quicksilver byproduct, intentionally less profitable than primary mercury retorting.
-        output_throughput: Cinnabar pigment sorting is an ancillary quicksilver byproduct, intentionally less profitable than primary mercury retorting.
     pp_quicksilver_retort_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

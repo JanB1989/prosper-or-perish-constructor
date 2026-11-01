@@ -771,6 +771,32 @@ with ≥ 5 locations, 4,000+ candidates):
 | Populous, any development | rural glassmaker, rural daywork yard, forest/fishing village, irrigation | 0.15-0.3 / 0.3-0.5 |
 | Anywhere | cookshop, tavern, mason, tar kiln, rural clothmaker, market village, field management, land clearance | ~0.5 / ~0.5 / ~0.5 |
 
+### 2.5b Rural producers next to a town (verified 2026-11-01)
+
+The AI scores a rural-capable producer (`rural_settlement = yes`) 0 at a rural location whose province has a town of the
+same owner, when a method of it makes a good that a method of a town-only producer also makes and both buildings are
+available to the country that evaluates it: the advance researched if one unlocks the building, and `country_potential`
+passes. That country is the builder, not the location owner, so a foreign building goes by the foreign country. Town, city
+and megalopolis all count; a town of another owner in the same province does not.
+
+- Every method counts: active or not, main good or side good. One side method shuts the whole building out.
+- No `ai_construct_weight`, price or shortage opens it. A market whose only free sites are such locations gets no
+  entry, so it looks as if the AI ignores the shortage.
+- When it starts depends on the town-only producer:
+  - For everyone from day 1, because one of them needs no advance and has no condition: dyes (dyes guild), logistics
+    (transport office, coastal shipping office), leather (tannery), wine (winery), saltpeter (saltpeter guild), cloth, glass,
+    jewelry, beer (brewery), pottery, manual labor (hired labour yard).
+  - Once the country researches it: incense (perfumery), silk (silk guild; the ablaq palace does not count, a variable gates
+    it), medicaments (apothecary), tools and weaponry (the guild advances).
+  - Only for countries that can use it: slaves, for non-Christian countries (the slave market's condition).
+- Measured over run 97f9d39a (1342-1837): iron mines gained 2 of 1,464 levels at such sites, other rural producers keep
+  a median 83 % of their rural levels there. The iron mines' ochre method (dyes) was the only cause; it is gone since
+  2026-11-01, like the pigment method of the mercury tiers.
+
+Check a new method's good against the town-only producers. `tests/test_rural_town_goods.py` fails on any pair of a
+rural-capable building and a good a town-only building also makes, whatever advance that building needs (a country can
+research it later), unless it is listed in `[rural_town_goods.allowed]` (`constructor.toml`).
+
 ## 3. Estates (verified)
 
 - An estate does **not** use a queue. It keeps **one planned project** (`estate_manager.database.*.building` +

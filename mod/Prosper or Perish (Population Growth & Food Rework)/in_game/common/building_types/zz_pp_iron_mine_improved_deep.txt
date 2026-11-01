@@ -37,24 +37,6 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
-    pp_iron_mine_deep_no_secondary = {
-        icon_type = building_type
-        icon = iron_mine_deep
-        category = building_maintenance
-    }
-    pp_iron_mine_deep_ochre = {
-        icon_type = building_type
-        icon = iron_mine_deep
-        lumber = 0.043 # washing troughs, drying racks
-        tools = 0.005 # sieves, shovels
-        fiber_crops = 0.008 # sieve cloths, sacks
-        manual_labor = 0.028
-        produced = dyes
-        output = 0.04
-        category = building_maintenance
-    }
-}
-unique_production_methods = {
     pp_iron_mine_deep_no_primary = {
         icon_type = building_type
         icon = iron_mine_deep

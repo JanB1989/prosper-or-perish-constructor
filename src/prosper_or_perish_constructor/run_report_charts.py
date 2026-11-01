@@ -469,8 +469,8 @@ def price_charts(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dic
         "price_heatmap", "prices", "Prices of every good",
         "World price of each good (markets weighted by traded volume) as a multiple of its base price; red = dearer, "
         "blue = cheaper. Goods grouped (the coloured bar: farming, mining, gathering/hunting/forestry, manufactured), "
-        "the most produced first; hover a cell or an icon for the name. Mod bookkeeping goods (offset, logistics, "
-        "province food, labour) are left out.",
+        "the most produced first; hover a cell or an icon for the name, click an icon for the good's spread of price and "
+        "stock over the markets (goods page). Mod bookkeeping goods (offset, logistics, province food, labour) are left out.",
         [view("Price ÷ base", "ratio", price, fields=tip), view("Change since first save", "ratio", change, fields=tip)],
         height=_heat_height(goods), goods_legend="groups")]
 
@@ -546,7 +546,8 @@ def trade_charts(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dic
         "Per good and save. Imported share: imports ÷ (production + imports) of all markets. Unmet demand: demand no "
         "market could supply (Σ max(0, demand − supply) ÷ Σ demand). Markets short: supply below 90 % of demand; in "
         "surplus: producing and supply above 110 % of demand. A good with markets short and markets in surplus at the "
-        "same time is one trade does not carry.",
+        "same time is one trade does not carry. Click a good's icon for its spread of price and stock over the markets "
+        "(goods page).",
         [view("Imported share", "pct", heat_option(labels, ylabels, _heat_data(w, x, goods, pl.col("import_share"), fields, 0.0, 60.0),
                                                     vmin=0.0, vmax=60.0, colors=SEQUENTIAL_HEAT, scale_label="fn:unit:pct0",
                                                     goods_axis=True), fields=tip),

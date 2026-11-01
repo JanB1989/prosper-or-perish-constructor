@@ -115,6 +115,28 @@ def test_goods_page_reads_its_data_files() -> None:
 
     page = goods_page_html("Run x", (1337, 1400))
     assert "goods/index.js" in page and "goods/summary.js" in page and "id=goodlist" in page and "type: 'sankey'" in page
+    assert "Price across markets" in page and "Stock across markets" in page and "e.bands.fill" in page and "&tv=${S.tv}" in page
+
+
+def test_market_bands_weight_markets_by_volume_and_read_the_stock_cap() -> None:
+    """Three markets trade cloth: the big one (volume 70) holds the median; fill = stock / cap, clipped; a market
+    without a cap counts for the price only, a market without volume not at all."""
+    mg = pl.DataFrame({
+        "snapshot_id": ["s1"] * 5 + ["s2"],
+        "good_id": ["cloth"] * 4 + ["wool", "cloth"],
+        "price": [1.0, 2.0, 4.0, 9.0, 1.0, 3.0],
+        "default_price": [2.0] * 6,
+        "supply": [5.0, 35.0, 10.0, 0.0, 1.0, 1.0],
+        "demand": [5.0, 35.0, 10.0, 0.0, 1.0, 1.0],
+        "stockpile": [0.0, 50.0, 300.0, 10.0, 5.0, 1.0],
+        "stock_cap": [100.0, 100.0, 200.0, 100.0, None, 100.0],
+    })
+    bands = rg.market_bands(mg, ["s1", "s2", "s3"])
+    assert bands["cloth"]["price"][0] == [0.5, 1, 1, 1, 2]  # 10 % / 70 % / 20 % of the volume at 0.5x / 1x / 2x
+    assert bands["cloth"]["fill"][0] == [0, 0.5, 0.5, 0.5, 1]  # 300 of a 200 cap counts as full
+    assert bands["cloth"]["price"][1] == [1.5] * 5 and bands["cloth"]["price"][2] is None
+    assert bands["wool"]["price"][0] == [0.5] * 5 and bands["wool"]["fill"][0] is None
+    assert rg.market_bands(mg.drop("stock_cap"), ["s1"]) == {}
 
 
 def test_report_data_loads_from_disk_and_from_the_site() -> None:

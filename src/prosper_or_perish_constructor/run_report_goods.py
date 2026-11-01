@@ -10,8 +10,8 @@
   figures ``m`` [good, region, price x volume, volume, supply, demand, stockpile, markets short, markets in surplus,
   markets] and trade between world regions ``x`` [good, region, imports, exports] (the trade routes that ran and
   cross the region's border); amounts are goods per month, indices point into the index lists (-1 = none);
-- `goods/summary.js`: per good and save the world production, use and price, and production / use by building
-  type, for the charts over the run.
+- `goods/summary.js`: per good and save the world production, use and price, production / use by building type,
+  and the spread over markets of the price and the stock fill (`market_bands`), for the charts over the run.
 
 How production is split. A market's totals per good are exact (`supplied_Production`, `demanded_Building`,
 `taken_Building`). A good's `base_production` x the market's idle peasants (thousands) is part of that production
@@ -397,6 +397,33 @@ def _summary_rows(flows: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return out
 
 
+BAND_SHARES = (0.1, 0.25, 0.5, 0.75, 0.9)
+
+
+def market_bands(market_goods: pl.DataFrame, snapshots: list[str]) -> dict[str, dict[str, list[Any]]]:
+    """Per good: {"price": [...], "fill": [...]} with one entry per save, [10, 25, 50, 75, 90 %] of the markets that
+    trade the good (each weighted by its supply + demand of it) or None. Price ÷ the good's default price; fill = the
+    market's stock of the good ÷ its stockpile cap (RunData.market_goods.stock_cap)."""
+    if market_goods.is_empty() or "stock_cap" not in market_goods.columns:
+        return {}
+    by = ["snapshot_id", "good_id"]
+    frame = market_goods.select(
+        *by, (pl.col("supply") + pl.col("demand")).alias("w"), (pl.col("price") / pl.col("default_price")).alias("price"),
+        pl.when(pl.col("stock_cap") > 0).then((pl.col("stockpile") / pl.col("stock_cap")).clip(0.0, 1.0)).alias("fill"))
+    at = {s: i for i, s in enumerate(snapshots)}
+    out: dict[str, dict[str, list[Any]]] = {}
+    for value in ("price", "fill"):
+        ranked = frame.filter((pl.col("w") > 0) & pl.col(value).is_finite()).sort([*by, value]).with_columns(
+            (pl.col("w").cum_sum().over(by) / pl.col("w").sum().over(by)).alias("share"))
+        bands = ranked.group_by(by).agg(
+            *[pl.col(value).filter(pl.col("share") >= q - 1e-9).first().alias(f"q{i}") for i, q in enumerate(BAND_SHARES)])
+        for snapshot, good, *values in bands.iter_rows():
+            if snapshot in at:
+                entry = out.setdefault(good, {"price": [None] * len(snapshots), "fill": [None] * len(snapshots)})
+                entry[value][at[snapshot]] = [_sig(v, 3) if value == "price" else _sig(round(v, 3), 3) for v in values]
+    return out
+
+
 # --------------------------------------------------------------------------------------------------------
 # Per-save flows in parallel: each save is independent, and one save's queries are many small polars calls that use
 # few cores, so worker processes fill the per-save caches and the page builders below only read them.
@@ -507,6 +534,7 @@ def build_goods_data(run: RunData, dataset: Path, out: Path, recipes: Recipes, *
 
     # over the run: production by building type and use by building type / bucket (top 8 + other) per good
     summary: dict[str, Any] = {}
+    bands = market_bands(run.market_goods, [s["snapshot_id"] for s in snapshots])
     goods = sorted({g for s in summaries for g in s})
     for good in goods:
         rows = [s.get(good, {"made": {}, "used": {}}) for s in summaries]
@@ -515,6 +543,8 @@ def build_goods_data(run: RunData, dataset: Path, out: Path, recipes: Recipes, *
             "used": [_sig(sum(r["used"].values())) for r in rows],
             "price": [_sig(r.get("price")) for r in rows],
         }
+        if good in bands:
+            entry["bands"] = bands[good]
         for side in ("made", "used"):
             peak: dict[str, float] = {}
             for r in rows:

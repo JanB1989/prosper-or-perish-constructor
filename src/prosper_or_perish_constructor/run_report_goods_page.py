@@ -431,10 +431,38 @@ GOODS_JS = r"""
          {type: 'line', name: 'Used', showSymbol: false, color: '#eb6834', lineStyle: {width: 2.5}, data: e.used.map((v, j) => [xs[j], v])},
          {type: 'line', name: 'Price ÷ base', yAxisIndex: 1, showSymbol: false, color: INK, lineStyle: {width: 1.5, type: 'dashed'},
           data: e.price.map((v, j) => [xs[j], v == null ? null : v / goodPrice(g)])}]},
+      bandView(e.bands && e.bands.price, '#2a78d6', v => v.toFixed(2) + '×',
+               {type: 'value', min: 0, axisLabel: {formatter: v => v.toFixed(1) + '×'}}, 1),
+      bandView(e.bands && e.bands.fill, '#1baf7a', v => Math.round(v * 100) + ' %',
+               {type: 'value', min: 0, max: 1, axisLabel: {formatter: v => Math.round(v * 100) + ' %'}}, null),
     ];
     const option = views[S.tv];
-    option.series.forEach((s, i) => { if (i === 0) s.markLine = marker; });
+    option.series[0].markLine = option.ref == null ? marker : {...marker, data: [...marker.data, {yAxis: option.ref}]};
+    delete option.ref;
     return option;
+    // the spread over markets: median line, middle half and 80 % as stacked areas on an invisible 10 % line
+    function bandView(rows, color, fmt, yAxis, ref) {
+      const at = (j, k) => rows && rows[j] ? rows[j][k] : null;
+      const gap = (j, a, b) => rows && rows[j] ? rows[j][b] - rows[j][a] : null;
+      const layer = (name, opacity, f) => ({type: 'line', name, stack: 'band', showSymbol: false, silent: true, color, lineStyle: {width: 0},
+        emphasis: {disabled: true}, ...(opacity ? {areaStyle: {color, opacity}, itemStyle: {opacity: Math.min(1, 2 * opacity)}} : {}),
+        data: xs.map((x, j) => [x, f(j)])});
+      const tip = ps => {
+        const j = ps[0].dataIndex, r = rows && rows[j];
+        const head = `<b>${esc(IX.saves[j].label)}</b>`;
+        if (!r) return `${head}<br>no market trades it`;
+        return head + [['90 % of the volume below', 4], ['75 % below', 3], ['Median', 2], ['25 % below', 1], ['10 % below', 0]]
+          .map(([n, k]) => `<br>${n} <b>${fmt(r[k])}</b>`).join('');
+      };
+      return {...base, ref, yAxis,
+        tooltip: {trigger: 'axis', confine: true, formatter: tip},
+        legend: {...base.legend, selectedMode: false, data: ['Median', 'Middle half', '80 %']},
+        title: rows ? undefined : {text: 'No market data for this good in this report', left: 'center', top: 'middle', textStyle: {color: MUTED, fontSize: 13, fontWeight: 'normal'}},
+        series: [
+          {type: 'line', name: 'Median', showSymbol: false, color, lineStyle: {width: 2.5}, z: 3, data: xs.map((x, j) => [x, at(j, 2)])},
+          layer('', 0, j => at(j, 0)), layer('80 %', 0.16, j => gap(j, 0, 1)), layer('Middle half', 0.38, j => gap(j, 1, 3)),
+          layer('80 %', 0.16, j => gap(j, 3, 4))]};
+    }
   }
   function regionOption(D, g) {
     const rows = D.by[g], pg = goodPrice(g);
@@ -471,7 +499,7 @@ GOODS_JS = r"""
   }
   function writeHash() {
     const r = S.r >= 0 ? IX.regions[S.r].id : 'world';
-    const h = `#g=${encodeURIComponent(IX.goods[S.g].id)}&s=${S.s}&r=${encodeURIComponent(r)}&d=${S.d}`;
+    const h = `#g=${encodeURIComponent(IX.goods[S.g].id)}&s=${S.s}&r=${encodeURIComponent(r)}&d=${S.d}&tv=${S.tv}`;
     if (location.hash !== h) history.replaceState(null, '', h);
   }
   function readHash() {
@@ -480,6 +508,7 @@ GOODS_JS = r"""
     if (p.has('s')) { const s = Number(p.get('s')); if (s >= 0 && s < IX.saves.length) S.s = s; }
     if (p.has('r')) S.r = regionIndex.has(p.get('r')) ? regionIndex.get(p.get('r')) : -1;
     if (p.get('d') === 'method' || p.get('d') === 'building') S.d = p.get('d');
+    if (p.has('tv')) { const tv = Number(p.get('tv')); if (tv >= 0 && tv < document.querySelectorAll('#timeviews button').length) S.tv = tv; }
   }
   function select(g, push = true) {
     if (g == null || !IX.goods[g]) return;
@@ -689,9 +718,12 @@ def goods_page_html(run_name: str, years: tuple[int, int]) -> str:
       <p class=caption>Buildings (by method) and the other demand of the markets: pops, construction, armies and navies (upkeep and
       new units), roads. Got: what they received ÷ what they wanted.</p></section>
   </div>
-  <section class=card><header><h3>Over the run</h3><div class=views id=timeviews><button type=button>Producers</button><button type=button>Users</button><button type=button>Made, used, price</button></div></header>
+  <section class=card><header><h3>Over the run</h3><div class=views id=timeviews><button type=button>Producers</button><button type=button>Users</button><button type=button>Made, used, price</button><button type=button>Price across markets</button><button type=button>Stock across markets</button></div></header>
     <div id=time class=chart style="height:400px"></div>
-    <p class=caption>World totals per save, the eight largest producers or users and the rest. The dashed line marks the chosen save.</p></section>
+    <p class=caption>World totals per save, the eight largest producers or users and the rest. Price and stock across markets: how the
+    markets that trade the good spread, each weighted by its supply + demand of it; the line is the median, the dark band the middle
+    half and the light band 80 % of that volume. Price ÷ the good's base price (dashed: 1×); stock = the market's stock of the good ÷
+    its stockpile cap (0 % empty, 100 % full). The dashed vertical line marks the chosen save.</p></section>
   <section class=card><header><h3>By world region</h3></header><div id=regions class=chart style="height:320px"></div>
     <p class=caption>Value made and used per world region in the chosen save. Click a region to show only it (again for the world).</p></section>
 </div>

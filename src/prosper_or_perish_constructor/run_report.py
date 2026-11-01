@@ -131,7 +131,8 @@ class RunData:
     buildings_by_category: pl.DataFrame  # snapshot_id, building_category, levels
     countries: pl.DataFrame
     # per snapshot, market and good (no mod bookkeeping goods): group, price, default_price, supply, demand,
-    # production (supplied_Production), imports (supplied_Trade), exports (demanded_Trade), burgher_trade
+    # production (supplied_Production), imports (supplied_Trade), exports (demanded_Trade), burgher_trade, stockpile,
+    # stock_cap (the market's stockpile cap, null when the save has no bookkeeping good to read it from)
     market_goods: pl.DataFrame = field(default_factory=pl.DataFrame)
     markets: pl.DataFrame = field(default_factory=pl.DataFrame)  # snapshot_id, market_id, center_slug
     # routes that ran (engine table trades, happened = yes): snapshot_id, from_market (exporter), to_market
@@ -267,6 +268,13 @@ def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | Non
         )
         .drop("location_population")
     )
+    # the save keeps no stockpile cap, but the bookkeeping goods always sit at it (the engine's local oversupply): the
+    # largest of their stocks is the market's cap
+    stock_caps = (
+        _scan(dataset, "market_goods", playthrough)
+        .filter(pl.col("snapshot_id").is_in(wanted) & pl.col("good_id").is_in(sorted(DUMMY_GOODS)))
+        .group_by("snapshot_id", "market_id").agg(pl.col("stockpile").max().alias("stock_cap"))
+    )
     market_goods = (
         _scan(dataset, "market_goods", playthrough)
         .filter(pl.col("snapshot_id").is_in(wanted) & ~pl.col("good_id").is_in(sorted(DUMMY_GOODS))
@@ -278,7 +286,9 @@ def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | Non
             pl.col("supplied_Trade").fill_null(0.0).alias("imports"),
             pl.col("demanded_Trade").fill_null(0.0).alias("exports"),
             pl.col("demanded_BurgherTrades").fill_null(0.0).alias("burgher_trade"),
+            pl.col("stockpile").fill_null(0.0),
         )
+        .join(stock_caps, on=["snapshot_id", "market_id"], how="left")
         .collect()
     )
     markets = (
@@ -1550,9 +1560,13 @@ PAGE_JS = r"""
     el.dataset.ready = '1';
     const spec = specs[el.dataset.key];
     const chart = echarts.init(el, dark ? 'dark' : null);
-    // a good's icon on a heatmap axis names itself on hover
+    // a good's icon on a heatmap axis names itself on hover and opens the good's price spread on the goods page
     chart.on('mouseover', p => { if (p.componentType === 'yAxis' && GOODS[p.value]) el.title = goodName(p.value); });
     chart.on('mouseout', p => { if (p.componentType === 'yAxis') el.title = ''; });
+    chart.on('click', p => {
+      if (p.componentType === 'yAxis' && GOODS[p.value] && document.querySelector("a.goodslink[href='goods.html']"))
+        window.location.href = 'goods.html#g=' + encodeURIComponent(p.value) + '&tv=3';
+    });
     const buttons = el.closest('.card').querySelectorAll('.views button');
     const show = i => {
       const view = spec.views[i];

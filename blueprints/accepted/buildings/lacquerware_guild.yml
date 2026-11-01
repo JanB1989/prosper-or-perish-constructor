@@ -31,10 +31,10 @@ building:
     graphical_tags = { factory_small }
     unique_production_methods = {
         pp_lacquerware_guild_lacquerware_shop_maintenance = {
-            lumber = 0.798
-            dyes = 0.329
-            tools = 0.077
-            manual_labor = 0.511
+            lumber = 0.72
+            dyes = 0.3
+            tools = 0.07
+            manual_labor = 0.79
             produced = lacquerware
             output = 0.7
             category = guild_input
@@ -43,9 +43,9 @@ building:
     }
     unique_production_methods = {
         pp_lacquerware_guild_market_sales = {
-            offset = 0.015
+            offset = 0.019
             produced = lacquerware
-            output = 0.002
+            output = 0.004
             category = building_maintenance
         }
     }

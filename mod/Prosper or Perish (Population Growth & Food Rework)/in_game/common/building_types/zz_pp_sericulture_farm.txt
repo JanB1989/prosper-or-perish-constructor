@@ -43,10 +43,10 @@ unique_production_methods = {
     pp_sericulture_farm_cocoon_reeling = {
         icon_type = building_type
         icon = sericulture_farm
-        lumber = 0.12 # rearing trays, frames, reeling wheels and fuel for the cocoon basins
-        tools = 0.01 # knives, reel fittings
-        pottery = 0.036 # basins for boiling the cocoons
-        manual_labor = 0.059
+        lumber = 0.11 # rearing trays, frames, reeling wheels and fuel for the cocoon basins
+        tools = 0.009 # knives, reel fittings
+        pottery = 0.031 # basins for boiling the cocoons
+        manual_labor = 0.085
         produced = silk
         output = 0.138 # 0.089 until 2026-10-14; farmed silk is the main source (2026-10-14, Jan)
         category = building_maintenance
@@ -56,9 +56,9 @@ unique_production_methods = {
     pp_sericulture_farm_market_sales = {
         icon_type = goods
         icon = silk
-        offset = 0.018
+        offset = 0.015
         produced = silk
-        output = 0.003
+        output = 0.004
         category = building_maintenance
     }
 }

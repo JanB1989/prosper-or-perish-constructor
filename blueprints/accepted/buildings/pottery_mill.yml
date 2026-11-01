@@ -35,11 +35,11 @@ building:
     graphical_tags = { factory_large }
     unique_production_methods = {
         pp_pottery_mill_pottery_mill_maintenance = {
-            clay = 7.2
-            lumber = 0.64
-            tools = 0.184 # tools cut to a running cost (~10 %)
-            coal = 0.22 # coal-fired bottle kilns
-            manual_labor = 0.24
+            clay = 6.53
+            lumber = 0.58
+            tools = 0.17 # tools cut to a running cost (~10 %)
+            coal = 0.2 # coal-fired bottle kilns
+            manual_labor = 0.77
             produced = pottery
             output = 7.22
             debug_max_profit = mills_profit_margin
@@ -48,10 +48,10 @@ building:
         pp_pottery_mill_legacy_pottery_w_maintenance = {
             icon_type = building_type
             icon = pottery_workshop
-            clay = 3.63
-            lumber = 0.51
-            tools = 0.1
-            manual_labor = 0.33
+            clay = 3.28
+            lumber = 0.45
+            tools = 0.09
+            manual_labor = 0.65
             produced = pottery
             output = 4.06
             debug_max_profit = mills_profit_margin
@@ -60,9 +60,9 @@ building:
     }
     unique_production_methods = {
         pp_pottery_mill_market_sales = {
-            offset = 0.015
+            offset = 0.017
             produced = pottery
-            output = 0.01
+            output = 0.018
             category = building_maintenance
         }
     }

@@ -111,7 +111,7 @@ unique_production_methods = {
         fiber_crops = 0.015 # nets and lines
         ivory = 0.009 # bone hooks and weights
         manual_labor = 0.025
-        debug_max_profit = 0.040
+        debug_max_profit = 0
         category = building_maintenance
     }
     pp_net_curing_yard_preserved_catch = {
@@ -135,7 +135,7 @@ unique_production_methods = {
         fish = 0.093
         produced = local_food
         output = 1.12
-        debug_max_profit = 2.011
+        debug_max_profit = 2.763
         category = building_maintenance
     }
 }
@@ -143,9 +143,9 @@ unique_production_methods = {
     pp_net_curing_yard_market_sales = {
         icon_type = goods
         icon = fish
-        offset = 0.015
+        offset = 0.017
         produced = fish
-        output = 0.01
+        output = 0.018
         category = building_maintenance
     }
 }

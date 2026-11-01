@@ -43,10 +43,10 @@ unique_production_methods = {
     pp_dye_plantation_vat_curing = {
         icon_type = building_type
         icon = dye_plantation
-        lumber = 0.47 # drying racks, vats, beater paddles
-        tools = 0.042 # knives, presses
-        pottery = 0.16 # steeping jars and settling pots
-        manual_labor = 0.236
+        lumber = 0.42 # drying racks, vats, beater paddles
+        tools = 0.037 # knives, presses
+        pottery = 0.14 # steeping jars and settling pots
+        manual_labor = 0.36
         produced = dyes
         output = 0.563
         category = building_maintenance
@@ -56,9 +56,9 @@ unique_production_methods = {
     pp_dye_plantation_market_sales = {
         icon_type = goods
         icon = dyes
-        offset = 0.018
+        offset = 0.015
         produced = dyes
-        output = 0.003
+        output = 0.004
         category = building_maintenance
     }
 }

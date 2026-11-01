@@ -393,6 +393,13 @@ def _build_parser() -> argparse.ArgumentParser:
         help="apply writes the price file (and the new prices' modifier types, icons and names) from vanilla unit types, goods demands and default prices; check reports whether they are current.",
     )
     ship_upkeep.add_argument("--verbose", action="store_true", help="also print every ship with its old and new base upkeep.")
+    stockpile = _add_command(
+        subcommands,
+        "stockpile",
+        "Stockpile prices: the goods' raised default prices and pop demand factors from [stockpile_prices] (in_game/common/goods/zz_pp_goods_stockpile_prices.txt).",
+        _stockpile,
+    )
+    stockpile.add_argument("action", choices=("apply", "check"), help="apply writes the goods file; check reports it off.")
     blockade = _add_command(
         subcommands,
         "blockade",
@@ -1336,6 +1343,29 @@ def _gate(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: P
     return 0
 
 
+def _stockpile(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("stockpile does not accept extra arguments.")
+    from prosper_or_perish_constructor import stockpile_prices
+
+    goods, changed = stockpile_prices.apply(repo, project, write=args.action == "apply")
+    state = ("written" if changed else "unchanged") if args.action == "apply" else ("OFF (run ppc stockpile apply)" if changed else "in step")
+    print(f"stockpile prices: {goods} goods, {stockpile_prices.OUTPUT} {state}.")
+    return 0 if args.action == "apply" or not changed else 1
+
+
+def _print_stockpile_check(repo: Path, project: Path) -> None:
+    """Build-time summary; printed, not fatal (ppc stockpile apply brings the goods file back in step)."""
+    from prosper_or_perish_constructor import stockpile_prices
+
+    try:
+        _, changed = stockpile_prices.apply(repo, project, write=False)
+    except Exception as exc:  # noqa: BLE001 - the build must not fail on the advisory check
+        print(f"Stockpile prices check skipped: {exc}", flush=True)
+        return
+    print(f"Stockpile prices: {'OFF, run ppc stockpile apply' if changed else 'in step'}.", flush=True)
+
+
 def _print_gate_check(repo: Path, project: Path) -> None:
     """Build-time summary; problems are printed, not fatal (flag new production buildings with ppc gate apply)."""
     from prosper_or_perish_constructor import production_gate
@@ -1555,6 +1585,7 @@ def _build_stages(clock: "_StageClock", extra: Sequence[str], repo: Path, projec
     clock.run("finalize", _finalize_constructor_mod, repo, project)
     for label, check in (
         ("age food check", _print_age_food_check),
+        ("stockpile check", _print_stockpile_check),
         ("labour check", _print_labour_check),
         ("legacy check", _print_legacy_check),
         ("logistics check", _print_logistics_check),

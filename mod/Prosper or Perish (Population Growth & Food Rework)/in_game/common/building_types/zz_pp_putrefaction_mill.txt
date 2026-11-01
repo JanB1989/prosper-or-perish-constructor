@@ -22,12 +22,12 @@ unique_production_methods = {
     pp_putrefaction_mill_demands = {
         icon_type = building_type
         icon = putrefaction_mill
-        pottery = 1.06
-        livestock = 1.92
-        manual_labor = 0.16
+        pottery = 0.96
+        livestock = 1.74
+        manual_labor = 0.53
         produced = saltpeter
         output = 4.0
-        debug_max_profit = 0.529
+        debug_max_profit = 0.278
         category = mills_input
     }
 }
@@ -35,9 +35,9 @@ unique_production_methods = {
     pp_putrefaction_mill_market_sales = {
         icon_type = goods
         icon = saltpeter
-        offset = 0.015
+        offset = 0.017
         produced = saltpeter
-        output = 0.005
+        output = 0.009
         category = building_maintenance
     }
 }

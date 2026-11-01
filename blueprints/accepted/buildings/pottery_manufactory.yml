@@ -34,11 +34,11 @@ building:
     obsolete = pottery_workshop
     unique_production_methods = {
         pp_pottery_manufactory_pottery_manufactory_maintenance = {
-            clay = 1.802
-            lumber = 0.34 # kiln fuel and drying racks
-            tools = 0.065 # tools cut to a running cost (~10 %)
-            coal = 0.136 # coal-fired kilns
-            manual_labor = 0.117
+            clay = 1.6
+            lumber = 0.3 # kiln fuel and drying racks
+            tools = 0.058 # tools cut to a running cost (~10 %)
+            coal = 0.12 # coal-fired kilns
+            manual_labor = 0.34
             produced = pottery
             output = 2.76
             category = manufactory_input
@@ -47,10 +47,10 @@ building:
         pp_pottery_manufactory_legacy_pottery_w_maintenance = {
             icon_type = building_type
             icon = pottery_workshop
-            clay = 1.69
-            lumber = 0.24
-            tools = 0.047
-            manual_labor = 0.15
+            clay = 1.53
+            lumber = 0.21
+            tools = 0.042
+            manual_labor = 0.3
             produced = pottery
             output = 2.07
             debug_max_profit = manufactory_profit_margin
@@ -59,9 +59,9 @@ building:
     }
     unique_production_methods = {
         pp_pottery_manufactory_market_sales = {
-            offset = 0.015
+            offset = 0.017
             produced = pottery
-            output = 0.01
+            output = 0.018
             category = building_maintenance
         }
     }

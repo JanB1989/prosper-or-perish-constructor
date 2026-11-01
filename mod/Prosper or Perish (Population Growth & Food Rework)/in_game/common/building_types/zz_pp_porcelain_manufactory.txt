@@ -17,13 +17,13 @@ unique_production_methods = {
     pp_porcelain_manufactory_porcelain_manufactory_maintenance = {
         icon_type = building_type
         icon = porcelain_manufactory
-        clay = 10.2 # fireclay saggars to protect the ware in the kiln
-        coal = 1.547 # more fuel for the high-temperature firing
-        tools = 0.297 # tools cut to a running cost (~10 %)
-        manual_labor = 0.714
+        clay = 9.24 # fireclay saggars to protect the ware in the kiln
+        coal = 1.4 # more fuel for the high-temperature firing
+        tools = 0.27 # tools cut to a running cost (~10 %)
+        manual_labor = 1.6
         produced = porcelain
         output = 3.729
-        debug_max_profit = 0.022
+        debug_max_profit = manufactory_profit_margin
         category = manufactory_input
     }
 }
@@ -31,9 +31,9 @@ unique_production_methods = {
     pp_porcelain_manufactory_market_sales = {
         icon_type = goods
         icon = porcelain
-        offset = 0.018
+        offset = 0.017
         produced = porcelain
-        output = 0.004
+        output = 0.006
         category = building_maintenance
     }
 }

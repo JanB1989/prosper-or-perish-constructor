@@ -70,17 +70,17 @@ building:
             category = building_maintenance
         }
         pp_alum_quarry_clay = {
-            lumber = 0.045 # barrows, troughs
-            tools = 0.005 # spades
-            manual_labor = 0.022
+            lumber = 0.041 # barrows, troughs
+            tools = 0.004 # spades
+            manual_labor = 0.032
             produced = clay
             output = 0.264
             category = building_maintenance
         }
         pp_alum_quarry_stone = {
-            lumber = 0.066 # skids, barrows
-            tools = 0.007 # hammers
-            manual_labor = 0.028
+            lumber = 0.058 # skids, barrows
+            tools = 0.006 # hammers
+            manual_labor = 0.045
             produced = stone
             output = 0.168
             category = building_maintenance
@@ -91,10 +91,10 @@ building:
             category = building_maintenance
         }
         pp_alum_quarry_alum = {
-            lumber = 0.3 # calcining kiln wood, leaching vats
-            tools = 0.05 # picks, hammers
-            coal = 0.14 # charcoal for calcining and boiling
-            manual_labor = 0.21
+            lumber = 0.27 # calcining kiln wood, leaching vats
+            tools = 0.044 # picks, hammers
+            coal = 0.12 # charcoal for calcining and boiling
+            manual_labor = 0.32
             produced = alum
             output = 0.424
             category = building_maintenance
@@ -102,9 +102,9 @@ building:
     }
     unique_production_methods = {
         pp_alum_quarry_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = alum
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

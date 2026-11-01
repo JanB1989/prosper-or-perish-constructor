@@ -54,7 +54,7 @@ unique_production_methods = {
         leather = 0.12
         lumber = 0.33 # hurdles, fold gates, field-wall stiles
         manual_labor = 0.14
-        debug_max_profit = 0.709
+        debug_max_profit = 0.641
         category = building_maintenance
     }
 }
@@ -65,7 +65,7 @@ unique_production_methods = {
         wool = 0.053
         produced = local_food
         output = 1.6
-        debug_max_profit = 2.019
+        debug_max_profit = 2.774
         category = building_maintenance
     }
 }
@@ -73,9 +73,9 @@ unique_production_methods = {
     pp_enclosed_sheep_walks_market_sales = {
         icon_type = goods
         icon = wool
-        offset = 0.015
+        offset = 0.019
         produced = wool
-        output = 0.004
+        output = 0.008
         category = building_maintenance
     }
 }

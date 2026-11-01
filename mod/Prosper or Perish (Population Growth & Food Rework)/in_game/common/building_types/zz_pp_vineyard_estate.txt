@@ -40,10 +40,10 @@ unique_production_methods = {
     pp_vineyard_estate_press_houses = {
         icon_type = building_type
         icon = vineyard_estate
-        lumber = 0.14 # presses, stakes, and cask staves
-        pottery = 0.068 # fermentation jars and storage vessels
-        tools = 0.014 # pruning knives and press hardware
-        manual_labor = 0.072
+        lumber = 0.12 # presses, stakes, and cask staves
+        pottery = 0.06 # fermentation jars and storage vessels
+        tools = 0.012 # pruning knives and press hardware
+        manual_labor = 0.12
         produced = wine
         output = 0.222
         category = building_maintenance
@@ -53,9 +53,9 @@ unique_production_methods = {
     pp_vineyard_estate_market_sales = {
         icon_type = goods
         icon = wine
-        offset = 0.015
+        offset = 0.017
         produced = wine
-        output = 0.005
+        output = 0.009
         category = building_maintenance
     }
 }

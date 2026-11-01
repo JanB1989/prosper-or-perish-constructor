@@ -34,22 +34,22 @@ building:
     graphical_tags = { factory_medium }
     unique_production_methods = {
         pp_tanning_workshop_leather_wildgame_workshop_maintenance = {
-            wild_game = 2.34
-            sand = 0.585
-            tar = 0.286 # birch tar and oils for currying the hides
-            tools = 0.123 # tools cut to a running cost (~10 %)
-            manual_labor = 0.416
+            wild_game = 2.11
+            sand = 0.53
+            tar = 0.26 # birch tar and oils for currying the hides
+            tools = 0.11 # tools cut to a running cost (~10 %)
+            manual_labor = 0.77
             produced = leather
             output = 1.497
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_tanning_workshop_leather_livestock_workshop_maintenance = {
-            livestock = 1.547
-            sand = 0.598
-            tar = 0.312 # birch tar and oils for currying the hides
-            tools = 0.123 # tools cut to a running cost (~10 %)
-            manual_labor = 0.39
+            livestock = 1.39
+            sand = 0.54
+            tar = 0.28 # birch tar and oils for currying the hides
+            tools = 0.11 # tools cut to a running cost (~10 %)
+            manual_labor = 0.76
             produced = leather
             output = 1.497
             debug_max_profit = workshop_profit_margin
@@ -58,9 +58,9 @@ building:
     }
     unique_production_methods = {
         pp_tanning_workshop_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = leather
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

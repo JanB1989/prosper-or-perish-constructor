@@ -41,10 +41,10 @@ unique_production_methods = {
     pp_stone_quarry_cut_stone = {
         icon_type = building_type
         icon = stone_quarry
-        lumber = 0.049 # rollers and shoring
-        leather = 0.019 # hoist straps
-        tools = 0.011 # picks and wedges
-        manual_labor = 0.041
+        lumber = 0.044 # rollers and shoring
+        leather = 0.017 # hoist straps
+        tools = 0.01 # picks and wedges
+        manual_labor = 0.059
         produced = stone
         output = 0.233
         category = building_maintenance
@@ -54,9 +54,9 @@ unique_production_methods = {
     pp_stone_quarry_market_sales = {
         icon_type = goods
         icon = stone
-        offset = 0.015
+        offset = 0.017
         produced = stone
-        output = 0.01
+        output = 0.018
         category = building_maintenance
     }
 }

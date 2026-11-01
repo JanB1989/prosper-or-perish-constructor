@@ -66,10 +66,10 @@ building:
             category = building_maintenance
         }
         pp_cotton_farm_gin_house = {
-            lumber = 0.304 # drying sheds
-            fiber_crops = 0.132 # picking sacks, bale cloth
-            tools = 0.036 # ginning rollers
-            manual_labor = 0.2
+            lumber = 0.27 # drying sheds
+            fiber_crops = 0.12 # picking sacks, bale cloth
+            tools = 0.032 # ginning rollers
+            manual_labor = 0.3
             produced = cotton
             output = 0.619
             category = building_maintenance
@@ -77,9 +77,9 @@ building:
     }
     unique_production_methods = {
         pp_cotton_farm_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = cotton
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

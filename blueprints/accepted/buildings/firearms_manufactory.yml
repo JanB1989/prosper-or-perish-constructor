@@ -42,9 +42,9 @@ building:
         pp_firearms_manufactory_ammunition_maintenance = {
             icon_type = goods
             icon = lead
-            lead = 0.204
-            saltpeter = 0.391
-            manual_labor = 0.088
+            lead = 0.18
+            saltpeter = 0.35
+            manual_labor = 0.22
             produced = firearms
             output = 0.502
             category = manufactory_input
@@ -53,9 +53,9 @@ building:
         pp_firearms_manufactory_legacy_guns_workshop_ammunition_iron_maintenance = {
             icon_type = goods
             icon = iron
-            iron = 0.16
-            saltpeter = 0.16
-            manual_labor = 0.079
+            iron = 0.15
+            saltpeter = 0.15
+            manual_labor = 0.16
             produced = firearms
             output = 0.38
             debug_max_profit = manufactory_profit_margin
@@ -64,10 +64,10 @@ building:
     }
     unique_production_methods = {
         pp_firearms_manufactory_firearms_manufactory_maintenance = {
-            lumber = 0.595
-            coal = 0.595
-            iron = 1.598
-            manual_labor = 0.578
+            lumber = 0.54
+            coal = 0.54
+            iron = 1.44
+            manual_labor = 1.35
             category = manufactory_input
             produced = firearms
             output = 3.221
@@ -76,10 +76,10 @@ building:
         pp_firearms_manufactory_legacy_guns_guild_lumber_maintenance = {
             icon_type = goods
             icon = lumber
-            lumber = 0.2
-            iron = 0.056
-            tools = 0.026
-            manual_labor = 0.088
+            lumber = 0.17
+            iron = 0.049
+            tools = 0.023
+            manual_labor = 0.16
             produced = firearms
             output = 0.27
             debug_max_profit = manufactory_profit_margin
@@ -88,11 +88,11 @@ building:
         pp_firearms_manufactory_legacy_hand_cannon_guild_maintenance = {
             icon_type = building_type
             icon = hand_cannon_guild
-            tools = 0.16
-            saltpeter = 0.42
-            copper = 0.42
-            tin = 0.18
-            manual_labor = 0.55
+            tools = 0.15
+            saltpeter = 0.39
+            copper = 0.39
+            tin = 0.16
+            manual_labor = 0.79
             produced = firearms
             output = 1.36
             debug_max_profit = manufactory_profit_margin
@@ -101,11 +101,11 @@ building:
         pp_firearms_manufactory_legacy_guns_workshop_bronze_maintenance = {
             icon_type = goods
             icon = copper
-            copper = 1.04
-            tin = 0.21
-            tools = 0.29
-            lumber = 0.68
-            manual_labor = 0.62
+            copper = 0.94
+            tin = 0.19
+            tools = 0.27
+            lumber = 0.61
+            manual_labor = 1.2
             produced = firearms
             output = 2.42
             debug_max_profit = manufactory_profit_margin
@@ -114,9 +114,9 @@ building:
     }
     unique_production_methods = {
         pp_firearms_manufactory_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = firearms
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

@@ -63,34 +63,34 @@ building:
             category = building_maintenance
         }
         pp_horse_breeders_fodder_leys = {
-            legumes = 0.29 # clover, vetch and horse gram
-            leather = 0.025 # tack and harness
-            manual_labor = 0.08
+            legumes = 0.26 # clover, vetch and horse gram
+            leather = 0.022 # tack and harness
+            manual_labor = 0.12
             produced = horses
             output = 0.155
             category = building_maintenance
         }
         pp_horse_breeders_millet_fodder = {
-            millet = 0.26 # millet and sorghum feed
-            leather = 0.025 # tack and harness
-            manual_labor = 0.07
+            millet = 0.23 # millet and sorghum feed
+            leather = 0.022 # tack and harness
+            manual_labor = 0.11
             produced = horses
             output = 0.155
             category = building_maintenance
         }
         pp_horse_breeders_stud_yards = {
-            wheat = 0.306 # fodder grain
-            leather = 0.033 # tack and harness
-            manual_labor = 0.082
+            wheat = 0.27 # fodder grain
+            leather = 0.029 # tack and harness
+            manual_labor = 0.13
             produced = horses
             output = 0.189
             category = building_maintenance
         }
         pp_horse_breeders_selected_stallions = {
-            wheat = 0.349 # grain and stable feed
-            legumes = 0.136 # hay and fodder leys
-            leather = 0.048 # tack and harness
-            manual_labor = 0.145
+            wheat = 0.31 # grain and stable feed
+            legumes = 0.12 # hay and fodder leys
+            leather = 0.043 # tack and harness
+            manual_labor = 0.22
             produced = horses
             output = 0.289
             debug_max_profit = 0
@@ -99,9 +99,9 @@ building:
     }
     unique_production_methods = {
         pp_horse_breeders_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = horses
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

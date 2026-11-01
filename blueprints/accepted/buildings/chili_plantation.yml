@@ -60,10 +60,10 @@ building:
             category = building_maintenance
         }
         pp_chili_plantation_sun_drying_mats = {
-            fiber_crops = 0.40 # drying mats, picking baskets and pod strings
-            tools = 0.043 # harvest knives
-            lumber = 0.13 # drying racks and stakes
-            manual_labor = 0.252
+            fiber_crops = 0.36 # drying mats, picking baskets and pod strings
+            tools = 0.038 # harvest knives
+            lumber = 0.12 # drying racks and stakes
+            manual_labor = 0.37
             produced = chili
             output = 0.471
             category = building_maintenance
@@ -71,9 +71,9 @@ building:
     }
     unique_production_methods = {
         pp_chili_plantation_market_sales = {
-            offset = 0.015
+            offset = 0.019
             produced = chili
-            output = 0.002
+            output = 0.004
             category = building_maintenance
         }
     }

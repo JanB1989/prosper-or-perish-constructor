@@ -36,9 +36,9 @@ building:
     graphical_tags = { factory_large }
     unique_production_methods = {
         pp_perfumery_blended_incense = {
-            liquor = 0.19
-            pepper = 0.23
-            manual_labor = 0.13
+            liquor = 0.17
+            pepper = 0.21
+            manual_labor = 0.28
             produced = incense
             output = 1
             debug_max_profit = 0.6
@@ -47,9 +47,9 @@ building:
     }
     unique_production_methods = {
         pp_perfumery_market_sales = {
-            offset = 0.015
+            offset = 0.019
             produced = incense
-            output = 0.004
+            output = 0.008
             category = building_maintenance
         }
     }

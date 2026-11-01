@@ -29,7 +29,7 @@ ai_construct_weight = {
         add = {
             value = "market.market_price(goods:legumes)"
             divide = "default_price(goods:legumes)"
-            multiply = 2
+            multiply = 1.6
             multiply = { value = 1 add = modifier:local_legumes_output_modifier subtract = pp_stored_food_staple_line }
             subtract = 1
             multiply = 400
@@ -68,7 +68,7 @@ unique_production_methods = {
         manual_labor = 0.025
         produced = beeswax
         output = 0.063
-        debug_max_profit = 0.714
+        debug_max_profit = 0.371
         category = building_maintenance
     }
 }
@@ -110,7 +110,7 @@ unique_production_methods = {
         legumes = 0.01
         produced = local_food
         output = 1.5
-        debug_max_profit = 36.500
+        debug_max_profit = 45.875
         category = building_maintenance
     }
 }

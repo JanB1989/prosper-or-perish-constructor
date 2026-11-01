@@ -37,54 +37,54 @@ building:
     construction_demand = guild_construction
     unique_production_methods = {
         pp_distillers_guild_sugar_liquor_guild_maintenance = {
-            sugar = 0.427
-            glass = 0.057
-            manual_labor = 0.245
+            sugar = 0.38
+            glass = 0.051
+            manual_labor = 0.4
             produced = liquor
             output = 0.7
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_distillers_guild_rice_liquor_guild_maintenance = {
-            rice = 1.246
-            glass = 0.07
-            manual_labor = 0.245
+            rice = 1.12
+            glass = 0.063
+            manual_labor = 0.39
             produced = liquor
             output = 0.7
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_distillers_guild_potato_liquor_guild_maintenance = {
-            potato = 1.246
-            glass = 0.07
-            manual_labor = 0.245
+            potato = 1.12
+            glass = 0.063
+            manual_labor = 0.39
             produced = liquor
             output = 0.7
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_distillers_guild_wheat_liquor_guild_maintenance = {
-            wheat = 1.246
-            glass = 0.07
-            manual_labor = 0.245
+            wheat = 1.12
+            glass = 0.063
+            manual_labor = 0.39
             produced = liquor
             output = 0.7
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_distillers_guild_beer_liquor_guild_maintenance = {
-            beer = 0.623
-            glass = 0.07
-            manual_labor = 0.245
+            beer = 0.56
+            glass = 0.063
+            manual_labor = 0.39
             produced = liquor
             output = 0.7
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_distillers_guild_wine_liquor_guild_maintenance = {
-            wine = 0.623
-            glass = 0.07
-            manual_labor = 0.245
+            wine = 0.56
+            glass = 0.063
+            manual_labor = 0.39
             produced = liquor
             output = 0.7
             debug_max_profit = guild_profit_margin
@@ -93,9 +93,9 @@ building:
     }
     unique_production_methods = {
         pp_distillers_guild_market_sales = {
-            offset = 0.015
+            offset = 0.019
             produced = liquor
-            output = 0.004
+            output = 0.008
             category = building_maintenance
         }
     }

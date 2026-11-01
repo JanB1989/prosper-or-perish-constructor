@@ -1033,6 +1033,12 @@ price_floor_share = 0.2       # balance labour at its price floor: 20 % of the d
 tolerance = 0.02              # a method within this share of its class is left alone (a rounding step moves about 0.01)
 min_good_share = 0.05         # goods worth less than this share of a method's input cost are folded into the rest
 max_goods = 4                 # at most this many goods per method besides labour (the cheapest go first)
+# Stockpile branch (2026-11-01, Jan): building inputs are 59 % of world demand in run 67859be2, and pop cuts cannot reach iron,
+# tools or lumber. Every share class pays this much more labour (the cost stays, the goods scale down about 10 %), except:
+extra_share = 0.09
+extra_share_skip = ["hand_work", "plantation", "logistics", "logistics_hand"]  # already labour-heavy, or slaves stand for the work
+extra_share_spare_goods = ["local_food", "province_food_sales", "victuals"]    # buildings making these or a staple food keep their share (staples are fine)
+extra_share_spare_buildings = ["cookshop", "public_kitchen"]                   # they sell their meals for offset, their food is a flat modifier
 
 [farm_level_cost]
 # Farms (footprint farm_land) repeat their levels cheaper: this factor x the goods-derived increase_per_level_cost
@@ -1095,13 +1101,15 @@ pinned_goods = ["local_food", "offset", "logistics"]
 # is (1 + output modifiers) x the good's market price / base price x margin, so the AI builds when the good is dear and
 # stops when it is cheap: at margin 1.0 and the 1.05 threshold it opens at 1.05x the base price without output bonus,
 # earlier on good land. Storage-leg gates (grange, tavern), services and logistics keep their own gate.
-# Stockpile prices (branch stockpile-prices, 2026-10-31, Jan): the engine's default prices are x2 (see [stockpile_prices]),
-# so the leg is 1.0 / 1.5 of its old margin at the prices the passes read: it opens at 1.575x the old base price, about
-# 1.3 months of stock where supply meets demand (1.0 would open below ~5.5 months and producers would refine locally).
-margin = 0.667
+# Stockpile prices (branch stockpile-prices, 2026-11-01, Jan): the engine's default prices are x1.6 (see [stockpile_prices]),
+# so the leg's margin = 1.05 / (1.6 x the price / default it should open at). This gate sets where stocks settle: the AI
+# stops building below it, whatever the demand. 1.06 opens at 0.62x the default (0.99x the old base price), about 3.3 months
+# of stock where supply meets demand, 5.5 with +20 % output (0.667 at x2 opened at 1.3 and 2.7; run 67859be2 sat there).
+# Watch: at 1.0 and x2 (5.2 months) producers refined locally in the trade simulator.
+margin = 1.06
 # Steel (2026-10-15): nothing demands steel until some exists (its users switch methods only when it is in the market), so
-# its price sat at the base price and the 1.0 leg never opened; no steel mill in 9 full runs. At 1.06 it opens from 0.99x.
-margin_by_good = { steel = 0.707 }
+# its price sat at the base price and the 1.0 leg never opened; no steel mill in 9 full runs. Kept 1.06x the others' margin.
+margin_by_good = { steel = 1.12 }
 value = 0.01          # gold of the main good per level at base prices; the cost x market access must stay above 0.001
 input = "offset"
 slot_label = "Market"
@@ -1110,12 +1118,34 @@ method_desc = "A few hands carry a small share of the produce straight to market
 
 [stockpile_prices]
 # Branch stockpile-prices (2026-10-31, Jan): prices follow the market stockpile. in_game/common/goods/
-# zz_pp_goods_stockpile_prices.txt raises every default_market_price x base_price_mult except the floor-pinned dummy
-# goods; NMarket.STOCKPILE_TRADE_IMPACT_ON_SUPPLY_SCALE 6.7 with the bleed from the first unit puts a market at the old
-# price at 6 months of stock (supply = demand), 2x it when empty. production_labour.load_prices divides the raise back
-# out, so labour, gate legs, logistics, Old Ways recipes, crop farms and ship upkeep keep their amounts.
-base_price_mult = 2.0
+# zz_pp_goods_stockpile_prices.txt (`ppc stockpile apply`) raises every default_market_price x base_price_mult except the
+# floor-pinned dummy goods; NMarket.STOCKPILE_TRADE_IMPACT_ON_SUPPLY_SCALE 6.7 with the bleed from the first unit puts a
+# market with supply = demand at the default price when empty and at 0.635x it at 3 months of stock. x1.6 (2026-11-01, Jan,
+# was x2): 3 months of stock is then about the old price; prices and nominal incomes fall with it (and minting, which
+# follows income), price / default does not. production_labour.load_prices divides the raise back out, so labour, gate
+# legs, logistics, Old Ways recipes, crop farms and ship upkeep keep their amounts.
+base_price_mult = 1.6
 keep_base_price = ["offset", "logistics", "local_food", "manual_labor", "province_food_sales"]
+
+[stockpile_prices.pop_demand]
+# A good's pop demand x this, on every pop type (demand_multiply in the same file; 2026-11-01, Jan). The engine's price brake
+# on pop demand has no setting per good or pop type and only acts above the default price, so this is the tuning per good.
+# From run 67859be2 (saves 1634-1834): the cut that takes the good to demand / production 0.98 with the other changes of that
+# day, for goods where pops are at least a quarter of the demand and that production did not catch up with. No staple foods.
+amber = 0.4
+cocoa = 0.4
+coffee = 0.4
+porcelain = 0.5
+tobacco = 0.5
+salt = 0.55
+tea = 0.65
+ivory = 0.7
+sugar = 0.7
+fine_cloth = 0.8
+pearls = 0.85
+leather = 0.9
+wine = 0.9
+incense = 0.95
 
 [stockpile_prices.price_factor]
 # On top of the raise (2026-10-31, Jan: oversupplied goods a little cheaper, undersupplied a little dearer). From run

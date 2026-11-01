@@ -60,9 +60,9 @@ building:
             category = building_maintenance
         }
         pp_clove_grove_curing_houses = {
-            lumber = 0.52 # curing racks
-            coal = 0.172 # drying heat
-            manual_labor = 0.256
+            lumber = 0.46 # curing racks
+            coal = 0.15 # drying heat
+            manual_labor = 0.41
             produced = cloves
             output = 0.504
             category = building_maintenance
@@ -70,9 +70,9 @@ building:
     }
     unique_production_methods = {
         pp_clove_grove_market_sales = {
-            offset = 0.015
+            offset = 0.019
             produced = cloves
-            output = 0.002
+            output = 0.004
             category = building_maintenance
         }
     }

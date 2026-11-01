@@ -43,10 +43,10 @@ unique_production_methods = {
     pp_tobacco_farm_curing_barns = {
         icon_type = building_type
         icon = tobacco_farm
-        lumber = 0.384 # curing barns
-        fiber_crops = 0.077 # hanging cords, packing twine, hand-of-leaf ties
-        tools = 0.035 # knives and presses
-        manual_labor = 0.212
+        lumber = 0.34 # curing barns
+        fiber_crops = 0.069 # hanging cords, packing twine, hand-of-leaf ties
+        tools = 0.031 # knives and presses
+        manual_labor = 0.32
         produced = tobacco
         output = 0.641
         category = building_maintenance
@@ -56,9 +56,9 @@ unique_production_methods = {
     pp_tobacco_farm_market_sales = {
         icon_type = goods
         icon = tobacco
-        offset = 0.018
+        offset = 0.017
         produced = tobacco
-        output = 0.004
+        output = 0.006
         category = building_maintenance
     }
 }

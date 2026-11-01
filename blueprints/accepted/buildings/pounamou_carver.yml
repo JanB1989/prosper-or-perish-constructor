@@ -42,8 +42,8 @@ building:
     }
     unique_production_methods = {
         pp_pounamou_carver_pounamou_carver_maintenance = {
-            gems = 0.2
-            manual_labor = 0.13
+            gems = 0.18
+            manual_labor = 0.21
             produced = jewelry
             output = 0.2
             debug_max_profit = rural_profit_margin
@@ -52,9 +52,9 @@ building:
     }
     unique_production_methods = {
         pp_pounamou_carver_market_sales = {
-            offset = 0.015
+            offset = 0.019
             produced = jewelry
-            output = 0.002
+            output = 0.004
             category = building_maintenance
         }
     }

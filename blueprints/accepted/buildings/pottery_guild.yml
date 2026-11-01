@@ -31,10 +31,10 @@ building:
     graphical_tags = { factory_small }
     unique_production_methods = {
         pp_pottery_guild_pottery_maintenance = {
-            clay = 0.651
-            lumber = 0.098 # kiln fuel
-            tools = 0.02 # tools cut to a running cost (~10 %)
-            manual_labor = 0.091
+            clay = 0.58
+            lumber = 0.088 # kiln fuel
+            tools = 0.018 # tools cut to a running cost (~10 %)
+            manual_labor = 0.15
             produced = pottery
             output = 0.7
             debug_max_profit = guild_profit_margin
@@ -43,9 +43,9 @@ building:
     }
     unique_production_methods = {
         pp_pottery_guild_market_sales = {
-            offset = 0.015
+            offset = 0.017
             produced = pottery
-            output = 0.01
+            output = 0.018
             category = building_maintenance
         }
     }

@@ -66,9 +66,9 @@ building:
             category = building_maintenance
         }
         pp_pepper_garden_blanched_garbling_yards = {
-            pottery = 0.52 # blanching pots
-            coal = 0.256 # boiling fuel
-            manual_labor = 0.216
+            pottery = 0.46 # blanching pots
+            coal = 0.23 # boiling fuel
+            manual_labor = 0.33
             produced = pepper
             output = 0.416
             category = building_maintenance
@@ -76,9 +76,9 @@ building:
     }
     unique_production_methods = {
         pp_pepper_garden_market_sales = {
-            offset = 0.015
+            offset = 0.019
             produced = pepper
-            output = 0.002
+            output = 0.004
             category = building_maintenance
         }
     }

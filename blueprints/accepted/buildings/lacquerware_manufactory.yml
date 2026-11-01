@@ -33,10 +33,10 @@ building:
     graphical_tags = { factory_large }
     unique_production_methods = {
         pp_lacquerware_manufactory_lacquerware_manufactory_maintenance = {
-            lumber = 4.199
-            dyes = 1.683
-            tools = 0.425
-            manual_labor = 1.156
+            lumber = 3.79
+            dyes = 1.52
+            tools = 0.38
+            manual_labor = 2.65
             produced = lacquerware
             output = 3.732
             debug_max_profit = manufactory_profit_margin
@@ -45,9 +45,9 @@ building:
     }
     unique_production_methods = {
         pp_lacquerware_manufactory_market_sales = {
-            offset = 0.015
+            offset = 0.019
             produced = lacquerware
-            output = 0.002
+            output = 0.004
             category = building_maintenance
         }
     }

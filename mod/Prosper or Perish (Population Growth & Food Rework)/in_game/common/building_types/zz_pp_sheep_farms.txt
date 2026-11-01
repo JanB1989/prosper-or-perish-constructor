@@ -57,7 +57,7 @@ REPLACE:sheep_farms = {
             wool = 0.032
             produced = local_food
             output = 0.96
-            debug_max_profit = 2.000
+            debug_max_profit = 2.750
             category = building_maintenance
         }
     }
@@ -65,9 +65,9 @@ REPLACE:sheep_farms = {
         pp_sheep_farms_market_sales = {
             icon_type = goods
             icon = wool
-            offset = 0.015
+            offset = 0.019
             produced = wool
-            output = 0.004
+            output = 0.008
             category = building_maintenance
         }
     }

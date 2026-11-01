@@ -39,27 +39,27 @@ building:
     graphical_tags = { factory_medium }
     unique_production_methods = {
         pp_cannon_workshop_cannon_workshop_ammunition_stone_maintenance = {
-            stone = 0.125
-            saltpeter = 0.125
-            manual_labor = 0.043
+            stone = 0.11
+            saltpeter = 0.11
+            manual_labor = 0.088
             produced = cannons
             output = 0.135
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_cannon_workshop_cannon_workshop_ammunition_lead_maintenance = {
-            lead = 0.143
-            saltpeter = 0.143
-            manual_labor = 0.052
+            lead = 0.13
+            saltpeter = 0.13
+            manual_labor = 0.1
             produced = cannons
             output = 0.203
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_cannon_workshop_cannon_workshop_ammunition_iron_maintenance = {
-            iron = 0.16
-            saltpeter = 0.13
-            manual_labor = 0.1
+            iron = 0.15
+            saltpeter = 0.12
+            manual_labor = 0.16
             produced = cannons
             output = 0.272
             debug_max_profit = workshop_profit_margin
@@ -68,19 +68,19 @@ building:
     }
     unique_production_methods = {
         pp_cannon_workshop_cannon_workshop_iron_maintenance = {
-            iron = 1.3
-            tools = 0.143
-            manual_labor = 0.572
+            iron = 1.17
+            tools = 0.13
+            manual_labor = 1.05
             produced = cannons
             output = 1.5
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_cannon_workshop_cannon_workshop_bronze_maintenance = {
-            copper = 1.287
-            tin = 0.325
-            tools = 0.156
-            manual_labor = 0.572
+            copper = 1.16
+            tin = 0.29
+            tools = 0.14
+            manual_labor = 1.1
             produced = cannons
             output = 1.5
             debug_max_profit = workshop_profit_margin
@@ -89,9 +89,9 @@ building:
     }
     unique_production_methods = {
         pp_cannon_workshop_market_sales = {
-            offset = 0.018
+            offset = 0.015
             produced = cannons
-            output = 0.003
+            output = 0.004
             category = building_maintenance
         }
     }

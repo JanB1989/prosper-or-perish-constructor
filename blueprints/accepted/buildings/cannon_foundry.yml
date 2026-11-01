@@ -42,9 +42,9 @@ building:
         pp_cannon_foundry_ammunition_maintenance = {
             icon_type = goods
             icon = lead
-            lead = 0.765
-            saltpeter = 1.258
-            manual_labor = 0.323
+            lead = 0.69
+            saltpeter = 1.14
+            manual_labor = 0.71
             produced = cannons
             output = 1.214
             debug_max_profit = manufactory_profit_margin
@@ -53,9 +53,9 @@ building:
         pp_cannon_foundry_legacy_cannon_workshop_ammunition_stone_maintenance = {
             icon_type = goods
             icon = stone
-            stone = 0.49
-            saltpeter = 0.49
-            manual_labor = 0.17
+            stone = 0.43
+            saltpeter = 0.43
+            manual_labor = 0.34
             produced = cannons
             output = 0.45
             debug_max_profit = manufactory_profit_margin
@@ -64,9 +64,9 @@ building:
         pp_cannon_foundry_legacy_cannon_workshop_ammunition_iron_maintenance = {
             icon_type = goods
             icon = iron
-            iron = 0.57
-            saltpeter = 0.46
-            manual_labor = 0.36
+            iron = 0.53
+            saltpeter = 0.43
+            manual_labor = 0.57
             produced = cannons
             output = 0.91
             debug_max_profit = manufactory_profit_margin
@@ -75,11 +75,11 @@ building:
     }
     unique_production_methods = {
         pp_cannon_foundry_cannon_foundry_maintenance = {
-            tools = 0.408 # tools cut to a running cost (~15 %, arms making)
-            copper = 1.258
-            tin = 0.629
-            coal = 0.986 # fuel for the reverberatory furnace
-            manual_labor = 0.646
+            tools = 0.37 # tools cut to a running cost (~15 %, arms making)
+            copper = 1.14
+            tin = 0.57
+            coal = 0.89 # fuel for the reverberatory furnace
+            manual_labor = 1.45
             produced = cannons
             output = 2.519
             debug_max_profit = manufactory_profit_margin
@@ -88,10 +88,10 @@ building:
         pp_cannon_foundry_legacy_cannon_workshop_bronze_maintenance = {
             icon_type = goods
             icon = copper
-            copper = 1.55
-            tin = 0.39
-            tools = 0.19
-            manual_labor = 0.69
+            copper = 1.39
+            tin = 0.35
+            tools = 0.17
+            manual_labor = 1.3
             produced = cannons
             output = 1.89
             debug_max_profit = manufactory_profit_margin
@@ -100,9 +100,9 @@ building:
         pp_cannon_foundry_legacy_cannon_workshop_iron_maintenance = {
             icon_type = goods
             icon = iron
-            iron = 1.57
-            tools = 0.17
-            manual_labor = 0.69
+            iron = 1.42
+            tools = 0.16
+            manual_labor = 1.25
             produced = cannons
             output = 1.89
             debug_max_profit = manufactory_profit_margin
@@ -111,9 +111,9 @@ building:
     }
     unique_production_methods = {
         pp_cannon_foundry_market_sales = {
-            offset = 0.018
+            offset = 0.015
             produced = cannons
-            output = 0.003
+            output = 0.004
             category = building_maintenance
         }
     }

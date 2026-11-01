@@ -41,10 +41,10 @@ unique_production_methods = {
     pp_ivory_hunting_camp_caravan_hunts = {
         icon_type = building_type
         icon = ivory_hunting_camp
-        weaponry = 0.12 # hunting arms
-        livestock = 0.11 # pack animals
-        tools = 0.026 # tusk extraction gear
-        manual_labor = 0.14
+        weaponry = 0.11 # hunting arms
+        livestock = 0.099 # pack animals
+        tools = 0.023 # tusk extraction gear
+        manual_labor = 0.2
         produced = ivory
         output = 0.222
         category = building_maintenance
@@ -54,9 +54,9 @@ unique_production_methods = {
     pp_ivory_hunting_camp_market_sales = {
         icon_type = goods
         icon = ivory
-        offset = 0.018
+        offset = 0.015
         produced = ivory
-        output = 0.003
+        output = 0.004
         category = building_maintenance
     }
 }

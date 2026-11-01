@@ -38,10 +38,10 @@ building:
     obsolete = brewery_manufactory
     unique_production_methods = {
         pp_brewery_mill_brewery_mill_maintenance = {
-            lumber = 1.5 # casks, vats and malt kiln fuel
-            wheat = 10.8
-            tools = 0.48 # tools cut to a running cost (~10 %)
-            manual_labor = 0.6
+            lumber = 1.36 # casks, vats and malt kiln fuel
+            wheat = 9.77
+            tools = 0.43 # tools cut to a running cost (~10 %)
+            manual_labor = 2.05
             produced = beer
             output = 8.935
             debug_max_profit = mills_profit_margin
@@ -50,10 +50,10 @@ building:
         pp_brewery_mill_legacy_fruit_beer_workshop_maintenance = {
             icon_type = goods
             icon = fruit
-            fruit = 4.01
-            lumber = 1.13
-            tools = 0.23
-            manual_labor = 0.68
+            fruit = 3.58
+            lumber = 1.02
+            tools = 0.2
+            manual_labor = 1.4
             produced = beer
             output = 4.25
             debug_max_profit = mills_profit_margin
@@ -62,9 +62,9 @@ building:
         pp_brewery_mill_legacy_maize_beer_workshop_maintenance = {
             icon_type = goods
             icon = maize
-            maize = 5.42
-            pottery = 1.26
-            manual_labor = 0.73
+            maize = 4.88
+            pottery = 1.15
+            manual_labor = 1.4
             produced = beer
             output = 4.25
             debug_max_profit = mills_profit_margin
@@ -73,10 +73,10 @@ building:
         pp_brewery_mill_legacy_millet_beer_workshop_maintenance = {
             icon_type = goods
             icon = millet
-            millet = 3.81
-            lumber = 1.21
-            tools = 0.23
-            manual_labor = 0.75
+            millet = 3.43
+            lumber = 1.1
+            tools = 0.2
+            manual_labor = 1.4
             produced = beer
             output = 4.25
             debug_max_profit = mills_profit_margin
@@ -85,10 +85,10 @@ building:
         pp_brewery_mill_legacy_rice_beer_workshop_maintenance = {
             icon_type = goods
             icon = rice
-            rice = 3.81
-            lumber = 1.21
-            tools = 0.23
-            manual_labor = 0.75
+            rice = 3.43
+            lumber = 1.1
+            tools = 0.2
+            manual_labor = 1.4
             produced = beer
             output = 4.25
             debug_max_profit = mills_profit_margin
@@ -97,9 +97,9 @@ building:
     }
     unique_production_methods = {
         pp_brewery_mill_market_sales = {
-            offset = 0.015
+            offset = 0.017
             produced = beer
-            output = 0.005
+            output = 0.009
             category = building_maintenance
         }
     }

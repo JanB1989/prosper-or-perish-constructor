@@ -71,9 +71,9 @@ building:
             category = building_maintenance
         }
         pp_terraced_coffee_grove_terraced_shade_gardens = {
-            fiber_crops = 0.12 # shade ties and harvest sacks
-            furniture = 0.104 # light nursery and shade frames
-            manual_labor = 0.088
+            fiber_crops = 0.11 # shade ties and harvest sacks
+            furniture = 0.093 # light nursery and shade frames
+            manual_labor = 0.14
             produced = coffee
             output = 0.356
             category = building_maintenance
@@ -84,10 +84,10 @@ building:
             category = building_maintenance
         }
         pp_terraced_coffee_grove_washing_frames = {
-            fiber_crops = 0.308 # drying mats and sacks
-            pottery = 0.26 # washing and fermentation vessels
-            furniture = 0.172 # light pulping and washing frames
-            manual_labor = 0.228
+            fiber_crops = 0.28 # drying mats and sacks
+            pottery = 0.23 # washing and fermentation vessels
+            furniture = 0.15 # light pulping and washing frames
+            manual_labor = 0.38
             produced = coffee
             output = 0.901
             category = building_maintenance
@@ -95,9 +95,9 @@ building:
     }
     unique_production_methods = {
         pp_terraced_coffee_grove_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = coffee
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

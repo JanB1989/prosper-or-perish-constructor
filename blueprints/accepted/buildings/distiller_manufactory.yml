@@ -39,45 +39,45 @@ building:
     obsolete = distillers_workshop
     unique_production_methods = {
         pp_distiller_manufactory_sugar_distillery_maintenance = {
-            sugar = 2.125
-            glass = 0.357
-            manual_labor = 0.561
+            sugar = 1.92
+            glass = 0.32
+            manual_labor = 1.3
             produced = liquor
             output = 3.72
             category = manufactory_input
             debug_max_profit = manufactory_profit_margin
         }
         pp_distiller_manufactory_rice_distillery_maintenance = {
-            rice = 6.358
-            glass = 0.357
-            manual_labor = 0.578
+            rice = 5.76
+            glass = 0.32
+            manual_labor = 1.3
             produced = liquor
             output = 3.72
             category = manufactory_input
             debug_max_profit = manufactory_profit_margin
         }
         pp_distiller_manufactory_potato_distillery_maintenance = {
-            potato = 6.358
-            glass = 0.357
-            manual_labor = 0.578
+            potato = 5.76
+            glass = 0.32
+            manual_labor = 1.3
             produced = liquor
             output = 3.72
             category = manufactory_input
             debug_max_profit = manufactory_profit_margin
         }
         pp_distiller_manufactory_wheat_distillery_maintenance = {
-            wheat = 6.358
-            glass = 0.357
-            manual_labor = 0.578
+            wheat = 5.76
+            glass = 0.32
+            manual_labor = 1.3
             produced = liquor
             output = 3.72
             category = manufactory_input
             debug_max_profit = manufactory_profit_margin
         }
         pp_distiller_manufactory_scottish_whisky_distillery_maintenance = {
-            millet = 6.358
-            glass = 0.357
-            manual_labor = 0.578
+            millet = 5.76
+            glass = 0.32
+            manual_labor = 1.3
             produced = liquor
             output = 3.72
             category = manufactory_input
@@ -86,9 +86,9 @@ building:
         pp_distiller_manufactory_legacy_beer_liquor_workshop_maintenance = {
             icon_type = goods
             icon = beer
-            beer = 2.29
-            glass = 0.27
-            manual_labor = 0.63
+            beer = 2.08
+            glass = 0.24
+            manual_labor = 1.15
             produced = liquor
             output = 2.79
             debug_max_profit = manufactory_profit_margin
@@ -97,9 +97,9 @@ building:
         pp_distiller_manufactory_legacy_wine_liquor_workshop_maintenance = {
             icon_type = goods
             icon = wine
-            wine = 2.29
-            glass = 0.27
-            manual_labor = 0.63
+            wine = 2.08
+            glass = 0.24
+            manual_labor = 1.15
             produced = liquor
             output = 2.79
             debug_max_profit = manufactory_profit_margin
@@ -108,9 +108,9 @@ building:
     }
     unique_production_methods = {
         pp_distiller_manufactory_market_sales = {
-            offset = 0.015
+            offset = 0.019
             produced = liquor
-            output = 0.004
+            output = 0.008
             category = building_maintenance
         }
     }

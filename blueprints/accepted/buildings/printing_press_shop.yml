@@ -36,20 +36,20 @@ building:
     graphical_tags = { factory_medium }
     unique_production_methods = {
         pp_printing_press_shop_printing_press_leather_maintenance = {
-            lead = 0.286
-            paper = 0.988
-            leather = 0.175
-            manual_labor = 0.429
+            lead = 0.26
+            paper = 0.89
+            leather = 0.16
+            manual_labor = 0.72
             produced = books
             output = 1.358
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_printing_press_shop_printing_press_maintenance = {
-            lead = 0.286
-            paper = 0.988
-            lumber = 0.351
-            manual_labor = 0.429
+            lead = 0.26
+            paper = 0.89
+            lumber = 0.31
+            manual_labor = 0.75
             produced = books
             output = 1.36
             debug_max_profit = workshop_profit_margin
@@ -58,10 +58,10 @@ building:
         pp_printing_press_shop_legacy_scriptorium_leather_maintenance = {
             icon_type = goods
             icon = leather
-            dyes = 0.15
-            paper = 0.61
-            leather = 0.15
-            manual_labor = 0.4
+            dyes = 0.14
+            paper = 0.53
+            leather = 0.14
+            manual_labor = 0.67
             produced = books
             output = 1.02
             debug_max_profit = workshop_profit_margin
@@ -70,10 +70,10 @@ building:
         pp_printing_press_shop_legacy_scriptorium_maintenance = {
             icon_type = building_type
             icon = scriptorium
-            dyes = 0.15
-            paper = 0.59
-            lumber = 0.3
-            manual_labor = 0.39
+            dyes = 0.14
+            paper = 0.51
+            lumber = 0.27
+            manual_labor = 0.65
             produced = books
             output = 1.02
             debug_max_profit = workshop_profit_margin
@@ -82,9 +82,9 @@ building:
     }
     unique_production_methods = {
         pp_printing_press_shop_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = books
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

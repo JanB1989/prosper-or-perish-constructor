@@ -33,11 +33,11 @@ building:
     obsolete = naval_supplies_workshop
     unique_production_methods = {
         pp_naval_supplies_manufactory_naval_supplies_manufactory_maintenance = {
-            lumber = 1.649
-            fiber_crops = 1.224
-            tar = 1.224
-            cloth = 0.408
-            manual_labor = 0.697
+            lumber = 1.49
+            fiber_crops = 1.11
+            tar = 1.11
+            cloth = 0.37
+            manual_labor = 1.55
             produced = naval_supplies
             output = 3.723
             debug_max_profit = manufactory_profit_margin
@@ -46,9 +46,9 @@ building:
     }
     unique_production_methods = {
         pp_naval_supplies_manufactory_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = naval_supplies
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

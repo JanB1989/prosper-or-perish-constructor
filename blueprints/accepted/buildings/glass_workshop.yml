@@ -33,11 +33,11 @@ building:
     graphical_tags = { factory_medium }
     unique_production_methods = {
         pp_glass_workshop_metal_glass_workshop_maintenance = {
-            lumber = 1.053 # furnace fuel and wood ash for potash flux
-            sand = 1.443
-            tools = 0.126 # tools cut to a running cost (~10 %)
-            lead = 0.351 # lead oxide flux for the lead glass
-            manual_labor = 0.429
+            lumber = 0.95 # furnace fuel and wood ash for potash flux
+            sand = 1.31
+            tools = 0.11 # tools cut to a running cost (~10 %)
+            lead = 0.32 # lead oxide flux for the lead glass
+            manual_labor = 0.79
             produced = glass
             output = 1.498
             debug_max_profit = workshop_profit_margin
@@ -46,11 +46,11 @@ building:
         pp_glass_workshop_legacy_glass_guild_maintenance = {
             icon_type = goods
             icon = glass
-            lumber = 0.59
-            sand = 0.95
-            tools = 0.071
-            clay = 0.53
-            manual_labor = 0.31
+            lumber = 0.52
+            sand = 0.85
+            tools = 0.064
+            clay = 0.46
+            manual_labor = 0.53
             produced = glass
             output = 0.84
             debug_max_profit = workshop_profit_margin
@@ -59,9 +59,9 @@ building:
     }
     unique_production_methods = {
         pp_glass_workshop_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = glass
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

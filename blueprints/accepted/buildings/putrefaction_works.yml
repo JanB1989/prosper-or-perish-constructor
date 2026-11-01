@@ -37,9 +37,9 @@ building:
     }
     unique_production_methods = {
         pp_putrefaction_works_demands = {
-            pottery = 0.56
-            livestock = 1.12
-            manual_labor = 0.16
+            pottery = 0.5
+            livestock = 1.01
+            manual_labor = 0.39
             produced = saltpeter
             output = 2.0
             debug_max_profit = 0.75
@@ -48,9 +48,9 @@ building:
     }
     unique_production_methods = {
         pp_putrefaction_works_market_sales = {
-            offset = 0.015
+            offset = 0.017
             produced = saltpeter
-            output = 0.005
+            output = 0.009
             category = building_maintenance
         }
     }

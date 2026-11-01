@@ -72,19 +72,19 @@ building:
             category = building_maintenance
         }
         pp_tin_stamping_mill_lead = {
-            lumber = 0.063 # stamp frames, troughs
-            tools = 0.008 # stamp shoes, sieves
-            coal = 0.014 # lead smelting fuel
-            manual_labor = 0.025
+            lumber = 0.056 # stamp frames, troughs
+            tools = 0.007 # stamp shoes, sieves
+            coal = 0.012 # lead smelting fuel
+            manual_labor = 0.044
             produced = lead
             output = 0.102
             category = building_maintenance
         }
         pp_tin_stamping_mill_copper = {
-            lumber = 0.063 # stamp frames, troughs
-            tools = 0.008 # stamp shoes, sieves
-            coal = 0.014 # copper smelting fuel
-            manual_labor = 0.025
+            lumber = 0.056 # stamp frames, troughs
+            tools = 0.007 # stamp shoes, sieves
+            coal = 0.012 # copper smelting fuel
+            manual_labor = 0.044
             produced = copper
             output = 0.068
             category = building_maintenance
@@ -95,10 +95,10 @@ building:
             category = building_maintenance
         }
         pp_tin_stamping_mill_tin = {
-            lumber = 0.53 # stamp frames, water wheels, buddles
-            tools = 0.08 # stamp heads, picks
-            coal = 0.17 # blowing house fuel
-            manual_labor = 0.23
+            lumber = 0.47 # stamp frames, water wheels, buddles
+            tools = 0.071 # stamp heads, picks
+            coal = 0.15 # blowing house fuel
+            manual_labor = 0.4
             produced = tin
             output = 0.95
             category = building_maintenance
@@ -106,9 +106,9 @@ building:
     }
     unique_production_methods = {
         pp_tin_stamping_mill_market_sales = {
-            offset = 0.015
+            offset = 0.017
             produced = tin
-            output = 0.005
+            output = 0.009
             category = building_maintenance
         }
     }

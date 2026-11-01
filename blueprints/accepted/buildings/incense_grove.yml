@@ -61,10 +61,10 @@ building:
             category = building_maintenance
         }
         pp_incense_grove_tapping_camps = {
-            fiber_crops = 0.10 # collection cloth and baskets (a few more baskets)
-            lumber = 0.096 # drying racks and shelters
-            tools = 0.016 # tapping knives
-            manual_labor = 0.092
+            fiber_crops = 0.089 # collection cloth and baskets (a few more baskets)
+            lumber = 0.085 # drying racks and shelters
+            tools = 0.014 # tapping knives
+            manual_labor = 0.14
             produced = incense
             output = 0.222
             category = building_maintenance
@@ -72,9 +72,9 @@ building:
     }
     unique_production_methods = {
         pp_incense_grove_market_sales = {
-            offset = 0.015
+            offset = 0.019
             produced = incense
-            output = 0.004
+            output = 0.008
             category = building_maintenance
         }
     }

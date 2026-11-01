@@ -35,9 +35,9 @@ building:
     graphical_tags = { factory_large }
     unique_production_methods = {
         pp_steel_mill_steel_mill_maintenance = {
-            iron = 6.88
-            coal = 6.88
-            manual_labor = 1.58
+            iron = 6.24
+            coal = 6.24
+            manual_labor = 5.1
             produced = steel
             output = 8.946
             debug_max_profit = mills_profit_margin
@@ -46,7 +46,7 @@ building:
     }
     unique_production_methods = {
         pp_steel_mill_market_sales = {
-            offset = 0.014
+            offset = 0.009
             produced = steel
             output = 0.002
             category = building_maintenance

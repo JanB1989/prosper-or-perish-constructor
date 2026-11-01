@@ -43,9 +43,9 @@ unique_production_methods = {
     pp_ablaq_palace_ablaq_palace_maintenance = {
         icon_type = building_type
         icon = ablaq_palace
-        lumber = 0.13
-        marble = 0.18
-        manual_labor = 0.2
+        lumber = 0.12
+        marble = 0.16
+        manual_labor = 0.32
         produced = silk
         output = 0.35
         debug_max_profit = rural_profit_margin
@@ -56,9 +56,9 @@ unique_production_methods = {
     pp_ablaq_palace_market_sales = {
         icon_type = goods
         icon = silk
-        offset = 0.018
+        offset = 0.015
         produced = silk
-        output = 0.003
+        output = 0.004
         category = building_maintenance
     }
 }

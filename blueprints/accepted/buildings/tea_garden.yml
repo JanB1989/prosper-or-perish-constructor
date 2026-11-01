@@ -66,9 +66,9 @@ building:
             category = building_maintenance
         }
         pp_tea_garden_bamboo_withering_trays = {
-            fiber_crops = 0.32 # bamboo trays
-            clay = 0.256 # firing hearths
-            manual_labor = 0.172
+            fiber_crops = 0.29 # bamboo trays
+            clay = 0.23 # firing hearths
+            manual_labor = 0.25
             produced = tea
             output = 0.523
             category = building_maintenance
@@ -76,9 +76,9 @@ building:
     }
     unique_production_methods = {
         pp_tea_garden_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = tea
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

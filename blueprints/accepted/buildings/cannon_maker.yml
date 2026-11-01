@@ -38,27 +38,27 @@ building:
     graphical_tags = { factory_small }
     unique_production_methods = {
         pp_cannon_maker_cannon_maker_ammunition_stone_maintenance = {
-            stone = 0.062
-            saltpeter = 0.062
-            manual_labor = 0.032
+            stone = 0.056
+            saltpeter = 0.056
+            manual_labor = 0.05
             produced = cannons
             output = 0.061
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_cannon_maker_cannon_maker_ammunition_lead_maintenance = {
-            lead = 0.067
-            saltpeter = 0.067
-            manual_labor = 0.045
+            lead = 0.06
+            saltpeter = 0.06
+            manual_labor = 0.073
             produced = cannons
             output = 0.084
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_cannon_maker_cannon_maker_ammunition_iron_maintenance = {
-            iron = 0.067
-            saltpeter = 0.067
-            manual_labor = 0.058
+            iron = 0.06
+            saltpeter = 0.06
+            manual_labor = 0.097
             produced = cannons
             output = 0.112
             debug_max_profit = guild_profit_margin
@@ -67,32 +67,32 @@ building:
     }
     unique_production_methods = {
         pp_cannon_maker_cannon_maker_lumber_maintenance = {
-            lumber = 0.064
-            iron = 0.024
-            tools = 0.011
-            manual_labor = 0.038
+            lumber = 0.057
+            iron = 0.022
+            tools = 0.01
+            manual_labor = 0.061
             produced = cannons
             output = 0.07
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
         pp_cannon_maker_cannon_maker_bronze_maintenance = {
-            copper = 0.371
-            tin = 0.077
-            tools = 0.133 # tools cut to a running cost (~15 %, arms making)
-            lumber = 0.441 # charcoal for the casting furnace, mould frames and carriages
-            manual_labor = 0.406
+            copper = 0.33
+            tin = 0.069
+            tools = 0.12 # tools cut to a running cost (~15 %, arms making)
+            lumber = 0.4 # charcoal for the casting furnace, mould frames and carriages
+            manual_labor = 0.66
             produced = cannons
             output = 0.7
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_cannon_maker_cannon_maker_iron_maintenance = {
-            iron = 0.399
-            tools = 0.133 # tools cut to a running cost (~15 %, arms making)
-            coal = 0.21 # forge fuel for welding the hooped barrels
-            lumber = 0.126 # carriages and beds
-            manual_labor = 0.406
+            iron = 0.36
+            tools = 0.12 # tools cut to a running cost (~15 %, arms making)
+            coal = 0.19 # forge fuel for welding the hooped barrels
+            lumber = 0.11 # carriages and beds
+            manual_labor = 0.65
             produced = cannons
             output = 0.7
             debug_max_profit = guild_profit_margin
@@ -101,9 +101,9 @@ building:
     }
     unique_production_methods = {
         pp_cannon_maker_market_sales = {
-            offset = 0.018
+            offset = 0.015
             produced = cannons
-            output = 0.003
+            output = 0.004
             category = building_maintenance
         }
     }

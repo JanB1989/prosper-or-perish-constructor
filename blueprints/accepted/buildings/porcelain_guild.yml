@@ -31,10 +31,10 @@ building:
     graphical_tags = { factory_small }
     unique_production_methods = {
         pp_porcelain_guild_porcelain_guild_maintenance = {
-            clay = 1.834
-            coal = 0.364
-            tools = 0.036
-            manual_labor = 0.294
+            clay = 1.65
+            coal = 0.33
+            tools = 0.032
+            manual_labor = 0.47
             produced = porcelain
             output = 0.7
             debug_max_profit = guild_profit_margin
@@ -43,9 +43,9 @@ building:
     }
     unique_production_methods = {
         pp_porcelain_guild_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = porcelain
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

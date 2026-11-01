@@ -72,19 +72,19 @@ building:
             category = building_maintenance
         }
         pp_gold_diggings_copper = {
-            lumber = 0.05 # props, washing troughs
-            tools = 0.007 # picks, sieves
-            coal = 0.014 # copper smelting fuel
-            manual_labor = 0.028
+            lumber = 0.044 # props, washing troughs
+            tools = 0.006 # picks, sieves
+            coal = 0.012 # copper smelting fuel
+            manual_labor = 0.046
             produced = copper
             output = 0.056
             category = building_maintenance
         }
         pp_gold_diggings_silver = {
-            lumber = 0.063 # props, parting hearths
-            tools = 0.009 # picks, tongs
-            coal = 0.02 # parting and cupellation fuel
-            manual_labor = 0.039
+            lumber = 0.056 # props, parting hearths
+            tools = 0.008 # picks, tongs
+            coal = 0.018 # parting and cupellation fuel
+            manual_labor = 0.059
             produced = silver
             output = 0.04
             category = building_maintenance
@@ -102,10 +102,10 @@ building:
             category = building_maintenance
         }
         pp_gold_diggings_gold = {
-            lumber = 0.46 # sluice boxes, cradles, leats
-            tools = 0.055 # picks, shovels, pans
-            wool = 0.1 # fleeces lining the sluices catch fine gold
-            manual_labor = 0.27
+            lumber = 0.41 # sluice boxes, cradles, leats
+            tools = 0.049 # picks, shovels, pans
+            wool = 0.089 # fleeces lining the sluices catch fine gold
+            manual_labor = 0.4
             produced = goods_gold
             output = 0.200
             category = building_maintenance
@@ -113,7 +113,7 @@ building:
     }
     unique_production_methods = {
         pp_gold_diggings_market_sales = {
-            offset = 0.027
+            offset = 0.017
             produced = goods_gold
             output = 0.002
             category = building_maintenance

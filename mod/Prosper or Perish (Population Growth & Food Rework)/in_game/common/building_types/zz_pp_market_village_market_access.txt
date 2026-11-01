@@ -30,8 +30,8 @@ unique_production_methods = {
         icon = market_village
         produced = pottery
         output = 0.14
-        clay = 0.175
-        manual_labor = 0.029
+        clay = 0.15
+        manual_labor = 0.041
         debug_max_profit = rural_profit_margin
         category = building_maintenance
     }
@@ -40,8 +40,8 @@ unique_production_methods = {
         icon = market_village
         produced = jewelry
         output = 0.07
-        stone = 0.224
-        manual_labor = 0.077
+        stone = 0.2
+        manual_labor = 0.1
         debug_max_profit = rural_profit_margin
         category = building_maintenance
     }
@@ -50,19 +50,19 @@ unique_production_methods = {
         icon = market_village
         produced = weaponry
         output = 0.14
-        lumber = 0.175
-        manual_labor = 0.105
+        lumber = 0.16
+        manual_labor = 0.13
         debug_max_profit = rural_profit_margin
         category = building_maintenance
     }
     pp_market_village_rural_millet_brewery = {
         icon_type = building_type
         icon = market_village
-        millet = 0.273
-        lumber = 0.07 # firewood for boiling the mash (was 0.079)
-        tools = 0.014 # 2026-10-05: tools an accelerant, village brewing needs few, was 0.056
-        pottery = 0.056 # brewing and storage jars
-        manual_labor = 0.168
+        millet = 0.24
+        lumber = 0.062 # firewood for boiling the mash (was 0.079)
+        tools = 0.012 # 2026-10-05: tools an accelerant, village brewing needs few, was 0.056
+        pottery = 0.049 # brewing and storage jars
+        manual_labor = 0.23
         produced = beer
         output = 0.35
         debug_max_profit = rural_profit_margin
@@ -85,7 +85,7 @@ unique_production_methods = {
         icon = tools
         offset = 0.034
         produced = tools
-        output = 0.007
+        output = 0.011
         category = building_maintenance
     }
 }

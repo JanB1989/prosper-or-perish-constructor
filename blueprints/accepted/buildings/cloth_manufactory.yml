@@ -38,9 +38,9 @@ building:
     graphical_tags = { factory_large }
     unique_production_methods = {
         pp_cloth_manufactory_wool_cloth_manufactory_maintenance = {
-            wool = 3.145
-            dyes = 0.289
-            manual_labor = 0.68
+            wool = 2.84
+            dyes = 0.26
+            manual_labor = 1.55
             produced = cloth
             output = 3.723
             category = guild_input
@@ -49,17 +49,17 @@ building:
         pp_cloth_manufactory_cotton_cloth_manufactory_maintenance = {
             produced = cloth
             output = 3.724
-            cotton = 2.618
-            dyes = 0.289
-            manual_labor = 0.697
+            cotton = 2.37
+            dyes = 0.26
+            manual_labor = 1.55
             category = guild_input
             debug_max_profit = manufactory_profit_margin
         }
         pp_cloth_manufactory_fiber_crops_cloth_manufactory_maintenance = {
             produced = cloth
-            fiber_crops = 4.267
-            dyes = 0.119
-            manual_labor = 0.697
+            fiber_crops = 3.86
+            dyes = 0.11
+            manual_labor = 1.55
             output = 3.724
             category = guild_input
             debug_max_profit = manufactory_profit_margin
@@ -67,8 +67,8 @@ building:
         pp_cloth_manufactory_legacy_fiber_crops_cloth_workshop_maintenance = {
             icon_type = goods
             icon = fiber_crops
-            fiber_crops = 2.68
-            manual_labor = 0.59
+            fiber_crops = 2.4
+            manual_labor = 1.15
             produced = cloth
             output = 2.28
             debug_max_profit = manufactory_profit_margin
@@ -77,8 +77,8 @@ building:
         pp_cloth_manufactory_legacy_cotton_cloth_workshop_maintenance = {
             icon_type = goods
             icon = cotton
-            cotton = 2.18
-            manual_labor = 0.74
+            cotton = 1.97
+            manual_labor = 1.35
             produced = cloth
             output = 2.79
             debug_max_profit = manufactory_profit_margin
@@ -87,8 +87,8 @@ building:
         pp_cloth_manufactory_legacy_wool_cloth_workshop_maintenance = {
             icon_type = goods
             icon = wool
-            wool = 2.61
-            manual_labor = 0.74
+            wool = 2.36
+            manual_labor = 1.4
             produced = cloth
             output = 2.79
             debug_max_profit = manufactory_profit_margin
@@ -97,9 +97,9 @@ building:
     }
     unique_production_methods = {
         pp_cloth_manufactory_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = cloth
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

@@ -55,11 +55,11 @@ building:
     build_time = colonise_build_time
     unique_production_methods = {
         pp_slave_center_slave_center_maintenance = {
-            stone = 0.8 # walled compound and pens (2026-10-05: takes the tools share, was 0.39)
-            tools = 0.09 # 2026-10-05: tools an accelerant, was 0.39
-            firearms = 0.19
-            paper = 0.47 # factors' ledgers and bills of lading (was 0.19)
-            manual_labor = 0.43
+            stone = 0.72 # walled compound and pens (2026-10-05: takes the tools share, was 0.39)
+            tools = 0.081 # 2026-10-05: tools an accelerant, was 0.39
+            firearms = 0.17
+            paper = 0.42 # factors' ledgers and bills of lading (was 0.19)
+            manual_labor = 0.7
             produced = slaves_goods
             output = 1.0
             debug_max_profit = -1
@@ -68,9 +68,9 @@ building:
     }
     unique_production_methods = {
         pp_slave_center_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = slaves_goods
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

@@ -70,10 +70,10 @@ building:
             category = building_maintenance
         }
         pp_market_cotton_farm_bale_yard = {
-            fiber_crops = 0.156 # picking bags and bale cloth
-            furniture = 0.088 # drying racks and bale press carpentry
-            tools = 0.012 # hand screw press hardware
-            manual_labor = 0.096
+            fiber_crops = 0.14 # picking bags and bale cloth
+            furniture = 0.078 # drying racks and bale press carpentry
+            tools = 0.011 # hand screw press hardware
+            manual_labor = 0.16
             produced = cotton
             output = 0.395
             category = building_maintenance
@@ -84,9 +84,9 @@ building:
             category = building_maintenance
         }
         pp_market_cotton_farm_roller_gin_house = {
-            furniture = 0.208 # carpentry for roller gin frames
-            tools = 0.02 # metal rollers and adjustment tools
-            manual_labor = 0.108
+            furniture = 0.19 # carpentry for roller gin frames
+            tools = 0.018 # metal rollers and adjustment tools
+            manual_labor = 0.17
             produced = cotton
             output = 0.443
             category = building_maintenance
@@ -94,9 +94,9 @@ building:
     }
     unique_production_methods = {
         pp_market_cotton_farm_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = cotton
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

@@ -110,10 +110,10 @@ building:
             category = building_maintenance
         }
         pp_inland_saltworks_open_pan_boiling = {
-            lumber = 0.38 # pan fuel
-            clay = 0.16 # hearth linings
-            pottery = 0.22 # brine vessels
-            manual_labor = 0.22
+            lumber = 0.34 # pan fuel
+            clay = 0.14 # hearth linings
+            pottery = 0.2 # brine vessels
+            manual_labor = 0.32
             produced = salt
             output = 0.233
             category = building_maintenance
@@ -121,9 +121,9 @@ building:
     }
     unique_production_methods = {
         pp_inland_saltworks_market_sales = {
-            offset = 0.015
+            offset = 0.019
             produced = salt
-            output = 0.002
+            output = 0.004
             category = building_maintenance
         }
     }

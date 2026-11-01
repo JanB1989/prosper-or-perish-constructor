@@ -35,33 +35,33 @@ building:
     graphical_tags = { factory_small }
     unique_production_methods = {
         pp_tools_guild_stone_tools_guild_maintenance = {
-            stone = 0.406
-            manual_labor = 0.069
+            stone = 0.37
+            manual_labor = 0.11
             produced = tools
             output = 0.175
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_tools_guild_copper_tools_guild_maintenance = {
-            copper = 0.315
-            manual_labor = 0.161
+            copper = 0.28
+            manual_labor = 0.27
             produced = tools
             output = 0.392
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_tools_guild_bronze_tools_guild_maintenance = {
-            copper = 0.329
-            tin = 0.027
-            manual_labor = 0.168
+            copper = 0.29
+            tin = 0.024
+            manual_labor = 0.29
             produced = tools
             output = 0.42
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_tools_guild_metalwork_guild_maintenance = {
-            iron = 0.504
-            manual_labor = 0.287
+            iron = 0.45
+            manual_labor = 0.48
             produced = tools
             output = 0.7
             debug_max_profit = guild_profit_margin
@@ -72,7 +72,7 @@ building:
         pp_tools_guild_market_sales = {
             offset = 0.034
             produced = tools
-            output = 0.007
+            output = 0.011
             category = building_maintenance
         }
     }

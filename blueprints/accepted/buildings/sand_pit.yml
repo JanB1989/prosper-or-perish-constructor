@@ -58,9 +58,9 @@ building:
             category = building_maintenance
         }
         pp_sand_pit_screened_pits = {
-            lumber = 0.044 # screens and pit shoring
-            tools = 0.005 # shovels and sieves
-            manual_labor = 0.019
+            lumber = 0.039 # screens and pit shoring
+            tools = 0.004 # shovels and sieves
+            manual_labor = 0.031
             produced = sand
             output = 0.233
             category = building_maintenance
@@ -68,9 +68,9 @@ building:
     }
     unique_production_methods = {
         pp_sand_pit_market_sales = {
-            offset = 0.015
+            offset = 0.017
             produced = sand
-            output = 0.02
+            output = 0.036
             category = building_maintenance
         }
     }

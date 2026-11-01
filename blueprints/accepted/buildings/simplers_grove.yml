@@ -60,9 +60,9 @@ building:
             category = building_maintenance
         }
         pp_simplers_grove_wicker_drying_racks = {
-            fiber_crops = 0.029 # baskets, ties, drying screens and mats
-            pottery = 0.016 # crocks and dry storage vessels
-            manual_labor = 0.016
+            fiber_crops = 0.026 # baskets, ties, drying screens and mats
+            pottery = 0.014 # crocks and dry storage vessels
+            manual_labor = 0.024
             produced = medicaments
             output = 0.116
             category = building_maintenance
@@ -70,9 +70,9 @@ building:
     }
     unique_production_methods = {
         pp_simplers_grove_market_sales = {
-            offset = 0.015
+            offset = 0.017
             produced = medicaments
-            output = 0.01
+            output = 0.018
             category = building_maintenance
         }
     }

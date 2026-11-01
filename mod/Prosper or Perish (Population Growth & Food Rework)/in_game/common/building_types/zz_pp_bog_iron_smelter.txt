@@ -40,8 +40,8 @@ unique_production_methods = {
     pp_bog_iron_maintenance = {
         icon_type = building_type
         icon = bog_iron_smelter
-        coal = 0.37 # charcoal, furnace fuel
-        manual_labor = 0.16
+        coal = 0.33 # charcoal, furnace fuel
+        manual_labor = 0.24
         produced = iron
         output = 0.31
         debug_max_profit = 0.2
@@ -52,9 +52,9 @@ unique_production_methods = {
     pp_bog_iron_smelter_market_sales = {
         icon_type = goods
         icon = iron
-        offset = 0.021
+        offset = 0.01
         produced = iron
-        output = 0.004
+        output = 0.003
         category = building_maintenance
     }
 }

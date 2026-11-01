@@ -43,9 +43,9 @@ unique_production_methods = {
     pp_elephant_kraal_kheddah_stockades = {
         icon_type = building_type
         icon = elephant_kraal
-        lumber = 0.084 # stockades, gates
-        fruit = 0.14 # fodder, bait
-        manual_labor = 0.064
+        lumber = 0.075 # stockades, gates
+        fruit = 0.12 # fodder, bait
+        manual_labor = 0.1
         produced = elephants
         output = 0.076
         category = building_maintenance
@@ -55,9 +55,9 @@ unique_production_methods = {
     pp_elephant_kraal_market_sales = {
         icon_type = goods
         icon = elephants
-        offset = 0.015
+        offset = 0.019
         produced = elephants
-        output = 0.002
+        output = 0.004
         category = building_maintenance
     }
 }

@@ -38,9 +38,9 @@ unique_production_methods = {
             icon = clay_pit
             produced = clay
             output = 1.44
-            lumber = 0.23
-            livestock = 0.098
-            manual_labor = 0.12
+            lumber = 0.2
+            livestock = 0.087
+            manual_labor = 0.19
             category = building_maintenance
         }
     }
@@ -48,9 +48,9 @@ unique_production_methods = {
     pp_clay_pit_market_sales = {
         icon_type = goods
         icon = clay
-        offset = 0.015
+        offset = 0.017
         produced = clay
-        output = 0.02
+        output = 0.036
         category = building_maintenance
     }
 }

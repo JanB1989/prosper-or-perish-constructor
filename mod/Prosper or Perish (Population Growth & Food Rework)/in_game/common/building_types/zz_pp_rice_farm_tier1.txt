@@ -35,7 +35,7 @@ ai_construct_weight = {
         add = {
             value = "market.market_price(goods:rice)"
             divide = "default_price(goods:rice)"
-            multiply = 2
+            multiply = 1.6
             multiply = { value = 1 add = modifier:local_rice_output_modifier subtract = pp_stored_food_staple_line }
             subtract = 1
             multiply = 400
@@ -79,7 +79,7 @@ unique_production_methods = {
         manual_labor = 0.064
         produced = rice
         output = 0.736
-        debug_max_profit = 0.299
+        debug_max_profit = 0.214
         category = building_maintenance
     }
 }
@@ -90,7 +90,7 @@ unique_production_methods = {
         rice = 0.015
         produced = local_food
         output = 2.3
-        debug_max_profit = 37.333
+        debug_max_profit = 46.917
         category = building_maintenance
     }
 }

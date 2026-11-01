@@ -2472,12 +2472,12 @@ def test_silk_is_a_farmed_upper_class_luxury() -> None:
 
 def test_jewelry_guild_cuts_gems_in_its_base_slot() -> None:
     """2026-10-14 (Jan): gems feed the jewelry guild's base slot (gem cutting) next to gold, silver and copper, at the
-    metal bases' margin at default prices (0.75 gems x 4 + labour for 0.7 jewelry x 5)."""
+    metal bases' margin at default prices (0.67 gems x 4 + labour for 0.7 jewelry x 5)."""
     text = (ROOT / "blueprints" / "accepted" / "buildings" / "jewelry_guild.yml").read_text(encoding="utf-8")
     slot = re.search(r"- name: slot_1\n    methods:\n((?:    - \S+\n)+)", text).group(1)
     assert "pp_jewelry_guild_gems_base" in slot and "pp_jewelry_guild_silver_base" in slot
     body = re.search(r"pp_jewelry_guild_gems_base = \{\n(.*?)\n\s*\}", text, flags=re.S).group(1)
-    assert re.search(r"^\s*gems = 0\.75$", body, flags=re.M) and re.search(r"^\s*output = 0\.7$", body, flags=re.M)
+    assert re.search(r"^\s*gems = 0\.67$", body, flags=re.M) and re.search(r"^\s*output = 0\.7$", body, flags=re.M)
 
 
 def test_staple_and_victuals_transport_costs() -> None:
@@ -2976,10 +2976,10 @@ def test_victuals_trade_construction_and_coastal_saltern_debug_keys_are_localize
     assert isinstance(lined_pans, CList)
     values = _entry_values(lined_pans)
     assert values["output"] == 0.24
-    # production labour (primary class share) replaced part of the goods on 2026-09-23
-    assert values["clay"] == 1.09
-    assert values["pottery"] == 0.31
-    assert values["manual_labor"] == 0.19
+    # production labour (primary class share + extra_share) replaced part of the goods
+    assert values["clay"] == 0.97
+    assert values["pottery"] == 0.28
+    assert values["manual_labor"] == 0.28
 
 
 def test_salt_rgo_bonus_reduces_food_decay_without_affecting_saltpeter() -> None:

@@ -36,9 +36,9 @@ building:
     graphical_tags = { factory_large }
     unique_production_methods = {
         pp_iron_foundry_iron_foundry_maintenance = {
-            iron = 2.261
-            coal = 0.561
-            manual_labor = 0.663
+            iron = 2.04
+            coal = 0.51
+            manual_labor = 1.55
             category = manufactory_input
             produced = tools
             output = 3.698
@@ -47,8 +47,8 @@ building:
         pp_iron_foundry_legacy_stone_tools_guild_maintenance = {
             icon_type = goods
             icon = stone
-            stone = 1.17
-            manual_labor = 0.2
+            stone = 1.05
+            manual_labor = 0.31
             produced = tools
             output = 0.52
             debug_max_profit = manufactory_profit_margin
@@ -57,8 +57,8 @@ building:
         pp_iron_foundry_legacy_copper_tools_guild_maintenance = {
             icon_type = goods
             icon = copper
-            copper = 0.87
-            manual_labor = 0.44
+            copper = 0.77
+            manual_labor = 0.74
             produced = tools
             output = 1.16
             debug_max_profit = manufactory_profit_margin
@@ -67,9 +67,9 @@ building:
         pp_iron_foundry_legacy_bronze_tools_guild_maintenance = {
             icon_type = goods
             icon = tin
-            copper = 0.89
-            tin = 0.073
-            manual_labor = 0.45
+            copper = 0.79
+            tin = 0.065
+            manual_labor = 0.79
             produced = tools
             output = 1.25
             debug_max_profit = manufactory_profit_margin
@@ -78,8 +78,8 @@ building:
         pp_iron_foundry_legacy_metalwork_workshop_maintenance = {
             icon_type = building_type
             icon = tools_workshop
-            iron = 1.87
-            manual_labor = 0.73
+            iron = 1.7
+            manual_labor = 1.35
             produced = tools
             output = 2.77
             debug_max_profit = manufactory_profit_margin
@@ -90,7 +90,7 @@ building:
         pp_iron_foundry_market_sales = {
             offset = 0.034
             produced = tools
-            output = 0.007
+            output = 0.011
             category = building_maintenance
         }
     }

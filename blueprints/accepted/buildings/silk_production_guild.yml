@@ -40,8 +40,8 @@ building:
         pp_silk_production_guild_silk_production_guild_maintenance = {
             icon_type = building_type
             icon = silk_production_guild
-            fiber_crops = 0.86
-            manual_labor = 0.28
+            fiber_crops = 0.77
+            manual_labor = 0.46
             produced = silk
             output = 0.3 # 0.6 until 2026-10-14; silk comes from farms; fiber crops make silk only when it is dear
             category = guild_input
@@ -49,9 +49,9 @@ building:
     }
     unique_production_methods = {
         pp_silk_production_guild_market_sales = {
-            offset = 0.018
+            offset = 0.015
             produced = silk
-            output = 0.003
+            output = 0.004
             category = building_maintenance
         }
     }

@@ -34,10 +34,10 @@ building:
     graphical_tags = { factory_large }
     unique_production_methods = {
         pp_furniture_mill_furniture_mill_maintenance = {
-            lumber = 9.32 # more timber per piece, machine offcuts
-            dyes = 1.02
-            tools = 0.72 # tools cut to a running cost (~10 %)
-            manual_labor = 0.96
+            lumber = 8.45 # more timber per piece, machine offcuts
+            dyes = 0.92
+            tools = 0.65 # tools cut to a running cost (~10 %)
+            manual_labor = 3.1
             produced = furniture
             output = 8.948
             debug_max_profit = mills_profit_margin
@@ -46,9 +46,9 @@ building:
     }
     unique_production_methods = {
         pp_furniture_mill_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = furniture
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

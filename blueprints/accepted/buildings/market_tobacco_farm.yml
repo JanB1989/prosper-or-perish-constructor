@@ -71,10 +71,10 @@ building:
             category = building_maintenance
         }
         pp_market_tobacco_farm_sorting_tables = {
-            furniture = 0.12 # sorting tables and hogsheads
-            fiber_crops = 0.052 # bundle ties
-            paper = 0.04 # packing marks and sale records
-            manual_labor = 0.092
+            furniture = 0.11 # sorting tables and hogsheads
+            fiber_crops = 0.047 # bundle ties
+            paper = 0.036 # packing marks and sale records
+            manual_labor = 0.14
             produced = tobacco
             output = 0.354
             category = building_maintenance
@@ -85,9 +85,9 @@ building:
             category = building_maintenance
         }
         pp_market_tobacco_farm_curing_racks = {
-            furniture = 0.172 # curing racks and hogsheads
-            fiber_crops = 0.088 # leaf ties
-            manual_labor = 0.108
+            furniture = 0.15 # curing racks and hogsheads
+            fiber_crops = 0.078 # leaf ties
+            manual_labor = 0.19
             produced = tobacco
             output = 0.445
             category = building_maintenance
@@ -95,9 +95,9 @@ building:
     }
     unique_production_methods = {
         pp_market_tobacco_farm_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = tobacco
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

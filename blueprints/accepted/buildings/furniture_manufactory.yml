@@ -33,10 +33,10 @@ building:
     obsolete = furniture_workshop
     unique_production_methods = {
         pp_furniture_manufactory_furniture_manufactory_maintenance = {
-            lumber = 3.74 # finer timber and veneers, more offcuts
-            dyes = 0.391
-            tools = 0.297 # tools cut to a running cost (~10 %)
-            manual_labor = 0.731
+            lumber = 3.39 # finer timber and veneers, more offcuts
+            dyes = 0.35
+            tools = 0.27 # tools cut to a running cost (~10 %)
+            manual_labor = 1.6
             produced = furniture
             output = 3.727
             category = manufactory_input
@@ -45,9 +45,9 @@ building:
     }
     unique_production_methods = {
         pp_furniture_manufactory_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = furniture
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

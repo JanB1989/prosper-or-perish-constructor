@@ -71,8 +71,8 @@ building:
             category = building_maintenance
         }
         pp_saffron_kiln_croft_livestock_manure = {
-            livestock = 0.156 # manure for richer crocus beds
-            manual_labor = 0.036
+            livestock = 0.14 # manure for richer crocus beds
+            manual_labor = 0.06
             produced = saffron
             output = 0.2
             category = building_maintenance
@@ -83,9 +83,9 @@ building:
             category = building_maintenance
         }
         pp_saffron_kiln_croft_pottery_kilns = {
-            pottery = 0.276 # trays and covered drying pans
-            coal = 0.12 # light brazier and kiln fuel
-            manual_labor = 0.084
+            pottery = 0.25 # trays and covered drying pans
+            coal = 0.11 # light brazier and kiln fuel
+            manual_labor = 0.13
             produced = saffron
             output = 0.38
             category = building_maintenance
@@ -93,9 +93,9 @@ building:
     }
     unique_production_methods = {
         pp_saffron_kiln_croft_market_sales = {
-            offset = 0.015
+            offset = 0.019
             produced = saffron
-            output = 0.002
+            output = 0.004
             category = building_maintenance
         }
     }

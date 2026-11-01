@@ -353,11 +353,14 @@ LEG_STEP = Decimal("0.001")  # method quantities keep at most three decimals
 
 def _leg_amounts(value: float, price: float, margin: float, input_price: float) -> tuple[float, float]:
     """(output, input amount) in steps of 0.001, output worth ``value`` to twice that at base prices, picked so the
-    rounded amounts hold ``margin`` as closely as the step allows."""
+    rounded amounts hold ``margin`` as closely as the step allows; larger, up to eight times ``value``, only while the
+    margin is still more than 1 % off."""
     low = max(1, math.ceil(value / price / float(LEG_STEP) - 1e-9))
     high = max(low, math.ceil(2 * value / price / float(LEG_STEP) - 1e-9))
     best: tuple[float, Decimal, Decimal] | None = None
-    for k in range(low, high + 1):
+    for k in range(low, 4 * high + 1):
+        if k > high and best[0] <= 0.01 * margin:
+            break
         output = LEG_STEP * k
         amount = max((output * Decimal(str(price)) / Decimal(str(margin * input_price))).quantize(LEG_STEP, rounding=ROUND_HALF_UP), LEG_STEP)
         error = abs(float(output) * price / (float(amount) * input_price) - margin)

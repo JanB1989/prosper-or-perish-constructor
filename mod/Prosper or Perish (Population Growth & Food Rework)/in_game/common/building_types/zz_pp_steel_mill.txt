@@ -20,12 +20,12 @@ unique_production_methods = {
     pp_steel_mill_steel_mill_maintenance = {
         icon_type = building_type
         icon = steel_mill
-        iron = 6.88
-        coal = 6.88
-        manual_labor = 1.58
+        iron = 6.24
+        coal = 6.24
+        manual_labor = 5.1
         produced = steel
         output = 8.946
-        debug_max_profit = 0.070
+        debug_max_profit = mills_profit_margin
         category = mills_input
     }
 }
@@ -33,7 +33,7 @@ unique_production_methods = {
     pp_steel_mill_market_sales = {
         icon_type = goods
         icon = steel
-        offset = 0.014
+        offset = 0.009
         produced = steel
         output = 0.002
         category = building_maintenance

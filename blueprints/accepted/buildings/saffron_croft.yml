@@ -66,9 +66,9 @@ building:
             category = building_maintenance
         }
         pp_saffron_croft_toasting_braziers = {
-            pottery = 0.344 # warming pans
-            coal = 0.172 # brazier fuel
-            manual_labor = 0.156
+            pottery = 0.31 # warming pans
+            coal = 0.15 # brazier fuel
+            manual_labor = 0.23
             produced = saffron
             output = 0.282
             category = building_maintenance
@@ -76,9 +76,9 @@ building:
     }
     unique_production_methods = {
         pp_saffron_croft_market_sales = {
-            offset = 0.015
+            offset = 0.019
             produced = saffron
-            output = 0.002
+            output = 0.004
             category = building_maintenance
         }
     }

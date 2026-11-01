@@ -32,11 +32,11 @@ building:
     graphical_tags = { factory_small }
     unique_production_methods = {
         pp_furniture_guild_furniture_maintenance = {
-            lumber = 0.63
-            dyes = 0.098
-            tools = 0.063 # tools cut to a running cost (~10 %)
-            beeswax = 0.056 # wax polish for the finish
-            manual_labor = 0.266
+            lumber = 0.56
+            dyes = 0.087
+            tools = 0.056 # tools cut to a running cost (~10 %)
+            beeswax = 0.049 # wax polish for the finish
+            manual_labor = 0.47
             produced = furniture
             output = 0.7
             debug_max_profit = guild_profit_margin
@@ -45,9 +45,9 @@ building:
     }
     unique_production_methods = {
         pp_furniture_guild_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = furniture
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

@@ -41,9 +41,9 @@ unique_production_methods = {
     pp_pearl_fishery_dhow_diving_crews = {
         icon_type = building_type
         icon = pearl_fishery
-        naval_supplies = 0.025
-        victuals = 0.049
-        manual_labor = 0.048
+        naval_supplies = 0.022
+        victuals = 0.044
+        manual_labor = 0.072
         produced = pearls
         output = 0.078
         category = building_maintenance
@@ -53,9 +53,9 @@ unique_production_methods = {
     pp_pearl_fishery_market_sales = {
         icon_type = goods
         icon = pearls
-        offset = 0.018
+        offset = 0.015
         produced = pearls
-        output = 0.003
+        output = 0.004
         category = building_maintenance
     }
 }

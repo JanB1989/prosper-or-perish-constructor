@@ -18,13 +18,13 @@ unique_production_methods = {
     pp_pottery_workshop_pottery_w_maintenance = {
         icon_type = building_type
         icon = pottery_workshop
-        clay = 1.287
-        lumber = 0.182 # kiln fuel
-        tools = 0.036 # tools cut to a running cost (~10 %)
-        manual_labor = 0.117
+        clay = 1.16
+        lumber = 0.16 # kiln fuel
+        tools = 0.032 # tools cut to a running cost (~10 %)
+        manual_labor = 0.23
         produced = pottery
         output = 1.49
-        debug_max_profit = 0.195
+        debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
 }
@@ -32,9 +32,9 @@ unique_production_methods = {
     pp_pottery_workshop_market_sales = {
         icon_type = goods
         icon = pottery
-        offset = 0.015
+        offset = 0.017
         produced = pottery
-        output = 0.01
+        output = 0.018
         category = building_maintenance
     }
 }

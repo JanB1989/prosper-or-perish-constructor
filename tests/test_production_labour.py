@@ -119,6 +119,27 @@ def test_apply_moves_the_class_share_onto_labour_and_keeps_the_cost(repo: Path) 
     assert "            stone = 0.0\n            manual_labor = 0.4\n" in text
 
 
+def test_extra_share_adds_to_the_class_but_spares_food_buildings_and_skipped_classes(repo: Path) -> None:
+    project = repo / "constructor.toml"
+    project.write_text(CONFIG.replace("max_goods = 3\n", 'max_goods = 3\nextra_share = 0.1\nextra_share_spare_goods = ["province_food_sales"]\n'), encoding="utf-8")
+    assert pl.load_config(project).extra_share == 0.1 and "wheat" in pl.load_config(project).extra_share_spare_goods  # the staple foods come along
+    pl.apply(repo, project, PRICES)
+    wheat = _methods(repo)["pp_brewery_wheat"]
+    assert wheat.inputs["manual_labor"] / sum(a * (PRICES[g] * (0.2 if g == "manual_labor" else 1)) for g, a in wheat.inputs.items()) == pytest.approx(0.30, abs=0.01)
+
+    path = repo / pl.BLUEPRINT_ROOT_RELATIVE / "buildings/brewery.yml"
+    path.write_text(BREWERY.replace("produced = beer\n            output = 0.5", "produced = wheat\n            output = 0.5"), encoding="utf-8")
+    pl.apply(repo, project, PRICES)  # a building making a staple food keeps the class share
+    wheat = _methods(repo)["pp_brewery_wheat"]
+    assert wheat.inputs["manual_labor"] / sum(a * (PRICES[g] * (0.2 if g == "manual_labor" else 1)) for g, a in wheat.inputs.items()) == pytest.approx(0.20, abs=0.01)
+
+    path.write_text(BREWERY, encoding="utf-8")
+    project.write_text(project.read_text(encoding="utf-8").replace("extra_share = 0.1\n", 'extra_share = 0.1\nextra_share_skip = ["craft"]\n'), encoding="utf-8")
+    pl.apply(repo, project, PRICES)  # a skipped class too
+    wheat = _methods(repo)["pp_brewery_wheat"]
+    assert wheat.inputs["manual_labor"] / sum(a * (PRICES[g] * (0.2 if g == "manual_labor" else 1)) for g, a in wheat.inputs.items()) == pytest.approx(0.20, abs=0.01)
+
+
 def test_base_methods_pay_labour_worth_a_share_of_their_output(repo: Path) -> None:
     pl.apply(repo, repo / "constructor.toml", PRICES)
     base = _methods(repo)["pp_brewery_base"]

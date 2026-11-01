@@ -17,42 +17,42 @@ unique_production_methods = {
     pp_tools_workshop_metalwork_workshop_maintenance = {
         icon_type = building_type
         icon = tools_workshop
-        iron = 1.027
-        manual_labor = 0.403
+        iron = 0.93
+        manual_labor = 0.74
         produced = tools
         output = 1.492
-        debug_max_profit = 0.054
+        debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
     pp_tools_workshop_legacy_stone_tools_guild_maintenance = {
         icon_type = goods
         icon = stone
-        stone = 0.64
-        manual_labor = 0.11
+        stone = 0.58
+        manual_labor = 0.17
         produced = tools
         output = 0.28
-        debug_max_profit = 0.069
+        debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
     pp_tools_workshop_legacy_copper_tools_guild_maintenance = {
         icon_type = goods
         icon = copper
-        copper = 0.48
-        manual_labor = 0.24
+        copper = 0.42
+        manual_labor = 0.41
         produced = tools
         output = 0.63
-        debug_max_profit = 0.080
+        debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
     pp_tools_workshop_legacy_bronze_tools_guild_maintenance = {
         icon_type = goods
         icon = tin
-        copper = 0.49
-        tin = 0.04
-        manual_labor = 0.25
+        copper = 0.43
+        tin = 0.036
+        manual_labor = 0.43
         produced = tools
         output = 0.67
-        debug_max_profit = 0.080
+        debug_max_profit = workshop_profit_margin
         category = workshop_input
     }
 }
@@ -62,7 +62,7 @@ unique_production_methods = {
         icon = tools
         offset = 0.034
         produced = tools
-        output = 0.007
+        output = 0.011
         category = building_maintenance
     }
 }

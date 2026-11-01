@@ -120,6 +120,10 @@ NAI = {
 }
 
 NEconomy = {
+	# Branch stockpile-prices (2026-11-01, Jan): minted metal follows income (about 0.2-0.3 x income x the coin slider at old
+	# prices in every run), so gold and silver stood at 3-4x their production by 1834 with two thirds unmet. With the lower
+	# default prices (income about -25 %) this makes about x0.33 in all; x0.25 would leave metals too cheap early.
+	INFLATION_MINTING_GOLD_DEMANDS_FACTOR = 0.45 # 1.0
  	SUPPLY_AND_DEMAND_STABILITY_OFFSET_CONSTANT = 0.5
  	PRODUCTION_EFFIENCY_BONUS_PER_LEVEL = 0.012
  	# Stored-food cap (EU5 1.4): the engine's storage term (off: NPop.FOOD_STORAGE_POP_GROWTH = 0) would be full at
@@ -169,8 +173,8 @@ NMarket = {
  	MAX_PRICE_IMPACT = 1.5 # 6
 	# Stockpile prices (branch stockpile-prices, 2026-10-31, Jan): the stock bleed (5 % of the stock a month) runs from the
 	# first unit and counts 6.7x as supply in the price, so the price follows months of stock, the same for every good;
-	# with default prices x2 (goods/zz_pp_goods_stockpile_prices.txt) a market with supply = demand sits at the old price
-	# at 6 months of stock, at 2x it when empty, 0.6x at 24 months.
+	# with default prices x1.6 (goods/zz_pp_goods_stockpile_prices.txt) a market with supply = demand sits at the old price
+	# at 3.2 months of stock, at 1.6x it when empty, 0.5x at 24 months.
 	MARKET_MIN_STOCKPILE_TO_ALLOW_EXTRA_TRADE = 0 # 0.5
 	MARKET_STOCKPILE_FULL_EXTRA_TRADE_THRESHOLD = 0.01 # 0.75
 	MARKET_STOCKPILE_PERCENTAGE_FOR_EXTRA_TRADE = 0.05 # 0.05
@@ -202,6 +206,9 @@ NMarket = {
 }
 
 NPop = {
+	# Branch stockpile-prices (2026-11-01, Jan): pop demand per head = 1 + this x development, for every good: about -12 % late
+	# in run 67859be2's terms, and it grows slower with development. Staple foods have room to spare.
+	DEVELOPMENT_SCALE_ON_DEMAND = 0.04 # 0.05
  	# GOODS_PRICE_SATISFACTION_SCALE vanilla -0.05 since 2026-10-05 (was -0.10, then -0.06; French pops sat at 0.2-0.3)
 	POP_JOB_SURPLUS_SCALE_CAP = 1 # vanilla 5
 	# EU5 1.4 migration after conquest and under discrimination. Migration moves people, it is not growth; in PP it

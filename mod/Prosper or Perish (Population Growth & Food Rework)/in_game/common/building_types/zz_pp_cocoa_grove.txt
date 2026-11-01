@@ -43,9 +43,9 @@ unique_production_methods = {
     pp_cocoa_grove_fermentation_houses = {
         icon_type = building_type
         icon = cocoa_grove
-        furniture = 0.296 # light fermentation boxes and raised trays
-        fiber_crops = 0.116 # drying mats, sacks, and ties
-        manual_labor = 0.24
+        furniture = 0.26 # light fermentation boxes and raised trays
+        fiber_crops = 0.1 # drying mats, sacks, and ties
+        manual_labor = 0.38
         produced = cocoa
         output = 0.567
         category = building_maintenance
@@ -55,9 +55,9 @@ unique_production_methods = {
     pp_cocoa_grove_market_sales = {
         icon_type = goods
         icon = cocoa
-        offset = 0.018
+        offset = 0.015
         produced = cocoa
-        output = 0.003
+        output = 0.004
         category = building_maintenance
     }
 }

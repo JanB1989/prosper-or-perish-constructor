@@ -55,7 +55,7 @@ unique_production_methods = {
         wild_game = 0.08
         produced = local_food
         output = 0.96
-        debug_max_profit = 2.000
+        debug_max_profit = 2.750
         category = building_maintenance
     }
 }
@@ -63,9 +63,9 @@ unique_production_methods = {
     pp_eng_royal_forest_market_sales = {
         icon_type = goods
         icon = wild_game
-        offset = 0.015
+        offset = 0.017
         produced = wild_game
-        output = 0.01
+        output = 0.018
         category = building_maintenance
     }
 }

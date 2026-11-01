@@ -41,24 +41,24 @@ building:
     unique_production_methods = {
         pp_fine_cloth_workshop_standard_fine_cloth_workshop_maintenance = {
             produced = fine_cloth
-            dyes = 0.17
-            manual_labor = 0.09
+            dyes = 0.16
+            manual_labor = 0.13
             output = 0.162
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_fine_cloth_workshop_alum_fine_cloth_workshop_maintenance = {
-            alum = 0.077
-            dyes = 0.338
-            manual_labor = 0.195
+            alum = 0.07
+            dyes = 0.31
+            manual_labor = 0.33
             produced = fine_cloth
             output = 0.34
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_fine_cloth_workshop_fur_trim_workshop_maintenance = {
-            fur = 0.806
-            manual_labor = 0.169
+            fur = 0.72
+            manual_labor = 0.34
             produced = fine_cloth
             output = 0.34
             debug_max_profit = workshop_profit_margin
@@ -67,8 +67,8 @@ building:
     }
     unique_production_methods = {
         pp_fine_cloth_workshop_wool_weavers_workshop_maintenance = {
-            wool = 1.625
-            manual_labor = 0.442
+            wool = 1.46
+            manual_labor = 0.85
             produced = fine_cloth
             output = 0.818
             category = workshop_input
@@ -81,24 +81,24 @@ building:
                     has_variable = spanish_cloth_industry
                 }
             }
-            wool = 1.625
-            manual_labor = 0.442
+            wool = 1.46
+            manual_labor = 0.85
             produced = fine_cloth
             output = 0.818
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_fine_cloth_workshop_fine_cloth_workshop_maintenance = {
-            cloth = 1.352
-            manual_labor = 0.455
+            cloth = 1.22
+            manual_labor = 0.85
             produced = fine_cloth
             output = 0.818
             category = workshop_input
             debug_max_profit = workshop_profit_margin
         }
         pp_fine_cloth_workshop_silk_weavers_workshop_maintenance = {
-            silk = 1.365
-            manual_labor = 0.611
+            silk = 1.23
+            manual_labor = 1.15
             produced = fine_cloth
             output = 1.091
             category = workshop_input
@@ -107,9 +107,9 @@ building:
     }
     unique_production_methods = {
         pp_fine_cloth_workshop_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = fine_cloth
-            output = 0.002
+            output = 0.003
             category = building_maintenance
         }
     }

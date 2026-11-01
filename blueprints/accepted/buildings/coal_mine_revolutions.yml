@@ -70,9 +70,9 @@ building:
             category = building_maintenance
         }
         pp_coal_mine_revolutions_fireclay = {
-            lumber = 0.062 # props, weathering sheds
-            tools = 0.006 # picks, shovels
-            manual_labor = 0.007
+            lumber = 0.056 # props, weathering sheds
+            tools = 0.005 # picks, shovels
+            manual_labor = 0.021
             produced = clay
             output = 0.302
             category = building_maintenance
@@ -83,11 +83,11 @@ building:
             category = building_maintenance
         }
         pp_coal_mine_revolutions_coal = {
-            lumber = 0.75 # props, headframes, tubs
-            tools = 0.14 # picks, engine fittings
-            beeswax = 0.16 # candles, engine grease
-            tar = 0.45 # tarred winding ropes, pump packing (a pit does not buy its own coal)
-            manual_labor = 0.15
+            lumber = 0.68 # props, headframes, tubs
+            tools = 0.13 # picks, engine fittings
+            beeswax = 0.14 # candles, engine grease
+            tar = 0.41 # tarred winding ropes, pump packing (a pit does not buy its own coal)
+            manual_labor = 0.42
             produced = coal
             output = 2.25
             category = building_maintenance
@@ -95,9 +95,9 @@ building:
     }
     unique_production_methods = {
         pp_coal_mine_revolutions_market_sales = {
-            offset = 0.015
+            offset = 0.017
             produced = coal
-            output = 0.005
+            output = 0.009
             category = building_maintenance
         }
     }

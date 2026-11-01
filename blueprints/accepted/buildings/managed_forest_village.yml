@@ -25,8 +25,8 @@ building:
   - name: slot_0
     methods:
     - pp_managed_forest_village_base_wild_game
-    - pp_managed_forest_village_base_fur
     - pp_managed_forest_village_base_beeswax
+    - pp_managed_forest_village_base_fur
     - pp_managed_forest_village_base_leather
   - name: slot_1
     methods:
@@ -88,15 +88,15 @@ building:
             output = 0.135
             category = building_maintenance
         }
-        pp_managed_forest_village_base_fur = {
-            manual_labor = 0.054
-            produced = fur
-            output = 0.135
-            category = building_maintenance
-        }
         pp_managed_forest_village_base_beeswax = {
             manual_labor = 0.054
             produced = beeswax
+            output = 0.135
+            category = building_maintenance
+        }
+        pp_managed_forest_village_base_fur = {
+            manual_labor = 0.054
+            produced = fur
             output = 0.135
             category = building_maintenance
         }
@@ -167,9 +167,9 @@ building:
     }
     unique_production_methods = {
         pp_managed_forest_village_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = leather
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }
@@ -199,6 +199,7 @@ localization:
     managed_forest_village_slot_0: Managed Forest
     managed_forest_village_slot_1: Forest Work
     managed_forest_village_slot_2: Provisioning
+    managed_forest_village_slot_3: Market
     pp_managed_forest_village: Managed Forest Villages
     pp_managed_forest_village_base_beeswax: Forest Apiaries
     pp_managed_forest_village_base_fur: Forest Fur
@@ -214,7 +215,6 @@ localization:
     pp_managed_forest_village_tannery: Managed Forest Tanning
     pp_managed_forest_village_market_sales: Market Sales
     pp_managed_forest_village_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
-    managed_forest_village_slot_3: Market
 icon:
   source_png: ../assets/icons/managed_forest_village.png
   output_dds: managed_forest_village.dds

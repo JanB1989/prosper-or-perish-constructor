@@ -40,24 +40,24 @@ building:
     unique_production_methods = {
         pp_fine_cloth_guild_standard_fine_cloth_guild_maintenance = {
             produced = fine_cloth
-            dyes = 0.084
-            manual_labor = 0.059
+            dyes = 0.076
+            manual_labor = 0.091
             output = 0.07
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
         pp_fine_cloth_guild_alum_fine_cloth_guild_maintenance = {
-            alum = 0.036
-            dyes = 0.147
-            manual_labor = 0.119
+            alum = 0.032
+            dyes = 0.13
+            manual_labor = 0.2
             produced = fine_cloth
             output = 0.14
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_fine_cloth_guild_fur_trim_guild_maintenance = {
-            fur = 0.35
-            manual_labor = 0.112
+            fur = 0.31
+            manual_labor = 0.19
             produced = fine_cloth
             output = 0.14
             debug_max_profit = guild_profit_margin
@@ -66,16 +66,16 @@ building:
     }
     unique_production_methods = {
         pp_fine_cloth_guild_fine_cloth_guild_maintenance = {
-            cloth = 0.595
-            manual_labor = 0.287
+            cloth = 0.53
+            manual_labor = 0.48
             produced = fine_cloth
             output = 0.35
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_fine_cloth_guild_wool_weavers_maintenance = {
-            wool = 0.714
-            manual_labor = 0.294
+            wool = 0.64
+            manual_labor = 0.48
             produced = fine_cloth
             output = 0.35
             debug_max_profit = guild_profit_margin
@@ -88,16 +88,16 @@ building:
                     has_variable = spanish_cloth_industry
                 }
             }
-            wool = 0.714
-            manual_labor = 0.294
+            wool = 0.64
+            manual_labor = 0.48
             produced = fine_cloth
             output = 0.35
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
         pp_fine_cloth_guild_silk_weavers_maintenance = {
-            silk = 0.63
-            manual_labor = 0.392
+            silk = 0.56
+            manual_labor = 0.67
             produced = fine_cloth
             output = 0.49
             category = guild_input
@@ -106,9 +106,9 @@ building:
     }
     unique_production_methods = {
         pp_fine_cloth_guild_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = fine_cloth
-            output = 0.002
+            output = 0.003
             category = building_maintenance
         }
     }

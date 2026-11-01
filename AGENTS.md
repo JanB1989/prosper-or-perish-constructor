@@ -428,13 +428,23 @@
 
 - Exploration branch, never merged unasked. Prices follow the market stockpile: `NMarket.STOCKPILE_TRADE_IMPACT_ON_SUPPLY_SCALE`
   6.7 with the stock bleed from the first unit (`MARKET_MIN_STOCKPILE_TO_ALLOW_EXTRA_TRADE` 0,
-  `MARKET_STOCKPILE_FULL_EXTRA_TRADE_THRESHOLD` 0.01), every default price x2 except the floor-pinned dummy goods
-  (`in_game/common/goods/zz_pp_goods_stockpile_prices.txt`, `[stockpile_prices]`), stockpile cap x10 (development 100,
-  market centre 250). A market with supply = demand sits at the old price at 6 months of stock, at 2x it when empty.
+  `MARKET_STOCKPILE_FULL_EXTRA_TRADE_THRESHOLD` 0.01), every default price x1.6 except the floor-pinned dummy goods
+  (`in_game/common/goods/zz_pp_goods_stockpile_prices.txt`, written by `ppc stockpile apply` from `[stockpile_prices]`;
+  `check` must report it in step, a test enforces it), stockpile cap x10 (development 100, market centre 250). A market
+  with supply = demand sits at the default price when empty and at the old price at 3.2 months of stock. Price / default
+  depends only on supply, demand and stock, never on the raise: the raise moves the price level and nominal incomes.
 - `production_labour.load_prices` divides the raise back out, so every pass that turns gold into goods amounts (labour,
   gate legs, logistics, Old Ways, crop farms, ship upkeep) keeps its amounts; `profit_margins.goods_prices` reads what the
-  engine reads. The Market legs run at margin 0.667 (steel 0.707): they open at 1.575x the old base price, about 1.3
-  months of stock. Iron and lumber lost `ai_rgo_expansion_priority` (0 here, 0.025 on 0.10).
+  engine reads. After changing the raise: `ppc stockpile apply`, `ppc crop-farms --write`, labour, legacy, logistics, gate.
+  The Market legs run at margin 1.06 (steel 1.12): they open at 0.62x the default price, about 3.3 months of stock (5.5
+  with +20 % output), and that gate is where stocks settle, whatever the demand. Iron and lumber lost
+  `ai_rgo_expansion_priority` (0 here, 0.025 on 0.10).
+- Demand (2026-11-01, Jan; from run 67859be2, where demand / production sat at 1.1-1.15 from 1550 on, not tested in game):
+  `[stockpile_prices.pop_demand]` is a `demand_multiply` on every pop type per good (the engine's price brake has no setting
+  per good or pop type and only acts above the default price); `NPop.DEVELOPMENT_SCALE_ON_DEMAND` 0.04;
+  `NEconomy.INFLATION_MINTING_GOLD_DEMANDS_FACTOR` 0.45 (minted metal follows income); `[production_labour] extra_share`
+  0.09 on every share class except `extra_share_skip` and food buildings (a method producing a staple food or a good in
+  `extra_share_spare_goods`, or `extra_share_spare_buildings`): the cost stays, the goods scale down about 10 %.
 - `[stockpile_prices.price_factor]` (0.85-1.15 per good, from run 06aedac2's relative prices; staple foods never cut)
   multiplies the raise; the passes and the crop farm weight divide it back out too (`stockpile_price_raise`), so only
   the engine's market price moves. Crop farm `ai_construct_weight` multiplies price / default by the raise (a weight

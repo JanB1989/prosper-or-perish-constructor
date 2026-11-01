@@ -32,18 +32,18 @@ building:
     graphical_tags = { factory_small }
     unique_production_methods = {
         pp_apothecary_natural_medicine_apotechary = {
-            wild_game = 0.04
-            fiber_crops = 0.16
-            manual_labor = 0.067
+            wild_game = 0.037
+            fiber_crops = 0.15
+            manual_labor = 0.09
             produced = medicaments
             output = 0.5
             debug_max_profit = guild_profit_margin
             category = guild_input
         }
         pp_apothecary_ancient_medicine_apotechary = {
-            mercury = 0.016
-            ivory = 0.08
-            manual_labor = 0.061
+            mercury = 0.014
+            ivory = 0.072
+            manual_labor = 0.099
             produced = medicaments
             output = 0.5
             debug_max_profit = guild_profit_margin
@@ -52,9 +52,9 @@ building:
     }
     unique_production_methods = {
         pp_apothecary_market_sales = {
-            offset = 0.015
+            offset = 0.017
             produced = medicaments
-            output = 0.01
+            output = 0.018
             category = building_maintenance
         }
     }

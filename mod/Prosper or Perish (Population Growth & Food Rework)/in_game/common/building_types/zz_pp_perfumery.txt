@@ -21,12 +21,12 @@ unique_production_methods = {
     pp_perfumery_blended_incense = {
         icon_type = building_type
         icon = perfumery
-        liquor = 0.19
-        pepper = 0.23
-        manual_labor = 0.13
+        liquor = 0.17
+        pepper = 0.21
+        manual_labor = 0.28
         produced = incense
         output = 1
-        debug_max_profit = 0.406
+        debug_max_profit = 0.140
         category = guild_input
     }
 }
@@ -34,9 +34,9 @@ unique_production_methods = {
     pp_perfumery_market_sales = {
         icon_type = goods
         icon = incense
-        offset = 0.015
+        offset = 0.019
         produced = incense
-        output = 0.004
+        output = 0.008
         category = building_maintenance
     }
 }

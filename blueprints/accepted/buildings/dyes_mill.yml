@@ -34,9 +34,9 @@ building:
     graphical_tags = { factory_large }
     unique_production_methods = {
         pp_dyes_mill_dyesmill_maintenance = {
-            alum = 2.716
-            lumber = 3.97
-            manual_labor = 0.61
+            alum = 2.46
+            lumber = 3.59
+            manual_labor = 2.05
             produced = dyes
             output = 4.0
             debug_max_profit = mills_profit_margin
@@ -45,8 +45,8 @@ building:
         pp_dyes_mill_legacy_dyes_guild_maintenance = {
             icon_type = goods
             icon = dyes
-            lumber = 2.17
-            manual_labor = 0.63
+            lumber = 1.94
+            manual_labor = 1.05
             produced = dyes
             output = 1.13
             debug_max_profit = mills_profit_margin
@@ -55,9 +55,9 @@ building:
     }
     unique_production_methods = {
         pp_dyes_mill_market_sales = {
-            offset = 0.018
+            offset = 0.015
             produced = dyes
-            output = 0.003
+            output = 0.004
             category = building_maintenance
         }
     }

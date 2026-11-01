@@ -71,21 +71,21 @@ building:
             category = building_maintenance
         }
         pp_lead_mine_bole_silver = {
-            lumber = 0.036 # props, cupellation hearths
-            tools = 0.006 # picks, tongs
-            lead = 0.018
-            coal = 0.012 # cupellation fuel
-            manual_labor = 0.016
+            lumber = 0.032 # props, cupellation hearths
+            tools = 0.005 # picks, tongs
+            lead = 0.016
+            coal = 0.011 # cupellation fuel
+            manual_labor = 0.032
             produced = silver
             output = 0.029
             category = building_maintenance
         }
         pp_lead_mine_bole_gold = {
-            lumber = 0.036 # props, parting hearths
-            tools = 0.006 # picks, tongs
-            lead = 0.018
-            coal = 0.012 # parting and cupellation fuel
-            manual_labor = 0.016
+            lumber = 0.032 # props, parting hearths
+            tools = 0.005 # picks, tongs
+            lead = 0.016
+            coal = 0.011 # parting and cupellation fuel
+            manual_labor = 0.032
             produced = goods_gold
             output = 0.026
             category = building_maintenance
@@ -96,11 +96,11 @@ building:
             category = building_maintenance
         }
         pp_lead_mine_bole_lead = {
-            lumber = 0.4 # props, kiln-dried bole wood
-            tools = 0.075 # picks, buckers, hammers
-            beeswax = 0.06 # mine candles
-            coal = 0.22 # charcoal for the bole hearths
-            manual_labor = 0.21
+            lumber = 0.36 # props, kiln-dried bole wood
+            tools = 0.068 # picks, buckers, hammers
+            beeswax = 0.055 # mine candles
+            coal = 0.2 # charcoal for the bole hearths
+            manual_labor = 0.35
             produced = lead
             output = 0.952
             category = building_maintenance
@@ -108,9 +108,9 @@ building:
     }
     unique_production_methods = {
         pp_lead_mine_bole_smelting_market_sales = {
-            offset = 0.015
+            offset = 0.017
             produced = lead
-            output = 0.005
+            output = 0.009
             category = building_maintenance
         }
     }

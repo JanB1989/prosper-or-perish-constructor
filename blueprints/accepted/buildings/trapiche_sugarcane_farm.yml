@@ -70,9 +70,9 @@ building:
             category = building_maintenance
         }
         pp_trapiche_sugarcane_farm_open_kettles = {
-            pottery = 0.42 # sugar molds and boiling pans
-            tools = 0.012 # skimmers and ladles
-            manual_labor = 0.072
+            pottery = 0.37 # sugar molds and boiling pans
+            tools = 0.011 # skimmers and ladles
+            manual_labor = 0.13
             produced = sugar
             output = 0.332
             category = building_maintenance
@@ -83,9 +83,9 @@ building:
             category = building_maintenance
         }
         pp_trapiche_sugarcane_farm_trapiche_pressing = {
-            furniture = 0.156 # trapiche carpentry and wooden rollers
-            tools = 0.02 # roller fittings and cane knives
-            manual_labor = 0.084
+            furniture = 0.14 # trapiche carpentry and wooden rollers
+            tools = 0.018 # roller fittings and cane knives
+            manual_labor = 0.14
             produced = sugar
             output = 0.343
             category = building_maintenance
@@ -93,9 +93,9 @@ building:
     }
     unique_production_methods = {
         pp_trapiche_sugarcane_farm_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = sugar
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

@@ -66,11 +66,11 @@ building:
             category = building_maintenance
         }
         pp_fiber_dressing_yard_retting_pits = {
-            livestock = 0.21 # manure and light draught support
-            legumes = 0.21 # rotation fertility and green manure
-            clay = 0.34 # lined retting pits and daubed floors
-            coal = 0.17 # controlled drying heat
-            manual_labor = 0.16
+            livestock = 0.19 # manure and light draught support
+            legumes = 0.19 # rotation fertility and green manure
+            clay = 0.3 # lined retting pits and daubed floors
+            coal = 0.15 # controlled drying heat
+            manual_labor = 0.27
             produced = fiber_crops
             output = 0.57
             category = building_maintenance
@@ -78,9 +78,9 @@ building:
     }
     unique_production_methods = {
         pp_fiber_dressing_yard_market_sales = {
-            offset = 0.015
+            offset = 0.017
             produced = fiber_crops
-            output = 0.005
+            output = 0.009
             category = building_maintenance
         }
     }

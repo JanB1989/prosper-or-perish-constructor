@@ -71,19 +71,19 @@ building:
             category = building_maintenance
         }
         pp_silver_mine_improved_lead = {
-            lumber = 0.056 # props, ore hearth wood
-            tools = 0.008 # picks, tongs
-            coal = 0.02 # lead smelting fuel
-            manual_labor = 0.027
+            lumber = 0.05 # props, ore hearth wood
+            tools = 0.007 # picks, tongs
+            coal = 0.018 # lead smelting fuel
+            manual_labor = 0.045
             produced = lead
             output = 0.102
             category = building_maintenance
         }
         pp_silver_mine_improved_gold = {
-            lumber = 0.057 # props, parting hearths
-            tools = 0.009 # picks, tongs
-            coal = 0.02 # parting and cupellation fuel
-            manual_labor = 0.03
+            lumber = 0.052 # props, parting hearths
+            tools = 0.008 # picks, tongs
+            coal = 0.018 # parting and cupellation fuel
+            manual_labor = 0.046
             produced = goods_gold
             output = 0.027
             category = building_maintenance
@@ -94,11 +94,11 @@ building:
             category = building_maintenance
         }
         pp_silver_mine_improved_silver = {
-            lumber = 0.31 # timbering, galleries
-            tools = 0.065 # picks, stamp shoes
-            beeswax = 0.11 # mine candles
-            coal = 0.15 # smelting and cupellation fuel
-            manual_labor = 0.21
+            lumber = 0.28 # timbering, galleries
+            tools = 0.058 # picks, stamp shoes
+            beeswax = 0.099 # mine candles
+            coal = 0.13 # smelting and cupellation fuel
+            manual_labor = 0.35
             produced = silver
             output = 0.274
             category = building_maintenance
@@ -106,9 +106,9 @@ building:
     }
     unique_production_methods = {
         pp_silver_mine_improved_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = silver
-            output = 0.002
+            output = 0.003
             category = building_maintenance
         }
     }

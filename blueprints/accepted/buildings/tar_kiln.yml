@@ -40,17 +40,17 @@ building:
         pp_tar_kiln_tar_kiln_maintenance = {
             produced = tar
             output = 1.0
-            lumber = 0.91
-            manual_labor = 0.35
+            lumber = 0.81
+            manual_labor = 0.52
             category = guild_input
             debug_max_profit = rural_profit_margin
         }
     }
     unique_production_methods = {
         pp_tar_kiln_market_sales = {
-            offset = 0.015
+            offset = 0.017
             produced = tar
-            output = 0.005
+            output = 0.009
             category = building_maintenance
         }
     }

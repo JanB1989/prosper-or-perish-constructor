@@ -70,18 +70,18 @@ building:
             category = building_maintenance
         }
         pp_gem_gravel_pit_sand = {
-            lumber = 0.032 # screens, barrows
+            lumber = 0.028 # screens, barrows
             tools = 0.004 # shovels
-            manual_labor = 0.015
+            manual_labor = 0.022
             produced = sand
             output = 0.192
             category = building_maintenance
         }
         pp_gem_gravel_pit_gold = {
-            lumber = 0.057 # washing troughs, cradles
-            tools = 0.008 # pans, shovels
-            fiber_crops = 0.014 # panning baskets, sieves
-            manual_labor = 0.032
+            lumber = 0.05 # washing troughs, cradles
+            tools = 0.007 # pans, shovels
+            fiber_crops = 0.012 # panning baskets, sieves
+            manual_labor = 0.052
             produced = goods_gold
             output = 0.026
             category = building_maintenance
@@ -92,10 +92,10 @@ building:
             category = building_maintenance
         }
         pp_gem_gravel_pit_gems = {
-            lumber = 0.41 # pit shoring, washing troughs
-            tools = 0.055 # picks, shovels
-            fiber_crops = 0.14 # gravel baskets, sieves
-            manual_labor = 0.27
+            lumber = 0.37 # pit shoring, washing troughs
+            tools = 0.049 # picks, shovels
+            fiber_crops = 0.13 # gravel baskets, sieves
+            manual_labor = 0.38
             produced = gems
             output = 0.385
             category = building_maintenance
@@ -103,9 +103,9 @@ building:
     }
     unique_production_methods = {
         pp_gem_gravel_pit_market_sales = {
-            offset = 0.018
+            offset = 0.015
             produced = gems
-            output = 0.003
+            output = 0.004
             category = building_maintenance
         }
     }

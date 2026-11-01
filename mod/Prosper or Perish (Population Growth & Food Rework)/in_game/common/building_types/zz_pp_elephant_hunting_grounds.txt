@@ -36,11 +36,11 @@ unique_production_methods = {
         icon = elephant_hunting_grounds
         produced = ivory
         output = 1.0
-        tools = 0.12 # tusk saws and skinning knives: a small running cost
-        weaponry = 0.2
-        elephants = 0.4
-        livestock = 0.17 # pack oxen and camp provisions for the hunting parties
-        manual_labor = 0.74
+        tools = 0.11 # tusk saws and skinning knives: a small running cost
+        weaponry = 0.18
+        elephants = 0.36
+        livestock = 0.15 # pack oxen and camp provisions for the hunting parties
+        manual_labor = 1.05
         debug_max_profit = rural_profit_margin
         category = guild_input
     }
@@ -49,9 +49,9 @@ unique_production_methods = {
     pp_elephant_hunting_grounds_market_sales = {
         icon_type = goods
         icon = ivory
-        offset = 0.018
+        offset = 0.015
         produced = ivory
-        output = 0.003
+        output = 0.004
         category = building_maintenance
     }
 }

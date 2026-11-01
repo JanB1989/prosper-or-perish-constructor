@@ -45,10 +45,10 @@ unique_production_methods = {
     pp_saltpeter_beds_leaching_vats = {
         icon_type = building_type
         icon = saltpeter_beds
-        livestock = 0.14 # manure beds
-        pottery = 0.068 # leaching vats
-        fiber_crops = 0.021 # straw bedding
-        manual_labor = 0.064
+        livestock = 0.12 # manure beds
+        pottery = 0.06 # leaching vats
+        fiber_crops = 0.018 # straw bedding
+        manual_labor = 0.11
         produced = saltpeter
         output = 0.222
         category = building_maintenance
@@ -58,9 +58,9 @@ unique_production_methods = {
     pp_saltpeter_beds_market_sales = {
         icon_type = goods
         icon = saltpeter
-        offset = 0.015
+        offset = 0.017
         produced = saltpeter
-        output = 0.005
+        output = 0.009
         category = building_maintenance
     }
 }

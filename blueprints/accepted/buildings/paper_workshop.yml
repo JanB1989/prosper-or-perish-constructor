@@ -34,18 +34,18 @@ building:
     graphical_tags = { factory_medium }
     unique_production_methods = {
         pp_paper_workshop_paper_workshop_fiber_pulp_maintenance = {
-            fiber_crops = 0.77
-            manual_labor = 0.22
+            fiber_crops = 0.7
+            manual_labor = 0.36
             produced = paper
             output = 1.0
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_paper_workshop_paper_workshop_cloth_maintenance = {
-            cloth = 0.51
-            alum = 0.013
-            lumber = 0.088
-            manual_labor = 0.24
+            cloth = 0.46
+            alum = 0.012
+            lumber = 0.079
+            manual_labor = 0.41
             produced = paper
             output = 1.1
             debug_max_profit = workshop_profit_margin
@@ -54,10 +54,10 @@ building:
         pp_paper_workshop_legacy_paper_guild_leather_maintenance = {
             icon_type = goods
             icon = leather
-            leather = 0.13
-            alum = 0.016
-            lumber = 0.11
-            manual_labor = 0.095
+            leather = 0.12
+            alum = 0.014
+            lumber = 0.096
+            manual_labor = 0.17
             produced = paper
             output = 0.41
             debug_max_profit = workshop_profit_margin
@@ -66,9 +66,9 @@ building:
     }
     unique_production_methods = {
         pp_paper_workshop_market_sales = {
-            offset = 0.015
+            offset = 0.017
             produced = paper
-            output = 0.005
+            output = 0.009
             category = building_maintenance
         }
     }

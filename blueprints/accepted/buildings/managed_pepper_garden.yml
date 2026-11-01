@@ -72,9 +72,9 @@ building:
             category = building_maintenance
         }
         pp_managed_pepper_garden_garbling_tables = {
-            furniture = 0.136 # light sorting racks and tables
-            fiber_crops = 0.104 # sacks, screens, and woven trays
-            manual_labor = 0.104
+            furniture = 0.12 # light sorting racks and tables
+            fiber_crops = 0.094 # sacks, screens, and woven trays
+            manual_labor = 0.17
             produced = pepper
             output = 0.24
             category = building_maintenance
@@ -85,9 +85,9 @@ building:
             category = building_maintenance
         }
         pp_managed_pepper_garden_bamboo_drying_mats = {
-            fiber_crops = 0.276 # bamboo mats, harvest baskets, and vine ties
-            pottery = 0.172 # blanching pots and storage jars
-            manual_labor = 0.116
+            fiber_crops = 0.25 # bamboo mats, harvest baskets, and vine ties
+            pottery = 0.15 # blanching pots and storage jars
+            manual_labor = 0.19
             produced = pepper
             output = 0.42
             category = building_maintenance
@@ -95,9 +95,9 @@ building:
     }
     unique_production_methods = {
         pp_managed_pepper_garden_market_sales = {
-            offset = 0.015
+            offset = 0.019
             produced = pepper
-            output = 0.002
+            output = 0.004
             category = building_maintenance
         }
     }

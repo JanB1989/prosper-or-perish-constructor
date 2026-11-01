@@ -40,8 +40,8 @@ building:
     graphical_tags = { factory_large }
     unique_production_methods = {
         pp_fine_cloth_manufactory_standard_cloth_manufactory_maintenance = {
-            dyes = 0.408
-            manual_labor = 0.156
+            dyes = 0.38
+            manual_labor = 0.27
             produced = fine_cloth
             output = 0.37
             category = guild_input
@@ -50,17 +50,17 @@ building:
         pp_fine_cloth_manufactory_alum_fine_cloth_manufactory_maintenance = {
             produced = fine_cloth
             output = 0.744
-            dyes = 0.748
-            alum = 0.187
-            manual_labor = 0.272
+            dyes = 0.68
+            alum = 0.17
+            manual_labor = 0.59
             category = guild_input
             debug_max_profit = manufactory_profit_margin
         }
         pp_fine_cloth_manufactory_legacy_fur_trim_workshop_maintenance = {
             icon_type = goods
             icon = fur
-            fur = 1.3
-            manual_labor = 0.27
+            fur = 1.16
+            manual_labor = 0.55
             produced = fine_cloth
             output = 0.56
             debug_max_profit = manufactory_profit_margin
@@ -69,8 +69,8 @@ building:
     }
     unique_production_methods = {
         pp_fine_cloth_manufactory_silk_cloth_manufactory_maintenance = {
-            silk = 4.692
-            manual_labor = 1.377
+            silk = 4.23
+            manual_labor = 3.2
             produced = fine_cloth
             output = 3.736
             category = manufactory_input
@@ -78,8 +78,8 @@ building:
         }
         pp_fine_cloth_manufactory_fine_cloth_manufactory_maintenance = {
             produced = fine_cloth
-            cloth = 6.239
-            manual_labor = 1.428
+            cloth = 5.64
+            manual_labor = 3.2
             output = 3.736
             debug_max_profit = manufactory_profit_margin
             category = manufactory_input
@@ -87,8 +87,8 @@ building:
         pp_fine_cloth_manufactory_legacy_wool_weavers_workshop_maintenance = {
             icon_type = goods
             icon = wool
-            wool = 4.09
-            manual_labor = 1.1
+            wool = 3.67
+            manual_labor = 2.15
             produced = fine_cloth
             output = 2.1
             debug_max_profit = manufactory_profit_margin
@@ -97,9 +97,9 @@ building:
     }
     unique_production_methods = {
         pp_fine_cloth_manufactory_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = fine_cloth
-            output = 0.002
+            output = 0.003
             category = building_maintenance
         }
     }

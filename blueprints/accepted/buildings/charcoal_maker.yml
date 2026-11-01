@@ -48,18 +48,18 @@ building:
 
                 debug_max_profit = 0.1
 
-                lumber = 0.42 # coppice poles and cordwood
-                clay = 0.98 # earth, turf, and clay sealing
-                manual_labor = 0.27
+                lumber = 0.37 # coppice poles and cordwood
+                clay = 0.87 # earth, turf, and clay sealing
+                manual_labor = 0.41
                 category = guild_input
             }
 
         }
         unique_production_methods = {
             pp_charcoal_maker_market_sales = {
-                offset = 0.015
+                offset = 0.017
                 produced = coal
-                output = 0.005
+                output = 0.009
                 category = building_maintenance
             }
         }

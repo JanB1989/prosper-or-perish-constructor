@@ -75,7 +75,7 @@ unique_production_methods = {
         fruit = 0.08
         produced = local_food
         output = 0.96
-        debug_max_profit = 2.000
+        debug_max_profit = 2.750
         category = building_maintenance
     }
 }
@@ -83,9 +83,9 @@ unique_production_methods = {
     pp_maghreb_palm_irrigation_market_sales = {
         icon_type = goods
         icon = fruit
-        offset = 0.015
+        offset = 0.017
         produced = fruit
-        output = 0.01
+        output = 0.018
         category = building_maintenance
     }
 }

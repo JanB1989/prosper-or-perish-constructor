@@ -37,9 +37,9 @@ unique_production_methods = {
     pp_coastal_saltern_lined_evaporation_pans = {
         icon_type = building_type
         icon = salt_collector
-        clay = 1.09 # pan linings
-        pottery = 0.31 # settling vessels
-        manual_labor = 0.19
+        clay = 0.97 # pan linings
+        pottery = 0.28 # settling vessels
+        manual_labor = 0.28
         produced = salt
         output = 0.240
         category = building_maintenance
@@ -49,9 +49,9 @@ unique_production_methods = {
     pp_salt_collector_market_sales = {
         icon_type = goods
         icon = salt
-        offset = 0.015
+        offset = 0.019
         produced = salt
-        output = 0.002
+        output = 0.004
         category = building_maintenance
     }
 }

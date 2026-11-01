@@ -38,17 +38,17 @@ building:
     graphical_tags = { factory_large }
     unique_production_methods = {
         pp_iron_mill_steel_tools = {
-            steel = 4.5
-            manual_labor = 0.92
+            steel = 4.08
+            manual_labor = 3
             category = mills_input
             produced = tools
             output = 8.865
             debug_max_profit = mills_profit_margin
         }
         pp_iron_mill_iron_mill_maintenance = {
-            iron = 5.62
-            coal = 1.4
-            manual_labor = 0.96
+            iron = 5.1
+            coal = 1.27
+            manual_labor = 3.05
             category = mills_input
             produced = tools
             output = 8.865
@@ -57,8 +57,8 @@ building:
         pp_iron_mill_legacy_stone_tools_guild_maintenance = {
             icon_type = goods
             icon = stone
-            stone = 2.11
-            manual_labor = 0.36
+            stone = 1.9
+            manual_labor = 0.57
             produced = tools
             output = 0.93
             debug_max_profit = mills_profit_margin
@@ -67,8 +67,8 @@ building:
         pp_iron_mill_legacy_copper_tools_guild_maintenance = {
             icon_type = goods
             icon = copper
-            copper = 1.58
-            manual_labor = 0.81
+            copper = 1.39
+            manual_labor = 1.35
             produced = tools
             output = 2.09
             debug_max_profit = mills_profit_margin
@@ -77,9 +77,9 @@ building:
         pp_iron_mill_legacy_bronze_tools_guild_maintenance = {
             icon_type = goods
             icon = tin
-            copper = 1.61
-            tin = 0.13
-            manual_labor = 0.82
+            copper = 1.42
+            tin = 0.12
+            manual_labor = 1.4
             produced = tools
             output = 2.24
             debug_max_profit = mills_profit_margin
@@ -88,8 +88,8 @@ building:
         pp_iron_mill_legacy_metalwork_workshop_maintenance = {
             icon_type = building_type
             icon = tools_workshop
-            iron = 3.38
-            manual_labor = 1.35
+            iron = 3.06
+            manual_labor = 2.45
             produced = tools
             output = 4.99
             debug_max_profit = mills_profit_margin
@@ -100,7 +100,7 @@ building:
         pp_iron_mill_market_sales = {
             offset = 0.034
             produced = tools
-            output = 0.007
+            output = 0.011
             category = building_maintenance
         }
     }

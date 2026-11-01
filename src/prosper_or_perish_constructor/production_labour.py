@@ -24,6 +24,10 @@ labour absorbs the goods' rounding. Zero-amount goods lines are left alone.
 A method already within ``tolerance`` of its class is not touched, so apply is stable. ``ppc labour check`` reports
 untagged methods, unknown classes and methods off their class; ``ppc build`` prints the check.
 Legacy methods (``legacy_methods.py``) are scaled copies of their origin method, labour included, so this pass skips them.
+
+``extra_share`` adds to every share class, except the classes in ``extra_share_skip``, the buildings in
+``extra_share_spare_buildings`` and buildings with a method that produces a staple food or a good in
+``extra_share_spare_goods``.
 """
 
 from __future__ import annotations
@@ -42,6 +46,7 @@ from eu5gameparser.clausewitz.parser import parse_text
 from eu5gameparser.clausewitz.syntax import CList
 from prosper_or_perish_constructor import yaml_io
 from prosper_or_perish_constructor.production_gate import is_leg, is_legacy
+from prosper_or_perish_constructor.staple_foods import staple_foods
 
 CONFIG_SECTION = "production_labour"
 KEEP = "keep"
@@ -71,6 +76,10 @@ class LabourConfig:
     min_good_share: float
     max_goods: int
     classes: dict[str, LabourClass]
+    extra_share: float = 0.0
+    extra_share_skip: frozenset[str] = frozenset()
+    extra_share_spare_goods: frozenset[str] = frozenset()  # with the staple foods
+    extra_share_spare_buildings: frozenset[str] = frozenset()
 
 
 @dataclass(frozen=True)
@@ -142,6 +151,10 @@ def load_config(project: Path) -> LabourConfig:
         min_good_share=float(section.get("min_good_share", 0.05)),
         max_goods=int(section.get("max_goods", 4)),
         classes=classes,
+        extra_share=float(section.get("extra_share", 0.0)),
+        extra_share_skip=frozenset(str(c) for c in section.get("extra_share_skip", [])),
+        extra_share_spare_goods=frozenset(str(g) for g in section.get("extra_share_spare_goods", [])) | frozenset(staple_foods()),
+        extra_share_spare_buildings=frozenset(str(b) for b in section.get("extra_share_spare_buildings", [])),
     )
 
 
@@ -156,7 +169,7 @@ def stockpile_price_raise(raw: Mapping[str, Any], good: str) -> float:
 def stockpile_base_prices(project: Path, prices: Mapping[str, float]) -> dict[str, float]:
     """Engine default prices (as the parser reads them) back to the base prices before the [stockpile_prices] raise."""
     raw = tomllib.loads(project.read_text(encoding="utf-8-sig"))
-    return {str(good): float(price) / stockpile_price_raise(raw, str(good)) for good, price in prices.items()}
+    return {str(good): round(float(price) / stockpile_price_raise(raw, str(good)), 5) for good, price in prices.items()}
 
 
 def load_prices(repo: Path, project: Path) -> dict[str, float]:
@@ -170,7 +183,7 @@ def load_prices(repo: Path, project: Path) -> dict[str, float]:
     # [stockpile_prices]: the mod's default prices are raised (x base_price_mult x the good's price_factor) for the
     # engine's price formula; every pass that turns gold into goods amounts keeps working at the prices before the raise.
     return {
-        str(row["name"]): float(row["default_market_price"]) / stockpile_price_raise(raw, str(row["name"]))
+        str(row["name"]): round(float(row["default_market_price"]) / stockpile_price_raise(raw, str(row["name"])), 5)
         for row in goods.select("name", "default_market_price").to_dicts()
         if row["default_market_price"] is not None
     }
@@ -284,6 +297,7 @@ def plan_method(
     config: LabourConfig,
     prices: dict[str, float],
     keep: frozenset[str] = frozenset(),
+    extra_share: float = 0.0,
 ) -> Plan:
     good = config.good
     labour_price = prices.get(good, 5.0) * config.price_floor_share
@@ -320,7 +334,7 @@ def plan_method(
         plan.changed = True
         return plan
 
-    share = float(labour_class.share or 0.0)
+    share = float(labour_class.share or 0.0) + extra_share
     if cost <= 0:
         plan.problem = f"class {labour_class.name} needs goods inputs (use an output_share class)"
         return plan
@@ -396,6 +410,7 @@ def plan_all(repo: Path, config: LabourConfig, prices: dict[str, float]) -> Labo
             continue
         for extra in sorted(set(overrides) - {m.name for m in blueprint_methods(path)}):
             result.problems.append(f"{path.name}: labour.methods names {extra}, which is not a method of the blueprint")
+        spared = any(m.produced in config.extra_share_spare_goods or m.building in config.extra_share_spare_buildings for m in blueprint_methods(path))
         for method in methods:
             name = overrides.get(method.name, default)
             if name is None:
@@ -405,7 +420,8 @@ def plan_all(repo: Path, config: LabourConfig, prices: dict[str, float]) -> Labo
             if labour_class is None:
                 result.problems.append(f"{path.name}: {method.name}: labour class {name!r} is not in [{CONFIG_SECTION}.classes]")
                 continue
-            plan = plan_method(method, labour_class, config, prices, keep)
+            extra_share = 0.0 if spared or name in config.extra_share_skip else config.extra_share
+            plan = plan_method(method, labour_class, config, prices, keep, extra_share)
             if plan.problem:
                 result.problems.append(f"{path.name}: {method.name}: {plan.problem}")
             result.plans.append(plan)

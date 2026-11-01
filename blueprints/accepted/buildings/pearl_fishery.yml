@@ -58,9 +58,9 @@ building:
             category = building_maintenance
         }
         pp_pearl_fishery_dhow_diving_crews = {
-            naval_supplies = 0.025
-            victuals = 0.049
-            manual_labor = 0.048
+            naval_supplies = 0.022
+            victuals = 0.044
+            manual_labor = 0.072
             produced = pearls
             output = 0.078
             category = building_maintenance
@@ -68,9 +68,9 @@ building:
     }
     unique_production_methods = {
         pp_pearl_fishery_market_sales = {
-            offset = 0.018
+            offset = 0.015
             produced = pearls
-            output = 0.003
+            output = 0.004
             category = building_maintenance
         }
     }

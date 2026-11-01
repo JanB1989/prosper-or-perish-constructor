@@ -44,9 +44,9 @@ building:
         pp_cannons_factory_ammunition_maintenance = {
             icon_type = goods
             icon = lead
-            lead = 1
-            saltpeter = 1.66
-            manual_labor = 0.22
+            lead = 0.91
+            saltpeter = 1.5
+            manual_labor = 0.72
             produced = cannons
             output = 1.566
             debug_max_profit = mills_profit_margin
@@ -55,9 +55,9 @@ building:
         pp_cannons_factory_legacy_cannon_workshop_ammunition_stone_maintenance = {
             icon_type = goods
             icon = stone
-            stone = 0.46
-            saltpeter = 0.46
-            manual_labor = 0.16
+            stone = 0.41
+            saltpeter = 0.41
+            manual_labor = 0.33
             produced = cannons
             output = 0.44
             debug_max_profit = mills_profit_margin
@@ -66,9 +66,9 @@ building:
         pp_cannons_factory_legacy_cannon_workshop_ammunition_iron_maintenance = {
             icon_type = goods
             icon = iron
-            iron = 0.54
-            saltpeter = 0.44
-            manual_labor = 0.34
+            iron = 0.51
+            saltpeter = 0.4
+            manual_labor = 0.54
             produced = cannons
             output = 0.88
             debug_max_profit = mills_profit_margin
@@ -77,8 +77,8 @@ building:
     }
     unique_production_methods = {
         pp_cannons_factory_gun_factory_maintenance = {
-            steel = 4.98
-            manual_labor = 0.98
+            steel = 4.5
+            manual_labor = 3.4
             produced = cannons
             output = 7.376
             debug_max_profit = mills_profit_margin
@@ -87,10 +87,10 @@ building:
         pp_cannons_factory_legacy_cannon_workshop_bronze_maintenance = {
             icon_type = goods
             icon = copper
-            copper = 3.35
-            tin = 0.85
-            tools = 0.41
-            manual_labor = 1.5
+            copper = 3.01
+            tin = 0.75
+            tools = 0.36
+            manual_labor = 2.85
             produced = cannons
             output = 4.15
             debug_max_profit = mills_profit_margin
@@ -99,9 +99,9 @@ building:
         pp_cannons_factory_legacy_cannon_workshop_iron_maintenance = {
             icon_type = goods
             icon = iron
-            iron = 3.39
-            tools = 0.37
-            manual_labor = 1.5
+            iron = 3.06
+            tools = 0.34
+            manual_labor = 2.75
             produced = cannons
             output = 4.15
             debug_max_profit = mills_profit_margin
@@ -110,11 +110,11 @@ building:
         pp_cannons_factory_legacy_cannon_foundry_maintenance = {
             icon_type = building_type
             icon = cannon_foundry
-            tools = 0.88
-            copper = 2.72
-            tin = 1.36
-            coal = 2.13
-            manual_labor = 1.4
+            tools = 0.8
+            copper = 2.46
+            tin = 1.23
+            coal = 1.92
+            manual_labor = 3.15
             produced = cannons
             output = 5.53
             debug_max_profit = mills_profit_margin
@@ -123,9 +123,9 @@ building:
     }
     unique_production_methods = {
         pp_cannons_factory_market_sales = {
-            offset = 0.018
+            offset = 0.015
             produced = cannons
-            output = 0.003
+            output = 0.004
             category = building_maintenance
         }
     }

@@ -31,11 +31,11 @@ building:
     graphical_tags = { factory_small }
     unique_production_methods = {
         pp_naval_supplies_guild_naval_supplies_guild_maintenance = {
-            lumber = 0.133
-            fiber_crops = 0.343
-            tar = 0.371
-            cloth = 0.034
-            manual_labor = 0.287
+            lumber = 0.12
+            fiber_crops = 0.31
+            tar = 0.33
+            cloth = 0.03
+            manual_labor = 0.47
             produced = naval_supplies
             output = 0.7
             debug_max_profit = guild_profit_margin
@@ -44,9 +44,9 @@ building:
     }
     unique_production_methods = {
         pp_naval_supplies_guild_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = naval_supplies
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

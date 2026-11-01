@@ -16,10 +16,10 @@ unique_production_methods = {
     pp_lacquerware_guild_lacquerware_shop_maintenance = {
         icon_type = building_type
         icon = lacquerware_guild
-        lumber = 0.798
-        dyes = 0.329
-        tools = 0.077
-        manual_labor = 0.511
+        lumber = 0.72
+        dyes = 0.3
+        tools = 0.07
+        manual_labor = 0.79
         produced = lacquerware
         output = 0.7
         category = guild_input
@@ -30,9 +30,9 @@ unique_production_methods = {
     pp_lacquerware_guild_market_sales = {
         icon_type = goods
         icon = lacquerware
-        offset = 0.015
+        offset = 0.019
         produced = lacquerware
-        output = 0.002
+        output = 0.004
         category = building_maintenance
     }
 }

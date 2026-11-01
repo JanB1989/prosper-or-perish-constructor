@@ -73,30 +73,30 @@ building:
             category = building_maintenance
         }
         pp_copper_mine_tin = {
-            lumber = 0.035 # props, washing troughs
-            tools = 0.005 # picks, sieves
-            coal = 0.009 # tin smelting fuel
-            manual_labor = 0.022
+            lumber = 0.031 # props, washing troughs
+            tools = 0.004 # picks, sieves
+            coal = 0.008 # tin smelting fuel
+            manual_labor = 0.034
             produced = tin
             output = 0.06
             category = building_maintenance
         }
         pp_copper_mine_silver = {
-            lumber = 0.035 # props, liquation hearths
-            tools = 0.008 # picks, tongs
-            lead = 0.016
-            coal = 0.019 # liquation and cupellation fuel
-            manual_labor = 0.033
+            lumber = 0.031 # props, liquation hearths
+            tools = 0.007 # picks, tongs
+            lead = 0.014
+            coal = 0.017 # liquation and cupellation fuel
+            manual_labor = 0.051
             produced = silver
             output = 0.033
             category = building_maintenance
         }
         pp_copper_mine_gold = {
-            lumber = 0.035 # props, parting hearths
-            tools = 0.008 # picks, tongs
-            lead = 0.016
-            coal = 0.019 # parting and cupellation fuel
-            manual_labor = 0.033
+            lumber = 0.031 # props, parting hearths
+            tools = 0.007 # picks, tongs
+            lead = 0.014
+            coal = 0.017 # parting and cupellation fuel
+            manual_labor = 0.051
             produced = goods_gold
             output = 0.026
             category = building_maintenance
@@ -115,11 +115,11 @@ building:
             category = building_maintenance
         }
         pp_copper_mine_copper = {
-            lumber = 0.33 # pit props, roast heap wood
-            tools = 0.07 # picks, wedges, hammers
-            beeswax = 0.074 # mine candles
-            coal = 0.2 # charcoal for ore roasting heaps
-            manual_labor = 0.31
+            lumber = 0.3 # pit props, roast heap wood
+            tools = 0.063 # picks, wedges, hammers
+            beeswax = 0.066 # mine candles
+            coal = 0.18 # charcoal for ore roasting heaps
+            manual_labor = 0.44
             produced = copper
             output = 0.6
             category = building_maintenance
@@ -127,9 +127,9 @@ building:
     }
     unique_production_methods = {
         pp_copper_mine_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = copper
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

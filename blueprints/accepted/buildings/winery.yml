@@ -32,30 +32,30 @@ building:
     graphical_tags = { factory_small }
     unique_production_methods = {
         pp_winery_honey_winery_maintenance = {
-            beeswax = 0.54
-            lumber = 0.24 # casks and vats
-            tools = 0.06 # tools cut to a running cost (~10 %)
-            manual_labor = 0.27
+            beeswax = 0.48
+            lumber = 0.21 # casks and vats
+            tools = 0.054 # tools cut to a running cost (~10 %)
+            manual_labor = 0.46
             produced = wine
             output = 0.97
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
         pp_winery_fruit_winery_maintenance = {
-            fruit = 1.12
-            lumber = 0.2 # casks, vats and press timber
-            tools = 0.06 # tools cut to a running cost (~10 %)
-            manual_labor = 0.28
+            fruit = 1.01
+            lumber = 0.18 # casks, vats and press timber
+            tools = 0.054 # tools cut to a running cost (~10 %)
+            manual_labor = 0.44
             produced = wine
             output = 1.0
             category = guild_input
             debug_max_profit = guild_profit_margin
         }
         pp_winery_rice_winery_maintenance = {
-            rice = 1.13
-            lumber = 0.21 # casks, vats and steaming fuel
-            tools = 0.06 # tools cut to a running cost (~10 %)
-            manual_labor = 0.27
+            rice = 1.01
+            lumber = 0.19 # casks, vats and steaming fuel
+            tools = 0.054 # tools cut to a running cost (~10 %)
+            manual_labor = 0.44
             produced = wine
             output = 1.0
             category = guild_input
@@ -64,9 +64,9 @@ building:
     }
     unique_production_methods = {
         pp_winery_market_sales = {
-            offset = 0.015
+            offset = 0.017
             produced = wine
-            output = 0.005
+            output = 0.009
             category = building_maintenance
         }
     }

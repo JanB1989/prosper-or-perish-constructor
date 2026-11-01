@@ -38,54 +38,54 @@ building:
     construction_demand = workshop_construction
     unique_production_methods = {
         pp_distillers_workshop_beer_liquor_workshop_maintenance = {
-            beer = 1.235
-            glass = 0.143
-            manual_labor = 0.338
+            beer = 1.12
+            glass = 0.13
+            manual_labor = 0.61
             produced = liquor
             output = 1.495
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_distillers_workshop_wine_liquor_workshop_maintenance = {
-            wine = 1.235
-            glass = 0.143
-            manual_labor = 0.338
+            wine = 1.12
+            glass = 0.13
+            manual_labor = 0.61
             produced = liquor
             output = 1.495
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_distillers_workshop_sugar_liquor_workshop_maintenance = {
-            sugar = 0.871
-            glass = 0.101
-            manual_labor = 0.325
+            sugar = 0.78
+            glass = 0.091
+            manual_labor = 0.63
             produced = liquor
             output = 1.495
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_distillers_workshop_rice_liquor_workshop_maintenance = {
-            rice = 2.561
-            glass = 0.118
-            manual_labor = 0.325
+            rice = 2.31
+            glass = 0.11
+            manual_labor = 0.6
             produced = liquor
             output = 1.495
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_distillers_workshop_potato_liquor_workshop_maintenance = {
-            potato = 2.561
-            glass = 0.118
-            manual_labor = 0.325
+            potato = 2.31
+            glass = 0.11
+            manual_labor = 0.6
             produced = liquor
             output = 1.495
             debug_max_profit = workshop_profit_margin
             category = workshop_input
         }
         pp_distillers_workshop_wheat_liquor_workshop_maintenance = {
-            wheat = 2.561
-            glass = 0.118
-            manual_labor = 0.325
+            wheat = 2.31
+            glass = 0.11
+            manual_labor = 0.6
             produced = liquor
             output = 1.495
             debug_max_profit = workshop_profit_margin
@@ -94,9 +94,9 @@ building:
     }
     unique_production_methods = {
         pp_distillers_workshop_market_sales = {
-            offset = 0.015
+            offset = 0.019
             produced = liquor
-            output = 0.004
+            output = 0.008
             category = building_maintenance
         }
     }

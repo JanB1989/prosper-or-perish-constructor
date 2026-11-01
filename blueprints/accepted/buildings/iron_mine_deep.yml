@@ -74,10 +74,10 @@ building:
             category = building_maintenance
         }
         pp_iron_mine_deep_ochre = {
-            lumber = 0.048 # washing troughs, drying racks
-            tools = 0.006 # sieves, shovels
-            fiber_crops = 0.009 # sieve cloths, sacks
-            manual_labor = 0.014
+            lumber = 0.043 # washing troughs, drying racks
+            tools = 0.005 # sieves, shovels
+            fiber_crops = 0.008 # sieve cloths, sacks
+            manual_labor = 0.028
             produced = dyes
             output = 0.04
             category = building_maintenance
@@ -88,39 +88,39 @@ building:
             category = building_maintenance
         }
         pp_iron_mine_deep_ore_dressing_floors = {
-            fiber_crops = 0.23 # sacks, screens (x1.15 tools-free fallback)
-            cloth = 0.11 # sorting cloths
-            beeswax = 0.061 # candles, seals
-            manual_labor = 0.13
+            fiber_crops = 0.21 # sacks, screens (x1.15 tools-free fallback)
+            cloth = 0.1 # sorting cloths
+            beeswax = 0.056 # candles, seals
+            manual_labor = 0.21
             produced = iron
             output = 0.414 # raised with its inputs: tools-free fallback, margin kept
             category = building_maintenance
         }
         pp_iron_mine_deep_horse_whim_haulage = {
-            horses = 0.2 # whim draft teams
-            leather = 0.089 # harness, buckets
-            beeswax = 0.053 # mine candles, seals
-            manual_labor = 0.11
+            horses = 0.18 # whim draft teams
+            leather = 0.079 # harness, buckets
+            beeswax = 0.047 # mine candles, seals
+            manual_labor = 0.21
             produced = iron
             output = 0.442
             category = building_maintenance
         }
         pp_iron_mine_deep_drainage_workings = {
-            lumber = 0.56 # shaft timbering, headframes, pump rods
-            tools = 0.095 # picks, pump fittings
-            beeswax = 0.09 # candles, pump seals
-            tar = 0.2 # tarred winding ropes, pitched pump barrels
-            manual_labor = 0.22
+            lumber = 0.5 # shaft timbering, headframes, pump rods
+            tools = 0.085 # picks, pump fittings
+            beeswax = 0.08 # candles, pump seals
+            tar = 0.18 # tarred winding ropes, pitched pump barrels
+            manual_labor = 0.42
             produced = iron
             output = 0.763
             category = building_maintenance
         }
         pp_iron_mine_deep_slitting_ore = {
-            lumber = 0.55 # galleries, bar racks
-            tools = 0.1 # rolls, stamps, pumps
-            beeswax = 0.12 # candles, pump seals
-            coal = 0.27 # ore roasting fuel
-            manual_labor = 0.27
+            lumber = 0.5 # galleries, bar racks
+            tools = 0.09 # rolls, stamps, pumps
+            beeswax = 0.11 # candles, pump seals
+            coal = 0.24 # ore roasting fuel
+            manual_labor = 0.47
             produced = iron
             output = 0.84
             category = building_maintenance
@@ -128,9 +128,9 @@ building:
     }
     unique_production_methods = {
         pp_iron_mine_deep_market_sales = {
-            offset = 0.021
+            offset = 0.01
             produced = iron
-            output = 0.004
+            output = 0.003
             category = building_maintenance
         }
     }

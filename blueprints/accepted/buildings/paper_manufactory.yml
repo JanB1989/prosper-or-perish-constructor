@@ -35,11 +35,11 @@ building:
     graphical_tags = { factory_large }
     unique_production_methods = {
         pp_paper_manufactory_paper_manufactory_maintenance = {
-            cloth = 0.27
-            fiber_crops = 1.08
-            alum = 0.032
-            lumber = 0.216
-            manual_labor = 0.27
+            cloth = 0.24
+            fiber_crops = 0.98
+            alum = 0.029
+            lumber = 0.2
+            manual_labor = 0.6
             produced = paper
             output = 2.0
             debug_max_profit = manufactory_profit_margin
@@ -48,10 +48,10 @@ building:
         pp_paper_manufactory_legacy_paper_guild_leather_maintenance = {
             icon_type = goods
             icon = leather
-            leather = 0.19
-            alum = 0.023
-            lumber = 0.15
-            manual_labor = 0.14
+            leather = 0.17
+            alum = 0.02
+            lumber = 0.14
+            manual_labor = 0.24
             produced = paper
             output = 0.56
             debug_max_profit = manufactory_profit_margin
@@ -60,8 +60,8 @@ building:
         pp_paper_manufactory_legacy_paper_workshop_fiber_pulp_maintenance = {
             icon_type = goods
             icon = fiber_crops
-            fiber_crops = 1.11
-            manual_labor = 0.32
+            fiber_crops = 1.01
+            manual_labor = 0.52
             produced = paper
             output = 1.36
             debug_max_profit = manufactory_profit_margin
@@ -70,10 +70,10 @@ building:
         pp_paper_manufactory_legacy_paper_workshop_cloth_maintenance = {
             icon_type = goods
             icon = cloth
-            cloth = 0.72
-            alum = 0.018
-            lumber = 0.12
-            manual_labor = 0.34
+            cloth = 0.65
+            alum = 0.017
+            lumber = 0.11
+            manual_labor = 0.58
             produced = paper
             output = 1.5
             debug_max_profit = manufactory_profit_margin
@@ -82,9 +82,9 @@ building:
     }
     unique_production_methods = {
         pp_paper_manufactory_market_sales = {
-            offset = 0.015
+            offset = 0.017
             produced = paper
-            output = 0.005
+            output = 0.009
             category = building_maintenance
         }
     }

@@ -71,17 +71,17 @@ building:
             category = building_maintenance
         }
         pp_quicksilver_retort_dyes = {
-            lumber = 0.051 # grinding troughs
-            tools = 0.005 # mortars, shovels
-            manual_labor = 0.012
+            lumber = 0.046 # grinding troughs
+            tools = 0.004 # mortars, shovels
+            manual_labor = 0.024
             produced = dyes
             output = 0.027
             category = building_maintenance
         }
         pp_quicksilver_retort_stone = {
-            lumber = 0.051 # skids, barrows
-            tools = 0.005 # hammers
-            manual_labor = 0.012
+            lumber = 0.046 # skids, barrows
+            tools = 0.004 # hammers
+            manual_labor = 0.024
             produced = stone
             output = 0.14
             category = building_maintenance
@@ -92,11 +92,11 @@ building:
             category = building_maintenance
         }
         pp_quicksilver_retort_mercury = {
-            lumber = 0.46 # retort fuel, timbering
-            tools = 0.075 # picks, furnace irons
-            beeswax = 0.093
-            pottery = 0.25 # clay aludels and condensing jars
-            manual_labor = 0.17
+            lumber = 0.41 # retort fuel, timbering
+            tools = 0.067 # picks, furnace irons
+            beeswax = 0.083
+            pottery = 0.22 # clay aludels and condensing jars
+            manual_labor = 0.33
             produced = mercury
             output = 0.610
             category = building_maintenance
@@ -104,9 +104,9 @@ building:
     }
     unique_production_methods = {
         pp_quicksilver_retort_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = mercury
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

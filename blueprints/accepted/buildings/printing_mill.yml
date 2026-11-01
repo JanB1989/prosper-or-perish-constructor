@@ -37,20 +37,20 @@ building:
     graphical_tags = { factory_large }
     unique_production_methods = {
         pp_printing_mill_printing_mill_leather_maintenance = {
-            lead = 1.42
-            paper = 7.84
-            leather = 1.14
-            manual_labor = 0.94
+            lead = 1.29
+            paper = 7.11
+            leather = 1.03
+            manual_labor = 3
             produced = books
             output = 8.915
             debug_max_profit = mills_profit_margin
             category = mills_input
         }
         pp_printing_mill_printing_mill_maintenance = {
-            lead = 1.42
-            paper = 7.84
-            lumber = 2.28
-            manual_labor = 0.94
+            lead = 1.29
+            paper = 7.11
+            lumber = 2.07
+            manual_labor = 3.05
             produced = books
             output = 8.938
             debug_max_profit = mills_profit_margin
@@ -59,10 +59,10 @@ building:
         pp_printing_mill_legacy_scriptorium_leather_maintenance = {
             icon_type = goods
             icon = leather
-            dyes = 0.57
-            paper = 2.23
-            leather = 0.57
-            manual_labor = 1.5
+            dyes = 0.51
+            paper = 1.93
+            leather = 0.51
+            manual_labor = 2.45
             produced = books
             output = 3.77
             debug_max_profit = mills_profit_margin
@@ -71,10 +71,10 @@ building:
         pp_printing_mill_legacy_scriptorium_maintenance = {
             icon_type = building_type
             icon = scriptorium
-            dyes = 0.55
-            paper = 2.16
-            lumber = 1.1
-            manual_labor = 1.45
+            dyes = 0.5
+            paper = 1.89
+            lumber = 0.99
+            manual_labor = 2.4
             produced = books
             output = 3.77
             debug_max_profit = mills_profit_margin
@@ -83,9 +83,9 @@ building:
     }
     unique_production_methods = {
         pp_printing_mill_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = books
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

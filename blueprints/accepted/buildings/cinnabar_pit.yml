@@ -70,17 +70,17 @@ building:
             category = building_maintenance
         }
         pp_cinnabar_pit_dyes = {
-            lumber = 0.045 # grinding troughs
-            tools = 0.005 # mortars, shovels
-            manual_labor = 0.022
+            lumber = 0.041 # grinding troughs
+            tools = 0.004 # mortars, shovels
+            manual_labor = 0.032
             produced = dyes
             output = 0.03
             category = building_maintenance
         }
         pp_cinnabar_pit_stone = {
-            lumber = 0.045 # skids, barrows
-            tools = 0.005 # hammers
-            manual_labor = 0.022
+            lumber = 0.041 # skids, barrows
+            tools = 0.004 # hammers
+            manual_labor = 0.032
             produced = stone
             output = 0.144
             category = building_maintenance
@@ -91,11 +91,11 @@ building:
             category = building_maintenance
         }
         pp_cinnabar_pit_mercury = {
-            lumber = 0.25 # pit props, galleries
-            tools = 0.05 # picks, wedges
-            beeswax = 0.074
-            coal = 0.1 # ore roasting furnace fuel
-            manual_labor = 0.2
+            lumber = 0.22 # pit props, galleries
+            tools = 0.044 # picks, wedges
+            beeswax = 0.065
+            coal = 0.088 # ore roasting furnace fuel
+            manual_labor = 0.31
             produced = mercury
             output = 0.423
             category = building_maintenance
@@ -103,9 +103,9 @@ building:
     }
     unique_production_methods = {
         pp_cinnabar_pit_market_sales = {
-            offset = 0.018
+            offset = 0.017
             produced = mercury
-            output = 0.004
+            output = 0.006
             category = building_maintenance
         }
     }

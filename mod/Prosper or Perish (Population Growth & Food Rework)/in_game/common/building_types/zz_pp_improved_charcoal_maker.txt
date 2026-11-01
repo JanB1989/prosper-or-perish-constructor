@@ -33,9 +33,9 @@ increase_per_level_cost = 0.18
 
             debug_max_profit = 0.3
 
-            lumber = 0.58 # coppice poles and cordwood
-            clay = 1.36 # sealed kiln and retort lining
-            manual_labor = 0.15
+            lumber = 0.52 # coppice poles and cordwood
+            clay = 1.23 # sealed kiln and retort lining
+            manual_labor = 0.32
             category = guild_input
         }
 
@@ -44,9 +44,9 @@ increase_per_level_cost = 0.18
         pp_improved_charcoal_maker_market_sales = {
             icon_type = goods
             icon = coal
-            offset = 0.015
+            offset = 0.017
             produced = coal
-            output = 0.005
+            output = 0.009
             category = building_maintenance
         }
     }

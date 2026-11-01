@@ -1304,14 +1304,14 @@ types SelectedMarketView {
 
 lateralview = {
 	name = "selected_market_view"
-	size = { 700 100% } # PP: wider than the vanilla left panel (570)
+	size = { 720 100% } # PP: wider than the vanilla left panel (570)
 	widget = { # PP: pp_panel_width for the search filter menu
 		size = { 0 0 }
 		visible_at_creation = no
-		visible = "[Not(SelectedMarketLateralView.Vars.HasValue('pp_panel_width', '700'))]"
+		visible = "[Not(SelectedMarketLateralView.Vars.HasValue('pp_panel_width', '720'))]"
 		state = {
 			name = _show
-			on_start = "[SelectedMarketLateralView.Vars.Set('pp_panel_width', '700')]"
+			on_start = "[SelectedMarketLateralView.Vars.Set('pp_panel_width', '720')]"
 		}
 	}
 
@@ -2400,18 +2400,18 @@ window = { # PP: vanilla select_menu_left (select_menu.gui), opened beside the w
 	allow_outside = yes
 	layer = sidemenu
 	parentanchor = left
-	position = { 700 180 }
+	position = { 720 180 }
 
 	state = {
 		name = _show
 		duration = 0.133
-		position_x = 700
+		position_x = 720
 		alpha = 1
 	}
 	state = {
 		name = _hide
 		duration = 0.133
-		position_x = 655
+		position_x = 675
 		alpha = 0
 	}
 

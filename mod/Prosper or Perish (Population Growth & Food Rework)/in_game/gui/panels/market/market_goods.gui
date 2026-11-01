@@ -111,6 +111,34 @@
 							}
 						}
 					}
+
+					widget = { # PP: the stock in months of the market's demand, the bar full at 12 months
+						size = { 58 22 }
+						datacontext = "[SelectedMarketLateralView.GetMarket]"
+						tooltip = "PP_MARKET_STOCK_MONTHS_TT"
+
+						widget = {
+							visible = "[GreaterThan_CFixedPoint(Market.GetDemand(GoodsMarketEntry.GetGoods), '(CFixedPoint)0')]"
+							size = { 50 20 }
+							parentanchor = vcenter
+
+							progressbar_framed = {
+								size = { 100% 100% }
+								using = progress_bar_green_alt
+								value = "[FixedPointToFloat(Divide_CFixedPoint(GoodsMarketEntry.GetStockpile, Market.GetDemand(GoodsMarketEntry.GetGoods)))]"
+								min = 0
+								max = 12
+							}
+
+							text_single = {
+								size = { 100% 100% }
+								autoresize = no
+								align = center|nobaseline
+								using = Font_Size_Small
+								raw_text = "[Divide_CFixedPoint(GoodsMarketEntry.GetStockpile, Market.GetDemand(GoodsMarketEntry.GetGoods))|1]"
+							}
+						}
+					}
 				}
 
 				hbox = {
@@ -1029,6 +1057,18 @@ types MarketOverview {
 					name = "stockpile"
 					layoutpolicy_vertical = expanding
 					size = { 100 -1 }
+				}
+
+				widget = { # the months stored: no sort key in the engine, so an icon and not a button
+					layoutpolicy_vertical = expanding
+					size = { 58 -1 }
+					tooltip = "PP_MARKET_STOCK_MONTHS_HEADER_TT"
+
+					icon = {
+						parentanchor = center
+						size = { 24 24 }
+						texture = "gfx/interface/icons/sort/monthly_progress.dds"
+					}
 				}
 
 				sort_by_key_button = {

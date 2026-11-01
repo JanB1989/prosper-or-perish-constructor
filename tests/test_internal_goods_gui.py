@@ -117,6 +117,22 @@ def test_market_stockpile_column_shows_fill_and_amount():
     assert f"position = {{ {tool.MARKET_PANEL_WIDTH} 180 }}" in picker   # its market picker opens beside it
 
 
+def test_market_stock_months_column():
+    """Jan, 2026-11-01: the stock in months of demand beside the fill, as a bar; the engine has no sort key for it, so
+    its header is an icon. Guarded where a market has no demand of the good, and every text key exists."""
+    tool = _tool()
+    text = _mod(tool.MARKET_GOODS)
+    assert text.count(f"size = {{ {tool.STOCK_MONTHS_CELL_WIDTH} 22 }}") == 1
+    assert text.count(f'value = "[FixedPointToFloat({tool.STOCK_MONTHS})]"') == 1
+    assert text.count(f'raw_text = "[{tool.STOCK_MONTHS}|1]"') == 1
+    assert text.count(f"max = {tool.STOCK_MONTHS_BAR_MAX}") == 1
+    assert text.count("GreaterThan_CFixedPoint(Market.GetDemand(GoodsMarketEntry.GetGoods), '(CFixedPoint)0')") == 1
+    assert tool.STOCK_MONTHS_HEADER not in text   # a marker in the tool, never a sort key in the game
+    english = "\n".join(p.read_text(encoding="utf-8-sig") for p in (tool.MOD_ROOT / "main_menu/localization/english").glob("*.yml"))
+    for key in ("PP_MARKET_STOCK_MONTHS_TT", "PP_MARKET_STOCK_MONTHS_HEADER_TT"):
+        assert key in text and f"{key}:" in english
+
+
 def _header(text: str, index: int) -> list[tuple[str | None, int]]:
     start = [m.start() for m in re.finditer(r'blockoverride "sort_buttons_filtered_list"', text)][index]
     block = text[start:text.index("expand = {}", start)]
@@ -134,8 +150,10 @@ def test_market_header_buttons_sit_over_their_cells():
     text = _mod(tool.MARKET_GOODS)
     assert text.count("expand = {} # PP: the cells side by side from the left") == 2   # Goods and Regional rows
     lead = tool.MARKET_ROW_LEAD + 30
-    cells = [tool.STOCKPILE_CELL_WIDTH, 62, 62, 62, 15, 62, tool.MARKET_PRICE_WIDTH, tool.MARKET_PRICE_DIFF_WIDTH]
-    assert _header(text, 0) == [("name", lead), *zip(tool.MARKET_COLUMNS, cells)]
+    cells = [tool.STOCKPILE_CELL_WIDTH, tool.STOCK_MONTHS_CELL_WIDTH, 62, 62, 62, 15, 62, tool.MARKET_PRICE_WIDTH,
+             tool.MARKET_PRICE_DIFF_WIDTH]
+    columns = [None if c == tool.STOCK_MONTHS_HEADER else c for c in tool.MARKET_COLUMNS]   # the icon has no sort key
+    assert _header(text, 0) == [("name", lead), *zip(columns, cells)]
     assert _header(text, 1) == [("name", lead), *zip(tool.IN_RANGE_COLUMNS, [62, 62, 62, 62, 62, 15, 62])]
     for key in ('name = "market_price"', 'name = "market_price_diff"'):   # its header button and its own cell
         assert text.count(key) == 2, key

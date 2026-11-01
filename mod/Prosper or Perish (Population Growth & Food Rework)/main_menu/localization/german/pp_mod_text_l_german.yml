@@ -5147,6 +5147,9 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
  # pp_market_founding_l_english.yml
   pp_found_market: "Found a Market in the Capital"
   pp_found_market_desc: "Create a new [market|e] in our capital, which lies far from every other market."
+ # pp_market_panel_l_english.yml
+  PP_MARKET_STOCK_MONTHS_HEADER_TT: "Months of [demand|e] held in the [stockpile|e]"
+  PP_MARKET_STOCK_MONTHS_TT: "[GoodsMarketEntry.GetStockpile|0] in the [stockpile|e] against [Market.GetDemand(GoodsMarketEntry.GetGoods)|1] [demand|e] a month: [Divide_CFixedPoint(GoodsMarketEntry.GetStockpile, Market.GetDemand(GoodsMarketEntry.GetGoods))|1] months"
  # pp_market_village_market_access_l_english.yml
 
 # >>> eu5-building-pipeline:market_village:localization

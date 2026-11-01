@@ -1,0 +1,3 @@
+﻿l_english:
+  PP_MARKET_STOCK_MONTHS_HEADER_TT: "Months of [demand|e] held in the [stockpile|e]"
+  PP_MARKET_STOCK_MONTHS_TT: "[GoodsMarketEntry.GetStockpile|0] in the [stockpile|e] against [Market.GetDemand(GoodsMarketEntry.GetGoods)|1] [demand|e] a month: [Divide_CFixedPoint(GoodsMarketEntry.GetStockpile, Market.GetDemand(GoodsMarketEntry.GetGoods))|1] months"

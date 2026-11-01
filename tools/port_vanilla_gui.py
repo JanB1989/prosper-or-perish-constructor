@@ -111,15 +111,23 @@ MARKET_GOODS = "panels/market/market_goods.gui"
 MARKET_VIEW = "selected_market_view.gui"
 # the market panel (port_market_view): wider than the vanilla left panel (570) for the stockpile column and the split
 # price cell below. A row's cells get the panel's width less MARKET_ROW_LOSS (measured in game 2026-11-01: 568 at
-# 650) and need 620: icon 30, stockpile 100, local balance/imports/exports 3 x 62, arrow 15, balance 62, price 44 + 52,
-# margin 2, actions 129
-MARKET_PANEL_WIDTH = 720
+# 650) and need 678: icon 30, stockpile 100, months stored 58, local balance/imports/exports 3 x 62, arrow 15, balance 62,
+# price 44 + 52, margin 2, actions 129
+MARKET_PANEL_WIDTH = 760
 MARKET_ROW_LOSS = 82
 # the market's stockpile column (port_market_stockpile): cell = bar + 4 spacing + amount + gap (vanilla: 15); the gap
 # keeps the amount off the next column's numbers, which fill their cells (Jan, 2026-11-01: "3-160.01")
 STOCKPILE_CELL_WIDTH = 100
 STOCKPILE_BAR_WIDTH = 46
 STOCKPILE_GAP = 8
+# the stock in months of the market's demand, the same figure as the run report's goods page (Jan, 2026-11-01: more
+# telling than the fill, every good shares one cap). Its bar is full at the report's cheap_months. The engine has no
+# sort key for it, so its header is an icon without a button.
+STOCK_MONTHS = "Divide_CFixedPoint(GoodsMarketEntry.GetStockpile, Market.GetDemand(GoodsMarketEntry.GetGoods))"
+STOCK_MONTHS_CELL_WIDTH = 58
+STOCK_MONTHS_BAR_WIDTH = STOCK_MONTHS_CELL_WIDTH - STOCKPILE_GAP
+STOCK_MONTHS_BAR_MAX = 12
+STOCK_MONTHS_HEADER = "pp_stock_months"
 MARKET_ACTIONS_WIDTH = 4 * 30 + 3 * 3   # the row's four action buttons (build, raw goods, import, export), spacing 3
 # the goods lists as columns (port_market_columns, Jan 2026-11-01: "the values I sort are the ones below"): the rows
 # lay their cells out side by side from the left, and each header button is exactly as wide as its cell. Vanilla
@@ -132,7 +140,7 @@ MARKET_PRICE_DIFF_WIDTH = 52            # wider than their numbers ("+200%") for
 PRICE_AGAINST_DEFAULT = ("Subtract_CFixedPoint(Divide_CFixedPoint(GoodsMarketEntry.GetPrice, "
                          "GoodsMarketEntry.GetGoods.GetDefaultMarketPrice), '(CFixedPoint)1')")
 # header buttons in row order; None = the rows' arrow between exports and balance (no sort key)
-MARKET_COLUMNS = ("stockpile", "goods_local_balance", "goods_imports", "goods_exports", None, "goods_balance",
+MARKET_COLUMNS = ("stockpile", STOCK_MONTHS_HEADER, "goods_local_balance", "goods_imports", "goods_exports", None, "goods_balance",
                   "market_price", "market_price_diff")
 IN_RANGE_COLUMNS = ("in_range_produced", "in_range_locally_demanded", "in_range_local_balance", "in_range_imports",
                     "in_range_exports", None, "in_range_balance")
@@ -1030,10 +1038,25 @@ def _hide_table(text: str, model: str, what: str) -> str:
     return text[:opener.start()] + table + text[end:]
 
 
+def _stock_months_cell() -> str:
+    demanded = "GreaterThan_CFixedPoint(Market.GetDemand(GoodsMarketEntry.GetGoods), '(CFixedPoint)0')"
+    return (f"widget = {{ # PP: the stock in months of the market's demand, the bar full at {STOCK_MONTHS_BAR_MAX} months\n"
+            f"\tsize = {{ {STOCK_MONTHS_CELL_WIDTH} 22 }}\n"
+            "\tdatacontext = \"[SelectedMarketLateralView.GetMarket]\"\n"
+            "\ttooltip = \"PP_MARKET_STOCK_MONTHS_TT\"\n\n"
+            f"\twidget = {{\n\t\tvisible = \"[{demanded}]\"\n\t\tsize = {{ {STOCK_MONTHS_BAR_WIDTH} 20 }}\n\t\tparentanchor = vcenter\n\n"
+            "\t\tprogressbar_framed = {\n\t\t\tsize = { 100% 100% }\n\t\t\tusing = progress_bar_green_alt\n"
+            f"\t\t\tvalue = \"[FixedPointToFloat({STOCK_MONTHS})]\"\n\t\t\tmin = 0\n\t\t\tmax = {STOCK_MONTHS_BAR_MAX}\n\t\t}}\n\n"
+            "\t\ttext_single = {\n\t\t\tsize = { 100% 100% }\n\t\t\tautoresize = no\n"
+            "\t\t\talign = center|nobaseline\n\t\t\tusing = Font_Size_Small\n"
+            f"\t\t\traw_text = \"[{STOCK_MONTHS}|1]\"\n\t\t}}\n\t}}\n}}\n")
+
+
 def port_market_stockpile(text: str, what: str = f"vanilla {MARKET_GOODS}") -> str:
     """The market's goods rows: vanilla's 5 px vertical stockpile bar becomes a wide bar with the fill in whole percent
     on it and the stockpile amount beside it (Jan, 2026-11-01: the thin bar was unreadable; the panel is wider for it,
-    port_market_view), the header buttons follow the columns (MARKET_HEADER_WIDTHS), and the row's action buttons
+    port_market_view), then a bar with the months stored (_stock_months_cell), the header buttons follow the columns
+    (MARKET_HEADER_WIDTHS), and the row's action buttons
     are hidden in observer mode in a box that keeps their room: their checks (CanGoodGetProduced and the like) run
     the producing buildings' country_potential on the observer's empty country and logged about a thousand script
     errors a second while the panel was open. The header follows the columns (port_market_columns)."""
@@ -1065,7 +1088,7 @@ def port_market_stockpile(text: str, what: str = f"vanilla {MARKET_GOODS}") -> s
             f"\t\t\ttext = \"[{amount}|0]\"\n\t\t}}\n\n"
             f"\t\ttext_single = {{\n\t\t\tvisible = \"[Not({stocked})]\"\n\t\t\tlayoutpolicy_horizontal = expanding\n"
             "\t\t\tautoresize = no\n\t\t\tsize = { -1 20 }\n\t\t\talign = right|nobaseline\n\t\t\tusing = Font_Size_Small\n"
-            f"\t\t\ttext = \"[{amount}|0]\"\n\t\t\tdefault_format = \"#weak\"\n\t\t}}\n\t}}\n}}\n")
+            f"\t\t\ttext = \"[{amount}|0]\"\n\t\t\tdefault_format = \"#weak\"\n\t\t}}\n\t}}\n}}\n\n" + _stock_months_cell())
     text = text[:opener[0].start()] + _indent(cell, len(ind)).rstrip("\n") + text[end:]
     # the action buttons: in a box of their size, shown to a player only
     actions = list(re.finditer(r"(?m)^([ \t]*)hbox = \{\n[ \t]*spacing = 3\n[ \t]*header_button_left = \{\n", text))
@@ -1126,6 +1149,12 @@ def _sort_header(ind: str, columns: list[tuple[str | None, int]]) -> str:
     for name, width in columns:
         if name is None:
             out += f"{ind}\twidget = {{ # the rows' arrow between exports and balance\n{ind}\t\tsize = {{ {width} 1 }}\n{ind}\t}}\n\n"
+        elif name == STOCK_MONTHS_HEADER:
+            out += (f"{ind}\twidget = {{ # the months stored: no sort key in the engine, so an icon and not a button\n"
+                    f"{ind}\t\tlayoutpolicy_vertical = expanding\n{ind}\t\tsize = {{ {width} -1 }}\n"
+                    f'{ind}\t\ttooltip = "PP_MARKET_STOCK_MONTHS_HEADER_TT"\n\n'
+                    f"{ind}\t\ticon = {{\n{ind}\t\t\tparentanchor = center\n{ind}\t\t\tsize = {{ 24 24 }}\n"
+                    f'{ind}\t\t\ttexture = "gfx/interface/icons/sort/monthly_progress.dds"\n{ind}\t\t}}\n{ind}\t}}\n\n')
         else:
             out += (f'{ind}\tsort_by_key_button = {{\n{ind}\t\tname = "{name}"\n{ind}\t\tlayoutpolicy_vertical = expanding\n'
                     f"{ind}\t\tsize = {{ {width} -1 }}\n{ind}\t}}\n\n")
@@ -1164,12 +1193,13 @@ def port_market_columns(text: str, what: str = f"vanilla {MARKET_GOODS}") -> str
     headers = list(re.finditer(r'(?m)^([ \t]*)blockoverride "sort_buttons_filtered_list" \{\n', text))
     if len(headers) != 2:
         raise ValueError(f"{what}: expected 2 sort headers, found {len(headers)}")
-    specs = [list(zip(MARKET_COLUMNS, [STOCKPILE_CELL_WIDTH, *widths[0]])), list(zip(IN_RANGE_COLUMNS, widths[1]))]
+    specs = [list(zip(MARKET_COLUMNS, [STOCKPILE_CELL_WIDTH, STOCK_MONTHS_CELL_WIDTH, *widths[0]])),
+             list(zip(IN_RANGE_COLUMNS, widths[1]))]
     for i in (1, 0):
         m = headers[i]
         end = _block_end(text, text.index("{", m.start()))
         names = re.findall(r'name = "(\w+)"', text[m.start():end])
-        columns = [c for c, _ in specs[i] if c]
+        columns = [c for c, _ in specs[i] if c and c != STOCK_MONTHS_HEADER]
         if names != ["name", *columns]:
             raise ValueError(f"{what}: the sort header has {names}")
         text = text[:m.start()] + _sort_header(m.group(1), [("name", lead), *specs[i]]) + text[end:]

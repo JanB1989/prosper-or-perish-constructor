@@ -54,7 +54,7 @@
 					}
 
 					widget = { # PP: the stockpile as a wide bar with its fill in whole percent and the amount (vanilla: a 5 px bar)
-						size = { 92 22 }
+						size = { 100 22 }
 						datacontext = "[SelectedMarketLateralView.GetMarket]"
 						tooltipwidget = {
 							using = GoodsMarketEntry_template
@@ -67,6 +67,7 @@
 						hbox = {
 							using = layoutpolicy_expanding
 							spacing = 4
+							margin_right = 8
 
 							widget = {
 								size = { 46 20 }
@@ -310,7 +311,7 @@
 						tooltipmeta = {
 							texture = "[GetGoodsIcon(GoodsMarketEntry.GetGoods)]"
 						}
-						size = { 40 20 }
+						size = { 44 20 }
 						datacontext = "[SelectedMarketLateralView.GetMarket]"
 						tooltipwidget = {
 							using = goods_market_price_tooltip
@@ -320,7 +321,7 @@
 							expand = {}
 
 							text_single = {
-								maximumsize = { 40 20 }
+								maximumsize = { 38 20 }
 								align = right|nobaseline
 								using = Font_Size_Small
 								text = "[GoodsMarketEntry.GetPrice|2]"
@@ -333,7 +334,7 @@
 					}
 
 					widget = { # PP: the price against its default in percent, red above, green below (vanilla: coin icons)
-						size = { 42 20 }
+						size = { 52 20 }
 						datacontext = "[SelectedMarketLateralView.GetMarket]"
 						tooltipwidget = {
 							using = goods_market_price_tooltip
@@ -343,7 +344,7 @@
 							expand = {}
 
 							text_single = {
-								maximumsize = { 42 20 }
+								maximumsize = { 46 20 }
 								align = right|nobaseline
 								using = Font_Size_Small
 								text = "[Subtract_CFixedPoint(Divide_CFixedPoint(GoodsMarketEntry.GetPrice, GoodsMarketEntry.GetGoods.GetDefaultMarketPrice), '(CFixedPoint)1')|-=0%]"
@@ -1027,7 +1028,7 @@ types MarketOverview {
 				sort_by_key_button = {
 					name = "stockpile"
 					layoutpolicy_vertical = expanding
-					size = { 92 -1 }
+					size = { 100 -1 }
 				}
 
 				sort_by_key_button = {
@@ -1061,13 +1062,13 @@ types MarketOverview {
 				sort_by_key_button = {
 					name = "market_price"
 					layoutpolicy_vertical = expanding
-					size = { 40 -1 }
+					size = { 44 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "market_price_diff"
 					layoutpolicy_vertical = expanding
-					size = { 42 -1 }
+					size = { 52 -1 }
 				}
 
 				expand = {}

@@ -111,20 +111,23 @@ MARKET_GOODS = "panels/market/market_goods.gui"
 MARKET_VIEW = "selected_market_view.gui"
 # the market panel (port_market_view): wider than the vanilla left panel (570) for the stockpile column and the split
 # price cell below. A row's cells get the panel's width less MARKET_ROW_LOSS (measured in game 2026-11-01: 568 at
-# 650) and need 598: icon 30, stockpile 92, local balance/imports/exports 3 x 62, arrow 15, balance 62, price 40 + 42,
+# 650) and need 620: icon 30, stockpile 100, local balance/imports/exports 3 x 62, arrow 15, balance 62, price 44 + 52,
 # margin 2, actions 129
-MARKET_PANEL_WIDTH = 700
+MARKET_PANEL_WIDTH = 720
 MARKET_ROW_LOSS = 82
-# the market's stockpile column (port_market_stockpile): cell = bar + 4 spacing + amount (vanilla: 15)
-STOCKPILE_CELL_WIDTH = 92
+# the market's stockpile column (port_market_stockpile): cell = bar + 4 spacing + amount + gap (vanilla: 15); the gap
+# keeps the amount off the next column's numbers, which fill their cells (Jan, 2026-11-01: "3-160.01")
+STOCKPILE_CELL_WIDTH = 100
 STOCKPILE_BAR_WIDTH = 46
+STOCKPILE_GAP = 8
 MARKET_ACTIONS_WIDTH = 4 * 30 + 3 * 3   # the row's four action buttons (build, raw goods, import, export), spacing 3
 # the goods lists as columns (port_market_columns, Jan 2026-11-01: "the values I sort are the ones below"): the rows
 # lay their cells out side by side from the left, and each header button is exactly as wide as its cell. Vanilla
 # spread the row's cells over the free room while the header buttons kept fixed widths, so they never lined up.
 MARKET_ROW_LEAD = 3 + 3                 # the row card's inset (99 % of the row, centred) and its margin
-MARKET_PRICE_WIDTH = 40                 # vanilla's 50-wide price cell split: price, then its difference icon
-MARKET_PRICE_DIFF_WIDTH = 42            # the price against its default, up to "+200%" (a sort button needs 30)
+VANILLA_PRICE_WIDTH = 50                # vanilla's price cell: the price and its difference icon
+MARKET_PRICE_WIDTH = 44                 # split into the price and the price against its default; both right-aligned,
+MARKET_PRICE_DIFF_WIDTH = 52            # wider than their numbers ("+200%") for a gap to the column before
 # price / default price - 1, shown as a percentage: what vanilla's coin icons (copper/silver/gold) only hinted at
 PRICE_AGAINST_DEFAULT = ("Subtract_CFixedPoint(Divide_CFixedPoint(GoodsMarketEntry.GetPrice, "
                          "GoodsMarketEntry.GetGoods.GetDefaultMarketPrice), '(CFixedPoint)1')")
@@ -1050,7 +1053,7 @@ def port_market_stockpile(text: str, what: str = f"vanilla {MARKET_GOODS}") -> s
             "\tdatacontext = \"[SelectedMarketLateralView.GetMarket]\"\n"
             "\ttooltipwidget = {\n\t\tusing = GoodsMarketEntry_template\n\t}\n\n"
             "\tsort_by_small_highlight = {\n\t\tname = \"stockpile\"\n\t}\n\n"
-            "\thbox = {\n\t\tusing = layoutpolicy_expanding\n\t\tspacing = 4\n\n"
+            f"\thbox = {{\n\t\tusing = layoutpolicy_expanding\n\t\tspacing = 4\n\t\tmargin_right = {STOCKPILE_GAP}\n\n"
             f"\t\twidget = {{\n\t\t\tsize = {{ {STOCKPILE_BAR_WIDTH} 20 }}\n\n"
             "\t\t\tprogressbar_framed = {\n\t\t\t\tsize = { 100% 100% }\n\t\t\t\tusing = progress_bar_green_alt\n"
             f"\t\t\t\tvalue = \"[{percent}]\"\n\t\t\t\tmin = 0\n\t\t\t\tmax = 100\n\t\t\t}}\n\n"
@@ -1102,17 +1105,17 @@ def _price_cells(cell: str, ind: str, what: str) -> str:
             raise ValueError(f"{what}: the price cell has no {key}")
     tooltip = ("\tdatacontext = \"[SelectedMarketLateralView.GetMarket]\"\n"
                "\ttooltipwidget = {\n\t\tusing = goods_market_price_tooltip\n\t}\n\n")
-    cells = (f"widget = {{ # PP: the price (vanilla: one {MARKET_PRICE_WIDTH + 10}-wide cell with its difference icon)\n"
+    cells = (f"widget = {{ # PP: the price (vanilla: one {VANILLA_PRICE_WIDTH}-wide cell with its difference icon)\n"
              "\ttooltipmeta = {\n\t\ttexture = \"[GetGoodsIcon(GoodsMarketEntry.GetGoods)]\"\n\t}\n"
              f"\tsize = {{ {MARKET_PRICE_WIDTH} 20 }}\n" + tooltip +
              "\thbox = {\n\t\texpand = {}\n\n\t\ttext_single = {\n"
-             f"\t\t\tmaximumsize = {{ {MARKET_PRICE_WIDTH} 20 }}\n\t\t\talign = right|nobaseline\n"
+             f"\t\t\tmaximumsize = {{ {MARKET_PRICE_WIDTH - 6} 20 }}\n\t\t\talign = right|nobaseline\n"
              "\t\t\tusing = Font_Size_Small\n\t\t\ttext = \"[GoodsMarketEntry.GetPrice|2]\"\n\n"
              "\t\t\tsort_by_small_highlight = {\n\t\t\t\tname = \"market_price\"\n\t\t\t}\n\t\t}\n\t}\n}\n\n"
              "widget = { # PP: the price against its default in percent, red above, green below (vanilla: coin icons)\n"
              f"\tsize = {{ {MARKET_PRICE_DIFF_WIDTH} 20 }}\n" + tooltip +
              "\thbox = {\n\t\texpand = {}\n\n\t\ttext_single = {\n"
-             f"\t\t\tmaximumsize = {{ {MARKET_PRICE_DIFF_WIDTH} 20 }}\n\t\t\talign = right|nobaseline\n"
+             f"\t\t\tmaximumsize = {{ {MARKET_PRICE_DIFF_WIDTH - 6} 20 }}\n\t\t\talign = right|nobaseline\n"
              f"\t\t\tusing = Font_Size_Small\n\t\t\ttext = \"[{PRICE_AGAINST_DEFAULT}|-=0%]\"\n\n"
              "\t\t\tsort_by_small_highlight = {\n\t\t\t\tname = \"market_price_diff\"\n\t\t\t}\n\t\t}\n\t}\n}\n")
     return _indent(cells, len(ind) + 1).rstrip("\n")
@@ -1146,7 +1149,7 @@ def port_market_columns(text: str, what: str = f"vanilla {MARKET_GOODS}") -> str
         cells = _row_cells(text, m.start(), end, ind)
         widths[i] = [w for _, _, w in cells]
         if i == 0:   # Goods: local balance, imports, exports, arrow, balance, price
-            if widths[0] != [62, 62, 62, 15, 62, MARKET_PRICE_WIDTH + 10]:
+            if widths[0] != [62, 62, 62, 15, 62, VANILLA_PRICE_WIDTH]:
                 raise ValueError(f"{what}: the Goods row's cells are {widths[0]}")
             s, e, _ = cells[-1]   # s is the cell's line start
             text = text[:s] + _price_cells(text[s:e], ind, what) + text[e:]

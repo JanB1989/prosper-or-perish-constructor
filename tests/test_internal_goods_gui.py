@@ -99,3 +99,18 @@ def test_braces_balance():
     for rel in [*_files(), tool.INTERNAL_GOODS_GUI]:
         text = _mod(rel)
         assert tool._block_end("{" + text + "}", 0) == len(text) + 2, rel
+
+
+def test_market_stockpile_column_shows_fill_and_amount():
+    """Jan, 2026-11-01: vanilla's 5 px stockpile bar was unreadable. The goods row shows a wide bar with the fill in
+    whole percent and the stockpile amount beside it, and the header buttons follow the wider column."""
+    tool = _tool()
+    text = _mod(tool.MARKET_GOODS)
+    assert "size = { 5 22 }" not in text
+    assert text.count(f"size = {{ {tool.STOCKPILE_CELL_WIDTH} 22 }}") == 1
+    assert text.count('value = "[GoodsMarketEntry.GetStockpilePercentage]"') == 1
+    assert text.count('raw_text = "[GoodsMarketEntry.GetStockpilePercentage|0]%"') == 1
+    assert text.count('text = "[GoodsMarketEntry.GetStockpile|0]"') == 2   # the amount; weak when the stock is empty
+    for name, width in tool.STOCKPILE_HEADER_WIDTHS.items():
+        assert re.search(rf'name = "{name}"\n[ \t]*layoutpolicy_vertical = expanding\n[ \t]*size = \{{ {width} -1 \}}',
+                         text), name

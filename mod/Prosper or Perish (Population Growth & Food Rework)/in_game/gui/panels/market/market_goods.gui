@@ -53,18 +53,8 @@
 						}
 					}
 
-					widget = {
-						size = {15 22}
-
-						progressbar_framed = {
-							parentanchor = center
-							size = { 5 22 }
-							using = progress_bar_green_alt
-							value = "[FixedPointToFloat(Divide_CFixedPoint(GoodsMarketEntry.GetStockpile, GoodsMarketEntry.GetMarket.GetCenterLocation.GetModifierValueFixed('maximum_stockpile_capacity')))]"
-							min = 0
-							max = 1
-							direction = vertical
-						}
+					widget = { # PP: the stockpile as a wide bar with its fill in whole percent and the amount (vanilla: a 5 px bar)
+						size = { 92 22 }
 						datacontext = "[SelectedMarketLateralView.GetMarket]"
 						tooltipwidget = {
 							using = GoodsMarketEntry_template
@@ -72,6 +62,52 @@
 
 						sort_by_small_highlight = {
 							name = "stockpile"
+						}
+
+						hbox = {
+							using = layoutpolicy_expanding
+							spacing = 4
+
+							widget = {
+								size = { 46 20 }
+
+								progressbar_framed = {
+									size = { 100% 100% }
+									using = progress_bar_green_alt
+									value = "[GoodsMarketEntry.GetStockpilePercentage]"
+									min = 0
+									max = 100
+								}
+
+								text_single = {
+									size = { 100% 100% }
+									autoresize = no
+									align = center|nobaseline
+									using = Font_Size_Small
+									raw_text = "[GoodsMarketEntry.GetStockpilePercentage|0]%"
+								}
+							}
+
+							text_single = {
+								visible = "[GreaterThan_CFixedPoint(GoodsMarketEntry.GetStockpile, '(CFixedPoint)0')]"
+								layoutpolicy_horizontal = expanding
+								autoresize = no
+								size = { -1 20 }
+								align = right|nobaseline
+								using = Font_Size_Small
+								text = "[GoodsMarketEntry.GetStockpile|0]"
+							}
+
+							text_single = {
+								visible = "[Not(GreaterThan_CFixedPoint(GoodsMarketEntry.GetStockpile, '(CFixedPoint)0'))]"
+								layoutpolicy_horizontal = expanding
+								autoresize = no
+								size = { -1 20 }
+								align = right|nobaseline
+								using = Font_Size_Small
+								text = "[GoodsMarketEntry.GetStockpile|0]"
+								default_format = "#weak"
+							}
 						}
 					}
 				}
@@ -999,13 +1035,13 @@ types MarketOverview {
 				sort_by_key_button = {
 					name = "stockpile"
 					layoutpolicy_vertical = expanding
-					size = { 35 -1 }
+					size = { 105 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "goods_local_balance"
 					layoutpolicy_vertical = expanding
-					size = { 55 -1 }
+					size = { 40 -1 }
 				}
 
 				sort_by_key_button = {
@@ -1017,13 +1053,13 @@ types MarketOverview {
 				sort_by_key_button = {
 					name = "goods_exports"
 					layoutpolicy_vertical = expanding
-					size = { 70 -1 }
+					size = { 48 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "goods_balance"
 					layoutpolicy_vertical = expanding
-					size = { 75 -1 }
+					size = { 53 -1 }
 				}
 
 				sort_by_key_button = {

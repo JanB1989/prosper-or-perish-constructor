@@ -306,71 +306,52 @@
 					}
 
 					# PRICE
-					widget = {
+					widget = { # PP: the price (vanilla: one 50-wide cell with its difference icon)
 						tooltipmeta = {
-							texture =  "[GetGoodsIcon(GoodsMarketEntry.GetGoods)]"
+							texture = "[GetGoodsIcon(GoodsMarketEntry.GetGoods)]"
 						}
-						# size = { 68 20 }
-						size = { 50 20 }
+						size = { 40 20 }
 						datacontext = "[SelectedMarketLateralView.GetMarket]"
 						tooltipwidget = {
 							using = goods_market_price_tooltip
 						}
+
 						hbox = {
-							# spacing = 1
-							# text_single = {
-							# 	maximumsize = { 30 20 }
-							# 	align = right|nobaseline
-							# 	using = Font_Size_Small
-							# 	text = "[GoodsMarketEntry.GetGoods.GetDefaultMarketPrice|2S]"
-							# 	datacontext = "[SelectedMarketLateralView.GetMarket]"
-
-							# }
-							# icon = {
-							# 	# parentanchor = center
-							# 	size = { 12 12 }
-							# 	texture = "gfx/interface/icons/outliner/arrow_right.dds"
-							# }
-							# icon = {
-							# 	size = {12 12}
-							# 	texture = "gfx/interface/buttons/flats/button_simple.dds"						
-							# 	modify_texture = {
-							# 		using = color_new_gold_texture
-							# 	}
-							# }
 							expand = {}
-							hbox = {
 
-								# expand = {}
-								
-								spacing = 2
+							text_single = {
+								maximumsize = { 40 20 }
+								align = right|nobaseline
+								using = Font_Size_Small
+								text = "[GoodsMarketEntry.GetPrice|2]"
 
-								text_single = {
-									maximumsize = { 30 20 }
-									align = center|nobaseline
-									using = Font_Size_Small
-									text = "[GoodsMarketEntry.GetPrice|2]"
-									datacontext = "[SelectedMarketLateralView.GetMarket]"
-				
-									sort_by_small_highlight = {
-										name = "market_price"
-									}
-								}
-	
-								text_single = {
-									maximumsize = { 20 20 }
-									align = right|nobaseline
-									using = Font_Size_Small
-									raw_text = "@[GoodsMarketEntry.GetGoods.GetPriceDifferenceIconName(GoodsMarketEntry.GetPrice)]!"
-									datacontext = "[SelectedMarketLateralView.GetMarket]"
-				
-									sort_by_small_highlight = {
-										name = "market_price_diff"
-									}
+								sort_by_small_highlight = {
+									name = "market_price"
 								}
 							}
 						}
 					}
+
+					widget = { # PP: the price against its default
+						size = { 30 20 }
+						datacontext = "[SelectedMarketLateralView.GetMarket]"
+						tooltipwidget = {
+							using = goods_market_price_tooltip
+						}
+
+						text_single = {
+							parentanchor = center
+							align = center|nobaseline
+							using = Font_Size_Small
+							raw_text = "@[GoodsMarketEntry.GetGoods.GetPriceDifferenceIconName(GoodsMarketEntry.GetPrice)]!"
+
+							sort_by_small_highlight = {
+								name = "market_price_diff"
+							}
+						}
+					}
+
+					expand = {} # PP: the cells side by side from the left, under their header buttons
 				}
 
 				widget = { # PP: the actions only for a player (an observer's empty country fails their checks)
@@ -857,6 +838,8 @@ template goods_in_range_entry {
 							}
 						}
 					}					
+
+					expand = {} # PP: the cells side by side from the left, under their header buttons
 				}
 
             }
@@ -1030,53 +1013,60 @@ types MarketOverview {
 				}
 			}
 
-			blockoverride "sort_buttons_filtered_list" {
+			blockoverride "sort_buttons_filtered_list" { # PP: each button as wide as its cell in the rows below
 				sort_by_key_button = {
 					name = "name"
 					layoutpolicy_vertical = expanding
-					size = { 35 -1 }
+					size = { 36 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "stockpile"
 					layoutpolicy_vertical = expanding
-					size = { 105 -1 }
+					size = { 92 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "goods_local_balance"
 					layoutpolicy_vertical = expanding
-					size = { 50 -1 }
+					size = { 62 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "goods_imports"
 					layoutpolicy_vertical = expanding
-					size = { 86 -1 }
+					size = { 62 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "goods_exports"
 					layoutpolicy_vertical = expanding
-					size = { 50 -1 }
+					size = { 62 -1 }
+				}
+
+				widget = { # the rows' arrow between exports and balance
+					size = { 15 1 }
 				}
 
 				sort_by_key_button = {
 					name = "goods_balance"
 					layoutpolicy_vertical = expanding
-					size = { 89 -1 }
+					size = { 62 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "market_price"
 					layoutpolicy_vertical = expanding
-					size = { 41 -1 }
+					size = { 40 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "market_price_diff"
-					using = layoutpolicy_expanding
+					layoutpolicy_vertical = expanding
+					size = { 30 -1 }
 				}
+
+				expand = {}
 			}
 
 			blockoverride "scroll_list_layout" {
@@ -1180,47 +1170,54 @@ types MarketsInRangeOverview {
 				}
 			}
 
-			blockoverride "sort_buttons_filtered_list" {
+			blockoverride "sort_buttons_filtered_list" { # PP: each button as wide as its cell in the rows below
 				sort_by_key_button = {
 					name = "name"
 					layoutpolicy_vertical = expanding
-					size = { 25 -1 }
+					size = { 36 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "in_range_produced"
 					layoutpolicy_vertical = expanding
-					size = { 55 -1 }
+					size = { 62 -1 }
 				}
+
 				sort_by_key_button = {
 					name = "in_range_locally_demanded"
 					layoutpolicy_vertical = expanding
-					size = { 55 -1 }
+					size = { 62 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "in_range_local_balance"
 					layoutpolicy_vertical = expanding
-					size = { 55 -1 }
+					size = { 62 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "in_range_imports"
 					layoutpolicy_vertical = expanding
-					size = { 70 -1 }
+					size = { 62 -1 }
 				}
 
 				sort_by_key_button = {
 					name = "in_range_exports"
 					layoutpolicy_vertical = expanding
-					size = { 70 -1 }
+					size = { 62 -1 }
+				}
+
+				widget = { # the rows' arrow between exports and balance
+					size = { 15 1 }
 				}
 
 				sort_by_key_button = {
 					name = "in_range_balance"
 					layoutpolicy_vertical = expanding
-					size = { 75 -1 }
+					size = { 62 -1 }
 				}
+
+				expand = {}
 			}
 
 			blockoverride "scroll_list_layout" {

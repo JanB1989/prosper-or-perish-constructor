@@ -15,6 +15,8 @@ writes `graphs/report/<run>/`:
   heatmap axes, tables and the goods-group legends, with the name on hover;
 - `goods.html` + `goods/` - the goods page (`run_report_goods`): for every good, save and world region what makes it
   and what uses it, by building and production method, as a flow chart and tables, linked from the report's nav;
+- `budget.html` + `budget/` - the budget page (`run_report_budget`): per save, world region and large country where the
+  money comes from (down to goods), who gets it (estates, state) and where it goes, as a flow chart, tables and over time;
 - `food.html` + `food/` - the food page (`run_report_food`): how food reaches the province stores (subsistence, RGOs,
   farms, Cookshops by recipe, Taverns) and where it goes (pops, spoilage, Granges), months stored, every province.
 
@@ -1754,6 +1756,8 @@ def write_page(run: RunData, out: Path, maps: list[dict[str, str]], payload: dic
     goods_link = "<a href='goods.html' class=goodslink>Goods: what makes and uses them →</a>" if (out / "goods.html").is_file() else ""
     if (out / "food.html").is_file():
         goods_link += "<a href='food.html' class=goodslink>Food: stores, sources and eaters →</a>"
+    if (out / "budget.html").is_file():
+        goods_link += "<a href='budget.html' class=goodslink>Budget: where the money comes from and goes →</a>"
     for key, title, lead in SECTIONS:
         charts = [c for c in payload["charts"] if c["section"] == key]
         tables = [t for t in payload["tables"] if t["section"] == key]
@@ -1844,6 +1848,13 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
     goods_cache = out_root / ".goods_cache" / playthrough
     prepared = prepare_goods_flows(playthrough, run_snapshots(dataset, playthrough)["snapshot_id"].to_list(), repo=repo,
                                    project=project, dataset=dataset, cache=goods_cache, log=log)
+    from prosper_or_perish_constructor.run_report_budget import prepare_budget_flows, write_budget_page
+
+    budget_cache = out_root / ".budget_cache" / playthrough
+    budget_saves = run_snapshots(dataset, playthrough).select("snapshot_id", "year", "date").to_dicts()
+    for snap in budget_saves:
+        snap["month"] = int(str(snap["date"]).split(".")[1])
+    prepare_budget_flows(playthrough, budget_saves, dataset=dataset, cache=budget_cache, log=log)
     run = load_run(dataset, playthrough, labels=load_labels(repo, project), improvements=_improvement_model(repo, project, log))
     run.price_scale = load_price_scale(project)
     if run.urban_saves:
@@ -1858,7 +1869,8 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
                                       good_icon_sources(repo, project), out, log)
     # independent steps side by side: the goods and food pages (from the flows above), the map videos, the trade and
     # promotion maps, and the charts here
-    with ThreadPoolExecutor(4) as pool:
+    with ThreadPoolExecutor(5) as pool:
+        budget_page = pool.submit(write_budget_page, run, out, repo=repo, dataset=dataset, cache=budget_cache, log=log)
         pages = pool.submit(write_goods_page, run, out, repo=repo, project=project, dataset=dataset, cache=goods_cache,
                             canvas=canvas, fps=fps, prepared=prepared, log=log)
         location_maps = pool.submit(render_maps, run, canvas, out / "maps", repo=repo, project=project, fps=fps, log=log)
@@ -1868,6 +1880,7 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
         log(f"charts: {len(payload['charts'])}, tables: {len(payload['tables'])}")
         maps = location_maps.result() + trade_maps.result() + promotion_map.result()
         pages.result()
+        budget_page.result()
     page = write_page(run, out, maps, payload)
     (out / "report.json").write_text(json.dumps({
         "playthrough_id": run.playthrough_id, "name": run.name, "years": run.years, "saves": run.snapshots.height,
@@ -1875,6 +1888,7 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
         "tables": [{"key": t["key"], "section": t["section"], "title": t["title"]} for t in payload["tables"]],
         "goods_page": (out / "goods.html").is_file(),
         "food_page": (out / "food.html").is_file(),
+        "budget_page": (out / "budget.html").is_file(),
     }, indent=2), encoding="utf-8")
     log(f"report written to {page} ({page.stat().st_size / 1e6:.1f} MB) in {time.perf_counter() - started:.1f}s")
     return page

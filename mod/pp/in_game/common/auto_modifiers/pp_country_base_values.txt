@@ -13,9 +13,10 @@ TRY_INJECT:country_base_values = {
 	# (topography/pp_wb_attribute_rows.txt, generated), because neither a country nor a rank modifier reaches
 	# unowned tribal land, where tribesmen grew ~1 %/yr (47M -> 186M in 1352-1482 in a test campaign).
 	food_purchase_efficiency = 10000 # markets hold no food, so the food slider only bills unmet demand; this makes that bill ~0
-	# Internal dummy goods are never traded between markets: their prices are local signals (storage legs, labour,
-	# logistics wage), so trade would only arbitrage them away. The engine checks these bans on the exporter's and the
-	# importer's market owner.
+	# Internal dummy goods are not traded between markets: their prices are local signals (storage legs, labour,
+	# logistics wage), so trade would only arbitrage them away. The engine checks these bans between different market
+	# owners; burghers' exports between two markets of one country skip them (rare, docs/market_rulebook.md 8d).
+	# local_food needs no ban: burghers ship no food good from a market without market food, and PP markets hold none.
 	ban_exports_of_logistics = yes
 	ban_imports_of_logistics = yes
 	ban_exports_of_manual_labor = yes

@@ -81,7 +81,7 @@ NAI = {
 	AI_UNLOCK_BUILDING_ADVANCE_UTIL_PER_UPGRADE = 200 # 200 (1.3: 50); vanilla 1.4: advances that unlock supply buildings are researched sooner, which helps shortages
 	# EU5 1.4 food trade orders read the market food stock as a share of market food capacity. PP markets hold no food
 	# (NMarket.FOOD_CAPACITY_FACTOR 0), so the share is 0 in every market. These rules only touch goods with a food value
-	# and PP sets food = 0 on every good, so the values only set the direction: food trade is never held back by a market stock.
+	# and PP sets food = 0 on every traded good (only local_food keeps 1, it never trades), so the values only set the direction: food trade is never held back by a market stock.
 	TRADE_ORDER_FOOD_GROWTH_STOCKPILE_FRACTION = 1.0 # 0.4; below it a market may grow its food imports: always (at 0 never)
 	TRADE_ORDER_FOOD_MAINTAIN_STOCKPILE_FRACTION = 1.0 # 0.6; below it a market stays eligible to import food: always (at 0 never)
 	TRADE_ORDER_FOOD_EXPORT_SELF_STOP_FRACTION = 0 # 0.5; a market's own-food exports never stop for a low market stock
@@ -161,14 +161,14 @@ NMarket = {
 	MARKET_UPSTREAM_FACTOR = 0.8 # 0.9
 	MARKET_NO_PORT_EXTRA_DISTANCE = 0.1 # 0.1; navigation banks carry river ports
 	MARKET_PORT_EXTRA_DISTANCE = 0.02 # 0.02, scaled by 1 - harbor suitability
-	# Prices count trade fully on both sides (vanilla: 75 % of trade and 25 % / 10 % of burgher-trade exports / imports).
+	# Prices count trade fully on both sides (vanilla: 75 % of trade and 25 % of burgher-trade exports and imports; imports 10 % before EU5 1.4).
 	# Exports: a neighbour's shortage bought from this market raises its price and reaches its producers.
 	# Imports: a market whose need is covered by imports sees it in its price and stops building its own copy of the
 	# supply, so production concentrates in the exporting markets (specialisation, long run 2026-10-01).
 	TRADE_IMPACT_ON_DEMAND_SCALE = 1.0 # 0.75
 	BURGHER_TRADE_IMPACT_ON_DEMAND_SCALE = 1.0 # 0.25
 	TRADE_IMPACT_ON_SUPPLY_SCALE = 1.0 # 0.75
-	BURGHER_TRADE_IMPACT_ON_SUPPLY_SCALE = 1.0 # 0.1
+	BURGHER_TRADE_IMPACT_ON_SUPPLY_SCALE = 1.0 # 0.25 (0.1 before EU5 1.4)
 	MIN_PRICE_IMPACT = -0.5
  	MAX_PRICE_IMPACT = 1.5 # 6
 	# Stockpile prices (branch stockpile-prices, 2026-10-31, Jan): the stock bleed (5 % of the stock a month) runs from the

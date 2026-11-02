@@ -285,8 +285,8 @@ building supply and by trading from producers that can export.
 trade buildings, `global_merchant_capacity_modifier`). One traded unit of any good uses one unit of capacity, whatever the
 good's value, transport cost or the distance (the save's `merchant.used` equals the sum of the trade sizes). The world has
 ~2,800-3,000 capacity, 98 % of it in use, against ~50,000 units of raw output a month; capacity does not grow with the
-economy. Burghers trade on their own besides (burgher trading: the burghers of a town buy what their market lacks); in 1387
-they moved more raw goods than the countries (1,934 against 1,366 units a month).
+economy. Burghers trade on their own besides (burgher trading: the burghers of a town buy what their market lacks; its rules
+are in section 8d); in 1387 they moved more raw goods than the countries (1,934 against 1,366 units a month).
 
 **Profit per unit** = destination price x (1 + the trader's selling efficiency) - source price (divided by the market
 owner's modifier when the trader is not the owner, never below half) - a distance cost - `NCountry.MERCHANT_MAINTENANCE_COST`
@@ -302,7 +302,7 @@ development point).
 **Price.** Target price = base price x (D + c S) / (S + c D), clamped to 0.2-3x, with c = 0.2 (fitted on 6,867 market-goods
 of a 1387 save) and S, D the supply and demand plus `SUPPLY_AND_DEMAND_STABILITY_OFFSET_CONSTANT`; the price moves
 `MONTHLY_PRICE_CHANGE` of the way to the target each month. Trade enters S and D only in part: imports count
-`TRADE_IMPACT_ON_SUPPLY_SCALE` (0.75) of country trades and `BURGHER_TRADE_IMPACT_ON_SUPPLY_SCALE` (0.1) of burgher trades;
+`TRADE_IMPACT_ON_SUPPLY_SCALE` (0.75) of country trades and `BURGHER_TRADE_IMPACT_ON_SUPPLY_SCALE` (0.25 since EU5 1.4, 0.1 before) of burgher trades;
 exports count `TRADE_IMPACT_ON_DEMAND_SCALE` and `BURGHER_TRADE_IMPACT_ON_DEMAND_SCALE` (vanilla 0.75 and 0.25; a country
 modifier `export_impact_on_demand` scales them, capped at 1). A stockpile drawn down for export does not count as supply
 (`STOCKPILE_TRADE_IMPACT_ON_SUPPLY_SCALE` 0). At vanilla values an exporter's price saw a quarter of its burgher exports, so a
@@ -339,7 +339,8 @@ production gate leg (section 2.4i of the AI building rulebook), profit and the s
   market food capacity; PP markets hold none, so the share is 0 everywhere and the thresholds are set so it never holds
   food trade back (`TRADE_ORDER_FOOD_GROWTH/MAINTAIN_STOCKPILE_FRACTION` 1.0, `TRADE_ORDER_FOOD_EXPORT_SELF_STOP/CANCEL_FRACTION`
   and `MARKET_MIN_FOOD_STOCKPILE_RATIO_FOR_BURGHER_TRADE` 0). Those rules only apply to goods with a food value, and PP
-  gives every good food = 0. The rest of the trade-order system, trade policies, tariffs and subsidies stay vanilla.
+  gives every traded good food = 0 (only `local_food` keeps a value, 1, and it never trades, section 8d). The rest of the
+  trade-order system, trade policies, tariffs and subsidies stay vanilla.
 
 Test runs (fresh game to 1387, then 10 years from the same save; v8 = the list above, continued to 1407; b0 = no change):
 
@@ -482,6 +483,105 @@ automation (and the player's "Tariffs" automation) is apparently not wired up ye
   goods have food 0.
 - Lowering `max_tariff` in `country_base_values` caps them, but advances and laws add their own `max_tariff`.
 - The price effect matters only for player-set import rates.
+
+## 8d. Burgher trade: what limits it (EU5 1.4.5, 2026-11-02, engine-confirmed, measured on nine saves of run ebdb631e)
+
+Burgher trade fills monthly deficits. It runs once a month after the country trades, one market at a time in a fixed order
+(the market list, never sorted), so a market early in the list gets first pick of the month's surplus. Saves keep only
+per-market totals (`supplied_BurgherTrades`, `demanded_BurgherTrades`), no routes.
+
+**Two steps, one capacity pool per market.**
+
+1. **Imports.** Need per good = demand - supply - the market's own country-trade exports, when above 0.01. The buyer's
+   stockpile and price are not read. Goods go by `priority`, highest first: a building input ranks by the value of what the
+   building makes, pops add nothing. Each need takes min(need left, capacity left, the source's surplus) from the sources
+   in range, in list order. The trade is booked before its profit is worked out, so a loss-making import still runs and
+   uses capacity; it just pays the burghers nothing.
+2. **Exports.** Leftover capacity ships the market's surplus to markets in range with demand above supply and a higher
+   price, largest relative price gap first: min(capacity left, surplus, the buyer's deficit), only at a profit.
+
+A source's surplus = min(supply - demand, stockpile), both above 0. A stockpile with no monthly surplus ships nothing.
+
+**Capacity** per location = burghers (thousands) x (1 + `local_trades_per_burgher` + `global_trades_per_burgher`), both
+shown in game as Burghers Trade Capacity. One traded unit of any good uses one unit. It is separate from merchant capacity.
+
+- Local: burgher literacy (+0.5 at full literacy); trade buildings per staffed level (Marketplace 1, Merchants' Quarters 1.5,
+  Grand Marketplace 2, Commerce Center 4, Port Authority 0.25; market warehouse, funduq, merchants guild 0.1); town rights
+  (royal market rights 0.4, market charter 0.25, Swedish and Norwegian city rights 1); salt RGO bonus 0.10 (PP).
+- Global: Trade Monopolies privilege +1, free-trade societal value up to +1, Act of Navigation +0.25, trading companies
+  parliament issue +1, some country advances 0.15-0.4.
+
+**Range.** `burgher_max_trade_range` per age in `common/age`; PP keeps vanilla and no modifier changes it. It is a hard limit
+between market centres: inside it every market counts the same, with no distance cost.
+
+| From | Range | On the map | Markets in reach (median of the 160 on the 1837 map) |
+| --- | --- | --- | --- |
+| 1337 | 600 | ~2,300 km | 19 |
+| 1342 | 700 | ~2,700 km | 24 |
+| 1437 | 800 | ~3,000 km | 30 |
+| 1537 | 900 | ~3,500 km | 34.5 |
+| 1637 | 1000 | ~3,900 km | 42 |
+| 1737 | 1100 | ~4,300 km | 47 |
+
+- On one land mass the distance is the straight line. Across land masses it is the smaller of 2 x straight line and 2 x land
+  legs to the ports + sea route; a centre with no port on another land mass is out of reach. Which locations the engine
+  groups into one land mass is not mapped.
+- The map scale is a fit, not read from the engine: one range unit is about 2 px of `locations.png`, about 3.9 km. At that
+  scale 99.84 %+ of burgher imports have an exporter within reach, and the replay fits best from 1.5 to 2.5 x the range in px
+  (error 0.09-0.26 at 2 x, 0.17-0.38 at 1 x, 0.13-0.39 with no limit). That the value read is this age key rests on the
+  order of the age fields and on this fit.
+- At that scale the Americas are out of reach of Europe, Africa and Asia at every age. Market pairs in reach from range 700 to
+  1100: inside Europe 66 -> 88 %, Europe-Africa 10 -> 31 %, Europe-Asia 4 -> 14 %. A few ports exceed the fit (Mogadishu,
+  Kilwa, Sofala, Tahiti, Tongatapu), in tiny volumes, probably by sea route.
+
+**Who.** No trade when the burghers' country is at war with the owner of the other market's centre, is embargoed by it, or it
+is in isolation and they have no exemption.
+
+**What.** Every good can trade unless something below blocks it, including gold, silver and slaves.
+
+| Goods | Block |
+| --- | --- |
+| `offset`, `logistics`, `manual_labor`, `province_food_sales` | PP bans export and import on every country (`pp_country_base_values.txt`) |
+| `local_food` | No ban. A good with a food value ships only from a market holding market food, and PP markets hold none. It is the only PP good with a food value |
+| Wine, beer, liquor | Import ban for Sunni, Shia and Ibadi countries; both ways under the `ban_on_alcohol` reform |
+| Slaves | Both ways under `slavery_outlawed`; exports under the `protecting_against_slave_trade` character modifier |
+| Gold, silver | Export ban under the `gold_export_ban` law |
+| Livestock | Import ban under the Cathar `pescatarianism` aspect |
+| Others by event | Static modifiers such as `foodstuffs_exports_banned` (Black Death), `cloth_exports_banned`, `tea_imports_banned` |
+
+In the import step the burghers' own country's import ban always counts, the source owner's export ban only when the two
+market owners differ. The export step tests bans only between different market owners, so a banned good can move between two
+markets of one country: seen once in nine saves, 71 `manual_labor` from Hangzhou to Wuning in 1717, both Wu. Harmless.
+
+**What does not limit it.** Merchant capacity, merchant power, trade efficiency, `transport_cost` and the merchants' trade
+range. Market access only decides which location's capacity is used first. Tariffs only enter the profit.
+
+**Profit** = `TRADE_BURGHER_PROFIT_SCALE` (0.1) x (destination price - source price) x units + tariff terms, paid only above 0;
+the location's control share goes to the burghers estate.
+
+**How much capacity is used.** Saves do not store capacity, so this rebuilds it from the sources above. The replay runs the
+monthly pass with that capacity; its market imports correlate 0.98-1.00 with the saves, and it moves 4-13 % too many units
+because it models no wars, embargoes or bans. Trade columns = units moved in the replay, against today.
+
+| Year | Capacity per 1,000 burghers | World use | Median market use | Full markets (95 %+) | Capacity x2 | Capacity x0.5 | Trade buildings x0.5 | Trade buildings x0 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1347 | 2.8 | 34 % | 47 % | 38 of 125 | +0.6 % | -7 % | -1.2 % | -7 % |
+| 1407 | 4.3 | 36 % | 56 % | 47 of 126 | +1.8 % | -10 % | -3.2 % | -29 % |
+| 1472 | 5.0 | 27 % | 43 % | 39 of 131 | +1.2 % | -4 % | -1.2 % | -19 % |
+| 1532 | 6.2 | 18 % | 27 % | 35 of 134 | +0.5 % | -3 % | -0.4 % | -11 % |
+| 1597 | 6.9 | 17 % | 25 % | 25 of 138 | +0.3 % | -1 % | -0.3 % | -5 % |
+| 1657 | 7.0 | 19 % | 24 % | 32 of 145 | +0.7 % | -3 % | -0.8 % | -9 % |
+| 1717 | 8.6 | 17 % | 24 % | 26 of 147 | +0.2 % | -2 % | -0.5 % | -7 % |
+| 1782 | 11.6 | 15 % | 26 % | 31 of 152 | +0.3 % | -2 % | -0.6 % | -10 % |
+| 1837 | 14.7 | 14 % | 29 % | 30 of 160 | +0.3 % | -2 % | -0.5 % | -15 % |
+
+- Capacity does not limit burgher trade. Full markets hold 26 % of burghers in 1347 but 2-6 % from 1532 on, and neighbours
+  with spare capacity ship to them. What stays unmet has no source in range: doubling capacity moves unmet need 0 to -5 %.
+- Cuts cost little until they are large. Unmet need changes +5 to +45 % at capacity x0.5, +1 to +13 % at trade buildings x0.5,
+  +15 to +156 % at trade buildings x0. The early game is tightest.
+- Trade buildings are most of the growth: 1.6 of the 2.8 in 1347, 12.6 of the 14.7 in 1837.
+- The fit worsens below capacity x0.75 and is flat above, so real capacity is not much below this rebuild but may be higher.
+  The console command `export_market_capacity` should write the real values; it has not been run.
 
 ## 7. Open
 

@@ -509,10 +509,11 @@
 - A `REPLACE:` or `TRY_REPLACE:` block is a frozen copy of vanilla, and `ppc update-audit` compares vanilla with vanilla
   only. `agricultural_cultivation` kept `monthly_towards_serfdom` where vanilla has `monthly_towards_land`; the game
   tracker starts on 2026-05-17 with land already in place, so no audit could show it.
-- `config/vanilla_replace_pins.csv` holds the hash of the vanilla block (the audit's `new_hash`, joined with `+` per DLC
+- `tests/vanilla_replace_pins.csv` holds the hash of the vanilla block (the audit's `new_hash`, joined with `+` per DLC
   inject) for every replaced block. `tests/test_vanilla_replace_pins.py` fails when one differs, so after a game update
   `ppc test` lists these blocks too. Port the change into the mod's copy, then run `uv run ppc vanilla-pins record`.
-  `ppc vanilla-pins check` lists the same blocks without the suite. A new `REPLACE:` needs a record as well.
+  `ppc vanilla-pins check` lists the same blocks without the suite. A new `REPLACE:` needs a record as well. The file
+  stays out of `config`, a World Builder input: a record there would rerun the start setup on the next sync.
 - The same test compares the mod's copies with vanilla today for societal value moves (`monthly_towards_*`): a replaced
   block may differ only if it is listed in `DELIBERATE_SOCIETAL_VALUE_MOVES`. Other lines are not compared with vanilla
   today, because the mod changes them on purpose; the pins catch their vanilla changes from 2026-11-02 on.

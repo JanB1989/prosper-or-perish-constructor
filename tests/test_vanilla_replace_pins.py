@@ -6,6 +6,7 @@ from pathlib import Path
 
 from eu5gameparser.clausewitz.syntax import CList, Value
 from eu5gameparser.load_order import LoadOrderConfig
+from prosper_or_perish_constructor.cli import WORLDBUILDER_CODE_AND_DATA
 from prosper_or_perish_constructor.vanilla_pins import (
     PINS_PATH,
     current_pins,
@@ -51,6 +52,10 @@ def test_replaced_vanilla_blocks_match_the_reviewed_text() -> None:
     assert not problems, "\n".join(
         ["Port each changed block into the mod's copy, then run `ppc vanilla-pins record`:", *problems]
     )
+
+
+def test_recording_pins_does_not_rerun_the_start_setup() -> None:
+    assert not any(PINS_PATH.is_relative_to(stage_input) for stage_input in WORLDBUILDER_CODE_AND_DATA)
 
 
 def test_replaces_keep_vanilla_societal_value_moves() -> None:

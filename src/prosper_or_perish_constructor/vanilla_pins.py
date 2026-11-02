@@ -2,9 +2,10 @@
 
 A (TRY_)REPLACE freezes a copy of the vanilla block, so a later vanilla change never reaches the mod by itself, and
 `ppc update-audit` only compares vanilla with vanilla: agricultural_cultivation kept monthly_towards_serfdom after vanilla
-moved it to land. `config/vanilla_replace_pins.csv` holds the update-audit hash of each replaced vanilla block;
+moved it to land. `tests/vanilla_replace_pins.csv` holds the update-audit hash of each replaced vanilla block;
 tests/test_vanilla_replace_pins.py fails when one differs, so a game update lists these blocks until they are ported and
-recorded again with `ppc vanilla-pins record`.
+recorded again with `ppc vanilla-pins record`. The file stays out of `config`: that folder is a World Builder input, so
+a record there would rerun the start setup on the next sync.
 """
 
 from __future__ import annotations
@@ -18,7 +19,7 @@ from eu5gameparser.clausewitz.syntax import CEntry
 
 from prosper_or_perish_constructor.update_audit import COMMON_SCOPES, _definition_hash, _entry_mode, _normalized_entry
 
-PINS_PATH = Path("config") / "vanilla_replace_pins.csv"
+PINS_PATH = Path("tests") / "vanilla_replace_pins.csv"
 REPLACE_MODES = {"REPLACE", "TRY_REPLACE"}
 DEFINING_MODES = REPLACE_MODES | {"CREATE", "REPLACE_OR_CREATE"}
 INJECT_MODES = {"INJECT", "TRY_INJECT", "INJECT_OR_CREATE"}

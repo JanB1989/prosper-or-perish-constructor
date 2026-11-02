@@ -25,7 +25,7 @@ from prosper_or_perish_constructor.rgo_cost_redirects import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 LOAD_ORDER = ROOT / "constructor.load_order.toml"
 EXPECTED_NO_EFFECT_RGO_REDIRECT_ADVANCES: set[str] = set()
 

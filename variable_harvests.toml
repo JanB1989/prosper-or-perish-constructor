@@ -23,10 +23,10 @@ subcontinents = [
 ]
 
 [paths]
-static_modifiers = "mod/Prosper or Perish (Population Growth & Food Rework)/in_game/common/static_modifiers/pp_variable_harvest_modifiers.txt"
-scripted_effects = "mod/Prosper or Perish (Population Growth & Food Rework)/in_game/common/scripted_effects/pp_variable_harvest_effects.txt"
-modifier_localization = "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/localization/english/pp_variable_harvest_modifiers_l_english.yml"
-location_modifiers = "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/common/static_modifiers/pp_location_modifiers.txt"
+static_modifiers = "mod/pp/in_game/common/static_modifiers/pp_variable_harvest_modifiers.txt"
+scripted_effects = "mod/pp/in_game/common/scripted_effects/pp_variable_harvest_effects.txt"
+modifier_localization = "mod/pp/main_menu/localization/english/pp_variable_harvest_modifiers_l_english.yml"
+location_modifiers = "mod/pp/main_menu/common/static_modifiers/pp_location_modifiers.txt"
 
 [derivation]
 high_positive_share = 0.20

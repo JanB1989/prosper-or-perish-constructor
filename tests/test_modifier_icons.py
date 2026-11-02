@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-COMMON = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)" / "main_menu" / "common"
+COMMON = ROOT / "mod" / "pp" / "main_menu" / "common"
 TOP_LEVEL = re.compile(r"^([A-Za-z_][\w.]*)\s*=\s*\{", re.M)
 COMMENT = re.compile(r"#[^\n]*")
 

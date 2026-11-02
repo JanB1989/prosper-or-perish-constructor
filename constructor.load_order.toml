@@ -17,7 +17,7 @@ id = "constructor"
 name = "Prosper or Perish Constructor"
 # Keep the constructor mod root relative to this checkout so the same config
 # works after cloning the repository to a different native WSL/Linux path.
-root = "mod/Prosper or Perish (Population Growth & Food Rework)"
+root = "mod/pp"
 
 [profiles]
 vanilla = ["vanilla"]

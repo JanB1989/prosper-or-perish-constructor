@@ -11,7 +11,7 @@ from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT / "constructor.toml"
 BUILDING_TYPES = Path("in_game/common/building_types")
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 
 _BLOCK = re.compile(r"^((?:TRY_)?(?:REPLACE|INJECT)(?:_OR_CREATE)?:)?([A-Za-z0-9_]+)\s*=\s*\{", re.M)
 _TAGS = re.compile(r"graphical_tags\s*=\s*\{([^}]*)\}")

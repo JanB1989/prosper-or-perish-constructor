@@ -83,7 +83,7 @@ def test_nothing_the_stage_runs_reads_the_blind_keys() -> None:
     writers = {"market_access.py", "markets.py", "logistics.py"}
     code = [p for rel in WORLDBUILDER_CODE_AND_DATA if (root := repo / rel).exists()
             for p in ([root] if root.is_file() else root.rglob("*.py")) if p.suffix == ".py" and p.name not in writers]
-    mod = next((repo / "mod").glob("Prosper or Perish (Population*"))
+    mod = repo / "mod" / "pp"
     scripts = [p for sub in ("in_game/common", "main_menu/common") for p in (mod / sub).rglob("*.txt")
                if "static_modifiers" not in p.parts]
     for key in WB_BLIND_STATIC_KEYS:
@@ -93,7 +93,7 @@ def test_nothing_the_stage_runs_reads_the_blind_keys() -> None:
 
 
 def _mod_root() -> Path:
-    return next((Path(__file__).resolve().parents[1] / "mod").glob("Prosper or Perish (Population*"))
+    return Path(__file__).resolve().parents[1] / "mod" / "pp"
 
 
 def test_worldbuilder_mod_inputs_exist() -> None:

@@ -5,7 +5,7 @@ from eu5gameparser.load_order import LoadOrderConfig
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 EVENT_ROOT = MOD_ROOT / "in_game" / "events"
 
 OVERRIDDEN_EVENT_FILES = (

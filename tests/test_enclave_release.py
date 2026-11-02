@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-COMMON = Path(__file__).resolve().parents[1] / "mod" / "Prosper or Perish (Population Growth & Food Rework)" / "in_game" / "common"
+COMMON = Path(__file__).resolve().parents[1] / "mod" / "pp" / "in_game" / "common"
 
 
 def _block(text: str, key: str) -> str:

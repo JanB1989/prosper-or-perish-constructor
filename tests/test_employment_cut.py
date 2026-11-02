@@ -11,7 +11,7 @@ from prosper_or_perish_constructor import building_footprint, building_scaling
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT / "constructor.toml"
-MOD = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD = ROOT / "mod" / "pp"
 BUILDING_TYPES = MOD / "in_game" / "common" / "building_types"
 BLUEPRINTS = ROOT / "blueprints" / "accepted" / "buildings"
 COUNTER = re.compile(r"^[ \t]*local_pp_(farm|staple)_levels\s*=", re.M)

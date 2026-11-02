@@ -9,7 +9,7 @@ from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT / "constructor.toml"
-MOD = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD = ROOT / "mod" / "pp"
 CONFIG = msw.Config(amount=20, demand_floor=1, tax_base_full=2000, not_goods=frozenset({"offset", "logistics", "local_food"}))
 PRICES = {"iron": 3.0, "dyes": 8.0, "tools": 6.0}
 

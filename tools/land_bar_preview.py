@@ -32,7 +32,7 @@ from PIL import Image
 from prosper_or_perish_constructor import arable_land_bar as alb
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD = ROOT / "mod" / "pp"
 GAME = Path.home() / ".cache/eu5-vanilla/game"
 HANDOVER = ROOT.parent / "EU5WorldBuilder/artifacts/handover/latest/location_targets.csv"
 SAVES = Path("/mnt/c/Users/Anwender/Documents/Paradox Interactive/Europa Universalis V/save games")

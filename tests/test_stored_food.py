@@ -15,7 +15,7 @@ from prosper_or_perish_constructor.worldbuilder import migration
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT / "constructor.toml"
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 ON_ACTION = MOD_ROOT / "in_game/common/on_action/pp_stored_food.txt"
 GAME_START = MOD_ROOT / "in_game/common/on_action/pp_game_start.txt"
 STORAGE_VALUES = MOD_ROOT / "in_game/common/script_values/pp_province_food_storage.txt"

@@ -8,7 +8,7 @@ from prosper_or_perish_constructor import food_storage_gui
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 MAP_MODE_ROOT = MOD_ROOT / "in_game" / "gfx" / "map" / "map_modes"
 LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_building_adjustments_l_english.yml"
 FOOD_STORAGE_LOCALIZATION = MOD_ROOT / food_storage_gui.FOOD_STORAGE_LOCALIZATION

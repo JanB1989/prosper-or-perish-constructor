@@ -26,7 +26,7 @@ from eu5_building_pipeline.dds import write_game_dds
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD = ROOT / "mod/Prosper or Perish (Population Growth & Food Rework)"
+MOD = ROOT / "mod/pp"
 FIELD = ROOT / "assets/icons/arable_land/arable_land.png"
 ICONS_DIR = "gfx/interface/icons/pp_arable_land"   # under the mod's main_menu: abundant.dds, available.dds, overused.dds
 BASE_TARGETS = {   # under the mod's main_menu/gfx/interface/icons -> "field" or "modifier"

@@ -20,7 +20,7 @@ from scripts.generate_variable_harvests import exempt_goods
 from test_gui_blocks import _calls, _vanilla
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 STYLE = MOD_ROOT / "in_game/gui/shared/pp_europedia_style.gui"
 GENERATED = MOD_ROOT / location_status.EUROPEDIA_HARVEST_GUI
 EUROPEDIA = MOD_ROOT / "in_game/gui/encyclopedia_lateralview.gui"

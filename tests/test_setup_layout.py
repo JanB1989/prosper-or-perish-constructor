@@ -7,7 +7,7 @@ from eu5gameparser.load_order import LoadOrderConfig
 from prosper_or_perish_constructor import setup_layout as sl
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 
 
 def test_the_mod_ships_nothing_in_the_pre_1_4_setup_folder() -> None:

@@ -9,7 +9,7 @@ from prosper_or_perish_constructor.worldbuilder.buildings import gate_trigger, t
 from prosper_or_perish_constructor.worldbuilder.start_placement import load_owners
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 
 
 def test_river_areas_never_name_a_country():

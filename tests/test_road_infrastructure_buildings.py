@@ -9,7 +9,7 @@ from prosper_or_perish_constructor import yaml_io
 ROOT = Path(__file__).resolve().parents[1]
 BLUEPRINT_ROOT = ROOT / "blueprints" / "accepted" / "buildings"
 MANIFEST_PATH = ROOT / "blueprints" / "buildings.manifest.yml"
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 ROAD_TYPES = MOD_ROOT / "in_game" / "common" / "road_types" / "pp_road_infrastructure_rebalance.txt"
 GAME_START = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_game_start.txt"
 ROAD_STARTUP = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_road_infrastructure_startup.txt"

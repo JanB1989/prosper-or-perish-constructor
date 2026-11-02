@@ -17,7 +17,7 @@ from prosper_or_perish_constructor.worldbuilder import start_simulation as ss
 from prosper_or_perish_constructor.worldbuilder.start_rules import Rules
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 # location lists that are a building's design, not a start exception (vanilla's own, or a site classification)
 DESIGN_LOCATION_LISTS = {"salt_mine", "salt_mine_improved", "inland_saltworks", "engineered_brine_saltworks", "ablaq_palace", "shoen"}
 

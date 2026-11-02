@@ -17,7 +17,7 @@ import pytest
 from prosper_or_perish_constructor import building_links, cap_tooltips
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 _ENTRY = re.compile(r'^\s*([\w.]+):\d*\s*"(.*)"\s*$')
 _REFERENCE = re.compile(r"\$(\w+)(?:\|[^$]*)?\$")
 _UNLINKED = re.compile(r"ShowBuildingTypeNameWithNoTooltip\(|ShowBuildingTypeName\('\w+'\)\]")

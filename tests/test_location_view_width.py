@@ -13,7 +13,7 @@ from pathlib import Path
 from prosper_or_perish_constructor import arable_land_bar, location_status, location_view
 
 ROOT = Path(__file__).resolve().parents[1]
-WINDOW = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)" / "in_game" / "gui" / "location_window.gui"
+WINDOW = ROOT / "mod" / "pp" / "in_game" / "gui" / "location_window.gui"
 
 
 def _bar_block(text: str) -> str:

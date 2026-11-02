@@ -17,26 +17,27 @@ spec.loader.exec_module(check_path_lengths)
 
 
 def test_tracked_paths_fit_windows_path_budget() -> None:
-    issues = check_path_lengths.check_paths(
-        check_path_lengths.tracked_paths(ROOT),
-        max_relative_path=check_path_lengths.MAX_RELATIVE_PATH,
-        max_component=check_path_lengths.MAX_COMPONENT,
-    )
+    issues = check_path_lengths.check_paths(check_path_lengths.tracked_paths(ROOT))
 
     assert not issues, "\n".join(
         f"{issue.length} > {issue.limit} {issue.kind}: {issue.path}" for issue in issues
     )
 
 
-def test_path_budget_exceptions_are_limited_to_engine_required_icons() -> None:
-    assert len(check_path_lengths.ENGINE_REQUIRED_PATH_LIMITS) == 4
-    assert all(
-        path.endswith(".dds")
-        and ("/trade_goods/illustrations/icon_goods_" in path or "/icons/climate/ha1300_climate_" in path)
-        for path in check_path_lengths.ENGINE_REQUIRED_PATH_LIMITS
-    )
-    assert check_path_lengths.check_paths(
-        list(check_path_lengths.ENGINE_REQUIRED_PATH_LIMITS),
-        max_relative_path=check_path_lengths.MAX_RELATIVE_PATH,
-        max_component=check_path_lengths.MAX_COMPONENT,
-    ) == []
+def test_budget_leaves_room_for_the_worst_folder_people_put_the_repo_in() -> None:
+    # 2026-11-02: a GitHub ZIP unpacked by Explorer (doubled folder) under a long user name and OneDrive
+    root = "C:\\Users\\firstname.lastname\\OneDrive - Company\\Downloads\\" + "prosper-or-perish-constructor-main\\" * 2
+    assert len(root) <= check_path_lengths.ROOT_ALLOWANCE
+    assert check_path_lengths.ROOT_ALLOWANCE + check_path_lengths.MAX_RELATIVE_PATH <= 259
+    assert check_path_lengths.ROOT_ALLOWANCE + check_path_lengths.MAX_RELATIVE_FOLDER <= 247
+
+
+def test_check_flags_paths_and_folders_over_the_budget_without_exceptions() -> None:
+    limit, folder_limit = check_path_lengths.MAX_RELATIVE_PATH, check_path_lengths.MAX_RELATIVE_FOLDER
+    at_limit = "a" * 50 + "/" + "b" * (limit - 51)
+    deep = "a" * 50 + "/" + "b" * (folder_limit - 50) + "/f"
+
+    assert check_path_lengths.check_paths([at_limit]) == []
+    assert [issue.kind for issue in check_path_lengths.check_paths([at_limit + "c"])] == ["path"]
+    assert [issue.kind for issue in check_path_lengths.check_paths([deep])] == ["folder"]
+    assert [issue.kind for issue in check_path_lengths.check_paths(["c" * (check_path_lengths.MAX_COMPONENT + 1)])] == ["component"]

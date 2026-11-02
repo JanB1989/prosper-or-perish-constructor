@@ -21,7 +21,7 @@ from prosper_or_perish_constructor import staple_foods
 from test_project_config import LAND_FARM_BUILDINGS
 
 
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 CONFIG_PATH = ROOT / "variable_harvests.toml"
 HARVEST_MODIFIERS = (
     MOD_ROOT / "in_game" / "common" / "static_modifiers" / "pp_variable_harvest_modifiers.txt"

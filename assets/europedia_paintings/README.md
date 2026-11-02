@@ -17,7 +17,7 @@ middle band), save it here as `<card>.jpg`, add it to `PAINTINGS` in the tool, a
 
 ## What this is for
 Prosper or Perish is a large economy, food and population mod for Europa Universalis V. Its repo is
-`/home/jan/development/ProsperOrPerishConstructor` (WSL; the mod lives in `mod/Prosper or Perish (Population Growth & Food Rework)`).
+`/home/jan/development/ProsperOrPerishConstructor` (WSL; the mod lives in `mod/pp`).
 The mod has its own in-game encyclopedia ("Europedia"). Every page (card) opens with a wide picture across the top, the
 banner. It is shown at 1450 x 250 px (stored at 2900 x 500). Today these banners are stitched-together landscapes, and
 they all look alike. We want each page to open with a real painting of its topic instead.

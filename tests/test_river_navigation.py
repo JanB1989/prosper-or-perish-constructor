@@ -1,6 +1,6 @@
 from pathlib import Path
 
-MOD = Path(__file__).resolve().parents[1]/'mod/Prosper or Perish (Population Growth & Food Rework)'
+MOD = Path(__file__).resolve().parents[1]/'mod/pp'
 
 
 def test_documented_starting_navigation_turns_shallows_navigable():

@@ -8,7 +8,7 @@ from prosper_or_perish_constructor.worldbuilder import spline_network as sn
 from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
 REPO = Path(__file__).resolve().parents[1]
-MOD = REPO / "mod/Prosper or Perish (Population Growth & Food Rework)"
+MOD = REPO / "mod/pp"
 
 
 def _network(points, strips, connections):

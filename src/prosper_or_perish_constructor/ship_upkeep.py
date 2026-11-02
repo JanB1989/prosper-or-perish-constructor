@@ -24,7 +24,7 @@ from pathlib import Path
 from eu5gameparser.clausewitz.parser import parse_file
 from eu5gameparser.clausewitz.syntax import CList
 
-MOD_FOLDER = "Prosper or Perish (Population Growth & Food Rework)"
+MOD_FOLDER = "pp"
 OUTPUT = Path("in_game/common/prices/pp_ship_upkeep.txt")
 MODIFIER_TYPES = Path("main_menu/common/modifier_type_definitions/pp_ship_upkeep_modifier_types.txt")
 MODIFIER_ICONS = Path("main_menu/common/modifier_icons/pp_ship_upkeep_modifier_icons.txt")

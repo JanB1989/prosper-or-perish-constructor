@@ -30,7 +30,7 @@ from prosper_or_perish_constructor.worldbuilder import biomes as wb_biomes  # no
 from prosper_or_perish_constructor.worldbuilder import compat as wb_compat  # noqa: E402
 
 Image.MAX_IMAGE_PIXELS = None
-MOD = REPO / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD = REPO / "mod" / "pp"
 WATER = np.array([86, 118, 140], np.float32)
 TOPO_COAST = {"flatland": 0, "hills": 1, "plateau": 2, "mountains": 3, "wetlands": 4}
 

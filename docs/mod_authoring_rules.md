@@ -1,6 +1,6 @@
 # Mod authoring rules
 
-Rules for hand-authored files of the main mod (`mod/Prosper or Perish (Population Growth & Food Rework)`, called M
+Rules for hand-authored files of the main mod (`mod/pp`, called M
 below): map modes and their icons, farmed goods output modifiers, the Europedia (game concepts and their GUI). They
 used to ship inside the mod as `.cursorrules`, `.cursor/rules/*.mdc`,
 `in_game/gfx/map/map_modes/MAP_MODE_ICONS.md` and `main_menu/common/game_concepts/Ingame_Documentation_Rules.md`;

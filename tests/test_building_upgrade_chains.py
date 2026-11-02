@@ -34,7 +34,7 @@ VANILLA_LOCATIONS = (
 ADVANCES_PATH = (
     ROOT
     / "mod"
-    / "Prosper or Perish (Population Growth & Food Rework)"
+    / "pp"
     / "in_game"
     / "common"
     / "advances"
@@ -44,7 +44,7 @@ ADVANCE_ROOT = ADVANCES_PATH.parent
 FISHING_ADVANCES_PATH = (
     ROOT
     / "mod"
-    / "Prosper or Perish (Population Growth & Food Rework)"
+    / "pp"
     / "in_game"
     / "common"
     / "advances"
@@ -53,7 +53,7 @@ FISHING_ADVANCES_PATH = (
 DRIFT_NET_ADVANCES_PATH = (
     ROOT
     / "mod"
-    / "Prosper or Perish (Population Growth & Food Rework)"
+    / "pp"
     / "in_game"
     / "common"
     / "advances"
@@ -62,7 +62,7 @@ DRIFT_NET_ADVANCES_PATH = (
 GAME_START_PATH = (
     ROOT
     / "mod"
-    / "Prosper or Perish (Population Growth & Food Rework)"
+    / "pp"
     / "in_game"
     / "common"
     / "on_action"
@@ -71,7 +71,7 @@ GAME_START_PATH = (
 BUILDING_TYPES_ROOT = (
     ROOT
     / "mod"
-    / "Prosper or Perish (Population Growth & Food Rework)"
+    / "pp"
     / "in_game"
     / "common"
     / "building_types"
@@ -79,7 +79,7 @@ BUILDING_TYPES_ROOT = (
 LOCALIZATION_ROOT = (
     ROOT
     / "mod"
-    / "Prosper or Perish (Population Growth & Food Rework)"
+    / "pp"
     / "main_menu"
     / "localization"
     / "english"
@@ -87,7 +87,7 @@ LOCALIZATION_ROOT = (
 LOCATION_MODIFIER_ADJUSTMENTS_PATH = (
     ROOT
     / "mod"
-    / "Prosper or Perish (Population Growth & Food Rework)"
+    / "pp"
     / "main_menu"
     / "common"
     / "static_modifiers"

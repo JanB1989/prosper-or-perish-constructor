@@ -12,7 +12,7 @@ from prosper_or_perish_constructor.worldbuilder.start_food_model_v2 import FoodM
 from prosper_or_perish_constructor.worldbuilder.start_simulation import Simulation
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 BLUEPRINTS = ROOT / "blueprints" / "accepted" / "buildings"
 
 

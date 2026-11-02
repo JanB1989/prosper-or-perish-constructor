@@ -23,7 +23,7 @@ from eu5_building_pipeline.iconkit.finalize import grade, soften
 SEED = 41
 SIDE = 256  # interface_dds.ADVANCE_MAX_SIDE
 ROOT = Path(__file__).resolve().parents[3]
-OUTPUT = ROOT / "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/advance/amber_diggings.dds"
+OUTPUT = ROOT / "mod/pp/main_menu/gfx/interface/advance/amber_diggings.dds"
 
 GOLD = ((255, 204, 84), (222, 124, 18), (112, 40, 4))
 ORANGE = ((252, 170, 56), (200, 84, 12), (96, 28, 4))

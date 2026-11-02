@@ -5,7 +5,7 @@ from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-COMMON = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)" / "in_game" / "common"
+COMMON = ROOT / "mod" / "pp" / "in_game" / "common"
 ROAD_PROXIMITY = {"gravel": 0, "paved": 5, "modern": 10, "railroad": 15}  # vanilla road_types proximity
 
 

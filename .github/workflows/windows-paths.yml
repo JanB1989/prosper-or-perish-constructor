@@ -1,0 +1,22 @@
+# Every push and pull request on real Windows: the path budget, the file names, and a clone under the longest root we allow.
+# This also catches what skips the local pre-commit hook.
+name: Windows paths
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  windows-paths:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Path budget and file names
+        run: |
+          python tools/check_path_lengths.py
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          python tools/check_repo_files.py
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+      - name: Clone under the longest allowed root
+        run: ./tools/check_windows_clone.ps1

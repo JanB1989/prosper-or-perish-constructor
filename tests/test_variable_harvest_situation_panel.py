@@ -19,7 +19,7 @@ from test_europedia_style import _all_loc, _concepts, _loc, _texture_exists
 from test_gui_blocks import _calls, _index, _vanilla
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 PANEL = MOD_ROOT / "in_game/gui/panels/situation/harvest_situation.gui"
 CUSTOM = MOD_ROOT / location_status.CUSTOM_LOCALIZATION
 HARVEST_LOC = MOD_ROOT / location_status.HARVEST_LOCALIZATION

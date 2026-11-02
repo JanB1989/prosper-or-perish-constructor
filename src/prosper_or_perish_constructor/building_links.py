@@ -22,7 +22,7 @@ from pathlib import Path
 from prosper_or_perish_constructor import yaml_io
 
 ROOT = Path(__file__).resolve().parents[2]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 BLUEPRINTS = Path("blueprints/accepted/buildings")
 _DEFINITION = re.compile(r"^(?:[A-Z_]+:)?(\w+)\s*=\s*\{", re.MULTILINE)
 _ENTRY = re.compile(r'^\s*([\w.]+):\d*\s*"(.*)"\s*$')

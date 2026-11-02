@@ -14,7 +14,7 @@ from prosper_or_perish_constructor import loc_languages, loc_replace, seasonal_h
 from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 STANDALONE = ROOT / "mod" / seasonal_harvests.STANDALONE_FOLDER
 _TOP = re.compile(r"^(?:[A-Z_]+:)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*\{", re.M)
 _WORD = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")

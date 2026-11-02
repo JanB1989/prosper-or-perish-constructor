@@ -40,7 +40,6 @@ VICTUALS_KEY = "local_victuals_output_modifier"
 TAVERN_BLUEPRINT = Path("blueprints/accepted/buildings/tavern.yml")
 GRANGE_BLUEPRINT = Path("blueprints/accepted/buildings/grange.yml")
 STARVING_FILE = Path("main_menu/common/static_modifiers/pp_location_modifier_adjustments.txt")
-MOD_GLOB = "Prosper or Perish (Population*"
 
 
 @dataclass(frozen=True)
@@ -154,7 +153,7 @@ def _modifier(body: str, key: str) -> float:
 
 
 def _starving(root: Path, key: str) -> float:
-    mod = next((root / "mod").glob(MOD_GLOB))
+    mod = root / "mod" / "pp"
     text = (mod / STARVING_FILE).read_text(encoding="utf-8-sig")
     block = text[text.index("province_starving"):]
     return _modifier(block[: block.index("\n}")], key)

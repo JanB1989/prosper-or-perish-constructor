@@ -16,7 +16,7 @@ MANIFEST_PATH = ROOT / "blueprints" / "buildings.manifest.yml"
 MOD_ICON_ROOT = (
     ROOT
     / "mod"
-    / "Prosper or Perish (Population Growth & Food Rework)"
+    / "pp"
     / "in_game"
     / "gfx"
     / "interface"

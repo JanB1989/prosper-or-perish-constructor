@@ -14,7 +14,7 @@ from prosper_or_perish_constructor import yaml_io
 from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
 REPO = Path(__file__).resolve().parents[1]
-MOD = REPO / "mod/Prosper or Perish (Population Growth & Food Rework)"
+MOD = REPO / "mod/pp"
 MANIFEST = REPO / "blueprints/buildings.manifest.yml"
 ACROSS_THE_PILLARS = {
     "tali_a_watchtower", "library_cordoba", "thagr_fort", "saqaliba_barracks", "qadi_office", "saharan_trade_house",

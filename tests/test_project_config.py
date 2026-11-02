@@ -32,7 +32,7 @@ from prosper_or_perish_constructor import yaml_io
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 ESTATE_PRIVILEGE_ADJUSTMENTS = (
     MOD_ROOT / "in_game" / "common" / "estate_privileges" / "pp_estate_privilege_adjustments.txt"
 )
@@ -361,7 +361,7 @@ def test_constructor_config_loads() -> None:
     config = load_project_config(ROOT / "constructor.toml")
 
     assert config.name == "Prosper or Perish Constructor"
-    assert config.mod_root == ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+    assert config.mod_root == ROOT / "mod" / "pp"
     if (ROOT / "constructor.local.toml").exists():
         assert config.deploy_target is not None
     else:
@@ -402,12 +402,12 @@ def test_constructor_path_configuration_is_portable_and_documented(tmp_path: Pat
     assert r'C:\Games\steamapps\common\Europa Universalis V' in load_order_text
     assert "/mnt/c/Games/steamapps/common/Europa Universalis V" in load_order_text
     assert "Windows drive paths on WSL/Linux" in load_order_text
-    assert 'root = "mod/Prosper or Perish (Population Growth & Food Rework)"' in load_order_text
+    assert 'root = "mod/pp"' in load_order_text
 
     assert r'C:\Games\steamapps\common\Europa Universalis V' in load_order_example
     assert "/mnt/c/Games/steamapps/common/Europa Universalis V" in load_order_example
     assert "/mnt/d/SteamLibrary/steamapps/common/Europa Universalis V" in load_order_example
-    assert 'root = "mod/Prosper or Perish (Population Growth & Food Rework)"' in load_order_example
+    assert 'root = "mod/pp"' in load_order_example
 
     assert "/mnt/c/Users/<windows-user>/Documents/Paradox Interactive/Europa Universalis V" in local_example
 

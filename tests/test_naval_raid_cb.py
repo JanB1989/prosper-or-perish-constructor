@@ -13,7 +13,7 @@ from pathlib import Path
 from eu5gameparser.clausewitz.parser import parse_file
 from eu5gameparser.clausewitz.syntax import CList
 
-MOD = Path(__file__).resolve().parents[1] / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD = Path(__file__).resolve().parents[1] / "mod" / "pp"
 COMMON = MOD / "in_game" / "common"
 CB_FILE = COMMON / "casus_belli" / "pp_naval_raid_cb.txt"
 WARGOAL_FILE = COMMON / "wargoals" / "pp_naval_raid_wargoal.txt"

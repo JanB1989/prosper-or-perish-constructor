@@ -10,7 +10,7 @@ from prosper_or_perish_constructor import logistics as lg
 from prosper_or_perish_constructor import yaml_io
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 VARIANTS = {
     "pp_caravanserai": "pp_logistics_zone_caravan",
     "pp_oasis_caravan_station": "pp_logistics_zone_oasis",

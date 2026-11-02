@@ -6,7 +6,7 @@ from prosper_or_perish_constructor import loc_replace
 from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 
 
 def test_mod_english_localization_defines_no_vanilla_key():

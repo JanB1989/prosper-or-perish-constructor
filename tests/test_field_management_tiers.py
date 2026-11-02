@@ -15,7 +15,7 @@ def test_field_management_tiers_upgrade_in_order():
 
 
 def test_tier_caps_leave_the_levels_they_convert_out():
-    caps = (ROOT / "mod/Prosper or Perish (Population Growth & Food Rework)" / b.CAPS_PATH).read_text(encoding="utf-8-sig")
+    caps = (ROOT / "mod/pp" / b.CAPS_PATH).read_text(encoding="utf-8-sig")
     blocks = {block.split(" = {", 1)[0]: block for block in caps.split("\n\n") if block.startswith("pp_wb_cap_field_management")}
     base = blocks["pp_wb_cap_field_management"]
     assert "pp_wb_levels_field_management_convertible" in base and "pp_wb_levels_field_management_improved" in base

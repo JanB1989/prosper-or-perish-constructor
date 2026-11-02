@@ -13,7 +13,7 @@ SOURCES = ROOT / "assets/icons/land_potential/sources"
 PREVIEW = ROOT / "assets/icons/land_potential/land_potential.png"
 TARGET = (
     ROOT
-    / "mod/Prosper or Perish (Population Growth & Food Rework)"
+    / "mod/pp"
     / "main_menu/gfx/interface/icons/location_icons/pp_land_potential.dds"
 )
 SIZE = 128

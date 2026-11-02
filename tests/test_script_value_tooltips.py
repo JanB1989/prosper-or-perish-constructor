@@ -12,7 +12,7 @@ from eu5gameparser.clausewitz.parser import parse_text
 from eu5gameparser.clausewitz.syntax import CList
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 OPS = {"add", "subtract", "multiply", "divide", "modulo", "min", "max", "floor", "ceiling", "round", "value"}
 # same-name copies of vanilla files keep vanilla's own values unchanged
 VANILLA_COPIES = {"default_values.txt"}

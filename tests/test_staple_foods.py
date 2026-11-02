@@ -21,7 +21,7 @@ from prosper_or_perish_constructor.worldbuilder import crop_allocation
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT / "constructor.toml"
 BLUEPRINTS = ROOT / "blueprints/accepted/buildings"
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 
 
 def _body(name: str) -> str:

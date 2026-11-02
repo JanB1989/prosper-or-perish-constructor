@@ -25,7 +25,7 @@ from prosper_or_perish_constructor.vanilla_food_productivity import (
 
 ROOT = Path(__file__).resolve().parents[1]
 LOAD_ORDER = ROOT / "constructor.load_order.toml"
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 
 
 @cache

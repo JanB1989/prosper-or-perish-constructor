@@ -325,7 +325,7 @@ def test_land_potential_tiers_sort_by_step_and_only_hold_steps_that_occur():
 def test_land_potential_chip_uses_its_own_icon_which_ships_with_the_mod():
     chip = tt.land_potential_chip({})
     assert chip.count(f'texture = "{tt.LAND_POTENTIAL_ICON}"') == 2   # chip and tooltip title
-    mod = Path(__file__).resolve().parents[1] / "mod/Prosper or Perish (Population Growth & Food Rework)"
+    mod = Path(__file__).resolve().parents[1] / "mod/pp"
     assert (mod / "main_menu" / tt.LAND_POTENTIAL_ICON).is_file()
 
 

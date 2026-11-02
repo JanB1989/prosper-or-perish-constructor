@@ -11,7 +11,7 @@ from eu5_building_pipeline.dds import dds_info, encode_dds, is_game_format
 from prosper_or_perish_constructor import interface_dds
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 
 
 def test_every_mod_interface_dds_is_in_the_game_format() -> None:

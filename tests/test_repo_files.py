@@ -34,6 +34,10 @@ def test_check_flags_size_temp_and_windows_names() -> None:
         ("docs/aux.txt", 0),
         ("docs/what?.md", 0),
         ("docs/trailing. ", 0),
+        ("docs/trailing.", 0),
+        ("docs/a b.md", 0),
+        ("mod/x (y & z)/f.txt", 0),
+        ("docs/ü.md", 0),
         ("docs/Readme.md", 0),
         ("docs/README.md", 0),
         ("Assets/a.png", 0),
@@ -45,7 +49,8 @@ def test_check_flags_size_temp_and_windows_names() -> None:
     for path in ("tmp/china_start_before.csv", "tmp_raw_material_base_pm_coverage.py", "scripts/run.log",
                  "src/pkg/__pycache__/x.cpython-314.pyc"):
         assert ("temp", path) in kinds
-    for path in ("docs/nul", "docs/aux.txt", "docs/what?.md", "docs/trailing. ", "Assets"):
+    for path in ("docs/nul", "docs/aux.txt", "docs/what?.md", "docs/trailing. ", "docs/trailing.", "docs/a b.md",
+                 "mod/x (y & z)/f.txt", "docs/ü.md", "Assets"):
         assert ("windows", path) in kinds
     assert ("windows", "docs/README.md") in kinds   # case-only twins: the first in sort order is named
     # ordinary files pass, including names that merely start with "temp" and setup templates

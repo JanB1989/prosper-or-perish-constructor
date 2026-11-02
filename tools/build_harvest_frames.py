@@ -17,7 +17,7 @@ from prosper_or_perish_constructor.location_status import HARVEST_FRAMES, NEUTRA
 from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD = ROOT / "mod/Prosper or Perish (Population Growth & Food Rework)"
+MOD = ROOT / "mod/pp"
 SOURCE = "game/main_menu/gfx/interface/icons/climate/continental_frame.dds"
 
 

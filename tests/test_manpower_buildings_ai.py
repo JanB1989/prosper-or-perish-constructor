@@ -10,7 +10,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 BLUEPRINTS = ROOT / "blueprints" / "accepted" / "buildings"
-BUILDING_TYPES = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)" / "in_game" / "common" / "building_types"
+BUILDING_TYPES = ROOT / "mod" / "pp" / "in_game" / "common" / "building_types"
 MANPOWER_BUILDINGS = ("armory", "barracks", "training_fields", "regimental_camp", "conscription_center")
 FLAG = re.compile(r"^\s*important_for_AI\s*=\s*yes\s*$", re.M)
 

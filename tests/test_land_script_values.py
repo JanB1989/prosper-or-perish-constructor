@@ -21,7 +21,7 @@ from prosper_or_perish_constructor.rural_capacity import LAND_FARM_BUILDINGS
 from prosper_or_perish_constructor.script_eval import ScriptEval
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 EVAL = ScriptEval(MOD_ROOT)
 
 FLAT = 59.168

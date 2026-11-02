@@ -4,8 +4,8 @@ Concrete EU5 mod workspace for the Prosper or Perish population growth and food 
 
 This repo is the example project that wires together the reusable parser, building pipeline,
 and orchestrator packages. It keeps a local mod copy under
-`mod/Prosper or Perish (Population Growth & Food Rework)` and writes generated analysis output to
-ignored artifact folders.
+`mod/pp` (a short name so the repo fits Windows' path limits wherever it is cloned; the installed
+mod folder keeps its full name) and writes generated analysis output to ignored artifact folders.
 
 ## Published Examples
 
@@ -88,7 +88,7 @@ Use the [profile-analyzer skill](.agents/skills/profile-analyzer/SKILL.md) for c
 
 ## Mod Ownership
 
-The local `mod/Prosper or Perish (Population Growth & Food Rework)` folder is the source of truth
+The local `mod/pp` folder is the source of truth
 for hand-authored gameplay patches. Edit normal `TRY_INJECT` and `TRY_REPLACE` files there
 directly.
 
@@ -297,9 +297,9 @@ The export is generated from the mod's custom Europedia GUI, localization, and g
 definitions:
 
 ```text
-mod/Prosper or Perish (Population Growth & Food Rework)/in_game/gui/encyclopedia_lateralview.gui
-mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/localization/english/pp_europedia_l_english.yml
-mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/common/game_concepts/
+mod/pp/in_game/gui/encyclopedia_lateralview.gui
+mod/pp/main_menu/localization/english/pp_europedia_l_english.yml
+mod/pp/main_menu/common/game_concepts/
 ```
 
 ## Savegame Analysis

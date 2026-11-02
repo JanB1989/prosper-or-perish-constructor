@@ -13,7 +13,7 @@ from PIL import Image, ImageDraw
 from eu5_building_pipeline import render_template, write_icon_asset
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD = ROOT / 'mod/Prosper or Perish (Population Growth & Food Rework)'
+MOD = ROOT / 'mod/pp'
 
 def prepare(raw, destination):
     rgba = np.array(Image.open(raw).convert('RGBA'))

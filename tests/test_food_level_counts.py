@@ -11,7 +11,7 @@ from pathlib import Path
 from prosper_or_perish_constructor import food_level_counts
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 
 
 def test_generated_counts_are_current_and_cover_every_counter_building():

@@ -2,7 +2,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 ESTATE_TOOLTIP = MOD_ROOT / "in_game" / "gui" / "shared" / "zz_pp_estate_tooltips.gui"
 ESTATE_SATISFACTION_TOOLTIP = (
     MOD_ROOT / "main_menu" / "gui" / "shared" / "zz_pp_estate_satisfaction_tooltips.gui"

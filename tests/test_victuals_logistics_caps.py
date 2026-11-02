@@ -13,7 +13,7 @@ import pytest
 from prosper_or_perish_constructor.worldbuilder import coast
 
 REPO = Path(__file__).resolve().parents[1]
-MOD = REPO / "mod/Prosper or Perish (Population Growth & Food Rework)"
+MOD = REPO / "mod/pp"
 CAPS = MOD / "in_game/common/script_values/pp_victuals_logistics.txt"
 
 

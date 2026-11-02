@@ -625,7 +625,7 @@ def create_field_management_blueprint(repo: Path) -> Path:
     manifest.setdefault("enabled", {})["buildings/field_management.yml"] = True
     manifest_path.write_text(yaml.dump(manifest, sort_keys=False, allow_unicode=True), encoding="utf-8")
     # placeholder art until the real icon exists
-    icons = repo / "mod/Prosper or Perish (Population Growth & Food Rework)/in_game/gfx/interface/icons/buildings"
+    icons = repo / "mod/pp/in_game/gfx/interface/icons/buildings"
     src_icon = icons / "land_clearance.dds"
     if src_icon.is_file() and not (icons / "field_management.dds").is_file():
         (icons / "field_management.dds").write_bytes(src_icon.read_bytes())

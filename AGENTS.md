@@ -6,7 +6,8 @@
 - Prefer `uv run ppc test`, `uv run ppc inspect`, `uv run ppc analyze`, and `uv run ppc blueprint ...` over raw `eu5-orchestrator` commands unless debugging the wrapper itself.
 - Use parser/evaluator commands for game-data and blueprint questions instead of text-searching generated mod files.
 - Treat `uv run ppc sync --yes` as a live deploy action. Do not run it unless the user explicitly asks to mirror into the live Paradox mod folder.
-- The constructor output mod root is `mod/Prosper or Perish (Population Growth & Food Rework)` under this repo, shown from Windows as `\\wsl$\Ubuntu\home\jan\development\ProsperOrPerishConstructor\mod\Prosper or Perish (Population Growth & Food Rework)`.
+- The constructor output mod root is `mod/pp` under this repo, shown from Windows as `\\wsl$\Ubuntu\home\jan\development\ProsperOrPerishConstructor\mod\pp`.
+- The repo folders `mod/pp` and `mod/harvests` are short on purpose: every tracked path stays inside the Windows path budget and plain ASCII (`tools/check_path_lengths.py`, `tools/check_repo_files.py`, pre-commit, and `.github/workflows/windows-paths.yml` on real Windows; no exceptions). The live Paradox folder keeps its full name through `[deploy] target`.
 - `uv run ppc sync --yes` first makes sure that repo-local output mod root is built/current, then copies that output to the configured live Paradox mod folder. Work either edits files directly in this repo-local output root, or edits source/config/blueprints that compile into that output root before sync copies it onward.
 - Do not look for or use a nested `Constructor/mod/...` path in this checkout; the repo-local compiled mod path is `mod/...`.
 - The sync reruns the World Builder start setup (70-100 s) only when one of its inputs changed. Its mod inputs are the
@@ -524,7 +525,7 @@
   3. Merge and push the exact release commit, confirm `main` is clean, then run `uv run ppc sync --yes` against the confirmed live target.
   4. Verify release-critical deployed files match the repository output byte-for-byte and run the final relevant tests after sync when the sync/build path could have changed tracked output.
   5. Inspect recent GitHub releases with `gh release list` and `gh release view <previous-tag>` before drafting notes, so the title and writing style remain consistent.
-  6. Write short patch notes about player-facing mod changes only. Exclude constructor, parser, test, CI, and other tooling changes unless the user explicitly asks to mention them.
+  6. Write short patch notes about player-facing mod changes only. Exclude constructor, parser, test, CI, and other tooling changes unless the user explicitly asks to mention them. The release zip's top folder is the live name `Prosper or Perish (Population Growth & Food Rework)`, not the repo's `mod/pp`: the release text tells players to copy that folder.
   7. Create or update the release, then verify its tag, target commit, title, body, publication state, and URL. If a release was published before its final sync, complete the sync and explicitly re-verify or adjust the release before reporting completion.
 
 ## Localization

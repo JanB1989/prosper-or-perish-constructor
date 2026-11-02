@@ -15,7 +15,7 @@ import pytest
 from prosper_or_perish_constructor.worldbuilder import spline_network as sn
 
 REPO = Path(__file__).resolve().parents[1]
-MAP_DATA = REPO / "mod/Prosper or Perish (Population Growth & Food Rework)/in_game/map_data"
+MAP_DATA = REPO / "mod/pp/in_game/map_data"
 # file -> (header, fields per row)
 FILES = {
     "adjacencies.csv": ("From;To;Type;Through;start_x;start_y;stop_x;stop_y;Comment", 9),

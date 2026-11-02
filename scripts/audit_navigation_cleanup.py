@@ -8,7 +8,7 @@ from eu5gameparser.clausewitz.parser import parse_text,parse_file
 from prosper_or_perish_constructor import yaml_io
 
 ROOT=Path(__file__).resolve().parents[1]
-MOD=ROOT/'mod/Prosper or Perish (Population Growth & Food Rework)'
+MOD=ROOT/'mod/pp'
 REF='checkpoint/pre-river-navigation-cleanup-20260922'
 SETUP='main_menu/setup/1337/14_pp_worldbuilder_buildings.txt'
 

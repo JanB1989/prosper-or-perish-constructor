@@ -18,7 +18,7 @@ from prosper_or_perish_constructor.population_capacity_map_mode import (
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT_CONFIG = ROOT / "constructor.toml"
-MOD_ROOT_DEFAULT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT_DEFAULT = ROOT / "mod" / "pp"
 LOCATION_MODIFIERS_REL = Path("main_menu/common/static_modifiers/pp_location_modifiers.txt")
 BUILDING_CAPACITY_VALUES_REL = Path("in_game/common/script_values/pp_building_capacity_values.txt")
 BUILDING_CAPS_REL = Path("in_game/common/script_values/pp_building_caps.txt")

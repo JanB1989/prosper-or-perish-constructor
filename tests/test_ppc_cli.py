@@ -837,14 +837,14 @@ def test_province_food_sales_output_modifier_values_use_three_decimal_precision(
     paths = [
         ROOT
         / "mod"
-        / "Prosper or Perish (Population Growth & Food Rework)"
+        / "pp"
         / "main_menu"
         / "common"
         / "static_modifiers"
         / "pp_location_modifier_adjustments.txt",
         ROOT
         / "mod"
-        / "Prosper or Perish (Population Growth & Food Rework)"
+        / "pp"
         / "in_game"
         / "common"
         / "location_ranks"

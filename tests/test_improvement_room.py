@@ -13,7 +13,7 @@ from prosper_or_perish_constructor import improvement_room as ir
 from prosper_or_perish_constructor.arable_land_bar import Building, CapUnit, Model
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod/Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod/pp"
 SHARED, SINGLE = "pp_wb_cap_terraces_shared", "pp_wb_cap_clearing_terms"
 
 

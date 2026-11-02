@@ -17,7 +17,7 @@ from prosper_or_perish_constructor.setup_layout import SETUP_DIR
 from prosper_or_perish_constructor.worldbuilder import development as dev
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 WEIGHTS = {"base": -2.0, "coastal": 5.0, "river": 0.5, "road": 2.0, "town": 2.0, "hills": -2.0, "sparse": -1.0,
            "arctic": -5.0, "flatland": 1.0, "forest": -2.0, "north_region": 5.0}
 

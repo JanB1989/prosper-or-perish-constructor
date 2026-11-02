@@ -35,13 +35,13 @@ from it.
 The constructor output mod root is:
 
 ```text
-mod/Prosper or Perish (Population Growth & Food Rework)
+mod/pp
 ```
 
 From Windows this is visible as:
 
 ```text
-\\wsl$\Ubuntu\home\jan\development\ProsperOrPerishConstructor\mod\Prosper or Perish (Population Growth & Food Rework)
+\\wsl$\Ubuntu\home\jan\development\ProsperOrPerishConstructor\mod\pp
 ```
 
 This repo-local `mod/...` directory is the compiled mod copy. `uv run ppc

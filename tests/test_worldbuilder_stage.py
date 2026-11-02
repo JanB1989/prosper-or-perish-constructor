@@ -614,7 +614,7 @@ def test_river_levels_live_in_config_not_in_ignored_injects() -> None:
     )
 
     repo = Path(__file__).resolve().parents[1]
-    mod = repo / "mod/Prosper or Perish (Population Growth & Food Rework)"
+    mod = repo / "mod/pp"
     adjustments = (mod / wb_modifiers.ADJUSTMENTS_PATH).read_text(encoding="utf-8-sig")
     assert "river_flowing_through" not in "\n".join(l.split("#", 1)[0] for l in adjustments.splitlines())
     assert "river_level" in STATIC_MODIFIER_FACTORS_NOT_COMPILED
@@ -650,7 +650,7 @@ def test_rgo_chip_lists_the_bonus_of_the_location_raw_material_only():
 
 
 def test_rgo_chip_help_is_localized():
-    loc = (Path(__file__).resolve().parents[1] / "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/localization/english/pp_rgo_modifiers_l_english.yml").read_text(encoding="utf-8-sig")
+    loc = (Path(__file__).resolve().parents[1] / "mod/pp/main_menu/localization/english/pp_rgo_modifiers_l_english.yml").read_text(encoding="utf-8-sig")
     assert "\nPP_RGO_CHIP_HELP:" in loc
 
 
@@ -724,7 +724,7 @@ def test_foreign_buildings_support_their_own_level() -> None:
     monaco = _re.search(r"(?ms)^rock_of_monaco = \{[^\n]*\n(?P<body>.*?)\n\}", events)
     assert monaco is not None and _re.search(r"(?m)^\s*is_foreign = yes", monaco.group("body"))
     foreign.append("rock_of_monaco")
-    mod = next((repo / "mod").glob("Prosper*Rework*"))
+    mod = repo / "mod" / "pp"
     owners = building_footprint.owner_blocks(mod, vanilla)
     for key in foreign:
         owner = owners[key]
@@ -736,7 +736,7 @@ def test_foreign_buildings_support_their_own_level() -> None:
 
 def test_river_restore_sees_the_engine_river() -> None:
     # the engine's river_flowing_through_N is invisible to has_location_modifier; has_river reads it (no double river)
-    mod = next((Path(__file__).resolve().parents[1] / "mod").glob("Prosper*Rework*"))
+    mod = Path(__file__).resolve().parents[1] / "mod" / "pp"
     text = (mod / "in_game/common/scripted_triggers/pp_navigation_rivers.txt").read_text(encoding="utf-8-sig")
     assert "pp_navigation_has_river = { OR = { has_river = yes" in text
 

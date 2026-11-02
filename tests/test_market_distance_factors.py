@@ -1,7 +1,7 @@
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD = ROOT / "mod" / "pp"
 
 
 def _defines():

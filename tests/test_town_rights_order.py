@@ -13,7 +13,7 @@ from pathlib import Path
 TOWN_RIGHTS = (
     Path(__file__).resolve().parents[1]
     / "mod"
-    / "Prosper or Perish (Population Growth & Food Rework)"
+    / "pp"
     / "in_game"
     / "common"
     / "town_rights"

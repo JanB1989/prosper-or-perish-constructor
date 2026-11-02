@@ -17,7 +17,7 @@ from eu5gameparser.load_order import LoadOrderConfig
 from prosper_or_perish_constructor import arable_land_bar, gui_blocks, location_status, stored_food
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 PROJECT = ROOT / "constructor.toml"
 WINDOW = MOD_ROOT / "in_game/gui/location_window.gui"
 ATTRIBUTE_TOOLTIPS = MOD_ROOT / "in_game/gui/shared/pp_attribute_tooltips.gui"

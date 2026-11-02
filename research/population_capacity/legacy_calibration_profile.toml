@@ -44,8 +44,8 @@ hyde_urban_population = "data/output_data/hyde_3_5/urban_population_1337.tif"
 # by the existing shared location-modifier compiler; setup files make the
 # starting development and irrigation values match the simulated year-0 state.
 population_capacity_table = "data/population_capacity/population_capacity.csv"
-development_setup = "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/setup/start/14_development.txt"
-irrigation_setup = "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/setup/start/14_pp_population_irrigation.txt"
+development_setup = "mod/pp/main_menu/setup/start/14_development.txt"
+irrigation_setup = "mod/pp/main_menu/setup/start/14_pp_population_irrigation.txt"
 manifest = "artifacts/data/population_simulation/deployment.json"
 development_decimals = 2
 

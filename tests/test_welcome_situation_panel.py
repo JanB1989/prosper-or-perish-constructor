@@ -17,7 +17,7 @@ from test_europedia_style import _all_loc, _loc, _texture_exists
 from test_gui_blocks import _calls, _index, _vanilla
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 PANEL = MOD_ROOT / "in_game/gui/panels/situation/pp_mod_welcome_situation.gui"
 SITUATION = MOD_ROOT / "in_game/common/situations/pp_mod_welcome_situation.txt"
 SCRIPTED_GUI = MOD_ROOT / "in_game/common/scripted_guis/pp_welcome_situation.txt"

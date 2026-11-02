@@ -19,9 +19,10 @@ MAX_FILE_BYTES = 50_000_000
 # Scratch folders and files: local work only, never tracked (also in .gitignore).
 TEMP_DIRS = ("tmp", ".tmp", "__pycache__")
 TEMP_NAME = re.compile(r"^(tmp_.*|.*\.(tmp|bak|orig|rej|swp|log|pyc)|.*~|\.DS_Store|Thumbs\.db|desktop\.ini)$", re.IGNORECASE)
-# Windows: reserved device names (with any extension), forbidden characters, trailing dot or space.
+# Windows: reserved device names (with any extension), trailing dot. Names stay plain ASCII without spaces or shell characters:
+# that covers everything Windows forbids, and ZIP tools, cmd and scripts have no trouble with them either.
 RESERVED = re.compile(r"^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?$", re.IGNORECASE)
-FORBIDDEN = re.compile(r'[<>:"|?*\\\x00-\x1f]')
+ALLOWED = re.compile(r"[A-Za-z0-9._-]+")
 
 
 @dataclass(frozen=True)
@@ -59,10 +60,10 @@ def check_files(files: list[tuple[str, int]], max_file_bytes: int = MAX_FILE_BYT
         for part in parts:
             if RESERVED.match(part):
                 issues.append(FileIssue(path, "windows", f"reserved name {part!r}"))
-            elif FORBIDDEN.search(part):
-                issues.append(FileIssue(path, "windows", f"forbidden character in {part!r}"))
-            elif part.endswith((".", " ")):
-                issues.append(FileIssue(path, "windows", f"trailing dot or space in {part!r}"))
+            elif not ALLOWED.fullmatch(part):
+                issues.append(FileIssue(path, "windows", f"character outside A-Z a-z 0-9 . _ - in {part!r}"))
+            elif part.endswith("."):
+                issues.append(FileIssue(path, "windows", f"trailing dot in {part!r}"))
         for depth in range(1, len(parts) + 1):
             prefix = "/".join(parts[:depth])
             folded[prefix.lower()].add(prefix)

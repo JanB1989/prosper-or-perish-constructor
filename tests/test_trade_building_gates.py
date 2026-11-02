@@ -14,7 +14,7 @@ from pathlib import Path
 from eu5gameparser.load_order import LoadOrderConfig
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)" / "in_game/common"
+MOD = ROOT / "mod" / "pp" / "in_game/common"
 GATES = ("allow", "location_potential", "country_potential")
 INSTITUTION = re.compile(r"has_embraced_institution|institution:\w+")
 

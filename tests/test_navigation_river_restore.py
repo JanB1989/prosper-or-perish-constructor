@@ -13,7 +13,7 @@ from pathlib import Path
 import pytest
 
 REPO = Path(__file__).resolve().parents[1]
-MOD = REPO / "mod/Prosper or Perish (Population Growth & Food Rework)"
+MOD = REPO / "mod/pp"
 EFFECT = MOD / "in_game/common/scripted_effects/pp_navigation_river_bonuses.txt"
 TRIGGERS = MOD / "in_game/common/scripted_triggers/pp_navigation_rivers.txt"
 

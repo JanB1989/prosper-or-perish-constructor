@@ -21,7 +21,7 @@ from prosper_or_perish_constructor import yaml_io
 
 ROOT = Path(__file__).resolve().parents[1]
 LOAD_ORDER = ROOT / "constructor.load_order.toml"
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 MOD_ADVANCES = MOD_ROOT / "in_game" / "common" / "advances"
 BLUEPRINT_ROOT = ROOT / "blueprints" / "accepted"
 MANIFEST_PATH = ROOT / "blueprints" / "buildings.manifest.yml"

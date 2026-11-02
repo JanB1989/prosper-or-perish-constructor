@@ -9,7 +9,7 @@ import pytest
 from prosper_or_perish_constructor import loc_languages, loc_replace, seasonal_harvests
 
 ROOT = Path(__file__).resolve().parents[1]
-MODS = (ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)", ROOT / "mod" / "Prosper or Perish Seasonal Harvests")
+MODS = (ROOT / "mod" / "pp", ROOT / "mod" / "harvests")
 SHIPPED = [p for p in (*seasonal_harvests.COPIED, seasonal_harvests.SHARED_LOCALIZATION) if p.endswith("_l_english.yml")]
 
 
@@ -59,7 +59,7 @@ def test_every_language_holds_every_english_key_with_the_english_text(mod: Path)
 def test_copies_stay_in_the_windows_path_budget() -> None:
     longest = max((len(p.relative_to(ROOT).as_posix()) for mod in MODS for f in loc_languages.FOLDERS
                    for lang in loc_languages.LANGUAGES for p in (mod / f / lang).rglob("*.yml")), default=0)
-    assert longest <= 140
+    assert longest <= 109
 
 
 def test_the_languages_are_the_games() -> None:

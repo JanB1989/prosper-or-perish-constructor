@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Check tracked repository paths against a conservative Windows path budget."""
+"""Check tracked repository paths against the Windows path limits, with room for the folder the repo sits in.
+
+Measured with Git for Windows 2.49, long paths off (its default), 2026-11-02: a file path of 259 characters checks out, 260
+fails with "Filename too long"; a folder path of 247 works, 248 fails. There are no exceptions: a file that does not fit gets
+a shorter name or folder. tools/check_windows_clone.ps1 proves the same on real Windows.
+"""
 
 from __future__ import annotations
 
@@ -10,27 +15,16 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
-MAX_RELATIVE_PATH = 140
+WINDOWS_MAX_FILE_PATH = 259
+WINDOWS_MAX_FOLDER_PATH = 247
+# The folder the repo sits in, last backslash included. The worst case we plan for is 127 characters, a GitHub ZIP unpacked by
+# Explorer (it doubles the folder) under a long user name and OneDrive:
+# C:\Users\firstname.lastname\OneDrive - Company\Downloads\prosper-or-perish-constructor-main\prosper-or-perish-constructor-main\
+ROOT_ALLOWANCE = 150
+MAX_RELATIVE_PATH = WINDOWS_MAX_FILE_PATH - ROOT_ALLOWANCE
+MAX_RELATIVE_FOLDER = WINDOWS_MAX_FOLDER_PATH - ROOT_ALLOWANCE
 MAX_COMPONENT = 100
-ENGINE_REQUIRED_PATH_LIMITS = {
-    (
-        "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/"
-        "icons/trade_goods/illustrations/icon_goods_manual_labor.dds"
-    ): 150,
-    (
-        "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/"
-        "icons/trade_goods/illustrations/icon_goods_province_food_purchase.dds"
-    ): 150,
-    (
-        "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/"
-        "icons/trade_goods/illustrations/icon_goods_province_food_sales.dds"
-    ): 150,
-    # World Builder climate icon: the engine derives the file name from the climate key.
-    (
-        "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/"
-        "icons/climate/ha1300_climate_dry_summer_continental_frame.dds"
-    ): 150,
-}
+LABELS = {"path": "relative path", "folder": "folder", "component": "path component"}
 
 
 @dataclass(frozen=True)
@@ -62,13 +56,16 @@ def check_paths(
     paths: list[str],
     *,
     max_relative_path: int = MAX_RELATIVE_PATH,
+    max_relative_folder: int = MAX_RELATIVE_FOLDER,
     max_component: int = MAX_COMPONENT,
 ) -> list[PathLengthIssue]:
     issues: list[PathLengthIssue] = []
     for path in paths:
-        path_limit = ENGINE_REQUIRED_PATH_LIMITS.get(path, max_relative_path)
-        if len(path) > path_limit:
-            issues.append(PathLengthIssue(path, "path", len(path), path_limit))
+        if len(path) > max_relative_path:
+            issues.append(PathLengthIssue(path, "path", len(path), max_relative_path))
+        folder = path.rpartition("/")[0]
+        if len(folder) > max_relative_folder:
+            issues.append(PathLengthIssue(path, "folder", len(folder), max_relative_folder))
         longest_component = max((len(part) for part in path.split("/")), default=0)
         if longest_component > max_component:
             issues.append(PathLengthIssue(path, "component", longest_component, max_component))
@@ -88,6 +85,7 @@ def repo_root() -> Path:
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--max-relative-path", type=int, default=MAX_RELATIVE_PATH)
+    parser.add_argument("--max-relative-folder", type=int, default=MAX_RELATIVE_FOLDER)
     parser.add_argument("--max-component", type=int, default=MAX_COMPONENT)
     return parser.parse_args(argv)
 
@@ -98,19 +96,19 @@ def main(argv: list[str] | None = None) -> int:
     issues = check_paths(
         tracked_paths(repo),
         max_relative_path=args.max_relative_path,
+        max_relative_folder=args.max_relative_folder,
         max_component=args.max_component,
     )
     if not issues:
         return 0
 
     print(
-        "Tracked paths exceed the Windows path budget "
-        f"(path <= {args.max_relative_path}, component <= {args.max_component}):",
+        "Tracked paths exceed the Windows path budget, shorten them "
+        f"(path <= {args.max_relative_path}, folder <= {args.max_relative_folder}, component <= {args.max_component}):",
         file=sys.stderr,
     )
     for issue in issues:
-        label = "relative path" if issue.kind == "path" else "path component"
-        print(f"  {issue.length:>3} > {issue.limit:<3} {label}: {issue.path}", file=sys.stderr)
+        print(f"  {issue.length:>3} > {issue.limit:<3} {LABELS[issue.kind]}: {issue.path}", file=sys.stderr)
     return 1
 
 

@@ -7,7 +7,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 CONCEPT_KEY = re.compile(r"^\s*game_concept_((?:pp_|prosper)[A-Za-z0-9_]*?)(?:_desc)?:\d*\s*\"", re.M)
 TEXT_KEY = re.compile(r"^\s*game_concept_([A-Za-z0-9_]+):\d*\s*\"", re.M)
 

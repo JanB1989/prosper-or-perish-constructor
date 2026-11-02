@@ -15,7 +15,7 @@ import pytest
 from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
 REPO = Path(__file__).resolve().parents[1]
-MOD = REPO / "mod/Prosper or Perish (Population Growth & Food Rework)"
+MOD = REPO / "mod/pp"
 # Only a plain block or an *_OR_CREATE defines a building; the mod's TRY_INJECT stubs for DLC buildings (and any other
 # INJECT/REPLACE) add to a building that must already exist, so they do not make a DLC building safe to link.
 DEFINITION = re.compile(r"^(?:(?:INJECT|REPLACE)_OR_CREATE:)?([A-Za-z0-9_]+)\s*=\s*\{", re.M)

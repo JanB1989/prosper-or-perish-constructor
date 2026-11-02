@@ -8,7 +8,7 @@ from prosper_or_perish_constructor.food_storage_gui import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 FOOD_STORAGE_MAX_MONTHS = format_gui_fixed_point(
     load_food_storage_max_months(
         profile="constructor",

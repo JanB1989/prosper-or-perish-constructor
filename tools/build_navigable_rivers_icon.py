@@ -22,7 +22,7 @@ from prosper_or_perish_constructor.worldbuilder.navigation_map_modes import MAP_
 from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD = ROOT / "mod/Prosper or Perish (Population Growth & Food Rework)"
+MOD = ROOT / "mod/pp"
 ICON = f"main_menu/gfx/interface/icons/map_modes/{MAP_MODE}.dds"
 SOURCE = "game/main_menu/gfx/interface/icons/map_modes/rivers.dds"
 SIZE = 128

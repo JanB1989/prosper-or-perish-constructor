@@ -16,7 +16,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 BLUEPRINTS = ROOT / "blueprints/accepted/buildings"
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 VALUES = MOD_ROOT / "in_game/common/script_values/pp_food_building_values.txt"
 TERM = "add = pp_food_urgency_weight"
 

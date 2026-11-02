@@ -4,7 +4,7 @@ from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 FILE = MOD_ROOT / "in_game/common/advances/pp_public_health_advances_adjustments.txt"
 VANILLA_ADVANCES = Path.home() / ".cache/eu5-vanilla/game/in_game/common/advances"
 

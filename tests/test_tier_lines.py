@@ -12,7 +12,7 @@ from prosper_or_perish_constructor import tier_lines
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT / "constructor.toml"
-MOD = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD = ROOT / "mod" / "pp"
 LINES = {
     "alum_quarry", "amber_collector", "cinnabar_pit", "clay_pit", "coal_mine", "cocoa_grove", "coffee_grove", "copper_mine", "cotton_farm",
     "fiber_crops_farm", "gem_gravel_pit", "gold_diggings", "horse_breeders", "inland_saltworks", "iron_mine", "lead_mine",

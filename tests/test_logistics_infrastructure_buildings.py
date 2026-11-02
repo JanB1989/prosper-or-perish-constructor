@@ -7,7 +7,7 @@ from prosper_or_perish_constructor import yaml_io
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 BLUEPRINTS = ROOT / "blueprints" / "accepted" / "buildings"
 RIVER_BLUEPRINT = BLUEPRINTS / "river_boatmen_yard.yml"
 # building -> (logistics class, site cap of its one-level-at-a-time max_levels or None, rank flags)

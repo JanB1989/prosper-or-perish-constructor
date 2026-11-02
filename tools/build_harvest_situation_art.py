@@ -30,7 +30,7 @@ from prosper_or_perish_constructor.interface_dds import encode_bc7
 from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD = ROOT / "mod/Prosper or Perish (Population Growth & Food Rework)"
+MOD = ROOT / "mod/pp"
 PICTURE = "gfx/interface/illustrations/situation/{}.dds"   # under the mod's main_menu, like vanilla's
 ICON = "gfx/interface/icons/situations/harvest_situation.dds"   # under the mod's in_game, like the welcome icon
 ICON_SOURCE = "game/main_menu/gfx/interface/icons/alerts_icons/weather_system.dds"

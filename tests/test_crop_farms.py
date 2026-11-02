@@ -16,7 +16,7 @@ from prosper_or_perish_constructor.rural_capacity import LAND_FARM_BUILDINGS
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT / "constructor.toml"
 BLUEPRINTS = ROOT / "blueprints" / "accepted" / "buildings"
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 ADVANCES_ROOT = MOD_ROOT / "in_game" / "common" / "advances"
 FARMING_CAPACITY_VALUES = MOD_ROOT / "in_game" / "common" / "script_values" / "pp_farming_capacity.txt"
 ENGLISH_LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english"

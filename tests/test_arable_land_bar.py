@@ -16,7 +16,7 @@ TRACK = f"size = {{ {alb.BAR_WIDTH} 18 }}"
 COLUMN = f"size = {{ {alb.BAR_WIDTH} 56 }}"
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 WINDOW = MOD_ROOT / "in_game/gui/location_window.gui"
 STATIC = MOD_ROOT / "main_menu/common/static_modifiers/pp_location_modifier_adjustments.txt"
 

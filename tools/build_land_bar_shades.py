@@ -20,7 +20,7 @@ from prosper_or_perish_constructor.arable_land_bar import SHADES
 from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD = ROOT / "mod/Prosper or Perish (Population Growth & Food Rework)"
+MOD = ROOT / "mod/pp"
 BARS = "game/main_menu/gfx/interface/progressbars"
 # bar part -> (vanilla bar, hue it takes on PIL's 0..255 scale or None to keep it, saturation factor, value factor);
 # vanilla's green sits at hue ~74, its grey at ~146 with saturation ~69

@@ -9,7 +9,7 @@ import pytest
 
 from prosper_or_perish_constructor import location_status, stored_food
 
-MOD_ROOT = Path(__file__).resolve().parents[1] / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = Path(__file__).resolve().parents[1] / "mod" / "pp"
 PROJECT = Path(__file__).resolve().parents[1] / "constructor.toml"
 HARVESTS = location_status.Harvests(
     keys=["pp_harvest_x_abysmal", "pp_harvest_x_very_good", "pp_harvest_y_poor", "pp_harvest_y_bountiful"],

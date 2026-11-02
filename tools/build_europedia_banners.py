@@ -30,7 +30,7 @@ from PIL import Image, ImageFilter
 from prosper_or_perish_constructor.interface_dds import encode_bc7
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD = ROOT / "mod/Prosper or Perish (Population Growth & Food Rework)"
+MOD = ROOT / "mod/pp"
 PAINTINGS_DIR = ROOT / "assets/europedia_paintings"
 BANNERS_DIR = "gfx/interface/illustrations/pp_europedia"   # under the mod's main_menu
 W, H = 2900, 500

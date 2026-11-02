@@ -15,7 +15,7 @@ from eu5gameparser.domain.defines import load_define_data
 
 ROOT = Path(__file__).resolve().parents[1]
 LOAD_ORDER = ROOT / "constructor.load_order.toml"
-DEFINES = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)" / "loading_screen/common/defines"
+DEFINES = ROOT / "mod" / "pp" / "loading_screen/common/defines"
 
 
 @cache
@@ -87,5 +87,5 @@ def test_peace_deals_take_connected_land_only() -> None:
     worth_mult = float(values[("NAI", "AI_CONQUER_TREATY_DESIRE_FROM_WORTH_MULT")])
     assert adjacent > 100000
     assert abs(adjacent * worth_mult - 25) < 0.05
-    assert not (ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)" / "in_game" / "common"
+    assert not (ROOT / "mod" / "pp" / "in_game" / "common"
                 / "peace_treaties" / "pp_cede_preferred_location.txt").exists()

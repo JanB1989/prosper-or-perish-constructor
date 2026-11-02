@@ -35,7 +35,7 @@ TIERS = {"charter": "pp_{good}_charter", "rights": "pp_{good}_rights"}
 # tiers each line has: the 17 manufacturing lines a charter and its rights; iron (Hammer Privileges) one right only
 LINES = {good: tuple(TIERS) for good in GOODS} | {"iron": ("rights",)}
 PNG_DIR = REPO / "artifacts" / "icons" / "town_rights"
-DDS_DIR = REPO / "mod" / "Prosper or Perish (Population Growth & Food Rework)" / "main_menu" / "gfx" / "interface" / \
+DDS_DIR = REPO / "mod" / "pp" / "main_menu" / "gfx" / "interface" / \
     "icons" / "town_rights"
 VANILLA = Path.home() / ".cache" / "eu5-vanilla" / "game" / "main_menu" / "gfx" / "interface" / "icons" / "town_rights"
 VANILLA_PAIRS = ("textile", "tooling", "weaponry", "book", "brewing", "naval")

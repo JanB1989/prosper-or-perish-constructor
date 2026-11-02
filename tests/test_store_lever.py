@@ -15,7 +15,7 @@ import pytest
 from prosper_or_perish_constructor import store_lever
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = ROOT / "mod" / "pp"
 DEFINES = MOD_ROOT / "loading_screen/common/defines/pp_defines_adjustments.txt"
 VICTUALS = 2.7          # the mean victuals price the start model uses ([worldbuilder.start.food_sim])
 PRICES = (1.5, 2.0, 2.7, 3.5, 4.5, 6.0)

@@ -1,6 +1,6 @@
 """Seasonal Harvests: the standalone mod is the main mod's harvest system, file for file.
 
-The standalone mod (``mod/Prosper or Perish Seasonal Harvests``) ships the main mod's harvest files at the same paths, so a
+The standalone mod (``mod/harvests``) ships the main mod's harvest files at the same paths, so a
 player who loads both mods gets every file once (the later mod's copy replaces the other's) and no localization key twice.
 ``apply`` runs in ``ppc finalize``:
 
@@ -22,7 +22,7 @@ from pathlib import Path
 
 from prosper_or_perish_constructor import loc_replace
 
-STANDALONE_FOLDER = "Prosper or Perish Seasonal Harvests"
+STANDALONE_FOLDER = "harvests"
 COPIED = (
     "in_game/common/situations/pp_variable_harvest_situation.txt",
     "in_game/common/scripted_effects/pp_variable_harvest_effects.txt",

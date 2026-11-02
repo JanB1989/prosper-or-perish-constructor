@@ -392,7 +392,7 @@ def test_non_production_hand_overrides_remain_in_place() -> None:
     building_types = (
         ROOT
         / "mod"
-        / "Prosper or Perish (Population Growth & Food Rework)"
+        / "pp"
         / "in_game"
         / "common"
         / "building_types"

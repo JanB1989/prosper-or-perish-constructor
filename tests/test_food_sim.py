@@ -177,7 +177,7 @@ def test_winter_levels_match_the_mod_climates():
     import re
     from pathlib import Path
 
-    mod = Path(__file__).resolve().parents[1] / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+    mod = Path(__file__).resolve().parents[1] / "mod" / "pp"
     found = {}
     for f in (mod / "in_game/common/climates").glob("*.txt"):
         name = None
@@ -201,7 +201,7 @@ def test_regional_harvests_follow_the_mod_tables():
     import random
     from pathlib import Path
 
-    mod = Path(__file__).resolve().parents[1] / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+    mod = Path(__file__).resolve().parents[1] / "mod" / "pp"
     text = (mod / "in_game/common/static_modifiers/pp_variable_harvest_modifiers.txt").read_text(encoding="utf-8-sig")
     for severity, value in fs.HARVEST_SEVERITY.items():
         if value:
@@ -227,7 +227,7 @@ def test_tribal_values_match_the_mod():
 
     from prosper_or_perish_constructor.worldbuilder.start_food_model_v2 import FoodModelConfig
 
-    mod = Path(__file__).resolve().parents[1] / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+    mod = Path(__file__).resolve().parents[1] / "mod" / "pp"
     text = (mod / "in_game/common/pop_types/pp_pop_adjustments.txt").read_text(encoding="utf-8-sig")
     block = text.split("TRY_INJECT:tribesmen")[1]
     assert "pop_food_consumption = 0\n" in block and "local_population_growth" not in block
@@ -286,7 +286,7 @@ def replace_overpop(p, rows):
 def test_free_land_values_match_the_mod():
     from pathlib import Path
 
-    mod = Path(__file__).resolve().parents[1] / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+    mod = Path(__file__).resolve().parents[1] / "mod" / "pp"
     text = (mod / "main_menu/common/static_modifiers/pp_capacity_pressure_effects.txt").read_text(encoding="utf-8-sig")
     abundant = text.split("TRY_REPLACE:abundant_free_land")[1].split("TRY_REPLACE:")[0]
     available = text.split("TRY_REPLACE:available_free_land")[1].split("TRY_REPLACE:")[0]
@@ -301,7 +301,7 @@ def test_overpopulation_value_matches_the_mod():
     from pathlib import Path
 
     root = Path(__file__).resolve().parents[1]
-    mod = root / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+    mod = root / "mod" / "pp"
     text = (mod / "main_menu/common/static_modifiers/pp_capacity_pressure_effects.txt").read_text(encoding="utf-8-sig")
     over = text.split("TRY_REPLACE:overpopulation = {")[1].split("\n}")[0]
     cfg = tomllib.loads((root / "constructor.toml").read_text(encoding="utf-8"))
@@ -313,7 +313,7 @@ def test_overpopulation_value_matches_the_mod():
 def test_the_tribesmen_birth_brake_is_on_every_topography_not_a_rank_or_country():
     from pathlib import Path
 
-    mod = Path(__file__).resolve().parents[1] / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+    mod = Path(__file__).resolve().parents[1] / "mod" / "pp"
     ranks = (mod / "in_game/common/location_ranks/pp_location_rank_adjustments.txt").read_text(encoding="utf-8-sig")
     country = (mod / "in_game/common/auto_modifiers/pp_country_base_values.txt").read_text(encoding="utf-8-sig")
     land = (mod / "main_menu/common/static_modifiers/pp_capacity_pressure_effects.txt").read_text(encoding="utf-8-sig")

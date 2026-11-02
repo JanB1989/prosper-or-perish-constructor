@@ -27,7 +27,7 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-MOD_ROOT = REPO / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+MOD_ROOT = REPO / "mod" / "pp"
 GUI = Path("in_game/gui")
 MONTHS_VALUE = "pp_province_food_storage_months"   # script value, in_game/common/script_values/pp_province_food_storage.txt
 # divisor placeholder; compile_food_storage_gui writes the configured maximum

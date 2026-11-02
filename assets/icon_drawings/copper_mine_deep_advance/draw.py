@@ -24,7 +24,7 @@ from eu5_building_pipeline.iconkit.finalize import grade, soften
 SEED = 37
 SIDE = 256  # interface_dds.ADVANCE_MAX_SIDE
 ROOT = Path(__file__).resolve().parents[3]
-OUTPUT = ROOT / "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/gfx/interface/advance/copper_mine_deep.dds"
+OUTPUT = ROOT / "mod/pp/main_menu/gfx/interface/advance/copper_mine_deep.dds"
 
 MAL = "#62b08e"  # malachite, lit
 MAL_DARK = "#1c4a3a"

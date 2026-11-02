@@ -31,7 +31,7 @@ from prosper_or_perish_constructor import provisioning, yaml_io
 CONFIG_SECTION = "age_food"
 APPLIED_KEY = "age_food_throughput"
 ADVANCES_FILE = Path("in_game/common/advances/pp_prosperity_advances_adjustments.txt")
-MOD_FOLDER = "Prosper or Perish (Population Growth & Food Rework)"
+MOD_FOLDER = "pp"
 BLUEPRINTS = Path("blueprints/accepted/buildings")
 # non-goods keys of a production method
 METHOD_KEYS = {"produced", "output", "category", "debug_max_profit", "potential", "allow", "no_upkeep", "ai_will_do"}

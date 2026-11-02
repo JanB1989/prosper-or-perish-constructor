@@ -2,7 +2,8 @@
 REPLACE:agricultural_cultivation = {
 	age = age_1_traditions
 	country_modifier = {
-		monthly_towards_serfdom = societal_value_monthly_move
+		global_monthly_prosperity = 0.001
+		monthly_towards_land = societal_value_monthly_move
 		global_wheat_output_modifier = 0.075
 		global_rice_output_modifier = 0.075
 		global_millet_output_modifier = 0.075

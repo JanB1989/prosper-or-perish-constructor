@@ -532,6 +532,23 @@ def _build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Report output directory. Defaults to reports/eu5_update_audit/<old>..<new>.",
     )
+    vanilla_pins = _add_command(
+        subcommands,
+        "vanilla-pins",
+        "Pin each vanilla block the mod replaces whole to the vanilla text last reviewed.",
+        _vanilla_pins,
+    )
+    vanilla_pins.add_argument(
+        "action",
+        choices=("check", "record"),
+        help="check lists replaced blocks whose vanilla text changed; record writes today's text as reviewed, after porting.",
+    )
+    vanilla_pins.add_argument(
+        "--load-order",
+        type=Path,
+        default=CONSTRUCTOR_LOAD_ORDER,
+        help="Load-order TOML path relative to --repo. Defaults to constructor.load_order.toml.",
+    )
     output_modifiers = _add_command(
         subcommands,
         "output-modifiers",
@@ -2438,6 +2455,28 @@ def _update_audit(
     print(f"all_csv={summary.all_csv}", flush=True)
     print(f"changed_json={summary.changed_json}", flush=True)
     return 0
+
+
+def _vanilla_pins(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("vanilla-pins does not accept extra arguments.")
+    from eu5gameparser.load_order import LoadOrderConfig
+    from prosper_or_perish_constructor import vanilla_pins
+    from prosper_or_perish_constructor.update_audit import _project_mod_root
+
+    load_order = _resolve_repo_relative_path(repo, args.load_order)
+    game_root = LoadOrderConfig.load(load_order).vanilla_root / "game"
+    current = vanilla_pins.current_pins(_project_mod_root(repo, project), game_root)
+    pins_path = repo / vanilla_pins.PINS_PATH
+    problems = vanilla_pins.pin_problems(current, vanilla_pins.load_pins(pins_path))
+    for problem in problems:
+        print(problem)
+    if args.action == "record":
+        vanilla_pins.write_pins(pins_path, current)
+        print(f"vanilla pins: {len(current)} replaced blocks recorded in {pins_path}")
+        return 0
+    print(f"vanilla pins: {len(current)} replaced blocks, {len(problems)} to review")
+    return 1 if problems else 0
 
 
 def _output_modifiers(

@@ -2211,6 +2211,18 @@ def test_land_owning_farmers_is_a_full_privilege_replacement() -> None:
     assert modifier_values["global_peasants_estate_power"] == 0.5
 
 
+def test_agricultural_cultivation_keeps_vanilla_effects_without_direct_food() -> None:
+    entries = {entry.key: entry.value for entry in parse_file(GOVERNMENT_REFORM_ADJUSTMENTS).entries}
+    country_modifier = _entry_values(entries["REPLACE:agricultural_cultivation"])["country_modifier"]
+    assert isinstance(country_modifier, CList)
+    modifier_values = _entry_values(country_modifier)
+    assert modifier_values["monthly_towards_land"] == "societal_value_monthly_move"
+    assert "monthly_towards_serfdom" not in modifier_values
+    assert modifier_values["global_monthly_prosperity"] == 0.001
+    assert "global_monthly_food_modifier" not in modifier_values
+    assert modifier_values["global_wheat_output_modifier"] == 0.075
+
+
 def test_powerful_magnates_food_modifier_is_zeroed_by_replacement() -> None:
     parsed = parse_file(GOVERNMENT_REFORM_ADJUSTMENTS)
     entries = {entry.key: entry.value for entry in parsed.entries}

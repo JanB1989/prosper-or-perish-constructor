@@ -115,9 +115,15 @@ DELIBERATE_REPLACE_DIFFERENCES: dict[str, tuple[set[str], set[str]]] = {
         {"global_iron_output_modifier = 0.1", "expand_rgo_mining_cost_modifier = -0.1"},
         {"global_rural_build_buildings_efficiency = 0.05"},
     ),
+    # copper and tin producers research it behind the common pike and shot (2026-11-02, Jan): the AI left it to small countries
     "new_currency_demands": (
-        {"global_copper_output_modifier = 0.25", "global_tin_output_modifier = 0.1"},
-        {"unlock_building = copper_mine_adit", "unlock_building = tin_stamping_mill"},
+        {"global_copper_output_modifier = 0.25", "global_tin_output_modifier = 0.1", "requires = blast_furnace"},
+        {
+            "requires = pike_and_shot_advance",
+            "unlock_building = copper_mine_adit",
+            "unlock_building = tin_stamping_mill",
+            "ai_weight = {if={limit={OR={produced_in_country:copper>0 produced_in_country:tin>0}} add=200}}",
+        },
     ),
     "green_vitriol": (set(), {"unlock_building = alum_works"}),
     "renaissance_sculptures": (

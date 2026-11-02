@@ -35,7 +35,7 @@ ai_construct_weight = {
         add = {
             value = "market.market_price(goods:potato)"
             divide = "default_price(goods:potato)"
-            multiply = 1.6
+            multiply = 1.55
             multiply = { value = 1 add = modifier:local_potato_output_modifier subtract = pp_stored_food_staple_line }
             subtract = 1
             multiply = 400
@@ -75,7 +75,7 @@ unique_production_methods = {
         manual_labor = 0.011
         produced = potato
         output = 0.1
-        debug_max_profit = 1.145
+        debug_max_profit = 1.095
         category = building_maintenance
     }
     pp_potato_farm_ridged_fields = {
@@ -86,7 +86,7 @@ unique_production_methods = {
         manual_labor = 0.006
         produced = potato
         output = 0.11
-        debug_max_profit = 1.178
+        debug_max_profit = 1.152
         category = building_maintenance
     }
 }
@@ -97,7 +97,7 @@ unique_production_methods = {
         potato = 0.01
         produced = local_food
         output = 1.5
-        debug_max_profit = 45.875
+        debug_max_profit = 47.387
         category = building_maintenance
     }
 }

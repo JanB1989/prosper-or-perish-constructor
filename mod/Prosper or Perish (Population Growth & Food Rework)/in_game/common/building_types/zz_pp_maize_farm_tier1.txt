@@ -35,7 +35,7 @@ ai_construct_weight = {
         add = {
             value = "market.market_price(goods:maize)"
             divide = "default_price(goods:maize)"
-            multiply = 1.6
+            multiply = 1.55
             multiply = { value = 1 add = modifier:local_maize_output_modifier subtract = pp_stored_food_staple_line }
             subtract = 1
             multiply = 400
@@ -80,7 +80,7 @@ unique_production_methods = {
         manual_labor = 0.06
         produced = maize
         output = 0.678
-        debug_max_profit = 0.203
+        debug_max_profit = 0.190
         category = building_maintenance
     }
 }
@@ -91,7 +91,7 @@ unique_production_methods = {
         maize = 0.015
         produced = local_food
         output = 2.3
-        debug_max_profit = 46.917
+        debug_max_profit = 48.462
         category = building_maintenance
     }
 }

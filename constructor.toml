@@ -1101,11 +1101,11 @@ pinned_goods = ["local_food", "offset", "logistics"]
 # is (1 + output modifiers) x the good's market price / base price x margin, so the AI builds when the good is dear and
 # stops when it is cheap: at margin 1.0 and the 1.05 threshold it opens at 1.05x the base price without output bonus,
 # earlier on good land. Storage-leg gates (grange, tavern), services and logistics keep their own gate.
-# Stockpile prices (branch stockpile-prices, 2026-11-01, Jan): the engine's default prices are x1.6 (see [stockpile_prices]),
-# so the leg's margin = 1.05 / (1.6 x the price / default it should open at). This gate sets where stocks settle: the AI
-# stops building below it, whatever the demand. 1.06 opens at 0.62x the default (0.99x the old base price), about 3.3 months
-# of stock where supply meets demand, 5.5 with +20 % output (0.667 at x2 opened at 1.3 and 2.7; run 67859be2 sat there).
-# Watch: at 1.0 and x2 (5.2 months) producers refined locally in the trade simulator.
+# Stockpile prices (branch stockpile-prices, 2026-11-02, Jan): the engine's default prices are x1.55 (see [stockpile_prices]),
+# so the leg's margin = 1.05 / (1.55 x the price / default it should open at). This gate sets where stocks settle: the AI
+# stops building below it, whatever the demand. 1.06 opens at 0.64x the default (0.99x the old base price), about 2.9 months
+# of stock where supply meets demand, 5.0 with +20 % output (at x1.6: 0.62x, 3.3 and 5.5; 0.667 at x2 opened at 1.3 and 2.7,
+# run 67859be2 sat there). Watch: at 1.0 and x2 (5.2 months) producers refined locally in the trade simulator.
 margin = 1.06
 # Steel (2026-10-15): nothing demands steel until some exists (its users switch methods only when it is in the market), so
 # its price sat at the base price and the 1.0 leg never opened; no steel mill in 9 full runs. Kept 1.06x the others' margin.
@@ -1201,7 +1201,11 @@ saltpeter_workshop = 300    # 1,023 vs 68, was 600
 # was x2): 3 months of stock is then about the old price; prices and nominal incomes fall with it (and minting, which
 # follows income), price / default does not. production_labour.load_prices divides the raise back out, so labour, gate
 # legs, logistics, Old Ways recipes, crop farms and ship upkeep keep their amounts.
-base_price_mult = 1.6
+# x1.55 (2026-11-02, Jan, "rein in the economy very marginally"): -3.1 % on every raised price. At run ebdb631e's quantities
+# world building profit -3.1 %, tax base and state income about -3 %, because Province Food, logistics and offset revenue
+# (pinned) offset the labour bill (pinned); per building median -4 %, thin workshops -10 %, food and logistics buildings up.
+# The Market legs keep their amounts, so they open at the same gold price, a higher price / default (see [production_gate.leg]).
+base_price_mult = 1.55  # 1.6 until 2026-11-02
 keep_base_price = ["offset", "logistics", "local_food", "manual_labor", "province_food_sales"]
 
 [stockpile_prices.report_price_scale]
@@ -1240,24 +1244,29 @@ incense = 0.95
 # <= 0.8 -> 0.9, >= 1.25 -> 1.1, >= 1.6 -> 1.15; goods under 0.1 % of world demand left out unless at the floor in 30 %
 # of their markets. Staple foods are never cut (the run's food fell short; rice, olives, legumes, livestock, wool kept).
 # The passes and the AI weights keep reading the old base price, so only the engine's market price moves.
+# 2026-11-02 (Jan): moved against the whole of run ebdb631e, one step each; demand-weighted -0.06 % of world goods value.
+# Under = share of demand short (under 1 month of stock, 5 % unmet); glut = 12+ months of stock below half the default; price
+# and gate = price / default. Goods far above their gate (tea, coffee, cocoa, incense, 0.8-1.4) stay: their farms already earn
+# the most, the gate is not what holds them back. Staple foods are never cut; goods at 0.85 stay at the bottom of the range.
 beeswax = 0.85
 pepper = 0.85
 saffron = 0.85
 alum = 0.85
 marble = 0.85
 cloves = 0.85
-saltpeter = 0.85
-tin = 0.85
+saltpeter = 0.9  # 0.85 until 2026-11-02: gate at 0.73 above its price 0.65, 16 % of late demand on under 3 months of stock behind it
+tin = 0.9  # 0.85 until 2026-11-02: glut 93-96 % until 1550 (what the 0.85 was for), 9 % then 4 % after 1650; short 8 % late, price 0.81
 chili = 0.85
 elephants = 0.85
 fine_cloth = 0.9
 cotton = 0.9
 silk = 0.9
-stone = 0.9
-copper = 0.9
+stone = 0.85  # 0.9 until 2026-11-02: glut 27 %, under 0.4 %, price 0.54; cheaper input for masons at break-even
+copper = 0.9  # checked 2026-11-02, run ebdb631e: 1.0 adds 4, 2, 13 sites past workers and gold at 1597, 1642, 1807; growth has no step at this gate
 dyes = 0.9
 masonry = 0.9
-gems = 0.9
+gems = 0.85  # 0.9 until 2026-11-02: glut 25 %, under 0.1 %, price 0.54; no pit near a loss, cheaper input for jewelry guilds
+sand = 0.95  # 1.0 until 2026-11-02: glut 31 % (25 %+ in 78 of 100 saves), under 2.4 %, price 0.60 at its gate, in every era
 pearls = 0.9
 ivory = 0.9
 medicaments = 0.9

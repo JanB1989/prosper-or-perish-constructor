@@ -6,6 +6,12 @@ labour:
   methods:
     pp_amber_collector_base_amber: base
 gate_method: pp_amber_collector_market_sales
+upgrade_chain:
+  family: amber
+  tier: 0
+  previous: null
+  next: amber_diggings
+  unlock_advance: null
 building:
   key: amber_collector
   mode: CREATE

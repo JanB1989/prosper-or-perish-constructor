@@ -1,13 +1,13 @@
 ﻿# There sadly is no other interesting way to scale road cost :/
 TRY_INJECT:build_gravel_road = {
-	gold = 45 # 10 
+	gold = 50 # 10 (45 until 2026-11-02)
 }
 TRY_INJECT:build_paved_road = {
-	gold = 240 # 25
+	gold = 265 # 25 (240 until 2026-11-02)
 }
 TRY_INJECT:build_modern_road = {
-	gold = 450 # 50 (570 until 2026-10-14)
+	gold = 495 # 50 (450 until 2026-11-02, 570 until 2026-10-14)
 }
 TRY_INJECT:build_railroad = {
-	gold = 1300 # 100 (1650 until 2026-10-14)
+	gold = 1430 # 100 (1300 until 2026-11-02, 1650 until 2026-10-14)
 }

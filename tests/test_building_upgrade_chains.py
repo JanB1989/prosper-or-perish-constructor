@@ -127,6 +127,7 @@ EXPECTED_CHAINS = {
     "copper_mine": [
         ("copper_mine", None),
         ("copper_mine_adit", "new_currency_demands"),
+        ("copper_mine_deep", "pp_reverberatory_copper"),
     ],
     "silver_mine": [
         ("silver_mine", None),
@@ -163,6 +164,10 @@ EXPECTED_CHAINS = {
         ("bog_iron_smelter_blast_furnace", "blast_furnace"),
         ("bog_iron_smelter_coke_blast_furnace", "coke_blast_furnace"),
     ],
+    "amber": [
+        ("amber_collector", None),
+        ("amber_diggings", "pp_amber_diggings"),
+    ],
     "cookshop": [
         ("cookshop", None),
         ("public_kitchen", "pp_public_kitchen"),
@@ -178,6 +183,7 @@ ADDED_MINE_BUILDING_GOODS = {
     "quicksilver_retort": "mercury",
     "copper_mine": "copper",
     "copper_mine_adit": "copper",
+    "copper_mine_deep": "copper",
     "gem_gravel_pit": "gems",
     "gem_sluice": "gems",
     "gold_diggings": "goods_gold",
@@ -1948,7 +1954,7 @@ def test_tin_mine_tiers_are_tin_deposit_only_and_have_unique_icons() -> None:
 
 
 def test_copper_mine_tiers_are_copper_deposit_only() -> None:
-    for key in ("copper_mine", "copper_mine_adit"):
+    for key in ("copper_mine", "copper_mine_adit", "copper_mine_deep"):
         body = _load_blueprint(key)["building"]["body"]
         assert re.search(r"location_potential\s*=\s*\{\s*raw_material\s*=\s*goods:copper\s*\}", body)
 
@@ -1964,6 +1970,14 @@ def test_gem_mine_tiers_are_gem_deposit_only_and_have_unique_icons() -> None:
         raw = _load_blueprint(key)
         body = raw["building"]["body"]
         assert re.search(r"location_potential\s*=\s*\{\s*raw_material\s*=\s*goods:gems\s*\}", body)
+        assert raw["icon"]["output_dds"] == f"{key}.dds"
+
+
+def test_amber_tiers_are_amber_deposit_only_and_have_unique_icons() -> None:
+    for key in ("amber_collector", "amber_diggings"):
+        raw = _load_blueprint(key)
+        body = raw["building"]["body"]
+        assert re.search(r"location_potential\s*=\s*\{\s*raw_material\s*=\s*goods:amber\s*\}", body)
         assert raw["icon"]["output_dds"] == f"{key}.dds"
 
 

@@ -2,6 +2,9 @@
 
 # >>> eu5-building-pipeline:water_sawmill:localization
   pp_water_sawmill_base_lumber: "Woodland Cutting"
+  pp_water_sawmill_no_elephants: "No Forest Elephants"
+  pp_water_sawmill_elephant_skidding: "Elephant Log Hauling"
+  pp_water_sawmill_elephant_skidding_desc: "Mahouts and their working elephants haul the heaviest logs down to the log pond. It pays only where the market holds plenty of cheap elephants."
   pp_water_sawmill_extra_rations: "Extra Rations"
   pp_water_sawmill_horse_tools: "Horse Teams"
   pp_water_sawmill_horse_victuals: "Provisioned Horse Sawyers"
@@ -13,9 +16,10 @@
   water_sawmill: "Water Sawmill"
   water_sawmill_desc: "Water sawmills use millraces and reciprocating saw frames to turn logs into boards. Log ponds and sawn-timber yards move woodland cutting toward regular lumber production."
   water_sawmill_slot_0: "Woodland Cutting"
-  water_sawmill_slot_1: "Crew Support"
-  water_sawmill_slot_2: "Water Sawing"
+  water_sawmill_slot_1: "Forest Elephants"
+  water_sawmill_slot_2: "Crew Support"
+  water_sawmill_slot_3: "Water Sawing"
   pp_water_sawmill_market_sales: "Market Sales"
   pp_water_sawmill_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
-  water_sawmill_slot_3: "Market"
+  water_sawmill_slot_4: "Market"
 # <<< eu5-building-pipeline:water_sawmill:localization

@@ -4,18 +4,64 @@ footprint: urban_district
 shutdown: keep  # the marketplace line may be closed by the AI to save upkeep (Jan 2026-10-05)
 building:
   key: merchants_quarters
-  mode: INJECT
-  source: pp_building_footprint.txt
-  production_method_slots: []
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_merchants_quarters_maintenance
   possible_production_methods: []
   body: |-
     # Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
     # no institution gate (2026-10-19, Jan): a researched building never needs an unrelated institution
     # (test_trade_building_gates); it had Printing Press / Global Trade since 2026-10-06.
-    # trade buildings 2026-10-06: merchant capacity per level 1.5 -> 1.8, +20 % (adds to vanilla's line)
-    modifier = {
-    	local_merchant_capacity = 0.3
+    # Replaced whole because vanilla keeps its upkeep inside the building (2026-11-02, Jan: the merchant line took 26-32 % of
+    # world salt in run ebdb631e, a price-blind use). Only the salt and the merchant capacity differ from vanilla.
+    audio_tier = 2
+
+    is_foreign = no
+    max_levels = market_max_level
+    pop_type = burghers
+
+    category = trade_category
+
+    employment_size = 0.1 # trade_employment
+
+    town = yes
+    city = yes
+    megalopolis = yes
+
+    build_time = merchant_build_time
+
+    unique_production_methods = {
+    	pp_merchants_quarters_maintenance = {
+    		icon_type = building_type
+    		icon = merchants_quarters
+    		cloth = 0.075
+    		jewelry = 0.075
+    		paper = 0.075
+    		salt = 0.06 # 0.075
+    		beeswax = 0.03
+    		category = building_maintenance
+    	}
     }
+
+    construction_demand = town_building_construction
+
+    # trade buildings 2026-10-06: merchant capacity per level 1.5 -> 1.8, +20 %
+    modifier = {
+    	local_pop_assimilation_speed_modifier = 0.01
+    	local_burghers_estate_power = 0.1
+
+    	local_market_access = 0.005
+
+    	local_merchant_power = 1.5
+    	local_trades_per_burgher = 1.5
+    	local_merchant_capacity = 1.8
+    }
+
+    obsolete = marketplace
+
     # trade buildings 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001; build the upgrade where its
     # predecessor stands and at the market centre, like the farm upgrades (/ (owner income + 10))
     ai_construct_weight = {
@@ -24,3 +70,12 @@ building:
     	if = { limit = { is_market_center = yes } add = 100 }
     	divide = { value = scope:owner.monthly_income_total add = 10 }
     }
+localization:
+  entries:
+    pp_merchants_quarters_maintenance: "[ShowBuildingTypeName('merchants_quarters')|e] Maintenance"
+
+evaluation:
+  allow_rules:
+    profit_percent: Upkeep only, the building sells nothing.
+    input_throughput: Vanilla upkeep on a small staff, not a recipe.
+    output_throughput: Upkeep only, the building sells nothing.

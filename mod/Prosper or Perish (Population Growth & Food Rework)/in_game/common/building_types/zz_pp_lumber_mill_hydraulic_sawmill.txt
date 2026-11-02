@@ -43,6 +43,34 @@ unique_production_methods = {
     }
 }
 unique_production_methods = {
+    pp_water_sawmill_no_elephants = {
+        icon_type = building_type
+        icon = water_sawmill
+        category = building_maintenance
+    }
+    # 2026-11-02 (Jan: find uses for the elephants): as on the lumber mill, a slot of its own. Loses money at default
+    # prices; with elephants at the floor it pays from lumber about 1.4 up, and at lumber 1.7 it stops at elephants
+    # about 2. Two methods, so the market gate is safe: where it says no, no elephants is right.
+    pp_water_sawmill_elephant_skidding = {
+        icon_type = goods
+        icon = elephants
+        potential = {
+            any_market_present_in_country = {
+                is_produced_in_market = goods:elephants
+            }
+        }
+        location_allow = {
+            market ?= { is_produced_in_market = goods:elephants }
+        }
+        elephants = 0.12 # working elephants haul the logs to the pond, a larger yard than the mill's
+        manual_labor = 0.15 # mahouts and chain gangs
+        produced = lumber
+        output = 0.24
+        debug_max_profit = 0
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
     pp_water_sawmill_no_crew_support = {
         icon_type = building_type
         icon = water_sawmill

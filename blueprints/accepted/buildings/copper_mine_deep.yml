@@ -1,0 +1,236 @@
+﻿version: 2
+tag: copper_mine_deep
+footprint: mining
+labour:
+  class: primary_absolutism
+  methods:
+    pp_copper_mine_deep_base_copper: base
+gate_method: pp_copper_mine_deep_market_sales
+upgrade_chain:
+  family: copper_mine
+  tier: 2
+  previous: copper_mine_adit
+  next: null
+  unlock_advance: pp_reverberatory_copper
+building:
+  key: copper_mine_deep
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_copper_mine_deep_base_copper
+    - name: slot_1
+      methods:
+        - pp_copper_mine_deep_no_secondary
+        - pp_copper_mine_deep_tin
+        - pp_copper_mine_deep_silver
+        - pp_copper_mine_deep_gold
+    - name: slot_2
+      methods:
+        - pp_copper_mine_deep_no_primary
+        - pp_copper_mine_deep_horse_whim_hoisting
+        - pp_copper_mine_deep_drained_shafts
+        - pp_copper_mine_deep_reverberatory_smelting
+    - name: slot_3
+      methods:
+        - pp_copper_mine_deep_market_sales
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    increase_per_level_cost = 0.25
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 1
+    category = rgo_building_category
+    custom_tags = { pp_mine_building }
+    icon = copper_mine_deep
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    obsolete = copper_mine_adit
+    build_time = manufactory_build_time
+
+    location_potential = {
+        raw_material = goods:copper
+    }
+    construction_demand = manufactory_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_copper_mine_deep_base_copper = {
+            manual_labor = 0.066
+            produced = copper
+            output = 0.11
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_copper_mine_deep_no_secondary = {
+            category = building_maintenance
+        }
+        pp_copper_mine_deep_tin = {
+            lumber = 0.034 # props, washing troughs
+            tools = 0.005 # picks, sieves
+            coal = 0.012 # tin smelting fuel
+            manual_labor = 0.021
+            produced = tin
+            output = 0.062
+            category = building_maintenance
+        }
+        pp_copper_mine_deep_silver = {
+            lumber = 0.04 # props, liquation hearths
+            tools = 0.008 # picks, tongs
+            lead = 0.016
+            coal = 0.02 # liquation and cupellation fuel
+            manual_labor = 0.035
+            produced = silver
+            output = 0.036
+            category = building_maintenance
+        }
+        pp_copper_mine_deep_gold = {
+            lumber = 0.04 # props, parting hearths
+            tools = 0.008 # picks, tongs
+            lead = 0.016
+            coal = 0.02 # parting and cupellation fuel
+            manual_labor = 0.035
+            produced = goods_gold
+            output = 0.028
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_copper_mine_deep_no_primary = {
+            category = building_maintenance
+        }
+        pp_copper_mine_deep_horse_whim_hoisting = {
+            horses = 0.2 # whim draft teams
+            leather = 0.1 # harness, ore buckets
+            beeswax = 0.07 # mine candles
+            manual_labor = 0.21
+            produced = copper
+            output = 0.52 # tools-free fallback, lower throughput
+            category = building_maintenance
+        }
+        pp_copper_mine_deep_drained_shafts = {
+            lumber = 0.5 # shaft timbering, headframes, pump rods
+            tools = 0.09 # picks, pump fittings
+            beeswax = 0.09 # candles, pump seals
+            tar = 0.28 # tarred winding ropes, pitched pump barrels
+            manual_labor = 0.39
+            produced = copper
+            output = 0.88
+            category = building_maintenance
+        }
+        pp_copper_mine_deep_reverberatory_smelting = {
+            lumber = 0.44 # galleries, furnace charging floors
+            tools = 0.095 # rakes, pump fittings
+            beeswax = 0.1 # mine candles
+            coal = 0.43 # reverberatory furnace fuel
+            manual_labor = 0.44
+            produced = copper
+            output = 0.99
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_copper_mine_deep_market_sales = {
+            offset = 0.017
+            produced = copper
+            output = 0.006
+            category = building_maintenance
+        }
+    }
+
+    raw_modifier = {
+    }
+
+    modifier = {
+        local_population_growth = -0.00015
+        local_migration_attraction = 0.010
+        local_copper_output_modifier = 0.035
+    }
+localization:
+  entries:
+    copper_mine_deep_slot_0: Copper Lode
+    copper_mine_deep_slot_1: Ore Parting
+    copper_mine_deep_slot_2: Deep Copper Workings
+    copper_mine_deep_slot_3: Market
+    copper_mine_deep: Deep Copper Works
+    copper_mine_deep_desc: Drained shafts, horse whims, and coal-fired reverberatory furnaces let copper districts work deeper lodes and smelt poorer ores at the mine. Silver-bearing, gold-bearing, and tin-bearing stones are parted where the lode allows.
+    pp_copper_mine_deep_base_copper: Surveyed Deep Copper Lode
+    pp_copper_mine_deep_no_secondary: No Secondary Output
+    pp_copper_mine_deep_silver: Liquation Parting
+    pp_copper_mine_deep_gold: Auriferous Parting
+    pp_copper_mine_deep_tin: Tin Lode Parting
+    pp_copper_mine_deep_no_primary: No Deep Copper Workings
+    pp_copper_mine_deep_horse_whim_hoisting: Horse-Whim Hoisting
+    pp_copper_mine_deep_drained_shafts: Drained Shaft Workings
+    pp_copper_mine_deep_reverberatory_smelting: Reverberatory Smelting
+    pp_copper_mine_deep_market_sales: Market Sales
+    pp_copper_mine_deep_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
+    pp_reverberatory_copper: Reverberatory Copper Smelting
+    pp_reverberatory_copper_desc: Coal-fired reverberatory furnaces and deep drainage shafts let copper districts smelt poorer ores at the mine and keep the founders supplied.
+icon:
+  source_png: ../assets/icons/copper_mine_deep.png
+  output_dds: copper_mine_deep.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Deep Copper Works, transparent background. Center a braced timber headframe over a stone shaft beside a brick reverberatory furnace with a tall chimney, green-blue copper ore, and a stack of copper-red cakes, no text, no frame, painterly historical UI art.
+
+evaluation:
+  production_methods:
+    pp_copper_mine_deep_base_copper:
+      production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+    pp_copper_mine_deep_no_primary:
+      production_efficiency: 1.00
+    pp_copper_mine_deep_horse_whim_hoisting:
+      production_efficiency: 1.00
+      allow_rules:
+        profit_percent: Horse-whim hoisting is accepted above the generic margin band as a loop-breaking copper fallback.
+        input_throughput: Horse-whim hoisting is a lower-throughput loop-breaking fallback that avoids lumber, tool and coal inputs.
+        output_throughput: Horse-whim hoisting is a lower-throughput loop-breaking fallback that avoids lumber, tool and coal inputs.
+        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
+    pp_copper_mine_deep_drained_shafts:
+      production_efficiency: 1.00
+      allow_rules:
+        output_throughput: Drained shaft workings intentionally sit above the generic output target, like the deep iron workings.
+    pp_copper_mine_deep_reverberatory_smelting:
+      production_efficiency: 1.00
+      allow_rules:
+        output_throughput: Reverberatory smelting intentionally sits above the generic output target, like the deep iron workings.
+    pp_copper_mine_deep_no_secondary:
+      production_efficiency: 1.00
+    pp_copper_mine_deep_silver:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Liquation parting is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+        input_throughput: Liquation parting is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+        output_throughput: Liquation parting is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+        amortization_months: Liquation parting is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+    pp_copper_mine_deep_gold:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Auriferous parting is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+        input_throughput: Auriferous parting is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+        output_throughput: Auriferous parting is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+        amortization_months: Auriferous parting is an ancillary copper-lode byproduct, intentionally less profitable than primary copper extraction.
+    pp_copper_mine_deep_tin:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Tin lode parting is an ancillary regional copper-district byproduct, intentionally less profitable than primary copper extraction.
+        input_throughput: Tin lode parting is an ancillary regional copper-district byproduct, intentionally less profitable than primary copper extraction.
+        output_throughput: Tin lode parting is an ancillary regional copper-district byproduct, intentionally less profitable than primary copper extraction.
+        amortization_months: Tin lode parting is an ancillary regional copper-district byproduct, intentionally less profitable than primary copper extraction.
+    pp_copper_mine_deep_market_sales:
+      allow_rules:
+        profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.
+        input_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.
+        output_throughput: The Market Sales gate leg is a small technical method that only sets the AI margin check.

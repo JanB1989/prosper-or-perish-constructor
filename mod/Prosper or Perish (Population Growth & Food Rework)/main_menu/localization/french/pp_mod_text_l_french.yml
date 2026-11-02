@@ -204,6 +204,26 @@
   pp_amber_collector_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
   amber_collector_slot_3: "Market"
 # <<< eu5-building-pipeline:amber_collector:localization
+ # pp_amber_diggings_l_english.yml
+
+# >>> eu5-building-pipeline:amber_diggings:localization
+  amber_diggings_slot_0: "Blue Earth Seam"
+  amber_diggings_slot_1: "Spoil Carting"
+  amber_diggings_slot_2: "Pit Digging"
+  amber_diggings: "Amber Diggings"
+  amber_diggings_desc: "Where the [ShowBuildingTypeName('amber_collector')|e] searched the shore, these crews go after the source: timber-shored pits cut down to the dark blue earth that holds the amber, a windlass to bring it up, and sorting tables beside the spoil. Far more comes out of the ground than the sea ever gave up."
+  pp_amber_diggings: "Amber Regale"
+  pp_amber_diggings_desc: "The crown claims the amber of its shores as its own and pays to dig for more of it. [ShowBuildingTypeName('amber_diggings')|e] replace the old beach crews."
+  pp_amber_diggings_base_amber: "Blue Earth Seam"
+  pp_amber_diggings_no_spoil: "No Spoil Carting"
+  pp_amber_diggings_spoil_horses: "Horse-Drawn Spoil"
+  pp_amber_diggings_spoil_livestock: "Ox-Drawn Spoil"
+  pp_amber_diggings_no_pit_digging: "No Pit Digging"
+  pp_amber_diggings_shored_pits: "Shored Pits"
+  pp_amber_diggings_market_sales: "Market Sales"
+  pp_amber_diggings_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  amber_diggings_slot_3: "Market"
+# <<< eu5-building-pipeline:amber_diggings:localization
  # pp_apothecary_l_english.yml
 
 # >>> eu5-building-pipeline:apothecary:localization
@@ -2048,6 +2068,11 @@
   pp_coffee_grove_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
   coffee_grove_slot_2: "Market"
 # <<< eu5-building-pipeline:coffee_grove:localization
+ # pp_commerce_center_l_english.yml
+
+# >>> eu5-building-pipeline:commerce_center:localization
+  pp_commerce_center_maintenance: "[ShowBuildingTypeName('commerce_center')|e] Maintenance"
+# <<< eu5-building-pipeline:commerce_center:localization
  # pp_conscription_center_l_english.yml
 
 # >>> eu5-building-pipeline:conscription_center:localization
@@ -2105,6 +2130,29 @@
   pp_copper_mine_adit_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
   copper_mine_adit_slot_3: "Market"
 # <<< eu5-building-pipeline:copper_mine_adit:localization
+ # pp_copper_mine_deep_l_english.yml
+
+# >>> eu5-building-pipeline:copper_mine_deep:localization
+  copper_mine_deep_slot_0: "Copper Lode"
+  copper_mine_deep_slot_1: "Ore Parting"
+  copper_mine_deep_slot_2: "Deep Copper Workings"
+  copper_mine_deep_slot_3: "Market"
+  copper_mine_deep: "Deep Copper Works"
+  copper_mine_deep_desc: "Drained shafts, horse whims, and coal-fired reverberatory furnaces let copper districts work deeper lodes and smelt poorer ores at the mine. Silver-bearing, gold-bearing, and tin-bearing stones are parted where the lode allows."
+  pp_copper_mine_deep_base_copper: "Surveyed Deep Copper Lode"
+  pp_copper_mine_deep_no_secondary: "No Secondary Output"
+  pp_copper_mine_deep_silver: "Liquation Parting"
+  pp_copper_mine_deep_gold: "Auriferous Parting"
+  pp_copper_mine_deep_tin: "Tin Lode Parting"
+  pp_copper_mine_deep_no_primary: "No Deep Copper Workings"
+  pp_copper_mine_deep_horse_whim_hoisting: "Horse-Whim Hoisting"
+  pp_copper_mine_deep_drained_shafts: "Drained Shaft Workings"
+  pp_copper_mine_deep_reverberatory_smelting: "Reverberatory Smelting"
+  pp_copper_mine_deep_market_sales: "Market Sales"
+  pp_copper_mine_deep_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
+  pp_reverberatory_copper: "Reverberatory Copper Smelting"
+  pp_reverberatory_copper_desc: "Coal-fired reverberatory furnaces and deep drainage shafts let copper districts smelt poorer ores at the mine and keep the founders supplied."
+# <<< eu5-building-pipeline:copper_mine_deep:localization
  # pp_copper_mine_l_english.yml
 
 # >>> eu5-building-pipeline:copper_mine:localization
@@ -4208,6 +4256,11 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
 # >>> eu5-building-pipeline:granary:localization
   pp_granary_price: "[ShowBuildingTypeName('granary')|e] Price"
 # <<< eu5-building-pipeline:granary:localization
+ # pp_grand_marketplace_l_english.yml
+
+# >>> eu5-building-pipeline:grand_marketplace:localization
+  pp_grand_marketplace_maintenance: "[ShowBuildingTypeName('grand_marketplace')|e] Maintenance"
+# <<< eu5-building-pipeline:grand_marketplace:localization
  # pp_grand_shipyard_l_english.yml
 
 # >>> eu5-building-pipeline:grand_shipyard:localization
@@ -4835,6 +4888,9 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
 
 # >>> eu5-building-pipeline:water_sawmill:localization
   pp_water_sawmill_base_lumber: "Woodland Cutting"
+  pp_water_sawmill_no_elephants: "No Forest Elephants"
+  pp_water_sawmill_elephant_skidding: "Elephant Log Hauling"
+  pp_water_sawmill_elephant_skidding_desc: "Mahouts and their working elephants haul the heaviest logs down to the log pond. It pays only where the market holds plenty of cheap elephants."
   pp_water_sawmill_extra_rations: "Extra Rations"
   pp_water_sawmill_horse_tools: "Horse Teams"
   pp_water_sawmill_horse_victuals: "Provisioned Horse Sawyers"
@@ -4846,11 +4902,12 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   water_sawmill: "Water Sawmill"
   water_sawmill_desc: "Water sawmills use millraces and reciprocating saw frames to turn logs into boards. Log ponds and sawn-timber yards move woodland cutting toward regular lumber production."
   water_sawmill_slot_0: "Woodland Cutting"
-  water_sawmill_slot_1: "Crew Support"
-  water_sawmill_slot_2: "Water Sawing"
+  water_sawmill_slot_1: "Forest Elephants"
+  water_sawmill_slot_2: "Crew Support"
+  water_sawmill_slot_3: "Water Sawing"
   pp_water_sawmill_market_sales: "Market Sales"
   pp_water_sawmill_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
-  water_sawmill_slot_3: "Market"
+  water_sawmill_slot_4: "Market"
 # <<< eu5-building-pipeline:water_sawmill:localization
  # pp_lumber_mill_improved_l_english.yml
 
@@ -4859,8 +4916,12 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   lumber_mill_improved_desc: "Planned saw works combine managed timber stands, forest ordinances, log landings, and improved saw frames. Larger crews move more wood through organized yards."
   lumber_mill_improved_slot_0: "Managed Woodland Cutting"
   lumber_mill_improved_slot_1: "Crew Support"
-  lumber_mill_improved_slot_2: "Saw Works"
+  lumber_mill_improved_slot_2: "Forest Elephants"
+  lumber_mill_improved_slot_3: "Saw Works"
   pp_lumber_mill_improved_base_lumber: "Managed Woodland Cutting"
+  pp_lumber_mill_improved_no_elephants: "No Forest Elephants"
+  pp_lumber_mill_improved_elephant_skidding: "Elephant Timber Yards"
+  pp_lumber_mill_improved_elephant_skidding_desc: "Mahouts and their working elephants shift and stack the heaviest timber in the yards. It pays only where the market holds plenty of cheap elephants."
   pp_lumber_mill_improved_horse_tools: "Horse Forest Ordinances"
   pp_lumber_mill_improved_horse_victuals: "Provisioned Horse Ordinances"
   pp_lumber_mill_improved_livestock_tools: "Ox Forest Ordinances"
@@ -4870,15 +4931,19 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   pp_lumber_mill_improved_wound_salves: "Wound Salves"
   pp_lumber_mill_improved_market_sales: "Market Sales"
   pp_lumber_mill_improved_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
-  lumber_mill_improved_slot_3: "Market"
+  lumber_mill_improved_slot_4: "Market"
 # <<< eu5-building-pipeline:lumber_mill_improved:localization
  # pp_lumber_mill_l_english.yml
 
 # >>> eu5-building-pipeline:lumber_mill:localization
   lumber_mill_slot_0: "Woodland Cutting"
-  lumber_mill_slot_1: "Crew Support"
-  lumber_mill_slot_2: "Logging Method"
+  lumber_mill_slot_1: "Forest Elephants"
+  lumber_mill_slot_2: "Crew Support"
+  lumber_mill_slot_3: "Logging Method"
   pp_lumber_mill_base_lumber: "Woodland Cutting"
+  pp_lumber_mill_no_elephants: "No Forest Elephants"
+  pp_lumber_mill_elephant_skidding: "Elephant Skidding"
+  pp_lumber_mill_elephant_skidding_desc: "Mahouts and their working elephants drag the heaviest trunks out of the forest. It pays only where the market holds plenty of cheap elephants."
   pp_lumber_mill_extra_rations: "Extra Rations"
   pp_lumber_mill_horse_tools: "Horse Logging Teams"
   pp_lumber_mill_horse_victuals: "Provisioned Horse Crews"
@@ -4889,7 +4954,7 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   pp_lumber_mill_wound_salves: "Wound Salves"
   pp_lumber_mill_market_sales: "Market Sales"
   pp_lumber_mill_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
-  lumber_mill_slot_3: "Market"
+  lumber_mill_slot_4: "Market"
 # <<< eu5-building-pipeline:lumber_mill:localization
  # pp_maghreb_palm_irrigation_l_english.yml
 
@@ -5151,6 +5216,11 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   pp_market_village_market_sales: "Market Sales"
   pp_market_village_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
 # <<< eu5-building-pipeline:market_village:localization
+ # pp_marketplace_l_english.yml
+
+# >>> eu5-building-pipeline:marketplace:localization
+  pp_marketplace_maintenance: "[ShowBuildingTypeName('marketplace')|e] Maintenance"
+# <<< eu5-building-pipeline:marketplace:localization
  # pp_mason_l_english.yml
 
 # >>> eu5-building-pipeline:mason:localization
@@ -5161,6 +5231,11 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   pp_mason_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
   mason_slot_1: "Market"
 # <<< eu5-building-pipeline:mason:localization
+ # pp_merchants_quarters_l_english.yml
+
+# >>> eu5-building-pipeline:merchants_quarters:localization
+  pp_merchants_quarters_maintenance: "[ShowBuildingTypeName('merchants_quarters')|e] Maintenance"
+# <<< eu5-building-pipeline:merchants_quarters:localization
  # pp_millet_farm_tier0_l_english.yml
 
 # >>> eu5-building-pipeline:millet_farm:localization
@@ -5460,6 +5535,12 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   MODIFIER_TYPE_NAME_pp_water_sawmill_price_cost_modifier: "[ShowBuildingTypeName('water_sawmill')|e] Cost"
   MODIFIER_TYPE_DESC_pp_winery_manufactory_price_cost_modifier: "Affects the cost of building [ShowBuildingTypeName('winery_manufactory')|e]."
   MODIFIER_TYPE_NAME_pp_winery_manufactory_price_cost_modifier: "[ShowBuildingTypeName('winery_manufactory')|e] Cost"
+  MODIFIER_TYPE_DESC_pp_amber_collector_price_cost_modifier: "Affects the cost of building [ShowBuildingTypeName('amber_collector')|e]."
+  MODIFIER_TYPE_NAME_pp_amber_collector_price_cost_modifier: "[ShowBuildingTypeName('amber_collector')|e] Cost"
+  MODIFIER_TYPE_DESC_pp_amber_diggings_price_cost_modifier: "Affects the cost of building [ShowBuildingTypeName('amber_diggings')|e]."
+  MODIFIER_TYPE_NAME_pp_amber_diggings_price_cost_modifier: "[ShowBuildingTypeName('amber_diggings')|e] Cost"
+  MODIFIER_TYPE_DESC_pp_copper_mine_deep_price_cost_modifier: "Affects the cost of building [ShowBuildingTypeName('copper_mine_deep')|e]."
+  MODIFIER_TYPE_NAME_pp_copper_mine_deep_price_cost_modifier: "[ShowBuildingTypeName('copper_mine_deep')|e] Cost"
  # pp_modifiers_l_english.yml
 STATIC_MODIFIER_NAME_pp_harder_ai_harder_modifier: "Harder AI Food Efficiency"
 STATIC_MODIFIER_NAME_pp_harder_ai_very_hard_modifier: "Very Hard AI Food Efficiency"
@@ -8406,6 +8487,8 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
   PP_BUILDING_LEVEL_UPGRADED_TIER: "Upgraded Building"
   pp_alum_quarry_price: "[ShowBuildingTypeName('alum_quarry')|e] Price"
   pp_alum_works_price: "[ShowBuildingTypeName('alum_works')|e] Price"
+  pp_amber_collector_price: "[ShowBuildingTypeName('amber_collector')|e] Price"
+  pp_amber_diggings_price: "[ShowBuildingTypeName('amber_diggings')|e] Price"
   pp_cinnabar_pit_price: "[ShowBuildingTypeName('cinnabar_pit')|e] Price"
   pp_quicksilver_retort_price: "[ShowBuildingTypeName('quicksilver_retort')|e] Price"
   pp_clay_pit_price: "[ShowBuildingTypeName('clay_pit')|e] Price"
@@ -8419,6 +8502,7 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
   pp_terraced_coffee_grove_price: "[ShowBuildingTypeName('terraced_coffee_grove')|e] Price"
   pp_copper_mine_price: "[ShowBuildingTypeName('copper_mine')|e] Price"
   pp_copper_mine_adit_price: "[ShowBuildingTypeName('copper_mine_adit')|e] Price"
+  pp_copper_mine_deep_price: "[ShowBuildingTypeName('copper_mine_deep')|e] Price"
   pp_cotton_farm_price: "[ShowBuildingTypeName('cotton_farm')|e] Price"
   pp_market_cotton_farm_price: "[ShowBuildingTypeName('market_cotton_farm')|e] Price"
   pp_fiber_crops_farm_price: "[ShowBuildingTypeName('fiber_crops_farm')|e] Price"

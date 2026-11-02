@@ -1,12 +1,54 @@
 ﻿# >>> eu5-building-pipeline:grand_marketplace:building
-INJECT:grand_marketplace = {
+REPLACE:grand_marketplace = {
 # Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
 # no institution gate (2026-10-19, Jan): a researched building never needs an unrelated institution
 # (test_trade_building_gates); it had Printing Press / Global Trade since 2026-10-06.
-# trade buildings 2026-10-06: merchant capacity per level 2 -> 3, +50 % (adds to vanilla's line)
-modifier = {
-	local_merchant_capacity = 1.0
+# Replaced whole because vanilla keeps its upkeep inside the building (2026-11-02, Jan: the merchant line took 26-32 % of
+# world salt in run ebdb631e, a price-blind use). Only the salt and the merchant capacity differ from vanilla.
+audio_tier = 3
+is_foreign = no
+max_levels = market_max_level
+pop_type = burghers
+
+category = trade_category
+
+employment_size = 0.1 # trade_employment
+
+town = yes
+city = yes
+megalopolis = yes
+
+build_time = merchant_build_time
+
+unique_production_methods = {
+	pp_grand_marketplace_maintenance = {
+		icon_type = building_type
+		icon = grand_marketplace
+		cloth = 0.1
+		jewelry = 0.1
+		paper = 0.1
+		salt = 0.08 # 0.1
+		beeswax = 0.04
+		category = building_maintenance
+	}
 }
+
+construction_demand = town_building_construction
+
+# trade buildings 2026-10-06: merchant capacity per level 2 -> 3, +50 %
+modifier = {
+	local_pop_assimilation_speed_modifier = 0.01
+	local_burghers_estate_power = 0.1
+
+	local_market_access = 0.01
+
+	local_merchant_power = 2.0
+	local_trades_per_burgher = 2.0
+	local_merchant_capacity = 3.0
+}
+
+obsolete = merchants_quarters
+
 # trade buildings 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001; build the upgrade where its
 # predecessor stands and at the market centre, like the farm upgrades (/ (owner income + 10))
 ai_construct_weight = {

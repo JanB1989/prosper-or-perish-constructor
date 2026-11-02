@@ -35,7 +35,7 @@ ai_construct_weight = {
         add = {
             value = "market.market_price(goods:rice)"
             divide = "default_price(goods:rice)"
-            multiply = 1.6
+            multiply = 1.55
             multiply = { value = 1 add = modifier:local_rice_output_modifier subtract = pp_stored_food_staple_line }
             subtract = 1
             multiply = 400
@@ -75,7 +75,7 @@ unique_production_methods = {
         manual_labor = 0.005
         produced = rice
         output = 0.11
-        debug_max_profit = 1.866
+        debug_max_profit = 1.829
         category = building_maintenance
     }
     pp_rice_farm_wet_paddy = {
@@ -86,7 +86,7 @@ unique_production_methods = {
         manual_labor = 0.011
         produced = rice
         output = 0.11
-        debug_max_profit = 1.251
+        debug_max_profit = 1.201
         category = building_maintenance
     }
 }
@@ -97,7 +97,7 @@ unique_production_methods = {
         rice = 0.01
         produced = local_food
         output = 1.5
-        debug_max_profit = 45.875
+        debug_max_profit = 47.387
         category = building_maintenance
     }
 }

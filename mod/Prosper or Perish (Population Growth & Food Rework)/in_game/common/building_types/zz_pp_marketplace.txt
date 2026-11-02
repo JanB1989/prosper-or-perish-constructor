@@ -1,5 +1,46 @@
 ﻿# >>> eu5-building-pipeline:marketplace:building
-INJECT:marketplace = {
+REPLACE:marketplace = {
 # Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+# Replaced whole because vanilla keeps its upkeep inside the building (2026-11-02, Jan: the merchant line took 26-32 % of
+# world salt in run ebdb631e, a price-blind use). Only the salt differs from vanilla.
+audio_tier = 1
+is_foreign = no
+max_levels = marketplace_max_level
+pop_type = burghers
+
+category = trade_category
+
+employment_size = 0.1 # trade_employment
+
+town = yes
+city = yes
+megalopolis = yes
+
+build_time = merchant_build_time
+
+unique_production_methods = {
+	pp_marketplace_maintenance = {
+		icon_type = building_type
+		icon = marketplace
+		cloth = 0.06
+		jewelry = 0.05
+		paper = 0.05
+		salt = 0.05 # 0.06
+		category = building_maintenance
+	}
+}
+
+construction_demand = town_building_construction
+
+modifier = {
+	local_pop_assimilation_speed_modifier = 0.01
+	local_burghers_estate_power = 0.1
+
+	local_market_access = 0.005
+
+	local_merchant_power = 1
+	local_trades_per_burgher = 1
+	local_merchant_capacity = 1
+}
 }
 # <<< eu5-building-pipeline:marketplace:building

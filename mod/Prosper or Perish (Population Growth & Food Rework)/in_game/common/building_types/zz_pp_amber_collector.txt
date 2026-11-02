@@ -2,6 +2,7 @@
 amber_collector = {
 is_foreign = no
 increase_per_level_cost = 0.19
+price = pp_amber_collector_price
 max_levels = rural_building_cap
 pop_type = laborers
 employment_size = 0.8   # [building_scaling.employment_cut] reference 1

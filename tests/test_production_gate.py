@@ -419,14 +419,14 @@ def test_no_good_skips_the_margin_check() -> None:
 
 
 def test_passes_read_prices_before_the_stockpile_raise() -> None:
-    """[stockpile_prices]: the engine reads default prices x1.6 (dummy goods kept); the passes that turn gold into goods
+    """[stockpile_prices]: the engine reads default prices x1.55 (dummy goods kept); the passes that turn gold into goods
     amounts read them divided back, so recipes, legs and upkeep keep their amounts."""
     from prosper_or_perish_constructor import production_labour, profit_margins
 
     engine = profit_margins.goods_prices(ROOT / "constructor.load_order.toml", "constructor")
     passes = production_labour.load_prices(ROOT, ROOT / "constructor.toml")
-    assert (engine["iron"], passes["iron"]) == (5.6, 3.5)
-    assert (engine["victuals"], passes["victuals"]) == (4.8, 3.0)
-    assert (engine["fur"], passes["fur"]) == (3.68, 2.0)   # x1.6 x the 1.15 price_factor
+    assert (engine["iron"], passes["iron"]) == (5.425, 3.5)
+    assert (engine["victuals"], passes["victuals"]) == (4.65, 3.0)
+    assert (engine["fur"], passes["fur"]) == (3.565, 2.0)   # x1.55 x the 1.15 price_factor
     assert engine["offset"] == passes["offset"] == 5.0
     assert engine["local_food"] == passes["local_food"] == 0.5

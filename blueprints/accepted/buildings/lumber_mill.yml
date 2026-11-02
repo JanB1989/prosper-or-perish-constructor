@@ -22,17 +22,21 @@ building:
     - pp_lumber_mill_base_lumber
   - name: slot_1
     methods:
+    - pp_lumber_mill_no_elephants
+    - pp_lumber_mill_elephant_skidding
+  - name: slot_2
+    methods:
     - pp_lumber_mill_no_extra_rations
     - pp_lumber_mill_wound_salves
     - pp_lumber_mill_extra_rations
-  - name: slot_2
+  - name: slot_3
     methods:
     - pp_lumber_mill_no_primary
     - pp_lumber_mill_livestock_victuals
     - pp_lumber_mill_horse_victuals
     - pp_lumber_mill_livestock_tools
     - pp_lumber_mill_horse_tools
-  - name: slot_3
+  - name: slot_4
     methods:
     - pp_lumber_mill_market_sales
   possible_production_methods: []
@@ -71,6 +75,33 @@ building:
                 manual_labor = 0.037
                 produced = lumber
                 output = 0.105
+                category = building_maintenance
+            }
+        }
+        unique_production_methods = {
+            pp_lumber_mill_no_elephants = {
+                category = building_maintenance
+            }
+            # 2026-11-02 (Jan: find uses for the elephants; run ebdb631e: 230 made a month, 25 wanted, at the price floor
+            # wherever they are bred). A slot of its own, so the horse and ox teams and the salves keep their goods. Loses
+            # money at default prices; with elephants at the floor it pays from lumber about 1.4 up, and at lumber 1.7 it
+            # stops at elephants about 2.1. Two methods, so the market gate is safe: where it says no, no elephants is right.
+            pp_lumber_mill_elephant_skidding = {
+                icon_type = goods
+                icon = elephants
+                potential = {
+                    any_market_present_in_country = {
+                        is_produced_in_market = goods:elephants
+                    }
+                }
+                location_allow = {
+                    market ?= { is_produced_in_market = goods:elephants }
+                }
+                elephants = 0.1 # working elephants drag the heaviest trunks out of the forest
+                manual_labor = 0.19 # mahouts and chain gangs
+                produced = lumber
+                output = 0.25
+                debug_max_profit = 0
                 category = building_maintenance
             }
         }
@@ -169,11 +200,15 @@ advancements:
 localization:
   entries:
     lumber_mill_slot_0: Woodland Cutting
-    lumber_mill_slot_1: Crew Support
-    lumber_mill_slot_2: Logging Method
+    lumber_mill_slot_1: Forest Elephants
+    lumber_mill_slot_2: Crew Support
+    lumber_mill_slot_3: Logging Method
     lumber_improvements_discovery: Dedicated Forestry
     lumber_improvements_discovery_desc: Dedicated woodland management prepares larger forest districts for later sawmill improvements.
     pp_lumber_mill_base_lumber: Woodland Cutting
+    pp_lumber_mill_no_elephants: No Forest Elephants
+    pp_lumber_mill_elephant_skidding: Elephant Skidding
+    pp_lumber_mill_elephant_skidding_desc: Mahouts and their working elephants drag the heaviest trunks out of the forest. It pays only where the market holds plenty of cheap elephants.
     pp_lumber_mill_extra_rations: Extra Rations
     pp_lumber_mill_horse_tools: Horse Logging Teams
     pp_lumber_mill_horse_victuals: Provisioned Horse Crews
@@ -184,7 +219,7 @@ localization:
     pp_lumber_mill_wound_salves: Wound Salves
     pp_lumber_mill_market_sales: Market Sales
     pp_lumber_mill_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
-    lumber_mill_slot_3: Market
+    lumber_mill_slot_4: Market
 evaluation:
   production_methods:
     pp_lumber_mill_base_lumber:
@@ -194,6 +229,14 @@ evaluation:
         output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_lumber_mill_no_primary:
       production_efficiency: 1.0
+    pp_lumber_mill_no_elephants:
+      production_efficiency: 1.0
+    pp_lumber_mill_elephant_skidding:
+      production_efficiency: 1.0
+      allow_rules:
+        profit_percent: Elephant skidding pays only where elephants sit near the price floor, deliberately at a loss at default prices.
+        input_throughput: Elephant skidding is a small add-on beside the logging teams, deliberately below the full-building throughput.
+        output_throughput: Elephant skidding is a small add-on beside the logging teams, deliberately below the full-building throughput.
     pp_lumber_mill_horse_tools:
       production_efficiency: 1.0
     pp_lumber_mill_horse_victuals:

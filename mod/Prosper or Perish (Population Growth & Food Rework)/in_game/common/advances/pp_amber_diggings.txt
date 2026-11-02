@@ -1,0 +1,14 @@
+﻿# >>> eu5-building-pipeline:amber_diggings:advancement
+pp_amber_diggings = {
+icon = amber_diggings
+age = age_4_reformation
+requires = global_trade_advance
+unlock_building = amber_diggings
+ai_weight = {
+    if = {
+        limit = { produced_in_country:amber > 0 }
+        add = 200
+    }
+}
+}
+# <<< eu5-building-pipeline:amber_diggings:advancement

@@ -29,7 +29,7 @@ ai_construct_weight = {
         add = {
             value = "market.market_price(goods:millet)"
             divide = "default_price(goods:millet)"
-            multiply = 1.6
+            multiply = 1.55
             multiply = { value = 1 add = modifier:local_millet_output_modifier subtract = pp_stored_food_staple_line }
             subtract = 1
             multiply = 400
@@ -74,7 +74,7 @@ unique_production_methods = {
         manual_labor = 0.055
         produced = millet
         output = 0.69
-        debug_max_profit = 0.255
+        debug_max_profit = 0.243
         category = building_maintenance
     }
 }
@@ -85,7 +85,7 @@ unique_production_methods = {
         millet = 0.015
         produced = local_food
         output = 2.3
-        debug_max_profit = 46.917
+        debug_max_profit = 48.462
         category = building_maintenance
     }
 }

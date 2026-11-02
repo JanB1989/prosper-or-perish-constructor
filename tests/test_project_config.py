@@ -2323,7 +2323,7 @@ def test_normalized_production_sites_use_unit_employment_and_baseline_prices() -
     from prosper_or_perish_constructor.provisioning import PROVISIONED_GOOD_BY_BUILDING
 
     scoped_blueprints = _normalized_production_site_blueprints()
-    assert len(scoped_blueprints) == 132   # 102 before the crop farm split: 4 farm tiers became 32; +2 camel herders/stud
+    assert len(scoped_blueprints) == 134   # +2 amber diggings and deep copper works 2026-11-02; 102 before the crop farm split: 4 farm tiers became 32; +2 camel herders/stud
 
     # the staple food buildings employ 1.25 per level, peasants and laborers alike (2026-10-05, Jan, early-game nerf;
     # 1.25 is not the cut reference, so their laborer tiers keep it); their age 4-5 tiers are back to the unit size

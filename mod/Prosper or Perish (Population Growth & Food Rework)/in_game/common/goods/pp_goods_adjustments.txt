@@ -290,8 +290,19 @@ TRY_INJECT:cocoa = {
 TRY_INJECT:coffee = {
 	block_rgo_upgrade = yes
 }
+# Court elephants (2026-11-02, Jan: find uses; run ebdb631e: 230 a month made, 25 wanted, at the price floor wherever they
+# are bred). Vanilla's nobles want 0.1, but only above wealth 2, which almost no estate reaches: pops bought under 0.2 a
+# month all game. Now as for pearls: wealth 1 (this key adds to vanilla's), half vanilla's rate (about 25 a month in 1342,
+# 85 in 1837), and only in markets that breed them, so South Asian markets without any get no unmet demand.
 TRY_INJECT:elephants = {
 	block_rgo_upgrade = yes
+	demand_add = {
+		nobles = -0.05 # vanilla 0.1
+	}
+	wealth_impact_threshold = {
+		nobles = -1 # vanilla 2
+	}
+	no_demand_if_no_market_availability = yes
 }
 TRY_INJECT:camels = {
 	block_rgo_upgrade = yes

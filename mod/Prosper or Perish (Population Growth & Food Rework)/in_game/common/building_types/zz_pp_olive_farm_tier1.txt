@@ -35,7 +35,7 @@ ai_construct_weight = {
         add = {
             value = "market.market_price(goods:olives)"
             divide = "default_price(goods:olives)"
-            multiply = 1.6
+            multiply = 1.55
             multiply = { value = 1 add = modifier:local_olives_output_modifier subtract = pp_stored_food_staple_line }
             subtract = 1
             multiply = 400
@@ -80,7 +80,7 @@ unique_production_methods = {
         manual_labor = 0.058
         produced = olives
         output = 0.678
-        debug_max_profit = 0.193
+        debug_max_profit = 0.181
         category = building_maintenance
     }
 }
@@ -91,7 +91,7 @@ unique_production_methods = {
         olives = 0.015
         produced = local_food
         output = 2.3
-        debug_max_profit = 46.917
+        debug_max_profit = 48.462
         category = building_maintenance
     }
 }

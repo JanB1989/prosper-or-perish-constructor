@@ -433,16 +433,16 @@
 
 - Exploration branch, never merged unasked. Prices follow the market stockpile: `NMarket.STOCKPILE_TRADE_IMPACT_ON_SUPPLY_SCALE`
   6.7 with the stock bleed from the first unit (`MARKET_MIN_STOCKPILE_TO_ALLOW_EXTRA_TRADE` 0,
-  `MARKET_STOCKPILE_FULL_EXTRA_TRADE_THRESHOLD` 0.01), every default price x1.6 except the floor-pinned dummy goods
-  (`in_game/common/goods/zz_pp_goods_stockpile_prices.txt`, written by `ppc stockpile apply` from `[stockpile_prices]`;
+  `MARKET_STOCKPILE_FULL_EXTRA_TRADE_THRESHOLD` 0.01), every default price x1.55 (x1.6 until 2026-11-02) except the floor-pinned
+  dummy goods (`in_game/common/goods/zz_pp_goods_stockpile_prices.txt`, written by `ppc stockpile apply` from `[stockpile_prices]`;
   `check` must report it in step, a test enforces it), stockpile cap x10 (development 100, market centre 250). A market
-  with supply = demand sits at the default price when empty and at the old price at 3.2 months of stock. Price / default
+  with supply = demand sits at the default price when empty and at the old price at 2.9 months of stock. Price / default
   depends only on supply, demand and stock, never on the raise: the raise moves the price level and nominal incomes.
 - `production_labour.load_prices` divides the raise back out, so every pass that turns gold into goods amounts (labour,
   gate legs, logistics, Old Ways, crop farms, ship upkeep) keeps its amounts; `profit_margins.goods_prices` reads what the
   engine reads. After changing the raise: `ppc stockpile apply`, `ppc crop-farms --write`, labour, legacy, logistics, gate.
-  The Market legs run at margin 1.06 (steel 1.12): they open at 0.62x the default price, about 3.3 months of stock (5.5
-  with +20 % output), and that gate is where stocks settle, whatever the demand. Iron and lumber lost
+  The Market legs run at margin 1.06 (steel 1.12): they open at 0.64x the default price / the good's factor, about 2.9 months
+  of stock (5.0 with +20 % output), and that gate is where stocks settle, whatever the demand. Iron and lumber lost
   `ai_rgo_expansion_priority` (0 here, 0.025 on 0.10).
 - Demand (2026-11-01, Jan; from run 67859be2, where demand / production sat at 1.1-1.15 from 1550 on, not tested in game):
   `[stockpile_prices.pop_demand]` is a `demand_multiply` on every pop type per good (the engine's price brake has no setting
@@ -450,8 +450,8 @@
   `NEconomy.INFLATION_MINTING_GOLD_DEMANDS_FACTOR` 0.45 (minted metal follows income); `[production_labour] extra_share`
   0.09 on every share class except `extra_share_skip` and food buildings (a method producing a staple food or a good in
   `extra_share_spare_goods`, or `extra_share_spare_buildings`): the cost stays, the goods scale down about 10 %.
-- `[stockpile_prices.price_factor]` (0.85-1.15 per good, from run 06aedac2's relative prices; staple foods never cut)
-  multiplies the raise; the passes and the crop farm weight divide it back out too (`stockpile_price_raise`), so only
+- `[stockpile_prices.price_factor]` (0.85-1.15 per good, from run 06aedac2's relative prices, five moved one step on 2026-11-02
+  from run ebdb631e; staple foods never cut) multiplies the raise; the passes and the crop farm weight divide it back out too (`stockpile_price_raise`), so only
   the engine's market price moves. Crop farm `ai_construct_weight` multiplies price / default by the raise (a weight
   that read the raised default made farms look half as profitable in run 06aedac2).
 - Building prices x1.5 in gold (`in_game/common/prices/zz_pp_building_price_stockpile.txt`, written by hand, old value in
@@ -467,6 +467,19 @@
   `script_values/pp_tier_line_caps.txt`); every tier also names all older tiers as `obsolete`, so a site two tiers behind
   can upgrade (blueprints keep the direct predecessor only, the pass adds the rest). `increase_per_level_cost` stays. A new
   line in scope needs no config; a test pins the list of lines. `[tier_lines.price_overrides]` prices four crafts.
+- Copper and amber (2026-11-02, Jan; not tested in game): the AI skipped `new_currency_demands` (the adit's unlock; owners of 27 % of
+  copper sites in 1642, 40 % in 1807), so it now requires `pike_and_shot_advance` with weight +200 for copper and tin producers;
+  a third tier, Deep Copper Works (`copper_mine_deep`, advance `pp_reverberatory_copper`, age 5). The copper price factor stays 0.9:
+  1.0 opens only 2-13 more sites past workers and gold. Amber Diggings (`amber_diggings`, advance `pp_amber_diggings`, age 4 under
+  `global_trade_advance`): about twice the amber per level. An advance's `requires` must be in its own age, and a building unlocked
+  after age 1 needs an institution-gated ancestor (`tests/test_focus_restricted_unlocks.py`).
+- Merchant line salt (2026-11-02, Jan): `marketplace`, `merchants_quarters`, `grand_marketplace` and `commerce_center` are REPLACE copies
+  of vanilla because their upkeep sits inside the building (the line took 26-32 % of world salt, whatever the price); salt 0.05 / 0.06 /
+  0.08 / 0.08, was 0.06 / 0.075 / 0.1 / 0.1. Port them on game updates.
+- Elephants (2026-11-02, Jan: find uses; run ebdb631e: about 230 a month made, 25 wanted, all at the floor; not tested in game): the
+  nobles' demand opens at wealth 1 at half vanilla's rate, only in markets that breed them (`pp_goods_adjustments.txt`); the three
+  lumber mill tiers have a two-method slot "Forest Elephants" whose method loses money at default prices and pays with elephants
+  near the floor and lumber from about 1.4 (`location_allow`: the market breeds elephants; safe in a two-method slot).
 - Not changed: marketplace building caps (vanilla 20-100), tariffs. Engine costs that scale by market / default price
   (unit upkeep and the like) run about 35-50 % lower at normal stocks. Simulation: `~/pp_ai_run/tradesim` (private).
 
@@ -490,8 +503,9 @@
 
 ## AI Roads (2026-10-15, Jan)
 
-- Roads should not be good everywhere, upgrades rarely: prices stay (gravel 45, paved 240, modern 450, railroad 1300
-  per unit, `pp_road_gold_adjustments.txt`). The engine credits a candidate road with the full land - road saving at its
+- Roads should not be good everywhere, upgrades rarely: gravel 50, paved 265, modern 495, railroad 1430 per unit
+  (`pp_road_gold_adjustments.txt`; +10 % on 2026-11-02, Jan: too many late roads; run ebdb631e had 1,504 railroads by 1837, about
+  half built by estates and a quarter on the +50 pairs below, neither of which a price moves much). The engine credits a candidate road with the full land - road saving at its
   far end even where that end already has a cheaper path (river leg 12 < road 20) or no proximity; 42 % of the AI's new
   roads in run 4b90876a raised nothing.
 - `road_types/pp_road_ai_weights.txt` INJECTs `ai_construct_weight` (root = from, scope:to, scope:builder) from

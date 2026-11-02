@@ -2,6 +2,8 @@
 # Final gold: zz_pp_building_price_stockpile.txt does not touch these keys.
 pp_alum_quarry_price = { gold = 75 }
 pp_alum_works_price = { gold = 125 }
+pp_amber_collector_price = { gold = 75 }
+pp_amber_diggings_price = { gold = 125 }
 pp_cinnabar_pit_price = { gold = 75 }
 pp_quicksilver_retort_price = { gold = 125 }
 pp_clay_pit_price = { gold = 75 }
@@ -15,6 +17,7 @@ pp_coffee_grove_price = { gold = 100 }
 pp_terraced_coffee_grove_price = { gold = 200 }
 pp_copper_mine_price = { gold = 75 }
 pp_copper_mine_adit_price = { gold = 125 }
+pp_copper_mine_deep_price = { gold = 200 }
 pp_cotton_farm_price = { gold = 100 }
 pp_market_cotton_farm_price = { gold = 200 }
 pp_fiber_crops_farm_price = { gold = 75 }

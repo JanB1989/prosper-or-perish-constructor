@@ -1,0 +1,100 @@
+﻿# >>> eu5-building-pipeline:amber_diggings:building
+amber_diggings = {
+is_foreign = no
+increase_per_level_cost = 0.19
+price = pp_amber_diggings_price
+max_levels = pp_rural_building_cap_tier_1
+pop_type = laborers
+employment_size = 0.8   # [building_scaling.employment_cut] reference 1
+category = rgo_building_category
+icon = amber_diggings
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+obsolete = amber_collector
+build_time = workshop_build_time
+
+location_potential = {
+    raw_material = goods:amber
+}
+construction_demand = workshop_construction
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_amber_diggings_base_amber = {
+        icon_type = building_type
+        icon = amber_diggings
+        manual_labor = 0.062
+        produced = amber
+        output = 0.078
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_amber_diggings_no_spoil = {
+        icon_type = building_type
+        icon = amber_diggings
+        category = building_maintenance
+    }
+    pp_amber_diggings_spoil_horses = {
+        icon_type = building_type
+        icon = amber_diggings
+        horses = 0.032
+        manual_labor = 0.023
+        produced = sand
+        output = 0.288
+        category = building_maintenance
+    }
+    pp_amber_diggings_spoil_livestock = {
+        icon_type = building_type
+        icon = amber_diggings
+        livestock = 0.063
+        manual_labor = 0.025
+        produced = sand
+        output = 0.288
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_amber_diggings_no_pit_digging = {
+        icon_type = building_type
+        icon = amber_diggings
+        category = building_maintenance
+    }
+    pp_amber_diggings_shored_pits = {
+        icon_type = building_type
+        icon = amber_diggings
+        lumber = 0.14 # pit shoring, the windlass
+        fiber_crops = 0.082 # ropes, baskets, sieves
+        tools = 0.027 # spades, picks
+        manual_labor = 0.11
+        produced = amber
+        output = 0.174
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_amber_diggings_market_sales = {
+        icon_type = goods
+        icon = amber
+        offset = 0.015
+        produced = amber
+        output = 0.004
+        category = building_maintenance
+    }
+}
+
+
+modifier = {
+    local_migration_attraction = 0.005
+}
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_amber
+}
+}
+# <<< eu5-building-pipeline:amber_diggings:building

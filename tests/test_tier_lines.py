@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT / "constructor.toml"
 MOD = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 LINES = {
-    "alum_quarry", "cinnabar_pit", "clay_pit", "coal_mine", "cocoa_grove", "coffee_grove", "copper_mine", "cotton_farm",
+    "alum_quarry", "amber_collector", "cinnabar_pit", "clay_pit", "coal_mine", "cocoa_grove", "coffee_grove", "copper_mine", "cotton_farm",
     "fiber_crops_farm", "gem_gravel_pit", "gold_diggings", "horse_breeders", "inland_saltworks", "iron_mine", "lead_mine",
     "lumber_mill", "marble_quarry", "pepper_garden", "saffron_croft", "salt_mine", "sand_pit", "sericulture_farm",
     "silver_mine", "stone_quarry", "sugarcane_farm", "tea_garden", "tin_streamworks", "tobacco_farm",
@@ -52,11 +52,13 @@ def test_scope_is_the_raw_material_lines_and_the_extras(tiers: dict[str, tier_li
 
 @pytest.mark.parametrize(("line", "prices"), [
     (("iron_mine", "iron_mine_improved", "iron_mine_deep"), (100, 150, 225)),
+    (("copper_mine", "copper_mine_adit", "copper_mine_deep"), (75, 125, 200)),
     (("coal_mine", "coal_mine_improved", "coal_mine_revolutions"), (100, 200, 300)),
     (("lead_mine", "lead_mine_bole_smelting", "lead_mine_cupola_smelting"), (75, 125, 200)),
     (("lumber_mill", "water_sawmill", "lumber_mill_improved"), (100, 150, 225)),
     (("clay_pit", "clay_washmill"), (75, 125)),
     (("tea_garden", "tea_sorting_garden"), (100, 200)),
+    (("amber_collector", "amber_diggings"), (75, 125)),
 ])
 def test_ladders(tiers: dict[str, tier_lines.Tier], line: tuple[str, ...], prices: tuple[int, ...]) -> None:
     assert tuple(tiers[tag].price for tag in line) == prices

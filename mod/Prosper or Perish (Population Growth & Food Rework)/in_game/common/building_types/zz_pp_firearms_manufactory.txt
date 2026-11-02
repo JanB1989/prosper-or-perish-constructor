@@ -24,7 +24,7 @@ unique_production_methods = {
         produced = firearms
         output = 0.502
         category = manufactory_input
-        debug_max_profit = 0.009
+        debug_max_profit = manufactory_profit_margin
     }
     pp_firearms_manufactory_legacy_guns_workshop_ammunition_iron_maintenance = {
         icon_type = goods

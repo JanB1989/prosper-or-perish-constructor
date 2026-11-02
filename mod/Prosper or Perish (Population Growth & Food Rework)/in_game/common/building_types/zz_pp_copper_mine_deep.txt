@@ -1,0 +1,145 @@
+﻿# >>> eu5-building-pipeline:copper_mine_deep:building
+copper_mine_deep = {
+is_foreign = no
+increase_per_level_cost = 0.19
+price = pp_copper_mine_deep_price
+max_levels = pp_rural_building_cap_tier_2
+pop_type = laborers
+employment_size = 0.8   # [building_scaling.employment_cut] reference 1
+category = rgo_building_category
+custom_tags = { pp_mine_building }
+icon = copper_mine_deep
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+obsolete = copper_mine_adit
+obsolete = copper_mine
+build_time = manufactory_build_time
+
+location_potential = {
+    raw_material = goods:copper
+}
+construction_demand = manufactory_construction
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_copper_mine_deep_base_copper = {
+        icon_type = building_type
+        icon = copper_mine_deep
+        manual_labor = 0.066
+        produced = copper
+        output = 0.11
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_copper_mine_deep_no_secondary = {
+        icon_type = building_type
+        icon = copper_mine_deep
+        category = building_maintenance
+    }
+    pp_copper_mine_deep_tin = {
+        icon_type = building_type
+        icon = copper_mine_deep
+        lumber = 0.034 # props, washing troughs
+        tools = 0.005 # picks, sieves
+        coal = 0.012 # tin smelting fuel
+        manual_labor = 0.021
+        produced = tin
+        output = 0.062
+        category = building_maintenance
+    }
+    pp_copper_mine_deep_silver = {
+        icon_type = building_type
+        icon = copper_mine_deep
+        lumber = 0.04 # props, liquation hearths
+        tools = 0.008 # picks, tongs
+        lead = 0.016
+        coal = 0.02 # liquation and cupellation fuel
+        manual_labor = 0.035
+        produced = silver
+        output = 0.036
+        category = building_maintenance
+    }
+    pp_copper_mine_deep_gold = {
+        icon_type = building_type
+        icon = copper_mine_deep
+        lumber = 0.04 # props, parting hearths
+        tools = 0.008 # picks, tongs
+        lead = 0.016
+        coal = 0.02 # parting and cupellation fuel
+        manual_labor = 0.035
+        produced = goods_gold
+        output = 0.028
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_copper_mine_deep_no_primary = {
+        icon_type = building_type
+        icon = copper_mine_deep
+        category = building_maintenance
+    }
+    pp_copper_mine_deep_horse_whim_hoisting = {
+        icon_type = building_type
+        icon = copper_mine_deep
+        horses = 0.2 # whim draft teams
+        leather = 0.1 # harness, ore buckets
+        beeswax = 0.07 # mine candles
+        manual_labor = 0.21
+        produced = copper
+        output = 0.52 # tools-free fallback, lower throughput
+        category = building_maintenance
+    }
+    pp_copper_mine_deep_drained_shafts = {
+        icon_type = building_type
+        icon = copper_mine_deep
+        lumber = 0.5 # shaft timbering, headframes, pump rods
+        tools = 0.09 # picks, pump fittings
+        beeswax = 0.09 # candles, pump seals
+        tar = 0.28 # tarred winding ropes, pitched pump barrels
+        manual_labor = 0.39
+        produced = copper
+        output = 0.88
+        category = building_maintenance
+    }
+    pp_copper_mine_deep_reverberatory_smelting = {
+        icon_type = building_type
+        icon = copper_mine_deep
+        lumber = 0.44 # galleries, furnace charging floors
+        tools = 0.095 # rakes, pump fittings
+        beeswax = 0.1 # mine candles
+        coal = 0.43 # reverberatory furnace fuel
+        manual_labor = 0.44
+        produced = copper
+        output = 0.99
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_copper_mine_deep_market_sales = {
+        icon_type = goods
+        icon = copper
+        offset = 0.017
+        produced = copper
+        output = 0.006
+        category = building_maintenance
+    }
+}
+
+
+modifier = {
+    local_population_growth = -0.00015
+    local_migration_attraction = 0.010
+    local_copper_output_modifier = 0.02625
+}
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_copper
+}
+}
+# <<< eu5-building-pipeline:copper_mine_deep:building

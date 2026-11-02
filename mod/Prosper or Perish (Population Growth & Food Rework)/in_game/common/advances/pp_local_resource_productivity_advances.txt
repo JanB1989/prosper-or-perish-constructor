@@ -31,12 +31,42 @@ REPLACE:efficient_mining = {
 	global_copper_output_modifier = 0.1
 }
 
+# 2026-11-02, Jan: the AI left this to small countries (run ebdb631e: 18 % of the tax base at 1642, 35 % at 1837, while
+# the lines with a 90 % unlock end up 90 % upgraded), so half the copper levels could not upgrade. Copper and tin producers
+# now research it behind the common pike and shot, not the blast furnace, with the weight vanilla gives the patio process.
 REPLACE:new_currency_demands = {
 	age = age_3_discovery
 	icon = debt_and_loans
-	requires = blast_furnace
+	requires = pike_and_shot_advance
 	unlock_building = copper_mine_adit
 	unlock_building = tin_stamping_mill
+	ai_weight = {
+		if = {
+			limit = {
+				OR = {
+					produced_in_country:copper > 0
+					produced_in_country:tin > 0
+				}
+			}
+			add = 200
+		}
+	}
+}
+
+# 2026-11-02, Jan: copper's top tier stood at 1.3x its lowest (iron 1.8x) and upgrades are the supply the AI really builds.
+pp_reverberatory_copper = {
+	age = age_5_absolutism
+	icon = copper_mine_deep
+	requires = manufactories_advance
+	unlock_building = copper_mine_deep
+	ai_weight = {
+		if = {
+			limit = {
+				produced_in_country:copper > 0
+			}
+			add = 200
+		}
+	}
 }
 
 REPLACE:green_vitriol = {

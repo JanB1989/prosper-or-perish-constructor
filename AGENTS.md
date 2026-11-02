@@ -367,14 +367,21 @@
   while the copy differs from vanilla apart from those values, and also pins the net food productivity of every
   vanilla object (and of the mod's own objects) to 0 under this rule.
 
-## Advance Cards (2026-11-02, Jan)
+## Blank Effects (2026-11-02, Jan)
 
-- An advance with nothing on its card never builds, deploys or passes the tests (`advance_effects.py`, fatal in
-  `ppc build` and `ppc sync`, `tests/test_advance_tree.py`). It reads the merged advance with the mod's script values:
-  a key's copies add up, a net 0 is not a line, an unlock must reach something. There is no exception list.
-- A line the mod zeroes gets a live one in `in_game/common/advances/pp_empty_advance_effects.txt`: vanilla's food tier
-  number as output of the goods the advance is about. An advance that only gates something says so with a
-  `pure_tooltip_entry` (the canals there, the four gated crops from `crop_farms.py`).
+- What would show nothing in game never builds, deploys or passes the tests (`blank_effects.py`, fatal in `ppc build` and
+  `ppc sync`, `tests/test_blank_effects.py`). It reads the merged objects with the mod's script values: a key's copies add
+  up, a net 0 is not a line. There is no exception list. `empty_advances`: an advance with nothing on its card (an unlock
+  must reach something too). `dead_modifier_blocks`: in every other database folder, a modifier block where lines are
+  written and all of them come to 0; a block left empty on purpose (a REPLACE without lines) is not dead. Buildings:
+  `tests/test_building_effects.py`, which reads the script values as well.
+- A line the mod zeroes gets a live one in the folder's `pp_empty_effects.txt` (advances: `pp_empty_advance_effects.txt`):
+  vanilla's food tier number as output of the goods the object is about, every crop farm good when it is about farming in
+  general. An advance that only gates something says so with a `pure_tooltip_entry` (the canals, the four gated crops from
+  `crop_farms.py`).
+- `in_game/common/gods/hellenism.txt` is a same-path copy of vanilla's file plus `ZEUS_OMEN_LINES`: the omen sits inside
+  the god, so an inject or REPLACE of it could register the omen twice. A test fails when vanilla's file changes; copy
+  it again.
 
 ## Max-Level Tooltips (EU5 1.4)
 

@@ -1,0 +1,18 @@
+﻿# The only line was vanilla's food modifier, which the mod values 0 (blank_effects.py stops the build on such a block).
+# The same number as output of the crop farm goods, as with the reforms, laws and estates that had it.
+TRY_REPLACE:green_thumb = {
+	category = cabinet
+	custom_tags = { economical }
+	flavor = personality
+
+	modifier = {
+		global_wheat_output_modifier = 0.025
+		global_rice_output_modifier = 0.025
+		global_millet_output_modifier = 0.025
+		global_maize_output_modifier = 0.025
+		global_legumes_output_modifier = 0.025
+		global_potato_output_modifier = 0.025
+		global_olives_output_modifier = 0.025
+		global_livestock_output_modifier = 0.025
+	}
+}

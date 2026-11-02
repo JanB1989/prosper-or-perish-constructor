@@ -234,7 +234,7 @@ def test_sync_full_build_and_force_deploy_use_recovery_path(
     recorded: list[Path] = []
 
     monkeypatch.setattr(cli, "_finalize_constructor_mod", lambda repo_arg, project_arg: None)
-    monkeypatch.setattr(cli, "_check_advance_cards", lambda repo_arg: 0)
+    monkeypatch.setattr(cli, "_check_blank_effects", lambda repo_arg: 0)
     monkeypatch.setattr(cli, "_record_current_sync_state", lambda repo_arg, project_arg: recorded.append(project_arg))
     monkeypatch.setattr(cli, "_game_running", lambda: False)
 
@@ -254,12 +254,12 @@ def test_sync_full_build_and_force_deploy_use_recovery_path(
     assert recorded == [repo / "constructor.toml"]
 
 
-def test_full_sync_deploys_nothing_with_an_empty_advance(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_full_sync_deploys_nothing_with_a_blank_effect(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = _repo(tmp_path)
     (repo / "constructor.local.toml").write_text("[deploy]\ntarget = 'live'\n", encoding="utf-8")
     calls: list[str] = []
     monkeypatch.setattr(cli, "_finalize_constructor_mod", lambda repo_arg, project_arg: None)
-    monkeypatch.setattr(cli, "_check_advance_cards", lambda repo_arg: 1)
+    monkeypatch.setattr(cli, "_check_blank_effects", lambda repo_arg: 1)
     monkeypatch.setattr(cli, "_game_running", lambda: False)
     monkeypatch.setattr(cli, "_run", lambda command, cwd: calls.append(str(command[1])) or 0)
 
@@ -273,7 +273,7 @@ def test_sync_does_not_deploy_while_the_game_runs(tmp_path: Path, monkeypatch: p
     (repo / "constructor.local.toml").write_text("[deploy]\ntarget = 'live'\n", encoding="utf-8")
     calls: list[str] = []
     monkeypatch.setattr(cli, "_finalize_constructor_mod", lambda repo_arg, project_arg: None)
-    monkeypatch.setattr(cli, "_check_advance_cards", lambda repo_arg: 0)
+    monkeypatch.setattr(cli, "_check_blank_effects", lambda repo_arg: 0)
     monkeypatch.setattr(cli, "_record_current_sync_state", lambda repo_arg, project_arg: None)
     monkeypatch.setattr(cli, "_run", lambda command, cwd: calls.append(str(command[1])) or 0)
     monkeypatch.setattr(cli, "_game_running", lambda: True)
@@ -332,7 +332,7 @@ def test_smart_sync_reruns_world_builder_only_when_its_inputs_change(
     monkeypatch.setattr(cli, "_run", fake_run)
     monkeypatch.setattr(cli, "_game_running", lambda: False)
     monkeypatch.setattr(cli, "_finalize_constructor_mod", lambda repo_arg, project_arg: None)
-    monkeypatch.setattr(cli, "_check_advance_cards", lambda repo_arg: 0)
+    monkeypatch.setattr(cli, "_check_blank_effects", lambda repo_arg: 0)
 
     def sync() -> list[str]:
         runs.clear()
@@ -349,13 +349,13 @@ def test_smart_sync_reruns_world_builder_only_when_its_inputs_change(
     setup.write_text("locations = { rome = {} }\n", encoding="utf-8")
     assert sync() == ["worldbuilder", "validate"]
 
-    # an empty advance stops the sync before the deploy, and the next one checks again
+    # a blank effect stops the sync before the deploy, and the next one checks again
     setup.write_text("locations = { milan = {} }\n", encoding="utf-8")
-    monkeypatch.setattr(cli, "_check_advance_cards", lambda repo_arg: 1)
+    monkeypatch.setattr(cli, "_check_blank_effects", lambda repo_arg: 1)
     runs.clear()
     assert cli.main(["--repo", str(repo), "sync", "--yes"]) == 1
     assert "deploy" not in runs
-    monkeypatch.setattr(cli, "_check_advance_cards", lambda repo_arg: 0)
+    monkeypatch.setattr(cli, "_check_blank_effects", lambda repo_arg: 0)
     assert "validate" in sync()
 
 

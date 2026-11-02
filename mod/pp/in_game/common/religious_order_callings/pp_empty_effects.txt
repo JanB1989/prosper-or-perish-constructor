@@ -1,0 +1,8 @@
+﻿# The only country line was vanilla's food modifier, which the mod values 0 (blank_effects.py stops the build on such a
+# block). The same number as output of what the order's granges worked: grain and sheep.
+TRY_INJECT:cultivators_calling = {
+	country_modifier = {
+		global_wheat_output_modifier = 0.025
+		global_wool_output_modifier = 0.025
+	}
+}

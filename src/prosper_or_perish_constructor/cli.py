@@ -1629,9 +1629,9 @@ def _build_stages(clock: "_StageClock", extra: Sequence[str], repo: Path, projec
     if build_code != 0:
         return build_code
     clock.run("finalize", _finalize_constructor_mod, repo, project)
-    cards_code = clock.run("advance card check", _check_advance_cards, repo)
-    if cards_code != 0:
-        return cards_code
+    blank_code = clock.run("blank effect check", _check_blank_effects, repo)
+    if blank_code != 0:
+        return blank_code
     for label, check in (
         ("age food check", _print_age_food_check),
         ("stockpile check", _print_stockpile_check),
@@ -1645,17 +1645,21 @@ def _build_stages(clock: "_StageClock", extra: Sequence[str], repo: Path, projec
     return 0
 
 
-def _check_advance_cards(repo: Path) -> int:
-    """Fatal, unlike the summaries above: an advance with nothing on its card never builds or deploys."""
-    from prosper_or_perish_constructor.advance_effects import empty_advances
+def _check_blank_effects(repo: Path) -> int:
+    """Fatal, unlike the summaries above: what would show nothing in game never builds or deploys."""
+    from prosper_or_perish_constructor.blank_effects import dead_modifier_blocks, empty_advances
 
     empty = empty_advances(repo / CONSTRUCTOR_LOAD_ORDER)
+    dead = dead_modifier_blocks(repo / CONSTRUCTOR_LOAD_ORDER)
     for line in empty:
         print(f"Empty advance: {line}", flush=True)
-    if empty:
-        print(f"{len(empty)} advances show a bare title in game: give each an effect or a pure_tooltip_entry.", flush=True)
+    for line in dead:
+        print(f"Dead modifier block: {line}", flush=True)
+    if empty or dead:
+        print(f"{len(empty) + len(dead)} show nothing in game: give each an effect (advances: or a pure_tooltip_entry).",
+              flush=True)
         return 1
-    print("Advance cards: none empty.", flush=True)
+    print("Blank effects: none.", flush=True)
     return 0
 
 
@@ -4608,7 +4612,7 @@ def _smart_sync(args: argparse.Namespace, repo: Path, project: Path, clock: "_St
         result = clock.run("validate", _run, ["eu5-orchestrator", "validate", "--project", project], repo)
         if result != 0:
             return result
-        result = clock.run("advance card check", _check_advance_cards, repo)
+        result = clock.run("blank effect check", _check_blank_effects, repo)
         if result != 0:
             return result
         state["validation"] = clock.run("validation fingerprint", _validation_fingerprint, repo, project)

@@ -1,0 +1,84 @@
+﻿# The only line was vanilla's food modifier, which the mod values 0 (blank_effects.py stops the build on such a block).
+# The same number as output of the goods each one is about, like the_little_ice_age.
+
+# Events that take the harvest: every crop farm good.
+TRY_INJECT:eruption_of_huaynaputina = {
+	global_wheat_output_modifier = -0.25
+	global_rice_output_modifier = -0.25
+	global_millet_output_modifier = -0.25
+	global_maize_output_modifier = -0.25
+	global_legumes_output_modifier = -0.25
+	global_potato_output_modifier = -0.25
+	global_olives_output_modifier = -0.25
+	global_livestock_output_modifier = -0.25
+}
+TRY_INJECT:unattended_crops = {
+	global_wheat_output_modifier = -0.25
+	global_rice_output_modifier = -0.25
+	global_millet_output_modifier = -0.25
+	global_maize_output_modifier = -0.25
+	global_legumes_output_modifier = -0.25
+	global_potato_output_modifier = -0.25
+	global_olives_output_modifier = -0.25
+	global_livestock_output_modifier = -0.25
+}
+TRY_INJECT:famine_and_bad_crops_modifier = {
+	local_wheat_output_modifier = -0.33
+	local_rice_output_modifier = -0.33
+	local_millet_output_modifier = -0.33
+	local_maize_output_modifier = -0.33
+	local_legumes_output_modifier = -0.33
+	local_potato_output_modifier = -0.33
+	local_olives_output_modifier = -0.33
+	local_livestock_output_modifier = -0.33
+}
+TRY_INJECT:pandoras_evils_modifier = {
+	local_wheat_output_modifier = -0.25
+	local_rice_output_modifier = -0.25
+	local_millet_output_modifier = -0.25
+	local_maize_output_modifier = -0.25
+	local_legumes_output_modifier = -0.25
+	local_potato_output_modifier = -0.25
+	local_olives_output_modifier = -0.25
+	local_livestock_output_modifier = -0.25
+}
+
+# England's event: every crop farm good.
+TRY_INJECT:invested_in_farming_output = {
+	global_wheat_output_modifier = 0.05
+	global_rice_output_modifier = 0.05
+	global_millet_output_modifier = 0.05
+	global_maize_output_modifier = 0.05
+	global_legumes_output_modifier = 0.05
+	global_potato_output_modifier = 0.05
+	global_olives_output_modifier = 0.05
+	global_livestock_output_modifier = 0.05
+}
+
+# Tunis's countryside: grain and olives.
+TRY_INJECT:tun_control_over_countryside_restored = {
+	global_wheat_output_modifier = 0.05
+	global_olives_output_modifier = 0.05
+}
+
+# Harvest festivals: the crops they honour.
+TRY_INJECT:coia_raymi_quilla_modifier = {
+	global_maize_output_modifier = 0.05
+	global_potato_output_modifier = 0.05
+}
+TRY_INJECT:uinal_mac_modifier = {
+	global_maize_output_modifier = 0.05
+	global_legumes_output_modifier = 0.05
+}
+TRY_INJECT:huey_tozoztli_mass = {
+	global_maize_output_modifier = 0.05
+	global_legumes_output_modifier = 0.05
+}
+TRY_INJECT:huey_tozoztli_gr = {
+	global_maize_output_modifier = 0.025
+	global_legumes_output_modifier = 0.025
+}
+TRY_INJECT:fordicidia_modifier = {
+	global_wheat_output_modifier = 0.05
+	global_livestock_output_modifier = 0.05
+}

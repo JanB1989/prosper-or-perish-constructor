@@ -1,0 +1,8 @@
+﻿# The only line was vanilla's food modifier, which the mod values 0 (blank_effects.py stops the build on such a block).
+# Zeus's omen The Bountiful One had the same: hellenism.txt in this folder, a copy of vanilla's file with two lines added.
+TRY_INJECT:freyr_god = {
+	country_modifier = {
+		global_wheat_output_modifier = 0.025
+		global_livestock_output_modifier = 0.025
+	}
+}

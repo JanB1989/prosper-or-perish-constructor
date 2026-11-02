@@ -11,6 +11,7 @@ custom_tags = { pp_food_security_priority pp_staple_food_priority farming_capaci
 ai_construct_weight = {
     value = 0
     add = pp_food_urgency_weight
+    add = pp_market_short_camels
 }
 icon = camel_herders
 rural_settlement = yes

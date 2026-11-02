@@ -62,5 +62,9 @@ raw_modifier = {
 }
 construction_demand = village_construction
 increase_per_level_cost = 0.12
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_ivory
+}
 }
 # <<< eu5-building-pipeline:elephant_hunting_grounds:building

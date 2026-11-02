@@ -1116,6 +1116,17 @@ slot_label = "Market"
 method_name = "Market Sales"
 method_desc = "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
 
+[market_short_weight]
+# The AI reacts a little when its market runs short of a good (market_short_weight.py, finalize): every producer's
+# ai_construct_weight gets, last, amount x clamp(1 - market stock / monthly market demand) x clamp(owner tax base /
+# tax_base_full) for its main good, only where the market's monthly demand is above demand_floor. Nothing changes from one
+# month of stock upward. Tested against other forms in docs/ai_building_rulebook.md "Short market weight".
+amount = 20
+demand_floor = 1
+tax_base_full = 2000
+# outputs that are not goods anyone stocks: a building is never there for these
+not_goods = ["offset", "logistics", "local_food", "manual_labor", "province_food_sales", "export_sales", "export_tally", "manual_labor_cost", "province_food_purchase"]
+
 [rural_town_goods]
 # The AI does not build a rural-capable producer (rural_settlement = yes) at a rural location whose province has a town of
 # the same owner while the country evaluating it also has a town-only producer of ANY good that building can make (researched

@@ -95,5 +95,9 @@ raw_modifier = {
   pp_levels_horse_breeders = 1
   local_population_capacity = -2
 }
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_horses
+}
 }
 # <<< eu5-building-pipeline:horse_breeders:building

@@ -46,5 +46,9 @@ unique_production_methods = {
 }
 construction_demand = basic_construction_needs
 increase_per_level_cost = 0.11
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_masonry
+}
 }
 # <<< eu5-building-pipeline:mason:building

@@ -109,6 +109,7 @@ ai_construct_weight = {
     value = 0
     if = { limit = { has_building = building_type:distillers_guild } add = 200 }
     divide = { value = scope:owner.monthly_income_total add = 10 }
+    add = pp_market_short_liquor
 }
 }
 # <<< eu5-building-pipeline:distillers_workshop:building

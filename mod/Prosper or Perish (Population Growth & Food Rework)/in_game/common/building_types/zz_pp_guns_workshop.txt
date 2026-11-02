@@ -118,6 +118,7 @@ ai_construct_weight = {
     value = 0
     if = { limit = { has_building = building_type:gun_smith } add = 200 }
     divide = { value = scope:owner.monthly_income_total add = 10 }
+    add = pp_market_short_firearms
 }
 }
 # <<< eu5-building-pipeline:guns_workshop:building

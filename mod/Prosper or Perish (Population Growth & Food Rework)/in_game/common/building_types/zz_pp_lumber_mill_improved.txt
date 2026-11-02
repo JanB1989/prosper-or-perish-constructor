@@ -132,5 +132,9 @@ modifier = {
     local_migration_attraction = 0.005
     local_population_growth = -0.0000
 }
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_lumber
+}
 }
 # <<< eu5-building-pipeline:lumber_mill_improved:building

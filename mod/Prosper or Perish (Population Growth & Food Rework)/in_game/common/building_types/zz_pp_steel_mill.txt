@@ -41,5 +41,9 @@ unique_production_methods = {
 }
 construction_demand = mill_construction
 increase_per_level_cost = 0.16
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_steel
+}
 }
 # <<< eu5-building-pipeline:steel_mill:building

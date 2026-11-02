@@ -90,5 +90,9 @@ unique_production_methods = {
 construction_demand = manufactory_construction
 increase_per_level_cost = 0.19
 price = pp_winery_manufactory_price
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_wine
+}
 }
 # <<< eu5-building-pipeline:winery_manufactory:building

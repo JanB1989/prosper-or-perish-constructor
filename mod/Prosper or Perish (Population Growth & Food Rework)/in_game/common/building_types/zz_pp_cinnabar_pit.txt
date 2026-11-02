@@ -87,5 +87,9 @@ modifier = {
     local_migration_attraction = 0.010
     local_mercury_output_modifier = 0.01125
 }
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_mercury
+}
 }
 # <<< eu5-building-pipeline:cinnabar_pit:building

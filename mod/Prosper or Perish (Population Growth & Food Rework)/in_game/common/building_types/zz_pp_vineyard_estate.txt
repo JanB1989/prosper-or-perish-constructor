@@ -68,5 +68,9 @@ raw_modifier = {
 modifier = {
     local_migration_attraction = 0.003
 }
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_wine
+}
 }
 # <<< eu5-building-pipeline:vineyard_estate:building

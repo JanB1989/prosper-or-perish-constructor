@@ -65,5 +65,9 @@ unique_production_methods = {
 modifier = {
     local_migration_attraction = 0.003
 }
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_ivory
+}
 }
 # <<< eu5-building-pipeline:ivory_hunting_camp:building

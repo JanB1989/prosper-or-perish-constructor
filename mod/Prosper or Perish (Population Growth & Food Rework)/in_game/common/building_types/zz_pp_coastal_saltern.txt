@@ -62,5 +62,9 @@ modifier = {
 }
 build_time = rural_build_time
 construction_demand = farm_constructions
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_salt
+}
 }
 # <<< eu5-building-pipeline:salt_collector:building

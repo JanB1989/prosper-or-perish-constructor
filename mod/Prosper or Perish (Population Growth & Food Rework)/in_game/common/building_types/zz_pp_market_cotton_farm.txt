@@ -89,5 +89,9 @@ raw_modifier = {
 modifier = {
     local_migration_attraction = 0.003
 }
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_cotton
+}
 }
 # <<< eu5-building-pipeline:market_cotton_farm:building

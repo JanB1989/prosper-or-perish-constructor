@@ -53,5 +53,9 @@ increase_per_level_cost = 0.18
 
     construction_demand = guild_construction
 
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_coal
+}
 }
 # <<< eu5-building-pipeline:charcoal_maker:building

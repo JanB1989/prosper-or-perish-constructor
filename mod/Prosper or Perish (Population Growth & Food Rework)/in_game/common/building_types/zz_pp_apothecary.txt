@@ -50,5 +50,9 @@ construction_demand = guild_construction
 # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
 increase_per_level_cost = 0.52
 price = pp_apothecary_price
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_medicaments
+}
 }
 # <<< eu5-building-pipeline:apothecary:building

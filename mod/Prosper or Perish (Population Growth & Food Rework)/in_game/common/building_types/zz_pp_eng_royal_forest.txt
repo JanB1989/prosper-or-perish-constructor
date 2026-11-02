@@ -30,6 +30,7 @@ location_potential = {
 ai_construct_weight = {
     value = 0
     add = pp_food_urgency_weight
+    add = pp_market_short_wild_game
 }
 build_time = rural_build_time
 expensive = yes

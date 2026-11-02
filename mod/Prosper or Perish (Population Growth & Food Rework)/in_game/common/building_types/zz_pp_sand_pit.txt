@@ -56,5 +56,9 @@ unique_production_methods = {
 }
 
 construction_demand = basic_construction_needs
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_sand
+}
 }
 # <<< eu5-building-pipeline:sand_pit:building

@@ -64,5 +64,9 @@ unique_production_methods = {
 modifier = {
     local_migration_attraction = 0.003
 }
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_pearls
+}
 }
 # <<< eu5-building-pipeline:pearl_fishery:building

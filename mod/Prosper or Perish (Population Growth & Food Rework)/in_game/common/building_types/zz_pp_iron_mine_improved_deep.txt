@@ -106,5 +106,9 @@ modifier = {
     local_migration_attraction = 0.010
     local_iron_output_modifier = 0.02625
 }
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_iron
+}
 }
 # <<< eu5-building-pipeline:iron_mine_deep:building

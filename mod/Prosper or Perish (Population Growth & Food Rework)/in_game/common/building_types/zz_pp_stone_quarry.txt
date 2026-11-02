@@ -64,5 +64,9 @@ unique_production_methods = {
 
 build_time = rural_build_time
 construction_demand = basic_construction_needs
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_stone
+}
 }
 # <<< eu5-building-pipeline:stone_quarry:building

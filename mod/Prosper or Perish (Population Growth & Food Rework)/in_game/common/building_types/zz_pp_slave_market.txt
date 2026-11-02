@@ -58,5 +58,9 @@ modifier = {
 }
 construction_demand = town_building_construction
 increase_per_level_cost = 0.15
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_slaves_goods
+}
 }
 # <<< eu5-building-pipeline:slave_market:building

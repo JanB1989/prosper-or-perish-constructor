@@ -111,6 +111,7 @@ ai_construct_weight = {
     value = 0
     if = { limit = { has_building = building_type:cannon_workshop } add = 200 }
     divide = { value = scope:owner.monthly_income_total add = 10 }
+    add = pp_market_short_cannons
 }
 }
 # <<< eu5-building-pipeline:cannon_foundry:building

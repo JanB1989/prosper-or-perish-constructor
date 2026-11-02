@@ -64,5 +64,9 @@ custom_tags = {
 }
 construction_demand = workshop_construction
 increase_per_level_cost = 0.16
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_paper
+}
 }
 # <<< eu5-building-pipeline:paper_workshop:building

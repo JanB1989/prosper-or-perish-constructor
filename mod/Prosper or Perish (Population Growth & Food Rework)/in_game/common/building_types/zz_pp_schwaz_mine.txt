@@ -49,5 +49,9 @@ modifier = {
 }
 construction_demand = basic_construction_needs
 increase_per_level_cost = 0.21
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_silver
+}
 }
 # <<< eu5-building-pipeline:schwaz_mine:building

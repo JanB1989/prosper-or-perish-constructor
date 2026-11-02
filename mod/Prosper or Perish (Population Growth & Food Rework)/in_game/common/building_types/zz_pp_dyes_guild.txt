@@ -48,5 +48,9 @@ construction_demand = guild_construction
 # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
 increase_per_level_cost = 0.45
 price = pp_dyes_guild_price
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_dyes
+}
 }
 # <<< eu5-building-pipeline:dyes_guild:building

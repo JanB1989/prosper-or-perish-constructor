@@ -18,6 +18,7 @@ REPLACE:forest_village = {
     ai_construct_weight = {
         value = 0
         add = pp_food_urgency_weight
+    add = pp_market_short_beeswax
     }
     ai_forbid_shutdown = no
     location_potential = {

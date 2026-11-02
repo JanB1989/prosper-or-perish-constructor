@@ -45,6 +45,7 @@ ai_construct_weight = {
   }
   if = { limit = { NOT = { exists = market } } subtract = 10000 }
   if = { limit = { pp_location_province_food_balance <= 0 } subtract = 10000 }
+    add = pp_market_short_victuals
 }
 
 # slot 0: packing goods: pottery, barrels or tin cans waste less of the food.

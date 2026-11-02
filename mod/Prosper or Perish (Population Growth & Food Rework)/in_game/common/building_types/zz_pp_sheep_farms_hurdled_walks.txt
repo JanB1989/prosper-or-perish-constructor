@@ -18,6 +18,7 @@ forbidden_for_estates = yes
 ai_construct_weight = {
     value = 0
     add = pp_food_urgency_weight
+    add = pp_market_short_wool
 }
 ai_forbid_shutdown = no
 can_close = yes

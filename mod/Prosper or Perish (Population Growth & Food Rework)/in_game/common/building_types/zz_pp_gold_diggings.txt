@@ -107,5 +107,9 @@ modifier = {
     local_migration_attraction = 0.010
     local_goods_gold_output_modifier = 0.01125
 }
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_goods_gold
+}
 }
 # <<< eu5-building-pipeline:gold_diggings:building

@@ -52,5 +52,9 @@ raw_modifier = {
     local_burghers_desired_pop = 0.05
 }
 increase_per_level_cost = 0.15
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_dyes
+}
 }
 # <<< eu5-building-pipeline:dyes_mill:building

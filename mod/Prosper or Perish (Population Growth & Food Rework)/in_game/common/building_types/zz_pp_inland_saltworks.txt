@@ -113,5 +113,9 @@ modifier = {
     local_population_growth = -0.0000
     local_migration_attraction = 0.003
 }
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_salt
+}
 }
 # <<< eu5-building-pipeline:inland_saltworks:building

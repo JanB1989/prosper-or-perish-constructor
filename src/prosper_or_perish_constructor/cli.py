@@ -1792,6 +1792,15 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         + (" (rewritten)." if counts.changed else " (unchanged)."),
         flush=True,
     )
+    from prosper_or_perish_constructor import market_short_weight
+    from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
+
+    short = market_short_weight.apply(project, mod_root, vanilla_root(repo, project))
+    print(
+        f"Short market weight: {short.producers} producers of {short.goods} goods, {short.new_blocks} new weight blocks, "
+        f"{short.files_changed} files changed" + (f"; not in the mod: {', '.join(short.not_in_mod)}." if short.not_in_mod else "."),
+        flush=True,
+    )
     from prosper_or_perish_constructor import loc_replace
 
     overrides = loc_replace.apply(mod_root, cap_tooltips.game_root(vanilla_root(repo, project)))

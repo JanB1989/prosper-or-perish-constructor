@@ -60,5 +60,9 @@ unique_production_methods = {
 }
 
 construction_demand = basic_construction_needs
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_iron
+}
 }
 # <<< eu5-building-pipeline:bog_iron_smelter:building

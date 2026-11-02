@@ -43,5 +43,9 @@ unique_production_methods = {
 # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
 increase_per_level_cost = 0.41
 price = pp_silk_production_guild_price
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_silk
+}
 }
 # <<< eu5-building-pipeline:silk_production_guild:building

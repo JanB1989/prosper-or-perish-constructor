@@ -134,5 +134,9 @@ modifier = {
     local_population_growth = -0.00008
     local_migration_attraction = 0.005
 }
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_salt
+}
 }
 # <<< eu5-building-pipeline:engineered_brine_saltworks:building

@@ -98,5 +98,9 @@ modifier = {
     local_migration_attraction = 0.010
     local_marble_output_modifier = 0.01875
 }
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_marble
+}
 }
 # <<< eu5-building-pipeline:marble_saw_yard:building

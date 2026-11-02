@@ -44,5 +44,9 @@ unique_production_methods = {
 build_time = rural_build_time
 construction_demand = guild_construction
 increase_per_level_cost = 0.17
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_tar
+}
 }
 # <<< eu5-building-pipeline:tar_kiln:building

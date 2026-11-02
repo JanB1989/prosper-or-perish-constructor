@@ -100,5 +100,9 @@ modifier = {
     local_migration_attraction = 0.010
     local_silver_output_modifier = 0.01875
 }
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_silver
+}
 }
 # <<< eu5-building-pipeline:silver_mine_improved:building

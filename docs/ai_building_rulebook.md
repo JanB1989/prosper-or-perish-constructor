@@ -797,6 +797,44 @@ Check a new method's good against the town-only producers. `tests/test_rural_tow
 rural-capable building and a good a town-only building also makes, whatever advance that building needs (a country can
 research it later), unless it is listed in `[rural_town_goods.allowed]` (`constructor.toml`).
 
+### 2.5c Short market weight (tested 2026-11-02)
+
+Why shortages sit: the AI's score counts about a third of a site's real profit and turns positive at about 4 years of real
+payback, whatever the price between 0.3 and 1.0 x default; most short markets' sites are narrowly negative on cost. Only 33 of
+224 producers had a weight that read a price at all. So every producer now gets, as the last line of its
+`ai_construct_weight` (finalize, `market_short_weight.py`, `[market_short_weight]`), for its main good:
+
+    20 x clamp(1 - market stock / monthly market demand) x clamp(owner tax base / 2000)     where market demand > 1
+
+Full at an empty market, 0 from one month of stock. The weight is added after the engine's multipliers, so it tips sites that
+were narrowly negative in short markets; sites the engine scores exactly 0 (profit gate, 2.5b) stay 0. The tax base part keeps
+small countries with idle gold from building on it. Main good = the good of the building's market leg, else its largest
+output by value.
+
+Tested on the save of a run against the same save without it (same mod otherwise):
+
+- 10 years from 1652 (the worst shortages of a run), five checkpoints: markets under band 20.1 -> 16.4 %, unmet demand 7.7
+  -> 6.3 %, in-glut goods unchanged, trade share +0.8 points, standing levels +0.2 %, new levels +8 %, running constructions
+  +13 %, treasuries +2 %. Levels above control staff and earn like control's own new levels. All five checkpoints moved the
+  same way; one save swings about 3 points on its own.
+- 4 years from 1752 (calm): nothing moves beyond noise, the term sleeps when markets are fine.
+- No visible change in tick time; no script errors on the reads.
+- 100 years from 1597 against the run's own saves, ten checkpoints: under band 12.4 -> 8.4 % (lower at 8 of 10; worst year
+  24.5 -> 14.9 %), thin 25.2 -> 23.1 %, unmet 4.7 -> 3.4 %, over 5.4 -> 5.7 %, trade share 26.1 -> 26.4 %, levels +3.2 % at
+  the end, running constructions +12 %, treasuries -5 %, closed levels 4.8 -> 4.9 %. Biggest gains: cannons, firearms, copper,
+  naval supplies, paper, coal, tools, weaponry, salt, tea. The cost: a few small goods with a world glut still build where
+  one market runs dry (pearls, saffron, lacquerware, mercury, silk).
+- Shortage moves from "under" to "thin" (under a month of stock but demand nearly met); 10 years do not lift it to a
+  comfortable stock.
+
+Tried and worse: price instead of stock (fewer short-market builds), payback on the recipe (builds goods in band), scaling by
+the building's price (no gain on firearms and cannons), `AI_ignore_available_worker_flag` (one year: +33 % constructions, no
+band moves, a boom).
+
+What it cannot do: no same-market weight brings tea, coffee, cocoa or amber to a market without sites; salt, wheat and fruit
+are held by land or harvest, not by rank; a market behind the check for idle workers never reaches the term. Building ends
+about one shortage in five; falling demand and imports end the rest.
+
 ## 3. Estates (verified)
 
 - An estate does **not** use a queue. It keeps **one planned project** (`estate_manager.database.*.building` +

@@ -89,5 +89,9 @@ modifier = {
     local_migration_attraction = 0.010
     local_coal_output_modifier = 0.02625
 }
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_coal
+}
 }
 # <<< eu5-building-pipeline:coal_mine_revolutions:building

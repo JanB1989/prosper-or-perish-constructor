@@ -67,5 +67,9 @@ raw_modifier = {
   pp_levels_fiber_crops_farm = 1
   local_population_capacity = -5
 }
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_fiber_crops
+}
 }
 # <<< eu5-building-pipeline:fiber_crops_farm:building

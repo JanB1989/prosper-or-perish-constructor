@@ -45,5 +45,9 @@ unique_production_methods = {
 obsolete = saltpeter_guild
 custom_tags = { workshop }
 construction_demand = workshop_construction
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_saltpeter
+}
 }
 # <<< eu5-building-pipeline:saltpeter_workshop:building

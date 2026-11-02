@@ -72,5 +72,9 @@ raw_modifier = {
 modifier = {
     local_migration_attraction = 0.003
 }
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_sugar
+}
 }
 # <<< eu5-building-pipeline:sugarcane_farm:building

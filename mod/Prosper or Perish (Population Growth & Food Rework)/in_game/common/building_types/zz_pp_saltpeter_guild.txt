@@ -47,5 +47,9 @@ unique_production_methods = {
 
 custom_tags = { guild }
 construction_demand = guild_construction
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_saltpeter
+}
 }
 # <<< eu5-building-pipeline:saltpeter_guild:building

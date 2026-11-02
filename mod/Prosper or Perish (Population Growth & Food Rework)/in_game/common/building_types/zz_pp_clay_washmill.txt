@@ -101,5 +101,9 @@ modifier = {
     local_migration_attraction = 0.003
     local_population_growth = -0.0000
 }
+ai_construct_weight = {
+    value = 0
+    add = pp_market_short_clay
+}
 }
 # <<< eu5-building-pipeline:clay_washmill:building

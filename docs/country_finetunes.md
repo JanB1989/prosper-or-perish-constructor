@@ -2,6 +2,10 @@
 
 Hand-tuned changes for single countries, one entry each: what and why.
 
+- **Country advances that showed a bare title get goods output** (2026-11-02, Jan, not tested in game).
+  `advances/pp_empty_advance_effects.txt` injects vanilla's food tier number as output of the goods each advance is about,
+  on 18 country, culture and religion advances (Tamed Steppes, Chinampas, Holy Rivers, Fertile Rivers ...). Why: the mod
+  values their only line, vanilla's food modifier, 0.
 - **Ottomans: a little more towards the Mamluks, North Africa and Arabia, a little less northeast** (2026-11-01, Jan, not
   tested in game). `area_preferences/pp_conquest_preferences.txt` REPLACEs vanilla's aims, which keep vanilla's steps: Levant
   + Egypt, Maghreb, Hejaz + Yemen modifier 1 -> 2; Caucasus and Pontic shore 1 -> 0.5. New `pp_ottoman_less_northeast`

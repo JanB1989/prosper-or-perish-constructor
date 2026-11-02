@@ -144,6 +144,7 @@ advancements:
     age = age_3_discovery
     requires = new_world_advance
     unlock_production_method = pp_victualling_yard_rice_shipment
+    pure_tooltip_entry = pp_rice_farm_advance_general_tt
     ai_weight = { add = 50 }
     potential = {
         exists = capital
@@ -184,6 +185,7 @@ localization:
     pp_rice_farm_provision_desc: The household keeps back a little of its crop and cooks for the province. The lower the province store is, the more food it makes of it.
     pp_rice_farm_advance_general: Rice Cultivation
     pp_rice_farm_advance_general_desc: Adopt techniques for cultivating rice as a staple crop in suitable regions.
+    pp_rice_farm_advance_general_tt: Unlocks [ShowBuildingTypeName('rice_farm')|e]
 icon:
   source_png: ../assets/icons/rice_farm.png
   output_dds: rice_farm.dds

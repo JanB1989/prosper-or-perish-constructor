@@ -144,6 +144,7 @@ advancements:
     age = age_4_reformation
     requires = global_trade_advance
     unlock_production_method = pp_victualling_yard_maize_shipment
+    pure_tooltip_entry = pp_maize_farm_advance_general_tt
     ai_weight = { add = 50 }
     potential = {
         exists = capital
@@ -173,6 +174,7 @@ localization:
     pp_maize_farm_provision_desc: The household keeps back a little of its crop and cooks for the province. The lower the province store is, the more food it makes of it.
     pp_maize_farm_advance_general: Maize Cultivation
     pp_maize_farm_advance_general_desc: Adopt maize cultivation through colonial and trade networks.
+    pp_maize_farm_advance_general_tt: Unlocks [ShowBuildingTypeName('maize_farm')|e]
 icon:
   source_png: ../assets/icons/maize_farm.png
   output_dds: maize_farm.dds

@@ -710,6 +710,7 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
         advancements.append({"key": key, "body": _general_advance_body(table, crop, context.gates.get(crop.good))})
         entries[key] = str(spec["name"])
         entries[f"{key}_desc"] = str(spec["desc"])
+        entries[f"{key}_tt"] = f"Unlocks [ShowBuildingTypeName('{building}')|e]"
     if crop.stem == TIER_ADVANCE_HOST_STEM:
         for key, spec in table.raw.get("advances", {}).items():
             if cultivation_advance_tier(table, spec) != tier:
@@ -901,6 +902,8 @@ def _general_advance_body(table: CropTable, crop: Crop, gate: RgoUnlockGate | No
         f"requires = {spec['requires']}",
         # other buildings' methods that come with the crop (the Victualling Yard's maize shipment)
         *(f"unlock_production_method = {method}" for method in spec.get("unlock_production_methods", ())),
+        # the farm line asks has_advance in country_potential: an unlock_building would lock out the native lands
+        f"pure_tooltip_entry = {table.general_advance(crop)}_tt",
         f"ai_weight = {{ add = {int(table.unlocks.get('ai_weight', 50))} }}",
         "potential = {",
         "    exists = capital",

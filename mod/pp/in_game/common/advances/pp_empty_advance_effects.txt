@@ -1,0 +1,80 @@
+﻿# Advances that would show a bare title in game (advance_effects.py stops the build on any such advance).
+
+# Their only line was vanilla's global_monthly_food_modifier, which the mod values 0 (vanilla_food_productivity.py).
+# As with the reforms, laws and estates that had it: the same number as output of the goods the advance is about.
+TRY_INJECT:tamed_steppes = {
+	global_livestock_output_modifier = 0.025
+	global_fish_output_modifier = 0.025
+}
+TRY_INJECT:warka_ties = {
+	global_wild_game_output_modifier = 0.05
+	global_fish_output_modifier = 0.05
+}
+TRY_INJECT:seren_taun = {
+	global_rice_output_modifier = 0.05
+}
+TRY_INJECT:valley_irrigation = {
+	global_maize_output_modifier = 0.05
+	global_potato_output_modifier = 0.05
+}
+TRY_INJECT:mzk_the_agricultural_wealth_of_the_devoll = {
+	global_wheat_output_modifier = 0.1
+	global_livestock_output_modifier = 0.1
+}
+TRY_INJECT:chinampas = {
+	global_maize_output_modifier = 0.05
+	global_legumes_output_modifier = 0.05
+}
+TRY_INJECT:ira_promotion_of_irrigation = {
+	global_wheat_output_modifier = 0.05
+	global_fruit_output_modifier = 0.05
+}
+TRY_INJECT:slash_and_burn = {
+	global_maize_output_modifier = 0.05
+	global_legumes_output_modifier = 0.05
+}
+TRY_INJECT:chi_great_rivers_of_china = {
+	global_rice_output_modifier = 0.05
+	global_wheat_output_modifier = 0.05
+}
+TRY_INJECT:fla_prospering_agriculture = {
+	global_wheat_output_modifier = 0.05
+	global_legumes_output_modifier = 0.05
+}
+TRY_INJECT:pun_breadbasket_of_india = {
+	global_wheat_output_modifier = 0.1
+	global_cotton_output_modifier = 0.1
+}
+TRY_INJECT:cba_irrigation_of_southern_kanto = {
+	global_rice_output_modifier = 0.05
+}
+TRY_INJECT:holy_rivers = {
+	global_rice_output_modifier = 0.05
+	global_fish_output_modifier = 0.05
+}
+TRY_INJECT:sic_licentia_populandi = {
+	global_wheat_output_modifier = 0.1
+}
+TRY_INJECT:dan_danish_agriculture = {
+	global_wheat_output_modifier = 0.1
+	global_livestock_output_modifier = 0.1
+}
+TRY_INJECT:khm_invest_in_irrigation = {
+	global_rice_output_modifier = 0.1
+}
+TRY_INJECT:piedmontese_the_canal = {
+	global_rice_output_modifier = 0.1
+	global_wheat_output_modifier = 0.1
+}
+TRY_INJECT:ser_the_sumadija_agrarian_revolution = {
+	global_livestock_output_modifier = 0.1
+	global_maize_output_modifier = 0.1
+}
+
+# Vanilla writes no line at all: these only gate the canal decisions (has_advance).
+TRY_INJECT:suez_canal_advance = {
+	pure_tooltip_entry = pp_suez_canal_advance_tt
+}
+TRY_INJECT:panama_canal_advance = {
+	pure_tooltip_entry = pp_panama_canal_advance_tt
+}

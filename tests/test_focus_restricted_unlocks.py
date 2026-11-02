@@ -2,7 +2,6 @@
 
 from collections import defaultdict, deque
 from functools import lru_cache
-import json
 from pathlib import Path
 import re
 
@@ -17,12 +16,11 @@ ROOT = Path(__file__).resolve().parents[1]
 BLUEPRINT_ROOT = ROOT / "blueprints" / "accepted"
 MANIFEST_PATH = ROOT / "blueprints" / "buildings.manifest.yml"
 FOCUS_VALUES = {"adm", "dip", "mil"}
-INTENTIONAL_ZERO_NET_ADVANCE_PATCH_FILES = {"pp_rgo_building_cost_redirects.txt"}
 
 
 def _crop_flag_advances() -> set[str]:
     """General crop advances (rice, maize, potato, olives): flags the crop farms' country_potential checks with
-    has_advance, so they carry no modifier or unlock of their own."""
+    has_advance."""
     table = load_crop_table(ROOT)
     return {table.general_advance(crop) for crop in table.crops if crop.gated}
 
@@ -107,27 +105,11 @@ def test_constructor_owned_unlocks_after_age_one_have_institution_gated_ancestry
     assert offenders == []
 
 
-def test_constructor_sourced_advances_are_not_empty_player_techs() -> None:
-    data = load_eu5_data(
-        profile="constructor",
-        load_order_path=ROOT / "constructor.load_order.toml",
-    )
-    flag_advances = _crop_flag_advances()
-
-    offenders = [
-        f"{row['name']} at {_source_location(row)}"
-        for row in data.advancements.to_dicts()
-        if row.get("source_layer") == "constructor"
-        and Path(row["source_file"]).name not in INTENTIONAL_ZERO_NET_ADVANCE_PATCH_FILES
-        and row["name"] not in flag_advances
-        and not _advance_has_player_payload(row)
-    ]
-
-    assert offenders == []
+def test_general_crop_advances_gate_the_crop_farms() -> None:
     blueprint_text = "\n".join(
         path.read_text(encoding="utf-8-sig") for path in (BLUEPRINT_ROOT / "buildings").glob("*.yml")
     )
-    for advance in flag_advances:
+    for advance in _crop_flag_advances():
         assert f"has_advance = {advance}" in blueprint_text, advance
 
 
@@ -244,45 +226,6 @@ def _institution_free_unlock_offenders(
         if item in constructor_items
         and not any(item.endswith(f"_{original}") for original in vanilla_originals)
     ]
-
-
-def _advance_has_player_payload(row: dict) -> bool:
-    modifiers = _json_object(row.get("modifiers"))
-    unlocks = _json_object(row.get("unlocks"))
-
-    return _has_nonzero_modifier(modifiers) or any(unlocks.values()) or _has_yes_capability(row)
-
-
-def _has_yes_capability(row: dict) -> bool:
-    """A `<capability> = yes` line (can_recruit_explorer, allow_open_sea_exploration); the parser keeps these out of
-    the modifier column."""
-    data = _json_object(row.get("data"))
-    return any(
-        entry.get("value") is True and entry.get("key") not in {"allow_children", "pure_tooltip_entry"}
-        for entry in data.get("entries", [])
-    )
-
-
-def _has_nonzero_modifier(value: object) -> bool:
-    if isinstance(value, dict):
-        return any(_has_nonzero_modifier(item) for item in value.values())
-    if isinstance(value, list):
-        return any(_has_nonzero_modifier(item) for item in value)
-    if isinstance(value, bool) or value is None:
-        return False
-    if isinstance(value, (int, float)):
-        return abs(float(value)) > 1e-12
-    return True
-
-
-def _json_object(value: object) -> dict:
-    if isinstance(value, dict):
-        return value
-    if isinstance(value, str) and value:
-        parsed = json.loads(value)
-        assert isinstance(parsed, dict)
-        return parsed
-    return {}
 
 
 def _age_number(age: object) -> int:

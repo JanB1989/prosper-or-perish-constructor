@@ -143,6 +143,7 @@ advancements:
   body: |-
     age = age_4_reformation
     requires = global_trade_advance
+    pure_tooltip_entry = pp_olives_farm_advance_general_tt
     ai_weight = { add = 50 }
     potential = {
         exists = capital
@@ -176,6 +177,7 @@ localization:
     pp_olive_farm_provision_desc: The household keeps back a little of its crop and cooks for the province. The lower the province store is, the more food it makes of it.
     pp_olives_farm_advance_general: Olive Cultivation
     pp_olives_farm_advance_general_desc: Adopt olive cultivation through trade and regional exchange.
+    pp_olives_farm_advance_general_tt: Unlocks [ShowBuildingTypeName('olive_farm')|e]
 icon:
   source_png: ../assets/icons/olive_farm.png
   output_dds: olive_farm.dds

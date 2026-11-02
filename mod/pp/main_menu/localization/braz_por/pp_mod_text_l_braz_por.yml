@@ -150,6 +150,8 @@
   # Prosper or Perish - Agricultural & Fishing Innovations (regional variants reuse same text)
   pp_pan_amalgamation_mines: "Amalgamation Mines"
   pp_pan_amalgamation_mines_desc: "Stamp mills and retort furnaces support larger precious-metal recovery where gold and mercury deposits can sustain the work."
+  pp_suez_canal_advance_tt: "Unlocks the #Y $build_suez_canal.title$#! [decision|e]"
+  pp_panama_canal_advance_tt: "Unlocks the #Y $build_panama_canal.title$#! [decision|e]"
  # pp_alum_quarry_l_english.yml
 
 # >>> eu5-building-pipeline:alum_quarry:localization
@@ -4986,6 +4988,7 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   pp_maize_farm_provision_desc: "The household keeps back a little of its crop and cooks for the province. The lower the province store is, the more food it makes of it."
   pp_maize_farm_advance_general: "Maize Cultivation"
   pp_maize_farm_advance_general_desc: "Adopt maize cultivation through colonial and trade networks."
+  pp_maize_farm_advance_general_tt: "Unlocks [ShowBuildingTypeName('maize_farm')|e]"
 # <<< eu5-building-pipeline:maize_farm:localization
  # pp_maize_farm_tier1_l_english.yml
 
@@ -6776,6 +6779,7 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
   pp_olive_farm_provision_desc: "The household keeps back a little of its crop and cooks for the province. The lower the province store is, the more food it makes of it."
   pp_olives_farm_advance_general: "Olive Cultivation"
   pp_olives_farm_advance_general_desc: "Adopt olive cultivation through trade and regional exchange."
+  pp_olives_farm_advance_general_tt: "Unlocks [ShowBuildingTypeName('olive_farm')|e]"
 # <<< eu5-building-pipeline:olive_farm:localization
  # pp_olive_farm_tier1_l_english.yml
 
@@ -7011,6 +7015,7 @@ AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
   pp_potato_farm_provision_desc: "The household keeps back a little of its crop and cooks for the province. The lower the province store is, the more food it makes of it."
   pp_potato_farm_advance_general: "Potato Cultivation"
   pp_potato_farm_advance_general_desc: "Adopt the potato as a reliable staple crop."
+  pp_potato_farm_advance_general_tt: "Unlocks [ShowBuildingTypeName('potato_farm')|e]"
 # <<< eu5-building-pipeline:potato_farm:localization
  # pp_potato_farm_tier1_l_english.yml
 
@@ -7365,6 +7370,7 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
   pp_rice_farm_provision_desc: "The household keeps back a little of its crop and cooks for the province. The lower the province store is, the more food it makes of it."
   pp_rice_farm_advance_general: "Rice Cultivation"
   pp_rice_farm_advance_general_desc: "Adopt techniques for cultivating rice as a staple crop in suitable regions."
+  pp_rice_farm_advance_general_tt: "Unlocks [ShowBuildingTypeName('rice_farm')|e]"
 # <<< eu5-building-pipeline:rice_farm:localization
  # pp_rice_farm_tier1_l_english.yml
 

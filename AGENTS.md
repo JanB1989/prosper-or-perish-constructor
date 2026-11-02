@@ -367,6 +367,15 @@
   while the copy differs from vanilla apart from those values, and also pins the net food productivity of every
   vanilla object (and of the mod's own objects) to 0 under this rule.
 
+## Advance Cards (2026-11-02, Jan)
+
+- An advance with nothing on its card never builds, deploys or passes the tests (`advance_effects.py`, fatal in
+  `ppc build` and `ppc sync`, `tests/test_advance_tree.py`). It reads the merged advance with the mod's script values:
+  a key's copies add up, a net 0 is not a line, an unlock must reach something. There is no exception list.
+- A line the mod zeroes gets a live one in `in_game/common/advances/pp_empty_advance_effects.txt`: vanilla's food tier
+  number as output of the goods the advance is about. An advance that only gates something says so with a
+  `pure_tooltip_entry` (the canals there, the four gated crops from `crop_farms.py`).
+
 ## Max-Level Tooltips (EU5 1.4)
 
 - The game draws a building's max level as one row per script-value operation: every step after the first `value =`

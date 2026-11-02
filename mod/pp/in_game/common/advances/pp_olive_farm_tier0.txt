@@ -2,6 +2,7 @@
 pp_olives_farm_advance_general = {
 age = age_4_reformation
 requires = global_trade_advance
+pure_tooltip_entry = pp_olives_farm_advance_general_tt
 ai_weight = { add = 50 }
 potential = {
     exists = capital

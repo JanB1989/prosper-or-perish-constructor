@@ -467,6 +467,8 @@
   `script_values/pp_tier_line_caps.txt`); every tier also names all older tiers as `obsolete`, so a site two tiers behind
   can upgrade (blueprints keep the direct predecessor only, the pass adds the rest). `increase_per_level_cost` stays. A new
   line in scope needs no config; a test pins the list of lines. `[tier_lines.price_overrides]` prices four crafts.
+- Silver (2026-11-02, Jan; not tested in game): `saiger_process_discovery` had the same research hole as the adit's advance, so it
+  also requires `pike_and_shot_advance`, with weight +200 for silver producers.
 - Copper and amber (2026-11-02, Jan; not tested in game): the AI skipped `new_currency_demands` (the adit's unlock; owners of 27 % of
   copper sites in 1642, 40 % in 1807), so it now requires `pike_and_shot_advance` with weight +200 for copper and tin producers;
   a third tier, Deep Copper Works (`copper_mine_deep`, advance `pp_reverberatory_copper`, age 5). The copper price factor stays 0.9:
@@ -510,8 +512,8 @@
   roads in run 4b90876a raised nothing.
 - `road_types/pp_road_ai_weights.txt` INJECTs `ai_construct_weight` (root = from, scope:to, scope:builder) from
   `script_values/pp_road_ai_values.txt`: veto when |proximity(from) - proximity(to)| < the type's step
-  (20 - road proximity) / 1.15 + 2. Railroads skip it between two locations of potential tax base 80+ (~30 pairs in 1827)
-  and get +50 x min(1, builder gold / 10,000) there. `tests/test_road_ai_weights.py`. Not tested in game; the +50 is
+  (20 - road proximity) / 1.15 + 2. Railroads skip it between two locations of potential tax base 120+ and get +25 x min(1, builder gold / 10,000) there
+  (80+ and +50 until 2026-11-02: tax bases grew past the old line, 1,073 locations at 1827 in run ebdb631e, 602 in 0.10 run af7dce96). `tests/test_road_ai_weights.py`. Not tested in game; the +50 is
   not calibrated.
 
 ## Release Checklist

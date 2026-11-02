@@ -165,11 +165,21 @@ REPLACE:coal_improvements_revolutions = {
 	unlock_building = coal_mine_revolutions
 }
 
+# 2026-11-02, Jan: the same hole as the adit's advance (run ebdb631e: 29 % of the tax base by 1837), so two thirds of the silver
+# levels stood on the old tier. Silver producers now research it behind the common pike and shot, with vanilla's patio weight.
 REPLACE:saiger_process_discovery = {
 	age = age_3_discovery
 	icon = serbian_mining
-	requires = blast_furnace
+	requires = pike_and_shot_advance
 	unlock_building = silver_mine_improved
+	ai_weight = {
+		if = {
+			limit = {
+				produced_in_country:silver > 0
+			}
+			add = 200
+		}
+	}
 }
 
 REPLACE:lead_ore_dressing = {

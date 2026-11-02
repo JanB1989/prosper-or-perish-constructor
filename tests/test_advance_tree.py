@@ -166,8 +166,12 @@ DELIBERATE_REPLACE_DIFFERENCES: dict[str, tuple[set[str], set[str]]] = {
         {"unlock_building = coal_mine_revolutions"},
     ),
     "saiger_process_discovery": (
-        {"global_lead_output_modifier = 0.2", "global_silver_output_modifier = 0.2"},
-        {"unlock_building = silver_mine_improved"},
+        {"global_lead_output_modifier = 0.2", "global_silver_output_modifier = 0.2", "requires = blast_furnace"},
+        {
+            "requires = pike_and_shot_advance",
+            "unlock_building = silver_mine_improved",
+            "ai_weight = {if={limit={produced_in_country:silver>0} add=200}}",
+        },
     ),
     "lead_ore_dressing": ({"global_lead_output_modifier = 1.0"}, {"global_lead_output_modifier = 0.25"}),
     "bole_smelting": ({"global_lead_output_modifier = 1.0"}, {"unlock_building = lead_mine_bole_smelting"}),

@@ -505,16 +505,15 @@
 
 ## AI Roads (2026-10-15, Jan)
 
-- Roads should not be good everywhere, upgrades rarely: gravel 50, paved 265, modern 495, railroad 1430 per unit
-  (`pp_road_gold_adjustments.txt`; +10 % on 2026-11-02, Jan: too many late roads; run ebdb631e had 1,504 railroads by 1837, about
-  half built by estates and a quarter on the +50 pairs below, neither of which a price moves much). The engine credits a candidate road with the full land - road saving at its
+- Roads should not be good everywhere, upgrades rarely: gravel 50, paved 265, modern 495, railroad 2000 per unit
+  (`pp_road_gold_adjustments.txt`; 2026-11-02, Jan: too many late roads, 1,504 railroads by 1837 in run ebdb631e; +10 %, railroad +54 %. A cost
+  limits them, no tax base line and no bonus). The engine credits a candidate road with the full land - road saving at its
   far end even where that end already has a cheaper path (river leg 12 < road 20) or no proximity; 42 % of the AI's new
   roads in run 4b90876a raised nothing.
 - `road_types/pp_road_ai_weights.txt` INJECTs `ai_construct_weight` (root = from, scope:to, scope:builder) from
   `script_values/pp_road_ai_values.txt`: veto when |proximity(from) - proximity(to)| < the type's step
-  (20 - road proximity) / 1.15 + 2. Railroads skip it between two locations of potential tax base 120+ and get +25 x min(1, builder gold / 10,000) there
-  (80+ and +50 until 2026-11-02: tax bases grew past the old line, 1,073 locations at 1827 in run ebdb631e, 602 in 0.10 run af7dce96). `tests/test_road_ai_weights.py`. Not tested in game; the +50 is
-  not calibrated.
+  (20 - road proximity) / 1.15 + 2, the same rule for all four types (railroads had a great-centre exception and bonus until 2026-11-02).
+  `tests/test_road_ai_weights.py`. Not tested in game.
 
 ## Release Checklist
 

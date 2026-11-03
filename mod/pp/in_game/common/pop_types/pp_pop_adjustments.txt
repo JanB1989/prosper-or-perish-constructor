@@ -14,6 +14,11 @@ TRY_INJECT:burghers = {
 		local_pop_promotion_speed = 0.001
 	}
 }
+# Laborers and soldiers are lower class, as in vanilla (2026-11-03, Jan, players saw odd cultures). They carried upper = yes
+# from the first version of this file: every laborer the game creates at game start then took the owner's primary culture and
+# state religion (92 % of laborers, vanilla 51 %; 8 million Mongols in Yuan China, French across the Low Countries). Their share
+# of what vanilla multiplies for the upper class stays, written per good in goods/pp_goods_adjustments.txt.
+# tests/test_pop_classes.py keeps both true.
 # Political power per pop (2026-10-11, Jan, after MEIOU and Taxes): the peasants estate's pops x6 (MEIOU raised the
 # whole estate 0.025 -> 0.15), tribesmen x50 (Jan: 0.01 -> 0.5, MEIOU x20; also the Cossacks, who are tribesmen). EU5 1.4 keeps
 # power on the pop type, so dhimmi pops follow their type.
@@ -21,7 +26,6 @@ TRY_INJECT:laborers = {
 	power_per_pop = 0.225 # vanilla 0.0375
 	pop_food_consumption = 1.5 # 1.75 2026-10-05..14 (early-game nerf)
 	promotion_factor = 4
-	upper = yes
 	pop_percentage_impact = {
 		local_monthly_development = 0.003
 	}
@@ -34,7 +38,6 @@ TRY_INJECT:soldiers = {
 	power_per_pop = 0.375 # vanilla 0.0625
 	pop_food_consumption = 4.0
 	promotion_factor = 1
-	upper = yes
 	pop_percentage_impact = {
 		local_max_control = 1.0
 	}

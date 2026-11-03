@@ -55,6 +55,23 @@ The local output modifier map modes (`M/in_game/gfx/map/map_modes/pp_local_outpu
 `tools/generate_pp_goods_output_map_modes.py` writes `pp_goods_output_map_modes_generated.txt`. Edit the generators,
 not the files.
 
+## Pop types: the upper flag
+
+`upper = yes` on a pop type is more than a demand group. It also decides who a pop is when the game creates it at game
+start: an upper-class type takes the owner's primary culture and state religion, any other type the culture and
+religion of the pop it came from (exceptions in the engine: burghers keep the local culture and take only the religion;
+soldiers take both without the flag). It also feeds the goods' `upper` demand lines, `local_upper_class_capacity_modifier`,
+`is_upper_class` and the country's dominant upper class culture.
+
+Vanilla flags nobles, clergy and burghers. Never add the flag to give a pop type demand or capacity: laborers and
+soldiers carried it from the mod's first version until 2026-11-03, and that put about 16 million people into the ruling
+culture on day one (8 million Mongols in Yuan China, French across the Low Countries, Dehlavi across India), the odd
+cultures and religions players reported. Give the pop type its own lines instead: `goods/pp_goods_adjustments.txt` holds
+the laborers and soldiers lines for every vanilla `upper` line in the goods, so their demand did not move, and
+`tests/test_pop_classes.py` keeps the flag off and the list complete after a game update. The one thing that did not
+carry over: devastation's `local_upper_class_capacity_modifier` no longer lowers the laborer and soldier caps (no such
+modifier exists for one pop type).
+
 ## Buttons that change the game, and observers
 
 A GUI button changes the game only through a game command (a scripted GUI's `Execute`, every vanilla action). The

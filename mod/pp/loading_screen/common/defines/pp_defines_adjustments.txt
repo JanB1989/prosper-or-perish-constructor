@@ -171,6 +171,11 @@ NMarket = {
 	BURGHER_TRADE_IMPACT_ON_SUPPLY_SCALE = 1.0 # 0.25 (0.1 before EU5 1.4)
 	MIN_PRICE_IMPACT = -0.5
  	MAX_PRICE_IMPACT = 1.5 # 6
+	# Pop demand price brake (2026-11-03, Jan): pop demand x clamp(1 - this x (price / default - 1), floor 0.35, 1). The exe fixes
+	# the start at 1x default. Stock keeps prices below default, so on this branch the brake acts only where a market is empty and
+	# short, and it can be steep: -50 % at 1.5x, the floor at 1.65x. Run ebdb631e, static: 2-4 % of pop demand value, three
+	# quarters of it tea, fur, cocoa and amber; common goods about 1 % or less.
+	DEMAND_ELASTICITY_COEFFICIENT = 1.0 # 0.40
 	# Stockpile prices (branch stockpile-prices, 2026-10-31, Jan): the stock bleed (5 % of the stock a month) runs from the
 	# first unit and counts 6.7x as supply in the price, so the price follows months of stock, the same for every good;
 	# with default prices x1.6 (goods/zz_pp_goods_stockpile_prices.txt) a market with supply = demand sits at the old price

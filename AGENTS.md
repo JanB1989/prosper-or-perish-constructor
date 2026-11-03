@@ -461,6 +461,12 @@
   The Market legs run at margin 1.06 (steel 1.12): they open at 0.64x the default price / the good's factor, about 2.9 months
   of stock (5.0 with +20 % output), and that gate is where stocks settle, whatever the demand. Iron and lumber lost
   `ai_rgo_expansion_priority` (0 here, 0.025 on 0.10).
+- Price brake (2026-11-03, Jan, not tested in game): `NMarket.DEMAND_ELASTICITY_COEFFICIENT` 1.0 (vanilla 0.40). The exe fixes its start at
+  1x default; a good below default has stock or surplus, so the brake acts only in real shortage (it reduces strain on goods already too
+  much in demand). Static estimate from run ebdb631e: 2-4 % of pop demand value, three quarters of it tea, fur, cocoa and amber (at 1652
+  amber -26 %, cocoa -24 %, coffee -22 %, tea -7 %, wheat -2 %). Watch: less unmet demand also means a weaker missing-goods term in the AI's
+  building utility. `demand_multiply` is a load-time number, it cannot follow price. Tea's and coffee's `demanded_Temporary` is vanilla event
+  demand (`prices.7`, `coffee_boom_happened`), which the brake never touches.
 - Demand (2026-11-01, Jan; from run 67859be2, where demand / production sat at 1.1-1.15 from 1550 on, not tested in game):
   `[stockpile_prices.pop_demand]` is a `demand_multiply` on every pop type per good (the engine's price brake has no setting
   per good or pop type and only acts above the default price); `NPop.DEVELOPMENT_SCALE_ON_DEMAND` 0.04;

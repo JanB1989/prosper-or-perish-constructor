@@ -1,6 +1,11 @@
-﻿# Capital vs Traditional: replace global_monthly_food_modifier with per-good output modifiers
+﻿# Burgher trade capacity (2026-11-03, Jan: burgher trade belongs to the trading societies, the reverse sides cut it): capital economy,
+# plutocracy and free subjects add global_trades_per_burgher, traditional economy, aristocracy and serfdom take it away. Plutocracy
+# is what separates republics from monarchies (run 16fe282a: +14 against -74 in 1837). The three cuts sum to less than the base of 1.
+
+# Capital vs Traditional: replace global_monthly_food_modifier with per-good output modifiers
 TRY_INJECT:capital_economy_vs_traditional_economy = {
 	left_modifier = {
+		global_trades_per_burgher = 1.0
 		global_wheat_output_modifier = -0.3
 		global_rice_output_modifier = -0.3
 		global_millet_output_modifier = -0.3
@@ -33,6 +38,7 @@ TRY_INJECT:capital_economy_vs_traditional_economy = {
 		global_local_food_output_modifier = 0.10
 	}
 	right_modifier = {
+		global_trades_per_burgher = -0.3
 		global_raw_material_output = -0.2
 		global_max_rgo_size_modifier = 0.2
 		global_population_capacity_modifier = -0.25
@@ -69,7 +75,11 @@ TRY_INJECT:land_vs_naval = {
 }
 
 TRY_INJECT:aristocracy_vs_plutocracy = {
+	left_modifier = {
+		global_trades_per_burgher = -0.4
+	}
 	right_modifier = {
+		global_trades_per_burgher = 1.0
 		global_victuals_output_modifier = 0.05 # merchant houses run the provisioning trade
 	}
 }
@@ -137,6 +147,7 @@ TRY_INJECT:outward_vs_inward = {
 
 TRY_INJECT:serfdom_vs_free_subjects = {
 	left_modifier = {
+		global_trades_per_burgher = -0.1
 		global_raw_material_output = -0.10
 		global_max_rgo_size_modifier = 0.20
 		global_slaves_food_consumption = -0.20
@@ -144,6 +155,7 @@ TRY_INJECT:serfdom_vs_free_subjects = {
 		global_tribes_estate_power = -0.5 # 2026-10-11, Jan, after MEIOU and Taxes
 	}
 	right_modifier = {
+		global_trades_per_burgher = 0.5
 		global_tribes_estate_power = 0.5
 		# free peasants grow cash crops for the market
 		global_dyes_output_modifier = 0.05

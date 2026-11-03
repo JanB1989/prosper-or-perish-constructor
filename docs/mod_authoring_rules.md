@@ -72,6 +72,11 @@ the laborers and soldiers lines for every vanilla `upper` line in the goods, so 
 carry over: devastation's `local_upper_class_capacity_modifier` no longer lowers the laborer and soldier caps (no such
 modifier exists for one pop type).
 
+Measured from new games, 10 years, one run before and two after: world people, tax, building levels, gold, demand and
+prices stay within what two runs of the same mod differ by. Two effects repeat in both runs after: laborer satisfaction
+0.52 -> 0.40 at year 1 (vanilla 0.39; they are Tolerated and Accepted pops now where they are not the ruling culture), and
+Yuan China's tax base about halves by year 10 on the same land (963 -> 513 and 464; it starts equal at year 1).
+
 ## Buttons that change the game, and observers
 
 A GUI button changes the game only through a game command (a scripted GUI's `Execute`, every vanilla action). The

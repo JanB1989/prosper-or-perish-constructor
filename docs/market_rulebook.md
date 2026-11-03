@@ -505,8 +505,8 @@ A source's surplus = min(supply - demand, stockpile), both above 0. A stockpile 
 **Capacity** per location = burghers (thousands) x (1 + `local_trades_per_burgher` + `global_trades_per_burgher`), both
 shown in game as Burghers Trade Capacity. One traded unit of any good uses one unit. It is separate from merchant capacity.
 
-- Local: burgher literacy (+0.5 at full literacy); trade buildings per staffed level (Marketplace 1, Merchants' Quarters 0.75,
-  Grand Marketplace 1, Commerce Center 1.5, Port Authority 0.25; market warehouse, funduq, merchants guild 0.1); town rights
+- Local: burgher literacy (+0.5 at full literacy); trade buildings per staffed level (Marketplace 0.7, Merchants' Quarters 0.8,
+  Grand Marketplace 0.9, Commerce Center 1, Port Authority 0.25; market warehouse, funduq, merchants guild 0.1); town rights
   (royal market rights 0.4, market charter 0.25, Swedish and Norwegian city rights 1); salt RGO bonus 0.10 (PP).
 - Global: Trade Monopolies privilege +1, free-trade societal value up to +1, Act of Navigation +0.25, trading companies
   parliament issue +1, some country advances 0.15-0.4. Societal values (PP), at full value: plutocracy +1 / aristocracy -0.4,

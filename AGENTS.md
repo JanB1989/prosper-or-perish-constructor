@@ -471,11 +471,11 @@
   -0.1) and traditional economy 0, so the real multiplier at the start goes about 0.55 -> 0.40, RGOs -27 %. A change of it also moves the colonial nation's own value (now +0.7,
   3x a normal RGO) and the start planner's `rgo_output_per_location` for lumber (now 0.42); `raw_goods_per_rgo_k` stays. Run 16fe282a: RGOs 62 % of raw goods output at 1342, 14 % at 1837;
   used / made 0.53 at 1342, about 1 from 1500. Watch: prices near the floor rise faster than output falls, so RGO income and Location Wealth rise, and raw producers' gates open earlier.
-- Burgher trade capacity (2026-11-03, Jan, not tested in game): `local_trades_per_burgher` per level Marketplace 1, Merchants' Quarters 0.75 (was 1.5), Grand Marketplace 1 (2), Commerce Center 1.5 (4);
+- Burgher trade capacity (2026-11-03, Jan, not tested in game): `local_trades_per_burgher` per level Marketplace 0.7 (was 1), Merchants' Quarters 0.8 (1.5), Grand Marketplace 0.9 (2), Commerce Center 1 (4): each upgrade adds 0.1, an upgrade never loses capacity (Jan);
   `global_trades_per_burgher` in `societal_values/pp_societal_value_adjustments.txt`: plutocracy +1 / aristocracy -0.4, capital economy +1 / traditional -0.3, free subjects +0.5 / serfdom -0.1. Keep the three
   cuts summing below the base of 1 (-0.5, -0.5, -0.25 left 1.4-1.7 % of burghers with no capacity). Run 16fe282a used 13-36 % of the old capacity, trade buildings 58-86 % of it. Replay of its saves: capacity per
-  1,000 burghers 13.8 -> 7.6 in 1837, 2.9 -> 2.4 in 1347; used 23-45 %; units -0.4 to -2.3 %; republic / monarchy capacity 0.55 -> 0.75 in 1837, 1.37 -> 1.79 in 1347. Capacity does not limit burgher
-  trade, so republic-majority markets' share of units barely moves. `docs/market_rulebook.md` 8d.
+  1,000 burghers 13.8 -> 7.6 in 1837, 2.9 -> 1.9 in 1347; used 23-57 %; units -0.4 to -3.1 %; republic / monarchy capacity 0.55 -> 0.70 in 1837, 1.37 -> 2.00 in 1347. Tightest: the median market is full in 1407 (57 %
+  used before), unmet need 1.53 -> 1.88 % of demand. Capacity does not limit burgher trade, so republic-majority markets' share of units barely moves. `docs/market_rulebook.md` 8d.
 - Demand (2026-11-01, Jan; from run 67859be2, where demand / production sat at 1.1-1.15 from 1550 on, not tested in game):
   `[stockpile_prices.pop_demand]` is a `demand_multiply` on every pop type per good (the engine's price brake has no setting
   per good or pop type and only acts above the default price); `NPop.DEVELOPMENT_SCALE_ON_DEMAND` 0.04;

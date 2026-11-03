@@ -32,6 +32,7 @@ unique_production_methods = {
 
 construction_demand = town_building_construction
 
+# burgher trade capacity 2026-11-03: 1 -> 0.7, each upgrade adds 0.1 (run 16fe282a used 13-36 % of it)
 modifier = {
 	local_pop_assimilation_speed_modifier = 0.01
 	local_burghers_estate_power = 0.1
@@ -39,7 +40,7 @@ modifier = {
 	local_market_access = 0.005
 
 	local_merchant_power = 1
-	local_trades_per_burgher = 1
+	local_trades_per_burgher = 0.7
 	local_merchant_capacity = 1
 }
 }

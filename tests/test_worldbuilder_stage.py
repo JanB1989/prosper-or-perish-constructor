@@ -493,7 +493,7 @@ def test_population_capacity_cell_bands_the_gauge_and_names_both_sides_of_the_ra
     # EU5 1.4: one template draws the population cell of the location card and of the location view header
     template = """template location_card_population_button_body {
 \tblock "location_card_population_size" {
-\t\tsize = { 120 28 }
+\t\tsize = { 100 28 }
 \t}
 \thbox = {
 \t\tvbox = {
@@ -533,7 +533,7 @@ def test_population_capacity_cell_bands_the_gauge_and_names_both_sides_of_the_ra
     copy = out[out.index("template pp_location_card_population_button_body"):]
     assert "using = pp_location_card_population_button_body" in out.split("window = {")[0]   # the location card switches
     assert "\t\tusing = location_card_population_button_body\n\t\tblockoverride" in out          # the header does not
-    assert "size = { 139 28 }" in copy and "size = { 120 28 }" not in copy   # only the card's cell widens
+    assert "size = { 139 28 }" in copy and "size = { 100 28 }" not in copy   # only the card's cell widens
     assert "ignoreinvisible = yes" in copy                      # the hidden gauges must not reserve rows
     assert "GetTotalPopulation]@population!" not in copy
 

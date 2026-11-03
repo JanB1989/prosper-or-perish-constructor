@@ -1140,9 +1140,7 @@
 					}
 				}
 	
-				widget = {
-					using = location_card_town_rights
-				}
+				block "location_card_town_rights_vertical_slot" {}
 			}
 
 			vbox = {
@@ -1434,7 +1432,7 @@
 							# layoutpolicy_horizontal = expanding
 							# size = { -1 28 }
 
-							size = { 90 28 }
+							size = { 70 28 }
 
 							action_tooltip = {
 								click_type = left
@@ -1840,9 +1838,7 @@
 					}
 				}
 	
-				widget = {
-					using = location_card_town_rights
-				}
+				block "location_card_town_rights_vertical_slot" {}
 			}
 
 			vbox = {
@@ -2134,7 +2130,7 @@
 							# layoutpolicy_horizontal = expanding
 							# size = { -1 28 }
 
-							size = { 90 28 }
+							size = { 70 28 }
 
 							action_tooltip = {
 								click_type = left
@@ -3175,7 +3171,7 @@
 
 template location_card_market_button_body {
 	block "location_card_market_size" {
-		size = { 90 28 }
+		size = { 70 28 }
 	}
 
 	datacontext = "[Location.GetMarket]"
@@ -3280,7 +3276,7 @@ template location_card_market_button_body {
 
 template location_card_population_button_body {
 	block "location_card_population_size" {
-		size = { 120 28 }
+		size = { 100 28 }
 	}
 
 	block "location_card_population_click" {
@@ -3917,6 +3913,47 @@ template location_card_town_rights {
 
 	block "location_town_rights_sort_highlight" {}
 }
+
+template location_card_town_rights_vertical {
+	block "location_card_town_rights_size" {
+		size = { 33 33 }
+	}
+	visible = "[Or(GreaterThan_int32(GetDataModelSize(Location.GetTownRights), '(int32)0'), And(Location.GetOwner.IsPlayer, Not(Location.GetRank.IsDefault)))]"
+	block "location_card_town_rights_enabled" {
+		enabled = "[And(ShowGrantLocationTownRights(Location.Self), Not(Location.GetRank.IsDefault))]"
+	}
+
+	block "location_card_town_rights_empty_button" {
+		button_townrights = {
+			using = location_card_town_rights_empty_body
+		}
+	}
+
+	block "location_card_town_rights_empty_extra" {}
+
+	# ONE TOWN RIGHT SELECTED
+	hbox = {
+		block "location_card_town_rights_single_visible" {
+			visible = "[EqualTo_int32(GetDataModelSize(Location.GetTownRights), '(int32)1')]"
+		}
+		datamodel = "[Location.GetTownRights]"
+		item = {
+			widget = {
+				using = layoutpolicy_expanding
+				block "location_card_town_rights_item_visible" {}
+
+				block "location_card_town_rights_item_button" {
+					button_townrights = {
+						size = { 100% 100% }
+						using = location_card_town_rights_item_body
+					}
+				}
+			}
+		}
+	}
+	block "location_town_rights_sort_highlight" {}
+}
+
 
 template location_fort_status {
 	hbox = {
@@ -5011,6 +5048,12 @@ lateralview = {
 							}
 
 							blockoverride "location_card_town_rights_slot" {}
+
+							blockoverride "location_card_town_rights_vertical_slot" {
+								widget = {
+									using = location_card_town_rights_vertical
+								}
+							}
 
 							blockoverride "location_card_core_icon_size" {
 								size = { 28 28 }

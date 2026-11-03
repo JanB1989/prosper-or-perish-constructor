@@ -325,7 +325,8 @@ def _read(path: Path) -> str:
 # draws a pp_ copy of the template (a template another mod re-declares under the vanilla name cannot undo it).
 _POP_TEMPLATE = "location_card_population_button_body"
 PP_POP_TEMPLATE = "pp_" + _POP_TEMPLATE
-_POP_CELL = re.compile(r'(block "location_card_population_size" \{\s*size = \{ )120( 28 \})')
+# Vanilla's cell width (EU5 1.4.7: 100, was 120). The mod's cell holds population, capacity and fill: it stays 139.
+_POP_CELL = re.compile(r'(block "location_card_population_size" \{\s*size = \{ )100( 28 \})')
 # Only one of the four gauges is ever visible; the cell is 28px tall and cannot afford to reserve
 # space for the hidden three.
 _POP_VBOX = re.compile(r"(?m)^([ \t]*)margin_right = 8\n[ \t]*margin_bottom = 3\n")

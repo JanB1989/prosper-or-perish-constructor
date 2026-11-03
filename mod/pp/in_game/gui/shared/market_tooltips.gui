@@ -4062,7 +4062,7 @@ template market_burgher_trade_capacity {
 		}
 		
 		blockoverride "tooltip_content" {
-			TooltipScrolledStringPairList = {
+			TooltipStringPairList = {
 				textcontext = "[Market.GetBurgherTradeInfo(GetPlayer.Self)]"
 			}
 		}

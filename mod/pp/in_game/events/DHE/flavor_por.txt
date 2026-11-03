@@ -4683,6 +4683,14 @@ flavor_por.61 = { #Ceuta Crusade
 					target = root
 				}
 			}
+			NOT = {
+				top_overlord ?= {
+					has_mutual_scripted_relation = {
+						type = relation_type:alliance
+						target = root
+					}
+				}
+			}
 		}
 	}
 

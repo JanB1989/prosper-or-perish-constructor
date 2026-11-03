@@ -846,8 +846,8 @@ serve_fallback_raw_goods_share = 0.5   # when the market cannot supply the Taver
 margin = 2.0
 [worldbuilder.start.construction_materials.goods.lumber]
 producers = { lumber_mill = 0.70, water_sawmill = 1.0, lumber_mill_improved = 1.0 }
-rgo_output_per_location = 0.58     # lumber is also a raw material: nb.eu5 RGO output 2,905 on 2,514 locations,
-                                   # halved by global_raw_material_output -0.5 (2026-10-03)
+rgo_output_per_location = 0.42     # lumber is also a raw material: nb.eu5 RGO output 2,905 on 2,514 locations, 0.58 at
+                                   # global_raw_material_output -0.5 (run 16fe282a measured 0.55-0.57), x 0.40 / 0.55 at -0.65
 place = ["lumber_mill"]
 construction_per_million_pops = 0.61
 per_tavern = 0.25

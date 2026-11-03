@@ -101,9 +101,9 @@ REPLACE:colonial_nation = {
 		# PP: no population capacity % (vanilla 0.10; 2026-10-27, Jan: capacity is farmland)
 		allow_rgo_slave_demand = yes
 		loyalty_to_overlord = 20
-		# PP: a raw-material economy. RGOs at 1.5x full yield (the -0.5 country base value in
-		# auto_modifiers/pp_country_base_values.txt plus this +1.0), cheap rural building, dear towns, weaker workshops.
-		global_raw_material_output = 1.0 # 0.5 until 2026-10-14 (Jan): 3x a normal country RGO
+		# PP: a raw-material economy. RGOs at 1.05x full yield (the -0.65 country base value in
+		# auto_modifiers/pp_country_base_values.txt plus this +0.7), cheap rural building, dear towns, weaker workshops.
+		global_raw_material_output = 0.7 # 3x a normal country RGO (Jan, 2026-10-14): 0.5 until then, 1.0 at base -0.5 until 2026-11-03
 		global_rural_build_buildings_efficiency = 0.25
 		global_urban_build_buildings_efficiency = -0.25
 		global_production_efficiency = -0.05

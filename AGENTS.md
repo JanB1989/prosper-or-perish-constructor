@@ -467,6 +467,10 @@
   amber -26 %, cocoa -24 %, coffee -22 %, tea -7 %, wheat -2 %). Watch: less unmet demand also means a weaker missing-goods term in the AI's
   building utility. `demand_multiply` is a load-time number, it cannot follow price. Tea's and coffee's `demanded_Temporary` is vanilla event
   demand (`prices.7`, `coffee_boom_happened`), which the brake never touches.
+- RGO output (2026-11-03, Jan, not tested in game): country base value `global_raw_material_output` -0.65 (was -0.5). Additive: serfdom nets +0.1 (vanilla +0.2, ours
+  -0.1) and traditional economy 0, so the real multiplier at the start goes about 0.55 -> 0.40, RGOs -27 %. A change of it also moves the colonial nation's own value (now +0.7,
+  3x a normal RGO) and the start planner's `rgo_output_per_location` for lumber (now 0.42); `raw_goods_per_rgo_k` stays. Run 16fe282a: RGOs 62 % of raw goods output at 1342, 14 % at 1837;
+  used / made 0.53 at 1342, about 1 from 1500. Watch: prices near the floor rise faster than output falls, so RGO income and Location Wealth rise, and raw producers' gates open earlier.
 - Demand (2026-11-01, Jan; from run 67859be2, where demand / production sat at 1.1-1.15 from 1550 on, not tested in game):
   `[stockpile_prices.pop_demand]` is a `demand_multiply` on every pop type per good (the engine's price brake has no setting
   per good or pop type and only acts above the default price); `NPop.DEVELOPMENT_SCALE_ON_DEMAND` 0.04;

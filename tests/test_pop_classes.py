@@ -87,6 +87,23 @@ def test_lumber_still_cancels_all_pop_demand() -> None:
     assert add["nobles"] == add["clergy"] == add["burghers"] == -0.00125
 
 
+def test_devastation_hits_higher_pops_harder() -> None:
+    """Without the flag only devastation's own lines send workers back to the land; share of a typical location's type lost at full devastation."""
+    text = _text(MOD_ROOT / "main_menu/common/static_modifiers/pp_location_modifier_adjustments.txt")
+    lines = _values(next(body for _, body in _blocks(text, "TRY_REPLACE:devastation")))
+    people, laborers, soldiers = 14.0, 2.4, 0.035  # 1,000s, median rural location of a 10-year run
+    ladder = [
+        (lines["local_laborers_desired_pop"] + lines["local_laborers_desired_pop_scaled"] * people) / laborers,
+        lines["local_soldiers_desired_pop_scaled"] * people / soldiers,
+        lines["local_upper_class_capacity_modifier"],  # burghers: their cap is jobs
+        lines["local_clergy_desired_pop_scaled"] / 0.005,  # vanilla location_base_values
+        lines["local_nobles_desired_pop_scaled"] / 0.0025,
+    ]
+    assert ladder == sorted(ladder)
+    assert 0 < ladder[0] < 0.28  # laborers: below their idle share, so jobs stay staffed
+    assert ladder[-1] < 1  # never the whole type
+
+
 def test_the_list_is_every_upper_line_in_vanilla() -> None:
     """A new upper line after a game update needs a line for laborers and soldiers too."""
     root = cap_tooltips.game_root(vanilla_root(ROOT, ROOT / "constructor.toml"))

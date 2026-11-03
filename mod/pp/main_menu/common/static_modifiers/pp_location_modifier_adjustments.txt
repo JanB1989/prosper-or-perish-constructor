@@ -199,6 +199,16 @@ TRY_REPLACE:devastation = {
 	local_life_expectancy = 10
 	local_mercenaries_modifier = -0.5
 	local_upper_class_capacity_modifier = 0.5
+	# Devastation sends people back to the land (2026-11-03, Jan). The strength is negative, so these cut the type's cap; the upper
+	# class modifier above reaches only burghers, whose cap is jobs. At full devastation the median location loses laborers 21 %,
+	# soldiers 39 %, burghers 50 %, clergy 50 %, nobles 59 %. Laborers lose less than their idle share (28 %), so most jobs stay staffed.
+	# A starving province falls into devastation, so this is also a way out of a famine, and a partial one: the
+	# simulation's famine deaths fall only 1-4 %. tools/devastation_cap_sim.py
+	local_laborers_desired_pop = 0.4
+	local_laborers_desired_pop_scaled = 0.01
+	local_soldiers_desired_pop_scaled = 0.001
+	local_clergy_desired_pop_scaled = 0.0025
+	local_nobles_desired_pop_scaled = 0.0016
 	local_peasants_food_consumption = 0.10
 	local_defensive = 0.50
 	local_unrest = -0.25

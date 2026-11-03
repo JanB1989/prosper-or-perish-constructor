@@ -68,9 +68,32 @@ soldiers carried it from the mod's first version until 2026-11-03, and that put 
 culture on day one (8 million Mongols in Yuan China, French across the Low Countries, Dehlavi across India), the odd
 cultures and religions players reported. Give the pop type its own lines instead: `goods/pp_goods_adjustments.txt` holds
 the laborers and soldiers lines for every vanilla `upper` line in the goods, so their demand did not move, and
-`tests/test_pop_classes.py` keeps the flag off and the list complete after a game update. The one thing that did not
-carry over: devastation's `local_upper_class_capacity_modifier` no longer lowers the laborer and soldier caps (no such
-modifier exists for one pop type).
+`tests/test_pop_classes.py` keeps the flag off and the list complete after a game update.
+
+The flag was also the workers' way out of a famine. Starving lowers prosperity, negative prosperity is devastation, and
+devastation's `local_upper_class_capacity_modifier` cut their caps, so they demoted to peasants: 1.18 % of laborers a month in
+empty stores, 0.03-0.05 % after the flag went. Demotion itself is `has_cap`: a type over its cap demotes, flag or not. Peasants eat
+less and an idle one feeds himself, so this is the one thing that closes a gap: deaths alone barely do, an idle peasant makes more
+than he eats. No percentage modifier exists for one pop type, so `devastation` carries flat and per-people cap cuts instead
+(`local_<type>_desired_pop`, `local_<type>_desired_pop_scaled`). At full devastation the median location loses laborers 21 %,
+soldiers 39 %, burghers 50 % (the upper class modifier), clergy 50 %, nobles 59 %. Burghers and soldiers demote to laborers;
+laborers, clergy and nobles to peasants. `tools/devastation_cap_sim.py` chose the numbers from real locations in the saves:
+
+| In the simulation | No cut | Old flag | Now |
+|---|---|---|---|
+| Deaths, famines ending at the measured rate | 16.5 % | 16.2 % | 16.3 % |
+| Deaths, no outside help for 20 years | 42.0 % | 39.8 % | 40.5 % |
+| Famine over within 10 years, no outside help | 16.8 % | 21.6 % | 21.1 % |
+| Laborer job-years lost, two-year famine | 0.8 % | 13.6 % | 4.4 % |
+| Laborers lost when looted to -0.6, fed | 1.3 % | 22.0 % | 11.3 % |
+| Years until they are 90 % back | | 9.0 | 5.7 |
+
+The sim reproduces the measured demotion without tuning (0.03 % a month without a cut, 1.0 % with the old flag). It has no AI
+reaction and no new buildings, and the cuts are not tested in game. Where a type is very small the flat or per-people cut can
+empty it at full devastation: 2.9 % of locations for laborers, 0.2 % of the laborers. Promotion stays off during devastation:
+turning it on brought the workers back 2-4 years sooner but moved peasants off the land during the famine (famines over within
+10 years 16.8 -> 8.7 %). Burghers come back slowest, 23 years after a looting to -0.6, unchanged here: promotion into them is
+about 1 person a month per location.
 
 Measured from new games, 10 years, one run before and two after: world people, tax, building levels, gold, demand and
 prices stay within what two runs of the same mod differ by. Two effects repeat in both runs after: laborer satisfaction

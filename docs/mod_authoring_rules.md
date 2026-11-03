@@ -102,9 +102,9 @@ about 1 person a month per location.
 
 Measured from new games, 10 years, one run before and two after, with copies of the `upper` lines still holding demand level
 and no devastation cap cuts yet: world people, tax, building levels, gold, demand and
-prices stay within what two runs of the same mod differ by. Two effects repeat in both runs after: laborer satisfaction
-0.52 -> 0.40 at year 1 (vanilla 0.39; they are Tolerated and Accepted pops now where they are not the ruling culture), and
-Yuan China's tax base about halves by year 10 on the same land (963 -> 513 and 464; it starts equal at year 1).
+prices stay within what two runs of the same mod differ by. One effect repeats in both runs after: laborer satisfaction
+0.52 -> 0.40 at year 1 (vanilla 0.39; they are Tolerated and Accepted pops now where they are not the ruling culture).
+Yuan China's tax base at 1347 is run noise, not the flag: 963 and 474 flag on, 513 and 464 flag off with the copied lines, 1,170 without them.
 
 ## Buttons that change the game, and observers
 

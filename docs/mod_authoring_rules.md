@@ -66,9 +66,14 @@ soldiers take both without the flag). It also feeds the goods' `upper` demand li
 Vanilla flags nobles, clergy and burghers. Never add the flag to give a pop type demand or capacity: laborers and
 soldiers carried it from the mod's first version until 2026-11-03, and that put about 16 million people into the ruling
 culture on day one (8 million Mongols in Yuan China, French across the Low Countries, Dehlavi across India), the odd
-cultures and religions players reported. Give the pop type its own lines instead: `goods/pp_goods_adjustments.txt` holds
-the laborers and soldiers lines for every vanilla `upper` line in the goods, so their demand did not move, and
-`tests/test_pop_classes.py` keeps the flag off and the list complete after a game update.
+cultures and religions players reported. If a pop type needs demand, give it its own lines in the goods.
+`tests/test_pop_classes.py` keeps the flag off.
+
+The goods' `upper` lines no longer reach laborers and soldiers (Jan, 2026-11-03: no copies, see what a run shows before touching
+demand). One month from game start: pop goods demand -4.8 % in units, -3.9 % in value at default prices; wheat -15 %, beer -14 %,
+fruit -10 %, legumes -10 %, furniture -9 %, millet -8 %, fur -4 %; lacquerware -58 %, paper -12 %, jewelry -6 % with no line of
+their own, cause not traced. Laborer satisfaction does not move. Not run past that month. Watch staple prices and farms: staples
+already sell at 0.27-0.51 of default in years 5-10, and a crop below default gives its farm a negative AI score.
 
 The flag was also the workers' way out of a famine. Starving lowers prosperity, negative prosperity is devastation, and
 devastation's `local_upper_class_capacity_modifier` cut their caps, so they demoted to peasants: 1.18 % of laborers a month in
@@ -95,7 +100,8 @@ turning it on brought the workers back 2-4 years sooner but moved peasants off t
 10 years 16.8 -> 8.7 %). Burghers come back slowest, 23 years after a looting to -0.6, unchanged here: promotion into them is
 about 1 person a month per location.
 
-Measured from new games, 10 years, one run before and two after: world people, tax, building levels, gold, demand and
+Measured from new games, 10 years, one run before and two after, with copies of the `upper` lines still holding demand level
+and no devastation cap cuts yet: world people, tax, building levels, gold, demand and
 prices stay within what two runs of the same mod differ by. Two effects repeat in both runs after: laborer satisfaction
 0.52 -> 0.40 at year 1 (vanilla 0.39; they are Tolerated and Accepted pops now where they are not the ruling culture), and
 Yuan China's tax base about halves by year 10 on the same land (963 -> 513 and 464; it starts equal at year 1).

@@ -607,6 +607,12 @@ In game, first version (median settled prices, no cap), full world, 13 monthly s
 
 Model flows alone, without the factors, miss by 53 %: pop demand is off by up to 100x per good (wealth rules, upper-class goods) and method choice is not modelled, but these errors are stable per good. A 30 % error in a flow moves the target by about 10 %. Replay with flows as they were, months until prices sit within 5 % of the 1348 level: 124 now, 23 with filled stocks at price speed 0.15, 35 at 0.10, 71 at 0.05; first-year moves 6.4, 4.9, 2.7 % a month (now 4-5).
 
+## 8f. How often the AI opens a trade (2026-11-04)
+
+`ADJUST_TRADE_ROUTE_CHANCE` 0.25 (vanilla 0.5). Each country goes through each market about once a month, closes trades that lose money (no roll), lists possible new trades best first and rolls this chance on each until its capacity is used. So it only slows opening, and a trader may skip the best deal for the next.
+
+Tested in game from one save of run 4fe06a72, two pairs of 30 months (start 1532 and 1535), one run per arm, 0.5 against 0.25. New bookers at the same price gap halve (0.26 to 0.12 of traders). New trades 503 to 390 a month, country trade flows change 12 instead of 15 % a month. Trade makes about a third of monthly price variance; the part credited to trade falls 16-20 %, total price variance about 7 %, value in months moving over 5 % 10-13 %. Trade value -2.4 %, unmet pop demand +0.1 points. Two 0.5 runs from one save differed by more than the 7 %, so the change in trader behaviour is clear and the price effect alone is within one run's noise. The Kyoto-Akita cannon loop died about a year sooner; from a calm start a new loop grew at Dadu-Kaifeng at 0.5, none at 0.25. Long-run AI reaction not measured.
+
 ## 7. Open
 
 - Treaty flows (per country pair) and the Paris constant (+0.1) in the attraction.

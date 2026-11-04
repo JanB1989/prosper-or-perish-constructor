@@ -76,6 +76,7 @@ NAI = {
 	AI_IMPORT_POP_NEED_SCORE_BONUS = 10 # 5; imports that cover a pop shortage win merchant capacity from luxury arbitrage
 	# EU5 1.4 split the import loss limit: AI_WELFARE_IMPORT_PROFIT_CUTOFF (-1) now covers building inputs and slaves only.
 	AI_POP_NEED_IMPORT_PROFIT_CUTOFF = -1.0 # -0.1; pop shortages are answered by imports from producers even at a loss, as in 1.3 and the raw-material trade runs
+	ADJUST_TRADE_ROUTE_CHANCE = 0.25 # 0.5; 2026-11-04, Jan: the AI rolls this on each possible new trade, best first. Fewer traders jump on one gap in one month: country trade flows change 12 instead of 15 % a month (docs/market_rulebook.md 8f)
 	AI_COUNTRY_POP_NEED_MODIFIER_UTILITY = 0.001 # 0.001; vanilla: value of modifiers that raise pop demand, no PP system leans on it
 	AI_RGO_PRODUCTION_BONUS_MODIFIER_UTIL = 0.25 # 0.25; vanilla: RGOs barely grow in PP, buildings answer shortages, so no extra weight on RGO output
 	AI_UNLOCK_BUILDING_ADVANCE_UTIL_PER_UPGRADE = 200 # 200 (1.3: 50); vanilla 1.4: advances that unlock supply buildings are researched sooner, which helps shortages

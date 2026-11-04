@@ -283,8 +283,7 @@ def _fingerprint(repo: Path, project: Path, mod_root: Path) -> str:
 
 def _without_fingerprint(text: str) -> str:
     """Later finalize passes touch the fingerprint's inputs, so ``changed`` looks at the plan alone."""
-    return re.sub(r"^# inputs \w*
-", "", text, count=1, flags=re.M)
+    return re.sub(r"^# inputs \w*\n", "", text, count=1, flags=re.M)
 
 
 def render(stock: dict[MarketGood, float], fingerprint: str = "") -> str:

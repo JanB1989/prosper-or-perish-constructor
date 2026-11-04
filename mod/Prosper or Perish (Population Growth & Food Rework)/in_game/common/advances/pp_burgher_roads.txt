@@ -1,0 +1,19 @@
+﻿# Prosper or Perish - roads are burgher buildings: vanilla grants the nobles the right to build roads here; the
+# burghers get it instead. Same file in static_modifiers and government_reforms. EU5 1.4.1 body otherwise unchanged.
+
+TRY_REPLACE:entrepot_connections = {
+	age = age_2_renaissance
+	icon = road_building
+
+	potential = {
+		has_or_had_tag = TLE
+	}
+
+	build_gravel_road_cost_modifier = -0.2
+	build_modern_road_cost_modifier = -0.2
+	build_paved_road_cost_modifier = -0.2
+	build_railroad_cost_modifier = -0.2
+	burghers_estate_allowed_to_build_roads = yes
+
+	requires = merchants_and_trade
+}

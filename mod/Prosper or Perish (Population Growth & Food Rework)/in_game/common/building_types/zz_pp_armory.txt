@@ -14,6 +14,16 @@ REPLACE:armory = {
 	megalopolis = yes
 	
 	important_for_AI = yes
+	AI_ignore_available_worker_flag = yes # PP: soldiers are scarce (0.6 % of pops, 1545 save); vanilla sets it on fields and camps
+	ai_construct_weight = {
+		# PP: the emptier the manpower pool, the more the AI wants manpower buildings; without it the AI never queued
+		# them (1541 save: 0 of 573 queues). Library pattern: weight / (owner monthly income + 10).
+		value = 1
+		subtract = scope:owner.manpower_percentage
+		min = 0
+		multiply = 300
+		divide = { value = scope:owner.monthly_income_total add = 10 }
+	}
 	build_time = soldier_building
 	
 	obsolete = provincial_garrison

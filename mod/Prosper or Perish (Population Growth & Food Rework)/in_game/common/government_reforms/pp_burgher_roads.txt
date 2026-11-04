@@ -1,0 +1,25 @@
+﻿# Prosper or Perish - roads are burgher buildings: vanilla grants the nobles the right to build roads here; the
+# burghers get it instead. Same file in static_modifiers and advances. EU5 1.4.1 body otherwise unchanged.
+
+TRY_REPLACE:logothesion_of_the_drome = {
+	age = age_1_traditions
+
+	potential = {
+		has_societal_value = societal_value_type:latinization_vs_hellenization
+		has_dlc = "d008_fate_of_the_phoenix"
+	}
+
+	societal_values = {
+		hellenization_focus
+	}
+
+	country_modifier = {
+		diplomatic_spending_cost = -0.02
+		burghers_estate_allowed_to_build_roads = yes
+		land_cost_on_distance_from_capital_speed_propagation = 0.1
+
+		monthly_towards_centralization = societal_value_monthly_move
+	}
+
+	years = 2
+}

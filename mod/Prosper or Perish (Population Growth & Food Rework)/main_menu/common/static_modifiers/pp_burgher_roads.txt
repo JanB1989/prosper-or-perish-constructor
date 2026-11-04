@@ -1,0 +1,10 @@
+﻿# Prosper or Perish - roads are burgher buildings: vanilla grants the nobles the right to build roads here; the
+# burghers get it instead. Same file in government_reforms and advances. EU5 1.4.1 bodies otherwise unchanged.
+
+TRY_REPLACE:granted_circle_infrastructure_expansion = {
+	game_data = { category = country }
+	burghers_estate_allowed_to_build_roads = yes
+	global_build_buildings_efficiency = 0.2
+	global_levy_size_modifier = -0.1
+	global_manpower_modifier = -0.1
+}

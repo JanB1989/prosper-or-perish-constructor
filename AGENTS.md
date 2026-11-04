@@ -517,6 +517,14 @@
 - Not changed: marketplace building caps (vanilla 20-100), tariffs. Engine costs that scale by market / default price
   (unit upkeep and the like) run about 35-50 % lower at normal stocks. Simulation: `~/pp_ai_run/tradesim` (private).
 
+## Start Market Stock (2026-11-04, Jan)
+
+- A new game slid for about a decade because market stocks fill from 2 to 45+ months of supply and the target price falls with them. No script can set a price or a default price, so `start_market_stock.py` (finalize pass of `ppc build` / `ppc sync`) writes `in_game/common/on_action/pp_start_market_stock.txt`: one `add_goods_supply` per market and good, once, at game start. The price then only has to step down to its target at `MONTHLY_PRICE_CHANGE`.
+- Per market and good: `(months(x) - existing_months) x max(use, make)`, with `months(x) = ((1 - 0.2 x) / (x - 0.2) - 1) / 0.335` (the price law solved at supply = demand for the settled price x). use and make come out of game from what the build places: pops x the goods files, setup levels x inputs and outputs (each slot averaged), RGO workers by rank, World Builder land rows, `config/start_markets.csv`.
+- `start_market_stock.csv`: per good the settled price and one engine factor each for pop demand, building inputs, RGO and building outputs (the engine's wealth rules and method choice are not modelled). Demand, recipes, levels and pops move the result at every build without a save. Only a moved settled price or a new good at game start needs `uv run ppc start-stock calibrate --save <day-0 save>` (settled prices from the newest five full runs in `graphs/dataset`). `ppc start-stock check [--save <day-0 save>]` says whether the file is current and how far the targets sit from the settled prices.
+- Checked on a day-0 save of the same build: target against settled price, typical miss 30 %, mean +9 % (no added stock 157 %, +139 %; true flows of the save 22 %). Factors from a save of 2026-09-20 still give 31 %, so the table does not go stale with balance edits. Details: `docs/market_rulebook.md` 8e.
+- Replay, flows as they were: world price / default 1.08 at day 0, 0.71 at month 6, 0.57 at 12, 0.50 at 24 (before: 0.95, 0.84, 0.70, 0.60). Not tested in game. Watch: start income falls within about 2 years instead of 10; the AI's first-decade building (many producers below the gate at once, `LOCAL_OVERSUPPLY_STOCKPILE_THRESHOLD`); whether `add_goods_supply` at game start lands in stock only.
+
 ## Ship Upkeep (2026-10-11, Jan)
 
 - A ship's monthly upkeep is the value of its maintenance goods at default market prices. Vanilla charges the category

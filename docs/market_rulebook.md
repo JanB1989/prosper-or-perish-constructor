@@ -585,6 +585,24 @@ because it models no wars, embargoes or bans. Trade columns = units moved in the
 - The fit worsens below capacity x0.75 and is flat above, so real capacity is not much below this rebuild but may be higher.
   The console command `export_market_capacity` should write the real values; it has not been run.
 
+## 8e. Start market stock (2026-11-04)
+
+The target price falls as stock fills: S gains 6.7 x 5 % = 0.335 x stock (ramp full from 1 % of the market's largest stock). A new game starts with about 2 months of supply in stock and settles near 45-52 months by 1352-1362, so world price / default slid from 0.95 to 0.38 by 1348. Stock is what a script can move (`add_goods_supply`); no effect sets a price or a default price, and a price only moves `MONTHLY_PRICE_CHANGE` of its gap a month, so even a target at the 0.2 floor takes about 9 months at 0.15.
+
+At supply = demand = B the target is x when stock = B x months(x), months(x) = ((1 - 0.2 x) / (x - 0.2) - 1) / 0.335: 12.3 months at x 0.38, 5.1 at 0.6, 0 at 1. Prices above 1 get no stock.
+
+What repeats between runs (five full runs, 1362): settled price per good, range 0.21-1.39, run-to-run sd 0.011; stock per market and good, correlation of logs 0.98, about 18 % apart. The stock the formula gives from 1337 flows is about half of 1362's, because the start economy is smaller; it is the price that has to be right, not the stock.
+
+| Check on a day-0 save, target against the settled price, value-weighted | typical miss | mean |
+| --- | --- | --- |
+| No added stock | 157 % | +139 % |
+| True flows of the save | 22 % | +2 % |
+| Model flows, engine factors from this save | 30 % | +9 % |
+| Model flows, engine factors from a save of 2026-10-20 | 30 % | +4 % |
+| Model flows, engine factors from a save of 2026-09-20 | 31 % | +2 % |
+
+Model flows alone, without the factors, miss by 53 %: pop demand is off by up to 100x per good (wealth rules, upper-class goods) and method choice is not modelled, but these errors are stable per good. A 30 % error in a flow moves the target by about 10 %. Replay with flows as they were, months until prices sit within 5 % of the 1348 level: 124 now, 23 with filled stocks at price speed 0.15, 35 at 0.10, 71 at 0.05; first-year moves 6.4, 4.9, 2.7 % a month (now 4-5).
+
 ## 7. Open
 
 - Treaty flows (per country pair) and the Paris constant (+0.1) in the attraction.

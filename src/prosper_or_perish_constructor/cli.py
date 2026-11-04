@@ -434,6 +434,21 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="also list every building with its gate method and base-price margin.",
     )
+    start_stock = _add_command(
+        subcommands,
+        "start-stock",
+        "Fill every market once at game start with roughly the stock it settles at (start_market_stock.csv).",
+        _start_stock,
+    )
+    start_stock.add_argument(
+        "action",
+        choices=("apply", "check", "calibrate"),
+        help="apply writes the on_action (the finalize pass does this at every build); check says whether it is current and, "
+        "with --save, how far a day-0 save's targets sit from the settled prices; calibrate rewrites the table.",
+    )
+    start_stock.add_argument("--save", type=Path, default=None, help="A day-0 .eu5 save, or a folder of its engine tables.")
+    start_stock.add_argument("--runs", nargs="*", default=[], help="calibrate: dataset runs for the settled prices (default: the newest five full runs).")
+    start_stock.add_argument("--year", type=int, default=1362, help="calibrate: the year stocks count as settled.")
     logistics = _add_command(
         subcommands,
         "logistics",
@@ -1424,6 +1439,41 @@ def _print_gate_check(repo: Path, project: Path) -> None:
     )
 
 
+def _start_stock(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("start-stock does not accept extra arguments.")
+    from prosper_or_perish_constructor import start_market_stock
+    from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
+
+    mod_root = _project_mod_root(repo, project)
+    game = vanilla_root(repo, project)
+    if args.action == "calibrate":
+        if args.save is None:
+            raise SystemExit("start-stock calibrate needs --save (a day-0 save).")
+        count = start_market_stock.calibrate(repo, project, mod_root, game, save=args.save, runs=args.runs, year=args.year)
+        print(f"{start_market_stock.TABLE}: {count} goods.")
+        return 0
+    result = start_market_stock.apply(repo, project, mod_root, game, write=args.action == "apply")
+    print(_start_stock_line(result))
+    if args.action == "check" and args.save is not None:
+        miss = start_market_stock.check_against_save(repo, project, mod_root, game, args.save)
+        print(
+            f"Target against the settled price in {args.save.name}: typical miss {miss['typical_miss']:.0f} %, mean {miss['mean_miss']:+.0f} % "
+            f"(no added stock: {miss['typical_miss_without']:.0f} %, {miss['mean_miss_without']:+.0f} %)."
+        )
+    return 1 if args.action == "check" and (result.changed or result.missing_goods) else 0
+
+
+def _start_stock_line(result) -> str:
+    if result.skipped:
+        return "Start market stock: inputs unchanged."
+    return (
+        f"Start market stock: {result.lines} rows in {result.markets} markets, {result.goods} goods, {result.gold:,.0f} gold at default prices"
+        + (" (rewritten)" if result.changed else " (unchanged)")
+        + (f"; no table row for {', '.join(result.missing_goods)} (run ppc start-stock calibrate)." if result.missing_goods else ".")
+    )
+
+
 def _logistics(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
     if extra:
         raise SystemExit("logistics does not accept extra arguments.")
@@ -1839,6 +1889,9 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         f"{short.files_changed} files changed" + (f"; not in the mod: {', '.join(short.not_in_mod)}." if short.not_in_mod else "."),
         flush=True,
     )
+    from prosper_or_perish_constructor import start_market_stock
+
+    print(_start_stock_line(start_market_stock.apply(repo, project, mod_root, vanilla_root(repo, project))), flush=True)
     from prosper_or_perish_constructor import loc_replace
 
     overrides = loc_replace.apply(mod_root, cap_tooltips.game_root(vanilla_root(repo, project)))

@@ -1116,6 +1116,13 @@ slot_label = "Market"
 method_name = "Market Sales"
 method_desc = "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
 
+[start_market_stock]
+# Every market starts with roughly the stock it settles at (start_market_stock.py, finalize; 2026-11-04, Jan). Per good:
+# (months(settled price) - existing_months) x max(start use, start make), engine factors in start_market_stock.csv.
+existing_months = 2        # stock the engine itself gives a market at game start, in months of supply (day-0 save: 2.1)
+min_amount = 1             # no line for less
+not_goods = ["offset", "logistics", "local_food", "manual_labor", "province_food_sales"]
+
 [market_short_weight]
 # The AI reacts a little when its market runs short of a good (market_short_weight.py, finalize): every producer's
 # ai_construct_weight gets, last, amount x clamp(1 - market stock / monthly market demand) x clamp(owner tax base /

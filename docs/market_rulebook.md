@@ -601,6 +601,10 @@ What repeats between runs (five full runs, 1362): settled price per good, range 
 | Model flows, engine factors from a save of 2026-10-20 | 30 % | +4 % |
 | Model flows, engine factors from a save of 2026-09-20 | 31 % | +2 % |
 
+Stock is capped so a market stays at 85 % of its ceiling (275 + 100 x the centre's development): at 90 % `LOCAL_OVERSUPPLY_STOCKPILE_THRESHOLD` stops the AI building producers of the good there. The first version had no cap and left 190 rows above 90 %.
+
+In game, first version (median settled prices, no cap), full world, 13 monthly saves against the same build without the stock: stock 27 months of supply in the first month, 39 by month 10 (without 2 and 6); price / default 0.95, 0.67, 0.52, 0.46 at months 1, 6, 10, 13 (without 1.03, 0.87, 0.74 at 1, 6, 10; 0.42 in 1348). The target reached 0.38 at month 13, below that 0.42, so settled prices are now volume-weighted per good, not the median market. Unmet pop demand 12 against 27 % in month 1, 7 against 9.5 % at month 10. 92 % of the planned value landed; the rest hit ceilings. Building profit -26 % and tax paid -27 % at month 10, as intended; workers -6 %; constructions, food and people unchanged.
+
 Model flows alone, without the factors, miss by 53 %: pop demand is off by up to 100x per good (wealth rules, upper-class goods) and method choice is not modelled, but these errors are stable per good. A 30 % error in a flow moves the target by about 10 %. Replay with flows as they were, months until prices sit within 5 % of the 1348 level: 124 now, 23 with filled stocks at price speed 0.15, 35 at 0.10, 71 at 0.05; first-year moves 6.4, 4.9, 2.7 % a month (now 4-5).
 
 ## 7. Open

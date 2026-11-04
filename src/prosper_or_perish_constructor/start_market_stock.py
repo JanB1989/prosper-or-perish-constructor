@@ -8,12 +8,14 @@ the month, so nothing is lost before 1 May 1337. The price then only has to step
 
 The stock of a market and good comes out of game, from what the build itself places:
 
-    stock = (months(x) - existing_months) x max(use, make)
+    stock = min(months(x) x flow, 0.85 x ceiling) - existing_months x flow,  flow = max(use, make)
     months(x) = ((1 - 0.2 x) / (x - 0.2) - 1) / 0.335
 
 Solving the price law at supply = demand for the good's settled price x (price / default): that many months of flow put
 the target at x. use and make are start flows per market: people x the goods' pop demand, building levels x inputs and
-outputs (each slot's methods averaged), RGO workers by rank, land quality from the World Builder rows.
+outputs (each slot's methods averaged), RGO workers by rank, land quality from the World Builder rows. The ceiling is the
+market's stock ceiling from its centre's development: at 90 % of it the AI stops building producers of the good there
+(LOCAL_OVERSUPPLY_STOCKPILE_THRESHOLD), so the injection stays below that.
 
 ``start_market_stock.csv`` holds one row per good: the settled price and one engine factor for each of those four
 flows, because the engine's wealth rules and method choice are not modelled. Demand, recipes, levels and pops all move
@@ -40,6 +42,7 @@ import polars as pl
 
 from prosper_or_perish_constructor.worldbuilder import start_placement as sp
 from prosper_or_perish_constructor.worldbuilder.contract import load_config as load_worldbuilder_config
+from prosper_or_perish_constructor.worldbuilder.development import SETUP_RELATIVE_PATH
 from prosper_or_perish_constructor.worldbuilder.start_simulation import setup_levels
 
 OUTPUT = Path("in_game/common/on_action/pp_start_market_stock.txt")
@@ -55,6 +58,9 @@ SUPPLY_FROM_STOCK = 0.335  # STOCKPILE_TRADE_IMPACT_ON_SUPPLY_SCALE 6.7 x MARKET
 PRICE_C = 0.2              # c of the price law, target = default x (D + c S) / (S + c D)
 LOWEST_GAP = 0.02          # a settled price at the .2 floor would need endless stock
 FACTORS = ("pop_factor", "input_factor", "rgo_factor", "output_factor")
+CEILING_BASE = 275.0      # market_center 250 + 25 at every location (day-0 save)
+CEILING_PER_DEVELOPMENT = 100.0  # maximum_stockpile_capacity of the development static modifier
+CEILING_SHARE = 0.85      # below LOCAL_OVERSUPPLY_STOCKPILE_THRESHOLD 0.9
 INPUT_FOLDERS = ("in_game/common/goods", "in_game/common/goods_demand", "in_game/common/pop_types", "in_game/common/building_types",
                  "in_game/common/production_methods", "main_menu/setup/1337")
 
@@ -87,6 +93,7 @@ class Flows:
     rgo: Counter = field(default_factory=Counter)
     outputs: Counter = field(default_factory=Counter)
     people: Counter = field(default_factory=Counter)  # thousands per market
+    ceiling: dict[str, float] = field(default_factory=dict)  # stock ceiling per market
 
 
 @dataclass
@@ -207,6 +214,8 @@ def model_flows(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -
     locations = pl.read_parquet(repo / LOCATIONS, columns=["location_tag", "province", "raw_material"])
     market_of = _markets_of_locations(repo, mod_root, vanilla_root, locations)
     flows = Flows()
+    development = dict(re.findall(r"^\s*(\w+) = ([0-9.]+)", (mod_root / SETUP_RELATIVE_PATH).read_text(encoding="utf-8-sig"), re.M))
+    flows.ceiling = {m: CEILING_BASE + CEILING_PER_DEVELOPMENT * float(development.get(m, 0.0)) for m in set(market_of.values())}
 
     pops = sp.parse_pops((mod_root / sp.POPS_SETUP_PATH).read_text(encoding="utf-8-sig"))
     for tag, rows in pops.items():
@@ -251,7 +260,9 @@ def plan(flows: Flows, table: dict[str, Row], config: Config) -> dict[MarketGood
             key = (market, good)
             use = flows.pop[key] * row.pop_factor + flows.inputs[key] * row.input_factor + flows.people[market] * row.rest_per_k
             make = flows.rgo[key] * row.rgo_factor + flows.outputs[key] * row.output_factor
-            amount = max(0.0, stock_months(row.settled_price) - config.existing_months) * max(use, make)
+            flow = max(use, make)
+            total = min(stock_months(row.settled_price) * flow, CEILING_SHARE * flows.ceiling.get(market, math.inf))
+            amount = total - config.existing_months * flow
             if amount >= config.min_amount:
                 out[key] = round(amount, 1)
     return out
@@ -366,8 +377,10 @@ def _settled_prices(dataset: Path, runs: list[str], year: int, config: Config) -
         files = sorted((dataset / "tables/market_goods" / f"playthrough_id={run}").glob(f"{year}_*.parquet"))
         if not files:
             raise SystemExit(f"run {run} has no save from {year}")
-        one = pl.read_parquet(files[0], columns=["good_id", "price", "default_price"]).filter(pl.col("price").is_not_null(), pl.col("default_price") > 0)
-        frames.append(one.with_columns(x=pl.col("price") / pl.col("default_price")).group_by("good_id").agg(pl.col("x").median()))
+        one = pl.read_parquet(files[0], columns=["good_id", "price", "default_price", "supply", "demand"]).filter(pl.col("price").is_not_null(), pl.col("default_price") > 0)
+        one = one.with_columns(x=pl.col("price") / pl.col("default_price"), w=pl.max_horizontal(pl.col("supply").fill_null(0.0), pl.col("demand").fill_null(0.0)) + 0.01)
+        # by volume, not the median market: large markets sit above small ones, and it is their price the world feels
+        frames.append(one.group_by("good_id").agg(((pl.col("x") * pl.col("w")).sum() / pl.col("w").sum()).alias("x")))
     settled = pl.concat(frames).group_by("good_id").agg(pl.col("x").mean())
     return {good: x for good, x in settled.iter_rows() if good not in config.not_goods}
 

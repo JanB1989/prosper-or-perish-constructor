@@ -44,6 +44,23 @@ def test_plan_skips_small_amounts_dear_goods_and_dummy_goods() -> None:
     assert sms.plan(flows, table, CONFIG) == {}
 
 
+def test_stock_stays_below_the_ceiling() -> None:
+    flows = sms.Flows(rgo=Counter({("a", "clay"): 1000.0}), people=Counter({"a": 1.0}), ceiling={"a": 2000.0})
+    stock = sms.plan(flows, {"clay": sms.Row(0.25, rgo_factor=1.0)}, sms.Config(existing_months=0.0, min_amount=1.0, not_goods=frozenset()))
+    assert stock[("a", "clay")] == pytest.approx(sms.CEILING_SHARE * 2000.0)
+
+
+def test_nothing_is_added_to_a_market_already_over_the_ceiling_share() -> None:
+    flows = sms.Flows(rgo=Counter({("a", "clay"): 1000.0}), people=Counter({"a": 1.0}), ceiling={"a": 100.0})
+    assert sms.plan(flows, {"clay": sms.Row(0.25, rgo_factor=1.0)}, CONFIG) == {}
+
+
+def test_ceiling_numbers_match_the_mod() -> None:
+    text = (MOD / "main_menu/common/static_modifiers/pp_location_modifier_adjustments.txt").read_text(encoding="utf-8-sig")
+    assert f"maximum_stockpile_capacity = {sms.CEILING_PER_DEVELOPMENT:g} " in text
+    assert "TRY_INJECT:market_center" in text and "maximum_stockpile_capacity = 250 " in text
+
+
 def test_rest_goes_by_people() -> None:
     flows = sms.Flows(people=Counter({"a": 10.0}))
     stock = sms.plan(flows, {"tea": sms.Row(0.5, rest_per_k=2.0)}, CONFIG)

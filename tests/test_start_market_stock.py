@@ -54,8 +54,14 @@ def test_render_scopes_each_market_once() -> None:
     text = sms.render({("kyoto", "wheat"): 12.5, ("kyoto", "lumber"): 3.0, ("akita", "wheat"): 1.0})
     assert text.count("location:kyoto.market = {") == 1
     assert "add_goods_supply = { goods = goods:wheat amount = 12.5 }" in text
-    assert f"on_actions = {{ {sms.ON_ACTION} }}" in text
     assert text.count("{") == text.count("}")
+
+
+def test_it_runs_after_the_first_days_and_before_the_first_price_step() -> None:
+    """Prices step on the 1st; a new game starts on 1 April."""
+    assert 1 <= sms.DELAY_DAYS <= 29
+    hook = sms.render({("kyoto", "wheat"): 1.0}).split(f"{sms.ON_ACTION} = {{")[0]
+    assert re.search(rf"delay = \{{ days = {sms.DELAY_DAYS} \}}\s+{sms.ON_ACTION}", hook)
 
 
 def test_table_is_sane() -> None:

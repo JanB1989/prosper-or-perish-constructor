@@ -62,11 +62,13 @@ building:
     important_for_AI = no
     can_close = yes
 
+    # upgrade not worse 2026-11-06: own method outputs x1.4, inputs kept; it earned less per level than the
+    # Clay Pit it replaces (tests/test_upgrade_not_worse.py)
     unique_production_methods = {
         pp_clay_washmill_base_clay = {
-            manual_labor = 0.011
+            manual_labor = 0.015
             produced = clay
-            output = 0.11
+            output = 0.154
             category = building_maintenance
         }
     }
@@ -79,7 +81,7 @@ building:
             tools = 0.005 # spades
             manual_labor = 0.026
             produced = clay
-            output = 0.23
+            output = 0.322
             category = building_maintenance
         }
     }
@@ -93,7 +95,7 @@ building:
             horses = 0.015
             manual_labor = 0.085
             produced = clay
-            output = 0.69
+            output = 0.966
             category = building_maintenance
         }
         pp_clay_washmill_ox_pugging = {
@@ -102,7 +104,7 @@ building:
             livestock = 0.053 # oxen turning the pug mill
             manual_labor = 0.098
             produced = clay
-            output = 0.69
+            output = 0.966
             category = building_maintenance
         }
     }
@@ -169,16 +171,22 @@ evaluation:
   production_methods:
     pp_clay_washmill_base_clay:
       production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Upgrade not worse 2026-11-06, outputs x1.4 so it earns more per level than the Clay Pit it replaces (tests/test_upgrade_not_worse.py).
     pp_clay_washmill_no_preparation:
       production_efficiency: 1.00
     pp_clay_washmill_horse_pugging:
       production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Upgrade not worse 2026-11-06, outputs x1.4 so it earns more per level than the Clay Pit it replaces (tests/test_upgrade_not_worse.py).
     pp_clay_washmill_ox_pugging:
       production_efficiency: 1.05
     pp_clay_washmill_no_refining:
       production_efficiency: 1.00
     pp_clay_washmill_levigation_ponds:
       production_efficiency: 1.05
+      allow_rules:
+        profit_percent: Upgrade not worse 2026-11-06, outputs x1.4 so it earns more per level than the Clay Pit it replaces (tests/test_upgrade_not_worse.py).
     pp_clay_washmill_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

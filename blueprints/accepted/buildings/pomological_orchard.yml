@@ -77,6 +77,8 @@ building:
         }
     }
 
+    # upgrade not worse 2026-11-06: own method outputs x1.1, inputs kept; it earned less per level than the
+    # Nursery Orchard it replaces (tests/test_upgrade_not_worse.py)
     unique_production_methods = {
         pp_pomological_orchard_base_fruit = {
             manual_labor = 0.029
@@ -96,7 +98,7 @@ building:
             pottery = 0.065
             manual_labor = 0.08
             produced = beeswax
-            output = 0.45
+            output = 0.495
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -107,7 +109,7 @@ building:
         }
         pp_pomological_orchard_grafted_rows = {
             produced = fruit
-            output = 3.04
+            output = 3.344
             tools = 0.097 # pruning hooks, grafting knives: an accelerant, not the bulk of the cost
             lumber = 1.0 # trellises, espalier frames, ladders, crates, stakes
             paper = 0.217 # cultivar ledgers
@@ -202,6 +204,7 @@ evaluation:
     pp_pomological_orchard_hedgerow_hives:
       production_efficiency: 1.0
       allow_rules:
+        profit_percent: Upgrade not worse 2026-11-06, outputs x1.1 so it earns more per level than the Nursery Orchard it replaces (tests/test_upgrade_not_worse.py).
         input_throughput: Hedgerow hive sideline is intentionally smaller than the full-building throughput target.
         output_throughput: Hedgerow hive sideline is intentionally smaller than the full-building throughput target.
     pp_pomological_orchard_provision:

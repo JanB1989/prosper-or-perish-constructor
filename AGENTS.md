@@ -530,6 +530,23 @@
 - Not changed: marketplace building caps (vanilla 20-100), tariffs. Engine costs that scale by market / default price
   (unit upkeep and the like) run about 35-50 % lower at normal stocks. Simulation: `~/pp_ai_run/tradesim` (private).
 
+## Upgrades Never Worse (2026-11-06, Jan)
+
+- Rule: a building that names another as `obsolete` never earns or makes less per level than the producing building it
+  replaces (once researched, the old one cannot be built). `tests/test_upgrade_not_worse.py` reads the compiled mod, at base
+  prices (`production_gate.load_prices`), in every age from the upgrade's unlock with the methods each knows by then: profit
+  per level with each slot's most profitable method, and output value with each slot's most valuable method. No exceptions.
+- Why: the Clay Washmill made 1.07 clay per level against the Clay Pit's 1.48 and earned a third of its profit since the June
+  move to one worker per level (its outputs were divided by 4, the pit's were not). Nothing checked it.
+- Fixed the same day (blueprint comment `upgrade not worse 2026-11-06`): one output factor on the upgrade's own methods, inputs
+  kept, the smallest step of 0.05 at which it earns at least 1.25x what it replaces at its unlock and never less later (the
+  mod's 131 upgrade pairs: lower quartile 1.27x, median 1.9x). Clay Washmill x1.4, Salt Mine (improved) x1.25, Sand Washery,
+  Fiber Dressing Yard, Coke Blast Furnace, Planned Saw Works, Pomological Orchard x1.1, Blast Furnace and Gun Smith x1.05,
+  Offshore Fishery x1.3. Food buildings and the saw works keep their slot-0 base method (Provision follows it; the saw
+  works' base is a requested low baseline). Planned Saw Works also got the Water Sawmill's Extra Rations (an upgrade never
+  takes a recipe away). Evaluation bands crossed by the fix carry an allow rule naming it; the offshore output band is x1.3.
+- Not changed: tier-line prices (every fixed tier still takes the 1.5x step), employment, the predecessors.
+
 ## Start Market Stock (2026-11-04, Jan)
 
 - A new game slid for about a decade because market stocks fill from 2 to 45+ months of supply and the target price falls with them. No script can set a price or a default price, so `start_market_stock.py` (finalize pass of `ppc build` / `ppc sync`) writes `in_game/common/on_action/pp_start_market_stock.txt`: one `add_goods_supply` per market and good, once, 5 days into a new game (`DELAY_DAYS`: on day 0 location modifiers and the stock ceilings they set may not be in place; prices first step on 1 May, so nothing is lost). The price then only has to step down to its target at `MONTHLY_PRICE_CHANGE`.

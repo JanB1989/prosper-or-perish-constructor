@@ -53,11 +53,13 @@ building:
     important_for_AI = no
     can_close = yes
 
+    # upgrade not worse 2026-11-06: own method outputs x1.1, inputs kept; it earned less per level than the
+    # Sand Pit it replaces (tests/test_upgrade_not_worse.py)
     unique_production_methods = {
         pp_sand_washery_base_sand = {
-            manual_labor = 0.011
+            manual_labor = 0.012
             produced = sand
-            output = 0.11
+            output = 0.121
             category = building_maintenance
         }
     }
@@ -71,7 +73,7 @@ building:
             fiber_crops = 0.01 # woven riddles
             manual_labor = 0.036
             produced = sand
-            output = 0.29
+            output = 0.319
             category = building_maintenance
         }
     }
@@ -85,7 +87,7 @@ building:
             fiber_crops = 0.012 # fine sieves
             manual_labor = 0.038
             produced = sand
-            output = 0.31
+            output = 0.341
             category = building_maintenance
         }
     }

@@ -848,10 +848,11 @@ def test_offshore_fishery_output_tuning_and_evaluation_bands_are_locked() -> Non
     raw = _load_blueprint("offshore_fishery")
     body = raw["building"]["body"]
     expected_outputs = {
-        # x1.35 since [age_food] (2026-10-03): was 1.185 / 1.55 / 1.80
-        "pp_offshore_fishery_herring_busses": "1.6",
-        "pp_offshore_fishery_distant_water_schooners": "2.09",
-        "pp_offshore_fishery_steam_trawlers": "2.43",
+        # x1.35 since [age_food] (2026-10-03): was 1.185 / 1.55 / 1.80; x1.3 since 2026-11-06 (it earned less per level
+        # than the drift net fishery it replaces, tests/test_upgrade_not_worse.py): was 1.6 / 2.09 / 2.43
+        "pp_offshore_fishery_herring_busses": "2.08",
+        "pp_offshore_fishery_distant_water_schooners": "2.717",
+        "pp_offshore_fishery_steam_trawlers": "3.159",
     }
 
     for method, output in expected_outputs.items():
@@ -868,7 +869,7 @@ def test_offshore_fishery_output_tuning_and_evaluation_bands_are_locked() -> Non
         flags=re.S,
     )
     assert raw["evaluation"]["bands"] == {
-        "output_gold_per_1k": {"max": 2.56},   # 1.90 x1.35 [age_food]
+        "output_gold_per_1k": {"max": 3.33},   # 1.90 x1.35 [age_food] x1.3 (upgrade not worse)
         "amortization_months": {"max": 900},
     }
 

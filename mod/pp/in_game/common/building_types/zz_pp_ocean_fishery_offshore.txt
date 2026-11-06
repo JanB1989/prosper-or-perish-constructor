@@ -34,6 +34,8 @@ forbidden_for_estates = no
 important_for_AI = no
 can_close = yes
 
+# upgrade not worse 2026-11-06: own method outputs x1.3, inputs kept; it earned less per level than the
+# Drift Net Fishery it replaces (tests/test_upgrade_not_worse.py)
 unique_production_methods = {
     pp_offshore_fishery_base_catch = {
         icon_type = building_type
@@ -58,8 +60,8 @@ unique_production_methods = {
         salt = 0.053 # barrel curing
         manual_labor = 0.176
         produced = fish
-        output = 1.6
-        debug_max_profit = 0
+        output = 2.08
+        debug_max_profit = 0.024
         category = building_maintenance
     }
     pp_offshore_fishery_distant_water_schooners = {
@@ -70,8 +72,8 @@ unique_production_methods = {
         salt = 0.062 # catch curing
         manual_labor = 0.243
         produced = fish
-        output = 2.09
-        debug_max_profit = 0
+        output = 2.717
+        debug_max_profit = 0.004
         category = building_maintenance
     }
     pp_offshore_fishery_steam_trawlers = {
@@ -82,8 +84,8 @@ unique_production_methods = {
         tools = 0.066 # winch and engine repairs
         manual_labor = 0.216
         produced = fish
-        output = 2.43
-        debug_max_profit = 0
+        output = 3.159
+        debug_max_profit = 0.201
         category = building_maintenance
     }
 }

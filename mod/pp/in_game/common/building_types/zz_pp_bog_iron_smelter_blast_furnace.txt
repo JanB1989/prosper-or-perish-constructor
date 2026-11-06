@@ -35,6 +35,8 @@ location_potential = {
         raw_material = goods:mercury
     }
 }
+# upgrade not worse 2026-11-06: own method outputs x1.05, inputs kept; it earned less per level than the
+# Bog Iron Smelter it replaces (tests/test_upgrade_not_worse.py)
 unique_production_methods = {
     pp_bog_iron_smelter_blast_furnace_maintenance = {
         icon_type = building_type
@@ -43,7 +45,7 @@ unique_production_methods = {
         tools = 0.038 # bloom breaking, tuyere upkeep
         manual_labor = 0.22
         produced = iron
-        output = 0.32
+        output = 0.336
         category = building_maintenance
     }
     pp_bog_iron_smelter_blast_furnace_finery = {
@@ -54,7 +56,7 @@ unique_production_methods = {
         lumber = 0.046 # racks, furnace frames
         manual_labor = 0.27
         produced = iron
-        output = 0.39
+        output = 0.41
         category = building_maintenance
     }
 }

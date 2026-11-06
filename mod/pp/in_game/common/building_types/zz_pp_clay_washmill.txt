@@ -29,13 +29,15 @@ forbidden_for_estates = no
 important_for_AI = no
 can_close = yes
 
+# upgrade not worse 2026-11-06: own method outputs x1.4, inputs kept; it earned less per level than the
+# Clay Pit it replaces (tests/test_upgrade_not_worse.py)
 unique_production_methods = {
     pp_clay_washmill_base_clay = {
         icon_type = building_type
         icon = clay_washmill
-        manual_labor = 0.011
+        manual_labor = 0.015
         produced = clay
-        output = 0.11
+        output = 0.154
         category = building_maintenance
     }
 }
@@ -52,7 +54,7 @@ unique_production_methods = {
         tools = 0.005 # spades
         manual_labor = 0.026
         produced = clay
-        output = 0.23
+        output = 0.322
         category = building_maintenance
     }
 }
@@ -70,7 +72,7 @@ unique_production_methods = {
         horses = 0.015
         manual_labor = 0.085
         produced = clay
-        output = 0.69
+        output = 0.966
         category = building_maintenance
     }
     pp_clay_washmill_ox_pugging = {
@@ -81,7 +83,7 @@ unique_production_methods = {
         livestock = 0.053 # oxen turning the pug mill
         manual_labor = 0.098
         produced = clay
-        output = 0.69
+        output = 0.966
         category = building_maintenance
     }
 }

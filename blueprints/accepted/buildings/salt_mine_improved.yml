@@ -97,11 +97,13 @@ building:
     important_for_AI = no
     can_close = yes
 
+    # upgrade not worse 2026-11-06: own method outputs x1.25, inputs kept; it earned less per level than the
+    # Salt Mine it replaces (tests/test_upgrade_not_worse.py)
     unique_production_methods = {
         pp_salt_mine_improved_base_salt = {
-            manual_labor = 0.07
+            manual_labor = 0.088
             produced = salt
-            output = 0.070
+            output = 0.088
             category = building_maintenance
         }
     }
@@ -116,7 +118,7 @@ building:
             leather = 0.11 # harness, buckets, salt sacks
             manual_labor = 0.48
             produced = salt
-            output = 0.366
+            output = 0.458
             category = building_maintenance
         }
     }
@@ -162,6 +164,8 @@ evaluation:
       production_efficiency: 1.0
     pp_salt_mine_improved_timbered_haulage:
       production_efficiency: 1.15
+      allow_rules:
+        output_throughput: Upgrade not worse 2026-11-06, outputs x1.25 so it earns more per level than the Salt Mine it replaces (tests/test_upgrade_not_worse.py).
     pp_salt_mine_improved_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

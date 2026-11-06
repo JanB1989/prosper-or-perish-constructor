@@ -25,13 +25,15 @@ location_potential = {
     pp_fiber_crops_farm_location_potential = yes
 }
 
+# upgrade not worse 2026-11-06: own method outputs x1.1, inputs kept; it earned less per level than the
+# Fiber Crops Farm it replaces (tests/test_upgrade_not_worse.py)
 unique_production_methods = {
     pp_fiber_dressing_yard_base_fiber_crops = {
         icon_type = building_type
         icon = fiber_dressing_yard
-        manual_labor = 0.042
+        manual_labor = 0.046
         produced = fiber_crops
-        output = 0.105
+        output = 0.116
         category = building_maintenance
     }
 }
@@ -50,7 +52,7 @@ unique_production_methods = {
         coal = 0.15 # controlled drying heat
         manual_labor = 0.27
         produced = fiber_crops
-        output = 0.57
+        output = 0.627
         category = building_maintenance
     }
 }

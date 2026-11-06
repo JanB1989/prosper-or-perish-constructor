@@ -70,6 +70,8 @@ building:
     important_for_AI = no
     can_close = yes
 
+    # upgrade not worse 2026-11-06: own method outputs x1.3, inputs kept; it earned less per level than the
+    # Drift Net Fishery it replaces (tests/test_upgrade_not_worse.py)
     unique_production_methods = {
         pp_offshore_fishery_base_catch = {
             manual_labor = 0.024
@@ -88,7 +90,7 @@ building:
             salt = 0.053 # barrel curing
             manual_labor = 0.176
             produced = fish
-            output = 1.6
+            output = 2.08
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -98,7 +100,7 @@ building:
             salt = 0.062 # catch curing
             manual_labor = 0.243
             produced = fish
-            output = 2.09
+            output = 2.717
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -108,7 +110,7 @@ building:
             tools = 0.066 # winch and engine repairs
             manual_labor = 0.216
             produced = fish
-            output = 2.43
+            output = 3.159
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -173,7 +175,7 @@ evaluation:
     output_throughput: Food relief of age_4_reformation (age_food.py, throughput x1.35) raises output per worker on purpose.
   bands:
     output_gold_per_1k:
-      max: 2.56
+      max: 3.33  # 1.90 x1.35 [age_food] x1.3 (upgrade not worse 2026-11-06)
     amortization_months:
       max: 900
   production_methods:
@@ -186,15 +188,18 @@ evaluation:
     pp_offshore_fishery_herring_busses:
       production_efficiency: 1.15
       allow_rules:
+        profit_percent: Upgrade not worse 2026-11-06, outputs x1.3 so it earns more per level than the Drift Net Fishery it replaces (tests/test_upgrade_not_worse.py).
         input_throughput: Herring busses keep a lower gear profile after repeated fish-output tuning, with most salt demand shifted into hull and net inputs.
         output_throughput: Herring busses are now the age 4 offshore entry tier and intentionally stay below later schooners and steam trawlers.
     pp_offshore_fishery_distant_water_schooners:
       production_efficiency: 1.05
       allow_rules:
+        profit_percent: Upgrade not worse 2026-11-06, outputs x1.3 so it earns more per level than the Drift Net Fishery it replaces (tests/test_upgrade_not_worse.py).
         amortization_months: Age 5 schooners use heavier fleet stores and may repay slowly while staying below the steam trawler tier.
     pp_offshore_fishery_steam_trawlers:
       production_efficiency: 1.05
       allow_rules:
+        profit_percent: Upgrade not worse 2026-11-06, outputs x1.3 so it earns more per level than the Drift Net Fishery it replaces (tests/test_upgrade_not_worse.py).
         input_throughput: Steam trawlers keep a pre-steel-tool input profile while becoming the clear late offshore fishing tier.
         output_throughput: Late-game offshore fish output is capped below generic laborer throughput while staying above schooners.
     pp_offshore_fishery_provision:

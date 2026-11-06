@@ -1,0 +1,32 @@
+﻿# Prosper or Perish - Construction Plan triggers (player-only construction rules; see on_action/pp_construction_plan.txt).
+# Every trigger here runs inside pp_cplan_run, where scope:pp_cplan_country is the player country.
+
+# Location scope: the plan may build here (the player's own location, not set to Hands off).
+pp_cplan_location_ok = {
+	owner ?= scope:pp_cplan_country
+	NOT = { has_variable = pp_cplan_here_off }
+}
+
+# Any scope: the month's budget is not used up (constructions started this month, gold above the reserve).
+pp_cplan_budget_left = {
+	scope:pp_cplan_country = {
+		var:pp_cplan_started < pp_cplan_max100
+		gold > pp_cplan_reserve_gold
+	}
+}
+
+# Any scope: the current rule has not built yet and the budget lasts.
+pp_cplan_may_try = {
+	scope:pp_cplan_country = { NOT = { has_variable = pp_cplan_hit } }
+	pp_cplan_budget_left = yes
+}
+
+# Location scope: the logistics rule wants a level here (location override Always, or market access below the line;
+# Never blocks it). The building's own gates (access, building levels, one level at a time) still apply.
+pp_cplan_logistics_wanted = {
+	pp_cplan_logi_n < 1.5
+	OR = {
+		pp_cplan_logi_n > 0.5
+		market_access < pp_cplan_access_line
+	}
+}

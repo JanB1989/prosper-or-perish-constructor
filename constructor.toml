@@ -1134,6 +1134,32 @@ tax_base_full = 2000
 # outputs that are not goods anyone stocks: a building is never there for these
 not_goods = ["offset", "logistics", "local_food", "manual_labor", "province_food_sales", "export_sales", "export_tally", "manual_labor_cost", "province_food_purchase"]
 
+[construction_plan]
+# Player-only construction rules (branch player-construction-manager, 2026-11-06, Jan; construction_plan.py writes the
+# generated parts at finalize, docs/player_construction_manager.md). The AI never runs them: the monthly pass fires only
+# for countries with is_ai = no that switched the plan on. Defaults the player can change in the Construction Plan panel:
+reserve_months = 6            # gold kept back, in months of total income
+max_per_month = 3             # most new constructions the plan starts in a month
+access_threshold = 85         # logistics: build where market access is below this, in %
+keep_months = 3               # goods "Keep stocked": build while the market holds less than this many months of its demand
+farm_sites_per_province = 4   # food: locations of a province tried for a farm, most arable land first
+# Food chain answers in the province capital, tried in this order after the farms (first one that can be built).
+kitchens = ["public_kitchen", "cookshop"]
+taverns = ["tavern"]
+granaries = ["granary"]
+# Logistics buildings, first that can be built wins (their zones never overlap; river and coast before roads).
+logistics_order = ["river_boatmen_yard", "coastal_shipping_office", "transport_office", "carrier_inn", "pp_caravanserai", "pp_oasis_caravan_station", "pp_yam_station", "pp_banjara_tanda", "pp_llama_caravan_post"]
+# Goods never listed in the Goods tab (not traded or not built for).
+hidden_goods = ["offset", "logistics", "local_food", "manual_labor", "province_food_sales"]
+
+[construction_plan.focus]
+# Province focus -> [build below, stop above] stored months. Order = the cycle order in the panel; "hands_off" and "custom"
+# follow these. The first one is the default for a province nobody set.
+standard = [6, 18]
+breadbasket = [8, 20]
+market_town = [6, 14]
+workshop = [4, 12]
+
 [rural_town_goods]
 # The AI does not build a rural-capable producer (rural_settlement = yes) at a rural location whose province has a town of
 # the same owner while the country evaluating it also has a town-only producer of ANY good that building can make (researched

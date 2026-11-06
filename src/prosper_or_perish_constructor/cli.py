@@ -1889,6 +1889,16 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         f"{short.files_changed} files changed" + (f"; not in the mod: {', '.join(short.not_in_mod)}." if short.not_in_mod else "."),
         flush=True,
     )
+    from prosper_or_perish_constructor import construction_plan
+
+    plan = construction_plan.apply(repo, project, mod_root, vanilla_root(repo, project))
+    print(
+        f"Construction Plan (player rules): {len(plan.goods)} goods with "
+        f"{sum(len(names) for names in plan.producers.values())} producers, {len(plan.farm_lines)} farm lines, "
+        f"{len(plan.logistics)} logistics buildings, {plan.files_changed} files changed"
+        + (f"; UNKNOWN buildings: {', '.join(plan.missing)}." if plan.missing else "."),
+        flush=True,
+    )
     from prosper_or_perish_constructor import start_market_stock
 
     print(_start_stock_line(start_market_stock.apply(repo, project, mod_root, vanilla_root(repo, project))), flush=True)

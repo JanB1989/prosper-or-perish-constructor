@@ -1,0 +1,151 @@
+﻿# Prosper or Perish - Construction Plan values (player-only construction rules). The settings with their defaults
+# (pp_cplan_reserve_months, pp_cplan_max_per_month, pp_cplan_access_pct, pp_cplan_keep_months, the focus bands) are
+# generated from [construction_plan] into pp_construction_plan_generated.txt. Variables carry + 100.
+
+# Country scope: the month's construction limit + 100 (compared with var:pp_cplan_started).
+pp_cplan_max100 = {
+	value = pp_cplan_max_per_month
+	add = 100
+}
+
+# Country scope: gold kept back.
+pp_cplan_reserve_gold = {
+	value = monthly_income_total
+	multiply = pp_cplan_reserve_months
+	min = 0
+}
+
+# Location scope: the owner's logistics line as a market access fraction.
+pp_cplan_access_line = {
+	value = 0
+	owner ?= { add = pp_cplan_access_pct }
+	divide = 100
+}
+
+# Province scope: the band + 100, compared with var:pp_stored_food_months (stored_food.py keeps it + 100).
+pp_cplan_band_lo100 = {
+	value = pp_cplan_band_lo
+	add = 100
+}
+pp_cplan_band_hi100 = {
+	value = pp_cplan_band_hi
+	add = 100
+}
+
+# Location scope: arable land left for farms, in people (the farm caps' Free Arable Land before the land per level).
+pp_cplan_farm_site = {
+	value = modifier:local_population_capacity
+	subtract = pp_townsfolk_capacity
+}
+
+# ---- Panel readouts ----
+
+# Country scope: 1 while the plan runs.
+pp_cplan_on_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_on }
+		value = 1
+	}
+}
+
+# Country scope: 1 while a rule group runs (they run by default).
+pp_cplan_food_n = {
+	value = 1
+	if = {
+		limit = { has_variable = pp_cplan_food_off }
+		value = 0
+	}
+}
+pp_cplan_logistics_n = {
+	value = 1
+	if = {
+		limit = { has_variable = pp_cplan_logistics_off }
+		value = 0
+	}
+}
+pp_cplan_goods_n = {
+	value = 1
+	if = {
+		limit = { has_variable = pp_cplan_goods_off }
+		value = 0
+	}
+}
+
+# Country scope: constructions the plan started in its last pass, and the gold they took.
+pp_cplan_started_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_started }
+		value = var:pp_cplan_started
+		subtract = 100
+	}
+}
+pp_cplan_spent_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_spent }
+		value = var:pp_cplan_spent
+		subtract = 100
+	}
+}
+
+# Country scope: the reserve in gold, for the panel.
+pp_cplan_reserve_gold_n = {
+	value = pp_cplan_reserve_gold
+}
+
+# Province scope: the rule's state after the last pass (0 not run yet, 1 building, 2 blocked, 3 in band, 4 above band,
+# 5 hands off, 7 held back by the budget, 8 store not counted yet, 9 store full and no Granary possible).
+pp_cplan_status_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_status }
+		value = var:pp_cplan_status
+		subtract = 100
+	}
+}
+
+# Province scope: stored months (the store the AI weights read).
+pp_cplan_stored_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_stored_food_months }
+		value = var:pp_stored_food_months
+		subtract = 100
+	}
+	min = 0
+}
+
+# Location scope: the logistics override (0 follow the plan, 1 always, 2 never) and Hands off (1).
+pp_cplan_logi_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_logi }
+		value = var:pp_cplan_logi
+		subtract = 100
+	}
+}
+pp_cplan_here_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_here_off }
+		value = 1
+	}
+}
+
+# Location scope: why the plan built here last month (1 food, 2 logistics, 3 goods).
+pp_cplan_why_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_log_why }
+		value = var:pp_cplan_log_why
+		subtract = 100
+	}
+}
+
+# Location scope: market access in %, and the owner's line, for the Logistics tab.
+pp_cplan_access_here = {
+	value = market_access
+	multiply = 100
+}

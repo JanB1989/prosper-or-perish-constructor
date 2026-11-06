@@ -1,6 +1,7 @@
 ﻿# Prosper or Perish - Construction Plan values (player-only construction rules). The settings with their defaults
-# (pp_cplan_reserve_months, pp_cplan_max_per_month, pp_cplan_access_pct, pp_cplan_keep_months, the focus bands) are
-# generated from [construction_plan] into pp_construction_plan_generated.txt. Variables carry + 100.
+# (pp_cplan_reserve_months, pp_cplan_max_per_month, pp_cplan_access_pct, pp_cplan_keep_months, pp_cplan_payback_line,
+# the focus bands), the conditions and the per-rule readouts are generated from [construction_plan] into
+# pp_construction_plan_generated.txt. Variables carry + 100.
 
 # Country scope: the month's construction limit + 100 (compared with var:pp_cplan_started).
 pp_cplan_max100 = {
@@ -8,11 +9,13 @@ pp_cplan_max100 = {
 	add = 100
 }
 
-# Country scope: the rule groups that run (at least 1), and each one's share of the monthly limit, rounded up.
+# Country scope: the rule groups that run (location rules when a location has own rules; at least 1), and each one's
+# share of the monthly limit, rounded up.
 pp_cplan_groups_on = {
 	value = pp_cplan_food_n
 	add = pp_cplan_logistics_n
 	add = pp_cplan_goods_n
+	add = pp_cplan_location_rules_n
 	min = 1
 }
 pp_cplan_group_share = {
@@ -57,10 +60,126 @@ pp_cplan_band_hi100 = {
 	add = 100
 }
 
-# Location scope: arable land left for farms, in people (the farm caps' Free Arable Land before the land per level).
+# Location scope: arable land left for farms, in thousands of people (the farm caps' Free Arable Land before the land
+# per level).
 pp_cplan_farm_site = {
 	value = modifier:local_population_capacity
 	subtract = pp_townsfolk_capacity
+}
+
+# Location scope: the province's stored food in months (a location rule condition).
+pp_cplan_stored_here = {
+	value = 0
+	province ?= { add = pp_cplan_stored_n }
+}
+
+# ---- Build cost and payback (location scope; scope:pp_cplan_btype = the building type, the temporary values
+# pp_cplan_ipl / pp_cplan_pf / pp_cplan_ef set by pp_cplan_btype_data or the goods pickers) ----
+# The engine's formula, calibrated in game on 158 constructions (2026-11-06, all within 1 %): base price
+# x (1 + increase_per_level_cost x standing levels) / max(0.5, 1 + build efficiency) x the construction goods' price
+# factor. Efficiency = the location's local term + the owner's global term + one category term (urban or rural by the
+# location's city status; forts, ports and foreign buildings their own; mills none) + the location's new-building term
+# for a building that does not stand yet.
+
+# 1 + the efficiency every building gets here.
+pp_cplan_eff_base = {
+	value = 1
+	add = modifier:local_build_buildings_efficiency
+	owner ?= { add = modifier:global_build_buildings_efficiency }
+	if = {
+		limit = {
+			exists = scope:pp_cplan_btype
+			NOT = { has_building = scope:pp_cplan_btype }
+		}
+		add = modifier:local_build_new_buildings_efficiency
+	}
+}
+pp_cplan_eff_std = {
+	value = pp_cplan_eff_base
+	if = {
+		limit = { is_city = yes }
+		owner ?= { add = modifier:global_urban_build_buildings_efficiency }
+	}
+	else = {
+		owner ?= { add = modifier:global_rural_build_buildings_efficiency }
+	}
+	min = 0.5
+}
+pp_cplan_eff_fort = {
+	value = pp_cplan_eff_base
+	owner ?= { add = modifier:global_fort_build_buildings_efficiency }
+	min = 0.5
+}
+pp_cplan_eff_port = {
+	value = pp_cplan_eff_base
+	add = modifier:local_port_build_buildings_efficiency
+	owner ?= { add = modifier:global_port_build_buildings_efficiency }
+	min = 0.5
+}
+pp_cplan_eff_foreign = {
+	value = pp_cplan_eff_base
+	owner ?= { add = modifier:global_foreign_build_buildings_efficiency }
+	min = 0.5
+}
+pp_cplan_eff_mill = {
+	value = pp_cplan_eff_base
+	min = 0.5
+}
+
+# Standing levels and levels under construction of scope:pp_cplan_btype here.
+pp_cplan_bt_levels = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_type = scope:pp_cplan_btype }
+		add = building_level
+	}
+}
+pp_cplan_bt_queued = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_type = scope:pp_cplan_btype }
+		add = building_levels_under_construction
+	}
+}
+
+# Monthly profit per level of the standing scope:pp_cplan_btype here.
+pp_cplan_bt_profit = {
+	value = 0
+	every_buildings_in_location = {
+		limit = {
+			building_type = scope:pp_cplan_btype
+			building_level > 0
+		}
+		add = {
+			value = building_profit
+			divide = building_level
+		}
+	}
+}
+
+# The gold the next level of scope:pp_cplan_btype costs here.
+pp_cplan_est_cost = {
+	value = scope:pp_cplan_btype.building_base_cost_in_gold
+	multiply = {
+		value = pp_cplan_bt_levels
+		multiply = scope:pp_cplan_ipl
+		add = 1
+	}
+	divide = scope:pp_cplan_ef
+	multiply = scope:pp_cplan_pf
+}
+
+# Years the next level of scope:pp_cplan_btype takes to pay back its cost from the profit per level standing here
+# (999 without profit).
+pp_cplan_est_payback_years = {
+	value = 999
+	if = {
+		limit = { pp_cplan_bt_profit > 0.001 }
+		value = pp_cplan_est_cost
+		divide = pp_cplan_bt_profit
+		divide = 12
+	}
+	max = 999
 }
 
 # ---- Panel readouts ----
@@ -74,7 +193,7 @@ pp_cplan_on_n = {
 	}
 }
 
-# Country scope: 1 while a rule group runs (they run by default).
+# Country scope: 1 while a rule group runs (they run by default; location rules while a location has its own).
 pp_cplan_food_n = {
 	value = 1
 	if = {
@@ -94,6 +213,27 @@ pp_cplan_goods_n = {
 	if = {
 		limit = { has_variable = pp_cplan_goods_off }
 		value = 0
+	}
+}
+pp_cplan_location_rules_n = {
+	value = 0
+	if = {
+		limit = { pp_cplan_has_own_locations = yes }
+		value = 1
+	}
+}
+
+# Country scope: locations of the country with own rules.
+pp_cplan_own_count = {
+	value = 0
+	every_in_list = {
+		variable = pp_cplan_own
+		limit = {
+			owner ?= root
+			has_variable = pp_cplan_mode
+			var:pp_cplan_mode < 101.5
+		}
+		add = 1
 	}
 }
 
@@ -120,6 +260,16 @@ pp_cplan_reserve_gold_n = {
 	value = pp_cplan_reserve_gold
 }
 
+# Country scope: the profile last loaded (0 none).
+pp_cplan_profile_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_profile }
+		value = var:pp_cplan_profile
+		subtract = 100
+	}
+}
+
 # Province scope: the rule's state after the last pass (0 not run yet, 1 building, 2 blocked, 3 in band, 4 above band,
 # 5 hands off, 7 held back by the budget, 8 store not counted yet, 9 store full and no Granary possible).
 pp_cplan_status_n = {
@@ -142,7 +292,7 @@ pp_cplan_stored_n = {
 	min = 0
 }
 
-# Location scope: the logistics override (0 follow the plan, 1 always, 2 never) and Hands off (1).
+# Location scope: the logistics override (0 follow the plan, 1 always, 2 never).
 pp_cplan_logi_n = {
 	value = 0
 	if = {
@@ -151,15 +301,61 @@ pp_cplan_logi_n = {
 		subtract = 100
 	}
 }
-pp_cplan_here_n = {
+
+# Location scope: the mode (0 the plan's global rules, 1 own rules, 2 hands off) and the template last applied (0 none
+# or edited since).
+pp_cplan_mode_n = {
 	value = 0
 	if = {
-		limit = { has_variable = pp_cplan_here_off }
-		value = 1
+		limit = { has_variable = pp_cplan_mode }
+		value = var:pp_cplan_mode
+		subtract = 100
+	}
+}
+pp_cplan_tpl_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_tpl }
+		value = var:pp_cplan_tpl
+		subtract = 100
 	}
 }
 
-# Location scope: why the plan built here last month (1 food, 2 logistics, 3 goods).
+# Location scope: the plan's payback estimate (years) of rule 1..4 at its last pass (0 none yet).
+pp_cplan_r1_est_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r1_est }
+		value = var:pp_cplan_r1_est
+		subtract = 100
+	}
+}
+pp_cplan_r2_est_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r2_est }
+		value = var:pp_cplan_r2_est
+		subtract = 100
+	}
+}
+pp_cplan_r3_est_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r3_est }
+		value = var:pp_cplan_r3_est
+		subtract = 100
+	}
+}
+pp_cplan_r4_est_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r4_est }
+		value = var:pp_cplan_r4_est
+		subtract = 100
+	}
+}
+
+# Location scope: why the plan built here last month (1 food, 2 logistics, 3 goods, 4 a location rule).
 pp_cplan_why_n = {
 	value = 0
 	if = {
@@ -169,7 +365,7 @@ pp_cplan_why_n = {
 	}
 }
 
-# Location scope: market access in %, and the owner's line, for the Logistics tab.
+# Location scope: market access in %, for the Logistics tab.
 pp_cplan_access_here = {
 	value = market_access
 	multiply = 100

@@ -1,10 +1,10 @@
 ﻿# Prosper or Perish - Construction Plan triggers (player-only construction rules; see on_action/pp_construction_plan.txt).
-# Every trigger here runs inside pp_cplan_run, where scope:pp_cplan_country is the player country.
+# Every trigger here runs inside pp_cplan_run, where scope:pp_cplan_country is the player country, unless noted.
 
-# Location scope: the plan may build here (the player's own location, not set to Hands off).
+# Location scope: the global rules may build here (the player's own location, neither own rules nor hands off).
 pp_cplan_location_ok = {
 	owner ?= scope:pp_cplan_country
-	NOT = { has_variable = pp_cplan_here_off }
+	NOT = { has_variable = pp_cplan_mode }
 }
 
 # Any scope: the month's budget is not used up (constructions started this month, also within the share of the
@@ -30,5 +30,41 @@ pp_cplan_logistics_wanted = {
 	OR = {
 		pp_cplan_logi_n > 0.5
 		market_access < pp_cplan_access_line
+	}
+}
+
+# Country scope (root = this country, in the pass and in the panel): at least one location of the country follows its
+# own rules.
+pp_cplan_has_own_locations = {
+	any_in_list = {
+		variable = pp_cplan_own
+		owner ?= root
+		has_variable = pp_cplan_mode
+		var:pp_cplan_mode < 101.5
+	}
+}
+
+# Location scope: the condition of rule $n$ holds (no condition = always).
+pp_cplan_rule_cond = {
+	OR = {
+		NOT = { has_variable = pp_cplan_r$n$_m }
+		AND = {
+			NOT = { has_variable = pp_cplan_r$n$_c }
+			pp_cplan_r$n$_now >= pp_cplan_r$n$_t_n
+		}
+		AND = {
+			has_variable = pp_cplan_r$n$_c
+			pp_cplan_r$n$_now < pp_cplan_r$n$_t_n
+		}
+	}
+}
+
+# Location scope, after pp_cplan_btype_data: rule $n$'s payback limit allows the next level (no limit, or a building
+# that does not stand yet, or the plan's estimate within the limit).
+pp_cplan_rule_payback_ok = {
+	OR = {
+		NOT = { has_variable = pp_cplan_r$n$_pb }
+		pp_cplan_bt_levels < 0.5
+		pp_cplan_est_payback_years <= pp_cplan_r$n$_pb_n
 	}
 }

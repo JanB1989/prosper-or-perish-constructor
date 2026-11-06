@@ -1,7 +1,51 @@
 # Player Construction Manager: design brainstorm
 
-Status 2026-11-06: **first version built** on branch `player-construction-manager` (architecture B, tested in game: new
-game as England, 1337-04 to 1337-06, error.log clean). Player-only: the AI keeps its own logic and is never touched.
+Status 2026-11-06: **v2 built** on branch `player-construction-manager` (architecture B; v1 and v2 tested in new games as
+England, error.log clean of plan lines). Player-only: the AI keeps its own logic and is never touched.
+
+## Built (v2, Jan 2026-11-06: payback instead of cost/profit, a location layer, templates, profiles)
+
+- **Payback is the one money number.** Payback = the gold the next level costs here over the profit one level makes
+  here each month, in years. The cost is the engine's own formula, fitted in game on 158 real constructions (all within
+  1 %): base price (`building_base_cost_in_gold`) x (1 + increase_per_level_cost x standing levels) / max(0.5, 1 + build
+  efficiency: location + owner global + one category term, urban or rural by `is_city`, forts/ports/foreign their own,
+  mills none, + the new-building term) x the construction goods' price factor (each good's price / default clamped to
+  1 + MIN/MAX_PRICE_IMPACT, 0.5..2.5 in PP, averaged by the demand's amounts; `default_construct_building` when a building
+  names none). In game the plan's cost matched the GUI's `GetBuildOrExpandBuildingCost` to the cent (Woking Cookshop
+  30.01). Profit: a standing building's `building_profit / building_level` (what PP's build panel also uses); a building
+  that does not stand yet shows the engine's estimate (`GetBuildingTypeProfitInLocation`) and its first level needs no
+  payback check.
+- **Goods "Expand"** = one more level of a standing producer whose next level pays back within the country's payback line
+  (default 10 years, Goods tab). Keep stocked stays a stock rule.
+- **Two layers.** Each location has a mode: the plan's rules (default), **Own Rules** (the global food, logistics and goods
+  rules leave it alone; only its own list builds there) or Hands Off. Own rules run first each month, as their own rule
+  group with an equal share of the monthly limit.
+- **Location rules** (Here tab; up to 4 per location): build a building up to a level, one level at a time, when a
+  condition holds (Always or one of 18 numbers: the game's location filter numbers - population, peasants, idle peasants
+  and laborers, employment, market access, control, proximity, development, prosperity, building levels, tax base, RGO
+  profit, literacy, coast, river - plus PP's stored food and arable land; at least / below a threshold that starts at the
+  value here) and the next level pays back within its limit. Each rule shows its state after the last pass (started,
+  waiting for the condition, done, a level under construction, payback above the limit, cannot be built now, budget,
+  market lacks the construction goods).
+- **Getting there:** a cog in the location window header (player-owned locations) opens the Here tab on that location;
+  the Locations tab lists every province and location with its mode, Edit, and template buttons. The Here tab lists the
+  buildings standing there and the ones that could be built there, each with its payback, and an Add button.
+- **Templates** (4 per country): save a location's mode and rules, apply them to one location (Here or Locations tab) or to
+  every location of a province (province row in Locations, or the Province button in Here). A location shows "template
+  N" until edited.
+- **Profiles** (3 per country, Plan tab): save and load the country settings (reserve, limit, logistics line, stock
+  line, payback line, which rule groups run, every good's mode). Province focuses and location rules are not in them.
+- **Guards found in the in-game tests:** the construction goods must be in the location's market (one unit's need of each;
+  the engine stalls a construction whose market lacks them: 3 Cookshops in Northumberland stalled on Edinburgh masonry);
+  never a second level of the same building in a location while one is under construction (a Granary had +5 queued in
+  Plymouth); the food rule waits in a province while one of its food buildings is under construction there.
+- Engine facts (memory `player-construction-manager`): `NOT = { a b }` means neither a nor b; `construct_building` checks no
+  `allow` (it queued Cookshops outside province capitals until the guard was fixed); `can_build_building` does check
+  `allow` and max levels; building conditions of foreign and jewelry buildings read `scope:actor` (the plan sets it);
+  `num_pop_type:peasants` (colon form); a GUI reads a scope variable with `Scope.Var('x')`, `.IsSet`.
+- Not built yet: Upgrades rule group; filter by the game's own search filters inside our lists (the conditions mirror their
+  numbers instead); per-template names; "Expand" and "Never" for farms bought by the food rule are untested at scale; a
+  long run (cost not profiled).
 
 ## Built (v1)
 

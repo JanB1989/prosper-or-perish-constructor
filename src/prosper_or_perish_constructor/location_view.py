@@ -16,7 +16,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from prosper_or_perish_constructor import arable_land_bar, attribute_tooltips, location_status
+from prosper_or_perish_constructor import arable_land_bar, attribute_tooltips, construction_plan, location_status
 from prosper_or_perish_constructor.worldbuilder.geography import EXPORT_BUILD_FILE, LOCATION_WINDOW
 
 _FOOD_PERCENT = 'value = "[FixedPointToFloat(Province.GetFoodCapacityPercent)]"'
@@ -614,6 +614,8 @@ def build_window(export_text: str, mod_root: Path, vanilla: Path | None, stored_
     merged = show_every_timed_modifier(move_modifier_row(merged), shown_by_chips(mod_root, vanilla, goods, bool(harvests.keys)))
     # the land state (abundant / available / overused, with its strength) sits beside the population bars only
     merged = arable_land_bar.add_to_window(merged, location_status.land_state(land_rows, "pp_land_bar_state"))
+    # the Construction Plan's cog in the header (construction_plan.py)
+    merged = construction_plan.add_location_cog(merged)
     return widen_window(chip_frames(merged))
 
 

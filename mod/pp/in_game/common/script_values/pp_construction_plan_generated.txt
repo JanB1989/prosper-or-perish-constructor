@@ -38,6 +38,15 @@ pp_cplan_keep_months = {
 		subtract = 100
 	}
 }
+# Country scope: the Expand line, payback of the next level in years.
+pp_cplan_payback_line = {
+	value = 10
+	if = {
+		limit = { has_variable = pp_cplan_payback }
+		value = var:pp_cplan_payback
+		subtract = 100
+	}
+}
 # Country scope: the province focus count, for the panel's cycle (bands + hands off + custom).
 pp_cplan_focus_count = { value = 6 }
 # Country scope: farm sites tried per province.
@@ -210,7 +219,7 @@ pp_cplan_farm_score_cattle = {
 
 # ---- Goods, per good ----
 
-# camels: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# camels: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_camels = {
 	value = 0
 	if = {
@@ -246,7 +255,7 @@ pp_cplan_site_camels = {
 	min = 1
 }
 
-# elephants: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# elephants: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_elephants = {
 	value = 0
 	if = {
@@ -282,7 +291,7 @@ pp_cplan_site_elephants = {
 	min = 1
 }
 
-# horses: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# horses: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_horses = {
 	value = 0
 	if = {
@@ -318,7 +327,7 @@ pp_cplan_site_horses = {
 	min = 1
 }
 
-# livestock: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# livestock: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_livestock = {
 	value = 0
 	if = {
@@ -354,7 +363,7 @@ pp_cplan_site_livestock = {
 	min = 1
 }
 
-# wool: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# wool: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_wool = {
 	value = 0
 	if = {
@@ -390,7 +399,7 @@ pp_cplan_site_wool = {
 	min = 1
 }
 
-# beeswax: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# beeswax: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_beeswax = {
 	value = 0
 	if = {
@@ -426,7 +435,7 @@ pp_cplan_site_beeswax = {
 	min = 1
 }
 
-# dyes: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# dyes: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_dyes = {
 	value = 0
 	if = {
@@ -462,7 +471,7 @@ pp_cplan_site_dyes = {
 	min = 1
 }
 
-# incense: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# incense: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_incense = {
 	value = 0
 	if = {
@@ -498,7 +507,7 @@ pp_cplan_site_incense = {
 	min = 1
 }
 
-# tobacco: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# tobacco: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_tobacco = {
 	value = 0
 	if = {
@@ -534,7 +543,7 @@ pp_cplan_site_tobacco = {
 	min = 1
 }
 
-# cotton: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# cotton: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_cotton = {
 	value = 0
 	if = {
@@ -570,7 +579,7 @@ pp_cplan_site_cotton = {
 	min = 1
 }
 
-# fiber_crops: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# fiber_crops: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_fiber_crops = {
 	value = 0
 	if = {
@@ -606,7 +615,7 @@ pp_cplan_site_fiber_crops = {
 	min = 1
 }
 
-# silk: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# silk: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_silk = {
 	value = 0
 	if = {
@@ -642,7 +651,7 @@ pp_cplan_site_silk = {
 	min = 1
 }
 
-# chili: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# chili: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_chili = {
 	value = 0
 	if = {
@@ -678,7 +687,7 @@ pp_cplan_site_chili = {
 	min = 1
 }
 
-# cloves: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# cloves: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_cloves = {
 	value = 0
 	if = {
@@ -714,7 +723,7 @@ pp_cplan_site_cloves = {
 	min = 1
 }
 
-# pepper: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# pepper: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_pepper = {
 	value = 0
 	if = {
@@ -750,7 +759,7 @@ pp_cplan_site_pepper = {
 	min = 1
 }
 
-# saffron: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# saffron: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_saffron = {
 	value = 0
 	if = {
@@ -786,7 +795,7 @@ pp_cplan_site_saffron = {
 	min = 1
 }
 
-# legumes: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# legumes: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_legumes = {
 	value = 0
 	if = {
@@ -822,7 +831,7 @@ pp_cplan_site_legumes = {
 	min = 1
 }
 
-# maize: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# maize: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_maize = {
 	value = 0
 	if = {
@@ -858,7 +867,7 @@ pp_cplan_site_maize = {
 	min = 1
 }
 
-# millet: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# millet: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_millet = {
 	value = 0
 	if = {
@@ -894,7 +903,7 @@ pp_cplan_site_millet = {
 	min = 1
 }
 
-# potato: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# potato: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_potato = {
 	value = 0
 	if = {
@@ -930,7 +939,7 @@ pp_cplan_site_potato = {
 	min = 1
 }
 
-# rice: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# rice: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_rice = {
 	value = 0
 	if = {
@@ -966,7 +975,7 @@ pp_cplan_site_rice = {
 	min = 1
 }
 
-# wheat: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# wheat: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_wheat = {
 	value = 0
 	if = {
@@ -1002,7 +1011,7 @@ pp_cplan_site_wheat = {
 	min = 1
 }
 
-# cocoa: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# cocoa: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_cocoa = {
 	value = 0
 	if = {
@@ -1038,7 +1047,7 @@ pp_cplan_site_cocoa = {
 	min = 1
 }
 
-# coffee: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# coffee: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_coffee = {
 	value = 0
 	if = {
@@ -1074,7 +1083,7 @@ pp_cplan_site_coffee = {
 	min = 1
 }
 
-# tea: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# tea: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_tea = {
 	value = 0
 	if = {
@@ -1110,7 +1119,7 @@ pp_cplan_site_tea = {
 	min = 1
 }
 
-# sugar: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# sugar: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_sugar = {
 	value = 0
 	if = {
@@ -1146,7 +1155,7 @@ pp_cplan_site_sugar = {
 	min = 1
 }
 
-# fruit: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# fruit: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_fruit = {
 	value = 0
 	if = {
@@ -1182,7 +1191,7 @@ pp_cplan_site_fruit = {
 	min = 1
 }
 
-# olives: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# olives: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_olives = {
 	value = 0
 	if = {
@@ -1218,7 +1227,7 @@ pp_cplan_site_olives = {
 	min = 1
 }
 
-# wine: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# wine: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_wine = {
 	value = 0
 	if = {
@@ -1254,7 +1263,7 @@ pp_cplan_site_wine = {
 	min = 1
 }
 
-# lumber: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# lumber: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_lumber = {
 	value = 0
 	if = {
@@ -1290,7 +1299,7 @@ pp_cplan_site_lumber = {
 	min = 1
 }
 
-# fish: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# fish: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_fish = {
 	value = 0
 	if = {
@@ -1326,7 +1335,7 @@ pp_cplan_site_fish = {
 	min = 1
 }
 
-# pearls: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# pearls: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_pearls = {
 	value = 0
 	if = {
@@ -1362,7 +1371,7 @@ pp_cplan_site_pearls = {
 	min = 1
 }
 
-# clay: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# clay: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_clay = {
 	value = 0
 	if = {
@@ -1398,7 +1407,7 @@ pp_cplan_site_clay = {
 	min = 1
 }
 
-# sand: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# sand: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_sand = {
 	value = 0
 	if = {
@@ -1434,7 +1443,7 @@ pp_cplan_site_sand = {
 	min = 1
 }
 
-# medicaments: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# medicaments: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_medicaments = {
 	value = 0
 	if = {
@@ -1470,7 +1479,7 @@ pp_cplan_site_medicaments = {
 	min = 1
 }
 
-# salt: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# salt: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_salt = {
 	value = 0
 	if = {
@@ -1506,7 +1515,7 @@ pp_cplan_site_salt = {
 	min = 1
 }
 
-# amber: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# amber: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_amber = {
 	value = 0
 	if = {
@@ -1542,7 +1551,7 @@ pp_cplan_site_amber = {
 	min = 1
 }
 
-# ivory: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# ivory: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_ivory = {
 	value = 0
 	if = {
@@ -1578,7 +1587,7 @@ pp_cplan_site_ivory = {
 	min = 1
 }
 
-# wild_game: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# wild_game: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_wild_game = {
 	value = 0
 	if = {
@@ -1614,7 +1623,7 @@ pp_cplan_site_wild_game = {
 	min = 1
 }
 
-# beer: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# beer: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_beer = {
 	value = 0
 	if = {
@@ -1650,7 +1659,7 @@ pp_cplan_site_beer = {
 	min = 1
 }
 
-# liquor: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# liquor: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_liquor = {
 	value = 0
 	if = {
@@ -1686,7 +1695,7 @@ pp_cplan_site_liquor = {
 	min = 1
 }
 
-# books: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# books: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_books = {
 	value = 0
 	if = {
@@ -1722,7 +1731,7 @@ pp_cplan_site_books = {
 	min = 1
 }
 
-# paper: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# paper: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_paper = {
 	value = 0
 	if = {
@@ -1758,7 +1767,7 @@ pp_cplan_site_paper = {
 	min = 1
 }
 
-# slaves_goods: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# slaves_goods: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_slaves_goods = {
 	value = 0
 	if = {
@@ -1794,7 +1803,7 @@ pp_cplan_site_slaves_goods = {
 	min = 1
 }
 
-# glass: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# glass: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_glass = {
 	value = 0
 	if = {
@@ -1830,7 +1839,7 @@ pp_cplan_site_glass = {
 	min = 1
 }
 
-# masonry: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# masonry: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_masonry = {
 	value = 0
 	if = {
@@ -1866,7 +1875,7 @@ pp_cplan_site_masonry = {
 	min = 1
 }
 
-# pottery: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# pottery: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_pottery = {
 	value = 0
 	if = {
@@ -1902,7 +1911,7 @@ pp_cplan_site_pottery = {
 	min = 1
 }
 
-# tar: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# tar: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_tar = {
 	value = 0
 	if = {
@@ -1938,7 +1947,7 @@ pp_cplan_site_tar = {
 	min = 1
 }
 
-# furniture: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# furniture: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_furniture = {
 	value = 0
 	if = {
@@ -1974,7 +1983,7 @@ pp_cplan_site_furniture = {
 	min = 1
 }
 
-# jewelry: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# jewelry: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_jewelry = {
 	value = 0
 	if = {
@@ -2010,7 +2019,7 @@ pp_cplan_site_jewelry = {
 	min = 1
 }
 
-# lacquerware: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# lacquerware: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_lacquerware = {
 	value = 0
 	if = {
@@ -2046,7 +2055,7 @@ pp_cplan_site_lacquerware = {
 	min = 1
 }
 
-# porcelain: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# porcelain: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_porcelain = {
 	value = 0
 	if = {
@@ -2082,7 +2091,7 @@ pp_cplan_site_porcelain = {
 	min = 1
 }
 
-# steel: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# steel: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_steel = {
 	value = 0
 	if = {
@@ -2118,7 +2127,7 @@ pp_cplan_site_steel = {
 	min = 1
 }
 
-# tools: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# tools: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_tools = {
 	value = 0
 	if = {
@@ -2154,7 +2163,7 @@ pp_cplan_site_tools = {
 	min = 1
 }
 
-# cannons: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# cannons: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_cannons = {
 	value = 0
 	if = {
@@ -2190,7 +2199,7 @@ pp_cplan_site_cannons = {
 	min = 1
 }
 
-# firearms: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# firearms: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_firearms = {
 	value = 0
 	if = {
@@ -2226,7 +2235,7 @@ pp_cplan_site_firearms = {
 	min = 1
 }
 
-# weaponry: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# weaponry: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_weaponry = {
 	value = 0
 	if = {
@@ -2262,7 +2271,7 @@ pp_cplan_site_weaponry = {
 	min = 1
 }
 
-# naval_supplies: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# naval_supplies: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_naval_supplies = {
 	value = 0
 	if = {
@@ -2298,7 +2307,7 @@ pp_cplan_site_naval_supplies = {
 	min = 1
 }
 
-# victuals: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# victuals: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_victuals = {
 	value = 0
 	if = {
@@ -2334,7 +2343,7 @@ pp_cplan_site_victuals = {
 	min = 1
 }
 
-# cloth: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# cloth: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_cloth = {
 	value = 0
 	if = {
@@ -2370,7 +2379,7 @@ pp_cplan_site_cloth = {
 	min = 1
 }
 
-# fine_cloth: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# fine_cloth: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_fine_cloth = {
 	value = 0
 	if = {
@@ -2406,7 +2415,7 @@ pp_cplan_site_fine_cloth = {
 	min = 1
 }
 
-# leather: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# leather: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_leather = {
 	value = 0
 	if = {
@@ -2442,7 +2451,7 @@ pp_cplan_site_leather = {
 	min = 1
 }
 
-# marble: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# marble: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_marble = {
 	value = 0
 	if = {
@@ -2478,7 +2487,7 @@ pp_cplan_site_marble = {
 	min = 1
 }
 
-# stone: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# stone: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_stone = {
 	value = 0
 	if = {
@@ -2514,7 +2523,7 @@ pp_cplan_site_stone = {
 	min = 1
 }
 
-# coal: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# coal: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_coal = {
 	value = 0
 	if = {
@@ -2550,7 +2559,7 @@ pp_cplan_site_coal = {
 	min = 1
 }
 
-# alum: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# alum: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_alum = {
 	value = 0
 	if = {
@@ -2586,7 +2595,7 @@ pp_cplan_site_alum = {
 	min = 1
 }
 
-# mercury: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# mercury: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_mercury = {
 	value = 0
 	if = {
@@ -2622,7 +2631,7 @@ pp_cplan_site_mercury = {
 	min = 1
 }
 
-# saltpeter: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# saltpeter: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_saltpeter = {
 	value = 0
 	if = {
@@ -2658,7 +2667,7 @@ pp_cplan_site_saltpeter = {
 	min = 1
 }
 
-# copper: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# copper: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_copper = {
 	value = 0
 	if = {
@@ -2694,7 +2703,7 @@ pp_cplan_site_copper = {
 	min = 1
 }
 
-# iron: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# iron: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_iron = {
 	value = 0
 	if = {
@@ -2730,7 +2739,7 @@ pp_cplan_site_iron = {
 	min = 1
 }
 
-# lead: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# lead: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_lead = {
 	value = 0
 	if = {
@@ -2766,7 +2775,7 @@ pp_cplan_site_lead = {
 	min = 1
 }
 
-# tin: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# tin: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_tin = {
 	value = 0
 	if = {
@@ -2802,7 +2811,7 @@ pp_cplan_site_tin = {
 	min = 1
 }
 
-# gems: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# gems: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_gems = {
 	value = 0
 	if = {
@@ -2838,7 +2847,7 @@ pp_cplan_site_gems = {
 	min = 1
 }
 
-# goods_gold: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# goods_gold: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_goods_gold = {
 	value = 0
 	if = {
@@ -2874,7 +2883,7 @@ pp_cplan_site_goods_gold = {
 	min = 1
 }
 
-# silver: Country scope: the mode (0 off, 1 keep stocked, 2 expand while profitable, 3 never).
+# silver: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).
 pp_cplan_mode_silver = {
 	value = 0
 	if = {
@@ -2910,3 +2919,1839 @@ pp_cplan_site_silver = {
 	min = 1
 }
 
+
+# ---- Build cost: the construction goods' price factor (location scope, its market) ----
+# Each good's price / default price, clamped to 0.5..2.5 (1 + MIN/MAX_PRICE_IMPACT), averaged by the
+# demand's amounts; 1 where the location has no market or the demand names no goods.
+
+pp_cplan_cd_academy_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:books)" divide = "default_price(goods:books)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:paper)" divide = "default_price(goods:paper)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 1 }
+		divide = 6
+	}
+}
+pp_cplan_cd_admiralty_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:fine_cloth)" divide = "default_price(goods:fine_cloth)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:marble)" divide = "default_price(goods:marble)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 5 }
+		add = { value = "market.market_price(goods:naval_supplies)" divide = "default_price(goods:naval_supplies)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 4 }
+		divide = 14
+	}
+}
+pp_cplan_cd_aqueduct_system_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.25 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.3 }
+		add = { value = "market.market_price(goods:stone)" divide = "default_price(goods:stone)" min = 0.5 max = 2.5 multiply = 0.3 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 0.15 }
+		divide = 1
+	}
+}
+pp_cplan_cd_art_school_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:cloth)" divide = "default_price(goods:cloth)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 1 }
+		divide = 3
+	}
+}
+pp_cplan_cd_bank_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:paper)" divide = "default_price(goods:paper)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 0.2 }
+		divide = 1
+	}
+}
+pp_cplan_cd_basic_construction_needs = { value = 1 }
+pp_cplan_cd_bolshoi_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:goods_gold)" divide = "default_price(goods:goods_gold)" min = 0.5 max = 2.5 multiply = 0.5 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:marble)" divide = "default_price(goods:marble)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 3 }
+		divide = 7.5
+	}
+}
+pp_cplan_cd_bridge_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.25 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.25 }
+		divide = 0.5
+	}
+}
+pp_cplan_cd_capital_building_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:fine_cloth)" divide = "default_price(goods:fine_cloth)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:goods_gold)" divide = "default_price(goods:goods_gold)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:marble)" divide = "default_price(goods:marble)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 2 }
+		divide = 12
+	}
+}
+pp_cplan_cd_caravan_stop_building_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:camels)" divide = "default_price(goods:camels)" min = 0.5 max = 2.5 multiply = 0.15 }
+		add = { value = "market.market_price(goods:goods_gold)" divide = "default_price(goods:goods_gold)" min = 0.5 max = 2.5 multiply = 0.05 }
+		add = { value = "market.market_price(goods:salt)" divide = "default_price(goods:salt)" min = 0.5 max = 2.5 multiply = 0.1 }
+		divide = 0.3
+	}
+}
+pp_cplan_cd_caravanserai_building_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:camels)" divide = "default_price(goods:camels)" min = 0.5 max = 2.5 multiply = 0.15 }
+		add = { value = "market.market_price(goods:horses)" divide = "default_price(goods:horses)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.3 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.1 }
+		divide = 0.75
+	}
+}
+pp_cplan_cd_cardinal_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:books)" divide = "default_price(goods:books)" min = 0.5 max = 2.5 multiply = 0.1 }
+		add = { value = "market.market_price(goods:fine_cloth)" divide = "default_price(goods:fine_cloth)" min = 0.5 max = 2.5 multiply = 0.1 }
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 0.4 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.5 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.25 }
+		divide = 1.35
+	}
+}
+pp_cplan_cd_castle_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:stone)" divide = "default_price(goods:stone)" min = 0.5 max = 2.5 multiply = 2 }
+		divide = 2
+	}
+}
+pp_cplan_cd_city_walls_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:stone)" divide = "default_price(goods:stone)" min = 0.5 max = 2.5 multiply = 5 }
+		divide = 5
+	}
+}
+pp_cplan_cd_college_of_poets_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:books)" divide = "default_price(goods:books)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:marble)" divide = "default_price(goods:marble)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 3 }
+		divide = 10
+	}
+}
+pp_cplan_cd_colony_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.5 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.5 }
+		divide = 1
+	}
+}
+pp_cplan_cd_default_construct_building = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.1 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.1 }
+		divide = 0.2
+	}
+}
+pp_cplan_cd_dun_fort_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 1.5 }
+		divide = 1.5
+	}
+}
+pp_cplan_cd_early_capital_building_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:fine_cloth)" divide = "default_price(goods:fine_cloth)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:goods_gold)" divide = "default_price(goods:goods_gold)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 2 }
+		divide = 10
+	}
+}
+pp_cplan_cd_early_capital_building_silver_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:fine_cloth)" divide = "default_price(goods:fine_cloth)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:silver)" divide = "default_price(goods:silver)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 2 }
+		divide = 10
+	}
+}
+pp_cplan_cd_early_soldier_building_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:leather)" divide = "default_price(goods:leather)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.4 }
+		add = { value = "market.market_price(goods:weaponry)" divide = "default_price(goods:weaponry)" min = 0.5 max = 2.5 multiply = 1 }
+		divide = 3.4
+	}
+}
+pp_cplan_cd_eghabho_nore_mansion_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 4 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:paper)" divide = "default_price(goods:paper)" min = 0.5 max = 2.5 multiply = 1 }
+		divide = 7
+	}
+}
+pp_cplan_cd_estate_construct_building = { value = 1 }
+pp_cplan_cd_farm_constructions = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.2 }
+		divide = 0.2
+	}
+}
+pp_cplan_cd_fondaco_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:paper)" divide = "default_price(goods:paper)" min = 0.5 max = 2.5 multiply = 0.1 }
+		divide = 0.7
+	}
+}
+pp_cplan_cd_fort_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:stone)" divide = "default_price(goods:stone)" min = 0.5 max = 2.5 multiply = 2 }
+		divide = 2
+	}
+}
+pp_cplan_cd_fortress_church_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 1.5 }
+		divide = 1.5
+	}
+}
+pp_cplan_cd_fortress_granary_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 1.5 }
+		divide = 1.5
+	}
+}
+pp_cplan_cd_globe_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 0.25 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 5 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 0.5 }
+		divide = 6.75
+	}
+}
+pp_cplan_cd_granary_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.5 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.5 }
+		divide = 1
+	}
+}
+pp_cplan_cd_grand_apartment_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:marble)" divide = "default_price(goods:marble)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 1 }
+		divide = 4
+	}
+}
+pp_cplan_cd_guild_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.5 }
+		divide = 0.5
+	}
+}
+pp_cplan_cd_hanseatic_town_hall_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:fine_cloth)" divide = "default_price(goods:fine_cloth)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:goods_gold)" divide = "default_price(goods:goods_gold)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:marble)" divide = "default_price(goods:marble)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 2 }
+		divide = 14
+	}
+}
+pp_cplan_cd_herrenchiemsee_abbey_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:books)" divide = "default_price(goods:books)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:marble)" divide = "default_price(goods:marble)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 3 }
+		divide = 10
+	}
+}
+pp_cplan_cd_hexamilion_wall_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 6 }
+		divide = 6
+	}
+}
+pp_cplan_cd_horse_breeders_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:horses)" divide = "default_price(goods:horses)" min = 0.5 max = 2.5 multiply = 0.15 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.5 }
+		add = { value = "market.market_price(goods:wheat)" divide = "default_price(goods:wheat)" min = 0.5 max = 2.5 multiply = 0.25 }
+		divide = 1.1
+	}
+}
+pp_cplan_cd_ibadat_khana_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:books)" divide = "default_price(goods:books)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:paper)" divide = "default_price(goods:paper)" min = 0.5 max = 2.5 multiply = 2 }
+		divide = 7
+	}
+}
+pp_cplan_cd_important_building_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:fine_cloth)" divide = "default_price(goods:fine_cloth)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:marble)" divide = "default_price(goods:marble)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 5 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 4 }
+		divide = 12
+	}
+}
+pp_cplan_cd_incamisana_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:stone)" divide = "default_price(goods:stone)" min = 0.5 max = 2.5 multiply = 0.5 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 0.2 }
+		divide = 0.7
+	}
+}
+pp_cplan_cd_japanese_clan_building_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.5 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.1 }
+		divide = 0.6
+	}
+}
+pp_cplan_cd_jewish_district_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:sand)" divide = "default_price(goods:sand)" min = 0.5 max = 2.5 multiply = 2 }
+		divide = 6
+	}
+}
+pp_cplan_cd_khmer_baray_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 3 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 2 }
+		divide = 7
+	}
+}
+pp_cplan_cd_kontor_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:paper)" divide = "default_price(goods:paper)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 0.2 }
+		divide = 1
+	}
+}
+pp_cplan_cd_korean_gunnery_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:firearms)" divide = "default_price(goods:firearms)" min = 0.5 max = 2.5 multiply = 0.5 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.5 }
+		divide = 1
+	}
+}
+pp_cplan_cd_kremlin_building_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:clay)" divide = "default_price(goods:clay)" min = 0.5 max = 2.5 multiply = 0.1 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.1 }
+		add = { value = "market.market_price(goods:weaponry)" divide = "default_price(goods:weaponry)" min = 0.5 max = 2.5 multiply = 0.25 }
+		divide = 0.45
+	}
+}
+pp_cplan_cd_library_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:books)" divide = "default_price(goods:books)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:paper)" divide = "default_price(goods:paper)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 1 }
+		divide = 6
+	}
+}
+pp_cplan_cd_local_governor_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:fine_cloth)" divide = "default_price(goods:fine_cloth)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 5 }
+		add = { value = "market.market_price(goods:goods_gold)" divide = "default_price(goods:goods_gold)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 5 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 5 }
+		divide = 19
+	}
+}
+pp_cplan_cd_maghreb_palm_irrigation_building_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.1 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.1 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 0.1 }
+		divide = 0.3
+	}
+}
+pp_cplan_cd_manufactory_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 0.25 }
+		divide = 2.25
+	}
+}
+pp_cplan_cd_market_center_building_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:paper)" divide = "default_price(goods:paper)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 0.2 }
+		divide = 1
+	}
+}
+pp_cplan_cd_merchant_guild_chapel_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 0.5 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 1 }
+		divide = 2.5
+	}
+}
+pp_cplan_cd_mercury_patio_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.5 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.5 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 0.5 }
+		divide = 1.5
+	}
+}
+pp_cplan_cd_mill_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 4 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 0.5 }
+		divide = 4.5
+	}
+}
+pp_cplan_cd_minting_office_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 0.1 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:marble)" divide = "default_price(goods:marble)" min = 0.5 max = 2.5 multiply = 0.25 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.1 }
+		divide = 0.65
+	}
+}
+pp_cplan_cd_nahuatl_warrior_building_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.8 }
+		add = { value = "market.market_price(goods:weaponry)" divide = "default_price(goods:weaponry)" min = 0.5 max = 2.5 multiply = 1 }
+		divide = 2.8
+	}
+}
+pp_cplan_cd_novodevichy_building_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 3 }
+		add = { value = "market.market_price(goods:weaponry)" divide = "default_price(goods:weaponry)" min = 0.5 max = 2.5 multiply = 1 }
+		divide = 5
+	}
+}
+pp_cplan_cd_opera_house_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:cloth)" divide = "default_price(goods:cloth)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 1 }
+		divide = 7
+	}
+}
+pp_cplan_cd_order_commandery_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.1 }
+		add = { value = "market.market_price(goods:weaponry)" divide = "default_price(goods:weaponry)" min = 0.5 max = 2.5 multiply = 0.1 }
+		divide = 0.4
+	}
+}
+pp_cplan_cd_order_stronghold_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.1 }
+		add = { value = "market.market_price(goods:paper)" divide = "default_price(goods:paper)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:weaponry)" divide = "default_price(goods:weaponry)" min = 0.5 max = 2.5 multiply = 0.25 }
+		divide = 0.55
+	}
+}
+pp_cplan_cd_ostrog_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 2.5 }
+		divide = 2.5
+	}
+}
+pp_cplan_cd_peel_towers_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.5 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 1 }
+		divide = 1.5
+	}
+}
+pp_cplan_cd_phanariot_district_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:sand)" divide = "default_price(goods:sand)" min = 0.5 max = 2.5 multiply = 2 }
+		divide = 6
+	}
+}
+pp_cplan_cd_plantation_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.1 }
+		add = { value = "market.market_price(goods:naval_supplies)" divide = "default_price(goods:naval_supplies)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 0.2 }
+		divide = 1.5
+	}
+}
+pp_cplan_cd_polders_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 3 }
+		divide = 4
+	}
+}
+pp_cplan_cd_pomor_outpost_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 1.5 }
+		divide = 1.5
+	}
+}
+pp_cplan_cd_por_feitoria_building_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 3 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 3 }
+		add = { value = "market.market_price(goods:naval_supplies)" divide = "default_price(goods:naval_supplies)" min = 0.5 max = 2.5 multiply = 3 }
+		divide = 9
+	}
+}
+pp_cplan_cd_por_trading_post_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 2 }
+		divide = 2
+	}
+}
+pp_cplan_cd_port_building_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.1 }
+		add = { value = "market.market_price(goods:naval_supplies)" divide = "default_price(goods:naval_supplies)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 0.2 }
+		divide = 1.5
+	}
+}
+pp_cplan_cd_pound_lock_canal_infrastructure_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.5 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.5 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 0.25 }
+		divide = 1.25
+	}
+}
+pp_cplan_cd_pp_banjara_tanda_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:cloth)" divide = "default_price(goods:cloth)" min = 0.5 max = 2.5 multiply = 0.04 }
+		add = { value = "market.market_price(goods:livestock)" divide = "default_price(goods:livestock)" min = 0.5 max = 2.5 multiply = 0.4 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.2 }
+		divide = 0.64
+	}
+}
+pp_cplan_cd_pp_capital_jewelry_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:fine_cloth)" divide = "default_price(goods:fine_cloth)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:jewelry)" divide = "default_price(goods:jewelry)" min = 0.5 max = 2.5 multiply = 0.8 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:marble)" divide = "default_price(goods:marble)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 2 }
+		divide = 10.8
+	}
+}
+pp_cplan_cd_pp_caravanserai_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:camels)" divide = "default_price(goods:camels)" min = 0.5 max = 2.5 multiply = 0.1 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.15 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:stone)" divide = "default_price(goods:stone)" min = 0.5 max = 2.5 multiply = 0.3 }
+		divide = 0.75
+	}
+}
+pp_cplan_cd_pp_carrier_inn_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:horses)" divide = "default_price(goods:horses)" min = 0.5 max = 2.5 multiply = 0.1 }
+		add = { value = "market.market_price(goods:livestock)" divide = "default_price(goods:livestock)" min = 0.5 max = 2.5 multiply = 0.15 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.25 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.1 }
+		divide = 0.6
+	}
+}
+pp_cplan_cd_pp_coastal_shipping_office_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.35 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:naval_supplies)" divide = "default_price(goods:naval_supplies)" min = 0.5 max = 2.5 multiply = 0.25 }
+		add = { value = "market.market_price(goods:tar)" divide = "default_price(goods:tar)" min = 0.5 max = 2.5 multiply = 0.15 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 0.2 }
+		divide = 1.15
+	}
+}
+pp_cplan_cd_pp_early_capital_jewelry_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:fine_cloth)" divide = "default_price(goods:fine_cloth)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:jewelry)" divide = "default_price(goods:jewelry)" min = 0.5 max = 2.5 multiply = 0.8 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 2 }
+		divide = 8.8
+	}
+}
+pp_cplan_cd_pp_funduq_jewelry_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:jewelry)" divide = "default_price(goods:jewelry)" min = 0.5 max = 2.5 multiply = 0.02 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.3 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.1 }
+		add = { value = "market.market_price(goods:paper)" divide = "default_price(goods:paper)" min = 0.5 max = 2.5 multiply = 0.1 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 0.2 }
+		divide = 0.72
+	}
+}
+pp_cplan_cd_pp_llama_caravan_post_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:livestock)" divide = "default_price(goods:livestock)" min = 0.5 max = 2.5 multiply = 0.3 }
+		add = { value = "market.market_price(goods:stone)" divide = "default_price(goods:stone)" min = 0.5 max = 2.5 multiply = 0.4 }
+		add = { value = "market.market_price(goods:wool)" divide = "default_price(goods:wool)" min = 0.5 max = 2.5 multiply = 0.08 }
+		divide = 0.78
+	}
+}
+pp_cplan_cd_pp_local_governor_jewelry_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:fine_cloth)" divide = "default_price(goods:fine_cloth)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 5 }
+		add = { value = "market.market_price(goods:jewelry)" divide = "default_price(goods:jewelry)" min = 0.5 max = 2.5 multiply = 0.8 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 5 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 5 }
+		divide = 17.8
+	}
+}
+pp_cplan_cd_pp_oasis_caravan_station_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:camels)" divide = "default_price(goods:camels)" min = 0.5 max = 2.5 multiply = 0.15 }
+		add = { value = "market.market_price(goods:clay)" divide = "default_price(goods:clay)" min = 0.5 max = 2.5 multiply = 0.4 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.1 }
+		add = { value = "market.market_price(goods:stone)" divide = "default_price(goods:stone)" min = 0.5 max = 2.5 multiply = 0.2 }
+		divide = 0.85
+	}
+}
+pp_cplan_cd_pp_prestige_jewelry_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:copper)" divide = "default_price(goods:copper)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:jewelry)" divide = "default_price(goods:jewelry)" min = 0.5 max = 2.5 multiply = 0.8 }
+		add = { value = "market.market_price(goods:marble)" divide = "default_price(goods:marble)" min = 0.5 max = 2.5 multiply = 5 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 3 }
+		add = { value = "market.market_price(goods:tin)" divide = "default_price(goods:tin)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 2 }
+		divide = 16.8
+	}
+}
+pp_cplan_cd_pp_river_boatmen_yard_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.35 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.15 }
+		add = { value = "market.market_price(goods:naval_supplies)" divide = "default_price(goods:naval_supplies)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 0.2 }
+		divide = 0.9
+	}
+}
+pp_cplan_cd_pp_transport_office_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 0.15 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.3 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.75 }
+		add = { value = "market.market_price(goods:paper)" divide = "default_price(goods:paper)" min = 0.5 max = 2.5 multiply = 0.25 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 0.4 }
+		divide = 1.85
+	}
+}
+pp_cplan_cd_pp_yam_station_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:horses)" divide = "default_price(goods:horses)" min = 0.5 max = 2.5 multiply = 0.1 }
+		add = { value = "market.market_price(goods:livestock)" divide = "default_price(goods:livestock)" min = 0.5 max = 2.5 multiply = 0.1 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.35 }
+		divide = 0.55
+	}
+}
+pp_cplan_cd_prestige_building_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:copper)" divide = "default_price(goods:copper)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:goods_gold)" divide = "default_price(goods:goods_gold)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:marble)" divide = "default_price(goods:marble)" min = 0.5 max = 2.5 multiply = 5 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 3 }
+		add = { value = "market.market_price(goods:tin)" divide = "default_price(goods:tin)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 2 }
+		divide = 18
+	}
+}
+pp_cplan_cd_pukara_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:stone)" divide = "default_price(goods:stone)" min = 0.5 max = 2.5 multiply = 1 }
+		divide = 1
+	}
+}
+pp_cplan_cd_rahdar_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:weaponry)" divide = "default_price(goods:weaponry)" min = 0.5 max = 2.5 multiply = 1 }
+		divide = 3
+	}
+}
+pp_cplan_cd_repaired_great_wall_of_china_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:clay)" divide = "default_price(goods:clay)" min = 0.5 max = 2.5 multiply = 0.5 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:stone)" divide = "default_price(goods:stone)" min = 0.5 max = 2.5 multiply = 2 }
+		divide = 4.5
+	}
+}
+pp_cplan_cd_ruined_great_wall_of_china_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:clay)" divide = "default_price(goods:clay)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 2.5 }
+		divide = 4.5
+	}
+}
+pp_cplan_cd_school_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:books)" divide = "default_price(goods:books)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:paper)" divide = "default_price(goods:paper)" min = 0.5 max = 2.5 multiply = 2 }
+		divide = 4
+	}
+}
+pp_cplan_cd_simple_colony_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.5 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.5 }
+		divide = 1
+	}
+}
+pp_cplan_cd_sofa_stockade_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:clay)" divide = "default_price(goods:clay)" min = 0.5 max = 2.5 multiply = 2.5 }
+		divide = 2.5
+	}
+}
+pp_cplan_cd_soldier_building_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:leather)" divide = "default_price(goods:leather)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:weaponry)" divide = "default_price(goods:weaponry)" min = 0.5 max = 2.5 multiply = 1 }
+		divide = 4
+	}
+}
+pp_cplan_cd_stockade_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 2 }
+		divide = 2
+	}
+}
+pp_cplan_cd_sukharev_tower_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.5 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 2 }
+		divide = 2.5
+	}
+}
+pp_cplan_cd_swi_collegium_helveticum_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:books)" divide = "default_price(goods:books)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 3 }
+		divide = 8
+	}
+}
+pp_cplan_cd_tambo_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:stone)" divide = "default_price(goods:stone)" min = 0.5 max = 2.5 multiply = 0.3 }
+		add = { value = "market.market_price(goods:wool)" divide = "default_price(goods:wool)" min = 0.5 max = 2.5 multiply = 0.2 }
+		divide = 0.5
+	}
+}
+pp_cplan_cd_terraces_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:stone)" divide = "default_price(goods:stone)" min = 0.5 max = 2.5 multiply = 0.5 }
+		divide = 0.5
+	}
+}
+pp_cplan_cd_theater_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:cloth)" divide = "default_price(goods:cloth)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 1 }
+		divide = 7
+	}
+}
+pp_cplan_cd_town_building_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:glass)" divide = "default_price(goods:glass)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.75 }
+		divide = 0.95
+	}
+}
+pp_cplan_cd_tur_kodjabashi_office_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:paper)" divide = "default_price(goods:paper)" min = 0.5 max = 2.5 multiply = 4 }
+		divide = 8
+	}
+}
+pp_cplan_cd_university_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:books)" divide = "default_price(goods:books)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:paper)" divide = "default_price(goods:paper)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 1 }
+		divide = 8
+	}
+}
+pp_cplan_cd_venetian_palaces_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:books)" divide = "default_price(goods:books)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:jewelry)" divide = "default_price(goods:jewelry)" min = 0.5 max = 2.5 multiply = 0.15 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:paper)" divide = "default_price(goods:paper)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:stone)" divide = "default_price(goods:stone)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 1 }
+		divide = 7.15
+	}
+}
+pp_cplan_cd_victuals_trade_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.25 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.1 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 0.1 }
+		divide = 0.45
+	}
+}
+pp_cplan_cd_village_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.25 }
+		divide = 0.25
+	}
+}
+pp_cplan_cd_village_granary_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.5 }
+		divide = 0.5
+	}
+}
+pp_cplan_cd_warehouse_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 0.2 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 0.2 }
+		divide = 0.6
+	}
+}
+pp_cplan_cd_woodhenge_of_cahokia_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:clay)" divide = "default_price(goods:clay)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:lumber)" divide = "default_price(goods:lumber)" min = 0.5 max = 2.5 multiply = 2 }
+		divide = 3
+	}
+}
+pp_cplan_cd_workshop_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 1 }
+		divide = 1
+	}
+}
+pp_cplan_cd_zhixian_construction = {
+	value = 1
+	if = {
+		limit = { market ?= { always = yes } }
+		value = 0
+		add = { value = "market.market_price(goods:masonry)" divide = "default_price(goods:masonry)" min = 0.5 max = 2.5 multiply = 1 }
+		add = { value = "market.market_price(goods:paper)" divide = "default_price(goods:paper)" min = 0.5 max = 2.5 multiply = 2 }
+		add = { value = "market.market_price(goods:tools)" divide = "default_price(goods:tools)" min = 0.5 max = 2.5 multiply = 1 }
+		divide = 4
+	}
+}
+
+# ---- Location rules: conditions (location scope, in the panel's units) ----
+
+pp_cplan_m_population = {
+	value = population
+}
+pp_cplan_m_peasants = {
+	value = num_pop_type:peasants
+}
+pp_cplan_m_idle_peasants = {
+	value = "unemployed_pops_of_pop_type_in_location(pop_type:peasants)"
+}
+pp_cplan_m_idle_laborers = {
+	value = "unemployed_pops_of_pop_type_in_location(pop_type:laborers)"
+}
+pp_cplan_m_employment = {
+	value = employment_percentage
+	multiply = 100
+}
+pp_cplan_m_market_access = {
+	value = market_access
+	multiply = 100
+}
+pp_cplan_m_control = {
+	value = local_control
+	multiply = 100
+}
+pp_cplan_m_proximity = {
+	value = proximity
+}
+pp_cplan_m_development = {
+	value = development
+}
+pp_cplan_m_prosperity = {
+	value = prosperity
+	multiply = 100
+}
+pp_cplan_m_stored_food = {
+	value = pp_cplan_stored_here
+}
+pp_cplan_m_arable_land = {
+	value = pp_cplan_farm_site
+}
+pp_cplan_m_building_levels = {
+	value = total_building_levels
+}
+pp_cplan_m_tax_base = {
+	value = location_tax_base
+}
+pp_cplan_m_rgo_profit = {
+	value = rgo_profit
+}
+pp_cplan_m_literacy = {
+	value = average_location_literacy
+}
+pp_cplan_m_coastal = {
+	value = 0
+	if = {
+		limit = { is_coastal = yes }
+		value = 1
+	}
+}
+pp_cplan_m_river = {
+	value = 0
+	if = {
+		limit = { has_river = yes }
+		value = 1
+	}
+}
+
+# Any scope: the conditions' count and the last id + 100 (the cycle wraps after it).
+pp_cplan_metric_count = { value = 18 }
+pp_cplan_metric_last100 = { value = 118 }
+# Any scope: the highest level a rule can ask for, + 100.
+pp_cplan_max_rule_level100 = { value = 130 }
+# Country scope: the mode template 1 sets (0 the plan's rules, 1 own rules, 2 hands off).
+pp_cplan_t1_mode_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_t1_mode }
+		value = var:pp_cplan_t1_mode
+		subtract = 100
+	}
+}
+# Country scope: the mode template 2 sets (0 the plan's rules, 1 own rules, 2 hands off).
+pp_cplan_t2_mode_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_t2_mode }
+		value = var:pp_cplan_t2_mode
+		subtract = 100
+	}
+}
+# Country scope: the mode template 3 sets (0 the plan's rules, 1 own rules, 2 hands off).
+pp_cplan_t3_mode_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_t3_mode }
+		value = var:pp_cplan_t3_mode
+		subtract = 100
+	}
+}
+# Country scope: the mode template 4 sets (0 the plan's rules, 1 own rules, 2 hands off).
+pp_cplan_t4_mode_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_t4_mode }
+		value = var:pp_cplan_t4_mode
+		subtract = 100
+	}
+}
+# Country scope: 1 once profile 1 is saved.
+pp_cplan_p1_saved_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_p1_saved }
+		value = 1
+	}
+}
+# Country scope: 1 once profile 2 is saved.
+pp_cplan_p2_saved_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_p2_saved }
+		value = 1
+	}
+}
+# Country scope: 1 once profile 3 is saved.
+pp_cplan_p3_saved_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_p3_saved }
+		value = 1
+	}
+}
+
+# ---- Rule 1 of a location (location scope) ----
+# 1 while the rule names a building.
+pp_cplan_r1_set_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r1_b }
+		value = 1
+	}
+}
+# The level the rule builds up to.
+pp_cplan_r1_lv_n = {
+	value = 1
+	if = {
+		limit = { has_variable = pp_cplan_r1_lv }
+		value = var:pp_cplan_r1_lv
+		subtract = 100
+	}
+}
+# The levels that stood here at the plan's last look.
+pp_cplan_r1_has_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r1_has }
+		value = var:pp_cplan_r1_has
+		subtract = 100
+	}
+}
+# The condition id (0 = always).
+pp_cplan_r1_m_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r1_m }
+		value = var:pp_cplan_r1_m
+		subtract = 100
+	}
+}
+# 1 = the condition holds below the threshold, 0 = at it or above.
+pp_cplan_r1_below_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r1_c }
+		value = var:pp_cplan_r1_c
+		subtract = 100
+	}
+}
+# The threshold, in the condition's units.
+pp_cplan_r1_t_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r1_t }
+		value = var:pp_cplan_r1_t
+		subtract = 100000
+	}
+}
+# The payback limit in years (0 = any).
+pp_cplan_r1_pb_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r1_pb }
+		value = var:pp_cplan_r1_pb
+		subtract = 100
+	}
+}
+# The rule's state after the last pass (0 not run yet, 1 started, 2 waiting for its condition, 3 done, 4 a level under construction, 5 payback too long, 6 cannot be built now, 7 held back by the budget, 8 the market lacks its construction goods).
+pp_cplan_r1_st_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r1_st }
+		value = var:pp_cplan_r1_st
+		subtract = 100
+	}
+}
+# The condition's value here now.
+pp_cplan_r1_now = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r1_m }
+		if = { limit = { var:pp_cplan_r1_m > 100.5 var:pp_cplan_r1_m < 101.5 } value = pp_cplan_m_population }
+		else_if = { limit = { var:pp_cplan_r1_m > 101.5 var:pp_cplan_r1_m < 102.5 } value = pp_cplan_m_peasants }
+		else_if = { limit = { var:pp_cplan_r1_m > 102.5 var:pp_cplan_r1_m < 103.5 } value = pp_cplan_m_idle_peasants }
+		else_if = { limit = { var:pp_cplan_r1_m > 103.5 var:pp_cplan_r1_m < 104.5 } value = pp_cplan_m_idle_laborers }
+		else_if = { limit = { var:pp_cplan_r1_m > 104.5 var:pp_cplan_r1_m < 105.5 } value = pp_cplan_m_employment }
+		else_if = { limit = { var:pp_cplan_r1_m > 105.5 var:pp_cplan_r1_m < 106.5 } value = pp_cplan_m_market_access }
+		else_if = { limit = { var:pp_cplan_r1_m > 106.5 var:pp_cplan_r1_m < 107.5 } value = pp_cplan_m_control }
+		else_if = { limit = { var:pp_cplan_r1_m > 107.5 var:pp_cplan_r1_m < 108.5 } value = pp_cplan_m_proximity }
+		else_if = { limit = { var:pp_cplan_r1_m > 108.5 var:pp_cplan_r1_m < 109.5 } value = pp_cplan_m_development }
+		else_if = { limit = { var:pp_cplan_r1_m > 109.5 var:pp_cplan_r1_m < 110.5 } value = pp_cplan_m_prosperity }
+		else_if = { limit = { var:pp_cplan_r1_m > 110.5 var:pp_cplan_r1_m < 111.5 } value = pp_cplan_m_stored_food }
+		else_if = { limit = { var:pp_cplan_r1_m > 111.5 var:pp_cplan_r1_m < 112.5 } value = pp_cplan_m_arable_land }
+		else_if = { limit = { var:pp_cplan_r1_m > 112.5 var:pp_cplan_r1_m < 113.5 } value = pp_cplan_m_building_levels }
+		else_if = { limit = { var:pp_cplan_r1_m > 113.5 var:pp_cplan_r1_m < 114.5 } value = pp_cplan_m_tax_base }
+		else_if = { limit = { var:pp_cplan_r1_m > 114.5 var:pp_cplan_r1_m < 115.5 } value = pp_cplan_m_rgo_profit }
+		else_if = { limit = { var:pp_cplan_r1_m > 115.5 var:pp_cplan_r1_m < 116.5 } value = pp_cplan_m_literacy }
+		else_if = { limit = { var:pp_cplan_r1_m > 116.5 var:pp_cplan_r1_m < 117.5 } value = pp_cplan_m_coastal }
+		else_if = { limit = { var:pp_cplan_r1_m > 117.5 var:pp_cplan_r1_m < 118.5 } value = pp_cplan_m_river }
+	}
+}
+# One step of the threshold arrows.
+pp_cplan_r1_step = {
+	value = 1
+	if = {
+		limit = { has_variable = pp_cplan_r1_m }
+		if = { limit = { var:pp_cplan_r1_m > 100.5 var:pp_cplan_r1_m < 101.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r1_m > 101.5 var:pp_cplan_r1_m < 102.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r1_m > 102.5 var:pp_cplan_r1_m < 103.5 } value = 0.5 }
+		else_if = { limit = { var:pp_cplan_r1_m > 103.5 var:pp_cplan_r1_m < 104.5 } value = 0.5 }
+		else_if = { limit = { var:pp_cplan_r1_m > 104.5 var:pp_cplan_r1_m < 105.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r1_m > 105.5 var:pp_cplan_r1_m < 106.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r1_m > 106.5 var:pp_cplan_r1_m < 107.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r1_m > 107.5 var:pp_cplan_r1_m < 108.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r1_m > 108.5 var:pp_cplan_r1_m < 109.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r1_m > 109.5 var:pp_cplan_r1_m < 110.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r1_m > 110.5 var:pp_cplan_r1_m < 111.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r1_m > 111.5 var:pp_cplan_r1_m < 112.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r1_m > 112.5 var:pp_cplan_r1_m < 113.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r1_m > 113.5 var:pp_cplan_r1_m < 114.5 } value = 0.5 }
+		else_if = { limit = { var:pp_cplan_r1_m > 114.5 var:pp_cplan_r1_m < 115.5 } value = 0.1 }
+		else_if = { limit = { var:pp_cplan_r1_m > 115.5 var:pp_cplan_r1_m < 116.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r1_m > 116.5 var:pp_cplan_r1_m < 117.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r1_m > 117.5 var:pp_cplan_r1_m < 118.5 } value = 1 }
+	}
+}
+
+# ---- Rule 2 of a location (location scope) ----
+# 1 while the rule names a building.
+pp_cplan_r2_set_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r2_b }
+		value = 1
+	}
+}
+# The level the rule builds up to.
+pp_cplan_r2_lv_n = {
+	value = 1
+	if = {
+		limit = { has_variable = pp_cplan_r2_lv }
+		value = var:pp_cplan_r2_lv
+		subtract = 100
+	}
+}
+# The levels that stood here at the plan's last look.
+pp_cplan_r2_has_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r2_has }
+		value = var:pp_cplan_r2_has
+		subtract = 100
+	}
+}
+# The condition id (0 = always).
+pp_cplan_r2_m_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r2_m }
+		value = var:pp_cplan_r2_m
+		subtract = 100
+	}
+}
+# 1 = the condition holds below the threshold, 0 = at it or above.
+pp_cplan_r2_below_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r2_c }
+		value = var:pp_cplan_r2_c
+		subtract = 100
+	}
+}
+# The threshold, in the condition's units.
+pp_cplan_r2_t_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r2_t }
+		value = var:pp_cplan_r2_t
+		subtract = 100000
+	}
+}
+# The payback limit in years (0 = any).
+pp_cplan_r2_pb_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r2_pb }
+		value = var:pp_cplan_r2_pb
+		subtract = 100
+	}
+}
+# The rule's state after the last pass (0 not run yet, 1 started, 2 waiting for its condition, 3 done, 4 a level under construction, 5 payback too long, 6 cannot be built now, 7 held back by the budget, 8 the market lacks its construction goods).
+pp_cplan_r2_st_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r2_st }
+		value = var:pp_cplan_r2_st
+		subtract = 100
+	}
+}
+# The condition's value here now.
+pp_cplan_r2_now = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r2_m }
+		if = { limit = { var:pp_cplan_r2_m > 100.5 var:pp_cplan_r2_m < 101.5 } value = pp_cplan_m_population }
+		else_if = { limit = { var:pp_cplan_r2_m > 101.5 var:pp_cplan_r2_m < 102.5 } value = pp_cplan_m_peasants }
+		else_if = { limit = { var:pp_cplan_r2_m > 102.5 var:pp_cplan_r2_m < 103.5 } value = pp_cplan_m_idle_peasants }
+		else_if = { limit = { var:pp_cplan_r2_m > 103.5 var:pp_cplan_r2_m < 104.5 } value = pp_cplan_m_idle_laborers }
+		else_if = { limit = { var:pp_cplan_r2_m > 104.5 var:pp_cplan_r2_m < 105.5 } value = pp_cplan_m_employment }
+		else_if = { limit = { var:pp_cplan_r2_m > 105.5 var:pp_cplan_r2_m < 106.5 } value = pp_cplan_m_market_access }
+		else_if = { limit = { var:pp_cplan_r2_m > 106.5 var:pp_cplan_r2_m < 107.5 } value = pp_cplan_m_control }
+		else_if = { limit = { var:pp_cplan_r2_m > 107.5 var:pp_cplan_r2_m < 108.5 } value = pp_cplan_m_proximity }
+		else_if = { limit = { var:pp_cplan_r2_m > 108.5 var:pp_cplan_r2_m < 109.5 } value = pp_cplan_m_development }
+		else_if = { limit = { var:pp_cplan_r2_m > 109.5 var:pp_cplan_r2_m < 110.5 } value = pp_cplan_m_prosperity }
+		else_if = { limit = { var:pp_cplan_r2_m > 110.5 var:pp_cplan_r2_m < 111.5 } value = pp_cplan_m_stored_food }
+		else_if = { limit = { var:pp_cplan_r2_m > 111.5 var:pp_cplan_r2_m < 112.5 } value = pp_cplan_m_arable_land }
+		else_if = { limit = { var:pp_cplan_r2_m > 112.5 var:pp_cplan_r2_m < 113.5 } value = pp_cplan_m_building_levels }
+		else_if = { limit = { var:pp_cplan_r2_m > 113.5 var:pp_cplan_r2_m < 114.5 } value = pp_cplan_m_tax_base }
+		else_if = { limit = { var:pp_cplan_r2_m > 114.5 var:pp_cplan_r2_m < 115.5 } value = pp_cplan_m_rgo_profit }
+		else_if = { limit = { var:pp_cplan_r2_m > 115.5 var:pp_cplan_r2_m < 116.5 } value = pp_cplan_m_literacy }
+		else_if = { limit = { var:pp_cplan_r2_m > 116.5 var:pp_cplan_r2_m < 117.5 } value = pp_cplan_m_coastal }
+		else_if = { limit = { var:pp_cplan_r2_m > 117.5 var:pp_cplan_r2_m < 118.5 } value = pp_cplan_m_river }
+	}
+}
+# One step of the threshold arrows.
+pp_cplan_r2_step = {
+	value = 1
+	if = {
+		limit = { has_variable = pp_cplan_r2_m }
+		if = { limit = { var:pp_cplan_r2_m > 100.5 var:pp_cplan_r2_m < 101.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r2_m > 101.5 var:pp_cplan_r2_m < 102.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r2_m > 102.5 var:pp_cplan_r2_m < 103.5 } value = 0.5 }
+		else_if = { limit = { var:pp_cplan_r2_m > 103.5 var:pp_cplan_r2_m < 104.5 } value = 0.5 }
+		else_if = { limit = { var:pp_cplan_r2_m > 104.5 var:pp_cplan_r2_m < 105.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r2_m > 105.5 var:pp_cplan_r2_m < 106.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r2_m > 106.5 var:pp_cplan_r2_m < 107.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r2_m > 107.5 var:pp_cplan_r2_m < 108.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r2_m > 108.5 var:pp_cplan_r2_m < 109.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r2_m > 109.5 var:pp_cplan_r2_m < 110.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r2_m > 110.5 var:pp_cplan_r2_m < 111.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r2_m > 111.5 var:pp_cplan_r2_m < 112.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r2_m > 112.5 var:pp_cplan_r2_m < 113.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r2_m > 113.5 var:pp_cplan_r2_m < 114.5 } value = 0.5 }
+		else_if = { limit = { var:pp_cplan_r2_m > 114.5 var:pp_cplan_r2_m < 115.5 } value = 0.1 }
+		else_if = { limit = { var:pp_cplan_r2_m > 115.5 var:pp_cplan_r2_m < 116.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r2_m > 116.5 var:pp_cplan_r2_m < 117.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r2_m > 117.5 var:pp_cplan_r2_m < 118.5 } value = 1 }
+	}
+}
+
+# ---- Rule 3 of a location (location scope) ----
+# 1 while the rule names a building.
+pp_cplan_r3_set_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r3_b }
+		value = 1
+	}
+}
+# The level the rule builds up to.
+pp_cplan_r3_lv_n = {
+	value = 1
+	if = {
+		limit = { has_variable = pp_cplan_r3_lv }
+		value = var:pp_cplan_r3_lv
+		subtract = 100
+	}
+}
+# The levels that stood here at the plan's last look.
+pp_cplan_r3_has_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r3_has }
+		value = var:pp_cplan_r3_has
+		subtract = 100
+	}
+}
+# The condition id (0 = always).
+pp_cplan_r3_m_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r3_m }
+		value = var:pp_cplan_r3_m
+		subtract = 100
+	}
+}
+# 1 = the condition holds below the threshold, 0 = at it or above.
+pp_cplan_r3_below_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r3_c }
+		value = var:pp_cplan_r3_c
+		subtract = 100
+	}
+}
+# The threshold, in the condition's units.
+pp_cplan_r3_t_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r3_t }
+		value = var:pp_cplan_r3_t
+		subtract = 100000
+	}
+}
+# The payback limit in years (0 = any).
+pp_cplan_r3_pb_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r3_pb }
+		value = var:pp_cplan_r3_pb
+		subtract = 100
+	}
+}
+# The rule's state after the last pass (0 not run yet, 1 started, 2 waiting for its condition, 3 done, 4 a level under construction, 5 payback too long, 6 cannot be built now, 7 held back by the budget, 8 the market lacks its construction goods).
+pp_cplan_r3_st_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r3_st }
+		value = var:pp_cplan_r3_st
+		subtract = 100
+	}
+}
+# The condition's value here now.
+pp_cplan_r3_now = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r3_m }
+		if = { limit = { var:pp_cplan_r3_m > 100.5 var:pp_cplan_r3_m < 101.5 } value = pp_cplan_m_population }
+		else_if = { limit = { var:pp_cplan_r3_m > 101.5 var:pp_cplan_r3_m < 102.5 } value = pp_cplan_m_peasants }
+		else_if = { limit = { var:pp_cplan_r3_m > 102.5 var:pp_cplan_r3_m < 103.5 } value = pp_cplan_m_idle_peasants }
+		else_if = { limit = { var:pp_cplan_r3_m > 103.5 var:pp_cplan_r3_m < 104.5 } value = pp_cplan_m_idle_laborers }
+		else_if = { limit = { var:pp_cplan_r3_m > 104.5 var:pp_cplan_r3_m < 105.5 } value = pp_cplan_m_employment }
+		else_if = { limit = { var:pp_cplan_r3_m > 105.5 var:pp_cplan_r3_m < 106.5 } value = pp_cplan_m_market_access }
+		else_if = { limit = { var:pp_cplan_r3_m > 106.5 var:pp_cplan_r3_m < 107.5 } value = pp_cplan_m_control }
+		else_if = { limit = { var:pp_cplan_r3_m > 107.5 var:pp_cplan_r3_m < 108.5 } value = pp_cplan_m_proximity }
+		else_if = { limit = { var:pp_cplan_r3_m > 108.5 var:pp_cplan_r3_m < 109.5 } value = pp_cplan_m_development }
+		else_if = { limit = { var:pp_cplan_r3_m > 109.5 var:pp_cplan_r3_m < 110.5 } value = pp_cplan_m_prosperity }
+		else_if = { limit = { var:pp_cplan_r3_m > 110.5 var:pp_cplan_r3_m < 111.5 } value = pp_cplan_m_stored_food }
+		else_if = { limit = { var:pp_cplan_r3_m > 111.5 var:pp_cplan_r3_m < 112.5 } value = pp_cplan_m_arable_land }
+		else_if = { limit = { var:pp_cplan_r3_m > 112.5 var:pp_cplan_r3_m < 113.5 } value = pp_cplan_m_building_levels }
+		else_if = { limit = { var:pp_cplan_r3_m > 113.5 var:pp_cplan_r3_m < 114.5 } value = pp_cplan_m_tax_base }
+		else_if = { limit = { var:pp_cplan_r3_m > 114.5 var:pp_cplan_r3_m < 115.5 } value = pp_cplan_m_rgo_profit }
+		else_if = { limit = { var:pp_cplan_r3_m > 115.5 var:pp_cplan_r3_m < 116.5 } value = pp_cplan_m_literacy }
+		else_if = { limit = { var:pp_cplan_r3_m > 116.5 var:pp_cplan_r3_m < 117.5 } value = pp_cplan_m_coastal }
+		else_if = { limit = { var:pp_cplan_r3_m > 117.5 var:pp_cplan_r3_m < 118.5 } value = pp_cplan_m_river }
+	}
+}
+# One step of the threshold arrows.
+pp_cplan_r3_step = {
+	value = 1
+	if = {
+		limit = { has_variable = pp_cplan_r3_m }
+		if = { limit = { var:pp_cplan_r3_m > 100.5 var:pp_cplan_r3_m < 101.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r3_m > 101.5 var:pp_cplan_r3_m < 102.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r3_m > 102.5 var:pp_cplan_r3_m < 103.5 } value = 0.5 }
+		else_if = { limit = { var:pp_cplan_r3_m > 103.5 var:pp_cplan_r3_m < 104.5 } value = 0.5 }
+		else_if = { limit = { var:pp_cplan_r3_m > 104.5 var:pp_cplan_r3_m < 105.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r3_m > 105.5 var:pp_cplan_r3_m < 106.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r3_m > 106.5 var:pp_cplan_r3_m < 107.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r3_m > 107.5 var:pp_cplan_r3_m < 108.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r3_m > 108.5 var:pp_cplan_r3_m < 109.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r3_m > 109.5 var:pp_cplan_r3_m < 110.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r3_m > 110.5 var:pp_cplan_r3_m < 111.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r3_m > 111.5 var:pp_cplan_r3_m < 112.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r3_m > 112.5 var:pp_cplan_r3_m < 113.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r3_m > 113.5 var:pp_cplan_r3_m < 114.5 } value = 0.5 }
+		else_if = { limit = { var:pp_cplan_r3_m > 114.5 var:pp_cplan_r3_m < 115.5 } value = 0.1 }
+		else_if = { limit = { var:pp_cplan_r3_m > 115.5 var:pp_cplan_r3_m < 116.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r3_m > 116.5 var:pp_cplan_r3_m < 117.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r3_m > 117.5 var:pp_cplan_r3_m < 118.5 } value = 1 }
+	}
+}
+
+# ---- Rule 4 of a location (location scope) ----
+# 1 while the rule names a building.
+pp_cplan_r4_set_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r4_b }
+		value = 1
+	}
+}
+# The level the rule builds up to.
+pp_cplan_r4_lv_n = {
+	value = 1
+	if = {
+		limit = { has_variable = pp_cplan_r4_lv }
+		value = var:pp_cplan_r4_lv
+		subtract = 100
+	}
+}
+# The levels that stood here at the plan's last look.
+pp_cplan_r4_has_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r4_has }
+		value = var:pp_cplan_r4_has
+		subtract = 100
+	}
+}
+# The condition id (0 = always).
+pp_cplan_r4_m_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r4_m }
+		value = var:pp_cplan_r4_m
+		subtract = 100
+	}
+}
+# 1 = the condition holds below the threshold, 0 = at it or above.
+pp_cplan_r4_below_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r4_c }
+		value = var:pp_cplan_r4_c
+		subtract = 100
+	}
+}
+# The threshold, in the condition's units.
+pp_cplan_r4_t_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r4_t }
+		value = var:pp_cplan_r4_t
+		subtract = 100000
+	}
+}
+# The payback limit in years (0 = any).
+pp_cplan_r4_pb_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r4_pb }
+		value = var:pp_cplan_r4_pb
+		subtract = 100
+	}
+}
+# The rule's state after the last pass (0 not run yet, 1 started, 2 waiting for its condition, 3 done, 4 a level under construction, 5 payback too long, 6 cannot be built now, 7 held back by the budget, 8 the market lacks its construction goods).
+pp_cplan_r4_st_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r4_st }
+		value = var:pp_cplan_r4_st
+		subtract = 100
+	}
+}
+# The condition's value here now.
+pp_cplan_r4_now = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_r4_m }
+		if = { limit = { var:pp_cplan_r4_m > 100.5 var:pp_cplan_r4_m < 101.5 } value = pp_cplan_m_population }
+		else_if = { limit = { var:pp_cplan_r4_m > 101.5 var:pp_cplan_r4_m < 102.5 } value = pp_cplan_m_peasants }
+		else_if = { limit = { var:pp_cplan_r4_m > 102.5 var:pp_cplan_r4_m < 103.5 } value = pp_cplan_m_idle_peasants }
+		else_if = { limit = { var:pp_cplan_r4_m > 103.5 var:pp_cplan_r4_m < 104.5 } value = pp_cplan_m_idle_laborers }
+		else_if = { limit = { var:pp_cplan_r4_m > 104.5 var:pp_cplan_r4_m < 105.5 } value = pp_cplan_m_employment }
+		else_if = { limit = { var:pp_cplan_r4_m > 105.5 var:pp_cplan_r4_m < 106.5 } value = pp_cplan_m_market_access }
+		else_if = { limit = { var:pp_cplan_r4_m > 106.5 var:pp_cplan_r4_m < 107.5 } value = pp_cplan_m_control }
+		else_if = { limit = { var:pp_cplan_r4_m > 107.5 var:pp_cplan_r4_m < 108.5 } value = pp_cplan_m_proximity }
+		else_if = { limit = { var:pp_cplan_r4_m > 108.5 var:pp_cplan_r4_m < 109.5 } value = pp_cplan_m_development }
+		else_if = { limit = { var:pp_cplan_r4_m > 109.5 var:pp_cplan_r4_m < 110.5 } value = pp_cplan_m_prosperity }
+		else_if = { limit = { var:pp_cplan_r4_m > 110.5 var:pp_cplan_r4_m < 111.5 } value = pp_cplan_m_stored_food }
+		else_if = { limit = { var:pp_cplan_r4_m > 111.5 var:pp_cplan_r4_m < 112.5 } value = pp_cplan_m_arable_land }
+		else_if = { limit = { var:pp_cplan_r4_m > 112.5 var:pp_cplan_r4_m < 113.5 } value = pp_cplan_m_building_levels }
+		else_if = { limit = { var:pp_cplan_r4_m > 113.5 var:pp_cplan_r4_m < 114.5 } value = pp_cplan_m_tax_base }
+		else_if = { limit = { var:pp_cplan_r4_m > 114.5 var:pp_cplan_r4_m < 115.5 } value = pp_cplan_m_rgo_profit }
+		else_if = { limit = { var:pp_cplan_r4_m > 115.5 var:pp_cplan_r4_m < 116.5 } value = pp_cplan_m_literacy }
+		else_if = { limit = { var:pp_cplan_r4_m > 116.5 var:pp_cplan_r4_m < 117.5 } value = pp_cplan_m_coastal }
+		else_if = { limit = { var:pp_cplan_r4_m > 117.5 var:pp_cplan_r4_m < 118.5 } value = pp_cplan_m_river }
+	}
+}
+# One step of the threshold arrows.
+pp_cplan_r4_step = {
+	value = 1
+	if = {
+		limit = { has_variable = pp_cplan_r4_m }
+		if = { limit = { var:pp_cplan_r4_m > 100.5 var:pp_cplan_r4_m < 101.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r4_m > 101.5 var:pp_cplan_r4_m < 102.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r4_m > 102.5 var:pp_cplan_r4_m < 103.5 } value = 0.5 }
+		else_if = { limit = { var:pp_cplan_r4_m > 103.5 var:pp_cplan_r4_m < 104.5 } value = 0.5 }
+		else_if = { limit = { var:pp_cplan_r4_m > 104.5 var:pp_cplan_r4_m < 105.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r4_m > 105.5 var:pp_cplan_r4_m < 106.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r4_m > 106.5 var:pp_cplan_r4_m < 107.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r4_m > 107.5 var:pp_cplan_r4_m < 108.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r4_m > 108.5 var:pp_cplan_r4_m < 109.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r4_m > 109.5 var:pp_cplan_r4_m < 110.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r4_m > 110.5 var:pp_cplan_r4_m < 111.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r4_m > 111.5 var:pp_cplan_r4_m < 112.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r4_m > 112.5 var:pp_cplan_r4_m < 113.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r4_m > 113.5 var:pp_cplan_r4_m < 114.5 } value = 0.5 }
+		else_if = { limit = { var:pp_cplan_r4_m > 114.5 var:pp_cplan_r4_m < 115.5 } value = 0.1 }
+		else_if = { limit = { var:pp_cplan_r4_m > 115.5 var:pp_cplan_r4_m < 116.5 } value = 5 }
+		else_if = { limit = { var:pp_cplan_r4_m > 116.5 var:pp_cplan_r4_m < 117.5 } value = 1 }
+		else_if = { limit = { var:pp_cplan_r4_m > 117.5 var:pp_cplan_r4_m < 118.5 } value = 1 }
+	}
+}

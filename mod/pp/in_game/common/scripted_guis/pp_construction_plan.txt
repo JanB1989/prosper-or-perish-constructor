@@ -1,5 +1,7 @@
-﻿# Prosper or Perish - Construction Plan panel buttons (gui/pp_construction_plan.gui). Flags passed from the GUI:
-# scope:pp_key (which setting), scope:pp_dir (up / down), scope:pp_good + scope:pp_mode (goods modes).
+﻿# Prosper or Perish - Construction Plan panel buttons (gui/pp_construction_plan*.gui, gui/location_window.gui).
+# Flags passed from the GUI: scope:pp_key (which setting), scope:pp_dir (up / down), scope:pp_good + scope:pp_mode
+# (goods modes), scope:pp_rule (r1..r4), scope:pp_slot (t1..t4 templates, p1..p3 profiles); scope:pp_btype is a
+# building type.
 
 # Country scope: the plan on / off.
 pp_cplan_toggle_on = {
@@ -22,7 +24,8 @@ pp_cplan_toggle_module = {
 	}
 }
 
-# Country scope: one step of a setting (scope:pp_key = reserve / max / access_line / keep, scope:pp_dir = up / down).
+# Country scope: one step of a setting (scope:pp_key = reserve / max / access_line / keep / payback, scope:pp_dir =
+# up / down).
 pp_cplan_step = {
 	scope = country
 	effect = {
@@ -32,6 +35,7 @@ pp_cplan_step = {
 			flag:max = { pp_cplan_step_var = { var = pp_cplan_max current = pp_cplan_max_per_month step = 1 min = 101 max = 120 } }
 			flag:access_line = { pp_cplan_step_var = { var = pp_cplan_access current = pp_cplan_access_pct step = 5 min = 150 max = 195 } }
 			flag:keep = { pp_cplan_step_var = { var = pp_cplan_keep current = pp_cplan_keep_months step = 1 min = 101 max = 124 } }
+			flag:payback = { pp_cplan_step_var = { var = pp_cplan_payback current = pp_cplan_payback_line step = 1 min = 101 max = 150 } }
 		}
 	}
 }
@@ -41,6 +45,14 @@ pp_cplan_good_mode = {
 	scope = country
 	effect = {
 		pp_cplan_set_good_mode = yes
+	}
+}
+
+# Country scope: save or load a global profile (scope:pp_slot = p1..p3, scope:pp_key = save / load).
+pp_cplan_profile = {
+	scope = country
+	effect = {
+		pp_cplan_profile_do = yes
 	}
 }
 
@@ -90,6 +102,14 @@ pp_cplan_step_band = {
 	}
 }
 
+# Province scope: apply a saved location template to every location of the province (scope:pp_slot = t1..t4).
+pp_cplan_template_province = {
+	scope = province
+	effect = {
+		pp_cplan_template_province_do = yes
+	}
+}
+
 # Location scope: the logistics override, Follow the plan -> Always -> Never -> Follow.
 pp_cplan_cycle_logi = {
 	scope = location
@@ -108,11 +128,54 @@ pp_cplan_cycle_logi = {
 	}
 }
 
-# Location scope: Hands off (the plan builds nothing here) on / off.
-pp_cplan_toggle_here = {
+# Location scope: the location's mode, the plan's rules -> own rules -> hands off.
+pp_cplan_cycle_mode = {
 	scope = location
 	effect = {
-		pp_cplan_flip = { var = pp_cplan_here_off }
+		pp_cplan_cycle_mode = yes
+	}
+}
+
+# Location scope: show this location in the panel's Here tab (and list the buildings it can take).
+pp_cplan_select = {
+	scope = location
+	effect = {
+		owner ?= { set_variable = { name = pp_cplan_sel value = root } }
+		pp_cplan_fill_cands = yes
+	}
+}
+
+# Location scope: list the buildings again (after an advance, a construction or a lost building).
+pp_cplan_refresh = {
+	scope = location
+	effect = {
+		pp_cplan_fill_cands = yes
+	}
+}
+
+# Location scope: a rule for the building type scope:pp_btype.
+pp_cplan_add_rule = {
+	scope = location
+	effect = {
+		pp_cplan_add_rule = yes
+	}
+}
+
+# Location scope: one change to a rule (scope:pp_rule = r1..r4, scope:pp_key = lv / metric / cmp / t / tbig / pb /
+# clear, scope:pp_dir = up / down).
+pp_cplan_rule_edit = {
+	scope = location
+	effect = {
+		pp_cplan_rule_edit_switch = yes
+	}
+}
+
+# Location scope: save this location as a template, or apply one to it or to its whole province (scope:pp_slot =
+# t1..t4, scope:pp_key = save / apply / province).
+pp_cplan_template = {
+	scope = location
+	effect = {
+		pp_cplan_template_do = yes
 	}
 }
 
@@ -123,7 +186,7 @@ pp_cplan_logistics_row = {
 		OR = {
 			market_access < 0.99
 			has_variable = pp_cplan_logi
-			has_variable = pp_cplan_here_off
+			has_variable = pp_cplan_mode
 		}
 	}
 }

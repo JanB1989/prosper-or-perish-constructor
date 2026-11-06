@@ -74,6 +74,13 @@ def test_render_scopes_each_market_once() -> None:
     assert text.count("{") == text.count("}")
 
 
+def test_the_game_file_carries_no_fingerprint() -> None:
+    """A fingerprint line made fingerprint-only rewrites of game data, which ppc sync --while-running refuses; it lives in
+    STAMP beside the build."""
+    assert "# inputs" not in sms.render({("kyoto", "wheat"): 1.0})
+    assert sms.STAMP.parts[0] == "artifacts"  # ignored by git, never deployed
+
+
 def test_it_runs_after_the_first_days_and_before_the_first_price_step() -> None:
     """Prices step on the 1st; a new game starts on 1 April."""
     assert 1 <= sms.DELAY_DAYS <= 29

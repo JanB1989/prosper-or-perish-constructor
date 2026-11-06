@@ -7,10 +7,12 @@ pp_cplan_location_ok = {
 	NOT = { has_variable = pp_cplan_here_off }
 }
 
-# Any scope: the month's budget is not used up (constructions started this month, gold above the reserve).
+# Any scope: the month's budget is not used up (constructions started this month, also within the share of the
+# rule groups so far, gold above the reserve).
 pp_cplan_budget_left = {
 	scope:pp_cplan_country = {
 		pp_cplan_started_n < pp_cplan_max_per_month
+		pp_cplan_started_n < pp_cplan_cap_n
 		gold > pp_cplan_reserve_gold
 	}
 }

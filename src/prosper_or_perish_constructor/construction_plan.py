@@ -406,6 +406,14 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]], farm_goods:
     for good in goods:
         parts.append(f"\t\tflag:{good} = {{ pp_cplan_apply_mode = {{ var = pp_cplan_g_{good} }} }}\n")
     parts.append("\t}\n}\n")
+    flags = sorted(set(goods) | set(MODE_KEYS) | {"food", "logistics", "goods", "reserve", "max", "access", "keep",
+                                                   "up", "down", "lo", "hi"})
+    parts.append(
+        "\n# Any scope, never run (pp_cplan_run calls it under always = no): declares the flags the panel passes, so the\n"
+        "# script check logs no 'used but never set' line for them.\npp_cplan_declare_flags = {\n"
+        + "".join(f"\tset_variable = {{ name = pp_cplan_flag value = flag:{flag} }}\n" for flag in flags)
+        + "}\n"
+    )
     return "".join(parts)
 
 

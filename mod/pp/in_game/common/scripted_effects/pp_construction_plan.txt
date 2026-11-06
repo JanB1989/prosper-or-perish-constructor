@@ -24,11 +24,18 @@ pp_cplan_run = {
 	set_variable = { name = pp_cplan_started value = 100 }
 	set_variable = { name = pp_cplan_spent value = 100 }
 	remove_variable = pp_cplan_hit
+	# each rule group running gets an equal share of the monthly limit; a share left unused passes on to the next
+	set_variable = { name = pp_cplan_cap value = 100 }
 	if = {
 		limit = { NOT = { has_variable = pp_cplan_food_off } }
+		change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }
 		every_province = {
 			pp_cplan_food_province = yes
 		}
+	}
+	if = {
+		limit = { NOT = { has_variable = pp_cplan_logistics_off } }
+		change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }
 	}
 	if = {
 		limit = {
@@ -50,6 +57,10 @@ pp_cplan_run = {
 		}
 	}
 	if = {
+		limit = { NOT = { has_variable = pp_cplan_goods_off } }
+		change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }
+	}
+	if = {
 		limit = {
 			NOT = { has_variable = pp_cplan_goods_off }
 			pp_cplan_budget_left = yes
@@ -65,6 +76,7 @@ pp_cplan_run = {
 		save_scope_as = pp_dir
 		save_scope_as = pp_good
 		save_scope_as = pp_mode
+		pp_cplan_declare_flags = yes
 	}
 }
 

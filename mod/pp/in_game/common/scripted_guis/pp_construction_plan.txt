@@ -22,7 +22,7 @@ pp_cplan_toggle_module = {
 	}
 }
 
-# Country scope: one step of a setting (scope:pp_key = reserve / max / access / keep, scope:pp_dir = up / down).
+# Country scope: one step of a setting (scope:pp_key = reserve / max / access_line / keep, scope:pp_dir = up / down).
 pp_cplan_step = {
 	scope = country
 	effect = {
@@ -30,7 +30,7 @@ pp_cplan_step = {
 			trigger = scope:pp_key
 			flag:reserve = { pp_cplan_step_var = { var = pp_cplan_reserve current = pp_cplan_reserve_months step = 1 min = 100 max = 136 } }
 			flag:max = { pp_cplan_step_var = { var = pp_cplan_max current = pp_cplan_max_per_month step = 1 min = 101 max = 120 } }
-			flag:access = { pp_cplan_step_var = { var = pp_cplan_access current = pp_cplan_access_pct step = 5 min = 150 max = 195 } }
+			flag:access_line = { pp_cplan_step_var = { var = pp_cplan_access current = pp_cplan_access_pct step = 5 min = 150 max = 195 } }
 			flag:keep = { pp_cplan_step_var = { var = pp_cplan_keep current = pp_cplan_keep_months step = 1 min = 101 max = 124 } }
 		}
 	}

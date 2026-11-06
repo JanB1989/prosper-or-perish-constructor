@@ -438,11 +438,11 @@ widget = {
 						pp_cplan_label = { text = "PP_CPLAN_ACCESS_VALUE" }
 						pp_cplan_step_button = {
 							text = "PP_CPLAN_MINUS"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('access')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
+							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('access_line')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
 						}
 						pp_cplan_step_button = {
 							text = "PP_CPLAN_PLUS"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('access')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
+							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('access_line')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
 						}
 					}
 					pp_cplan_note = { text = "PP_CPLAN_LOGISTICS_NOTE" }

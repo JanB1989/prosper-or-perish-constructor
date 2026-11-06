@@ -6805,7 +6805,7 @@ pp_cplan_set_good_mode = {
 # Any scope, never run (pp_cplan_run calls it under always = no): declares the flags the panel passes, so the
 # script check logs no 'used but never set' line for them.
 pp_cplan_declare_flags = {
-	set_variable = { name = pp_cplan_flag value = flag:access }
+	set_variable = { name = pp_cplan_flag value = flag:access_line }
 	set_variable = { name = pp_cplan_flag value = flag:alum }
 	set_variable = { name = pp_cplan_flag value = flag:amber }
 	set_variable = { name = pp_cplan_flag value = flag:beer }

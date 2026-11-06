@@ -497,6 +497,13 @@
   1.29 late). Bonuses (rivers, ports, ruler, advances) are worth their vanilla weight again, penalties are milder, and the
   0.5 floor no longer binds on mountains. Religious-influence prices (monasteries, preachers, merchant guild chapel) untouched.
   `tests/test_tier_lines.py` ties this file to `[tier_lines] price_factor`.
+- Building cost tooltip (2026-11-06, Jan): one shared vanilla template (`price_tooltip`, economy_tooltips.gui) shows the
+  engine text `PriceTooltipWrap.GetTooltip` for every price. Only `BUILDING_LEVEL_COST_MOD` (in
+  `replace/english/pp_vanilla_overrides_l_english.yml`) is building-only: red when it raises the cost, with the bucket rows
+  "Level, multiplies the cost" above and "Construction Efficiency, divides the cost" below. The engine writes it only when
+  the level term is not 0 (a first level shows the efficiency rows under the plain header); an upgrade row comes after it.
+  `SCALE_IMPACT_ON_PRICE`, `PRICE_FURTHER_MODIFIED` and `MARKET_PRICE_IMPACT_HEADER` stay vanilla: war costs pass their own
+  scale text (`tests/test_building_cost_tooltip.py`).
 - Tier lines (`tier_lines.py`, `[tier_lines]`, finalize pass, `ppc tier-lines` lists them; 2026-11-01, Jan, from run 6ee05b7e):
   upgrade lines whose lowest tier needs a raw material, + the extras. A researched successor freezes the old tier, and upper
   tiers cost 4-24x the base for 1.0-1.5x its profit. Each tier's price = profit per level at base prices x 180 months, lowest

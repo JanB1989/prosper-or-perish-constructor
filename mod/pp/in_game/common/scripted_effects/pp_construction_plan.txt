@@ -77,6 +77,10 @@ pp_cplan_run = {
 		save_scope_as = pp_good
 		save_scope_as = pp_mode
 		pp_cplan_declare_flags = yes
+		if = {
+			limit = { has_variable = pp_cplan_flag }
+			remove_variable = pp_cplan_flag
+		}
 	}
 }
 

@@ -1,6 +1,34 @@
 # Player Construction Manager: design brainstorm
 
-Status 2026-11-06: brainstorm only, nothing built. Player-only: the AI keeps its own logic and is never touched.
+Status 2026-11-06: **first version built** on branch `player-construction-manager` (architecture B, tested in game: new
+game as England, 1337-04 to 1337-06, error.log clean). Player-only: the AI keeps its own logic and is never touched.
+
+## Built (v1)
+
+- **Construction Plan** panel (scripted widgets `pp_construction_plan` = opener button, `pp_construction_plan_window`;
+  `in_game/gui/pp_construction_plan.gui`), tabs Plan / Food / Goods / Logistics. Off by default per country.
+- **Plan:** on/off, gold reserve (months of total income), most new constructions a month, rule groups on/off, "Last
+  month" list (building, location, which rule). Each running group gets an equal share of the monthly limit; a share left
+  unused passes on to the next group (food, logistics, goods). Constructions are `construct_building` = normal, paid,
+  in the construction queue (verified: gold drops, queue shows them).
+- **Food (per province):** focus Standard 6/18, Breadbasket 8/20, Market Town 6/14, Workshop 4/12, Hands Off, Custom
+  (arrows set your own band); status per province (building X / blocked / in band / above / held back / store full).
+  Below band: crop farm (standing line first, else the line with the best local output), then kitchen, then Tavern in the
+  province capital; a full store under 24 months gets a Granary.
+- **Goods (per good):** Off / Keep / Expand / Never, months of stock in the capital's market, a Keep line (months).
+  Keep built a Stud Farm in Woking for horses (0 months) in the test.
+- **Logistics (per location):** a market access line, per location Follow Plan / Always / Never and Plan builds / Hands
+  Off. The buildings' own gates still apply (15 building levels: no English location qualified in 1337).
+- Generated parts (`construction_plan.py`, finalize): farm/kitchen/tavern/granary/logistics pickers, 226 producers of 75
+  goods, per-good values, the Goods tab rows. Tests: `tests/test_construction_plan.py`.
+
+## Not built yet (from the mock-up and this doc)
+
+- Controls in PP's own windows (food panel rows, market goods list, location window); all controls sit in the panel.
+- "Next from the plan / blocked by" per location; pins per building (only per-location Hands Off).
+- Upgrades rule group; province focus preset from geography (every province starts on Standard).
+- The Logistics tab lists every location below full access, also those under the 15-level gate.
+- Not exercised in game: Expand while profitable, Never, multiplayer, a long run (cost not profiled; one country).
 Goal (Jan): a player sets rules once, coarse or fine, and buildings get queued when the conditions hold. It has to
 understand PP's own systems (Province Food and stores, logistics, farm land, the Cookshop budget), which Construction
 Manager does not.

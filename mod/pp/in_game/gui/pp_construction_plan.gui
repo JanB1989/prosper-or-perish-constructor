@@ -17,10 +17,12 @@ types PPConstructionPlan
 
 	type pp_cplan_step_button = button_regular {
 		size = { 26 24 }
+		tooltip = "PP_CPLAN_STEP_TT"
 	}
 
 	type pp_cplan_switch_button = button_regular {
 		size = { 70 26 }
+		tooltip = "PP_CPLAN_SWITCH_TT"
 	}
 
 	type pp_cplan_label = text_single {
@@ -53,26 +55,26 @@ types PPConstructionPlan
 	}
 }
 
+# ---- Opener (its own scripted widget: a widget only takes mouse input inside its parent's rectangle) ----
 widget = {
 	name = "pp_construction_plan"
-	size = { 0 0 }
+	position = { 36 236 }
+	size = { 170 32 }
 	# scripted widgets need a function here; "yes" does not work
-	visible = "[EqualTo_CFixedPoint('(CFixedPoint)0', '(CFixedPoint)0')]"
+	visible = "[And(GetPlayer.Exists, Not(IsObserving))]"
 
-	# ---- Opener ----
 	button_regular = {
 		name = "pp_cplan_opener"
-		visible = "[And(GetPlayer.Exists, Not(IsObserving))]"
-		position = { 470 8 }
 		size = { 170 32 }
 		text = "PP_CPLAN_OPEN"
 		tooltip = "PP_CPLAN_OPEN_TT"
 		onclick = "[GetVariableSystem.Toggle('pp_cplan_open')]"
 	}
+}
 
-	# ---- Panel ----
+# ---- Panel ----
 	window = {
-		name = "pp_cplan_window"
+		name = "pp_construction_plan_window"
 		visible = "[And3(GetVariableSystem.Exists('pp_cplan_open'), GetPlayer.Exists, Not(IsObserving))]"
 		position = { 90 120 }
 		size = { 620 780 }
@@ -95,21 +97,25 @@ widget = {
 				spacing = 6
 				pp_cplan_tab_button = {
 					text = "PP_CPLAN_TAB_PLAN"
+					tooltip = "PP_CPLAN_TAB_PLAN_TT"
 					down = "[Or(GetVariableSystem.HasValue('pp_cplan_tab', 'plan'), Not(GetVariableSystem.Exists('pp_cplan_tab')))]"
 					onclick = "[GetVariableSystem.Set('pp_cplan_tab', 'plan')]"
 				}
 				pp_cplan_tab_button = {
 					text = "PP_CPLAN_TAB_FOOD"
+					tooltip = "PP_CPLAN_TAB_FOOD_TT"
 					down = "[GetVariableSystem.HasValue('pp_cplan_tab', 'food')]"
 					onclick = "[GetVariableSystem.Set('pp_cplan_tab', 'food')]"
 				}
 				pp_cplan_tab_button = {
 					text = "PP_CPLAN_TAB_GOODS"
+					tooltip = "PP_CPLAN_TAB_GOODS_TT"
 					down = "[GetVariableSystem.HasValue('pp_cplan_tab', 'goods')]"
 					onclick = "[GetVariableSystem.Set('pp_cplan_tab', 'goods')]"
 				}
 				pp_cplan_tab_button = {
 					text = "PP_CPLAN_TAB_LOGISTICS"
+					tooltip = "PP_CPLAN_TAB_LOGISTICS_TT"
 					down = "[GetVariableSystem.HasValue('pp_cplan_tab', 'logistics')]"
 					onclick = "[GetVariableSystem.Set('pp_cplan_tab', 'logistics')]"
 				}
@@ -137,7 +143,6 @@ widget = {
 						pp_cplan_switch_button = {
 							visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_on_n'), '(CFixedPoint)0.5')]"
 							text = "PP_CPLAN_ON"
-							down = yes
 							onclick = "[GetScriptedGui('pp_cplan_toggle_on').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 						}
 						pp_cplan_switch_button = {
@@ -168,7 +173,7 @@ widget = {
 						spacing = 6
 						pp_cplan_label = { text = "PP_CPLAN_MAX" tooltip = "PP_CPLAN_MAX_TT" }
 						expand = {}
-						pp_cplan_label = { text = "[GetPlayer.MakeScope.ScriptValue('pp_cplan_max_per_month')|0]" }
+						pp_cplan_label = { raw_text = "[GetPlayer.MakeScope.ScriptValue('pp_cplan_max_per_month')|0]" }
 						pp_cplan_step_button = {
 							text = "PP_CPLAN_MINUS"
 							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('max')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
@@ -189,7 +194,6 @@ widget = {
 						pp_cplan_switch_button = {
 							visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_food_n'), '(CFixedPoint)0.5')]"
 							text = "PP_CPLAN_ON"
-							down = yes
 							onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('food')).End)]"
 						}
 						pp_cplan_switch_button = {
@@ -206,7 +210,6 @@ widget = {
 						pp_cplan_switch_button = {
 							visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_logistics_n'), '(CFixedPoint)0.5')]"
 							text = "PP_CPLAN_ON"
-							down = yes
 							onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('logistics')).End)]"
 						}
 						pp_cplan_switch_button = {
@@ -223,7 +226,6 @@ widget = {
 						pp_cplan_switch_button = {
 							visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_goods_n'), '(CFixedPoint)0.5')]"
 							text = "PP_CPLAN_ON"
-							down = yes
 							onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('goods')).End)]"
 						}
 						pp_cplan_switch_button = {
@@ -242,36 +244,35 @@ widget = {
 						scrollbarpolicy_horizontal = always_off
 						scrollbar_vertical = { using = Scrollbar_Vertical }
 						scrollwidget = {
-							vbox = {
-								layoutpolicy_horizontal = expanding
+							flowcontainer = {
+								direction = vertical
 								datamodel = "[GetPlayer.MakeScope.GetList('pp_cplan_log')]"
 								item = {
-									hbox = {
-										datacontext = "[Scope.GetLocation]"
-										layoutpolicy_horizontal = expanding
+									flowcontainer = {
+										direction = horizontal
 										spacing = 4
 										margin = { 2 1 }
-										hbox = {
-											datamodel = "[Location.MakeScope.GetList('pp_cplan_log_types')]"
+										flowcontainer = {
+											direction = horizontal
+											datamodel = "[Scope.GetList('pp_cplan_log_types')]"
 											spacing = 4
 											item = {
-												pp_cplan_label = { text = "[Scope.GetBuildingType.GetName]" }
+												pp_cplan_label = { raw_text = "[Scope.GetBuildingType.GetName]" }
 											}
 										}
 										pp_cplan_label = { text = "PP_CPLAN_IN_LOCATION" }
 										pp_cplan_label = {
-											visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)1')]"
+											visible = "[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)1')]"
 											text = "PP_CPLAN_WHY_FOOD"
 										}
 										pp_cplan_label = {
-											visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)2')]"
+											visible = "[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)2')]"
 											text = "PP_CPLAN_WHY_LOGISTICS"
 										}
 										pp_cplan_label = {
-											visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)3')]"
+											visible = "[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)3')]"
 											text = "PP_CPLAN_WHY_GOODS"
 										}
-										expand = {}
 									}
 								}
 							}
@@ -308,7 +309,7 @@ widget = {
 										hbox = {
 											layoutpolicy_horizontal = expanding
 											spacing = 6
-											pp_cplan_label = { text = "[Province.GetName]" minimumsize = { 150 -1 } maximumsize = { 150 -1 } }
+											pp_cplan_label = { raw_text = "[Province.GetName]" minimumsize = { 150 -1 } maximumsize = { 150 -1 } }
 											button_regular = {
 												size = { 120 26 }
 												tooltip = "PP_CPLAN_FOCUS_TT"
@@ -337,7 +338,7 @@ widget = {
 												text = "PP_CPLAN_MINUS"
 												onclick = "[GetScriptedGui('pp_cplan_step_band').Execute(GuiScope.SetRoot(Province.MakeScope).AddScope('pp_key', MakeScopeFlag('lo')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
 											}
-											pp_cplan_label = { text = "[Province.MakeScope.ScriptValue('pp_cplan_band_lo')|0]" minimumsize = { 22 -1 } align = center|nobaseline }
+											pp_cplan_label = { raw_text = "[Province.MakeScope.ScriptValue('pp_cplan_band_lo')|0]" minimumsize = { 22 -1 } align = center|nobaseline }
 											pp_cplan_step_button = {
 												text = "PP_CPLAN_PLUS"
 												onclick = "[GetScriptedGui('pp_cplan_step_band').Execute(GuiScope.SetRoot(Province.MakeScope).AddScope('pp_key', MakeScopeFlag('lo')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
@@ -348,7 +349,7 @@ widget = {
 												text = "PP_CPLAN_MINUS"
 												onclick = "[GetScriptedGui('pp_cplan_step_band').Execute(GuiScope.SetRoot(Province.MakeScope).AddScope('pp_key', MakeScopeFlag('hi')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
 											}
-											pp_cplan_label = { text = "[Province.MakeScope.ScriptValue('pp_cplan_band_hi')|0]" minimumsize = { 22 -1 } align = center|nobaseline }
+											pp_cplan_label = { raw_text = "[Province.MakeScope.ScriptValue('pp_cplan_band_hi')|0]" minimumsize = { 22 -1 } align = center|nobaseline }
 											pp_cplan_step_button = {
 												text = "PP_CPLAN_PLUS"
 												onclick = "[GetScriptedGui('pp_cplan_step_band').Execute(GuiScope.SetRoot(Province.MakeScope).AddScope('pp_key', MakeScopeFlag('hi')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
@@ -366,7 +367,7 @@ widget = {
 												datamodel = "[Province.MakeScope.GetList('pp_cplan_status_types')]"
 												spacing = 4
 												item = {
-													pp_cplan_label = { text = "[Scope.GetBuildingType.GetName]" }
+													pp_cplan_label = { raw_text = "[Scope.GetBuildingType.GetName]" }
 												}
 											}
 											pp_cplan_label = { visible = "[EqualTo_CFixedPoint(Province.MakeScope.ScriptValue('pp_cplan_status_n'), '(CFixedPoint)2')]" text = "PP_CPLAN_ST_2" }
@@ -452,21 +453,25 @@ widget = {
 						scrollbarpolicy_horizontal = always_off
 						scrollbar_vertical = { using = Scrollbar_Vertical }
 						scrollwidget = {
-							vbox = {
-								layoutpolicy_horizontal = expanding
+							flowcontainer = {
+								direction = vertical
+								ignoreinvisible = yes
 								datamodel = "[GetPlayer.GetProvinces]"
 								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
+									flowcontainer = {
+										direction = vertical
 										ignoreinvisible = yes
 										datamodel = "[Province.GetLocations]"
 										item = {
-											hbox = {
+											# a container takes no hbox as a direct child: the row is a widget holding the hbox
+											widget = {
 												visible = "[GetScriptedGui('pp_cplan_logistics_row').IsShown(GuiScope.SetRoot(Location.MakeScope).End)]"
-												layoutpolicy_horizontal = expanding
+												size = { 560 30 }
+												hbox = {
+													using = layoutpolicy_expanding
 												spacing = 6
 												margin = { 4 2 }
-												pp_cplan_label = { text = "[Location.GetName]" minimumsize = { 170 -1 } maximumsize = { 170 -1 } }
+												pp_cplan_label = { raw_text = "[Location.GetName]" minimumsize = { 170 -1 } maximumsize = { 170 -1 } }
 												pp_cplan_label = { text = "PP_CPLAN_ACCESS_HERE" minimumsize = { 60 -1 } tooltip = "PP_CPLAN_ACCESS_HERE_TT" }
 												button_regular = {
 													size = { 120 26 }
@@ -484,6 +489,7 @@ widget = {
 													text_single = { parentanchor = center visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_cplan_here_n'), '(CFixedPoint)1')]" text = "PP_CPLAN_HERE_OFF" }
 												}
 												expand = {}
+												}
 											}
 										}
 									}
@@ -504,4 +510,3 @@ widget = {
 			}
 		}
 	}
-}

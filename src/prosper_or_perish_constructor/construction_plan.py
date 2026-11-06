@@ -37,6 +37,7 @@ from prosper_or_perish_constructor import market_short_weight
 
 EFFECTS = Path("in_game/common/scripted_effects/pp_construction_plan_generated.txt")
 VALUES = Path("in_game/common/script_values/pp_construction_plan_generated.txt")
+TRIGGERS = Path("in_game/common/scripted_triggers/pp_construction_plan_generated.txt")
 GUI = Path("in_game/gui/pp_construction_plan_goods.gui")
 GOODS_CATEGORIES = Path("config/goods_categories.csv")
 BUILDING_TYPES = Path("in_game/common/building_types")
@@ -367,16 +368,6 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]], farm_goods:
             )
             first = False
         parts.append("}\n")
-        parts.append(
-            f"# Location scope: a standing {good} producer that earns and can grow here.\n"
-            f"pp_cplan_has_earner_{good} = {{\n"
-            "\tOR = {\n"
-            + "".join(
-                f"\t\tany_buildings_in_location = {{ building_type = building_type:{name} building_profit > 0 is_at_max_level = no }}\n"
-                for name in names
-            )
-            + "\t}\n}\n"
-        )
 
     parts.append(
         "\n# Country scope (scope:pp_cplan_country): one construction per good and month at most, while the budget lasts.\n"
@@ -418,6 +409,23 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]], farm_goods:
     return "".join(parts)
 
 
+
+def render_triggers(goods: list[str], producers: dict[str, list[str]]) -> str:
+    parts = [HEADER]
+    for good in goods:
+        parts.append(
+            f"\n# Location scope: a standing {good} producer that earns and can grow here.\n"
+            f"pp_cplan_has_earner_{good} = {{\n"
+            "\tOR = {\n"
+            + "".join(
+                f"\t\tany_buildings_in_location = {{ building_type = building_type:{name} building_profit > 0 is_at_max_level = no }}\n"
+                for name in producers[good]
+            )
+            + "\t}\n}\n"
+        )
+    return "".join(parts)
+
+
 # ---------------------------------------------------------------------------------------------------------------------
 # GUI
 
@@ -431,8 +439,8 @@ def render_gui(goods: list[str]) -> str:
         for number, key in enumerate(MODE_KEYS):
             buttons.append(
                 f"\t\t\t\tpp_cplan_mode_button = {{\n"
-                f"\t\t\t\t\ttext = \"PP_CPLAN_MODE_{key.upper()}\"\n"
-                f"\t\t\t\t\tdown = \"[EqualTo_CFixedPoint({mode}, '(CFixedPoint){number}')]\"\n"
+                f"\t\t\t\t\ttext = \"[SelectLocalization(EqualTo_CFixedPoint({mode}, '(CFixedPoint){number}'), "
+                f"'PP_CPLAN_MODE_{key.upper()}_ON', 'PP_CPLAN_MODE_{key.upper()}')]\"\n"
                 f"\t\t\t\t\tonclick = \"[GetScriptedGui('pp_cplan_good_mode').Execute(GuiScope.SetRoot(GetPlayer.MakeScope)"
                 f".AddScope('pp_good', MakeScopeFlag('{good}')).AddScope('pp_mode', MakeScopeFlag('{key}')).End)]\"\n"
                 f"\t\t\t\t\ttooltip = \"PP_CPLAN_MODE_{key.upper()}_TT\"\n"
@@ -443,12 +451,12 @@ def render_gui(goods: list[str]) -> str:
             "\t\t\t\tlayoutpolicy_horizontal = expanding\n"
             "\t\t\t\tspacing = 4\n"
             "\t\t\t\tmargin = { 4 2 }\n"
-            f"\t\t\t\ttext_single = {{ text = \"@{good}! [ShowGoodsName('{good}')]\" minimumsize = {{ 150 -1 }} maximumsize = {{ 150 -1 }} }}\n"
+            f"\t\t\t\ttext_single = {{ raw_text = \"@{good}! [ShowGoodsName('{good}')]\" minimumsize = {{ 150 -1 }} maximumsize = {{ 150 -1 }} }}\n"
             f"\t\t\t\tpp_cplan_months_pie = {{\n"
             f"\t\t\t\t\tblockoverride \"pp_cplan_fill\" {{ value = \"[FixedPointToFloat(Divide_CFixedPoint(Min_CFixedPoint({months}, '(CFixedPoint)12'), '(CFixedPoint)12'))]\" }}\n"
             f"\t\t\t\t\tblockoverride \"pp_cplan_rest\" {{ value = \"[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint(Min_CFixedPoint({months}, '(CFixedPoint)12'), '(CFixedPoint)12')))]\" }}\n"
             f"\t\t\t\t}}\n"
-            f"\t\t\t\ttext_single = {{ text = \"[{months}|1]\" tooltip = \"PP_CPLAN_GOOD_MONTHS_TT\" minimumsize = {{ 44 -1 }} align = right|nobaseline }}\n"
+            f"\t\t\t\ttext_single = {{ raw_text = \"[{months}|1]\" tooltip = \"PP_CPLAN_GOOD_MONTHS_TT\" minimumsize = {{ 44 -1 }} align = right|nobaseline }}\n"
             + "".join(buttons)
             + "\t\t\t}\n"
         )
@@ -510,6 +518,7 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
     texts = {
         mod_root / VALUES: render_values(config, lines, farm_goods, goods, by_good),
         mod_root / EFFECTS: render_effects(config, lines, farm_goods, goods, by_good),
+        mod_root / TRIGGERS: render_triggers(goods, by_good),
         mod_root / GUI: render_gui(goods),
     }
     for path, text in texts.items():

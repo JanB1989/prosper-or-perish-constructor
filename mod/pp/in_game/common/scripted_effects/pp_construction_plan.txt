@@ -57,6 +57,15 @@ pp_cplan_run = {
 		pp_cplan_goods_run = yes
 	}
 	remove_variable = pp_cplan_hit
+	# Never runs: tells the script check that the panel's button scopes (set by the GUI with AddScope) exist, so the
+	# log has no "used but never set" lines for them.
+	if = {
+		limit = { always = no }
+		save_scope_as = pp_key
+		save_scope_as = pp_dir
+		save_scope_as = pp_good
+		save_scope_as = pp_mode
+	}
 }
 
 # Province scope: the food rule. Above the band nothing; a full store under 24 months gets a Granary; below the band a

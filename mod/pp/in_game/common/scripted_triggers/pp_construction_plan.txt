@@ -10,7 +10,7 @@ pp_cplan_location_ok = {
 # Any scope: the month's budget is not used up (constructions started this month, gold above the reserve).
 pp_cplan_budget_left = {
 	scope:pp_cplan_country = {
-		var:pp_cplan_started < pp_cplan_max100
+		pp_cplan_started_n < pp_cplan_max_per_month
 		gold > pp_cplan_reserve_gold
 	}
 }

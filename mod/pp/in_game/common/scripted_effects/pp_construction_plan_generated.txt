@@ -660,13 +660,6 @@ pp_cplan_expand_goods_camels = {
 		pp_cplan_construct = { type = camel_stud why = 103 }
 	}
 }
-# Location scope: a standing camels producer that earns and can grow here.
-pp_cplan_has_earner_camels = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:camel_herders building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:camel_stud building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of elephants, a standing one first.
 pp_cplan_try_goods_elephants = {
@@ -687,12 +680,6 @@ pp_cplan_expand_goods_elephants = {
 			location_and_owner_can_build = { building_type = elephant_kraal }
 		}
 		pp_cplan_construct = { type = elephant_kraal why = 103 }
-	}
-}
-# Location scope: a standing elephants producer that earns and can grow here.
-pp_cplan_has_earner_elephants = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:elephant_kraal building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -730,13 +717,6 @@ pp_cplan_expand_goods_horses = {
 			location_and_owner_can_build = { building_type = stud_farm }
 		}
 		pp_cplan_construct = { type = stud_farm why = 103 }
-	}
-}
-# Location scope: a standing horses producer that earns and can grow here.
-pp_cplan_has_earner_horses = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:horse_breeders building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:stud_farm building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -806,15 +786,6 @@ pp_cplan_expand_goods_livestock = {
 		pp_cplan_construct = { type = cattle_rotations why = 103 }
 	}
 }
-# Location scope: a standing livestock producer that earns and can grow here.
-pp_cplan_has_earner_livestock = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:cattle_farm building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:cattle_farmstead building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:cattle_model_farm building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:cattle_rotations building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of wool, a standing one first.
 pp_cplan_try_goods_wool = {
@@ -867,14 +838,6 @@ pp_cplan_expand_goods_wool = {
 		pp_cplan_construct = { type = sheep_farms why = 103 }
 	}
 }
-# Location scope: a standing wool producer that earns and can grow here.
-pp_cplan_has_earner_wool = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:enclosed_sheep_walks building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:hurdled_sheepcotes building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:sheep_farms building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of beeswax, a standing one first.
 pp_cplan_try_goods_beeswax = {
@@ -895,12 +858,6 @@ pp_cplan_expand_goods_beeswax = {
 			location_and_owner_can_build = { building_type = forest_village }
 		}
 		pp_cplan_construct = { type = forest_village why = 103 }
-	}
-}
-# Location scope: a standing beeswax producer that earns and can grow here.
-pp_cplan_has_earner_beeswax = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:forest_village building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -985,16 +942,6 @@ pp_cplan_expand_goods_dyes = {
 		pp_cplan_construct = { type = dyesworks why = 103 }
 	}
 }
-# Location scope: a standing dyes producer that earns and can grow here.
-pp_cplan_has_earner_dyes = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:dye_plantation building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:dyes_guild building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:dyes_mill building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:dyes_workshop building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:dyesworks building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of incense, a standing one first.
 pp_cplan_try_goods_incense = {
@@ -1030,13 +977,6 @@ pp_cplan_expand_goods_incense = {
 			location_and_owner_can_build = { building_type = perfumery }
 		}
 		pp_cplan_construct = { type = perfumery why = 103 }
-	}
-}
-# Location scope: a standing incense producer that earns and can grow here.
-pp_cplan_has_earner_incense = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:incense_grove building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:perfumery building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -1091,14 +1031,6 @@ pp_cplan_expand_goods_tobacco = {
 		pp_cplan_construct = { type = tobacco_plantation why = 103 }
 	}
 }
-# Location scope: a standing tobacco producer that earns and can grow here.
-pp_cplan_has_earner_tobacco = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:market_tobacco_farm building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:tobacco_farm building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:tobacco_plantation building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of cotton, a standing one first.
 pp_cplan_try_goods_cotton = {
@@ -1151,14 +1083,6 @@ pp_cplan_expand_goods_cotton = {
 		pp_cplan_construct = { type = market_cotton_farm why = 103 }
 	}
 }
-# Location scope: a standing cotton producer that earns and can grow here.
-pp_cplan_has_earner_cotton = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:cotton_farm building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:cotton_plantation building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:market_cotton_farm building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of fiber_crops, a standing one first.
 pp_cplan_try_goods_fiber_crops = {
@@ -1194,13 +1118,6 @@ pp_cplan_expand_goods_fiber_crops = {
 			location_and_owner_can_build = { building_type = fiber_dressing_yard }
 		}
 		pp_cplan_construct = { type = fiber_dressing_yard why = 103 }
-	}
-}
-# Location scope: a standing fiber_crops producer that earns and can grow here.
-pp_cplan_has_earner_fiber_crops = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:fiber_crops_farm building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:fiber_dressing_yard building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -1270,15 +1187,6 @@ pp_cplan_expand_goods_silk = {
 		pp_cplan_construct = { type = silk_production_guild why = 103 }
 	}
 }
-# Location scope: a standing silk producer that earns and can grow here.
-pp_cplan_has_earner_silk = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:ablaq_palace building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:regulated_sericulture_farm building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:sericulture_farm building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:silk_production_guild building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of chili, a standing one first.
 pp_cplan_try_goods_chili = {
@@ -1301,12 +1209,6 @@ pp_cplan_expand_goods_chili = {
 		pp_cplan_construct = { type = chili_plantation why = 103 }
 	}
 }
-# Location scope: a standing chili producer that earns and can grow here.
-pp_cplan_has_earner_chili = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:chili_plantation building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of cloves, a standing one first.
 pp_cplan_try_goods_cloves = {
@@ -1327,12 +1229,6 @@ pp_cplan_expand_goods_cloves = {
 			location_and_owner_can_build = { building_type = clove_grove }
 		}
 		pp_cplan_construct = { type = clove_grove why = 103 }
-	}
-}
-# Location scope: a standing cloves producer that earns and can grow here.
-pp_cplan_has_earner_cloves = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:clove_grove building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -1372,13 +1268,6 @@ pp_cplan_expand_goods_pepper = {
 		pp_cplan_construct = { type = pepper_garden why = 103 }
 	}
 }
-# Location scope: a standing pepper producer that earns and can grow here.
-pp_cplan_has_earner_pepper = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:managed_pepper_garden building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:pepper_garden building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of saffron, a standing one first.
 pp_cplan_try_goods_saffron = {
@@ -1414,13 +1303,6 @@ pp_cplan_expand_goods_saffron = {
 			location_and_owner_can_build = { building_type = saffron_kiln_croft }
 		}
 		pp_cplan_construct = { type = saffron_kiln_croft why = 103 }
-	}
-}
-# Location scope: a standing saffron producer that earns and can grow here.
-pp_cplan_has_earner_saffron = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:saffron_croft building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:saffron_kiln_croft building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -1490,15 +1372,6 @@ pp_cplan_expand_goods_legumes = {
 		pp_cplan_construct = { type = legume_rotations why = 103 }
 	}
 }
-# Location scope: a standing legumes producer that earns and can grow here.
-pp_cplan_has_earner_legumes = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:legume_farm building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:legume_farmstead building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:legume_model_farm building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:legume_rotations building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of maize, a standing one first.
 pp_cplan_try_goods_maize = {
@@ -1564,15 +1437,6 @@ pp_cplan_expand_goods_maize = {
 			location_and_owner_can_build = { building_type = maize_rotations }
 		}
 		pp_cplan_construct = { type = maize_rotations why = 103 }
-	}
-}
-# Location scope: a standing maize producer that earns and can grow here.
-pp_cplan_has_earner_maize = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:maize_farm building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:maize_farmstead building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:maize_model_farm building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:maize_rotations building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -1642,15 +1506,6 @@ pp_cplan_expand_goods_millet = {
 		pp_cplan_construct = { type = millet_rotations why = 103 }
 	}
 }
-# Location scope: a standing millet producer that earns and can grow here.
-pp_cplan_has_earner_millet = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:millet_farm building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:millet_farmstead building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:millet_model_farm building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:millet_rotations building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of potato, a standing one first.
 pp_cplan_try_goods_potato = {
@@ -1716,15 +1571,6 @@ pp_cplan_expand_goods_potato = {
 			location_and_owner_can_build = { building_type = potato_rotations }
 		}
 		pp_cplan_construct = { type = potato_rotations why = 103 }
-	}
-}
-# Location scope: a standing potato producer that earns and can grow here.
-pp_cplan_has_earner_potato = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:potato_farm building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:potato_farmstead building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:potato_model_farm building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:potato_rotations building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -1794,15 +1640,6 @@ pp_cplan_expand_goods_rice = {
 		pp_cplan_construct = { type = rice_rotations why = 103 }
 	}
 }
-# Location scope: a standing rice producer that earns and can grow here.
-pp_cplan_has_earner_rice = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:rice_farm building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:rice_farmstead building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:rice_model_farm building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:rice_rotations building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of wheat, a standing one first.
 pp_cplan_try_goods_wheat = {
@@ -1870,15 +1707,6 @@ pp_cplan_expand_goods_wheat = {
 		pp_cplan_construct = { type = wheat_rotations why = 103 }
 	}
 }
-# Location scope: a standing wheat producer that earns and can grow here.
-pp_cplan_has_earner_wheat = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:wheat_farm building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:wheat_farmstead building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:wheat_model_farm building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:wheat_rotations building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of cocoa, a standing one first.
 pp_cplan_try_goods_cocoa = {
@@ -1914,13 +1742,6 @@ pp_cplan_expand_goods_cocoa = {
 			location_and_owner_can_build = { building_type = managed_cocoa_grove }
 		}
 		pp_cplan_construct = { type = managed_cocoa_grove why = 103 }
-	}
-}
-# Location scope: a standing cocoa producer that earns and can grow here.
-pp_cplan_has_earner_cocoa = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:cocoa_grove building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:managed_cocoa_grove building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -1960,13 +1781,6 @@ pp_cplan_expand_goods_coffee = {
 		pp_cplan_construct = { type = terraced_coffee_grove why = 103 }
 	}
 }
-# Location scope: a standing coffee producer that earns and can grow here.
-pp_cplan_has_earner_coffee = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:coffee_grove building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:terraced_coffee_grove building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of tea, a standing one first.
 pp_cplan_try_goods_tea = {
@@ -2002,13 +1816,6 @@ pp_cplan_expand_goods_tea = {
 			location_and_owner_can_build = { building_type = tea_sorting_garden }
 		}
 		pp_cplan_construct = { type = tea_sorting_garden why = 103 }
-	}
-}
-# Location scope: a standing tea producer that earns and can grow here.
-pp_cplan_has_earner_tea = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:tea_garden building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:tea_sorting_garden building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -2061,14 +1868,6 @@ pp_cplan_expand_goods_sugar = {
 			location_and_owner_can_build = { building_type = trapiche_sugarcane_farm }
 		}
 		pp_cplan_construct = { type = trapiche_sugarcane_farm why = 103 }
-	}
-}
-# Location scope: a standing sugar producer that earns and can grow here.
-pp_cplan_has_earner_sugar = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:sugar_plantation building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:sugarcane_farm building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:trapiche_sugarcane_farm building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -2138,15 +1937,6 @@ pp_cplan_expand_goods_fruit = {
 		pp_cplan_construct = { type = pomological_orchard why = 103 }
 	}
 }
-# Location scope: a standing fruit producer that earns and can grow here.
-pp_cplan_has_earner_fruit = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:fruit_orchard building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:maghreb_palm_irrigation building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:nursery_orchard building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:pomological_orchard building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of olives, a standing one first.
 pp_cplan_try_goods_olives = {
@@ -2214,15 +2004,6 @@ pp_cplan_expand_goods_olives = {
 		pp_cplan_construct = { type = olive_rotations why = 103 }
 	}
 }
-# Location scope: a standing olives producer that earns and can grow here.
-pp_cplan_has_earner_olives = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:olive_farm building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:olive_farmstead building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:olive_model_farm building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:olive_rotations building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of wine, a standing one first.
 pp_cplan_try_goods_wine = {
@@ -2273,14 +2054,6 @@ pp_cplan_expand_goods_wine = {
 			location_and_owner_can_build = { building_type = winery_manufactory }
 		}
 		pp_cplan_construct = { type = winery_manufactory why = 103 }
-	}
-}
-# Location scope: a standing wine producer that earns and can grow here.
-pp_cplan_has_earner_wine = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:vineyard_estate building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:winery building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:winery_manufactory building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -2348,15 +2121,6 @@ pp_cplan_expand_goods_lumber = {
 			location_and_owner_can_build = { building_type = water_sawmill }
 		}
 		pp_cplan_construct = { type = water_sawmill why = 103 }
-	}
-}
-# Location scope: a standing lumber producer that earns and can grow here.
-pp_cplan_has_earner_lumber = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:lumber_mill building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:lumber_mill_improved building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:shoen building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:water_sawmill building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -2441,16 +2205,6 @@ pp_cplan_expand_goods_fish = {
 		pp_cplan_construct = { type = offshore_fishery why = 103 }
 	}
 }
-# Location scope: a standing fish producer that earns and can grow here.
-pp_cplan_has_earner_fish = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:drift_net_fishery building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:fishing_village building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:net_curing_yard building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:ocean_fishery building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:offshore_fishery building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of pearls, a standing one first.
 pp_cplan_try_goods_pearls = {
@@ -2471,12 +2225,6 @@ pp_cplan_expand_goods_pearls = {
 			location_and_owner_can_build = { building_type = pearl_fishery }
 		}
 		pp_cplan_construct = { type = pearl_fishery why = 103 }
-	}
-}
-# Location scope: a standing pearls producer that earns and can grow here.
-pp_cplan_has_earner_pearls = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:pearl_fishery building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -2516,13 +2264,6 @@ pp_cplan_expand_goods_clay = {
 		pp_cplan_construct = { type = clay_washmill why = 103 }
 	}
 }
-# Location scope: a standing clay producer that earns and can grow here.
-pp_cplan_has_earner_clay = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:clay_pit building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:clay_washmill building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of sand, a standing one first.
 pp_cplan_try_goods_sand = {
@@ -2560,13 +2301,6 @@ pp_cplan_expand_goods_sand = {
 		pp_cplan_construct = { type = sand_washery why = 103 }
 	}
 }
-# Location scope: a standing sand producer that earns and can grow here.
-pp_cplan_has_earner_sand = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:sand_pit building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:sand_washery building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of medicaments, a standing one first.
 pp_cplan_try_goods_medicaments = {
@@ -2602,13 +2336,6 @@ pp_cplan_expand_goods_medicaments = {
 			location_and_owner_can_build = { building_type = simplers_grove }
 		}
 		pp_cplan_construct = { type = simplers_grove why = 103 }
-	}
-}
-# Location scope: a standing medicaments producer that earns and can grow here.
-pp_cplan_has_earner_medicaments = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:apothecary building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:simplers_grove building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -2693,16 +2420,6 @@ pp_cplan_expand_goods_salt = {
 		pp_cplan_construct = { type = salt_mine_improved why = 103 }
 	}
 }
-# Location scope: a standing salt producer that earns and can grow here.
-pp_cplan_has_earner_salt = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:engineered_brine_saltworks building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:inland_saltworks building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:salt_collector building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:salt_mine building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:salt_mine_improved building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of amber, a standing one first.
 pp_cplan_try_goods_amber = {
@@ -2738,13 +2455,6 @@ pp_cplan_expand_goods_amber = {
 			location_and_owner_can_build = { building_type = amber_diggings }
 		}
 		pp_cplan_construct = { type = amber_diggings why = 103 }
-	}
-}
-# Location scope: a standing amber producer that earns and can grow here.
-pp_cplan_has_earner_amber = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:amber_collector building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:amber_diggings building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -2784,13 +2494,6 @@ pp_cplan_expand_goods_ivory = {
 		pp_cplan_construct = { type = ivory_hunting_camp why = 103 }
 	}
 }
-# Location scope: a standing ivory producer that earns and can grow here.
-pp_cplan_has_earner_ivory = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:elephant_hunting_grounds building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:ivory_hunting_camp building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of wild_game, a standing one first.
 pp_cplan_try_goods_wild_game = {
@@ -2811,12 +2514,6 @@ pp_cplan_expand_goods_wild_game = {
 			location_and_owner_can_build = { building_type = eng_royal_forest }
 		}
 		pp_cplan_construct = { type = eng_royal_forest why = 103 }
-	}
-}
-# Location scope: a standing wild_game producer that earns and can grow here.
-pp_cplan_has_earner_wild_game = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:eng_royal_forest building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -2886,15 +2583,6 @@ pp_cplan_expand_goods_beer = {
 		pp_cplan_construct = { type = brewery_mill why = 103 }
 	}
 }
-# Location scope: a standing beer producer that earns and can grow here.
-pp_cplan_has_earner_beer = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:beer_workshop building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:brewery building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:brewery_manufactory building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:brewery_mill building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of liquor, a standing one first.
 pp_cplan_try_goods_liquor = {
@@ -2960,15 +2648,6 @@ pp_cplan_expand_goods_liquor = {
 			location_and_owner_can_build = { building_type = distillers_workshop }
 		}
 		pp_cplan_construct = { type = distillers_workshop why = 103 }
-	}
-}
-# Location scope: a standing liquor producer that earns and can grow here.
-pp_cplan_has_earner_liquor = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:distiller_manufactory building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:distiller_mill building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:distillers_guild building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:distillers_workshop building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -3038,15 +2717,6 @@ pp_cplan_expand_goods_books = {
 		pp_cplan_construct = { type = scriptorium why = 103 }
 	}
 }
-# Location scope: a standing books producer that earns and can grow here.
-pp_cplan_has_earner_books = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:printing_manufactory building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:printing_mill building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:printing_press_shop building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:scriptorium building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of paper, a standing one first.
 pp_cplan_try_goods_paper = {
@@ -3114,15 +2784,6 @@ pp_cplan_expand_goods_paper = {
 		pp_cplan_construct = { type = paper_workshop why = 103 }
 	}
 }
-# Location scope: a standing paper producer that earns and can grow here.
-pp_cplan_has_earner_paper = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:paper_guild building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:paper_manufactory building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:paper_mill building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:paper_workshop building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of slaves_goods, a standing one first.
 pp_cplan_try_goods_slaves_goods = {
@@ -3158,13 +2819,6 @@ pp_cplan_expand_goods_slaves_goods = {
 			location_and_owner_can_build = { building_type = slave_market }
 		}
 		pp_cplan_construct = { type = slave_market why = 103 }
-	}
-}
-# Location scope: a standing slaves_goods producer that earns and can grow here.
-pp_cplan_has_earner_slaves_goods = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:slave_center building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:slave_market building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -3249,16 +2903,6 @@ pp_cplan_expand_goods_glass = {
 		pp_cplan_construct = { type = rural_glassmaker why = 103 }
 	}
 }
-# Location scope: a standing glass producer that earns and can grow here.
-pp_cplan_has_earner_glass = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:glass_guild building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:glass_mill building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:glass_workshop building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:glassworks building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:rural_glassmaker building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of masonry, a standing one first.
 pp_cplan_try_goods_masonry = {
@@ -3279,12 +2923,6 @@ pp_cplan_expand_goods_masonry = {
 			location_and_owner_can_build = { building_type = mason }
 		}
 		pp_cplan_construct = { type = mason why = 103 }
-	}
-}
-# Location scope: a standing masonry producer that earns and can grow here.
-pp_cplan_has_earner_masonry = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:mason building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -3354,15 +2992,6 @@ pp_cplan_expand_goods_pottery = {
 		pp_cplan_construct = { type = pottery_workshop why = 103 }
 	}
 }
-# Location scope: a standing pottery producer that earns and can grow here.
-pp_cplan_has_earner_pottery = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:pottery_guild building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:pottery_manufactory building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:pottery_mill building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:pottery_workshop building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of tar, a standing one first.
 pp_cplan_try_goods_tar = {
@@ -3383,12 +3012,6 @@ pp_cplan_expand_goods_tar = {
 			location_and_owner_can_build = { building_type = tar_kiln }
 		}
 		pp_cplan_construct = { type = tar_kiln why = 103 }
-	}
-}
-# Location scope: a standing tar producer that earns and can grow here.
-pp_cplan_has_earner_tar = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:tar_kiln building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -3458,15 +3081,6 @@ pp_cplan_expand_goods_furniture = {
 		pp_cplan_construct = { type = furniture_workshop why = 103 }
 	}
 }
-# Location scope: a standing furniture producer that earns and can grow here.
-pp_cplan_has_earner_furniture = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:furniture_guild building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:furniture_manufactory building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:furniture_mill building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:furniture_workshop building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of jewelry, a standing one first.
 pp_cplan_try_goods_jewelry = {
@@ -3502,13 +3116,6 @@ pp_cplan_expand_goods_jewelry = {
 			location_and_owner_can_build = { building_type = pounamou_carver }
 		}
 		pp_cplan_construct = { type = pounamou_carver why = 103 }
-	}
-}
-# Location scope: a standing jewelry producer that earns and can grow here.
-pp_cplan_has_earner_jewelry = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:jewelry_guild building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:pounamou_carver building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -3548,13 +3155,6 @@ pp_cplan_expand_goods_lacquerware = {
 		pp_cplan_construct = { type = lacquerware_manufactory why = 103 }
 	}
 }
-# Location scope: a standing lacquerware producer that earns and can grow here.
-pp_cplan_has_earner_lacquerware = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:lacquerware_guild building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:lacquerware_manufactory building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of porcelain, a standing one first.
 pp_cplan_try_goods_porcelain = {
@@ -3592,13 +3192,6 @@ pp_cplan_expand_goods_porcelain = {
 		pp_cplan_construct = { type = porcelain_manufactory why = 103 }
 	}
 }
-# Location scope: a standing porcelain producer that earns and can grow here.
-pp_cplan_has_earner_porcelain = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:porcelain_guild building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:porcelain_manufactory building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of steel, a standing one first.
 pp_cplan_try_goods_steel = {
@@ -3619,12 +3212,6 @@ pp_cplan_expand_goods_steel = {
 			location_and_owner_can_build = { building_type = steel_mill }
 		}
 		pp_cplan_construct = { type = steel_mill why = 103 }
-	}
-}
-# Location scope: a standing steel producer that earns and can grow here.
-pp_cplan_has_earner_steel = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:steel_mill building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -3724,17 +3311,6 @@ pp_cplan_expand_goods_tools = {
 		pp_cplan_construct = { type = tools_workshop why = 103 }
 	}
 }
-# Location scope: a standing tools producer that earns and can grow here.
-pp_cplan_has_earner_tools = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:iron_foundry building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:iron_mill building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:market_village building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:tatara building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:tools_guild building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:tools_workshop building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of cannons, a standing one first.
 pp_cplan_try_goods_cannons = {
@@ -3800,15 +3376,6 @@ pp_cplan_expand_goods_cannons = {
 			location_and_owner_can_build = { building_type = cannons_factory }
 		}
 		pp_cplan_construct = { type = cannons_factory why = 103 }
-	}
-}
-# Location scope: a standing cannons producer that earns and can grow here.
-pp_cplan_has_earner_cannons = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:cannon_foundry building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:cannon_maker building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:cannon_workshop building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:cannons_factory building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -3893,16 +3460,6 @@ pp_cplan_expand_goods_firearms = {
 		pp_cplan_construct = { type = hand_cannon_guild why = 103 }
 	}
 }
-# Location scope: a standing firearms producer that earns and can grow here.
-pp_cplan_has_earner_firearms = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:firearms_factory building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:firearms_manufactory building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:gun_smith building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:guns_workshop building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:hand_cannon_guild building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of weaponry, a standing one first.
 pp_cplan_try_goods_weaponry = {
@@ -3968,15 +3525,6 @@ pp_cplan_expand_goods_weaponry = {
 			location_and_owner_can_build = { building_type = weapon_workshop }
 		}
 		pp_cplan_construct = { type = weapon_workshop why = 103 }
-	}
-}
-# Location scope: a standing weaponry producer that earns and can grow here.
-pp_cplan_has_earner_weaponry = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:weapon_factory building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:weapon_guild building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:weapon_manufactory building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:weapon_workshop building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -4046,15 +3594,6 @@ pp_cplan_expand_goods_naval_supplies = {
 		pp_cplan_construct = { type = naval_supplies_workshop why = 103 }
 	}
 }
-# Location scope: a standing naval_supplies producer that earns and can grow here.
-pp_cplan_has_earner_naval_supplies = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:naval_supplies_guild building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:naval_supplies_manufactory building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:naval_supplies_mill building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:naval_supplies_workshop building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of victuals, a standing one first.
 pp_cplan_try_goods_victuals = {
@@ -4090,13 +3629,6 @@ pp_cplan_expand_goods_victuals = {
 			location_and_owner_can_build = { building_type = victualling_yard }
 		}
 		pp_cplan_construct = { type = victualling_yard why = 103 }
-	}
-}
-# Location scope: a standing victuals producer that earns and can grow here.
-pp_cplan_has_earner_victuals = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:grange building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:victualling_yard building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -4181,16 +3713,6 @@ pp_cplan_expand_goods_cloth = {
 		pp_cplan_construct = { type = textile_mill why = 103 }
 	}
 }
-# Location scope: a standing cloth producer that earns and can grow here.
-pp_cplan_has_earner_cloth = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:cloth_guild building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:cloth_manufactory building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:cloth_workshop building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:rural_clothmaker building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:textile_mill building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of fine_cloth, a standing one first.
 pp_cplan_try_goods_fine_cloth = {
@@ -4256,15 +3778,6 @@ pp_cplan_expand_goods_fine_cloth = {
 			location_and_owner_can_build = { building_type = fine_cloth_workshop }
 		}
 		pp_cplan_construct = { type = fine_cloth_workshop why = 103 }
-	}
-}
-# Location scope: a standing fine_cloth producer that earns and can grow here.
-pp_cplan_has_earner_fine_cloth = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:fine_cloth_guild building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:fine_cloth_manufactory building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:fine_cloth_mill building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:fine_cloth_workshop building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -4349,16 +3862,6 @@ pp_cplan_expand_goods_leather = {
 		pp_cplan_construct = { type = tanning_workshop why = 103 }
 	}
 }
-# Location scope: a standing leather producer that earns and can grow here.
-pp_cplan_has_earner_leather = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:managed_forest_village building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:tannery building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:tannery_manufactory building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:tannery_mill building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:tanning_workshop building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of marble, a standing one first.
 pp_cplan_try_goods_marble = {
@@ -4396,13 +3899,6 @@ pp_cplan_expand_goods_marble = {
 		pp_cplan_construct = { type = marble_saw_yard why = 103 }
 	}
 }
-# Location scope: a standing marble producer that earns and can grow here.
-pp_cplan_has_earner_marble = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:marble_quarry building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:marble_saw_yard building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of stone, a standing one first.
 pp_cplan_try_goods_stone = {
@@ -4438,13 +3934,6 @@ pp_cplan_expand_goods_stone = {
 			location_and_owner_can_build = { building_type = stone_quarry_improved }
 		}
 		pp_cplan_construct = { type = stone_quarry_improved why = 103 }
-	}
-}
-# Location scope: a standing stone producer that earns and can grow here.
-pp_cplan_has_earner_stone = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:stone_quarry building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:stone_quarry_improved building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -4529,16 +4018,6 @@ pp_cplan_expand_goods_coal = {
 		pp_cplan_construct = { type = improved_charcoal_maker why = 103 }
 	}
 }
-# Location scope: a standing coal producer that earns and can grow here.
-pp_cplan_has_earner_coal = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:charcoal_maker building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:coal_mine building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:coal_mine_improved building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:coal_mine_revolutions building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:improved_charcoal_maker building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of alum, a standing one first.
 pp_cplan_try_goods_alum = {
@@ -4576,13 +4055,6 @@ pp_cplan_expand_goods_alum = {
 		pp_cplan_construct = { type = alum_works why = 103 }
 	}
 }
-# Location scope: a standing alum producer that earns and can grow here.
-pp_cplan_has_earner_alum = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:alum_quarry building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:alum_works building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of mercury, a standing one first.
 pp_cplan_try_goods_mercury = {
@@ -4618,13 +4090,6 @@ pp_cplan_expand_goods_mercury = {
 			location_and_owner_can_build = { building_type = quicksilver_retort }
 		}
 		pp_cplan_construct = { type = quicksilver_retort why = 103 }
-	}
-}
-# Location scope: a standing mercury producer that earns and can grow here.
-pp_cplan_has_earner_mercury = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:cinnabar_pit building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:quicksilver_retort building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -4709,16 +4174,6 @@ pp_cplan_expand_goods_saltpeter = {
 		pp_cplan_construct = { type = saltpeter_workshop why = 103 }
 	}
 }
-# Location scope: a standing saltpeter producer that earns and can grow here.
-pp_cplan_has_earner_saltpeter = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:putrefaction_mill building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:putrefaction_works building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:saltpeter_beds building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:saltpeter_guild building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:saltpeter_workshop building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of copper, a standing one first.
 pp_cplan_try_goods_copper = {
@@ -4769,14 +4224,6 @@ pp_cplan_expand_goods_copper = {
 			location_and_owner_can_build = { building_type = copper_mine_deep }
 		}
 		pp_cplan_construct = { type = copper_mine_deep why = 103 }
-	}
-}
-# Location scope: a standing copper producer that earns and can grow here.
-pp_cplan_has_earner_copper = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:copper_mine building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:copper_mine_adit building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:copper_mine_deep building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -4876,17 +4323,6 @@ pp_cplan_expand_goods_iron = {
 		pp_cplan_construct = { type = iron_mine_improved why = 103 }
 	}
 }
-# Location scope: a standing iron producer that earns and can grow here.
-pp_cplan_has_earner_iron = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:bog_iron_smelter building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:bog_iron_smelter_blast_furnace building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:bog_iron_smelter_coke_blast_furnace building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:iron_mine building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:iron_mine_deep building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:iron_mine_improved building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of lead, a standing one first.
 pp_cplan_try_goods_lead = {
@@ -4939,14 +4375,6 @@ pp_cplan_expand_goods_lead = {
 		pp_cplan_construct = { type = lead_mine_cupola_smelting why = 103 }
 	}
 }
-# Location scope: a standing lead producer that earns and can grow here.
-pp_cplan_has_earner_lead = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:lead_mine building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:lead_mine_bole_smelting building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:lead_mine_cupola_smelting building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of tin, a standing one first.
 pp_cplan_try_goods_tin = {
@@ -4982,13 +4410,6 @@ pp_cplan_expand_goods_tin = {
 			location_and_owner_can_build = { building_type = tin_streamworks }
 		}
 		pp_cplan_construct = { type = tin_streamworks why = 103 }
-	}
-}
-# Location scope: a standing tin producer that earns and can grow here.
-pp_cplan_has_earner_tin = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:tin_stamping_mill building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:tin_streamworks building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -5028,13 +4449,6 @@ pp_cplan_expand_goods_gems = {
 		pp_cplan_construct = { type = gem_sluice why = 103 }
 	}
 }
-# Location scope: a standing gems producer that earns and can grow here.
-pp_cplan_has_earner_gems = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:gem_gravel_pit building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:gem_sluice building_profit > 0 is_at_max_level = no }
-	}
-}
 
 # Location scope: a producer of goods_gold, a standing one first.
 pp_cplan_try_goods_goods_gold = {
@@ -5070,13 +4484,6 @@ pp_cplan_expand_goods_goods_gold = {
 			location_and_owner_can_build = { building_type = gold_stamp_mill }
 		}
 		pp_cplan_construct = { type = gold_stamp_mill why = 103 }
-	}
-}
-# Location scope: a standing goods_gold producer that earns and can grow here.
-pp_cplan_has_earner_goods_gold = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:gold_diggings building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:gold_stamp_mill building_profit > 0 is_at_max_level = no }
 	}
 }
 
@@ -5129,14 +4536,6 @@ pp_cplan_expand_goods_silver = {
 			location_and_owner_can_build = { building_type = silver_mine_improved }
 		}
 		pp_cplan_construct = { type = silver_mine_improved why = 103 }
-	}
-}
-# Location scope: a standing silver producer that earns and can grow here.
-pp_cplan_has_earner_silver = {
-	OR = {
-		any_buildings_in_location = { building_type = building_type:schwaz_mine building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:silver_mine building_profit > 0 is_at_max_level = no }
-		any_buildings_in_location = { building_type = building_type:silver_mine_improved building_profit > 0 is_at_max_level = no }
 	}
 }
 

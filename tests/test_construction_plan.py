@@ -65,6 +65,38 @@ def test_panel_references_exist() -> None:
         assert key in loc_keys, f"text {key} missing"
 
 
+def _widget_tree(text: str) -> list[tuple[str, str | None]]:
+    """(widget, parent widget) for every block, `item` blocks passing their parent through."""
+    pairs: list[tuple[str, str | None]] = []
+    stack: list[str | None] = []
+    for match in re.finditer(r"([A-Za-z_][A-Za-z0-9_]*)\s*=\s*\{|\}", re.sub(r"#[^\n]*", "", text)):
+        if match.group(0) == "}":
+            if stack:
+                stack.pop()
+            continue
+        name = match.group(1)
+        parent = stack[-1] if stack else None
+        if name == "item":
+            stack.append(parent)
+            continue
+        pairs.append((name, parent))
+        stack.append(name)
+    return pairs
+
+
+def test_no_box_directly_inside_a_container() -> None:
+    """EU5 refuses an hbox/vbox as a direct child of a (flow)container; a hot reload with one crashed the game."""
+    for path in GUI_FILES:
+        for name, parent in _widget_tree(_read(path)):
+            if parent in {"flowcontainer", "container", "dynamicgridbox", "fixedgridbox"}:
+                assert name not in {"hbox", "vbox"}, f"{path.name}: {name} directly inside {parent}"
+
+
+def test_raw_text_never_replaced_other_properties() -> None:
+    for path in GUI_FILES:
+        assert "conraw_text" not in _read(path)
+
+
 def test_only_human_countries_run_the_plan() -> None:
     text = _read(ON_ACTION)
     assert "is_ai = no" in text

@@ -6,6 +6,7 @@
  bog_iron_smelter_desc: "A small wetland ironworks that gathers, roasts, and smelts bog iron where conventional ore deposits are absent."
  bole_smelting_desc: "Wind-fed upland hearths and better galena preparation improve lead smelting at organized lead mines."
  BUILDING_LEVEL_BASE: "#T Building Capacity Breakdown#!\nBase Capacity"
+ BUILDING_LEVEL_COST_MOD: "#T Level#!, multiplies the cost:\nBuilding Level $LEVEL|0Y$ [BUILDING_TYPE.GetNameWithNoTooltip]: $MOD|2-%=$\n#T Construction Efficiency#!, divides the cost:"
  BUILDING_LEVEL_DEVELOPMENT: "From Development"
  BUILDING_LEVEL_HAS_RIVER: " [river|e]"
  BUILDING_LEVEL_IS_CITY: "City Bonus"

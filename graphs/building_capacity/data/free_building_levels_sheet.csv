@@ -30,10 +30,10 @@ fixed,river_level,3,7.0,0.2,0.2
 fixed,river_level,4,9.0,0.25,0.25
 fixed,river_level,5,12.0,0.3,0.3
 fixed,is_port,true,6.0,0.15,0.15
-dynamic,location_rank,rural_settlement,30.0,-0.3,-0.3
-dynamic,location_rank,town,36.0,-0.3,-0.3
-dynamic,location_rank,city,42.0,-0.3,-0.3
-dynamic,location_rank,megalopolis,48.0,-0.3,-0.3
+dynamic,location_rank,rural_settlement,30.0,,-0.3
+dynamic,location_rank,town,36.0,,-0.3
+dynamic,location_rank,city,42.0,,-0.3
+dynamic,location_rank,megalopolis,48.0,,-0.3
 dynamic,road_level,0,0.0,,
 dynamic,road_level,1,4.0,,
 dynamic,road_level,2,8.0,,

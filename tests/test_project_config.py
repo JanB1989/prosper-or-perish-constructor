@@ -32,6 +32,14 @@ from prosper_or_perish_constructor import yaml_io
 
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def _stockpile_building_gold(gold: float) -> float:
+    """Branch stockpile-prices: a building price in gold x1.5 x [tier_lines] price_factor (the rank build efficiency,
+    2026-11-06), in steps of 5 (prices/zz_pp_building_price_stockpile.txt)."""
+    from prosper_or_perish_constructor import tier_lines
+
+    return float(tier_lines.final_gold(gold * 1.5, tier_lines.load_config(ROOT / "constructor.toml")))
 MOD_ROOT = ROOT / "mod" / "pp"
 ESTATE_PRIVILEGE_ADJUSTMENTS = (
     MOD_ROOT / "in_game" / "common" / "estate_privileges" / "pp_estate_privilege_adjustments.txt"
@@ -1611,8 +1619,8 @@ def test_water_control_capacity_buildings_use_scaled_gold_prices() -> None:
 
     for building, (price_key, gold) in expected_prices.items():
         assert buildings[building]["price"] == price_key
-        # branch stockpile-prices: every building price x1.5 (prices/zz_pp_building_price_stockpile.txt)
-        assert buildings[building]["price_gold"] == gold * 1.5
+        # branch stockpile-prices: every building price x1.5 x1.30, rounded to 5 (prices/zz_pp_building_price_stockpile.txt)
+        assert buildings[building]["price_gold"] == _stockpile_building_gold(gold)
 
 
 def test_excluded_buildings_do_not_use_land_farm_capacity_pool() -> None:
@@ -2313,21 +2321,21 @@ def test_cookshop_building_line_has_resolved_prices() -> None:
     buildings = {row["name"]: row for row in annotated.buildings.to_dicts()}
 
     # [building_price_brake]: the Cookshop pays its own price key, 40 gold since 2026-10-01 (75 on 2026-09-30, the brake's 100)
-    # Branch stockpile-prices: every building price x1.5 (prices/zz_pp_building_price_stockpile.txt).
+    # Branch stockpile-prices: every building price x1.5 x1.30, rounded to 5 (prices/zz_pp_building_price_stockpile.txt).
     assert buildings["cookshop"]["price"] == "pp_cookshop_price"
     assert buildings["cookshop"]["effective_price"] == "pp_cookshop_price"
-    assert buildings["cookshop"]["effective_price_gold"] == 40.0 * 1.5
+    assert buildings["cookshop"]["effective_price_gold"] == _stockpile_building_gold(40.0)
     assert buildings["cookshop"]["price_kind"] == "explicit"
 
     assert buildings["public_kitchen"]["price"] is None
     assert buildings["public_kitchen"]["effective_price"] == "p_building_age_5_absolutism"
-    assert buildings["public_kitchen"]["effective_price_gold"] == 800.0 * 1.5
+    assert buildings["public_kitchen"]["effective_price_gold"] == _stockpile_building_gold(800.0)
     assert buildings["public_kitchen"]["price_kind"] == "baseline_age"
 
     assert buildings["tavern"]["price"] == "pp_tavern_price"
-    assert buildings["tavern"]["price_gold"] == 70.0 * 1.5  # doubled 2026-10-01: the expensive urban option
+    assert buildings["tavern"]["price_gold"] == _stockpile_building_gold(70.0)  # doubled 2026-10-01: the expensive urban option
     assert buildings["tavern"]["effective_price"] == "pp_tavern_price"
-    assert buildings["tavern"]["effective_price_gold"] == 70.0 * 1.5  # doubled 2026-10-01: the expensive urban option
+    assert buildings["tavern"]["effective_price_gold"] == _stockpile_building_gold(70.0)  # doubled 2026-10-01: the expensive urban option
     assert buildings["tavern"]["price_kind"] == "explicit"
 
 

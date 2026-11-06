@@ -44,6 +44,32 @@ def test_price_rule_stays_inside_its_bounds() -> None:
     assert tier_lines.tier_price(9.0, 100, config) == 200
 
 
+def test_final_gold_carries_the_rank_efficiency_factor() -> None:
+    """[tier_lines] price_factor 1.30 (2026-11-06): the flat -0.3 rank build efficiency moved into the prices."""
+    config = tier_lines.load_config(PROJECT)
+    assert config.price_factor == Decimal("1.30") and config.final_round_to == 5
+    assert tier_lines.final_gold(75, config) == 100  # 97.5 rounds up
+    assert tier_lines.final_gold(125, config) == 165  # 162.5
+    assert tier_lines.final_gold(225, config) == 295  # 292.5
+    assert tier_lines.final_gold(600, config) == 780
+
+
+def test_price_pass_carries_the_same_factor() -> None:
+    """zz_pp_building_price_stockpile.txt: gold = the old value in its comment x 1.5 x price_factor, in steps of 5."""
+    config = tier_lines.load_config(PROJECT)
+    text = (MOD / "in_game/common/prices/zz_pp_building_price_stockpile.txt").read_text(encoding="utf-8-sig")
+    rows = re.findall(r"(?m)^TRY_INJECT:(\w+) = \{ gold = (\d+) \} # ([\d.]+) ", text)
+    assert len(rows) == 70
+    for key, gold, old in rows:
+        assert int(gold) == tier_lines.final_gold(float(old) * 1.5, config), key
+
+
+def test_no_rank_build_efficiency() -> None:
+    """The rank build efficiency (-0.3 on every rank until 2026-11-06) lives in the prices; the ranks carry none."""
+    text = (MOD / "in_game/common/location_ranks/pp_location_rank_adjustments.txt").read_text(encoding="utf-8-sig")
+    assert "build_buildings_efficiency" not in text
+
+
 def test_scope_is_the_raw_material_lines_and_the_extras(tiers: dict[str, tier_lines.Tier]) -> None:
     overrides = tier_lines.load_config(PROJECT).price_overrides
     assert {tier.line for tier in tiers.values()} - set(overrides) == LINES
@@ -61,7 +87,9 @@ def test_scope_is_the_raw_material_lines_and_the_extras(tiers: dict[str, tier_li
     (("amber_collector", "amber_diggings"), (75, 125)),
 ])
 def test_ladders(tiers: dict[str, tier_lines.Tier], line: tuple[str, ...], prices: tuple[int, ...]) -> None:
-    assert tuple(tiers[tag].price for tag in line) == prices
+    """`prices`: the tier prices before price_factor; the keys hold them x price_factor (final_gold)."""
+    config = tier_lines.load_config(PROJECT)
+    assert tuple(tiers[tag].price for tag in line) == tuple(tier_lines.final_gold(price, config) for price in prices)
 
 
 def test_compiled_buildings_carry_the_plan(tiers: dict[str, tier_lines.Tier], compiled: dict[str, dict]) -> None:

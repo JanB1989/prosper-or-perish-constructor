@@ -1186,6 +1186,11 @@ base_max = 100
 step_min = 1.5          # higher tier: its worth, inside these multiples of the tier below
 step_max = 2.0
 round_to = 25
+# The gold in the price keys = that price x price_factor, in steps of final_round_to. 1.30 (2026-11-06, Jan): the flat -0.3
+# local_build_buildings_efficiency every location rank had moved into the building prices (zz_pp_building_price_stockpile.txt
+# carries the same factor). Run 77768726, gold spent per 50 years: 1.32 early, 1.29 late, 1.30 over the run.
+price_factor = 1.30
+final_round_to = 5
 extra_lines = ["sand_pit", "fiber_crops_farm", "horse_breeders"]  # no raw material gate, same problem
 # charcoal: its recipe loses money at base prices and it already takes 65 % of clay demand; villages and camels: AI weights
 exclude_lines = ["charcoal_maker", "mining_village", "fishing_village", "forest_village", "camel_herders"]

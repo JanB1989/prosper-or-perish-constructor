@@ -237,7 +237,9 @@ def test_committed_local_free_building_levels_copy_loads_via_polars() -> None:
         (row["factor"], row["value"]): row[LOCAL_CONSTRUCTION_SPEED_COLUMN]
         for row in weights.filter(pl.col(LOCAL_CONSTRUCTION_SPEED_COLUMN).is_not_null()).to_dicts()
     }
-    assert efficiency_pairs == construction_pairs
+    # The ranks carry construction speed only: their flat -0.3 build efficiency is in the building prices (2026-11-06, Jan).
+    assert not any(factor == "location_rank" for factor, _value in efficiency_pairs)
+    assert efficiency_pairs == {pair: value for pair, value in construction_pairs.items() if pair[0] != "location_rank"}
     assert_frame_equal(load_free_building_level_weights(repo), weights)
 
 
@@ -637,7 +639,8 @@ def test_river_level_zero_is_baseline_and_positive_levels_match_old_totals() -> 
     )
 
     expected_capacity = {0: 37.0, 1: 40.0, 5: 49.0}
-    expected_efficiency = {0: -0.13, 1: -0.03, 5: 0.17}
+    expected_speed = {0: -0.13, 1: -0.03, 5: 0.17}
+    expected_efficiency = {0: 0.17, 1: 0.27, 5: 0.47}  # no rank -0.3 since 2026-11-06 (it is in the building prices)
     for river_level, capacity_total in expected_capacity.items():
         frame = location.with_columns(pl.lit(river_level).alias("river_level"))
         capacity = compute_free_building_levels(frame, weights).frame["free_building_levels"].item()
@@ -649,7 +652,7 @@ def test_river_level_zero_is_baseline_and_positive_levels_match_old_totals() -> 
         ].item()
         assert capacity == capacity_total
         assert efficiency == pytest.approx(expected_efficiency[river_level])
-        assert construction_speed == pytest.approx(expected_efficiency[river_level])
+        assert construction_speed == pytest.approx(expected_speed[river_level])
 
 
 def test_compile_free_building_level_modifiers_updates_without_clobbering(tmp_path: Path) -> None:
@@ -741,7 +744,7 @@ def test_compile_free_building_level_modifiers_updates_without_clobbering(tmp_pa
     ranks_text = ranks_path.read_text(encoding="utf-8-sig")
     assert "free_building_levels = -58" in ranks_text
     assert "local_population_capacity = -100" in ranks_text
-    assert "local_build_buildings_efficiency = -0.3" in ranks_text
+    assert "local_build_buildings_efficiency" not in ranks_text  # in the building prices since 2026-11-06
     assert "local_construction_speed = -0.55" in ranks_text
 
     static_text = static_path.read_text(encoding="utf-8-sig")

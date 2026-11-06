@@ -490,12 +490,18 @@
   each comment): the 12 age prices every building without its own price uses, the estate, HRE army, aqueduct and
   hippodrome prices and the mod's 55 own building prices. Why: with prices x2 nominal incomes rose (x1.3 at the start, x2
   by 1542) while gold prices stayed, and the AI built faster than population grew (run 06aedac2). A new blueprint price
-  needs a line there too.
+  needs a line there too. Since 2026-11-06 (Jan) the file's gold = old value x 1.5 x 1.30, rounded to 5: every location
+  rank had `local_build_buildings_efficiency` -0.3 (a flat cost raise the cost tooltip showed as the rank; the engine divides
+  a level's price by max(0.5, 1 + summed efficiency)). The ranks carry none now (sheet `free_building_levels_sheet.csv`,
+  rank rows); the prices carry it. 1.30 = gold spent in run 77768726 at the old vs the new rule (per 50 years 1.32 early,
+  1.29 late). Bonuses (rivers, ports, ruler, advances) are worth their vanilla weight again, penalties are milder, and the
+  0.5 floor no longer binds on mountains. Religious-influence prices (monasteries, preachers, merchant guild chapel) untouched.
+  `tests/test_tier_lines.py` ties this file to `[tier_lines] price_factor`.
 - Tier lines (`tier_lines.py`, `[tier_lines]`, finalize pass, `ppc tier-lines` lists them; 2026-11-01, Jan, from run 6ee05b7e):
   upgrade lines whose lowest tier needs a raw material, + the extras. A researched successor freezes the old tier, and upper
   tiers cost 4-24x the base for 1.0-1.5x its profit. Each tier's price = profit per level at base prices x 180 months, lowest
-  tier 75-100 gold, higher tier 1.5-2x the tier below (`pp_<tag>_price` in `prices/pp_tier_line_prices.txt`, final gold, NOT
-  in the x1.5 file); own-good level bonus x0.75; tiers on `rural_building_cap` go deeper (second x1.25, third x1.5,
+  tier 75-100 gold, higher tier 1.5-2x the tier below, then x `price_factor` 1.30 rounded to 5 (the rank efficiency, see
+  above; `pp_<tag>_price` in `prices/pp_tier_line_prices.txt`, final gold, NOT in the x1.5 file); own-good level bonus x0.75; tiers on `rural_building_cap` go deeper (second x1.25, third x1.5,
   `script_values/pp_tier_line_caps.txt`); every tier also names all older tiers as `obsolete`, so a site two tiers behind
   can upgrade (blueprints keep the direct predecessor only, the pass adds the rest). `increase_per_level_cost` stays. A new
   line in scope needs no config; a test pins the list of lines. `[tier_lines.price_overrides]` prices four crafts.

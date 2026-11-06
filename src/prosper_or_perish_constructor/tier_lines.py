@@ -8,7 +8,8 @@ over the compiled buildings, the blueprints stay as they are:
 
 - Price: a tier's worth is its profit per level at base goods prices x `payback_months`. The lowest tier pays that
   inside `base_min` and `base_max`, a higher tier inside `step_min` and `step_max` x the tier below, in steps of
-  `round_to`. The keys hold final gold; zz_pp_building_price_stockpile.txt (x1.5) does not touch them.
+  `round_to`. The keys hold final gold = that price x `price_factor` in steps of `final_round_to` (`final_gold`);
+  zz_pp_building_price_stockpile.txt (x1.5) does not touch them.
 - Level bonus: a positive `local_<good>_output_modifier` on the line's own good x `level_bonus_factor`.
 - Depth: a tier above the lowest on `rural_building_cap` gets that cap x (1 + `depth_per_tier` x tier), one labelled row.
 - Skip-tier upgrades: each tier also names every older tier as `obsolete`. Only the next tier was named, so a site two
@@ -62,6 +63,8 @@ class Config:
     level_bonus_factor: Decimal
     depth_per_tier: Decimal
     price_overrides: dict[str, int]
+    price_factor: Decimal = Decimal(1)
+    final_round_to: int = 5
 
 
 @dataclass(frozen=True)
@@ -99,11 +102,20 @@ def load_config(project: Path) -> Config:
         level_bonus_factor=Decimal(str(section["level_bonus_factor"])),
         depth_per_tier=Decimal(str(section["depth_per_tier"])),
         price_overrides={str(tag): int(gold) for tag, gold in section.get("price_overrides", {}).items()},
+        price_factor=Decimal(str(section.get("price_factor", 1))),
+        final_round_to=int(section.get("final_round_to", 5)),
     )
 
 
+def final_gold(price: float, config: Config) -> int:
+    """The gold a price key holds: the tier (or override) price x `price_factor`, in steps of `final_round_to`."""
+    steps = (Decimal(str(price)) * config.price_factor / config.final_round_to).quantize(Decimal(1), rounding=ROUND_HALF_UP)
+    return int(steps) * config.final_round_to
+
+
 def tier_price(value: float, below: int | None, config: Config) -> int:
-    """Final gold of a tier with this profit per level at base prices, given the price of the tier below."""
+    """Price of a tier with this profit per level at base prices, given the price of the tier below (before
+    `final_gold`)."""
     worth = max(value, 0.0) * config.payback_months
     if below is None:
         price = min(max(worth, config.base_min), config.base_max)
@@ -180,14 +192,16 @@ def plan(repo: Path, project: Path) -> list[Tier]:
                 tag=tag,
                 line=line,
                 tier=len(below),
-                price=price[tag],
+                price=final_gold(price[tag], config),
                 value=value,
                 previous=below[-1] if below else None,
                 older=tuple(reversed(below[:-1])),
                 deepens=bool(below) and bool(cap) and cap.group(1) == BASE_CAP,
                 bonus=_own_good_bonus(bodies[tag]),
             ))
-    tiers += [Tier(tag=tag, line=tag, tier=0, price=gold) for tag, gold in sorted(config.price_overrides.items())]
+    tiers += [
+        Tier(tag=tag, line=tag, tier=0, price=final_gold(gold, config)) for tag, gold in sorted(config.price_overrides.items())
+    ]
     return tiers
 
 

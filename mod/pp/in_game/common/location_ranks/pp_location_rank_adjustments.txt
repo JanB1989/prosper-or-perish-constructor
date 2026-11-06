@@ -1,7 +1,7 @@
 ﻿# In general cities and towns are now way worse at producing food.
 # The -0.004 growth gate below also applies to tribesmen on owned land (their share-weighted offset was removed 2026-09-26).
 # The tribesmen birth brake is on the topography classes (worldbuilder/modifiers.py): unowned land gets no rank modifiers.
-# Building in cities and towns is also more expensive in general to slow snowball down a bit
+# Construction is slower in every rank and slowest in cities and megalopolises (local_construction_speed). The flat -0.3 build efficiency every rank had is in the building prices since 2026-11-06 (x1.30).
 # They are better at storing food though.
 TRY_INJECT:megalopolis = {
 	rank_modifier = {
@@ -14,7 +14,6 @@ TRY_INJECT:megalopolis = {
 		local_population_growth = -0.004 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
 
 		free_building_levels = -152
-		local_build_buildings_efficiency = -0.3
 		local_construction_speed = -0.8
 	}
 }
@@ -36,7 +35,6 @@ TRY_INJECT:city = {
 		local_population_growth = -0.004 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
 
 		free_building_levels = -58
-		local_build_buildings_efficiency = -0.3
 		local_construction_speed = -0.55
 	}
 }
@@ -51,7 +49,6 @@ TRY_INJECT:town = {
 		local_province_food_sales_output_modifier = 0.025
 		local_offset_output_modifier = 0.025
 		free_building_levels = 11
-		local_build_buildings_efficiency = -0.3
 		local_construction_speed = -0.3
 	}
 }
@@ -63,7 +60,6 @@ TRY_INJECT:rural_settlement = {
 		local_offset_output_modifier = 0.00
 		free_building_levels = 30
 		local_population_growth = -0.004 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
-		local_build_buildings_efficiency = -0.3
 		local_construction_speed = -0.3
 	}
 }

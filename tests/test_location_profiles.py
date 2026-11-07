@@ -140,7 +140,7 @@ def test_scripted_guis_of_the_contract() -> None:
     guis = _read(MOD / lpf.SCRIPTED_GUIS)
     effects = _defined("scripted_effects")
     rows = re.findall(r"^\| `(pp_lprof_[a-z_]+)` \| (location|country)", _read(CONTRACT), re.MULTILINE)
-    assert len(rows) == 8
+    assert len(rows) == 9
     for name, scope in rows:
         block = _block(guis, name)
         assert f"scope = {scope}" in block, name
@@ -155,9 +155,9 @@ def test_flags_and_scopes_are_declared() -> None:
     result, _ = _build()
     effects = _read(MOD / lpf.EFFECTS)
     declared = set(re.findall(r"value = flag:(\w+)", _block(effects, "pp_lprof_declare_flags")))
-    expected = {f"s{k}" for k in range(1, config.slots + 1)} | {"none", "icon", "up", "down"}
+    expected = {f"s{k}" for k in range(1, config.slots + 1)} | {"none", "icon", "up", "down", lpf.EDITED, lpf.NEXT}
     expected |= {f"r{r}" for r in range(1, config.rules + 1)} | {f"c{n}" for n in range(1, len(config.colors) + 1)}
-    expected |= {item.key for item in result.items}
+    expected |= {item.key for item in result.items} | {symbol.key for symbol in config.symbols}
     assert expected <= declared
     for path in (MOD / lpf.EFFECTS, MOD / lpf.HAND_EFFECTS):
         for flag in re.findall(r"flag:(\w+)", _code(path)):
@@ -206,31 +206,153 @@ def test_only_the_player() -> None:
     assert callers == ["pp_construction_plan.txt"]
 
 
+PER_SLOT = ("pp_lprof_resolve", "pp_lprof_resolve_free", "pp_lprof_read", "pp_lprof_write", "pp_lprof_declare_flags")
+
+
 def test_slot_and_rule_counts_follow_the_config() -> None:
+    """Only the slot resolve and the slot read / write are written per slot (once each); a rule count shows in the
+    location's rule list and the copies."""
     config = lpf.load_config(PROJECT)
+    slots = [str(k) for k in range(1, config.slots + 1)]
     effects = _code(MOD / lpf.EFFECTS)
     rules = _block(effects, "pp_lprof_location_rules")
-    assert re.findall(r"pp_lprof_rules = \{ k = (\d+) \}", rules) == [str(k) for k in range(1, config.slots + 1)]
-    assert re.findall(r"r = (\d+) \}", _block(effects, "pp_lprof_rules")) == [str(r) for r in range(1, config.rules + 1)]
-    for name in ("pp_lprof_assign_do", "pp_lprof_new_do", "pp_lprof_set_do", "pp_lprof_color_do", "pp_lprof_payback_do",
-                 "pp_lprof_rule_clear_do", "pp_lprof_rule_move_do", "pp_lprof_delete_do"):
-        assert re.findall(r"flag:s(\d+) = ", _block(effects, name)) == [str(k) for k in range(1, config.slots + 1)], name
-    new = _block(effects, "pp_lprof_new_do")
-    for k in range(1, config.slots + 1):
-        assert f"pp_lprof_new_slot = {{ k = {k} col = {lpf.color_value(config, k)} }}" in new
-    assert "value = goods:lumber" in _block(_code(MOD / lpf.HAND_EFFECTS), "pp_lprof_new_slot")
-    assert lpf.DEFAULT_ICON == "lumber"
-    colors = re.findall(r"flag:c(\d+) = ", _block(effects, "pp_lprof_color_slot"))
+    assert re.findall(r"pp_lprof_rule = \{ r = (\d+) \}", rules) == [str(r) for r in range(1, config.rules + 1)]
+    resolve = _block(effects, "pp_lprof_resolve")
+    assert re.findall(r"flag:s(\d+) = \{ set_variable = \{ name = pp_lprof_k value = (\d+) \} \}", resolve) == [
+        (k, str(100 + int(k))) for k in slots]
+    assert "scope:pp_slot = flag:e" in resolve and "from = pp_lprof_e_k to = pp_lprof_k" in resolve
+    free = _block(effects, "pp_lprof_resolve_free")
+    assert re.findall(r"has_variable = pp_lprof_(\d+)_on \} \} set_variable = \{ name = pp_lprof_k value = (\d+) \}", free) == [
+        (k, str(100 + int(k))) for k in slots]
+    for name, callee in (("pp_lprof_read", "pp_lprof_read_slot"), ("pp_lprof_write", "pp_lprof_write_slot")):
+        chain = re.findall(rf"var:pp_lprof_k < ([0-9.]+) \}} {callee} = \{{ k = (\d+) \}}", _block(effects, name))
+        assert [k for _, k in chain] == slots, name
+        assert all(float(bound) == 100 + int(k) + 0.5 for bound, k in chain), name
+    # no other generated or hand-written effect names a slot
+    hand = _code(MOD / lpf.HAND_EFFECTS)
+    for text in (effects, hand):
+        for match in re.finditer(r"^([a-z_][a-z0-9_]*) = \{", text, re.MULTILINE):
+            body = _block(text, match.group(1))
+            if match.group(1) not in PER_SLOT:
+                assert not re.search(r"pp_lprof_\d+_|flag:s\d", body), f"{match.group(1)} names a slot"
+    colors = re.findall(r"flag:c(\d+) = ", _block(effects, "pp_lprof_color_staged"))
     assert colors == [str(n) for n in range(1, len(config.colors) + 1)]
+    assert "value = goods:lumber" in _block(hand, "pp_lprof_stage_new")
+    assert lpf.DEFAULT_ICON == "lumber"
     values = _code(MOD / lpf.VALUES)
-    free = _block(values, "pp_lprof_first_free")
-    assert re.findall(r"has_variable = pp_lprof_(\d+)_on", free) == [str(k) for k in range(1, config.slots + 1)]
+    new_color = _block(values, "pp_lprof_new_color")
+    subtract = int(re.search(r"subtract = (\d+)", new_color).group(1))
+    modulo = int(re.search(r"modulo = (\d+)", new_color).group(1))
+    add = int(re.search(r"add = (\d+)", new_color).group(1))
     for k in range(1, config.slots + 1):
-        assert f"pp_lprof_{k}_locs_n = {{" in values and f"pp_lprof_{k}_col_n = {{" in values
-        for r in range(1, config.rules + 1):
-            assert f"pp_lprof_{k}_r{r}_pb_n = {{" in values
+        assert (100 + k - subtract) % modulo + add == lpf.color_value(config, k), k
+    free_value = _block(values, "pp_lprof_first_free")
+    assert re.findall(r"has_variable = pp_lprof_(\d+)_on", free_value) == slots
+    assert re.findall(r"has_variable = pp_lprof_(\d+)_on", _block(values, "pp_lprof_used_n")) == slots
     for r in range(1, config.rules + 1):
         assert f"pp_lprof_r{r}_st_n = {{" in values
+
+
+def test_flag_frames_follow_one_order() -> None:
+    """A flag's frame number (pp_lprof_key_frame, stored beside icon flags and category rule targets) is its place in
+    lpf.frame_flags, the order of the GUI's flag strip: the building categories, then the symbols."""
+    config = lpf.load_config(PROJECT)
+    chain = re.findall(r"scope:pp_key = flag:(\w+) \} value = (\d+) \}", _block(_code(MOD / lpf.VALUES), "pp_lprof_key_frame"))
+    expected = lpf.frame_flags(lp.load_config(PROJECT).categories, config)
+    assert [flag for flag, _ in chain] == expected
+    assert [int(number) for _, number in chain] == list(range(101, 101 + len(expected)))
+    assert expected[:len(lp.load_config(PROJECT).categories)] == list(lp.load_config(PROJECT).categories)
+
+
+def test_pass_reads_the_location_copies() -> None:
+    """The monthly pass reads only the location's copy of its profile: no slot, no country variable of a profile."""
+    hand = _code(MOD / lpf.HAND_EFFECTS)
+    effects = _code(MOD / lpf.EFFECTS)
+    rule = _block(hand, "pp_lprof_rule")
+    for part in ("has_variable = pp_lprof_r$r$_g", "has_variable = pp_lprof_r$r$_c", "value = var:pp_lprof_r$r$_pb",
+                 "pp_lprof_goods_target = { v = pp_lprof_r$r$_g }", "pp_lprof_category_target = { v = pp_lprof_r$r$_c }"):
+        assert part in rule, part
+    for name in ("pp_lprof_goods_target", "pp_lprof_category_target"):
+        assert "trigger = var:$v$" in _block(effects, name), name
+    for text in (rule, _block(effects, "pp_lprof_location_rules"), _block(hand, "pp_lprof_run")):
+        assert "$k$" not in text and not re.search(r"pp_lprof_\d", text)
+        assert "scope:pp_cplan_country.var:pp_lprof" not in text
+
+
+def test_every_edit_passes_the_profile_on() -> None:
+    """Copy on edit: every button that changes a slot writes it back and gives the edit buffer and every location with
+    the slot the new data; assign gives the location the copy, and every way a profile leaves a location takes the copy
+    away."""
+    config = lpf.load_config(PROJECT)
+    hand = _code(MOD / lpf.HAND_EFFECTS)
+    effects = _code(MOD / lpf.EFFECTS)
+    guis = _read(MOD / lpf.SCRIPTED_GUIS)
+    staged = {"pp_lprof_set_do": "pp_lprof_set_staged", "pp_lprof_color_do": "pp_lprof_color_staged",
+              "pp_lprof_payback_do": "pp_lprof_payback_staged", "pp_lprof_rule_clear_do": "pp_lprof_rule_clear_staged",
+              "pp_lprof_rule_move_do": "pp_lprof_rule_move_staged"}
+    for do, op in staged.items():
+        assert f"pp_lprof_edit = {{ do = {op} }}" in _block(hand, do), do
+        body = _block(effects, op)
+        assert not re.search(r"pp_lprof_(?:\d+|e)_", body), f"{op} edits only the staged copy"
+    edit = _block(hand, "pp_lprof_edit")
+    order = [edit.index(part) for part in ("pp_lprof_resolve = yes", "pp_lprof_read = yes", "$do$ = yes",
+                                           "pp_lprof_commit = yes", "pp_lprof_unstage = yes")]
+    assert order == sorted(order)
+    commit = _block(hand, "pp_lprof_commit")
+    assert commit.index("pp_lprof_write = yes") < commit.index("pp_lprof_publish = yes")
+    publish = _block(hand, "pp_lprof_publish")
+    assert "pp_lprof_copy_profile = { from = pp_lprof_s to = pp_lprof_e }" in publish
+    assert "set_variable = { name = pp_lprof_e_k value = var:pp_lprof_k }" in publish
+    loop = publish[publish.index("every_in_list"):]
+    assert "var:pp_lprof > scope:pp_lprof_lo" in loop and "pp_lprof_copy_profile = { from = pp_lprof_s to = pp_lprof }" in loop
+    assert "pp_lprof_commit = yes" in _block(hand, "pp_lprof_new_do")
+    assert "pp_lprof_publish = yes" in _block(hand, "pp_lprof_select_do")
+    assert "pp_lprof_copy_profile = { from = pp_lprof_s to = pp_lprof }" in _block(hand, "pp_lprof_assign_staged")
+    delete = _block(hand, "pp_lprof_delete_staged")
+    assert "pp_lprof_write = yes" in delete and "pp_lprof_drop_gone = yes" in delete
+    assert "pp_lprof_clear_copies = { p = pp_lprof_e }" in delete
+    clear = _block(hand, "pp_lprof_clear_location")
+    assert "remove_variable = pp_lprof" in clear and "pp_lprof_clear_copies = { p = pp_lprof }" in clear
+    for name in ("pp_lprof_unassign", "pp_lprof_drop_gone", "pp_lprof_cleanup"):
+        assert "pp_lprof_clear_location = yes" in _block(hand, name), name
+    # a copy carries every field of a slot, and clearing one removes the same fields
+    fields = lpf.profile_fields(config)
+    copy = _block(effects, "pp_lprof_copy_profile")
+    pulled = re.findall(r"pp_lprof_pull_(\w+) = \{ from = \$from\$_(\w+) to = \$to\$_(\w+) \}", copy)
+    assert [source for _, source, _ in pulled] == fields and all(source == target for _, source, target in pulled)
+    assert {kind for kind, source, _ in pulled if source.endswith("_c")} == {"cat"}
+    kinds = dict((source, kind) for kind, source, _ in pulled)
+    assert kinds["ic"] == "icon" and kinds["in"] == "n" and kinds["col"] == "n"
+    frames = re.findall(r"pp_lprof_pull_n = \{ from = \$from\$_(\w+) to = \$to\$_\1 \}", _block(effects, "pp_lprof_copy_frames"))
+    assert frames == lpf.frame_fields(config) == [f"r{r}_cn" for r in range(1, config.rules + 1)]
+    assert re.findall(r"remove_variable = \$p\$_(\w+)", _block(effects, "pp_lprof_clear_copies")) == fields
+    assert re.findall(r"remove_variable = \$p\$_(\w+)", _block(effects, "pp_lprof_clear_frames")) == frames
+    assert "pp_lprof_clear_frames = { p = pp_lprof }" not in _code(MOD / lpf.HAND_EFFECTS), "a location copy has no frame numbers"
+    for name in ("pp_lprof_read_slot", "pp_lprof_write_slot"):
+        assert "pp_lprof_copy_profile = { from = " in _block(hand, name), name
+        assert "pp_lprof_copy_frames = { from = " in _block(hand, name), name
+    assert "pp_lprof_copy_frames = { from = pp_lprof_s to = pp_lprof_e }" in publish
+    # the GUI draws a flag only by its frame number: every place that sets a flag sets its number beside it
+    for name, flags in (("pp_lprof_set_icon", "OR = {"), ("pp_lprof_set_target", "pp_lprof_category_key = yes")):
+        body = _block(hand, name)
+        assert flags in body and "set_variable = { name = $n$ value = pp_lprof_key_frame }" in body, name
+        assert "remove_variable = $n$" in body, name
+    staged_set = _block(effects, "pp_lprof_set_staged")
+    assert "n = pp_lprof_s_in }" in staged_set
+    for r in range(1, config.rules + 1):
+        assert f"n = pp_lprof_s_r{r}_cn }}" in staged_set
+        assert f"remove_variable = pp_lprof_s_r{r}_cn" in _block(effects, "pp_lprof_rule_clear_staged")
+    swap = _block(hand, "pp_lprof_swap_rules")
+    assert "from = pp_lprof_s_r$a$_cn" in swap and "to = pp_lprof_s_r$b$_cn" in swap
+    # flags are compared (switch), never copied as a value; every icon flag and category reaches its copy
+    icon = _block(effects, "pp_lprof_pull_icon")
+    for flag in list(lp.load_config(PROJECT).categories) + [symbol.key for symbol in config.symbols]:
+        assert f"flag:{flag} = {{ set_variable = {{ name = $to$ value = flag:{flag} }} }}" in icon, flag
+    for category in lp.load_config(PROJECT).categories:
+        assert f"flag:{category} = {{ set_variable" in _block(effects, "pp_lprof_pull_cat"), category
+    # the edit buffer is what the editor's buttons pass (e) and new profiles use the first free slot (next)
+    assert "pp_lprof_select = {" in guis and "pp_lprof_select_do = yes" in _block(guis, "pp_lprof_select")
+    assert "pp_lprof_resolve_free = yes" in _block(hand, "pp_lprof_new_do")
 
 
 def test_items_reach_their_targets() -> None:
@@ -250,6 +372,18 @@ def test_items_reach_their_targets() -> None:
             assert f"flag:{item.key} = {{ pp_lprof_t_{item.key} = yes }}" in categories, item.key
     # nearly every good has a producer (the rest show "cannot be built here")
     assert sum(1 for item in result.items if item.kind == "good" and not result.targets[item.key]) <= 3
+    # a symbol is only an icon: it is a symbol key (pp_lprof_set_icon takes it), never a category or a good
+    symbols = _block(_code(MOD / lpf.TRIGGERS), "pp_lprof_symbol_key")
+    config = lpf.load_config(PROJECT)
+    assert config.symbols
+    for symbol in config.symbols:
+        assert symbol.key == lpf.SYMBOL_PREFIX + symbol.name
+        assert f"scope:pp_key = flag:{symbol.key}" in symbols, symbol.key
+        assert f"flag:{symbol.key}" not in category_key + keys + categories, symbol.key
+    assert {symbol.key for symbol in config.symbols}.isdisjoint(item.key for item in result.items)
+    hand = _code(MOD / lpf.HAND_EFFECTS)
+    assert "pp_lprof_symbol_key = yes" in _block(hand, "pp_lprof_set_icon")
+    assert "pp_lprof_symbol_key" not in _block(hand, "pp_lprof_set_target")
 
 
 def _step(chain: list[tuple[str, float, int]], value: int | None, otherwise: int | None) -> int | None:

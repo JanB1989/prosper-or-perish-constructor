@@ -3,17 +3,26 @@
 # location with a profile the global Construction Plan rules stand back (pp_cplan_location_ok) and the profile's rules
 # build there: the first rule group of the plan's monthly pass (pp_cplan_run), with its own share of the monthly limit.
 # Player-only like the plan: the pass runs for human countries that switched the plan on, the edits are scripted GUIs.
-# The per-target buildings, the dispatch, the per-slot edits and the flag declarations are generated into
-# pp_location_profiles_generated.txt (location_profiles.py). Variables carry + 100 (a variable at 0 counts as unset;
-# var:x = n compares scopes, so numbers use < / > ranges).
+# Up to 100 profiles cost little: every location with a profile carries a COPY of it (written on assign and whenever its
+# slot is edited), and the monthly pass and the map badge read only the copy; the editor shows one edit buffer (a copy
+# on the country). Generated into pp_location_profiles_generated.txt (location_profiles.py): the per-target buildings,
+# the dispatch, the slot resolve / read / write (the only per-slot script), the edits of the staged copy, the copy of a
+# profile and the flag declarations.
+# Variables carry + 100 (a variable at 0 counts as unset; var:x = n compares scopes, so numbers use < / > ranges).
 #
-# Country: pp_lprof_<k>_on (slot k in use), pp_lprof_<k>_ig / _ic (icon: a goods scope or a category flag),
-# pp_lprof_<k>_col (colour), pp_lprof_<k>_r<r>_g / _c (rule target: goods scope or category flag), pp_lprof_<k>_r<r>_pb
-# (payback limit in years, unset = any), the list pp_lprof_locs (locations with a profile).
-# Location: pp_lprof (slot k), pp_lprof_r<r>_st (rule state after the last pass: 1 started, 2 nothing to build, 3 a
-# level under construction, 5 payback too long, 6 cannot be built here, 7 budget, 8 the market lacks the construction
-# goods, 9 waiting for an earlier rule's construction this month). Pass temporaries: pp_lprof_st, pp_lprof_fail,
-# pp_lprof_best, pp_lprof_pick (location), the list pp_lprof_gone (country).
+# Country: pp_lprof_<k>_on (slot k in use), pp_lprof_<k>_ig / _ic (icon: a goods scope, or a flag: a building category
+# or a symbol) with pp_lprof_<k>_in (the flag's frame in the picture strip + 100: the GUI draws a flag only by its
+# frame), pp_lprof_<k>_col (colour), pp_lprof_<k>_r<r>_g / _c (rule target: goods scope or category flag; _cn its
+# frame),
+# pp_lprof_<k>_r<r>_pb (payback limit in years, unset = any), the list pp_lprof_locs (locations with a profile); the
+# edit buffer pp_lprof_e_k (the slot it holds) and pp_lprof_e_ig / _ic / _in / _col / _r<r>_g / _c / _cn / _pb (its
+# copy); during
+# a button: pp_lprof_k (the slot) and the staged copy pp_lprof_s_on / _ig / ... (removed at its end).
+# Location: pp_lprof (slot k), the copy pp_lprof_ig / _ic / _in / _col / _r<r>_g / _c / _pb, pp_lprof_r<r>_st (rule state
+# after the last pass: 1 started, 2 nothing to build, 3 a level under construction, 5 payback too long, 6 cannot be
+# built here, 7 budget, 8 the market lacks the construction goods, 9 waiting for an earlier rule's construction this
+# month) and pp_lprof_r<r>_est (the payback found). Pass temporaries: pp_lprof_st, pp_lprof_fail, pp_lprof_best,
+# pp_lprof_pick (location), the list pp_lprof_gone (country).
 
 # ---- The monthly pass (country scope, inside pp_cplan_run: scope:pp_cplan_country and scope:actor saved) ----
 
@@ -52,8 +61,7 @@ pp_lprof_cleanup = {
 					NOT = { is_target_in_variable_list = { name = pp_lprof_locs target = scope:pp_lprof_this } }
 				}
 			}
-			remove_variable = pp_lprof
-			pp_lprof_clear_states = yes
+			pp_lprof_clear_location = yes
 			refresh_map_colors = yes
 		}
 	}
@@ -72,28 +80,26 @@ pp_lprof_drop_gone = {
 		save_temporary_scope_as = pp_lprof_this
 		if = {
 			limit = { owner ?= root }
-			remove_variable = pp_lprof
-			pp_lprof_clear_states = yes
+			pp_lprof_clear_location = yes
 		}
 		root = { remove_list_variable = { name = pp_lprof_locs target = scope:pp_lprof_this } }
 	}
 	clear_variable_list = pp_lprof_gone
 }
 
-# Location scope: rule $r$ of profile $k$ (pp_lprof_location_rules runs them in order). A rule without a target has no
-# state. After a construction started here this month by an earlier rule: 9. Else its target decides (generated
-# pp_lprof_t_<target>), within its payback limit (scope:pp_lprof_pb, years + 100; no limit = any).
+# Location scope: rule $r$ of the location's profile, from its copy (pp_location_profiles_generated.txt's
+# pp_lprof_location_rules runs them in order). A rule without a target has no state. After a construction started here
+# this month by an earlier rule: 9. Else its target decides (generated pp_lprof_t_<target>), within its payback limit
+# (scope:pp_lprof_pb, years + 100; no limit = any).
 pp_lprof_rule = {
 	remove_variable = pp_lprof_st
 	remove_variable = pp_lprof_fail
 	remove_variable = pp_lprof_best
 	if = {
 		limit = {
-			scope:pp_cplan_country = {
-				OR = {
-					has_variable = pp_lprof_$k$_r$r$_g
-					has_variable = pp_lprof_$k$_r$r$_c
-				}
+			OR = {
+				has_variable = pp_lprof_r$r$_g
+				has_variable = pp_lprof_r$r$_c
 			}
 		}
 		if = {
@@ -103,15 +109,15 @@ pp_lprof_rule = {
 		else = {
 			save_temporary_scope_value_as = { name = pp_lprof_pb value = 1000000 }
 			if = {
-				limit = { scope:pp_cplan_country = { has_variable = pp_lprof_$k$_r$r$_pb } }
-				save_temporary_scope_value_as = { name = pp_lprof_pb value = scope:pp_cplan_country.var:pp_lprof_$k$_r$r$_pb }
+				limit = { has_variable = pp_lprof_r$r$_pb }
+				save_temporary_scope_value_as = { name = pp_lprof_pb value = var:pp_lprof_r$r$_pb }
 			}
 			if = {
-				limit = { scope:pp_cplan_country = { has_variable = pp_lprof_$k$_r$r$_g } }
-				pp_lprof_goods_target = { v = pp_lprof_$k$_r$r$_g }
+				limit = { has_variable = pp_lprof_r$r$_g }
+				pp_lprof_goods_target = { v = pp_lprof_r$r$_g }
 			}
 			else = {
-				pp_lprof_category_target = { v = pp_lprof_$k$_r$r$_c }
+				pp_lprof_category_target = { v = pp_lprof_r$r$_c }
 			}
 		}
 		pp_lprof_finish = { r = $r$ }
@@ -319,12 +325,336 @@ pp_lprof_build = {
 	}
 }
 
+# ---- Buttons (the scripted GUIs in scripted_guis/pp_location_profiles.txt). Country-scope buttons run with root = the
+# player's country; scope:pp_slot is s1..sN, e (the slot in the edit buffer) or, for a new profile, next. A button reads
+# the slot into the staged copy (pp_lprof_s_*, generated pp_lprof_read), edits that, writes it back (pp_lprof_write)
+# and passes it on: the edit buffer and every location with the slot get it (pp_lprof_publish). Only the reads and
+# writes are written per slot; every edit works on fixed names. ----
+
+# Location scope (root = the location): its profile scope:pp_slot (a slot that is on), or none. A profile replaces the
+# location's own rules or hands off; refresh_map_colors redraws the badges.
+pp_lprof_assign_do = {
+	owner ?= { save_scope_as = pp_lprof_country }
+	if = {
+		limit = { exists = scope:pp_lprof_country }
+		if = {
+			limit = { scope:pp_slot = flag:none }
+			pp_lprof_unassign = yes
+		}
+		else = {
+			scope:pp_lprof_country = {
+				pp_lprof_resolve = yes
+				pp_lprof_read = yes
+				pp_lprof_save_range = yes
+			}
+			if = {
+				limit = { scope:pp_lprof_country = { has_variable = pp_lprof_s_on } }
+				pp_lprof_assign_staged = yes
+			}
+			scope:pp_lprof_country = { pp_lprof_unstage = yes }
+		}
+	}
+	refresh_map_colors = yes
+}
+
+# Country scope: a new profile in slot scope:pp_slot (next = the first free one), shown in the editor.
+pp_lprof_new_do = {
+	save_scope_as = pp_lprof_country
+	if = {
+		limit = { scope:pp_slot = flag:next }
+		pp_lprof_resolve_free = yes
+	}
+	else = {
+		pp_lprof_resolve = yes
+	}
+	if = {
+		limit = { has_variable = pp_lprof_k }
+		pp_lprof_read = yes
+		if = {
+			limit = { NOT = { has_variable = pp_lprof_s_on } }
+			pp_lprof_stage_new = yes
+		}
+		pp_lprof_commit = yes
+	}
+	pp_lprof_unstage = yes
+}
+
+# Country scope: the editor shows slot scope:pp_slot (a slot in use); its locations get its data again.
+pp_lprof_select_do = {
+	save_scope_as = pp_lprof_country
+	pp_lprof_resolve = yes
+	pp_lprof_read = yes
+	if = {
+		limit = { has_variable = pp_lprof_s_on }
+		pp_lprof_publish = yes
+	}
+	pp_lprof_unstage = yes
+}
+
+# Country scope: the icon (scope:pp_field = icon) or rule r's target (r1..rN) of slot scope:pp_slot = the item
+# scope:pp_key.
+pp_lprof_set_do = {
+	pp_lprof_key_scope = yes
+	pp_lprof_edit = { do = pp_lprof_set_staged }
+}
+
+# Country scope: the colour scope:pp_col of slot scope:pp_slot.
+pp_lprof_color_do = {
+	pp_lprof_edit = { do = pp_lprof_color_staged }
+}
+
+# Country scope: one step (scope:pp_dir) of the payback limit of rule scope:pp_field of slot scope:pp_slot.
+pp_lprof_payback_do = {
+	pp_lprof_edit = { do = pp_lprof_payback_staged }
+}
+
+# Country scope: empties rule scope:pp_field of slot scope:pp_slot.
+pp_lprof_rule_clear_do = {
+	pp_lprof_edit = { do = pp_lprof_rule_clear_staged }
+}
+
+# Country scope: swaps rule scope:pp_field of slot scope:pp_slot with its neighbour in the direction scope:pp_dir.
+pp_lprof_rule_move_do = {
+	pp_lprof_edit = { do = pp_lprof_rule_move_staged }
+}
+
+# Country scope: clears slot scope:pp_slot and takes it off every location.
+pp_lprof_delete_do = {
+	save_scope_as = pp_lprof_country
+	pp_lprof_resolve = yes
+	pp_lprof_read = yes
+	if = {
+		limit = { has_variable = pp_lprof_s_on }
+		pp_lprof_delete_staged = yes
+	}
+	pp_lprof_unstage = yes
+}
+
+# Country scope (root = the player's country): slot scope:pp_slot staged, $do$ (an edit of the staged copy, generated
+# pp_lprof_*_staged), written back and passed on (pp_lprof_commit).
+pp_lprof_edit = {
+	save_scope_as = pp_lprof_country
+	pp_lprof_resolve = yes
+	pp_lprof_read = yes
+	if = {
+		limit = { has_variable = pp_lprof_s_on }
+		$do$ = yes
+		pp_lprof_commit = yes
+	}
+	pp_lprof_unstage = yes
+}
+
+# ---- The staged copy (country scope, scope:pp_lprof_country = the country, pp_lprof_k = the slot + 100) ----
+
+# The staged copy back into slot pp_lprof_k, then passed on.
+pp_lprof_commit = {
+	pp_lprof_write = yes
+	pp_lprof_publish = yes
+}
+
+# The staged copy into the edit buffer (the editor shows it) and into every location with the slot (their copies).
+pp_lprof_publish = {
+	set_variable = { name = pp_lprof_e_k value = var:pp_lprof_k }
+	pp_lprof_copy_profile = { from = pp_lprof_s to = pp_lprof_e }
+	pp_lprof_copy_frames = { from = pp_lprof_s to = pp_lprof_e }
+	pp_lprof_save_range = yes
+	every_in_list = {
+		variable = pp_lprof_locs
+		limit = {
+			has_variable = pp_lprof
+			var:pp_lprof > scope:pp_lprof_lo
+			var:pp_lprof < scope:pp_lprof_hi
+		}
+		pp_lprof_copy_profile = { from = pp_lprof_s to = pp_lprof }
+	}
+	refresh_map_colors = yes
+}
+
+# The var:pp_lprof range of slot pp_lprof_k's locations as scope:pp_lprof_lo / scope:pp_lprof_hi.
+pp_lprof_save_range = {
+	save_temporary_scope_value_as = { name = pp_lprof_lo value = pp_lprof_k_lo }
+	save_temporary_scope_value_as = { name = pp_lprof_hi value = pp_lprof_k_hi }
+}
+
+# The staged copy and the slot number removed (the end of every button).
+pp_lprof_unstage = {
+	remove_variable = pp_lprof_k
+	remove_variable = pp_lprof_s_on
+	pp_lprof_clear_copies = { p = pp_lprof_s } pp_lprof_clear_frames = { p = pp_lprof_s }
+}
+
+# A new profile: in use, icon lumber, colour k (wrapping, pp_lprof_new_color), no rules.
+pp_lprof_stage_new = {
+	pp_lprof_clear_copies = { p = pp_lprof_s } pp_lprof_clear_frames = { p = pp_lprof_s }
+	set_variable = { name = pp_lprof_s_on value = yes }
+	set_variable = { name = pp_lprof_s_ig value = goods:lumber }
+	set_variable = { name = pp_lprof_s_col value = pp_lprof_new_color }
+}
+
+# The slot emptied and taken off every location of the country's list that carries it (their copies go); a listed
+# location another country owns now only leaves the list. The edit buffer goes when it holds the slot.
+pp_lprof_delete_staged = {
+	remove_variable = pp_lprof_s_on
+	pp_lprof_clear_copies = { p = pp_lprof_s } pp_lprof_clear_frames = { p = pp_lprof_s }
+	pp_lprof_write = yes
+	pp_lprof_save_range = yes
+	every_in_list = {
+		variable = pp_lprof_locs
+		limit = {
+			has_variable = pp_lprof
+			var:pp_lprof > scope:pp_lprof_lo
+			var:pp_lprof < scope:pp_lprof_hi
+		}
+		pp_lprof_mark_gone = yes
+	}
+	pp_lprof_drop_gone = yes
+	if = {
+		limit = {
+			has_variable = pp_lprof_e_k
+			var:pp_lprof_e_k > scope:pp_lprof_lo
+			var:pp_lprof_e_k < scope:pp_lprof_hi
+		}
+		remove_variable = pp_lprof_e_k
+		pp_lprof_clear_copies = { p = pp_lprof_e } pp_lprof_clear_frames = { p = pp_lprof_e }
+	}
+	refresh_map_colors = yes
+}
+
+# The item scope:pp_key (a good from scope:pp_lprof_val, or a building category) into the rule target pair $g$ (goods
+# scope) / $c$ (category flag, with its frame number $n$ for the GUI); the other one goes. A symbol builds nothing and
+# is no rule target.
+pp_lprof_set_target = {
+	if = {
+		limit = { exists = scope:pp_lprof_val }
+		set_variable = { name = $g$ value = scope:pp_lprof_val }
+		remove_variable = $c$
+		remove_variable = $n$
+	}
+	else_if = {
+		limit = { pp_lprof_category_key = yes }
+		set_variable = { name = $c$ value = scope:pp_key }
+		set_variable = { name = $n$ value = pp_lprof_key_frame }
+		remove_variable = $g$
+	}
+}
+
+# The item scope:pp_key into the icon pair $g$ (goods scope) / $c$ (a flag: a building category or a symbol, with its
+# frame number $n$: the GUI draws the flag as that frame of the picture strip).
+pp_lprof_set_icon = {
+	if = {
+		limit = { exists = scope:pp_lprof_val }
+		set_variable = { name = $g$ value = scope:pp_lprof_val }
+		remove_variable = $c$
+		remove_variable = $n$
+	}
+	else_if = {
+		limit = {
+			OR = {
+				pp_lprof_category_key = yes
+				pp_lprof_symbol_key = yes
+			}
+		}
+		set_variable = { name = $c$ value = scope:pp_key }
+		set_variable = { name = $n$ value = pp_lprof_key_frame }
+		remove_variable = $g$
+	}
+}
+
+# Staged rules $a$ and $b$ swap places, and so do their states in the slot's locations.
+pp_lprof_swap_rules = {
+	pp_lprof_pull_g = { from = pp_lprof_s_r$a$_g to = pp_lprof_swap_g }
+	pp_lprof_pull_cat = { from = pp_lprof_s_r$a$_c to = pp_lprof_swap_c }
+	pp_lprof_pull_n = { from = pp_lprof_s_r$a$_cn to = pp_lprof_swap_cn }
+	pp_lprof_pull_n = { from = pp_lprof_s_r$a$_pb to = pp_lprof_swap_pb }
+	pp_lprof_pull_g = { from = pp_lprof_s_r$b$_g to = pp_lprof_s_r$a$_g }
+	pp_lprof_pull_cat = { from = pp_lprof_s_r$b$_c to = pp_lprof_s_r$a$_c }
+	pp_lprof_pull_n = { from = pp_lprof_s_r$b$_cn to = pp_lprof_s_r$a$_cn }
+	pp_lprof_pull_n = { from = pp_lprof_s_r$b$_pb to = pp_lprof_s_r$a$_pb }
+	pp_lprof_pull_g = { from = pp_lprof_swap_g to = pp_lprof_s_r$b$_g }
+	pp_lprof_pull_cat = { from = pp_lprof_swap_c to = pp_lprof_s_r$b$_c }
+	pp_lprof_pull_n = { from = pp_lprof_swap_cn to = pp_lprof_s_r$b$_cn }
+	pp_lprof_pull_n = { from = pp_lprof_swap_pb to = pp_lprof_s_r$b$_pb }
+	remove_variable = pp_lprof_swap_g
+	remove_variable = pp_lprof_swap_c
+	remove_variable = pp_lprof_swap_cn
+	remove_variable = pp_lprof_swap_pb
+	pp_lprof_save_range = yes
+	every_in_list = {
+		variable = pp_lprof_locs
+		limit = {
+			has_variable = pp_lprof
+			var:pp_lprof > scope:pp_lprof_lo
+			var:pp_lprof < scope:pp_lprof_hi
+		}
+		pp_cplan_copy_num = { from = pp_lprof_r$a$_st to = pp_lprof_swap_st }
+		pp_cplan_copy_num = { from = pp_lprof_r$b$_st to = pp_lprof_r$a$_st }
+		pp_cplan_copy_num = { from = pp_lprof_swap_st to = pp_lprof_r$b$_st }
+		pp_cplan_copy_num = { from = pp_lprof_r$a$_est to = pp_lprof_swap_st }
+		pp_cplan_copy_num = { from = pp_lprof_r$b$_est to = pp_lprof_r$a$_est }
+		pp_cplan_copy_num = { from = pp_lprof_swap_st to = pp_lprof_r$b$_est }
+		remove_variable = pp_lprof_swap_st
+	}
+}
+
+# Slot $k$'s variables -> the staged copy (generated pp_lprof_read picks $k$ from pp_lprof_k).
+pp_lprof_read_slot = {
+	pp_cplan_copy_flag = { from = pp_lprof_$k$_on to = pp_lprof_s_on }
+	pp_lprof_copy_profile = { from = pp_lprof_$k$ to = pp_lprof_s }
+	pp_lprof_copy_frames = { from = pp_lprof_$k$ to = pp_lprof_s }
+}
+
+# The staged copy -> slot $k$'s variables (generated pp_lprof_write).
+pp_lprof_write_slot = {
+	pp_cplan_copy_flag = { from = pp_lprof_s_on to = pp_lprof_$k$_on }
+	pp_lprof_copy_profile = { from = pp_lprof_s to = pp_lprof_$k$ }
+	pp_lprof_copy_frames = { from = pp_lprof_s to = pp_lprof_$k$ }
+}
+
+# Any scope: the goods scope in scope:pp_lprof_country's variable $from$ -> this scope's $to$ (removed when unset).
+pp_lprof_pull_g = {
+	if = {
+		limit = { scope:pp_lprof_country = { has_variable = $from$ } }
+		scope:pp_lprof_country = { var:$from$ = { save_temporary_scope_as = pp_lprof_tmp } }
+		set_variable = { name = $to$ value = scope:pp_lprof_tmp }
+	}
+	else = {
+		remove_variable = $to$
+	}
+}
+
+# Any scope: the number in scope:pp_lprof_country's variable $from$ -> this scope's $to$ (removed when unset).
+pp_lprof_pull_n = {
+	if = {
+		limit = { scope:pp_lprof_country = { has_variable = $from$ } }
+		set_variable = { name = $to$ value = scope:pp_lprof_country.var:$from$ }
+	}
+	else = {
+		remove_variable = $to$
+	}
+}
+
 # ---- Assignment ----
 
-# Location scope (scope:pp_lprof_country = its owner): profile $n$ (slot + 100). Replaces the location's own rules or
-# hands off (its stored own rules stay for later); the old states go.
+# Location scope (scope:pp_lprof_country = its owner, with slot pp_lprof_k staged and its range saved): the profile,
+# unless the location has it already: the slot, the list, one layer per location, the copy.
+pp_lprof_assign_staged = {
+	if = {
+		limit = {
+			OR = {
+				NOT = { has_variable = pp_lprof }
+				var:pp_lprof < scope:pp_lprof_lo
+				var:pp_lprof > scope:pp_lprof_hi
+			}
+		}
+		set_variable = { name = pp_lprof value = scope:pp_lprof_country.var:pp_lprof_k }
+		pp_lprof_assign_to = yes
+		pp_lprof_copy_profile = { from = pp_lprof_s to = pp_lprof }
+	}
+}
+
+# Location scope (scope:pp_lprof_country = its owner, pp_lprof set): the old states go, the location joins the list,
+# and the profile replaces the location's own rules or hands off (its stored own rules stay for later).
 pp_lprof_assign_to = {
-	set_variable = { name = pp_lprof value = $n$ }
 	pp_lprof_clear_states = yes
 	save_temporary_scope_as = pp_lprof_this
 	scope:pp_lprof_country = {
@@ -340,8 +670,7 @@ pp_lprof_assign_to = {
 
 # Location scope: no profile here (also called when the location gets own rules or hands off, pp_cplan_own_sync).
 pp_lprof_unassign = {
-	remove_variable = pp_lprof
-	pp_lprof_clear_states = yes
+	pp_lprof_clear_location = yes
 	save_temporary_scope_as = pp_lprof_this
 	owner ?= {
 		if = {
@@ -352,90 +681,9 @@ pp_lprof_unassign = {
 	refresh_map_colors = yes
 }
 
-# ---- Slot edits (country scope, root = the player's country) ----
-
-# Slot $k$ on: icon lumber, colour $col$ (+ 100), no rules.
-pp_lprof_new_slot = {
-	set_variable = { name = pp_lprof_$k$_on value = yes }
-	set_variable = { name = pp_lprof_$k$_ig value = goods:lumber }
-	remove_variable = pp_lprof_$k$_ic
-	set_variable = { name = pp_lprof_$k$_col value = $col$ }
-	pp_lprof_clear_rules = { k = $k$ }
-}
-
-# The item scope:pp_key into the pair $g$ (goods scope, from scope:pp_lprof_val) / $c$ (category flag); the other one
-# goes.
-pp_lprof_set_target = {
-	if = {
-		limit = { exists = scope:pp_lprof_val }
-		set_variable = { name = $g$ value = scope:pp_lprof_val }
-		remove_variable = $c$
-	}
-	else_if = {
-		limit = { pp_lprof_category_key = yes }
-		set_variable = { name = $c$ value = scope:pp_key }
-		remove_variable = $g$
-	}
-}
-
-# Any scope: the goods scope in the variable $from$ -> $to$ (removed when $from$ is unset).
-pp_lprof_copy_g = {
-	if = {
-		limit = { has_variable = $from$ }
-		var:$from$ = { save_temporary_scope_as = pp_lprof_tmp }
-		set_variable = { name = $to$ value = scope:pp_lprof_tmp }
-	}
-	else = {
-		remove_variable = $to$
-	}
-}
-
-# Rules $a$ and $b$ of slot $k$ swap places, and so do their states in the slot's locations (var:pp_lprof between $lo$
-# and $hi$).
-pp_lprof_swap_rules = {
-	pp_lprof_copy_g = { from = pp_lprof_$k$_r$a$_g to = pp_lprof_swap_g }
-	pp_lprof_copy_c = { from = pp_lprof_$k$_r$a$_c to = pp_lprof_swap_c }
-	pp_cplan_copy_num = { from = pp_lprof_$k$_r$a$_pb to = pp_lprof_swap_pb }
-	pp_lprof_copy_g = { from = pp_lprof_$k$_r$b$_g to = pp_lprof_$k$_r$a$_g }
-	pp_lprof_copy_c = { from = pp_lprof_$k$_r$b$_c to = pp_lprof_$k$_r$a$_c }
-	pp_cplan_copy_num = { from = pp_lprof_$k$_r$b$_pb to = pp_lprof_$k$_r$a$_pb }
-	pp_lprof_copy_g = { from = pp_lprof_swap_g to = pp_lprof_$k$_r$b$_g }
-	pp_lprof_copy_c = { from = pp_lprof_swap_c to = pp_lprof_$k$_r$b$_c }
-	pp_cplan_copy_num = { from = pp_lprof_swap_pb to = pp_lprof_$k$_r$b$_pb }
-	remove_variable = pp_lprof_swap_g
-	remove_variable = pp_lprof_swap_c
-	remove_variable = pp_lprof_swap_pb
-	every_in_list = {
-		variable = pp_lprof_locs
-		limit = {
-			has_variable = pp_lprof
-			var:pp_lprof > $lo$
-			var:pp_lprof < $hi$
-		}
-		pp_cplan_copy_num = { from = pp_lprof_r$a$_st to = pp_lprof_swap_st }
-		pp_cplan_copy_num = { from = pp_lprof_r$b$_st to = pp_lprof_r$a$_st }
-		pp_cplan_copy_num = { from = pp_lprof_swap_st to = pp_lprof_r$b$_st }
-		remove_variable = pp_lprof_swap_st
-	}
-}
-
-# Slot $k$ cleared and taken off every location of the country's list that carries it (var:pp_lprof between $lo$ and
-# $hi$); a listed location another country owns now only leaves the list.
-pp_lprof_delete_slot = {
-	remove_variable = pp_lprof_$k$_on
-	remove_variable = pp_lprof_$k$_ig
-	remove_variable = pp_lprof_$k$_ic
-	remove_variable = pp_lprof_$k$_col
-	pp_lprof_clear_rules = { k = $k$ }
-	every_in_list = {
-		variable = pp_lprof_locs
-		limit = {
-			has_variable = pp_lprof
-			var:pp_lprof > $lo$
-			var:pp_lprof < $hi$
-		}
-		pp_lprof_mark_gone = yes
-	}
-	pp_lprof_drop_gone = yes
-	refresh_map_colors = yes
+# Location scope: the slot, the copy of the profile and the rule states removed.
+pp_lprof_clear_location = {
+	remove_variable = pp_lprof
+	pp_lprof_clear_copies = { p = pp_lprof }
+	pp_lprof_clear_states = yes
 }

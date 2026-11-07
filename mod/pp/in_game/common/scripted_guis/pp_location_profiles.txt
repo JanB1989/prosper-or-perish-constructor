@@ -1,7 +1,8 @@
 ﻿# Prosper or Perish - Location Profiles buttons (docs/location_profiles.md): the profile editor, the Location Plan
-# window's profile row, the map's right-click menu and the paint mode call these. Parameters are flag scopes the GUI
-# adds with AddScope: scope:pp_slot (s1..sN, or none for assign), scope:pp_field (icon, r1..rN), scope:pp_key (an item:
-# a good, logistics = market access, or a building category), scope:pp_dir (up / down), scope:pp_col (c1..cN).
+# window's profile row, the location window's row, the map's right-click menu and the paint mode call these. Parameters
+# are flag scopes the GUI adds with AddScope: scope:pp_slot (s1..sN; e = the profile in the editor's buffer; none for
+# assign; next = the first free slot for new), scope:pp_field (icon, r1..rN), scope:pp_key (an item: a good, logistics =
+# market access, a building category, or a symbol for the icon), scope:pp_dir (up / down), scope:pp_col (c1..cN).
 # Country-scope buttons run with root = the player's country (GuiScope.SetRoot(GetPlayer.MakeScope)). The effects are
 # in scripted_effects/pp_location_profiles*.txt.
 
@@ -13,11 +14,20 @@ pp_lprof_assign = {
 	}
 }
 
-# Country scope: slot scope:pp_slot on (icon lumber, its colour, no rules).
+# Country scope: a new profile in slot scope:pp_slot (next = the first free one: icon lumber, its colour, no rules);
+# the editor shows it.
 pp_lprof_new = {
 	scope = country
 	effect = {
 		pp_lprof_new_do = yes
+	}
+}
+
+# Country scope: the editor shows slot scope:pp_slot (its data goes into the edit buffer).
+pp_lprof_select = {
+	scope = country
+	effect = {
+		pp_lprof_select_do = yes
 	}
 }
 

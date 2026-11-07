@@ -4,6 +4,7 @@ map_markers.gui). Contract: docs/location_profiles.md."""
 
 from __future__ import annotations
 
+import dataclasses
 import re
 from pathlib import Path
 
@@ -32,6 +33,7 @@ CONTAINERS = {"flowcontainer", "container", "dynamicgridbox", "fixedgridbox"}
 PARAMS = {
     "pp_lprof_assign": {"pp_slot"},
     "pp_lprof_new": {"pp_slot"},
+    "pp_lprof_select": {"pp_slot"},
     "pp_lprof_set": {"pp_slot", "pp_field", "pp_key"},
     "pp_lprof_color": {"pp_slot", "pp_col"},
     "pp_lprof_payback": {"pp_slot", "pp_field", "pp_dir"},
@@ -106,9 +108,12 @@ def test_calls_pass_the_contract_parameters() -> None:
     config = _config()
     slots = {f"s{k}" for k in range(1, config.slots + 1)}
     fields = {"icon"} | {f"r{r}" for r in range(1, config.rules + 1)}
-    keys = {item.key for item in m.profile_items(ROOT, PROJECT)}
+    keys = {item.key for item in m.profile_items(ROOT, PROJECT)} | {symbol.key for symbol in config.symbols}
+    # the editor's buttons pass e (the edit buffer's slot), a new profile the first free slot (next)
+    slot_values = {"pp_lprof_assign": slots | {"none", "GetVariableSystem.Get('pp_lprof_brush')"},
+                   "pp_lprof_new": {m.NEXT}, "pp_lprof_select": slots}
     allowed = {
-        "pp_slot": slots | {"GetVariableSystem.Get('pp_lprof_edit')"},
+        "pp_slot": {m.EDITED},
         "pp_field": fields | {"GetVariableSystem.Get('pp_lprof_pick')"},
         "pp_dir": {"up", "down"},
         "pp_col": {f"c{index}" for index in range(1, len(config.colors) + 1)},
@@ -131,7 +136,7 @@ def test_calls_pass_the_contract_parameters() -> None:
         assert set(params) == PARAMS[name], f"{name}: {sorted(params)}"
         assert root == ("Location.MakeScope" if name == "pp_lprof_assign" else "GetPlayer.MakeScope"), f"{name}: root {root}"
         for param, value in params.items():
-            ok = allowed[param] | ({"none", "GetVariableSystem.Get('pp_lprof_brush')"} if name == "pp_lprof_assign" and param == "pp_slot" else set())
+            ok = slot_values.get(name, allowed[param]) if param == "pp_slot" else allowed[param]
             assert value in ok, f"{name}: {param} = {value}"
     assert found == text.count("Execute("), "a scripted GUI call does not read as SetRoot + AddScope flags + End"
 
@@ -141,16 +146,25 @@ def test_every_profile_part_is_there() -> None:
     generated = _read(GENERATED)
     for k in range(1, config.slots + 1):
         assert f"type pp_lprof_face_{k} = widget" in generated
-        assert f"'pp_lprof_edit', 's{k}'" in generated
+        assert m.player_call("pp_lprof_select", pp_slot=f"s{k}") in generated
         assert f"'pp_lprof_brush', 's{k}'" in generated
-        for r in range(1, config.rules + 1):
-            assert f"'pp_lprof_{k}_r{r}_pb'" in generated
+        assert m.assign_call(f"s{k}") in generated
+    # the editor is one body on the edit buffer: no slot's rule is in the GUI
+    assert not re.search(r"pp_lprof_\d+_r\d", generated)
     for r in range(1, config.rules + 1):
         assert f"GetVariableSystem.Set('pp_lprof_pick', 'r{r}')" in generated
+        assert f"'pp_lprof_e_r{r}_pb'" in generated and f"'pp_lprof_e_r{r}_g'" in generated
     assert "GetVariableSystem.Set('pp_lprof_pick', 'icon')" in generated
     for item in m.profile_items(ROOT, PROJECT):
         assert f"MakeScopeFlag('{item.key}')" in generated, item.key
+    for symbol in config.symbols:
+        assert f"MakeScopeFlag('{symbol.key}')" in generated, symbol.key
     assert lp.icon_exists(lp.Item(m.MARKET_ACCESS, "good", "access"), MOD, vanilla_root(ROOT, PROJECT))
+    # a new profile: one button in the window's header, shown while a slot is free
+    window = _read(WINDOW)
+    assert m.player_call("pp_lprof_new", pp_slot=m.NEXT) in window
+    assert "ScriptValue('pp_lprof_first_free')" in window
+    assert "pp_lprof_edit'" not in window + generated
 
 
 def test_types_are_defined() -> None:
@@ -257,13 +271,17 @@ def test_context_menu_is_vanilla_but_the_section() -> None:
 
 def test_marker_shows_badge_and_paint_frame() -> None:
     marker = _marker()
-    config = _config()
     visible = re.search(r'name = "pp_lplan_marker"\n\t\tvisible = "([^"]+)"', marker).group(1)
     assert "Location.GetOwner.IsPlayer" in visible  # nothing for other locations
     for part in ("Var('pp_lplan_n').IsSet", "Var('pp_lprof').IsSet", "GetVariableSystem.Exists('pp_lprof_brush')"):
         assert part in visible
-    for k in range(1, config.slots + 1):
-        assert f"PP_LPROF_UI_BADGE_{k}" in marker and f"'pp_lprof_{k}_col'" in marker
+    # one badge from the location's copy of its profile, whatever the slot count
+    cell = marker[marker.index("pp_lprof_marker_cell"):marker.index("PP_LPLAN_STATE_")]
+    assert cell.count('tooltip = "PP_LPROF_UI_BADGE"') == 1
+    assert not re.search(r"pp_lprof_\d|PP_LPROF_UI_BADGE_\d|pp_lprof_face_", cell)
+    for name in ("pp_lprof_col", "pp_lprof_ig", "pp_lprof_in"):
+        assert f"Location.MakeScope.Var('{name}')" in cell, name
+    assert f'texture = "{m.FLAGS_TEXTURE}" framesize = {{ {m.FLAG_FRAME} {m.FLAG_FRAME} }}' in cell
     assert m.assign_call("=GetVariableSystem.Get('pp_lprof_brush')") in marker
     # the badge comes first, the plan icons stay behind pp_lplan_n
     cell, icons = marker.index("pp_lprof_marker_cell"), marker.index("PP_LPLAN_STATE_")
@@ -314,4 +332,93 @@ def test_location_window_has_the_profile_row() -> None:
     assert f"{m.LOCATION_ROW} = {{}}" in block.group(0)
     assert window.index(m.ROW_MARK) < window.index("# INFRASTRUCTURE HUB")
     generated = (MOD / "in_game/gui/pp_location_profiles_generated.gui").read_text(encoding="utf-8-sig")
-    assert f"type {m.LOCATION_ROW} = vbox" in generated
+    assert f"type {m.LOCATION_ROW} = pp_lprof_plan_row {{}}" in generated and "type pp_lprof_plan_row = vbox" in generated
+
+
+def _with_slots(config: m.Config, slots: int) -> m.Config:
+    return dataclasses.replace(config, slots=slots)
+
+
+def test_only_the_tiles_grow_with_the_slots() -> None:
+    """The map marker (one per location), its badge and tooltip, and the editor are the same text for any slot count;
+    only the slot tiles and their faces and tooltips are written per slot."""
+    config = _config()
+    small, large = _with_slots(config, 12), _with_slots(config, 100)
+    items = m.profile_items(ROOT, PROJECT)
+    assert m.marker_cell(small, "{ 10 10 }") == m.marker_cell(large, "{ 10 10 }")
+    assert m._editor(small) == m._editor(large)
+    vanilla_path = vanilla_root(ROOT, PROJECT) / "game" / lp.MARKERS
+    if vanilla_path.is_file():
+        vanilla = vanilla_path.read_text(encoding="utf-8-sig")
+        plan_items = lp.plan_items(ROOT, lp.load_config(PROJECT))
+        assert lp.render_markers(vanilla, plan_items, small) == lp.render_markers(vanilla, plan_items, large)
+    loc_small, loc_large = m.render_loc(items, small), m.render_loc(items, large)
+    for key in ("PP_LPROF_UI_BADGE", "PP_LPROF_UI_LINE_ST_1", "PP_LPROF_UI_LTGT_G_1", "PP_LPROF_UI_STATES_1"):
+        line = re.search(rf"^  {key}: .*$", loc_small, re.MULTILINE).group(0)
+        assert line in loc_large and "pp_lprof_e_" not in line and not re.search(r"pp_lprof_\d", line), key
+    # the per-slot texts: a summary, three short tooltips and the icon's name (two keys) per slot, two per rule
+    per_slot = len(loc_large.splitlines()) - len(loc_small.splitlines())
+    assert per_slot == (100 - 12) * (6 + 2 * config.rules)
+
+
+def test_no_texture_from_a_flag_name() -> None:
+    """In game 2026-11-07: a texture built with Concatenate draws nothing (even from literals), and GetFlagName gives
+    the flag's localized name, not its key. No texture or frame may use either; GetFlagName only shows a name."""
+    for name, text in _gui_texts().items():
+        for prop, value in re.findall(r"\b(texture|frame)\s*=\s*\"([^\"]*)\"", text):
+            assert "Concatenate" not in value and "GetFlagName" not in value, f"{name}: {prop} = {value[:120]}"
+        for expression in re.findall(r"\[[^\]\n]*GetFlagName[^\]\n]*\]", text):
+            assert re.fullmatch(r"\[[\w.()']+\.GetFlagName\]", expression), f"{name}: GetFlagName used in {expression}"
+    for expression in re.findall(r"\[[^\]\n]*GetFlagName[^\]\n]*\]", _read(LOC)):
+        assert re.fullmatch(r"\[[\w.()']+\.GetFlagName\]", expression), f"loc: GetFlagName used in {expression}"
+    # every flag drawn is a frame of the flag strip, from a frame number variable (*_in, *_r<r>_cn)
+    generated = _read(GENERATED)
+    frames = re.findall(r"pp_lprof_flag = \{ frame = \"\[FixedPointToInt\(Subtract_CFixedPoint\(\w+\.MakeScope\.Var\('(\w+)'\)", generated)
+    assert frames and all(re.fullmatch(r"pp_lprof_(?:\d+_in|e_in|in|e_r\d+_cn)", var) for var in frames), set(frames)
+    config = _config()
+    assert {var for var in frames if "_r" in var} == {f"pp_lprof_e_r{r}_cn" for r in range(1, config.rules + 1)}
+    assert f'texture = "{m.FLAGS_TEXTURE}"' in generated and f"framesize = {{ {m.FLAG_FRAME} {m.FLAG_FRAME} }}" in generated
+
+
+def test_symbols_and_flag_pictures() -> None:
+    """Every symbol has its picture (game format, for the picker), its name and its picker button; every flag a profile
+    can hold (the building categories, then the symbols) is a frame of the flag strip, in the script's frame order; the
+    colours are one texture of frames."""
+    from eu5_building_pipeline.dds import dds_info, is_game_format
+
+    from prosper_or_perish_constructor import location_profiles as lpf
+
+    config = _config()
+    vanilla = vanilla_root(ROOT, PROJECT)
+    assert len(config.symbols) >= 15
+    keys = {item.key for item in m.profile_items(ROOT, PROJECT)}
+    loc = _read(LOC)
+    generated = _read(GENERATED)
+    for symbol in config.symbols:
+        assert re.fullmatch(r"[a-z_]+", symbol.name) and symbol.key not in keys, symbol.name
+        assert m.find_icon(symbol.texture, MOD, vanilla) is not None, f"{symbol.name}: no source {symbol.texture}"
+        assert re.search(rf'^  {symbol.key}: "{re.escape(symbol.title)}"$', loc, re.MULTILINE), symbol.key
+        assert f"PP_LPROF_UI_ITEM_{symbol.key.upper()}:" in loc
+        assert f'texture = "{m.SYMBOL_TEXTURE}{symbol.key}.dds"' in generated
+        picture = MOD / m.SYMBOL_DIR / f"{symbol.key}.dds"
+        assert picture.is_file() and is_game_format(picture, max_side=128), symbol.key
+    assert {path.stem for path in (MOD / m.SYMBOL_DIR).glob("*.dds")} == {symbol.key for symbol in config.symbols}, "stale pictures"
+    assert m.SYMBOL_DIR.as_posix().endswith(m.SYMBOL_TEXTURE.rstrip("/"))
+    flags = list(m.flag_sources(config))
+    assert flags == lpf.frame_flags(config.categories, config)
+    for flag, relative in m.flag_sources(config).items():
+        assert m.find_icon(relative, MOD, vanilla) is not None, flag
+    strip = MOD / m.FLAGS
+    info = dds_info(strip)
+    assert info and is_game_format(strip)
+    assert (info.width, info.height) == (m.FLAG_FRAME * len(flags), m.FLAG_FRAME)
+    assert strip.as_posix().endswith(m.FLAGS_TEXTURE) and "/icons/" not in m.FLAGS_TEXTURE  # icons/ is cut to 128 px
+    colors = MOD / m.COLORS
+    info = dds_info(colors)
+    assert info and is_game_format(colors)
+    assert (info.width, info.height) == (m.COLOR_FRAME * len(config.colors), m.COLOR_FRAME)
+    assert colors.as_posix().endswith(m.COLORS_TEXTURE)
+    # the symbols show only in the icon picker (they build nothing)
+    picker = generated[generated.index("type pp_lprof_picker"):generated.index("type pp_lprof_plan_row")]
+    group = picker[picker.index("PP_LPROF_UI_GROUP_SYMBOLS") - 200:picker.index("PP_LPROF_UI_GROUP_SYMBOLS")]
+    assert "GetVariableSystem.HasValue('pp_lprof_pick', 'icon')" in group

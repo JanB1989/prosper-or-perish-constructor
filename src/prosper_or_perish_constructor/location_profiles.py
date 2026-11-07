@@ -6,17 +6,29 @@ the profile's rules build there, as the first rule group of the monthly pass (``
 the monthly limit. Script cannot create named data while the game runs, so a profile is a generated slot
 ``k = 1..slots``.
 
+Cost independent of the slot count (2026-11-07, Jan: up to 100 profiles): every location with a profile carries a copy
+of it (icon, colour, each rule's target and payback limit), written on assign and whenever its slot is edited; the
+monthly pass and the map badge read only the copy. The editor shows one edit buffer (country variables
+``pp_lprof_e_*``, a copy of the slot it edits); its buttons pass the slot flag ``e`` (the buffer's slot). A button
+reads its slot into a staged copy (``pp_lprof_s_*``), edits that, writes it back and passes it on (buffer, locations).
+Parametrized scripted effects expand where they are called, so the only per-slot script is the slot number of a flag
+and the read and write of a slot (each instantiated once per slot, at one place); every edit works on fixed names.
+
 The engine is hand-written in the mod (``scripted_effects/pp_location_profiles.txt``, the scripted GUIs in
 ``scripted_guis/pp_location_profiles.txt``); this module writes the parts that follow the plan items, the buildings and
 ``[location_profiles]``:
 
 * ``scripted_effects/pp_location_profiles_generated.txt``: per rule target (a good, market access or a building
-  category) the buildings it builds, the dispatch from a rule's stored target to them, the per-slot edits (new, set,
-  colour, payback steps, clear, move, delete, assign) and the flag declarations;
-* ``script_values/pp_location_profiles_generated.txt``: readouts (slot, rule states, payback limits) and the pass's
-  helper values;
-* ``scripted_triggers/pp_location_profiles_generated.txt``: the category key check and "the country has profile
-  locations".
+  category) the buildings it builds, the dispatch from a rule's stored target to them, the rules of a location in
+  order, the slot resolve / read / write, the edits of the staged copy, the copy of a profile and the flag
+  declarations;
+* ``script_values/pp_location_profiles_generated.txt``: readouts (slot, buffer slot, rule states, first free slot,
+  profiles in use) and the pass's helper values;
+* ``scripted_triggers/pp_location_profiles_generated.txt``: the category and symbol key checks and "the country has
+  profile locations".
+
+A profile's icon is a good (a goods scope) or a flag: a building category or a symbol (``[location_profiles.symbols]``,
+generic pictures such as a city or a harbour that build nothing; flag ``pp_sym_<name>``).
 
 Targets: a good builds its producers (the buildings whose main good it is, as the Construction Plan's goods rules;
 ``logistics`` = market access builds the logistics buildings in the plan's order), a building category the player-
@@ -61,6 +73,27 @@ STATES = {
 # why a candidate failed, ranked (+ 100 in pp_lprof_fail; the highest rank of a rule's candidates gives its state)
 FAIL_STATE = {101: 2, 102: 6, 103: 5, 104: 8, 105: 7}
 DIRECTIONS = ("up", "down")
+EDITED = "e"  # the pp_slot flag of the editor's buttons: the slot in the edit buffer (pp_lprof_e_k)
+NEXT = "next"  # the pp_slot flag of the new profile button: the first slot not in use
+SYMBOL_PREFIX = "pp_sym_"  # a symbol's flag, loc key and texture name: pp_sym_<name>
+BUFFER = "pp_lprof_e"  # the edit buffer's variable prefix (country)
+COPY = "pp_lprof"  # a location's copy of its profile (variable prefix)
+# A flag is drawn as a frame of one picture strip (location_profiles_gui.render_textures), never through its name: the
+# icon flag has its frame number beside it (<prefix>_in), a category rule target too (<prefix>_r<r>_cn), each + 100.
+
+
+@dataclass(frozen=True)
+class Symbol:
+    """A generic picture a profile can carry as its icon (builds nothing)."""
+
+    name: str  # the config key (city)
+    title: str  # the player-facing name
+    texture: str  # its source below gfx/interface/icons (the mod's or vanilla's)
+
+    @property
+    def key(self) -> str:
+        """The flag, the loc key of its name and the texture's file name."""
+        return SYMBOL_PREFIX + self.name
 
 
 @dataclass(frozen=True)
@@ -69,6 +102,7 @@ class Config:
     rules: int
     payback_steps: tuple[int, ...]
     colors: tuple[tuple[float, float, float], ...]
+    symbols: tuple[Symbol, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -93,6 +127,12 @@ class Result:
     files_changed: int = 0
 
 
+def load_symbols(project: Path) -> tuple[Symbol, ...]:
+    """``[location_profiles.symbols]``: name = { name = "...", texture = "<folder>/<file>.dds" }, in picker order."""
+    data = tomllib.loads(project.read_text(encoding="utf-8"))["location_profiles"].get("symbols", {})
+    return tuple(Symbol(name, str(entry["name"]), str(entry["texture"])) for name, entry in data.items())
+
+
 def load_config(project: Path) -> Config:
     data = tomllib.loads(project.read_text(encoding="utf-8"))["location_profiles"]
     return Config(
@@ -100,6 +140,7 @@ def load_config(project: Path) -> Config:
         rules=int(data["rules"]),
         payback_steps=tuple(int(step) for step in data["payback_steps"]),
         colors=tuple(tuple(float(part) for part in color) for color in data["colors"]),
+        symbols=load_symbols(project),
     )
 
 
@@ -109,6 +150,12 @@ def profile_items(repo: Path, project: Path) -> list[lp.Item]:
     if not any(item.key == LOGISTICS for item in items):
         items.append(lp.Item(LOGISTICS, "good", "market_access"))
     return items
+
+
+def frame_flags(categories, config: Config) -> list[str]:
+    """The flags a profile's icon or rule can hold, in the order of their frames in the picture strip (frame n = the
+    n-th; their frame number variables hold n + 100): the building categories, then the symbols."""
+    return list(categories) + [symbol.key for symbol in config.symbols]
 
 
 def fields(config: Config) -> list[str]:
@@ -122,7 +169,8 @@ def slot_range(k: int) -> tuple[str, str]:
 
 
 def color_value(config: Config, k: int) -> int:
-    """A new slot's colour (+ 100): colour k, wrapping after the last."""
+    """A new slot's colour (+ 100): colour k, wrapping after the last (what the script value pp_lprof_new_color
+    computes)."""
     return 100 + (k - 1) % len(config.colors) + 1
 
 
@@ -257,105 +305,90 @@ def render_targets(found: dict[str, list[Candidate]]) -> str:
 def render_dispatch(items: list[lp.Item], found: dict[str, list[Candidate]], config: Config) -> str:
     goods = [item.key for item in items if item.kind == "good" and found.get(item.key)]
     categories = [item.key for item in items if item.kind == "category" and found.get(item.key)]
-    parts = [
-        "\n# Location scope: the good stored in the country variable $v$ (a goods scope) -> its target. A good nothing\n"
-        "# builds leaves the rule without a candidate (state 6).\n"
-        "pp_lprof_goods_target = {\n\tswitch = {\n\t\ttrigger = scope:pp_cplan_country.var:$v$\n"
+    return (
+        "\n# Location scope: the good in the location's variable $v$ (a goods scope, the location's copy of a rule) -> its\n"
+        "# target. A good nothing builds leaves the rule without a candidate (state 6).\n"
+        "pp_lprof_goods_target = {\n\tswitch = {\n\t\ttrigger = var:$v$\n"
         + "".join(f"\t\tgoods:{good} = {{ pp_lprof_t_{good} = yes }}\n" for good in goods)
-        + "\t}\n}\n",
-        "\n# Location scope: the building category stored in the country variable $v$ (a flag) -> its target.\n"
-        "pp_lprof_category_target = {\n\tswitch = {\n\t\ttrigger = scope:pp_cplan_country.var:$v$\n"
+        + "\t}\n}\n"
+        "\n# Location scope: the building category in the location's variable $v$ (a flag) -> its target.\n"
+        "pp_lprof_category_target = {\n\tswitch = {\n\t\ttrigger = var:$v$\n"
         + "".join(f"\t\tflag:{category} = {{ pp_lprof_t_{category} = yes }}\n" for category in categories)
-        + "\t}\n}\n",
-        "\n# Location scope (in scope:pp_cplan_country's list pp_lprof_locs, owned by it): the rules of its profile in order;\n"
-        "# the first rule that starts a construction ends the location for the month.\n"
-        "pp_lprof_location_rules = {\n\tscope:pp_cplan_country = { remove_variable = pp_cplan_hit }\n",
-    ]
-    for k in range(1, config.slots + 1):
-        low, high = slot_range(k)
-        keyword = "if" if k == 1 else "else_if"
-        parts.append(
-            f"\t{keyword} = {{\n\t\tlimit = {{\n\t\t\tvar:pp_lprof > {low} var:pp_lprof < {high}\n"
-            f"\t\t\tscope:pp_cplan_country = {{ has_variable = pp_lprof_{k}_on }}\n\t\t}}\n"
-            f"\t\tpp_lprof_rules = {{ k = {k} }}\n\t}}\n"
-        )
-    parts.append("\tscope:pp_cplan_country = { remove_variable = pp_cplan_hit }\n}\n")
-    parts.append(
-        "\n# Location scope: the rules of slot $k$.\npp_lprof_rules = {\n"
-        + "".join(f"\tpp_lprof_rule = {{ k = $k$ r = {r} }}\n" for r in range(1, config.rules + 1))
-        + "}\n"
+        + "\t}\n}\n"
+        "\n# Location scope (in scope:pp_cplan_country's list pp_lprof_locs, owned by it): the rules of its profile in order,\n"
+        "# from the location's copy (pp_lprof_r<r>_*); the first rule that starts a construction ends the location for the\n"
+        "# month. No slot is looked at.\n"
+        "pp_lprof_location_rules = {\n\tscope:pp_cplan_country = { remove_variable = pp_cplan_hit }\n"
+        + "".join(f"\tpp_lprof_rule = {{ r = {r} }}\n" for r in range(1, config.rules + 1))
+        + "\tscope:pp_cplan_country = { remove_variable = pp_cplan_hit }\n}\n"
     )
-    return "".join(parts)
+
+
+def render_slots(config: Config) -> str:
+    """The only per-slot script: a slot flag (or the edit buffer's slot, or the first free slot) -> the slot number
+    pp_lprof_k, and the copy between slot k's variables and the staged copy (pp_lprof_s_*). Everything else works on
+    fixed names."""
+    slots = range(1, config.slots + 1)
+
+    def chain(body) -> str:
+        return "".join(
+            f"\t\t{'if' if k == 1 else 'else_if'} = {{ limit = {{ var:pp_lprof_k < {slot_range(k)[1]} }} {body(k)} }}\n" for k in slots
+        )
+
+    return (
+        "\n# ---- Slots: the only per-slot script ----\n"
+        "\n# Country scope: pp_lprof_k = the slot (+ 100) of the flag scope:pp_slot (s1..sN, or e = the slot in the edit\n"
+        "# buffer, pp_lprof_e_k); removed for anything else.\n"
+        "pp_lprof_resolve = {\n\tremove_variable = pp_lprof_k\n"
+        "\tif = {\n\t\tlimit = { scope:pp_slot = flag:e }\n\t\tpp_cplan_copy_num = { from = pp_lprof_e_k to = pp_lprof_k }\n\t}\n"
+        "\telse = {\n\t\tswitch = {\n\t\t\ttrigger = scope:pp_slot\n"
+        + "".join(f"\t\t\tflag:s{k} = {{ set_variable = {{ name = pp_lprof_k value = {100 + k} }} }}\n" for k in slots)
+        + "\t\t}\n\t}\n}\n"
+        "\n# Country scope: pp_lprof_k = the first slot not in use (removed when all are).\n"
+        "pp_lprof_resolve_free = {\n\tremove_variable = pp_lprof_k\n"
+        + "".join(
+            f"\t{'if' if k == 1 else 'else_if'} = {{ limit = {{ NOT = {{ has_variable = pp_lprof_{k}_on }} }} "
+            f"set_variable = {{ name = pp_lprof_k value = {100 + k} }} }}\n" for k in slots
+        )
+        + "}\n"
+        "\n# Country scope (scope:pp_lprof_country = it): slot pp_lprof_k's variables -> the staged copy pp_lprof_s_*.\n"
+        "pp_lprof_read = {\n\tif = {\n\t\tlimit = { has_variable = pp_lprof_k }\n"
+        + chain(lambda k: f"pp_lprof_read_slot = {{ k = {k} }}")
+        + "\t}\n}\n"
+        "\n# Country scope (scope:pp_lprof_country = it): the staged copy -> slot pp_lprof_k's variables.\n"
+        "pp_lprof_write = {\n\tif = {\n\t\tlimit = { has_variable = pp_lprof_k }\n"
+        + chain(lambda k: f"pp_lprof_write_slot = {{ k = {k} }}")
+        + "\t}\n}\n"
+    )
 
 
 def render_edits(items: list[lp.Item], config: Config, categories: list[str]) -> str:
-    slots = range(1, config.slots + 1)
     rules = range(1, config.rules + 1)
     goods = [item.key for item in items if item.kind == "good"]
-    parts = ["\n# ---- Edits (scripted GUIs in scripted_guis/pp_location_profiles.txt) ----\n"]
+    icon_flags = categories + [symbol.key for symbol in config.symbols]
+    parts = ["\n# ---- Edits of the staged copy (pp_lprof_s_*, country scope; pp_lprof_edit in pp_location_profiles.txt) ----\n"]
 
-    def slot_switch(name: str, comment: str, body, before: str = "", after: str = "") -> None:
-        """A country-scope effect that runs body(k) for the slot flag scope:pp_slot."""
-        parts.append(f"\n# {comment}\n{name} = {{\n{before}\tswitch = {{\n\t\ttrigger = scope:pp_slot\n")
-        for k in slots:
-            parts.append(f"\t\tflag:s{k} = {{ {body(k)} }}\n")
-        parts.append(f"\t}}\n{after}}}\n")
-
-    def ranged(name: str):
-        def body(k: int) -> str:
-            low, high = slot_range(k)
-            return f"{name} = {{ k = {k} lo = {low} hi = {high} }}"
-        return body
-
-    # assign (location scope)
+    # set: the item flag -> a goods scope (goods) or the flag itself (categories, symbols)
     parts.append(
-        "\n# Location scope (root): the profile scope:pp_slot (s1..sN, a slot that is on) or none. A profile replaces the\n"
-        "# location's own rules or hands off; refresh_map_colors redraws the badges.\n"
-        "pp_lprof_assign_do = {\n\towner ?= { save_scope_as = pp_lprof_country }\n"
-        "\tif = {\n\t\tlimit = { exists = scope:pp_lprof_country }\n\t\tswitch = {\n\t\t\ttrigger = scope:pp_slot\n"
-        "\t\t\tflag:none = { pp_lprof_unassign = yes }\n"
-    )
-    for k in slots:
-        parts.append(
-            f"\t\t\tflag:s{k} = {{\n\t\t\t\tif = {{\n\t\t\t\t\tlimit = {{ scope:pp_lprof_country = {{ has_variable = pp_lprof_{k}_on }} }}\n"
-            f"\t\t\t\t\tpp_lprof_assign_to = {{ n = {100 + k} }}\n\t\t\t\t}}\n\t\t\t}}\n"
-        )
-    parts.append("\t\t}\n\t}\n\trefresh_map_colors = yes\n}\n")
-
-    slot_switch(
-        "pp_lprof_new_do",
-        "Country scope: switches slot scope:pp_slot on (icon, its colour, no rules; scripted GUI pp_lprof_new).",
-        lambda k: f"if = {{ limit = {{ NOT = {{ has_variable = pp_lprof_{k}_on }} }} pp_lprof_new_slot = {{ k = {k} col = {color_value(config, k)} }} }}",
-    )
-
-    # set: the item flag -> a goods scope (goods) or the flag itself (categories)
-    parts.append(
-        "\n# Any scope: the good named by the flag scope:pp_key as scope:pp_lprof_val (nothing for a category key).\n"
+        "\n# Any scope: the good named by the flag scope:pp_key as scope:pp_lprof_val (nothing for a category or symbol key).\n"
         "pp_lprof_key_scope = {\n\tswitch = {\n\t\ttrigger = scope:pp_key\n"
         + "".join(f"\t\tflag:{good} = {{ goods:{good} = {{ save_scope_as = pp_lprof_val }} }}\n" for good in goods)
         + "\t}\n}\n"
     )
     parts.append(
-        "\n# Country scope: the icon or a rule target (scope:pp_field) of slot $k$ = the item scope:pp_key.\n"
-        "pp_lprof_set_slot = {\n\tif = {\n\t\tlimit = { has_variable = pp_lprof_$k$_on }\n\t\tswitch = {\n\t\t\ttrigger = scope:pp_field\n"
-        "\t\t\tflag:icon = { pp_lprof_set_target = { g = pp_lprof_$k$_ig c = pp_lprof_$k$_ic } }\n"
-        + "".join(f"\t\t\tflag:r{r} = {{ pp_lprof_set_target = {{ g = pp_lprof_$k$_r{r}_g c = pp_lprof_$k$_r{r}_c }} }}\n" for r in rules)
-        + "\t\t}\n\t}\n}\n"
+        "\n# The icon or a rule target (scope:pp_field) = the item scope:pp_key (a symbol only as the icon).\n"
+        "pp_lprof_set_staged = {\n\tswitch = {\n\t\ttrigger = scope:pp_field\n"
+        "\t\tflag:icon = { pp_lprof_set_icon = { g = pp_lprof_s_ig c = pp_lprof_s_ic n = pp_lprof_s_in } }\n"
+        + "".join(f"\t\tflag:r{r} = {{ pp_lprof_set_target = {{ g = pp_lprof_s_r{r}_g c = pp_lprof_s_r{r}_c n = pp_lprof_s_r{r}_cn }} }}\n"
+                  for r in rules)
+        + "\t}\n}\n"
     )
-    slot_switch("pp_lprof_set_do", "Country scope: the icon or a rule target of slot scope:pp_slot (scripted GUI pp_lprof_set).",
-                lambda k: f"pp_lprof_set_slot = {{ k = {k} }}",
-                before="\tpp_lprof_key_scope = yes\n", after="\trefresh_map_colors = yes\n")
-
-    # colour
     parts.append(
-        "\n# Country scope: the colour scope:pp_col (c1..cN) of slot $k$.\npp_lprof_color_slot = {\n\tif = {\n"
-        "\t\tlimit = { has_variable = pp_lprof_$k$_on }\n\t\tswitch = {\n\t\t\ttrigger = scope:pp_col\n"
-        + "".join(f"\t\t\tflag:c{n} = {{ set_variable = {{ name = pp_lprof_$k$_col value = {100 + n} }} }}\n"
+        "\n# The colour scope:pp_col (c1..cN).\npp_lprof_color_staged = {\n\tswitch = {\n\t\ttrigger = scope:pp_col\n"
+        + "".join(f"\t\tflag:c{n} = {{ set_variable = {{ name = pp_lprof_s_col value = {100 + n} }} }}\n"
                   for n in range(1, len(config.colors) + 1))
-        + "\t\t}\n\t}\n}\n"
+        + "\t}\n}\n"
     )
-    slot_switch("pp_lprof_color_do", "Country scope: the colour of slot scope:pp_slot (scripted GUI pp_lprof_color).",
-                lambda k: f"pp_lprof_color_slot = {{ k = {k} }}", after="\trefresh_map_colors = yes\n")
 
     # payback steps
     steps = config.payback_steps
@@ -379,35 +412,31 @@ def render_edits(items: list[lp.Item], config: Config, categories: list[str]) ->
         + "\t}\n}\n"
     )
     parts.append(
-        "\n# Country scope: the payback limit of rule scope:pp_field (r1..rN) of slot $k$.\npp_lprof_payback_slot = {\n"
-        "\tif = {\n\t\tlimit = { has_variable = pp_lprof_$k$_on }\n\t\tswitch = {\n\t\t\ttrigger = scope:pp_field\n"
-        + "".join(f"\t\t\tflag:r{r} = {{ pp_lprof_pb_step = {{ var = pp_lprof_$k$_r{r}_pb }} }}\n" for r in rules)
-        + "\t\t}\n\t}\n}\n"
+        "\n# The payback limit of rule scope:pp_field (r1..rN), one step in the direction scope:pp_dir.\n"
+        "pp_lprof_payback_staged = {\n\tswitch = {\n\t\ttrigger = scope:pp_field\n"
+        + "".join(f"\t\tflag:r{r} = {{ pp_lprof_pb_step = {{ var = pp_lprof_s_r{r}_pb }} }}\n" for r in rules)
+        + "\t}\n}\n"
     )
-    slot_switch("pp_lprof_payback_do", "Country scope: steps a rule's payback limit (scripted GUI pp_lprof_payback).",
-                lambda k: f"pp_lprof_payback_slot = {{ k = {k} }}")
 
     # clear a rule
     parts.append(
-        "\n# Country scope: empties rule scope:pp_field of slot $k$ (var:pp_lprof between $lo$ and $hi$ in its locations).\n"
-        "pp_lprof_rule_clear_slot = {\n\tswitch = {\n\t\ttrigger = scope:pp_field\n"
+        "\n# Rule scope:pp_field emptied, and its states in the slot's locations.\npp_lprof_rule_clear_staged = {\n"
+        "\tpp_lprof_save_range = yes\n\tswitch = {\n\t\ttrigger = scope:pp_field\n"
     )
     for r in rules:
         parts.append(
-            f"\t\tflag:r{r} = {{\n\t\t\tremove_variable = pp_lprof_$k$_r{r}_g\n\t\t\tremove_variable = pp_lprof_$k$_r{r}_c\n"
-            f"\t\t\tremove_variable = pp_lprof_$k$_r{r}_pb\n"
+            f"\t\tflag:r{r} = {{\n\t\t\tremove_variable = pp_lprof_s_r{r}_g\n\t\t\tremove_variable = pp_lprof_s_r{r}_c\n"
+            f"\t\t\tremove_variable = pp_lprof_s_r{r}_cn\n\t\t\tremove_variable = pp_lprof_s_r{r}_pb\n"
             "\t\t\tevery_in_list = {\n\t\t\t\tvariable = pp_lprof_locs\n"
-            "\t\t\t\tlimit = { has_variable = pp_lprof var:pp_lprof > $lo$ var:pp_lprof < $hi$ }\n"
-            f"\t\t\t\tremove_variable = pp_lprof_r{r}_st\n\t\t\t}}\n\t\t}}\n"
+            "\t\t\t\tlimit = { has_variable = pp_lprof var:pp_lprof > scope:pp_lprof_lo var:pp_lprof < scope:pp_lprof_hi }\n"
+            f"\t\t\t\tremove_variable = pp_lprof_r{r}_st\n\t\t\t\tremove_variable = pp_lprof_r{r}_est\n\t\t\t}}\n\t\t}}\n"
         )
     parts.append("\t}\n}\n")
-    slot_switch("pp_lprof_rule_clear_do", "Country scope: empties a rule (scripted GUI pp_lprof_rule_clear).",
-                ranged("pp_lprof_rule_clear_slot"))
 
     # move a rule
     parts.append(
-        "\n# Country scope: swaps rule scope:pp_field of slot $k$ with its neighbour in the direction scope:pp_dir.\n"
-        "pp_lprof_rule_move_slot = {\n\tswitch = {\n\t\ttrigger = scope:pp_field\n"
+        "\n# Rule scope:pp_field swaps places with its neighbour in the direction scope:pp_dir.\npp_lprof_rule_move_staged = {\n"
+        "\tswitch = {\n\t\ttrigger = scope:pp_field\n"
     )
     for r in rules:
         branches = []
@@ -417,48 +446,94 @@ def render_edits(items: list[lp.Item], config: Config, categories: list[str]) ->
             branches.append(("down", r, r + 1))
         body = "".join(
             f"\t\t\tif = {{\n\t\t\t\tlimit = {{ scope:pp_dir = flag:{direction} }}\n"
-            f"\t\t\t\tpp_lprof_swap_rules = {{ k = $k$ a = {a} b = {b} lo = $lo$ hi = $hi$ }}\n\t\t\t}}\n"
+            f"\t\t\t\tpp_lprof_swap_rules = {{ a = {a} b = {b} }}\n\t\t\t}}\n"
             for direction, a, b in branches
         )
         parts.append(f"\t\tflag:r{r} = {{\n{body}\t\t}}\n")
     parts.append("\t}\n}\n")
-    slot_switch("pp_lprof_rule_move_do", "Country scope: moves a rule up or down (scripted GUI pp_lprof_rule_move).",
-                ranged("pp_lprof_rule_move_slot"))
 
-    # delete
-    slot_switch("pp_lprof_delete_do", "Country scope: clears slot scope:pp_slot and takes it off every location (scripted GUI pp_lprof_delete).",
-                ranged("pp_lprof_delete_slot"))
-
-    # helpers that follow the counts
+    # the copy of a profile, clearing
     parts.append(
-        "\n# Country scope: removes every rule of slot $k$.\npp_lprof_clear_rules = {\n"
-        + "".join(f"\tremove_variable = pp_lprof_$k$_r{r}_g\n\tremove_variable = pp_lprof_$k$_r{r}_c\n\tremove_variable = pp_lprof_$k$_r{r}_pb\n" for r in rules)
+        "\n# ---- Copies of a profile ----\n"
+        "\n# Any scope (scope:pp_lprof_country = the profile's country): scope:pp_lprof_country's $from$_* -> this scope's\n"
+        "# $to$_* (icon with its frame number, colour, rules; what $from$ lacks goes). A slot is pp_lprof_<k>, the staged\n"
+        "# copy pp_lprof_s, the edit buffer pp_lprof_e (country), a location's copy pp_lprof. The rules' category frame\n"
+        "# numbers (drawn only in the editor) go separately: pp_lprof_copy_frames.\n"
+        "pp_lprof_copy_profile = {\n"
+        + "".join(_pull(kind, name) for kind, name in _profile_pulls(config))
         + "}\n"
-        "\n# Location scope: removes the rule states.\npp_lprof_clear_states = {\n"
-        + "".join(f"\tremove_variable = pp_lprof_r{r}_st\n" for r in rules)
+        "\n# Any scope: the frame numbers of the rules' category targets, scope:pp_lprof_country's $from$_* -> this scope's\n"
+        "# $to$_* (slots, the staged copy, the edit buffer; a location's copy needs none).\npp_lprof_copy_frames = {\n"
+        + "".join(_pull("n", name) for name in frame_fields(config))
         + "}\n"
-        "\n# Any scope: the category flag in the variable $from$ -> $to$ (removed when $from$ holds none).\npp_lprof_copy_c = {\n"
-        "\tremove_variable = $to$\n\tif = {\n\t\tlimit = { has_variable = $from$ }\n\t\tswitch = {\n\t\t\ttrigger = var:$from$\n"
-        + "".join(f"\t\t\tflag:{category} = {{ set_variable = {{ name = $to$ value = flag:{category} }} }}\n" for category in categories)
-        + "\t\t}\n\t}\n}\n"
+        "\n# Any scope: a copy of a profile ($p$_*) removed. The rules' frame numbers exist only on slots, the staged copy\n"
+        "# and the edit buffer (pp_lprof_clear_frames): removing a variable never set counts as a use, and on a location\n"
+        "# copy logged \"used but never set\" (in game 2026-11-07).\npp_lprof_clear_copies = {\n"
+        + "".join(f"\tremove_variable = $p$_{name}\n" for name in profile_fields(config))
+        + "}\n"
+        "\n# Any scope but a location: the rules' frame numbers of a copy ($p$_*) removed.\npp_lprof_clear_frames = {\n"
+        + "".join(f"\tremove_variable = $p$_{name}\n" for name in frame_fields(config))
+        + "}\n"
+        "\n# Location scope: removes the rule states and the payback notes.\npp_lprof_clear_states = {\n"
+        + "".join(f"\tremove_variable = pp_lprof_r{r}_st\n\tremove_variable = pp_lprof_r{r}_est\n" for r in rules)
+        + "}\n"
     )
+
+    def pull_flag(name: str, what: str, flags: list[str]) -> str:
+        return (
+            f"\n# Any scope: the {what} flag in scope:pp_lprof_country's variable $from$ -> this scope's $to$ (removed when\n"
+            f"# $from$ holds none). A switch: the flag is compared, never copied as a value.\n{name} = {{\n"
+            "\tremove_variable = $to$\n\tif = {\n\t\tlimit = { scope:pp_lprof_country = { has_variable = $from$ } }\n"
+            "\t\tswitch = {\n\t\t\ttrigger = scope:pp_lprof_country.var:$from$\n"
+            + "".join(f"\t\t\tflag:{flag} = {{ set_variable = {{ name = $to$ value = flag:{flag} }} }}\n" for flag in flags)
+            + "\t\t}\n\t}\n}\n"
+        )
+
+    parts.append(pull_flag("pp_lprof_pull_icon", "icon (a building category or a symbol)", icon_flags))
+    parts.append(pull_flag("pp_lprof_pull_cat", "building category", categories))
     return "".join(parts)
 
 
 def declared_flags(items: list[lp.Item], config: Config) -> list[str]:
     """Every flag the GUI passes to the scripted GUIs."""
-    flags = {f"s{k}" for k in range(1, config.slots + 1)} | {"none"} | set(fields(config)) | set(DIRECTIONS)
+    flags = {f"s{k}" for k in range(1, config.slots + 1)} | {"none", EDITED, NEXT} | set(fields(config)) | set(DIRECTIONS)
     flags |= {f"c{n}" for n in range(1, len(config.colors) + 1)}
-    flags |= {item.key for item in items}
+    flags |= {item.key for item in items} | {symbol.key for symbol in config.symbols}
     return sorted(flags)
 
 
+def _profile_pulls(config: Config) -> list[tuple[str, str]]:
+    """(pull kind, field) of pp_lprof_copy_profile: g goods scope, icon / cat flag (a switch), n number."""
+    pulls = [("g", "ig"), ("icon", "ic"), ("n", "in"), ("n", "col")]
+    for r in range(1, config.rules + 1):
+        pulls += [("g", f"r{r}_g"), ("cat", f"r{r}_c"), ("n", f"r{r}_pb")]
+    return pulls
+
+
+def _pull(kind: str, name: str) -> str:
+    return f"\tpp_lprof_pull_{kind} = {{ from = $from$_{name} to = $to$_{name} }}\n"
+
+
+def profile_fields(config: Config) -> list[str]:
+    """The fields of a copy of a profile (variable <prefix>_<field>)."""
+    return [name for _, name in _profile_pulls(config)]
+
+
+def frame_fields(config: Config) -> list[str]:
+    """The frame numbers of the rules' category targets (slots, staged copy, edit buffer)."""
+    return [f"r{r}_cn" for r in range(1, config.rules + 1)]
+
+
+def copy_names(prefix: str, config: Config, frames: bool = False) -> list[str]:
+    """The variables of a copy of a profile (a location's: pp_lprof_*, the edit buffer's: pp_lprof_e_* with frames)."""
+    return [f"{prefix}_{name}" for name in profile_fields(config) + (frame_fields(config) if frames else [])]
+
+
 def gui_only_variables(config: Config) -> list[str]:
-    """Variables the script sets and only the GUI reads."""
-    names = []
-    for k in range(1, config.slots + 1):
-        names += [f"pp_lprof_{k}_ig", f"pp_lprof_{k}_ic", f"pp_lprof_{k}_col"]
-    return names
+    """Variables the script sets and only the GUI reads: a location's icon (and its frame) and colour, the whole edit
+    buffer."""
+    location = [f"{COPY}_{name}" for name in ("ig", "ic", "in", "col")]
+    return location + copy_names(BUFFER, config, frames=True)
 
 
 def render_declarations(items: list[lp.Item], config: Config) -> str:
@@ -479,6 +554,7 @@ def render_effects(items: list[lp.Item], found: dict[str, list[Candidate]], conf
         HEADER
         + render_targets(found)
         + render_dispatch(items, found, config)
+        + render_slots(config)
         + render_edits(items, config, categories)
         + render_declarations(items, config)
     )
@@ -493,7 +569,8 @@ def _var_n(name: str, var: str, comment: str) -> str:
             f"\t\tvalue = var:{var}\n\t\tsubtract = 100\n\t}}\n}}\n")
 
 
-def render_values(config: Config) -> str:
+def render_values(config: Config, categories: list[str]) -> str:
+    slots = range(1, config.slots + 1)
     parts = [
         HEADER,
         "\n# Any scope: profile slots and rules per profile ([location_profiles]).\n"
@@ -506,38 +583,45 @@ def render_values(config: Config) -> str:
         "pp_lprof_payback100 = {\n\tvalue = pp_cplan_est_payback_years\n\tadd = 100\n}\n"
         "pp_lprof_cost1 = {\n\tvalue = pp_cplan_est_cost\n\tadd = 1\n}\n\n",
         _var_n("pp_lprof_n", "pp_lprof", "Location scope: the profile slot (0 none)."),
-        "\n# Country scope: the first slot not in use (0 when all are), where the editor offers a new profile.\n"
+        _var_n("pp_lprof_e_n", "pp_lprof_e_k", "Country scope: the slot in the editor's buffer (0 none)."),
+        "\n# Any scope: the frame (+ 100) of the flag scope:pp_key in the picture strip (pp_profile_symbols.dds: the building\n"
+        "# categories, then the symbols), stored beside an icon flag or category rule target; 0 for anything else.\n"
+        "pp_lprof_key_frame = {\n\tvalue = 0\n"
+        + "".join(f"\t{'if' if index == 1 else 'else_if'} = {{ limit = {{ scope:pp_key = flag:{flag} }} value = {100 + index} }}\n"
+                  for index, flag in enumerate(frame_flags(categories, config), 1))
+        + "}\n",
+        "\n# Country scope (pp_lprof_k = a slot + 100): the var:pp_lprof range of its locations.\n"
+        "pp_lprof_k_lo = {\n\tvalue = var:pp_lprof_k\n\tsubtract = 0.5\n}\n"
+        "pp_lprof_k_hi = {\n\tvalue = var:pp_lprof_k\n\tadd = 0.5\n}\n",
+        f"\n# Country scope (pp_lprof_k = a new slot + 100): its colour + 100, colour k wrapping after the last of the {len(config.colors)}.\n"
+        f"pp_lprof_new_color = {{\n\tvalue = var:pp_lprof_k\n\tsubtract = {101 - len(config.colors)}\n\tmodulo = {len(config.colors)}\n\tadd = 101\n}}\n",
+        "\n# Country scope: the first slot not in use (0 when all are; the editor offers a new profile while one is free).\n"
         "pp_lprof_first_free = {\n\tvalue = 0\n"
         + "".join(
-            f"\t{'if' if k == 1 else 'else_if'} = {{\n\t\tlimit = {{ NOT = {{ has_variable = pp_lprof_{k}_on }} }}\n\t\tvalue = {k}\n\t}}\n"
-            for k in range(1, config.slots + 1)
+            f"\t{'if' if k == 1 else 'else_if'} = {{ limit = {{ NOT = {{ has_variable = pp_lprof_{k}_on }} }} value = {k} }}\n"
+            for k in slots
         )
+        + "}\n"
+        "\n# Country scope: the profiles in use.\npp_lprof_used_n = {\n\tvalue = 0\n"
+        + "".join(f"\tif = {{ limit = {{ has_variable = pp_lprof_{k}_on }} add = 1 }}\n" for k in slots)
         + "}\n\n",
     ]
     for r in range(1, config.rules + 1):
         parts.append(_var_n(f"pp_lprof_r{r}_st_n", f"pp_lprof_r{r}_st",
                             f"Location scope: the state of rule {r} after the last pass (0 not run yet; 1-9 PP_LPROF_ST_<n>)."))
-    for k in range(1, config.slots + 1):
-        low, high = slot_range(k)
-        parts.append(_var_n(f"pp_lprof_{k}_col_n", f"pp_lprof_{k}_col", f"Country scope: the colour of profile {k} (1..)."))
-        parts.append(
-            f"# Country scope (root = this country): the country's locations with profile {k}.\n"
-            f"pp_lprof_{k}_locs_n = {{\n\tvalue = 0\n\tevery_in_list = {{\n\t\tvariable = pp_lprof_locs\n"
-            f"\t\tlimit = {{\n\t\t\towner ?= root\n\t\t\thas_variable = pp_lprof\n\t\t\tvar:pp_lprof > {low}\n\t\t\tvar:pp_lprof < {high}\n\t\t}}\n"
-            "\t\tadd = 1\n\t}\n}\n"
-        )
-        for r in range(1, config.rules + 1):
-            parts.append(_var_n(f"pp_lprof_{k}_r{r}_pb_n", f"pp_lprof_{k}_r{r}_pb",
-                                f"Country scope: the payback limit of rule {r} of profile {k} in years (0 = any)."))
     return "".join(parts)
 
 
-def render_triggers(categories: list[str]) -> str:
+def render_triggers(categories: list[str], config: Config) -> str:
     return (
         HEADER
         + "\n# Any scope: the flag scope:pp_key names a building category item.\npp_lprof_category_key = {\n\tOR = {\n"
         + "".join(f"\t\tscope:pp_key = flag:{category}\n" for category in categories)
         + "\t}\n}\n"
+        "\n# Any scope: the flag scope:pp_key names a symbol ([location_profiles.symbols]; only a profile's icon).\n"
+        "pp_lprof_symbol_key = {\n\tOR = {\n"
+        + "".join(f"\t\tscope:pp_key = flag:{symbol.key}\n" for symbol in config.symbols)
+        + "\t\talways = no\n\t}\n}\n"
         "\n# Country scope (root = this country, in the pass and in the panel): a location the country owns has a profile.\n"
         "pp_lprof_has_locations = {\n\tany_in_list = {\n\t\tvariable = pp_lprof_locs\n\t\towner ?= root\n"
         "\t\thas_variable = pp_lprof\n\t}\n}\n"
@@ -565,8 +649,8 @@ def build(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -> tupl
     category_keys = [item.key for item in items if item.kind == "category"]
     texts = {
         mod_root / EFFECTS: render_effects(items, found, config, category_keys),
-        mod_root / VALUES: render_values(config),
-        mod_root / TRIGGERS: render_triggers(category_keys),
+        mod_root / VALUES: render_values(config, category_keys),
+        mod_root / TRIGGERS: render_triggers(category_keys, config),
     }
     return result, texts
 

@@ -1139,10 +1139,39 @@ per_row = 11
 # Location Profiles (branch location-profiles, 2026-11-07, Jan; docs/location_profiles.md): player profiles = an icon, a
 # colour and ordered build rules, assigned to locations on the map; their rules replace the global Construction Plan
 # rules there. location_profiles.py (script) and location_profiles_gui.py (windows, map) write the generated parts.
-slots = 12            # profiles per country (script cannot create named data at runtime: each profile is a slot)
+# Every location with a profile carries a copy of it (the monthly pass and the map badge read only that), and the editor
+# shows one edit buffer, so only the slot tiles grow with the slot count.
+slots = 100           # profiles per country (Jan 2026-11-07: up to 100; script cannot create named data at runtime: each profile is a slot, only used ones show)
 rules = 5             # ordered rules per profile
 payback_steps = [1, 2, 3, 4, 5, 7, 10, 15, 20, 30, 40, 50]   # years a rule's limit steps through (Jan 2026-11-07: up to 50); past the last = any payback
 colors = [[0.80, 0.25, 0.20], [0.90, 0.55, 0.15], [0.85, 0.80, 0.25], [0.30, 0.65, 0.30], [0.25, 0.60, 0.70], [0.25, 0.40, 0.80], [0.55, 0.35, 0.75], [0.75, 0.40, 0.60]]
+
+[location_profiles.symbols]
+# Generic pictures a profile can carry as its icon (Jan 2026-11-07: "a city, rural, food, ... so you are not forced to
+# use the iron icon for a metal town"); they build nothing, so they are no rule targets. name = { name = player-facing
+# name, texture = source below gfx/interface/icons (the mod's or vanilla's) }; location_profiles_gui.py writes it to
+# main_menu/gfx/interface/icons/pp_profile_symbols/pp_sym_<name>.dds (game format, at most 128 px). Picker order.
+city = { name = "City", texture = "map_modes/cities.dds" }
+town = { name = "Town", texture = "buildings/council_hall.dds" }
+village = { name = "Village", texture = "buildings/free_village.dds" }
+capital = { name = "Capital", texture = "location_icons/capital.dds" }
+food = { name = "Food", texture = "map_modes/province_food.dds" }
+farming = { name = "Farming", texture = "buildings/farming_village.dds" }
+herding = { name = "Herding", texture = "buildings/sheep_farms.dds" }
+fishing = { name = "Fishing", texture = "buildings/fishing_village.dds" }
+forest = { name = "Forest", texture = "map_modes/vegetation.dds" }
+mining = { name = "Mining", texture = "map_modes/raw_material.dds" }
+industry = { name = "Industry", texture = "location_icons/employment.dds" }
+luxury = { name = "Luxury", texture = "resources/political_influence.dds" }
+market = { name = "Market", texture = "map_modes/market.dds" }
+treasury = { name = "Treasury", texture = "map_modes/economical_base.dds" }
+harbour = { name = "Harbour", texture = "map_modes/maritime.dds" }
+military = { name = "Military", texture = "map_modes/military.dds" }
+stronghold = { name = "Stronghold", texture = "map_modes/fort.dds" }
+religion = { name = "Religion", texture = "buildings/cathedral.dds" }
+learning = { name = "Learning", texture = "map_modes/literacy.dds" }
+administration = { name = "Administration", texture = "map_modes/government.dds" }
+population = { name = "Population", texture = "map_modes/population.dds" }
 
 [market_short_weight]
 # The AI reacts a little when its market runs short of a good (market_short_weight.py, finalize): every producer's

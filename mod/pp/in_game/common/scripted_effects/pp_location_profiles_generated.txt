@@ -1782,11 +1782,11 @@ pp_lprof_t_infrastructure_category = {
 	}
 }
 
-# Location scope: the good stored in the country variable $v$ (a goods scope) -> its target. A good nothing
-# builds leaves the rule without a candidate (state 6).
+# Location scope: the good in the location's variable $v$ (a goods scope, the location's copy of a rule) -> its
+# target. A good nothing builds leaves the rule without a candidate (state 6).
 pp_lprof_goods_target = {
 	switch = {
-		trigger = scope:pp_cplan_country.var:$v$
+		trigger = var:$v$
 		goods:camels = { pp_lprof_t_camels = yes }
 		goods:elephants = { pp_lprof_t_elephants = yes }
 		goods:horses = { pp_lprof_t_horses = yes }
@@ -1866,10 +1866,10 @@ pp_lprof_goods_target = {
 	}
 }
 
-# Location scope: the building category stored in the country variable $v$ (a flag) -> its target.
+# Location scope: the building category in the location's variable $v$ (a flag) -> its target.
 pp_lprof_category_target = {
 	switch = {
-		trigger = scope:pp_cplan_country.var:$v$
+		trigger = var:$v$
 		flag:trade_category = { pp_lprof_t_trade_category = yes }
 		flag:government_category = { pp_lprof_t_government_category = yes }
 		flag:military_category = { pp_lprof_t_military_category = yes }
@@ -1881,214 +1881,458 @@ pp_lprof_category_target = {
 	}
 }
 
-# Location scope (in scope:pp_cplan_country's list pp_lprof_locs, owned by it): the rules of its profile in order;
-# the first rule that starts a construction ends the location for the month.
+# Location scope (in scope:pp_cplan_country's list pp_lprof_locs, owned by it): the rules of its profile in order,
+# from the location's copy (pp_lprof_r<r>_*); the first rule that starts a construction ends the location for the
+# month. No slot is looked at.
 pp_lprof_location_rules = {
 	scope:pp_cplan_country = { remove_variable = pp_cplan_hit }
-	if = {
-		limit = {
-			var:pp_lprof > 100.5 var:pp_lprof < 101.5
-			scope:pp_cplan_country = { has_variable = pp_lprof_1_on }
-		}
-		pp_lprof_rules = { k = 1 }
-	}
-	else_if = {
-		limit = {
-			var:pp_lprof > 101.5 var:pp_lprof < 102.5
-			scope:pp_cplan_country = { has_variable = pp_lprof_2_on }
-		}
-		pp_lprof_rules = { k = 2 }
-	}
-	else_if = {
-		limit = {
-			var:pp_lprof > 102.5 var:pp_lprof < 103.5
-			scope:pp_cplan_country = { has_variable = pp_lprof_3_on }
-		}
-		pp_lprof_rules = { k = 3 }
-	}
-	else_if = {
-		limit = {
-			var:pp_lprof > 103.5 var:pp_lprof < 104.5
-			scope:pp_cplan_country = { has_variable = pp_lprof_4_on }
-		}
-		pp_lprof_rules = { k = 4 }
-	}
-	else_if = {
-		limit = {
-			var:pp_lprof > 104.5 var:pp_lprof < 105.5
-			scope:pp_cplan_country = { has_variable = pp_lprof_5_on }
-		}
-		pp_lprof_rules = { k = 5 }
-	}
-	else_if = {
-		limit = {
-			var:pp_lprof > 105.5 var:pp_lprof < 106.5
-			scope:pp_cplan_country = { has_variable = pp_lprof_6_on }
-		}
-		pp_lprof_rules = { k = 6 }
-	}
-	else_if = {
-		limit = {
-			var:pp_lprof > 106.5 var:pp_lprof < 107.5
-			scope:pp_cplan_country = { has_variable = pp_lprof_7_on }
-		}
-		pp_lprof_rules = { k = 7 }
-	}
-	else_if = {
-		limit = {
-			var:pp_lprof > 107.5 var:pp_lprof < 108.5
-			scope:pp_cplan_country = { has_variable = pp_lprof_8_on }
-		}
-		pp_lprof_rules = { k = 8 }
-	}
-	else_if = {
-		limit = {
-			var:pp_lprof > 108.5 var:pp_lprof < 109.5
-			scope:pp_cplan_country = { has_variable = pp_lprof_9_on }
-		}
-		pp_lprof_rules = { k = 9 }
-	}
-	else_if = {
-		limit = {
-			var:pp_lprof > 109.5 var:pp_lprof < 110.5
-			scope:pp_cplan_country = { has_variable = pp_lprof_10_on }
-		}
-		pp_lprof_rules = { k = 10 }
-	}
-	else_if = {
-		limit = {
-			var:pp_lprof > 110.5 var:pp_lprof < 111.5
-			scope:pp_cplan_country = { has_variable = pp_lprof_11_on }
-		}
-		pp_lprof_rules = { k = 11 }
-	}
-	else_if = {
-		limit = {
-			var:pp_lprof > 111.5 var:pp_lprof < 112.5
-			scope:pp_cplan_country = { has_variable = pp_lprof_12_on }
-		}
-		pp_lprof_rules = { k = 12 }
-	}
+	pp_lprof_rule = { r = 1 }
+	pp_lprof_rule = { r = 2 }
+	pp_lprof_rule = { r = 3 }
+	pp_lprof_rule = { r = 4 }
+	pp_lprof_rule = { r = 5 }
 	scope:pp_cplan_country = { remove_variable = pp_cplan_hit }
 }
 
-# Location scope: the rules of slot $k$.
-pp_lprof_rules = {
-	pp_lprof_rule = { k = $k$ r = 1 }
-	pp_lprof_rule = { k = $k$ r = 2 }
-	pp_lprof_rule = { k = $k$ r = 3 }
-	pp_lprof_rule = { k = $k$ r = 4 }
-	pp_lprof_rule = { k = $k$ r = 5 }
-}
+# ---- Slots: the only per-slot script ----
 
-# ---- Edits (scripted GUIs in scripted_guis/pp_location_profiles.txt) ----
-
-# Location scope (root): the profile scope:pp_slot (s1..sN, a slot that is on) or none. A profile replaces the
-# location's own rules or hands off; refresh_map_colors redraws the badges.
-pp_lprof_assign_do = {
-	owner ?= { save_scope_as = pp_lprof_country }
+# Country scope: pp_lprof_k = the slot (+ 100) of the flag scope:pp_slot (s1..sN, or e = the slot in the edit
+# buffer, pp_lprof_e_k); removed for anything else.
+pp_lprof_resolve = {
+	remove_variable = pp_lprof_k
 	if = {
-		limit = { exists = scope:pp_lprof_country }
+		limit = { scope:pp_slot = flag:e }
+		pp_cplan_copy_num = { from = pp_lprof_e_k to = pp_lprof_k }
+	}
+	else = {
 		switch = {
 			trigger = scope:pp_slot
-			flag:none = { pp_lprof_unassign = yes }
-			flag:s1 = {
-				if = {
-					limit = { scope:pp_lprof_country = { has_variable = pp_lprof_1_on } }
-					pp_lprof_assign_to = { n = 101 }
-				}
-			}
-			flag:s2 = {
-				if = {
-					limit = { scope:pp_lprof_country = { has_variable = pp_lprof_2_on } }
-					pp_lprof_assign_to = { n = 102 }
-				}
-			}
-			flag:s3 = {
-				if = {
-					limit = { scope:pp_lprof_country = { has_variable = pp_lprof_3_on } }
-					pp_lprof_assign_to = { n = 103 }
-				}
-			}
-			flag:s4 = {
-				if = {
-					limit = { scope:pp_lprof_country = { has_variable = pp_lprof_4_on } }
-					pp_lprof_assign_to = { n = 104 }
-				}
-			}
-			flag:s5 = {
-				if = {
-					limit = { scope:pp_lprof_country = { has_variable = pp_lprof_5_on } }
-					pp_lprof_assign_to = { n = 105 }
-				}
-			}
-			flag:s6 = {
-				if = {
-					limit = { scope:pp_lprof_country = { has_variable = pp_lprof_6_on } }
-					pp_lprof_assign_to = { n = 106 }
-				}
-			}
-			flag:s7 = {
-				if = {
-					limit = { scope:pp_lprof_country = { has_variable = pp_lprof_7_on } }
-					pp_lprof_assign_to = { n = 107 }
-				}
-			}
-			flag:s8 = {
-				if = {
-					limit = { scope:pp_lprof_country = { has_variable = pp_lprof_8_on } }
-					pp_lprof_assign_to = { n = 108 }
-				}
-			}
-			flag:s9 = {
-				if = {
-					limit = { scope:pp_lprof_country = { has_variable = pp_lprof_9_on } }
-					pp_lprof_assign_to = { n = 109 }
-				}
-			}
-			flag:s10 = {
-				if = {
-					limit = { scope:pp_lprof_country = { has_variable = pp_lprof_10_on } }
-					pp_lprof_assign_to = { n = 110 }
-				}
-			}
-			flag:s11 = {
-				if = {
-					limit = { scope:pp_lprof_country = { has_variable = pp_lprof_11_on } }
-					pp_lprof_assign_to = { n = 111 }
-				}
-			}
-			flag:s12 = {
-				if = {
-					limit = { scope:pp_lprof_country = { has_variable = pp_lprof_12_on } }
-					pp_lprof_assign_to = { n = 112 }
-				}
-			}
+			flag:s1 = { set_variable = { name = pp_lprof_k value = 101 } }
+			flag:s2 = { set_variable = { name = pp_lprof_k value = 102 } }
+			flag:s3 = { set_variable = { name = pp_lprof_k value = 103 } }
+			flag:s4 = { set_variable = { name = pp_lprof_k value = 104 } }
+			flag:s5 = { set_variable = { name = pp_lprof_k value = 105 } }
+			flag:s6 = { set_variable = { name = pp_lprof_k value = 106 } }
+			flag:s7 = { set_variable = { name = pp_lprof_k value = 107 } }
+			flag:s8 = { set_variable = { name = pp_lprof_k value = 108 } }
+			flag:s9 = { set_variable = { name = pp_lprof_k value = 109 } }
+			flag:s10 = { set_variable = { name = pp_lprof_k value = 110 } }
+			flag:s11 = { set_variable = { name = pp_lprof_k value = 111 } }
+			flag:s12 = { set_variable = { name = pp_lprof_k value = 112 } }
+			flag:s13 = { set_variable = { name = pp_lprof_k value = 113 } }
+			flag:s14 = { set_variable = { name = pp_lprof_k value = 114 } }
+			flag:s15 = { set_variable = { name = pp_lprof_k value = 115 } }
+			flag:s16 = { set_variable = { name = pp_lprof_k value = 116 } }
+			flag:s17 = { set_variable = { name = pp_lprof_k value = 117 } }
+			flag:s18 = { set_variable = { name = pp_lprof_k value = 118 } }
+			flag:s19 = { set_variable = { name = pp_lprof_k value = 119 } }
+			flag:s20 = { set_variable = { name = pp_lprof_k value = 120 } }
+			flag:s21 = { set_variable = { name = pp_lprof_k value = 121 } }
+			flag:s22 = { set_variable = { name = pp_lprof_k value = 122 } }
+			flag:s23 = { set_variable = { name = pp_lprof_k value = 123 } }
+			flag:s24 = { set_variable = { name = pp_lprof_k value = 124 } }
+			flag:s25 = { set_variable = { name = pp_lprof_k value = 125 } }
+			flag:s26 = { set_variable = { name = pp_lprof_k value = 126 } }
+			flag:s27 = { set_variable = { name = pp_lprof_k value = 127 } }
+			flag:s28 = { set_variable = { name = pp_lprof_k value = 128 } }
+			flag:s29 = { set_variable = { name = pp_lprof_k value = 129 } }
+			flag:s30 = { set_variable = { name = pp_lprof_k value = 130 } }
+			flag:s31 = { set_variable = { name = pp_lprof_k value = 131 } }
+			flag:s32 = { set_variable = { name = pp_lprof_k value = 132 } }
+			flag:s33 = { set_variable = { name = pp_lprof_k value = 133 } }
+			flag:s34 = { set_variable = { name = pp_lprof_k value = 134 } }
+			flag:s35 = { set_variable = { name = pp_lprof_k value = 135 } }
+			flag:s36 = { set_variable = { name = pp_lprof_k value = 136 } }
+			flag:s37 = { set_variable = { name = pp_lprof_k value = 137 } }
+			flag:s38 = { set_variable = { name = pp_lprof_k value = 138 } }
+			flag:s39 = { set_variable = { name = pp_lprof_k value = 139 } }
+			flag:s40 = { set_variable = { name = pp_lprof_k value = 140 } }
+			flag:s41 = { set_variable = { name = pp_lprof_k value = 141 } }
+			flag:s42 = { set_variable = { name = pp_lprof_k value = 142 } }
+			flag:s43 = { set_variable = { name = pp_lprof_k value = 143 } }
+			flag:s44 = { set_variable = { name = pp_lprof_k value = 144 } }
+			flag:s45 = { set_variable = { name = pp_lprof_k value = 145 } }
+			flag:s46 = { set_variable = { name = pp_lprof_k value = 146 } }
+			flag:s47 = { set_variable = { name = pp_lprof_k value = 147 } }
+			flag:s48 = { set_variable = { name = pp_lprof_k value = 148 } }
+			flag:s49 = { set_variable = { name = pp_lprof_k value = 149 } }
+			flag:s50 = { set_variable = { name = pp_lprof_k value = 150 } }
+			flag:s51 = { set_variable = { name = pp_lprof_k value = 151 } }
+			flag:s52 = { set_variable = { name = pp_lprof_k value = 152 } }
+			flag:s53 = { set_variable = { name = pp_lprof_k value = 153 } }
+			flag:s54 = { set_variable = { name = pp_lprof_k value = 154 } }
+			flag:s55 = { set_variable = { name = pp_lprof_k value = 155 } }
+			flag:s56 = { set_variable = { name = pp_lprof_k value = 156 } }
+			flag:s57 = { set_variable = { name = pp_lprof_k value = 157 } }
+			flag:s58 = { set_variable = { name = pp_lprof_k value = 158 } }
+			flag:s59 = { set_variable = { name = pp_lprof_k value = 159 } }
+			flag:s60 = { set_variable = { name = pp_lprof_k value = 160 } }
+			flag:s61 = { set_variable = { name = pp_lprof_k value = 161 } }
+			flag:s62 = { set_variable = { name = pp_lprof_k value = 162 } }
+			flag:s63 = { set_variable = { name = pp_lprof_k value = 163 } }
+			flag:s64 = { set_variable = { name = pp_lprof_k value = 164 } }
+			flag:s65 = { set_variable = { name = pp_lprof_k value = 165 } }
+			flag:s66 = { set_variable = { name = pp_lprof_k value = 166 } }
+			flag:s67 = { set_variable = { name = pp_lprof_k value = 167 } }
+			flag:s68 = { set_variable = { name = pp_lprof_k value = 168 } }
+			flag:s69 = { set_variable = { name = pp_lprof_k value = 169 } }
+			flag:s70 = { set_variable = { name = pp_lprof_k value = 170 } }
+			flag:s71 = { set_variable = { name = pp_lprof_k value = 171 } }
+			flag:s72 = { set_variable = { name = pp_lprof_k value = 172 } }
+			flag:s73 = { set_variable = { name = pp_lprof_k value = 173 } }
+			flag:s74 = { set_variable = { name = pp_lprof_k value = 174 } }
+			flag:s75 = { set_variable = { name = pp_lprof_k value = 175 } }
+			flag:s76 = { set_variable = { name = pp_lprof_k value = 176 } }
+			flag:s77 = { set_variable = { name = pp_lprof_k value = 177 } }
+			flag:s78 = { set_variable = { name = pp_lprof_k value = 178 } }
+			flag:s79 = { set_variable = { name = pp_lprof_k value = 179 } }
+			flag:s80 = { set_variable = { name = pp_lprof_k value = 180 } }
+			flag:s81 = { set_variable = { name = pp_lprof_k value = 181 } }
+			flag:s82 = { set_variable = { name = pp_lprof_k value = 182 } }
+			flag:s83 = { set_variable = { name = pp_lprof_k value = 183 } }
+			flag:s84 = { set_variable = { name = pp_lprof_k value = 184 } }
+			flag:s85 = { set_variable = { name = pp_lprof_k value = 185 } }
+			flag:s86 = { set_variable = { name = pp_lprof_k value = 186 } }
+			flag:s87 = { set_variable = { name = pp_lprof_k value = 187 } }
+			flag:s88 = { set_variable = { name = pp_lprof_k value = 188 } }
+			flag:s89 = { set_variable = { name = pp_lprof_k value = 189 } }
+			flag:s90 = { set_variable = { name = pp_lprof_k value = 190 } }
+			flag:s91 = { set_variable = { name = pp_lprof_k value = 191 } }
+			flag:s92 = { set_variable = { name = pp_lprof_k value = 192 } }
+			flag:s93 = { set_variable = { name = pp_lprof_k value = 193 } }
+			flag:s94 = { set_variable = { name = pp_lprof_k value = 194 } }
+			flag:s95 = { set_variable = { name = pp_lprof_k value = 195 } }
+			flag:s96 = { set_variable = { name = pp_lprof_k value = 196 } }
+			flag:s97 = { set_variable = { name = pp_lprof_k value = 197 } }
+			flag:s98 = { set_variable = { name = pp_lprof_k value = 198 } }
+			flag:s99 = { set_variable = { name = pp_lprof_k value = 199 } }
+			flag:s100 = { set_variable = { name = pp_lprof_k value = 200 } }
 		}
 	}
-	refresh_map_colors = yes
 }
 
-# Country scope: switches slot scope:pp_slot on (icon, its colour, no rules; scripted GUI pp_lprof_new).
-pp_lprof_new_do = {
-	switch = {
-		trigger = scope:pp_slot
-		flag:s1 = { if = { limit = { NOT = { has_variable = pp_lprof_1_on } } pp_lprof_new_slot = { k = 1 col = 101 } } }
-		flag:s2 = { if = { limit = { NOT = { has_variable = pp_lprof_2_on } } pp_lprof_new_slot = { k = 2 col = 102 } } }
-		flag:s3 = { if = { limit = { NOT = { has_variable = pp_lprof_3_on } } pp_lprof_new_slot = { k = 3 col = 103 } } }
-		flag:s4 = { if = { limit = { NOT = { has_variable = pp_lprof_4_on } } pp_lprof_new_slot = { k = 4 col = 104 } } }
-		flag:s5 = { if = { limit = { NOT = { has_variable = pp_lprof_5_on } } pp_lprof_new_slot = { k = 5 col = 105 } } }
-		flag:s6 = { if = { limit = { NOT = { has_variable = pp_lprof_6_on } } pp_lprof_new_slot = { k = 6 col = 106 } } }
-		flag:s7 = { if = { limit = { NOT = { has_variable = pp_lprof_7_on } } pp_lprof_new_slot = { k = 7 col = 107 } } }
-		flag:s8 = { if = { limit = { NOT = { has_variable = pp_lprof_8_on } } pp_lprof_new_slot = { k = 8 col = 108 } } }
-		flag:s9 = { if = { limit = { NOT = { has_variable = pp_lprof_9_on } } pp_lprof_new_slot = { k = 9 col = 101 } } }
-		flag:s10 = { if = { limit = { NOT = { has_variable = pp_lprof_10_on } } pp_lprof_new_slot = { k = 10 col = 102 } } }
-		flag:s11 = { if = { limit = { NOT = { has_variable = pp_lprof_11_on } } pp_lprof_new_slot = { k = 11 col = 103 } } }
-		flag:s12 = { if = { limit = { NOT = { has_variable = pp_lprof_12_on } } pp_lprof_new_slot = { k = 12 col = 104 } } }
+# Country scope: pp_lprof_k = the first slot not in use (removed when all are).
+pp_lprof_resolve_free = {
+	remove_variable = pp_lprof_k
+	if = { limit = { NOT = { has_variable = pp_lprof_1_on } } set_variable = { name = pp_lprof_k value = 101 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_2_on } } set_variable = { name = pp_lprof_k value = 102 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_3_on } } set_variable = { name = pp_lprof_k value = 103 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_4_on } } set_variable = { name = pp_lprof_k value = 104 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_5_on } } set_variable = { name = pp_lprof_k value = 105 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_6_on } } set_variable = { name = pp_lprof_k value = 106 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_7_on } } set_variable = { name = pp_lprof_k value = 107 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_8_on } } set_variable = { name = pp_lprof_k value = 108 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_9_on } } set_variable = { name = pp_lprof_k value = 109 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_10_on } } set_variable = { name = pp_lprof_k value = 110 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_11_on } } set_variable = { name = pp_lprof_k value = 111 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_12_on } } set_variable = { name = pp_lprof_k value = 112 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_13_on } } set_variable = { name = pp_lprof_k value = 113 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_14_on } } set_variable = { name = pp_lprof_k value = 114 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_15_on } } set_variable = { name = pp_lprof_k value = 115 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_16_on } } set_variable = { name = pp_lprof_k value = 116 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_17_on } } set_variable = { name = pp_lprof_k value = 117 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_18_on } } set_variable = { name = pp_lprof_k value = 118 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_19_on } } set_variable = { name = pp_lprof_k value = 119 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_20_on } } set_variable = { name = pp_lprof_k value = 120 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_21_on } } set_variable = { name = pp_lprof_k value = 121 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_22_on } } set_variable = { name = pp_lprof_k value = 122 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_23_on } } set_variable = { name = pp_lprof_k value = 123 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_24_on } } set_variable = { name = pp_lprof_k value = 124 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_25_on } } set_variable = { name = pp_lprof_k value = 125 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_26_on } } set_variable = { name = pp_lprof_k value = 126 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_27_on } } set_variable = { name = pp_lprof_k value = 127 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_28_on } } set_variable = { name = pp_lprof_k value = 128 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_29_on } } set_variable = { name = pp_lprof_k value = 129 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_30_on } } set_variable = { name = pp_lprof_k value = 130 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_31_on } } set_variable = { name = pp_lprof_k value = 131 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_32_on } } set_variable = { name = pp_lprof_k value = 132 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_33_on } } set_variable = { name = pp_lprof_k value = 133 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_34_on } } set_variable = { name = pp_lprof_k value = 134 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_35_on } } set_variable = { name = pp_lprof_k value = 135 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_36_on } } set_variable = { name = pp_lprof_k value = 136 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_37_on } } set_variable = { name = pp_lprof_k value = 137 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_38_on } } set_variable = { name = pp_lprof_k value = 138 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_39_on } } set_variable = { name = pp_lprof_k value = 139 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_40_on } } set_variable = { name = pp_lprof_k value = 140 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_41_on } } set_variable = { name = pp_lprof_k value = 141 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_42_on } } set_variable = { name = pp_lprof_k value = 142 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_43_on } } set_variable = { name = pp_lprof_k value = 143 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_44_on } } set_variable = { name = pp_lprof_k value = 144 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_45_on } } set_variable = { name = pp_lprof_k value = 145 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_46_on } } set_variable = { name = pp_lprof_k value = 146 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_47_on } } set_variable = { name = pp_lprof_k value = 147 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_48_on } } set_variable = { name = pp_lprof_k value = 148 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_49_on } } set_variable = { name = pp_lprof_k value = 149 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_50_on } } set_variable = { name = pp_lprof_k value = 150 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_51_on } } set_variable = { name = pp_lprof_k value = 151 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_52_on } } set_variable = { name = pp_lprof_k value = 152 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_53_on } } set_variable = { name = pp_lprof_k value = 153 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_54_on } } set_variable = { name = pp_lprof_k value = 154 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_55_on } } set_variable = { name = pp_lprof_k value = 155 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_56_on } } set_variable = { name = pp_lprof_k value = 156 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_57_on } } set_variable = { name = pp_lprof_k value = 157 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_58_on } } set_variable = { name = pp_lprof_k value = 158 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_59_on } } set_variable = { name = pp_lprof_k value = 159 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_60_on } } set_variable = { name = pp_lprof_k value = 160 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_61_on } } set_variable = { name = pp_lprof_k value = 161 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_62_on } } set_variable = { name = pp_lprof_k value = 162 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_63_on } } set_variable = { name = pp_lprof_k value = 163 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_64_on } } set_variable = { name = pp_lprof_k value = 164 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_65_on } } set_variable = { name = pp_lprof_k value = 165 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_66_on } } set_variable = { name = pp_lprof_k value = 166 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_67_on } } set_variable = { name = pp_lprof_k value = 167 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_68_on } } set_variable = { name = pp_lprof_k value = 168 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_69_on } } set_variable = { name = pp_lprof_k value = 169 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_70_on } } set_variable = { name = pp_lprof_k value = 170 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_71_on } } set_variable = { name = pp_lprof_k value = 171 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_72_on } } set_variable = { name = pp_lprof_k value = 172 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_73_on } } set_variable = { name = pp_lprof_k value = 173 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_74_on } } set_variable = { name = pp_lprof_k value = 174 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_75_on } } set_variable = { name = pp_lprof_k value = 175 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_76_on } } set_variable = { name = pp_lprof_k value = 176 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_77_on } } set_variable = { name = pp_lprof_k value = 177 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_78_on } } set_variable = { name = pp_lprof_k value = 178 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_79_on } } set_variable = { name = pp_lprof_k value = 179 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_80_on } } set_variable = { name = pp_lprof_k value = 180 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_81_on } } set_variable = { name = pp_lprof_k value = 181 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_82_on } } set_variable = { name = pp_lprof_k value = 182 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_83_on } } set_variable = { name = pp_lprof_k value = 183 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_84_on } } set_variable = { name = pp_lprof_k value = 184 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_85_on } } set_variable = { name = pp_lprof_k value = 185 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_86_on } } set_variable = { name = pp_lprof_k value = 186 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_87_on } } set_variable = { name = pp_lprof_k value = 187 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_88_on } } set_variable = { name = pp_lprof_k value = 188 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_89_on } } set_variable = { name = pp_lprof_k value = 189 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_90_on } } set_variable = { name = pp_lprof_k value = 190 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_91_on } } set_variable = { name = pp_lprof_k value = 191 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_92_on } } set_variable = { name = pp_lprof_k value = 192 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_93_on } } set_variable = { name = pp_lprof_k value = 193 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_94_on } } set_variable = { name = pp_lprof_k value = 194 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_95_on } } set_variable = { name = pp_lprof_k value = 195 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_96_on } } set_variable = { name = pp_lprof_k value = 196 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_97_on } } set_variable = { name = pp_lprof_k value = 197 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_98_on } } set_variable = { name = pp_lprof_k value = 198 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_99_on } } set_variable = { name = pp_lprof_k value = 199 } }
+	else_if = { limit = { NOT = { has_variable = pp_lprof_100_on } } set_variable = { name = pp_lprof_k value = 200 } }
+}
+
+# Country scope (scope:pp_lprof_country = it): slot pp_lprof_k's variables -> the staged copy pp_lprof_s_*.
+pp_lprof_read = {
+	if = {
+		limit = { has_variable = pp_lprof_k }
+		if = { limit = { var:pp_lprof_k < 101.5 } pp_lprof_read_slot = { k = 1 } }
+		else_if = { limit = { var:pp_lprof_k < 102.5 } pp_lprof_read_slot = { k = 2 } }
+		else_if = { limit = { var:pp_lprof_k < 103.5 } pp_lprof_read_slot = { k = 3 } }
+		else_if = { limit = { var:pp_lprof_k < 104.5 } pp_lprof_read_slot = { k = 4 } }
+		else_if = { limit = { var:pp_lprof_k < 105.5 } pp_lprof_read_slot = { k = 5 } }
+		else_if = { limit = { var:pp_lprof_k < 106.5 } pp_lprof_read_slot = { k = 6 } }
+		else_if = { limit = { var:pp_lprof_k < 107.5 } pp_lprof_read_slot = { k = 7 } }
+		else_if = { limit = { var:pp_lprof_k < 108.5 } pp_lprof_read_slot = { k = 8 } }
+		else_if = { limit = { var:pp_lprof_k < 109.5 } pp_lprof_read_slot = { k = 9 } }
+		else_if = { limit = { var:pp_lprof_k < 110.5 } pp_lprof_read_slot = { k = 10 } }
+		else_if = { limit = { var:pp_lprof_k < 111.5 } pp_lprof_read_slot = { k = 11 } }
+		else_if = { limit = { var:pp_lprof_k < 112.5 } pp_lprof_read_slot = { k = 12 } }
+		else_if = { limit = { var:pp_lprof_k < 113.5 } pp_lprof_read_slot = { k = 13 } }
+		else_if = { limit = { var:pp_lprof_k < 114.5 } pp_lprof_read_slot = { k = 14 } }
+		else_if = { limit = { var:pp_lprof_k < 115.5 } pp_lprof_read_slot = { k = 15 } }
+		else_if = { limit = { var:pp_lprof_k < 116.5 } pp_lprof_read_slot = { k = 16 } }
+		else_if = { limit = { var:pp_lprof_k < 117.5 } pp_lprof_read_slot = { k = 17 } }
+		else_if = { limit = { var:pp_lprof_k < 118.5 } pp_lprof_read_slot = { k = 18 } }
+		else_if = { limit = { var:pp_lprof_k < 119.5 } pp_lprof_read_slot = { k = 19 } }
+		else_if = { limit = { var:pp_lprof_k < 120.5 } pp_lprof_read_slot = { k = 20 } }
+		else_if = { limit = { var:pp_lprof_k < 121.5 } pp_lprof_read_slot = { k = 21 } }
+		else_if = { limit = { var:pp_lprof_k < 122.5 } pp_lprof_read_slot = { k = 22 } }
+		else_if = { limit = { var:pp_lprof_k < 123.5 } pp_lprof_read_slot = { k = 23 } }
+		else_if = { limit = { var:pp_lprof_k < 124.5 } pp_lprof_read_slot = { k = 24 } }
+		else_if = { limit = { var:pp_lprof_k < 125.5 } pp_lprof_read_slot = { k = 25 } }
+		else_if = { limit = { var:pp_lprof_k < 126.5 } pp_lprof_read_slot = { k = 26 } }
+		else_if = { limit = { var:pp_lprof_k < 127.5 } pp_lprof_read_slot = { k = 27 } }
+		else_if = { limit = { var:pp_lprof_k < 128.5 } pp_lprof_read_slot = { k = 28 } }
+		else_if = { limit = { var:pp_lprof_k < 129.5 } pp_lprof_read_slot = { k = 29 } }
+		else_if = { limit = { var:pp_lprof_k < 130.5 } pp_lprof_read_slot = { k = 30 } }
+		else_if = { limit = { var:pp_lprof_k < 131.5 } pp_lprof_read_slot = { k = 31 } }
+		else_if = { limit = { var:pp_lprof_k < 132.5 } pp_lprof_read_slot = { k = 32 } }
+		else_if = { limit = { var:pp_lprof_k < 133.5 } pp_lprof_read_slot = { k = 33 } }
+		else_if = { limit = { var:pp_lprof_k < 134.5 } pp_lprof_read_slot = { k = 34 } }
+		else_if = { limit = { var:pp_lprof_k < 135.5 } pp_lprof_read_slot = { k = 35 } }
+		else_if = { limit = { var:pp_lprof_k < 136.5 } pp_lprof_read_slot = { k = 36 } }
+		else_if = { limit = { var:pp_lprof_k < 137.5 } pp_lprof_read_slot = { k = 37 } }
+		else_if = { limit = { var:pp_lprof_k < 138.5 } pp_lprof_read_slot = { k = 38 } }
+		else_if = { limit = { var:pp_lprof_k < 139.5 } pp_lprof_read_slot = { k = 39 } }
+		else_if = { limit = { var:pp_lprof_k < 140.5 } pp_lprof_read_slot = { k = 40 } }
+		else_if = { limit = { var:pp_lprof_k < 141.5 } pp_lprof_read_slot = { k = 41 } }
+		else_if = { limit = { var:pp_lprof_k < 142.5 } pp_lprof_read_slot = { k = 42 } }
+		else_if = { limit = { var:pp_lprof_k < 143.5 } pp_lprof_read_slot = { k = 43 } }
+		else_if = { limit = { var:pp_lprof_k < 144.5 } pp_lprof_read_slot = { k = 44 } }
+		else_if = { limit = { var:pp_lprof_k < 145.5 } pp_lprof_read_slot = { k = 45 } }
+		else_if = { limit = { var:pp_lprof_k < 146.5 } pp_lprof_read_slot = { k = 46 } }
+		else_if = { limit = { var:pp_lprof_k < 147.5 } pp_lprof_read_slot = { k = 47 } }
+		else_if = { limit = { var:pp_lprof_k < 148.5 } pp_lprof_read_slot = { k = 48 } }
+		else_if = { limit = { var:pp_lprof_k < 149.5 } pp_lprof_read_slot = { k = 49 } }
+		else_if = { limit = { var:pp_lprof_k < 150.5 } pp_lprof_read_slot = { k = 50 } }
+		else_if = { limit = { var:pp_lprof_k < 151.5 } pp_lprof_read_slot = { k = 51 } }
+		else_if = { limit = { var:pp_lprof_k < 152.5 } pp_lprof_read_slot = { k = 52 } }
+		else_if = { limit = { var:pp_lprof_k < 153.5 } pp_lprof_read_slot = { k = 53 } }
+		else_if = { limit = { var:pp_lprof_k < 154.5 } pp_lprof_read_slot = { k = 54 } }
+		else_if = { limit = { var:pp_lprof_k < 155.5 } pp_lprof_read_slot = { k = 55 } }
+		else_if = { limit = { var:pp_lprof_k < 156.5 } pp_lprof_read_slot = { k = 56 } }
+		else_if = { limit = { var:pp_lprof_k < 157.5 } pp_lprof_read_slot = { k = 57 } }
+		else_if = { limit = { var:pp_lprof_k < 158.5 } pp_lprof_read_slot = { k = 58 } }
+		else_if = { limit = { var:pp_lprof_k < 159.5 } pp_lprof_read_slot = { k = 59 } }
+		else_if = { limit = { var:pp_lprof_k < 160.5 } pp_lprof_read_slot = { k = 60 } }
+		else_if = { limit = { var:pp_lprof_k < 161.5 } pp_lprof_read_slot = { k = 61 } }
+		else_if = { limit = { var:pp_lprof_k < 162.5 } pp_lprof_read_slot = { k = 62 } }
+		else_if = { limit = { var:pp_lprof_k < 163.5 } pp_lprof_read_slot = { k = 63 } }
+		else_if = { limit = { var:pp_lprof_k < 164.5 } pp_lprof_read_slot = { k = 64 } }
+		else_if = { limit = { var:pp_lprof_k < 165.5 } pp_lprof_read_slot = { k = 65 } }
+		else_if = { limit = { var:pp_lprof_k < 166.5 } pp_lprof_read_slot = { k = 66 } }
+		else_if = { limit = { var:pp_lprof_k < 167.5 } pp_lprof_read_slot = { k = 67 } }
+		else_if = { limit = { var:pp_lprof_k < 168.5 } pp_lprof_read_slot = { k = 68 } }
+		else_if = { limit = { var:pp_lprof_k < 169.5 } pp_lprof_read_slot = { k = 69 } }
+		else_if = { limit = { var:pp_lprof_k < 170.5 } pp_lprof_read_slot = { k = 70 } }
+		else_if = { limit = { var:pp_lprof_k < 171.5 } pp_lprof_read_slot = { k = 71 } }
+		else_if = { limit = { var:pp_lprof_k < 172.5 } pp_lprof_read_slot = { k = 72 } }
+		else_if = { limit = { var:pp_lprof_k < 173.5 } pp_lprof_read_slot = { k = 73 } }
+		else_if = { limit = { var:pp_lprof_k < 174.5 } pp_lprof_read_slot = { k = 74 } }
+		else_if = { limit = { var:pp_lprof_k < 175.5 } pp_lprof_read_slot = { k = 75 } }
+		else_if = { limit = { var:pp_lprof_k < 176.5 } pp_lprof_read_slot = { k = 76 } }
+		else_if = { limit = { var:pp_lprof_k < 177.5 } pp_lprof_read_slot = { k = 77 } }
+		else_if = { limit = { var:pp_lprof_k < 178.5 } pp_lprof_read_slot = { k = 78 } }
+		else_if = { limit = { var:pp_lprof_k < 179.5 } pp_lprof_read_slot = { k = 79 } }
+		else_if = { limit = { var:pp_lprof_k < 180.5 } pp_lprof_read_slot = { k = 80 } }
+		else_if = { limit = { var:pp_lprof_k < 181.5 } pp_lprof_read_slot = { k = 81 } }
+		else_if = { limit = { var:pp_lprof_k < 182.5 } pp_lprof_read_slot = { k = 82 } }
+		else_if = { limit = { var:pp_lprof_k < 183.5 } pp_lprof_read_slot = { k = 83 } }
+		else_if = { limit = { var:pp_lprof_k < 184.5 } pp_lprof_read_slot = { k = 84 } }
+		else_if = { limit = { var:pp_lprof_k < 185.5 } pp_lprof_read_slot = { k = 85 } }
+		else_if = { limit = { var:pp_lprof_k < 186.5 } pp_lprof_read_slot = { k = 86 } }
+		else_if = { limit = { var:pp_lprof_k < 187.5 } pp_lprof_read_slot = { k = 87 } }
+		else_if = { limit = { var:pp_lprof_k < 188.5 } pp_lprof_read_slot = { k = 88 } }
+		else_if = { limit = { var:pp_lprof_k < 189.5 } pp_lprof_read_slot = { k = 89 } }
+		else_if = { limit = { var:pp_lprof_k < 190.5 } pp_lprof_read_slot = { k = 90 } }
+		else_if = { limit = { var:pp_lprof_k < 191.5 } pp_lprof_read_slot = { k = 91 } }
+		else_if = { limit = { var:pp_lprof_k < 192.5 } pp_lprof_read_slot = { k = 92 } }
+		else_if = { limit = { var:pp_lprof_k < 193.5 } pp_lprof_read_slot = { k = 93 } }
+		else_if = { limit = { var:pp_lprof_k < 194.5 } pp_lprof_read_slot = { k = 94 } }
+		else_if = { limit = { var:pp_lprof_k < 195.5 } pp_lprof_read_slot = { k = 95 } }
+		else_if = { limit = { var:pp_lprof_k < 196.5 } pp_lprof_read_slot = { k = 96 } }
+		else_if = { limit = { var:pp_lprof_k < 197.5 } pp_lprof_read_slot = { k = 97 } }
+		else_if = { limit = { var:pp_lprof_k < 198.5 } pp_lprof_read_slot = { k = 98 } }
+		else_if = { limit = { var:pp_lprof_k < 199.5 } pp_lprof_read_slot = { k = 99 } }
+		else_if = { limit = { var:pp_lprof_k < 200.5 } pp_lprof_read_slot = { k = 100 } }
 	}
 }
 
-# Any scope: the good named by the flag scope:pp_key as scope:pp_lprof_val (nothing for a category key).
+# Country scope (scope:pp_lprof_country = it): the staged copy -> slot pp_lprof_k's variables.
+pp_lprof_write = {
+	if = {
+		limit = { has_variable = pp_lprof_k }
+		if = { limit = { var:pp_lprof_k < 101.5 } pp_lprof_write_slot = { k = 1 } }
+		else_if = { limit = { var:pp_lprof_k < 102.5 } pp_lprof_write_slot = { k = 2 } }
+		else_if = { limit = { var:pp_lprof_k < 103.5 } pp_lprof_write_slot = { k = 3 } }
+		else_if = { limit = { var:pp_lprof_k < 104.5 } pp_lprof_write_slot = { k = 4 } }
+		else_if = { limit = { var:pp_lprof_k < 105.5 } pp_lprof_write_slot = { k = 5 } }
+		else_if = { limit = { var:pp_lprof_k < 106.5 } pp_lprof_write_slot = { k = 6 } }
+		else_if = { limit = { var:pp_lprof_k < 107.5 } pp_lprof_write_slot = { k = 7 } }
+		else_if = { limit = { var:pp_lprof_k < 108.5 } pp_lprof_write_slot = { k = 8 } }
+		else_if = { limit = { var:pp_lprof_k < 109.5 } pp_lprof_write_slot = { k = 9 } }
+		else_if = { limit = { var:pp_lprof_k < 110.5 } pp_lprof_write_slot = { k = 10 } }
+		else_if = { limit = { var:pp_lprof_k < 111.5 } pp_lprof_write_slot = { k = 11 } }
+		else_if = { limit = { var:pp_lprof_k < 112.5 } pp_lprof_write_slot = { k = 12 } }
+		else_if = { limit = { var:pp_lprof_k < 113.5 } pp_lprof_write_slot = { k = 13 } }
+		else_if = { limit = { var:pp_lprof_k < 114.5 } pp_lprof_write_slot = { k = 14 } }
+		else_if = { limit = { var:pp_lprof_k < 115.5 } pp_lprof_write_slot = { k = 15 } }
+		else_if = { limit = { var:pp_lprof_k < 116.5 } pp_lprof_write_slot = { k = 16 } }
+		else_if = { limit = { var:pp_lprof_k < 117.5 } pp_lprof_write_slot = { k = 17 } }
+		else_if = { limit = { var:pp_lprof_k < 118.5 } pp_lprof_write_slot = { k = 18 } }
+		else_if = { limit = { var:pp_lprof_k < 119.5 } pp_lprof_write_slot = { k = 19 } }
+		else_if = { limit = { var:pp_lprof_k < 120.5 } pp_lprof_write_slot = { k = 20 } }
+		else_if = { limit = { var:pp_lprof_k < 121.5 } pp_lprof_write_slot = { k = 21 } }
+		else_if = { limit = { var:pp_lprof_k < 122.5 } pp_lprof_write_slot = { k = 22 } }
+		else_if = { limit = { var:pp_lprof_k < 123.5 } pp_lprof_write_slot = { k = 23 } }
+		else_if = { limit = { var:pp_lprof_k < 124.5 } pp_lprof_write_slot = { k = 24 } }
+		else_if = { limit = { var:pp_lprof_k < 125.5 } pp_lprof_write_slot = { k = 25 } }
+		else_if = { limit = { var:pp_lprof_k < 126.5 } pp_lprof_write_slot = { k = 26 } }
+		else_if = { limit = { var:pp_lprof_k < 127.5 } pp_lprof_write_slot = { k = 27 } }
+		else_if = { limit = { var:pp_lprof_k < 128.5 } pp_lprof_write_slot = { k = 28 } }
+		else_if = { limit = { var:pp_lprof_k < 129.5 } pp_lprof_write_slot = { k = 29 } }
+		else_if = { limit = { var:pp_lprof_k < 130.5 } pp_lprof_write_slot = { k = 30 } }
+		else_if = { limit = { var:pp_lprof_k < 131.5 } pp_lprof_write_slot = { k = 31 } }
+		else_if = { limit = { var:pp_lprof_k < 132.5 } pp_lprof_write_slot = { k = 32 } }
+		else_if = { limit = { var:pp_lprof_k < 133.5 } pp_lprof_write_slot = { k = 33 } }
+		else_if = { limit = { var:pp_lprof_k < 134.5 } pp_lprof_write_slot = { k = 34 } }
+		else_if = { limit = { var:pp_lprof_k < 135.5 } pp_lprof_write_slot = { k = 35 } }
+		else_if = { limit = { var:pp_lprof_k < 136.5 } pp_lprof_write_slot = { k = 36 } }
+		else_if = { limit = { var:pp_lprof_k < 137.5 } pp_lprof_write_slot = { k = 37 } }
+		else_if = { limit = { var:pp_lprof_k < 138.5 } pp_lprof_write_slot = { k = 38 } }
+		else_if = { limit = { var:pp_lprof_k < 139.5 } pp_lprof_write_slot = { k = 39 } }
+		else_if = { limit = { var:pp_lprof_k < 140.5 } pp_lprof_write_slot = { k = 40 } }
+		else_if = { limit = { var:pp_lprof_k < 141.5 } pp_lprof_write_slot = { k = 41 } }
+		else_if = { limit = { var:pp_lprof_k < 142.5 } pp_lprof_write_slot = { k = 42 } }
+		else_if = { limit = { var:pp_lprof_k < 143.5 } pp_lprof_write_slot = { k = 43 } }
+		else_if = { limit = { var:pp_lprof_k < 144.5 } pp_lprof_write_slot = { k = 44 } }
+		else_if = { limit = { var:pp_lprof_k < 145.5 } pp_lprof_write_slot = { k = 45 } }
+		else_if = { limit = { var:pp_lprof_k < 146.5 } pp_lprof_write_slot = { k = 46 } }
+		else_if = { limit = { var:pp_lprof_k < 147.5 } pp_lprof_write_slot = { k = 47 } }
+		else_if = { limit = { var:pp_lprof_k < 148.5 } pp_lprof_write_slot = { k = 48 } }
+		else_if = { limit = { var:pp_lprof_k < 149.5 } pp_lprof_write_slot = { k = 49 } }
+		else_if = { limit = { var:pp_lprof_k < 150.5 } pp_lprof_write_slot = { k = 50 } }
+		else_if = { limit = { var:pp_lprof_k < 151.5 } pp_lprof_write_slot = { k = 51 } }
+		else_if = { limit = { var:pp_lprof_k < 152.5 } pp_lprof_write_slot = { k = 52 } }
+		else_if = { limit = { var:pp_lprof_k < 153.5 } pp_lprof_write_slot = { k = 53 } }
+		else_if = { limit = { var:pp_lprof_k < 154.5 } pp_lprof_write_slot = { k = 54 } }
+		else_if = { limit = { var:pp_lprof_k < 155.5 } pp_lprof_write_slot = { k = 55 } }
+		else_if = { limit = { var:pp_lprof_k < 156.5 } pp_lprof_write_slot = { k = 56 } }
+		else_if = { limit = { var:pp_lprof_k < 157.5 } pp_lprof_write_slot = { k = 57 } }
+		else_if = { limit = { var:pp_lprof_k < 158.5 } pp_lprof_write_slot = { k = 58 } }
+		else_if = { limit = { var:pp_lprof_k < 159.5 } pp_lprof_write_slot = { k = 59 } }
+		else_if = { limit = { var:pp_lprof_k < 160.5 } pp_lprof_write_slot = { k = 60 } }
+		else_if = { limit = { var:pp_lprof_k < 161.5 } pp_lprof_write_slot = { k = 61 } }
+		else_if = { limit = { var:pp_lprof_k < 162.5 } pp_lprof_write_slot = { k = 62 } }
+		else_if = { limit = { var:pp_lprof_k < 163.5 } pp_lprof_write_slot = { k = 63 } }
+		else_if = { limit = { var:pp_lprof_k < 164.5 } pp_lprof_write_slot = { k = 64 } }
+		else_if = { limit = { var:pp_lprof_k < 165.5 } pp_lprof_write_slot = { k = 65 } }
+		else_if = { limit = { var:pp_lprof_k < 166.5 } pp_lprof_write_slot = { k = 66 } }
+		else_if = { limit = { var:pp_lprof_k < 167.5 } pp_lprof_write_slot = { k = 67 } }
+		else_if = { limit = { var:pp_lprof_k < 168.5 } pp_lprof_write_slot = { k = 68 } }
+		else_if = { limit = { var:pp_lprof_k < 169.5 } pp_lprof_write_slot = { k = 69 } }
+		else_if = { limit = { var:pp_lprof_k < 170.5 } pp_lprof_write_slot = { k = 70 } }
+		else_if = { limit = { var:pp_lprof_k < 171.5 } pp_lprof_write_slot = { k = 71 } }
+		else_if = { limit = { var:pp_lprof_k < 172.5 } pp_lprof_write_slot = { k = 72 } }
+		else_if = { limit = { var:pp_lprof_k < 173.5 } pp_lprof_write_slot = { k = 73 } }
+		else_if = { limit = { var:pp_lprof_k < 174.5 } pp_lprof_write_slot = { k = 74 } }
+		else_if = { limit = { var:pp_lprof_k < 175.5 } pp_lprof_write_slot = { k = 75 } }
+		else_if = { limit = { var:pp_lprof_k < 176.5 } pp_lprof_write_slot = { k = 76 } }
+		else_if = { limit = { var:pp_lprof_k < 177.5 } pp_lprof_write_slot = { k = 77 } }
+		else_if = { limit = { var:pp_lprof_k < 178.5 } pp_lprof_write_slot = { k = 78 } }
+		else_if = { limit = { var:pp_lprof_k < 179.5 } pp_lprof_write_slot = { k = 79 } }
+		else_if = { limit = { var:pp_lprof_k < 180.5 } pp_lprof_write_slot = { k = 80 } }
+		else_if = { limit = { var:pp_lprof_k < 181.5 } pp_lprof_write_slot = { k = 81 } }
+		else_if = { limit = { var:pp_lprof_k < 182.5 } pp_lprof_write_slot = { k = 82 } }
+		else_if = { limit = { var:pp_lprof_k < 183.5 } pp_lprof_write_slot = { k = 83 } }
+		else_if = { limit = { var:pp_lprof_k < 184.5 } pp_lprof_write_slot = { k = 84 } }
+		else_if = { limit = { var:pp_lprof_k < 185.5 } pp_lprof_write_slot = { k = 85 } }
+		else_if = { limit = { var:pp_lprof_k < 186.5 } pp_lprof_write_slot = { k = 86 } }
+		else_if = { limit = { var:pp_lprof_k < 187.5 } pp_lprof_write_slot = { k = 87 } }
+		else_if = { limit = { var:pp_lprof_k < 188.5 } pp_lprof_write_slot = { k = 88 } }
+		else_if = { limit = { var:pp_lprof_k < 189.5 } pp_lprof_write_slot = { k = 89 } }
+		else_if = { limit = { var:pp_lprof_k < 190.5 } pp_lprof_write_slot = { k = 90 } }
+		else_if = { limit = { var:pp_lprof_k < 191.5 } pp_lprof_write_slot = { k = 91 } }
+		else_if = { limit = { var:pp_lprof_k < 192.5 } pp_lprof_write_slot = { k = 92 } }
+		else_if = { limit = { var:pp_lprof_k < 193.5 } pp_lprof_write_slot = { k = 93 } }
+		else_if = { limit = { var:pp_lprof_k < 194.5 } pp_lprof_write_slot = { k = 94 } }
+		else_if = { limit = { var:pp_lprof_k < 195.5 } pp_lprof_write_slot = { k = 95 } }
+		else_if = { limit = { var:pp_lprof_k < 196.5 } pp_lprof_write_slot = { k = 96 } }
+		else_if = { limit = { var:pp_lprof_k < 197.5 } pp_lprof_write_slot = { k = 97 } }
+		else_if = { limit = { var:pp_lprof_k < 198.5 } pp_lprof_write_slot = { k = 98 } }
+		else_if = { limit = { var:pp_lprof_k < 199.5 } pp_lprof_write_slot = { k = 99 } }
+		else_if = { limit = { var:pp_lprof_k < 200.5 } pp_lprof_write_slot = { k = 100 } }
+	}
+}
+
+# ---- Edits of the staged copy (pp_lprof_s_*, country scope; pp_lprof_edit in pp_location_profiles.txt) ----
+
+# Any scope: the good named by the flag scope:pp_key as scope:pp_lprof_val (nothing for a category or symbol key).
 pp_lprof_key_scope = {
 	switch = {
 		trigger = scope:pp_key
@@ -2172,79 +2416,32 @@ pp_lprof_key_scope = {
 	}
 }
 
-# Country scope: the icon or a rule target (scope:pp_field) of slot $k$ = the item scope:pp_key.
-pp_lprof_set_slot = {
-	if = {
-		limit = { has_variable = pp_lprof_$k$_on }
-		switch = {
-			trigger = scope:pp_field
-			flag:icon = { pp_lprof_set_target = { g = pp_lprof_$k$_ig c = pp_lprof_$k$_ic } }
-			flag:r1 = { pp_lprof_set_target = { g = pp_lprof_$k$_r1_g c = pp_lprof_$k$_r1_c } }
-			flag:r2 = { pp_lprof_set_target = { g = pp_lprof_$k$_r2_g c = pp_lprof_$k$_r2_c } }
-			flag:r3 = { pp_lprof_set_target = { g = pp_lprof_$k$_r3_g c = pp_lprof_$k$_r3_c } }
-			flag:r4 = { pp_lprof_set_target = { g = pp_lprof_$k$_r4_g c = pp_lprof_$k$_r4_c } }
-			flag:r5 = { pp_lprof_set_target = { g = pp_lprof_$k$_r5_g c = pp_lprof_$k$_r5_c } }
-		}
-	}
-}
-
-# Country scope: the icon or a rule target of slot scope:pp_slot (scripted GUI pp_lprof_set).
-pp_lprof_set_do = {
-	pp_lprof_key_scope = yes
+# The icon or a rule target (scope:pp_field) = the item scope:pp_key (a symbol only as the icon).
+pp_lprof_set_staged = {
 	switch = {
-		trigger = scope:pp_slot
-		flag:s1 = { pp_lprof_set_slot = { k = 1 } }
-		flag:s2 = { pp_lprof_set_slot = { k = 2 } }
-		flag:s3 = { pp_lprof_set_slot = { k = 3 } }
-		flag:s4 = { pp_lprof_set_slot = { k = 4 } }
-		flag:s5 = { pp_lprof_set_slot = { k = 5 } }
-		flag:s6 = { pp_lprof_set_slot = { k = 6 } }
-		flag:s7 = { pp_lprof_set_slot = { k = 7 } }
-		flag:s8 = { pp_lprof_set_slot = { k = 8 } }
-		flag:s9 = { pp_lprof_set_slot = { k = 9 } }
-		flag:s10 = { pp_lprof_set_slot = { k = 10 } }
-		flag:s11 = { pp_lprof_set_slot = { k = 11 } }
-		flag:s12 = { pp_lprof_set_slot = { k = 12 } }
-	}
-	refresh_map_colors = yes
-}
-
-# Country scope: the colour scope:pp_col (c1..cN) of slot $k$.
-pp_lprof_color_slot = {
-	if = {
-		limit = { has_variable = pp_lprof_$k$_on }
-		switch = {
-			trigger = scope:pp_col
-			flag:c1 = { set_variable = { name = pp_lprof_$k$_col value = 101 } }
-			flag:c2 = { set_variable = { name = pp_lprof_$k$_col value = 102 } }
-			flag:c3 = { set_variable = { name = pp_lprof_$k$_col value = 103 } }
-			flag:c4 = { set_variable = { name = pp_lprof_$k$_col value = 104 } }
-			flag:c5 = { set_variable = { name = pp_lprof_$k$_col value = 105 } }
-			flag:c6 = { set_variable = { name = pp_lprof_$k$_col value = 106 } }
-			flag:c7 = { set_variable = { name = pp_lprof_$k$_col value = 107 } }
-			flag:c8 = { set_variable = { name = pp_lprof_$k$_col value = 108 } }
-		}
+		trigger = scope:pp_field
+		flag:icon = { pp_lprof_set_icon = { g = pp_lprof_s_ig c = pp_lprof_s_ic n = pp_lprof_s_in } }
+		flag:r1 = { pp_lprof_set_target = { g = pp_lprof_s_r1_g c = pp_lprof_s_r1_c n = pp_lprof_s_r1_cn } }
+		flag:r2 = { pp_lprof_set_target = { g = pp_lprof_s_r2_g c = pp_lprof_s_r2_c n = pp_lprof_s_r2_cn } }
+		flag:r3 = { pp_lprof_set_target = { g = pp_lprof_s_r3_g c = pp_lprof_s_r3_c n = pp_lprof_s_r3_cn } }
+		flag:r4 = { pp_lprof_set_target = { g = pp_lprof_s_r4_g c = pp_lprof_s_r4_c n = pp_lprof_s_r4_cn } }
+		flag:r5 = { pp_lprof_set_target = { g = pp_lprof_s_r5_g c = pp_lprof_s_r5_c n = pp_lprof_s_r5_cn } }
 	}
 }
 
-# Country scope: the colour of slot scope:pp_slot (scripted GUI pp_lprof_color).
-pp_lprof_color_do = {
+# The colour scope:pp_col (c1..cN).
+pp_lprof_color_staged = {
 	switch = {
-		trigger = scope:pp_slot
-		flag:s1 = { pp_lprof_color_slot = { k = 1 } }
-		flag:s2 = { pp_lprof_color_slot = { k = 2 } }
-		flag:s3 = { pp_lprof_color_slot = { k = 3 } }
-		flag:s4 = { pp_lprof_color_slot = { k = 4 } }
-		flag:s5 = { pp_lprof_color_slot = { k = 5 } }
-		flag:s6 = { pp_lprof_color_slot = { k = 6 } }
-		flag:s7 = { pp_lprof_color_slot = { k = 7 } }
-		flag:s8 = { pp_lprof_color_slot = { k = 8 } }
-		flag:s9 = { pp_lprof_color_slot = { k = 9 } }
-		flag:s10 = { pp_lprof_color_slot = { k = 10 } }
-		flag:s11 = { pp_lprof_color_slot = { k = 11 } }
-		flag:s12 = { pp_lprof_color_slot = { k = 12 } }
+		trigger = scope:pp_col
+		flag:c1 = { set_variable = { name = pp_lprof_s_col value = 101 } }
+		flag:c2 = { set_variable = { name = pp_lprof_s_col value = 102 } }
+		flag:c3 = { set_variable = { name = pp_lprof_s_col value = 103 } }
+		flag:c4 = { set_variable = { name = pp_lprof_s_col value = 104 } }
+		flag:c5 = { set_variable = { name = pp_lprof_s_col value = 105 } }
+		flag:c6 = { set_variable = { name = pp_lprof_s_col value = 106 } }
+		flag:c7 = { set_variable = { name = pp_lprof_s_col value = 107 } }
+		flag:c8 = { set_variable = { name = pp_lprof_s_col value = 108 } }
 	}
-	refresh_map_colors = yes
 }
 
 # Any scope: steps the payback limit $var$ (years + 100; unset = any) through [location_profiles] payback_steps
@@ -2290,238 +2487,270 @@ pp_lprof_pb_step = {
 	}
 }
 
-# Country scope: the payback limit of rule scope:pp_field (r1..rN) of slot $k$.
-pp_lprof_payback_slot = {
-	if = {
-		limit = { has_variable = pp_lprof_$k$_on }
-		switch = {
-			trigger = scope:pp_field
-			flag:r1 = { pp_lprof_pb_step = { var = pp_lprof_$k$_r1_pb } }
-			flag:r2 = { pp_lprof_pb_step = { var = pp_lprof_$k$_r2_pb } }
-			flag:r3 = { pp_lprof_pb_step = { var = pp_lprof_$k$_r3_pb } }
-			flag:r4 = { pp_lprof_pb_step = { var = pp_lprof_$k$_r4_pb } }
-			flag:r5 = { pp_lprof_pb_step = { var = pp_lprof_$k$_r5_pb } }
-		}
-	}
-}
-
-# Country scope: steps a rule's payback limit (scripted GUI pp_lprof_payback).
-pp_lprof_payback_do = {
+# The payback limit of rule scope:pp_field (r1..rN), one step in the direction scope:pp_dir.
+pp_lprof_payback_staged = {
 	switch = {
-		trigger = scope:pp_slot
-		flag:s1 = { pp_lprof_payback_slot = { k = 1 } }
-		flag:s2 = { pp_lprof_payback_slot = { k = 2 } }
-		flag:s3 = { pp_lprof_payback_slot = { k = 3 } }
-		flag:s4 = { pp_lprof_payback_slot = { k = 4 } }
-		flag:s5 = { pp_lprof_payback_slot = { k = 5 } }
-		flag:s6 = { pp_lprof_payback_slot = { k = 6 } }
-		flag:s7 = { pp_lprof_payback_slot = { k = 7 } }
-		flag:s8 = { pp_lprof_payback_slot = { k = 8 } }
-		flag:s9 = { pp_lprof_payback_slot = { k = 9 } }
-		flag:s10 = { pp_lprof_payback_slot = { k = 10 } }
-		flag:s11 = { pp_lprof_payback_slot = { k = 11 } }
-		flag:s12 = { pp_lprof_payback_slot = { k = 12 } }
+		trigger = scope:pp_field
+		flag:r1 = { pp_lprof_pb_step = { var = pp_lprof_s_r1_pb } }
+		flag:r2 = { pp_lprof_pb_step = { var = pp_lprof_s_r2_pb } }
+		flag:r3 = { pp_lprof_pb_step = { var = pp_lprof_s_r3_pb } }
+		flag:r4 = { pp_lprof_pb_step = { var = pp_lprof_s_r4_pb } }
+		flag:r5 = { pp_lprof_pb_step = { var = pp_lprof_s_r5_pb } }
 	}
 }
 
-# Country scope: empties rule scope:pp_field of slot $k$ (var:pp_lprof between $lo$ and $hi$ in its locations).
-pp_lprof_rule_clear_slot = {
+# Rule scope:pp_field emptied, and its states in the slot's locations.
+pp_lprof_rule_clear_staged = {
+	pp_lprof_save_range = yes
 	switch = {
 		trigger = scope:pp_field
 		flag:r1 = {
-			remove_variable = pp_lprof_$k$_r1_g
-			remove_variable = pp_lprof_$k$_r1_c
-			remove_variable = pp_lprof_$k$_r1_pb
+			remove_variable = pp_lprof_s_r1_g
+			remove_variable = pp_lprof_s_r1_c
+			remove_variable = pp_lprof_s_r1_cn
+			remove_variable = pp_lprof_s_r1_pb
 			every_in_list = {
 				variable = pp_lprof_locs
-				limit = { has_variable = pp_lprof var:pp_lprof > $lo$ var:pp_lprof < $hi$ }
+				limit = { has_variable = pp_lprof var:pp_lprof > scope:pp_lprof_lo var:pp_lprof < scope:pp_lprof_hi }
 				remove_variable = pp_lprof_r1_st
+				remove_variable = pp_lprof_r1_est
 			}
 		}
 		flag:r2 = {
-			remove_variable = pp_lprof_$k$_r2_g
-			remove_variable = pp_lprof_$k$_r2_c
-			remove_variable = pp_lprof_$k$_r2_pb
+			remove_variable = pp_lprof_s_r2_g
+			remove_variable = pp_lprof_s_r2_c
+			remove_variable = pp_lprof_s_r2_cn
+			remove_variable = pp_lprof_s_r2_pb
 			every_in_list = {
 				variable = pp_lprof_locs
-				limit = { has_variable = pp_lprof var:pp_lprof > $lo$ var:pp_lprof < $hi$ }
+				limit = { has_variable = pp_lprof var:pp_lprof > scope:pp_lprof_lo var:pp_lprof < scope:pp_lprof_hi }
 				remove_variable = pp_lprof_r2_st
+				remove_variable = pp_lprof_r2_est
 			}
 		}
 		flag:r3 = {
-			remove_variable = pp_lprof_$k$_r3_g
-			remove_variable = pp_lprof_$k$_r3_c
-			remove_variable = pp_lprof_$k$_r3_pb
+			remove_variable = pp_lprof_s_r3_g
+			remove_variable = pp_lprof_s_r3_c
+			remove_variable = pp_lprof_s_r3_cn
+			remove_variable = pp_lprof_s_r3_pb
 			every_in_list = {
 				variable = pp_lprof_locs
-				limit = { has_variable = pp_lprof var:pp_lprof > $lo$ var:pp_lprof < $hi$ }
+				limit = { has_variable = pp_lprof var:pp_lprof > scope:pp_lprof_lo var:pp_lprof < scope:pp_lprof_hi }
 				remove_variable = pp_lprof_r3_st
+				remove_variable = pp_lprof_r3_est
 			}
 		}
 		flag:r4 = {
-			remove_variable = pp_lprof_$k$_r4_g
-			remove_variable = pp_lprof_$k$_r4_c
-			remove_variable = pp_lprof_$k$_r4_pb
+			remove_variable = pp_lprof_s_r4_g
+			remove_variable = pp_lprof_s_r4_c
+			remove_variable = pp_lprof_s_r4_cn
+			remove_variable = pp_lprof_s_r4_pb
 			every_in_list = {
 				variable = pp_lprof_locs
-				limit = { has_variable = pp_lprof var:pp_lprof > $lo$ var:pp_lprof < $hi$ }
+				limit = { has_variable = pp_lprof var:pp_lprof > scope:pp_lprof_lo var:pp_lprof < scope:pp_lprof_hi }
 				remove_variable = pp_lprof_r4_st
+				remove_variable = pp_lprof_r4_est
 			}
 		}
 		flag:r5 = {
-			remove_variable = pp_lprof_$k$_r5_g
-			remove_variable = pp_lprof_$k$_r5_c
-			remove_variable = pp_lprof_$k$_r5_pb
+			remove_variable = pp_lprof_s_r5_g
+			remove_variable = pp_lprof_s_r5_c
+			remove_variable = pp_lprof_s_r5_cn
+			remove_variable = pp_lprof_s_r5_pb
 			every_in_list = {
 				variable = pp_lprof_locs
-				limit = { has_variable = pp_lprof var:pp_lprof > $lo$ var:pp_lprof < $hi$ }
+				limit = { has_variable = pp_lprof var:pp_lprof > scope:pp_lprof_lo var:pp_lprof < scope:pp_lprof_hi }
 				remove_variable = pp_lprof_r5_st
+				remove_variable = pp_lprof_r5_est
 			}
 		}
 	}
 }
 
-# Country scope: empties a rule (scripted GUI pp_lprof_rule_clear).
-pp_lprof_rule_clear_do = {
-	switch = {
-		trigger = scope:pp_slot
-		flag:s1 = { pp_lprof_rule_clear_slot = { k = 1 lo = 100.5 hi = 101.5 } }
-		flag:s2 = { pp_lprof_rule_clear_slot = { k = 2 lo = 101.5 hi = 102.5 } }
-		flag:s3 = { pp_lprof_rule_clear_slot = { k = 3 lo = 102.5 hi = 103.5 } }
-		flag:s4 = { pp_lprof_rule_clear_slot = { k = 4 lo = 103.5 hi = 104.5 } }
-		flag:s5 = { pp_lprof_rule_clear_slot = { k = 5 lo = 104.5 hi = 105.5 } }
-		flag:s6 = { pp_lprof_rule_clear_slot = { k = 6 lo = 105.5 hi = 106.5 } }
-		flag:s7 = { pp_lprof_rule_clear_slot = { k = 7 lo = 106.5 hi = 107.5 } }
-		flag:s8 = { pp_lprof_rule_clear_slot = { k = 8 lo = 107.5 hi = 108.5 } }
-		flag:s9 = { pp_lprof_rule_clear_slot = { k = 9 lo = 108.5 hi = 109.5 } }
-		flag:s10 = { pp_lprof_rule_clear_slot = { k = 10 lo = 109.5 hi = 110.5 } }
-		flag:s11 = { pp_lprof_rule_clear_slot = { k = 11 lo = 110.5 hi = 111.5 } }
-		flag:s12 = { pp_lprof_rule_clear_slot = { k = 12 lo = 111.5 hi = 112.5 } }
-	}
-}
-
-# Country scope: swaps rule scope:pp_field of slot $k$ with its neighbour in the direction scope:pp_dir.
-pp_lprof_rule_move_slot = {
+# Rule scope:pp_field swaps places with its neighbour in the direction scope:pp_dir.
+pp_lprof_rule_move_staged = {
 	switch = {
 		trigger = scope:pp_field
 		flag:r1 = {
 			if = {
 				limit = { scope:pp_dir = flag:down }
-				pp_lprof_swap_rules = { k = $k$ a = 1 b = 2 lo = $lo$ hi = $hi$ }
+				pp_lprof_swap_rules = { a = 1 b = 2 }
 			}
 		}
 		flag:r2 = {
 			if = {
 				limit = { scope:pp_dir = flag:up }
-				pp_lprof_swap_rules = { k = $k$ a = 1 b = 2 lo = $lo$ hi = $hi$ }
+				pp_lprof_swap_rules = { a = 1 b = 2 }
 			}
 			if = {
 				limit = { scope:pp_dir = flag:down }
-				pp_lprof_swap_rules = { k = $k$ a = 2 b = 3 lo = $lo$ hi = $hi$ }
+				pp_lprof_swap_rules = { a = 2 b = 3 }
 			}
 		}
 		flag:r3 = {
 			if = {
 				limit = { scope:pp_dir = flag:up }
-				pp_lprof_swap_rules = { k = $k$ a = 2 b = 3 lo = $lo$ hi = $hi$ }
+				pp_lprof_swap_rules = { a = 2 b = 3 }
 			}
 			if = {
 				limit = { scope:pp_dir = flag:down }
-				pp_lprof_swap_rules = { k = $k$ a = 3 b = 4 lo = $lo$ hi = $hi$ }
+				pp_lprof_swap_rules = { a = 3 b = 4 }
 			}
 		}
 		flag:r4 = {
 			if = {
 				limit = { scope:pp_dir = flag:up }
-				pp_lprof_swap_rules = { k = $k$ a = 3 b = 4 lo = $lo$ hi = $hi$ }
+				pp_lprof_swap_rules = { a = 3 b = 4 }
 			}
 			if = {
 				limit = { scope:pp_dir = flag:down }
-				pp_lprof_swap_rules = { k = $k$ a = 4 b = 5 lo = $lo$ hi = $hi$ }
+				pp_lprof_swap_rules = { a = 4 b = 5 }
 			}
 		}
 		flag:r5 = {
 			if = {
 				limit = { scope:pp_dir = flag:up }
-				pp_lprof_swap_rules = { k = $k$ a = 4 b = 5 lo = $lo$ hi = $hi$ }
+				pp_lprof_swap_rules = { a = 4 b = 5 }
 			}
 		}
 	}
 }
 
-# Country scope: moves a rule up or down (scripted GUI pp_lprof_rule_move).
-pp_lprof_rule_move_do = {
-	switch = {
-		trigger = scope:pp_slot
-		flag:s1 = { pp_lprof_rule_move_slot = { k = 1 lo = 100.5 hi = 101.5 } }
-		flag:s2 = { pp_lprof_rule_move_slot = { k = 2 lo = 101.5 hi = 102.5 } }
-		flag:s3 = { pp_lprof_rule_move_slot = { k = 3 lo = 102.5 hi = 103.5 } }
-		flag:s4 = { pp_lprof_rule_move_slot = { k = 4 lo = 103.5 hi = 104.5 } }
-		flag:s5 = { pp_lprof_rule_move_slot = { k = 5 lo = 104.5 hi = 105.5 } }
-		flag:s6 = { pp_lprof_rule_move_slot = { k = 6 lo = 105.5 hi = 106.5 } }
-		flag:s7 = { pp_lprof_rule_move_slot = { k = 7 lo = 106.5 hi = 107.5 } }
-		flag:s8 = { pp_lprof_rule_move_slot = { k = 8 lo = 107.5 hi = 108.5 } }
-		flag:s9 = { pp_lprof_rule_move_slot = { k = 9 lo = 108.5 hi = 109.5 } }
-		flag:s10 = { pp_lprof_rule_move_slot = { k = 10 lo = 109.5 hi = 110.5 } }
-		flag:s11 = { pp_lprof_rule_move_slot = { k = 11 lo = 110.5 hi = 111.5 } }
-		flag:s12 = { pp_lprof_rule_move_slot = { k = 12 lo = 111.5 hi = 112.5 } }
-	}
+# ---- Copies of a profile ----
+
+# Any scope (scope:pp_lprof_country = the profile's country): scope:pp_lprof_country's $from$_* -> this scope's
+# $to$_* (icon with its frame number, colour, rules; what $from$ lacks goes). A slot is pp_lprof_<k>, the staged
+# copy pp_lprof_s, the edit buffer pp_lprof_e (country), a location's copy pp_lprof. The rules' category frame
+# numbers (drawn only in the editor) go separately: pp_lprof_copy_frames.
+pp_lprof_copy_profile = {
+	pp_lprof_pull_g = { from = $from$_ig to = $to$_ig }
+	pp_lprof_pull_icon = { from = $from$_ic to = $to$_ic }
+	pp_lprof_pull_n = { from = $from$_in to = $to$_in }
+	pp_lprof_pull_n = { from = $from$_col to = $to$_col }
+	pp_lprof_pull_g = { from = $from$_r1_g to = $to$_r1_g }
+	pp_lprof_pull_cat = { from = $from$_r1_c to = $to$_r1_c }
+	pp_lprof_pull_n = { from = $from$_r1_pb to = $to$_r1_pb }
+	pp_lprof_pull_g = { from = $from$_r2_g to = $to$_r2_g }
+	pp_lprof_pull_cat = { from = $from$_r2_c to = $to$_r2_c }
+	pp_lprof_pull_n = { from = $from$_r2_pb to = $to$_r2_pb }
+	pp_lprof_pull_g = { from = $from$_r3_g to = $to$_r3_g }
+	pp_lprof_pull_cat = { from = $from$_r3_c to = $to$_r3_c }
+	pp_lprof_pull_n = { from = $from$_r3_pb to = $to$_r3_pb }
+	pp_lprof_pull_g = { from = $from$_r4_g to = $to$_r4_g }
+	pp_lprof_pull_cat = { from = $from$_r4_c to = $to$_r4_c }
+	pp_lprof_pull_n = { from = $from$_r4_pb to = $to$_r4_pb }
+	pp_lprof_pull_g = { from = $from$_r5_g to = $to$_r5_g }
+	pp_lprof_pull_cat = { from = $from$_r5_c to = $to$_r5_c }
+	pp_lprof_pull_n = { from = $from$_r5_pb to = $to$_r5_pb }
 }
 
-# Country scope: clears slot scope:pp_slot and takes it off every location (scripted GUI pp_lprof_delete).
-pp_lprof_delete_do = {
-	switch = {
-		trigger = scope:pp_slot
-		flag:s1 = { pp_lprof_delete_slot = { k = 1 lo = 100.5 hi = 101.5 } }
-		flag:s2 = { pp_lprof_delete_slot = { k = 2 lo = 101.5 hi = 102.5 } }
-		flag:s3 = { pp_lprof_delete_slot = { k = 3 lo = 102.5 hi = 103.5 } }
-		flag:s4 = { pp_lprof_delete_slot = { k = 4 lo = 103.5 hi = 104.5 } }
-		flag:s5 = { pp_lprof_delete_slot = { k = 5 lo = 104.5 hi = 105.5 } }
-		flag:s6 = { pp_lprof_delete_slot = { k = 6 lo = 105.5 hi = 106.5 } }
-		flag:s7 = { pp_lprof_delete_slot = { k = 7 lo = 106.5 hi = 107.5 } }
-		flag:s8 = { pp_lprof_delete_slot = { k = 8 lo = 107.5 hi = 108.5 } }
-		flag:s9 = { pp_lprof_delete_slot = { k = 9 lo = 108.5 hi = 109.5 } }
-		flag:s10 = { pp_lprof_delete_slot = { k = 10 lo = 109.5 hi = 110.5 } }
-		flag:s11 = { pp_lprof_delete_slot = { k = 11 lo = 110.5 hi = 111.5 } }
-		flag:s12 = { pp_lprof_delete_slot = { k = 12 lo = 111.5 hi = 112.5 } }
-	}
+# Any scope: the frame numbers of the rules' category targets, scope:pp_lprof_country's $from$_* -> this scope's
+# $to$_* (slots, the staged copy, the edit buffer; a location's copy needs none).
+pp_lprof_copy_frames = {
+	pp_lprof_pull_n = { from = $from$_r1_cn to = $to$_r1_cn }
+	pp_lprof_pull_n = { from = $from$_r2_cn to = $to$_r2_cn }
+	pp_lprof_pull_n = { from = $from$_r3_cn to = $to$_r3_cn }
+	pp_lprof_pull_n = { from = $from$_r4_cn to = $to$_r4_cn }
+	pp_lprof_pull_n = { from = $from$_r5_cn to = $to$_r5_cn }
 }
 
-# Country scope: removes every rule of slot $k$.
-pp_lprof_clear_rules = {
-	remove_variable = pp_lprof_$k$_r1_g
-	remove_variable = pp_lprof_$k$_r1_c
-	remove_variable = pp_lprof_$k$_r1_pb
-	remove_variable = pp_lprof_$k$_r2_g
-	remove_variable = pp_lprof_$k$_r2_c
-	remove_variable = pp_lprof_$k$_r2_pb
-	remove_variable = pp_lprof_$k$_r3_g
-	remove_variable = pp_lprof_$k$_r3_c
-	remove_variable = pp_lprof_$k$_r3_pb
-	remove_variable = pp_lprof_$k$_r4_g
-	remove_variable = pp_lprof_$k$_r4_c
-	remove_variable = pp_lprof_$k$_r4_pb
-	remove_variable = pp_lprof_$k$_r5_g
-	remove_variable = pp_lprof_$k$_r5_c
-	remove_variable = pp_lprof_$k$_r5_pb
+# Any scope: a copy of a profile ($p$_*) removed. The rules' frame numbers exist only on slots, the staged copy
+# and the edit buffer (pp_lprof_clear_frames): removing a variable never set counts as a use, and on a location
+# copy logged "used but never set" (in game 2026-11-07).
+pp_lprof_clear_copies = {
+	remove_variable = $p$_ig
+	remove_variable = $p$_ic
+	remove_variable = $p$_in
+	remove_variable = $p$_col
+	remove_variable = $p$_r1_g
+	remove_variable = $p$_r1_c
+	remove_variable = $p$_r1_pb
+	remove_variable = $p$_r2_g
+	remove_variable = $p$_r2_c
+	remove_variable = $p$_r2_pb
+	remove_variable = $p$_r3_g
+	remove_variable = $p$_r3_c
+	remove_variable = $p$_r3_pb
+	remove_variable = $p$_r4_g
+	remove_variable = $p$_r4_c
+	remove_variable = $p$_r4_pb
+	remove_variable = $p$_r5_g
+	remove_variable = $p$_r5_c
+	remove_variable = $p$_r5_pb
 }
 
-# Location scope: removes the rule states.
+# Any scope but a location: the rules' frame numbers of a copy ($p$_*) removed.
+pp_lprof_clear_frames = {
+	remove_variable = $p$_r1_cn
+	remove_variable = $p$_r2_cn
+	remove_variable = $p$_r3_cn
+	remove_variable = $p$_r4_cn
+	remove_variable = $p$_r5_cn
+}
+
+# Location scope: removes the rule states and the payback notes.
 pp_lprof_clear_states = {
 	remove_variable = pp_lprof_r1_st
+	remove_variable = pp_lprof_r1_est
 	remove_variable = pp_lprof_r2_st
+	remove_variable = pp_lprof_r2_est
 	remove_variable = pp_lprof_r3_st
+	remove_variable = pp_lprof_r3_est
 	remove_variable = pp_lprof_r4_st
+	remove_variable = pp_lprof_r4_est
 	remove_variable = pp_lprof_r5_st
+	remove_variable = pp_lprof_r5_est
 }
 
-# Any scope: the category flag in the variable $from$ -> $to$ (removed when $from$ holds none).
-pp_lprof_copy_c = {
+# Any scope: the icon (a building category or a symbol) flag in scope:pp_lprof_country's variable $from$ -> this scope's $to$ (removed when
+# $from$ holds none). A switch: the flag is compared, never copied as a value.
+pp_lprof_pull_icon = {
 	remove_variable = $to$
 	if = {
-		limit = { has_variable = $from$ }
+		limit = { scope:pp_lprof_country = { has_variable = $from$ } }
 		switch = {
-			trigger = var:$from$
+			trigger = scope:pp_lprof_country.var:$from$
+			flag:trade_category = { set_variable = { name = $to$ value = flag:trade_category } }
+			flag:government_category = { set_variable = { name = $to$ value = flag:government_category } }
+			flag:military_category = { set_variable = { name = $to$ value = flag:military_category } }
+			flag:defense_category = { set_variable = { name = $to$ value = flag:defense_category } }
+			flag:religious_category = { set_variable = { name = $to$ value = flag:religious_category } }
+			flag:cultural_category = { set_variable = { name = $to$ value = flag:cultural_category } }
+			flag:naval_category = { set_variable = { name = $to$ value = flag:naval_category } }
+			flag:infrastructure_category = { set_variable = { name = $to$ value = flag:infrastructure_category } }
+			flag:pp_sym_city = { set_variable = { name = $to$ value = flag:pp_sym_city } }
+			flag:pp_sym_town = { set_variable = { name = $to$ value = flag:pp_sym_town } }
+			flag:pp_sym_village = { set_variable = { name = $to$ value = flag:pp_sym_village } }
+			flag:pp_sym_capital = { set_variable = { name = $to$ value = flag:pp_sym_capital } }
+			flag:pp_sym_food = { set_variable = { name = $to$ value = flag:pp_sym_food } }
+			flag:pp_sym_farming = { set_variable = { name = $to$ value = flag:pp_sym_farming } }
+			flag:pp_sym_herding = { set_variable = { name = $to$ value = flag:pp_sym_herding } }
+			flag:pp_sym_fishing = { set_variable = { name = $to$ value = flag:pp_sym_fishing } }
+			flag:pp_sym_forest = { set_variable = { name = $to$ value = flag:pp_sym_forest } }
+			flag:pp_sym_mining = { set_variable = { name = $to$ value = flag:pp_sym_mining } }
+			flag:pp_sym_industry = { set_variable = { name = $to$ value = flag:pp_sym_industry } }
+			flag:pp_sym_luxury = { set_variable = { name = $to$ value = flag:pp_sym_luxury } }
+			flag:pp_sym_market = { set_variable = { name = $to$ value = flag:pp_sym_market } }
+			flag:pp_sym_treasury = { set_variable = { name = $to$ value = flag:pp_sym_treasury } }
+			flag:pp_sym_harbour = { set_variable = { name = $to$ value = flag:pp_sym_harbour } }
+			flag:pp_sym_military = { set_variable = { name = $to$ value = flag:pp_sym_military } }
+			flag:pp_sym_stronghold = { set_variable = { name = $to$ value = flag:pp_sym_stronghold } }
+			flag:pp_sym_religion = { set_variable = { name = $to$ value = flag:pp_sym_religion } }
+			flag:pp_sym_learning = { set_variable = { name = $to$ value = flag:pp_sym_learning } }
+			flag:pp_sym_administration = { set_variable = { name = $to$ value = flag:pp_sym_administration } }
+			flag:pp_sym_population = { set_variable = { name = $to$ value = flag:pp_sym_population } }
+		}
+	}
+}
+
+# Any scope: the building category flag in scope:pp_lprof_country's variable $from$ -> this scope's $to$ (removed when
+# $from$ holds none). A switch: the flag is compared, never copied as a value.
+pp_lprof_pull_cat = {
+	remove_variable = $to$
+	if = {
+		limit = { scope:pp_lprof_country = { has_variable = $from$ } }
+		switch = {
+			trigger = scope:pp_lprof_country.var:$from$
 			flag:trade_category = { set_variable = { name = $to$ value = flag:trade_category } }
 			flag:government_category = { set_variable = { name = $to$ value = flag:government_category } }
 			flag:military_category = { set_variable = { name = $to$ value = flag:military_category } }
@@ -2565,6 +2794,7 @@ pp_lprof_declare_flags = {
 	set_variable = { name = pp_lprof_flag value = flag:defense_category }
 	set_variable = { name = pp_lprof_flag value = flag:down }
 	set_variable = { name = pp_lprof_flag value = flag:dyes }
+	set_variable = { name = pp_lprof_flag value = flag:e }
 	set_variable = { name = pp_lprof_flag value = flag:elephants }
 	set_variable = { name = pp_lprof_flag value = flag:fiber_crops }
 	set_variable = { name = pp_lprof_flag value = flag:fine_cloth }
@@ -2601,6 +2831,7 @@ pp_lprof_declare_flags = {
 	set_variable = { name = pp_lprof_flag value = flag:millet }
 	set_variable = { name = pp_lprof_flag value = flag:naval_category }
 	set_variable = { name = pp_lprof_flag value = flag:naval_supplies }
+	set_variable = { name = pp_lprof_flag value = flag:next }
 	set_variable = { name = pp_lprof_flag value = flag:none }
 	set_variable = { name = pp_lprof_flag value = flag:olives }
 	set_variable = { name = pp_lprof_flag value = flag:paper }
@@ -2609,6 +2840,27 @@ pp_lprof_declare_flags = {
 	set_variable = { name = pp_lprof_flag value = flag:porcelain }
 	set_variable = { name = pp_lprof_flag value = flag:potato }
 	set_variable = { name = pp_lprof_flag value = flag:pottery }
+	set_variable = { name = pp_lprof_flag value = flag:pp_sym_administration }
+	set_variable = { name = pp_lprof_flag value = flag:pp_sym_capital }
+	set_variable = { name = pp_lprof_flag value = flag:pp_sym_city }
+	set_variable = { name = pp_lprof_flag value = flag:pp_sym_farming }
+	set_variable = { name = pp_lprof_flag value = flag:pp_sym_fishing }
+	set_variable = { name = pp_lprof_flag value = flag:pp_sym_food }
+	set_variable = { name = pp_lprof_flag value = flag:pp_sym_forest }
+	set_variable = { name = pp_lprof_flag value = flag:pp_sym_harbour }
+	set_variable = { name = pp_lprof_flag value = flag:pp_sym_herding }
+	set_variable = { name = pp_lprof_flag value = flag:pp_sym_industry }
+	set_variable = { name = pp_lprof_flag value = flag:pp_sym_learning }
+	set_variable = { name = pp_lprof_flag value = flag:pp_sym_luxury }
+	set_variable = { name = pp_lprof_flag value = flag:pp_sym_market }
+	set_variable = { name = pp_lprof_flag value = flag:pp_sym_military }
+	set_variable = { name = pp_lprof_flag value = flag:pp_sym_mining }
+	set_variable = { name = pp_lprof_flag value = flag:pp_sym_population }
+	set_variable = { name = pp_lprof_flag value = flag:pp_sym_religion }
+	set_variable = { name = pp_lprof_flag value = flag:pp_sym_stronghold }
+	set_variable = { name = pp_lprof_flag value = flag:pp_sym_town }
+	set_variable = { name = pp_lprof_flag value = flag:pp_sym_treasury }
+	set_variable = { name = pp_lprof_flag value = flag:pp_sym_village }
 	set_variable = { name = pp_lprof_flag value = flag:r1 }
 	set_variable = { name = pp_lprof_flag value = flag:r2 }
 	set_variable = { name = pp_lprof_flag value = flag:r3 }
@@ -2618,16 +2870,104 @@ pp_lprof_declare_flags = {
 	set_variable = { name = pp_lprof_flag value = flag:rice }
 	set_variable = { name = pp_lprof_flag value = flag:s1 }
 	set_variable = { name = pp_lprof_flag value = flag:s10 }
+	set_variable = { name = pp_lprof_flag value = flag:s100 }
 	set_variable = { name = pp_lprof_flag value = flag:s11 }
 	set_variable = { name = pp_lprof_flag value = flag:s12 }
+	set_variable = { name = pp_lprof_flag value = flag:s13 }
+	set_variable = { name = pp_lprof_flag value = flag:s14 }
+	set_variable = { name = pp_lprof_flag value = flag:s15 }
+	set_variable = { name = pp_lprof_flag value = flag:s16 }
+	set_variable = { name = pp_lprof_flag value = flag:s17 }
+	set_variable = { name = pp_lprof_flag value = flag:s18 }
+	set_variable = { name = pp_lprof_flag value = flag:s19 }
 	set_variable = { name = pp_lprof_flag value = flag:s2 }
+	set_variable = { name = pp_lprof_flag value = flag:s20 }
+	set_variable = { name = pp_lprof_flag value = flag:s21 }
+	set_variable = { name = pp_lprof_flag value = flag:s22 }
+	set_variable = { name = pp_lprof_flag value = flag:s23 }
+	set_variable = { name = pp_lprof_flag value = flag:s24 }
+	set_variable = { name = pp_lprof_flag value = flag:s25 }
+	set_variable = { name = pp_lprof_flag value = flag:s26 }
+	set_variable = { name = pp_lprof_flag value = flag:s27 }
+	set_variable = { name = pp_lprof_flag value = flag:s28 }
+	set_variable = { name = pp_lprof_flag value = flag:s29 }
 	set_variable = { name = pp_lprof_flag value = flag:s3 }
+	set_variable = { name = pp_lprof_flag value = flag:s30 }
+	set_variable = { name = pp_lprof_flag value = flag:s31 }
+	set_variable = { name = pp_lprof_flag value = flag:s32 }
+	set_variable = { name = pp_lprof_flag value = flag:s33 }
+	set_variable = { name = pp_lprof_flag value = flag:s34 }
+	set_variable = { name = pp_lprof_flag value = flag:s35 }
+	set_variable = { name = pp_lprof_flag value = flag:s36 }
+	set_variable = { name = pp_lprof_flag value = flag:s37 }
+	set_variable = { name = pp_lprof_flag value = flag:s38 }
+	set_variable = { name = pp_lprof_flag value = flag:s39 }
 	set_variable = { name = pp_lprof_flag value = flag:s4 }
+	set_variable = { name = pp_lprof_flag value = flag:s40 }
+	set_variable = { name = pp_lprof_flag value = flag:s41 }
+	set_variable = { name = pp_lprof_flag value = flag:s42 }
+	set_variable = { name = pp_lprof_flag value = flag:s43 }
+	set_variable = { name = pp_lprof_flag value = flag:s44 }
+	set_variable = { name = pp_lprof_flag value = flag:s45 }
+	set_variable = { name = pp_lprof_flag value = flag:s46 }
+	set_variable = { name = pp_lprof_flag value = flag:s47 }
+	set_variable = { name = pp_lprof_flag value = flag:s48 }
+	set_variable = { name = pp_lprof_flag value = flag:s49 }
 	set_variable = { name = pp_lprof_flag value = flag:s5 }
+	set_variable = { name = pp_lprof_flag value = flag:s50 }
+	set_variable = { name = pp_lprof_flag value = flag:s51 }
+	set_variable = { name = pp_lprof_flag value = flag:s52 }
+	set_variable = { name = pp_lprof_flag value = flag:s53 }
+	set_variable = { name = pp_lprof_flag value = flag:s54 }
+	set_variable = { name = pp_lprof_flag value = flag:s55 }
+	set_variable = { name = pp_lprof_flag value = flag:s56 }
+	set_variable = { name = pp_lprof_flag value = flag:s57 }
+	set_variable = { name = pp_lprof_flag value = flag:s58 }
+	set_variable = { name = pp_lprof_flag value = flag:s59 }
 	set_variable = { name = pp_lprof_flag value = flag:s6 }
+	set_variable = { name = pp_lprof_flag value = flag:s60 }
+	set_variable = { name = pp_lprof_flag value = flag:s61 }
+	set_variable = { name = pp_lprof_flag value = flag:s62 }
+	set_variable = { name = pp_lprof_flag value = flag:s63 }
+	set_variable = { name = pp_lprof_flag value = flag:s64 }
+	set_variable = { name = pp_lprof_flag value = flag:s65 }
+	set_variable = { name = pp_lprof_flag value = flag:s66 }
+	set_variable = { name = pp_lprof_flag value = flag:s67 }
+	set_variable = { name = pp_lprof_flag value = flag:s68 }
+	set_variable = { name = pp_lprof_flag value = flag:s69 }
 	set_variable = { name = pp_lprof_flag value = flag:s7 }
+	set_variable = { name = pp_lprof_flag value = flag:s70 }
+	set_variable = { name = pp_lprof_flag value = flag:s71 }
+	set_variable = { name = pp_lprof_flag value = flag:s72 }
+	set_variable = { name = pp_lprof_flag value = flag:s73 }
+	set_variable = { name = pp_lprof_flag value = flag:s74 }
+	set_variable = { name = pp_lprof_flag value = flag:s75 }
+	set_variable = { name = pp_lprof_flag value = flag:s76 }
+	set_variable = { name = pp_lprof_flag value = flag:s77 }
+	set_variable = { name = pp_lprof_flag value = flag:s78 }
+	set_variable = { name = pp_lprof_flag value = flag:s79 }
 	set_variable = { name = pp_lprof_flag value = flag:s8 }
+	set_variable = { name = pp_lprof_flag value = flag:s80 }
+	set_variable = { name = pp_lprof_flag value = flag:s81 }
+	set_variable = { name = pp_lprof_flag value = flag:s82 }
+	set_variable = { name = pp_lprof_flag value = flag:s83 }
+	set_variable = { name = pp_lprof_flag value = flag:s84 }
+	set_variable = { name = pp_lprof_flag value = flag:s85 }
+	set_variable = { name = pp_lprof_flag value = flag:s86 }
+	set_variable = { name = pp_lprof_flag value = flag:s87 }
+	set_variable = { name = pp_lprof_flag value = flag:s88 }
+	set_variable = { name = pp_lprof_flag value = flag:s89 }
 	set_variable = { name = pp_lprof_flag value = flag:s9 }
+	set_variable = { name = pp_lprof_flag value = flag:s90 }
+	set_variable = { name = pp_lprof_flag value = flag:s91 }
+	set_variable = { name = pp_lprof_flag value = flag:s92 }
+	set_variable = { name = pp_lprof_flag value = flag:s93 }
+	set_variable = { name = pp_lprof_flag value = flag:s94 }
+	set_variable = { name = pp_lprof_flag value = flag:s95 }
+	set_variable = { name = pp_lprof_flag value = flag:s96 }
+	set_variable = { name = pp_lprof_flag value = flag:s97 }
+	set_variable = { name = pp_lprof_flag value = flag:s98 }
+	set_variable = { name = pp_lprof_flag value = flag:s99 }
 	set_variable = { name = pp_lprof_flag value = flag:saffron }
 	set_variable = { name = pp_lprof_flag value = flag:salt }
 	set_variable = { name = pp_lprof_flag value = flag:saltpeter }
@@ -2655,42 +2995,34 @@ pp_lprof_declare_flags = {
 		limit = {
 			OR = {
 				has_variable = pp_lprof_flag
-				has_variable = pp_lprof_1_ig
-				has_variable = pp_lprof_1_ic
-				has_variable = pp_lprof_1_col
-				has_variable = pp_lprof_2_ig
-				has_variable = pp_lprof_2_ic
-				has_variable = pp_lprof_2_col
-				has_variable = pp_lprof_3_ig
-				has_variable = pp_lprof_3_ic
-				has_variable = pp_lprof_3_col
-				has_variable = pp_lprof_4_ig
-				has_variable = pp_lprof_4_ic
-				has_variable = pp_lprof_4_col
-				has_variable = pp_lprof_5_ig
-				has_variable = pp_lprof_5_ic
-				has_variable = pp_lprof_5_col
-				has_variable = pp_lprof_6_ig
-				has_variable = pp_lprof_6_ic
-				has_variable = pp_lprof_6_col
-				has_variable = pp_lprof_7_ig
-				has_variable = pp_lprof_7_ic
-				has_variable = pp_lprof_7_col
-				has_variable = pp_lprof_8_ig
-				has_variable = pp_lprof_8_ic
-				has_variable = pp_lprof_8_col
-				has_variable = pp_lprof_9_ig
-				has_variable = pp_lprof_9_ic
-				has_variable = pp_lprof_9_col
-				has_variable = pp_lprof_10_ig
-				has_variable = pp_lprof_10_ic
-				has_variable = pp_lprof_10_col
-				has_variable = pp_lprof_11_ig
-				has_variable = pp_lprof_11_ic
-				has_variable = pp_lprof_11_col
-				has_variable = pp_lprof_12_ig
-				has_variable = pp_lprof_12_ic
-				has_variable = pp_lprof_12_col
+				has_variable = pp_lprof_ig
+				has_variable = pp_lprof_ic
+				has_variable = pp_lprof_in
+				has_variable = pp_lprof_col
+				has_variable = pp_lprof_e_ig
+				has_variable = pp_lprof_e_ic
+				has_variable = pp_lprof_e_in
+				has_variable = pp_lprof_e_col
+				has_variable = pp_lprof_e_r1_g
+				has_variable = pp_lprof_e_r1_c
+				has_variable = pp_lprof_e_r1_pb
+				has_variable = pp_lprof_e_r2_g
+				has_variable = pp_lprof_e_r2_c
+				has_variable = pp_lprof_e_r2_pb
+				has_variable = pp_lprof_e_r3_g
+				has_variable = pp_lprof_e_r3_c
+				has_variable = pp_lprof_e_r3_pb
+				has_variable = pp_lprof_e_r4_g
+				has_variable = pp_lprof_e_r4_c
+				has_variable = pp_lprof_e_r4_pb
+				has_variable = pp_lprof_e_r5_g
+				has_variable = pp_lprof_e_r5_c
+				has_variable = pp_lprof_e_r5_pb
+				has_variable = pp_lprof_e_r1_cn
+				has_variable = pp_lprof_e_r2_cn
+				has_variable = pp_lprof_e_r3_cn
+				has_variable = pp_lprof_e_r4_cn
+				has_variable = pp_lprof_e_r5_cn
 			}
 		}
 		remove_variable = pp_lprof_flag

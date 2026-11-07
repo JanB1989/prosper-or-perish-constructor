@@ -1,20 +1,30 @@
 """Location Profiles: the windows and the map (editor, plan window row, right-click menu, paint mode, marker badge).
 
 Contract: docs/location_profiles.md. The script side (``location_profiles.py``, ``scripted_guis/pp_location_profiles.txt``)
-keeps the profiles; this module writes the GUI parts that follow ``[location_profiles]`` (slots, rules, colours) and the
-items (the Location Plan's items plus Market access = the good ``logistics``):
+keeps the profiles; this module writes the GUI parts that follow ``[location_profiles]`` (slots, rules, colours,
+symbols) and the items (the Location Plan's items plus Market access = the good ``logistics``):
 
 * ``gui/pp_location_profiles_generated.gui``: the types the hand-written ``gui/pp_location_profiles.gui`` (editor window,
   paint palette) and ``gui/pp_location_plan.gui`` (the Profile row) use: each slot's face (its icon on its colour), the
-  slot strip, the edited slot, the item picker, the plan window's row, the palette tiles;
+  location's badge, the slot strip, the editor (one body: the edit buffer), the item picker, the Profile row, the
+  palette tiles;
 * ``gui/context_menu.gui``: vanilla's, with a "Location Profile" section in ``LocationContextMenu`` (player locations);
-* ``localization/english/pp_location_profiles_gui_l_english.yml``: every text of the windows, menu and map.
+* ``localization/english/pp_location_profiles_gui_l_english.yml``: every text of the windows, menu and map;
+* ``main_menu/gfx/interface/component_tiles/pp_profile_symbols.dds``: every flag a profile can hold (the building
+  categories, then the symbols) as frames of one strip, and ``.../component_tiles/pp_profile_colors.dds``: the profile
+  colours as frames of one texture. A tile picks its frames from number variables (the colour, the icon flag's frame
+  ``*_in``, a category rule's ``*_r<r>_cn``), so a slot's face is two icons; no texture path is built from a flag;
+* ``main_menu/gfx/interface/icons/pp_profile_symbols/pp_sym_<name>.dds``: each symbol's own picture, for the picker.
+
+Cost independent of the slot count where it is drawn often: the map marker's badge and its tooltip read only the
+location's copy of its profile (``pp_lprof_ig`` / ``_ic`` / ``_col`` / ``_r<r>_*``), and the editor shows the edit
+buffer (``pp_lprof_e_*``). Only the slot tiles (a button with the slot's face) and their tooltips are written per slot.
 
 The map marker's badge and paint frame sit in ``location_plan.render_markers`` (it reads ``marker_cell`` from here).
 
-GUI variables: ``pp_lprof_open`` (editor open), ``pp_lprof_edit`` (``s<k>``: the slot the editor shows),
-``pp_lprof_pick`` (``icon`` / ``r<r>``: the item picker is open for that field), ``pp_lprof_brush`` (``s<k>`` / ``none``:
-paint mode, clicking a location's frame on the map gives it that profile).
+GUI variables: ``pp_lprof_open`` (editor open), ``pp_lprof_pick`` (``icon`` / ``r<r>``: the item picker is open for that
+field), ``pp_lprof_brush`` (``s<k>`` / ``none``: paint mode, clicking a location's frame on the map gives it that
+profile). The profile the editor shows is the script's edit buffer (``pp_lprof_e_k``).
 """
 
 from __future__ import annotations
@@ -23,33 +33,54 @@ from dataclasses import dataclass
 from pathlib import Path
 import re
 import tomllib
+from typing import Callable
 
 from prosper_or_perish_constructor import location_plan as lp
+from prosper_or_perish_constructor import location_profiles as lpf
 
 GUI = Path("in_game/gui/pp_location_profiles_generated.gui")
 WINDOW = Path("in_game/gui/pp_location_profiles.gui")
 WIDGETS = Path("in_game/gui/scripted_widgets/pp_location_profiles.txt")
 LOC = Path("main_menu/localization/english/pp_location_profiles_gui_l_english.yml")
 CONTEXT_MENU = Path("in_game/gui/context_menu.gui")
+SYMBOL_DIR = Path("main_menu/gfx/interface/icons/pp_profile_symbols")  # one picture per symbol, for the static picker
+SYMBOL_TEXTURE = "gfx/interface/icons/pp_profile_symbols/"
+# Every flag a profile's icon or rule can hold (lpf.frame_flags: the building categories, then the symbols) as frames of
+# one strip: the GUI draws a flag as frame <number variable> - 100, like the colours. In game 2026-11-07: a texture
+# built with Concatenate draws nothing (even from literals), and GetFlagName gives the flag's localized name, not its
+# key, so no texture path is ever built from a flag. Outside icons/ (interface_dds keeps icons at 128 px).
+FLAGS = Path("main_menu/gfx/interface/component_tiles/pp_profile_symbols.dds")
+FLAGS_TEXTURE = "gfx/interface/component_tiles/pp_profile_symbols.dds"
+FLAG_FRAME = 64  # px per flag frame
+FLAG_EDGE = 2  # transparent px around each picture
+COLORS = Path("main_menu/gfx/interface/component_tiles/pp_profile_colors.dds")
+COLORS_TEXTURE = "gfx/interface/component_tiles/pp_profile_colors.dds"
+COLOR_FRAME = 64  # px per colour frame
+COLOR_EDGE = 2  # transparent px around each frame, so a frame never shows its neighbour's colour at its edge
+ICON_FOLDER = Path("gfx/interface/icons")
 HEADER = "# Generated by ppc finalize (location_profiles_gui.py) from [location_profiles]; do not edit by hand.\n"
 
 # the script side's scripted GUIs (docs/location_profiles.md); the GUI calls nothing else of it
 SCRIPTED_GUIS = (
-    "pp_lprof_assign", "pp_lprof_new", "pp_lprof_set", "pp_lprof_color", "pp_lprof_payback", "pp_lprof_rule_clear",
-    "pp_lprof_rule_move", "pp_lprof_delete",
+    "pp_lprof_assign", "pp_lprof_new", "pp_lprof_select", "pp_lprof_set", "pp_lprof_color", "pp_lprof_payback",
+    "pp_lprof_rule_clear", "pp_lprof_rule_move", "pp_lprof_delete",
 )
 STATES = 9  # rule states 1..9 (+100), texts PP_LPROF_ST_<n> from the script side
 MARKET_ACCESS = "logistics"
-OPEN, EDIT, PICK, BRUSH = "pp_lprof_open", "pp_lprof_edit", "pp_lprof_pick", "pp_lprof_brush"
+OPEN, PICK, BRUSH = "pp_lprof_open", "pp_lprof_pick", "pp_lprof_brush"
+EDITED, NEXT = lpf.EDITED, lpf.NEXT
 TILE = lp.TILE
 GOLD = "0.9 0.7 0.25 0.95"
 DARK = "0.12 0.12 0.12 0.8"
-CATEGORY_ICON_FOLDER = "gfx/interface/icons/building_categories/"
 FLAT = "gfx/interface/buttons/flats/{}.dds"
 MENU_START = "\t\t\t# PP Location Profiles (location_profiles_gui.py): the location's profile, player locations only\n"
 MENU_END = "\t\t\t# PP Location Profiles end\n"
 _MENU_TYPE = "type LocationContextMenu = ContextMenuBase {"
 _MENU_ANCHOR = '\t\t\tContextMenuSectionSet = {\n\t\t\t\tvisible = "[Location.IsPlayerLocation]"\n'
+ROW_TILES = 8  # tiles per row in the Profile rows (Location Plan window, location window)
+STRIP_TILES = 10  # in the editor's profile list
+PALETTE_TILES = 4
+MENU_TILES = 7
 
 
 @dataclass(frozen=True)
@@ -60,6 +91,7 @@ class Config:
     colors: tuple[tuple[float, float, float], ...]
     categories: tuple[str, ...]
     per_row: int
+    symbols: tuple[lpf.Symbol, ...] = ()
 
 
 def load_config(project: Path) -> Config:
@@ -72,6 +104,7 @@ def load_config(project: Path) -> Config:
         colors=tuple(tuple(float(part) for part in color) for color in data["colors"]),
         categories=plan.categories,
         per_row=plan.per_row,
+        symbols=lpf.load_symbols(project),
     )
 
 
@@ -98,6 +131,11 @@ def fixed(value: int) -> str:
 
 def equals(var: str, value: int) -> str:
     return f"EqualTo_CFixedPoint({var}.GetValue, {fixed(value)})"
+
+
+def value_is(scope: str, name: str, value: int) -> str:
+    """A script value of the scope equals value (0 for an unset variable behind it, no GetValue on a missing one)."""
+    return f"EqualTo_CFixedPoint({scope}.ScriptValue('{name}'), {fixed(value)})"
 
 
 def on(k: int) -> str:
@@ -141,37 +179,60 @@ def assign_call(slot: str) -> str:
     return execute("pp_lprof_assign", "Location.MakeScope", pp_slot=slot)
 
 
-def category_texture(var: str, categories: tuple[str, ...]) -> str:
-    """The icon of the building category held by a flag variable: gfx/interface/icons/building_categories/<flag>.dds.
-    GetFlagName gives the bare key (CMF builds variable and loc keys from it the same way); the script side stores only
-    the categories of [location_plan] there, and every one has its icon (location_plan's missing_icons check). A
-    Select_CString chain over the categories did the same in 1.3 KB per use (84 uses)."""
-    folder = CATEGORY_ICON_FOLDER
-    if any(lp.CATEGORY_ICON.format(category=category) != f"{folder}{category}.dds" for category in categories):
-        raise ValueError("location_plan.CATEGORY_ICON no longer <folder>/<category>.dds")
-    return f"[Concatenate('{folder}', Concatenate({var}.GetFlagName, '.dds'))]"
+def frame_of(var: str) -> str:
+    """The frame of a strip texture for a frame number variable (n + 100 -> frame n): a colour of the colour texture,
+    a flag (building category or symbol) of the flag strip."""
+    return f"[FixedPointToInt(Subtract_CFixedPoint({var}.GetValue, {fixed(100)}))]"
 
 
-def target_icons(goods_var: str, category_var: str, categories: tuple[str, ...], tab: str, size: str = "82% 82%") -> str:
-    """A goods icon or a building category icon, whichever the two variables hold (one of them at most)."""
+color_frame = frame_of
+
+
+def flag_name(var: str) -> str:
+    """The name of the flag (building category or symbol) in a variable: GetFlagName gives the flag's localized name
+    (in game 2026-11-07: "City" for pp_sym_city), so it is shown as it is, never compared or built into a path."""
+    return f"[{var}.GetFlagName]"
+
+
+# Where a profile's data is read: suffix (ig, ic, col, r1_g, ...) -> a GUI variable expression.
+Reader = Callable[[str], str]
+
+
+def slot_reader(k: int) -> Reader:
+    return lambda suffix: pvar(f"pp_lprof_{k}_{suffix}")
+
+
+def buffer_reader(suffix: str) -> str:
+    return pvar(f"{lpf.BUFFER}_{suffix}")
+
+
+def location_reader(suffix: str) -> str:
+    return lvar(f"{lpf.COPY}_{suffix}")
+
+
+def target_icons(goods_var: str, frame_var: str, tab: str) -> str:
+    """A goods icon, or a flag's frame of the flag strip (frame_var = the flag's frame number), whichever is set (one
+    of them at most)."""
     return (
         f'{tab}widget = {{ visible = "[{goods_var}.IsSet]" size = {{ 100% 100% }} '
-        f'icon = {{ size = {{ {size} }} parentanchor = center texture = "[GetGoodsIcon({goods_var}.GetGoods.Self)]" }} }}\n'
-        f'{tab}widget = {{ visible = "[{category_var}.IsSet]" size = {{ 100% 100% }} '
-        f'icon = {{ size = {{ {size} }} parentanchor = center texture = "{category_texture(category_var, categories)}" }} }}\n'
+        f'pp_lprof_symbol = {{ texture = "[GetGoodsIcon({goods_var}.GetGoods.Self)]" }} }}\n'
+        f'{tab}widget = {{ visible = "[{frame_var}.IsSet]" size = {{ 100% 100% }} '
+        f'pp_lprof_flag = {{ frame = "{frame_of(frame_var)}" }} }}\n'
     )
 
 
-def face(k: int, config: Config, tab: str, alpha: float = 0.95) -> str:
-    """Slot k's look: its icon on its colour (player variables)."""
-    out = []
-    for index, (red, green, blue) in enumerate(config.colors, 1):
-        out.append(
-            f'{tab}icon = {{ visible = "[{equals(pvar(f"pp_lprof_{k}_col"), 100 + index)}]" size = {{ 100% 100% }} '
-            f'texture = "{TILE}" color = {{ {red:g} {green:g} {blue:g} {alpha:g} }} }}\n'
-        )
-    out.append(target_icons(pvar(f"pp_lprof_{k}_ig"), pvar(f"pp_lprof_{k}_ic"), config.categories, tab))
-    return "".join(out)
+def face(read: Reader, tab: str, always: bool = False) -> str:
+    """A profile's look: its icon on its colour (one colour frame, one icon). ``always``: the colour is set wherever
+    the face shows (a slot's tile shows only while the slot is in use)."""
+    shown = "" if always else f' visible = "[{read("col")}.IsSet]"'
+    return (
+        f'{tab}pp_lprof_color = {{{shown} frame = "{frame_of(read("col"))}" }}\n'
+        + target_icons(read("ig"), read("in"), tab)
+    )
+
+
+def rule_set(read: Reader, r: int) -> str:
+    return any_of([f"{read(f'r{r}_g')}.IsSet", f"{read(f'r{r}_c')}.IsSet"])
 
 
 def _rows(count: int, per_row: int) -> list[list[int]]:
@@ -183,36 +244,32 @@ def _row_visible(row: list[int]) -> str:
     return any_of([on(k) for k in row])
 
 
-def rule_set(k: int, r: int) -> str:
-    return any_of([f"{pvar(f'pp_lprof_{k}_r{r}_g')}.IsSet", f"{pvar(f'pp_lprof_{k}_r{r}_c')}.IsSet"])
-
-
 # ---------------------------------------------------------------------------------------------------------------------
 # the map marker (location_plan.render_markers): the badge, the paint frame
 
 
 def marker_cell(config: Config, icon_size: str) -> str:
-    """One icon-sized cell in front of the plan icons: the location's badge (its profile's icon on its colour) and,
-    while a brush is set, a frame that paints the brush's profile onto the location. Only the player's locations get
-    a marker, and only locations with a profile look at the slots."""
+    """One icon-sized cell in front of the plan icons: the location's badge (the icon and colour of its copy of its
+    profile; the same for every slot count) and, while a brush is set, a frame that paints the brush's profile onto the
+    location. Only the player's locations get a marker."""
     has = f"{lvar('pp_lprof')}.IsSet"
     brush = f"GetVariableSystem.Exists('{BRUSH}')"
-    out = [
-        "\t\t\t# PP Location Profiles (location_profiles_gui.py): the location's profile badge, the paint frame\n",
-        f"\t\t\twidget = {{\n\t\t\t\tname = \"pp_lprof_marker_cell\"\n\t\t\t\tvisible = \"[Or({has}, {brush})]\"\n",
-        f"\t\t\t\tsize = \"{icon_size}\"\n",
-        f"\t\t\t\twidget = {{\n\t\t\t\t\tvisible = \"[{has}]\"\n\t\t\t\t\tsize = {{ 100% 100% }}\n",
-    ]
-    for k in range(1, config.slots + 1):
-        out.append(
-            f"\t\t\t\t\twidget = {{\n\t\t\t\t\t\tvisible = \"[{equals(lvar('pp_lprof'), 100 + k)}]\"\n"
-            f"\t\t\t\t\t\tsize = {{ 100% 100% }}\n\t\t\t\t\t\ttooltip = \"PP_LPROF_UI_BADGE_{k}\"\n"
-            + face(k, config, "\t\t\t\t\t\t", 0.9)
-            + "\t\t\t\t\t}\n"
-        )
-    out.append("\t\t\t\t}\n")
     strip = "{ 100% 12% }", "{ 12% 100% }"
-    out.append(
+    return (
+        "\t\t\t# PP Location Profiles (location_profiles_gui.py): the location's profile badge (its copy of the profile), the\n"
+        "\t\t\t# paint frame\n"
+        f"\t\t\twidget = {{\n\t\t\t\tname = \"pp_lprof_marker_cell\"\n\t\t\t\tvisible = \"[Or({has}, {brush})]\"\n"
+        f"\t\t\t\tsize = \"{icon_size}\"\n"
+        f"\t\t\t\twidget = {{\n\t\t\t\t\tvisible = \"[{has}]\"\n\t\t\t\t\tsize = {{ 100% 100% }}\n"
+        "\t\t\t\t\ttooltip = \"PP_LPROF_UI_BADGE\"\n"
+        f"\t\t\t\t\ticon = {{ visible = \"[{location_reader('col')}.IsSet]\" size = {{ 100% 100% }} texture = \"{COLORS_TEXTURE}\" "
+        f"framesize = {{ {COLOR_FRAME} {COLOR_FRAME} }} frame = \"{color_frame(location_reader('col'))}\" alpha = 0.9 }}\n"
+        f"\t\t\t\t\twidget = {{ visible = \"[{location_reader('ig')}.IsSet]\" size = {{ 100% 100% }} icon = {{ size = {{ 82% 82% }} "
+        f"parentanchor = center texture = \"[GetGoodsIcon({location_reader('ig')}.GetGoods.Self)]\" }} }}\n"
+        f"\t\t\t\t\twidget = {{ visible = \"[{location_reader('in')}.IsSet]\" size = {{ 100% 100% }} icon = {{ size = {{ 82% 82% }} "
+        f"parentanchor = center texture = \"{FLAGS_TEXTURE}\" framesize = {{ {FLAG_FRAME} {FLAG_FRAME} }} "
+        f"frame = \"{frame_of(location_reader('in'))}\" }} }}\n"
+        "\t\t\t\t}\n"
         f"\t\t\t\tbutton = {{\n\t\t\t\t\tvisible = \"[{brush}]\"\n\t\t\t\t\tsize = {{ 100% 100% }}\n"
         f"\t\t\t\t\ttooltip = \"PP_LPROF_UI_PAINT_HERE\"\n"
         f"\t\t\t\t\tonclick = \"{assign_call(f'=GetVariableSystem.Get({BRUSH!r})')}\"\n"
@@ -223,7 +280,6 @@ def marker_cell(config: Config, icon_size: str) -> str:
         f"\t\t\t\t\ticon = {{ parentanchor = right size = {strip[1]} texture = \"{TILE}\" color = {{ {GOLD} }} }}\n"
         "\t\t\t\t}\n\t\t\t}\n"
     )
-    return "".join(out)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -239,65 +295,73 @@ def _icon_button(icon: str, tab: str, **props: str) -> str:
     return "".join(lines)
 
 
+def _base_types() -> str:
+    return (
+        "\t# A profile colour: one frame of the colour texture (frame = the colour variable - 100).\n"
+        f"\ttype pp_lprof_color = icon {{\n\t\tsize = {{ 100% 100% }}\n\t\ttexture = \"{COLORS_TEXTURE}\"\n"
+        f"\t\tframesize = {{ {COLOR_FRAME} {COLOR_FRAME} }}\n\t}}\n"
+        "\t# A profile's icon on its colour: a good's icon.\n"
+        "\ttype pp_lprof_symbol = icon {\n\t\tsize = { 82% 82% }\n\t\tparentanchor = center\n\t}\n"
+        "\t# A profile's icon on its colour, or a rule's category: a flag's frame of the flag strip (frame = its number - 100).\n"
+        f"\ttype pp_lprof_flag = icon {{\n\t\tsize = {{ 82% 82% }}\n\t\tparentanchor = center\n\t\ttexture = \"{FLAGS_TEXTURE}\"\n"
+        f"\t\tframesize = {{ {FLAG_FRAME} {FLAG_FRAME} }}\n\t}}\n"
+        "\t# The gold frame behind a selected tile.\n"
+        f"\ttype pp_lprof_gold = icon {{\n\t\tsize = {{ 100% 100% }}\n\t\ttexture = \"{TILE}\"\n\t\tcolor = {{ {GOLD} }}\n\t}}\n"
+        "\t# The location's profile (datacontext Location; size it at the use): its copy's icon and colour, the rules with\n"
+        "\t# this location's states in the tooltip.\n"
+        f"\ttype pp_lprof_badge = widget {{\n\t\tvisible = \"[{lvar('pp_lprof')}.IsSet]\"\n\t\ttooltip = \"PP_LPROF_UI_BADGE\"\n"
+        + face(location_reader, "\t\t")
+        + "\t}\n"
+    )
+
+
 def _faces(config: Config) -> str:
-    out = ["\t# Each slot's look: its icon on its colour (size it at the use).\n"]
+    out = ["\n\t# Each slot's look: its icon on its colour (size it at the use).\n"]
     for k in range(1, config.slots + 1):
-        out.append(f"\ttype pp_lprof_face_{k} = widget {{\n\t\tsize = {{ 100% 100% }}\n" + face(k, config, "\t\t") + "\t}\n")
+        out.append(f"\ttype pp_lprof_face_{k} = widget {{\n\t\tsize = {{ 100% 100% }}\n" + face(slot_reader(k), "\t\t", True) + "\t}\n")
     return "".join(out)
 
 
-def _slot_strip(config: Config, per_row: int = 10) -> str:
-    """The editor's slot list: each profile in use (click to edit it), and "+" at the first free slot."""
-    out = ["\n\t# The editor's profiles: click one to edit it; + at the first free slot makes a new one.\n"
+def _slot_strip(config: Config) -> str:
+    """The editor's profile list: each profile in use; a click shows it in the editor (pp_lprof_select)."""
+    out = ["\n\t# The editor's profiles: click one to edit it (the new profile button sits in the window's header).\n"
            "\ttype pp_lprof_slot_strip = vbox {\n\t\tlayoutpolicy_horizontal = expanding\n\t\tspacing = 2\n"]
-    for row in _rows(config.slots, per_row):
-        before = [row[0] - 1] if row[0] > 1 else []
-        visible = "yes" if row[0] == 1 else f"[{any_of([on(k) for k in before + row])}]"
-        out.append("\t\tflowcontainer = {\n")
-        if visible != "yes":
-            out.append(f"\t\t\tvisible = \"{visible}\"\n")
-        out.append("\t\t\tdirection = horizontal\n\t\t\tignoreinvisible = yes\n\t\t\tspacing = 4\n")
+    for row in _rows(config.slots, STRIP_TILES):
+        out.append(f"\t\tflowcontainer = {{\n\t\t\tvisible = \"[{_row_visible(row)}]\"\n"
+                   "\t\t\tdirection = horizontal\n\t\t\tignoreinvisible = yes\n\t\t\tspacing = 4\n")
         for k in row:
             out.append(
                 f"\t\t\twidget = {{\n\t\t\t\tvisible = \"[{on(k)}]\"\n\t\t\t\tsize = {{ 46 46 }}\n"
-                f"\t\t\t\ticon = {{ visible = \"[{gui_has(EDIT, f's{k}')}]\" size = {{ 100% 100% }} texture = \"{TILE}\" color = {{ {GOLD} }} }}\n"
+                f"\t\t\t\tpp_lprof_gold = {{ visible = \"[{value_is('GetPlayer.MakeScope', 'pp_lprof_e_n', k)}]\" }}\n"
                 f"\t\t\t\tbutton = {{\n\t\t\t\t\tsize = {{ 40 40 }}\n\t\t\t\t\tparentanchor = center\n"
                 f"\t\t\t\t\ttooltip = \"PP_LPROF_UI_EDIT_{k}\"\n"
-                f"\t\t\t\t\tonclick = \"[GetVariableSystem.Set('{EDIT}', 's{k}')]\"\n"
+                f"\t\t\t\t\tonclick = \"{player_call('pp_lprof_select', pp_slot=f's{k}')}\"\n"
                 f"\t\t\t\t\tonclick = \"[GetVariableSystem.Clear('{PICK}')]\"\n"
                 f"\t\t\t\t\tpp_lprof_face_{k} = {{}}\n\t\t\t\t}}\n\t\t\t}}\n"
-            )
-            free = all_of([f"Not({on(k)})"] + [on(j) for j in range(1, k)])
-            out.append(
-                f"\t\t\twidget = {{\n\t\t\t\tvisible = \"[{free}]\"\n\t\t\t\tsize = {{ 46 46 }}\n"
-                f"\t\t\t\tbutton_regular = {{\n\t\t\t\t\tsize = {{ 40 40 }}\n\t\t\t\t\tparentanchor = center\n"
-                f"\t\t\t\t\ttooltip = \"PP_LPROF_UI_NEW_TT\"\n"
-                f"\t\t\t\t\tonclick = \"{player_call('pp_lprof_new', pp_slot=f's{k}')}\"\n"
-                f"\t\t\t\t\tonclick = \"[GetVariableSystem.Set('{EDIT}', 's{k}')]\"\n"
-                f"\t\t\t\t\tonclick = \"[GetVariableSystem.Clear('{PICK}')]\"\n"
-                f"\t\t\t\t\ticon = {{ parentanchor = center size = {{ 22 22 }} texture = \"{FLAT.format('plus')}\" using = button_regular_icon_color }}\n"
-                "\t\t\t\t}\n\t\t\t}\n"
             )
         out.append("\t\t}\n")
     out.append("\t}\n")
     return "".join(out)
 
 
-def _rule_row(k: int, r: int, config: Config) -> str:
-    g, c, pb = pvar(f"pp_lprof_{k}_r{r}_g"), pvar(f"pp_lprof_{k}_r{r}_c"), pvar(f"pp_lprof_{k}_r{r}_pb")
+def _rule_row(r: int, config: Config) -> str:
+    """Rule r of the edited profile (the edit buffer)."""
+    read = buffer_reader
+    g, c, cn, pb = read(f"r{r}_g"), read(f"r{r}_c"), read(f"r{r}_cn"), read(f"r{r}_pb")
     field = f"r{r}"
-    tab = "\t\t\t\t"
+    is_set = rule_set(read, r)
+    tab = "\t\t\t"
     out = [
-        f"\t\t\t# rule {r}\n\t\t\thbox = {{\n{tab}layoutpolicy_horizontal = expanding\n{tab}spacing = 4\n",
+        f"\t\t# rule {r}\n\t\thbox = {{\n{tab}layoutpolicy_horizontal = expanding\n{tab}spacing = 4\n",
         f"{tab}pp_lprof_label = {{ raw_text = \"{r}.\" minimumsize = {{ 20 -1 }} }}\n",
         # the target: click to pick it
         f"{tab}widget = {{\n{tab}\tsize = {{ 40 40 }}\n"
-        f"{tab}\ticon = {{ visible = \"[{gui_has(PICK, field)}]\" size = {{ 100% 100% }} texture = \"{TILE}\" color = {{ {GOLD} }} }}\n"
+        f"{tab}\tpp_lprof_gold = {{ visible = \"[{gui_has(PICK, field)}]\" }}\n"
         f"{tab}\tbutton = {{\n{tab}\t\tsize = {{ 34 34 }}\n{tab}\t\tparentanchor = center\n{tab}\t\ttooltip = \"PP_LPROF_UI_TARGET_TT\"\n"
         f"{tab}\t\tonclick = \"[GetVariableSystem.Set('{PICK}', '{field}')]\"\n"
         f"{tab}\t\ticon = {{ size = {{ 100% 100% }} texture = \"{TILE}\" color = {{ {DARK} }} }}\n"
-        + target_icons(g, c, config.categories, f"{tab}\t\t")
-        + f"{tab}\t\ticon = {{ visible = \"[Not({rule_set(k, r)})]\" parentanchor = center size = {{ 18 18 }} "
+        + target_icons(g, cn, f"{tab}\t\t")
+        + f"{tab}\t\ticon = {{ visible = \"[Not({is_set})]\" parentanchor = center size = {{ 18 18 }} "
         f"texture = \"{FLAT.format('plus')}\" using = button_regular_icon_color }}\n"
         f"{tab}\t}}\n{tab}}}\n",
         # its name
@@ -307,15 +371,15 @@ def _rule_row(k: int, r: int, config: Config) -> str:
         f"{tab}\t\tpp_lprof_label = {{ parentanchor = left|vcenter visible = \"[EqualTo_string({g}.GetGoods.GetKey, '{MARKET_ACCESS}')]\" text = \"PP_LPROF_UI_MARKET_ACCESS\" }}\n"
         f"{tab}\t}}\n"
         f"{tab}\twidget = {{\n{tab}\t\tvisible = \"[{c}.IsSet]\"\n{tab}\t\tsize = {{ 100% 100% }}\n"
-        f"{tab}\t\tpp_lprof_label = {{ parentanchor = left|vcenter raw_text = \"[Localize({c}.GetFlagName)]\" }}\n"
+        f"{tab}\t\tpp_lprof_label = {{ parentanchor = left|vcenter raw_text = \"{flag_name(c)}\" }}\n"
         f"{tab}\t}}\n"
-        f"{tab}\tpp_lprof_label = {{ parentanchor = left|vcenter visible = \"[Not({rule_set(k, r)})]\" text = \"PP_LPROF_UI_EMPTY_RULE\" default_format = \"#weak\" }}\n"
+        f"{tab}\tpp_lprof_label = {{ parentanchor = left|vcenter visible = \"[Not({is_set})]\" text = \"PP_LPROF_UI_EMPTY_RULE\" default_format = \"#weak\" }}\n"
         f"{tab}}}\n",
         # payback limit: - / < N years | any / +
         f"{tab}widget = {{\n{tab}\tsize = {{ 150 30 }}\n"
-        f"{tab}\thbox = {{\n{tab}\t\tvisible = \"[{rule_set(k, r)}]\"\n{tab}\t\tsize = {{ 100% 100% }}\n{tab}\t\tspacing = 3\n"
+        f"{tab}\thbox = {{\n{tab}\t\tvisible = \"[{is_set}]\"\n{tab}\t\tsize = {{ 100% 100% }}\n{tab}\t\tspacing = 3\n"
         + _icon_button("minus", f"{tab}\t\t", tooltip="PP_LPROF_UI_PB_DOWN_TT",
-                       onclick=player_call("pp_lprof_payback", pp_slot=f"s{k}", pp_field=field, pp_dir="down"))
+                       onclick=player_call("pp_lprof_payback", pp_slot=EDITED, pp_field=field, pp_dir="down"))
         + f"{tab}\t\twidget = {{\n{tab}\t\t\tsize = {{ 86 26 }}\n{tab}\t\t\ttooltip = \"PP_LPROF_UI_PB_TT\"\n"
         f"{tab}\t\t\thbox = {{\n{tab}\t\t\t\tvisible = \"[{pb}.IsSet]\"\n{tab}\t\t\t\tsize = {{ 100% 100% }}\n{tab}\t\t\t\tspacing = 3\n"
         f"{tab}\t\t\t\texpand = {{}}\n"
@@ -325,76 +389,85 @@ def _rule_row(k: int, r: int, config: Config) -> str:
         f"{tab}\t\t\tpp_lprof_label = {{ parentanchor = center visible = \"[Not({pb}.IsSet)]\" text = \"PP_LPROF_UI_PB_ANY\" }}\n"
         f"{tab}\t\t}}\n"
         + _icon_button("plus", f"{tab}\t\t", enabled=f"[{pb}.IsSet]", tooltip="PP_LPROF_UI_PB_UP_TT",
-                       onclick=player_call("pp_lprof_payback", pp_slot=f"s{k}", pp_field=field, pp_dir="up"))
+                       onclick=player_call("pp_lprof_payback", pp_slot=EDITED, pp_field=field, pp_dir="up"))
         + f"{tab}\t}}\n{tab}}}\n",
         f"{tab}expand = {{}}\n",
     ]
     # order: up (towards rule 1) / down, then clear
     if r > 1:
         out.append(_icon_button("up", tab, tooltip="PP_LPROF_UI_UP_TT",
-                                onclick=player_call("pp_lprof_rule_move", pp_slot=f"s{k}", pp_field=field, pp_dir="up")))
+                                onclick=player_call("pp_lprof_rule_move", pp_slot=EDITED, pp_field=field, pp_dir="up")))
     else:
         out.append(f"{tab}widget = {{ size = {{ 26 24 }} }}\n")
     if r < config.rules:
         out.append(_icon_button("down", tab, tooltip="PP_LPROF_UI_DOWN_TT",
-                                onclick=player_call("pp_lprof_rule_move", pp_slot=f"s{k}", pp_field=field, pp_dir="down")))
+                                onclick=player_call("pp_lprof_rule_move", pp_slot=EDITED, pp_field=field, pp_dir="down")))
     else:
         out.append(f"{tab}widget = {{ size = {{ 26 24 }} }}\n")
-    out.append(_icon_button("remove", tab, enabled=f"[{rule_set(k, r)}]", tooltip="PP_LPROF_UI_CLEAR_TT",
-                            onclick=player_call("pp_lprof_rule_clear", pp_slot=f"s{k}", pp_field=field)))
-    out.append("\t\t\t}\n")
+    out.append(_icon_button("remove", tab, enabled=f"[{is_set}]", tooltip="PP_LPROF_UI_CLEAR_TT",
+                            onclick=player_call("pp_lprof_rule_clear", pp_slot=EDITED, pp_field=field)))
+    out.append("\t\t}\n")
     return "".join(out)
 
 
 def _editor(config: Config) -> str:
-    """The edited slot (GUI variable pp_lprof_edit): icon, colour, the rules in order, Delete."""
-    out = ["\n\t# The profile the editor shows (pp_lprof_edit = s<k>).\n"
-           "\ttype pp_lprof_editor = vbox {\n\t\tlayoutpolicy_horizontal = expanding\n\t\tignoreinvisible = yes\n"]
-    for k in range(1, config.slots + 1):
-        col = pvar(f"pp_lprof_{k}_col")
+    """The edited profile, one body for every slot: the edit buffer (pp_lprof_e_*, the script's copy of the slot in
+    pp_lprof_e_k): icon, colour, the rules in order, Delete. Its buttons pass the slot flag e (the buffer's slot)."""
+    out = [
+        "\n\t# The edited profile: the edit buffer (pp_lprof_e_*), whatever slot it holds.\n"
+        "\ttype pp_lprof_editor = vbox {\n"
+        f"\t\tvisible = \"[{pvar('pp_lprof_e_k')}.IsSet]\"\n"
+        "\t\tlayoutpolicy_horizontal = expanding\n\t\tspacing = 4\n"
+        "\t\thbox = {\n\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\tspacing = 6\n"
+        "\t\t\tpp_lprof_label = { text = \"PP_LPROF_UI_ICON\" }\n"
+        "\t\t\twidget = {\n\t\t\t\tsize = { 54 54 }\n"
+        f"\t\t\t\tpp_lprof_gold = {{ visible = \"[{gui_has(PICK, 'icon')}]\" }}\n"
+        "\t\t\t\tbutton = {\n\t\t\t\t\tsize = { 46 46 }\n\t\t\t\t\tparentanchor = center\n"
+        "\t\t\t\t\ttooltip = \"PP_LPROF_UI_ICON_TT\"\n"
+        f"\t\t\t\t\tonclick = \"[GetVariableSystem.Set('{PICK}', 'icon')]\"\n"
+        + face(buffer_reader, "\t\t\t\t\t")
+        + "\t\t\t\t}\n\t\t\t}\n"
+        "\t\t\tpp_lprof_label = { text = \"PP_LPROF_UI_COLOR\" }\n"
+    ]
+    for index, (red, green, blue) in enumerate(config.colors, 1):
         out.append(
-            f"\t\tvbox = {{\n\t\t\tvisible = \"[And({gui_has(EDIT, f's{k}')}, {on(k)})]\"\n"
-            "\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\tspacing = 4\n"
-            "\t\t\thbox = {\n\t\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\t\tspacing = 6\n"
-            "\t\t\t\tpp_lprof_label = { text = \"PP_LPROF_UI_ICON\" }\n"
-            f"\t\t\t\twidget = {{\n\t\t\t\t\tsize = {{ 54 54 }}\n"
-            f"\t\t\t\t\ticon = {{ visible = \"[{gui_has(PICK, 'icon')}]\" size = {{ 100% 100% }} texture = \"{TILE}\" color = {{ {GOLD} }} }}\n"
-            f"\t\t\t\t\tbutton = {{\n\t\t\t\t\t\tsize = {{ 46 46 }}\n\t\t\t\t\t\tparentanchor = center\n"
-            f"\t\t\t\t\t\ttooltip = \"PP_LPROF_UI_ICON_TT\"\n"
-            f"\t\t\t\t\t\tonclick = \"[GetVariableSystem.Set('{PICK}', 'icon')]\"\n"
-            f"\t\t\t\t\t\tpp_lprof_face_{k} = {{}}\n\t\t\t\t\t}}\n\t\t\t\t}}\n"
-            "\t\t\t\tpp_lprof_label = { text = \"PP_LPROF_UI_COLOR\" }\n"
-        )
-        for index, (red, green, blue) in enumerate(config.colors, 1):
-            out.append(
-                f"\t\t\t\twidget = {{\n\t\t\t\t\tsize = {{ 26 26 }}\n"
-                f"\t\t\t\t\ticon = {{ visible = \"[{equals(col, 100 + index)}]\" size = {{ 100% 100% }} texture = \"{TILE}\" color = {{ {GOLD} }} }}\n"
-                f"\t\t\t\t\tbutton = {{\n\t\t\t\t\t\tsize = {{ 20 20 }}\n\t\t\t\t\t\tparentanchor = center\n"
-                f"\t\t\t\t\t\ttooltip = \"PP_LPROF_UI_COLOR_TT\"\n"
-                f"\t\t\t\t\t\tonclick = \"{player_call('pp_lprof_color', pp_slot=f's{k}', pp_col=f'c{index}')}\"\n"
-                f"\t\t\t\t\t\ticon = {{ size = {{ 100% 100% }} texture = \"{TILE}\" color = {{ {red:g} {green:g} {blue:g} 1 }} }}\n"
-                "\t\t\t\t\t}\n\t\t\t\t}\n"
-            )
-        out.append(
-            "\t\t\t\texpand = {}\n"
-            "\t\t\t\tbutton_regular = {\n\t\t\t\t\tsize = { 80 26 }\n\t\t\t\t\ttext = \"PP_LPROF_UI_DELETE\"\n"
-            "\t\t\t\t\ttooltip = \"PP_LPROF_UI_DELETE_TT\"\n"
-            f"\t\t\t\t\tonclick = \"{player_call('pp_lprof_delete', pp_slot=f's{k}')}\"\n"
-            f"\t\t\t\t\tonclick = \"[GetVariableSystem.Clear('{EDIT}')]\"\n"
-            f"\t\t\t\t\tonclick = \"[GetVariableSystem.Clear('{PICK}')]\"\n"
+            "\t\t\twidget = {\n\t\t\t\tsize = { 26 26 }\n"
+            f"\t\t\t\tpp_lprof_gold = {{ visible = \"[{equals(buffer_reader('col'), 100 + index)}]\" }}\n"
+            "\t\t\t\tbutton = {\n\t\t\t\t\tsize = { 20 20 }\n\t\t\t\t\tparentanchor = center\n"
+            "\t\t\t\t\ttooltip = \"PP_LPROF_UI_COLOR_TT\"\n"
+            f"\t\t\t\t\tonclick = \"{player_call('pp_lprof_color', pp_slot=EDITED, pp_col=f'c{index}')}\"\n"
+            f"\t\t\t\t\ticon = {{ size = {{ 100% 100% }} texture = \"{TILE}\" color = {{ {red:g} {green:g} {blue:g} 1 }} }}\n"
             "\t\t\t\t}\n\t\t\t}\n"
-            "\t\t\tpp_lprof_title = { text = \"PP_LPROF_UI_RULES\" }\n"
-            "\t\t\tpp_lprof_note = { text = \"PP_LPROF_UI_RULES_NOTE\" }\n"
         )
-        for r in range(1, config.rules + 1):
-            out.append(_rule_row(k, r, config))
-        out.append("\t\t}\n")
+    out.append(
+        "\t\t\texpand = {}\n"
+        "\t\t\tbutton_regular = {\n\t\t\t\tsize = { 80 26 }\n\t\t\t\ttext = \"PP_LPROF_UI_DELETE\"\n"
+        "\t\t\t\ttooltip = \"PP_LPROF_UI_DELETE_TT\"\n"
+        f"\t\t\t\tonclick = \"{player_call('pp_lprof_delete', pp_slot=EDITED)}\"\n"
+        f"\t\t\t\tonclick = \"[GetVariableSystem.Clear('{PICK}')]\"\n"
+        "\t\t\t}\n\t\t}\n"
+        "\t\tpp_lprof_title = { text = \"PP_LPROF_UI_RULES\" }\n"
+        "\t\tpp_lprof_note = { text = \"PP_LPROF_UI_RULES_NOTE\" }\n"
+    )
+    for r in range(1, config.rules + 1):
+        out.append(_rule_row(r, config))
     out.append("\t}\n")
     return "".join(out)
 
 
+def _picker_button(key: str, texture: str, tab: str, pick: str) -> str:
+    return (
+        f"{tab}widget = {{\n{tab}\tsize = {{ 40 40 }}\n"
+        f"{tab}\tbutton = {{\n{tab}\t\tsize = {{ 34 34 }}\n{tab}\t\tparentanchor = center\n"
+        f"{tab}\t\ttexture = \"{texture}\"\n{tab}\t\ttooltip = \"PP_LPROF_UI_ITEM_{key.upper()}\"\n"
+        f"{tab}\t\tonclick = \"{pick.replace(repr('KEY'), repr(key))}\"\n"
+        f"{tab}\t\tonclick = \"[GetVariableSystem.Clear('{PICK}')]\"\n{tab}\t}}\n{tab}}}\n"
+    )
+
+
 def _picker(items: list[lp.Item], config: Config) -> str:
-    """The item picker of the editor: sets the edited slot's icon or rule target (pp_lprof_pick) to the item."""
+    """The item picker of the editor: sets the edited profile's icon or rule target (pp_lprof_pick) to the item. The
+    symbols show only for the icon (they build nothing)."""
     out = ["\n\t# The items: click one to make it the edited profile's icon or rule target (pp_lprof_pick).\n"
            "\ttype pp_lprof_picker = vbox {\n\t\tlayoutpolicy_horizontal = expanding\n\t\tspacing = 2\n"
            "\t\thbox = {\n\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\tspacing = 6\n"
@@ -407,44 +480,33 @@ def _picker(items: list[lp.Item], config: Config) -> str:
         "\t\t\t\ttooltip = \"PP_LPROF_UI_CANCEL_TT\"\n"
         f"\t\t\t\tonclick = \"[GetVariableSystem.Clear('{PICK}')]\"\n\t\t\t}}\n\t\t}}\n"
     )
-    pick = player_call("pp_lprof_set", pp_slot=f"=GetVariableSystem.Get('{EDIT}')", pp_field=f"=GetVariableSystem.Get('{PICK}')",
-                       pp_key="KEY")
+    pick = player_call("pp_lprof_set", pp_slot=EDITED, pp_field=f"=GetVariableSystem.Get('{PICK}')", pp_key="KEY")
+    if config.symbols:
+        out.append(f"\t\tvbox = {{\n\t\t\tvisible = \"[{gui_has(PICK, 'icon')}]\"\n\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\tspacing = 2\n"
+                   "\t\t\tpp_lprof_title = { text = \"PP_LPROF_UI_GROUP_SYMBOLS\" }\n")
+        for start in range(0, len(config.symbols), config.per_row):
+            out.append("\t\t\thbox = {\n\t\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\t\tspacing = 3\n")
+            for symbol in config.symbols[start:start + config.per_row]:
+                out.append(_picker_button(symbol.key, f"{SYMBOL_TEXTURE}{symbol.key}.dds", "\t\t\t\t", pick))
+            out.append("\t\t\t\texpand = {}\n\t\t\t}\n")
+        out.append("\t\t}\n")
     for group, members in lp.groups(items):
         title = "PP_LPROF_UI_GROUP_ACCESS" if group == "access" else f"PP_LPLAN_GROUP_{group.upper()}"
         out.append(f"\t\tpp_lprof_title = {{ text = \"{title}\" }}\n")
         for start in range(0, len(members), config.per_row):
             out.append("\t\thbox = {\n\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\tspacing = 3\n")
             for item in members[start:start + config.per_row]:
-                out.append(
-                    f"\t\t\twidget = {{\n\t\t\t\tsize = {{ 40 40 }}\n"
-                    f"\t\t\t\tbutton = {{\n\t\t\t\t\tsize = {{ 34 34 }}\n\t\t\t\t\tparentanchor = center\n"
-                    f"\t\t\t\t\ttexture = \"{item.icon}\"\n\t\t\t\t\ttooltip = \"PP_LPROF_UI_ITEM_{item.key.upper()}\"\n"
-                    f"\t\t\t\t\tonclick = \"{pick.replace(repr('KEY'), repr(item.key))}\"\n"
-                    f"\t\t\t\t\tonclick = \"[GetVariableSystem.Clear('{PICK}')]\"\n\t\t\t\t}}\n\t\t\t}}\n"
-                )
+                out.append(_picker_button(item.key, item.icon, "\t\t\t", pick))
             out.append("\t\t\texpand = {}\n\t\t}\n")
     out.append("\t}\n")
     return "".join(out)
 
 
-def _location_badge(config: Config, size: int, tab: str) -> str:
-    """The location's badge (datacontext Location): its profile's face; nothing without a profile."""
-    out = [f"{tab}widget = {{\n{tab}\tvisible = \"[{lvar('pp_lprof')}.IsSet]\"\n{tab}\tsize = {{ {size} {size} }}\n"]
-    for k in range(1, config.slots + 1):
-        out.append(
-            f"{tab}\tpp_lprof_face_{k} = {{ visible = \"[{equals(lvar('pp_lprof'), 100 + k)}]\" tooltip = \"PP_LPROF_UI_BADGE_{k}\" }}\n"
-        )
-    out.append(f"{tab}}}\n")
-    return "".join(out)
-
-
 def _assign_tile(k: int, size: int, tab: str, extra_onclick: str = "") -> str:
     """A tile that gives the location (datacontext Location) slot k's profile; framed while it has it."""
-    current = f"{lvar('pp_lprof')}.IsSet"
     return (
         f"{tab}widget = {{\n{tab}\tvisible = \"[{on(k)}]\"\n{tab}\tsize = {{ {size + 6} {size + 6} }}\n"
-        f"{tab}\twidget = {{ visible = \"[{current}]\" size = {{ 100% 100% }} "
-        f"icon = {{ visible = \"[{equals(lvar('pp_lprof'), 100 + k)}]\" size = {{ 100% 100% }} texture = \"{TILE}\" color = {{ {GOLD} }} }} }}\n"
+        f"{tab}\tpp_lprof_gold = {{ visible = \"[{value_is('Location.MakeScope', 'pp_lprof_n', k)}]\" }}\n"
         f"{tab}\tbutton = {{\n{tab}\t\tsize = {{ {size} {size} }}\n{tab}\t\tparentanchor = center\n"
         f"{tab}\t\ttooltip = \"PP_LPROF_UI_ASSIGN_{k}\"\n"
         f"{tab}\t\tonclick = \"{assign_call(f's{k}')}\"\n"
@@ -453,16 +515,17 @@ def _assign_tile(k: int, size: int, tab: str, extra_onclick: str = "") -> str:
     )
 
 
-def _plan_row(config: Config, per_row: int = 12, name: str = "pp_lprof_plan_row",
-              where: str = "The Location Plan window's") -> str:
-    """A Profile row (datacontext Location): its badge, None, Edit profiles, the tiles. The Location Plan window uses
-    it, and the location window's Infrastructure tab (narrower, fewer tiles per row; add_location_row)."""
+def _plan_row(config: Config) -> str:
+    """The Profile row (datacontext Location): its badge, None, Edit profiles, the tiles in rows that show only while
+    they hold a profile. The Location Plan window uses it, and the location window's Infrastructure tab (the same type
+    under its own name; add_location_row)."""
     out = [
-        f"\n\t# {where} Profile row (datacontext Location).\n"
-        f"\ttype {name} = vbox {{\n\t\tlayoutpolicy_horizontal = expanding\n\t\tspacing = 3\n"
+        "\n\t# The Profile row of the Location Plan window and of the location window's Infrastructure tab (datacontext\n"
+        "\t# Location).\n"
+        "\ttype pp_lprof_plan_row = vbox {\n\t\tlayoutpolicy_horizontal = expanding\n\t\tspacing = 3\n"
         "\t\thbox = {\n\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\tspacing = 6\n"
-        "\t\t\tpp_lprof_title = { text = \"PP_LPROF_UI_ROW_TITLE\" }\n",
-        _location_badge(config, 30, "\t\t\t"),
+        "\t\t\tpp_lprof_title = { text = \"PP_LPROF_UI_ROW_TITLE\" }\n"
+        "\t\t\tpp_lprof_badge = { size = { 30 30 } }\n"
         f"\t\t\tpp_lprof_label = {{ visible = \"[Not({lvar('pp_lprof')}.IsSet)]\" text = \"PP_LPROF_UI_ROW_NONE\" default_format = \"#weak\" }}\n"
         "\t\t\texpand = {}\n"
         "\t\t\tbutton_regular = {\n"
@@ -473,33 +536,34 @@ def _plan_row(config: Config, per_row: int = 12, name: str = "pp_lprof_plan_row"
         "\t\t\t\ttooltip = \"PP_LPROF_UI_EDIT_PROFILES_TT\"\n"
         f"\t\t\t\tonclick = \"[GetVariableSystem.Set('{OPEN}', 'yes')]\"\n\t\t\t}}\n\t\t}}\n",
     ]
-    for row in _rows(config.slots, per_row):
+    for row in _rows(config.slots, ROW_TILES):
         out.append(f"\t\tflowcontainer = {{\n\t\t\tvisible = \"[{_row_visible(row)}]\"\n"
                    "\t\t\tdirection = horizontal\n\t\t\tignoreinvisible = yes\n\t\t\tspacing = 3\n")
         for k in row:
             out.append(_assign_tile(k, 30, "\t\t\t"))
         out.append("\t\t}\n")
     out.append("\t}\n")
+    out.append(f"\n\t# The location window's Infrastructure tab: the same row.\n\ttype {LOCATION_ROW} = pp_lprof_plan_row {{}}\n")
     return "".join(out)
 
 
-def _palette(config: Config, per_row: int = 4) -> str:
+def _palette(config: Config) -> str:
     """The paint palette's tiles: pick a profile (or the eraser) as the brush; click the selected one to stop."""
     out = ["\n\t# The paint palette: the brush (pp_lprof_brush) is a profile or the eraser; the selected one again stops.\n"
            "\ttype pp_lprof_palette_tiles = vbox {\n\t\tspacing = 2\n"
-           f"\t\tpp_lprof_note_narrow = {{ visible = \"[Not({any_of([on(k) for k in range(1, config.slots + 1)])})]\" text = \"PP_LPROF_UI_PALETTE_EMPTY\" }}\n"]
+           f"\t\tpp_lprof_note_narrow = {{ visible = \"[{value_is('GetPlayer.MakeScope', 'pp_lprof_used_n', 0)}]\" text = \"PP_LPROF_UI_PALETTE_EMPTY\" }}\n"]
 
     def tile(value: str, tooltip: str, inner: str, tab: str) -> str:
         selected = gui_has(BRUSH, value)
         return (
-            f"{tab}\ticon = {{ visible = \"[{selected}]\" size = {{ 100% 100% }} texture = \"{TILE}\" color = {{ {GOLD} }} }}\n"
+            f"{tab}\tpp_lprof_gold = {{ visible = \"[{selected}]\" }}\n"
             f"{tab}\tbutton = {{\n{tab}\t\tvisible = \"[Not({selected})]\"\n{tab}\t\tsize = {{ 34 34 }}\n{tab}\t\tparentanchor = center\n"
             f"{tab}\t\ttooltip = \"{tooltip}\"\n{tab}\t\tonclick = \"[GetVariableSystem.Set('{BRUSH}', '{value}')]\"\n{inner}{tab}\t}}\n"
             f"{tab}\tbutton = {{\n{tab}\t\tvisible = \"[{selected}]\"\n{tab}\t\tsize = {{ 34 34 }}\n{tab}\t\tparentanchor = center\n"
             f"{tab}\t\ttooltip = \"{tooltip}\"\n{tab}\t\tonclick = \"[GetVariableSystem.Clear('{BRUSH}')]\"\n{inner}{tab}\t}}\n"
         )
 
-    for row in _rows(config.slots, per_row):
+    for row in _rows(config.slots, PALETTE_TILES):
         out.append(f"\t\thbox = {{\n\t\t\tvisible = \"[{_row_visible(row)}]\"\n\t\t\tignoreinvisible = yes\n\t\t\tspacing = 3\n")
         for k in row:
             out.append(f"\t\t\twidget = {{\n\t\t\t\tvisible = \"[{on(k)}]\"\n\t\t\t\tsize = {{ 40 40 }}\n"
@@ -549,12 +613,12 @@ def render_gui(items: list[lp.Item], config: Config) -> str:
     return (
         HEADER
         + "\ntypes PPLocationProfilesGenerated\n{\n"
+        + _base_types()
         + _faces(config)
         + _slot_strip(config)
         + _editor(config)
         + _picker(items, config)
         + _plan_row(config)
-        + _plan_row(config, 8, LOCATION_ROW, "The location window's Infrastructure tab:")
         + _palette(config)
         + "}\n"
     )
@@ -585,8 +649,9 @@ def _block_end(text: str, start: int) -> int:
         index += 1
 
 
-def menu_section(config: Config, per_row: int = 7) -> str:
-    """The Location Profile section of the location's right-click menu (datacontext Location)."""
+def menu_section(config: Config) -> str:
+    """The Location Profile section of the location's right-click menu (datacontext Location): the badge, the tiles in
+    rows that show only while they hold a profile, No profile, Location Plan, Edit profiles."""
     tab = "\t\t\t\t\t"
     has = f"{lvar('pp_lprof')}.IsSet"
     out = [
@@ -597,11 +662,11 @@ def menu_section(config: Config, per_row: int = 7) -> str:
         "\t\t\t\t\t\ttexture = \"gfx/interface/icons/map_modes/pp_location_plan.dds\"\n\t\t\t\t\t}\n\t\t\t\t}\n",
         "\t\t\t\tblockoverride \"title_text\" {\n\t\t\t\t\ttext = \"PP_LPROF_UI_MENU_TITLE\"\n\t\t\t\t}\n",
         "\t\t\t\tblockoverride \"title_right\" {\n",
-        _location_badge(config, 24, "\t\t\t\t\t"),
+        f"{tab}pp_lprof_badge = {{ size = {{ 24 24 }} }}\n",
         "\t\t\t\t}\n",
         "\t\t\t\tblockoverride \"contextmenu_entries\" {\n",
     ]
-    for row in _rows(config.slots, per_row):
+    for row in _rows(config.slots, MENU_TILES):
         out.append(f"{tab}hbox = {{\n{tab}\tvisible = \"[{_row_visible(row)}]\"\n{tab}\tlayoutpolicy_horizontal = expanding\n"
                    f"{tab}\tignoreinvisible = yes\n{tab}\tspacing = 2\n{tab}\tmargin_left = 10\n")
         for k in row:
@@ -662,7 +727,8 @@ TEXTS = {
                                "to stop painting.",
     "PP_LPROF_UI_PICK_SLOT": "Pick a profile above to edit it, or make a new one with the plus.",
     "PP_LPROF_UI_ICON": "Icon",
-    "PP_LPROF_UI_ICON_TT": "Click to choose the profile's icon from the list below",
+    "PP_LPROF_UI_ICON_TT": "Click to choose the profile's icon from the list below: a good, a building category or a "
+                           "symbol",
     "PP_LPROF_UI_COLOR": "Colour",
     "PP_LPROF_UI_COLOR_TT": "Give the profile this colour",
     "PP_LPROF_UI_DELETE": "Delete",
@@ -690,8 +756,10 @@ TEXTS = {
     "PP_LPROF_UI_CANCEL": "Cancel",
     "PP_LPROF_UI_CANCEL_TT": "Close the list without a change",
     "PP_LPROF_UI_GROUP_ACCESS": "Market access",
+    "PP_LPROF_UI_GROUP_SYMBOLS": "Symbols",
     "PP_LPROF_UI_PICK_ITEM": "Click to choose it.",
     "PP_LPROF_UI_ACCESS_DESC": "The logistics buildings, which raise a location's market access.",
+    "PP_LPROF_UI_SYMBOL_DESC": "A picture for the profile's icon; it builds nothing.",
     "PP_LPROF_UI_ROW_TITLE": "Profile",
     "PP_LPROF_UI_ROW_NONE": "None: the Construction Plan's rules apply here",
     "PP_LPROF_UI_NONE": "None",
@@ -727,26 +795,27 @@ TEXTS = {
 }
 
 
-def _line(k: int, r: int) -> str:
-    """Rule r of slot k as a tooltip line: its target and payback limit."""
-    return (f"\\n{r}. [SelectLocalization({pvar(f'pp_lprof_{k}_r{r}_g')}.IsSet, 'PP_LPROF_UI_TGT_G_{k}_{r}', 'PP_LPROF_UI_TGT_C_{k}_{r}')]"
-            f" #weak ([SelectLocalization({pvar(f'pp_lprof_{k}_r{r}_pb')}.IsSet, 'PP_LPROF_UI_PBL_{k}_{r}', "
-            f"'PP_LPROF_UI_ANY_PAYBACK_SHORT')])#!")
-
-
-def _summary(k: int, config: Config, states: bool) -> str:
-    rules = "".join(
-        f"[SelectLocalization({rule_set(k, r)}, 'PP_LPROF_UI_{'LINE_ST' if states else 'LINE'}_{k}_{r}', 'PP_LPROF_UI_EMPTY')]"
-        for r in range(1, config.rules + 1)
-    )
-    none = f"[SelectLocalization({any_of([rule_set(k, r) for r in range(1, config.rules + 1)])}, 'PP_LPROF_UI_EMPTY', 'PP_LPROF_UI_NO_RULES')]"
-    return f"#T $PP_LPROF_UI_SUMMARY_TITLE$#!{rules}{none}"
+def goods_name(var: str) -> str:
+    """The name of the good in a variable; the good logistics is the target Market access."""
+    key = f"{var}.GetGoods.GetKey"
+    return (f"[AddTextIf(EqualTo_string({key}, '{MARKET_ACCESS}'), Localize('PP_LPROF_UI_MARKET_ACCESS'))]"
+            f"[AddTextIf(Not(EqualTo_string({key}, '{MARKET_ACCESS}')), {var}.GetGoods.GetName)]")
 
 
 def _item_name(item: lp.Item) -> str:
     if item.key == MARKET_ACCESS:
         return "$PP_LPROF_UI_MARKET_ACCESS$"
     return f"[ShowGoodsName('{item.key}')]" if item.kind == "good" else f"${item.key}$"
+
+
+def _summary_title(read: Reader, icon_goods: str, icon_flag: str) -> str:
+    """The tooltip title: Location Profile: <the icon's name> (a good's name, a category's or a symbol's)."""
+    return f"#T $PP_LPROF_UI_SUMMARY_TITLE$: [SelectLocalization({read('ig')}.IsSet, '{icon_goods}', '{icon_flag}')]#!"
+
+
+def _none_line(read: Reader, config: Config) -> str:
+    rules = [rule_set(read, r) for r in range(1, config.rules + 1)]
+    return f"[SelectLocalization({any_of(rules)}, 'PP_LPROF_UI_EMPTY', 'PP_LPROF_UI_NO_RULES')]"
 
 
 def render_loc(items: list[lp.Item], config: Config) -> str:
@@ -761,44 +830,164 @@ def render_loc(items: list[lp.Item], config: Config) -> str:
         lines.append(f"  PP_LPROF_UI_ITEM_{item.key.upper()}: \"#T {_item_name(item)}#!{desc}\\n$PP_LPROF_UI_PICK_ITEM$\"")
     for r in range(1, config.rules + 1):
         lines.append(f"  PP_LPROF_UI_PICK_R{r}: \"Choose what rule {r} builds\"")
-    lines.append("  # rule states (location variable pp_lprof_r<r>_st, +100; texts PP_LPROF_ST_<n> from the script side)")
+    lines.append("  # the symbols: names (the loc key is the flag, so GetFlagName shows this name like a category's)")
+    for symbol in config.symbols:
+        lines.append(f"  {symbol.key}: {quote(symbol.title)}")
+        lines.append(f"  PP_LPROF_UI_ITEM_{symbol.key.upper()}: \"#T ${symbol.key}$#!\\n$PP_LPROF_UI_SYMBOL_DESC$\\n$PP_LPROF_UI_PICK_ITEM$\"")
+
+    # the location's badge: its copy of the profile and its rule states (one text for every slot)
+    lines.append("  # the location's badge: its copy of its profile (pp_lprof_*) and the rule states (pp_lprof_r<r>_st, +100;")
+    lines.append("  # texts PP_LPROF_ST_<n> from the script side)")
+    read = location_reader
+    badge = (_summary_title(read, "PP_LPROF_UI_LOC_ICON_G", "PP_LPROF_UI_LOC_ICON_C")
+             + "".join(f"[SelectLocalization({rule_set(read, r)}, 'PP_LPROF_UI_LINE_ST_{r}', 'PP_LPROF_UI_EMPTY')]"
+                       for r in range(1, config.rules + 1))
+             + _none_line(read, config))
+    lines.append(f"  PP_LPROF_UI_BADGE: \"{badge}\"")
+    lines.append(f"  PP_LPROF_UI_LOC_ICON_G: \"{goods_name(read('ig'))}\"")
+    lines.append(f"  PP_LPROF_UI_LOC_ICON_C: \"{flag_name(read('ic'))}\"")
     for r in range(1, config.rules + 1):
-        state = lvar(f"pp_lprof_r{r}_st")
+        g, c, pb = read(f"r{r}_g"), read(f"r{r}_c"), read(f"r{r}_pb")
+        state, est = lvar(f"pp_lprof_r{r}_st"), lvar(f"pp_lprof_r{r}_est")
+        lines.append(
+            f"  PP_LPROF_UI_LINE_ST_{r}: \"\\n{r}. [SelectLocalization({g}.IsSet, 'PP_LPROF_UI_LTGT_G_{r}', 'PP_LPROF_UI_LTGT_C_{r}')]"
+            f" #weak ([SelectLocalization({pb}.IsSet, 'PP_LPROF_UI_LPBL_{r}', 'PP_LPROF_UI_ANY_PAYBACK_SHORT')])#!: "
+            f"[SelectLocalization({state}.IsSet, 'PP_LPROF_UI_STATES_{r}', 'PP_LPROF_UI_STATE_NONE')]"
+            f"[SelectLocalization(And({equals(state, 105)}, {est}.IsSet), 'PP_LPROF_UI_EST_{r}', 'PP_LPROF_UI_EMPTY')]\"")
+        lines.append(f"  PP_LPROF_UI_LTGT_G_{r}: \"{goods_name(g)}\"")
+        lines.append(f"  PP_LPROF_UI_LTGT_C_{r}: \"{flag_name(c)}\"")
+        lines.append(f"  PP_LPROF_UI_LPBL_{r}: \"payback under [Subtract_CFixedPoint({pb}.GetValue, {fixed(100)})|0] years\"")
         lines.append(f"  PP_LPROF_UI_STATES_{r}: \"" + "".join(
             f"[AddTextIf({equals(state, 100 + n)}, Localize('PP_LPROF_ST_{n}'))]" for n in range(1, STATES + 1)) + "\"")
         # beside "pays back too slowly": the shortest payback the pass found (pp_lprof_r<r>_est, years + 100; 1099 = no profit)
-        est = lvar(f"pp_lprof_r{r}_est")
         lines.append(f"  PP_LPROF_UI_EST_{r}: \" #weak ([SelectLocalization(GreaterThan_CFixedPoint({est}.GetValue, {fixed(1098)}), "
                      f"'PP_LPROF_UI_EST_NO_PROFIT', 'PP_LPROF_UI_EST_YEARS_{r}')])#!\"")
         lines.append(f"  PP_LPROF_UI_EST_YEARS_{r}: \"next level pays back in [Subtract_CFixedPoint({est}.GetValue, {fixed(100)})|0] years\"")
-    lines.append("  # per profile: its rules (editor, palette, tiles) and with this location's states (badge)")
+
+    # per slot: the tiles' tooltips (the profile's icon and rule targets; the limits are in the editor and the badge)
+    lines.append("  # per profile: its icon and rule targets (editor list, palette, tiles)")
     for k in range(1, config.slots + 1):
-        summary = _summary(k, config, False)
-        lines.append(f"  PP_LPROF_UI_SUMMARY_{k}: \"{summary}\"")
-        lines.append(f"  PP_LPROF_UI_EDIT_{k}: \"{summary}\\n\\n$PP_LPROF_UI_CLICK_EDIT$\"")
-        lines.append(f"  PP_LPROF_UI_ASSIGN_{k}: \"{summary}\\n\\n$PP_LPROF_UI_CLICK_ASSIGN$\"")
-        lines.append(f"  PP_LPROF_UI_BRUSH_{k}: \"{summary}\\n\\n$PP_LPROF_UI_CLICK_BRUSH$\"")
-        lines.append(f"  PP_LPROF_UI_BADGE_{k}: \"{_summary(k, config, True)}\"")
+        read = slot_reader(k)
+        rules = "".join(
+            f"[SelectLocalization({read(f'r{r}_g')}.IsSet, 'PP_LPROF_UI_TGT_G_{k}_{r}', "
+            f"Select_CString({read(f'r{r}_c')}.IsSet, 'PP_LPROF_UI_TGT_C_{k}_{r}', 'PP_LPROF_UI_EMPTY'))]"
+            for r in range(1, config.rules + 1)
+        )
+        lines.append(f"  PP_LPROF_UI_SUMMARY_{k}: \"{_summary_title(read, f'PP_LPROF_UI_ICON_G_{k}', f'PP_LPROF_UI_ICON_C_{k}')}{rules}\"")
+        lines.append(f"  PP_LPROF_UI_EDIT_{k}: \"$PP_LPROF_UI_SUMMARY_{k}$\\n\\n$PP_LPROF_UI_CLICK_EDIT$\"")
+        lines.append(f"  PP_LPROF_UI_ASSIGN_{k}: \"$PP_LPROF_UI_SUMMARY_{k}$\\n\\n$PP_LPROF_UI_CLICK_ASSIGN$\"")
+        lines.append(f"  PP_LPROF_UI_BRUSH_{k}: \"$PP_LPROF_UI_SUMMARY_{k}$\\n\\n$PP_LPROF_UI_CLICK_BRUSH$\"")
+        lines.append(f"  PP_LPROF_UI_ICON_G_{k}: \"{goods_name(read('ig'))}\"")
+        lines.append(f"  PP_LPROF_UI_ICON_C_{k}: \"{flag_name(read('ic'))}\"")
         for r in range(1, config.rules + 1):
-            g, c, pb = pvar(f"pp_lprof_{k}_r{r}_g"), pvar(f"pp_lprof_{k}_r{r}_c"), pvar(f"pp_lprof_{k}_r{r}_pb")
-            key = f"{g}.GetGoods.GetKey"
-            lines.append(f"  PP_LPROF_UI_LINE_{k}_{r}: \"{_line(k, r)}\"")
-            lines.append(f"  PP_LPROF_UI_LINE_ST_{k}_{r}: \"{_line(k, r)}: [SelectLocalization({lvar(f'pp_lprof_r{r}_st')}.IsSet, "
-                         f"'PP_LPROF_UI_STATES_{r}', 'PP_LPROF_UI_STATE_NONE')]"
-                         f"[SelectLocalization(And({equals(lvar(f'pp_lprof_r{r}_st'), 105)}, {lvar(f'pp_lprof_r{r}_est')}.IsSet), "
-                         f"'PP_LPROF_UI_EST_{r}', 'PP_LPROF_UI_EMPTY')]\"")
-            lines.append(f"  PP_LPROF_UI_TGT_G_{k}_{r}: \"[AddTextIf(EqualTo_string({key}, '{MARKET_ACCESS}'), "
-                         f"Localize('PP_LPROF_UI_MARKET_ACCESS'))][AddTextIf(Not(EqualTo_string({key}, '{MARKET_ACCESS}')), {g}.GetGoods.GetName)]\"")
-            lines.append(f"  PP_LPROF_UI_TGT_C_{k}_{r}: \"[Localize({c}.GetFlagName)]\"")
-            lines.append(f"  PP_LPROF_UI_PBL_{k}_{r}: \"payback under [Subtract_CFixedPoint({pb}.GetValue, {fixed(100)})|0] years\"")
+            lines.append(f"  PP_LPROF_UI_TGT_G_{k}_{r}: \"\\n{r}. {goods_name(read(f'r{r}_g'))}\"")
+            lines.append(f"  PP_LPROF_UI_TGT_C_{k}_{r}: \"\\n{r}. {flag_name(read(f'r{r}_c'))}\"")
     return "\n".join(lines) + "\n"
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# textures: the flag strip, the symbols' own pictures (picker), the colour frames
+
+
+def flag_sources(config: Config) -> dict[str, str]:
+    """Every flag a profile's icon or rule can hold, in frame order (lpf.frame_flags: the building categories, then
+    the symbols) -> its source picture below gfx/interface/icons."""
+    sources = {category: lp.CATEGORY_ICON.format(category=category).removeprefix(f"{ICON_FOLDER.as_posix()}/")
+               for category in config.categories}
+    sources.update((symbol.key, symbol.texture) for symbol in config.symbols)
+    if list(sources) != lpf.frame_flags(config.categories, config):
+        raise ValueError("flag frame order differs from location_profiles.frame_flags")
+    return sources
+
+
+def find_icon(relative: str, mod_root: Path, vanilla_root: Path) -> Path | None:
+    """An icon below gfx/interface/icons: the mod's first, then vanilla's (main_menu, then in_game)."""
+    for root in (mod_root, vanilla_root / "game"):
+        for layer in lp.ICON_ROOTS:
+            path = root / layer / ICON_FOLDER / relative
+            if path.is_file():
+                return path
+    return None
+
+
+def color_atlas(colors: tuple[tuple[float, float, float], ...]) -> bytes:
+    """The profile colours as frames of one DXT5 texture (frame n = colour n), each with a transparent edge of its own
+    colour so filtering never blends in the neighbouring frame."""
+    from PIL import Image
+
+    from eu5_building_pipeline.dds import encode_dds
+
+    size, edge = COLOR_FRAME, COLOR_EDGE
+    image = Image.new("RGBA", (size * len(colors), size))
+    for index, color in enumerate(colors):
+        rgb = tuple(round(part * 255) for part in color)
+        image.paste(rgb + (0,), (index * size, 0, (index + 1) * size, size))
+        image.paste(rgb + (255,), (index * size + edge, edge, (index + 1) * size - edge, size - edge))
+    return encode_dds(image, "DXT5")
+
+
+def flag_strip(pictures: list) -> bytes:
+    """The flag pictures (PIL images, frame order) as frames of one DXT5 strip: each fitted into its frame inside a
+    transparent edge, so filtering never blends in the neighbouring picture."""
+    from PIL import Image
+
+    from eu5_building_pipeline.dds import encode_dds
+
+    size, inner = FLAG_FRAME, FLAG_FRAME - 2 * FLAG_EDGE
+    image = Image.new("RGBA", (size * len(pictures), size))
+    for index, picture in enumerate(pictures):
+        picture = picture.convert("RGBA")
+        scale = inner / max(picture.size)
+        fitted = picture.resize((max(1, round(picture.width * scale)), max(1, round(picture.height * scale))),
+                                Image.Resampling.LANCZOS)
+        image.alpha_composite(fitted, (index * size + (size - fitted.width) // 2, (size - fitted.height) // 2))
+    return encode_dds(image, "DXT5")
+
+
+def render_textures(config: Config, mod_root: Path, vanilla_root: Path) -> tuple[dict[Path, bytes], list[str]]:
+    """Mod path -> bytes of every texture this side writes (the flag strip, each symbol's own picture for the picker,
+    the colour frames), and the flags whose source picture is missing (no strip then)."""
+    import io
+
+    from PIL import Image
+
+    from prosper_or_perish_constructor import interface_dds
+
+    textures: dict[Path, bytes] = {}
+    missing: list[str] = []
+    pictures = []
+    symbols = {symbol.key for symbol in config.symbols}
+    for flag, relative in flag_sources(config).items():
+        source = find_icon(relative, mod_root, vanilla_root)
+        if source is None or source.is_relative_to(mod_root / SYMBOL_DIR):
+            missing.append(flag)
+            continue
+        data = source.read_bytes()
+        with Image.open(io.BytesIO(data)) as picture:
+            pictures.append(picture.convert("RGBA"))
+        if flag in symbols:
+            target = SYMBOL_DIR / f"{flag}.dds"
+            textures[mod_root / target] = interface_dds.normalized(data, target)
+    if not missing:
+        textures[mod_root / FLAGS] = flag_strip(pictures)
+    textures[mod_root / COLORS] = color_atlas(config.colors)
+    return textures, missing
+
+
+def _write_bytes(path: Path, data: bytes, write: bool) -> bool:
+    if path.is_file() and path.read_bytes() == data:
+        return False
+    if write:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
+    return True
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 
 
 def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: bool = True) -> int:
-    """Writes the generated files; returns how many changed."""
+    """Writes the generated files; returns how many changed (a stale flag picture removed counts)."""
     config = load_config(project)
     items = profile_items(repo, project)
     texts = {
@@ -808,10 +997,16 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
     vanilla_menu = vanilla_root / "game" / CONTEXT_MENU
     if vanilla_menu.is_file():
         texts[mod_root / CONTEXT_MENU] = "﻿" + patch_context_menu(vanilla_menu.read_text(encoding="utf-8-sig"), config)
-    changed = 0
-    for path, text in texts.items():
-        if lp._write(path, text, write):
-            changed += 1
+    changed = sum(lp._write(path, text, write) for path, text in texts.items())
+    if (vanilla_root / "game").is_dir():
+        textures, _ = render_textures(config, mod_root, vanilla_root)
+        changed += sum(_write_bytes(path, data, write) for path, data in textures.items())
+        folder = mod_root / SYMBOL_DIR
+        for stale in sorted(folder.glob("*.dds")) if folder.is_dir() else []:
+            if stale not in textures:
+                changed += 1
+                if write:
+                    stale.unlink()
     return changed
 
 

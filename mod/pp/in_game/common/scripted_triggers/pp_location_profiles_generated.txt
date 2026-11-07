@@ -14,6 +14,34 @@ pp_lprof_category_key = {
 	}
 }
 
+# Any scope: the flag scope:pp_key names a symbol ([location_profiles.symbols]; only a profile's icon).
+pp_lprof_symbol_key = {
+	OR = {
+		scope:pp_key = flag:pp_sym_city
+		scope:pp_key = flag:pp_sym_town
+		scope:pp_key = flag:pp_sym_village
+		scope:pp_key = flag:pp_sym_capital
+		scope:pp_key = flag:pp_sym_food
+		scope:pp_key = flag:pp_sym_farming
+		scope:pp_key = flag:pp_sym_herding
+		scope:pp_key = flag:pp_sym_fishing
+		scope:pp_key = flag:pp_sym_forest
+		scope:pp_key = flag:pp_sym_mining
+		scope:pp_key = flag:pp_sym_industry
+		scope:pp_key = flag:pp_sym_luxury
+		scope:pp_key = flag:pp_sym_market
+		scope:pp_key = flag:pp_sym_treasury
+		scope:pp_key = flag:pp_sym_harbour
+		scope:pp_key = flag:pp_sym_military
+		scope:pp_key = flag:pp_sym_stronghold
+		scope:pp_key = flag:pp_sym_religion
+		scope:pp_key = flag:pp_sym_learning
+		scope:pp_key = flag:pp_sym_administration
+		scope:pp_key = flag:pp_sym_population
+		always = no
+	}
+}
+
 # Country scope (root = this country, in the pass and in the panel): a location the country owns has a profile.
 pp_lprof_has_locations = {
 	any_in_list = {

@@ -722,6 +722,7 @@ TEXTS = {
     "PP_LPROF_UI_NO_RULES": "\n#weak No build rules yet#!",
     "PP_LPROF_UI_EMPTY": "",
     "PP_LPROF_UI_STATE_NONE": "#weak not checked yet#!",
+    "PP_LPROF_UI_EST_NO_PROFIT": "its next level makes no profit here",
     "PP_LPROF_UI_ANY_PAYBACK_SHORT": "any payback",
 }
 
@@ -765,6 +766,11 @@ def render_loc(items: list[lp.Item], config: Config) -> str:
         state = lvar(f"pp_lprof_r{r}_st")
         lines.append(f"  PP_LPROF_UI_STATES_{r}: \"" + "".join(
             f"[AddTextIf({equals(state, 100 + n)}, Localize('PP_LPROF_ST_{n}'))]" for n in range(1, STATES + 1)) + "\"")
+        # beside "pays back too slowly": the shortest payback the pass found (pp_lprof_r<r>_est, years + 100; 1099 = no profit)
+        est = lvar(f"pp_lprof_r{r}_est")
+        lines.append(f"  PP_LPROF_UI_EST_{r}: \" #weak ([SelectLocalization(GreaterThan_CFixedPoint({est}.GetValue, {fixed(1098)}), "
+                     f"'PP_LPROF_UI_EST_NO_PROFIT', 'PP_LPROF_UI_EST_YEARS_{r}')])#!\"")
+        lines.append(f"  PP_LPROF_UI_EST_YEARS_{r}: \"next level pays back in [Subtract_CFixedPoint({est}.GetValue, {fixed(100)})|0] years\"")
     lines.append("  # per profile: its rules (editor, palette, tiles) and with this location's states (badge)")
     for k in range(1, config.slots + 1):
         summary = _summary(k, config, False)
@@ -778,7 +784,9 @@ def render_loc(items: list[lp.Item], config: Config) -> str:
             key = f"{g}.GetGoods.GetKey"
             lines.append(f"  PP_LPROF_UI_LINE_{k}_{r}: \"{_line(k, r)}\"")
             lines.append(f"  PP_LPROF_UI_LINE_ST_{k}_{r}: \"{_line(k, r)}: [SelectLocalization({lvar(f'pp_lprof_r{r}_st')}.IsSet, "
-                         f"'PP_LPROF_UI_STATES_{r}', 'PP_LPROF_UI_STATE_NONE')]\"")
+                         f"'PP_LPROF_UI_STATES_{r}', 'PP_LPROF_UI_STATE_NONE')]"
+                         f"[SelectLocalization(And({equals(lvar(f'pp_lprof_r{r}_st'), 105)}, {lvar(f'pp_lprof_r{r}_est')}.IsSet), "
+                         f"'PP_LPROF_UI_EST_{r}', 'PP_LPROF_UI_EMPTY')]\"")
             lines.append(f"  PP_LPROF_UI_TGT_G_{k}_{r}: \"[AddTextIf(EqualTo_string({key}, '{MARKET_ACCESS}'), "
                          f"Localize('PP_LPROF_UI_MARKET_ACCESS'))][AddTextIf(Not(EqualTo_string({key}, '{MARKET_ACCESS}')), {g}.GetGoods.GetName)]\"")
             lines.append(f"  PP_LPROF_UI_TGT_C_{k}_{r}: \"[Localize({c}.GetFlagName)]\"")

@@ -302,7 +302,7 @@ def test_states_and_texts() -> None:
     finish = _block(_code(MOD / lpf.HAND_EFFECTS), "pp_lprof_finish")
     for rank, state in lpf.FAIL_STATE.items():
         if rank == 101:
-            assert f"value = {100 + state}" in finish.split("else = {")[-1]
+            assert re.search(rf"else = \{{\s*set_variable = \{{ name = pp_lprof_r\$r\$_st value = {100 + state} \}}", finish), rank
         else:
             assert re.search(rf"var:pp_lprof_fail > {rank - 0.5:g} \}}\n\t\tset_variable = \{{ name = pp_lprof_r\$r\$_st value = {100 + state} \}}", finish), rank
     states = {int(n) - 100 for n in re.findall(r"name = pp_lprof_(?:st|r\$r\$_st) value = (1\d\d)", _code(MOD / lpf.HAND_EFFECTS) + _code(MOD / lpf.EFFECTS))}
@@ -360,3 +360,17 @@ def test_braces_balance() -> None:
         for char in text:
             depth += {"{": 1, "}": -1}.get(char, 0)
             assert depth >= 0, path.name
+
+
+def test_rules_keep_the_payback_they_found() -> None:
+    """A rule held back by its payback limit shows the shortest payback it found (Jan 2026-11-07: the number beside
+    the limit): expand notes it, finish writes it into pp_lprof_r<r>_est, the badge text reads it."""
+    code = _code(MOD / lpf.HAND_EFFECTS)
+    expand = _block(code, "pp_lprof_expand")
+    assert expand.index("pp_lprof_note_payback = yes") < expand.index("pp_lprof_payback100 > scope:pp_lprof_pb")
+    finish = _block(code, "pp_lprof_finish")
+    assert "set_variable = { name = pp_lprof_r$r$_est value = var:pp_lprof_best }" in finish
+    assert "remove_variable = pp_lprof_best" in _block(code, "pp_lprof_rule")
+    loc = (MOD / "main_menu/localization/english/pp_location_profiles_gui_l_english.yml").read_text(encoding="utf-8-sig")
+    for r in range(1, lpf.load_config(PROJECT).rules + 1):
+        assert f"'PP_LPROF_UI_EST_{r}'" in loc and f"pp_lprof_r{r}_est" in loc

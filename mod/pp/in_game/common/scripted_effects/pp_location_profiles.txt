@@ -86,6 +86,7 @@ pp_lprof_drop_gone = {
 pp_lprof_rule = {
 	remove_variable = pp_lprof_st
 	remove_variable = pp_lprof_fail
+	remove_variable = pp_lprof_best
 	if = {
 		limit = {
 			scope:pp_cplan_country = {
@@ -117,6 +118,7 @@ pp_lprof_rule = {
 	}
 	else = {
 		remove_variable = pp_lprof_r$r$_st
+		remove_variable = pp_lprof_r$r$_est
 	}
 }
 
@@ -151,8 +153,30 @@ pp_lprof_finish = {
 	else = {
 		set_variable = { name = pp_lprof_r$r$_st value = 102 }
 	}
+	# the shortest payback of a standing candidate's next level (years + 100; 1099 = no profit), shown beside the state
+	if = {
+		limit = { has_variable = pp_lprof_best }
+		set_variable = { name = pp_lprof_r$r$_est value = var:pp_lprof_best }
+	}
+	else = {
+		remove_variable = pp_lprof_r$r$_est
+	}
 	remove_variable = pp_lprof_st
 	remove_variable = pp_lprof_fail
+	remove_variable = pp_lprof_best
+}
+
+# Location scope (scope:pp_cplan_btype and the cost values set): keeps the shortest payback seen for this rule.
+pp_lprof_note_payback = {
+	if = {
+		limit = {
+			OR = {
+				NOT = { has_variable = pp_lprof_best }
+				var:pp_lprof_best > pp_lprof_payback100
+			}
+		}
+		set_variable = { name = pp_lprof_best value = pp_lprof_payback100 }
+	}
 }
 
 # Location scope: records why a candidate failed ($r$ = 101..105), keeping the reason closest to a construction.
@@ -189,6 +213,7 @@ pp_lprof_expand = {
 			save_temporary_scope_value_as = { name = pp_cplan_ipl value = $ipl$ }
 			save_temporary_scope_value_as = { name = pp_cplan_pf value = pp_cplan_cd_$demand$ }
 			save_temporary_scope_value_as = { name = pp_cplan_ef value = pp_cplan_eff_$cat$ }
+			pp_lprof_note_payback = yes
 			if = {
 				limit = { pp_lprof_payback100 > scope:pp_lprof_pb }
 				pp_lprof_fail = { r = 103 }

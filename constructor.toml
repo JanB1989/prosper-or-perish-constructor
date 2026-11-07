@@ -1135,6 +1135,15 @@ hidden_goods = ["offset", "logistics", "local_food", "manual_labor", "province_f
 # Icons per row in the picker.
 per_row = 11
 
+[location_profiles]
+# Location Profiles (branch location-profiles, 2026-11-07, Jan; docs/location_profiles.md): player profiles = an icon, a
+# colour and ordered build rules, assigned to locations on the map; their rules replace the global Construction Plan
+# rules there. location_profiles.py (script) and location_profiles_gui.py (windows, map) write the generated parts.
+slots = 12            # profiles per country (script cannot create named data at runtime: each profile is a slot)
+rules = 5             # ordered rules per profile
+payback_steps = [1, 2, 3, 4, 5, 7, 10, 15, 20]   # years a rule's limit steps through; past the last = any payback
+colors = [[0.80, 0.25, 0.20], [0.90, 0.55, 0.15], [0.85, 0.80, 0.25], [0.30, 0.65, 0.30], [0.25, 0.60, 0.70], [0.25, 0.40, 0.80], [0.55, 0.35, 0.75], [0.75, 0.40, 0.60]]
+
 [market_short_weight]
 # The AI reacts a little when its market runs short of a good (market_short_weight.py, finalize): every producer's
 # ai_construct_weight gets, last, amount x clamp(1 - market stock / monthly market demand) x clamp(owner tax base /

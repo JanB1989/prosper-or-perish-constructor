@@ -1907,6 +1907,11 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         + (f"; UNKNOWN buildings: {', '.join(plan.missing)}." if plan.missing else "."),
         flush=True,
     )
+    from prosper_or_perish_constructor import location_profiles, location_profiles_gui
+
+    changed = location_profiles.apply(repo, project, mod_root, vanilla_root(repo, project))
+    changed += location_profiles_gui.apply(repo, project, mod_root, vanilla_root(repo, project))
+    print(f"Location profiles: {changed} files changed.", flush=True)
     from prosper_or_perish_constructor import start_market_stock
 
     print(_start_stock_line(start_market_stock.apply(repo, project, mod_root, vanilla_root(repo, project))), flush=True)

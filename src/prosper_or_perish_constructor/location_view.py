@@ -16,7 +16,9 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from prosper_or_perish_constructor import arable_land_bar, attribute_tooltips, construction_plan, location_plan, location_status
+from prosper_or_perish_constructor import (
+    arable_land_bar, attribute_tooltips, construction_plan, location_plan, location_profiles_gui, location_status,
+)
 from prosper_or_perish_constructor.worldbuilder.geography import EXPORT_BUILD_FILE, LOCATION_WINDOW
 
 _FOOD_PERCENT = 'value = "[FixedPointToFloat(Province.GetFoodCapacityPercent)]"'
@@ -618,6 +620,8 @@ def build_window(export_text: str, mod_root: Path, vanilla: Path | None, stored_
     merged = location_plan.add_location_button(merged)
     # the Construction Plan's cog in the header (construction_plan.py)
     merged = construction_plan.add_location_cog(merged)
+    # the Location Profile row on top of the Infrastructure tab (location_profiles_gui.py)
+    merged = location_profiles_gui.add_location_row(merged)
     return widen_window(chip_frames(merged))
 
 

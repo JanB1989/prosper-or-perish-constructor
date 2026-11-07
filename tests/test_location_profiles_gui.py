@@ -303,3 +303,15 @@ def test_gui_functions_exist_in_the_data_type_dump() -> None:
     data_contexts = {"Location", "ExtraTooltipInfo"}  # widget datacontexts, not globals
     assert not sorted(used_globals - globals_ - data_contexts), "unknown global GUI functions"
     assert not sorted(used_members - members), "unknown GUI member functions"
+
+
+def test_location_window_has_the_profile_row() -> None:
+    """The Infrastructure tab starts with the Profile row (player locations only), whose type is generated."""
+    window = (MOD / "in_game/gui/location_window.gui").read_text(encoding="utf-8-sig")
+    block = re.search(re.escape(m.ROW_MARK) + r".*?\n\s*\}", window, re.DOTALL)
+    assert block, "the location window lost the Profile row"
+    assert "LocationView.GetLocation.GetOwner.IsPlayer" in block.group(0) and "Not(IsObserving)" in block.group(0)
+    assert f"{m.LOCATION_ROW} = {{}}" in block.group(0)
+    assert window.index(m.ROW_MARK) < window.index("# INFRASTRUCTURE HUB")
+    generated = (MOD / "in_game/gui/pp_location_profiles_generated.gui").read_text(encoding="utf-8-sig")
+    assert f"type {m.LOCATION_ROW} = vbox" in generated

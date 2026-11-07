@@ -453,11 +453,13 @@ def _assign_tile(k: int, size: int, tab: str, extra_onclick: str = "") -> str:
     )
 
 
-def _plan_row(config: Config, per_row: int = 12) -> str:
-    """The Location Plan window's Profile row (datacontext Location): its badge, None, Edit profiles, the tiles."""
+def _plan_row(config: Config, per_row: int = 12, name: str = "pp_lprof_plan_row",
+              where: str = "The Location Plan window's") -> str:
+    """A Profile row (datacontext Location): its badge, None, Edit profiles, the tiles. The Location Plan window uses
+    it, and the location window's Infrastructure tab (narrower, fewer tiles per row; add_location_row)."""
     out = [
-        "\n\t# The Location Plan window's Profile row (datacontext Location).\n"
-        "\ttype pp_lprof_plan_row = vbox {\n\t\tlayoutpolicy_horizontal = expanding\n\t\tspacing = 3\n"
+        f"\n\t# {where} Profile row (datacontext Location).\n"
+        f"\ttype {name} = vbox {{\n\t\tlayoutpolicy_horizontal = expanding\n\t\tspacing = 3\n"
         "\t\thbox = {\n\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\tspacing = 6\n"
         "\t\t\tpp_lprof_title = { text = \"PP_LPROF_UI_ROW_TITLE\" }\n",
         _location_badge(config, 30, "\t\t\t"),
@@ -513,6 +515,36 @@ def _palette(config: Config, per_row: int = 4) -> str:
     return "".join(out)
 
 
+# ---------------------------------------------------------------------------------------------------------------------
+# the location window (patched by location_view.build_window): the Profile row on top of the Infrastructure tab
+
+LOCATION_ROW = "pp_lprof_location_row"
+ROW_MARK = "# PP: Location Profile row (location_profiles_gui.py)"
+_INFRA_ANCHOR = "# INFRASTRUCTURE HUB\n"
+
+
+def add_location_row(text: str) -> str:
+    """The location window's Infrastructure tab starts with the Profile row (Jan 2026-11-07: pick the profile where the
+    buildings are, without opening the Location Plan window); player-owned locations, not observers."""
+    if ROW_MARK in text:
+        return text
+    if text.count(_INFRA_ANCHOR) != 1:
+        raise ValueError("location window: the Infrastructure tab's hub comment not found once")
+    at = text.index(_INFRA_ANCHOR)
+    line_start = text.rindex("\n", 0, at) + 1
+    tab = text[line_start:at]
+    row = (
+        f"{tab}vbox = {{ {ROW_MARK}\n"
+        f"{tab}\tvisible = \"[And(LocationView.GetLocation.GetOwner.IsPlayer, Not(IsObserving))]\"\n"
+        f"{tab}\tlayoutpolicy_horizontal = expanding\n"
+        f"{tab}\tmargin = {{ 4 4 }}\n"
+        f"{tab}\tdatacontext = \"[LocationView.GetLocation]\"\n"
+        f"{tab}\t{LOCATION_ROW} = {{}}\n"
+        f"{tab}}}\n"
+    )
+    return text[:line_start] + row + text[line_start:]
+
+
 def render_gui(items: list[lp.Item], config: Config) -> str:
     return (
         HEADER
@@ -522,6 +554,7 @@ def render_gui(items: list[lp.Item], config: Config) -> str:
         + _editor(config)
         + _picker(items, config)
         + _plan_row(config)
+        + _plan_row(config, 8, LOCATION_ROW, "The location window's Infrastructure tab:")
         + _palette(config)
         + "}\n"
     )

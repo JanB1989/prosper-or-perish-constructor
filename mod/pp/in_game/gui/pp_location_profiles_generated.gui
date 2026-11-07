@@ -8174,6 +8174,204 @@ types PPLocationProfilesGenerated
 		}
 	}
 
+	# The location window's Infrastructure tab: Profile row (datacontext Location).
+	type pp_lprof_location_row = vbox {
+		layoutpolicy_horizontal = expanding
+		spacing = 3
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 6
+			pp_lprof_title = { text = "PP_LPROF_UI_ROW_TITLE" }
+			widget = {
+				visible = "[Location.MakeScope.Var('pp_lprof').IsSet]"
+				size = { 30 30 }
+				pp_lprof_face_1 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)101')]" tooltip = "PP_LPROF_UI_BADGE_1" }
+				pp_lprof_face_2 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)102')]" tooltip = "PP_LPROF_UI_BADGE_2" }
+				pp_lprof_face_3 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)103')]" tooltip = "PP_LPROF_UI_BADGE_3" }
+				pp_lprof_face_4 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)104')]" tooltip = "PP_LPROF_UI_BADGE_4" }
+				pp_lprof_face_5 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)105')]" tooltip = "PP_LPROF_UI_BADGE_5" }
+				pp_lprof_face_6 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)106')]" tooltip = "PP_LPROF_UI_BADGE_6" }
+				pp_lprof_face_7 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)107')]" tooltip = "PP_LPROF_UI_BADGE_7" }
+				pp_lprof_face_8 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)108')]" tooltip = "PP_LPROF_UI_BADGE_8" }
+				pp_lprof_face_9 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)109')]" tooltip = "PP_LPROF_UI_BADGE_9" }
+				pp_lprof_face_10 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)110')]" tooltip = "PP_LPROF_UI_BADGE_10" }
+				pp_lprof_face_11 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)111')]" tooltip = "PP_LPROF_UI_BADGE_11" }
+				pp_lprof_face_12 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)112')]" tooltip = "PP_LPROF_UI_BADGE_12" }
+			}
+			pp_lprof_label = { visible = "[Not(Location.MakeScope.Var('pp_lprof').IsSet)]" text = "PP_LPROF_UI_ROW_NONE" default_format = "#weak" }
+			expand = {}
+			button_regular = {
+				visible = "[Location.MakeScope.Var('pp_lprof').IsSet]"
+				size = { 70 26 }
+				text = "PP_LPROF_UI_NONE"
+				tooltip = "PP_LPROF_UI_NONE_TT"
+				onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('none')).End)]"
+			}
+			button_regular = {
+				size = { 110 26 }
+				text = "PP_LPROF_UI_EDIT_PROFILES"
+				tooltip = "PP_LPROF_UI_EDIT_PROFILES_TT"
+				onclick = "[GetVariableSystem.Set('pp_lprof_open', 'yes')]"
+			}
+		}
+		flowcontainer = {
+			visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_1_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_2_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_3_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_4_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_5_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_6_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_7_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_8_on').IsSet)]"
+			direction = horizontal
+			ignoreinvisible = yes
+			spacing = 3
+			widget = {
+				visible = "[GetPlayer.MakeScope.Var('pp_lprof_1_on').IsSet]"
+				size = { 36 36 }
+				widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)101')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+				button = {
+					size = { 30 30 }
+					parentanchor = center
+					tooltip = "PP_LPROF_UI_ASSIGN_1"
+					onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s1')).End)]"
+					pp_lprof_face_1 = {}
+				}
+			}
+			widget = {
+				visible = "[GetPlayer.MakeScope.Var('pp_lprof_2_on').IsSet]"
+				size = { 36 36 }
+				widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)102')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+				button = {
+					size = { 30 30 }
+					parentanchor = center
+					tooltip = "PP_LPROF_UI_ASSIGN_2"
+					onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s2')).End)]"
+					pp_lprof_face_2 = {}
+				}
+			}
+			widget = {
+				visible = "[GetPlayer.MakeScope.Var('pp_lprof_3_on').IsSet]"
+				size = { 36 36 }
+				widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)103')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+				button = {
+					size = { 30 30 }
+					parentanchor = center
+					tooltip = "PP_LPROF_UI_ASSIGN_3"
+					onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s3')).End)]"
+					pp_lprof_face_3 = {}
+				}
+			}
+			widget = {
+				visible = "[GetPlayer.MakeScope.Var('pp_lprof_4_on').IsSet]"
+				size = { 36 36 }
+				widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)104')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+				button = {
+					size = { 30 30 }
+					parentanchor = center
+					tooltip = "PP_LPROF_UI_ASSIGN_4"
+					onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s4')).End)]"
+					pp_lprof_face_4 = {}
+				}
+			}
+			widget = {
+				visible = "[GetPlayer.MakeScope.Var('pp_lprof_5_on').IsSet]"
+				size = { 36 36 }
+				widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)105')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+				button = {
+					size = { 30 30 }
+					parentanchor = center
+					tooltip = "PP_LPROF_UI_ASSIGN_5"
+					onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s5')).End)]"
+					pp_lprof_face_5 = {}
+				}
+			}
+			widget = {
+				visible = "[GetPlayer.MakeScope.Var('pp_lprof_6_on').IsSet]"
+				size = { 36 36 }
+				widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)106')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+				button = {
+					size = { 30 30 }
+					parentanchor = center
+					tooltip = "PP_LPROF_UI_ASSIGN_6"
+					onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s6')).End)]"
+					pp_lprof_face_6 = {}
+				}
+			}
+			widget = {
+				visible = "[GetPlayer.MakeScope.Var('pp_lprof_7_on').IsSet]"
+				size = { 36 36 }
+				widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)107')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+				button = {
+					size = { 30 30 }
+					parentanchor = center
+					tooltip = "PP_LPROF_UI_ASSIGN_7"
+					onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s7')).End)]"
+					pp_lprof_face_7 = {}
+				}
+			}
+			widget = {
+				visible = "[GetPlayer.MakeScope.Var('pp_lprof_8_on').IsSet]"
+				size = { 36 36 }
+				widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)108')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+				button = {
+					size = { 30 30 }
+					parentanchor = center
+					tooltip = "PP_LPROF_UI_ASSIGN_8"
+					onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s8')).End)]"
+					pp_lprof_face_8 = {}
+				}
+			}
+		}
+		flowcontainer = {
+			visible = "[Or4(GetPlayer.MakeScope.Var('pp_lprof_9_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_10_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_11_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_12_on').IsSet)]"
+			direction = horizontal
+			ignoreinvisible = yes
+			spacing = 3
+			widget = {
+				visible = "[GetPlayer.MakeScope.Var('pp_lprof_9_on').IsSet]"
+				size = { 36 36 }
+				widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)109')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+				button = {
+					size = { 30 30 }
+					parentanchor = center
+					tooltip = "PP_LPROF_UI_ASSIGN_9"
+					onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s9')).End)]"
+					pp_lprof_face_9 = {}
+				}
+			}
+			widget = {
+				visible = "[GetPlayer.MakeScope.Var('pp_lprof_10_on').IsSet]"
+				size = { 36 36 }
+				widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)110')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+				button = {
+					size = { 30 30 }
+					parentanchor = center
+					tooltip = "PP_LPROF_UI_ASSIGN_10"
+					onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s10')).End)]"
+					pp_lprof_face_10 = {}
+				}
+			}
+			widget = {
+				visible = "[GetPlayer.MakeScope.Var('pp_lprof_11_on').IsSet]"
+				size = { 36 36 }
+				widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)111')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+				button = {
+					size = { 30 30 }
+					parentanchor = center
+					tooltip = "PP_LPROF_UI_ASSIGN_11"
+					onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s11')).End)]"
+					pp_lprof_face_11 = {}
+				}
+			}
+			widget = {
+				visible = "[GetPlayer.MakeScope.Var('pp_lprof_12_on').IsSet]"
+				size = { 36 36 }
+				widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)112')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+				button = {
+					size = { 30 30 }
+					parentanchor = center
+					tooltip = "PP_LPROF_UI_ASSIGN_12"
+					onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s12')).End)]"
+					pp_lprof_face_12 = {}
+				}
+			}
+		}
+	}
+
 	# The paint palette: the brush (pp_lprof_brush) is a profile or the eraser; the selected one again stops.
 	type pp_lprof_palette_tiles = vbox {
 		spacing = 2

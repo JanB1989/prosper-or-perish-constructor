@@ -29,6 +29,7 @@ pp_lplan_flip = {
 		}
 		remove_variable = pp_lplan_n
 	}
+	refresh_map_colors = yes
 }
 
 # Location scope (root, from the scripted GUI): the window shows this location.

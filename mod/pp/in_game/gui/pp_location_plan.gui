@@ -72,6 +72,12 @@ window = {
 						pp_lplan_label = { raw_text = "[Location.GetProvince.GetName]" default_format = "#weak" }
 						expand = {}
 						button_regular = {
+							size = { 110 26 }
+							text = "PP_LPLAN_SHOW_MAP"
+							tooltip = "PP_LPLAN_SHOW_MAP_TT"
+							onclick = "[GetMapMode('pp_location_plan').SetMapMode]"
+						}
+						button_regular = {
 							size = { 70 26 }
 							text = "PP_LPLAN_CLEAR"
 							tooltip = "PP_LPLAN_CLEAR_TT"

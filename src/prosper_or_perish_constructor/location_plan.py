@@ -63,6 +63,7 @@ class Config:
     categories: tuple[str, ...]
     hidden_goods: frozenset[str]
     per_row: int
+    marker_items: tuple[str, ...] = ()
 
 
 @dataclass
@@ -78,6 +79,7 @@ def load_config(project: Path) -> Config:
         categories=tuple(data["categories"]),
         hidden_goods=frozenset(data["hidden_goods"]),
         per_row=int(data["per_row"]),
+        marker_items=tuple(data.get("marker_items", ())),
     )
 
 
@@ -211,28 +213,74 @@ def _name(item: Item) -> str:
     return f"[ShowGoodsName('{item.key}')]" if item.kind == "good" else f"${item.key}$"
 
 
-def _map_icon(item: Item) -> str:
-    return f"@{item.key}! " if item.kind == "good" else f"${item.key}$ "
-
-
 def render_loc(items: list[Item]) -> str:
+    # no map tooltip texts: the map mode needs the raw_material color mode for its icons, which ignores a tooltip_key
     lines = ["﻿l_english:", "  # " + HEADER.strip().lstrip("# ")]
-    lines.append('  PP_LPLAN_NONE: ""')
     for item in items:
         upper = item.key.upper()
         lines.append(f'  PP_LPLAN_PICK_{upper}: "#T {_name(item)}#!\\n[SelectLocalization({_planned(item)}, \'PP_LPLAN_PICK_ON\', \'PP_LPLAN_PICK_OFF\')]"')
         lines.append(f'  PP_LPLAN_STATE_{upper}: "#T {_name(item)}#!\\n[SelectLocalization({_done(item)}, \'PP_LPLAN_STATE_DONE\', \'PP_LPLAN_STATE_OPEN\')]"')
-        lines.append(f'  PP_LPLAN_ICON_{upper}: "{_map_icon(item)}"')
-    # the map tooltip: icons of the planned items, done and still to do (context ROOT.GetLocation)
-    for name, want_done in (("PP_LPLAN_MAP_DONE_ICONS", True), ("PP_LPLAN_MAP_OPEN_ICONS", False)):
-        segments = []
-        for item in items:
-            planned = f"ROOT.GetLocation.MakeScope.Var('{item.var}').IsSet"
-            done = f"EqualTo_CFixedPoint(ROOT.GetLocation.MakeScope.ScriptValue('{item.done}'), '(CFixedPoint)1')"
-            condition = f"And({planned}, {done if want_done else f'Not({done})'})"
-            segments.append(f"[SelectLocalization({condition}, 'PP_LPLAN_ICON_{item.key.upper()}', 'PP_LPLAN_NONE')]")
-        lines.append(f'  {name}: "{"".join(segments)}"')
     return "\n".join(lines) + "\n"
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# the map marker: vanilla's raw goods marker draws the plan's icons in the Location Plan map mode
+
+MARKERS = Path("in_game/gui/map_markers.gui")
+MAP_MODE_KEY = "pp_location_plan"
+_MARKER_HEAD = "### Raw Goods Marker\nwidget = {\n\tname = \"raw_goods_marker\"\n"
+_PLAN_MODE = f"GetMapMode('{MAP_MODE_KEY}').IsSet"
+# one icon's size, scaled with the zoom like vanilla's marker (which caps at 85)
+_ICON_SIZE = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+
+
+def _marker_block_end(text: str, start: int) -> int:
+    depth, index = 0, text.index("{", start)
+    while True:
+        depth += {"{": 1, "}": -1}.get(text[index], 0)
+        index += 1
+        if depth == 0:
+            return index
+
+
+def render_markers(vanilla: str, items: list[Item]) -> str:
+    """Vanilla's map_markers.gui with the raw goods marker split in two: its own content outside the Location Plan map
+    mode, and the plan's icons (green tile once done, red while still to do) in it, for the player's locations."""
+    if vanilla.count(_MARKER_HEAD) != 1:
+        raise ValueError("map_markers.gui: raw goods marker not found once")
+    start = vanilla.index(_MARKER_HEAD)
+    end = _marker_block_end(vanilla, start)
+    block = vanilla[start:end]
+    first_button = block.index("\n\tbutton = {")
+    head, body = block[:first_button], block[first_button:block.rindex("}")]
+    body = "\n".join(("\t" + line if line.strip() else line) for line in body.split("\n"))
+    icons = []
+    for item in items:
+        icons.append(
+            f"\t\t\twidget = {{\n"
+            f"\t\t\t\tvisible = \"[{_planned(item)}]\"\n"
+            f"\t\t\t\tsize = \"{_ICON_SIZE}\"\n"
+            f"\t\t\t\ttooltip = \"PP_LPLAN_STATE_{item.key.upper()}\"\n"
+            f"\t\t\t\ticon = {{ visible = \"[{_done(item)}]\" size = {{ 100% 100% }} texture = \"{TILE}\" color = {{ 0.25 0.7 0.3 0.85 }} }}\n"
+            f"\t\t\t\ticon = {{ visible = \"[Not({_done(item)})]\" size = {{ 100% 100% }} texture = \"{TILE}\" color = {{ 0.75 0.25 0.2 0.85 }} }}\n"
+            f"\t\t\t\ticon = {{ size = {{ 84% 84% }} parentanchor = center texture = \"{item.icon}\" }}\n"
+            f"\t\t\t}}\n"
+        )
+    patched = (
+        head
+        + f"\n\t# PP Location Plan (location_plan.py): vanilla's content outside the {MAP_MODE_KEY} map mode\n"
+        + f"\twidget = {{\n\t\tvisible = \"[Not({_PLAN_MODE})]\"\n\t\tsize = {{ 100% 100% }}\n\t\tallow_outside = yes\n"
+        + body.rstrip() + "\n\t}\n\n"
+        + f"\t# PP Location Plan: in its map mode, the plan's icons of the player's locations\n"
+        + f"\twidget = {{\n\t\tname = \"pp_lplan_marker\"\n"
+        + f"\t\tvisible = \"[And({_PLAN_MODE}, Location.GetOwner.IsPlayer)]\"\n"
+        + "\t\tsize = { 100% 100% }\n\t\tallow_outside = yes\n"
+        + "\t\tflowcontainer = {\n\t\t\tparentanchor = center\n\t\t\twidgetanchor = center\n\t\t\tdirection = horizontal\n"
+        + "\t\t\tignoreinvisible = yes\n\t\t\tallow_outside = yes\n\t\t\tspacing = 2\n"
+        + "".join(icons)
+        + "\t\t}\n\t}\n}"
+    )
+    return vanilla[:start] + patched + vanilla[end:]
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -300,12 +348,17 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
     items = plan_items(repo, config)
     result = Result(items=items)
     result.missing_icons = [item.key for item in items if not icon_exists(item, mod_root, vanilla_root)]
+    vanilla_markers = vanilla_root / "game" / MARKERS
+    by_key = {item.key: item for item in items}
     texts = {
         mod_root / VALUES: "﻿" + render_values(items),
         mod_root / EFFECTS: "﻿" + render_effects(items),
         mod_root / GUI: "﻿" + render_gui(items, config),
         mod_root / LOC: render_loc(items),
     }
+    if config.marker_items and vanilla_markers.is_file():
+        vanilla = vanilla_markers.read_text(encoding="utf-8-sig")
+        texts[mod_root / MARKERS] = "﻿" + render_markers(vanilla, [by_key[key] for key in config.marker_items])
     for path, text in texts.items():
         if _write(path, text, write):
             result.files_changed += 1

@@ -97,6 +97,28 @@ def test_no_box_directly_inside_a_container() -> None:
             stack.append(name)
 
 
+def test_marker_changes_only_the_raw_goods_marker() -> None:
+    """The mod's map_markers.gui is vanilla's with only the raw goods marker split (plan icons in the plan map mode)."""
+    vanilla_path = vanilla_root(ROOT, PROJECT) / "game" / lp.MARKERS
+    if not vanilla_path.is_file():
+        return
+    vanilla = vanilla_path.read_text(encoding="utf-8-sig")
+    mod = _read(MOD / lp.MARKERS)
+
+    def outside(text: str) -> str:
+        start = text.index("### Raw Goods Marker")
+        return text[:start] + text[lp._marker_block_end(text, start):]
+
+    assert outside(mod) == outside(vanilla)
+    assert 'name = "pp_lplan_marker"' in mod
+    assert f"GetMapMode('{lp.MAP_MODE_KEY}').IsSet" in mod
+    assert "raw_goods_marker = yes" in _read(MAP_MODE)
+    # the engine creates raw goods markers only with the raw_material color mode (in game 2026-11-07)
+    assert "color_mode = raw_material" in _read(MAP_MODE)
+    for key in lp.load_config(PROJECT).marker_items:
+        assert f"pp_lplan_g_{key}" in mod
+
+
 def test_only_for_the_player() -> None:
     assert "Not(IsObserving)" in _read(WINDOW)
     assert "LocationView.GetLocation.GetOwner.IsPlayer" in lp.BUTTON

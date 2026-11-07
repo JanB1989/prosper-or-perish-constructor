@@ -1,0 +1,70 @@
+﻿# Prosper or Perish - Construction Plan triggers (player-only construction rules; see on_action/pp_construction_plan.txt).
+# Every trigger here runs inside pp_cplan_run, where scope:pp_cplan_country is the player country, unless noted.
+
+# Location scope: the global rules may build here (the player's own location, neither own rules nor hands off).
+pp_cplan_location_ok = {
+	owner ?= scope:pp_cplan_country
+	NOT = { has_variable = pp_cplan_mode }
+}
+
+# Any scope: the month's budget is not used up (constructions started this month, also within the share of the
+# rule groups so far, gold above the reserve).
+pp_cplan_budget_left = {
+	scope:pp_cplan_country = {
+		pp_cplan_started_n < pp_cplan_max_per_month
+		pp_cplan_started_n < pp_cplan_cap_n
+		gold > pp_cplan_reserve_gold
+	}
+}
+
+# Any scope: the current rule has not built yet and the budget lasts.
+pp_cplan_may_try = {
+	scope:pp_cplan_country = { NOT = { has_variable = pp_cplan_hit } }
+	pp_cplan_budget_left = yes
+}
+
+# Location scope: the logistics rule wants a level here (location override Always, or market access below the line;
+# Never blocks it). The building's own gates (access, building levels, one level at a time) still apply.
+pp_cplan_logistics_wanted = {
+	pp_cplan_logi_n < 1.5
+	OR = {
+		pp_cplan_logi_n > 0.5
+		market_access < pp_cplan_access_line
+	}
+}
+
+# Country scope (root = this country, in the pass and in the panel): at least one location of the country follows its
+# own rules.
+pp_cplan_has_own_locations = {
+	any_in_list = {
+		variable = pp_cplan_own
+		owner ?= root
+		has_variable = pp_cplan_mode
+		var:pp_cplan_mode < 101.5
+	}
+}
+
+# Location scope: the condition of rule $n$ holds (no condition = always).
+pp_cplan_rule_cond = {
+	OR = {
+		NOT = { has_variable = pp_cplan_r$n$_m }
+		AND = {
+			NOT = { has_variable = pp_cplan_r$n$_c }
+			pp_cplan_r$n$_now >= pp_cplan_r$n$_t_n
+		}
+		AND = {
+			has_variable = pp_cplan_r$n$_c
+			pp_cplan_r$n$_now < pp_cplan_r$n$_t_n
+		}
+	}
+}
+
+# Location scope, after pp_cplan_btype_data: rule $n$'s payback limit allows the next level (no limit, or a building
+# that does not stand yet, or the plan's estimate within the limit).
+pp_cplan_rule_payback_ok = {
+	OR = {
+		NOT = { has_variable = pp_cplan_r$n$_pb }
+		pp_cplan_bt_levels < 0.5
+		pp_cplan_est_payback_years <= pp_cplan_r$n$_pb_n
+	}
+}

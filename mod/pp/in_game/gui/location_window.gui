@@ -4516,7 +4516,7 @@ lateralview = {
 		widget = { # PP: Location Plan, what this location should produce (gui/pp_location_plan.gui)
 			parentanchor = right|vcenter
 			size = { 40 40 }
-			position = { -62 0 }
+			position = { -92 0 }
 			visible = "[And(LocationView.GetLocation.GetOwner.IsPlayer, Not(IsObserving))]"
 
 			button_minimize = {
@@ -4532,6 +4532,31 @@ lateralview = {
 					title = "PP_LPLAN_LOCATION_BUTTON"
 					on_action = "[GetScriptedGui('pp_lplan_select').Execute(GuiScope.SetRoot(LocationView.GetLocation.MakeScope).End)]"
 					on_action = "[GetVariableSystem.Set('pp_lplan_open', 'yes')]"
+				}
+
+				tooltipwidget = { BasicFunctionalTooltip = {} }
+			}
+		}
+		widget = { # PP: Construction Plan, this location's own rules (gui/pp_construction_plan.gui, Here tab)
+			parentanchor = right|vcenter
+			size = { 40 40 }
+			position = { -62 0 }
+			visible = "[And(LocationView.GetLocation.GetOwner.IsPlayer, Not(IsObserving))]"
+
+			button_minimize = {
+				parentanchor = right|vcenter
+				size = { 25 25 }
+
+				blockoverride "button_texture" {
+					texture = "gfx/interface/buttons/flats/automation_cog.dds"
+					texture_density = 2
+				}
+
+				action_tooltip = {
+					title = "PP_CPLAN_LOCATION_COG"
+					on_action = "[GetScriptedGui('pp_cplan_select').Execute(GuiScope.SetRoot(LocationView.GetLocation.MakeScope).End)]"
+					on_action = "[GetVariableSystem.Set('pp_cplan_open', 'yes')]"
+					on_action = "[GetVariableSystem.Set('pp_cplan_tab', 'here')]"
 				}
 
 				tooltipwidget = { BasicFunctionalTooltip = {} }

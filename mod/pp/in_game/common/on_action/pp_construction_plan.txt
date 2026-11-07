@@ -1,0 +1,22 @@
+﻿# Prosper or Perish - Construction Plan (branch player-construction-manager, 2026-11-06, Jan).
+# Player-only construction rules: once a month every country with is_ai = no that switched the plan on in the
+# Construction Plan panel starts the constructions its rules call for (pp_cplan_run, pp_construction_plan.txt in
+# scripted_effects). AI countries never run it, so the AI's building is unchanged. A pulse by Jan's request (the plan is
+# a monthly automation by design); it touches one country per human player.
+
+monthly_country_pulse = {
+	on_actions = {
+		pp_construction_plan_monthly
+	}
+}
+
+# Country scope.
+pp_construction_plan_monthly = {
+	trigger = {
+		is_ai = no
+		has_variable = pp_cplan_on
+	}
+	effect = {
+		pp_cplan_run = yes
+	}
+}

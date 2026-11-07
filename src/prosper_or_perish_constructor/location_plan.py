@@ -291,7 +291,7 @@ BUTTON = f"""
 		widget = {{ {BUTTON_MARK} (gui/pp_location_plan.gui)
 			parentanchor = right|vcenter
 			size = {{ 40 40 }}
-			position = {{ -62 0 }}
+			position = {{ -92 0 }}
 			visible = "[And(LocationView.GetLocation.GetOwner.IsPlayer, Not(IsObserving))]"
 
 			button_minimize = {{

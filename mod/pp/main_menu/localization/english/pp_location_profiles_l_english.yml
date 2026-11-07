@@ -1,0 +1,13 @@
+﻿l_english:
+  # Location Profiles: the state of a profile rule in a location after the plan's last monthly pass (pp_lprof_r<r>_st).
+  PP_LPROF_ST_0: "Not checked yet: the plan looks at it in its next monthly pass."
+  PP_LPROF_ST_1: "Started a construction here last month."
+  PP_LPROF_ST_2: "Nothing to build: every building of this target here is at its highest level."
+  PP_LPROF_ST_3: "Waiting for a level under construction here."
+  PP_LPROF_ST_4: "Waiting."
+  PP_LPROF_ST_5: "The next level pays back too slowly for this rule's limit."
+  PP_LPROF_ST_6: "Cannot be built here now."
+  PP_LPROF_ST_7: "Held back by the plan's monthly limit or gold reserve."
+  PP_LPROF_ST_8: "The market lacks the construction goods."
+  PP_LPROF_ST_9: "Waiting: an earlier rule started a construction here last month."
+  # the Construction Plan's ledger ("Last month"): a construction a location profile started

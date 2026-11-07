@@ -383,6 +383,10 @@ widget = {
 											visible = "[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)4')]"
 											text = "PP_CPLAN_WHY_RULE"
 										}
+										pp_cplan_label = {
+											visible = "[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)5')]"
+											text = "PP_CPLAN_WHY_PROFILE"
+										}
 									}
 								}
 							}

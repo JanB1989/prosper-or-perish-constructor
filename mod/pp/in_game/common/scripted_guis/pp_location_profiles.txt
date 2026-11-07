@@ -1,0 +1,70 @@
+﻿# Prosper or Perish - Location Profiles buttons (docs/location_profiles.md): the profile editor, the Location Plan
+# window's profile row, the map's right-click menu and the paint mode call these. Parameters are flag scopes the GUI
+# adds with AddScope: scope:pp_slot (s1..sN, or none for assign), scope:pp_field (icon, r1..rN), scope:pp_key (an item:
+# a good, logistics = market access, or a building category), scope:pp_dir (up / down), scope:pp_col (c1..cN).
+# Country-scope buttons run with root = the player's country (GuiScope.SetRoot(GetPlayer.MakeScope)). The effects are
+# in scripted_effects/pp_location_profiles*.txt.
+
+# Location scope (root = the location): its profile scope:pp_slot (a slot that is on), or none.
+pp_lprof_assign = {
+	scope = location
+	effect = {
+		pp_lprof_assign_do = yes
+	}
+}
+
+# Country scope: slot scope:pp_slot on (icon lumber, its colour, no rules).
+pp_lprof_new = {
+	scope = country
+	effect = {
+		pp_lprof_new_do = yes
+	}
+}
+
+# Country scope: the icon (scope:pp_field = icon) or rule r's target (r1..rN) of slot scope:pp_slot = the item scope:pp_key.
+pp_lprof_set = {
+	scope = country
+	effect = {
+		pp_lprof_set_do = yes
+	}
+}
+
+# Country scope: the colour scope:pp_col of slot scope:pp_slot.
+pp_lprof_color = {
+	scope = country
+	effect = {
+		pp_lprof_color_do = yes
+	}
+}
+
+# Country scope: one step (scope:pp_dir) of the payback limit of rule scope:pp_field of slot scope:pp_slot.
+pp_lprof_payback = {
+	scope = country
+	effect = {
+		pp_lprof_payback_do = yes
+	}
+}
+
+# Country scope: empties rule scope:pp_field of slot scope:pp_slot.
+pp_lprof_rule_clear = {
+	scope = country
+	effect = {
+		pp_lprof_rule_clear_do = yes
+	}
+}
+
+# Country scope: swaps rule scope:pp_field of slot scope:pp_slot with its neighbour in the direction scope:pp_dir.
+pp_lprof_rule_move = {
+	scope = country
+	effect = {
+		pp_lprof_rule_move_do = yes
+	}
+}
+
+# Country scope: clears slot scope:pp_slot and takes it off every location.
+pp_lprof_delete = {
+	scope = country
+	effect = {
+		pp_lprof_delete_do = yes
+	}
+}

@@ -1,0 +1,179 @@
+﻿# Prosper or Perish - Location Profiles: the editor window and the paint palette (branch location-profiles,
+# 2026-11-07, Jan; docs/location_profiles.md). Scripted widgets (gui/scripted_widgets/pp_location_profiles.txt), so no
+# vanilla window is overridden. A profile is an icon, a colour and ordered build rules; the player gives it to
+# locations (Location Plan window row, the map's right-click menu, the paint palette in the Location Plan map mode),
+# and there its rules replace the Construction Plan's rules. The parts that follow [location_profiles] (slots, rules,
+# colours) and the items are generated (pp_location_profiles_generated.gui, location_profiles_gui.py); every button
+# runs a scripted GUI of common/scripted_guis/pp_location_profiles.txt (the script side).
+# GUI variables: pp_lprof_open (window open), pp_lprof_edit (s<k>: the profile shown), pp_lprof_pick (icon / r<r>: the
+# item list is open for that field), pp_lprof_brush (s<k> / none: paint mode).
+# Shown only to a player who plays a country (observers' scripted GUIs do nothing).
+
+types PPLocationProfiles
+{
+	type pp_lprof_label = text_single {
+		autoresize = yes
+		align = left|nobaseline
+	}
+
+	type pp_lprof_title = text_single {
+		autoresize = yes
+		align = left|nobaseline
+		default_format = "#yellow_titles"
+	}
+
+	type pp_lprof_note = text_multi {
+		autoresize = yes
+		maximumsize = { 520 -1 }
+		minimumsize = { 520 -1 }
+		default_format = "#weak"
+	}
+
+	type pp_lprof_note_narrow = text_multi {
+		autoresize = yes
+		maximumsize = { 180 -1 }
+		minimumsize = { 180 -1 }
+		default_format = "#weak"
+	}
+
+	# A small button with a flat icon (blockoverride "pp_lprof_icon" { texture = ... }).
+	type pp_lprof_icon_button = button_regular {
+		size = { 26 24 }
+		icon = {
+			parentanchor = center
+			size = { 16 16 }
+			using = button_regular_icon_color
+			block "pp_lprof_icon" {
+				texture = "gfx/interface/buttons/flats/plus.dds"
+			}
+		}
+	}
+}
+
+# ---- Editor ----
+window = {
+	name = "pp_location_profiles_window"
+	visible = "[And3(GetVariableSystem.Exists('pp_lprof_open'), GetPlayer.Exists, Not(IsObserving))]"
+	position = { 1170 110 }
+	size = { 580 820 }
+	movable = yes
+	using = bg_window_default_alt
+	filter_mouse = all
+
+	vbox = {
+		using = window_margin_alt
+
+		window_header_alt = {
+			blockoverride "header_text" {
+				text = "PP_LPROF_UI_TITLE"
+			}
+		}
+
+		vbox = {
+			using = layoutpolicy_expanding
+			using = bg_main_inner_notabs_alt
+			using = window_main_tabs_margin_alt
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+				margin = { 8 6 }
+				spacing = 5
+
+				pp_lprof_note = { text = "PP_LPROF_UI_NOTE" }
+
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					spacing = 6
+					pp_lprof_title = { text = "PP_LPROF_UI_YOURS" }
+					expand = {}
+					button_regular = {
+						size = { 120 26 }
+						text = "PP_LPROF_UI_PAINT_MAP"
+						tooltip = "PP_LPROF_UI_PAINT_MAP_TT"
+						onclick = "[GetMapMode('pp_location_plan').SetMapMode]"
+					}
+				}
+
+				pp_lprof_slot_strip = {}
+
+				pp_lprof_note = {
+					visible = "[Not(GetVariableSystem.Exists('pp_lprof_edit'))]"
+					text = "PP_LPROF_UI_PICK_SLOT"
+				}
+
+				pp_lprof_editor = {}
+
+				scrollarea = {
+					visible = "[And(GetVariableSystem.Exists('pp_lprof_pick'), GetVariableSystem.Exists('pp_lprof_edit'))]"
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					scrollbarpolicy_horizontal = always_off
+					scrollbar_vertical = { using = Scrollbar_Vertical }
+					scrollwidget = {
+						vbox = {
+							minimumsize = { 530 -1 }
+							maximumsize = { 530 -1 }
+							pp_lprof_picker = {}
+						}
+					}
+				}
+
+				expand = {
+					visible = "[Not(And(GetVariableSystem.Exists('pp_lprof_pick'), GetVariableSystem.Exists('pp_lprof_edit')))]"
+				}
+			}
+		}
+	}
+
+	widget = {
+		parentanchor = right
+		position = { -5 5 }
+		size = { 40 40 }
+		button_close_alt = {
+			blockoverride "close_on_action" {
+				on_action = "[GetVariableSystem.Clear('pp_lprof_open')]"
+				on_action = "[GetVariableSystem.Clear('pp_lprof_pick')]"
+			}
+		}
+	}
+}
+
+# ---- Paint palette: only in the Location Plan map mode. The panel sets the root's size (set_parent_size_to_minimum,
+# as vanilla's context menu does), so clicks reach the tiles and the map outside it stays clickable ----
+widget = {
+	name = "pp_location_profiles_palette"
+	position = { 36 280 }
+	visible = "[And3(GetMapMode('pp_location_plan').IsSet, GetPlayer.Exists, Not(IsObserving))]"
+
+	vbox = {
+		set_parent_size_to_minimum = yes
+		using = bg_window_default_alt
+		filter_mouse = all
+		margin = { 10 10 }
+		spacing = 5
+
+		pp_lprof_title = { text = "PP_LPROF_UI_PALETTE_TITLE" }
+		pp_lprof_note_narrow = { text = "PP_LPROF_UI_PALETTE_NOTE" }
+		pp_lprof_palette_tiles = {}
+
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 4
+			button_regular = {
+				visible = "[GetVariableSystem.Exists('pp_lprof_brush')]"
+				size = { 70 26 }
+				text = "PP_LPROF_UI_STOP"
+				tooltip = "PP_LPROF_UI_STOP_TT"
+				onclick = "[GetVariableSystem.Clear('pp_lprof_brush')]"
+			}
+			button_regular = {
+				size = { 110 26 }
+				text = "PP_LPROF_UI_EDIT_PROFILES"
+				tooltip = "PP_LPROF_UI_EDIT_PROFILES_TT"
+				onclick = "[GetVariableSystem.Set('pp_lprof_open', 'yes')]"
+			}
+			expand = {}
+		}
+	}
+}

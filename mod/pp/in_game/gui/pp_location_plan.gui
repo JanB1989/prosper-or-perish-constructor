@@ -29,7 +29,7 @@ window = {
 	name = "pp_location_plan_window"
 	visible = "[And3(GetVariableSystem.Exists('pp_lplan_open'), GetPlayer.Exists, Not(IsObserving))]"
 	position = { 620 110 }
-	size = { 540 720 }
+	size = { 540 800 }
 	movable = yes
 	using = bg_window_default_alt
 	filter_mouse = all
@@ -84,6 +84,10 @@ window = {
 							onclick = "[GetScriptedGui('pp_lplan_clear').Execute(GuiScope.SetRoot(Location.MakeScope).End)]"
 						}
 					}
+
+					# Location Profiles (pp_location_profiles_generated.gui): the location's profile, the player's profiles to
+					# give it, Edit profiles
+					pp_lprof_plan_row = {}
 
 					pp_lplan_note = { text = "PP_LPLAN_NOTE" }
 

@@ -9,13 +9,14 @@ pp_cplan_max100 = {
 	add = 100
 }
 
-# Country scope: the rule groups that run (location rules when a location has own rules; at least 1), and each one's
-# share of the monthly limit, rounded up.
+# Country scope: the rule groups that run (location rules when a location has own rules, location profiles when a
+# location has a profile; at least 1), and each one's share of the monthly limit, rounded up.
 pp_cplan_groups_on = {
 	value = pp_cplan_food_n
 	add = pp_cplan_logistics_n
 	add = pp_cplan_goods_n
 	add = pp_cplan_location_rules_n
+	add = pp_lprof_group_n
 	min = 1
 }
 pp_cplan_group_share = {

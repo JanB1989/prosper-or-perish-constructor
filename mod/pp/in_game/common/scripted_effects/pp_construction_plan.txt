@@ -1,7 +1,9 @@
 ﻿# Prosper or Perish - Construction Plan (branch player-construction-manager, 2026-11-06, Jan).
 # Player-only construction rules, run once a month by on_action/pp_construction_plan.txt for each human country that
 # switched the plan on. Two layers: the global rules (Food per province, Logistics per location, Goods per good) and
-# per-location own rules, which replace the global rules in that location. The pickers per building and good, the
+# per-location own rules, which replace the global rules in that location. Location profiles (branch location-profiles,
+# pp_location_profiles.txt) run first: a location with a profile follows only the profile's rules, and the global rules
+# and own rules leave it alone (one layer per location). The pickers per building and good, the
 # build cost data, rule edits, templates and profiles are generated from [construction_plan] into
 # pp_construction_plan_generated.txt (construction_plan.py). Constructions are normal, paid constructions
 # (construct_building), so they show in the construction queue like the player's own.
@@ -32,7 +34,9 @@ pp_cplan_run = {
 	remove_variable = pp_cplan_hit
 	# each rule group running gets an equal share of the monthly limit; a share left unused passes on to the next
 	set_variable = { name = pp_cplan_cap value = 100 }
-	# Location rules first: a location set to Own Rules follows only its own list.
+	# Location profiles first (pp_location_profiles.txt): a location with a profile follows only its profile's rules.
+	pp_lprof_run = yes
+	# Location rules next: a location set to Own Rules follows only its own list.
 	if = {
 		limit = { pp_cplan_has_own_locations = yes }
 		change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }
@@ -99,7 +103,10 @@ pp_cplan_run = {
 		save_scope_as = pp_rule
 		save_scope_as = pp_slot
 		save_scope_as = pp_btype
+		save_scope_as = pp_field # Location Profiles
+		save_scope_as = pp_col # Location Profiles
 		pp_cplan_declare_flags = yes
+		pp_lprof_declare_flags = yes
 		if = {
 			limit = {
 				has_variable = pp_cplan_flag
@@ -534,6 +541,14 @@ pp_cplan_own_sync = {
 				remove_list_variable = { name = pp_cplan_own target = scope:pp_cplan_this }
 			}
 		}
+	}
+	# one layer per location: own rules or hands off take the place of a location profile (pp_location_profiles.txt)
+	if = {
+		limit = {
+			has_variable = pp_cplan_mode
+			has_variable = pp_lprof
+		}
+		pp_lprof_unassign = yes
 	}
 }
 

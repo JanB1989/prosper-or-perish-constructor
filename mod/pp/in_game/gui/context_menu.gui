@@ -1,0 +1,2817 @@
+﻿@context_menu_wide = 320
+
+types ContextMenuSpecificTypes
+{
+	# SPECIFIC TYPES
+	# -------------------------------------------------------------------------
+
+	type TerraIncognitaContextMenu = ContextMenuBase {
+		blockoverride "contextmenu_content" {
+			ContextMenuSection = {
+				blockoverride "title_icon" {
+					icon = {
+						size = { 24 24 }
+						texture = "gfx/interface/icons/flat_icons/geopolitics/known_world.dds"
+						texture_density = 2
+					}
+				}
+
+				blockoverride "title_text" {
+					text = "game_concept_terra_incognita"
+				}
+
+				blockoverride "contextmenu_entries" {
+					datacontext = "[Player]"
+					ContextMenuEntryListSubSection = {
+						ContextMenuEntry = {
+							blockoverride "entry_button" {
+								text_single = {
+									visible = "[Not(Location.GetArea.CanExplore(Country.Self))]"
+									margin = { 10 0 }
+									size = { 100% 100% }
+									fontsize_min = 10
+									autoresize = no
+									text = "TERRA_INCOGNITA_CTXMENU_DESC"
+								}
+
+								ContextMenuEntryListSubSection = {
+									visible = "[Location.GetArea.CanExplore(Country.Self)]"
+									tooltipmeta = {
+										texture = "gfx/interface/icons/character_roles/explorer.dds"
+										game_concept = "[exploration|E]"
+									}
+
+									targetted_button_regular = {
+										using = contextmenu_entry_button_inner_template
+										layoutpolicy_horizontal = expanding
+										size = { -1 35 }
+										visible = "[PdxGuiWidget.IsUberButtonVisible]"
+										scripted_action_tooltip = {
+											click_type = left
+											click_mode = single
+											action_name = "start_exploration"
+											actor = "[Player]"
+											parameter = {
+												parameter_name = "target"
+												parameter_value = "[Location.GetArea]"
+											}
+										}
+										enabled = "[PdxGuiWidget.IsUberButtonEnabled]"
+
+									tooltipmeta = {
+										title = "start_exploration_on"
+										texture = "gfx/interface/icons/character_roles/explorer.dds"
+										game_concept = "[exploration|E]"
+									}
+
+										blockoverride "entry_icon_texture" {
+											texture = "gfx/interface/icons/flat_icons/geopolitics/exploration_sea.dds"
+										}
+
+										blockoverride "entry_text" {
+											text = "start_exploration_on"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	type CountryContextMenuSection = ContextMenuSection {
+		visible = "[Country.IsValid]"
+
+		blockoverride "title_icon" {
+			country_flag_small = {
+				blockoverride "tooltip" {}
+				blockoverride "contextmenu" {}
+				blockoverride "rightclick" {}
+			}
+		}
+
+		blockoverride "title_text" {
+			raw_text = "[Country.GetLongNameWithNoTooltip]"
+		}
+
+		blockoverride "title_right" {
+			button_pin = {
+				size = { 23 23 }
+				visible = "[IsPlayerValid]"
+				action_tooltip = {
+					title = "[SelectLocalization(IsCountryFaved(Country.Self), 'UNPIN_OUTLINER', 'PIN_OUTLINER')]"
+					on_action = "[ToggleCountryFav(Country.Self)]"
+				}
+				tooltipwidget = { BasicFunctionalTooltip = {} }
+				down = "[IsCountryFaved(Country.Self)]"
+			}
+		}
+
+		blockoverride "contextmenu_entries" {
+			ContextMenuEntry = {
+				visible = "[Country.HasCapital]"
+				
+				blockoverride "click_action" {
+					title = "GO_TO_CAPITAL_TEXT"
+					on_action = "[PanToCountry(Country.Self)]"
+				}
+
+				blockoverride "tooltip" {
+					tagtooltip_enabled = yes
+					tooltip = "[Country.GetCapital.GetName]"
+				}
+
+				blockoverride "entry_icon_texture" {
+					texture = "gfx/interface/icons/location_icons/capital.dds"
+				}
+
+				blockoverride "entry_text" {
+					text = "GO_TO_CAPITAL_TEXT"
+				}
+			}
+			
+			ContextMenuEntry = {
+				visible = "[CanPlayerRenameCountry(Country.Self)]"
+			
+				blockoverride "click_action" {
+					title = "RENAME_COUNTRY"
+					on_action = "[OpenRenameCountryDialog(Country.Self)]"
+				}
+
+				blockoverride "entry_icon_texture" {
+					texture = "gfx/interface/icons/flat_icons/rename_country.dds"
+				}
+
+				blockoverride "entry_text" {
+					text = "RENAME_COUNTRY"
+				}
+			}
+
+			ContextMenuEntry = {
+				visible = "[And(IsLobbyOpen, IsCountryPlayable(Country.Self))]"
+
+				blockoverride "click_action" {
+					title = "JOMINI_MULTIPLAYER_GUI_SELECT"
+					on_action = "[SetLobbyCountry(Country.Self)]"
+				}
+
+				blockoverride "entry_icon_texture" {
+					texture = "gfx/interface/buttons/flats/accept.dds"
+					using = ui_direction_button_overlay
+				}
+
+				blockoverride "entry_text" {
+					text = "JOMINI_MULTIPLAYER_GUI_SELECT"
+				}
+			}
+
+			block "open_country_panel_entry" {
+				ContextMenuEntry = {
+					visible = "[And4(Not(IsLobbyOpen), IsPlayerValid, Not(Country.IsPlayer), Country.IsReal)]"
+					blockoverride "click_action" {
+						title = "OPEN_COUNTRY_PANEL"
+						on_action = "[ShowForeignCountry(Country.Self)]"
+					}
+
+					blockoverride "entry_icon_texture" {
+						texture = "gfx/interface/icons/flat_icons/country.dds"
+					}
+
+					blockoverride "entry_text" {
+						text = "OPEN_COUNTRY_PANEL"
+					}
+				}
+			}
+
+			ContextMenuEntry = {
+				visible = "[And4(Not(IsLobbyOpen), IsPlayerValid, Not(Country.IsPlayer), Country.IsReal)]"
+				blockoverride "click_action" {
+					title = "SELECT_ACTIONS"
+					on_action = "[ShowDiploMacrobuilderWithCountry(Country.Self)]"
+					on_action = "[ExtraTooltipInfo.CloseContextMenu]"
+				}
+
+				blockoverride "entry_icon_texture" {
+					texture = "gfx/interface/icons/alerts_icons/diplomacy.dds"
+				}
+
+				blockoverride "entry_text" {
+					text = "SELECT_ACTIONS"
+				}
+			}
+
+			ContextMenuEntryListSubSection = {
+				datacontext = "[Country.GetQuickDiplomaticActions]"
+				visible = "[And(And(Not(IsLobbyOpen), IsPlayerValid), DataModelHasItems(QuickDiplomaticActions.GetList))]"
+				datacontext = "[Pin('diplo_actions')]"
+				datamodel = "[QuickDiplomaticActions.GetList]"
+				item = {
+					ContextMenuEntry = {
+						visible = "[PinCollection.IsPinned( DiplomaticActionItem.GetTag )]"
+						enabled = "[DiplomaticActionItem.IsEnabled]"
+
+						blockoverride "entry_button" {
+							button = {
+								visible = "[And(Not(EqualTo_string(DiplomaticActionItem.GetTag, 'UNCONDITIONALSURRENDER')), Not(EqualTo_string(DiplomaticActionItem.GetTag, 'WAR')))]"
+								using = contextmenu_entry_button_template
+							}
+							button = {
+								visible = "[Or(EqualTo_string(DiplomaticActionItem.GetTag, 'UNCONDITIONALSURRENDER'), EqualTo_string(DiplomaticActionItem.GetTag, 'WAR'))]"
+								using = contextmenu_entry_button_template
+								blockoverride "button_texture" {
+									using = button_regular_red_texture
+								}
+							}
+						}
+
+						blockoverride "click_action" {
+							title = "[DiplomaticActionItem.GetTitle]"
+							enabled = "[DiplomaticActionItem.IsEnabled]"
+							conditions = "[DiplomaticActionItem.GetTooltip]"
+							on_action = "[DiplomaticActionItem.OnClick]"
+						}
+
+						blockoverride "tooltip" {
+							tooltipwidget = {
+								using = diplomatic_action_tooltip
+								blockoverride "diplomatic_action_tooltip_content_extra"{
+									TooltipScrolledBlockList = {
+										visible = "[EqualTo_string(DiplomaticActionItem.GetTag, 'IMPROVE_RELATION')]"
+										blockoverride "block_scrollarea" { maximumsize = { -1 420 }}
+										textcontext = "[Country.GetDiplomacy.GetOpinionDescription(GetPlayer)]"
+									}
+									TooltipScrolledBlockList = {
+										visible = "[EqualTo_string(DiplomaticActionItem.GetTag, 'BUILD_SPYNETWORK')]"
+										blockoverride "block_scrollarea" { maximumsize = { -1 420 }}
+										textcontext = "[Country.GetDiplomaticCurrencyDesc('spy_network')]"
+									}
+									TooltipScrolledBlockList = {
+										visible = "[EqualTo_string(DiplomaticActionItem.GetTag, 'CURRY_FAVORS')]"
+										blockoverride "block_scrollarea" { maximumsize = { -1 420 }}
+										textcontext = "[Country.GetDiplomaticCurrencyDesc('favors')]"
+									}
+									TooltipScrolledBlockList = {
+										visible = "[EqualTo_string(DiplomaticActionItem.GetTag, 'PROFESS_TRUST')]"
+										blockoverride "block_scrollarea" { maximumsize = { -1 420 }}
+										textcontext = "[Country.GetDiplomacy.GetTrustDescription(GetPlayer)]"
+									}
+								}
+							}
+						}
+
+						blockoverride "entry_icon_texture" {
+							texture = "[DiplomaticActionItem.GetTexture]"
+							# using = ui_direction_button_overlay
+						}
+
+						blockoverride "entry_text" {
+							text = "[DiplomaticActionItem.GetTitle]"
+						}
+
+						blockoverride "entry_right" {
+							hbox = {
+								spacing = 5
+								text_single = {
+									visible = "[DiplomaticActionItem.HasAffectedDiplomaticCurrency]"
+									align = nobaseline
+									autoresize = yes
+									text = "[DiplomaticActionItem.GetAffectedDiplomaticCurrency]"
+								}
+								icon = {
+									size = { 20 20 }
+									frame_grid = { 3 1 }
+									visible = "[And(Not(DiplomaticActionItem.HasAffectedDiplomaticCurrency), DiplomaticActionItem.RequiresAcceptance)]"
+									texture = "gfx/interface/icons/diplomatic_status/ai_accept_decline_icon.dds"
+									frame = "[DiplomaticActionItem.GetAcceptanceFrame]"
+									tooltip = "[DiplomaticActionItem.GetAcceptanceTooltip]"
+								}
+							}
+						}
+					}
+				}
+			}
+
+			DynamicDiploContextMenuSection = {}
+
+			block "extra_country_contextmenu_entries" {}
+
+			ContextMenuEntry = {
+				visible = "[CanPlayerPlayAsCountry(Country.Self)]"
+
+				blockoverride "entry_button" {
+					button = {
+						using = contextmenu_entry_button_template
+
+						blockoverride "button_texture" {
+							using = button_regular_green_texture
+						}
+					}
+				}
+
+				blockoverride "click_action" {
+					click_mode = confirm
+					title = "PLAY_AS_COUNTRY"
+					confirmation = "PLAY_AS_COUNTRY_CONFIRM"
+					on_action = "[PlayAsCountry(Country.Self)]"
+				}
+
+				blockoverride "entry_icon_texture" {
+					texture = "gfx/interface/buttons/flats/square_button_play.dds"
+					using = ui_direction_button_overlay
+				}
+
+				blockoverride "entry_text" {
+					text = "PLAY_AS_COUNTRY"
+				}
+			}
+		}
+	}
+	type DynamicDiploContextMenuSection = ContextMenuEntryListSubSection {
+		datacontext = "[Country.GetDynamicQuickDiplomaticActions]"
+		visible = "[And(Country.IsValid, Not(StringIsEmpty(QuickDiplomaticActions.GetDynamicActionsTitle)))]"
+
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			margin = { 10 5 }
+			spacing = 2
+
+			using = bg_paper_card
+
+			blockoverride "card_texture_extra" {
+				modify_texture = {
+					using = color_black_texture
+					blend_mode = multiply
+					alpha = 0.3
+				}
+			}
+
+			icon = {
+				size = { 30 30 }
+				texture = "[QuickDiplomaticActions.GetDynamicActionsIcon]"
+			}
+
+			text_single = {
+				layoutpolicy_horizontal = expanding
+				size = { -1 30 }
+				fontsize_min = 10
+				autoresize = no
+				raw_text = "[QuickDiplomaticActions.GetDynamicActionsTitle]"
+			}
+		}
+
+		targetted_button_regular = {
+			using = contextmenu_entry_button_inner_template
+			layoutpolicy_horizontal = expanding
+			size = { -1 35 }
+			visible = "[PdxGuiWidget.IsUberButtonVisible]"
+			scripted_action_tooltip = {
+				click_type = left
+				click_mode = single
+				action_name = "change_military_stance"
+				actor = "[Player]"
+				parameter = {
+					parameter_name = "subject"
+					parameter_value = "[Country.MakeScope]"
+				}
+			}
+			enabled = "[PdxGuiWidget.IsUberButtonEnabled]"
+
+			tooltipmeta = {
+				title = "[Country.GetMilitaryStance.GetNameWithNoTooltip]"
+			}
+
+			blockoverride "tooltip" {
+				tooltipwidget = {
+					using = action_tooltip_pop_out
+					blockoverride "title_icon" {
+						icon = {
+							using = tooltip_title_icon_size
+							texture = "[GetMilitaryStanceIcon(Country.GetMilitaryStance)]"
+						}
+					}
+				}
+			}
+
+			blockoverride "entry_icon_texture" {
+				texture = "[GetMilitaryStanceIcon(Country.GetMilitaryStance)]"
+			}
+
+			blockoverride "entry_text" {
+				text = "[Country.GetMilitaryStance.GetNameWithNoTooltip]"
+			}
+		}
+
+		ContextMenuEntryListSubSection = {
+			datacontext = "[Country.GetDynamicQuickDiplomaticActions]"
+			visible = "[And(And(Not(IsLobbyOpen), IsPlayerValid), DataModelHasItems(QuickDiplomaticActions.GetDynamicList))]"
+			datacontext = "[Pin('diplo_actions')]"
+			datamodel = "[QuickDiplomaticActions.GetDynamicList]"
+			item = {
+				ContextMenuEntry = {
+					visible = "[And(Not(EqualTo_string(DiplomaticActionItem.GetTag, 'colonial_nation')), PinCollection.IsPinned( DiplomaticActionItem.GetTag ))]"
+					enabled = "[DiplomaticActionItem.IsEnabled]"
+
+					blockoverride "click_action" {
+						title = "[DiplomaticActionItem.GetTitle]"
+						enabled = "[DiplomaticActionItem.IsEnabled]"
+						conditions = "[DiplomaticActionItem.GetTooltip]"
+						on_action = "[DiplomaticActionItem.OnClick]"
+					}
+
+					blockoverride "tooltip" {
+						tooltipwidget = {
+							using = diplomatic_action_tooltip
+						}
+					}
+
+					blockoverride "entry_icon_texture" {
+						texture = "[DiplomaticActionItem.GetTexture]"
+					}
+
+					blockoverride "entry_text" {
+						text = "[DiplomaticActionItem.GetTitle]"
+					}
+
+					blockoverride "entry_right" {
+						hbox = {
+							spacing = 5
+							text_single = {
+								visible = "[DiplomaticActionItem.HasAffectedDiplomaticCurrency]"
+								align = nobaseline
+								autoresize = yes
+								text = "[DiplomaticActionItem.GetAffectedDiplomaticCurrency]"
+							}
+							icon = {
+								size = { 20 20 }
+								frame_grid = { 3 1 }
+								visible = "[And(Not(DiplomaticActionItem.HasAffectedDiplomaticCurrency), DiplomaticActionItem.RequiresAcceptance)]"
+								texture = "gfx/interface/icons/diplomatic_status/ai_accept_decline_icon.dds"
+								frame = "[DiplomaticActionItem.GetAcceptanceFrame]"
+								tooltipwidget = {
+									SimpleContextualStringPairTooltipType = {
+										blockoverride "title_icon" {
+											icon = {
+												using = tooltip_title_icon_size
+												frame_grid = { 3 1 }
+												visible = "[And(Not(DiplomaticActionItem.HasAffectedDiplomaticCurrency), DiplomaticActionItem.RequiresAcceptance)]"
+												texture = "gfx/interface/icons/diplomatic_status/ai_accept_decline_icon.dds"
+												frame = "[DiplomaticActionItem.GetAcceptanceFrame]"
+											}
+											
+										}
+
+										blockoverride "concept_link" {
+											raw_text = "[subject|e]"
+										}
+
+										lowpriotextcontext = "[DiplomaticActionItem.GetAcceptanceTooltip]"
+
+									}
+								}
+							}
+
+							button_pin = {
+								size = { 23 23 }
+								checked = yes
+								tooltip_enabled = no
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	type CountryContextMenu = ContextMenuBase {
+		blockoverride "contextmenu_content" {
+			ContextMenuSectionSet = {
+				CountryContextMenuSection = {}
+			}
+		}
+	}
+
+	type UnitContextMenuActionItem = ContextMenuEntry {
+		visible = "[PinCollection.IsPinnedWithDefaultValue( UnitActionItem.GetKey, UnitActionItem.IsPinnedByDefault )]"
+
+		blockoverride "entry_button" {
+			button = {
+				visible = "[UnitActionItem.IsToggleAction]"
+				using = contextmenu_entry_button_template
+
+				blockoverride "onclick_closecontextmenu" {}
+				blockoverride "click_closecontextmenu_action" {}
+
+				blockoverride "onclick" {
+					action_tooltip = {
+						click_type = left
+						click_mode = confirm
+						title = "[UnitActionItem.GetName]"
+						visible = "[UnitActionItem.HasHoldLeftAction]"
+						on_action = "[UnitActionItem.HoldLeftClick]"
+						conditions = "[MakeItFailIf(Not(UnitActionItem.CanHoldLeftClick), UnitActionItem.GetTooltip)]"
+						enabled = "[UnitActionItem.CanHoldLeftClick]"
+						description = "[UnitActionItem.GetLeftClickDescription]"
+					}
+
+					action_tooltip = {
+						click_type = right
+						click_mode = confirm
+						conditions = "[MakeItFailIf(Not(UnitActionItem.CanHoldLeftClick), UnitActionItem.GetTooltip)]"
+						visible = "[UnitActionItem.HasHoldRightAction]"
+						title = "[UnitActionItem.GetSecondaryName]"
+						on_action = "[UnitActionItem.HoldRightClick]"
+						enabled = "[UnitActionItem.CanHoldRightClick]"
+						description = "[UnitActionItem.GetRightClickDescription]"
+					}
+
+					action_tooltip = {
+						visible = "[UnitActionItem.HasSingleLeftAction]"
+						title = "[UnitActionItem.GetName]"
+						on_action = "[UnitActionItem.SingleLeftClick]"
+						enabled = "[UnitActionItem.CanSingleLeftClick]"
+						conditions = "[MakeItFailIf(Not(UnitActionItem.CanSingleLeftClick), UnitActionItem.GetTooltip)]"
+						description = "[UnitActionItem.GetLeftClickDescription]"
+					}
+
+					action_tooltip = {
+						click_type = right
+						click_mode = single
+						visible = "[UnitActionItem.HasSingleRightAction]"
+						title = "[UnitActionItem.GetSecondaryName]"
+						on_action = "[UnitActionItem.SingleRightClick]"
+						enabled = "[UnitActionItem.CanSingleRightClick]"
+						description = "[UnitActionItem.GetRightClickDescription]"
+					}
+
+					enabled = "[Or3(And(UnitActionItem.HasSingleLeftAction, UnitActionItem.CanSingleLeftClick),
+					And(UnitActionItem.HasHoldRightAction, UnitActionItem.CanHoldRightClick),
+					And(UnitActionItem.HasHoldLeftAction, UnitActionItem.CanHoldLeftClick))]"
+					tooltipwidget = {BasicFunctionalTooltip = {}}
+				}
+
+				blockoverride "entry_icon_texture" {
+					texture = "[UnitActionItem.GetTexture]"
+				}
+
+				blockoverride "entry_text" {
+					text = "[UnitActionItem.GetName]"
+				}
+
+				blockoverride "entry_right" {
+					hbox = {
+						spacing = 5
+
+						button_checkbox = {
+							size = { 20 20 }
+							visible = "[UnitActionItem.IsToggleAction]"
+							down = "[UnitActionItem.IsActive]"
+
+							action_tooltip = {
+								click_type = left
+								click_mode = confirm
+								title = "[UnitActionItem.GetName]"
+								visible = "[UnitActionItem.HasHoldLeftAction]"
+								on_action = "[UnitActionItem.HoldLeftClick]"
+								conditions = "[MakeItFailIf(Not(UnitActionItem.CanHoldLeftClick), UnitActionItem.GetTooltip)]"
+								enabled = "[UnitActionItem.CanHoldLeftClick]"
+								description = "[UnitActionItem.GetLeftClickDescription]"
+							}
+
+							action_tooltip = {
+								click_type = right
+								click_mode = confirm
+								conditions = "[MakeItFailIf(Not(UnitActionItem.CanHoldLeftClick), UnitActionItem.GetTooltip)]"
+								visible = "[UnitActionItem.HasHoldRightAction]"
+								title = "[UnitActionItem.GetSecondaryName]"
+								on_action = "[UnitActionItem.HoldRightClick]"
+								enabled = "[UnitActionItem.CanHoldRightClick]"
+								description = "[UnitActionItem.GetRightClickDescription]"
+							}
+
+							action_tooltip = {
+								visible = "[UnitActionItem.HasSingleLeftAction]"
+								title = "[UnitActionItem.GetName]"
+								on_action = "[UnitActionItem.SingleLeftClick]"
+								enabled = "[UnitActionItem.CanSingleLeftClick]"
+								conditions = "[MakeItFailIf(Not(UnitActionItem.CanSingleLeftClick), UnitActionItem.GetTooltip)]"
+								description = "[UnitActionItem.GetLeftClickDescription]"
+							}
+
+							action_tooltip = {
+								click_type = right
+								click_mode = single
+								visible = "[UnitActionItem.HasSingleRightAction]"
+								title = "[UnitActionItem.GetSecondaryName]"
+								on_action = "[UnitActionItem.SingleRightClick]"
+								enabled = "[UnitActionItem.CanSingleRightClick]"
+								description = "[UnitActionItem.GetRightClickDescription]"
+							}
+
+							enabled = "[Or3(And(UnitActionItem.HasSingleLeftAction, UnitActionItem.CanSingleLeftClick),
+							And(UnitActionItem.HasHoldRightAction, UnitActionItem.CanHoldRightClick),
+							And(UnitActionItem.HasHoldLeftAction, UnitActionItem.CanHoldLeftClick))]"
+							tooltipwidget = {BasicFunctionalTooltip = {}}
+						}
+
+						# button_pin = {
+						# 	size = { 23 23 }
+						# 	checked = yes
+						# }
+					}
+				}
+
+				tooltipwidget = {
+					using = UnitAction_tooltip
+				}
+			}
+
+			button = {
+				visible = "[Not(UnitActionItem.IsToggleAction)]"
+				using = contextmenu_entry_button_template
+
+				blockoverride "onclick" {
+					action_tooltip = {
+						click_type = left
+						click_mode = confirm
+						title = "[UnitActionItem.GetName]"
+						visible = "[UnitActionItem.HasHoldLeftAction]"
+						on_action = "[UnitActionItem.HoldLeftClick]"
+						conditions = "[MakeItFailIf(Not(UnitActionItem.CanHoldLeftClick), UnitActionItem.GetTooltip)]"
+						enabled = "[UnitActionItem.CanHoldLeftClick]"
+						description = "[UnitActionItem.GetLeftClickDescription]"
+					}
+
+					action_tooltip = {
+						click_type = right
+						click_mode = confirm
+						conditions = "[MakeItFailIf(Not(UnitActionItem.CanHoldLeftClick), UnitActionItem.GetTooltip)]"
+						visible = "[UnitActionItem.HasHoldRightAction]"
+						title = "[UnitActionItem.GetSecondaryName]"
+						on_action = "[UnitActionItem.HoldRightClick]"
+						enabled = "[UnitActionItem.CanHoldRightClick]"
+						description = "[UnitActionItem.GetRightClickDescription]"
+					}
+
+					action_tooltip = {
+						visible = "[UnitActionItem.HasSingleLeftAction]"
+						title = "[UnitActionItem.GetName]"
+						on_action = "[UnitActionItem.SingleLeftClick]"
+						enabled = "[UnitActionItem.CanSingleLeftClick]"
+						conditions = "[MakeItFailIf(Not(UnitActionItem.CanSingleLeftClick), UnitActionItem.GetTooltip)]"
+						description = "[UnitActionItem.GetLeftClickDescription]"
+					}
+
+					enabled = "[Or3(And(UnitActionItem.HasSingleLeftAction, UnitActionItem.CanSingleLeftClick),
+					And(UnitActionItem.HasHoldRightAction, UnitActionItem.CanHoldRightClick),
+					And(UnitActionItem.HasHoldLeftAction, UnitActionItem.CanHoldLeftClick))]"
+					tooltipwidget = {BasicFunctionalTooltip = {}}
+				}
+
+				blockoverride "entry_icon_texture" {
+					texture = "[UnitActionItem.GetTexture]"
+				}
+
+				blockoverride "entry_text" {
+					text = "[UnitActionItem.GetName]"
+				}
+
+				# blockoverride "entry_right" {
+				# 	hbox = {
+				# 		button_pin = {
+				# 			size = { 23 23 }
+				# 			checked = yes
+				# 			onclick = "[PinCollection.Toggle( UnitActionItem.GetKey )]"
+				# 		}
+				# 	}
+				# }
+
+				tooltipwidget = {
+					using = UnitAction_tooltip
+				}
+			}
+		}
+	}
+
+	type UnitContextMenu = ContextMenuBase {
+		blockoverride "contextmenu_content" {
+			ContextMenuSection = {
+				blockoverride "title_icon" {
+					icon = {
+						size = { 32 32 }
+						texture = "gfx/interface/icons/unit_recruit/normal_training.dds"
+					}
+				}
+
+				blockoverride "title_text" {
+					raw_text = "[Unit.GetNameWithNoTooltip]"
+				}
+
+				blockoverride "contextmenu_entries" {
+					block "unit_contextmenu_pre_entries" {}
+
+					ContextMenuEntryListSubSection = {
+						datacontext = "[Unit.GetQuickUnitActions]"
+						datacontext = "[Pin('unit_actions')]"
+						visible = "[DataModelHasItems(QuickUnitActions.AccessList)]"
+						datamodel = "[QuickUnitActions.AccessList]"
+						item = { UnitContextMenuActionItem = {} }
+					}
+				}
+			}
+		}
+	}
+
+	type UnitMarkerContextMenu = ContextMenuBase {
+		blockoverride "contextmenu_content" {
+			ContextMenuSection = {
+				blockoverride "title_icon" {
+					icon = {
+						size = { 24 24 }
+						texture = "gfx/interface/icons/unit_recruit/normal_training.dds"
+					}
+				}
+
+				blockoverride "title_text" {
+					raw_text = "[UnitMarkerItem.GetContextMenuTitle]"
+				}
+
+				blockoverride "contextmenu_entries" {
+					ContextMenuEntryListSubSection = {
+						datacontext = "[UnitMarkerItem.GetQuickUnitActions]"
+						datacontext = "[Pin('unit_actions')]"
+						visible = "[DataModelHasItems(QuickUnitActions.AccessList)]"
+						datamodel = "[QuickUnitActions.AccessList]"
+						item = { UnitContextMenuActionItem = {} }
+					}
+				}
+			}
+		}
+	}
+
+	type SeazoneContextMenu = ContextMenuBase {
+		blockoverride "contextmenu_content" {
+			ContextMenuSection = {
+				blockoverride "title_icon" {
+					icon = {
+						size = { 24 24 }
+						texture = "gfx/interface/icons/flat_icons/geopolitics/maritime_presence.dds"
+
+						modify_texture = {
+							using = color_new_gold_texture
+							blend_mode = overlay
+						}
+
+						using = ui_direction_button_detail
+					}
+				}
+
+				blockoverride "title_text" {
+					raw_text = "[Location.GetNameWithNoTooltip]"
+				}
+
+				blockoverride "title_right" {
+					button_pin = {
+						size = { 23 23 }
+						visible = "[IsPlayerValid]"
+						action_tooltip = {
+							title = "[SelectLocalization(IsSeazoneFaved(Location.Self), 'UNPIN_OUTLINER', 'PIN_OUTLINER')]"
+							on_action = "[ToggleSeazoneFav(Location.Self)]"
+						}
+						tooltipwidget = { BasicFunctionalTooltip = {} }
+						down = "[IsSeazoneFaved(Location.Self)]"
+					}
+				}
+
+				blockoverride "contextmenu_entries" {
+					targetted_button_regular = {
+						using = contextmenu_entry_button_inner_template
+						layoutpolicy_horizontal = expanding
+						size = { -1 35 }
+						visible = "[PdxGuiWidget.IsUberButtonVisible]"
+						scripted_action_tooltip = {
+							click_type = left
+							click_mode = confirm
+							action_name = "hire_privateer"
+							actor = "[Player]"
+							parameter = {
+								parameter_name = "target"
+								parameter_value = "[Location.GetArea]"
+							}
+						}
+						scripted_action_tooltip = {
+							click_type = right
+							click_mode = confirm
+							action_name = "dismiss_privateer"
+							actor = "[Player]"
+							parameter = {
+								parameter_name = "target"
+								parameter_value = "[Location.GetArea]"
+							}
+						}
+						enabled = "[PdxGuiWidget.IsUberButtonEnabled]"
+
+						tooltipmeta = {
+							title = "hire_privateer"
+						}
+
+						blockoverride "entry_icon_texture" {
+							texture = "gfx/interface/buttons/flats/ship_button.dds"
+							using = ui_direction_button_overlay
+						}
+
+						blockoverride "entry_text" {
+							text = "hire_privateer"
+						}
+					}
+				}
+			}
+		}
+	}
+
+	type LocationContextMenu = ContextMenuBase {
+		blockoverride "contextmenu_content" {
+			ContextMenuSectionSet = {
+				visible = "[Not(Location.IsPlayerLocation)]"
+				datacontext = "[Location.GetListOfCountries]"
+				ContextMenuSectionSet = {
+					visible = "[DataModelHasItems(CountryListFromLocation.GetList)]"
+					datamodel = "[CountryListFromLocation.GetList]"
+					item = {
+						CountryContextMenuSection = {}
+					}
+				}
+			}
+
+			ContextMenuSection = {
+				blockoverride "title_icon" {
+					icon = {
+						size = { 24 24 }
+						texture = "gfx/interface/icons/country_types/location.dds"
+						using = ui_direction_button_detail
+					}
+				}
+
+				blockoverride "title_text" {
+					raw_text = "[Location.GetNameWithNoTooltip]"
+				}
+
+				blockoverride "title_right" {
+					button_pin = {
+						size = { 23 23 }
+						visible = "[IsPlayerValid]"
+						action_tooltip = {
+							title = "[SelectLocalization(IsLocationFaved(Location.Self), 'UNPIN_OUTLINER', 'PIN_OUTLINER')]"
+							on_action = "[ToggleLocationFav(Location.Self)]"
+						}
+						tooltipwidget = { BasicFunctionalTooltip = {} }
+						down = "[IsLocationFaved(Location.Self)]"
+					}
+				}
+
+				blockoverride "contextmenu_entries" {
+					block "location_contextmenu_post_entries" {}
+
+					ContextMenuEntry = {
+						visible = "[Location.CanTransferOccupation]"
+						blockoverride "click_action" {
+							title = "TRANFER_OCC_TITLE_TT"
+							enabled = "[Location.CanTransferOccupation]"
+							on_action = "[ShowTransferOccupation(Location.Self)]"
+						}
+
+						blockoverride "entry_icon_texture" {
+							texture = "gfx/interface/icons/flat_icons/declare_war/transfer_occupation.dds"
+						}
+
+						blockoverride "entry_text" {
+							text = "TRANFER_OCC_TITLE_TT"
+						}
+					}
+
+					ContextMenuEntry = {
+						blockoverride "onclick" {
+							onclick = "[PanToLocation(Location.Self)]"
+							tooltip_enabled = no
+						}
+		
+						blockoverride "entry_icon_texture" {
+							texture = "gfx/interface/icons/map_modes/locations.dds"
+						}
+		
+						blockoverride "entry_text" {
+							text = "GO_TO_LOCATION"
+						}
+					}
+
+					ContextMenuEntry = {
+						blockoverride "click_action" {
+							title = "LOC_VIEW_BUILDINGS"
+							on_action = "[ShowLocationProductionView(Location.GetId, '(bool)yes')]"
+						}
+
+						blockoverride "entry_icon_texture" {
+							texture = "gfx/interface/icons/flat_icons/building_default.dds"
+						}
+
+						blockoverride "entry_text" {
+							text = "BUIILDINGS_IN_LOCATION"
+						}
+					}
+
+					ContextMenuEntryListSubSection = {
+						ContextMenuEntry = {
+							visible = "[Location.CanBuildArmyForCountry(Player.Self)]"
+
+							blockoverride "click_action" {
+								title = "ARMY_BUILDER"
+								enabled = "[And(Not(Location.HasCombat), Not(Location.HasSiege))]"
+								on_action = "[ShowArmyBuilderViewWithLocation(Location.GetId)]"
+							}
+
+							blockoverride "entry_icon_texture" {
+								texture = "gfx/interface/icons/unit_category/regulars.dds"
+							}
+
+							blockoverride "entry_text" {
+								text = "ARMY_BUILDER"
+							}
+						}
+
+						ContextMenuEntry = {
+							visible = "[Location.CanBuildArmyForCountry(Player.Self)]"
+
+							blockoverride "click_action" {
+								title = "HIRE_ARMY"
+								enabled = "[And(Not(Location.HasCombat), Not(Location.HasSiege))]"
+								on_action = "[OpenLateralViewWithParams('army_builder', 'subtab = hiring | unit_type = army')]"
+							}
+
+							blockoverride "entry_icon_texture" {
+								texture = "gfx/interface/icons/unit_category/mercenary.dds"
+							}
+
+							blockoverride "entry_text" {
+								text = "HIRE_ARMY"
+							}
+						}
+
+						ContextMenuEntry = {
+							visible = "[Location.CanBuildSailorsForCountry(Player.Self)]"
+
+							blockoverride "click_action" {
+								title = "NAVY_BUILDER"
+								enabled = "[And(Not(Location.HasCombat), Not(Location.HasSiege))]"
+								on_action = "[ShowNavyBuilderViewWithLocation(Location.GetId)]"
+							}
+
+							blockoverride "entry_icon_texture" {
+								texture = "gfx/interface/icons/unit_category/regulars_navy.dds"
+							}
+
+							blockoverride "entry_text" {
+								text = "NAVY_BUILDER"
+							}
+						}
+
+						ContextMenuEntry = {
+							visible = "[Location.CanBuildSailorsForCountry(Player.Self)]"
+
+							blockoverride "click_action" {
+								title = "HIRE_NAVY"
+								enabled = "[And(Not(Location.HasCombat), Not(Location.HasSiege))]"
+								on_action = "[OpenLateralViewWithParams('army_builder', 'subtab = hiring | unit_type = navy')]"
+							}
+
+							blockoverride "entry_icon_texture" {
+								texture = "gfx/interface/icons/unit_category/mercenary_navy.dds"
+							}
+
+							blockoverride "entry_text" {
+								text = "HIRE_NAVY"
+							}
+						}
+
+						ContextMenuEntry = {
+							blockoverride "tooltip" {
+								datacontext = "[Location.GetMarket]"
+
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "OPEN_MARKET"
+									on_action = "[ShowMarket(Market.Self)]"
+								}
+
+								action_tooltip = {
+									click_type = right
+									click_mode = confirm
+									title = "LOC_VIEW_CREATE_MARKET"
+									visible = "[Not(Location.IsMarketCenter)]"
+									enabled = "[Location.CanCreateMarket]"
+									on_action = "[CreateMarketInLocation(Location.Self)]"
+									conditions = "[Location.GetCreateMarketConditions]"
+								}
+
+								action_tooltip = {
+									click_type = right
+									click_mode = confirm
+									title = "LOC_VIEW_DESTROY_MARKET"
+									visible = "[Location.IsMarketCenter]"
+									enabled = "[Location.CanDestroyMarket]"
+									on_action = "[DestroyMarketInLocation(Location.Self)]"
+									conditions = "[Location.GetDestroyMarketConditions]"
+								}
+
+								onmousehierarchyenter = "[PdxGuiWidget.SetHighlightMarket(Market.Self)]"
+								ondoubleclick = "[PanToLocation(Location.GetMarket.GetCenterLocation)]"
+
+								tooltipwidget = {
+									using = location_market_tooltip
+								}
+							}
+
+							blockoverride "entry_icon_texture" {
+								texture = "gfx/interface/icons/flat_icons/market.dds"
+							}
+
+							blockoverride "entry_text" {
+								text = "[Location.GetMarket.GetNameWithNoTooltip]"
+							}
+						}
+
+						ContextMenuEntry = {
+							blockoverride "onclick" {
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "OPEN_PEOPLE_VIEW"
+									on_action = "[ShowCountryPeopleViewWithLocation(Location.GetId, '(bool)yes')]"
+								}
+		
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									click_modifier = shift
+									title = "encourage_migration"
+									on_action = "[ShowSelectCabinetToEncourageMigration(Location.Self)]"
+									enabled = "[IsCabinetActionAllowed('encourage_migration')]"
+									conditions = "[GetCabinetActionTooltip('encourage_migration')]"
+								}
+		
+								action_tooltip = {
+									click_type = right
+									click_mode = single
+									click_modifier = shift
+									title = "expel_people"
+									on_action = "[ShowSelectCabinetToExpelPeople(Location.GetProvince)]"
+									enabled = "[And(Or(IsCabinetActionAllowed('expel_people'), IsCabinetActionAllowed('encourage_migration')), Location.GetOwner.IsPlayer)]"
+									conditions = "[GetCabinetActionTooltip('expel_people')]"
+								}
+		
+								tooltipwidget = {
+									using = population_location_tooltip
+								}
+							}
+	
+							blockoverride "entry_icon" {
+								piechart = {
+									size = { 21 21 }
+									alwaystransparent = yes
+
+									using = piechart_angles
+
+									pieslice_no_highlight = {
+										texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
+										value = "[FixedPointToFloat(Location.GetAverageSatisfaction)]"
+										color = { 1 1 1 1 }
+										alwaystransparent = yes
+									}
+
+									pieslice_no_highlight = {
+										texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
+										value = "[Subtract_float('(float)1.0', FixedPointToFloat(Location.GetAverageSatisfaction))]"
+										color = { 1 1 1 1 }
+										alwaystransparent = yes
+									}
+									icon = {
+										size = { 65% 65% }
+										parentanchor = center
+										name = "sad face"
+										visible = "[LessThanOrEqualTo_CFixedPoint(Location.GetAverageSatisfaction,'(CFixedPoint)0.25')]"
+										texture = "gfx/interface/icons/flat_icons/sad.dds"
+										texture_density = 2
+									}
+		
+									icon = {
+										size = { 65% 65% }
+										parentanchor = center
+										name = "neutral face"
+										visible = "[BetweenInclusiveOfMax_CFixedPoint(Location.GetAverageSatisfaction,'(CFixedPoint)0.25', '(CFixedPoint)0.5')]"
+										texture = "gfx/interface/icons/flat_icons/neutral.dds"
+										texture_density = 2
+									}
+		
+									icon = {
+										size = { 65% 65% }
+										parentanchor = center
+										name = "happy face"
+										visible = "[GreaterThan_CFixedPoint(Location.GetAverageSatisfaction,'(CFixedPoint)0.5')]"
+										texture = "gfx/interface/icons/flat_icons/happy.dds"
+										texture_density = 2
+									}
+								}
+							}
+	
+							blockoverride "entry_text" {
+								text = "LOC_POP_TT_TITLE"
+							}
+						}
+						
+						ContextMenuEntry = {
+							blockoverride "onclick" {
+								tooltipwidget = {
+									using = location_rgo_button_tooltip
+								}
+	
+								enabled = "[Or(Location.CanUpgradeRGO, Location.CanReduceRGO)]"
+		
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+		
+									title = "LOCATION_VIEW_EXPAND_RGO_TITLE"
+									enabled = "[Location.CanUpgradeRGO]"
+									description = "[Location.GetUpgradeRGOTooltip]"
+									on_action = "[Location.UpgradeRGO]"
+								}
+		
+								action_tooltip = {
+									click_type = right
+									click_mode = single
+		
+									title = "LOCATION_VIEW_UNQUEUE_RGO_TITLE"
+									visible = "[Location.IsMaxRGOWorkersUnderConstruction]"
+									enabled = "[Location.CanReduceRGO]"
+									description = "[Location.GetReduceRGOTooltip]"
+									on_action = "[Location.ReduceRGO]"
+								}
+		
+								action_tooltip = {
+									click_type = right
+									click_mode = confirm
+		
+									title = "LOCATION_VIEW_REDUCE_RGO_TITLE"
+									visible = "[Not(Location.IsMaxRGOWorkersUnderConstruction)]"
+									enabled = "[Location.CanReduceRGO]"
+									description = "[Location.GetReduceRGOTooltip]"
+									on_action = "[Location.ReduceRGO]"
+								}
+							}
+	
+							blockoverride "entry_icon" {
+								widget = {
+									size = {21 21}
+									piechart = {
+										visible = "[GreaterThan_CFixedPoint(Location.GetMaxRGOWorkers, '(CFixedPoint)0')]"
+										alwaystransparent = yes
+										parentanchor = center
+										size = { 21 21 }
+										using = piechart_angles
+										using = bg_circle_piechart
+										pieslice_no_highlight = {
+											filter_mouse = none
+											alwaystransparent = yes
+											texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
+											value = "[Divide_CFixedPoint(Location.GetEffectiveRGOWorkers, Location.GetMaxRGOWorkers)]"
+											color = { 1 1 1 1 }
+										}
+	
+										pieslice_no_highlight = {
+											filter_mouse = none
+											alwaystransparent = yes
+											texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
+											value = "[Subtract_float('(float)1.0', FixedPointToFloatPercentageCapped(Divide_CFixedPoint(Location.GetEffectiveRGOWorkers, Location.GetMaxRGOWorkers), '(bool)yes'))]"
+											color = { 1 1 1 1 }
+										}
+										icon = {
+											size = { 61% 61% }
+											parentanchor = center
+											texture = "[GetGoodsIcon(Location.GetRawMaterial)]"
+										}
+									}
+								}
+							}
+	
+							blockoverride "entry_text" {
+								text = "RAW_MATERIAL_LOCATION_TOOLTIP_T"
+							}
+						}
+						
+						ContextMenuEntry = {
+							blockoverride "onclick" {
+								visible = "[Not(And4(Location.IsOccupied, Not(Location.HasSiege), Not(IsLateralViewOpened('select_interaction_target')), Location.GetController.IsPlayer))]"
+
+								tooltipwidget = {
+									using = Garrison_tooltip
+								}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "GARRISON_TOOLTIP_LEFT_CLICK"
+									on_action = "[ShowFortProductionInLocation(Location.Self)]"
+									visible = "[Location.GetOwner.IsPlayer]"
+								}
+
+								enabled = "[Location.GetOwner.IsPlayer]"
+							}
+	
+							blockoverride "entry_icon" {
+								icon = {
+									visible = "[Not(Location.HasFort)]"
+									size = { 21 21 }
+									alwaystransparent = yes
+									texture = "gfx/interface/icons/flat_icons/no_fort.dds"
+								}
+							
+								piechart = {
+									visible = "[Location.HasFort]"
+									size = { 21 21 }
+									alwaystransparent = yes
+							
+									pieslice_no_highlight = {
+										texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
+										value = "[FixedPointToFloat(Location.GetGarrisonPercentage)]"
+										color = { 1 1 1 1 }
+										alwaystransparent = yes
+									}
+							
+									pieslice_no_highlight = {
+										texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
+										value = "[Subtract_float('(float)1.0', FixedPointToFloat(Location.GetGarrisonPercentage))]"
+										color = { 1 1 1 1 }
+										alwaystransparent = yes
+									}
+							
+									icon = {
+										size = { 62% 62% }
+										parentanchor = center
+										texture = "gfx/interface/icons/location_icons/garrison.dds"
+										texture_density = 2
+									}
+							
+									using = bg_circle_piechart
+								}
+							}
+	
+							blockoverride "entry_text" {
+								text = "[SelectLocalization(GreaterThan_int32(Location.GetFortLevel, '(int32)0' ), 'FORT_LOCATION_LEVEL', 'NO_FORT_LOCATION_LEVEL')]"
+							}
+						}
+
+						ContextMenuEntry = {
+
+							blockoverride "click_action" {
+								title = "ROAD_BUILDER"
+								on_action = "[ShowRoadBuilder(Location.GetLocation)]"
+							}
+
+							blockoverride "entry_icon_texture" {
+								texture = "gfx/interface/buttons/flats/roads.dds"
+								using = ui_direction_button_overlay
+
+								# using = ui_direction_button_detail
+							}
+
+							blockoverride "entry_text" {
+								text = "LOC_BUILD_ROADS"
+							}
+						}
+
+						ContextMenuEntry = {
+							visible = "[Location.ShowMoveCapital]"
+
+							blockoverride "onclick" {
+								enabled = "[Player.CanMoveCapitalToLocation(Location.Self)]"
+
+								tooltipwidget = {
+									using = move_capital_context_menu_tooltip
+								}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "MOVE_CAPITAL"
+									enabled = "[Player.CanMoveCapitalToLocation(Location.Self)]"
+									conditions = "[Player.GetMoveCapitalToLocationConditions(Location.Self)]"
+									on_action = "[MoveCapitalHere(Location.Self)]"
+								}
+							}
+
+							blockoverride "entry_icon_texture" {
+								texture = "gfx/interface/buttons/flats/move_capital_button.dds"
+								using = ui_direction_button_overlay
+							}
+
+							blockoverride "entry_text" {
+								text = "MOVE_CAPITAL"
+							}
+						}
+
+						targetted_button_regular = {
+							using = contextmenu_entry_button_inner_template
+							layoutpolicy_horizontal = expanding
+							size = { -1 35 }
+							name = "create_colonial_charter"
+							datacontext = "[Location.GetProvinceDefinition]"
+							visible = "[And(PdxGuiWidget.IsUberButtonVisible, PdxGuiWidget.IsUberButtonEnabled)]"
+							scripted_action_tooltip = {
+								click_type = left
+								click_mode = single
+								action_name = "create_colonial_charter"
+								actor = "[Player]"
+								parameter = {
+									parameter_name = "target"
+									parameter_value = "[Location.GetProvinceDefinition]"
+								}
+							}
+							enabled = "[PdxGuiWidget.IsUberButtonEnabled]"
+
+							blockoverride "entry_icon_texture" {
+								texture = "gfx/interface/icons/flat_icons/geopolitics/current_explorers.dds"
+							}
+
+							blockoverride "entry_text" {
+								text = "CREATE_COLONIAL_CHARTER"
+							}
+
+							tooltipwidget = {
+								create_colonial_charter_tooltip = {}
+							}
+						}
+
+						targetted_button_regular = {
+							using = contextmenu_entry_button_inner_template
+							layoutpolicy_horizontal = expanding
+							size = { -1 35 }
+							visible = "[PdxGuiWidget.IsUberButtonVisible]"
+							name = "periphora"
+							datacontext = "[Location]"
+							scripted_action_tooltip = {
+								click_type = left
+								click_mode = single
+								action_name = "periphora"
+								actor = "[Player]"
+								parameter = {
+									parameter_name = "recipient"
+									parameter_value = "[Location.MakeScope]"
+								}
+							}
+							enabled = "[PdxGuiWidget.IsUberButtonEnabled]"
+
+							tooltipmeta = {
+								title = "periphora"
+							}
+
+							blockoverride "entry_icon_texture" {
+								texture = "gfx/interface/buttons/flats/accept.dds"
+								using = ui_direction_button_overlay
+							}
+
+							blockoverride "entry_text" {
+								text = "periphora"
+							}
+						}
+
+						ContextMenuSectionSet = {
+							layoutpolicy_horizontal = expanding
+							tooltipmeta = {
+								title = "add_location_to_international_organization"
+								texture = "[GetConceptTexture('international_organization')]"
+							}
+							
+							targetted_button_regular = {
+								using = contextmenu_entry_button_inner_template
+								layoutpolicy_horizontal = expanding
+								size = { -1 35 }
+								visible = "[PdxGuiWidget.IsUberButtonVisible]"
+								datacontext = "[Location]"
+								scripted_action_tooltip = {
+									click_type = left
+									click_mode = confirm
+									action_name = "add_location_to_international_organization"
+									actor = "[Player]"
+									parameter = {
+										parameter_name = "target"
+										parameter_value = "[Location.MakeScope]"
+									}
+								}
+								scripted_action_tooltip = {
+									click_type = right
+									click_mode = confirm
+									action_name = "remove_location_from_international_organization"
+									actor = "[Player]"
+									parameter = {
+										parameter_name = "target"
+										parameter_value = "[Location.MakeScope]"
+									}
+								}
+								enabled = "[PdxGuiWidget.IsUberButtonEnabled]"
+
+								blockoverride "entry_icon_texture" {
+									texture = "gfx/interface/buttons/flats/accept.dds"
+									using = ui_direction_button_overlay
+								}
+
+								blockoverride "entry_text" {
+									text = "add_location_to_international_organization"
+								}
+
+								tooltipwidget = {
+									ContextualTooltipType = {
+										blockoverride "tooltip_content" {
+											using = action_tooltip_inner_content
+											blockoverride "conditions_list" {
+												TooltipScrolledRequirementsList = {
+													blockoverride "block_scrollarea" { maximumsize = { -1 300 }}
+													blockoverride "block_title" { text = "game_concept_conditions" }
+													visible = "[And(DataModelHasItems(RequirementsList.GetLines), UIAction.IsEnabled)]"
+													textcontext = "[UIAction.GetConditions]"
+												}
+											}
+										}
+
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			# ContextMenuSection = {
+			# 	datacontext = "[Location.GetProvince]"
+			# 	blockoverride "title_icon" {
+			# 		icon = {
+			# 			size = { 24 24 }
+			# 			texture = "gfx/interface/icons/country_types/province.dds"
+
+			# 			using = ui_direction_button_detail
+			# 		}
+			# 	}
+
+			# 	blockoverride "title_text" {
+			# 		raw_text = "[Province.GetNameWithNoTooltip]"
+			# 	}
+
+			# 	blockoverride "contextmenu_entries" {
+			# 		ContextMenuEntry = {
+			# 			blockoverride "onclick" {
+			# 				onclick = "[ShowSelectCabinetForContextMenu]"
+			# 			}
+
+			# 			blockoverride "entry_icon_texture" {
+			# 				texture = "gfx/interface/icons/alerts_icons/do_goverment_action.dds"
+			# 			}
+
+			# 			blockoverride "entry_text" {
+			# 				text = "game_concept_cabinet_actions"
+			# 			}
+			# 		}
+			# 	}
+			# }
+
+			# ContextMenuSection = {
+			# 	datacontext = "[Location.GetArea]"
+			# 	blockoverride "title_icon" {
+			# 		icon = {
+			# 			size = { 24 24 }
+			# 			texture = "gfx/interface/icons/country_types/area.dds"
+
+			# 			using = ui_direction_button_detail
+			# 		}
+			# 	}
+
+			# 	blockoverride "title_text" {
+			# 		raw_text = "[Area.GetNameWithNoTooltip]"
+			# 	}
+
+			# 	blockoverride "contextmenu_entries" {
+			# 		ContextMenuEntry = {
+			# 			blockoverride "onclick" {
+			# 				onclick = "[ShowSelectCabinetForContextMenu]"
+			# 			}
+
+			# 			blockoverride "entry_icon_texture" {
+			# 				texture = "gfx/interface/icons/alerts_icons/do_goverment_action.dds"
+			# 			}
+
+			# 			blockoverride "entry_text" {
+			# 				text = "game_concept_cabinet_actions"
+			# 			}
+			# 		}
+			# 	}
+			# }
+
+			# PP Location Profiles (location_profiles_gui.py): the location's profile, player locations only
+			ContextMenuSection = {
+				visible = "[And(Location.GetOwner.IsPlayer, Not(IsObserving))]"
+				blockoverride "title_icon" {
+					icon = {
+						size = { 24 24 }
+						texture = "gfx/interface/icons/map_modes/pp_location_plan.dds"
+					}
+				}
+				blockoverride "title_text" {
+					text = "PP_LPROF_UI_MENU_TITLE"
+				}
+				blockoverride "title_right" {
+					widget = {
+						visible = "[Location.MakeScope.Var('pp_lprof').IsSet]"
+						size = { 24 24 }
+						pp_lprof_face_1 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)101')]" tooltip = "PP_LPROF_UI_BADGE_1" }
+						pp_lprof_face_2 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)102')]" tooltip = "PP_LPROF_UI_BADGE_2" }
+						pp_lprof_face_3 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)103')]" tooltip = "PP_LPROF_UI_BADGE_3" }
+						pp_lprof_face_4 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)104')]" tooltip = "PP_LPROF_UI_BADGE_4" }
+						pp_lprof_face_5 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)105')]" tooltip = "PP_LPROF_UI_BADGE_5" }
+						pp_lprof_face_6 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)106')]" tooltip = "PP_LPROF_UI_BADGE_6" }
+						pp_lprof_face_7 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)107')]" tooltip = "PP_LPROF_UI_BADGE_7" }
+						pp_lprof_face_8 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)108')]" tooltip = "PP_LPROF_UI_BADGE_8" }
+						pp_lprof_face_9 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)109')]" tooltip = "PP_LPROF_UI_BADGE_9" }
+						pp_lprof_face_10 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)110')]" tooltip = "PP_LPROF_UI_BADGE_10" }
+						pp_lprof_face_11 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)111')]" tooltip = "PP_LPROF_UI_BADGE_11" }
+						pp_lprof_face_12 = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)112')]" tooltip = "PP_LPROF_UI_BADGE_12" }
+					}
+				}
+				blockoverride "contextmenu_entries" {
+					hbox = {
+						visible = "[Or7(GetPlayer.MakeScope.Var('pp_lprof_1_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_2_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_3_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_4_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_5_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_6_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_7_on').IsSet)]"
+						layoutpolicy_horizontal = expanding
+						ignoreinvisible = yes
+						spacing = 2
+						margin_left = 10
+						widget = {
+							visible = "[GetPlayer.MakeScope.Var('pp_lprof_1_on').IsSet]"
+							size = { 36 36 }
+							widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)101')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+							button = {
+								size = { 30 30 }
+								parentanchor = center
+								tooltip = "PP_LPROF_UI_ASSIGN_1"
+								onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s1')).End)]"
+								onclick = "[ExtraTooltipInfo.CloseContextMenu]"
+								pp_lprof_face_1 = {}
+							}
+						}
+						widget = {
+							visible = "[GetPlayer.MakeScope.Var('pp_lprof_2_on').IsSet]"
+							size = { 36 36 }
+							widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)102')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+							button = {
+								size = { 30 30 }
+								parentanchor = center
+								tooltip = "PP_LPROF_UI_ASSIGN_2"
+								onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s2')).End)]"
+								onclick = "[ExtraTooltipInfo.CloseContextMenu]"
+								pp_lprof_face_2 = {}
+							}
+						}
+						widget = {
+							visible = "[GetPlayer.MakeScope.Var('pp_lprof_3_on').IsSet]"
+							size = { 36 36 }
+							widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)103')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+							button = {
+								size = { 30 30 }
+								parentanchor = center
+								tooltip = "PP_LPROF_UI_ASSIGN_3"
+								onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s3')).End)]"
+								onclick = "[ExtraTooltipInfo.CloseContextMenu]"
+								pp_lprof_face_3 = {}
+							}
+						}
+						widget = {
+							visible = "[GetPlayer.MakeScope.Var('pp_lprof_4_on').IsSet]"
+							size = { 36 36 }
+							widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)104')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+							button = {
+								size = { 30 30 }
+								parentanchor = center
+								tooltip = "PP_LPROF_UI_ASSIGN_4"
+								onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s4')).End)]"
+								onclick = "[ExtraTooltipInfo.CloseContextMenu]"
+								pp_lprof_face_4 = {}
+							}
+						}
+						widget = {
+							visible = "[GetPlayer.MakeScope.Var('pp_lprof_5_on').IsSet]"
+							size = { 36 36 }
+							widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)105')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+							button = {
+								size = { 30 30 }
+								parentanchor = center
+								tooltip = "PP_LPROF_UI_ASSIGN_5"
+								onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s5')).End)]"
+								onclick = "[ExtraTooltipInfo.CloseContextMenu]"
+								pp_lprof_face_5 = {}
+							}
+						}
+						widget = {
+							visible = "[GetPlayer.MakeScope.Var('pp_lprof_6_on').IsSet]"
+							size = { 36 36 }
+							widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)106')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+							button = {
+								size = { 30 30 }
+								parentanchor = center
+								tooltip = "PP_LPROF_UI_ASSIGN_6"
+								onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s6')).End)]"
+								onclick = "[ExtraTooltipInfo.CloseContextMenu]"
+								pp_lprof_face_6 = {}
+							}
+						}
+						widget = {
+							visible = "[GetPlayer.MakeScope.Var('pp_lprof_7_on').IsSet]"
+							size = { 36 36 }
+							widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)107')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+							button = {
+								size = { 30 30 }
+								parentanchor = center
+								tooltip = "PP_LPROF_UI_ASSIGN_7"
+								onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s7')).End)]"
+								onclick = "[ExtraTooltipInfo.CloseContextMenu]"
+								pp_lprof_face_7 = {}
+							}
+						}
+						expand = {}
+					}
+					hbox = {
+						visible = "[Or5(GetPlayer.MakeScope.Var('pp_lprof_8_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_9_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_10_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_11_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_12_on').IsSet)]"
+						layoutpolicy_horizontal = expanding
+						ignoreinvisible = yes
+						spacing = 2
+						margin_left = 10
+						widget = {
+							visible = "[GetPlayer.MakeScope.Var('pp_lprof_8_on').IsSet]"
+							size = { 36 36 }
+							widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)108')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+							button = {
+								size = { 30 30 }
+								parentanchor = center
+								tooltip = "PP_LPROF_UI_ASSIGN_8"
+								onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s8')).End)]"
+								onclick = "[ExtraTooltipInfo.CloseContextMenu]"
+								pp_lprof_face_8 = {}
+							}
+						}
+						widget = {
+							visible = "[GetPlayer.MakeScope.Var('pp_lprof_9_on').IsSet]"
+							size = { 36 36 }
+							widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)109')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+							button = {
+								size = { 30 30 }
+								parentanchor = center
+								tooltip = "PP_LPROF_UI_ASSIGN_9"
+								onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s9')).End)]"
+								onclick = "[ExtraTooltipInfo.CloseContextMenu]"
+								pp_lprof_face_9 = {}
+							}
+						}
+						widget = {
+							visible = "[GetPlayer.MakeScope.Var('pp_lprof_10_on').IsSet]"
+							size = { 36 36 }
+							widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)110')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+							button = {
+								size = { 30 30 }
+								parentanchor = center
+								tooltip = "PP_LPROF_UI_ASSIGN_10"
+								onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s10')).End)]"
+								onclick = "[ExtraTooltipInfo.CloseContextMenu]"
+								pp_lprof_face_10 = {}
+							}
+						}
+						widget = {
+							visible = "[GetPlayer.MakeScope.Var('pp_lprof_11_on').IsSet]"
+							size = { 36 36 }
+							widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)111')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+							button = {
+								size = { 30 30 }
+								parentanchor = center
+								tooltip = "PP_LPROF_UI_ASSIGN_11"
+								onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s11')).End)]"
+								onclick = "[ExtraTooltipInfo.CloseContextMenu]"
+								pp_lprof_face_11 = {}
+							}
+						}
+						widget = {
+							visible = "[GetPlayer.MakeScope.Var('pp_lprof_12_on').IsSet]"
+							size = { 36 36 }
+							widget = { visible = "[Location.MakeScope.Var('pp_lprof').IsSet]" size = { 100% 100% } icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.Var('pp_lprof').GetValue, '(CFixedPoint)112')]" size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } } }
+							button = {
+								size = { 30 30 }
+								parentanchor = center
+								tooltip = "PP_LPROF_UI_ASSIGN_12"
+								onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s12')).End)]"
+								onclick = "[ExtraTooltipInfo.CloseContextMenu]"
+								pp_lprof_face_12 = {}
+							}
+						}
+						expand = {}
+					}
+					ContextMenuEntry = {
+						visible = "[Location.MakeScope.Var('pp_lprof').IsSet]"
+						blockoverride "click_action" {
+							title = "PP_LPROF_UI_MENU_NONE_TT"
+							on_action = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('none')).End)]"
+						}
+						blockoverride "entry_icon_texture" {
+							texture = "gfx/interface/buttons/flats/remove.dds"
+						}
+						blockoverride "entry_text" {
+							text = "PP_LPROF_UI_MENU_NONE"
+						}
+					}
+					ContextMenuEntry = {
+						blockoverride "click_action" {
+							title = "PP_LPROF_UI_MENU_PLAN_TT"
+							on_action = "[GetScriptedGui('pp_lplan_select').Execute(GuiScope.SetRoot(Location.MakeScope).End)]"
+							on_action = "[GetVariableSystem.Set('pp_lplan_open', 'yes')]"
+						}
+						blockoverride "entry_icon_texture" {
+							texture = "gfx/interface/buttons/flats/economy.dds"
+						}
+						blockoverride "entry_text" {
+							text = "PP_LPROF_UI_MENU_PLAN"
+						}
+					}
+					ContextMenuEntry = {
+						blockoverride "click_action" {
+							title = "PP_LPROF_UI_MENU_EDIT_TT"
+							on_action = "[GetVariableSystem.Set('pp_lprof_open', 'yes')]"
+						}
+						blockoverride "entry_icon_texture" {
+							texture = "gfx/interface/buttons/flats/rename.dds"
+						}
+						blockoverride "entry_text" {
+							text = "PP_LPROF_UI_MENU_EDIT"
+						}
+					}
+				}
+			}
+			# PP Location Profiles end
+
+			ContextMenuSectionSet = {
+				visible = "[Location.IsPlayerLocation]"
+				datacontext = "[Location.GetListOfCountries]"
+				ContextMenuSectionSet = {
+					visible = "[DataModelHasItems(CountryListFromLocation.GetList)]"
+					datamodel = "[CountryListFromLocation.GetList]"
+					item = {
+						CountryContextMenuSection = {}
+					}
+				}
+			}
+		}
+	}
+
+	type CharacterContextMenuSection = ContextMenuSection {
+		visible = "[Character.IsValid]"
+
+		blockoverride "title_icon" {
+			widget = {
+				size = { 24 24 }
+				character_frame_small = {
+					blockoverride "character_frame_size" {
+						size = { 37 40 }
+						parentanchor = center
+						position = {0 3}
+					}
+					blockoverride "character_frame_estate_visible" {
+						visible = no
+					}
+					blockoverride "character_frame_dynasty_visible" {
+						visible = no
+					}
+					blockoverride "portrait_datacontext" {
+						datacontext = "[Character]"
+					}
+					blockoverride "portrait_position" {position = { 0 0 }}
+					blockoverride "portrait_click" {}
+					blockoverride "rightclick" {}
+				}
+			}
+		}
+
+		blockoverride "title_text" {
+			raw_text = "[Character.GetShortNameWithNoTooltip]"
+		}
+
+		blockoverride "title_right" {
+			button_pin = {
+				size = { 23 23 }
+				visible = "[IsPlayerValid]"
+				action_tooltip = {
+					title = "[SelectLocalization(IsCharacterFaved(Character.Self), 'UNPIN_OUTLINER', 'PIN_OUTLINER')]"
+					on_action = "[ToggleCharacterFav(Character.Self)]"
+				}
+				tooltipwidget = { BasicFunctionalTooltip = {} }
+				down = "[IsCharacterFaved(Character.Self)]"
+			}
+		}
+
+		blockoverride "contextmenu_entries" {
+			block "open_dynasty_entry" {
+				ContextMenuEntry = {
+					visible = "[Character.HasDynasty]"
+
+					blockoverride "onclick" {
+						onclick = "[ShowCharacterInDynasty(Character.Self)]"
+						tooltip_enabled = no
+					}
+
+					blockoverride "entry_icon" {
+						dynasty_shield_small = {
+							datacontext = "[Character.GetDynasty]"
+							blockoverride "click" {}
+							blockoverride "show_as_button" { visible = no }
+							blockoverride "show_as_icon" { visible = yes }
+							blockoverride "tooltip" { tooltip_enabled = no }
+							blockoverride "contextmenu" {}
+						}
+					}
+
+					blockoverride "entry_text" {
+						text = "DYNASTY_OPEN_DYNASTY_VIEW"
+					}
+				}
+			}
+
+			ContextMenuEntryListSubSection = {
+				datacontext = "[GetCharacterQuickActions(Character.Self)]"
+				datacontext = "[Pin('character_actions')]"
+				visible = "[DataModelHasItems(QuickCharacterActions.GetActions)]"
+				datamodel = "[QuickCharacterActions.GetActions]"
+				item = {
+					ContextMenuEntry = {
+						datacontext = "[CharacterActionItem.GetUIAction]"
+						visible = "[PinCollection.IsPinned( CharacterActionItem.GetKey )]"
+
+						blockoverride "entry_button" {
+							button = {
+								using = contextmenu_entry_button_template
+								visible = "[CharacterActionItem.HasEffectsInfo]"
+								datacontext = "[Character.GetEducation]"
+
+								blockoverride "onclick" {
+									using = button_action_provider
+									tooltipwidget = {
+										using = ChildEducation_tooltip
+										blockoverride "title_icon_texture" {
+											texture = "[GetEducationIcon(ChildEducation.Self)]"
+										}
+									}
+								}
+
+								blockoverride "entry_icon_texture" {
+									texture = "[GetEducationIcon(ChildEducation.Self)]"
+								}
+
+								blockoverride "entry_text" {
+									text = "[UIActionProvider.GetTitle]"
+								}
+
+								# blockoverride "entry_right" {
+								# 	button_pin = {
+								# 		size = { 23 23 }
+								# 		checked = yes
+								# 		tooltip_enabled = no
+								# 	}
+								# }
+							}
+
+							button = {
+								using = contextmenu_entry_button_template
+								visible = "[Not(CharacterActionItem.HasEffectsInfo)]"
+
+								blockoverride "onclick" {
+									using = button_action_provider
+									tooltipwidget = {
+										ContextualTooltipType = {
+											blockoverride "title_text" {
+												text = "[UIAction.GetTitle]"
+											}
+									
+											blockoverride "concept_link" {
+												text = "[Localize(Concatenate(CharacterActionItem.GetKey, '_concept'))]"
+											}
+											
+											blockoverride "title_icon" {
+												icon = {
+													using = tooltip_title_icon_size
+													texture = "[CharacterActionItem.GetIcon]"
+												}
+											}
+											
+											blockoverride "tooltip_content" {
+												using = action_tooltip_inner_content
+												blockoverride "conditions_list" {
+													TooltipScrolledRequirementsList = {
+														blockoverride "block_scrollarea" { maximumsize = { -1 300 }}
+														blockoverride "block_title" { text = "game_concept_conditions" }
+														visible = "[And(DataModelHasItems(RequirementsList.GetLines), UIAction.IsEnabled)]"
+														textcontext = "[UIAction.GetConditions]"
+													}
+												}
+											}
+
+										}
+									}
+								}
+
+								blockoverride "entry_icon_texture" {
+									texture = "[CharacterActionItem.GetIcon]"
+								}
+
+								blockoverride "entry_text" {
+									text = "[UIActionProvider.GetTitle]"
+								}
+
+								# blockoverride "entry_right" {
+								# 	button_pin = {
+								# 		size = { 23 23 }
+								# 		checked = yes
+								# 		tooltip_enabled = no
+								# 	}
+								# }
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	type CharacterContextMenu = ContextMenuBase {
+		blockoverride "contextmenu_content" {
+			CharacterContextMenuSection = {}
+		}
+	}
+
+	type MarketContextMenuSection = ContextMenuSection {
+		blockoverride "title_icon" {
+
+			country_flag_small = {
+				blockoverride "tooltip" {}
+				blockoverride "contextmenu" {}
+				blockoverride "rightclick" {}
+				datacontext = "[Market.GetCenterLocation.GetOwner]"
+			}
+		}
+
+		blockoverride "title_text" {
+			raw_text = "[Market.GetNameWithNoTooltip]"
+		}
+
+		blockoverride "title_right" {
+			button_pin = {
+				size = { 23 23 }
+				visible = "[IsPlayerValid]"
+				action_tooltip = {
+					title = "[SelectLocalization(IsMarketFaved(Market.Self), 'UNPIN_OUTLINER', 'PIN_OUTLINER')]"
+					on_action = "[ToggleMarketFav(Market.Self)]"
+				}
+				tooltipwidget = { BasicFunctionalTooltip = {} }
+				down = "[IsMarketFaved(Market.Self)]"
+			}
+		}
+
+		blockoverride "contextmenu_entries" {
+
+			ContextMenuEntryListSubSection = {
+
+				tooltipmeta = {
+					texture = "gfx/interface/icons/map_modes/market.dds"
+					game_concept = "[market|E]"
+				}
+
+				datacontext = "[GetMarketCountryNeeds(Player.Self, Market.Self)]"
+
+				#TRADE CAPACITY
+				ContextMenuEntry = {
+					blockoverride "onclick" {
+						using = trade_capacity_button_action
+					}
+
+					blockoverride "entry_icon" {
+						icon = {
+							size = {20 20}
+							texture = "gfx/interface/icons/flat_icons/trade_capacity.dds"
+							glow = {
+								name = "drop_shadow"
+								glow_radius = 3
+								color = {0.0 0.0 0.0 1.0}
+								alpha = 0.5
+							}
+						}
+					}
+
+					blockoverride "entry_text_widget" {
+						text_single = {
+							text = "game_concept_merchant_capacity"
+							layoutpolicy_horizontal = expanding
+							size = { -1 20 }
+							autoresize = no
+						}
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							using = trade_capacity_button_text
+						}
+					}
+				}
+
+				#GOVERNMENT NEEDS
+				ContextMenuEntry = {
+					visible = "[Or(GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'), GreaterThan_CFixedPoint(Market.GetTotalMerchantCapacity(Player.Self),'(CFixedPoint)0'))]"
+					blockoverride "onclick" {
+						using = gov_needs_button_action
+					}
+
+					blockoverride "entry_icon_texture" {
+						texture = "gfx/interface/icons/flat_icons/parliament_needs.dds"
+					}
+
+					blockoverride "entry_text_widget" {
+						text_single = {
+							text = "game_concept_government_needs"
+							layoutpolicy_horizontal = expanding
+							size = { -1 20 }
+							autoresize = no
+						}
+
+						text_single = {
+							visible = "[And(GreaterThan_CFixedPoint(Market.GetTotalMerchantCapacity(Player.Self),'(CFixedPoint)0'), Or(MarketCountryNeeds.HasGovernmentMissingGoods, MarketCountryNeeds.HasBuildingsMissingGoods))]"
+							maximumsize = {40 -1}
+							align = nobaseline
+							text = "[MarketCountryNeeds.GetGovernmentMissingGoodsAmount]"
+						}
+						text_single = {
+							visible = "[Or(Not(GreaterThan_CFixedPoint(Market.GetTotalMerchantCapacity(Player.Self),'(CFixedPoint)0')), Not(Or(MarketCountryNeeds.HasGovernmentMissingGoods, MarketCountryNeeds.HasBuildingsMissingGoods)))]"
+							maximumsize = {40 -1}
+							align = nobaseline
+							raw_text = "-"
+						}
+					}
+				}
+
+				#POP NEEDS
+				ContextMenuEntry = {
+					visible = "[GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0')]"
+					blockoverride "onclick" {
+						using = pop_needs_button_action
+					}
+
+					blockoverride "entry_icon_texture" {
+						texture = "gfx/interface/icons/alerts_icons/pops_wanting_stuff.dds"
+					}
+
+					blockoverride "entry_text_widget" {
+						text_single = {
+							text = "game_concept_pop_needs"
+							layoutpolicy_horizontal = expanding
+							size = { -1 20 }
+							autoresize = no
+						}
+
+						text_single = {
+							visible = "[GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0')]"
+							maximumsize = {40 -1}
+							align = nobaseline
+							text = "[MarketCountryNeeds.GetPopsMissingGoodsAmount]"
+						}
+						text_single = {
+							visible = "[Not(GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
+							maximumsize = {40 -1}
+							align = nobaseline
+							raw_text = "-"
+						}
+					}
+				}
+
+				#FOOD NEEDS
+				ContextMenuEntry = {
+					visible = "[GreaterThan_CFixedPoint(Market.GetCountryPopulation(Player.Self),'(CFixedPoint)0')]"
+					blockoverride "onclick" {
+						using = food_needs_button_action
+					}
+
+					blockoverride "entry_icon_texture" {
+						texture = "gfx/interface/icons/location_icons/food.dds"
+					}
+
+					blockoverride "entry_text_widget" {
+						text_single = {
+							text = "game_concept_food_stockpile"
+							layoutpolicy_horizontal = expanding
+							size = { -1 20 }
+							autoresize = no
+						}
+
+						text_single = {
+							maximumsize = {40 -1}
+							align = nobaseline
+							text = "[Market.GetMonthlyFoodBalance|0+=]"
+						}
+					}
+				}
+
+				targetted_button_regular = {
+					using = contextmenu_entry_button_inner_template
+					layoutpolicy_horizontal = expanding
+					size = { -1 35 }
+					visible = "[PdxGuiWidget.IsUberButtonVisible]"
+					scripted_action_tooltip = {
+						click_type = left
+						click_mode = single
+						action_name = "relocate_market"
+						actor = "[Player]"
+						parameter = {
+							parameter_name = "target"
+							parameter_value = "[Market.MakeScope]"
+						}
+					}
+					enabled = "[PdxGuiWidget.IsUberButtonEnabled]"
+
+					tooltipmeta = {
+						title = "relocate_market"
+						texture = "gfx/interface/icons/map_modes/market.dds"
+						game_concept = "[market|E]"
+					}
+
+					blockoverride "entry_icon_texture" {
+						texture = "gfx/interface/icons/map_modes/market.dds"
+					}
+
+					blockoverride "entry_text" {
+						text = "relocate_market"
+					}
+
+					blockoverride "button_texture" {
+						using = button_regular_red_texture
+					}
+				}
+
+				targetted_button_regular = {
+					using = contextmenu_entry_button_inner_template
+					layoutpolicy_horizontal = expanding
+					size = { -1 35 }
+					visible = "[PdxGuiWidget.IsUberButtonVisible]"
+					datacontext = "[Market.GetCenterLocation]"
+					scripted_action_tooltip = {
+						click_type = left
+						click_mode = confirm
+						action_name = "destroy_market"
+						actor = "[Player]"
+						parameter = {
+							parameter_name = "target"
+							parameter_value = "[Market.MakeScope]"
+						}
+					}
+					enabled = "[PdxGuiWidget.IsUberButtonEnabled]"
+
+					tooltipmeta = {
+						title = "destroy_market"
+						texture = "gfx/interface/icons/map_modes/market.dds"
+						game_concept = "[market|E]"
+					}
+
+					blockoverride "entry_icon_texture" {
+						texture = "gfx/interface/icons/map_modes/market.dds"
+					}
+
+					blockoverride "entry_text" {
+						text = "destroy_market"
+					}
+
+					blockoverride "button_texture" {
+						using = button_regular_red_texture
+					}
+				}
+
+				block "market_contextmenu_post_entries" {}
+			}
+		}
+	}
+
+	type MarketContextMenu = ContextMenuBase {
+		blockoverride "contextmenu_content" {
+			MarketContextMenuSection = {}
+		}
+	}
+
+	type GoodsContextMenuSection = ContextMenuSection {
+		blockoverride "title_icon" {
+			icon = {
+				size = { 28 28 }
+				texture = "[GetGoodsIcon(Goods.Self)]"
+				texture_density = 2
+			}
+		}
+
+		blockoverride "title_text" {
+			text = "GOODS_MARKET_CTXMENU_TITLE"
+		}
+
+		blockoverride "title_right" {
+			button_pin = {
+				size = { 23 23 }
+				visible = "[IsPlayerValid]"
+				action_tooltip = {
+					title = "[SelectLocalization(IsGoodsFaved(Goods.Self), 'UNPIN_OUTLINER', 'PIN_OUTLINER')]"
+					on_action = "[ToggleGoodsFav(Goods.Self)]"
+				}
+				tooltipwidget = { BasicFunctionalTooltip = {} }
+				down = "[IsGoodsFaved(Goods.Self)]"
+			}
+		}
+
+		blockoverride "contextmenu_entries" {
+
+			ContextMenuEntry = {
+				blockoverride "click_action" {
+					title = "OPEN_GOOD_PANEL"
+					on_action = "[ShowGoods(Goods.Self)]"
+				}
+
+				blockoverride "entry_icon_texture" {
+					texture = "[GetGoodsIcon(Goods.Self)]"
+				}
+
+				blockoverride "entry_text" {
+					text = "OPEN_GOOD_PANEL"
+				}
+			}
+
+			ContextMenuEntry = {
+				visible = "[CanGoodGetProduced(Goods.Self)]"
+
+				blockoverride "click_action" {
+					title = "BROWSE_BUILDINGS"
+					enabled = "[CanGoodGetProduced(Goods.Self)]"
+					on_action = "[OpenLateralViewWithFilter('production', Goods.GetKey)]"
+					on_action = "[OpenLateralViewWithParams('production', 'display = lists')]"
+				}
+
+				blockoverride "entry_icon_texture" {
+					texture = "[GetConceptTexture('building')]"
+				}
+
+				blockoverride "entry_text" {
+					text = "BROWSE_BUILDINGS"
+				}
+			}
+
+			ContextMenuEntry = {
+				visible = "[Goods.IsRawMaterial]"
+				enabled = "[Goods.IsRawMaterial]"
+
+				blockoverride "click_action" {
+					title = "OPEN_RGO_BUILDER"
+					enabled = "[Goods.IsRawMaterial]"
+					on_action = "[ShowExpandRawGoodLocationsViewWithGoods(Goods.Self, '(bool)yes')]"
+				}
+
+				blockoverride "entry_icon_texture" {
+					texture = "gfx/interface/icons/map_modes/raw_material.dds"
+				}
+
+				blockoverride "entry_text" {
+					text = "OPEN_RGO_BUILDER"
+				}
+			}
+
+			block "market_contextmenu_entries" {}
+		}
+	}
+
+	type GoodsContextMenu = ContextMenuBase {
+		blockoverride "contextmenu_content" {
+			GoodsContextMenuSection = {}
+		}
+	}
+
+	type GoodsMarketContextMenuSection = GoodsContextMenuSection {
+		blockoverride "market_contextmenu_entries" {
+
+			widget = {
+				layoutpolicy_horizontal = expanding
+				size = { @[context_menu_wide - 10] 40 }
+
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					margin = { 10 5 }
+					spacing = 5
+
+					using = bg_paper_card
+
+					blockoverride "card_texture_extra" {
+						modify_texture = {
+							using = color_black_texture
+							blend_mode = multiply
+							alpha = 0.3
+						}
+					}
+
+					icon = {
+						size = { 30 30 }
+						texture = "[GetConceptTexture('imports')]"
+					}
+
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						size = { -1 30 }
+						fontsize_min = 10
+						autoresize = no
+						text = "GOODS_CONTEXT_MENU_IMPORTS_HEADER"
+					}
+				}
+			}
+
+			ContextMenuEntry = {
+
+				blockoverride "entry_button" {
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						margin_left = 10
+						spacing = 5
+
+						icon = {
+							size = { 20 20 }
+							texture = "[GetConceptTexture('import_tariff')]"
+							tagtooltip_enabled = yes
+							tooltip = "[import_tariff]"
+						}
+
+						text_single = {
+							layoutpolicy_horizontal = expanding
+							size = { -1 20 }
+							autoresize = no
+							align = nobaseline
+							fontsize_min = 10
+							text = "[import_tariff|e]"
+						}
+
+						hbox = {
+							spacing = 3
+							text_single = {
+								autoresize = yes
+								align = nobaseline
+								text = "[ShowGoodsTariffInMarket(Goods.Self, Market.Self, '(bool)yes')|0%]"
+							}
+
+							widget = {
+								size = { 120 20 }
+
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									layoutpolicy_vertical = expanding
+									spacing = 2
+
+									button_square_minus = {
+										size = { 15 15 }
+										using = snd_UI_minus
+										blockoverride "economy_slider_dec_button_config" {}
+										enabled = "[CanEditTariffsInMarket(Market.Self)]"
+										tooltipwidget = { BasicFunctionalTooltip = {} }
+										action_tooltip = {
+											click_type = left
+											click_mode = single
+											click_modifier = default
+											title = "TARIFF_BTN_LOWER_1"
+											conditions = "[MakeItFailIfLoc(Not(CanEditTariffsInMarket(Market.Self)), 'TRADE_POLICIES_TARIFF_SLIDER_NOT_OWNER_TT')]"
+											enabled = "[CanEditTariffsInMarket(Market.Self)]"
+											on_action = "[AdjustImportTariffInMarket(Goods.Self, Market.Self,'(float)-1')]"
+										}
+										action_tooltip = {
+											click_type = left
+											click_mode = single
+											click_modifier = ctrl
+											title = "TARIFF_BTN_LOWER_5"
+											conditions = "[MakeItFailIfLoc(Not(CanEditTariffsInMarket(Market.Self)), 'TRADE_POLICIES_TARIFF_SLIDER_NOT_OWNER_TT')]"
+											enabled = "[CanEditTariffsInMarket(Market.Self)]"
+											on_action = "[AdjustImportTariffInMarket(Goods.Self, Market.Self,'(float)-5')]"
+										}
+										action_tooltip = {
+											click_type = left
+											click_mode = single
+											click_modifier = shift
+											title = "TARIFF_BTN_LOWER_MIN"
+											conditions = "[MakeItFailIfLoc(Not(CanEditTariffsInMarket(Market.Self)), 'TRADE_POLICIES_TARIFF_SLIDER_NOT_OWNER_TT')]"
+											enabled = "[CanEditTariffsInMarket(Market.Self)]"
+											on_action = "[SetImportTariffToMinInMarket(Goods.Self, Market.Self)]"
+										}
+										action_tooltip = {
+											click_type = right
+											click_mode = single
+											title = "TARIFF_BTN_RESET"
+											conditions = "[MakeItFailIfLoc(Not(CanEditTariffsInMarket(Market.Self)), 'TRADE_POLICIES_TARIFF_SLIDER_NOT_OWNER_TT')]"
+											enabled = "[CanEditTariffsInMarket(Market.Self)]"
+											on_action = "[ResetImportTariffInMarket(Goods.Self, Market.Self)]"
+										}
+									}
+									economy_slider = {
+										layoutpolicy_horizontal = expanding
+										size = { -1 10 }
+										enabled = "[CanEditTariffsInMarket(Market.Self)]"
+										tooltipwidget = {
+											ContextualTooltipType = {
+												blockoverride "title_icon" {
+													icon = {
+														using = tooltip_title_icon_size
+														texture = "[GetConceptTexture('import_tariff')]"
+													}
+												}
+												blockoverride "title_text" {
+													text = "game_concept_import_tariffs"
+												}
+												blockoverride "concept_link" {
+													text = "[import_tariff|e]"
+												}
+												blockoverride "tooltip_content" {
+													TooltipTextBlock = {
+														blockoverride "text" {
+															text = "TRADE_POLICIES_TARIFF_SLIDER_CURRENT_IMPORT_IN_MARKET_TT"
+														}
+													}
+													TooltipStringPairList = {
+														visible = "[CanEditTariffsInMarket(Market.Self)]"
+														textcontext = "TRADE_POLICIES_TARIFF_MAX_IMPORT_IN_MARKET_TT"
+													}
+													TooltipScrolledStringPairList = {
+														blockoverride "block_scrollarea" { maximumsize = { -1 300 } minimumsize = { -1 30 } }
+														visible = "[And(CanEditTariffsInMarket(Market.Self), Not(StringIsEmpty(GetImportModifierTooltip(Market.GetOwner, Goods.Self))))]"
+														textcontext = "[GetImportModifierTooltip(Market.GetOwner, Goods.Self)]"
+													}
+												}
+											}
+										}
+										value = "[GetImportTariffInMarketSliderValue(Goods.Self, Market.Self)]"
+										min = 0
+										max = 1
+										mincap = "[GetTariffSliderMinCapInMarket(Market.Self)]"
+										maxcap = "[GetTariffSliderMaxCapInMarket(Market.Self)]"
+										inc_button = { button = {} }
+										dec_button = { button = {} }
+										onchangefinish = "[PostImportTariffInMarket(Goods.Self, Market.Self)]"
+									}
+									button_square_plus = {
+										size = { 15 15 }
+										using = snd_UI_plus
+										blockoverride "economy_slider_inc_button_config" {}
+										enabled = "[CanEditTariffsInMarket(Market.Self)]"
+										tooltipwidget = { BasicFunctionalTooltip = {} }
+										action_tooltip = {
+											click_type = left
+											click_mode = single
+											click_modifier = default
+											title = "TARIFF_BTN_RAISE_1"
+											conditions = "[MakeItFailIfLoc(Not(CanEditTariffsInMarket(Market.Self)), 'TRADE_POLICIES_TARIFF_SLIDER_NOT_OWNER_TT')]"
+											enabled = "[CanEditTariffsInMarket(Market.Self)]"
+											on_action = "[AdjustImportTariffInMarket(Goods.Self, Market.Self,'(float)1')]"
+										}
+										action_tooltip = {
+											click_type = left
+											click_mode = single
+											click_modifier = ctrl
+											title = "TARIFF_BTN_RAISE_5"
+											conditions = "[MakeItFailIfLoc(Not(CanEditTariffsInMarket(Market.Self)), 'TRADE_POLICIES_TARIFF_SLIDER_NOT_OWNER_TT')]"
+											enabled = "[CanEditTariffsInMarket(Market.Self)]"
+											on_action = "[AdjustImportTariffInMarket(Goods.Self, Market.Self,'(float)5')]"
+										}
+										action_tooltip = {
+											click_type = left
+											click_mode = single
+											click_modifier = shift
+											title = "TARIFF_BTN_RAISE_MAX"
+											conditions = "[MakeItFailIfLoc(Not(CanEditTariffsInMarket(Market.Self)), 'TRADE_POLICIES_TARIFF_SLIDER_NOT_OWNER_TT')]"
+											enabled = "[CanEditTariffsInMarket(Market.Self)]"
+											on_action = "[SetImportTariffToMaxInMarket(Goods.Self, Market.Self)]"
+										}
+										action_tooltip = {
+											click_type = right
+											click_mode = single
+											title = "TARIFF_BTN_RESET"
+											conditions = "[MakeItFailIfLoc(Not(CanEditTariffsInMarket(Market.Self)), 'TRADE_POLICIES_TARIFF_SLIDER_NOT_OWNER_TT')]"
+											enabled = "[CanEditTariffsInMarket(Market.Self)]"
+											on_action = "[ResetImportTariffInMarket(Goods.Self, Market.Self)]"
+										}
+									}
+								}
+							}
+
+							widget = {
+								size = { 16 16 }
+								icon = {
+									visible = "[GreaterThan_CFixedPoint(ShowGoodsTariffInMarket(Goods.Self, Market.Self, '(bool)yes'), '(CFixedPoint)0')]"
+									size = { 16 16 }
+									texture = "gfx/interface/icons/flat_icons/trade_market/tariff_small.dds"
+									parentanchor = center
+									tooltip = "[tariff]"
+									tagtooltip_enabled = yes
+								}
+								icon = {
+									visible = "[LessThan_CFixedPoint(ShowGoodsTariffInMarket(Goods.Self, Market.Self, '(bool)yes'), '(CFixedPoint)0')]"
+									size = { 16 16 }
+									texture = "gfx/interface/icons/flat_icons/trade_market/subvention_small.dds"
+									parentanchor = center
+									tooltip = "[subvention]"
+									tagtooltip_enabled = yes
+								}
+							}
+						}
+
+					}
+				}
+			}
+
+			ContextMenuEntry = {
+
+				enabled = "[HasTradeCapacityInMarket(Market.Self)]"
+
+				blockoverride "click_action" {
+					title = "MARKET_CTXMENU_CREATE_IMPORT_ORDER"
+					enabled = "[HasTradeCapacityInMarket(Market.Self)]"
+					conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(Market.Self)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
+					on_action = "[CreateImportOrderForGoodInMarket(Goods.Self, Market.Self)]"
+				}
+
+				blockoverride "entry_icon_texture" {
+					texture = "gfx/interface/icons/flat_icons/trade_market/import.dds"
+				}
+
+				blockoverride "entry_text" {
+					text = "MARKET_CTXMENU_CREATE_IMPORT_ORDER"
+				}
+			}
+
+			widget = {
+				layoutpolicy_horizontal = expanding
+				size = { @[context_menu_wide - 10] 40 }
+
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					margin = { 10 5 }
+					spacing = 5
+
+					using = bg_paper_card
+
+					blockoverride "card_texture_extra" {
+						modify_texture = {
+							using = color_black_texture
+							blend_mode = multiply
+							alpha = 0.3
+						}
+					}
+
+					icon = {
+						size = { 30 30 }
+						texture = "[GetConceptTexture('exports')]"
+					}
+
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						size = { -1 30 }
+						fontsize_min = 10
+						autoresize = no
+						text = "GOODS_CONTEXT_MENU_EXPORTS_HEADER"
+					}
+				}
+			}
+
+			ContextMenuEntry = {
+
+				blockoverride "entry_button" {
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						# margin = { 2 0 }
+						margin_left = 10
+						spacing = 5
+
+						icon = {
+							size = { 20 20 }
+							texture = "[GetConceptTexture('export_tariffs')]"
+							tagtooltip_enabled = yes
+							tooltip = "[export_tariffs]"
+						}
+
+						text_single = {
+							layoutpolicy_horizontal = expanding
+							size = { -1 20 }
+							autoresize = no
+							align = nobaseline
+							fontsize_min = 10
+							text = "[export_tariff|e]"
+						}
+
+						hbox = {
+							spacing = 3
+							text_single = {
+								autoresize = yes
+								align = nobaseline
+								text = "[ShowGoodsTariffInMarket(Goods.Self, Market.Self, '(bool)no')|0%]"
+							}
+							
+							widget = {
+								size = { 120 20 }
+	
+								hbox = {
+									layoutpolicy_horizontal = expanding
+									layoutpolicy_vertical = expanding
+									spacing = 2
+	
+									button_square_minus = {
+										size = { 15 15 }
+										using = snd_UI_minus
+										blockoverride "economy_slider_dec_button_config" {}
+										enabled = "[CanEditTariffsInMarket(Market.Self)]"
+										tooltipwidget = { BasicFunctionalTooltip = {} }
+										action_tooltip = {
+											click_type = left
+											click_mode = single
+											click_modifier = default
+											title = "TARIFF_BTN_LOWER_1"
+											conditions = "[MakeItFailIfLoc(Not(CanEditTariffsInMarket(Market.Self)), 'TRADE_POLICIES_TARIFF_SLIDER_NOT_OWNER_TT')]"
+											enabled = "[CanEditTariffsInMarket(Market.Self)]"
+											on_action = "[AdjustExportTariffInMarket(Goods.Self, Market.Self,'(float)-1')]"
+										}
+										action_tooltip = {
+											click_type = left
+											click_mode = single
+											click_modifier = ctrl
+											title = "TARIFF_BTN_LOWER_5"
+											conditions = "[MakeItFailIfLoc(Not(CanEditTariffsInMarket(Market.Self)), 'TRADE_POLICIES_TARIFF_SLIDER_NOT_OWNER_TT')]"
+											enabled = "[CanEditTariffsInMarket(Market.Self)]"
+											on_action = "[AdjustExportTariffInMarket(Goods.Self, Market.Self,'(float)-5')]"
+										}
+										action_tooltip = {
+											click_type = left
+											click_mode = single
+											click_modifier = shift
+											title = "TARIFF_BTN_LOWER_MIN"
+											conditions = "[MakeItFailIfLoc(Not(CanEditTariffsInMarket(Market.Self)), 'TRADE_POLICIES_TARIFF_SLIDER_NOT_OWNER_TT')]"
+											enabled = "[CanEditTariffsInMarket(Market.Self)]"
+											on_action = "[SetExportTariffToMinInMarket(Goods.Self, Market.Self)]"
+										}
+										action_tooltip = {
+											click_type = right
+											click_mode = single
+											title = "TARIFF_BTN_RESET"
+											conditions = "[MakeItFailIfLoc(Not(CanEditTariffsInMarket(Market.Self)), 'TRADE_POLICIES_TARIFF_SLIDER_NOT_OWNER_TT')]"
+											enabled = "[CanEditTariffsInMarket(Market.Self)]"
+											on_action = "[ResetExportTariffInMarket(Goods.Self, Market.Self)]"
+										}
+									}
+	
+									economy_slider = {
+										layoutpolicy_horizontal = expanding
+										size = { -1 10 }
+										enabled = "[CanEditTariffsInMarket(Market.Self)]"
+										tooltipwidget = {
+											ContextualTooltipType = {
+												blockoverride "title_icon" {
+													icon = {
+														using = tooltip_title_icon_size
+														texture = "[GetConceptTexture('export_tariff')]"
+													}
+												}
+												blockoverride "title_text" {
+													text = "game_concept_export_tariffs"
+												}
+												blockoverride "concept_link" {
+													text = "[export_tariff|e]"
+												}
+												blockoverride "tooltip_content" {
+													TooltipTextBlock = {
+														blockoverride "text" {
+															text = "TRADE_POLICIES_TARIFF_SLIDER_CURRENT_EXPORT_IN_MARKET_TT"
+														}
+													}
+													TooltipStringPairList = {
+														visible = "[CanEditTariffsInMarket(Market.Self)]"
+														textcontext = "TRADE_POLICIES_TARIFF_MAX_EXPORT_IN_MARKET_TT"
+													}
+													TooltipScrolledStringPairList = {
+														blockoverride "block_scrollarea" { maximumsize = { -1 300 } minimumsize = { -1 30 } }
+														visible = "[And(CanEditTariffsInMarket(Market.Self), Not(StringIsEmpty(GetExportModifierTooltip(Market.GetOwner, Goods.Self))))]"
+														textcontext = "[GetExportModifierTooltip(Market.GetOwner, Goods.Self)]"
+													}
+												}
+											}
+										}
+										value = "[GetExportTariffInMarketSliderValue(Goods.Self, Market.Self)]"
+										min = 0
+										max = 1
+										mincap = "[GetTariffSliderMinCapInMarket(Market.Self)]"
+										maxcap = "[GetTariffSliderMaxCapInMarket(Market.Self)]"
+										inc_button = { button = {} }
+										dec_button = { button = {} }
+										onchangefinish = "[PostExportTariffInMarket(Goods.Self, Market.Self)]"
+									}
+	
+									button_square_plus = {
+										size = { 15 15 }
+										using = snd_UI_plus
+										blockoverride "economy_slider_inc_button_config" {}
+										enabled = "[CanEditTariffsInMarket(Market.Self)]"
+										tooltipwidget = { BasicFunctionalTooltip = {} }
+										action_tooltip = {
+											click_type = left
+											click_mode = single
+											click_modifier = default
+											title = "TARIFF_BTN_RAISE_1"
+											conditions = "[MakeItFailIfLoc(Not(CanEditTariffsInMarket(Market.Self)), 'TRADE_POLICIES_TARIFF_SLIDER_NOT_OWNER_TT')]"
+											enabled = "[CanEditTariffsInMarket(Market.Self)]"
+											on_action = "[AdjustExportTariffInMarket(Goods.Self, Market.Self,'(float)1')]"
+										}
+										action_tooltip = {
+											click_type = left
+											click_mode = single
+											click_modifier = ctrl
+											title = "TARIFF_BTN_RAISE_5"
+											conditions = "[MakeItFailIfLoc(Not(CanEditTariffsInMarket(Market.Self)), 'TRADE_POLICIES_TARIFF_SLIDER_NOT_OWNER_TT')]"
+											enabled = "[CanEditTariffsInMarket(Market.Self)]"
+											on_action = "[AdjustExportTariffInMarket(Goods.Self, Market.Self,'(float)5')]"
+										}
+										action_tooltip = {
+											click_type = left
+											click_mode = single
+											click_modifier = shift
+											title = "TARIFF_BTN_RAISE_MAX"
+											conditions = "[MakeItFailIfLoc(Not(CanEditTariffsInMarket(Market.Self)), 'TRADE_POLICIES_TARIFF_SLIDER_NOT_OWNER_TT')]"
+											enabled = "[CanEditTariffsInMarket(Market.Self)]"
+											on_action = "[SetExportTariffToMaxInMarket(Goods.Self, Market.Self)]"
+										}
+										action_tooltip = {
+											click_type = right
+											click_mode = single
+											title = "TARIFF_BTN_RESET"
+											conditions = "[MakeItFailIfLoc(Not(CanEditTariffsInMarket(Market.Self)), 'TRADE_POLICIES_TARIFF_SLIDER_NOT_OWNER_TT')]"
+											enabled = "[CanEditTariffsInMarket(Market.Self)]"
+											on_action = "[ResetExportTariffInMarket(Goods.Self, Market.Self)]"
+										}
+									}
+								}
+							}
+
+							widget = {
+								size = { 16 16 }
+								icon = {
+									visible = "[GreaterThan_CFixedPoint(ShowGoodsTariffInMarket(Goods.Self, Market.Self, '(bool)no'), '(CFixedPoint)0')]"
+									size = { 16 16 }
+									texture = "gfx/interface/icons/flat_icons/trade_market/tariff_small.dds"
+									parentanchor = center
+									tooltip = "[tariff]"
+									tagtooltip_enabled = yes
+								}
+								icon = {
+									visible = "[LessThan_CFixedPoint(ShowGoodsTariffInMarket(Goods.Self, Market.Self, '(bool)no'), '(CFixedPoint)0')]"
+									size = { 16 16 }
+									texture = "gfx/interface/icons/flat_icons/trade_market/subvention_small.dds"
+									parentanchor = center
+									tooltip = "[subvention]"
+									tagtooltip_enabled = yes
+								}
+							}
+						}
+
+					}
+				}
+			}
+
+			ContextMenuEntry = {
+
+				enabled = "[HasTradeCapacityInMarket(Market.Self)]"
+
+				blockoverride "click_action" {
+					title = "MARKET_CTXMENU_CREATE_EXPORT_ORDER"
+					enabled = "[HasTradeCapacityInMarket(Market.Self)]"
+					conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(Market.Self)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
+					on_action = "[CreateExportOrderForGoodInMarket(Goods.Self, Market.Self)]"
+				}
+
+				blockoverride "entry_icon_texture" {
+					texture = "gfx/interface/icons/flat_icons/trade_market/export.dds"
+				}
+
+				blockoverride "entry_text" {
+					text = "MARKET_CTXMENU_CREATE_EXPORT_ORDER"
+				}
+			}
+		}
+	}
+
+	type GoodsMarketContextMenu = ContextMenuBase {
+		blockoverride "contextmenu_content" {
+			GoodsMarketContextMenuSection = {}
+		}
+	}
+}

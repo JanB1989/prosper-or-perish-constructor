@@ -1,10 +1,12 @@
 ﻿# Prosper or Perish - Construction Plan triggers (player-only construction rules; see on_action/pp_construction_plan.txt).
 # Every trigger here runs inside pp_cplan_run, where scope:pp_cplan_country is the player country, unless noted.
 
-# Location scope: the global rules may build here (the player's own location, neither own rules nor hands off).
+# Location scope: the global rules may build here (the player's own location, neither own rules nor hands off nor a
+# location profile, whose rules have priority there: pp_location_profiles.txt).
 pp_cplan_location_ok = {
 	owner ?= scope:pp_cplan_country
 	NOT = { has_variable = pp_cplan_mode }
+	NOT = { has_variable = pp_lprof }
 }
 
 # Any scope: the month's budget is not used up (constructions started this month, also within the share of the

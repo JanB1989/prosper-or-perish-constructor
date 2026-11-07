@@ -242,10 +242,15 @@ def _marker_block_end(text: str, start: int) -> int:
             return index
 
 
-def render_markers(vanilla: str, items: list[Item]) -> str:
+def render_markers(vanilla: str, items: list[Item], profiles=None) -> str:
     """Vanilla's map_markers.gui with the raw goods marker split in two: its own content outside the Location Plan map
     mode, and the plan's icons (green tile once done, red while still to do) in it, for the player's locations with a
-    plan (pp_lplan_n is removed when nothing is planned, so other locations never look at the items)."""
+    plan (pp_lplan_n is removed when nothing is planned, so other locations never look at the items).
+
+    With ``profiles`` (location_profiles_gui.Config) the plan icons follow a Location Profiles cell: the location's
+    profile badge and, while the paint brush (GUI variable pp_lprof_brush) is set, a frame on every player location that
+    paints the brush's profile onto it. The marker then also shows for player locations with a profile or while
+    painting; the plan icons stay behind pp_lplan_n."""
     if vanilla.count(_MARKER_HEAD) != 1:
         raise ValueError("map_markers.gui: raw goods marker not found once")
     start = vanilla.index(_MARKER_HEAD)
@@ -254,18 +259,34 @@ def render_markers(vanilla: str, items: list[Item]) -> str:
     first_button = block.index("\n\tbutton = {")
     head, body = block[:first_button], block[first_button:block.rindex("}")]
     body = "\n".join(("\t" + line if line.strip() else line) for line in body.split("\n"))
+    tab = "\t\t\t\t" if profiles else "\t\t\t"
     icons = []
     for item in items:
         icons.append(
-            f"\t\t\twidget = {{\n"
-            f"\t\t\t\tvisible = \"[{_planned(item)}]\"\n"
-            f"\t\t\t\tsize = \"{_ICON_SIZE}\"\n"
-            f"\t\t\t\ttooltip = \"PP_LPLAN_STATE_{item.key.upper()}\"\n"
-            f"\t\t\t\ticon = {{ visible = \"[{_done(item)}]\" size = {{ 100% 100% }} texture = \"{TILE}\" color = {{ 0.25 0.7 0.3 0.85 }} }}\n"
-            f"\t\t\t\ticon = {{ visible = \"[Not({_done(item)})]\" size = {{ 100% 100% }} texture = \"{TILE}\" color = {{ 0.75 0.25 0.2 0.85 }} }}\n"
-            f"\t\t\t\ticon = {{ size = {{ 84% 84% }} parentanchor = center texture = \"{item.icon}\" }}\n"
-            f"\t\t\t}}\n"
+            f"{tab}widget = {{\n"
+            f"{tab}\tvisible = \"[{_planned(item)}]\"\n"
+            f"{tab}\tsize = \"{_ICON_SIZE}\"\n"
+            f"{tab}\ttooltip = \"PP_LPLAN_STATE_{item.key.upper()}\"\n"
+            f"{tab}\ticon = {{ visible = \"[{_done(item)}]\" size = {{ 100% 100% }} texture = \"{TILE}\" color = {{ 0.25 0.7 0.3 0.85 }} }}\n"
+            f"{tab}\ticon = {{ visible = \"[Not({_done(item)})]\" size = {{ 100% 100% }} texture = \"{TILE}\" color = {{ 0.75 0.25 0.2 0.85 }} }}\n"
+            f"{tab}\ticon = {{ size = {{ 84% 84% }} parentanchor = center texture = \"{item.icon}\" }}\n"
+            f"{tab}}}\n"
         )
+    has_plan = "Location.MakeScope.Var('pp_lplan_n').IsSet"
+    if profiles:
+        from prosper_or_perish_constructor import location_profiles_gui
+
+        shown = f"Or3({has_plan}, Location.MakeScope.Var('pp_lprof').IsSet, GetVariableSystem.Exists('pp_lprof_brush'))"
+        content = (
+            location_profiles_gui.marker_cell(profiles, _ICON_SIZE)
+            + "\t\t\t# the plan's icons (only locations with a plan look at the items)\n"
+            + f"\t\t\tflowcontainer = {{\n\t\t\t\tvisible = \"[{has_plan}]\"\n\t\t\t\tdirection = horizontal\n"
+            + "\t\t\t\tignoreinvisible = yes\n\t\t\t\tallow_outside = yes\n\t\t\t\tspacing = 2\n"
+            + "".join(icons)
+            + "\t\t\t}\n"
+        )
+    else:
+        shown, content = has_plan, "".join(icons)
     patched = (
         head
         + f"\n\t# PP Location Plan (location_plan.py): vanilla's content outside the {MAP_MODE_KEY} map mode\n"
@@ -273,11 +294,11 @@ def render_markers(vanilla: str, items: list[Item]) -> str:
         + body.rstrip() + "\n\t}\n\n"
         + f"\t# PP Location Plan: in its map mode, the plan's icons of the player's locations\n"
         + f"\twidget = {{\n\t\tname = \"pp_lplan_marker\"\n"
-        + f"\t\tvisible = \"[And({_PLAN_MODE}, And(Location.GetOwner.IsPlayer, Location.MakeScope.Var('pp_lplan_n').IsSet))]\"\n"
+        + f"\t\tvisible = \"[And({_PLAN_MODE}, And(Location.GetOwner.IsPlayer, {shown}))]\"\n"
         + "\t\tsize = { 100% 100% }\n\t\tallow_outside = yes\n"
         + "\t\tflowcontainer = {\n\t\t\tparentanchor = center\n\t\t\twidgetanchor = center\n\t\t\tdirection = horizontal\n"
         + "\t\t\tignoreinvisible = yes\n\t\t\tallow_outside = yes\n\t\t\tspacing = 2\n"
-        + "".join(icons)
+        + content
         + "\t\t}\n\t}\n}"
     )
     return vanilla[:start] + patched + vanilla[end:]
@@ -357,7 +378,12 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
     }
     if vanilla_markers.is_file():
         vanilla = vanilla_markers.read_text(encoding="utf-8-sig")
-        texts[mod_root / MARKERS] = "﻿" + render_markers(vanilla, items)
+        profiles = None
+        if "location_profiles" in tomllib.loads(project.read_text(encoding="utf-8")):
+            from prosper_or_perish_constructor import location_profiles_gui
+
+            profiles = location_profiles_gui.load_config(project)
+        texts[mod_root / MARKERS] = "﻿" + render_markers(vanilla, items, profiles)
     for path, text in texts.items():
         if _write(path, text, write):
             result.files_changed += 1

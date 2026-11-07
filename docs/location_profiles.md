@@ -109,3 +109,19 @@ construction goods in the market, never a second level under construction, budge
 
 Profile names (typed text cannot be stored); profiles carried to a new game; level caps per rule; conditions per rule
 (the v2 location rules keep those).
+
+## Status (2026-11-07)
+
+Built on `location-profiles`; all 1522 tests pass; **not run in game yet**, not deployed (the sync refused game data while
+the game ran). Built as in the contract, with these choices:
+- A new building for a goods or category rule is the **cheapest** one that can be built there (the plan's cost formula),
+  not the first in a list; a standing producer grows highest tier first.
+- Category rules start a building of the category only when none of it stands; afterwards they grow the standing one.
+- Market access = the Construction Plan's logistics order (first that can be built), payback limit on a standing one.
+- The editor, palette, right-click section and marker take about 530 KB of generated GUI (every slot x rule written out).
+- Category icons come from `Concatenate(..., GetFlagName, '.dds')`; goods icons from `GetGoodsIcon(Var.GetGoods.Self)`.
+
+To check in game first: `MakeScopeFlag(GetVariableSystem.Get(...))` (picker, paint frame), `GetFlagName` giving the bare
+key, the badge tooltips' nested texts, clicks on the marker frame, the `switch` on `goods:` keys in the rule dispatch.
+Known gaps: no tier upgrades (a researched successor freezes the old tier: state "cannot be built"), fur has no
+producer, profile names, profiles across games.

@@ -42,7 +42,7 @@ pp_location_plan = {
 	use_fow = no
 
 	category = economy
-	index = 40
+	index = 0	# the row in the category's menu (hud_bot.gui shows economy rows 0-3 only; 40 hid the mode): first row
 
 	# vanilla's raw goods marker, which draws the plan's icons in this map mode (map_markers.gui, location_plan.py)
 	map_markers = {

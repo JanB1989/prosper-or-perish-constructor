@@ -12,7 +12,7 @@ automatic Construction Plan (branch `player-construction-manager`) is parked; th
   every good (grouped Farming, Forestry, Gathering, Hunting, Manufactured, Mining) and eight building categories (Trade,
   Government, Military, Defensive, Religious, Cultural, Naval, Infrastructure). Click an icon to plan or unplan it;
   planned icons carry a gold frame. Clear empties the plan.
-- **Map mode Location Plan** (economy group, or "Show on map" in the window): each planned item as an icon over the
+- **Map mode Location Plan** (Economy menu, first row; or "Show on map" in the window): each planned item as an icon over the
   location, on a green tile once done, red while still to do; hover an icon for its name and state. The map underneath
   is the raw material map faded almost out. Every item of the picker has its map icon (first tested with two,
   2026-11-07; all since the same day).
@@ -51,6 +51,8 @@ Engine facts (in game 2026-11-07):
 - Mods that override `map_markers.gui` win if they load after PP: in Jan's playset Faster Universalis (3662193478),
   3601047146 and 3735059838 do. PP must load after them for the icons.
 - `refresh_map_colors = yes` after a toggle redraws the markers at once.
+- A map mode's `index` is its row in the category menu, not a sort order: hud_bot.gui shows economy rows 0-3 only
+  (`GetMapModeGroupFromCategory`). At index 40 the mode existed but never showed in the menu (test guards it).
 - GUI and map mode files hot-reload in a running game; loc and script files do not.
 
 Tested 2026-11-07 in a new game as England (saves `pp_lplan_england`, `pp_lplan_icons_england`): window, picker, strip,

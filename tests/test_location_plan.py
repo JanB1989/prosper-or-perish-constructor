@@ -81,6 +81,32 @@ def test_map_mode_is_registered() -> None:
         assert re.search(rf"^@{variable}\s*=", _read(MAP_MODE), re.MULTILINE), f"@{variable} not defined in the map mode file"
 
 
+def test_every_map_mode_sits_in_a_shown_row() -> None:
+    """A map mode's index is its row in the category menu, and hud_bot.gui lists only some rows per category
+    (GetMapModeGroupFromCategory): the plan map mode at index 40 never showed in the menu (2026-11-07)."""
+    hud = vanilla_root(ROOT, PROJECT) / "game/in_game/gui/hud_bot.gui"
+    if not hud.is_file():
+        return
+    shown: dict[str, set[int]] = {}
+    for category, row in re.findall(r"GetMapModeGroupFromCategory\('([a-z_]+)', '\(int32\)(\d+)'\)", _read(hud)):
+        shown.setdefault(category, set()).add(int(row))
+
+    def places(folder: Path) -> dict[str, tuple[str, int]]:
+        found: dict[str, tuple[str, int]] = {}
+        for path in folder.glob("*.txt"):
+            for name, body in re.findall(r"^([a-z_0-9]+) = \{(.*?)^\}", _read(path), re.MULTILINE | re.DOTALL):
+                category = re.search(r"^\s*category = ([a-z_]+)", body, re.MULTILINE)
+                index = re.search(r"^\s*index = (\d+)", body, re.MULTILINE)
+                if category:
+                    found[name] = (category.group(1), int(index.group(1)) if index else 0)
+        return found
+
+    vanilla = places(hud.parents[1] / "gfx/map/map_modes")  # vanilla keeps a few out of the menu on purpose
+    for name, (category, row) in places(MOD / "in_game/gfx/map/map_modes").items():
+        if category in shown and vanilla.get(name) != (category, row):
+            assert row in shown[category], f"{name}: {category} row {row} is not in the map mode menu"
+
+
 def test_no_box_directly_inside_a_container() -> None:
     """EU5 refuses an hbox/vbox as a direct child of a (flow)container; a hot reload with one crashed the game."""
     for path in GUI_FILES:

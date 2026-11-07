@@ -1,0 +1,125 @@
+﻿# Prosper or Perish - Location Plan window (branch location-plan, 2026-11-07, Jan). A scripted widget
+# (gui/scripted_widgets/pp_location_plan.txt), so no vanilla window is overridden; opened by the plan button in the
+# location window's header (location_plan.py patches it in). The player marks what the location should produce or have;
+# only visual. The picker grid and the strip of planned icons are generated (pp_location_plan_generated.gui); the map
+# mode pp_location_plan colors the locations by their plan. Shown only to a player who plays a country.
+
+types PPLocationPlan
+{
+	type pp_lplan_label = text_single {
+		autoresize = yes
+		align = left|nobaseline
+	}
+
+	type pp_lplan_note = text_multi {
+		autoresize = yes
+		maximumsize = { 500 -1 }
+		minimumsize = { 500 -1 }
+		default_format = "#weak"
+	}
+
+	type pp_lplan_group_title = text_single {
+		autoresize = yes
+		align = left|nobaseline
+		default_format = "#yellow_titles"
+	}
+}
+
+window = {
+	name = "pp_location_plan_window"
+	visible = "[And3(GetVariableSystem.Exists('pp_lplan_open'), GetPlayer.Exists, Not(IsObserving))]"
+	position = { 620 110 }
+	size = { 540 720 }
+	movable = yes
+	using = bg_window_default_alt
+	filter_mouse = all
+
+	vbox = {
+		using = window_margin_alt
+
+		window_header_alt = {
+			blockoverride "header_text" {
+				text = "PP_LPLAN_TITLE"
+			}
+		}
+
+		vbox = {
+			using = layoutpolicy_expanding
+			using = bg_main_inner_notabs_alt
+			using = window_main_tabs_margin_alt
+
+			pp_lplan_note = {
+				visible = "[Not(GetPlayer.MakeScope.Var('pp_lplan_sel').IsSet)]"
+				text = "PP_LPLAN_NONE_PICKED"
+			}
+
+			vbox = {
+				visible = "[GetPlayer.MakeScope.Var('pp_lplan_sel').IsSet]"
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+
+				vbox = {
+					datacontext = "[GetPlayer.MakeScope.Var('pp_lplan_sel').GetLocation]"
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					margin = { 8 6 }
+					spacing = 5
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						spacing = 6
+						pp_lplan_label = { raw_text = "[Location.GetName]" fontsize = 20 }
+						pp_lplan_label = { raw_text = "[Location.GetProvince.GetName]" default_format = "#weak" }
+						expand = {}
+						button_regular = {
+							size = { 70 26 }
+							text = "PP_LPLAN_CLEAR"
+							tooltip = "PP_LPLAN_CLEAR_TT"
+							onclick = "[GetScriptedGui('pp_lplan_clear').Execute(GuiScope.SetRoot(Location.MakeScope).End)]"
+						}
+					}
+
+					pp_lplan_note = { text = "PP_LPLAN_NOTE" }
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						spacing = 6
+						pp_lplan_group_title = { text = "PP_LPLAN_PLANNED" }
+						pp_lplan_label = { text = "PP_LPLAN_COUNTS" }
+						expand = {}
+					}
+					pp_lplan_label = {
+						visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lplan_planned_n'), '(CFixedPoint)0')]"
+						text = "PP_LPLAN_NOTHING_YET"
+					}
+					pp_lplan_strip = {
+						maximumsize = { 500 -1 }
+					}
+
+					scrollarea = {
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+						scrollbarpolicy_horizontal = always_off
+						scrollbar_vertical = { using = Scrollbar_Vertical }
+						scrollwidget = {
+							vbox = {
+								minimumsize = { 490 -1 }
+								maximumsize = { 490 -1 }
+								pp_lplan_picker = {}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	widget = {
+		parentanchor = right
+		position = { -5 5 }
+		size = { 40 40 }
+		button_close_alt = {
+			blockoverride "close_on_action" { on_action = "[GetVariableSystem.Clear('pp_lplan_open')]" }
+		}
+	}
+}

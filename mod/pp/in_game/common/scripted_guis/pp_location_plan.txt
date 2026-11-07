@@ -1,0 +1,27 @@
+﻿# Prosper or Perish - Location plan buttons (gui/pp_location_plan*.gui, the location window's plan button). Only visual:
+# they set location variables the window and the map mode read. scope:pp_key = the item's flag (a good or a building
+# category).
+
+# Location scope: show this location in the Location Plan window.
+pp_lplan_select = {
+	scope = location
+	effect = {
+		pp_lplan_select = yes
+	}
+}
+
+# Location scope: plan or unplan one item.
+pp_lplan_toggle = {
+	scope = location
+	effect = {
+		pp_lplan_toggle_switch = yes
+	}
+}
+
+# Location scope: empty the plan.
+pp_lplan_clear = {
+	scope = location
+	effect = {
+		pp_lplan_clear_all = yes
+	}
+}

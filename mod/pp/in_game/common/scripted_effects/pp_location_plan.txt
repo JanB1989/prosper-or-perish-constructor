@@ -1,0 +1,50 @@
+﻿# Prosper or Perish - Location plan (branch location-plan, 2026-11-07, Jan): the player marks what a location should
+# produce or have; only visual (gui/pp_location_plan.gui, map mode pp_location_plan). The toggle switch, clearing and
+# the flag declarations are generated into pp_location_plan_generated.txt (location_plan.py).
+# Location variables: pp_lplan_g_<good> / pp_lplan_c_<category> (present = planned), pp_lplan_n (items planned + 100;
+# a variable at 0 counts as unset). Country: pp_lplan_sel (the location the window shows).
+
+# Location scope: plans or unplans the item $var$ and keeps the count.
+pp_lplan_flip = {
+	if = {
+		limit = { has_variable = $var$ }
+		remove_variable = $var$
+		if = {
+			limit = { has_variable = pp_lplan_n }
+			change_variable = { name = pp_lplan_n subtract = 1 }
+		}
+	}
+	else = {
+		set_variable = { name = $var$ value = yes }
+		if = {
+			limit = { NOT = { has_variable = pp_lplan_n } }
+			set_variable = { name = pp_lplan_n value = 100 }
+		}
+		change_variable = { name = pp_lplan_n add = 1 }
+	}
+	if = {
+		limit = {
+			has_variable = pp_lplan_n
+			var:pp_lplan_n < 100.5
+		}
+		remove_variable = pp_lplan_n
+	}
+}
+
+# Location scope (root, from the scripted GUI): the window shows this location.
+pp_lplan_select = {
+	owner ?= { set_variable = { name = pp_lplan_sel value = root } }
+	# Never runs: declares the window's flag scope and the flags it passes, and uses the variable only the window reads.
+	if = {
+		limit = { always = no }
+		save_scope_as = pp_key
+		pp_lplan_declare_flags = yes
+		if = {
+			limit = {
+				has_variable = pp_lplan_flag
+				has_variable = pp_lplan_sel
+			}
+			remove_variable = pp_lplan_flag
+		}
+	}
+}

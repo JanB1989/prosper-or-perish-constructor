@@ -1,0 +1,106 @@
+﻿# Prosper or Perish - Location Plan map mode (branch location-plan, 2026-11-07, Jan): the player's locations by the plan
+# the player gave them in the Location Plan window (gui/pp_location_plan.gui). Only visual. Counts from
+# script_values/pp_location_plan_generated.txt (location_plan.py).
+
+@zoom_step_near = 			2	# closest zoom
+@data_gradient_alpha_inside = 			1
+@data_gradient_alpha_outside = 			1
+@data_gradient_width = 					0.25
+@data_gradient_color_mult = 			0.9
+@data_edge_width = 						0
+@data_edge_sharpness = 					0.01
+@data_edge_alpha = 						0
+@data_edge_color_mult = 				0
+@data_before_lighting_blend = 			0.5
+@data_after_lighting_blend = 			0.5
+
+pp_location_plan = {
+	map_color = {
+		if = {
+			limit = { is_ownable = no }
+			value = rgb { 128 128 128 }
+		}
+		else_if = {
+			limit = { NOT = { owner ?= scope:player } }
+			value = rgb { 72 72 78 }
+		}
+		else_if = {
+			limit = { pp_lplan_planned_n < 0.5 }
+			value = rgb { 170 165 150 }
+		}
+		else_if = {
+			limit = { pp_lplan_open_n < 0.5 }
+			value = rgb { 60 170 75 }
+		}
+		else_if = {
+			limit = { pp_lplan_done_n < 0.5 }
+			value = rgb { 205 70 50 }
+		}
+		else = {
+			value = rgb { 230 180 50 }
+		}
+	}
+
+	legend_key = { desc = "MAPMODE_PP_LOCATION_PLAN_DONE" color = rgb { 60 170 75 } }
+	legend_key = { desc = "MAPMODE_PP_LOCATION_PLAN_PARTLY" color = rgb { 230 180 50 } }
+	legend_key = { desc = "MAPMODE_PP_LOCATION_PLAN_OPEN" color = rgb { 205 70 50 } }
+	legend_key = { desc = "MAPMODE_PP_LOCATION_PLAN_NONE" color = rgb { 170 165 150 } }
+	legend_key = { desc = "MAPMODE_PP_LOCATION_PLAN_OTHER" color = rgb { 72 72 78 } }
+
+	tooltip_key = {
+		if = {
+			limit = {
+				owner ?= scope:player
+				pp_lplan_planned_n > 0.5
+			}
+			value = MAPMODE_PP_LOCATION_PLAN_TT_PLAN
+		}
+		else_if = {
+			limit = { owner ?= scope:player }
+			value = MAPMODE_PP_LOCATION_PLAN_TT_EMPTY
+		}
+		else = {
+			value = MAPMODE_PP_LOCATION_PLAN_TT_OTHER
+		}
+	}
+
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+
+	fill_in_impassable = no
+	enable_snow = no
+	enable_rivers = yes
+
+	flatmap_behaviour = Always
+	use_fow = no
+
+	category = economy
+	index = 40
+
+	map_markers = {
+		all = no
+	}
+
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = 	@data_gradient_alpha_inside
+		gradient_alpha_outside = 	@data_gradient_alpha_outside
+		gradient_width = 			@data_gradient_width
+		gradient_color_mult =		@data_gradient_color_mult
+		edge_width = 				@data_edge_width
+		edge_sharpness = 			@data_edge_sharpness
+		edge_alpha = 				@data_edge_alpha
+		edge_color_mult = 			@data_edge_color_mult
+		before_lighting_blend =		@data_before_lighting_blend
+		after_lighting_blend =		@data_after_lighting_blend
+	}
+
+	refresh_colors_on_selection_change = yes
+	color_refresh_counters = { Month ProductionList }
+	color_and_names_refresh_counters = { LocationOwnerChanged CountryStatus }
+}

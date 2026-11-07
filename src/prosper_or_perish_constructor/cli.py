@@ -1889,6 +1889,14 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         f"{short.files_changed} files changed" + (f"; not in the mod: {', '.join(short.not_in_mod)}." if short.not_in_mod else "."),
         flush=True,
     )
+    from prosper_or_perish_constructor import location_plan
+
+    lplan = location_plan.apply(repo, project, mod_root, vanilla_root(repo, project))
+    print(
+        f"Location plan (player marks): {len(lplan.items)} items, {lplan.files_changed} files changed"
+        + (f"; no icon for: {', '.join(lplan.missing_icons)}." if lplan.missing_icons else "."),
+        flush=True,
+    )
     from prosper_or_perish_constructor import start_market_stock
 
     print(_start_stock_line(start_market_stock.apply(repo, project, mod_root, vanilla_root(repo, project))), flush=True)

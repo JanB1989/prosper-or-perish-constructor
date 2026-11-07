@@ -1123,6 +1123,17 @@ existing_months = 2        # stock the engine itself gives a market at game star
 min_amount = 1             # no line for less
 not_goods = ["offset", "logistics", "local_food", "manual_labor", "province_food_sales"]
 
+[location_plan]
+# Location plan (branch location-plan, 2026-11-07, Jan): the player marks what a location should produce or have (goods
+# icons, building categories); a map mode shows planned locations as done / partly done / not started. Only visual,
+# player-only; no rule builds anything. location_plan.py writes the generated parts at finalize.
+# Building categories the player can mark (a category counts as done once a building of it stands in the location).
+categories = ["trade_category", "government_category", "military_category", "defense_category", "religious_category", "cultural_category", "naval_category", "infrastructure_category"]
+# Goods never offered (dummy goods nobody plans for).
+hidden_goods = ["offset", "logistics", "local_food", "manual_labor", "province_food_sales"]
+# Icons per row in the picker.
+per_row = 11
+
 [market_short_weight]
 # The AI reacts a little when its market runs short of a good (market_short_weight.py, finalize): every producer's
 # ai_construct_weight gets, last, amount x clamp(1 - market stock / monthly market demand) x clamp(owner tax base /

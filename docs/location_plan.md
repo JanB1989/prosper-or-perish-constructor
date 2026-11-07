@@ -14,8 +14,8 @@ automatic Construction Plan (branch `player-construction-manager`) is parked; th
   planned icons carry a gold frame. Clear empties the plan.
 - **Map mode Location Plan** (economy group, or "Show on map" in the window): each planned item as an icon over the
   location, on a green tile once done, red while still to do; hover an icon for its name and state. The map underneath
-  is the raw material map faded almost out. Test build (2026-11-07): only lumber and furniture draw icons
-  (`marker_items`); every item still works in the window.
+  is the raw material map faded almost out. Every item of the picker has its map icon (first tested with two,
+  2026-11-07; all since the same day).
 
 A planned good is done once the location produces it: its raw material is that good, or a standing building there
 produces it (`building_produced_goods`). A building category is done once a building of it stands there.
@@ -36,7 +36,8 @@ produces it (`building_produced_goods`). A building category is done once a buil
 
 The icons are vanilla's raw goods marker. `location_plan.py` copies vanilla `gui/map_markers.gui` into the mod and
 splits only the `raw_goods_marker` widget (a test checks the rest is vanilla): outside the plan map mode it shows
-vanilla's raw goods icon, in it a row of the planned `marker_items` icons, for player-owned locations only.
+vanilla's raw goods icon, in it a row of the planned icons, for player-owned
+locations with a plan only (`pp_lplan_n` set; locations without a plan never look at the 84 items).
 
 Engine facts (in game 2026-11-07):
 - The engine creates raw goods markers only with `color_mode = raw_material`. `map_markers = { raw_goods_marker = yes }`

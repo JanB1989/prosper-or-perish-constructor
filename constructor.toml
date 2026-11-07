@@ -1125,7 +1125,8 @@ not_goods = ["offset", "logistics", "local_food", "manual_labor", "province_food
 
 [location_plan]
 # Location plan (branch location-plan, 2026-11-07, Jan): the player marks what a location should produce or have (goods
-# icons, building categories); a map mode shows planned locations as done / partly done / not started. Only visual,
+# icons, building categories); the Location Plan map mode draws them as icons over the locations (green done, red still
+# to do; location_plan.py copies vanilla's map_markers.gui and changes only the raw goods marker). Only visual,
 # player-only; no rule builds anything. location_plan.py writes the generated parts at finalize.
 # Building categories the player can mark (a category counts as done once a building of it stands in the location).
 categories = ["trade_category", "government_category", "military_category", "defense_category", "religious_category", "cultural_category", "naval_category", "infrastructure_category"]
@@ -1133,9 +1134,6 @@ categories = ["trade_category", "government_category", "military_category", "def
 hidden_goods = ["offset", "logistics", "local_food", "manual_labor", "province_food_sales"]
 # Icons per row in the picker.
 per_row = 11
-# Items the map marker draws at planned locations in the Location Plan map mode (location_plan.py copies vanilla's
-# map_markers.gui and changes only the raw goods marker). First test (Jan 2026-11-07): two goods.
-marker_items = ["lumber", "furniture"]
 
 [market_short_weight]
 # The AI reacts a little when its market runs short of a good (market_short_weight.py, finalize): every producer's

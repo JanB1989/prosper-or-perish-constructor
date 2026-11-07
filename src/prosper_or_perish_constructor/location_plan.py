@@ -2,8 +2,8 @@
 
 Only visual and only for the player: in the location window a button opens the Location Plan window, where the player
 clicks goods icons ("produce lumber here") and building categories ("a trade building here"). The map mode Location
-Plan colors the player's locations by their plan: none, not started, partly done, done; hovering shows the planned
-icons sorted into done and still to do. Nothing is built by it.
+Plan draws the planned icons over the player's locations, on a green tile once done, red while still to do. Nothing is
+built by it.
 
 A planned good counts as done once the location produces it: its raw material is that good, or a standing building
 there produces it (``building_produced_goods``). A building category counts as done once a building of it stands there.
@@ -14,7 +14,8 @@ the parts that follow the goods list and ``[location_plan]``:
 * ``script_values/pp_location_plan_generated.txt``: done per item, the planned / open / done counts;
 * ``scripted_effects/pp_location_plan_generated.txt``: the toggle switch, clearing a plan, the flag declarations;
 * ``gui/pp_location_plan_generated.gui``: the picker grid and the strip of planned icons;
-* ``localization/english/pp_location_plan_generated_l_english.yml``: the item names and the map tooltip's icon lists.
+* ``localization/english/pp_location_plan_generated_l_english.yml``: the item names and states;
+* ``gui/map_markers.gui``: vanilla's, with the raw goods marker drawing the plan's icons in the plan map mode.
 
 Location variables: ``pp_lplan_g_<good>`` / ``pp_lplan_c_<category>`` (present = planned), ``pp_lplan_n`` (items
 planned + 100). Country: ``pp_lplan_sel`` (the location the window shows).
@@ -63,7 +64,6 @@ class Config:
     categories: tuple[str, ...]
     hidden_goods: frozenset[str]
     per_row: int
-    marker_items: tuple[str, ...] = ()
 
 
 @dataclass
@@ -79,7 +79,6 @@ def load_config(project: Path) -> Config:
         categories=tuple(data["categories"]),
         hidden_goods=frozenset(data["hidden_goods"]),
         per_row=int(data["per_row"]),
-        marker_items=tuple(data.get("marker_items", ())),
     )
 
 
@@ -245,7 +244,8 @@ def _marker_block_end(text: str, start: int) -> int:
 
 def render_markers(vanilla: str, items: list[Item]) -> str:
     """Vanilla's map_markers.gui with the raw goods marker split in two: its own content outside the Location Plan map
-    mode, and the plan's icons (green tile once done, red while still to do) in it, for the player's locations."""
+    mode, and the plan's icons (green tile once done, red while still to do) in it, for the player's locations with a
+    plan (pp_lplan_n is removed when nothing is planned, so other locations never look at the items)."""
     if vanilla.count(_MARKER_HEAD) != 1:
         raise ValueError("map_markers.gui: raw goods marker not found once")
     start = vanilla.index(_MARKER_HEAD)
@@ -273,7 +273,7 @@ def render_markers(vanilla: str, items: list[Item]) -> str:
         + body.rstrip() + "\n\t}\n\n"
         + f"\t# PP Location Plan: in its map mode, the plan's icons of the player's locations\n"
         + f"\twidget = {{\n\t\tname = \"pp_lplan_marker\"\n"
-        + f"\t\tvisible = \"[And({_PLAN_MODE}, Location.GetOwner.IsPlayer)]\"\n"
+        + f"\t\tvisible = \"[And({_PLAN_MODE}, And(Location.GetOwner.IsPlayer, Location.MakeScope.Var('pp_lplan_n').IsSet))]\"\n"
         + "\t\tsize = { 100% 100% }\n\t\tallow_outside = yes\n"
         + "\t\tflowcontainer = {\n\t\t\tparentanchor = center\n\t\t\twidgetanchor = center\n\t\t\tdirection = horizontal\n"
         + "\t\t\tignoreinvisible = yes\n\t\t\tallow_outside = yes\n\t\t\tspacing = 2\n"
@@ -349,16 +349,15 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
     result = Result(items=items)
     result.missing_icons = [item.key for item in items if not icon_exists(item, mod_root, vanilla_root)]
     vanilla_markers = vanilla_root / "game" / MARKERS
-    by_key = {item.key: item for item in items}
     texts = {
         mod_root / VALUES: "﻿" + render_values(items),
         mod_root / EFFECTS: "﻿" + render_effects(items),
         mod_root / GUI: "﻿" + render_gui(items, config),
         mod_root / LOC: render_loc(items),
     }
-    if config.marker_items and vanilla_markers.is_file():
+    if vanilla_markers.is_file():
         vanilla = vanilla_markers.read_text(encoding="utf-8-sig")
-        texts[mod_root / MARKERS] = "﻿" + render_markers(vanilla, [by_key[key] for key in config.marker_items])
+        texts[mod_root / MARKERS] = "﻿" + render_markers(vanilla, items)
     for path, text in texts.items():
         if _write(path, text, write):
             result.files_changed += 1

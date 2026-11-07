@@ -115,8 +115,10 @@ def test_marker_changes_only_the_raw_goods_marker() -> None:
     assert "raw_goods_marker = yes" in _read(MAP_MODE)
     # the engine creates raw goods markers only with the raw_material color mode (in game 2026-11-07)
     assert "color_mode = raw_material" in _read(MAP_MODE)
-    for key in lp.load_config(PROJECT).marker_items:
-        assert f"pp_lplan_g_{key}" in mod
+    for item in lp.plan_items(ROOT, lp.load_config(PROJECT)):
+        assert f"'{item.var}'" in mod and f"PP_LPLAN_STATE_{item.key.upper()}" in mod, item.key
+    # only locations with a plan look at the items
+    assert "Location.MakeScope.Var('pp_lplan_n').IsSet" in mod
 
 
 def test_only_for_the_player() -> None:

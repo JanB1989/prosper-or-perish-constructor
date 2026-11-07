@@ -112,8 +112,14 @@ Profile names (typed text cannot be stored); profiles carried to a new game; lev
 
 ## Status (2026-11-07)
 
-Built on `location-profiles`; all 1522 tests pass; **not run in game yet**, not deployed (the sync refused game data while
-the game ran). Built as in the contract, with these choices:
+Built on `location-profiles`; all 1522 tests pass; synced live. **Tested in game 2026-11-07** (England save
+`pp_lplan_icons_england` -> `pp_lprof_england`, 2 May 1337): editor (new profile, icon and rule pickers, colour, payback
+steps), paint palette (frames on every English location, brush assigns, eraser removes), map right-click menu
+(Location Profile section assigns), Location Plan window row, badge tooltip with rule states; one month with the global
+groups off started two Lumber Mills from the profile (ledger "(location profile)"); furniture showed "cannot be built
+here" in rural locations (the workshop needs a town), market access the same (logistics gate: 15 building levels). No
+profile lines in error.log. A paint click right after another one was once lost (likely while the markers redrew).
+Built as in the contract, with these choices:
 - A new building for a goods or category rule is the **cheapest** one that can be built there (the plan's cost formula),
   not the first in a list; a standing producer grows highest tier first.
 - Category rules start a building of the category only when none of it stands; afterwards they grow the standing one.
@@ -121,7 +127,8 @@ the game ran). Built as in the contract, with these choices:
 - The editor, palette, right-click section and marker take about 530 KB of generated GUI (every slot x rule written out).
 - Category icons come from `Concatenate(..., GetFlagName, '.dds')`; goods icons from `GetGoodsIcon(Var.GetGoods.Self)`.
 
-To check in game first: `MakeScopeFlag(GetVariableSystem.Get(...))` (picker, paint frame), `GetFlagName` giving the bare
-key, the badge tooltips' nested texts, clicks on the marker frame, the `switch` on `goods:` keys in the rule dispatch.
+Verified in game: `MakeScopeFlag(GetVariableSystem.Get(...))` (picker, paint frame), the badge tooltips' nested texts,
+clicks on the marker frames, the `switch` on `goods:` keys in the rule dispatch. Not yet seen: a category icon or rule
+(`GetFlagName`), a goods rule that expands a standing producer by payback, a long run.
 Known gaps: no tier upgrades (a researched successor freezes the old tier: state "cannot be built"), fur has no
 producer, profile names, profiles across games.

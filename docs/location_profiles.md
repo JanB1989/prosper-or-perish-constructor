@@ -23,7 +23,7 @@ are hidden. Raising it later changes only that number.
 [location_profiles]
 slots = 12            # profiles per country
 rules = 5             # ordered rules per profile
-payback_steps = [1, 2, 3, 4, 5, 7, 10, 15, 20]   # years a rule's limit steps through; past the last = any payback
+payback_steps = [1, 2, 3, 4, 5, 7, 10, 15, 20, 30, 40, 50]   # years a rule's limit steps through; past the last = any payback
 colors = [[0.80, 0.25, 0.20], [0.90, 0.55, 0.15], [0.85, 0.80, 0.25], [0.30, 0.65, 0.30],
           [0.25, 0.60, 0.70], [0.25, 0.40, 0.80], [0.55, 0.35, 0.75], [0.75, 0.40, 0.60]]
 ```

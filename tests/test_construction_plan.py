@@ -382,3 +382,21 @@ def test_improvements_cheap_and_much_first() -> None:
     assert "order_by = pp_cplan_fill_here" in block
     assert cp.load_config(PROJECT).improve_fill_pct == 90
     assert "pp_cplan_improve_off" in cp.PROFILE_FLAGS and "pp_cplan_imp" in cp.PROFILE_NUMBERS
+
+
+def test_construction_goods_cover_months_of_draw() -> None:
+    """Test world 2026-11-08: four River Boatmen's Yards started on 0.65 naval supplies and stood still for a year.
+    A construction starts only where its market holds construction_goods_months of its draw."""
+    config = cp.load_config(PROJECT)
+    assert config.construction_goods_months == 12
+    triggers = _read(MOD / cp.TRIGGERS)
+    yard = _effect(triggers, "pp_cplan_goods_here_pp_river_boatmen_yard_construction")
+    assert '"stockpile_in_market(goods:naval_supplies)" >= 2.4' in yard  # 0.2 a month x 12
+
+
+def test_profile_pass_gives_every_location_a_turn() -> None:
+    """Test world 2026-11-08: in the list's own order the profile assigned last built nothing in ten years."""
+    run = _effect(_read(MOD / "in_game/common/scripted_effects/pp_location_profiles.txt"), "pp_lprof_run")
+    assert "ordered_in_list = {" in run and "order_by = pp_lprof_turn" in run
+    assert "every_in_list" not in run.split("ordered_in_list")[1]
+    assert "subtract = total_building_levels" in _effect(_read(VALUES), "pp_lprof_turn")

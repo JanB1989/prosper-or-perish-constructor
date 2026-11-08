@@ -335,6 +335,13 @@ pp_cplan_improve_n = {
 	}
 }
 
+# Location scope: the order of the location profiles' pass (pp_location_profiles.txt): the fewest building levels first,
+# so every profiled location gets its turn at the monthly share.
+pp_lprof_turn = {
+	value = 0
+	subtract = total_building_levels
+}
+
 # Location scope: how full the location is (population over capacity), the improvement rule's order.
 pp_cplan_fill_here = {
 	value = location_population_percentage

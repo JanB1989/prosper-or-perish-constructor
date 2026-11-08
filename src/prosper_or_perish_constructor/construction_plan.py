@@ -116,6 +116,7 @@ class Config:
     yard_payback_years: int = 10
     tavern_victuals: float = 10.0
     improve_fill_pct: int = 90
+    construction_goods_months: int = 12
     access_blacklist: tuple[str, ...] = ()
     payback_years: int = 10
     rule_slots: int = 4
@@ -182,6 +183,7 @@ def load_config(project: Path) -> Config:
         yard_payback_years=int(data["yard_payback_years"]),
         tavern_victuals=float(data["tavern_victuals"]),
         improve_fill_pct=int(data["improve_fill_pct"]),
+        construction_goods_months=int(data["construction_goods_months"]),
         access_blacklist=tuple(data["access_blacklist"]),
         payback_years=int(data["payback_years"]),
         rule_slots=int(data["rule_slots"]),
@@ -1170,15 +1172,17 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]], farm_goods:
 
 def render_triggers(goods: list[str], producers: dict[str, list[str]],
                     demands: dict[str, dict[str, float]] | None = None,
-                    food_buildings: list[str] | None = None) -> str:
+                    food_buildings: list[str] | None = None, goods_months: int = 12) -> str:
     parts = [HEADER]
     if demands is not None:
         parts.append(
-            "\n# Location scope: the location's market holds at least one unit's need of every construction good of the\n"
-            "# demand (the engine stalls a construction whose market lacks its goods: \"Lack of access to goods\").\n"
+            f"\n# Location scope: the location's market holds {goods_months} months of one construction's draw of every\n"
+            "# construction good of the demand (the engine stalls a construction whose market lacks its goods: \"Lack of\n"
+            "# access to goods\"). One month's draw was too little: in the test world (2026-11-08) four River Boatmen's\n"
+            "# Yards started on 0.65 naval supplies in Burgos and stood still for a year.\n"
         )
         for key in sorted(demands):
-            tests = " ".join(f"\"stockpile_in_market(goods:{good})\" >= {_num(amount)}"
+            tests = " ".join(f"\"stockpile_in_market(goods:{good})\" >= {_num(amount * goods_months)}"
                              for good, amount in sorted(demands[key].items()))
             body = f"\tmarket ?= {{ {tests} }}\n" if tests else "\talways = yes\n"
             parts.append(f"pp_cplan_goods_here_{key} = {{\n{body}}}\n")
@@ -1578,7 +1582,8 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
         mod_root / EFFECTS: render_effects(config, food_lines, food_goods, goods, by_good, costs) + improve_effects,
         # the hunger steps wait for what they start (staple food makers, Taverns); kitchens are built anyway and must
         # not hold farms back for the year a Cookshop takes (seen in game 2026-11-08)
-        mod_root / TRIGGERS: render_triggers(goods, by_good, demands, food_buildings + list(config.taverns)),
+        mod_root / TRIGGERS: render_triggers(goods, by_good, demands, food_buildings + list(config.taverns),
+                                             config.construction_goods_months),
         mod_root / GUI: render_gui(goods),
         mod_root / HERE_GUI: render_here_gui(config),
     }

@@ -31,12 +31,17 @@ pp_lprof_run = {
 	if = {
 		limit = { pp_lprof_has_locations = yes }
 		change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }
-		every_in_list = {
+		# the locations with the fewest building levels first: in the list's own order the locations assigned first
+		# took the whole monthly share every month and the last profile built nothing in ten years (test world, 2026-11-08)
+		ordered_in_list = {
 			variable = pp_lprof_locs
 			limit = {
 				owner ?= scope:pp_cplan_country
 				has_variable = pp_lprof
 			}
+			order_by = pp_lprof_turn
+			max = 100000
+			check_range_bounds = no
 			pp_lprof_location_rules = yes
 		}
 	}

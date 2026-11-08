@@ -94,6 +94,20 @@ England, error.log clean of plan lines). Player-only: the AI keeps its own logic
   on the province capital blocks the capital's food buildings (the profile has priority there).
   First version the same day used counts of passes in a row (Granary 3, Grange 12, logistics 3 + 12 months without a
   market switch; tested in game on the Cyprus save: Cookshop, then Granary); Jan rejected stored history, replaced.
+- **Improvements (per location, 2026-11-08, Jan):** its own rule group (on/off, share of the monthly limit). Where the
+  people fill at least X % of a location's capacity (`location_population_percentage`, setting on the Plan tab, default
+  90, steps of 5, 50-150), the fullest locations first: one level of the improvement that adds the most capacity per
+  gold (raw_modifier capacity per level over base price x (1 + increase_per_level_cost x standing levels); 15
+  improvements read by `arable_land_bar.model`), among those that can be built (a standing older tier is replaced
+  once its successor is researched). Test world, new game 1337: no Castile location at 90 %, 8 at 70 %; at 70 % the
+  second month built Drainage Ditches in Granada.
+- **Test world (2026-11-08, Jan):** `eu5-mini-world` profile `plan_iberia` on stack `pp_plan` = mod "PP Construction
+  Test" (load after PP; playset "PP Plan Test", `pp_testing\eu5_playset.ps1 -Mode plan`): Iberia only (451 land
+  locations, 4 markets: Burgos, Sevilla, Lisbon, Barcelona), all of it Castile's (`owner = "CAS"`: the other countries
+  go off the map, their buildings in Iberia go to Castile), the rest of the world empty. Built from the live PP folder:
+  rebuild (`uv run eu5mini build -p plan_iberia -s pp_plan`, then `deploy -s pp_plan --yes`) after a PP sync that
+  changes the map or the start setup. New game as Castile: save `pp_plan_base` (1 April 1337). Speed: the plan's
+  monthly pass took about 4 ms (script profiler) for 451 locations, 3 constructions a month.
 - **Goods (per good):** Off / Keep / Expand / Never, months of stock in the capital's market, a Keep line (months).
   Keep built a Stud Farm in Woking for horses (0 months) in the test.
 - **Logistics (per location):** a market access line (default 97 % since 2026-11-08, steps of 1), per location Follow

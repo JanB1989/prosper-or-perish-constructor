@@ -1204,6 +1204,7 @@ grange_surplus_pct = 5        # Grange: the store holds 24 months and a normal m
 famine_months = 3             # Tavern first where a normal year leaves less than this in the store a year from now
 yard_payback_years = 10       # Victualling Yard: next level while it pays back within this; a first one where victuals cost their default price or more
 tavern_victuals = 10          # a Tavern only where its market holds at least this much victuals
+improve_fill_pct = 90         # improvements: build where people fill this share of a location's capacity, in % (Jan 2026-11-08)
 access_blacklist = ["staple_port_commercial_stagnation_modifier"]   # event modifiers taken out of market access
 # Food chain answers, first one that can be built. Kitchens are built whenever the Cookshop budget allows (Jan
 # 2026-11-08); the successor first (an old tier cannot be built once its successor is researched). Farms: the line

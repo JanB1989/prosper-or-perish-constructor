@@ -253,6 +253,37 @@ widget = {
 					hbox = {
 						layoutpolicy_horizontal = expanding
 						spacing = 8
+						pp_cplan_label = { text = "PP_CPLAN_IMPROVE_RULE" tooltip = "PP_CPLAN_IMPROVE_RULE_TT" }
+						expand = {}
+						pp_cplan_switch_button = {
+							visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_improve_n'), '(CFixedPoint)0.5')]"
+							text = "PP_CPLAN_ON"
+							onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve')).End)]"
+						}
+						pp_cplan_switch_button = {
+							visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_improve_n'), '(CFixedPoint)0.5'))]"
+							text = "PP_CPLAN_OFF"
+							onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve')).End)]"
+						}
+					}
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						spacing = 6
+						pp_cplan_label = { text = "PP_CPLAN_IMPROVE_LINE" tooltip = "PP_CPLAN_IMPROVE_LINE_TT" }
+						expand = {}
+						pp_cplan_label = { text = "PP_CPLAN_IMPROVE_LINE_VALUE" }
+						pp_cplan_step_button = {
+							text = "PP_CPLAN_MINUS"
+							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve_line')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
+						}
+						pp_cplan_step_button = {
+							text = "PP_CPLAN_PLUS"
+							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve_line')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
+						}
+					}
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						spacing = 8
 						pp_cplan_label = { text = "PP_CPLAN_GOODS_RULE" tooltip = "PP_CPLAN_GOODS_RULE_TT" }
 						expand = {}
 						pp_cplan_switch_button = {
@@ -386,6 +417,10 @@ widget = {
 										pp_cplan_label = {
 											visible = "[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)5')]"
 											text = "PP_CPLAN_WHY_PROFILE"
+										}
+										pp_cplan_label = {
+											visible = "[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)6')]"
+											text = "PP_CPLAN_WHY_IMPROVE"
 										}
 									}
 								}

@@ -20,6 +20,7 @@ pp_cplan_toggle_module = {
 			flag:food = { pp_cplan_flip = { var = pp_cplan_food_off } }
 			flag:logistics = { pp_cplan_flip = { var = pp_cplan_logistics_off } }
 			flag:goods = { pp_cplan_flip = { var = pp_cplan_goods_off } }
+			flag:improve = { pp_cplan_flip = { var = pp_cplan_improve_off } }
 		}
 	}
 }
@@ -39,6 +40,7 @@ pp_cplan_step = {
 			flag:grange_surplus = { pp_cplan_step_var = { var = pp_cplan_gsur current = pp_cplan_grange_surplus step = 1 min = 100 max = 150 } }
 			flag:famine = { pp_cplan_step_var = { var = pp_cplan_famine current = pp_cplan_famine_months step = 1 min = 100 max = 112 } }
 			flag:yard_payback = { pp_cplan_step_var = { var = pp_cplan_ypb current = pp_cplan_yard_payback step = 1 min = 101 max = 150 } }
+			flag:improve_line = { pp_cplan_step_var = { var = pp_cplan_imp current = pp_cplan_improve_pct step = 5 min = 150 max = 250 } }
 			flag:keep = { pp_cplan_step_var = { var = pp_cplan_keep current = pp_cplan_keep_months step = 1 min = 101 max = 124 } }
 			flag:payback = { pp_cplan_step_var = { var = pp_cplan_payback current = pp_cplan_payback_line step = 1 min = 101 max = 150 } }
 		}

@@ -66,12 +66,13 @@ FOCUS_EXTRA = ("hands_off", "custom")
 MODE_KEYS = ("off", "keep", "expand", "never")
 # why codes (+ 100) the ledger shows
 WHY_FOOD, WHY_LOGISTICS, WHY_GOODS, WHY_RULE = 101, 102, 103, 104
+WHY_IMPROVE = 106  # 105 is the location profiles (pp_location_profiles.txt)
 DEFAULT_DEMAND = "default_construct_building"  # vanilla: the construction demand of a building that names none
 # location rule status codes (+ 100), set by pp_cplan_rule (hand-written) and shown by the rule rows
 RULE_STATUS = ("started", "waiting", "done", "building", "payback", "blocked", "budget", "goods")
 # the setting variables a global profile carries (numbers) and the switches (present or not)
 PROFILE_NUMBERS = ("pp_cplan_reserve", "pp_cplan_max", "pp_cplan_access", "pp_cplan_keep", "pp_cplan_payback",
-                   "pp_cplan_gcap", "pp_cplan_gfill", "pp_cplan_gsur", "pp_cplan_famine", "pp_cplan_ypb")
+                   "pp_cplan_gcap", "pp_cplan_gfill", "pp_cplan_gsur", "pp_cplan_famine", "pp_cplan_ypb", "pp_cplan_imp")
 # the Variable Harvest modifiers (one per sub-continent and severity) whose peasant food consumption the food rules
 # take out ([construction_plan] baseline rules)
 HARVEST_MODIFIERS = Path("in_game/common/static_modifiers/pp_variable_harvest_modifiers.txt")
@@ -79,7 +80,7 @@ HARVEST_SEVERITIES = ("abysmal", "very_poor", "poor", "good", "very_good", "boun
 STATIC_MODIFIERS = (Path("main_menu/common/static_modifiers"), Path("in_game/common/static_modifiers"))
 POP_TYPES = Path("in_game/common/pop_types")
 BLUEPRINT_BUILDINGS = Path("blueprints/accepted/buildings")
-PROFILE_FLAGS = ("pp_cplan_food_off", "pp_cplan_logistics_off", "pp_cplan_goods_off")
+PROFILE_FLAGS = ("pp_cplan_food_off", "pp_cplan_logistics_off", "pp_cplan_goods_off", "pp_cplan_improve_off")
 # the variables of one location rule (pp_cplan_r<n>_<field>): the building type is a scope, the rest numbers
 RULE_NUMBER_FIELDS = ("lv", "m", "c", "t", "pb")
 
@@ -114,6 +115,7 @@ class Config:
     famine_months: int = 3
     yard_payback_years: int = 10
     tavern_victuals: float = 10.0
+    improve_fill_pct: int = 90
     access_blacklist: tuple[str, ...] = ()
     payback_years: int = 10
     rule_slots: int = 4
@@ -138,6 +140,7 @@ class Result:
     producers: dict[str, list[str]] = field(default_factory=dict)
     farm_lines: dict[str, list[str]] = field(default_factory=dict)
     food_lines: dict[str, list[str]] = field(default_factory=dict)
+    improvements: list[str] = field(default_factory=list)
     logistics: list[str] = field(default_factory=list)
     missing: list[str] = field(default_factory=list)
     buildings: dict[str, BuildingCost] = field(default_factory=dict)
@@ -178,6 +181,7 @@ def load_config(project: Path) -> Config:
         famine_months=int(data["famine_months"]),
         yard_payback_years=int(data["yard_payback_years"]),
         tavern_victuals=float(data["tavern_victuals"]),
+        improve_fill_pct=int(data["improve_fill_pct"]),
         access_blacklist=tuple(data["access_blacklist"]),
         payback_years=int(data["payback_years"]),
         rule_slots=int(data["rule_slots"]),
@@ -605,6 +609,12 @@ def render_values(config: Config, farm_lines: dict[str, list[str]], farm_goods: 
                                 "Country scope: the famine line, months in the store a year from now."))
     parts.append(_default_value("pp_cplan_yard_payback", "pp_cplan_ypb", config.yard_payback_years,
                                 "Country scope: Victualling Yard levels while they pay back within this many years."))
+    parts.append(_default_value("pp_cplan_improve_pct", "pp_cplan_imp", config.improve_fill_pct,
+                                "Country scope: improvements where people fill this % of a location's capacity."))
+    parts.append(
+        "# Country scope: the improvement line as a share of capacity (location_population_percentage).\n"
+        "pp_cplan_improve_line = {\n\tvalue = pp_cplan_improve_pct\n\tdivide = 100\n}\n"
+    )
     parts.append(
         "# Any scope: victuals a Tavern's market must hold ([construction_plan] tavern_victuals).\n"
         f"pp_cplan_tavern_victuals = {{ value = {_num(config.tavern_victuals)} }}\n\n"
@@ -689,6 +699,43 @@ def _method_value(name: str, recipe: Recipe) -> str:
         lines.append(f"\tsubtract = {{ value = \"market.market_price(goods:{good})\" multiply = {_num(amount)} }}")
     lines.append("}")
     return "\n".join(lines) + "\n"
+
+
+def render_improvements(improvements: list[tuple[str, float]], costs: dict[str, BuildingCost]) -> tuple[str, str]:
+    """Values and the picker of the improvements rule (Jan 2026-11-08): where people fill the owner's share of a
+    location's capacity, the improvement that adds the most capacity per gold (its raw_modifier capacity per level over
+    its price at the levels standing: cheap and much first)."""
+    values = [
+        "\n# ---- Improvements (location scope): capacity a level adds per 1,000 gold of its price here ----\n"
+        "# (base price x (1 + increase_per_level_cost x the levels standing); the location's build efficiency and the\n"
+        "# construction goods are the same for every improvement here)\n"
+    ]
+    effects = [
+        "\n# Location scope: one level of the improvement that adds the most capacity per gold here (pp_cplan_imp_<key>),\n"
+        "# among those that can be built; a standing older tier is replaced once its successor is researched.\n"
+        "pp_cplan_try_improve_here = {\n"
+        "\tset_variable = { name = pp_cplan_best value = 0.001 }\n"
+        "\tset_variable = { name = pp_cplan_pick value = 100 }\n"
+    ]
+    for number, (key, land) in enumerate(improvements, 101):
+        ipl = costs.get(key, BuildingCost(0.0, DEFAULT_DEMAND, "std")).ipl
+        values.append(
+            f"pp_cplan_imp_{key} = {{\n\tvalue = {_num(land * 1000)}\n\tdivide = {{\n"
+            f"\t\tvalue = \"location_building_level(building_type:{key})\"\n\t\tmultiply = {_num(ipl)}\n\t\tadd = 1\n"
+            f"\t\tmultiply = building_type:{key}.building_base_cost_in_gold\n\t\tmin = 1\n\t}}\n}}\n"
+        )
+        effects.append(
+            f"\tif = {{\n\t\tlimit = {{ {_can_build(key, costs)} pp_cplan_imp_{key} > var:pp_cplan_best }}\n"
+            f"\t\tset_variable = {{ name = pp_cplan_best value = pp_cplan_imp_{key} }}\n"
+            f"\t\tset_variable = {{ name = pp_cplan_pick value = {number} }}\n\t}}\n"
+        )
+    for number, (key, _land) in enumerate(improvements, 101):
+        effects.append(
+            f"\tif = {{\n\t\tlimit = {{ var:pp_cplan_pick > {number - 0.5:g} var:pp_cplan_pick < {number + 0.5:g} }}\n"
+            f"\t\tpp_cplan_construct = {{ type = {key} why = {WHY_IMPROVE} }}\n\t}}\n"
+        )
+    effects.append("\tremove_variable = pp_cplan_best\n\tremove_variable = pp_cplan_pick\n}\n")
+    return "".join(values), "".join(effects)
 
 
 def render_baseline_values(config: Config, farm_lines: dict[str, list[str]], farm_goods: dict[str, str],
@@ -1106,7 +1153,7 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]], farm_goods:
     flags = sorted(
         set(goods) | set(MODE_KEYS)
         | {"food", "logistics", "goods", "reserve", "max", "access_line", "keep", "payback", "up", "down", "lo", "hi"}
-        | {"granary_cap", "granary_fill", "grange_surplus", "famine", "yard_payback"}
+        | {"granary_cap", "granary_fill", "grange_surplus", "famine", "yard_payback", "improve", "improve_line"}
         | {"lv", "metric", "cmp", "t", "tbig", "pb", "clear", "save", "apply", "province", "load"}
         | {f"r{n}" for n in range(1, config.rule_slots + 1)}
         | {f"t{k}" for k in range(1, config.template_slots + 1)}
@@ -1509,7 +1556,13 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
     result.food_lines = food_lines
     food_buildings = [b for tiers in food_lines.values() for b in tiers]
 
-    wanted = food_buildings + list(config.kitchens) + list(config.taverns)
+    # improvements (Jan 2026-11-08): every building with a World Builder cap that adds capacity (arable_land_bar)
+    from prosper_or_perish_constructor import arable_land_bar
+    improvements = [(b.key, b.land) for b in arable_land_bar.model(mod_root, vanilla_root / "game").improvements]
+    result.improvements = [key for key, _ in improvements]
+    improve_values, improve_effects = render_improvements(improvements, costs)
+
+    wanted = food_buildings + list(config.kitchens) + list(config.taverns) + result.improvements
     wanted += list(config.granaries) + list(config.granges) + list(config.yards) + list(config.logistics_order)
     wanted += [name for names in by_good.values() for name in names]
     result.missing = sorted({name for name in wanted if name not in known})
@@ -1520,8 +1573,9 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
             config, food_lines, food_goods, farm_recipes(repo, food_buildings),
             harvest_rates(mod_root), peasant_food_consumption(mod_root, vanilla_root),
             access_modifier_amounts(mod_root, vanilla_root, config.access_blacklist), costs,
-        ),
-        mod_root / EFFECTS: render_effects(config, food_lines, food_goods, goods, by_good, costs),
+        )
+        + improve_values,
+        mod_root / EFFECTS: render_effects(config, food_lines, food_goods, goods, by_good, costs) + improve_effects,
         # the hunger steps wait for what they start (staple food makers, Taverns); kitchens are built anyway and must
         # not hold farms back for the year a Cookshop takes (seen in game 2026-11-08)
         mod_root / TRIGGERS: render_triggers(goods, by_good, demands, food_buildings + list(config.taverns)),

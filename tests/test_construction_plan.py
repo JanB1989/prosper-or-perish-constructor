@@ -362,3 +362,23 @@ def test_hunger_bucket_holds_every_staple_food_maker() -> None:
         assert name in buildings, name
     assert "cookshop" not in buildings and "tavern" not in buildings
     assert result.food_lines["forest_village"][0] == "forest_village"
+
+
+def test_improvements_cheap_and_much_first() -> None:
+    """Jan 2026-11-08: where people fill the line of a location's capacity, the improvement with the most capacity
+    per gold; the fullest locations first."""
+    result = cp.apply(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT), write=False)
+    assert {"land_clearance", "field_management", "irrigation_systems", "polders"} <= set(result.improvements)
+    generated = _read(MOD / cp.VALUES)
+    picker = _effect(_read(MOD / cp.EFFECTS), "pp_cplan_try_improve_here")
+    for key in result.improvements:
+        assert f"pp_cplan_imp_{key} > var:pp_cplan_best" in picker, key
+        assert f"location_and_owner_can_build = {{ building_type = {key} }}" in picker, key
+        value = _effect(generated, f"pp_cplan_imp_{key}")
+        assert f"building_type:{key}.building_base_cost_in_gold" in value
+    run = _effect(_read(EFFECTS), "pp_cplan_run")
+    block = run[run.index("pp_cplan_improve_off"):run.index("pp_cplan_try_improve_here")]
+    assert "location_population_percentage >= scope:pp_cplan_country.pp_cplan_improve_line" in block
+    assert "order_by = pp_cplan_fill_here" in block
+    assert cp.load_config(PROJECT).improve_fill_pct == 90
+    assert "pp_cplan_improve_off" in cp.PROFILE_FLAGS and "pp_cplan_imp" in cp.PROFILE_NUMBERS

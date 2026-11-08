@@ -9096,6 +9096,7 @@ pp_cplan_profile_save_1 = {
 	pp_cplan_copy_num = { from = pp_cplan_gsur to = pp_cplan_p1_gsur }
 	pp_cplan_copy_num = { from = pp_cplan_famine to = pp_cplan_p1_famine }
 	pp_cplan_copy_num = { from = pp_cplan_ypb to = pp_cplan_p1_ypb }
+	pp_cplan_copy_num = { from = pp_cplan_imp to = pp_cplan_p1_imp }
 	pp_cplan_copy_num = { from = pp_cplan_g_camels to = pp_cplan_p1_g_camels }
 	pp_cplan_copy_num = { from = pp_cplan_g_elephants to = pp_cplan_p1_g_elephants }
 	pp_cplan_copy_num = { from = pp_cplan_g_horses to = pp_cplan_p1_g_horses }
@@ -9174,6 +9175,7 @@ pp_cplan_profile_save_1 = {
 	pp_cplan_copy_flag = { from = pp_cplan_food_off to = pp_cplan_p1_food_off }
 	pp_cplan_copy_flag = { from = pp_cplan_logistics_off to = pp_cplan_p1_logistics_off }
 	pp_cplan_copy_flag = { from = pp_cplan_goods_off to = pp_cplan_p1_goods_off }
+	pp_cplan_copy_flag = { from = pp_cplan_improve_off to = pp_cplan_p1_improve_off }
 }
 pp_cplan_profile_load_1 = {
 	pp_cplan_copy_num = { from = pp_cplan_p1_reserve to = pp_cplan_reserve }
@@ -9186,6 +9188,7 @@ pp_cplan_profile_load_1 = {
 	pp_cplan_copy_num = { from = pp_cplan_p1_gsur to = pp_cplan_gsur }
 	pp_cplan_copy_num = { from = pp_cplan_p1_famine to = pp_cplan_famine }
 	pp_cplan_copy_num = { from = pp_cplan_p1_ypb to = pp_cplan_ypb }
+	pp_cplan_copy_num = { from = pp_cplan_p1_imp to = pp_cplan_imp }
 	pp_cplan_copy_num = { from = pp_cplan_p1_g_camels to = pp_cplan_g_camels }
 	pp_cplan_copy_num = { from = pp_cplan_p1_g_elephants to = pp_cplan_g_elephants }
 	pp_cplan_copy_num = { from = pp_cplan_p1_g_horses to = pp_cplan_g_horses }
@@ -9264,6 +9267,7 @@ pp_cplan_profile_load_1 = {
 	pp_cplan_copy_flag = { from = pp_cplan_p1_food_off to = pp_cplan_food_off }
 	pp_cplan_copy_flag = { from = pp_cplan_p1_logistics_off to = pp_cplan_logistics_off }
 	pp_cplan_copy_flag = { from = pp_cplan_p1_goods_off to = pp_cplan_goods_off }
+	pp_cplan_copy_flag = { from = pp_cplan_p1_improve_off to = pp_cplan_improve_off }
 	set_variable = { name = pp_cplan_profile value = 101 }
 }
 
@@ -9280,6 +9284,7 @@ pp_cplan_profile_save_2 = {
 	pp_cplan_copy_num = { from = pp_cplan_gsur to = pp_cplan_p2_gsur }
 	pp_cplan_copy_num = { from = pp_cplan_famine to = pp_cplan_p2_famine }
 	pp_cplan_copy_num = { from = pp_cplan_ypb to = pp_cplan_p2_ypb }
+	pp_cplan_copy_num = { from = pp_cplan_imp to = pp_cplan_p2_imp }
 	pp_cplan_copy_num = { from = pp_cplan_g_camels to = pp_cplan_p2_g_camels }
 	pp_cplan_copy_num = { from = pp_cplan_g_elephants to = pp_cplan_p2_g_elephants }
 	pp_cplan_copy_num = { from = pp_cplan_g_horses to = pp_cplan_p2_g_horses }
@@ -9358,6 +9363,7 @@ pp_cplan_profile_save_2 = {
 	pp_cplan_copy_flag = { from = pp_cplan_food_off to = pp_cplan_p2_food_off }
 	pp_cplan_copy_flag = { from = pp_cplan_logistics_off to = pp_cplan_p2_logistics_off }
 	pp_cplan_copy_flag = { from = pp_cplan_goods_off to = pp_cplan_p2_goods_off }
+	pp_cplan_copy_flag = { from = pp_cplan_improve_off to = pp_cplan_p2_improve_off }
 }
 pp_cplan_profile_load_2 = {
 	pp_cplan_copy_num = { from = pp_cplan_p2_reserve to = pp_cplan_reserve }
@@ -9370,6 +9376,7 @@ pp_cplan_profile_load_2 = {
 	pp_cplan_copy_num = { from = pp_cplan_p2_gsur to = pp_cplan_gsur }
 	pp_cplan_copy_num = { from = pp_cplan_p2_famine to = pp_cplan_famine }
 	pp_cplan_copy_num = { from = pp_cplan_p2_ypb to = pp_cplan_ypb }
+	pp_cplan_copy_num = { from = pp_cplan_p2_imp to = pp_cplan_imp }
 	pp_cplan_copy_num = { from = pp_cplan_p2_g_camels to = pp_cplan_g_camels }
 	pp_cplan_copy_num = { from = pp_cplan_p2_g_elephants to = pp_cplan_g_elephants }
 	pp_cplan_copy_num = { from = pp_cplan_p2_g_horses to = pp_cplan_g_horses }
@@ -9448,6 +9455,7 @@ pp_cplan_profile_load_2 = {
 	pp_cplan_copy_flag = { from = pp_cplan_p2_food_off to = pp_cplan_food_off }
 	pp_cplan_copy_flag = { from = pp_cplan_p2_logistics_off to = pp_cplan_logistics_off }
 	pp_cplan_copy_flag = { from = pp_cplan_p2_goods_off to = pp_cplan_goods_off }
+	pp_cplan_copy_flag = { from = pp_cplan_p2_improve_off to = pp_cplan_improve_off }
 	set_variable = { name = pp_cplan_profile value = 102 }
 }
 
@@ -9464,6 +9472,7 @@ pp_cplan_profile_save_3 = {
 	pp_cplan_copy_num = { from = pp_cplan_gsur to = pp_cplan_p3_gsur }
 	pp_cplan_copy_num = { from = pp_cplan_famine to = pp_cplan_p3_famine }
 	pp_cplan_copy_num = { from = pp_cplan_ypb to = pp_cplan_p3_ypb }
+	pp_cplan_copy_num = { from = pp_cplan_imp to = pp_cplan_p3_imp }
 	pp_cplan_copy_num = { from = pp_cplan_g_camels to = pp_cplan_p3_g_camels }
 	pp_cplan_copy_num = { from = pp_cplan_g_elephants to = pp_cplan_p3_g_elephants }
 	pp_cplan_copy_num = { from = pp_cplan_g_horses to = pp_cplan_p3_g_horses }
@@ -9542,6 +9551,7 @@ pp_cplan_profile_save_3 = {
 	pp_cplan_copy_flag = { from = pp_cplan_food_off to = pp_cplan_p3_food_off }
 	pp_cplan_copy_flag = { from = pp_cplan_logistics_off to = pp_cplan_p3_logistics_off }
 	pp_cplan_copy_flag = { from = pp_cplan_goods_off to = pp_cplan_p3_goods_off }
+	pp_cplan_copy_flag = { from = pp_cplan_improve_off to = pp_cplan_p3_improve_off }
 }
 pp_cplan_profile_load_3 = {
 	pp_cplan_copy_num = { from = pp_cplan_p3_reserve to = pp_cplan_reserve }
@@ -9554,6 +9564,7 @@ pp_cplan_profile_load_3 = {
 	pp_cplan_copy_num = { from = pp_cplan_p3_gsur to = pp_cplan_gsur }
 	pp_cplan_copy_num = { from = pp_cplan_p3_famine to = pp_cplan_famine }
 	pp_cplan_copy_num = { from = pp_cplan_p3_ypb to = pp_cplan_ypb }
+	pp_cplan_copy_num = { from = pp_cplan_p3_imp to = pp_cplan_imp }
 	pp_cplan_copy_num = { from = pp_cplan_p3_g_camels to = pp_cplan_g_camels }
 	pp_cplan_copy_num = { from = pp_cplan_p3_g_elephants to = pp_cplan_g_elephants }
 	pp_cplan_copy_num = { from = pp_cplan_p3_g_horses to = pp_cplan_g_horses }
@@ -9632,6 +9643,7 @@ pp_cplan_profile_load_3 = {
 	pp_cplan_copy_flag = { from = pp_cplan_p3_food_off to = pp_cplan_food_off }
 	pp_cplan_copy_flag = { from = pp_cplan_p3_logistics_off to = pp_cplan_logistics_off }
 	pp_cplan_copy_flag = { from = pp_cplan_p3_goods_off to = pp_cplan_goods_off }
+	pp_cplan_copy_flag = { from = pp_cplan_p3_improve_off to = pp_cplan_improve_off }
 	set_variable = { name = pp_cplan_profile value = 103 }
 }
 
@@ -9679,6 +9691,8 @@ pp_cplan_declare_flags = {
 	set_variable = { name = pp_cplan_flag value = flag:grange_surplus }
 	set_variable = { name = pp_cplan_flag value = flag:hi }
 	set_variable = { name = pp_cplan_flag value = flag:horses }
+	set_variable = { name = pp_cplan_flag value = flag:improve }
+	set_variable = { name = pp_cplan_flag value = flag:improve_line }
 	set_variable = { name = pp_cplan_flag value = flag:incense }
 	set_variable = { name = pp_cplan_flag value = flag:iron }
 	set_variable = { name = pp_cplan_flag value = flag:ivory }
@@ -9755,4 +9769,148 @@ pp_cplan_declare_flags = {
 	set_variable = { name = pp_cplan_flag value = flag:wine }
 	set_variable = { name = pp_cplan_flag value = flag:wool }
 	set_variable = { name = pp_cplan_flag value = flag:yard_payback }
+}
+
+# Location scope: one level of the improvement that adds the most capacity per gold here (pp_cplan_imp_<key>),
+# among those that can be built; a standing older tier is replaced once its successor is researched.
+pp_cplan_try_improve_here = {
+	set_variable = { name = pp_cplan_best value = 0.001 }
+	set_variable = { name = pp_cplan_pick value = 100 }
+	if = {
+		limit = { location_and_owner_can_build = { building_type = bund } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:bund building_levels_under_construction > 0 } } pp_cplan_imp_bund > var:pp_cplan_best }
+		set_variable = { name = pp_cplan_best value = pp_cplan_imp_bund }
+		set_variable = { name = pp_cplan_pick value = 101 }
+	}
+	if = {
+		limit = { location_and_owner_can_build = { building_type = field_drainage } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:field_drainage building_levels_under_construction > 0 } } pp_cplan_imp_field_drainage > var:pp_cplan_best }
+		set_variable = { name = pp_cplan_best value = pp_cplan_imp_field_drainage }
+		set_variable = { name = pp_cplan_pick value = 102 }
+	}
+	if = {
+		limit = { location_and_owner_can_build = { building_type = field_management } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:field_management building_levels_under_construction > 0 } } pp_cplan_imp_field_management > var:pp_cplan_best }
+		set_variable = { name = pp_cplan_best value = pp_cplan_imp_field_management }
+		set_variable = { name = pp_cplan_pick value = 103 }
+	}
+	if = {
+		limit = { location_and_owner_can_build = { building_type = field_management_convertible } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:field_management_convertible building_levels_under_construction > 0 } } pp_cplan_imp_field_management_convertible > var:pp_cplan_best }
+		set_variable = { name = pp_cplan_best value = pp_cplan_imp_field_management_convertible }
+		set_variable = { name = pp_cplan_pick value = 104 }
+	}
+	if = {
+		limit = { location_and_owner_can_build = { building_type = field_management_improved } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:field_management_improved building_levels_under_construction > 0 } } pp_cplan_imp_field_management_improved > var:pp_cplan_best }
+		set_variable = { name = pp_cplan_best value = pp_cplan_imp_field_management_improved }
+		set_variable = { name = pp_cplan_pick value = 105 }
+	}
+	if = {
+		limit = { location_and_owner_can_build = { building_type = incamisana } pp_cplan_goods_here_incamisana_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:incamisana building_levels_under_construction > 0 } } pp_cplan_imp_incamisana > var:pp_cplan_best }
+		set_variable = { name = pp_cplan_best value = pp_cplan_imp_incamisana }
+		set_variable = { name = pp_cplan_pick value = 106 }
+	}
+	if = {
+		limit = { location_and_owner_can_build = { building_type = irrigated_fields } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:irrigated_fields building_levels_under_construction > 0 } } pp_cplan_imp_irrigated_fields > var:pp_cplan_best }
+		set_variable = { name = pp_cplan_best value = pp_cplan_imp_irrigated_fields }
+		set_variable = { name = pp_cplan_pick value = 107 }
+	}
+	if = {
+		limit = { location_and_owner_can_build = { building_type = irrigation_systems } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:irrigation_systems building_levels_under_construction > 0 } } pp_cplan_imp_irrigation_systems > var:pp_cplan_best }
+		set_variable = { name = pp_cplan_best value = pp_cplan_imp_irrigation_systems }
+		set_variable = { name = pp_cplan_pick value = 108 }
+	}
+	if = {
+		limit = { location_and_owner_can_build = { building_type = jiangnan_canal_network } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:jiangnan_canal_network building_levels_under_construction > 0 } } pp_cplan_imp_jiangnan_canal_network > var:pp_cplan_best }
+		set_variable = { name = pp_cplan_best value = pp_cplan_imp_jiangnan_canal_network }
+		set_variable = { name = pp_cplan_pick value = 109 }
+	}
+	if = {
+		limit = { location_and_owner_can_build = { building_type = jiangnan_hill_terraces } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:jiangnan_hill_terraces building_levels_under_construction > 0 } } pp_cplan_imp_jiangnan_hill_terraces > var:pp_cplan_best }
+		set_variable = { name = pp_cplan_best value = pp_cplan_imp_jiangnan_hill_terraces }
+		set_variable = { name = pp_cplan_pick value = 110 }
+	}
+	if = {
+		limit = { location_and_owner_can_build = { building_type = khmer_baray } pp_cplan_goods_here_khmer_baray_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:khmer_baray building_levels_under_construction > 0 } } pp_cplan_imp_khmer_baray > var:pp_cplan_best }
+		set_variable = { name = pp_cplan_best value = pp_cplan_imp_khmer_baray }
+		set_variable = { name = pp_cplan_pick value = 111 }
+	}
+	if = {
+		limit = { location_and_owner_can_build = { building_type = land_clearance } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:land_clearance building_levels_under_construction > 0 } } pp_cplan_imp_land_clearance > var:pp_cplan_best }
+		set_variable = { name = pp_cplan_best value = pp_cplan_imp_land_clearance }
+		set_variable = { name = pp_cplan_pick value = 112 }
+	}
+	if = {
+		limit = { location_and_owner_can_build = { building_type = paddy_water_control } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:paddy_water_control building_levels_under_construction > 0 } } pp_cplan_imp_paddy_water_control > var:pp_cplan_best }
+		set_variable = { name = pp_cplan_best value = pp_cplan_imp_paddy_water_control }
+		set_variable = { name = pp_cplan_pick value = 113 }
+	}
+	if = {
+		limit = { location_and_owner_can_build = { building_type = polders } pp_cplan_goods_here_polders_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:polders building_levels_under_construction > 0 } } pp_cplan_imp_polders > var:pp_cplan_best }
+		set_variable = { name = pp_cplan_best value = pp_cplan_imp_polders }
+		set_variable = { name = pp_cplan_pick value = 114 }
+	}
+	if = {
+		limit = { location_and_owner_can_build = { building_type = qanats } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:qanats building_levels_under_construction > 0 } } pp_cplan_imp_qanats > var:pp_cplan_best }
+		set_variable = { name = pp_cplan_best value = pp_cplan_imp_qanats }
+		set_variable = { name = pp_cplan_pick value = 115 }
+	}
+	if = {
+		limit = { var:pp_cplan_pick > 100.5 var:pp_cplan_pick < 101.5 }
+		pp_cplan_construct = { type = bund why = 106 }
+	}
+	if = {
+		limit = { var:pp_cplan_pick > 101.5 var:pp_cplan_pick < 102.5 }
+		pp_cplan_construct = { type = field_drainage why = 106 }
+	}
+	if = {
+		limit = { var:pp_cplan_pick > 102.5 var:pp_cplan_pick < 103.5 }
+		pp_cplan_construct = { type = field_management why = 106 }
+	}
+	if = {
+		limit = { var:pp_cplan_pick > 103.5 var:pp_cplan_pick < 104.5 }
+		pp_cplan_construct = { type = field_management_convertible why = 106 }
+	}
+	if = {
+		limit = { var:pp_cplan_pick > 104.5 var:pp_cplan_pick < 105.5 }
+		pp_cplan_construct = { type = field_management_improved why = 106 }
+	}
+	if = {
+		limit = { var:pp_cplan_pick > 105.5 var:pp_cplan_pick < 106.5 }
+		pp_cplan_construct = { type = incamisana why = 106 }
+	}
+	if = {
+		limit = { var:pp_cplan_pick > 106.5 var:pp_cplan_pick < 107.5 }
+		pp_cplan_construct = { type = irrigated_fields why = 106 }
+	}
+	if = {
+		limit = { var:pp_cplan_pick > 107.5 var:pp_cplan_pick < 108.5 }
+		pp_cplan_construct = { type = irrigation_systems why = 106 }
+	}
+	if = {
+		limit = { var:pp_cplan_pick > 108.5 var:pp_cplan_pick < 109.5 }
+		pp_cplan_construct = { type = jiangnan_canal_network why = 106 }
+	}
+	if = {
+		limit = { var:pp_cplan_pick > 109.5 var:pp_cplan_pick < 110.5 }
+		pp_cplan_construct = { type = jiangnan_hill_terraces why = 106 }
+	}
+	if = {
+		limit = { var:pp_cplan_pick > 110.5 var:pp_cplan_pick < 111.5 }
+		pp_cplan_construct = { type = khmer_baray why = 106 }
+	}
+	if = {
+		limit = { var:pp_cplan_pick > 111.5 var:pp_cplan_pick < 112.5 }
+		pp_cplan_construct = { type = land_clearance why = 106 }
+	}
+	if = {
+		limit = { var:pp_cplan_pick > 112.5 var:pp_cplan_pick < 113.5 }
+		pp_cplan_construct = { type = paddy_water_control why = 106 }
+	}
+	if = {
+		limit = { var:pp_cplan_pick > 113.5 var:pp_cplan_pick < 114.5 }
+		pp_cplan_construct = { type = polders why = 106 }
+	}
+	if = {
+		limit = { var:pp_cplan_pick > 114.5 var:pp_cplan_pick < 115.5 }
+		pp_cplan_construct = { type = qanats why = 106 }
+	}
+	remove_variable = pp_cplan_best
+	remove_variable = pp_cplan_pick
 }

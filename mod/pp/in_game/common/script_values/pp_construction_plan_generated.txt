@@ -92,6 +92,20 @@ pp_cplan_yard_payback = {
 		subtract = 100
 	}
 }
+# Country scope: improvements where people fill this % of a location's capacity.
+pp_cplan_improve_pct = {
+	value = 90
+	if = {
+		limit = { has_variable = pp_cplan_imp }
+		value = var:pp_cplan_imp
+		subtract = 100
+	}
+}
+# Country scope: the improvement line as a share of capacity (location_population_percentage).
+pp_cplan_improve_line = {
+	value = pp_cplan_improve_pct
+	divide = 100
+}
 # Any scope: victuals a Tavern's market must hold ([construction_plan] tavern_victuals).
 pp_cplan_tavern_victuals = { value = 10 }
 
@@ -7924,4 +7938,158 @@ pp_cplan_farm_best_roi = {
 	min = pp_cplan_farm_line_roi_maghreb_palm_irrigation
 	min = pp_cplan_farm_line_roi_ocean_fishery
 	min = pp_cplan_farm_line_roi_sheep_farms
+}
+
+# ---- Improvements (location scope): capacity a level adds per 1,000 gold of its price here ----
+# (base price x (1 + increase_per_level_cost x the levels standing); the location's build efficiency and the
+# construction goods are the same for every improvement here)
+pp_cplan_imp_bund = {
+	value = 5000
+	divide = {
+		value = "location_building_level(building_type:bund)"
+		multiply = 0.05
+		add = 1
+		multiply = building_type:bund.building_base_cost_in_gold
+		min = 1
+	}
+}
+pp_cplan_imp_field_drainage = {
+	value = 5000
+	divide = {
+		value = "location_building_level(building_type:field_drainage)"
+		multiply = 0.05
+		add = 1
+		multiply = building_type:field_drainage.building_base_cost_in_gold
+		min = 1
+	}
+}
+pp_cplan_imp_field_management = {
+	value = 5000
+	divide = {
+		value = "location_building_level(building_type:field_management)"
+		multiply = 0.05
+		add = 1
+		multiply = building_type:field_management.building_base_cost_in_gold
+		min = 1
+	}
+}
+pp_cplan_imp_field_management_convertible = {
+	value = 7500
+	divide = {
+		value = "location_building_level(building_type:field_management_convertible)"
+		multiply = 0.05
+		add = 1
+		multiply = building_type:field_management_convertible.building_base_cost_in_gold
+		min = 1
+	}
+}
+pp_cplan_imp_field_management_improved = {
+	value = 10000
+	divide = {
+		value = "location_building_level(building_type:field_management_improved)"
+		multiply = 0.05
+		add = 1
+		multiply = building_type:field_management_improved.building_base_cost_in_gold
+		min = 1
+	}
+}
+pp_cplan_imp_incamisana = {
+	value = 7500
+	divide = {
+		value = "location_building_level(building_type:incamisana)"
+		multiply = 0.05
+		add = 1
+		multiply = building_type:incamisana.building_base_cost_in_gold
+		min = 1
+	}
+}
+pp_cplan_imp_irrigated_fields = {
+	value = 5000
+	divide = {
+		value = "location_building_level(building_type:irrigated_fields)"
+		multiply = 0.05
+		add = 1
+		multiply = building_type:irrigated_fields.building_base_cost_in_gold
+		min = 1
+	}
+}
+pp_cplan_imp_irrigation_systems = {
+	value = 5000
+	divide = {
+		value = "location_building_level(building_type:irrigation_systems)"
+		multiply = 0.05
+		add = 1
+		multiply = building_type:irrigation_systems.building_base_cost_in_gold
+		min = 1
+	}
+}
+pp_cplan_imp_jiangnan_canal_network = {
+	value = 12500
+	divide = {
+		value = "location_building_level(building_type:jiangnan_canal_network)"
+		multiply = 0.05
+		add = 1
+		multiply = building_type:jiangnan_canal_network.building_base_cost_in_gold
+		min = 1
+	}
+}
+pp_cplan_imp_jiangnan_hill_terraces = {
+	value = 15000
+	divide = {
+		value = "location_building_level(building_type:jiangnan_hill_terraces)"
+		multiply = 0.05
+		add = 1
+		multiply = building_type:jiangnan_hill_terraces.building_base_cost_in_gold
+		min = 1
+	}
+}
+pp_cplan_imp_khmer_baray = {
+	value = 7500
+	divide = {
+		value = "location_building_level(building_type:khmer_baray)"
+		multiply = 0.05
+		add = 1
+		multiply = building_type:khmer_baray.building_base_cost_in_gold
+		min = 1
+	}
+}
+pp_cplan_imp_land_clearance = {
+	value = 5000
+	divide = {
+		value = "location_building_level(building_type:land_clearance)"
+		multiply = 0.05
+		add = 1
+		multiply = building_type:land_clearance.building_base_cost_in_gold
+		min = 1
+	}
+}
+pp_cplan_imp_paddy_water_control = {
+	value = 5000
+	divide = {
+		value = "location_building_level(building_type:paddy_water_control)"
+		multiply = 0.05
+		add = 1
+		multiply = building_type:paddy_water_control.building_base_cost_in_gold
+		min = 1
+	}
+}
+pp_cplan_imp_polders = {
+	value = 5000
+	divide = {
+		value = "location_building_level(building_type:polders)"
+		multiply = 0.05
+		add = 1
+		multiply = building_type:polders.building_base_cost_in_gold
+		min = 1
+	}
+}
+pp_cplan_imp_qanats = {
+	value = 5000
+	divide = {
+		value = "location_building_level(building_type:qanats)"
+		multiply = 0.05
+		add = 1
+		multiply = building_type:qanats.building_base_cost_in_gold
+		min = 1
+	}
 }

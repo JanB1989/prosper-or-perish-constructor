@@ -82,6 +82,31 @@ pp_cplan_run = {
 			}
 		}
 	}
+	# Improvements (Jan 2026-11-08): where people fill the player's share of a location's capacity, the improvement
+	# that adds the most capacity per gold; the fullest locations first.
+	if = {
+		limit = { NOT = { has_variable = pp_cplan_improve_off } }
+		change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }
+	}
+	if = {
+		limit = {
+			NOT = { has_variable = pp_cplan_improve_off }
+			pp_cplan_budget_left = yes
+		}
+		ordered_owned_location = {
+			limit = {
+				pp_cplan_location_ok = yes
+				location_population_percentage >= scope:pp_cplan_country.pp_cplan_improve_line
+			}
+			order_by = pp_cplan_fill_here
+			max = 200
+			check_range_bounds = no
+			if = {
+				limit = { pp_cplan_budget_left = yes }
+				pp_cplan_try_improve_here = yes
+			}
+		}
+	}
 	if = {
 		limit = { NOT = { has_variable = pp_cplan_goods_off } }
 		change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }

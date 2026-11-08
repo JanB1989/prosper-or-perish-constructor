@@ -14,6 +14,7 @@ pp_cplan_max100 = {
 pp_cplan_groups_on = {
 	value = pp_cplan_food_n
 	add = pp_cplan_logistics_n
+	add = pp_cplan_improve_n
 	add = pp_cplan_goods_n
 	add = pp_cplan_location_rules_n
 	add = pp_lprof_group_n
@@ -325,6 +326,18 @@ pp_cplan_goods_n = {
 		limit = { has_variable = pp_cplan_goods_off }
 		value = 0
 	}
+}
+pp_cplan_improve_n = {
+	value = 1
+	if = {
+		limit = { has_variable = pp_cplan_improve_off }
+		value = 0
+	}
+}
+
+# Location scope: how full the location is (population over capacity), the improvement rule's order.
+pp_cplan_fill_here = {
+	value = location_population_percentage
 }
 pp_cplan_location_rules_n = {
 	value = 0

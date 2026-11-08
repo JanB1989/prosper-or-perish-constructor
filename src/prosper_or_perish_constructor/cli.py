@@ -442,11 +442,15 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     start_stock.add_argument(
         "action",
-        choices=("apply", "check", "calibrate"),
+        choices=("apply", "check", "calibrate", "presence"),
         help="apply writes the on_action (the finalize pass does this at every build); check says whether it is current and, "
-        "with --save, how far a day-0 save's targets sit from the settled prices; calibrate rewrites the table.",
+        "with --save, how far a day-0 save's targets sit from the settled prices; calibrate rewrites the table; presence rewrites "
+        "start_market_goods.csv (the goods each market produces) from saves of a new game, day 0 and about a month in.",
     )
-    start_stock.add_argument("--save", type=Path, default=None, help="A day-0 .eu5 save, or a folder of its engine tables.")
+    start_stock.add_argument(
+        "--save", type=Path, action="append", default=[],
+        help="A .eu5 save, or a folder of its engine tables: one day-0 save for check and calibrate, one or more for presence.",
+    )
     start_stock.add_argument("--runs", nargs="*", default=[], help="calibrate: dataset runs for the settled prices (default: the newest five full runs).")
     start_stock.add_argument("--year", type=int, default=1362, help="calibrate: the year stocks count as settled.")
     logistics = _add_command(
@@ -1447,21 +1451,30 @@ def _start_stock(args: argparse.Namespace, extra: Sequence[str], repo: Path, pro
 
     mod_root = _project_mod_root(repo, project)
     game = vanilla_root(repo, project)
+    if args.action == "presence":
+        if not args.save:
+            raise SystemExit("start-stock presence needs --save (saves of a new game: day 0 and about a month in).")
+        markets, rows = start_market_stock.write_presence(repo, project, args.save)
+        print(f"{start_market_stock.PRESENCE}: {markets} markets, {rows} goods produced.")
+        return 0
+    if len(args.save) > 1:
+        raise SystemExit(f"start-stock {args.action} takes one --save (a day-0 save).")
+    save = args.save[0] if args.save else None
     if args.action == "calibrate":
-        if args.save is None:
+        if save is None:
             raise SystemExit("start-stock calibrate needs --save (a day-0 save).")
-        count = start_market_stock.calibrate(repo, project, mod_root, game, save=args.save, runs=args.runs, year=args.year)
+        count = start_market_stock.calibrate(repo, project, mod_root, game, save=save, runs=args.runs, year=args.year)
         print(f"{start_market_stock.TABLE}: {count} goods.")
         return 0
     result = start_market_stock.apply(repo, project, mod_root, game, write=args.action == "apply")
     print(_start_stock_line(result))
-    if args.action == "check" and args.save is not None:
-        miss = start_market_stock.check_against_save(repo, project, mod_root, game, args.save)
+    if args.action == "check" and save is not None:
+        miss = start_market_stock.check_against_save(repo, project, mod_root, game, save)
         print(
-            f"Target against the settled price in {args.save.name}: typical miss {miss['typical_miss']:.0f} %, mean {miss['mean_miss']:+.0f} % "
+            f"Target against the settled price in {save.name}: typical miss {miss['typical_miss']:.0f} %, mean {miss['mean_miss']:+.0f} % "
             f"(no added stock: {miss['typical_miss_without']:.0f} %, {miss['mean_miss_without']:+.0f} %)."
         )
-    return 1 if args.action == "check" and (result.changed or result.missing_goods) else 0
+    return 1 if args.action == "check" and (result.changed or result.missing_goods or result.unlisted_markets) else 0
 
 
 def _start_stock_line(result) -> str:
@@ -1469,8 +1482,11 @@ def _start_stock_line(result) -> str:
         return "Start market stock: inputs unchanged."
     return (
         f"Start market stock: {result.lines} rows in {result.markets} markets, {result.goods} goods, {result.gold:,.0f} gold at default prices"
+        + f"; {result.dropped_rows} rows ({result.dropped_gold:,.0f} gold) left out where the market does not produce the good"
         + (" (rewritten)" if result.changed else " (unchanged)")
-        + (f"; no table row for {', '.join(result.missing_goods)} (run ppc start-stock calibrate)." if result.missing_goods else ".")
+        + (f"; no table row for {', '.join(result.missing_goods)} (run ppc start-stock calibrate)" if result.missing_goods else "")
+        + (f"; no goods list for {', '.join(result.unlisted_markets)} (run ppc start-stock presence)" if result.unlisted_markets else "")
+        + "."
     )
 
 

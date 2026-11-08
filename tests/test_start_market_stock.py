@@ -44,6 +44,21 @@ def test_plan_skips_small_amounts_dear_goods_and_dummy_goods() -> None:
     assert sms.plan(flows, table, CONFIG) == {}
 
 
+def test_a_vanilla_good_goes_only_where_the_market_produces_it() -> None:
+    """2026-11-08, Jan: chili in Paris, elephants in Venice; pop demand alone put them there."""
+    flows = sms.Flows(pop=Counter({("paris", "chili"): 5.0, ("paris", "wheat"): 5.0, ("paris", "victuals"): 5.0, ("mexico", "chili"): 5.0}),
+                      people=Counter({"paris": 1.0, "mexico": 1.0}))
+    table = {good: sms.Row(0.3, pop_factor=1.0) for good in ("chili", "wheat", "victuals")}
+    stock = sms.plan(flows, table, CONFIG, {"paris": frozenset({"wheat"}), "mexico": frozenset({"chili"})}, frozenset({"chili", "wheat"}))
+    assert set(stock) == {("paris", "wheat"), ("paris", "victuals"), ("mexico", "chili")}  # victuals: PP's own good, anywhere
+
+
+def test_a_market_missing_from_the_goods_list_gets_no_vanilla_goods() -> None:
+    flows = sms.Flows(pop=Counter({("new", "wheat"): 5.0, ("new", "victuals"): 5.0}), people=Counter({"new": 1.0}))
+    table = {good: sms.Row(0.3, pop_factor=1.0) for good in ("wheat", "victuals")}
+    assert set(sms.plan(flows, table, CONFIG, {}, frozenset({"wheat"}))) == {("new", "victuals")}
+
+
 def test_stock_stays_below_the_ceiling() -> None:
     flows = sms.Flows(rgo=Counter({("a", "clay"): 1000.0}), people=Counter({"a": 1.0}), ceiling={"a": 2000.0})
     stock = sms.plan(flows, {"clay": sms.Row(0.25, rgo_factor=1.0)}, sms.Config(existing_months=0.0, min_amount=1.0, not_goods=frozenset()))
@@ -99,15 +114,40 @@ def test_table_is_sane() -> None:
 def test_a_new_table_does_not_rerun_the_start_setup() -> None:
     from prosper_or_perish_constructor.cli import WORLDBUILDER_CODE_AND_DATA
 
-    assert not any(sms.TABLE.is_relative_to(stage_input) for stage_input in WORLDBUILDER_CODE_AND_DATA)
+    for table in (sms.TABLE, sms.PRESENCE):
+        assert not any(table.is_relative_to(stage_input) for stage_input in WORLDBUILDER_CODE_AND_DATA)
 
 
 def test_generated_file_matches_the_build() -> None:
     result = sms.apply(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT), write=False)
     assert not result.changed, "run ppc start-stock apply"
     assert not result.missing_goods, "run ppc start-stock calibrate"
+    assert not result.unlisted_markets, "run ppc start-stock presence --save <day-0 save> --save <month-1 save>"
     assert result.markets > 100
     assert result.lines > 3000
+
+
+def test_the_game_file_adds_no_good_a_market_does_not_produce() -> None:
+    """Every vanilla good in the on_action is in that market's goods list; New World goods stay in the Americas."""
+    text = (MOD / sms.OUTPUT).read_text(encoding="utf-8-sig")
+    produced = sms.load_presence(ROOT)
+    native = sms.vanilla_goods(vanilla_root(ROOT, PROJECT))
+    assert "victuals" not in native and "chili" in native
+    rows = []
+    for block in re.finditer(r"location:(\w+)\.market = \{(.*?)\n\t\t\}", text, re.S):
+        rows += [(block.group(1), good) for good in re.findall(r"goods:(\w+)", block.group(2))]
+    assert len(rows) > 3000
+    wrong = [(market, good) for market, good in rows if good in native and good not in produced.get(market, ())]
+    assert not wrong, wrong[:20]
+    import polars as pl
+    from eu5gameparser.domain.goods import load_goods_data
+
+    goods = load_goods_data(profile="constructor", load_order_path=ROOT / sms.LOAD_ORDER).goods
+    new_world = set(goods.filter(pl.col("origin_in_new_world").fill_null(False))["name"])
+    assert {"chili", "maize", "potato"} <= new_world
+    super_region = dict(pl.read_parquet(ROOT / sms.LOCATIONS, columns=["location_tag", "super_region"]).iter_rows())
+    assert sum(super_region.get(market) == "america" for market in {m for m, _ in rows}) >= 10
+    assert not [(m, g) for m, g in rows if g in new_world and super_region.get(m) != "america"]
 
 
 def test_every_market_and_good_exists() -> None:

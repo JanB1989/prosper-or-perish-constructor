@@ -21,6 +21,13 @@ market's stock ceiling from its centre's development: at 90 % of it the AI stops
 flows, because the engine's wealth rules and method choice are not modelled. Demand, recipes, levels and pops all move
 the result at every build; the table needs a new run only when a good's settled price itself moves
 (``ppc start-stock calibrate``). Numbers: docs/market_rulebook.md "Start market stock".
+
+Only goods a market has get stock (2026-11-08, Jan: chili in Paris, elephants in Venice and lacquerware in Mexico had stock
+and so came into those markets). A vanilla good goes only where the market produces it at game start, vanilla's
+``is_produced_in_market``; PP's own goods (victuals) go everywhere. ``start_market_goods.csv`` lists per market the goods
+produced there in a game without the start stock, on day 0 and one month in (locations change market on the first
+monthly tick), read from saves by ``ppc start-stock presence``; the model's own production misses about a tenth both ways
+(averaged method slots, base production, day-0 markets), so a save decides.
 """
 
 from __future__ import annotations
@@ -50,6 +57,8 @@ OUTPUT = Path("in_game/common/on_action/pp_start_market_stock.txt")
 # data, which ppc sync --while-running refuses to hot-reload (2026-11-06: a text-only change could not deploy).
 STAMP = Path("artifacts/data/start_market_stock/inputs.txt")
 TABLE = Path("start_market_stock.csv")
+PRESENCE = Path("start_market_goods.csv")  # repo root for the same reason as TABLE: config/ and data/ are start-setup inputs
+VANILLA_GOODS = Path("game/in_game/common/goods")
 LOCATIONS = Path("data/vanilla/locations_with_raw_material.parquet")
 START_MARKETS = Path("config/start_markets.csv")
 LOAD_ORDER = Path("constructor.load_order.toml")
@@ -108,6 +117,9 @@ class Result:
     changed: bool = False
     skipped: bool = False
     missing_goods: list[str] = field(default_factory=list)
+    unlisted_markets: list[str] = field(default_factory=list)  # markets with flows but no row in PRESENCE
+    dropped_rows: int = 0      # (market, good) rows left out because the market does not produce the good
+    dropped_gold: float = 0.0
 
 
 def load_project_config(project: Path) -> Config:
@@ -132,6 +144,23 @@ def load_table(repo: Path) -> dict[str, Row]:
     lines = (repo / TABLE).read_text(encoding="utf-8").splitlines()
     rows = csv.DictReader(line for line in lines if not line.startswith("#"))
     return {r["good"]: Row(*(float(r[k]) for k in ("settled_price", *FACTORS, "rest_per_k"))) for r in rows}
+
+
+def load_presence(repo: Path) -> dict[str, frozenset[str]]:
+    """market -> the goods produced there at game start (PRESENCE)."""
+    lines = (repo / PRESENCE).read_text(encoding="utf-8").splitlines()
+    rows = csv.DictReader(line for line in lines if not line.startswith("#"))
+    return {r["market"]: frozenset(r["goods"].split()) for r in rows}
+
+
+def vanilla_goods(vanilla_root: Path) -> frozenset[str]:
+    """Goods the game itself defines; every other good is PP's own and may go into any market."""
+    names: set[str] = set()
+    for path in sorted((vanilla_root / VANILLA_GOODS).glob("*.txt")):
+        names.update(re.findall(r"^([a-z_]+)\s*=\s*\{", path.read_text(encoding="utf-8-sig"), re.M))
+    if not names:
+        raise SystemExit(f"{vanilla_root / VANILLA_GOODS}: no goods found")
+    return frozenset(names)
 
 
 def _markets_of_locations(repo: Path, mod_root: Path, vanilla_root: Path, locations: pl.DataFrame) -> dict[str, str]:
@@ -253,12 +282,22 @@ def model_flows(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -
     return flows
 
 
-def plan(flows: Flows, table: dict[str, Row], config: Config) -> dict[MarketGood, float]:
-    """(market, good) -> goods to add at game start."""
+def plan(
+    flows: Flows,
+    table: dict[str, Row],
+    config: Config,
+    produced: dict[str, frozenset[str]] | None = None,
+    native: frozenset[str] = frozenset(),
+) -> dict[MarketGood, float]:
+    """(market, good) -> goods to add at game start. With ``produced``, a ``native`` (vanilla) good goes only into a market
+    that produces it; goods outside ``native`` are PP's own and go anywhere."""
     out: dict[MarketGood, float] = {}
     for market in sorted(flows.people):
+        made_here = produced.get(market, frozenset()) if produced is not None else None
         for good, row in table.items():
             if good in config.not_goods:
+                continue
+            if made_here is not None and good in native and good not in made_here:
                 continue
             key = (market, good)
             use = flows.pop[key] * row.pop_factor + flows.inputs[key] * row.input_factor + flows.people[market] * row.rest_per_k
@@ -271,10 +310,11 @@ def plan(flows: Flows, table: dict[str, Row], config: Config) -> dict[MarketGood
     return out
 
 
-def _fingerprint(repo: Path, project: Path, mod_root: Path) -> str:
+def _fingerprint(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -> str:
     """Everything the plan reads; the finalize pass skips the parser while this holds (ppc sync must stay fast)."""
     handover = load_worldbuilder_config(repo, project).handover
-    files = [repo / TABLE, repo / START_MARKETS, repo / LOCATIONS, project, Path(__file__), handover / "location_attributes.csv", handover / "attribute_rows.csv"]
+    files = [repo / TABLE, repo / PRESENCE, repo / START_MARKETS, repo / LOCATIONS, project, Path(__file__), handover / "location_attributes.csv", handover / "attribute_rows.csv"]
+    files.extend(sorted((vanilla_root / VANILLA_GOODS).glob("*.txt")))
     for folder in INPUT_FOLDERS:
         files.extend(sorted((mod_root / folder).glob("*.txt")))
     digest = hashlib.sha1()
@@ -316,16 +356,20 @@ def render(stock: dict[MarketGood, float]) -> str:
 
 
 def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: bool = True) -> Result:
-    fingerprint = _fingerprint(repo, project, mod_root)
+    fingerprint = _fingerprint(repo, project, mod_root, vanilla_root)
     path = mod_root / OUTPUT
     stamp = repo / STAMP
     if write and path.is_file() and stamp.is_file() and stamp.read_text(encoding="utf-8").strip() == fingerprint:
         return Result(skipped=True)
     config = load_project_config(project)
     table = load_table(repo)
+    produced = load_presence(repo)
+    native = vanilla_goods(vanilla_root)
     prices = {r["name"]: r["default_market_price"] or 0.0 for r in load_goods_data(profile="constructor", load_order_path=repo / LOAD_ORDER).goods.to_dicts()}
     flows = model_flows(repo, project, mod_root, vanilla_root)
-    stock = plan(flows, table, config)
+    stock = plan(flows, table, config, produced, native)
+    unfiltered = plan(flows, table, config)
+    dropped = {key: amount for key, amount in unfiltered.items() if key not in stock}
     text = render(stock)
     at_start = {good for part in (flows.pop, flows.inputs, flows.rgo, flows.outputs) for (_, good), value in part.items() if value > 0}
     before = path.read_text(encoding="utf-8-sig") if path.is_file() else None
@@ -336,6 +380,9 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
         gold=sum(amount * prices.get(good, 0.0) for (_, good), amount in stock.items()),
         changed=before is None or _without_fingerprint(before) != text,
         missing_goods=sorted(at_start - set(table) - config.not_goods),
+        unlisted_markets=sorted({market for market, _ in unfiltered} - set(produced)),
+        dropped_rows=len(dropped),
+        dropped_gold=sum(amount * prices.get(good, 0.0) for (_, good), amount in dropped.items()),
     )
     if write:
         if result.changed:
@@ -362,6 +409,35 @@ def _save_tables(save: Path, repo: Path) -> Path:
     if not result.ok:
         raise SystemExit(f"{save}: {result.error}")
     return Path(result.out)
+
+
+def write_presence(repo: Path, project: Path, saves: list[Path]) -> tuple[int, int]:
+    """Write PRESENCE from saves of a new game (day 0 and about a month in): per market every good it produces. Returns
+    (markets, rows). Rerun when the start setup changes which goods a market makes."""
+    config = load_project_config(project)
+    produced: dict[str, set[str]] = defaultdict(set)
+    names = []
+    for save in saves:
+        tables = _save_tables(save, repo)
+        goods = pl.read_parquet(tables / "market_goods.parquet", columns=["market_center_slug", "good_id", "supplied_Production"])
+        for market, good, amount in goods.iter_rows():
+            if (amount or 0.0) > 0 and good not in config.not_goods:
+                produced[market].add(good)
+        meta = tables / "metadata.parquet"
+        if meta.is_file():
+            row = pl.read_parquet(meta).to_dicts()[0]
+            names.append(f"{Path(str(row['path']).replace(chr(92), '/')).stem} ({row['date']})")
+        else:
+            names.append(save.name)
+    with (repo / PRESENCE).open("w", encoding="utf-8", newline="\n") as handle:
+        handle.write("# Generated by ppc start-stock presence; do not edit by hand. Per start market the goods it produces in a new game (any\n")
+        handle.write("# production in one of the saves). A vanilla good gets start stock only where listed; see start_market_stock.py.\n")
+        handle.write(f"# saves: {', '.join(names)}\n")
+        writer = csv.writer(handle, lineterminator="\n")
+        writer.writerow(["market", "goods"])
+        for market in sorted(produced):
+            writer.writerow([market, " ".join(sorted(produced[market]))])
+    return len(produced), sum(len(goods) for goods in produced.values())
 
 
 def _start_flows(tables: Path, config: Config) -> pl.DataFrame:
@@ -437,7 +513,7 @@ def check_against_save(repo: Path, project: Path, mod_root: Path, vanilla_root: 
     """Put the planned stock into a day-0 save's real markets: how far is the target from the settled price?"""
     config = load_project_config(project)
     table = load_table(repo)
-    stock = plan(model_flows(repo, project, mod_root, vanilla_root), table, config)
+    stock = plan(model_flows(repo, project, mod_root, vanilla_root), table, config, load_presence(repo), vanilla_goods(vanilla_root))
     start = _start_flows(_save_tables(save, repo), config)
     misses = {"with": [0.0, 0.0], "without": [0.0, 0.0]}
     weight_sum = 0.0

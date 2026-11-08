@@ -61,6 +61,79 @@ pp_cplan_band_hi100 = {
 	add = 100
 }
 
+# ---- Baseline rules: waits (passes in a row, + 100, compared with the counters pp_cplan_gw / _fw / _al / _mm) ----
+pp_cplan_granary_line100 = {
+	value = pp_cplan_granary_months
+	add = 99.5
+}
+# Country scope (the player's setting).
+pp_cplan_grange_line100 = {
+	value = pp_cplan_grange_months
+	add = 99.5
+}
+pp_cplan_access_line100 = {
+	value = pp_cplan_access_months
+	add = 99.5
+}
+pp_cplan_market_line100 = {
+	value = pp_cplan_market_months
+	add = 99.5
+}
+# A market the pass sees for the first time counts as settled (only a switch it sees starts the wait).
+pp_cplan_market_start100 = {
+	value = pp_cplan_market_months
+	add = 100
+}
+
+# Province scope: months of the province's consumption its store can hold (0 while nobody eats).
+pp_cplan_capacity_months = {
+	value = 0
+	if = {
+		limit = { pp_stored_food_province_consumption > 0 }
+		value = province_max_food
+		divide = pp_stored_food_province_consumption
+	}
+}
+# Province scope: how full the store is, in %.
+pp_cplan_fill_pct = {
+	value = province_food_percentage
+	multiply = 100
+}
+# Province scope: passes in a row the Granary rule's conditions held, and the store sat at 24 months (0 none).
+pp_cplan_gw_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_gw }
+		value = var:pp_cplan_gw
+		subtract = 100
+	}
+}
+pp_cplan_fw_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fw }
+		value = var:pp_cplan_fw
+		subtract = 100
+	}
+}
+# Location scope: passes in a row below the logistics line, and months since the last market switch the plan saw.
+pp_cplan_al_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_al }
+		value = var:pp_cplan_al
+		subtract = 100
+	}
+}
+pp_cplan_mm_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_mm }
+		value = var:pp_cplan_mm
+		subtract = 100
+	}
+}
+
 # Location scope: arable land left for farms, in thousands of people (the farm caps' Free Arable Land before the land
 # per level).
 pp_cplan_farm_site = {
@@ -363,6 +436,19 @@ pp_cplan_why_n = {
 		limit = { has_variable = pp_cplan_log_why }
 		value = var:pp_cplan_log_why
 		subtract = 100
+	}
+}
+
+# Location scope: 1 while the location is below the logistics line but the rule still waits (a recent dip, a market
+# switch, an occupation), for the Logistics tab.
+pp_cplan_access_wait_n = {
+	value = 0
+	if = {
+		limit = {
+			market_access < pp_cplan_access_line
+			NOT = { pp_cplan_access_settled = yes }
+		}
+		value = 1
 	}
 }
 

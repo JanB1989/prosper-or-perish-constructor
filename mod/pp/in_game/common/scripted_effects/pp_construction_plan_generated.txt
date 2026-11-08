@@ -582,6 +582,14 @@ pp_cplan_try_granary_here = {
 	}
 }
 
+# Location scope (the province capital): a Grange level, first that can be built.
+pp_cplan_try_grange_here = {
+	if = {
+		limit = { location_and_owner_can_build = { building_type = grange } pp_cplan_goods_here_victuals_trade_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:grange building_levels_under_construction > 0 } } }
+		pp_cplan_construct_food = { type = grange }
+	}
+}
+
 # Location scope: the first logistics building that can be built here ([construction_plan] logistics_order).
 pp_cplan_try_logistics_here = {
 	if = {
@@ -9277,6 +9285,9 @@ pp_cplan_profile_save_1 = {
 	pp_cplan_copy_num = { from = pp_cplan_access to = pp_cplan_p1_access }
 	pp_cplan_copy_num = { from = pp_cplan_keep to = pp_cplan_p1_keep }
 	pp_cplan_copy_num = { from = pp_cplan_payback to = pp_cplan_p1_payback }
+	pp_cplan_copy_num = { from = pp_cplan_gcap to = pp_cplan_p1_gcap }
+	pp_cplan_copy_num = { from = pp_cplan_gfill to = pp_cplan_p1_gfill }
+	pp_cplan_copy_num = { from = pp_cplan_grange to = pp_cplan_p1_grange }
 	pp_cplan_copy_num = { from = pp_cplan_g_camels to = pp_cplan_p1_g_camels }
 	pp_cplan_copy_num = { from = pp_cplan_g_elephants to = pp_cplan_p1_g_elephants }
 	pp_cplan_copy_num = { from = pp_cplan_g_horses to = pp_cplan_p1_g_horses }
@@ -9362,6 +9373,9 @@ pp_cplan_profile_load_1 = {
 	pp_cplan_copy_num = { from = pp_cplan_p1_access to = pp_cplan_access }
 	pp_cplan_copy_num = { from = pp_cplan_p1_keep to = pp_cplan_keep }
 	pp_cplan_copy_num = { from = pp_cplan_p1_payback to = pp_cplan_payback }
+	pp_cplan_copy_num = { from = pp_cplan_p1_gcap to = pp_cplan_gcap }
+	pp_cplan_copy_num = { from = pp_cplan_p1_gfill to = pp_cplan_gfill }
+	pp_cplan_copy_num = { from = pp_cplan_p1_grange to = pp_cplan_grange }
 	pp_cplan_copy_num = { from = pp_cplan_p1_g_camels to = pp_cplan_g_camels }
 	pp_cplan_copy_num = { from = pp_cplan_p1_g_elephants to = pp_cplan_g_elephants }
 	pp_cplan_copy_num = { from = pp_cplan_p1_g_horses to = pp_cplan_g_horses }
@@ -9451,6 +9465,9 @@ pp_cplan_profile_save_2 = {
 	pp_cplan_copy_num = { from = pp_cplan_access to = pp_cplan_p2_access }
 	pp_cplan_copy_num = { from = pp_cplan_keep to = pp_cplan_p2_keep }
 	pp_cplan_copy_num = { from = pp_cplan_payback to = pp_cplan_p2_payback }
+	pp_cplan_copy_num = { from = pp_cplan_gcap to = pp_cplan_p2_gcap }
+	pp_cplan_copy_num = { from = pp_cplan_gfill to = pp_cplan_p2_gfill }
+	pp_cplan_copy_num = { from = pp_cplan_grange to = pp_cplan_p2_grange }
 	pp_cplan_copy_num = { from = pp_cplan_g_camels to = pp_cplan_p2_g_camels }
 	pp_cplan_copy_num = { from = pp_cplan_g_elephants to = pp_cplan_p2_g_elephants }
 	pp_cplan_copy_num = { from = pp_cplan_g_horses to = pp_cplan_p2_g_horses }
@@ -9536,6 +9553,9 @@ pp_cplan_profile_load_2 = {
 	pp_cplan_copy_num = { from = pp_cplan_p2_access to = pp_cplan_access }
 	pp_cplan_copy_num = { from = pp_cplan_p2_keep to = pp_cplan_keep }
 	pp_cplan_copy_num = { from = pp_cplan_p2_payback to = pp_cplan_payback }
+	pp_cplan_copy_num = { from = pp_cplan_p2_gcap to = pp_cplan_gcap }
+	pp_cplan_copy_num = { from = pp_cplan_p2_gfill to = pp_cplan_gfill }
+	pp_cplan_copy_num = { from = pp_cplan_p2_grange to = pp_cplan_grange }
 	pp_cplan_copy_num = { from = pp_cplan_p2_g_camels to = pp_cplan_g_camels }
 	pp_cplan_copy_num = { from = pp_cplan_p2_g_elephants to = pp_cplan_g_elephants }
 	pp_cplan_copy_num = { from = pp_cplan_p2_g_horses to = pp_cplan_g_horses }
@@ -9625,6 +9645,9 @@ pp_cplan_profile_save_3 = {
 	pp_cplan_copy_num = { from = pp_cplan_access to = pp_cplan_p3_access }
 	pp_cplan_copy_num = { from = pp_cplan_keep to = pp_cplan_p3_keep }
 	pp_cplan_copy_num = { from = pp_cplan_payback to = pp_cplan_p3_payback }
+	pp_cplan_copy_num = { from = pp_cplan_gcap to = pp_cplan_p3_gcap }
+	pp_cplan_copy_num = { from = pp_cplan_gfill to = pp_cplan_p3_gfill }
+	pp_cplan_copy_num = { from = pp_cplan_grange to = pp_cplan_p3_grange }
 	pp_cplan_copy_num = { from = pp_cplan_g_camels to = pp_cplan_p3_g_camels }
 	pp_cplan_copy_num = { from = pp_cplan_g_elephants to = pp_cplan_p3_g_elephants }
 	pp_cplan_copy_num = { from = pp_cplan_g_horses to = pp_cplan_p3_g_horses }
@@ -9710,6 +9733,9 @@ pp_cplan_profile_load_3 = {
 	pp_cplan_copy_num = { from = pp_cplan_p3_access to = pp_cplan_access }
 	pp_cplan_copy_num = { from = pp_cplan_p3_keep to = pp_cplan_keep }
 	pp_cplan_copy_num = { from = pp_cplan_p3_payback to = pp_cplan_payback }
+	pp_cplan_copy_num = { from = pp_cplan_p3_gcap to = pp_cplan_gcap }
+	pp_cplan_copy_num = { from = pp_cplan_p3_gfill to = pp_cplan_gfill }
+	pp_cplan_copy_num = { from = pp_cplan_p3_grange to = pp_cplan_grange }
 	pp_cplan_copy_num = { from = pp_cplan_p3_g_camels to = pp_cplan_g_camels }
 	pp_cplan_copy_num = { from = pp_cplan_p3_g_elephants to = pp_cplan_g_elephants }
 	pp_cplan_copy_num = { from = pp_cplan_p3_g_horses to = pp_cplan_g_horses }
@@ -9829,6 +9855,9 @@ pp_cplan_declare_flags = {
 	set_variable = { name = pp_cplan_flag value = flag:glass }
 	set_variable = { name = pp_cplan_flag value = flag:goods }
 	set_variable = { name = pp_cplan_flag value = flag:goods_gold }
+	set_variable = { name = pp_cplan_flag value = flag:granary_cap }
+	set_variable = { name = pp_cplan_flag value = flag:granary_fill }
+	set_variable = { name = pp_cplan_flag value = flag:grange }
 	set_variable = { name = pp_cplan_flag value = flag:hi }
 	set_variable = { name = pp_cplan_flag value = flag:horses }
 	set_variable = { name = pp_cplan_flag value = flag:incense }

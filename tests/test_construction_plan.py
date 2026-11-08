@@ -223,3 +223,94 @@ def test_effects_use_the_vanilla_can_build_check() -> None:
         if "pp_cplan_pick" in limit:
             continue  # the farm picker checked the candidate before it picked it
         assert f"location_and_owner_can_build = {{ building_type = {building} }}" in limit, building
+
+
+# ---- Baseline rules (Jan 2026-11-08) ----
+
+TRIGGERS = MOD / "in_game/common/scripted_triggers/pp_construction_plan.txt"
+
+
+def _effect(text: str, name: str) -> str:
+    match = re.search(rf"^{name} = \{{\n(.*?)^\}}", text, re.MULTILINE | re.DOTALL)
+    assert match, name
+    return match.group(1)
+
+
+def test_baseline_defaults() -> None:
+    config = cp.load_config(PROJECT)
+    assert config.access_threshold == 97
+    assert (config.access_months, config.market_months) == (3, 12)
+    assert (config.granary_capacity_months, config.granary_fill_pct, config.granary_months) == (24, 85, 3)
+    assert config.grange_months == 12
+    assert config.granges == ("grange",)
+
+
+def test_food_pass_order() -> None:
+    """One food construction a province a month: farm (below the band), kitchen (always), Tavern (below the band),
+    Granary, Grange; the counters move before any of them."""
+    body = _effect(_read(EFFECTS), "pp_cplan_food_province")
+    steps = ["pp_cplan_food_watch = yes", "pp_cplan_try_farm_here", "pp_cplan_try_kitchen_here",
+             "pp_cplan_try_tavern_here", "pp_cplan_try_granary_here", "pp_cplan_try_grange_here"]
+    places = [body.index(step) for step in steps]
+    assert places == sorted(places)
+    # the kitchen needs no band; farm and Tavern do
+    kitchen = body[body.index("# 2."):body.index("# 3.")]
+    assert "pp_cplan_below_band" not in kitchen
+    for start, end in (("# 1.", "# 2."), ("# 3.", "# 4.")):
+        assert "pp_cplan_below_band = yes" in body[body.index(start):body.index(end)]
+    # every step after the first asks whether the province already built this month
+    for start, end in (("# 2.", "# 3."), ("# 3.", "# 4."), ("# 4.", "# 5."), ("# 5.", "# the state")):
+        assert "pp_cplan_may_try = yes" in body[body.index(start):body.index(end)]
+    # the Grange count starts again once a level was started
+    grange = body[body.index("# 5."):body.index("# the state")]
+    assert "remove_variable = pp_cplan_fw" in grange
+
+
+def test_kitchen_successor_first() -> None:
+    config = cp.load_config(PROJECT)
+    assert config.kitchens[0] == "public_kitchen" and "cookshop" in config.kitchens
+    effects = _read(MOD / cp.EFFECTS)
+    kitchen = _effect(effects, "pp_cplan_try_kitchen_here")
+    assert kitchen.index("public_kitchen") < kitchen.index("cookshop")
+    assert "pp_cplan_try_grange_here = {" in effects
+
+
+def test_hunger_rule_waits_only_for_food_makers() -> None:
+    triggers = _read(MOD / cp.TRIGGERS)
+    queued = _effect(triggers, "pp_cplan_food_queued")
+    assert "building_type:cookshop" in queued and "building_type:tavern" in queued
+    assert "building_type:granary" not in queued and "building_type:grange" not in queued
+
+
+def test_granary_rule_reads_room_and_fill() -> None:
+    triggers = _read(TRIGGERS)
+    now = _effect(triggers, "pp_cplan_granary_now")
+    assert "pp_cplan_capacity_months < scope:pp_cplan_country.pp_cplan_granary_cap" in now
+    assert "pp_cplan_fill_pct >= scope:pp_cplan_country.pp_cplan_granary_fill" in now
+    assert "pp_cplan_granary_line100" in _effect(triggers, "pp_cplan_granary_due")
+    assert "pp_cplan_grange_line100" in _effect(triggers, "pp_cplan_grange_due")
+
+
+def test_logistics_waits_out_short_dips() -> None:
+    triggers = _read(TRIGGERS)
+    wanted = _effect(triggers, "pp_cplan_logistics_wanted")
+    assert "pp_cplan_access_settled = yes" in wanted
+    settled = _effect(triggers, "pp_cplan_access_settled")
+    for part in ("controller ?= owner", "pp_cplan_access_line100", "pp_cplan_market_line100"):
+        assert part in settled
+    run = _effect(_read(EFFECTS), "pp_cplan_run")
+    # the counters move before the logistics pass reads them, also when the budget is used up
+    assert run.index("pp_cplan_access_watch = yes") < run.index("pp_cplan_try_logistics_here")
+    watch = run[run.index("logistics_off"):run.index("pp_cplan_access_watch = yes")]
+    assert "pp_cplan_budget_left" not in watch
+
+
+def test_new_settings_step_and_travel_in_profiles() -> None:
+    guis = _read(SCRIPTED_GUIS)
+    for flag, var in (("granary_cap", "pp_cplan_gcap"), ("granary_fill", "pp_cplan_gfill"), ("grange", "pp_cplan_grange")):
+        assert f"flag:{flag} = {{ pp_cplan_step_var = {{ var = {var} " in guis, flag
+        assert var in cp.PROFILE_NUMBERS
+        assert f"MakeScopeFlag('{flag}')" in _read(GUI_FILES[0]), flag
+    assert "flag:access_line = { pp_cplan_step_var = { var = pp_cplan_access current = pp_cplan_access_pct step = 1" in guis
+    # switching the plan or a rule group forgets old counts
+    assert guis.count("pp_cplan_reset_watch = yes") == 2

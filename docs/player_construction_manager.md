@@ -56,13 +56,29 @@ England, error.log clean of plan lines). Player-only: the AI keeps its own logic
   unused passes on to the next group (food, logistics, goods). Constructions are `construct_building` = normal, paid,
   in the construction queue (verified: gold drops, queue shows them).
 - **Food (per province):** focus Standard 6/18, Breadbasket 8/20, Market Town 6/14, Workshop 4/12, Hands Off, Custom
-  (arrows set your own band); status per province (building X / blocked / in band / above / held back / store full).
-  Below band: crop farm (standing line first, else the line with the best local output), then kitchen, then Tavern in the
-  province capital; a full store under 24 months gets a Granary.
+  (arrows set your own band); status per province (building X / blocked / in band / above / held back / Granary due).
+  Baseline rules since 2026-11-08 (Jan), one construction per province a month, the first that builds: (1) below the
+  band a crop farm (standing line first, else the line with the best local output); (2) a kitchen whenever the Cookshop
+  budget allows, Public Kitchen first (an old tier cannot be built once its successor is researched); (3) below the
+  band a Tavern; (4) a Granary while the store can hold less than N months of consumption (`province_max_food` /
+  consumption, setting, default 24) and is at least X % full (setting, default 85), both in 3 passes in a row: room
+  helps only a store that fills, in run 057c295e half of all provinces had room but sat at ~13 months; (5) a Grange
+  after the store held 24 months for M passes in a row (setting, default 12), the count starts again after each level.
+  The hunger steps wait while a farm, kitchen or Tavern of the province is under construction. Counters
+  `pp_cplan_gw` / `pp_cplan_fw` (province) move every pass, also with the budget used up; switching the plan or a group
+  clears them. Food tab: the three settings, room and fill per province. Farm, Tavern and Victualling Yard rules: open
+  (Jan's direction: farms by stored months + arable land, highest payback first, robust to Seasonal Harvests; Taverns
+  where farms do badly or food is very low; Yards by payback).
 - **Goods (per good):** Off / Keep / Expand / Never, months of stock in the capital's market, a Keep line (months).
   Keep built a Stud Farm in Woking for horses (0 months) in the test.
-- **Logistics (per location):** a market access line, per location Follow Plan / Always / Never and Plan builds / Hands
-  Off. The buildings' own gates still apply (15 building levels: no English location qualified in 1337).
+- **Logistics (per location):** a market access line (default 97 % since 2026-11-08, steps of 1), per location Follow
+  Plan / Always / Never and Plan builds / Hands Off. The buildings' own gates still apply (15 building levels: no English
+  location qualified in 1337). Short dips do not count (Jan): below the line in 3 passes in a row while the owner
+  controls the location (`controller ?= owner`), and 12 months without a market switch (`pp_cplan_mm`, market in
+  `pp_cplan_mkt`; a market first seen counts as settled). Run af7dce96 (1342-1837, 5-year saves): 98 % of drops below
+  97 % came with a market switch, a third were back above 5 years later; occupation 1.4 % (1 % otherwise); dips shorter
+  than 5 years are not in those saves. The Logistics tab marks a location "waiting" with both counts in the tooltip.
+  Always skips the wait.
 - Generated parts (`construction_plan.py`, finalize): farm/kitchen/tavern/granary/logistics pickers, 226 producers of 75
   goods, per-good values, the Goods tab rows. Tests: `tests/test_construction_plan.py`.
 

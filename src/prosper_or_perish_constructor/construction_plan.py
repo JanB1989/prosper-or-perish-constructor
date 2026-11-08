@@ -4,10 +4,12 @@ The player sets rules once in the Construction Plan panel; a monthly pass for co
 constructions with ``construct_building`` (a normal, paid construction). The AI never runs it. Two layers:
 
 * Global rules, per country (rule groups Food, Logistics, Goods):
-  * Food, per province: a band of stored months (focus presets or custom). Below it the plan answers in the food
-    chain's order: a crop farm where land is left, then a kitchen and a Tavern in the province capital. A full store
-    under 24 months gets a Granary.
-  * Logistics, per location: below the player's market access line the first logistics building that can be built.
+  * Food, per province, one construction a month, first that applies (baseline rules, Jan 2026-11-08): below the band
+    of stored months (focus presets or custom) a crop farm where land is left; a kitchen whenever the Cookshop budget
+    allows; below the band a Tavern; a Granary while the store can hold less than the player's months and is nearly
+    full (both in several passes in a row); a Grange, cautiously, after the store held 24 months for a long time.
+  * Logistics, per location: below the player's market access line (in several passes in a row, owner in control, no
+    recent market switch) the first logistics building that can be built.
   * Goods, per good: Off / Keep stocked (the market holds fewer months of its demand than the player's line) / Expand
     (a standing producer's next level pays back within the payback line) / Never.
 * Location rules, per location (Jan 2026-11-06): a location set to Own Rules leaves the global rules and follows its
@@ -66,7 +68,8 @@ DEFAULT_DEMAND = "default_construct_building"  # vanilla: the construction deman
 # location rule status codes (+ 100), set by pp_cplan_rule (hand-written) and shown by the rule rows
 RULE_STATUS = ("started", "waiting", "done", "building", "payback", "blocked", "budget", "goods")
 # the setting variables a global profile carries (numbers) and the switches (present or not)
-PROFILE_NUMBERS = ("pp_cplan_reserve", "pp_cplan_max", "pp_cplan_access", "pp_cplan_keep", "pp_cplan_payback")
+PROFILE_NUMBERS = ("pp_cplan_reserve", "pp_cplan_max", "pp_cplan_access", "pp_cplan_keep", "pp_cplan_payback",
+                   "pp_cplan_gcap", "pp_cplan_gfill", "pp_cplan_grange")
 PROFILE_FLAGS = ("pp_cplan_food_off", "pp_cplan_logistics_off", "pp_cplan_goods_off")
 # the variables of one location rule (pp_cplan_r<n>_<field>): the building type is a scope, the rest numbers
 RULE_NUMBER_FIELDS = ("lv", "m", "c", "t", "pb")
@@ -94,6 +97,13 @@ class Config:
     logistics_order: tuple[str, ...]
     hidden_goods: frozenset[str]
     focus: tuple[tuple[str, int, int], ...]
+    granges: tuple[str, ...] = ("grange",)
+    access_months: int = 3
+    market_months: int = 12
+    granary_capacity_months: int = 24
+    granary_fill_pct: int = 85
+    granary_months: int = 3
+    grange_months: int = 12
     payback_years: int = 10
     rule_slots: int = 4
     template_slots: int = 4
@@ -148,6 +158,13 @@ def load_config(project: Path) -> Config:
         logistics_order=tuple(data["logistics_order"]),
         hidden_goods=frozenset(data["hidden_goods"]),
         focus=focus,
+        granges=tuple(data["granges"]),
+        access_months=int(data["access_months"]),
+        market_months=int(data["market_months"]),
+        granary_capacity_months=int(data["granary_capacity_months"]),
+        granary_fill_pct=int(data["granary_fill_pct"]),
+        granary_months=int(data["granary_months"]),
+        grange_months=int(data["grange_months"]),
         payback_years=int(data["payback_years"]),
         rule_slots=int(data["rule_slots"]),
         template_slots=int(data["template_slots"]),
@@ -463,6 +480,18 @@ def render_values(config: Config, farm_lines: dict[str, list[str]], farm_goods: 
                                 "Country scope: the Keep stocked line, months of the market's demand in stock."))
     parts.append(_default_value("pp_cplan_payback_line", "pp_cplan_payback", config.payback_years,
                                 "Country scope: the Expand line, payback of the next level in years."))
+    parts.append(_default_value("pp_cplan_granary_cap", "pp_cplan_gcap", config.granary_capacity_months,
+                                "Country scope: Granary while the store holds less than this many months."))
+    parts.append(_default_value("pp_cplan_granary_fill", "pp_cplan_gfill", config.granary_fill_pct,
+                                "Country scope: Granary only while the store is at least this full, in %."))
+    parts.append(_default_value("pp_cplan_grange_months", "pp_cplan_grange", config.grange_months,
+                                "Country scope: Grange after this many passes in a row at 24 months stored."))
+    parts.append(
+        "# Fixed waits of the baseline rules (passes in a row; [construction_plan]).\n"
+        f"pp_cplan_access_months = {{ value = {config.access_months} }}\n"
+        f"pp_cplan_market_months = {{ value = {config.market_months} }}\n"
+        f"pp_cplan_granary_months = {{ value = {config.granary_months} }}\n\n"
+    )
     parts.append(
         "# Country scope: the province focus count, for the panel's cycle (bands + hands off + custom).\n"
         f"pp_cplan_focus_count = {{ value = {len(focus_ids(config))} }}\n"
@@ -757,6 +786,7 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]], farm_goods:
         ("pp_cplan_try_kitchen_here", config.kitchens, "a kitchen level (the province's Cookshop budget is its max level)"),
         ("pp_cplan_try_tavern_here", config.taverns, "a Tavern level"),
         ("pp_cplan_try_granary_here", config.granaries, "a Granary level"),
+        ("pp_cplan_try_grange_here", config.granges, "a Grange level"),
     ):
         parts.append(f"\n# Location scope (the province capital): {comment}, first that can be built.\n{name} = {{\n")
         for position, building in enumerate(buildings):
@@ -862,6 +892,7 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]], farm_goods:
     flags = sorted(
         set(goods) | set(MODE_KEYS)
         | {"food", "logistics", "goods", "reserve", "max", "access_line", "keep", "payback", "up", "down", "lo", "hi"}
+        | {"granary_cap", "granary_fill", "grange"}
         | {"lv", "metric", "cmp", "t", "tbig", "pb", "clear", "save", "apply", "province", "load"}
         | {f"r{n}" for n in range(1, config.rule_slots + 1)}
         | {f"t{k}" for k in range(1, config.template_slots + 1)}
@@ -1258,16 +1289,17 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
     result.logistics = list(config.logistics_order)
 
     wanted = [b for tiers in lines.values() for b in tiers] + list(config.kitchens) + list(config.taverns)
-    wanted += list(config.granaries) + list(config.logistics_order)
+    wanted += list(config.granaries) + list(config.granges) + list(config.logistics_order)
     wanted += [name for names in by_good.values() for name in names]
     result.missing = sorted({name for name in wanted if name not in known})
 
     texts = {
         mod_root / VALUES: render_values(config, lines, farm_goods, goods, by_good, demands, bounds),
         mod_root / EFFECTS: render_effects(config, lines, farm_goods, goods, by_good, costs),
+        # the hunger rule waits for the food makers it starts (farms, kitchens, Taverns), not for stores
         mod_root / TRIGGERS: render_triggers(goods, by_good, demands,
                                              [b for tiers in lines.values() for b in tiers] + list(config.kitchens)
-                                             + list(config.taverns) + list(config.granaries)),
+                                             + list(config.taverns)),
         mod_root / GUI: render_gui(goods),
         mod_root / HERE_GUI: render_here_gui(config),
     }

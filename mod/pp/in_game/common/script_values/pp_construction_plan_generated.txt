@@ -22,7 +22,7 @@ pp_cplan_max_per_month = {
 }
 # Country scope: the logistics line, market access in %.
 pp_cplan_access_pct = {
-	value = 85
+	value = 97
 	if = {
 		limit = { has_variable = pp_cplan_access }
 		value = var:pp_cplan_access
@@ -47,6 +47,38 @@ pp_cplan_payback_line = {
 		subtract = 100
 	}
 }
+# Country scope: Granary while the store holds less than this many months.
+pp_cplan_granary_cap = {
+	value = 24
+	if = {
+		limit = { has_variable = pp_cplan_gcap }
+		value = var:pp_cplan_gcap
+		subtract = 100
+	}
+}
+# Country scope: Granary only while the store is at least this full, in %.
+pp_cplan_granary_fill = {
+	value = 85
+	if = {
+		limit = { has_variable = pp_cplan_gfill }
+		value = var:pp_cplan_gfill
+		subtract = 100
+	}
+}
+# Country scope: Grange after this many passes in a row at 24 months stored.
+pp_cplan_grange_months = {
+	value = 12
+	if = {
+		limit = { has_variable = pp_cplan_grange }
+		value = var:pp_cplan_grange
+		subtract = 100
+	}
+}
+# Fixed waits of the baseline rules (passes in a row; [construction_plan]).
+pp_cplan_access_months = { value = 3 }
+pp_cplan_market_months = { value = 12 }
+pp_cplan_granary_months = { value = 3 }
+
 # Country scope: the province focus count, for the panel's cycle (bands + hands off + custom).
 pp_cplan_focus_count = { value = 6 }
 # Country scope: farm sites tried per province.

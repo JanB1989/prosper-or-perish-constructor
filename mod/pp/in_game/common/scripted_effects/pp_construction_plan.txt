@@ -10,11 +10,14 @@
 # Variables carry + 100 (a variable at 0 counts as unset; var:x = n compares scopes, so only < / > ranges are used).
 #
 # Country variables: pp_cplan_on (the plan runs), pp_cplan_food_off / _logistics_off / _goods_off (a rule group is
-# off), pp_cplan_reserve / _max / _access / _keep / _payback (settings, defaults in [construction_plan]),
+# off), pp_cplan_reserve / _max / _access / _keep / _payback / _gcap / _gfill / _grange (settings, defaults in
+# [construction_plan]),
 # pp_cplan_g_<good> (101 keep stocked, 102 expand within the payback line, 103 never), the pass's pp_cplan_started /
 # _spent / _cap / _hit, the lists pp_cplan_log (locations built in by the last pass) and pp_cplan_own (locations with
 # own rules), pp_cplan_sel (the location the Here tab shows), templates pp_cplan_t<k>_* and profiles pp_cplan_p<k>_*.
-# Province: pp_cplan_focus (+ pp_cplan_lo / _hi for Custom), pp_cplan_status + list pp_cplan_status_types.
+# Province: pp_cplan_focus (+ pp_cplan_lo / _hi for Custom), pp_cplan_status + list pp_cplan_status_types, the
+# counters pp_cplan_gw (Granary) / pp_cplan_fw (Grange). Location counters of the logistics rule: pp_cplan_al,
+# pp_cplan_mm and the market last seen pp_cplan_mkt.
 # Location: pp_cplan_mode (101 own rules, 102 hands off, unset = the global rules), the rules pp_cplan_r<n>_b
 # (building type) / _lv / _m / _c / _t / _pb / _st / _est, pp_cplan_tpl (the template last applied), pp_cplan_logi (101
 # always, 102 never), the list pp_cplan_cands (the Here tab's buildings), pp_cplan_log_why + list pp_cplan_log_types.
@@ -60,6 +63,10 @@ pp_cplan_run = {
 	if = {
 		limit = { NOT = { has_variable = pp_cplan_logistics_off } }
 		change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }
+		# the logistics counters move every pass, also while the budget is used up
+		every_owned_location = {
+			pp_cplan_access_watch = yes
+		}
 	}
 	if = {
 		limit = {
@@ -117,15 +124,21 @@ pp_cplan_run = {
 	}
 }
 
-# Province scope: the food rule. Above the band nothing; a full store under 24 months gets a Granary; below the band a
-# crop farm where land is left (the province's locations with the most arable land first), else a kitchen, else a
-# Tavern in the province capital. Locations with own rules or hands off are left out; while one of the rule's
-# buildings has a level under construction in the province, the rule waits (the store only moves once it stands).
-# The state goes into pp_cplan_status for the panel.
+# Province scope: the food rule, one construction a month, the first of these that builds (baseline rules, Jan
+# 2026-11-08):
+#   1. below the band: a crop farm where land is left (the province's locations with the most arable land first);
+#   2. a kitchen whenever the Cookshop budget allows (its successor first, so a researched tier replaces the old one);
+#   3. below the band: a Tavern in the province capital;
+#   4. a Granary while the store holds less than the player's months and is nearly full, both for a few passes;
+#   5. a Grange after the store held 24 months for the player's number of passes (the count starts again after each).
+# Locations with own rules, hands off or a profile are left out. While a farm, kitchen or Tavern of the province has a
+# level under construction, the hunger rules 1 and 3 wait (the store only moves once it stands). The counters behind 4
+# and 5 move every pass (pp_cplan_food_watch), also while the budget is used up. The state goes into pp_cplan_status.
 pp_cplan_food_province = {
 	save_scope_as = pp_cplan_province
 	clear_variable_list = pp_cplan_status_types
 	scope:pp_cplan_country = { remove_variable = pp_cplan_hit }
+	pp_cplan_food_watch = yes
 	if = {
 		limit = { pp_cplan_hands_off_n > 0.5 }
 		set_variable = { name = pp_cplan_status value = 105 }
@@ -134,48 +147,14 @@ pp_cplan_food_province = {
 		limit = { NOT = { has_variable = pp_stored_food_months } }
 		set_variable = { name = pp_cplan_status value = 108 }
 	}
-	else_if = {
-		limit = { var:pp_stored_food_months > pp_cplan_band_hi100 }
-		set_variable = { name = pp_cplan_status value = 104 }
-	}
-	else_if = {
-		limit = { any_location_in_province = { pp_cplan_food_queued = yes } }
-		set_variable = { name = pp_cplan_status value = 110 }
-	}
-	else_if = {
-		limit = {
-			province_capital ?= {
-				owner ?= scope:pp_cplan_country
-				pp_granary_ai_weight > 0
-			}
-		}
+	else = {
+		# 1. hungry: a farm
 		if = {
-			limit = { pp_cplan_budget_left = no }
-			set_variable = { name = pp_cplan_status value = 107 }
-		}
-		else = {
-			province_capital = {
-				if = {
-					limit = { pp_cplan_location_ok = yes }
-					pp_cplan_try_granary_here = yes
-				}
+			limit = {
+				pp_cplan_below_band = yes
+				pp_cplan_may_try = yes
+				NOT = { any_location_in_province = { pp_cplan_food_queued = yes } }
 			}
-			if = {
-				limit = { scope:pp_cplan_country = { has_variable = pp_cplan_hit } }
-				set_variable = { name = pp_cplan_status value = 101 }
-			}
-			else = {
-				set_variable = { name = pp_cplan_status value = 109 }
-			}
-		}
-	}
-	else_if = {
-		limit = { var:pp_stored_food_months < pp_cplan_band_lo100 }
-		if = {
-			limit = { pp_cplan_budget_left = no }
-			set_variable = { name = pp_cplan_status value = 107 }
-		}
-		else = {
 			ordered_location_in_province = {
 				limit = { pp_cplan_location_ok = yes }
 				order_by = pp_cplan_farm_site
@@ -186,37 +165,189 @@ pp_cplan_food_province = {
 					pp_cplan_try_farm_here = yes
 				}
 			}
-			if = {
-				limit = { pp_cplan_may_try = yes }
-				province_capital ?= {
-					if = {
-						limit = { pp_cplan_location_ok = yes }
-						pp_cplan_try_kitchen_here = yes
-					}
+		}
+		# 2. a kitchen, whenever it can be built
+		if = {
+			limit = { pp_cplan_may_try = yes }
+			province_capital ?= {
+				if = {
+					limit = { pp_cplan_location_ok = yes }
+					pp_cplan_try_kitchen_here = yes
 				}
 			}
-			if = {
-				limit = { pp_cplan_may_try = yes }
-				province_capital ?= {
-					if = {
-						limit = { pp_cplan_location_ok = yes }
-						pp_cplan_try_tavern_here = yes
-					}
+		}
+		# 3. hungry: a Tavern
+		if = {
+			limit = {
+				pp_cplan_below_band = yes
+				pp_cplan_may_try = yes
+				NOT = { any_location_in_province = { pp_cplan_food_queued = yes } }
+			}
+			province_capital ?= {
+				if = {
+					limit = { pp_cplan_location_ok = yes }
+					pp_cplan_try_tavern_here = yes
+				}
+			}
+		}
+		# 4. a Granary
+		if = {
+			limit = {
+				pp_cplan_granary_due = yes
+				pp_cplan_may_try = yes
+			}
+			province_capital ?= {
+				if = {
+					limit = { pp_cplan_location_ok = yes }
+					pp_cplan_try_granary_here = yes
+				}
+			}
+		}
+		# 5. a Grange, then the count starts again
+		if = {
+			limit = {
+				pp_cplan_grange_due = yes
+				pp_cplan_may_try = yes
+			}
+			province_capital ?= {
+				if = {
+					limit = { pp_cplan_location_ok = yes }
+					pp_cplan_try_grange_here = yes
 				}
 			}
 			if = {
 				limit = { scope:pp_cplan_country = { has_variable = pp_cplan_hit } }
-				set_variable = { name = pp_cplan_status value = 101 }
-			}
-			else = {
-				set_variable = { name = pp_cplan_status value = 102 }
+				remove_variable = pp_cplan_fw
 			}
 		}
-	}
-	else = {
-		set_variable = { name = pp_cplan_status value = 103 }
+		# the state for the panel
+		if = {
+			limit = { scope:pp_cplan_country = { has_variable = pp_cplan_hit } }
+			set_variable = { name = pp_cplan_status value = 101 }
+		}
+		else_if = {
+			limit = { pp_cplan_budget_left = no }
+			set_variable = { name = pp_cplan_status value = 107 }
+		}
+		else_if = {
+			limit = {
+				pp_cplan_below_band = yes
+				any_location_in_province = { pp_cplan_food_queued = yes }
+			}
+			set_variable = { name = pp_cplan_status value = 110 }
+		}
+		else_if = {
+			limit = { pp_cplan_below_band = yes }
+			set_variable = { name = pp_cplan_status value = 102 }
+		}
+		else_if = {
+			limit = { pp_cplan_granary_due = yes }
+			set_variable = { name = pp_cplan_status value = 109 }
+		}
+		else_if = {
+			limit = { var:pp_stored_food_months > pp_cplan_band_hi100 }
+			set_variable = { name = pp_cplan_status value = 104 }
+		}
+		else = {
+			set_variable = { name = pp_cplan_status value = 103 }
+		}
 	}
 	scope:pp_cplan_country = { remove_variable = pp_cplan_hit }
+}
+
+# Province scope: the counters of the Granary and Grange rules, once a pass: passes in a row the Granary conditions
+# held (pp_cplan_gw) and the store sat at 24 months (pp_cplan_fw); a pass without resets them.
+pp_cplan_food_watch = {
+	if = {
+		limit = { pp_cplan_granary_now = yes }
+		pp_cplan_count_up = { var = pp_cplan_gw }
+	}
+	else_if = {
+		limit = { has_variable = pp_cplan_gw }
+		remove_variable = pp_cplan_gw
+	}
+	if = {
+		limit = {
+			has_variable = pp_stored_food_months
+			var:pp_stored_food_months > 123.5
+		}
+		pp_cplan_count_up = { var = pp_cplan_fw }
+	}
+	else_if = {
+		limit = { has_variable = pp_cplan_fw }
+		remove_variable = pp_cplan_fw
+	}
+}
+
+# Location scope: the counters of the logistics rule, once a pass: passes in a row below the line while the owner held
+# the location (pp_cplan_al), and months since the last market switch the plan saw (pp_cplan_mm; the market itself in
+# pp_cplan_mkt). A market seen for the first time counts as settled, so only a switch starts the wait.
+pp_cplan_access_watch = {
+	if = {
+		limit = { exists = market }
+		market = { save_temporary_scope_as = pp_cplan_mkt_now }
+		if = {
+			limit = { NOT = { has_variable = pp_cplan_mkt } }
+			set_variable = { name = pp_cplan_mkt value = scope:pp_cplan_mkt_now }
+			set_variable = { name = pp_cplan_mm value = pp_cplan_market_start100 }
+		}
+		else_if = {
+			limit = { NOT = { var:pp_cplan_mkt = scope:pp_cplan_mkt_now } }
+			set_variable = { name = pp_cplan_mkt value = scope:pp_cplan_mkt_now }
+			set_variable = { name = pp_cplan_mm value = 100 }
+		}
+		else = {
+			pp_cplan_count_up = { var = pp_cplan_mm }
+		}
+	}
+	if = {
+		limit = {
+			controller ?= owner
+			market_access < pp_cplan_access_line
+		}
+		pp_cplan_count_up = { var = pp_cplan_al }
+	}
+	else_if = {
+		limit = { has_variable = pp_cplan_al }
+		remove_variable = pp_cplan_al
+	}
+}
+
+# Any scope: one more pass on the counter $var$ (+ 100; unset = 0), kept below 99 so it never overflows.
+pp_cplan_count_up = {
+	if = {
+		limit = { NOT = { has_variable = $var$ } }
+		set_variable = { name = $var$ value = 100 }
+	}
+	if = {
+		limit = { var:$var$ < 198.5 }
+		change_variable = { name = $var$ add = 1 }
+	}
+}
+
+# Country scope: forgets the counters of the baseline rules (when the plan or a rule group is switched, so a count
+# from before a pause never starts a building at once).
+pp_cplan_reset_watch = {
+	every_owned_location = {
+		limit = { has_variable = pp_cplan_al }
+		remove_variable = pp_cplan_al
+	}
+	every_province = {
+		limit = {
+			OR = {
+				has_variable = pp_cplan_gw
+				has_variable = pp_cplan_fw
+			}
+		}
+		if = {
+			limit = { has_variable = pp_cplan_gw }
+			remove_variable = pp_cplan_gw
+		}
+		if = {
+			limit = { has_variable = pp_cplan_fw }
+			remove_variable = pp_cplan_fw
+		}
+	}
 }
 
 # Location scope: start one level of $type$ here and record it ($why$: 101 food, 102 logistics, 103 goods, 104 a

@@ -402,6 +402,51 @@ widget = {
 					margin = { 6 6 }
 					spacing = 4
 
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						spacing = 6
+						pp_cplan_label = { text = "PP_CPLAN_GRANARY_CAP" tooltip = "PP_CPLAN_GRANARY_CAP_TT" }
+						expand = {}
+						pp_cplan_label = { text = "PP_CPLAN_GRANARY_CAP_VALUE" }
+						pp_cplan_step_button = {
+							text = "PP_CPLAN_MINUS"
+							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('granary_cap')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
+						}
+						pp_cplan_step_button = {
+							text = "PP_CPLAN_PLUS"
+							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('granary_cap')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
+						}
+					}
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						spacing = 6
+						pp_cplan_label = { text = "PP_CPLAN_GRANARY_FILL" tooltip = "PP_CPLAN_GRANARY_FILL_TT" }
+						expand = {}
+						pp_cplan_label = { text = "PP_CPLAN_GRANARY_FILL_VALUE" }
+						pp_cplan_step_button = {
+							text = "PP_CPLAN_MINUS"
+							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('granary_fill')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
+						}
+						pp_cplan_step_button = {
+							text = "PP_CPLAN_PLUS"
+							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('granary_fill')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
+						}
+					}
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						spacing = 6
+						pp_cplan_label = { text = "PP_CPLAN_GRANGE_MONTHS" tooltip = "PP_CPLAN_GRANGE_MONTHS_TT" }
+						expand = {}
+						pp_cplan_label = { text = "PP_CPLAN_GRANGE_MONTHS_VALUE" }
+						pp_cplan_step_button = {
+							text = "PP_CPLAN_MINUS"
+							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('grange')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
+						}
+						pp_cplan_step_button = {
+							text = "PP_CPLAN_PLUS"
+							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('grange')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
+						}
+					}
 					pp_cplan_note = { text = "PP_CPLAN_FOOD_NOTE" }
 
 					scrollarea = {
@@ -441,6 +486,7 @@ widget = {
 												blockoverride "pp_cplan_rest" { value = "[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint(Min_CFixedPoint(Province.MakeScope.ScriptValue('pp_cplan_stored_n'), '(CFixedPoint)24'), '(CFixedPoint)24')))]" }
 											}
 											pp_cplan_label = { text = "PP_CPLAN_STORED_VALUE" minimumsize = { 70 -1 } }
+											pp_cplan_label = { text = "PP_CPLAN_CAPACITY_VALUE" tooltip = "PP_CPLAN_CAPACITY_TT" }
 											expand = {}
 										}
 
@@ -603,6 +649,12 @@ widget = {
 													margin = { 4 2 }
 													pp_cplan_label = { raw_text = "[Location.GetName]" minimumsize = { 170 -1 } maximumsize = { 170 -1 } }
 													pp_cplan_label = { text = "PP_CPLAN_ACCESS_HERE" minimumsize = { 60 -1 } tooltip = "PP_CPLAN_ACCESS_HERE_TT" }
+													pp_cplan_label = {
+														visible = "[GreaterThan_CFixedPoint(Location.MakeScope.ScriptValue('pp_cplan_access_wait_n'), '(CFixedPoint)0.5')]"
+														text = "PP_CPLAN_ACCESS_WAIT"
+														tooltip = "PP_CPLAN_ACCESS_WAIT_TT"
+														minimumsize = { 70 -1 }
+													}
 													button_regular = {
 														size = { 120 26 }
 														tooltip = "PP_CPLAN_LOGI_TT"

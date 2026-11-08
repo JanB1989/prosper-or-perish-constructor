@@ -66,7 +66,12 @@ England, error.log clean of plan lines). Player-only: the AI keeps its own logic
   after the store held 24 months for M passes in a row (setting, default 12), the count starts again after each level.
   The hunger steps wait while a farm, kitchen or Tavern of the province is under construction. Counters
   `pp_cplan_gw` / `pp_cplan_fw` (province) move every pass, also with the budget used up; switching the plan or a group
-  clears them. Food tab: the three settings, room and fill per province. Farm, Tavern and Victualling Yard rules: open
+  clears them. Food tab: the three settings, room and fill per province. Tested in game 2026-11-08 (Cyprus save,
+  1339, 5 months): Cyprus room 22 months, 100 % full; the Granary came due after 3 passes; with a location profile on
+  the province capital it stayed "due, cannot be built" (the profile has priority there); without it the kitchen step
+  started a Cookshop, the next month the Granary; the market count rose 112 -> 116 (same-market compare works,
+  `province_max_food` works as a value); error.log has no plan lines. Not exercised: a location below the logistics
+  line, a market switch, an occupation, a Grange, the Public Kitchen upgrade. Farm, Tavern and Victualling Yard rules: open
   (Jan's direction: farms by stored months + arable land, highest payback first, robust to Seasonal Harvests; Taverns
   where farms do badly or food is very low; Yards by payback).
 - **Goods (per good):** Off / Keep / Expand / Never, months of stock in the capital's market, a Keep line (months).

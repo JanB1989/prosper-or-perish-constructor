@@ -108,6 +108,13 @@ England, error.log clean of plan lines). Player-only: the AI keeps its own logic
   rebuild (`uv run eu5mini build -p plan_iberia -s pp_plan`, then `deploy -s pp_plan --yes`) after a PP sync that
   changes the map or the start setup. New game as Castile: save `pp_plan_base` (1 April 1337). Speed: the plan's
   monthly pass took about 4 ms (script profiler) for 451 locations, 3 constructions a month.
+  Stress test 2026-11-08 (`artifacts/plan_test/2026-11-08/README.md`, console `run pp_plan_setup.txt`: 10
+  constructions a month, 4 profiles on 168 locations, goods rules): 10 years by `tick_day` take 18-20 s with the
+  plan off and 21 s with it on; profiler at 1347: 0.53 s a year for the pass (profiles 0.23, food 0.22). +396
+  levels over 10 years. Fixed from it (3accd8fe): construction goods must cover 12 months of the draw
+  (`construction_goods_months`; four River Boatmen's Yards had stood still a year on 0.65 naval supplies), and the
+  profile pass goes fewest building levels first (the profile assigned last had built nothing). The test world
+  falls apart after ~25 years (Catalan independence, rebels, Black Death): use 10-15 year runs.
 - **Goods (per good):** Off / Keep / Expand / Never, months of stock in the capital's market, a Keep line (months).
   Keep built a Stud Farm in Woking for horses (0 months) in the test.
 - **Logistics (per location):** a market access line (default 97 % since 2026-11-08, steps of 1), per location Follow

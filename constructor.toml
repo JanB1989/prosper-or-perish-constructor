@@ -1192,23 +1192,27 @@ reserve_months = 6            # gold kept back, in months of total income
 max_per_month = 3             # most new constructions the plan starts in a month
 access_threshold = 97         # logistics: build where market access is below this, in % (Jan 2026-11-08)
 keep_months = 3               # goods "Keep stocked": build while the market holds less than this many months of its demand
-farm_sites_per_province = 4   # food: locations of a province tried for a farm, most arable land first
-# Baseline rules (Jan 2026-11-08). Market access and the store also move for a short time (a market switch, an
-# occupation, harvest swings), so each rule asks for its condition in several monthly passes in a row. Run af7dce96
-# (1342-1837, saves every 5 years): 98 % of the drops below 97 % came with a market switch, a third of them were back
-# above 5 years later; occupation 1.4 %.
-access_months = 3             # logistics: market access below the line, owner in control, in this many passes in a row
-market_months = 12            # logistics: and no market switch seen for this many months (a market first seen counts as settled)
+farm_sites_per_province = 4   # food: locations tried for a staple food maker, best payback first
+# Baseline rules (Jan 2026-11-08). Every check reads the game as it stands; nothing is counted from pass to pass, so
+# the pass can run at any rhythm (Jan: no stored history). Short-lived effects are taken out instead (a blacklist):
+# this year's Variable Harvest (its peasant food consumption, read from the pp_harvest_* modifiers) and spoilage are
+# taken out of the food numbers, and the event modifiers in access_blacklist out of market access. The food rules
+# read "the store a year from now in a normal year" = stored months + 12 x the month's food gain without them.
 granary_capacity_months = 24  # Granary: while the province can store less than this many months of its consumption
-granary_fill_pct = 85         # Granary: and its store is at least this full, in %
-granary_months = 3            # Granary: both in this many passes in a row
-grange_months = 12            # Grange: after the store held 24 months in this many passes in a row (counted again after each level)
-# Food chain answers in the province capital, first one that can be built. Kitchens are built whenever the Cookshop
-# budget allows (Jan 2026-11-08); the successor first (an old tier cannot be built once its successor is researched).
+granary_fill_pct = 85         # Granary: and its store is at least this full, in %, and a normal year still adds food
+grange_surplus_pct = 5        # Grange: the store holds 24 months and a normal month still adds this share of consumption
+famine_months = 3             # Tavern first where a normal year leaves less than this in the store a year from now
+yard_payback_years = 10       # Victualling Yard: next level while it pays back within this; a first one where victuals cost their default price or more
+tavern_victuals = 10          # a Tavern only where its market holds at least this much victuals
+access_blacklist = ["staple_port_commercial_stagnation_modifier"]   # event modifiers taken out of market access
+# Food chain answers, first one that can be built. Kitchens are built whenever the Cookshop budget allows (Jan
+# 2026-11-08); the successor first (an old tier cannot be built once its successor is researched). Farms: the line
+# that pays back fastest at the market's prices and the location's output, at its highest buildable tier.
 kitchens = ["public_kitchen", "cookshop"]
 taverns = ["tavern"]
 granaries = ["granary"]
 granges = ["grange"]
+yards = ["victualling_yard"]
 # Logistics buildings, first that can be built wins (their zones never overlap; river and coast before roads).
 logistics_order = ["river_boatmen_yard", "coastal_shipping_office", "transport_office", "carrier_inn", "pp_caravanserai", "pp_oasis_caravan_station", "pp_yam_station", "pp_banjara_tanda", "pp_llama_caravan_post"]
 # Goods never listed in the Goods tab (not traded or not built for).

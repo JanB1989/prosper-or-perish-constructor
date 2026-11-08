@@ -65,19 +65,35 @@ pp_cplan_granary_fill = {
 		subtract = 100
 	}
 }
-# Country scope: Grange after this many passes in a row at 24 months stored.
-pp_cplan_grange_months = {
-	value = 12
+# Country scope: Grange where a full store still gains this % of consumption a month.
+pp_cplan_grange_surplus = {
+	value = 5
 	if = {
-		limit = { has_variable = pp_cplan_grange }
-		value = var:pp_cplan_grange
+		limit = { has_variable = pp_cplan_gsur }
+		value = var:pp_cplan_gsur
 		subtract = 100
 	}
 }
-# Fixed waits of the baseline rules (passes in a row; [construction_plan]).
-pp_cplan_access_months = { value = 3 }
-pp_cplan_market_months = { value = 12 }
-pp_cplan_granary_months = { value = 3 }
+# Country scope: the famine line, months in the store a year from now.
+pp_cplan_famine_months = {
+	value = 3
+	if = {
+		limit = { has_variable = pp_cplan_famine }
+		value = var:pp_cplan_famine
+		subtract = 100
+	}
+}
+# Country scope: Victualling Yard levels while they pay back within this many years.
+pp_cplan_yard_payback = {
+	value = 10
+	if = {
+		limit = { has_variable = pp_cplan_ypb }
+		value = var:pp_cplan_ypb
+		subtract = 100
+	}
+}
+# Any scope: victuals a Tavern's market must hold ([construction_plan] tavern_victuals).
+pp_cplan_tavern_victuals = { value = 10 }
 
 # Country scope: the province focus count, for the panel's cycle (bands + hands off + custom).
 pp_cplan_focus_count = { value = 6 }
@@ -164,89 +180,6 @@ pp_cplan_band_hi = {
 			subtract = 100
 		}
 	}
-}
-
-# ---- Food: farm lines (crop_farms.py), location scope ----
-
-# A wheat farm here: the line's local output (+ 1 = 1 %), much more where the line already stands.
-pp_cplan_farm_score_wheat = {
-	value = 100
-	add = { value = modifier:local_wheat_output_modifier multiply = 100 }
-	if = {
-		limit = { OR = { has_building = building_type:wheat_farm has_building = building_type:wheat_farmstead has_building = building_type:wheat_rotations has_building = building_type:wheat_model_farm } }
-		add = 1000
-	}
-	min = 1
-}
-# A rice farm here: the line's local output (+ 1 = 1 %), much more where the line already stands.
-pp_cplan_farm_score_rice = {
-	value = 100
-	add = { value = modifier:local_rice_output_modifier multiply = 100 }
-	if = {
-		limit = { OR = { has_building = building_type:rice_farm has_building = building_type:rice_farmstead has_building = building_type:rice_rotations has_building = building_type:rice_model_farm } }
-		add = 1000
-	}
-	min = 1
-}
-# A millet farm here: the line's local output (+ 1 = 1 %), much more where the line already stands.
-pp_cplan_farm_score_millet = {
-	value = 100
-	add = { value = modifier:local_millet_output_modifier multiply = 100 }
-	if = {
-		limit = { OR = { has_building = building_type:millet_farm has_building = building_type:millet_farmstead has_building = building_type:millet_rotations has_building = building_type:millet_model_farm } }
-		add = 1000
-	}
-	min = 1
-}
-# A maize farm here: the line's local output (+ 1 = 1 %), much more where the line already stands.
-pp_cplan_farm_score_maize = {
-	value = 100
-	add = { value = modifier:local_maize_output_modifier multiply = 100 }
-	if = {
-		limit = { OR = { has_building = building_type:maize_farm has_building = building_type:maize_farmstead has_building = building_type:maize_rotations has_building = building_type:maize_model_farm } }
-		add = 1000
-	}
-	min = 1
-}
-# A legumes farm here: the line's local output (+ 1 = 1 %), much more where the line already stands.
-pp_cplan_farm_score_legume = {
-	value = 100
-	add = { value = modifier:local_legumes_output_modifier multiply = 100 }
-	if = {
-		limit = { OR = { has_building = building_type:legume_farm has_building = building_type:legume_farmstead has_building = building_type:legume_rotations has_building = building_type:legume_model_farm } }
-		add = 1000
-	}
-	min = 1
-}
-# A potato farm here: the line's local output (+ 1 = 1 %), much more where the line already stands.
-pp_cplan_farm_score_potato = {
-	value = 100
-	add = { value = modifier:local_potato_output_modifier multiply = 100 }
-	if = {
-		limit = { OR = { has_building = building_type:potato_farm has_building = building_type:potato_farmstead has_building = building_type:potato_rotations has_building = building_type:potato_model_farm } }
-		add = 1000
-	}
-	min = 1
-}
-# A olives farm here: the line's local output (+ 1 = 1 %), much more where the line already stands.
-pp_cplan_farm_score_olive = {
-	value = 100
-	add = { value = modifier:local_olives_output_modifier multiply = 100 }
-	if = {
-		limit = { OR = { has_building = building_type:olive_farm has_building = building_type:olive_farmstead has_building = building_type:olive_rotations has_building = building_type:olive_model_farm } }
-		add = 1000
-	}
-	min = 1
-}
-# A livestock farm here: the line's local output (+ 1 = 1 %), much more where the line already stands.
-pp_cplan_farm_score_cattle = {
-	value = 100
-	add = { value = modifier:local_livestock_output_modifier multiply = 100 }
-	if = {
-		limit = { OR = { has_building = building_type:cattle_farm has_building = building_type:cattle_farmstead has_building = building_type:cattle_rotations has_building = building_type:cattle_model_farm } }
-		add = 1000
-	}
-	min = 1
 }
 
 # ---- Goods, per good ----
@@ -4786,4 +4719,3209 @@ pp_cplan_r4_step = {
 		else_if = { limit = { var:pp_cplan_r4_m > 116.5 var:pp_cplan_r4_m < 117.5 } value = 1 }
 		else_if = { limit = { var:pp_cplan_r4_m > 117.5 var:pp_cplan_r4_m < 118.5 } value = 1 }
 	}
+}
+
+# ---- Baseline rules: what is taken out (Jan 2026-11-08: no history, a blacklist) ----
+
+# Location scope: the food one unit of peasants eats more (bad harvest) or less (good harvest) a month this year:
+# the peasant food consumption of the location's Variable Harvest modifier x the peasants' food per head
+# (1). 0 in a normal year.
+pp_cplan_harvest_rate = {
+	value = 0
+	if = {
+		limit = { sub_continent = sub_continent:australasia }
+		if = { limit = { has_location_modifier = pp_harvest_australasia_abysmal } value = 0.3 }
+		else_if = { limit = { has_location_modifier = pp_harvest_australasia_very_poor } value = 0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_australasia_poor } value = 0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_australasia_good } value = -0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_australasia_very_good } value = -0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_australasia_bountiful } value = -0.3 }
+	}
+	else_if = {
+		limit = { sub_continent = sub_continent:central_africa }
+		if = { limit = { has_location_modifier = pp_harvest_central_africa_abysmal } value = 0.3 }
+		else_if = { limit = { has_location_modifier = pp_harvest_central_africa_very_poor } value = 0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_central_africa_poor } value = 0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_central_africa_good } value = -0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_central_africa_very_good } value = -0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_central_africa_bountiful } value = -0.3 }
+	}
+	else_if = {
+		limit = { sub_continent = sub_continent:central_asia }
+		if = { limit = { has_location_modifier = pp_harvest_central_asia_abysmal } value = 0.3 }
+		else_if = { limit = { has_location_modifier = pp_harvest_central_asia_very_poor } value = 0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_central_asia_poor } value = 0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_central_asia_good } value = -0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_central_asia_very_good } value = -0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_central_asia_bountiful } value = -0.3 }
+	}
+	else_if = {
+		limit = { sub_continent = sub_continent:east_africa }
+		if = { limit = { has_location_modifier = pp_harvest_east_africa_abysmal } value = 0.3 }
+		else_if = { limit = { has_location_modifier = pp_harvest_east_africa_very_poor } value = 0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_east_africa_poor } value = 0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_east_africa_good } value = -0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_east_africa_very_good } value = -0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_east_africa_bountiful } value = -0.3 }
+	}
+	else_if = {
+		limit = { sub_continent = sub_continent:east_asia }
+		if = { limit = { has_location_modifier = pp_harvest_east_asia_abysmal } value = 0.3 }
+		else_if = { limit = { has_location_modifier = pp_harvest_east_asia_very_poor } value = 0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_east_asia_poor } value = 0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_east_asia_good } value = -0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_east_asia_very_good } value = -0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_east_asia_bountiful } value = -0.3 }
+	}
+	else_if = {
+		limit = { sub_continent = sub_continent:eastern_europe }
+		if = { limit = { has_location_modifier = pp_harvest_eastern_europe_abysmal } value = 0.3 }
+		else_if = { limit = { has_location_modifier = pp_harvest_eastern_europe_very_poor } value = 0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_eastern_europe_poor } value = 0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_eastern_europe_good } value = -0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_eastern_europe_very_good } value = -0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_eastern_europe_bountiful } value = -0.3 }
+	}
+	else_if = {
+		limit = { sub_continent = sub_continent:middle_east }
+		if = { limit = { has_location_modifier = pp_harvest_middle_east_abysmal } value = 0.3 }
+		else_if = { limit = { has_location_modifier = pp_harvest_middle_east_very_poor } value = 0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_middle_east_poor } value = 0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_middle_east_good } value = -0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_middle_east_very_good } value = -0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_middle_east_bountiful } value = -0.3 }
+	}
+	else_if = {
+		limit = { sub_continent = sub_continent:north_africa }
+		if = { limit = { has_location_modifier = pp_harvest_north_africa_abysmal } value = 0.3 }
+		else_if = { limit = { has_location_modifier = pp_harvest_north_africa_very_poor } value = 0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_north_africa_poor } value = 0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_north_africa_good } value = -0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_north_africa_very_good } value = -0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_north_africa_bountiful } value = -0.3 }
+	}
+	else_if = {
+		limit = { sub_continent = sub_continent:north_america }
+		if = { limit = { has_location_modifier = pp_harvest_north_america_abysmal } value = 0.3 }
+		else_if = { limit = { has_location_modifier = pp_harvest_north_america_very_poor } value = 0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_north_america_poor } value = 0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_north_america_good } value = -0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_north_america_very_good } value = -0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_north_america_bountiful } value = -0.3 }
+	}
+	else_if = {
+		limit = { sub_continent = sub_continent:north_asia }
+		if = { limit = { has_location_modifier = pp_harvest_north_asia_abysmal } value = 0.3 }
+		else_if = { limit = { has_location_modifier = pp_harvest_north_asia_very_poor } value = 0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_north_asia_poor } value = 0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_north_asia_good } value = -0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_north_asia_very_good } value = -0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_north_asia_bountiful } value = -0.3 }
+	}
+	else_if = {
+		limit = { sub_continent = sub_continent:pacific_islands }
+		if = { limit = { has_location_modifier = pp_harvest_pacific_islands_abysmal } value = 0.3 }
+		else_if = { limit = { has_location_modifier = pp_harvest_pacific_islands_very_poor } value = 0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_pacific_islands_poor } value = 0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_pacific_islands_good } value = -0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_pacific_islands_very_good } value = -0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_pacific_islands_bountiful } value = -0.3 }
+	}
+	else_if = {
+		limit = { sub_continent = sub_continent:south_america }
+		if = { limit = { has_location_modifier = pp_harvest_south_america_abysmal } value = 0.3 }
+		else_if = { limit = { has_location_modifier = pp_harvest_south_america_very_poor } value = 0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_south_america_poor } value = 0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_south_america_good } value = -0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_south_america_very_good } value = -0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_south_america_bountiful } value = -0.3 }
+	}
+	else_if = {
+		limit = { sub_continent = sub_continent:south_asia }
+		if = { limit = { has_location_modifier = pp_harvest_south_asia_abysmal } value = 0.3 }
+		else_if = { limit = { has_location_modifier = pp_harvest_south_asia_very_poor } value = 0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_south_asia_poor } value = 0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_south_asia_good } value = -0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_south_asia_very_good } value = -0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_south_asia_bountiful } value = -0.3 }
+	}
+	else_if = {
+		limit = { sub_continent = sub_continent:south_east_asia }
+		if = { limit = { has_location_modifier = pp_harvest_south_east_asia_abysmal } value = 0.3 }
+		else_if = { limit = { has_location_modifier = pp_harvest_south_east_asia_very_poor } value = 0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_south_east_asia_poor } value = 0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_south_east_asia_good } value = -0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_south_east_asia_very_good } value = -0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_south_east_asia_bountiful } value = -0.3 }
+	}
+	else_if = {
+		limit = { sub_continent = sub_continent:southern_africa }
+		if = { limit = { has_location_modifier = pp_harvest_southern_africa_abysmal } value = 0.3 }
+		else_if = { limit = { has_location_modifier = pp_harvest_southern_africa_very_poor } value = 0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_southern_africa_poor } value = 0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_southern_africa_good } value = -0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_southern_africa_very_good } value = -0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_southern_africa_bountiful } value = -0.3 }
+	}
+	else_if = {
+		limit = { sub_continent = sub_continent:west_africa }
+		if = { limit = { has_location_modifier = pp_harvest_west_africa_abysmal } value = 0.3 }
+		else_if = { limit = { has_location_modifier = pp_harvest_west_africa_very_poor } value = 0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_west_africa_poor } value = 0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_west_africa_good } value = -0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_west_africa_very_good } value = -0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_west_africa_bountiful } value = -0.3 }
+	}
+	else_if = {
+		limit = { sub_continent = sub_continent:western_europe }
+		if = { limit = { has_location_modifier = pp_harvest_western_europe_abysmal } value = 0.3 }
+		else_if = { limit = { has_location_modifier = pp_harvest_western_europe_very_poor } value = 0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_western_europe_poor } value = 0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_western_europe_good } value = -0.11 }
+		else_if = { limit = { has_location_modifier = pp_harvest_western_europe_very_good } value = -0.2 }
+		else_if = { limit = { has_location_modifier = pp_harvest_western_europe_bountiful } value = -0.3 }
+	}
+}
+
+# Location scope: market access without the event modifiers of [construction_plan] access_blacklist.
+pp_cplan_access_normal = {
+	value = market_access
+	if = { limit = { has_location_modifier = staple_port_commercial_stagnation_modifier } subtract = -0.25 }
+}
+
+# ---- Farms: which line pays back fastest here (location scope, its market) ----
+# A level's monthly profit at this market's prices and this location's output: each slot's best method
+# (production efficiency, staffing and market access left out: the same for every line here). Its yearly
+# return in % of the tier's base price (pp_cplan_farm_roi_<tier>); a line's return is that of its highest tier
+# that can be built here (a standing older tier is replaced once its successor is researched).
+
+pp_cplan_fm_wheat_farm_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:wheat)" multiply = { value = modifier:local_wheat_output_modifier add = 1 min = 0 } multiply = 0.06 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.012 }
+}
+pp_cplan_fs_wheat_farm_1 = {
+	value = pp_cplan_fm_wheat_farm_1_1
+}
+pp_cplan_fm_wheat_farm_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:wheat)" multiply = { value = modifier:local_wheat_output_modifier add = 1 min = 0 } multiply = 0.15 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.037 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.021 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.024 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.002 }
+}
+pp_cplan_fm_wheat_farm_2_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:wheat)" multiply = { value = modifier:local_wheat_output_modifier add = 1 min = 0 } multiply = 0.166 }
+	subtract = { value = "market.market_price(goods:horses)" multiply = 0.016 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.029 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.026 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.003 }
+}
+pp_cplan_fs_wheat_farm_2 = {
+	value = pp_cplan_fm_wheat_farm_2_1
+	min = pp_cplan_fm_wheat_farm_2_2
+	min = 0
+}
+pp_cplan_fm_wheat_farm_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	subtract = { value = "market.market_price(goods:wheat)" multiply = 0.01 }
+}
+pp_cplan_fs_wheat_farm_3 = {
+	value = pp_cplan_fm_wheat_farm_3_1
+}
+pp_cplan_farm_est_wheat_farm = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_wheat_farm_1
+		add = pp_cplan_fs_wheat_farm_2
+		add = pp_cplan_fs_wheat_farm_3
+	}
+}
+pp_cplan_farm_roi_wheat_farm = {
+	value = pp_cplan_farm_est_wheat_farm
+	multiply = 1200
+	divide = { value = building_type:wheat_farm.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_wheat_farmstead_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:wheat)" multiply = { value = modifier:local_wheat_output_modifier add = 1 min = 0 } multiply = 0.092 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.018 }
+}
+pp_cplan_fs_wheat_farmstead_1 = {
+	value = pp_cplan_fm_wheat_farmstead_1_1
+}
+pp_cplan_fm_wheat_farmstead_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:wheat)" multiply = { value = modifier:local_wheat_output_modifier add = 1 min = 0 } multiply = 0.736 }
+	subtract = { value = "market.market_price(goods:horses)" multiply = 0.049 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.11 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.026 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.07 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.013 }
+}
+pp_cplan_fs_wheat_farmstead_2 = {
+	value = pp_cplan_fm_wheat_farmstead_2_1
+	min = 0
+}
+pp_cplan_fm_wheat_farmstead_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	subtract = { value = "market.market_price(goods:wheat)" multiply = 0.015 }
+}
+pp_cplan_fs_wheat_farmstead_3 = {
+	value = pp_cplan_fm_wheat_farmstead_3_1
+}
+pp_cplan_farm_est_wheat_farmstead = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_wheat_farmstead_1
+		add = pp_cplan_fs_wheat_farmstead_2
+		add = pp_cplan_fs_wheat_farmstead_3
+	}
+}
+pp_cplan_farm_roi_wheat_farmstead = {
+	value = pp_cplan_farm_est_wheat_farmstead
+	multiply = 1200
+	divide = { value = building_type:wheat_farmstead.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_wheat_rotations_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:wheat)" multiply = { value = modifier:local_wheat_output_modifier add = 1 min = 0 } multiply = 0.095 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.019 }
+}
+pp_cplan_fs_wheat_rotations_1 = {
+	value = pp_cplan_fm_wheat_rotations_1_1
+}
+pp_cplan_fm_wheat_rotations_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:wheat)" multiply = { value = modifier:local_wheat_output_modifier add = 1 min = 0 } multiply = 1.04 }
+	subtract = { value = "market.market_price(goods:horses)" multiply = 0.096 }
+	subtract = { value = "market.market_price(goods:legumes)" multiply = 0.16 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.14 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.11 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.03 }
+}
+pp_cplan_fm_wheat_rotations_2_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:wheat)" multiply = { value = modifier:local_wheat_output_modifier add = 1 min = 0 } multiply = 1.08 }
+	subtract = { value = "market.market_price(goods:clay)" multiply = 0.62 }
+	subtract = { value = "market.market_price(goods:horses)" multiply = 0.09 }
+	subtract = { value = "market.market_price(goods:legumes)" multiply = 0.12 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.1 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.03 }
+}
+pp_cplan_fs_wheat_rotations_2 = {
+	value = pp_cplan_fm_wheat_rotations_2_1
+	min = pp_cplan_fm_wheat_rotations_2_2
+	min = 0
+}
+pp_cplan_fm_wheat_rotations_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	subtract = { value = "market.market_price(goods:wheat)" multiply = 0.016 }
+}
+pp_cplan_fs_wheat_rotations_3 = {
+	value = pp_cplan_fm_wheat_rotations_3_1
+}
+pp_cplan_farm_est_wheat_rotations = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_wheat_rotations_1
+		add = pp_cplan_fs_wheat_rotations_2
+		add = pp_cplan_fs_wheat_rotations_3
+	}
+}
+pp_cplan_farm_roi_wheat_rotations = {
+	value = pp_cplan_farm_est_wheat_rotations
+	multiply = 1200
+	divide = { value = building_type:wheat_rotations.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_wheat_model_farm_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:wheat)" multiply = { value = modifier:local_wheat_output_modifier add = 1 min = 0 } multiply = 0.145 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.029 }
+}
+pp_cplan_fs_wheat_model_farm_1 = {
+	value = pp_cplan_fm_wheat_model_farm_1_1
+}
+pp_cplan_fm_wheat_model_farm_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:wheat)" multiply = { value = modifier:local_wheat_output_modifier add = 1 min = 0 } multiply = 1.54 }
+	subtract = { value = "market.market_price(goods:horses)" multiply = 0.13 }
+	subtract = { value = "market.market_price(goods:legumes)" multiply = 0.17 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.29 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.11 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.06 }
+}
+pp_cplan_fs_wheat_model_farm_2 = {
+	value = pp_cplan_fm_wheat_model_farm_2_1
+	min = 0
+}
+pp_cplan_fm_wheat_model_farm_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	subtract = { value = "market.market_price(goods:wheat)" multiply = 0.024 }
+}
+pp_cplan_fs_wheat_model_farm_3 = {
+	value = pp_cplan_fm_wheat_model_farm_3_1
+}
+pp_cplan_farm_est_wheat_model_farm = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_wheat_model_farm_1
+		add = pp_cplan_fs_wheat_model_farm_2
+		add = pp_cplan_fs_wheat_model_farm_3
+	}
+}
+pp_cplan_farm_roi_wheat_model_farm = {
+	value = pp_cplan_farm_est_wheat_model_farm
+	multiply = 1200
+	divide = { value = building_type:wheat_model_farm.building_base_cost_in_gold min = 1 }
+}
+
+# Location scope: the wheat line's return here (0 where no tier can be built or its good is set to Never).
+pp_cplan_farm_line_roi_wheat = {
+	value = 0
+	if = {
+		limit = { scope:pp_cplan_country = { pp_cplan_mode_wheat < 2.5 } }
+		if = {
+			limit = { location_and_owner_can_build = { building_type = wheat_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_model_farm building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_wheat_model_farm
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = wheat_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_rotations building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_wheat_rotations
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = wheat_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_farmstead building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_wheat_farmstead
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = wheat_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_farm building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_wheat_farm
+		}
+	}
+}
+pp_cplan_fm_rice_farm_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:rice)" multiply = { value = modifier:local_rice_output_modifier add = 1 min = 0 } multiply = 0.06 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.012 }
+}
+pp_cplan_fs_rice_farm_1 = {
+	value = pp_cplan_fm_rice_farm_1_1
+}
+pp_cplan_fm_rice_farm_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:rice)" multiply = { value = modifier:local_rice_output_modifier add = 1 min = 0 } multiply = 0.11 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.013 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.005 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.001 }
+}
+pp_cplan_fm_rice_farm_2_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:rice)" multiply = { value = modifier:local_rice_output_modifier add = 1 min = 0 } multiply = 0.11 }
+	subtract = { value = "market.market_price(goods:clay)" multiply = 0.011 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.006 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.011 }
+}
+pp_cplan_fs_rice_farm_2 = {
+	value = pp_cplan_fm_rice_farm_2_1
+	min = pp_cplan_fm_rice_farm_2_2
+	min = 0
+}
+pp_cplan_fm_rice_farm_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	subtract = { value = "market.market_price(goods:rice)" multiply = 0.01 }
+}
+pp_cplan_fs_rice_farm_3 = {
+	value = pp_cplan_fm_rice_farm_3_1
+}
+pp_cplan_farm_est_rice_farm = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_rice_farm_1
+		add = pp_cplan_fs_rice_farm_2
+		add = pp_cplan_fs_rice_farm_3
+	}
+}
+pp_cplan_farm_roi_rice_farm = {
+	value = pp_cplan_farm_est_rice_farm
+	multiply = 1200
+	divide = { value = building_type:rice_farm.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_rice_farmstead_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:rice)" multiply = { value = modifier:local_rice_output_modifier add = 1 min = 0 } multiply = 0.092 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.018 }
+}
+pp_cplan_fs_rice_farmstead_1 = {
+	value = pp_cplan_fm_rice_farmstead_1_1
+}
+pp_cplan_fm_rice_farmstead_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:rice)" multiply = { value = modifier:local_rice_output_modifier add = 1 min = 0 } multiply = 0.736 }
+	subtract = { value = "market.market_price(goods:clay)" multiply = 0.26 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.099 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.049 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.064 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.013 }
+}
+pp_cplan_fs_rice_farmstead_2 = {
+	value = pp_cplan_fm_rice_farmstead_2_1
+	min = 0
+}
+pp_cplan_fm_rice_farmstead_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	subtract = { value = "market.market_price(goods:rice)" multiply = 0.015 }
+}
+pp_cplan_fs_rice_farmstead_3 = {
+	value = pp_cplan_fm_rice_farmstead_3_1
+}
+pp_cplan_farm_est_rice_farmstead = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_rice_farmstead_1
+		add = pp_cplan_fs_rice_farmstead_2
+		add = pp_cplan_fs_rice_farmstead_3
+	}
+}
+pp_cplan_farm_roi_rice_farmstead = {
+	value = pp_cplan_farm_est_rice_farmstead
+	multiply = 1200
+	divide = { value = building_type:rice_farmstead.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_rice_rotations_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:rice)" multiply = { value = modifier:local_rice_output_modifier add = 1 min = 0 } multiply = 0.095 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.019 }
+}
+pp_cplan_fs_rice_rotations_1 = {
+	value = pp_cplan_fm_rice_rotations_1_1
+}
+pp_cplan_fm_rice_rotations_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:rice)" multiply = { value = modifier:local_rice_output_modifier add = 1 min = 0 } multiply = 1.04 }
+	subtract = { value = "market.market_price(goods:clay)" multiply = 0.5 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.22 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.072 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.097 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.03 }
+}
+pp_cplan_fm_rice_rotations_2_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:rice)" multiply = { value = modifier:local_rice_output_modifier add = 1 min = 0 } multiply = 1.08 }
+	subtract = { value = "market.market_price(goods:clay)" multiply = 0.22 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.12 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.23 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.1 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.03 }
+}
+pp_cplan_fs_rice_rotations_2 = {
+	value = pp_cplan_fm_rice_rotations_2_1
+	min = pp_cplan_fm_rice_rotations_2_2
+	min = 0
+}
+pp_cplan_fm_rice_rotations_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	subtract = { value = "market.market_price(goods:rice)" multiply = 0.016 }
+}
+pp_cplan_fs_rice_rotations_3 = {
+	value = pp_cplan_fm_rice_rotations_3_1
+}
+pp_cplan_farm_est_rice_rotations = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_rice_rotations_1
+		add = pp_cplan_fs_rice_rotations_2
+		add = pp_cplan_fs_rice_rotations_3
+	}
+}
+pp_cplan_farm_roi_rice_rotations = {
+	value = pp_cplan_farm_est_rice_rotations
+	multiply = 1200
+	divide = { value = building_type:rice_rotations.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_rice_model_farm_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:rice)" multiply = { value = modifier:local_rice_output_modifier add = 1 min = 0 } multiply = 0.145 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.029 }
+}
+pp_cplan_fs_rice_model_farm_1 = {
+	value = pp_cplan_fm_rice_model_farm_1_1
+}
+pp_cplan_fm_rice_model_farm_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:rice)" multiply = { value = modifier:local_rice_output_modifier add = 1 min = 0 } multiply = 1.54 }
+	subtract = { value = "market.market_price(goods:clay)" multiply = 0.68 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.19 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.25 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.11 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.06 }
+}
+pp_cplan_fs_rice_model_farm_2 = {
+	value = pp_cplan_fm_rice_model_farm_2_1
+	min = 0
+}
+pp_cplan_fm_rice_model_farm_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	subtract = { value = "market.market_price(goods:rice)" multiply = 0.024 }
+}
+pp_cplan_fs_rice_model_farm_3 = {
+	value = pp_cplan_fm_rice_model_farm_3_1
+}
+pp_cplan_farm_est_rice_model_farm = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_rice_model_farm_1
+		add = pp_cplan_fs_rice_model_farm_2
+		add = pp_cplan_fs_rice_model_farm_3
+	}
+}
+pp_cplan_farm_roi_rice_model_farm = {
+	value = pp_cplan_farm_est_rice_model_farm
+	multiply = 1200
+	divide = { value = building_type:rice_model_farm.building_base_cost_in_gold min = 1 }
+}
+
+# Location scope: the rice line's return here (0 where no tier can be built or its good is set to Never).
+pp_cplan_farm_line_roi_rice = {
+	value = 0
+	if = {
+		limit = { scope:pp_cplan_country = { pp_cplan_mode_rice < 2.5 } }
+		if = {
+			limit = { location_and_owner_can_build = { building_type = rice_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_model_farm building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_rice_model_farm
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = rice_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_rotations building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_rice_rotations
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = rice_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_farmstead building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_rice_farmstead
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = rice_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_farm building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_rice_farm
+		}
+	}
+}
+pp_cplan_fm_millet_farm_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:millet)" multiply = { value = modifier:local_millet_output_modifier add = 1 min = 0 } multiply = 0.06 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.012 }
+}
+pp_cplan_fs_millet_farm_1 = {
+	value = pp_cplan_fm_millet_farm_1_1
+}
+pp_cplan_fm_millet_farm_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:millet)" multiply = { value = modifier:local_millet_output_modifier add = 1 min = 0 } multiply = 0.15 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.021 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.038 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.002 }
+}
+pp_cplan_fm_millet_farm_2_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:millet)" multiply = { value = modifier:local_millet_output_modifier add = 1 min = 0 } multiply = 0.166 }
+	subtract = { value = "market.market_price(goods:legumes)" multiply = 0.041 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.011 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.025 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.026 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.003 }
+}
+pp_cplan_fs_millet_farm_2 = {
+	value = pp_cplan_fm_millet_farm_2_1
+	min = pp_cplan_fm_millet_farm_2_2
+	min = 0
+}
+pp_cplan_fm_millet_farm_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	subtract = { value = "market.market_price(goods:millet)" multiply = 0.01 }
+}
+pp_cplan_fs_millet_farm_3 = {
+	value = pp_cplan_fm_millet_farm_3_1
+}
+pp_cplan_farm_est_millet_farm = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_millet_farm_1
+		add = pp_cplan_fs_millet_farm_2
+		add = pp_cplan_fs_millet_farm_3
+	}
+}
+pp_cplan_farm_roi_millet_farm = {
+	value = pp_cplan_farm_est_millet_farm
+	multiply = 1200
+	divide = { value = building_type:millet_farm.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_millet_farmstead_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:millet)" multiply = { value = modifier:local_millet_output_modifier add = 1 min = 0 } multiply = 0.092 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.018 }
+}
+pp_cplan_fs_millet_farmstead_1 = {
+	value = pp_cplan_fm_millet_farmstead_1_1
+}
+pp_cplan_fm_millet_farmstead_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:millet)" multiply = { value = modifier:local_millet_output_modifier add = 1 min = 0 } multiply = 0.69 }
+	subtract = { value = "market.market_price(goods:fiber_crops)" multiply = 0.059 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.12 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.055 }
+	subtract = { value = "market.market_price(goods:pottery)" multiply = 0.04 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.011 }
+}
+pp_cplan_fs_millet_farmstead_2 = {
+	value = pp_cplan_fm_millet_farmstead_2_1
+	min = 0
+}
+pp_cplan_fm_millet_farmstead_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	subtract = { value = "market.market_price(goods:millet)" multiply = 0.015 }
+}
+pp_cplan_fs_millet_farmstead_3 = {
+	value = pp_cplan_fm_millet_farmstead_3_1
+}
+pp_cplan_farm_est_millet_farmstead = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_millet_farmstead_1
+		add = pp_cplan_fs_millet_farmstead_2
+		add = pp_cplan_fs_millet_farmstead_3
+	}
+}
+pp_cplan_farm_roi_millet_farmstead = {
+	value = pp_cplan_farm_est_millet_farmstead
+	multiply = 1200
+	divide = { value = building_type:millet_farmstead.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_millet_rotations_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:millet)" multiply = { value = modifier:local_millet_output_modifier add = 1 min = 0 } multiply = 0.095 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.019 }
+}
+pp_cplan_fs_millet_rotations_1 = {
+	value = pp_cplan_fm_millet_rotations_1_1
+}
+pp_cplan_fm_millet_rotations_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:millet)" multiply = { value = modifier:local_millet_output_modifier add = 1 min = 0 } multiply = 1.04 }
+	subtract = { value = "market.market_price(goods:fiber_crops)" multiply = 0.096 }
+	subtract = { value = "market.market_price(goods:horses)" multiply = 0.085 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.17 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.11 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.03 }
+}
+pp_cplan_fm_millet_rotations_2_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:millet)" multiply = { value = modifier:local_millet_output_modifier add = 1 min = 0 } multiply = 1.08 }
+	subtract = { value = "market.market_price(goods:horses)" multiply = 0.072 }
+	subtract = { value = "market.market_price(goods:legumes)" multiply = 0.16 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.11 }
+	subtract = { value = "market.market_price(goods:pottery)" multiply = 0.32 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.03 }
+}
+pp_cplan_fs_millet_rotations_2 = {
+	value = pp_cplan_fm_millet_rotations_2_1
+	min = pp_cplan_fm_millet_rotations_2_2
+	min = 0
+}
+pp_cplan_fm_millet_rotations_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	subtract = { value = "market.market_price(goods:millet)" multiply = 0.016 }
+}
+pp_cplan_fs_millet_rotations_3 = {
+	value = pp_cplan_fm_millet_rotations_3_1
+}
+pp_cplan_farm_est_millet_rotations = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_millet_rotations_1
+		add = pp_cplan_fs_millet_rotations_2
+		add = pp_cplan_fs_millet_rotations_3
+	}
+}
+pp_cplan_farm_roi_millet_rotations = {
+	value = pp_cplan_farm_est_millet_rotations
+	multiply = 1200
+	divide = { value = building_type:millet_rotations.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_millet_model_farm_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:millet)" multiply = { value = modifier:local_millet_output_modifier add = 1 min = 0 } multiply = 0.145 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.029 }
+}
+pp_cplan_fs_millet_model_farm_1 = {
+	value = pp_cplan_fm_millet_model_farm_1_1
+}
+pp_cplan_fm_millet_model_farm_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:millet)" multiply = { value = modifier:local_millet_output_modifier add = 1 min = 0 } multiply = 1.52 }
+	subtract = { value = "market.market_price(goods:horses)" multiply = 0.12 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.25 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.098 }
+	subtract = { value = "market.market_price(goods:paper)" multiply = 0.17 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.06 }
+}
+pp_cplan_fs_millet_model_farm_2 = {
+	value = pp_cplan_fm_millet_model_farm_2_1
+	min = 0
+}
+pp_cplan_fm_millet_model_farm_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	subtract = { value = "market.market_price(goods:millet)" multiply = 0.024 }
+}
+pp_cplan_fs_millet_model_farm_3 = {
+	value = pp_cplan_fm_millet_model_farm_3_1
+}
+pp_cplan_farm_est_millet_model_farm = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_millet_model_farm_1
+		add = pp_cplan_fs_millet_model_farm_2
+		add = pp_cplan_fs_millet_model_farm_3
+	}
+}
+pp_cplan_farm_roi_millet_model_farm = {
+	value = pp_cplan_farm_est_millet_model_farm
+	multiply = 1200
+	divide = { value = building_type:millet_model_farm.building_base_cost_in_gold min = 1 }
+}
+
+# Location scope: the millet line's return here (0 where no tier can be built or its good is set to Never).
+pp_cplan_farm_line_roi_millet = {
+	value = 0
+	if = {
+		limit = { scope:pp_cplan_country = { pp_cplan_mode_millet < 2.5 } }
+		if = {
+			limit = { location_and_owner_can_build = { building_type = millet_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_model_farm building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_millet_model_farm
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = millet_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_rotations building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_millet_rotations
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = millet_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_farmstead building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_millet_farmstead
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = millet_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_farm building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_millet_farm
+		}
+	}
+}
+pp_cplan_fm_maize_farm_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:maize)" multiply = { value = modifier:local_maize_output_modifier add = 1 min = 0 } multiply = 0.06 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.012 }
+}
+pp_cplan_fs_maize_farm_1 = {
+	value = pp_cplan_fm_maize_farm_1_1
+}
+pp_cplan_fm_maize_farm_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:maize)" multiply = { value = modifier:local_maize_output_modifier add = 1 min = 0 } multiply = 0.1 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.005 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.01 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.001 }
+}
+pp_cplan_fm_maize_farm_2_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:maize)" multiply = { value = modifier:local_maize_output_modifier add = 1 min = 0 } multiply = 0.11 }
+	subtract = { value = "market.market_price(goods:legumes)" multiply = 0.016 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.009 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.007 }
+}
+pp_cplan_fs_maize_farm_2 = {
+	value = pp_cplan_fm_maize_farm_2_1
+	min = pp_cplan_fm_maize_farm_2_2
+	min = 0
+}
+pp_cplan_fm_maize_farm_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	subtract = { value = "market.market_price(goods:maize)" multiply = 0.01 }
+}
+pp_cplan_fs_maize_farm_3 = {
+	value = pp_cplan_fm_maize_farm_3_1
+}
+pp_cplan_farm_est_maize_farm = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_maize_farm_1
+		add = pp_cplan_fs_maize_farm_2
+		add = pp_cplan_fs_maize_farm_3
+	}
+}
+pp_cplan_farm_roi_maize_farm = {
+	value = pp_cplan_farm_est_maize_farm
+	multiply = 1200
+	divide = { value = building_type:maize_farm.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_maize_farmstead_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:maize)" multiply = { value = modifier:local_maize_output_modifier add = 1 min = 0 } multiply = 0.092 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.018 }
+}
+pp_cplan_fs_maize_farmstead_1 = {
+	value = pp_cplan_fm_maize_farmstead_1_1
+}
+pp_cplan_fm_maize_farmstead_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:maize)" multiply = { value = modifier:local_maize_output_modifier add = 1 min = 0 } multiply = 0.678 }
+	subtract = { value = "market.market_price(goods:fiber_crops)" multiply = 0.07 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.079 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.045 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.06 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.012 }
+}
+pp_cplan_fs_maize_farmstead_2 = {
+	value = pp_cplan_fm_maize_farmstead_2_1
+	min = 0
+}
+pp_cplan_fm_maize_farmstead_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	subtract = { value = "market.market_price(goods:maize)" multiply = 0.015 }
+}
+pp_cplan_fs_maize_farmstead_3 = {
+	value = pp_cplan_fm_maize_farmstead_3_1
+}
+pp_cplan_farm_est_maize_farmstead = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_maize_farmstead_1
+		add = pp_cplan_fs_maize_farmstead_2
+		add = pp_cplan_fs_maize_farmstead_3
+	}
+}
+pp_cplan_farm_roi_maize_farmstead = {
+	value = pp_cplan_farm_est_maize_farmstead
+	multiply = 1200
+	divide = { value = building_type:maize_farmstead.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_maize_rotations_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:maize)" multiply = { value = modifier:local_maize_output_modifier add = 1 min = 0 } multiply = 0.095 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.019 }
+}
+pp_cplan_fs_maize_rotations_1 = {
+	value = pp_cplan_fm_maize_rotations_1_1
+}
+pp_cplan_fm_maize_rotations_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:maize)" multiply = { value = modifier:local_maize_output_modifier add = 1 min = 0 } multiply = 1.04 }
+	subtract = { value = "market.market_price(goods:fiber_crops)" multiply = 0.066 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.23 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.13 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.09 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.03 }
+}
+pp_cplan_fm_maize_rotations_2_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:maize)" multiply = { value = modifier:local_maize_output_modifier add = 1 min = 0 } multiply = 1.08 }
+	subtract = { value = "market.market_price(goods:legumes)" multiply = 0.18 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.17 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.15 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.098 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.03 }
+}
+pp_cplan_fs_maize_rotations_2 = {
+	value = pp_cplan_fm_maize_rotations_2_1
+	min = pp_cplan_fm_maize_rotations_2_2
+	min = 0
+}
+pp_cplan_fm_maize_rotations_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	subtract = { value = "market.market_price(goods:maize)" multiply = 0.016 }
+}
+pp_cplan_fs_maize_rotations_3 = {
+	value = pp_cplan_fm_maize_rotations_3_1
+}
+pp_cplan_farm_est_maize_rotations = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_maize_rotations_1
+		add = pp_cplan_fs_maize_rotations_2
+		add = pp_cplan_fs_maize_rotations_3
+	}
+}
+pp_cplan_farm_roi_maize_rotations = {
+	value = pp_cplan_farm_est_maize_rotations
+	multiply = 1200
+	divide = { value = building_type:maize_rotations.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_maize_model_farm_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:maize)" multiply = { value = modifier:local_maize_output_modifier add = 1 min = 0 } multiply = 0.145 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.029 }
+}
+pp_cplan_fs_maize_model_farm_1 = {
+	value = pp_cplan_fm_maize_model_farm_1_1
+}
+pp_cplan_fm_maize_model_farm_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:maize)" multiply = { value = modifier:local_maize_output_modifier add = 1 min = 0 } multiply = 1.52 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.3 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.19 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.098 }
+	subtract = { value = "market.market_price(goods:paper)" multiply = 0.15 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.06 }
+}
+pp_cplan_fs_maize_model_farm_2 = {
+	value = pp_cplan_fm_maize_model_farm_2_1
+	min = 0
+}
+pp_cplan_fm_maize_model_farm_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	subtract = { value = "market.market_price(goods:maize)" multiply = 0.024 }
+}
+pp_cplan_fs_maize_model_farm_3 = {
+	value = pp_cplan_fm_maize_model_farm_3_1
+}
+pp_cplan_farm_est_maize_model_farm = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_maize_model_farm_1
+		add = pp_cplan_fs_maize_model_farm_2
+		add = pp_cplan_fs_maize_model_farm_3
+	}
+}
+pp_cplan_farm_roi_maize_model_farm = {
+	value = pp_cplan_farm_est_maize_model_farm
+	multiply = 1200
+	divide = { value = building_type:maize_model_farm.building_base_cost_in_gold min = 1 }
+}
+
+# Location scope: the maize line's return here (0 where no tier can be built or its good is set to Never).
+pp_cplan_farm_line_roi_maize = {
+	value = 0
+	if = {
+		limit = { scope:pp_cplan_country = { pp_cplan_mode_maize < 2.5 } }
+		if = {
+			limit = { location_and_owner_can_build = { building_type = maize_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_model_farm building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_maize_model_farm
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = maize_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_rotations building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_maize_rotations
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = maize_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_farmstead building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_maize_farmstead
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = maize_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_farm building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_maize_farm
+		}
+	}
+}
+pp_cplan_fm_legume_farm_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:legumes)" multiply = { value = modifier:local_legumes_output_modifier add = 1 min = 0 } multiply = 0.06 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.012 }
+}
+pp_cplan_fs_legume_farm_1 = {
+	value = pp_cplan_fm_legume_farm_1_1
+}
+pp_cplan_fm_legume_farm_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:beeswax)" multiply = { value = modifier:local_beeswax_output_modifier add = 1 min = 0 } multiply = 0.063 }
+	subtract = { value = "market.market_price(goods:cloth)" multiply = 0 }
+	subtract = { value = "market.market_price(goods:furniture)" multiply = 0 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.025 }
+}
+pp_cplan_fs_legume_farm_2 = {
+	value = pp_cplan_fm_legume_farm_2_1
+	min = 0
+}
+pp_cplan_fm_legume_farm_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:legumes)" multiply = { value = modifier:local_legumes_output_modifier add = 1 min = 0 } multiply = 0.15 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.031 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.026 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.024 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.002 }
+}
+pp_cplan_fm_legume_farm_3_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:legumes)" multiply = { value = modifier:local_legumes_output_modifier add = 1 min = 0 } multiply = 0.166 }
+	subtract = { value = "market.market_price(goods:horses)" multiply = 0.016 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.029 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.026 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.003 }
+}
+pp_cplan_fs_legume_farm_3 = {
+	value = pp_cplan_fm_legume_farm_3_1
+	min = pp_cplan_fm_legume_farm_3_2
+	min = 0
+}
+pp_cplan_fm_legume_farm_4_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	subtract = { value = "market.market_price(goods:legumes)" multiply = 0.01 }
+}
+pp_cplan_fs_legume_farm_4 = {
+	value = pp_cplan_fm_legume_farm_4_1
+}
+pp_cplan_farm_est_legume_farm = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_legume_farm_1
+		add = pp_cplan_fs_legume_farm_2
+		add = pp_cplan_fs_legume_farm_3
+		add = pp_cplan_fs_legume_farm_4
+	}
+}
+pp_cplan_farm_roi_legume_farm = {
+	value = pp_cplan_farm_est_legume_farm
+	multiply = 1200
+	divide = { value = building_type:legume_farm.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_legume_farmstead_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:legumes)" multiply = { value = modifier:local_legumes_output_modifier add = 1 min = 0 } multiply = 0.092 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.018 }
+}
+pp_cplan_fs_legume_farmstead_1 = {
+	value = pp_cplan_fm_legume_farmstead_1_1
+}
+pp_cplan_fm_legume_farmstead_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:beeswax)" multiply = { value = modifier:local_beeswax_output_modifier add = 1 min = 0 } multiply = 0.12 }
+	subtract = { value = "market.market_price(goods:fiber_crops)" multiply = 0.022 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.008 }
+	subtract = { value = "market.market_price(goods:pottery)" multiply = 0.01 }
+}
+pp_cplan_fs_legume_farmstead_2 = {
+	value = pp_cplan_fm_legume_farmstead_2_1
+	min = 0
+}
+pp_cplan_fm_legume_farmstead_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:legumes)" multiply = { value = modifier:local_legumes_output_modifier add = 1 min = 0 } multiply = 0.678 }
+	subtract = { value = "market.market_price(goods:fiber_crops)" multiply = 0.059 }
+	subtract = { value = "market.market_price(goods:horses)" multiply = 0.034 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.049 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.06 }
+	subtract = { value = "market.market_price(goods:pottery)" multiply = 0.059 }
+}
+pp_cplan_fs_legume_farmstead_3 = {
+	value = pp_cplan_fm_legume_farmstead_3_1
+	min = 0
+}
+pp_cplan_fm_legume_farmstead_4_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	subtract = { value = "market.market_price(goods:legumes)" multiply = 0.015 }
+}
+pp_cplan_fs_legume_farmstead_4 = {
+	value = pp_cplan_fm_legume_farmstead_4_1
+}
+pp_cplan_farm_est_legume_farmstead = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_legume_farmstead_1
+		add = pp_cplan_fs_legume_farmstead_2
+		add = pp_cplan_fs_legume_farmstead_3
+		add = pp_cplan_fs_legume_farmstead_4
+	}
+}
+pp_cplan_farm_roi_legume_farmstead = {
+	value = pp_cplan_farm_est_legume_farmstead
+	multiply = 1200
+	divide = { value = building_type:legume_farmstead.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_legume_rotations_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:legumes)" multiply = { value = modifier:local_legumes_output_modifier add = 1 min = 0 } multiply = 0.095 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.019 }
+}
+pp_cplan_fs_legume_rotations_1 = {
+	value = pp_cplan_fm_legume_rotations_1_1
+}
+pp_cplan_fm_legume_rotations_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:beeswax)" multiply = { value = modifier:local_beeswax_output_modifier add = 1 min = 0 } multiply = 0.31 }
+	subtract = { value = "market.market_price(goods:fiber_crops)" multiply = 0.071 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.13 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.055 }
+	subtract = { value = "market.market_price(goods:pottery)" multiply = 0.045 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.014 }
+}
+pp_cplan_fs_legume_rotations_2 = {
+	value = pp_cplan_fm_legume_rotations_2_1
+	min = 0
+}
+pp_cplan_fm_legume_rotations_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:legumes)" multiply = { value = modifier:local_legumes_output_modifier add = 1 min = 0 } multiply = 1.05 }
+	subtract = { value = "market.market_price(goods:cloth)" multiply = 0.051 }
+	subtract = { value = "market.market_price(goods:horses)" multiply = 0.09 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.19 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.093 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.03 }
+}
+pp_cplan_fm_legume_rotations_3_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:legumes)" multiply = { value = modifier:local_legumes_output_modifier add = 1 min = 0 } multiply = 1.09 }
+	subtract = { value = "market.market_price(goods:fiber_crops)" multiply = 0.1 }
+	subtract = { value = "market.market_price(goods:horses)" multiply = 0.085 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.17 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.1 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.03 }
+}
+pp_cplan_fs_legume_rotations_3 = {
+	value = pp_cplan_fm_legume_rotations_3_1
+	min = pp_cplan_fm_legume_rotations_3_2
+	min = 0
+}
+pp_cplan_fm_legume_rotations_4_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	subtract = { value = "market.market_price(goods:legumes)" multiply = 0.016 }
+}
+pp_cplan_fs_legume_rotations_4 = {
+	value = pp_cplan_fm_legume_rotations_4_1
+}
+pp_cplan_farm_est_legume_rotations = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_legume_rotations_1
+		add = pp_cplan_fs_legume_rotations_2
+		add = pp_cplan_fs_legume_rotations_3
+		add = pp_cplan_fs_legume_rotations_4
+	}
+}
+pp_cplan_farm_roi_legume_rotations = {
+	value = pp_cplan_farm_est_legume_rotations
+	multiply = 1200
+	divide = { value = building_type:legume_rotations.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_legume_model_farm_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:legumes)" multiply = { value = modifier:local_legumes_output_modifier add = 1 min = 0 } multiply = 0.145 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.029 }
+}
+pp_cplan_fs_legume_model_farm_1 = {
+	value = pp_cplan_fm_legume_model_farm_1_1
+}
+pp_cplan_fm_legume_model_farm_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:legumes)" multiply = { value = modifier:local_legumes_output_modifier add = 1 min = 0 } multiply = 1.51 }
+	subtract = { value = "market.market_price(goods:horses)" multiply = 0.13 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.22 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.1 }
+	subtract = { value = "market.market_price(goods:paper)" multiply = 0.18 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.06 }
+}
+pp_cplan_fs_legume_model_farm_2 = {
+	value = pp_cplan_fm_legume_model_farm_2_1
+	min = 0
+}
+pp_cplan_fm_legume_model_farm_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	subtract = { value = "market.market_price(goods:legumes)" multiply = 0.024 }
+}
+pp_cplan_fs_legume_model_farm_3 = {
+	value = pp_cplan_fm_legume_model_farm_3_1
+}
+pp_cplan_farm_est_legume_model_farm = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_legume_model_farm_1
+		add = pp_cplan_fs_legume_model_farm_2
+		add = pp_cplan_fs_legume_model_farm_3
+	}
+}
+pp_cplan_farm_roi_legume_model_farm = {
+	value = pp_cplan_farm_est_legume_model_farm
+	multiply = 1200
+	divide = { value = building_type:legume_model_farm.building_base_cost_in_gold min = 1 }
+}
+
+# Location scope: the legume line's return here (0 where no tier can be built or its good is set to Never).
+pp_cplan_farm_line_roi_legume = {
+	value = 0
+	if = {
+		limit = { scope:pp_cplan_country = { pp_cplan_mode_legumes < 2.5 } }
+		if = {
+			limit = { location_and_owner_can_build = { building_type = legume_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_model_farm building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_legume_model_farm
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = legume_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_rotations building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_legume_rotations
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = legume_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_farmstead building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_legume_farmstead
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = legume_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_farm building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_legume_farm
+		}
+	}
+}
+pp_cplan_fm_potato_farm_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:potato)" multiply = { value = modifier:local_potato_output_modifier add = 1 min = 0 } multiply = 0.06 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.012 }
+}
+pp_cplan_fs_potato_farm_1 = {
+	value = pp_cplan_fm_potato_farm_1_1
+}
+pp_cplan_fm_potato_farm_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:potato)" multiply = { value = modifier:local_potato_output_modifier add = 1 min = 0 } multiply = 0.1 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.006 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.011 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.001 }
+}
+pp_cplan_fm_potato_farm_2_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:potato)" multiply = { value = modifier:local_potato_output_modifier add = 1 min = 0 } multiply = 0.11 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.019 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.006 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.001 }
+}
+pp_cplan_fs_potato_farm_2 = {
+	value = pp_cplan_fm_potato_farm_2_1
+	min = pp_cplan_fm_potato_farm_2_2
+	min = 0
+}
+pp_cplan_fm_potato_farm_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	subtract = { value = "market.market_price(goods:potato)" multiply = 0.01 }
+}
+pp_cplan_fs_potato_farm_3 = {
+	value = pp_cplan_fm_potato_farm_3_1
+}
+pp_cplan_farm_est_potato_farm = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_potato_farm_1
+		add = pp_cplan_fs_potato_farm_2
+		add = pp_cplan_fs_potato_farm_3
+	}
+}
+pp_cplan_farm_roi_potato_farm = {
+	value = pp_cplan_farm_est_potato_farm
+	multiply = 1200
+	divide = { value = building_type:potato_farm.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_potato_farmstead_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:potato)" multiply = { value = modifier:local_potato_output_modifier add = 1 min = 0 } multiply = 0.092 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.018 }
+}
+pp_cplan_fs_potato_farmstead_1 = {
+	value = pp_cplan_fm_potato_farmstead_1_1
+}
+pp_cplan_fm_potato_farmstead_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:potato)" multiply = { value = modifier:local_potato_output_modifier add = 1 min = 0 } multiply = 0.747 }
+	subtract = { value = "market.market_price(goods:clay)" multiply = 0.19 }
+	subtract = { value = "market.market_price(goods:fiber_crops)" multiply = 0.059 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.1 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.072 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.013 }
+}
+pp_cplan_fs_potato_farmstead_2 = {
+	value = pp_cplan_fm_potato_farmstead_2_1
+	min = 0
+}
+pp_cplan_fm_potato_farmstead_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	subtract = { value = "market.market_price(goods:potato)" multiply = 0.015 }
+}
+pp_cplan_fs_potato_farmstead_3 = {
+	value = pp_cplan_fm_potato_farmstead_3_1
+}
+pp_cplan_farm_est_potato_farmstead = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_potato_farmstead_1
+		add = pp_cplan_fs_potato_farmstead_2
+		add = pp_cplan_fs_potato_farmstead_3
+	}
+}
+pp_cplan_farm_roi_potato_farmstead = {
+	value = pp_cplan_farm_est_potato_farmstead
+	multiply = 1200
+	divide = { value = building_type:potato_farmstead.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_potato_rotations_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:potato)" multiply = { value = modifier:local_potato_output_modifier add = 1 min = 0 } multiply = 0.095 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.019 }
+}
+pp_cplan_fs_potato_rotations_1 = {
+	value = pp_cplan_fm_potato_rotations_1_1
+}
+pp_cplan_fm_potato_rotations_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:potato)" multiply = { value = modifier:local_potato_output_modifier add = 1 min = 0 } multiply = 1.05 }
+	subtract = { value = "market.market_price(goods:clay)" multiply = 0.37 }
+	subtract = { value = "market.market_price(goods:cloth)" multiply = 0.048 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.25 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.096 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.03 }
+}
+pp_cplan_fm_potato_rotations_2_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:potato)" multiply = { value = modifier:local_potato_output_modifier add = 1 min = 0 } multiply = 1.09 }
+	subtract = { value = "market.market_price(goods:clay)" multiply = 0.18 }
+	subtract = { value = "market.market_price(goods:fiber_crops)" multiply = 0.15 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.21 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.1 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.03 }
+}
+pp_cplan_fs_potato_rotations_2 = {
+	value = pp_cplan_fm_potato_rotations_2_1
+	min = pp_cplan_fm_potato_rotations_2_2
+	min = 0
+}
+pp_cplan_fm_potato_rotations_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	subtract = { value = "market.market_price(goods:potato)" multiply = 0.016 }
+}
+pp_cplan_fs_potato_rotations_3 = {
+	value = pp_cplan_fm_potato_rotations_3_1
+}
+pp_cplan_farm_est_potato_rotations = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_potato_rotations_1
+		add = pp_cplan_fs_potato_rotations_2
+		add = pp_cplan_fs_potato_rotations_3
+	}
+}
+pp_cplan_farm_roi_potato_rotations = {
+	value = pp_cplan_farm_est_potato_rotations
+	multiply = 1200
+	divide = { value = building_type:potato_rotations.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_potato_model_farm_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:potato)" multiply = { value = modifier:local_potato_output_modifier add = 1 min = 0 } multiply = 0.145 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.029 }
+}
+pp_cplan_fs_potato_model_farm_1 = {
+	value = pp_cplan_fm_potato_model_farm_1_1
+}
+pp_cplan_fm_potato_model_farm_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:potato)" multiply = { value = modifier:local_potato_output_modifier add = 1 min = 0 } multiply = 1.55 }
+	subtract = { value = "market.market_price(goods:clay)" multiply = 0.47 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.31 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.1 }
+	subtract = { value = "market.market_price(goods:paper)" multiply = 0.19 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.06 }
+}
+pp_cplan_fs_potato_model_farm_2 = {
+	value = pp_cplan_fm_potato_model_farm_2_1
+	min = 0
+}
+pp_cplan_fm_potato_model_farm_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	subtract = { value = "market.market_price(goods:potato)" multiply = 0.024 }
+}
+pp_cplan_fs_potato_model_farm_3 = {
+	value = pp_cplan_fm_potato_model_farm_3_1
+}
+pp_cplan_farm_est_potato_model_farm = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_potato_model_farm_1
+		add = pp_cplan_fs_potato_model_farm_2
+		add = pp_cplan_fs_potato_model_farm_3
+	}
+}
+pp_cplan_farm_roi_potato_model_farm = {
+	value = pp_cplan_farm_est_potato_model_farm
+	multiply = 1200
+	divide = { value = building_type:potato_model_farm.building_base_cost_in_gold min = 1 }
+}
+
+# Location scope: the potato line's return here (0 where no tier can be built or its good is set to Never).
+pp_cplan_farm_line_roi_potato = {
+	value = 0
+	if = {
+		limit = { scope:pp_cplan_country = { pp_cplan_mode_potato < 2.5 } }
+		if = {
+			limit = { location_and_owner_can_build = { building_type = potato_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_model_farm building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_potato_model_farm
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = potato_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_rotations building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_potato_rotations
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = potato_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_farmstead building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_potato_farmstead
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = potato_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_farm building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_potato_farm
+		}
+	}
+}
+pp_cplan_fm_olive_farm_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:olives)" multiply = { value = modifier:local_olives_output_modifier add = 1 min = 0 } multiply = 0.06 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.012 }
+}
+pp_cplan_fs_olive_farm_1 = {
+	value = pp_cplan_fm_olive_farm_1_1
+}
+pp_cplan_fm_olive_farm_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:olives)" multiply = { value = modifier:local_olives_output_modifier add = 1 min = 0 } multiply = 0.1 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.005 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.01 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.001 }
+}
+pp_cplan_fm_olive_farm_2_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:olives)" multiply = { value = modifier:local_olives_output_modifier add = 1 min = 0 } multiply = 0.11 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.01 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.006 }
+	subtract = { value = "market.market_price(goods:stone)" multiply = 0.016 }
+}
+pp_cplan_fs_olive_farm_2 = {
+	value = pp_cplan_fm_olive_farm_2_1
+	min = pp_cplan_fm_olive_farm_2_2
+	min = 0
+}
+pp_cplan_fm_olive_farm_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	subtract = { value = "market.market_price(goods:olives)" multiply = 0.01 }
+}
+pp_cplan_fs_olive_farm_3 = {
+	value = pp_cplan_fm_olive_farm_3_1
+}
+pp_cplan_farm_est_olive_farm = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_olive_farm_1
+		add = pp_cplan_fs_olive_farm_2
+		add = pp_cplan_fs_olive_farm_3
+	}
+}
+pp_cplan_farm_roi_olive_farm = {
+	value = pp_cplan_farm_est_olive_farm
+	multiply = 1200
+	divide = { value = building_type:olive_farm.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_olive_farmstead_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:olives)" multiply = { value = modifier:local_olives_output_modifier add = 1 min = 0 } multiply = 0.092 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.018 }
+}
+pp_cplan_fs_olive_farmstead_1 = {
+	value = pp_cplan_fm_olive_farmstead_1_1
+}
+pp_cplan_fm_olive_farmstead_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:olives)" multiply = { value = modifier:local_olives_output_modifier add = 1 min = 0 } multiply = 0.678 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.074 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.06 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.058 }
+	subtract = { value = "market.market_price(goods:pottery)" multiply = 0.12 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.012 }
+}
+pp_cplan_fs_olive_farmstead_2 = {
+	value = pp_cplan_fm_olive_farmstead_2_1
+	min = 0
+}
+pp_cplan_fm_olive_farmstead_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	subtract = { value = "market.market_price(goods:olives)" multiply = 0.015 }
+}
+pp_cplan_fs_olive_farmstead_3 = {
+	value = pp_cplan_fm_olive_farmstead_3_1
+}
+pp_cplan_farm_est_olive_farmstead = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_olive_farmstead_1
+		add = pp_cplan_fs_olive_farmstead_2
+		add = pp_cplan_fs_olive_farmstead_3
+	}
+}
+pp_cplan_farm_roi_olive_farmstead = {
+	value = pp_cplan_farm_est_olive_farmstead
+	multiply = 1200
+	divide = { value = building_type:olive_farmstead.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_olive_rotations_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:olives)" multiply = { value = modifier:local_olives_output_modifier add = 1 min = 0 } multiply = 0.095 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.019 }
+}
+pp_cplan_fs_olive_rotations_1 = {
+	value = pp_cplan_fm_olive_rotations_1_1
+}
+pp_cplan_fm_olive_rotations_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:olives)" multiply = { value = modifier:local_olives_output_modifier add = 1 min = 0 } multiply = 1.04 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.13 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.14 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.11 }
+	subtract = { value = "market.market_price(goods:pottery)" multiply = 0.26 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.03 }
+}
+pp_cplan_fm_olive_rotations_2_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:olives)" multiply = { value = modifier:local_olives_output_modifier add = 1 min = 0 } multiply = 1.08 }
+	subtract = { value = "market.market_price(goods:clay)" multiply = 0.52 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.11 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.16 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.099 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.03 }
+}
+pp_cplan_fs_olive_rotations_2 = {
+	value = pp_cplan_fm_olive_rotations_2_1
+	min = pp_cplan_fm_olive_rotations_2_2
+	min = 0
+}
+pp_cplan_fm_olive_rotations_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	subtract = { value = "market.market_price(goods:olives)" multiply = 0.016 }
+}
+pp_cplan_fs_olive_rotations_3 = {
+	value = pp_cplan_fm_olive_rotations_3_1
+}
+pp_cplan_farm_est_olive_rotations = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_olive_rotations_1
+		add = pp_cplan_fs_olive_rotations_2
+		add = pp_cplan_fs_olive_rotations_3
+	}
+}
+pp_cplan_farm_roi_olive_rotations = {
+	value = pp_cplan_farm_est_olive_rotations
+	multiply = 1200
+	divide = { value = building_type:olive_rotations.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_olive_model_farm_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:olives)" multiply = { value = modifier:local_olives_output_modifier add = 1 min = 0 } multiply = 0.145 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.029 }
+}
+pp_cplan_fs_olive_model_farm_1 = {
+	value = pp_cplan_fm_olive_model_farm_1_1
+}
+pp_cplan_fm_olive_model_farm_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:olives)" multiply = { value = modifier:local_olives_output_modifier add = 1 min = 0 } multiply = 1.52 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.17 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.23 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.11 }
+	subtract = { value = "market.market_price(goods:pottery)" multiply = 0.42 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.06 }
+}
+pp_cplan_fs_olive_model_farm_2 = {
+	value = pp_cplan_fm_olive_model_farm_2_1
+	min = 0
+}
+pp_cplan_fm_olive_model_farm_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	subtract = { value = "market.market_price(goods:olives)" multiply = 0.024 }
+}
+pp_cplan_fs_olive_model_farm_3 = {
+	value = pp_cplan_fm_olive_model_farm_3_1
+}
+pp_cplan_farm_est_olive_model_farm = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_olive_model_farm_1
+		add = pp_cplan_fs_olive_model_farm_2
+		add = pp_cplan_fs_olive_model_farm_3
+	}
+}
+pp_cplan_farm_roi_olive_model_farm = {
+	value = pp_cplan_farm_est_olive_model_farm
+	multiply = 1200
+	divide = { value = building_type:olive_model_farm.building_base_cost_in_gold min = 1 }
+}
+
+# Location scope: the olive line's return here (0 where no tier can be built or its good is set to Never).
+pp_cplan_farm_line_roi_olive = {
+	value = 0
+	if = {
+		limit = { scope:pp_cplan_country = { pp_cplan_mode_olives < 2.5 } }
+		if = {
+			limit = { location_and_owner_can_build = { building_type = olive_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_model_farm building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_olive_model_farm
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = olive_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_rotations building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_olive_rotations
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = olive_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_farmstead building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_olive_farmstead
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = olive_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_farm building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_olive_farm
+		}
+	}
+}
+pp_cplan_fm_cattle_farm_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:livestock)" multiply = { value = modifier:local_livestock_output_modifier add = 1 min = 0 } multiply = 0.06 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.018 }
+}
+pp_cplan_fs_cattle_farm_1 = {
+	value = pp_cplan_fm_cattle_farm_1_1
+}
+pp_cplan_fm_cattle_farm_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:livestock)" multiply = { value = modifier:local_livestock_output_modifier add = 1 min = 0 } multiply = 0.082 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.01 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.03 }
+	subtract = { value = "market.market_price(goods:salt)" multiply = 0.003 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.001 }
+}
+pp_cplan_fm_cattle_farm_2_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:livestock)" multiply = { value = modifier:local_livestock_output_modifier add = 1 min = 0 } multiply = 0.091 }
+	subtract = { value = "market.market_price(goods:clay)" multiply = 0.16 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.02 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.002 }
+}
+pp_cplan_fs_cattle_farm_2 = {
+	value = pp_cplan_fm_cattle_farm_2_1
+	min = pp_cplan_fm_cattle_farm_2_2
+	min = 0
+}
+pp_cplan_fm_cattle_farm_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.007 }
+}
+pp_cplan_fs_cattle_farm_3 = {
+	value = pp_cplan_fm_cattle_farm_3_1
+}
+pp_cplan_farm_est_cattle_farm = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_cattle_farm_1
+		add = pp_cplan_fs_cattle_farm_2
+		add = pp_cplan_fs_cattle_farm_3
+	}
+}
+pp_cplan_farm_roi_cattle_farm = {
+	value = pp_cplan_farm_est_cattle_farm
+	multiply = 1200
+	divide = { value = building_type:cattle_farm.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_cattle_farmstead_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:livestock)" multiply = { value = modifier:local_livestock_output_modifier add = 1 min = 0 } multiply = 0.092 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.028 }
+}
+pp_cplan_fs_cattle_farmstead_1 = {
+	value = pp_cplan_fm_cattle_farmstead_1_1
+}
+pp_cplan_fm_cattle_farmstead_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:livestock)" multiply = { value = modifier:local_livestock_output_modifier add = 1 min = 0 } multiply = 0.506 }
+	subtract = { value = "market.market_price(goods:clay)" multiply = 0.12 }
+	subtract = { value = "market.market_price(goods:legumes)" multiply = 0.099 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.12 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.046 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.066 }
+}
+pp_cplan_fs_cattle_farmstead_2 = {
+	value = pp_cplan_fm_cattle_farmstead_2_1
+	min = 0
+}
+pp_cplan_fm_cattle_farmstead_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.01 }
+}
+pp_cplan_fs_cattle_farmstead_3 = {
+	value = pp_cplan_fm_cattle_farmstead_3_1
+}
+pp_cplan_farm_est_cattle_farmstead = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_cattle_farmstead_1
+		add = pp_cplan_fs_cattle_farmstead_2
+		add = pp_cplan_fs_cattle_farmstead_3
+	}
+}
+pp_cplan_farm_roi_cattle_farmstead = {
+	value = pp_cplan_farm_est_cattle_farmstead
+	multiply = 1200
+	divide = { value = building_type:cattle_farmstead.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_cattle_rotations_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:livestock)" multiply = { value = modifier:local_livestock_output_modifier add = 1 min = 0 } multiply = 0.095 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.028 }
+}
+pp_cplan_fs_cattle_rotations_1 = {
+	value = pp_cplan_fm_cattle_rotations_1_1
+}
+pp_cplan_fm_cattle_rotations_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:livestock)" multiply = { value = modifier:local_livestock_output_modifier add = 1 min = 0 } multiply = 0.655 }
+	subtract = { value = "market.market_price(goods:horses)" multiply = 0.061 }
+	subtract = { value = "market.market_price(goods:legumes)" multiply = 0.2 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.17 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.085 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.03 }
+}
+pp_cplan_fm_cattle_rotations_2_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:livestock)" multiply = { value = modifier:local_livestock_output_modifier add = 1 min = 0 } multiply = 0.655 }
+	subtract = { value = "market.market_price(goods:horses)" multiply = 0.072 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.18 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.1 }
+	subtract = { value = "market.market_price(goods:salt)" multiply = 0.036 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.03 }
+}
+pp_cplan_fs_cattle_rotations_2 = {
+	value = pp_cplan_fm_cattle_rotations_2_1
+	min = pp_cplan_fm_cattle_rotations_2_2
+	min = 0
+}
+pp_cplan_fm_cattle_rotations_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.011 }
+}
+pp_cplan_fs_cattle_rotations_3 = {
+	value = pp_cplan_fm_cattle_rotations_3_1
+}
+pp_cplan_farm_est_cattle_rotations = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_cattle_rotations_1
+		add = pp_cplan_fs_cattle_rotations_2
+		add = pp_cplan_fs_cattle_rotations_3
+	}
+}
+pp_cplan_farm_roi_cattle_rotations = {
+	value = pp_cplan_farm_est_cattle_rotations
+	multiply = 1200
+	divide = { value = building_type:cattle_rotations.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_cattle_model_farm_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:livestock)" multiply = { value = modifier:local_livestock_output_modifier add = 1 min = 0 } multiply = 0.145 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.043 }
+}
+pp_cplan_fs_cattle_model_farm_1 = {
+	value = pp_cplan_fm_cattle_model_farm_1_1
+}
+pp_cplan_fm_cattle_model_farm_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:livestock)" multiply = { value = modifier:local_livestock_output_modifier add = 1 min = 0 } multiply = 1.01 }
+	subtract = { value = "market.market_price(goods:horses)" multiply = 0.12 }
+	subtract = { value = "market.market_price(goods:legumes)" multiply = 0.23 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.11 }
+	subtract = { value = "market.market_price(goods:pottery)" multiply = 0.4 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.06 }
+}
+pp_cplan_fs_cattle_model_farm_2 = {
+	value = pp_cplan_fm_cattle_model_farm_2_1
+	min = 0
+}
+pp_cplan_fm_cattle_model_farm_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.016 }
+}
+pp_cplan_fs_cattle_model_farm_3 = {
+	value = pp_cplan_fm_cattle_model_farm_3_1
+}
+pp_cplan_farm_est_cattle_model_farm = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_cattle_model_farm_1
+		add = pp_cplan_fs_cattle_model_farm_2
+		add = pp_cplan_fs_cattle_model_farm_3
+	}
+}
+pp_cplan_farm_roi_cattle_model_farm = {
+	value = pp_cplan_farm_est_cattle_model_farm
+	multiply = 1200
+	divide = { value = building_type:cattle_model_farm.building_base_cost_in_gold min = 1 }
+}
+
+# Location scope: the cattle line's return here (0 where no tier can be built or its good is set to Never).
+pp_cplan_farm_line_roi_cattle = {
+	value = 0
+	if = {
+		limit = { scope:pp_cplan_country = { pp_cplan_mode_livestock < 2.5 } }
+		if = {
+			limit = { location_and_owner_can_build = { building_type = cattle_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_model_farm building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_cattle_model_farm
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = cattle_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_rotations building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_cattle_rotations
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = cattle_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_farmstead building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_cattle_farmstead
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = cattle_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_farm building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_cattle_farm
+		}
+	}
+}
+pp_cplan_fm_camel_herders_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:camels)" multiply = { value = modifier:local_camels_output_modifier add = 1 min = 0 } multiply = 0.085 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.051 }
+}
+pp_cplan_fs_camel_herders_1 = {
+	value = pp_cplan_fm_camel_herders_1_1
+}
+pp_cplan_fm_camel_herders_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:camels)" multiply = { value = modifier:local_camels_output_modifier add = 1 min = 0 } multiply = 0.155 }
+	subtract = { value = "market.market_price(goods:leather)" multiply = 0.025 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.07 }
+	subtract = { value = "market.market_price(goods:millet)" multiply = 0.26 }
+}
+pp_cplan_fm_camel_herders_2_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:camels)" multiply = { value = modifier:local_camels_output_modifier add = 1 min = 0 } multiply = 0.155 }
+	subtract = { value = "market.market_price(goods:leather)" multiply = 0.04 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.08 }
+	subtract = { value = "market.market_price(goods:salt)" multiply = 0.045 }
+}
+pp_cplan_fm_camel_herders_2_3 = {
+	value = 0
+	add = { value = "market.market_price(goods:camels)" multiply = { value = modifier:local_camels_output_modifier add = 1 min = 0 } multiply = 0.155 }
+	subtract = { value = "market.market_price(goods:fish)" multiply = 0.12 }
+	subtract = { value = "market.market_price(goods:fruit)" multiply = 0.17 }
+	subtract = { value = "market.market_price(goods:leather)" multiply = 0.025 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.08 }
+}
+pp_cplan_fs_camel_herders_2 = {
+	value = pp_cplan_fm_camel_herders_2_1
+	min = pp_cplan_fm_camel_herders_2_2
+	min = pp_cplan_fm_camel_herders_2_3
+	min = 0
+}
+pp_cplan_fm_camel_herders_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.36 }
+	subtract = { value = "market.market_price(goods:camels)" multiply = 0.038 }
+}
+pp_cplan_fs_camel_herders_3 = {
+	value = pp_cplan_fm_camel_herders_3_1
+}
+pp_cplan_fm_camel_herders_4_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:camels)" multiply = { value = modifier:local_camels_output_modifier add = 1 min = 0 } multiply = 0.006 }
+	subtract = { value = "market.market_price(goods:offset)" multiply = 0.017 }
+}
+pp_cplan_fs_camel_herders_4 = {
+	value = pp_cplan_fm_camel_herders_4_1
+}
+pp_cplan_farm_est_camel_herders = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_camel_herders_1
+		add = pp_cplan_fs_camel_herders_2
+		add = pp_cplan_fs_camel_herders_3
+		add = pp_cplan_fs_camel_herders_4
+	}
+}
+pp_cplan_farm_roi_camel_herders = {
+	value = pp_cplan_farm_est_camel_herders
+	multiply = 1200
+	divide = { value = building_type:camel_herders.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_camel_stud_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:camels)" multiply = { value = modifier:local_camels_output_modifier add = 1 min = 0 } multiply = 0.085 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.051 }
+}
+pp_cplan_fs_camel_stud_1 = {
+	value = pp_cplan_fm_camel_stud_1_1
+}
+pp_cplan_fm_camel_stud_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:camels)" multiply = { value = modifier:local_camels_output_modifier add = 1 min = 0 } multiply = 0.527 }
+	subtract = { value = "market.market_price(goods:leather)" multiply = 0.146 }
+	subtract = { value = "market.market_price(goods:legumes)" multiply = 0.264 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.145 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.046 }
+	subtract = { value = "market.market_price(goods:wheat)" multiply = 0.493 }
+}
+pp_cplan_fm_camel_stud_2_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:camels)" multiply = { value = modifier:local_camels_output_modifier add = 1 min = 0 } multiply = 0.612 }
+	subtract = { value = "market.market_price(goods:cloth)" multiply = 0.063 }
+	subtract = { value = "market.market_price(goods:fruit)" multiply = 0.34 }
+	subtract = { value = "market.market_price(goods:leather)" multiply = 0.111 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.187 }
+	subtract = { value = "market.market_price(goods:millet)" multiply = 0.604 }
+}
+pp_cplan_fs_camel_stud_2 = {
+	value = pp_cplan_fm_camel_stud_2_1
+	min = pp_cplan_fm_camel_stud_2_2
+	min = 0
+}
+pp_cplan_fm_camel_stud_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.36 }
+	subtract = { value = "market.market_price(goods:camels)" multiply = 0.038 }
+}
+pp_cplan_fs_camel_stud_3 = {
+	value = pp_cplan_fm_camel_stud_3_1
+}
+pp_cplan_fm_camel_stud_4_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:camels)" multiply = { value = modifier:local_camels_output_modifier add = 1 min = 0 } multiply = 0.006 }
+	subtract = { value = "market.market_price(goods:offset)" multiply = 0.017 }
+}
+pp_cplan_fs_camel_stud_4 = {
+	value = pp_cplan_fm_camel_stud_4_1
+}
+pp_cplan_farm_est_camel_stud = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_camel_stud_1
+		add = pp_cplan_fs_camel_stud_2
+		add = pp_cplan_fs_camel_stud_3
+		add = pp_cplan_fs_camel_stud_4
+	}
+}
+pp_cplan_farm_roi_camel_stud = {
+	value = pp_cplan_farm_est_camel_stud
+	multiply = 1200
+	divide = { value = building_type:camel_stud.building_base_cost_in_gold min = 1 }
+}
+
+# Location scope: the camel_herders line's return here (0 where no tier can be built or its good is set to Never).
+pp_cplan_farm_line_roi_camel_herders = {
+	value = 0
+	if = {
+		limit = { scope:pp_cplan_country = { pp_cplan_mode_camels < 2.5 } }
+		if = {
+			limit = { location_and_owner_can_build = { building_type = camel_stud } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:camel_stud building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_camel_stud
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = camel_herders } pp_cplan_goods_here_basic_construction_needs = yes NOT = { any_buildings_in_location = { building_type = building_type:camel_herders building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_camel_herders
+		}
+	}
+}
+pp_cplan_fm_eng_royal_forest_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:wild_game)" multiply = { value = modifier:local_wild_game_output_modifier add = 1 min = 0 } multiply = 1 }
+	subtract = { value = "market.market_price(goods:horses)" multiply = 0.095 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.17 }
+	subtract = { value = "market.market_price(goods:weaponry)" multiply = 0.095 }
+	subtract = { value = "market.market_price(goods:wine)" multiply = 0.095 }
+}
+pp_cplan_fs_eng_royal_forest_1 = {
+	value = pp_cplan_fm_eng_royal_forest_1_1
+}
+pp_cplan_fm_eng_royal_forest_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.96 }
+	subtract = { value = "market.market_price(goods:wild_game)" multiply = 0.08 }
+}
+pp_cplan_fs_eng_royal_forest_2 = {
+	value = pp_cplan_fm_eng_royal_forest_2_1
+}
+pp_cplan_fm_eng_royal_forest_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:wild_game)" multiply = { value = modifier:local_wild_game_output_modifier add = 1 min = 0 } multiply = 0.018 }
+	subtract = { value = "market.market_price(goods:offset)" multiply = 0.017 }
+}
+pp_cplan_fs_eng_royal_forest_3 = {
+	value = pp_cplan_fm_eng_royal_forest_3_1
+}
+pp_cplan_farm_est_eng_royal_forest = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_eng_royal_forest_1
+		add = pp_cplan_fs_eng_royal_forest_2
+		add = pp_cplan_fs_eng_royal_forest_3
+	}
+}
+pp_cplan_farm_roi_eng_royal_forest = {
+	value = pp_cplan_farm_est_eng_royal_forest
+	multiply = 1200
+	divide = { value = building_type:eng_royal_forest.building_base_cost_in_gold min = 1 }
+}
+
+# Location scope: the eng_royal_forest line's return here (0 where no tier can be built or its good is set to Never).
+pp_cplan_farm_line_roi_eng_royal_forest = {
+	value = 0
+	if = {
+		limit = { scope:pp_cplan_country = { pp_cplan_mode_wild_game < 2.5 } }
+		if = {
+			limit = { location_and_owner_can_build = { building_type = eng_royal_forest } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:eng_royal_forest building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_eng_royal_forest
+		}
+	}
+}
+pp_cplan_fm_fishing_village_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 0.05 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.01 }
+}
+pp_cplan_fs_fishing_village_1 = {
+	value = pp_cplan_fm_fishing_village_1_1
+}
+pp_cplan_fm_fishing_village_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 0.042 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.022 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.009 }
+}
+pp_cplan_fs_fishing_village_2 = {
+	value = pp_cplan_fm_fishing_village_2_1
+	min = 0
+}
+pp_cplan_fm_fishing_village_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 0.04 }
+	subtract = { value = "market.market_price(goods:clay)" multiply = 0.018 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.011 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.007 }
+}
+pp_cplan_fm_fishing_village_3_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 0.059 }
+	subtract = { value = "market.market_price(goods:fiber_crops)" multiply = 0.011 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.015 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.011 }
+}
+pp_cplan_fs_fishing_village_3 = {
+	value = pp_cplan_fm_fishing_village_3_1
+	min = pp_cplan_fm_fishing_village_3_2
+	min = 0
+}
+pp_cplan_fm_fishing_village_4_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 0.085 }
+	subtract = { value = "market.market_price(goods:ivory)" multiply = 0.011 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.017 }
+	subtract = { value = "market.market_price(goods:salt)" multiply = 0.004 }
+}
+pp_cplan_fm_fishing_village_4_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 0.279 }
+	subtract = { value = "market.market_price(goods:fiber_crops)" multiply = 0.035 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.04 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.051 }
+	subtract = { value = "market.market_price(goods:salt)" multiply = 0.012 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.009 }
+}
+pp_cplan_fs_fishing_village_4 = {
+	value = pp_cplan_fm_fishing_village_4_1
+	min = pp_cplan_fm_fishing_village_4_2
+	min = 0
+}
+pp_cplan_fm_fishing_village_5_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.8 }
+	subtract = { value = "market.market_price(goods:fish)" multiply = 0.067 }
+}
+pp_cplan_fs_fishing_village_5 = {
+	value = pp_cplan_fm_fishing_village_5_1
+}
+pp_cplan_fm_fishing_village_6_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 0.018 }
+	subtract = { value = "market.market_price(goods:offset)" multiply = 0.017 }
+}
+pp_cplan_fs_fishing_village_6 = {
+	value = pp_cplan_fm_fishing_village_6_1
+}
+pp_cplan_farm_est_fishing_village = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_fishing_village_1
+		add = pp_cplan_fs_fishing_village_2
+		add = pp_cplan_fs_fishing_village_3
+		add = pp_cplan_fs_fishing_village_4
+		add = pp_cplan_fs_fishing_village_5
+		add = pp_cplan_fs_fishing_village_6
+	}
+}
+pp_cplan_farm_roi_fishing_village = {
+	value = pp_cplan_farm_est_fishing_village
+	multiply = 1200
+	divide = { value = building_type:fishing_village.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_net_curing_yard_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 0.07 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.014 }
+}
+pp_cplan_fs_net_curing_yard_1 = {
+	value = pp_cplan_fm_net_curing_yard_1_1
+}
+pp_cplan_fm_net_curing_yard_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 0.065 }
+	subtract = { value = "market.market_price(goods:fiber_crops)" multiply = 0.008 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.023 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.013 }
+}
+pp_cplan_fs_net_curing_yard_2 = {
+	value = pp_cplan_fm_net_curing_yard_2_1
+	min = 0
+}
+pp_cplan_fm_net_curing_yard_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 0.055 }
+	subtract = { value = "market.market_price(goods:clay)" multiply = 0.021 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.013 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.01 }
+	subtract = { value = "market.market_price(goods:pottery)" multiply = 0.008 }
+}
+pp_cplan_fm_net_curing_yard_3_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 0.075 }
+	subtract = { value = "market.market_price(goods:fiber_crops)" multiply = 0.015 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.016 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.013 }
+}
+pp_cplan_fs_net_curing_yard_3 = {
+	value = pp_cplan_fm_net_curing_yard_3_1
+	min = pp_cplan_fm_net_curing_yard_3_2
+	min = 0
+}
+pp_cplan_fm_net_curing_yard_4_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 0.17 }
+	subtract = { value = "market.market_price(goods:fiber_crops)" multiply = 0.015 }
+	subtract = { value = "market.market_price(goods:ivory)" multiply = 0.009 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.025 }
+	subtract = { value = "market.market_price(goods:salt)" multiply = 0.007 }
+}
+pp_cplan_fm_net_curing_yard_4_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 0.43 }
+	subtract = { value = "market.market_price(goods:fiber_crops)" multiply = 0.048 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.028 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.082 }
+	subtract = { value = "market.market_price(goods:salt)" multiply = 0.039 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.009 }
+}
+pp_cplan_fs_net_curing_yard_4 = {
+	value = pp_cplan_fm_net_curing_yard_4_1
+	min = pp_cplan_fm_net_curing_yard_4_2
+	min = 0
+}
+pp_cplan_fm_net_curing_yard_5_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.12 }
+	subtract = { value = "market.market_price(goods:fish)" multiply = 0.093 }
+}
+pp_cplan_fs_net_curing_yard_5 = {
+	value = pp_cplan_fm_net_curing_yard_5_1
+}
+pp_cplan_fm_net_curing_yard_6_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 0.018 }
+	subtract = { value = "market.market_price(goods:offset)" multiply = 0.017 }
+}
+pp_cplan_fs_net_curing_yard_6 = {
+	value = pp_cplan_fm_net_curing_yard_6_1
+}
+pp_cplan_farm_est_net_curing_yard = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_net_curing_yard_1
+		add = pp_cplan_fs_net_curing_yard_2
+		add = pp_cplan_fs_net_curing_yard_3
+		add = pp_cplan_fs_net_curing_yard_4
+		add = pp_cplan_fs_net_curing_yard_5
+		add = pp_cplan_fs_net_curing_yard_6
+	}
+}
+pp_cplan_farm_roi_net_curing_yard = {
+	value = pp_cplan_farm_est_net_curing_yard
+	multiply = 1200
+	divide = { value = building_type:net_curing_yard.building_base_cost_in_gold min = 1 }
+}
+
+# Location scope: the fishing_village line's return here (0 where no tier can be built or its good is set to Never).
+pp_cplan_farm_line_roi_fishing_village = {
+	value = 0
+	if = {
+		limit = { scope:pp_cplan_country = { pp_cplan_mode_fish < 2.5 } }
+		if = {
+			limit = { location_and_owner_can_build = { building_type = net_curing_yard } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:net_curing_yard building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_net_curing_yard
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = fishing_village } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:fishing_village building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_fishing_village
+		}
+	}
+}
+pp_cplan_fm_forest_village_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fur)" multiply = { value = modifier:local_fur_output_modifier add = 1 min = 0 } multiply = 0.027 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.011 }
+}
+pp_cplan_fm_forest_village_1_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:wild_game)" multiply = { value = modifier:local_wild_game_output_modifier add = 1 min = 0 } multiply = 0.06 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.012 }
+}
+pp_cplan_fm_forest_village_1_3 = {
+	value = 0
+	add = { value = "market.market_price(goods:beeswax)" multiply = { value = modifier:local_beeswax_output_modifier add = 1 min = 0 } multiply = 0.05 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.02 }
+}
+pp_cplan_fm_forest_village_1_4 = {
+	value = 0
+	add = { value = "market.market_price(goods:leather)" multiply = { value = modifier:local_leather_output_modifier add = 1 min = 0 } multiply = 0.04 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.024 }
+}
+pp_cplan_fs_forest_village_1 = {
+	value = pp_cplan_fm_forest_village_1_1
+	min = pp_cplan_fm_forest_village_1_2
+	min = pp_cplan_fm_forest_village_1_3
+	min = pp_cplan_fm_forest_village_1_4
+}
+pp_cplan_fm_forest_village_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:wild_game)" multiply = { value = modifier:local_wild_game_output_modifier add = 1 min = 0 } multiply = 0.063 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.013 }
+	subtract = { value = "market.market_price(goods:weaponry)" multiply = 0 }
+}
+pp_cplan_fm_forest_village_2_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:leather)" multiply = { value = modifier:local_leather_output_modifier add = 1 min = 0 } multiply = 0.039 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.018 }
+	subtract = { value = "market.market_price(goods:sand)" multiply = 0 }
+	subtract = { value = "market.market_price(goods:tar)" multiply = 0 }
+	subtract = { value = "market.market_price(goods:wild_game)" multiply = 0.082 }
+}
+pp_cplan_fm_forest_village_2_3 = {
+	value = 0
+	add = { value = "market.market_price(goods:fur)" multiply = { value = modifier:local_fur_output_modifier add = 1 min = 0 } multiply = 0.064 }
+	subtract = { value = "market.market_price(goods:fiber_crops)" multiply = 0.013 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.019 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.003 }
+	subtract = { value = "market.market_price(goods:weaponry)" multiply = 0.017 }
+}
+pp_cplan_fm_forest_village_2_4 = {
+	value = 0
+	add = { value = "market.market_price(goods:beeswax)" multiply = { value = modifier:local_beeswax_output_modifier add = 1 min = 0 } multiply = 0.13 }
+	subtract = { value = "market.market_price(goods:cloth)" multiply = 0.066 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.042 }
+}
+pp_cplan_fs_forest_village_2 = {
+	value = pp_cplan_fm_forest_village_2_1
+	min = pp_cplan_fm_forest_village_2_2
+	min = pp_cplan_fm_forest_village_2_3
+	min = pp_cplan_fm_forest_village_2_4
+	min = 0
+}
+pp_cplan_fm_forest_village_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.96 }
+	subtract = { value = "market.market_price(goods:wild_game)" multiply = 0.08 }
+}
+pp_cplan_fs_forest_village_3 = {
+	value = pp_cplan_fm_forest_village_3_1
+}
+pp_cplan_fm_forest_village_4_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:beeswax)" multiply = { value = modifier:local_beeswax_output_modifier add = 1 min = 0 } multiply = 0.009 }
+	subtract = { value = "market.market_price(goods:offset)" multiply = 0.017 }
+}
+pp_cplan_fs_forest_village_4 = {
+	value = pp_cplan_fm_forest_village_4_1
+}
+pp_cplan_farm_est_forest_village = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_forest_village_1
+		add = pp_cplan_fs_forest_village_2
+		add = pp_cplan_fs_forest_village_3
+		add = pp_cplan_fs_forest_village_4
+	}
+}
+pp_cplan_farm_roi_forest_village = {
+	value = pp_cplan_farm_est_forest_village
+	multiply = 1200
+	divide = { value = building_type:forest_village.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_managed_forest_village_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:wild_game)" multiply = { value = modifier:local_wild_game_output_modifier add = 1 min = 0 } multiply = 0.135 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.027 }
+}
+pp_cplan_fm_managed_forest_village_1_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:beeswax)" multiply = { value = modifier:local_beeswax_output_modifier add = 1 min = 0 } multiply = 0.135 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.054 }
+}
+pp_cplan_fm_managed_forest_village_1_3 = {
+	value = 0
+	add = { value = "market.market_price(goods:fur)" multiply = { value = modifier:local_fur_output_modifier add = 1 min = 0 } multiply = 0.135 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.054 }
+}
+pp_cplan_fm_managed_forest_village_1_4 = {
+	value = 0
+	add = { value = "market.market_price(goods:leather)" multiply = { value = modifier:local_leather_output_modifier add = 1 min = 0 } multiply = 0.135 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.081 }
+}
+pp_cplan_fs_managed_forest_village_1 = {
+	value = pp_cplan_fm_managed_forest_village_1_1
+	min = pp_cplan_fm_managed_forest_village_1_2
+	min = pp_cplan_fm_managed_forest_village_1_3
+	min = pp_cplan_fm_managed_forest_village_1_4
+}
+pp_cplan_fm_managed_forest_village_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:beeswax)" multiply = { value = modifier:local_beeswax_output_modifier add = 1 min = 0 } multiply = 0.911 }
+	subtract = { value = "market.market_price(goods:cloth)" multiply = 0.16 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.36 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.216 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.058 }
+	subtract = { value = "market.market_price(goods:victuals)" multiply = 0.126 }
+}
+pp_cplan_fm_managed_forest_village_2_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:wild_game)" multiply = { value = modifier:local_wild_game_output_modifier add = 1 min = 0 } multiply = 1.85 }
+	subtract = { value = "market.market_price(goods:horses)" multiply = 0.149 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.39 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.203 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.059 }
+	subtract = { value = "market.market_price(goods:victuals)" multiply = 0.132 }
+}
+pp_cplan_fm_managed_forest_village_2_3 = {
+	value = 0
+	add = { value = "market.market_price(goods:fur)" multiply = { value = modifier:local_fur_output_modifier add = 1 min = 0 } multiply = 0.925 }
+	subtract = { value = "market.market_price(goods:horses)" multiply = 0.135 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.41 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.203 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.059 }
+	subtract = { value = "market.market_price(goods:victuals)" multiply = 0.135 }
+}
+pp_cplan_fm_managed_forest_village_2_4 = {
+	value = 0
+	add = { value = "market.market_price(goods:leather)" multiply = { value = modifier:local_leather_output_modifier add = 1 min = 0 } multiply = 0.64 }
+	subtract = { value = "market.market_price(goods:horses)" multiply = 0.073 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.189 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.057 }
+	subtract = { value = "market.market_price(goods:victuals)" multiply = 0.073 }
+	subtract = { value = "market.market_price(goods:wild_game)" multiply = 1.05 }
+}
+pp_cplan_fs_managed_forest_village_2 = {
+	value = pp_cplan_fm_managed_forest_village_2_1
+	min = pp_cplan_fm_managed_forest_village_2_2
+	min = pp_cplan_fm_managed_forest_village_2_3
+	min = pp_cplan_fm_managed_forest_village_2_4
+	min = 0
+}
+pp_cplan_fm_managed_forest_village_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.16 }
+	subtract = { value = "market.market_price(goods:wild_game)" multiply = 0.18 }
+}
+pp_cplan_fs_managed_forest_village_3 = {
+	value = pp_cplan_fm_managed_forest_village_3_1
+}
+pp_cplan_fm_managed_forest_village_4_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:leather)" multiply = { value = modifier:local_leather_output_modifier add = 1 min = 0 } multiply = 0.006 }
+	subtract = { value = "market.market_price(goods:offset)" multiply = 0.017 }
+}
+pp_cplan_fs_managed_forest_village_4 = {
+	value = pp_cplan_fm_managed_forest_village_4_1
+}
+pp_cplan_farm_est_managed_forest_village = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_managed_forest_village_1
+		add = pp_cplan_fs_managed_forest_village_2
+		add = pp_cplan_fs_managed_forest_village_3
+		add = pp_cplan_fs_managed_forest_village_4
+	}
+}
+pp_cplan_farm_roi_managed_forest_village = {
+	value = pp_cplan_farm_est_managed_forest_village
+	multiply = 1200
+	divide = { value = building_type:managed_forest_village.building_base_cost_in_gold min = 1 }
+}
+
+# Location scope: the forest_village line's return here (0 where no tier can be built or its good is set to Never).
+pp_cplan_farm_line_roi_forest_village = {
+	value = 0
+	if = {
+		limit = { scope:pp_cplan_country = { pp_cplan_mode_beeswax < 2.5 } }
+		if = {
+			limit = { location_and_owner_can_build = { building_type = managed_forest_village } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:managed_forest_village building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_managed_forest_village
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = forest_village } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:forest_village building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_forest_village
+		}
+	}
+}
+pp_cplan_fm_fruit_orchard_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fruit)" multiply = { value = modifier:local_fruit_output_modifier add = 1 min = 0 } multiply = 0.06 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.012 }
+}
+pp_cplan_fs_fruit_orchard_1 = {
+	value = pp_cplan_fm_fruit_orchard_1_1
+}
+pp_cplan_fm_fruit_orchard_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:beeswax)" multiply = { value = modifier:local_beeswax_output_modifier add = 1 min = 0 } multiply = 0.063 }
+	subtract = { value = "market.market_price(goods:cloth)" multiply = 0 }
+	subtract = { value = "market.market_price(goods:furniture)" multiply = 0 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.025 }
+}
+pp_cplan_fs_fruit_orchard_2 = {
+	value = pp_cplan_fm_fruit_orchard_2_1
+	min = 0
+}
+pp_cplan_fm_fruit_orchard_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fruit)" multiply = { value = modifier:local_fruit_output_modifier add = 1 min = 0 } multiply = 0.166 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.086 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.033 }
+}
+pp_cplan_fs_fruit_orchard_3 = {
+	value = pp_cplan_fm_fruit_orchard_3_1
+	min = 0
+}
+pp_cplan_fm_fruit_orchard_4_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.96 }
+	subtract = { value = "market.market_price(goods:fruit)" multiply = 0.08 }
+}
+pp_cplan_fs_fruit_orchard_4 = {
+	value = pp_cplan_fm_fruit_orchard_4_1
+}
+pp_cplan_fm_fruit_orchard_5_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fruit)" multiply = { value = modifier:local_fruit_output_modifier add = 1 min = 0 } multiply = 0.018 }
+	subtract = { value = "market.market_price(goods:offset)" multiply = 0.017 }
+}
+pp_cplan_fs_fruit_orchard_5 = {
+	value = pp_cplan_fm_fruit_orchard_5_1
+}
+pp_cplan_farm_est_fruit_orchard = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_fruit_orchard_1
+		add = pp_cplan_fs_fruit_orchard_2
+		add = pp_cplan_fs_fruit_orchard_3
+		add = pp_cplan_fs_fruit_orchard_4
+		add = pp_cplan_fs_fruit_orchard_5
+	}
+}
+pp_cplan_farm_roi_fruit_orchard = {
+	value = pp_cplan_farm_est_fruit_orchard
+	multiply = 1200
+	divide = { value = building_type:fruit_orchard.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_nursery_orchard_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fruit)" multiply = { value = modifier:local_fruit_output_modifier add = 1 min = 0 } multiply = 0.098 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.02 }
+}
+pp_cplan_fs_nursery_orchard_1 = {
+	value = pp_cplan_fm_nursery_orchard_1_1
+}
+pp_cplan_fm_nursery_orchard_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:beeswax)" multiply = { value = modifier:local_beeswax_output_modifier add = 1 min = 0 } multiply = 0.138 }
+	subtract = { value = "market.market_price(goods:fiber_crops)" multiply = 0.025 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.009 }
+	subtract = { value = "market.market_price(goods:pottery)" multiply = 0.011 }
+}
+pp_cplan_fs_nursery_orchard_2 = {
+	value = pp_cplan_fm_nursery_orchard_2_1
+	min = 0
+}
+pp_cplan_fm_nursery_orchard_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fruit)" multiply = { value = modifier:local_fruit_output_modifier add = 1 min = 0 } multiply = 0.632 }
+	subtract = { value = "market.market_price(goods:fiber_crops)" multiply = 0.102 }
+	subtract = { value = "market.market_price(goods:furniture)" multiply = 0.024 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.07 }
+	subtract = { value = "market.market_price(goods:pottery)" multiply = 0.106 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.016 }
+}
+pp_cplan_fs_nursery_orchard_3 = {
+	value = pp_cplan_fm_nursery_orchard_3_1
+	min = 0
+}
+pp_cplan_fm_nursery_orchard_4_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.568 }
+	subtract = { value = "market.market_price(goods:fruit)" multiply = 0.131 }
+}
+pp_cplan_fs_nursery_orchard_4 = {
+	value = pp_cplan_fm_nursery_orchard_4_1
+}
+pp_cplan_fm_nursery_orchard_5_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fruit)" multiply = { value = modifier:local_fruit_output_modifier add = 1 min = 0 } multiply = 0.018 }
+	subtract = { value = "market.market_price(goods:offset)" multiply = 0.017 }
+}
+pp_cplan_fs_nursery_orchard_5 = {
+	value = pp_cplan_fm_nursery_orchard_5_1
+}
+pp_cplan_farm_est_nursery_orchard = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_nursery_orchard_1
+		add = pp_cplan_fs_nursery_orchard_2
+		add = pp_cplan_fs_nursery_orchard_3
+		add = pp_cplan_fs_nursery_orchard_4
+		add = pp_cplan_fs_nursery_orchard_5
+	}
+}
+pp_cplan_farm_roi_nursery_orchard = {
+	value = pp_cplan_farm_est_nursery_orchard
+	multiply = 1200
+	divide = { value = building_type:nursery_orchard.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_pomological_orchard_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fruit)" multiply = { value = modifier:local_fruit_output_modifier add = 1 min = 0 } multiply = 0.145 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.029 }
+}
+pp_cplan_fs_pomological_orchard_1 = {
+	value = pp_cplan_fm_pomological_orchard_1_1
+}
+pp_cplan_fm_pomological_orchard_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:beeswax)" multiply = { value = modifier:local_beeswax_output_modifier add = 1 min = 0 } multiply = 0.495 }
+	subtract = { value = "market.market_price(goods:fiber_crops)" multiply = 0.103 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.19 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.08 }
+	subtract = { value = "market.market_price(goods:pottery)" multiply = 0.065 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.02 }
+}
+pp_cplan_fs_pomological_orchard_2 = {
+	value = pp_cplan_fm_pomological_orchard_2_1
+	min = 0
+}
+pp_cplan_fm_pomological_orchard_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fruit)" multiply = { value = modifier:local_fruit_output_modifier add = 1 min = 0 } multiply = 3.344 }
+	subtract = { value = "market.market_price(goods:beeswax)" multiply = 0.2 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 1 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.246 }
+	subtract = { value = "market.market_price(goods:paper)" multiply = 0.217 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.097 }
+}
+pp_cplan_fs_pomological_orchard_3 = {
+	value = pp_cplan_fm_pomological_orchard_3_1
+	min = 0
+}
+pp_cplan_fm_pomological_orchard_4_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.32 }
+	subtract = { value = "market.market_price(goods:fruit)" multiply = 0.193 }
+}
+pp_cplan_fs_pomological_orchard_4 = {
+	value = pp_cplan_fm_pomological_orchard_4_1
+}
+pp_cplan_fm_pomological_orchard_5_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fruit)" multiply = { value = modifier:local_fruit_output_modifier add = 1 min = 0 } multiply = 0.018 }
+	subtract = { value = "market.market_price(goods:offset)" multiply = 0.017 }
+}
+pp_cplan_fs_pomological_orchard_5 = {
+	value = pp_cplan_fm_pomological_orchard_5_1
+}
+pp_cplan_farm_est_pomological_orchard = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_pomological_orchard_1
+		add = pp_cplan_fs_pomological_orchard_2
+		add = pp_cplan_fs_pomological_orchard_3
+		add = pp_cplan_fs_pomological_orchard_4
+		add = pp_cplan_fs_pomological_orchard_5
+	}
+}
+pp_cplan_farm_roi_pomological_orchard = {
+	value = pp_cplan_farm_est_pomological_orchard
+	multiply = 1200
+	divide = { value = building_type:pomological_orchard.building_base_cost_in_gold min = 1 }
+}
+
+# Location scope: the fruit_orchard line's return here (0 where no tier can be built or its good is set to Never).
+pp_cplan_farm_line_roi_fruit_orchard = {
+	value = 0
+	if = {
+		limit = { scope:pp_cplan_country = { pp_cplan_mode_fruit < 2.5 } }
+		if = {
+			limit = { location_and_owner_can_build = { building_type = pomological_orchard } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:pomological_orchard building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_pomological_orchard
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = nursery_orchard } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:nursery_orchard building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_nursery_orchard
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = fruit_orchard } pp_cplan_goods_here_farm_constructions = yes NOT = { any_buildings_in_location = { building_type = building_type:fruit_orchard building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_fruit_orchard
+		}
+	}
+}
+pp_cplan_fm_maghreb_palm_irrigation_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fruit)" multiply = { value = modifier:local_fruit_output_modifier add = 1 min = 0 } multiply = 0.8 }
+	subtract = { value = "market.market_price(goods:clay)" multiply = 0.19 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.17 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.14 }
+	subtract = { value = "market.market_price(goods:stone)" multiply = 0.14 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.023 }
+}
+pp_cplan_fs_maghreb_palm_irrigation_1 = {
+	value = pp_cplan_fm_maghreb_palm_irrigation_1_1
+}
+pp_cplan_fm_maghreb_palm_irrigation_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.96 }
+	subtract = { value = "market.market_price(goods:fruit)" multiply = 0.08 }
+}
+pp_cplan_fs_maghreb_palm_irrigation_2 = {
+	value = pp_cplan_fm_maghreb_palm_irrigation_2_1
+}
+pp_cplan_fm_maghreb_palm_irrigation_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fruit)" multiply = { value = modifier:local_fruit_output_modifier add = 1 min = 0 } multiply = 0.018 }
+	subtract = { value = "market.market_price(goods:offset)" multiply = 0.017 }
+}
+pp_cplan_fs_maghreb_palm_irrigation_3 = {
+	value = pp_cplan_fm_maghreb_palm_irrigation_3_1
+}
+pp_cplan_farm_est_maghreb_palm_irrigation = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_maghreb_palm_irrigation_1
+		add = pp_cplan_fs_maghreb_palm_irrigation_2
+		add = pp_cplan_fs_maghreb_palm_irrigation_3
+	}
+}
+pp_cplan_farm_roi_maghreb_palm_irrigation = {
+	value = pp_cplan_farm_est_maghreb_palm_irrigation
+	multiply = 1200
+	divide = { value = building_type:maghreb_palm_irrigation.building_base_cost_in_gold min = 1 }
+}
+
+# Location scope: the maghreb_palm_irrigation line's return here (0 where no tier can be built or its good is set to Never).
+pp_cplan_farm_line_roi_maghreb_palm_irrigation = {
+	value = 0
+	if = {
+		limit = { scope:pp_cplan_country = { pp_cplan_mode_fruit < 2.5 } }
+		if = {
+			limit = { location_and_owner_can_build = { building_type = maghreb_palm_irrigation } pp_cplan_goods_here_maghreb_palm_irrigation_building_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maghreb_palm_irrigation building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_maghreb_palm_irrigation
+		}
+	}
+}
+pp_cplan_fm_ocean_fishery_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 0.09 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.018 }
+}
+pp_cplan_fs_ocean_fishery_1 = {
+	value = pp_cplan_fm_ocean_fishery_1_1
+}
+pp_cplan_fm_ocean_fishery_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 0.834 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.36 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.17 }
+	subtract = { value = "market.market_price(goods:salt)" multiply = 0.025 }
+}
+pp_cplan_fs_ocean_fishery_2 = {
+	value = pp_cplan_fm_ocean_fishery_2_1
+	min = 0
+}
+pp_cplan_fm_ocean_fishery_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.44 }
+	subtract = { value = "market.market_price(goods:fish)" multiply = 0.12 }
+}
+pp_cplan_fs_ocean_fishery_3 = {
+	value = pp_cplan_fm_ocean_fishery_3_1
+}
+pp_cplan_fm_ocean_fishery_4_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 0.018 }
+	subtract = { value = "market.market_price(goods:offset)" multiply = 0.017 }
+}
+pp_cplan_fs_ocean_fishery_4 = {
+	value = pp_cplan_fm_ocean_fishery_4_1
+}
+pp_cplan_farm_est_ocean_fishery = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_ocean_fishery_1
+		add = pp_cplan_fs_ocean_fishery_2
+		add = pp_cplan_fs_ocean_fishery_3
+		add = pp_cplan_fs_ocean_fishery_4
+	}
+}
+pp_cplan_farm_roi_ocean_fishery = {
+	value = pp_cplan_farm_est_ocean_fishery
+	multiply = 1200
+	divide = { value = building_type:ocean_fishery.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_drift_net_fishery_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 0.103 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.021 }
+}
+pp_cplan_fs_drift_net_fishery_1 = {
+	value = pp_cplan_fm_drift_net_fishery_1_1
+}
+pp_cplan_fm_drift_net_fishery_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 1.24 }
+	subtract = { value = "market.market_price(goods:cloth)" multiply = 0.034 }
+	subtract = { value = "market.market_price(goods:fiber_crops)" multiply = 0.172 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.054 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.115 }
+	subtract = { value = "market.market_price(goods:salt)" multiply = 0.049 }
+}
+pp_cplan_fs_drift_net_fishery_2 = {
+	value = pp_cplan_fm_drift_net_fishery_2_1
+	min = 0
+}
+pp_cplan_fm_drift_net_fishery_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.648 }
+	subtract = { value = "market.market_price(goods:fish)" multiply = 0.137 }
+}
+pp_cplan_fs_drift_net_fishery_3 = {
+	value = pp_cplan_fm_drift_net_fishery_3_1
+}
+pp_cplan_fm_drift_net_fishery_4_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 0.018 }
+	subtract = { value = "market.market_price(goods:offset)" multiply = 0.017 }
+}
+pp_cplan_fs_drift_net_fishery_4 = {
+	value = pp_cplan_fm_drift_net_fishery_4_1
+}
+pp_cplan_farm_est_drift_net_fishery = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_drift_net_fishery_1
+		add = pp_cplan_fs_drift_net_fishery_2
+		add = pp_cplan_fs_drift_net_fishery_3
+		add = pp_cplan_fs_drift_net_fishery_4
+	}
+}
+pp_cplan_farm_roi_drift_net_fishery = {
+	value = pp_cplan_farm_est_drift_net_fishery
+	multiply = 1200
+	divide = { value = building_type:drift_net_fishery.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_offshore_fishery_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 0.121 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.024 }
+}
+pp_cplan_fs_offshore_fishery_1 = {
+	value = pp_cplan_fm_offshore_fishery_1_1
+}
+pp_cplan_fm_offshore_fishery_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 2.08 }
+	subtract = { value = "market.market_price(goods:fiber_crops)" multiply = 0.243 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.392 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.176 }
+	subtract = { value = "market.market_price(goods:salt)" multiply = 0.053 }
+}
+pp_cplan_fm_offshore_fishery_2_2 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 2.717 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.243 }
+	subtract = { value = "market.market_price(goods:naval_supplies)" multiply = 0.338 }
+	subtract = { value = "market.market_price(goods:salt)" multiply = 0.062 }
+	subtract = { value = "market.market_price(goods:victuals)" multiply = 0.189 }
+}
+pp_cplan_fm_offshore_fishery_2_3 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 3.159 }
+	subtract = { value = "market.market_price(goods:coal)" multiply = 0.35 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.216 }
+	subtract = { value = "market.market_price(goods:naval_supplies)" multiply = 0.34 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.066 }
+}
+pp_cplan_fs_offshore_fishery_2 = {
+	value = pp_cplan_fm_offshore_fishery_2_1
+	min = pp_cplan_fm_offshore_fishery_2_2
+	min = pp_cplan_fm_offshore_fishery_2_3
+	min = 0
+}
+pp_cplan_fm_offshore_fishery_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.936 }
+	subtract = { value = "market.market_price(goods:fish)" multiply = 0.161 }
+}
+pp_cplan_fs_offshore_fishery_3 = {
+	value = pp_cplan_fm_offshore_fishery_3_1
+}
+pp_cplan_fm_offshore_fishery_4_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:fish)" multiply = { value = modifier:local_fish_output_modifier add = 1 min = 0 } multiply = 0.018 }
+	subtract = { value = "market.market_price(goods:offset)" multiply = 0.017 }
+}
+pp_cplan_fs_offshore_fishery_4 = {
+	value = pp_cplan_fm_offshore_fishery_4_1
+}
+pp_cplan_farm_est_offshore_fishery = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_offshore_fishery_1
+		add = pp_cplan_fs_offshore_fishery_2
+		add = pp_cplan_fs_offshore_fishery_3
+		add = pp_cplan_fs_offshore_fishery_4
+	}
+}
+pp_cplan_farm_roi_offshore_fishery = {
+	value = pp_cplan_farm_est_offshore_fishery
+	multiply = 1200
+	divide = { value = building_type:offshore_fishery.building_base_cost_in_gold min = 1 }
+}
+
+# Location scope: the ocean_fishery line's return here (0 where no tier can be built or its good is set to Never).
+pp_cplan_farm_line_roi_ocean_fishery = {
+	value = 0
+	if = {
+		limit = { scope:pp_cplan_country = { pp_cplan_mode_fish < 2.5 } }
+		if = {
+			limit = { location_and_owner_can_build = { building_type = offshore_fishery } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:offshore_fishery building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_offshore_fishery
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = drift_net_fishery } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:drift_net_fishery building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_drift_net_fishery
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = ocean_fishery } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:ocean_fishery building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_ocean_fishery
+		}
+	}
+}
+pp_cplan_fm_sheep_farms_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:wool)" multiply = { value = modifier:local_wool_output_modifier add = 1 min = 0 } multiply = 0.06 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.03 }
+}
+pp_cplan_fs_sheep_farms_1 = {
+	value = pp_cplan_fm_sheep_farms_1_1
+}
+pp_cplan_fm_sheep_farms_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:wool)" multiply = { value = modifier:local_wool_output_modifier add = 1 min = 0 } multiply = 0.06 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.048 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.022 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.004 }
+}
+pp_cplan_fs_sheep_farms_2 = {
+	value = pp_cplan_fm_sheep_farms_2_1
+	min = 0
+}
+pp_cplan_fm_sheep_farms_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.96 }
+	subtract = { value = "market.market_price(goods:wool)" multiply = 0.032 }
+}
+pp_cplan_fs_sheep_farms_3 = {
+	value = pp_cplan_fm_sheep_farms_3_1
+}
+pp_cplan_fm_sheep_farms_4_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:wool)" multiply = { value = modifier:local_wool_output_modifier add = 1 min = 0 } multiply = 0.008 }
+	subtract = { value = "market.market_price(goods:offset)" multiply = 0.019 }
+}
+pp_cplan_fs_sheep_farms_4 = {
+	value = pp_cplan_fm_sheep_farms_4_1
+}
+pp_cplan_farm_est_sheep_farms = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_sheep_farms_1
+		add = pp_cplan_fs_sheep_farms_2
+		add = pp_cplan_fs_sheep_farms_3
+		add = pp_cplan_fs_sheep_farms_4
+	}
+}
+pp_cplan_farm_roi_sheep_farms = {
+	value = pp_cplan_farm_est_sheep_farms
+	multiply = 1200
+	divide = { value = building_type:sheep_farms.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_enclosed_sheep_walks_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:wool)" multiply = { value = modifier:local_wool_output_modifier add = 1 min = 0 } multiply = 0.1 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.05 }
+}
+pp_cplan_fs_enclosed_sheep_walks_1 = {
+	value = pp_cplan_fm_enclosed_sheep_walks_1_1
+}
+pp_cplan_fm_enclosed_sheep_walks_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:wool)" multiply = { value = modifier:local_wool_output_modifier add = 1 min = 0 } multiply = 1.44 }
+	subtract = { value = "market.market_price(goods:cloth)" multiply = 0.21 }
+	subtract = { value = "market.market_price(goods:leather)" multiply = 0.12 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.33 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.14 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.058 }
+}
+pp_cplan_fs_enclosed_sheep_walks_2 = {
+	value = pp_cplan_fm_enclosed_sheep_walks_2_1
+	min = 0
+}
+pp_cplan_fm_enclosed_sheep_walks_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.6 }
+	subtract = { value = "market.market_price(goods:wool)" multiply = 0.053 }
+}
+pp_cplan_fs_enclosed_sheep_walks_3 = {
+	value = pp_cplan_fm_enclosed_sheep_walks_3_1
+}
+pp_cplan_fm_enclosed_sheep_walks_4_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:wool)" multiply = { value = modifier:local_wool_output_modifier add = 1 min = 0 } multiply = 0.008 }
+	subtract = { value = "market.market_price(goods:offset)" multiply = 0.019 }
+}
+pp_cplan_fs_enclosed_sheep_walks_4 = {
+	value = pp_cplan_fm_enclosed_sheep_walks_4_1
+}
+pp_cplan_farm_est_enclosed_sheep_walks = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_enclosed_sheep_walks_1
+		add = pp_cplan_fs_enclosed_sheep_walks_2
+		add = pp_cplan_fs_enclosed_sheep_walks_3
+		add = pp_cplan_fs_enclosed_sheep_walks_4
+	}
+}
+pp_cplan_farm_roi_enclosed_sheep_walks = {
+	value = pp_cplan_farm_est_enclosed_sheep_walks
+	multiply = 1200
+	divide = { value = building_type:enclosed_sheep_walks.building_base_cost_in_gold min = 1 }
+}
+
+pp_cplan_fm_hurdled_sheepcotes_1_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:wool)" multiply = { value = modifier:local_wool_output_modifier add = 1 min = 0 } multiply = 0.09 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.045 }
+}
+pp_cplan_fs_hurdled_sheepcotes_1 = {
+	value = pp_cplan_fm_hurdled_sheepcotes_1_1
+}
+pp_cplan_fm_hurdled_sheepcotes_2_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:wool)" multiply = { value = modifier:local_wool_output_modifier add = 1 min = 0 } multiply = 0.22 }
+	subtract = { value = "market.market_price(goods:furniture)" multiply = 0.053 }
+	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.049 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.082 }
+	subtract = { value = "market.market_price(goods:victuals)" multiply = 0.045 }
+}
+pp_cplan_fs_hurdled_sheepcotes_2 = {
+	value = pp_cplan_fm_hurdled_sheepcotes_2_1
+	min = 0
+}
+pp_cplan_fm_hurdled_sheepcotes_3_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.44 }
+	subtract = { value = "market.market_price(goods:wool)" multiply = 0.048 }
+}
+pp_cplan_fs_hurdled_sheepcotes_3 = {
+	value = pp_cplan_fm_hurdled_sheepcotes_3_1
+}
+pp_cplan_fm_hurdled_sheepcotes_4_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:wool)" multiply = { value = modifier:local_wool_output_modifier add = 1 min = 0 } multiply = 0.008 }
+	subtract = { value = "market.market_price(goods:offset)" multiply = 0.019 }
+}
+pp_cplan_fs_hurdled_sheepcotes_4 = {
+	value = pp_cplan_fm_hurdled_sheepcotes_4_1
+}
+pp_cplan_farm_est_hurdled_sheepcotes = {
+	value = 0
+	if = {
+		limit = { market ?= { always = yes } }
+		add = pp_cplan_fs_hurdled_sheepcotes_1
+		add = pp_cplan_fs_hurdled_sheepcotes_2
+		add = pp_cplan_fs_hurdled_sheepcotes_3
+		add = pp_cplan_fs_hurdled_sheepcotes_4
+	}
+}
+pp_cplan_farm_roi_hurdled_sheepcotes = {
+	value = pp_cplan_farm_est_hurdled_sheepcotes
+	multiply = 1200
+	divide = { value = building_type:hurdled_sheepcotes.building_base_cost_in_gold min = 1 }
+}
+
+# Location scope: the sheep_farms line's return here (0 where no tier can be built or its good is set to Never).
+pp_cplan_farm_line_roi_sheep_farms = {
+	value = 0
+	if = {
+		limit = { scope:pp_cplan_country = { pp_cplan_mode_wool < 2.5 } }
+		if = {
+			limit = { location_and_owner_can_build = { building_type = hurdled_sheepcotes } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:hurdled_sheepcotes building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_hurdled_sheepcotes
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = enclosed_sheep_walks } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:enclosed_sheep_walks building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_enclosed_sheep_walks
+		}
+		else_if = {
+			limit = { location_and_owner_can_build = { building_type = sheep_farms } pp_cplan_goods_here_farm_constructions = yes NOT = { any_buildings_in_location = { building_type = building_type:sheep_farms building_levels_under_construction > 0 } } }
+			value = pp_cplan_farm_roi_sheep_farms
+		}
+	}
+}
+# Location scope: the best line's return here (the farm sites' order).
+pp_cplan_farm_best_roi = {
+	value = 0
+	min = pp_cplan_farm_line_roi_wheat
+	min = pp_cplan_farm_line_roi_rice
+	min = pp_cplan_farm_line_roi_millet
+	min = pp_cplan_farm_line_roi_maize
+	min = pp_cplan_farm_line_roi_legume
+	min = pp_cplan_farm_line_roi_potato
+	min = pp_cplan_farm_line_roi_olive
+	min = pp_cplan_farm_line_roi_cattle
+	min = pp_cplan_farm_line_roi_camel_herders
+	min = pp_cplan_farm_line_roi_eng_royal_forest
+	min = pp_cplan_farm_line_roi_fishing_village
+	min = pp_cplan_farm_line_roi_forest_village
+	min = pp_cplan_farm_line_roi_fruit_orchard
+	min = pp_cplan_farm_line_roi_maghreb_palm_irrigation
+	min = pp_cplan_farm_line_roi_ocean_fishery
+	min = pp_cplan_farm_line_roi_sheep_farms
 }

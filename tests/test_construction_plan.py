@@ -228,6 +228,7 @@ def test_effects_use_the_vanilla_can_build_check() -> None:
 # ---- Baseline rules (Jan 2026-11-08) ----
 
 TRIGGERS = MOD / "in_game/common/scripted_triggers/pp_construction_plan.txt"
+VALUES = MOD / "in_game/common/script_values/pp_construction_plan.txt"
 
 
 def _effect(text: str, name: str) -> str:
@@ -239,78 +240,125 @@ def _effect(text: str, name: str) -> str:
 def test_baseline_defaults() -> None:
     config = cp.load_config(PROJECT)
     assert config.access_threshold == 97
-    assert (config.access_months, config.market_months) == (3, 12)
-    assert (config.granary_capacity_months, config.granary_fill_pct, config.granary_months) == (24, 85, 3)
-    assert config.grange_months == 12
-    assert config.granges == ("grange",)
+    assert (config.granary_capacity_months, config.granary_fill_pct) == (24, 85)
+    assert (config.grange_surplus_pct, config.famine_months, config.yard_payback_years) == (5, 3, 10)
+    assert config.granges == ("grange",) and config.yards == ("victualling_yard",)
+    assert config.access_blacklist == ("staple_port_commercial_stagnation_modifier",)
+
+
+def test_nothing_is_kept_between_passes() -> None:
+    """Jan: no history. The baseline rules read the game as it stands; no counter variables, no watch effects."""
+    for path in (EFFECTS, TRIGGERS, VALUES, SCRIPTED_GUIS):
+        text = _read(path)
+        for gone in ("pp_cplan_gw", "pp_cplan_fw", "pp_cplan_al", "pp_cplan_mm", "pp_cplan_mkt",
+                     "pp_cplan_count_up", "pp_cplan_reset_watch", "_watch = yes"):
+            assert gone not in text, f"{path.name}: {gone}"
 
 
 def test_food_pass_order() -> None:
-    """One food construction a province a month: farm (below the band), kitchen (always), Tavern (below the band),
-    Granary, Grange; the counters move before any of them."""
+    """One food construction a province a month: famine Tavern, farm, kitchen, Tavern, Granary, Grange, Yard."""
     body = _effect(_read(EFFECTS), "pp_cplan_food_province")
-    steps = ["pp_cplan_food_watch = yes", "pp_cplan_try_farm_here", "pp_cplan_try_kitchen_here",
-             "pp_cplan_try_tavern_here", "pp_cplan_try_granary_here", "pp_cplan_try_grange_here"]
+    steps = ["# 1.", "# 2.", "# 3.", "# 4.", "# 5.", "# 6.", "# 7.", "# the state"]
     places = [body.index(step) for step in steps]
     assert places == sorted(places)
-    # the kitchen needs no band; farm and Tavern do
-    kitchen = body[body.index("# 2."):body.index("# 3.")]
-    assert "pp_cplan_below_band" not in kitchen
-    for start, end in (("# 1.", "# 2."), ("# 3.", "# 4.")):
-        assert "pp_cplan_below_band = yes" in body[body.index(start):body.index(end)]
-    # every step after the first asks whether the province already built this month
-    for start, end in (("# 2.", "# 3."), ("# 3.", "# 4."), ("# 4.", "# 5."), ("# 5.", "# the state")):
-        assert "pp_cplan_may_try = yes" in body[body.index(start):body.index(end)]
-    # the Grange count starts again once a level was started
-    grange = body[body.index("# 5."):body.index("# the state")]
-    assert "remove_variable = pp_cplan_fw" in grange
+    part = {n: body[places[n - 1]:places[n]] for n in range(1, 8)}
+    assert "pp_cplan_famine = yes" in part[1] and "pp_cplan_try_tavern_here" in part[1]
+    assert "pp_cplan_hungry = yes" in part[2] and "pp_cplan_try_farm_here" in part[2]
+    assert "order_by = pp_cplan_farm_best_roi" in part[2]
+    assert "pp_cplan_hungry" not in part[3] and "pp_cplan_try_kitchen_here" in part[3]
+    assert "pp_cplan_hungry = yes" in part[4] and "pp_cplan_try_tavern_here" in part[4]
+    assert "pp_cplan_granary_due = yes" in part[5] and "pp_cplan_try_granary_here" in part[5]
+    assert "pp_cplan_grange_due = yes" in part[6] and "pp_cplan_try_grange_here" in part[6]
+    assert "pp_cplan_try_yard_here" in part[7]
+    # Taverns only where the market holds victuals; every step after the first asks whether the province built already
+    assert "pp_cplan_victuals_here = yes" in part[1] and "pp_cplan_victuals_here = yes" in part[4]
+    for n in range(2, 8):
+        assert "pp_cplan_may_try = yes" in part[n], n
+
+
+def test_hunger_reads_a_normal_year() -> None:
+    triggers = _read(TRIGGERS)
+    assert "pp_cplan_food_in_a_year < pp_cplan_band_lo" in _effect(triggers, "pp_cplan_hungry")
+    assert "pp_cplan_food_in_a_year < scope:pp_cplan_country.pp_cplan_famine_months" in _effect(triggers, "pp_cplan_famine")
+    values = _read(VALUES)
+    gain = _effect(values, "pp_cplan_normal_gain")
+    assert "add = pp_cplan_harvest_food" in gain and "pp_cplan_spoil_rate" in gain
+    assert "subtract = pp_cplan_harvest_food" in _effect(values, "pp_cplan_normal_consumption")
+    granary = _effect(triggers, "pp_cplan_granary_due")
+    for part in ("pp_cplan_capacity_months < scope:pp_cplan_country.pp_cplan_granary_cap",
+                 "pp_cplan_fill_pct >= scope:pp_cplan_country.pp_cplan_granary_fill", "pp_cplan_normal_gain > 0"):
+        assert part in granary
+    assert "pp_cplan_normal_gain_pct >= scope:pp_cplan_country.pp_cplan_grange_surplus" in _effect(triggers, "pp_cplan_grange_due")
+
+
+def test_harvest_blacklist_covers_every_harvest_modifier() -> None:
+    rates = cp.harvest_rates(MOD)
+    assert len(rates) >= 15
+    names = re.findall(r"^(pp_harvest_\w+) = \{", _read(MOD / cp.HARVEST_MODIFIERS), re.MULTILINE)
+    generated = _read(MOD / cp.VALUES)
+    block = _effect(generated, "pp_cplan_harvest_rate")
+    for name in names:
+        assert f"has_location_modifier = {name} }}" in block, name
+    # bad years make the peasants eat more, good years less
+    assert rates["western_europe"]["abysmal"] > 0 > rates["western_europe"]["bountiful"]
+    assert all(set(found) == set(cp.HARVEST_SEVERITIES) for found in rates.values()), rates
+
+
+def test_logistics_reads_access_without_events() -> None:
+    triggers = _read(TRIGGERS)
+    wanted = _effect(triggers, "pp_cplan_logistics_wanted")
+    assert "controller ?= owner" in wanted and "pp_cplan_access_normal < pp_cplan_access_line" in wanted
+    block = _effect(_read(MOD / cp.VALUES), "pp_cplan_access_normal")
+    assert "has_location_modifier = staple_port_commercial_stagnation_modifier } subtract = -0.25" in block
+
+
+def test_farms_pick_the_fastest_payback() -> None:
+    config = cp.load_config(PROJECT)
+    generated = _read(MOD / cp.VALUES)
+    effects = _read(MOD / cp.EFFECTS)
+    picker = _effect(effects, "pp_cplan_try_farm_here")
+    lines = re.findall(r"limit = \{ pp_cplan_farm_line_roi_(\w+) > var:pp_cplan_best \}", picker)
+    assert lines and len(lines) == len(set(lines))
+    for line in lines:
+        block = _effect(generated, f"pp_cplan_farm_line_roi_{line}")
+        assert "location_and_owner_can_build" in block and "pp_cplan_mode_" in block
+        assert f"min = pp_cplan_farm_line_roi_{line}" in _effect(generated, "pp_cplan_farm_best_roi")
+    # the estimate reads the market's prices and the location's output of the good a method makes
+    est = _effect(generated, "pp_cplan_fm_wheat_farmstead_2_1")
+    assert 'market.market_price(goods:wheat)' in est and "modifier:local_wheat_output_modifier" in est
+    assert 'subtract = { value = "market.market_price(goods:tools)"' in est
+    assert config.yards[0] in _effect(effects, "pp_cplan_try_yard_here")
 
 
 def test_kitchen_successor_first() -> None:
     config = cp.load_config(PROJECT)
     assert config.kitchens[0] == "public_kitchen" and "cookshop" in config.kitchens
-    effects = _read(MOD / cp.EFFECTS)
-    kitchen = _effect(effects, "pp_cplan_try_kitchen_here")
+    kitchen = _effect(_read(MOD / cp.EFFECTS), "pp_cplan_try_kitchen_here")
     assert kitchen.index("public_kitchen") < kitchen.index("cookshop")
-    assert "pp_cplan_try_grange_here = {" in effects
 
 
 def test_hunger_rule_waits_only_for_food_makers() -> None:
-    triggers = _read(MOD / cp.TRIGGERS)
-    queued = _effect(triggers, "pp_cplan_food_queued")
-    assert "building_type:cookshop" in queued and "building_type:tavern" in queued
+    queued = _effect(_read(MOD / cp.TRIGGERS), "pp_cplan_food_queued")
+    assert "building_type:tavern" in queued and "building_type:wheat_farm" in queued
+    assert "building_type:cookshop" not in queued  # kitchens are built anyway, they must not hold farms back
     assert "building_type:granary" not in queued and "building_type:grange" not in queued
-
-
-def test_granary_rule_reads_room_and_fill() -> None:
-    triggers = _read(TRIGGERS)
-    now = _effect(triggers, "pp_cplan_granary_now")
-    assert "pp_cplan_capacity_months < scope:pp_cplan_country.pp_cplan_granary_cap" in now
-    assert "pp_cplan_fill_pct >= scope:pp_cplan_country.pp_cplan_granary_fill" in now
-    assert "pp_cplan_granary_line100" in _effect(triggers, "pp_cplan_granary_due")
-    assert "pp_cplan_grange_line100" in _effect(triggers, "pp_cplan_grange_due")
-
-
-def test_logistics_waits_out_short_dips() -> None:
-    triggers = _read(TRIGGERS)
-    wanted = _effect(triggers, "pp_cplan_logistics_wanted")
-    assert "pp_cplan_access_settled = yes" in wanted
-    settled = _effect(triggers, "pp_cplan_access_settled")
-    for part in ("controller ?= owner", "pp_cplan_access_line100", "pp_cplan_market_line100"):
-        assert part in settled
-    run = _effect(_read(EFFECTS), "pp_cplan_run")
-    # the counters move before the logistics pass reads them, also when the budget is used up
-    assert run.index("pp_cplan_access_watch = yes") < run.index("pp_cplan_try_logistics_here")
-    watch = run[run.index("logistics_off"):run.index("pp_cplan_access_watch = yes")]
-    assert "pp_cplan_budget_left" not in watch
 
 
 def test_new_settings_step_and_travel_in_profiles() -> None:
     guis = _read(SCRIPTED_GUIS)
-    for flag, var in (("granary_cap", "pp_cplan_gcap"), ("granary_fill", "pp_cplan_gfill"), ("grange", "pp_cplan_grange")):
+    for flag, var in (("granary_cap", "pp_cplan_gcap"), ("granary_fill", "pp_cplan_gfill"),
+                      ("grange_surplus", "pp_cplan_gsur"), ("famine", "pp_cplan_famine"), ("yard_payback", "pp_cplan_ypb")):
         assert f"flag:{flag} = {{ pp_cplan_step_var = {{ var = {var} " in guis, flag
         assert var in cp.PROFILE_NUMBERS
         assert f"MakeScopeFlag('{flag}')" in _read(GUI_FILES[0]), flag
     assert "flag:access_line = { pp_cplan_step_var = { var = pp_cplan_access current = pp_cplan_access_pct step = 1" in guis
-    # switching the plan or a rule group forgets old counts
-    assert guis.count("pp_cplan_reset_watch = yes") == 2
+
+
+def test_hunger_bucket_holds_every_staple_food_maker() -> None:
+    """Farms, orchards, fisheries, herds and forest villages compete in one bucket by payback (Jan 2026-11-08)."""
+    result = cp.apply(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT), write=False)
+    buildings = {b for tiers in result.food_lines.values() for b in tiers}
+    for name in ("wheat_farm", "fruit_orchard", "fishing_village", "ocean_fishery", "forest_village", "sheep_farms"):
+        assert name in buildings, name
+    assert "cookshop" not in buildings and "tavern" not in buildings
+    assert result.food_lines["forest_village"][0] == "forest_village"

@@ -4,12 +4,14 @@ The player sets rules once in the Construction Plan panel; a monthly pass for co
 constructions with ``construct_building`` (a normal, paid construction). The AI never runs it. Two layers:
 
 * Global rules, per country (rule groups Food, Logistics, Goods):
-  * Food, per province, one construction a month, first that applies (baseline rules, Jan 2026-11-08): below the band
-    of stored months (focus presets or custom) a crop farm where land is left; a kitchen whenever the Cookshop budget
-    allows; below the band a Tavern; a Granary while the store can hold less than the player's months and is nearly
-    full (both in several passes in a row); a Grange, cautiously, after the store held 24 months for a long time.
-  * Logistics, per location: below the player's market access line (in several passes in a row, owner in control, no
-    recent market switch) the first logistics building that can be built.
+  * Food, per province, one construction a month, first that applies (baseline rules, Jan 2026-11-08). Nothing is
+    kept between passes; the hunger checks read the store a year from now in a normal year (this year's Variable
+    Harvest and spoilage taken out). Famine: a Tavern; hungry: the crop farm that pays back fastest (recipe profit at
+    the market's prices and the location's output); a kitchen whenever the Cookshop budget allows; hungry without a
+    farm: a Tavern; a Granary while the store can hold less than the player's months, is nearly full and grows; a
+    Grange where a two-year store still grows by the player's share; a Victualling Yard by payback.
+  * Logistics, per location: market access without event modifiers below the player's line while the owner controls
+    the location: the first logistics building that can be built.
   * Goods, per good: Off / Keep stocked (the market holds fewer months of its demand than the player's line) / Expand
     (a standing producer's next level pays back within the payback line) / Never.
 * Location rules, per location (Jan 2026-11-06): a location set to Own Rules leaves the global rules and follows its
@@ -69,7 +71,14 @@ DEFAULT_DEMAND = "default_construct_building"  # vanilla: the construction deman
 RULE_STATUS = ("started", "waiting", "done", "building", "payback", "blocked", "budget", "goods")
 # the setting variables a global profile carries (numbers) and the switches (present or not)
 PROFILE_NUMBERS = ("pp_cplan_reserve", "pp_cplan_max", "pp_cplan_access", "pp_cplan_keep", "pp_cplan_payback",
-                   "pp_cplan_gcap", "pp_cplan_gfill", "pp_cplan_grange")
+                   "pp_cplan_gcap", "pp_cplan_gfill", "pp_cplan_gsur", "pp_cplan_famine", "pp_cplan_ypb")
+# the Variable Harvest modifiers (one per sub-continent and severity) whose peasant food consumption the food rules
+# take out ([construction_plan] baseline rules)
+HARVEST_MODIFIERS = Path("in_game/common/static_modifiers/pp_variable_harvest_modifiers.txt")
+HARVEST_SEVERITIES = ("abysmal", "very_poor", "poor", "good", "very_good", "bountiful")
+STATIC_MODIFIERS = (Path("main_menu/common/static_modifiers"), Path("in_game/common/static_modifiers"))
+POP_TYPES = Path("in_game/common/pop_types")
+BLUEPRINT_BUILDINGS = Path("blueprints/accepted/buildings")
 PROFILE_FLAGS = ("pp_cplan_food_off", "pp_cplan_logistics_off", "pp_cplan_goods_off")
 # the variables of one location rule (pp_cplan_r<n>_<field>): the building type is a scope, the rest numbers
 RULE_NUMBER_FIELDS = ("lv", "m", "c", "t", "pb")
@@ -98,12 +107,14 @@ class Config:
     hidden_goods: frozenset[str]
     focus: tuple[tuple[str, int, int], ...]
     granges: tuple[str, ...] = ("grange",)
-    access_months: int = 3
-    market_months: int = 12
+    yards: tuple[str, ...] = ("victualling_yard",)
     granary_capacity_months: int = 24
     granary_fill_pct: int = 85
-    granary_months: int = 3
-    grange_months: int = 12
+    grange_surplus_pct: int = 5
+    famine_months: int = 3
+    yard_payback_years: int = 10
+    tavern_victuals: float = 10.0
+    access_blacklist: tuple[str, ...] = ()
     payback_years: int = 10
     rule_slots: int = 4
     template_slots: int = 4
@@ -126,6 +137,7 @@ class Result:
     goods: list[str] = field(default_factory=list)
     producers: dict[str, list[str]] = field(default_factory=dict)
     farm_lines: dict[str, list[str]] = field(default_factory=dict)
+    food_lines: dict[str, list[str]] = field(default_factory=dict)
     logistics: list[str] = field(default_factory=list)
     missing: list[str] = field(default_factory=list)
     buildings: dict[str, BuildingCost] = field(default_factory=dict)
@@ -159,12 +171,14 @@ def load_config(project: Path) -> Config:
         hidden_goods=frozenset(data["hidden_goods"]),
         focus=focus,
         granges=tuple(data["granges"]),
-        access_months=int(data["access_months"]),
-        market_months=int(data["market_months"]),
+        yards=tuple(data["yards"]),
         granary_capacity_months=int(data["granary_capacity_months"]),
         granary_fill_pct=int(data["granary_fill_pct"]),
-        granary_months=int(data["granary_months"]),
-        grange_months=int(data["grange_months"]),
+        grange_surplus_pct=int(data["grange_surplus_pct"]),
+        famine_months=int(data["famine_months"]),
+        yard_payback_years=int(data["yard_payback_years"]),
+        tavern_victuals=float(data["tavern_victuals"]),
+        access_blacklist=tuple(data["access_blacklist"]),
         payback_years=int(data["payback_years"]),
         rule_slots=int(data["rule_slots"]),
         template_slots=int(data["template_slots"]),
@@ -315,6 +329,107 @@ def price_impact_bounds(mod_root: Path, vanilla_root: Path) -> tuple[float, floa
                 if match:
                     found[key] = float(match.group(1))
     return 1 + found.get("MIN_PRICE_IMPACT", -0.33), 1 + found.get("MAX_PRICE_IMPACT", 3.0)
+
+
+def harvest_rates(mod_root: Path) -> dict[str, dict[str, float]]:
+    """Sub-continent -> severity -> the peasant food consumption of that Variable Harvest modifier."""
+    rates: dict[str, dict[str, float]] = {}
+    path = mod_root / HARVEST_MODIFIERS
+    if not path.is_file():
+        return rates
+    for name, body in _blocks(path.read_text(encoding="utf-8-sig")):
+        if not name.startswith("pp_harvest_"):
+            continue
+        rest = name[len("pp_harvest_"):]
+        # the longest suffix first: "very_good" is not sub-continent "..._very" with "good"
+        severity = next((s for s in sorted(HARVEST_SEVERITIES, key=len, reverse=True) if rest.endswith("_" + s)), None)
+        value = _top_keys(body).get("local_peasants_food_consumption")
+        if severity and value is not None:
+            rates.setdefault(rest[: -len(severity) - 1], {})[severity] = float(value)
+    return rates
+
+
+def peasant_food_consumption(mod_root: Path, vanilla_root: Path) -> float:
+    """Food a unit of peasants eats a month (pop_food_consumption of the peasants pop type)."""
+    found = _database(mod_root, vanilla_root, POP_TYPES).get("peasants")
+    return float(found[0].get("pop_food_consumption", 1.0)) if found else 1.0
+
+
+def access_modifier_amounts(mod_root: Path, vanilla_root: Path, names: tuple[str, ...]) -> dict[str, float]:
+    """Static modifier -> its local_market_access (the access blacklist)."""
+    amounts: dict[str, float] = {}
+    for folder in STATIC_MODIFIERS:
+        data = _database(mod_root, vanilla_root, folder)
+        for name in names:
+            if name in data and "local_market_access" in data[name][0]:
+                amounts[name] = float(data[name][0]["local_market_access"])
+    return amounts
+
+
+def staple_food_lines(repo: Path, mod_root: Path, crop_lines: dict[str, list[str]], crop_goods: dict[str, str],
+                      main_good: dict[str, str], skip: set[str]) -> tuple[dict[str, list[str]], dict[str, str | None]]:
+    """Every staple food maker the hunger rule may build, as upgrade lines (oldest tier first) with the good a Never
+    mode blocks: the crop farm lines, then the other buildings that count toward the Cookshop budget (orchards,
+    fisheries, herds, forest villages: food_level_counts), chained by their ``obsolete`` keys."""
+    from prosper_or_perish_constructor import food_level_counts
+    from prosper_or_perish_constructor import yaml_io
+
+    lines: dict[str, list[str]] = {line: list(tiers) for line, tiers in crop_lines.items()}
+    goods: dict[str, str | None] = dict(crop_goods)
+    in_lines = {b for tiers in lines.values() for b in tiers}
+    makers = {key for key, per in food_level_counts.counters(mod_root).items()
+              if per.get("local_pp_farm_levels") or per.get("local_pp_staple_levels")}
+    makers -= in_lines | skip
+    older: dict[str, set[str]] = {key: set() for key in makers}
+    for path in sorted((repo / BLUEPRINT_BUILDINGS).glob("*.yml")):
+        building = yaml_io.safe_load(path.read_text(encoding="utf-8-sig")).get("building") or {}
+        key = building.get("key")
+        if key in makers:
+            older[key] = {name for name in re.findall(r"(?m)^\s*obsolete\s*=\s*(\w+)", building.get("body") or "")
+                          if name in makers}
+
+    def root(key: str, seen: frozenset[str] = frozenset()) -> str:
+        parents = sorted(older[key] - seen)
+        return root(parents[0], seen | {key}) if parents else key
+
+    chains: dict[str, list[str]] = {}
+    for key in sorted(makers):
+        chains.setdefault(root(key), []).append(key)
+    for start, members in sorted(chains.items()):
+        members.sort(key=lambda key: (len(older[key]), key))
+        lines[start] = members
+        goods[start] = next((main_good[m] for m in members if m in main_good), None)
+    return lines, goods
+
+
+@dataclass(frozen=True)
+class Recipe:
+    """One production method: the good it makes, how much, and its inputs (per level)."""
+
+    produced: str | None
+    output: float
+    inputs: tuple[tuple[str, float], ...]
+
+
+def farm_recipes(repo: Path, buildings: list[str]) -> dict[str, list[list[Recipe]]]:
+    """Building -> its slots, each a list of methods (from the accepted blueprints)."""
+    from prosper_or_perish_constructor import production_gate as pg
+    from prosper_or_perish_constructor import yaml_io
+
+    wanted = set(buildings)
+    found: dict[str, list[list[Recipe]]] = {}
+    for path in sorted((repo / BLUEPRINT_BUILDINGS).glob("*.yml")):
+        building = yaml_io.safe_load(path.read_text(encoding="utf-8-sig")).get("building") or {}
+        key = building.get("key")
+        if key not in wanted:
+            continue
+        slots, _ = pg.body_slots(building.get("body") or "")
+        found[key] = [
+            [Recipe(m.produced, float(m.output or 0.0), tuple(sorted((g, float(a)) for g, a in (m.inputs or {}).items())))
+             for m in slot.methods]
+            for slot in slots
+        ]
+    return found
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -484,13 +599,15 @@ def render_values(config: Config, farm_lines: dict[str, list[str]], farm_goods: 
                                 "Country scope: Granary while the store holds less than this many months."))
     parts.append(_default_value("pp_cplan_granary_fill", "pp_cplan_gfill", config.granary_fill_pct,
                                 "Country scope: Granary only while the store is at least this full, in %."))
-    parts.append(_default_value("pp_cplan_grange_months", "pp_cplan_grange", config.grange_months,
-                                "Country scope: Grange after this many passes in a row at 24 months stored."))
+    parts.append(_default_value("pp_cplan_grange_surplus", "pp_cplan_gsur", config.grange_surplus_pct,
+                                "Country scope: Grange where a full store still gains this % of consumption a month."))
+    parts.append(_default_value("pp_cplan_famine_months", "pp_cplan_famine", config.famine_months,
+                                "Country scope: the famine line, months in the store a year from now."))
+    parts.append(_default_value("pp_cplan_yard_payback", "pp_cplan_ypb", config.yard_payback_years,
+                                "Country scope: Victualling Yard levels while they pay back within this many years."))
     parts.append(
-        "# Fixed waits of the baseline rules (passes in a row; [construction_plan]).\n"
-        f"pp_cplan_access_months = {{ value = {config.access_months} }}\n"
-        f"pp_cplan_market_months = {{ value = {config.market_months} }}\n"
-        f"pp_cplan_granary_months = {{ value = {config.granary_months} }}\n\n"
+        "# Any scope: victuals a Tavern's market must hold ([construction_plan] tavern_victuals).\n"
+        f"pp_cplan_tavern_victuals = {{ value = {_num(config.tavern_victuals)} }}\n\n"
     )
     parts.append(
         "# Country scope: the province focus count, for the panel's cycle (bands + hands off + custom).\n"
@@ -517,19 +634,6 @@ def render_values(config: Config, farm_lines: dict[str, list[str]], farm_goods: 
     )
     parts.append(_band_value("pp_cplan_band_lo", config, 0, "pp_cplan_lo"))
     parts.append(_band_value("pp_cplan_band_hi", config, 1, "pp_cplan_hi"))
-    parts.append("\n# ---- Food: farm lines (crop_farms.py), location scope ----\n\n")
-    for line, tiers in farm_lines.items():
-        good = farm_goods[line]
-        standing = " ".join(f"has_building = building_type:{tier}" for tier in tiers)
-        parts.append(
-            f"# A {good} farm here: the line's local output (+ 1 = 1 %), much more where the line already stands.\n"
-            f"pp_cplan_farm_score_{line} = {{\n"
-            "\tvalue = 100\n"
-            f"\tadd = {{ value = modifier:local_{good}_output_modifier multiply = 100 }}\n"
-            f"\tif = {{\n\t\tlimit = {{ OR = {{ {standing} }} }}\n\t\tadd = 1000\n\t}}\n"
-            "\tmin = 1\n"
-            "}\n"
-        )
     parts.append("\n# ---- Goods, per good ----\n\n")
     for good in goods:
         standing = " ".join(f"has_building = building_type:{name}" for name in producers[good])
@@ -562,6 +666,123 @@ def render_values(config: Config, farm_lines: dict[str, list[str]], farm_goods: 
 
 def _not_never(good: str) -> str:
     return f"scope:pp_cplan_country = {{ pp_cplan_mode_{good} < 2.5 }}"
+
+
+def _can_build(name: str, costs: dict[str, BuildingCost]) -> str:
+    """The vanilla can-build check, the construction goods in this market, and no level of it under construction
+    here (the engine stalls a construction whose goods the market lacks; tested 2026-11-06, Edinburgh masonry)."""
+    demand = costs.get(name, BuildingCost(0.0, DEFAULT_DEMAND, "std")).demand
+    return (f"location_and_owner_can_build = {{ building_type = {name} }} pp_cplan_goods_here_{demand} = yes "
+            f"NOT = {{ any_buildings_in_location = {{ building_type = building_type:{name} building_levels_under_construction > 0 }} }}")
+
+
+def _method_value(name: str, recipe: Recipe) -> str:
+    """A script value: one level's monthly profit of this method at the location's market prices and output."""
+    lines = [f"{name} = {{", "\tvalue = 0"]
+    if recipe.produced:
+        lines.append(
+            f"\tadd = {{ value = \"market.market_price(goods:{recipe.produced})\" "
+            f"multiply = {{ value = modifier:local_{recipe.produced}_output_modifier add = 1 min = 0 }} "
+            f"multiply = {_num(recipe.output)} }}"
+        )
+    for good, amount in recipe.inputs:
+        lines.append(f"\tsubtract = {{ value = \"market.market_price(goods:{good})\" multiply = {_num(amount)} }}")
+    lines.append("}")
+    return "\n".join(lines) + "\n"
+
+
+def render_baseline_values(config: Config, farm_lines: dict[str, list[str]], farm_goods: dict[str, str],
+                           recipes: dict[str, list[list[Recipe]]], harvest: dict[str, dict[str, float]],
+                           peasant_rate: float, access_amounts: dict[str, float],
+                           costs: dict[str, BuildingCost]) -> str:
+    """Values of the baseline rules: the harvest and access blacklists and the farm payback estimates."""
+    parts = ["\n# ---- Baseline rules: what is taken out (Jan 2026-11-08: no history, a blacklist) ----\n\n"]
+    # this year's harvest
+    parts.append(
+        "# Location scope: the food one unit of peasants eats more (bad harvest) or less (good harvest) a month this year:\n"
+        "# the peasant food consumption of the location's Variable Harvest modifier x the peasants' food per head\n"
+        f"# ({_num(peasant_rate)}). 0 in a normal year.\n"
+        "pp_cplan_harvest_rate = {\n\tvalue = 0\n"
+    )
+    first = True
+    for sub, severities in sorted(harvest.items()):
+        parts.append(f"\t{'if' if first else 'else_if'} = {{\n\t\tlimit = {{ sub_continent = sub_continent:{sub} }}\n")
+        inner = True
+        for severity in HARVEST_SEVERITIES:
+            if severity not in severities:
+                continue
+            parts.append(
+                f"\t\t{'if' if inner else 'else_if'} = {{ limit = {{ has_location_modifier = pp_harvest_{sub}_{severity} }} "
+                f"value = {_num(severities[severity] * peasant_rate)} }}\n"
+            )
+            inner = False
+        parts.append("\t}\n")
+        first = False
+    parts.append("}\n\n")
+    # market access
+    parts.append(
+        "# Location scope: market access without the event modifiers of [construction_plan] access_blacklist.\n"
+        "pp_cplan_access_normal = {\n\tvalue = market_access\n"
+        + "".join(
+            f"\tif = {{ limit = {{ has_location_modifier = {name} }} subtract = {_num(amount)} }}\n"
+            for name, amount in sorted(access_amounts.items())
+        )
+        + "}\n\n"
+    )
+    # farms: profit estimates per method, slot, tier; payback per line
+    parts.append(
+        "# ---- Farms: which line pays back fastest here (location scope, its market) ----\n"
+        "# A level's monthly profit at this market's prices and this location's output: each slot's best method\n"
+        "# (production efficiency, staffing and market access left out: the same for every line here). Its yearly\n"
+        "# return in % of the tier's base price (pp_cplan_farm_roi_<tier>); a line's return is that of its highest tier\n"
+        "# that can be built here (a standing older tier is replaced once its successor is researched).\n\n"
+    )
+    for line, tiers in farm_lines.items():
+        for tier in tiers:
+            slots = recipes.get(tier, [])
+            slot_names = []
+            for s_index, slot in enumerate(slots, 1):
+                producing = [m for m in slot if m.produced or m.inputs]
+                method_names = []
+                for m_index, recipe in enumerate(producing, 1):
+                    name = f"pp_cplan_fm_{tier}_{s_index}_{m_index}"
+                    parts.append(_method_value(name, recipe))
+                    method_names.append(name)
+                if not method_names:
+                    continue
+                slot_name = f"pp_cplan_fs_{tier}_{s_index}"
+                floor = len(producing) < len(slot)  # a method without goods (0) is the slot's other choice
+                body = [f"{slot_name} = {{", f"\tvalue = {method_names[0]}"]
+                body += [f"\tmin = {other}" for other in method_names[1:]]  # min = x floors at x: the best method
+                if floor:
+                    body.append("\tmin = 0")
+                parts.append("\n".join(body) + "\n}\n")
+                slot_names.append(slot_name)
+            parts.append(
+                f"pp_cplan_farm_est_{tier} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ market ?= {{ always = yes }} }}\n"
+                + "".join(f"\t\tadd = {name}\n" for name in slot_names)
+                + "\t}\n}\n"
+                f"pp_cplan_farm_roi_{tier} = {{\n\tvalue = pp_cplan_farm_est_{tier}\n\tmultiply = 1200\n"
+                f"\tdivide = {{ value = building_type:{tier}.building_base_cost_in_gold min = 1 }}\n}}\n\n"
+            )
+        good = farm_goods.get(line)
+        never = _not_never(good) if good else "always = yes"
+        parts.append(f"# Location scope: the {line} line's return here (0 where no tier can be built or its good is set to Never).\n"
+                     f"pp_cplan_farm_line_roi_{line} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ {never} }}\n")
+        for position, tier in enumerate(reversed(tiers)):
+            parts.append(
+                f"\t\t{'if' if position == 0 else 'else_if'} = {{\n\t\t\tlimit = {{ {_can_build(tier, costs)} }}\n"
+                f"\t\t\tvalue = pp_cplan_farm_roi_{tier}\n\t\t}}\n"
+            )
+        parts.append("\t}\n}\n")
+    lines = list(farm_lines)
+    parts.append(
+        "# Location scope: the best line's return here (the farm sites' order).\n"
+        "pp_cplan_farm_best_roi = {\n\tvalue = 0\n"
+        + "".join(f"\tmin = pp_cplan_farm_line_roi_{line}\n" for line in lines)
+        + "}\n"
+    )
+    return "".join(parts)
 
 
 def _cost_data(cost: BuildingCost) -> str:
@@ -724,62 +945,55 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]], farm_goods:
                    costs: dict[str, BuildingCost] | None = None) -> str:
     costs = costs or {}
 
-    def _can_build(name: str) -> str:
-        """The vanilla can-build check, the construction goods in this market, and no level of it under construction
-        here (the engine stalls a construction whose goods the market lacks; tested 2026-11-06, Edinburgh masonry)."""
-        demand = costs.get(name, BuildingCost(0.0, DEFAULT_DEMAND, "std")).demand
-        return (f"location_and_owner_can_build = {{ building_type = {name} }} pp_cplan_goods_here_{demand} = yes "
-                f"NOT = {{ any_buildings_in_location = {{ building_type = building_type:{name} building_levels_under_construction > 0 }} }}")
+    def can(name: str) -> str:
+        return _can_build(name, costs)
 
     parts = [HEADER]
     # --- farm picker
     parts.append(
-        "\n# Location scope (owned by scope:pp_cplan_country). Picks the crop farm line to grow here: a line that stands\n"
-        "# grows its own standing tier, a new line starts at its highest buildable tier; the best score wins\n"
-        "# (pp_cplan_farm_score_<line>). Lines of a good set to Never are skipped.\n"
+        "\n# Location scope (owned by scope:pp_cplan_country). Builds a level of the staple food line (crop farms, orchards,\n"
+        "# fisheries, herds, forest villages) that pays back fastest here (pp_cplan_farm_line_roi_<line>: the market's\n"
+        "# prices, the location's output, lines of a good set to Never left out), at its highest tier that can be built;\n"
+        "# none where no line makes a profit (a building that loses money lays off its workers and makes no food).\n"
         "pp_cplan_try_farm_here = {\n"
-        "\tset_variable = { name = pp_cplan_best value = 1 }\n"
-        "\tset_variable = { name = pp_cplan_pick value = 1 }\n"
+        "\tset_variable = { name = pp_cplan_best value = 0.001 }\n"
+        "\tset_variable = { name = pp_cplan_pick value = 100 }\n"
     )
-    index = 2
-    pick: list[tuple[int, str]] = []
-    for line, tiers in farm_lines.items():
-        good = farm_goods[line]
-        numbers = {tier: index + position for position, tier in enumerate(tiers)}
-        index += len(tiers)
-        pick += [(numbers[tier], tier) for tier in tiers]
-        standing_any = " ".join(f"has_building = building_type:{tier}" for tier in tiers)
-        parts.append(f"\t# {line} ({good})\n\tif = {{\n\t\tlimit = {{ {_not_never(good)} }}\n")
-        parts.append(f"\t\tif = {{\n\t\t\tlimit = {{ OR = {{ {standing_any} }} }}\n")
+    for number, line in enumerate(farm_lines, 101):
+        parts.append(
+            f"\tif = {{\n\t\tlimit = {{ pp_cplan_farm_line_roi_{line} > var:pp_cplan_best }}\n"
+            f"\t\tset_variable = {{ name = pp_cplan_best value = pp_cplan_farm_line_roi_{line} }}\n"
+            f"\t\tset_variable = {{ name = pp_cplan_pick value = {number} }}\n\t}}\n"
+        )
+    for number, (line, tiers) in enumerate(farm_lines.items(), 101):
+        parts.append(f"\tif = {{\n\t\tlimit = {{ var:pp_cplan_pick > {number - 0.5:g} var:pp_cplan_pick < {number + 0.5:g} }}\n")
         for position, tier in enumerate(reversed(tiers)):
             parts.append(
-                f"\t\t\t{'if' if position == 0 else 'else_if'} = {{\n"
-                f"\t\t\t\tlimit = {{ has_building = building_type:{tier} {_can_build(tier)} }}\n"
-                f"\t\t\t\tset_variable = {{ name = pp_cplan_cand value = {numbers[tier]} }}\n\t\t\t}}\n"
+                f"\t\t{'if' if position == 0 else 'else_if'} = {{\n\t\t\tlimit = {{ {can(tier)} }}\n"
+                f"\t\t\tpp_cplan_construct_food = {{ type = {tier} }}\n\t\t}}\n"
             )
-        parts.append("\t\t}\n\t\telse = {\n")
-        for position, tier in enumerate(reversed(tiers)):
-            parts.append(
-                f"\t\t\t{'if' if position == 0 else 'else_if'} = {{\n"
-                f"\t\t\t\tlimit = {{ {_can_build(tier)} }}\n"
-                f"\t\t\t\tset_variable = {{ name = pp_cplan_cand value = {numbers[tier]} }}\n\t\t\t}}\n"
-            )
-        parts.append("\t\t}\n")
-        parts.append(
-            "\t\tif = {\n\t\t\tlimit = { has_variable = pp_cplan_cand }\n"
-            f"\t\t\tset_variable = {{ name = pp_cplan_score value = pp_cplan_farm_score_{line} }}\n"
-            "\t\t\tif = {\n\t\t\t\tlimit = { var:pp_cplan_score > var:pp_cplan_best }\n"
-            "\t\t\t\tset_variable = { name = pp_cplan_best value = var:pp_cplan_score }\n"
-            "\t\t\t\tset_variable = { name = pp_cplan_pick value = var:pp_cplan_cand }\n"
-            "\t\t\t}\n\t\t\tremove_variable = pp_cplan_cand\n\t\t\tremove_variable = pp_cplan_score\n\t\t}\n"
-            "\t}\n"
-        )
-    for number, tier in pick:
-        parts.append(
-            f"\tif = {{\n\t\tlimit = {{ var:pp_cplan_pick > {number - 0.5:g} var:pp_cplan_pick < {number + 0.5:g} }}\n"
-            f"\t\tpp_cplan_construct_food = {{ type = {tier} }}\n\t}}\n"
-        )
+        parts.append("\t}\n")
     parts.append("\tremove_variable = pp_cplan_best\n\tremove_variable = pp_cplan_pick\n}\n")
+
+    # --- Victualling Yard
+    parts.append(
+        "\n# Location scope: a Victualling Yard level here: the next level of a standing Yard while it pays back within the\n"
+        "# player's line (pp_cplan_yard_payback), a first level where victuals cost at least their default price here.\n"
+        "pp_cplan_try_yard_here = {\n"
+    )
+    for position, building in enumerate(config.yards):
+        parts.append(
+            f"\t{'if' if position == 0 else 'else_if'} = {{\n\t\tlimit = {{ {can(building)} }}\n"
+            f"\t\tbuilding_type:{building} = {{ save_scope_as = pp_cplan_btype }}\n"
+            "\t\tpp_cplan_btype_data = yes\n"
+            "\t\tif = {\n\t\t\tlimit = {\n\t\t\t\tOR = {\n"
+            "\t\t\t\t\tAND = {\n\t\t\t\t\t\tpp_cplan_bt_levels > 0.5\n"
+            "\t\t\t\t\t\tpp_cplan_est_payback_years <= scope:pp_cplan_country.pp_cplan_yard_payback\n\t\t\t\t\t}\n"
+            "\t\t\t\t\tAND = {\n\t\t\t\t\t\tpp_cplan_bt_levels < 0.5\n\t\t\t\t\t\tpp_cplan_victuals_price_ratio >= 1\n\t\t\t\t\t}\n"
+            "\t\t\t\t}\n\t\t\t}\n"
+            f"\t\t\tpp_cplan_construct_food = {{ type = {building} }}\n\t\t}}\n\t}}\n"
+        )
+    parts.append("}\n")
 
     # --- capital food buildings
     for name, buildings, comment in (
@@ -792,7 +1006,7 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]], farm_goods:
         for position, building in enumerate(buildings):
             keyword = "if" if position == 0 else "else_if"
             parts.append(
-                f"\t{keyword} = {{\n\t\tlimit = {{ {_can_build(building)} }}\n"
+                f"\t{keyword} = {{\n\t\tlimit = {{ {can(building)} }}\n"
                 f"\t\tpp_cplan_construct_food = {{ type = {building} }}\n\t}}\n"
             )
         parts.append("}\n")
@@ -803,7 +1017,7 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]], farm_goods:
     for position, building in enumerate(config.logistics_order):
         keyword = "if" if position == 0 else "else_if"
         parts.append(
-            f"\t{keyword} = {{\n\t\tlimit = {{ {_can_build(building)} }}\n"
+            f"\t{keyword} = {{\n\t\tlimit = {{ {can(building)} }}\n"
             f"\t\tpp_cplan_construct = {{ type = {building} why = {WHY_LOGISTICS} }}\n\t}}\n"
         )
     parts.append("}\n")
@@ -816,13 +1030,13 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]], farm_goods:
         first = True
         for name in names:
             parts.append(
-                f"\t{'if' if first else 'else_if'} = {{\n\t\tlimit = {{ has_building = building_type:{name} {_can_build(name)} }}\n"
+                f"\t{'if' if first else 'else_if'} = {{\n\t\tlimit = {{ has_building = building_type:{name} {can(name)} }}\n"
                 f"\t\tpp_cplan_construct = {{ type = {name} why = {WHY_GOODS} }}\n\t}}\n"
             )
             first = False
         for name in names:
             parts.append(
-                f"\telse_if = {{\n\t\tlimit = {{ {_can_build(name)} }}\n"
+                f"\telse_if = {{\n\t\tlimit = {{ {can(name)} }}\n"
                 f"\t\tpp_cplan_construct = {{ type = {name} why = {WHY_GOODS} }}\n\t}}\n"
             )
         parts.append("}\n")
@@ -836,7 +1050,7 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]], farm_goods:
                 "\tif = {\n\t\tlimit = {\n"
                 "\t\t\tscope:pp_cplan_country = { NOT = { has_variable = pp_cplan_hit } }\n"
                 f"\t\t\tany_buildings_in_location = {{ building_type = building_type:{name} building_level > 0 is_at_max_level = no }}\n"
-                f"\t\t\t{_can_build(name)}\n\t\t}}\n"
+                f"\t\t\t{can(name)}\n\t\t}}\n"
                 f"\t\tbuilding_type:{name} = {{ save_scope_as = pp_cplan_btype }}\n"
                 f"\t\t{_cost_data(cost)}\n"
                 "\t\tif = {\n\t\t\tlimit = { pp_cplan_est_payback_years <= scope:pp_cplan_country.pp_cplan_payback_line }\n"
@@ -892,7 +1106,7 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]], farm_goods:
     flags = sorted(
         set(goods) | set(MODE_KEYS)
         | {"food", "logistics", "goods", "reserve", "max", "access_line", "keep", "payback", "up", "down", "lo", "hi"}
-        | {"granary_cap", "granary_fill", "grange"}
+        | {"granary_cap", "granary_fill", "grange_surplus", "famine", "yard_payback"}
         | {"lv", "metric", "cmp", "t", "tbig", "pb", "clear", "save", "apply", "province", "load"}
         | {f"r{n}" for n in range(1, config.rule_slots + 1)}
         | {f"t{k}" for k in range(1, config.template_slots + 1)}
@@ -1288,18 +1502,29 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
     result.producers = by_good
     result.logistics = list(config.logistics_order)
 
-    wanted = [b for tiers in lines.values() for b in tiers] + list(config.kitchens) + list(config.taverns)
-    wanted += list(config.granaries) + list(config.granges) + list(config.logistics_order)
+    # the hunger rule's candidates: crop farm lines and every other staple food maker (orchards, fisheries, herds,
+    # forest villages), one bucket ranked by payback (Jan 2026-11-08)
+    food_lines, food_goods = staple_food_lines(repo, mod_root, lines, farm_goods, short.main_good,
+                                               set(config.kitchens) | set(config.taverns))
+    result.food_lines = food_lines
+    food_buildings = [b for tiers in food_lines.values() for b in tiers]
+
+    wanted = food_buildings + list(config.kitchens) + list(config.taverns)
+    wanted += list(config.granaries) + list(config.granges) + list(config.yards) + list(config.logistics_order)
     wanted += [name for names in by_good.values() for name in names]
     result.missing = sorted({name for name in wanted if name not in known})
 
     texts = {
-        mod_root / VALUES: render_values(config, lines, farm_goods, goods, by_good, demands, bounds),
-        mod_root / EFFECTS: render_effects(config, lines, farm_goods, goods, by_good, costs),
-        # the hunger rule waits for the food makers it starts (farms, kitchens, Taverns), not for stores
-        mod_root / TRIGGERS: render_triggers(goods, by_good, demands,
-                                             [b for tiers in lines.values() for b in tiers] + list(config.kitchens)
-                                             + list(config.taverns)),
+        mod_root / VALUES: render_values(config, lines, farm_goods, goods, by_good, demands, bounds)
+        + render_baseline_values(
+            config, food_lines, food_goods, farm_recipes(repo, food_buildings),
+            harvest_rates(mod_root), peasant_food_consumption(mod_root, vanilla_root),
+            access_modifier_amounts(mod_root, vanilla_root, config.access_blacklist), costs,
+        ),
+        mod_root / EFFECTS: render_effects(config, food_lines, food_goods, goods, by_good, costs),
+        # the hunger steps wait for what they start (staple food makers, Taverns); kitchens are built anyway and must
+        # not hold farms back for the year a Cookshop takes (seen in game 2026-11-08)
+        mod_root / TRIGGERS: render_triggers(goods, by_good, demands, food_buildings + list(config.taverns)),
         mod_root / GUI: render_gui(goods),
         mod_root / HERE_GUI: render_here_gui(config),
     }

@@ -25,58 +25,59 @@ pp_cplan_may_try = {
 	pp_cplan_budget_left = yes
 }
 
-# Location scope: the logistics rule wants a level here (location override Always, or market access below the line
-# for a while: pp_cplan_access_settled; Never blocks it). The building's own gates (access, building levels, one level
-# at a time) still apply.
+# Location scope: the logistics rule wants a level here (location override Always, or market access without event
+# modifiers below the line while the owner controls the location; Never blocks it). The building's own gates (access,
+# building levels, one level at a time) still apply. No market-switch wait (Jan: no history): in run af7dce96, 98.7 %
+# of the owned locations below 97 % at a save were below it five years earlier too.
 pp_cplan_logistics_wanted = {
 	pp_cplan_logi_n < 1.5
 	OR = {
 		pp_cplan_logi_n > 0.5
 		AND = {
-			market_access < pp_cplan_access_line
-			pp_cplan_access_settled = yes
+			controller ?= owner
+			pp_cplan_access_normal < pp_cplan_access_line
 		}
 	}
 }
 
-# Location scope: the low market access is no passing dip (pp_cplan_access_watch counts it): below the line in the
-# last passes in a row while the owner held the location, and no market switch seen for a year. Run af7dce96: nearly
-# every drop below 97 % came with a market switch, and a third of them were back above five years later.
-pp_cplan_access_settled = {
-	controller ?= owner
-	has_variable = pp_cplan_al
-	var:pp_cplan_al > pp_cplan_access_line100
-	has_variable = pp_cplan_mm
-	var:pp_cplan_mm > pp_cplan_market_line100
+# Province scope: the hunger rule: a normal year leaves less than the low end of the focus band in the store a year
+# from now (a bad harvest alone does not count, a province that refills by itself within the year neither).
+pp_cplan_hungry = {
+	has_variable = pp_stored_food_months
+	pp_cplan_food_in_a_year < pp_cplan_band_lo
 }
 
-# Province scope: the Granary rule's conditions hold now (scope:pp_cplan_country's settings): the store can hold less
-# than the line's months of consumption, and it is at least the line's share full (otherwise the surplus, not the room,
-# keeps the store low and a Granary adds nothing).
-pp_cplan_granary_now = {
+# Province scope: the famine rule (scope:pp_cplan_country's line): the same, below the famine line.
+pp_cplan_famine = {
+	has_variable = pp_stored_food_months
+	pp_cplan_food_in_a_year < scope:pp_cplan_country.pp_cplan_famine_months
+}
+
+# Province scope: the Granary rule: the store can hold less than the line's months of consumption, it is at least the
+# line's share full, and a normal month still adds food (otherwise the surplus, not the room, keeps the store low and
+# a Granary adds nothing).
+pp_cplan_granary_due = {
 	has_variable = pp_stored_food_months
 	pp_cplan_capacity_months > 0
 	pp_cplan_capacity_months < scope:pp_cplan_country.pp_cplan_granary_cap
 	pp_cplan_fill_pct >= scope:pp_cplan_country.pp_cplan_granary_fill
+	pp_cplan_normal_gain > 0
 }
 
-# Province scope: the Granary rule wants a level (its conditions held in the last passes in a row).
-pp_cplan_granary_due = {
-	has_variable = pp_cplan_gw
-	var:pp_cplan_gw > pp_cplan_granary_line100
-}
-
-# Province scope: the Grange rule wants a level: the store sat at 24 months (the stored-food effects stop rising there)
-# in the player's number of passes in a row; the count starts again after each Grange level, so they come slowly.
+# Province scope: the Grange rule: the store holds 24 months (the stored-food effects stop rising there) and a normal
+# month still adds the line's share of consumption on top. A working Grange packs the store below 24 months, so the
+# next level waits until it is full again.
 pp_cplan_grange_due = {
-	has_variable = pp_cplan_fw
-	var:pp_cplan_fw > scope:pp_cplan_country.pp_cplan_grange_line100
+	has_variable = pp_stored_food_months
+	var:pp_stored_food_months > 123.5
+	pp_cplan_normal_gain_pct >= scope:pp_cplan_country.pp_cplan_grange_surplus
 }
 
-# Province scope: the hunger rule's band (stored months below the low end of the focus band).
-pp_cplan_below_band = {
-	has_variable = pp_stored_food_months
-	var:pp_stored_food_months < pp_cplan_band_lo100
+# Location scope: the location's market holds the victuals a Tavern would serve.
+pp_cplan_victuals_here = {
+	market ?= {
+		"stockpile_in_market(goods:victuals)" >= pp_cplan_tavern_victuals
+	}
 }
 
 # Country scope (root = this country, in the pass and in the panel): at least one location of the country follows its

@@ -55,6 +55,27 @@ logic and is never touched (a console-only test switch lets it run for an AI cou
   peasants minus each building's `building_employment_size_amount - building_employed_amount`; peasants are promoted
   into the other classes), or idle pops of the building's own class (`pp_cplan_staff`). A profile rule that finds no
   workers shows "No free workers here" (state 4). The food, logistics and improvement rules do not check workers.
+- **Detail panes** (Jan 2026-11-09, night: "we can see that a building is being built, but not how much investment
+  is missing given the current settings, or why it was built; a little cog per setting where you can see what's
+  happening under the hood"): each rule group's row ends in vanilla's cog (`button_automation_shortcut`); it opens that
+  group's pane in place of the "Last month" list (GUI variable `pp_cplan_detail` = the group; generated
+  `gui/pp_construction_plan_detail.gui` + `pp_construction_plan_detail_l_english.yml`, construction_plan_detail.py).
+  The pane shows the last pass: the gold the group could spend (its part plus what the groups before it left), what it
+  spent on how many constructions, how many it wanted that waited for gold and the gold that would have started them
+  all, the group's situation (food: provinces close to empty or short a year from now, due a Granary or a Grange;
+  logistics: locations below the line and the lowest access; improvements: locations over the line and the fullest;
+  businesses: sites with a business within the line and the quickest payback; profiles: locations and their rules by
+  state), a chart of the last 12 passes (grey = wanted, gold = spent, as % of the largest month), and the list of what
+  it built, each with its cost and its reason (the food step and the store a year from now, the access %, the % of
+  capacity, the payback years, the profile's rule). How "wanted" is counted: every group now goes through all it wants
+  even after the gold is used up; the construction itself checks the budget (`pp_cplan_construct_scoped`) and counts a
+  level the gold does not reach at the engine's cost (`pp_cplan_note_wait`), once per decision (a province for the food
+  rule, its one construction a month; a location otherwise). Locations with a construction under way are not counted
+  (they cannot start one). The numbers live on the country until the next pass (`pp_cplan_d*` / `pp_cplan_ds_*`, the
+  history `pp_cplan_hn_` / `_hs_<why>_<k>`, generated `pp_cplan_stats_reset` / `pp_cplan_history_push`); switching the
+  plan on clears the chart. The rules never read any of it (a test checks), so the plan stays stateless as Jan wants.
+  Cost: a pass with no gold left now checks everything instead of stopping (the business pick over every free site,
+  the food steps of every province); not profiled yet. Not tested in game.
 - **Gone** (Jan: "the rest for now can go"): the Food, Goods, Logistics, Locations and Here tabs; the monthly
   construction limit; the presets; the line about the game's own automation (the guards stay: no level for a closed
   building, nothing where a construction is under way); the goods modes (Off / Keep / Expand / Never); the per-location

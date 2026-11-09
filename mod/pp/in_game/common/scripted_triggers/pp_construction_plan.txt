@@ -78,10 +78,10 @@ pp_cplan_affordable = {
 	pp_cplan_est_cost <= scope:pp_cplan_country.pp_cplan_free_gold
 }
 
-# Any scope: the current rule has not built yet and the budget lasts.
+# Any scope: the current rule has not built yet. The gold is checked by the construction itself
+# (pp_cplan_construct_scoped), so a step the gold does not reach is still counted for the window.
 pp_cplan_may_try = {
 	scope:pp_cplan_country = { NOT = { has_variable = pp_cplan_hit } }
-	pp_cplan_budget_left = yes
 }
 
 # Location scope: the logistics rule wants a level here: market access without event modifiers below the line while
@@ -93,17 +93,18 @@ pp_cplan_logistics_wanted = {
 	pp_cplan_access_normal < pp_cplan_access_line
 }
 
-# Province scope: the hunger rule: a normal year leaves less than pp_cplan_hungry_months in the store a year from now
-# (a bad harvest alone does not count, a province that refills by itself within the year neither).
+# Province scope, in pp_cplan_food_province (scope:pp_cplan_fy = pp_cplan_food_in_a_year, read once a province): the
+# hunger rule: a normal year leaves less than pp_cplan_hungry_months in the store a year from now (a bad harvest alone
+# does not count, a province that refills by itself within the year neither).
 pp_cplan_hungry = {
 	has_variable = pp_stored_food_months
-	pp_cplan_food_in_a_year < pp_cplan_hungry_months
+	scope:pp_cplan_fy < pp_cplan_hungry_months
 }
 
-# Province scope: the famine rule: the same, below the famine line.
+# Province scope, in pp_cplan_food_province: the famine rule: the same, below the famine line.
 pp_cplan_famine = {
 	has_variable = pp_stored_food_months
-	pp_cplan_food_in_a_year < pp_cplan_famine_months
+	scope:pp_cplan_fy < pp_cplan_famine_months
 }
 
 # Province scope: the Granary rule: the store can hold less than the line's months of consumption, it is at least the

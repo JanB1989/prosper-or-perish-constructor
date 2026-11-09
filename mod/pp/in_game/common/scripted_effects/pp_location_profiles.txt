@@ -36,7 +36,8 @@ pp_lprof_run = {
 			pp_lprof_has_locations = yes
 			pp_cplan_profiles_w > 0
 		}
-		change_variable = { name = pp_cplan_cap add = pp_cplan_share_profiles }
+		pp_cplan_group_start = { why = 105 add = pp_cplan_share_profiles }
+		save_temporary_scope_value_as = { name = pp_cplan_rv value = 0 }
 		# the locations with the fewest building levels first: in the list's own order the locations assigned first
 		# took the whole monthly share every month and the last profile built nothing in ten years (test world, 2026-11-08)
 		ordered_in_list = {
@@ -50,10 +51,16 @@ pp_lprof_run = {
 			check_range_bounds = no
 			# the workers a new level can find here (pp_cplan_staff)
 			save_temporary_scope_value_as = { name = pp_cplan_free_peasants value = pp_cplan_free_peasants_here }
+			# the window: one level waiting for gold counts once a location (pp_cplan_note_wait)
+			scope:pp_cplan_country = {
+				remove_variable = pp_cplan_noted
+				change_variable = { name = pp_cplan_ds_profiles_locs add = 1 }
+			}
 			pp_lprof_location_rules = yes
 		}
 	}
 	remove_variable = pp_cplan_hit
+	remove_variable = pp_cplan_noted
 }
 
 # Country scope: the list loses entries whose profile is gone (cleared by another owner), and an own location keeps no
@@ -108,6 +115,7 @@ pp_lprof_rule = {
 	remove_variable = pp_lprof_st
 	remove_variable = pp_lprof_fail
 	remove_variable = pp_lprof_best
+	save_temporary_scope_value_as = { name = pp_cplan_rs value = $r$ } # the window: the rule a construction came from
 	if = {
 		limit = {
 			OR = {
@@ -192,6 +200,46 @@ pp_lprof_finish = {
 	remove_variable = pp_lprof_st
 	remove_variable = pp_lprof_fail
 	remove_variable = pp_lprof_best
+	pp_lprof_count_state = { st = pp_lprof_r$r$_st }
+}
+
+# Location scope: the window counts the rules by their state after this pass (pp_cplan_ds_profiles_st<n>).
+pp_lprof_count_state = {
+	if = {
+		limit = { var:$st$ < 101.5 }
+		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_st1 add = 1 } }
+	}
+	else_if = {
+		limit = { var:$st$ < 102.5 }
+		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_st2 add = 1 } }
+	}
+	else_if = {
+		limit = { var:$st$ < 103.5 }
+		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_st3 add = 1 } }
+	}
+	else_if = {
+		limit = { var:$st$ < 104.5 }
+		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_st4 add = 1 } }
+	}
+	else_if = {
+		limit = { var:$st$ < 105.5 }
+		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_st5 add = 1 } }
+	}
+	else_if = {
+		limit = { var:$st$ < 106.5 }
+		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_st6 add = 1 } }
+	}
+	else_if = {
+		limit = { var:$st$ < 107.5 }
+		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_st7 add = 1 } }
+	}
+	else_if = {
+		limit = { var:$st$ < 108.5 }
+		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_st8 add = 1 } }
+	}
+	else = {
+		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_st9 add = 1 } }
+	}
 }
 
 # Location scope (scope:pp_cplan_btype and the cost values set): keeps the shortest payback seen for this rule.
@@ -346,19 +394,24 @@ pp_lprof_try = {
 }
 
 # Location scope: one level of scope:pp_cplan_btype while the month's budget lasts (the plan's construct records it in
-# the ledger as a profile's construction, why 105).
+# the ledger as a profile's construction, why 105). A level the gold does not reach: budget (106; the plan counts it for
+# the window, pp_cplan_note_wait); one it refuses for another reason (a level under construction, a closed building):
+# cannot be built (102).
 pp_lprof_build = {
+	scope:pp_cplan_country = { remove_variable = pp_cplan_wait }
+	pp_cplan_construct_scoped = { why = 105 }
 	if = {
-		limit = { pp_cplan_budget_left = yes }
-		pp_cplan_construct_scoped = { why = 105 }
-		if = {
-			limit = { scope:pp_cplan_country = { has_variable = pp_cplan_hit } }
-			set_variable = { name = pp_lprof_st value = 101 }
-		}
+		limit = { scope:pp_cplan_country = { has_variable = pp_cplan_hit } }
+		set_variable = { name = pp_lprof_st value = 101 }
 	}
-	else = {
+	else_if = {
+		limit = { scope:pp_cplan_country = { has_variable = pp_cplan_wait } }
 		pp_lprof_fail = { r = 106 }
 	}
+	else = {
+		pp_lprof_fail = { r = 102 }
+	}
+	scope:pp_cplan_country = { remove_variable = pp_cplan_wait }
 }
 
 # ---- Buttons (the scripted GUIs in scripted_guis/pp_location_profiles.txt). Country-scope buttons run with root = the

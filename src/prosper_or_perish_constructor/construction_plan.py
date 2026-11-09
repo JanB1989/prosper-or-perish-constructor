@@ -65,6 +65,9 @@ WEIGHT_GUI = Path("in_game/gui/pp_construction_plan_weights.gui")
 SCRIPT_VALUES = (Path("main_menu/common/script_values"), Path("in_game/common/script_values"))
 # the rule groups with a weight (their order in the window); a weight runs 0 (off) .. WEIGHT_STEPS
 GROUPS = ("profiles", "food", "logistics", "improve", "business")
+# the rule groups' construction codes (pp_cplan_construct_scoped's why; the pass keeps its numbers per code)
+GROUP_WHY = {"food": 101, "logistics": 102, "business": 103, "profiles": 105, "improve": 106}
+HISTORY_MONTHS = 12  # months the window's chart shows
 WEIGHT_STEPS = 10
 SEGMENT = 14  # px of one weight step in the bar
 BUILDING_TYPES = Path("in_game/common/building_types")
@@ -618,6 +621,87 @@ def render_weight_gui() -> str:
         )
     out.append("}\n")
     return "".join(out)
+
+
+# ---- The window's detail panes (Jan 2026-11-09: "how much investment is missing, what was built and why") ----
+# Per rule group (by its construction code, GROUP_WHY) the pass keeps on the country, until the next pass: that it ran,
+# the gold it could spend, the gold it spent, the constructions it started, the gold and the number of the constructions
+# it wanted that waited for gold, its situation (SITUATION), and the last HISTORY_MONTHS passes' gold wanted and spent.
+# The rules never read any of it.
+GROUP_NUMBERS = {"had": "dhad", "spent": "dspent", "started": "dn", "wait": "dwait", "waitn": "dwn"}
+SITUATION: dict[str, tuple[tuple[str, int], ...]] = {
+    # name, start value (+ 100; a running minimum starts high)
+    "food": (("provinces", 100), ("famine", 100), ("hungry", 100), ("granary", 100), ("grange", 100)),
+    "logistics": (("below", 100), ("lowest", 1099)),
+    "improve": (("over", 100), ("fullest", 100)),
+    "business": (("sites", 100), ("best", 1099)),
+    "profiles": (("locs", 100), *((f"st{n}", 100) for n in range(1, 10))),
+}
+
+
+def render_stats_effects() -> str:
+    """The pass's bookkeeping for the detail panes: the numbers start afresh each pass (pp_cplan_stats_reset), the
+    pass's gold wanted and spent go into the history at its end (pp_cplan_history_push: the oldest month drops out),
+    and switching the plan on clears the history (pp_cplan_history_clear)."""
+    reset, push, clear = [], [], []
+    for group in GROUPS:
+        why = GROUP_WHY[group]
+        reset.append(f"\t# {group}\n\tremove_variable = pp_cplan_dran_{why}\n\tclear_variable_list = pp_cplan_log_{why}\n")
+        reset += [f"\tset_variable = {{ name = pp_cplan_{var}_{why} value = 100 }}\n" for var in GROUP_NUMBERS.values()]
+        reset += [f"\tset_variable = {{ name = pp_cplan_ds_{group}_{name} value = {start} }}\n"
+                  for name, start in SITUATION[group]]
+        push.append(f"\t# {group}\n")
+        for kind in ("hn", "hs"):
+            push += [f"\tpp_cplan_copy_num = {{ from = pp_cplan_{kind}_{why}_{k - 1} to = pp_cplan_{kind}_{why}_{k} }}\n"
+                     for k in range(HISTORY_MONTHS, 1, -1)]
+            clear += [f"\tremove_variable = pp_cplan_{kind}_{why}_{k}\n" for k in range(1, HISTORY_MONTHS + 1)]
+        push.append(f"\tset_variable = {{ name = pp_cplan_hn_{why}_1 value = {{ value = var:pp_cplan_dspent_{why} "
+                    f"add = var:pp_cplan_dwait_{why} subtract = 100 }} }}\n")
+        push.append(f"\tset_variable = {{ name = pp_cplan_hs_{why}_1 value = var:pp_cplan_dspent_{why} }}\n")
+    return (
+        "\n# ---- The window's detail panes (rules never read these) ----\n\n"
+        "# Country scope, at the start of pp_cplan_run: every rule group's numbers start afresh (+ 100; the running\n"
+        "# minimums high).\npp_cplan_stats_reset = {\n" + "".join(reset) + "}\n\n"
+        f"# Country scope, at the end of pp_cplan_run: the pass's gold wanted (spent + waiting for gold) and spent per rule\n"
+        f"# group become month 1 of the history, the older months move up one, month {HISTORY_MONTHS} drops out.\n"
+        "pp_cplan_history_push = {\n" + "".join(push) + "}\n\n"
+        "# Country scope: the history is gone (the plan was switched on).\npp_cplan_history_clear = {\n" + "".join(clear) + "}\n"
+    )
+
+
+def render_stats_values() -> str:
+    """The detail panes' readouts (country scope): pp_cplan_d_<group>_<number> (GROUP_NUMBERS, need = spent + wait,
+    ran = 1 / 0), pp_cplan_d_<group>_<situation>, and the chart: pp_cplan_h_<group>_need_<k> / _spent_<k> (gold, k = 1
+    the last month), _needp_<k> / _spentp_<k> (% of the largest month wanted, the bars), _max, _sum_need, _sum_spent."""
+
+    def readout(name: str, var: str) -> str:
+        return (f"{name} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ has_variable = {var} }}\n"
+                f"\t\tvalue = var:{var}\n\t\tsubtract = 100\n\t}}\n}}\n")
+
+    parts = ["\n# ---- The window's detail panes (country scope; pp_cplan_stats_reset, pp_cplan_history_push) ----\n"]
+    for group in GROUPS:
+        why = GROUP_WHY[group]
+        prefix = f"pp_cplan_d_{group}"
+        parts.append(f"\n# {group} (construction code {why})\n")
+        parts.append(f"{prefix}_ran = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ has_variable = pp_cplan_dran_{why} }}\n"
+                     f"\t\tvalue = 1\n\t}}\n}}\n")
+        parts += [readout(f"{prefix}_{number}", f"pp_cplan_{var}_{why}") for number, var in GROUP_NUMBERS.items()]
+        parts.append(f"{prefix}_need = {{\n\tvalue = {prefix}_spent\n\tadd = {prefix}_wait\n}}\n")
+        parts += [readout(f"{prefix}_{name}", f"pp_cplan_ds_{group}_{name}") for name, _ in SITUATION[group]]
+        chart = f"pp_cplan_h_{group}"
+        for k in range(1, HISTORY_MONTHS + 1):
+            parts.append(readout(f"{chart}_need_{k}", f"pp_cplan_hn_{why}_{k}"))
+            parts.append(readout(f"{chart}_spent_{k}", f"pp_cplan_hs_{why}_{k}"))
+        months = range(1, HISTORY_MONTHS + 1)
+        parts.append(f"{chart}_max = {{\n\tvalue = 1\n" + "".join(f"\tmin = {chart}_need_{k}\n" for k in months) + "}\n")
+        for k in months:
+            for kind in ("need", "spent"):
+                parts.append(f"{chart}_{kind}p_{k} = {{\n\tvalue = {chart}_{kind}_{k}\n\tmultiply = 100\n"
+                             f"\tdivide = {chart}_max\n}}\n")
+        for kind in ("need", "spent"):
+            parts.append(f"{chart}_sum_{kind} = {{\n\tvalue = 0\n"
+                         + "".join(f"\tadd = {chart}_{kind}_{k}\n" for k in months) + "}\n")
+    return "".join(parts)
 
 
 def render_values(config: Config, demands: dict[str, dict[str, float]] | None = None,
@@ -1182,6 +1266,8 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
         result.businesses, built_recipes(database, list(result.businesses)), costs, harvest_outputs(mod_root),
         categories, config.profile_categories, result.staff)
 
+    from prosper_or_perish_constructor import construction_plan_detail  # imports this module
+
     wanted = food_buildings + list(config.kitchens) + list(config.taverns) + result.improvements
     wanted += list(config.granaries) + list(config.granges) + list(config.yards) + list(config.logistics_order)
     wanted += list(result.businesses)
@@ -1194,13 +1280,17 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
             harvest_rates(mod_root), peasant_food_consumption(mod_root, vanilla_root),
             access_modifier_amounts(mod_root, vanilla_root, config.access_blacklist), costs,
         )
-        + improve_values + business_values,
-        mod_root / EFFECTS: render_effects(config, food_lines, costs) + improve_effects + business_effects,
+        + improve_values + business_values + render_stats_values(),
+        mod_root / EFFECTS: render_effects(config, food_lines, costs) + improve_effects + business_effects
+        + render_stats_effects(),
         # the hunger steps wait for what they start (staple food makers, Taverns); kitchens are built anyway and must
         # not hold farms back for the year a Cookshop takes (seen in game 2026-11-08)
         mod_root / TRIGGERS: render_triggers(demands, food_buildings + list(config.taverns),
                                              config.construction_goods_months),
         mod_root / WEIGHT_GUI: render_weight_gui(),
+        # the window's detail panes (Jan 2026-11-09): a cog per rule group, the numbers render_stats_values gives
+        mod_root / construction_plan_detail.DETAIL_GUI: construction_plan_detail.render_gui(),
+        mod_root / construction_plan_detail.DETAIL_LOC: construction_plan_detail.render_loc(),
     }
     for path, text in texts.items():
         if _write(path, text, write):

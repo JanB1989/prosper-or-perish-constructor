@@ -139,15 +139,21 @@ def test_budget_is_the_gold_above_the_reserve() -> None:
         if group != "profiles":
             assert f"add = pp_cplan_{group}_w" in total
             body = _effect(_read(EFFECTS), f"pp_cplan_group_{group}")
-            assert f"limit = {{ pp_cplan_{group}_w > 0 }}\n\t\tchange_variable = {{ name = pp_cplan_cap add = pp_cplan_share_{group} }}" in body
+            assert (f"limit = {{ pp_cplan_{group}_w > 0 }}\n\t\tpp_cplan_group_start = {{ why = {cp.GROUP_WHY[group]} "
+                    f"add = pp_cplan_share_{group} }}") in body
     config = cp.load_config(PROJECT)
     assert dict(config.weights) == {group: 5 for group in cp.GROUPS}
     triggers = _read(TRIGGERS)
     budget = _effect(triggers, "pp_cplan_budget_left")
     assert "pp_cplan_spent_n < pp_cplan_cap_n" in budget and "pp_cplan_free_gold > 0" in budget
     assert "pp_cplan_est_cost <= scope:pp_cplan_country.pp_cplan_free_gold" in _effect(triggers, "pp_cplan_affordable")
+    start = _effect(_read(EFFECTS), "pp_cplan_group_start")
+    assert "change_variable = { name = pp_cplan_cap add = $add$ }" in start
+    # the gold is checked by the construction itself, so what the gold does not reach is counted (the detail panes)
     scoped = _effect(_read(EFFECTS), "pp_cplan_construct_scoped")
-    assert scoped.index("pp_cplan_btype_data = yes") < scoped.index("pp_cplan_affordable = yes") < scoped.index("pp_cplan_construct_now")
+    assert (scoped.index("pp_cplan_btype_data = yes") < scoped.index("pp_cplan_budget_left = yes")
+            < scoped.index("pp_cplan_affordable = yes") < scoped.index("pp_cplan_construct_now")
+            < scoped.index("pp_cplan_note_wait"))
 
 
 def test_weight_bars() -> None:
@@ -438,10 +444,15 @@ def test_food_pass_order() -> None:
     assert "pp_cplan_famine = yes" in part[1] and "pp_cplan_try_tavern_here" in part[1]
     assert "pp_cplan_hungry = yes" in part[2] and "pp_cplan_try_farm_here" in part[2]
     assert "order_by = pp_cplan_farm_best_roi" in part[2]
-    assert "pp_cplan_granary_due = yes" in part[3] and "pp_cplan_try_granary_here" in part[3]
+    assert "scope:pp_cplan_gd > 0.5" in part[3] and "pp_cplan_try_granary_here" in part[3]
     assert "pp_cplan_hungry" not in part[4] and "pp_cplan_try_kitchen_here" in part[4]
     assert "pp_cplan_hungry = yes" in part[5] and "pp_cplan_try_tavern_here" in part[5]
-    assert "pp_cplan_grange_due = yes" in part[6] and "pp_cplan_try_grange_here" in part[6]
+    assert "scope:pp_cplan_rd > 0.5" in part[6] and "pp_cplan_try_grange_here" in part[6]
+    # the Granary and Grange checks and the store a year from now are read once a province, before the steps
+    head = body[:places[0]]
+    assert "limit = { pp_cplan_granary_due = yes }\n\t\t\tsave_temporary_scope_value_as = { name = pp_cplan_gd value = 1 }" in head
+    assert "limit = { pp_cplan_grange_due = yes }\n\t\t\tsave_temporary_scope_value_as = { name = pp_cplan_rd value = 1 }" in head
+    assert "save_temporary_scope_value_as = { name = pp_cplan_fy value = pp_cplan_food_in_a_year }" in head
     assert "pp_cplan_try_yard_here" in part[7]
     # Taverns only where the market holds victuals; every step after the first asks whether the province built already
     assert "pp_cplan_victuals_here = yes" in part[1] and "pp_cplan_victuals_here = yes" in part[5]
@@ -451,8 +462,9 @@ def test_food_pass_order() -> None:
 
 def test_hunger_reads_a_normal_year() -> None:
     triggers = _read(TRIGGERS)
-    assert "pp_cplan_food_in_a_year < pp_cplan_hungry_months" in _effect(triggers, "pp_cplan_hungry")
-    assert "pp_cplan_food_in_a_year < pp_cplan_famine_months" in _effect(triggers, "pp_cplan_famine")
+    # read once a province (pp_cplan_food_province saves scope:pp_cplan_fy = pp_cplan_food_in_a_year)
+    assert "scope:pp_cplan_fy < pp_cplan_hungry_months" in _effect(triggers, "pp_cplan_hungry")
+    assert "scope:pp_cplan_fy < pp_cplan_famine_months" in _effect(triggers, "pp_cplan_famine")
     values = _read(VALUES)
     gain = _effect(values, "pp_cplan_normal_gain")
     assert "add = pp_cplan_harvest_food" in gain and "pp_cplan_spoil_rate" in gain
@@ -571,7 +583,7 @@ def test_granary_before_kitchen_while_due() -> None:
     food = _effect(_read(EFFECTS), "pp_cplan_food_province")
     assert food.index("pp_cplan_try_granary_here = yes") < food.index("pp_cplan_try_kitchen_here = yes")
     granary = food[food.index("# 3. a Granary"):food.index("pp_cplan_try_granary_here = yes")]
-    assert "pp_cplan_granary_due = yes" in granary
+    assert "scope:pp_cplan_gd > 0.5" in granary
 
 
 def test_no_name_is_defined_twice() -> None:
@@ -583,3 +595,93 @@ def test_no_name_is_defined_twice() -> None:
             for name in re.findall(r"^([A-Za-z_][A-Za-z0-9_]*) = \{", _read(path), re.MULTILINE):
                 assert name not in seen, f"{kind}: {name} in {seen.get(name)} and {path.name}"
                 seen[name] = path.name
+
+
+def test_groups_count_what_waits_for_gold() -> None:
+    """Jan 2026-11-09: the window shows how much gold the rules wanted, calculated from the last pass. Every group goes
+    through all it wants even after the gold is used up; the construction itself checks the gold and counts what the
+    gold does not reach (cost and number) once per decision: a province of the food rule, a location otherwise."""
+    effects = _read(EFFECTS)
+    for group in cp.GROUPS:
+        if group != "profiles":
+            assert "pp_cplan_budget_left" not in _effect(effects, f"pp_cplan_group_{group}"), group
+    assert "pp_cplan_budget_left" not in _effect(effects, "pp_cplan_food_province")
+    assert "pp_cplan_budget_left" not in _effect(_read(TRIGGERS), "pp_cplan_may_try")
+    note = _effect(effects, "pp_cplan_note_wait")
+    assert "save_temporary_scope_value_as = { name = pp_cplan_wc value = pp_cplan_est_cost }" in note
+    assert "limit = { NOT = { has_variable = pp_cplan_noted } }" in note
+    assert "change_variable = { name = pp_cplan_dwait_$why$ add = scope:pp_cplan_wc }" in note
+    assert "change_variable = { name = pp_cplan_dwn_$why$ add = 1 }" in note
+    # the decision units clear the mark: each food province, each profile location, each location of the other groups
+    assert _effect(effects, "pp_cplan_food_province").count("remove_variable = pp_cplan_noted") == 2
+    for group in ("logistics", "improve", "business"):
+        assert "remove_variable = pp_cplan_noted" in _effect(effects, f"pp_cplan_group_{group}"), group
+    profiles = _effect(_read(PROFILE_EFFECTS), "pp_lprof_run")
+    assert profiles.index("remove_variable = pp_cplan_noted") < profiles.index("pp_lprof_location_rules = yes")
+
+
+def test_detail_numbers_per_group() -> None:
+    """What each rule group did last month, for the window: gold it could spend, gold spent, constructions started,
+    the list of where, what each cost and why, its situation and twelve months of gold wanted and spent. They start
+    afresh every pass, the rules never read them, switching the plan on clears the chart."""
+    effects = _read(EFFECTS)
+    generated = _read(MOD / cp.EFFECTS)
+    values = _read(MOD / cp.VALUES)
+    start = _effect(effects, "pp_cplan_group_start")
+    assert "set_variable = { name = pp_cplan_dran_$why$ value = yes }" in start
+    assert ("name = pp_cplan_dhad_$why$ value = { value = pp_cplan_cap_n subtract = pp_cplan_spent_n min = 0 add = 100 }"
+            in start)
+    now = _effect(effects, "pp_cplan_construct_now")
+    for line in ("change_variable = { name = pp_cplan_dspent_$why$ add = scope:pp_cplan_paid }",
+                 "change_variable = { name = pp_cplan_dn_$why$ add = 1 }",
+                 "add_to_variable_list = { name = pp_cplan_log_$why$ target = scope:pp_cplan_site }",
+                 "set_variable = { name = pp_cplan_log_cost value = scope:pp_cplan_paid }",
+                 "set_variable = { name = pp_cplan_log_val value = scope:pp_cplan_rv }",
+                 "set_variable = { name = pp_cplan_log_step value = scope:pp_cplan_rs }"):
+        assert line in now, line
+    run = _effect(effects, "pp_cplan_run")
+    assert run.index("pp_cplan_stats_reset = yes") < run.index("pp_cplan_group_profiles = yes")
+    assert run.rindex("pp_cplan_group_improve = yes") < run.index("pp_cplan_history_push = yes")
+    for name in ("pp_cplan_log_cost", "pp_cplan_log_val", "pp_cplan_log_step"):
+        assert f"remove_variable = {name}" in run, name
+    reset = _effect(generated, "pp_cplan_stats_reset")
+    push = _effect(generated, "pp_cplan_history_push")
+    clear = _effect(generated, "pp_cplan_history_clear")
+    months = cp.HISTORY_MONTHS
+    for group in cp.GROUPS:
+        why = cp.GROUP_WHY[group]
+        assert f"clear_variable_list = pp_cplan_log_{why}" in reset and f"remove_variable = pp_cplan_dran_{why}" in reset
+        for var in cp.GROUP_NUMBERS.values():
+            assert f"set_variable = {{ name = pp_cplan_{var}_{why} value = 100 }}" in reset, (group, var)
+        for name, start_value in cp.SITUATION[group]:
+            assert f"set_variable = {{ name = pp_cplan_ds_{group}_{name} value = {start_value} }}" in reset
+            assert f"pp_cplan_d_{group}_{name} = {{" in values
+        assert f"from = pp_cplan_hn_{why}_{months - 1} to = pp_cplan_hn_{why}_{months} " in push
+        # the oldest month moves first, so nothing is copied twice
+        assert push.index(f"to = pp_cplan_hn_{why}_{months} ") < push.index(f"to = pp_cplan_hn_{why}_2 ")
+        assert (f"name = pp_cplan_hn_{why}_1 value = {{ value = var:pp_cplan_dspent_{why} add = var:pp_cplan_dwait_{why} "
+                f"subtract = 100 }}") in push
+        assert f"remove_variable = pp_cplan_hs_{why}_{months}" in clear
+        for number in (*cp.GROUP_NUMBERS, "need", "ran"):
+            assert f"pp_cplan_d_{group}_{number} = {{" in values, (group, number)
+        assert _effect(values, f"pp_cplan_h_{group}_max").count("\tmin = pp_cplan_h_") == months
+        assert f"divide = pp_cplan_h_{group}_max" in _effect(values, f"pp_cplan_h_{group}_needp_1")
+    # every group gives its constructions a reason: food the store a year from now and the step, logistics the
+    # access, improvements the fill, businesses the payback, profiles the rule
+    food = _effect(effects, "pp_cplan_food_province")
+    assert "save_temporary_scope_value_as = { name = pp_cplan_rv value = { value = scope:pp_cplan_fy add = 100 } }" in food
+    for step in range(1, 8):
+        assert f"save_temporary_scope_value_as = {{ name = pp_cplan_rs value = {step} }}" in food, step
+    for group, value, build in (("logistics", "pp_cplan_access_normal multiply = 100", "pp_cplan_try_logistics_here"),
+                                ("improve", "location_population_percentage multiply = 100", "pp_cplan_try_improve_here"),
+                                ("business", "value = 100 divide = var:pp_cplan_bz_roi", "pp_cplan_construct_scoped")):
+        body = _effect(effects, f"pp_cplan_group_{group}")
+        assert value in body and body.index("name = pp_cplan_rv") < body.index(build), group
+    assert "save_temporary_scope_value_as = { name = pp_cplan_rs value = $r$ }" in _effect(_read(PROFILE_EFFECTS), "pp_lprof_rule")
+    assert "pp_cplan_history_clear = yes" in _effect(_read(SCRIPTED_GUIS), "pp_cplan_toggle_on")
+    # the rules never decide on these numbers (only the window reads them; the running minimums compare in place)
+    readers = [path for path in _plan_script_files() if "script_values" not in str(path)] + [PROFILE_EFFECTS]
+    window_only = re.compile(r"limit = \{[^{}]*?\b(pp_cplan_(?:d_\w+|h_\w+|dhad_\d+|dspent_\d+|dwait_\d+|dwn_\d+|dn_\d+|hn_\w+|hs_\w+))")
+    for path in readers:
+        found = window_only.search(_read(path))
+        assert not found, f"{path.name}: a rule reads {found.group(1) if found else ''}"

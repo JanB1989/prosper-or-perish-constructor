@@ -210,7 +210,9 @@ category (generated list per category: player-buildable building types whose `ca
 `location_and_owner_can_build`, the workers one level needs (`pp_cplan_staff`, Jan 2026-11-09: idle peasants left
 after the open jobs of the location's buildings, or idle pops of the building's own class; candidates carry `pt` /
 `sz`, state 4 when none finds them), construction goods in the market (12 months of the draw), one construction at a
-time in the location, never a level for a closed building, budget (`pp_cplan_budget_left`). The monthly cleanup takes the
+time in the location, never a level for a closed building, budget (checked by `pp_cplan_construct_scoped`; a level the
+gold does not reach is state 7 and counts once a location as waiting for gold in the Location profiles detail pane,
+which also counts the rules by state, `pp_lprof_count_state`). The monthly cleanup takes the
 profile and its copy from locations that lost it (`pp_lprof_clear_location`).
 
 ## UI

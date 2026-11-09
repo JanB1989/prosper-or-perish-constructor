@@ -321,3 +321,29 @@ pp_cplan_why_n = {
 		subtract = 100
 	}
 }
+
+# Location scope, the window's detail panes: what last month's construction here cost, its reason value (the food
+# store a year from now in months, market access %, population % of capacity, payback years) and the food rule's step
+# or the profile rule it came from (pp_cplan_construct_now).
+pp_cplan_log_cost_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_log_cost }
+		value = var:pp_cplan_log_cost
+	}
+}
+pp_cplan_log_val_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_log_val }
+		value = var:pp_cplan_log_val
+		subtract = 100
+	}
+}
+pp_cplan_log_step_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_log_step }
+		value = var:pp_cplan_log_step
+	}
+}

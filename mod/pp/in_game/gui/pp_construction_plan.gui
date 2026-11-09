@@ -2,7 +2,12 @@
 # 2026-11-09). A scripted widget (gui/scripted_widgets/pp_construction_plan.txt), so no vanilla window is overridden.
 # Tabs (vanilla main tabs): Global settings (the plan on or off, the gold reserve, the five rule groups with their
 # weight bars and lines, what the last pass built) and Location profiles (the editor, type pp_lprof_editor_tab in
-# pp_location_profiles.gui). GUI variables: pp_cplan_open (window open), pp_cplan_tab ('profiles' = the second tab).
+# pp_location_profiles.gui). Each rule group row ends in a cog (pp_cplan_detail_button_<group>, since 2026-11-09, Jan:
+# "what's happening under the hood"); it shows that group's detail pane (pp_cplan_detail_<group>: gold had, wanted,
+# spent and waiting, its situation, the last 12 months, what it built and why) in place of the "Last month" list. Both
+# are generated into pp_construction_plan_detail.gui (construction_plan_detail.py).
+# GUI variables: pp_cplan_open (window open), pp_cplan_tab ('profiles' = the second tab), pp_cplan_detail (the group
+# whose pane is open; unset = the "Last month" list).
 # Every button runs a scripted GUI in common/scripted_guis/pp_construction_plan.txt; every number is a script value
 # (common/script_values/pp_construction_plan*.txt).
 # Shown only to a player who plays a country (not to observers: their scripted GUIs do nothing).
@@ -100,6 +105,7 @@ widget = {
 					visible = "[Not(GetVariableSystem.HasValue('pp_cplan_tab', 'profiles'))]"
 					layoutpolicy_horizontal = expanding
 					layoutpolicy_vertical = expanding
+					ignoreinvisible = yes # the closed detail panes take no spacing
 					margin = { 10 8 }
 					spacing = 8
 
@@ -140,7 +146,9 @@ widget = {
 						}
 					}
 
-					# the rule groups: name, line, weight bar (generated, pp_construction_plan_weights.gui) and part in %
+					# the rule groups: name, line, weight bar (generated, pp_construction_plan_weights.gui), part in % and the
+					# detail cog (generated, pp_construction_plan_detail.gui); label 140 + line 190 + bar 226 + cog 26 +
+					# spacing fit the tab's ~626 px
 					hbox = {
 						layoutpolicy_horizontal = expanding
 						pp_cplan_title = { text = "PP_CPLAN_RULES" }
@@ -152,29 +160,31 @@ widget = {
 					hbox = {
 						layoutpolicy_horizontal = expanding
 						spacing = 6
-						pp_cplan_label = { text = "PP_CPLAN_PROFILES_RULE" tooltip = "PP_CPLAN_PROFILES_RULE_TT" minimumsize = { 150 -1 } maximumsize = { 150 -1 } }
-						widget = { size = { 220 1 } }
+						pp_cplan_label = { text = "PP_CPLAN_PROFILES_RULE" tooltip = "PP_CPLAN_PROFILES_RULE_TT" minimumsize = { 140 -1 } maximumsize = { 140 -1 } }
+						widget = { size = { 190 1 } }
 						expand = {}
 						pp_cplan_weight_bar_profiles = {}
+						pp_cplan_detail_button_profiles = {}
 					}
 
 					# food
 					hbox = {
 						layoutpolicy_horizontal = expanding
 						spacing = 6
-						pp_cplan_label = { text = "PP_CPLAN_FOOD_RULE" tooltip = "PP_CPLAN_FOOD_RULE_TT" minimumsize = { 150 -1 } maximumsize = { 150 -1 } }
-						widget = { size = { 220 1 } }
+						pp_cplan_label = { text = "PP_CPLAN_FOOD_RULE" tooltip = "PP_CPLAN_FOOD_RULE_TT" minimumsize = { 140 -1 } maximumsize = { 140 -1 } }
+						widget = { size = { 190 1 } }
 						expand = {}
 						pp_cplan_weight_bar_food = {}
+						pp_cplan_detail_button_food = {}
 					}
 
 					# logistics
 					hbox = {
 						layoutpolicy_horizontal = expanding
 						spacing = 6
-						pp_cplan_label = { text = "PP_CPLAN_LOGISTICS_RULE" tooltip = "PP_CPLAN_LOGISTICS_RULE_TT" minimumsize = { 150 -1 } maximumsize = { 150 -1 } }
+						pp_cplan_label = { text = "PP_CPLAN_LOGISTICS_RULE" tooltip = "PP_CPLAN_LOGISTICS_RULE_TT" minimumsize = { 140 -1 } maximumsize = { 140 -1 } }
 						hbox = {
-							minimumsize = { 220 -1 }
+							minimumsize = { 190 -1 }
 							spacing = 4
 							pp_cplan_label = { text = "PP_CPLAN_ACCESS_VALUE" tooltip = "PP_CPLAN_LOGISTICS_RULE_TT" }
 							expand = {}
@@ -183,15 +193,16 @@ widget = {
 						}
 						expand = {}
 						pp_cplan_weight_bar_logistics = {}
+						pp_cplan_detail_button_logistics = {}
 					}
 
 					# improve
 					hbox = {
 						layoutpolicy_horizontal = expanding
 						spacing = 6
-						pp_cplan_label = { text = "PP_CPLAN_IMPROVE_RULE" tooltip = "PP_CPLAN_IMPROVE_RULE_TT" minimumsize = { 150 -1 } maximumsize = { 150 -1 } }
+						pp_cplan_label = { text = "PP_CPLAN_IMPROVE_RULE" tooltip = "PP_CPLAN_IMPROVE_RULE_TT" minimumsize = { 140 -1 } maximumsize = { 140 -1 } }
 						hbox = {
-							minimumsize = { 220 -1 }
+							minimumsize = { 190 -1 }
 							spacing = 4
 							pp_cplan_label = { text = "PP_CPLAN_IMPROVE_LINE_VALUE" tooltip = "PP_CPLAN_IMPROVE_RULE_TT" }
 							expand = {}
@@ -200,15 +211,16 @@ widget = {
 						}
 						expand = {}
 						pp_cplan_weight_bar_improve = {}
+						pp_cplan_detail_button_improve = {}
 					}
 
 					# business
 					hbox = {
 						layoutpolicy_horizontal = expanding
 						spacing = 6
-						pp_cplan_label = { text = "PP_CPLAN_BUSINESS_RULE" tooltip = "PP_CPLAN_BUSINESS_RULE_TT" minimumsize = { 150 -1 } maximumsize = { 150 -1 } }
+						pp_cplan_label = { text = "PP_CPLAN_BUSINESS_RULE" tooltip = "PP_CPLAN_BUSINESS_RULE_TT" minimumsize = { 140 -1 } maximumsize = { 140 -1 } }
 						hbox = {
-							minimumsize = { 220 -1 }
+							minimumsize = { 190 -1 }
 							spacing = 4
 							pp_cplan_label = { text = "PP_CPLAN_BUSINESS_LINE_VALUE" tooltip = "PP_CPLAN_BUSINESS_RULE_TT" }
 							expand = {}
@@ -217,59 +229,75 @@ widget = {
 						}
 						expand = {}
 						pp_cplan_weight_bar_business = {}
+						pp_cplan_detail_button_business = {}
 					}
 
-					pp_cplan_title = { text = "PP_CPLAN_LAST" }
-					pp_cplan_label = { text = "PP_CPLAN_LAST_SUMMARY" }
-
-					scrollarea = {
+					# last month, everything the plan built; a rule group's cog shows its own pane here instead
+					vbox = {
+						visible = "[Not(GetVariableSystem.Exists('pp_cplan_detail'))]"
 						layoutpolicy_horizontal = expanding
 						layoutpolicy_vertical = expanding
-						scrollbarpolicy_horizontal = always_off
-						scrollbar_vertical = { using = Scrollbar_Vertical }
-						scrollwidget = {
-							flowcontainer = {
-								direction = vertical
-								datamodel = "[GetPlayer.MakeScope.GetList('pp_cplan_log')]"
-								item = {
-									flowcontainer = {
-										direction = horizontal
-										spacing = 4
-										margin = { 2 1 }
+						spacing = 8
+
+						pp_cplan_title = { text = "PP_CPLAN_LAST" }
+						pp_cplan_label = { text = "PP_CPLAN_LAST_SUMMARY" }
+
+						scrollarea = {
+							layoutpolicy_horizontal = expanding
+							layoutpolicy_vertical = expanding
+							scrollbarpolicy_horizontal = always_off
+							scrollbar_vertical = { using = Scrollbar_Vertical }
+							scrollwidget = {
+								flowcontainer = {
+									direction = vertical
+									datamodel = "[GetPlayer.MakeScope.GetList('pp_cplan_log')]"
+									item = {
 										flowcontainer = {
 											direction = horizontal
-											datamodel = "[Scope.GetList('pp_cplan_log_types')]"
 											spacing = 4
-											item = {
-												pp_cplan_label = { raw_text = "[Scope.GetBuildingType.GetName]" }
+											margin = { 2 1 }
+											flowcontainer = {
+												direction = horizontal
+												datamodel = "[Scope.GetList('pp_cplan_log_types')]"
+												spacing = 4
+												item = {
+													pp_cplan_label = { raw_text = "[Scope.GetBuildingType.GetName]" }
+												}
 											}
-										}
-										pp_cplan_label = { text = "PP_CPLAN_IN_LOCATION" }
-										pp_cplan_label = {
-											visible = "[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)1')]"
-											text = "PP_CPLAN_WHY_FOOD"
-										}
-										pp_cplan_label = {
-											visible = "[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)2')]"
-											text = "PP_CPLAN_WHY_LOGISTICS"
-										}
-										pp_cplan_label = {
-											visible = "[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)3')]"
-											text = "PP_CPLAN_WHY_BUSINESS"
-										}
-										pp_cplan_label = {
-											visible = "[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)5')]"
-											text = "PP_CPLAN_WHY_PROFILE"
-										}
-										pp_cplan_label = {
-											visible = "[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)6')]"
-											text = "PP_CPLAN_WHY_IMPROVE"
+											pp_cplan_label = { text = "PP_CPLAN_IN_LOCATION" }
+											pp_cplan_label = {
+												visible = "[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)1')]"
+												text = "PP_CPLAN_WHY_FOOD"
+											}
+											pp_cplan_label = {
+												visible = "[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)2')]"
+												text = "PP_CPLAN_WHY_LOGISTICS"
+											}
+											pp_cplan_label = {
+												visible = "[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)3')]"
+												text = "PP_CPLAN_WHY_BUSINESS"
+											}
+											pp_cplan_label = {
+												visible = "[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)5')]"
+												text = "PP_CPLAN_WHY_PROFILE"
+											}
+											pp_cplan_label = {
+												visible = "[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)6')]"
+												text = "PP_CPLAN_WHY_IMPROVE"
+											}
 										}
 									}
 								}
 							}
 						}
 					}
+
+					# the rule groups' detail panes (generated, pp_construction_plan_detail.gui)
+					pp_cplan_detail_profiles = { visible = "[GetVariableSystem.HasValue('pp_cplan_detail', 'profiles')]" }
+					pp_cplan_detail_food = { visible = "[GetVariableSystem.HasValue('pp_cplan_detail', 'food')]" }
+					pp_cplan_detail_logistics = { visible = "[GetVariableSystem.HasValue('pp_cplan_detail', 'logistics')]" }
+					pp_cplan_detail_improve = { visible = "[GetVariableSystem.HasValue('pp_cplan_detail', 'improve')]" }
+					pp_cplan_detail_business = { visible = "[GetVariableSystem.HasValue('pp_cplan_detail', 'business')]" }
 				}
 
 				# ======================== Location profiles ========================
@@ -291,6 +319,7 @@ widget = {
 				blockoverride "close_on_action" {
 					on_action = "[GetVariableSystem.Clear('pp_cplan_open')]"
 					on_action = "[GetVariableSystem.Clear('pp_lprof_pick')]"
+					on_action = "[GetVariableSystem.Clear('pp_cplan_detail')]"
 				}
 			}
 		}

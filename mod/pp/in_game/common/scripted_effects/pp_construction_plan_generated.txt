@@ -5880,3 +5880,325 @@ pp_cplan_business_pick = {
 		remove_variable = pp_cplan_bz_roi
 	}
 }
+
+# ---- The window's detail panes (rules never read these) ----
+
+# Country scope, at the start of pp_cplan_run: every rule group's numbers start afresh (+ 100; the running
+# minimums high).
+pp_cplan_stats_reset = {
+	# profiles
+	remove_variable = pp_cplan_dran_105
+	clear_variable_list = pp_cplan_log_105
+	set_variable = { name = pp_cplan_dhad_105 value = 100 }
+	set_variable = { name = pp_cplan_dspent_105 value = 100 }
+	set_variable = { name = pp_cplan_dn_105 value = 100 }
+	set_variable = { name = pp_cplan_dwait_105 value = 100 }
+	set_variable = { name = pp_cplan_dwn_105 value = 100 }
+	set_variable = { name = pp_cplan_ds_profiles_locs value = 100 }
+	set_variable = { name = pp_cplan_ds_profiles_st1 value = 100 }
+	set_variable = { name = pp_cplan_ds_profiles_st2 value = 100 }
+	set_variable = { name = pp_cplan_ds_profiles_st3 value = 100 }
+	set_variable = { name = pp_cplan_ds_profiles_st4 value = 100 }
+	set_variable = { name = pp_cplan_ds_profiles_st5 value = 100 }
+	set_variable = { name = pp_cplan_ds_profiles_st6 value = 100 }
+	set_variable = { name = pp_cplan_ds_profiles_st7 value = 100 }
+	set_variable = { name = pp_cplan_ds_profiles_st8 value = 100 }
+	set_variable = { name = pp_cplan_ds_profiles_st9 value = 100 }
+	# food
+	remove_variable = pp_cplan_dran_101
+	clear_variable_list = pp_cplan_log_101
+	set_variable = { name = pp_cplan_dhad_101 value = 100 }
+	set_variable = { name = pp_cplan_dspent_101 value = 100 }
+	set_variable = { name = pp_cplan_dn_101 value = 100 }
+	set_variable = { name = pp_cplan_dwait_101 value = 100 }
+	set_variable = { name = pp_cplan_dwn_101 value = 100 }
+	set_variable = { name = pp_cplan_ds_food_provinces value = 100 }
+	set_variable = { name = pp_cplan_ds_food_famine value = 100 }
+	set_variable = { name = pp_cplan_ds_food_hungry value = 100 }
+	set_variable = { name = pp_cplan_ds_food_granary value = 100 }
+	set_variable = { name = pp_cplan_ds_food_grange value = 100 }
+	# logistics
+	remove_variable = pp_cplan_dran_102
+	clear_variable_list = pp_cplan_log_102
+	set_variable = { name = pp_cplan_dhad_102 value = 100 }
+	set_variable = { name = pp_cplan_dspent_102 value = 100 }
+	set_variable = { name = pp_cplan_dn_102 value = 100 }
+	set_variable = { name = pp_cplan_dwait_102 value = 100 }
+	set_variable = { name = pp_cplan_dwn_102 value = 100 }
+	set_variable = { name = pp_cplan_ds_logistics_below value = 100 }
+	set_variable = { name = pp_cplan_ds_logistics_lowest value = 1099 }
+	# improve
+	remove_variable = pp_cplan_dran_106
+	clear_variable_list = pp_cplan_log_106
+	set_variable = { name = pp_cplan_dhad_106 value = 100 }
+	set_variable = { name = pp_cplan_dspent_106 value = 100 }
+	set_variable = { name = pp_cplan_dn_106 value = 100 }
+	set_variable = { name = pp_cplan_dwait_106 value = 100 }
+	set_variable = { name = pp_cplan_dwn_106 value = 100 }
+	set_variable = { name = pp_cplan_ds_improve_over value = 100 }
+	set_variable = { name = pp_cplan_ds_improve_fullest value = 100 }
+	# business
+	remove_variable = pp_cplan_dran_103
+	clear_variable_list = pp_cplan_log_103
+	set_variable = { name = pp_cplan_dhad_103 value = 100 }
+	set_variable = { name = pp_cplan_dspent_103 value = 100 }
+	set_variable = { name = pp_cplan_dn_103 value = 100 }
+	set_variable = { name = pp_cplan_dwait_103 value = 100 }
+	set_variable = { name = pp_cplan_dwn_103 value = 100 }
+	set_variable = { name = pp_cplan_ds_business_sites value = 100 }
+	set_variable = { name = pp_cplan_ds_business_best value = 1099 }
+}
+
+# Country scope, at the end of pp_cplan_run: the pass's gold wanted (spent + waiting for gold) and spent per rule
+# group become month 1 of the history, the older months move up one, month 12 drops out.
+pp_cplan_history_push = {
+	# profiles
+	pp_cplan_copy_num = { from = pp_cplan_hn_105_11 to = pp_cplan_hn_105_12 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_105_10 to = pp_cplan_hn_105_11 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_105_9 to = pp_cplan_hn_105_10 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_105_8 to = pp_cplan_hn_105_9 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_105_7 to = pp_cplan_hn_105_8 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_105_6 to = pp_cplan_hn_105_7 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_105_5 to = pp_cplan_hn_105_6 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_105_4 to = pp_cplan_hn_105_5 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_105_3 to = pp_cplan_hn_105_4 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_105_2 to = pp_cplan_hn_105_3 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_105_1 to = pp_cplan_hn_105_2 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_105_11 to = pp_cplan_hs_105_12 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_105_10 to = pp_cplan_hs_105_11 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_105_9 to = pp_cplan_hs_105_10 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_105_8 to = pp_cplan_hs_105_9 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_105_7 to = pp_cplan_hs_105_8 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_105_6 to = pp_cplan_hs_105_7 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_105_5 to = pp_cplan_hs_105_6 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_105_4 to = pp_cplan_hs_105_5 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_105_3 to = pp_cplan_hs_105_4 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_105_2 to = pp_cplan_hs_105_3 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_105_1 to = pp_cplan_hs_105_2 }
+	set_variable = { name = pp_cplan_hn_105_1 value = { value = var:pp_cplan_dspent_105 add = var:pp_cplan_dwait_105 subtract = 100 } }
+	set_variable = { name = pp_cplan_hs_105_1 value = var:pp_cplan_dspent_105 }
+	# food
+	pp_cplan_copy_num = { from = pp_cplan_hn_101_11 to = pp_cplan_hn_101_12 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_101_10 to = pp_cplan_hn_101_11 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_101_9 to = pp_cplan_hn_101_10 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_101_8 to = pp_cplan_hn_101_9 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_101_7 to = pp_cplan_hn_101_8 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_101_6 to = pp_cplan_hn_101_7 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_101_5 to = pp_cplan_hn_101_6 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_101_4 to = pp_cplan_hn_101_5 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_101_3 to = pp_cplan_hn_101_4 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_101_2 to = pp_cplan_hn_101_3 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_101_1 to = pp_cplan_hn_101_2 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_101_11 to = pp_cplan_hs_101_12 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_101_10 to = pp_cplan_hs_101_11 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_101_9 to = pp_cplan_hs_101_10 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_101_8 to = pp_cplan_hs_101_9 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_101_7 to = pp_cplan_hs_101_8 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_101_6 to = pp_cplan_hs_101_7 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_101_5 to = pp_cplan_hs_101_6 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_101_4 to = pp_cplan_hs_101_5 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_101_3 to = pp_cplan_hs_101_4 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_101_2 to = pp_cplan_hs_101_3 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_101_1 to = pp_cplan_hs_101_2 }
+	set_variable = { name = pp_cplan_hn_101_1 value = { value = var:pp_cplan_dspent_101 add = var:pp_cplan_dwait_101 subtract = 100 } }
+	set_variable = { name = pp_cplan_hs_101_1 value = var:pp_cplan_dspent_101 }
+	# logistics
+	pp_cplan_copy_num = { from = pp_cplan_hn_102_11 to = pp_cplan_hn_102_12 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_102_10 to = pp_cplan_hn_102_11 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_102_9 to = pp_cplan_hn_102_10 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_102_8 to = pp_cplan_hn_102_9 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_102_7 to = pp_cplan_hn_102_8 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_102_6 to = pp_cplan_hn_102_7 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_102_5 to = pp_cplan_hn_102_6 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_102_4 to = pp_cplan_hn_102_5 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_102_3 to = pp_cplan_hn_102_4 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_102_2 to = pp_cplan_hn_102_3 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_102_1 to = pp_cplan_hn_102_2 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_102_11 to = pp_cplan_hs_102_12 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_102_10 to = pp_cplan_hs_102_11 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_102_9 to = pp_cplan_hs_102_10 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_102_8 to = pp_cplan_hs_102_9 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_102_7 to = pp_cplan_hs_102_8 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_102_6 to = pp_cplan_hs_102_7 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_102_5 to = pp_cplan_hs_102_6 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_102_4 to = pp_cplan_hs_102_5 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_102_3 to = pp_cplan_hs_102_4 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_102_2 to = pp_cplan_hs_102_3 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_102_1 to = pp_cplan_hs_102_2 }
+	set_variable = { name = pp_cplan_hn_102_1 value = { value = var:pp_cplan_dspent_102 add = var:pp_cplan_dwait_102 subtract = 100 } }
+	set_variable = { name = pp_cplan_hs_102_1 value = var:pp_cplan_dspent_102 }
+	# improve
+	pp_cplan_copy_num = { from = pp_cplan_hn_106_11 to = pp_cplan_hn_106_12 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_106_10 to = pp_cplan_hn_106_11 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_106_9 to = pp_cplan_hn_106_10 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_106_8 to = pp_cplan_hn_106_9 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_106_7 to = pp_cplan_hn_106_8 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_106_6 to = pp_cplan_hn_106_7 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_106_5 to = pp_cplan_hn_106_6 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_106_4 to = pp_cplan_hn_106_5 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_106_3 to = pp_cplan_hn_106_4 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_106_2 to = pp_cplan_hn_106_3 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_106_1 to = pp_cplan_hn_106_2 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_106_11 to = pp_cplan_hs_106_12 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_106_10 to = pp_cplan_hs_106_11 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_106_9 to = pp_cplan_hs_106_10 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_106_8 to = pp_cplan_hs_106_9 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_106_7 to = pp_cplan_hs_106_8 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_106_6 to = pp_cplan_hs_106_7 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_106_5 to = pp_cplan_hs_106_6 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_106_4 to = pp_cplan_hs_106_5 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_106_3 to = pp_cplan_hs_106_4 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_106_2 to = pp_cplan_hs_106_3 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_106_1 to = pp_cplan_hs_106_2 }
+	set_variable = { name = pp_cplan_hn_106_1 value = { value = var:pp_cplan_dspent_106 add = var:pp_cplan_dwait_106 subtract = 100 } }
+	set_variable = { name = pp_cplan_hs_106_1 value = var:pp_cplan_dspent_106 }
+	# business
+	pp_cplan_copy_num = { from = pp_cplan_hn_103_11 to = pp_cplan_hn_103_12 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_103_10 to = pp_cplan_hn_103_11 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_103_9 to = pp_cplan_hn_103_10 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_103_8 to = pp_cplan_hn_103_9 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_103_7 to = pp_cplan_hn_103_8 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_103_6 to = pp_cplan_hn_103_7 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_103_5 to = pp_cplan_hn_103_6 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_103_4 to = pp_cplan_hn_103_5 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_103_3 to = pp_cplan_hn_103_4 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_103_2 to = pp_cplan_hn_103_3 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_103_1 to = pp_cplan_hn_103_2 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_103_11 to = pp_cplan_hs_103_12 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_103_10 to = pp_cplan_hs_103_11 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_103_9 to = pp_cplan_hs_103_10 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_103_8 to = pp_cplan_hs_103_9 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_103_7 to = pp_cplan_hs_103_8 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_103_6 to = pp_cplan_hs_103_7 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_103_5 to = pp_cplan_hs_103_6 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_103_4 to = pp_cplan_hs_103_5 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_103_3 to = pp_cplan_hs_103_4 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_103_2 to = pp_cplan_hs_103_3 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_103_1 to = pp_cplan_hs_103_2 }
+	set_variable = { name = pp_cplan_hn_103_1 value = { value = var:pp_cplan_dspent_103 add = var:pp_cplan_dwait_103 subtract = 100 } }
+	set_variable = { name = pp_cplan_hs_103_1 value = var:pp_cplan_dspent_103 }
+}
+
+# Country scope: the history is gone (the plan was switched on).
+pp_cplan_history_clear = {
+	remove_variable = pp_cplan_hn_105_1
+	remove_variable = pp_cplan_hn_105_2
+	remove_variable = pp_cplan_hn_105_3
+	remove_variable = pp_cplan_hn_105_4
+	remove_variable = pp_cplan_hn_105_5
+	remove_variable = pp_cplan_hn_105_6
+	remove_variable = pp_cplan_hn_105_7
+	remove_variable = pp_cplan_hn_105_8
+	remove_variable = pp_cplan_hn_105_9
+	remove_variable = pp_cplan_hn_105_10
+	remove_variable = pp_cplan_hn_105_11
+	remove_variable = pp_cplan_hn_105_12
+	remove_variable = pp_cplan_hs_105_1
+	remove_variable = pp_cplan_hs_105_2
+	remove_variable = pp_cplan_hs_105_3
+	remove_variable = pp_cplan_hs_105_4
+	remove_variable = pp_cplan_hs_105_5
+	remove_variable = pp_cplan_hs_105_6
+	remove_variable = pp_cplan_hs_105_7
+	remove_variable = pp_cplan_hs_105_8
+	remove_variable = pp_cplan_hs_105_9
+	remove_variable = pp_cplan_hs_105_10
+	remove_variable = pp_cplan_hs_105_11
+	remove_variable = pp_cplan_hs_105_12
+	remove_variable = pp_cplan_hn_101_1
+	remove_variable = pp_cplan_hn_101_2
+	remove_variable = pp_cplan_hn_101_3
+	remove_variable = pp_cplan_hn_101_4
+	remove_variable = pp_cplan_hn_101_5
+	remove_variable = pp_cplan_hn_101_6
+	remove_variable = pp_cplan_hn_101_7
+	remove_variable = pp_cplan_hn_101_8
+	remove_variable = pp_cplan_hn_101_9
+	remove_variable = pp_cplan_hn_101_10
+	remove_variable = pp_cplan_hn_101_11
+	remove_variable = pp_cplan_hn_101_12
+	remove_variable = pp_cplan_hs_101_1
+	remove_variable = pp_cplan_hs_101_2
+	remove_variable = pp_cplan_hs_101_3
+	remove_variable = pp_cplan_hs_101_4
+	remove_variable = pp_cplan_hs_101_5
+	remove_variable = pp_cplan_hs_101_6
+	remove_variable = pp_cplan_hs_101_7
+	remove_variable = pp_cplan_hs_101_8
+	remove_variable = pp_cplan_hs_101_9
+	remove_variable = pp_cplan_hs_101_10
+	remove_variable = pp_cplan_hs_101_11
+	remove_variable = pp_cplan_hs_101_12
+	remove_variable = pp_cplan_hn_102_1
+	remove_variable = pp_cplan_hn_102_2
+	remove_variable = pp_cplan_hn_102_3
+	remove_variable = pp_cplan_hn_102_4
+	remove_variable = pp_cplan_hn_102_5
+	remove_variable = pp_cplan_hn_102_6
+	remove_variable = pp_cplan_hn_102_7
+	remove_variable = pp_cplan_hn_102_8
+	remove_variable = pp_cplan_hn_102_9
+	remove_variable = pp_cplan_hn_102_10
+	remove_variable = pp_cplan_hn_102_11
+	remove_variable = pp_cplan_hn_102_12
+	remove_variable = pp_cplan_hs_102_1
+	remove_variable = pp_cplan_hs_102_2
+	remove_variable = pp_cplan_hs_102_3
+	remove_variable = pp_cplan_hs_102_4
+	remove_variable = pp_cplan_hs_102_5
+	remove_variable = pp_cplan_hs_102_6
+	remove_variable = pp_cplan_hs_102_7
+	remove_variable = pp_cplan_hs_102_8
+	remove_variable = pp_cplan_hs_102_9
+	remove_variable = pp_cplan_hs_102_10
+	remove_variable = pp_cplan_hs_102_11
+	remove_variable = pp_cplan_hs_102_12
+	remove_variable = pp_cplan_hn_106_1
+	remove_variable = pp_cplan_hn_106_2
+	remove_variable = pp_cplan_hn_106_3
+	remove_variable = pp_cplan_hn_106_4
+	remove_variable = pp_cplan_hn_106_5
+	remove_variable = pp_cplan_hn_106_6
+	remove_variable = pp_cplan_hn_106_7
+	remove_variable = pp_cplan_hn_106_8
+	remove_variable = pp_cplan_hn_106_9
+	remove_variable = pp_cplan_hn_106_10
+	remove_variable = pp_cplan_hn_106_11
+	remove_variable = pp_cplan_hn_106_12
+	remove_variable = pp_cplan_hs_106_1
+	remove_variable = pp_cplan_hs_106_2
+	remove_variable = pp_cplan_hs_106_3
+	remove_variable = pp_cplan_hs_106_4
+	remove_variable = pp_cplan_hs_106_5
+	remove_variable = pp_cplan_hs_106_6
+	remove_variable = pp_cplan_hs_106_7
+	remove_variable = pp_cplan_hs_106_8
+	remove_variable = pp_cplan_hs_106_9
+	remove_variable = pp_cplan_hs_106_10
+	remove_variable = pp_cplan_hs_106_11
+	remove_variable = pp_cplan_hs_106_12
+	remove_variable = pp_cplan_hn_103_1
+	remove_variable = pp_cplan_hn_103_2
+	remove_variable = pp_cplan_hn_103_3
+	remove_variable = pp_cplan_hn_103_4
+	remove_variable = pp_cplan_hn_103_5
+	remove_variable = pp_cplan_hn_103_6
+	remove_variable = pp_cplan_hn_103_7
+	remove_variable = pp_cplan_hn_103_8
+	remove_variable = pp_cplan_hn_103_9
+	remove_variable = pp_cplan_hn_103_10
+	remove_variable = pp_cplan_hn_103_11
+	remove_variable = pp_cplan_hn_103_12
+	remove_variable = pp_cplan_hs_103_1
+	remove_variable = pp_cplan_hs_103_2
+	remove_variable = pp_cplan_hs_103_3
+	remove_variable = pp_cplan_hs_103_4
+	remove_variable = pp_cplan_hs_103_5
+	remove_variable = pp_cplan_hs_103_6
+	remove_variable = pp_cplan_hs_103_7
+	remove_variable = pp_cplan_hs_103_8
+	remove_variable = pp_cplan_hs_103_9
+	remove_variable = pp_cplan_hs_103_10
+	remove_variable = pp_cplan_hs_103_11
+	remove_variable = pp_cplan_hs_103_12
+}

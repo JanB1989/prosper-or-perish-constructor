@@ -14,9 +14,18 @@
 # rule groups' weights), pp_cplan_reserve / _access / _imp / _biz (the window's lines; defaults in [construction_plan]),
 # the list pp_cplan_log (locations built in by the last pass), the last pass's pp_cplan_started / _spent, and during a
 # pass only: pp_cplan_pot (gold above the reserve at its start), pp_cplan_cap (gold the rule groups so far may have
-# spent), pp_cplan_hit, pp_cplan_bz_<type> (the business types the country can build).
-# Location: pp_cplan_log_why + list pp_cplan_log_types (the last pass's constructions here); pp_cplan_bz_pick /
-# pp_cplan_bz_roi during the business group only.
+# spent), pp_cplan_hit, pp_cplan_noted, pp_cplan_wait, pp_cplan_bz_<type> (the business types the country can build).
+# What the window's detail panes show (Jan 2026-11-09: "how much investment is missing, what was built and why"), kept
+# per rule group by its construction code <why> (101 food, 102 logistics, 103 business, 105 profiles, 106 improvements)
+# until the next pass: pp_cplan_dran_<why> (the group ran), pp_cplan_dhad_ / _dspent_ / _dn_ (gold it could spend, gold
+# it spent, constructions started), pp_cplan_dwait_ / _dwn_ (the gold and the number of the constructions it wanted
+# that waited for gold), the list pp_cplan_log_<why>, the group's situation pp_cplan_ds_<name>, and the last 12 passes
+# pp_cplan_hn_<why>_<k> / pp_cplan_hs_<why>_<k> (wanted / spent, k = 1 the last; generated pp_cplan_stats_reset,
+# pp_cplan_history_push). The rules never read any of it: the window only.
+# Location: pp_cplan_log_why + list pp_cplan_log_types (the last pass's constructions here) and the construction's
+# pp_cplan_log_cost (gold), pp_cplan_log_val (its reason value + 100: the food store a year from now in months, market
+# access %, population % of capacity, payback years) and pp_cplan_log_step (the food rule's step, a profile's rule);
+# pp_cplan_bz_pick / pp_cplan_bz_roi during the business group only.
 
 # Country scope: the monthly pass.
 pp_cplan_run = {
@@ -26,11 +35,18 @@ pp_cplan_run = {
 		variable = pp_cplan_log
 		clear_variable_list = pp_cplan_log_types
 		remove_variable = pp_cplan_log_why
+		remove_variable = pp_cplan_log_cost
+		remove_variable = pp_cplan_log_val
+		remove_variable = pp_cplan_log_step
 	}
 	clear_variable_list = pp_cplan_log
 	set_variable = { name = pp_cplan_started value = 100 }
 	set_variable = { name = pp_cplan_spent value = 100 }
 	remove_variable = pp_cplan_hit
+	pp_cplan_stats_reset = yes
+	# a construction's reason for the window (pp_cplan_construct_now): each rule group sets them before it builds
+	save_temporary_scope_value_as = { name = pp_cplan_rv value = 0 }
+	save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }
 	# The gold above the reserve is this month's budget (Jan 2026-11-09: no limit on the number of constructions). Each
 	# rule group that runs adds its part of it to pp_cplan_cap (its weight over the sum of the weights,
 	# pp_cplan_share_<group>), so a part one group leaves passes on to the next; a group may go past its part with its
@@ -83,8 +99,11 @@ pp_cplan_run = {
 		pp_cplan_group_improve = yes
 	}
 	remove_variable = pp_cplan_hit
+	remove_variable = pp_cplan_noted
+	remove_variable = pp_cplan_wait
 	remove_variable = pp_cplan_pot
 	remove_variable = pp_cplan_cap
+	pp_cplan_history_push = yes
 	# test runs: one line per monthly pass (ppc plan-report counts the months by it; debug_log_date writes nothing)
 	if = {
 		limit = { has_variable = pp_cplan_ai_test }
@@ -112,6 +131,18 @@ pp_cplan_run = {
 
 # ---- The rule groups (country scope, inside pp_cplan_run; each with a weight above 0 adds its part of the month's gold
 # when it runs) ----
+# A group goes through everything it wants even after the gold is used up: what it cannot pay for is counted, not
+# built (pp_cplan_construct_scoped, pp_cplan_note_wait), so the window shows the gold that would have started it all
+# (Jan 2026-11-09: "how much investment is needed, correctly calculated from the last iteration").
+
+# Country scope: a rule group starts (its code $why$, its part of the month's gold $add$): the gold it may spend
+# grows by its part; the window keeps that it ran and the gold it could spend (its part and what the groups before it
+# left).
+pp_cplan_group_start = {
+	change_variable = { name = pp_cplan_cap add = $add$ }
+	set_variable = { name = pp_cplan_dran_$why$ value = yes }
+	set_variable = { name = pp_cplan_dhad_$why$ value = { value = pp_cplan_cap_n subtract = pp_cplan_spent_n min = 0 add = 100 } }
+}
 
 # Location profiles (pp_location_profiles.txt): their rules have priority in their locations; the global groups still
 # build there what a profile does not set (pp_cplan_*_ok).
@@ -123,7 +154,7 @@ pp_cplan_group_profiles = {
 pp_cplan_group_food = {
 	if = {
 		limit = { pp_cplan_food_w > 0 }
-		change_variable = { name = pp_cplan_cap add = pp_cplan_share_food }
+		pp_cplan_group_start = { why = 101 add = pp_cplan_share_food }
 		every_province = {
 			pp_cplan_food_province = yes
 		}
@@ -134,13 +165,7 @@ pp_cplan_group_food = {
 pp_cplan_group_logistics = {
 	if = {
 		limit = { pp_cplan_logistics_w > 0 }
-		change_variable = { name = pp_cplan_cap add = pp_cplan_share_logistics }
-	}
-	if = {
-		limit = {
-			pp_cplan_logistics_w > 0
-			pp_cplan_budget_left = yes
-		}
+		pp_cplan_group_start = { why = 102 add = pp_cplan_share_logistics }
 		ordered_owned_location = {
 			limit = {
 				pp_cplan_logistics_ok = yes
@@ -149,10 +174,18 @@ pp_cplan_group_logistics = {
 			order_by = pp_logistics_urgency_weight
 			max = 200
 			check_range_bounds = no
-			if = {
-				limit = { pp_cplan_budget_left = yes }
-				pp_cplan_try_logistics_here = yes
+			# the window: market access without event effects, in % (+ 100); the lowest of the locations below the line
+			save_temporary_scope_value_as = { name = pp_cplan_rv value = { value = pp_cplan_access_normal multiply = 100 add = 100 } }
+			save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }
+			scope:pp_cplan_country = {
+				remove_variable = pp_cplan_noted
+				change_variable = { name = pp_cplan_ds_logistics_below add = 1 }
+				if = {
+					limit = { var:pp_cplan_ds_logistics_lowest > scope:pp_cplan_rv }
+					set_variable = { name = pp_cplan_ds_logistics_lowest value = scope:pp_cplan_rv }
+				}
 			}
+			pp_cplan_try_logistics_here = yes
 		}
 	}
 }
@@ -162,13 +195,7 @@ pp_cplan_group_logistics = {
 pp_cplan_group_improve = {
 	if = {
 		limit = { pp_cplan_improve_w > 0 }
-		change_variable = { name = pp_cplan_cap add = pp_cplan_share_improve }
-	}
-	if = {
-		limit = {
-			pp_cplan_improve_w > 0
-			pp_cplan_budget_left = yes
-		}
+		pp_cplan_group_start = { why = 106 add = pp_cplan_share_improve }
 		ordered_owned_location = {
 			limit = {
 				pp_cplan_improve_ok = yes
@@ -177,10 +204,18 @@ pp_cplan_group_improve = {
 			order_by = pp_cplan_fill_here
 			max = 200
 			check_range_bounds = no
-			if = {
-				limit = { pp_cplan_budget_left = yes }
-				pp_cplan_try_improve_here = yes
+			# the window: population in % of capacity (+ 100); the fullest location over the line
+			save_temporary_scope_value_as = { name = pp_cplan_rv value = { value = location_population_percentage multiply = 100 add = 100 } }
+			save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }
+			scope:pp_cplan_country = {
+				remove_variable = pp_cplan_noted
+				change_variable = { name = pp_cplan_ds_improve_over add = 1 }
+				if = {
+					limit = { var:pp_cplan_ds_improve_fullest < scope:pp_cplan_rv }
+					set_variable = { name = pp_cplan_ds_improve_fullest value = scope:pp_cplan_rv }
+				}
 			}
+			pp_cplan_try_improve_here = yes
 		}
 	}
 }
@@ -193,13 +228,7 @@ pp_cplan_group_improve = {
 pp_cplan_group_business = {
 	if = {
 		limit = { pp_cplan_business_w > 0 }
-		change_variable = { name = pp_cplan_cap add = pp_cplan_share_business }
-	}
-	if = {
-		limit = {
-			pp_cplan_business_w > 0
-			pp_cplan_budget_left = yes
-		}
+		pp_cplan_group_start = { why = 103 add = pp_cplan_share_business }
 		pp_cplan_business_types = yes
 		every_owned_location = {
 			limit = { pp_cplan_business_site = yes }
@@ -210,11 +239,19 @@ pp_cplan_group_business = {
 			order_by = pp_cplan_bz_roi_n
 			max = 100000
 			check_range_bounds = no
-			if = {
-				limit = { pp_cplan_budget_left = yes }
-				var:pp_cplan_bz_pick = { save_scope_as = pp_cplan_btype }
-				pp_cplan_construct_scoped = { why = 103 }
+			# the window: the pick's payback in years (+ 100); the quickest of the country's sites
+			save_temporary_scope_value_as = { name = pp_cplan_rv value = { value = 100 divide = var:pp_cplan_bz_roi add = 100 } }
+			save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }
+			scope:pp_cplan_country = {
+				remove_variable = pp_cplan_noted
+				change_variable = { name = pp_cplan_ds_business_sites add = 1 }
+				if = {
+					limit = { var:pp_cplan_ds_business_best > scope:pp_cplan_rv }
+					set_variable = { name = pp_cplan_ds_business_best value = scope:pp_cplan_rv }
+				}
 			}
+			var:pp_cplan_bz_pick = { save_scope_as = pp_cplan_btype }
+			pp_cplan_construct_scoped = { why = 103 }
 			remove_variable = pp_cplan_bz_pick
 			remove_variable = pp_cplan_bz_roi
 		}
@@ -240,15 +277,52 @@ pp_cplan_group_business = {
 # Profile locations whose profile switched the food rule off are left out; a profile with a staple food rule keeps the
 # farm step out, one with a victuals rule the Grange and Yard steps. While a farm or Tavern of the province has a level
 # under construction, the hunger steps 2 and 5 wait (the store only moves once it stands).
+# Every province is gone through even after the gold is used up: the first step that waits for gold is counted for the
+# window (pp_cplan_note_wait, once a province: the rule's one construction a month), and the province's situation
+# (famine, hungry, a Granary or a Grange due) too. The store a year from now is read once (scope:pp_cplan_fy, the
+# hunger and famine triggers read it), the Granary and Grange checks once (scope:pp_cplan_gd / _rd, 1 = due).
 pp_cplan_food_province = {
 	save_scope_as = pp_cplan_province
-	scope:pp_cplan_country = { remove_variable = pp_cplan_hit }
+	scope:pp_cplan_country = {
+		remove_variable = pp_cplan_hit
+		remove_variable = pp_cplan_noted
+	}
 	if = {
-		limit = {
-			has_variable = pp_stored_food_months
-			pp_cplan_budget_left = yes
+		limit = { has_variable = pp_stored_food_months }
+		save_temporary_scope_value_as = { name = pp_cplan_fy value = pp_cplan_food_in_a_year }
+		save_temporary_scope_value_as = { name = pp_cplan_rv value = { value = scope:pp_cplan_fy add = 100 } }
+		save_temporary_scope_value_as = { name = pp_cplan_gd value = 0 }
+		save_temporary_scope_value_as = { name = pp_cplan_rd value = 0 }
+		if = {
+			limit = { pp_cplan_granary_due = yes }
+			save_temporary_scope_value_as = { name = pp_cplan_gd value = 1 }
+		}
+		if = {
+			limit = { pp_cplan_grange_due = yes }
+			save_temporary_scope_value_as = { name = pp_cplan_rd value = 1 }
+		}
+		# the window: the province's situation
+		scope:pp_cplan_country = {
+			change_variable = { name = pp_cplan_ds_food_provinces add = 1 }
+			if = {
+				limit = { scope:pp_cplan_fy < pp_cplan_famine_months }
+				change_variable = { name = pp_cplan_ds_food_famine add = 1 }
+			}
+			else_if = {
+				limit = { scope:pp_cplan_fy < pp_cplan_hungry_months }
+				change_variable = { name = pp_cplan_ds_food_hungry add = 1 }
+			}
+			if = {
+				limit = { scope:pp_cplan_gd > 0.5 }
+				change_variable = { name = pp_cplan_ds_food_granary add = 1 }
+			}
+			if = {
+				limit = { scope:pp_cplan_rd > 0.5 }
+				change_variable = { name = pp_cplan_ds_food_grange add = 1 }
+			}
 		}
 		# 1. famine: a Tavern
+		save_temporary_scope_value_as = { name = pp_cplan_rs value = 1 }
 		if = {
 			limit = { pp_cplan_famine = yes }
 			province_capital ?= {
@@ -262,6 +336,7 @@ pp_cplan_food_province = {
 			}
 		}
 		# 2. hungry: a farm
+		save_temporary_scope_value_as = { name = pp_cplan_rs value = 2 }
 		if = {
 			limit = {
 				pp_cplan_may_try = yes
@@ -283,10 +358,11 @@ pp_cplan_food_province = {
 			}
 		}
 		# 3. a Granary, while it is due (before the kitchen: a full, capped store spoils what a kitchen adds)
+		save_temporary_scope_value_as = { name = pp_cplan_rs value = 3 }
 		if = {
 			limit = {
 				pp_cplan_may_try = yes
-				pp_cplan_granary_due = yes
+				scope:pp_cplan_gd > 0.5
 			}
 			province_capital ?= {
 				if = {
@@ -296,6 +372,7 @@ pp_cplan_food_province = {
 			}
 		}
 		# 4. a kitchen, whenever it can be built
+		save_temporary_scope_value_as = { name = pp_cplan_rs value = 4 }
 		if = {
 			limit = { pp_cplan_may_try = yes }
 			province_capital ?= {
@@ -306,6 +383,7 @@ pp_cplan_food_province = {
 			}
 		}
 		# 5. hungry and nothing else possible: a Tavern
+		save_temporary_scope_value_as = { name = pp_cplan_rs value = 5 }
 		if = {
 			limit = {
 				pp_cplan_may_try = yes
@@ -323,10 +401,11 @@ pp_cplan_food_province = {
 			}
 		}
 		# 6. a Grange
+		save_temporary_scope_value_as = { name = pp_cplan_rs value = 6 }
 		if = {
 			limit = {
 				pp_cplan_may_try = yes
-				pp_cplan_grange_due = yes
+				scope:pp_cplan_rd > 0.5
 			}
 			province_capital ?= {
 				if = {
@@ -336,6 +415,7 @@ pp_cplan_food_province = {
 			}
 		}
 		# 7. a Victualling Yard
+		save_temporary_scope_value_as = { name = pp_cplan_rs value = 7 }
 		if = {
 			limit = { pp_cplan_may_try = yes }
 			every_location_in_province = {
@@ -353,7 +433,10 @@ pp_cplan_food_province = {
 			}
 		}
 	}
-	scope:pp_cplan_country = { remove_variable = pp_cplan_hit }
+	scope:pp_cplan_country = {
+		remove_variable = pp_cplan_hit
+		remove_variable = pp_cplan_noted
+	}
 }
 
 # Location scope: start one level of $type$ here and record it ($why$: 101 food, 102 logistics, 103 business, 105 a
@@ -370,7 +453,8 @@ pp_cplan_construct = {
 # level for a building that is closed: whoever closed it (the player or the game's Close and Open Buildings
 # automation) found it does not pay, and the plan does not argue (Jan 2026-11-09: the plan and the game's automation
 # must not undo each other). Never below the gold reserve: the level's cost (the engine's formula) must fit in the gold
-# above it.
+# above it, and only while the month's budget lasts (pp_cplan_budget_left: the gold of the rule groups so far). A level
+# the rule wants that the gold does not reach is counted for the window (pp_cplan_note_wait).
 pp_cplan_construct_scoped = {
 	if = {
 		limit = {
@@ -386,11 +470,34 @@ pp_cplan_construct_scoped = {
 		}
 		pp_cplan_btype_data = yes
 		if = {
-			limit = { pp_cplan_affordable = yes }
+			limit = {
+				pp_cplan_budget_left = yes
+				pp_cplan_affordable = yes
+			}
 			pp_cplan_construct_now = { why = $why$ }
+		}
+		else = {
+			pp_cplan_note_wait = { why = $why$ }
 		}
 	}
 }
+
+# Location scope, after pp_cplan_btype_data: the level of scope:pp_cplan_btype the rule group $why$ wants here waits for
+# gold. The window counts it and its cost, once per decision (pp_cplan_noted: a province of the food rule, a location of
+# the profiles, one location of the other groups); pp_cplan_wait tells a location profile's rule why it did not build.
+pp_cplan_note_wait = {
+	save_temporary_scope_value_as = { name = pp_cplan_wc value = pp_cplan_est_cost }
+	scope:pp_cplan_country = {
+		set_variable = { name = pp_cplan_wait value = yes }
+		if = {
+			limit = { NOT = { has_variable = pp_cplan_noted } }
+			set_variable = { name = pp_cplan_noted value = yes }
+			change_variable = { name = pp_cplan_dwait_$why$ add = scope:pp_cplan_wc }
+			change_variable = { name = pp_cplan_dwn_$why$ add = 1 }
+		}
+	}
+}
+
 pp_cplan_construct_now = {
 	save_scope_as = pp_cplan_site
 	scope:pp_cplan_country = {
@@ -398,17 +505,25 @@ pp_cplan_construct_now = {
 	}
 	construct_building = { building_type = scope:pp_cplan_btype }
 	scope:pp_cplan_country = {
-		change_variable = { name = pp_cplan_spent add = { value = var:pp_cplan_gold_before subtract = 1000000 subtract = gold } }
+		save_temporary_scope_value_as = { name = pp_cplan_paid value = { value = var:pp_cplan_gold_before subtract = 1000000 subtract = gold } }
+		change_variable = { name = pp_cplan_spent add = scope:pp_cplan_paid }
 		change_variable = { name = pp_cplan_started add = 1 }
+		change_variable = { name = pp_cplan_dspent_$why$ add = scope:pp_cplan_paid }
+		change_variable = { name = pp_cplan_dn_$why$ add = 1 }
 		set_variable = { name = pp_cplan_hit value = yes }
 		remove_variable = pp_cplan_gold_before
 		if = {
 			limit = { NOT = { is_target_in_variable_list = { name = pp_cplan_log target = scope:pp_cplan_site } } }
 			add_to_variable_list = { name = pp_cplan_log target = scope:pp_cplan_site }
 		}
+		add_to_variable_list = { name = pp_cplan_log_$why$ target = scope:pp_cplan_site }
 	}
 	add_to_variable_list = { name = pp_cplan_log_types target = scope:pp_cplan_btype }
 	set_variable = { name = pp_cplan_log_why value = $why$ }
+	# the window: what it cost and why (the group's reason value and step, scope:pp_cplan_rv / _rs)
+	set_variable = { name = pp_cplan_log_cost value = scope:pp_cplan_paid }
+	set_variable = { name = pp_cplan_log_val value = scope:pp_cplan_rv }
+	set_variable = { name = pp_cplan_log_step value = scope:pp_cplan_rs }
 	# test runs (pp_cplan_ai_test, set by the console): three lines per construction in debug.log, read by ppc
 	# plan-report: the rule group, the building type ("Building Type 'Granary' (350)") and the location ("Location
 	# 'Valladolid' (2584)", its id). debug_log gets no data context (in game 2026-11-09: ROOT and saved scopes are null

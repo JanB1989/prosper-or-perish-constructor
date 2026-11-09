@@ -16088,3 +16088,2223 @@ pp_cplan_bz_roi_winery_manufactory = {
 	divide = { value = pp_cplan_est_cost min = 0.01 }
 }
 
+
+# ---- The window's detail panes (country scope; pp_cplan_stats_reset, pp_cplan_history_push) ----
+
+# profiles (construction code 105)
+pp_cplan_d_profiles_ran = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dran_105 }
+		value = 1
+	}
+}
+pp_cplan_d_profiles_had = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dhad_105 }
+		value = var:pp_cplan_dhad_105
+		subtract = 100
+	}
+}
+pp_cplan_d_profiles_spent = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dspent_105 }
+		value = var:pp_cplan_dspent_105
+		subtract = 100
+	}
+}
+pp_cplan_d_profiles_started = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dn_105 }
+		value = var:pp_cplan_dn_105
+		subtract = 100
+	}
+}
+pp_cplan_d_profiles_wait = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dwait_105 }
+		value = var:pp_cplan_dwait_105
+		subtract = 100
+	}
+}
+pp_cplan_d_profiles_waitn = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dwn_105 }
+		value = var:pp_cplan_dwn_105
+		subtract = 100
+	}
+}
+pp_cplan_d_profiles_need = {
+	value = pp_cplan_d_profiles_spent
+	add = pp_cplan_d_profiles_wait
+}
+pp_cplan_d_profiles_locs = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_profiles_locs }
+		value = var:pp_cplan_ds_profiles_locs
+		subtract = 100
+	}
+}
+pp_cplan_d_profiles_st1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_profiles_st1 }
+		value = var:pp_cplan_ds_profiles_st1
+		subtract = 100
+	}
+}
+pp_cplan_d_profiles_st2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_profiles_st2 }
+		value = var:pp_cplan_ds_profiles_st2
+		subtract = 100
+	}
+}
+pp_cplan_d_profiles_st3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_profiles_st3 }
+		value = var:pp_cplan_ds_profiles_st3
+		subtract = 100
+	}
+}
+pp_cplan_d_profiles_st4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_profiles_st4 }
+		value = var:pp_cplan_ds_profiles_st4
+		subtract = 100
+	}
+}
+pp_cplan_d_profiles_st5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_profiles_st5 }
+		value = var:pp_cplan_ds_profiles_st5
+		subtract = 100
+	}
+}
+pp_cplan_d_profiles_st6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_profiles_st6 }
+		value = var:pp_cplan_ds_profiles_st6
+		subtract = 100
+	}
+}
+pp_cplan_d_profiles_st7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_profiles_st7 }
+		value = var:pp_cplan_ds_profiles_st7
+		subtract = 100
+	}
+}
+pp_cplan_d_profiles_st8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_profiles_st8 }
+		value = var:pp_cplan_ds_profiles_st8
+		subtract = 100
+	}
+}
+pp_cplan_d_profiles_st9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_profiles_st9 }
+		value = var:pp_cplan_ds_profiles_st9
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_need_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_105_1 }
+		value = var:pp_cplan_hn_105_1
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_spent_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_105_1 }
+		value = var:pp_cplan_hs_105_1
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_need_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_105_2 }
+		value = var:pp_cplan_hn_105_2
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_spent_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_105_2 }
+		value = var:pp_cplan_hs_105_2
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_need_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_105_3 }
+		value = var:pp_cplan_hn_105_3
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_spent_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_105_3 }
+		value = var:pp_cplan_hs_105_3
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_need_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_105_4 }
+		value = var:pp_cplan_hn_105_4
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_spent_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_105_4 }
+		value = var:pp_cplan_hs_105_4
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_need_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_105_5 }
+		value = var:pp_cplan_hn_105_5
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_spent_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_105_5 }
+		value = var:pp_cplan_hs_105_5
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_need_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_105_6 }
+		value = var:pp_cplan_hn_105_6
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_spent_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_105_6 }
+		value = var:pp_cplan_hs_105_6
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_need_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_105_7 }
+		value = var:pp_cplan_hn_105_7
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_spent_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_105_7 }
+		value = var:pp_cplan_hs_105_7
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_need_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_105_8 }
+		value = var:pp_cplan_hn_105_8
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_spent_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_105_8 }
+		value = var:pp_cplan_hs_105_8
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_need_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_105_9 }
+		value = var:pp_cplan_hn_105_9
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_spent_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_105_9 }
+		value = var:pp_cplan_hs_105_9
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_need_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_105_10 }
+		value = var:pp_cplan_hn_105_10
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_spent_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_105_10 }
+		value = var:pp_cplan_hs_105_10
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_need_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_105_11 }
+		value = var:pp_cplan_hn_105_11
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_spent_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_105_11 }
+		value = var:pp_cplan_hs_105_11
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_need_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_105_12 }
+		value = var:pp_cplan_hn_105_12
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_spent_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_105_12 }
+		value = var:pp_cplan_hs_105_12
+		subtract = 100
+	}
+}
+pp_cplan_h_profiles_max = {
+	value = 1
+	min = pp_cplan_h_profiles_need_1
+	min = pp_cplan_h_profiles_need_2
+	min = pp_cplan_h_profiles_need_3
+	min = pp_cplan_h_profiles_need_4
+	min = pp_cplan_h_profiles_need_5
+	min = pp_cplan_h_profiles_need_6
+	min = pp_cplan_h_profiles_need_7
+	min = pp_cplan_h_profiles_need_8
+	min = pp_cplan_h_profiles_need_9
+	min = pp_cplan_h_profiles_need_10
+	min = pp_cplan_h_profiles_need_11
+	min = pp_cplan_h_profiles_need_12
+}
+pp_cplan_h_profiles_needp_1 = {
+	value = pp_cplan_h_profiles_need_1
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_spentp_1 = {
+	value = pp_cplan_h_profiles_spent_1
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_needp_2 = {
+	value = pp_cplan_h_profiles_need_2
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_spentp_2 = {
+	value = pp_cplan_h_profiles_spent_2
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_needp_3 = {
+	value = pp_cplan_h_profiles_need_3
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_spentp_3 = {
+	value = pp_cplan_h_profiles_spent_3
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_needp_4 = {
+	value = pp_cplan_h_profiles_need_4
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_spentp_4 = {
+	value = pp_cplan_h_profiles_spent_4
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_needp_5 = {
+	value = pp_cplan_h_profiles_need_5
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_spentp_5 = {
+	value = pp_cplan_h_profiles_spent_5
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_needp_6 = {
+	value = pp_cplan_h_profiles_need_6
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_spentp_6 = {
+	value = pp_cplan_h_profiles_spent_6
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_needp_7 = {
+	value = pp_cplan_h_profiles_need_7
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_spentp_7 = {
+	value = pp_cplan_h_profiles_spent_7
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_needp_8 = {
+	value = pp_cplan_h_profiles_need_8
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_spentp_8 = {
+	value = pp_cplan_h_profiles_spent_8
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_needp_9 = {
+	value = pp_cplan_h_profiles_need_9
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_spentp_9 = {
+	value = pp_cplan_h_profiles_spent_9
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_needp_10 = {
+	value = pp_cplan_h_profiles_need_10
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_spentp_10 = {
+	value = pp_cplan_h_profiles_spent_10
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_needp_11 = {
+	value = pp_cplan_h_profiles_need_11
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_spentp_11 = {
+	value = pp_cplan_h_profiles_spent_11
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_needp_12 = {
+	value = pp_cplan_h_profiles_need_12
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_spentp_12 = {
+	value = pp_cplan_h_profiles_spent_12
+	multiply = 100
+	divide = pp_cplan_h_profiles_max
+}
+pp_cplan_h_profiles_sum_need = {
+	value = 0
+	add = pp_cplan_h_profiles_need_1
+	add = pp_cplan_h_profiles_need_2
+	add = pp_cplan_h_profiles_need_3
+	add = pp_cplan_h_profiles_need_4
+	add = pp_cplan_h_profiles_need_5
+	add = pp_cplan_h_profiles_need_6
+	add = pp_cplan_h_profiles_need_7
+	add = pp_cplan_h_profiles_need_8
+	add = pp_cplan_h_profiles_need_9
+	add = pp_cplan_h_profiles_need_10
+	add = pp_cplan_h_profiles_need_11
+	add = pp_cplan_h_profiles_need_12
+}
+pp_cplan_h_profiles_sum_spent = {
+	value = 0
+	add = pp_cplan_h_profiles_spent_1
+	add = pp_cplan_h_profiles_spent_2
+	add = pp_cplan_h_profiles_spent_3
+	add = pp_cplan_h_profiles_spent_4
+	add = pp_cplan_h_profiles_spent_5
+	add = pp_cplan_h_profiles_spent_6
+	add = pp_cplan_h_profiles_spent_7
+	add = pp_cplan_h_profiles_spent_8
+	add = pp_cplan_h_profiles_spent_9
+	add = pp_cplan_h_profiles_spent_10
+	add = pp_cplan_h_profiles_spent_11
+	add = pp_cplan_h_profiles_spent_12
+}
+
+# food (construction code 101)
+pp_cplan_d_food_ran = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dran_101 }
+		value = 1
+	}
+}
+pp_cplan_d_food_had = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dhad_101 }
+		value = var:pp_cplan_dhad_101
+		subtract = 100
+	}
+}
+pp_cplan_d_food_spent = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dspent_101 }
+		value = var:pp_cplan_dspent_101
+		subtract = 100
+	}
+}
+pp_cplan_d_food_started = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dn_101 }
+		value = var:pp_cplan_dn_101
+		subtract = 100
+	}
+}
+pp_cplan_d_food_wait = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dwait_101 }
+		value = var:pp_cplan_dwait_101
+		subtract = 100
+	}
+}
+pp_cplan_d_food_waitn = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dwn_101 }
+		value = var:pp_cplan_dwn_101
+		subtract = 100
+	}
+}
+pp_cplan_d_food_need = {
+	value = pp_cplan_d_food_spent
+	add = pp_cplan_d_food_wait
+}
+pp_cplan_d_food_provinces = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_food_provinces }
+		value = var:pp_cplan_ds_food_provinces
+		subtract = 100
+	}
+}
+pp_cplan_d_food_famine = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_food_famine }
+		value = var:pp_cplan_ds_food_famine
+		subtract = 100
+	}
+}
+pp_cplan_d_food_hungry = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_food_hungry }
+		value = var:pp_cplan_ds_food_hungry
+		subtract = 100
+	}
+}
+pp_cplan_d_food_granary = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_food_granary }
+		value = var:pp_cplan_ds_food_granary
+		subtract = 100
+	}
+}
+pp_cplan_d_food_grange = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_food_grange }
+		value = var:pp_cplan_ds_food_grange
+		subtract = 100
+	}
+}
+pp_cplan_h_food_need_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_101_1 }
+		value = var:pp_cplan_hn_101_1
+		subtract = 100
+	}
+}
+pp_cplan_h_food_spent_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_101_1 }
+		value = var:pp_cplan_hs_101_1
+		subtract = 100
+	}
+}
+pp_cplan_h_food_need_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_101_2 }
+		value = var:pp_cplan_hn_101_2
+		subtract = 100
+	}
+}
+pp_cplan_h_food_spent_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_101_2 }
+		value = var:pp_cplan_hs_101_2
+		subtract = 100
+	}
+}
+pp_cplan_h_food_need_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_101_3 }
+		value = var:pp_cplan_hn_101_3
+		subtract = 100
+	}
+}
+pp_cplan_h_food_spent_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_101_3 }
+		value = var:pp_cplan_hs_101_3
+		subtract = 100
+	}
+}
+pp_cplan_h_food_need_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_101_4 }
+		value = var:pp_cplan_hn_101_4
+		subtract = 100
+	}
+}
+pp_cplan_h_food_spent_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_101_4 }
+		value = var:pp_cplan_hs_101_4
+		subtract = 100
+	}
+}
+pp_cplan_h_food_need_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_101_5 }
+		value = var:pp_cplan_hn_101_5
+		subtract = 100
+	}
+}
+pp_cplan_h_food_spent_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_101_5 }
+		value = var:pp_cplan_hs_101_5
+		subtract = 100
+	}
+}
+pp_cplan_h_food_need_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_101_6 }
+		value = var:pp_cplan_hn_101_6
+		subtract = 100
+	}
+}
+pp_cplan_h_food_spent_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_101_6 }
+		value = var:pp_cplan_hs_101_6
+		subtract = 100
+	}
+}
+pp_cplan_h_food_need_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_101_7 }
+		value = var:pp_cplan_hn_101_7
+		subtract = 100
+	}
+}
+pp_cplan_h_food_spent_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_101_7 }
+		value = var:pp_cplan_hs_101_7
+		subtract = 100
+	}
+}
+pp_cplan_h_food_need_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_101_8 }
+		value = var:pp_cplan_hn_101_8
+		subtract = 100
+	}
+}
+pp_cplan_h_food_spent_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_101_8 }
+		value = var:pp_cplan_hs_101_8
+		subtract = 100
+	}
+}
+pp_cplan_h_food_need_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_101_9 }
+		value = var:pp_cplan_hn_101_9
+		subtract = 100
+	}
+}
+pp_cplan_h_food_spent_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_101_9 }
+		value = var:pp_cplan_hs_101_9
+		subtract = 100
+	}
+}
+pp_cplan_h_food_need_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_101_10 }
+		value = var:pp_cplan_hn_101_10
+		subtract = 100
+	}
+}
+pp_cplan_h_food_spent_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_101_10 }
+		value = var:pp_cplan_hs_101_10
+		subtract = 100
+	}
+}
+pp_cplan_h_food_need_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_101_11 }
+		value = var:pp_cplan_hn_101_11
+		subtract = 100
+	}
+}
+pp_cplan_h_food_spent_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_101_11 }
+		value = var:pp_cplan_hs_101_11
+		subtract = 100
+	}
+}
+pp_cplan_h_food_need_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_101_12 }
+		value = var:pp_cplan_hn_101_12
+		subtract = 100
+	}
+}
+pp_cplan_h_food_spent_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_101_12 }
+		value = var:pp_cplan_hs_101_12
+		subtract = 100
+	}
+}
+pp_cplan_h_food_max = {
+	value = 1
+	min = pp_cplan_h_food_need_1
+	min = pp_cplan_h_food_need_2
+	min = pp_cplan_h_food_need_3
+	min = pp_cplan_h_food_need_4
+	min = pp_cplan_h_food_need_5
+	min = pp_cplan_h_food_need_6
+	min = pp_cplan_h_food_need_7
+	min = pp_cplan_h_food_need_8
+	min = pp_cplan_h_food_need_9
+	min = pp_cplan_h_food_need_10
+	min = pp_cplan_h_food_need_11
+	min = pp_cplan_h_food_need_12
+}
+pp_cplan_h_food_needp_1 = {
+	value = pp_cplan_h_food_need_1
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_spentp_1 = {
+	value = pp_cplan_h_food_spent_1
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_needp_2 = {
+	value = pp_cplan_h_food_need_2
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_spentp_2 = {
+	value = pp_cplan_h_food_spent_2
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_needp_3 = {
+	value = pp_cplan_h_food_need_3
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_spentp_3 = {
+	value = pp_cplan_h_food_spent_3
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_needp_4 = {
+	value = pp_cplan_h_food_need_4
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_spentp_4 = {
+	value = pp_cplan_h_food_spent_4
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_needp_5 = {
+	value = pp_cplan_h_food_need_5
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_spentp_5 = {
+	value = pp_cplan_h_food_spent_5
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_needp_6 = {
+	value = pp_cplan_h_food_need_6
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_spentp_6 = {
+	value = pp_cplan_h_food_spent_6
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_needp_7 = {
+	value = pp_cplan_h_food_need_7
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_spentp_7 = {
+	value = pp_cplan_h_food_spent_7
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_needp_8 = {
+	value = pp_cplan_h_food_need_8
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_spentp_8 = {
+	value = pp_cplan_h_food_spent_8
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_needp_9 = {
+	value = pp_cplan_h_food_need_9
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_spentp_9 = {
+	value = pp_cplan_h_food_spent_9
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_needp_10 = {
+	value = pp_cplan_h_food_need_10
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_spentp_10 = {
+	value = pp_cplan_h_food_spent_10
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_needp_11 = {
+	value = pp_cplan_h_food_need_11
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_spentp_11 = {
+	value = pp_cplan_h_food_spent_11
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_needp_12 = {
+	value = pp_cplan_h_food_need_12
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_spentp_12 = {
+	value = pp_cplan_h_food_spent_12
+	multiply = 100
+	divide = pp_cplan_h_food_max
+}
+pp_cplan_h_food_sum_need = {
+	value = 0
+	add = pp_cplan_h_food_need_1
+	add = pp_cplan_h_food_need_2
+	add = pp_cplan_h_food_need_3
+	add = pp_cplan_h_food_need_4
+	add = pp_cplan_h_food_need_5
+	add = pp_cplan_h_food_need_6
+	add = pp_cplan_h_food_need_7
+	add = pp_cplan_h_food_need_8
+	add = pp_cplan_h_food_need_9
+	add = pp_cplan_h_food_need_10
+	add = pp_cplan_h_food_need_11
+	add = pp_cplan_h_food_need_12
+}
+pp_cplan_h_food_sum_spent = {
+	value = 0
+	add = pp_cplan_h_food_spent_1
+	add = pp_cplan_h_food_spent_2
+	add = pp_cplan_h_food_spent_3
+	add = pp_cplan_h_food_spent_4
+	add = pp_cplan_h_food_spent_5
+	add = pp_cplan_h_food_spent_6
+	add = pp_cplan_h_food_spent_7
+	add = pp_cplan_h_food_spent_8
+	add = pp_cplan_h_food_spent_9
+	add = pp_cplan_h_food_spent_10
+	add = pp_cplan_h_food_spent_11
+	add = pp_cplan_h_food_spent_12
+}
+
+# logistics (construction code 102)
+pp_cplan_d_logistics_ran = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dran_102 }
+		value = 1
+	}
+}
+pp_cplan_d_logistics_had = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dhad_102 }
+		value = var:pp_cplan_dhad_102
+		subtract = 100
+	}
+}
+pp_cplan_d_logistics_spent = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dspent_102 }
+		value = var:pp_cplan_dspent_102
+		subtract = 100
+	}
+}
+pp_cplan_d_logistics_started = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dn_102 }
+		value = var:pp_cplan_dn_102
+		subtract = 100
+	}
+}
+pp_cplan_d_logistics_wait = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dwait_102 }
+		value = var:pp_cplan_dwait_102
+		subtract = 100
+	}
+}
+pp_cplan_d_logistics_waitn = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dwn_102 }
+		value = var:pp_cplan_dwn_102
+		subtract = 100
+	}
+}
+pp_cplan_d_logistics_need = {
+	value = pp_cplan_d_logistics_spent
+	add = pp_cplan_d_logistics_wait
+}
+pp_cplan_d_logistics_below = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_logistics_below }
+		value = var:pp_cplan_ds_logistics_below
+		subtract = 100
+	}
+}
+pp_cplan_d_logistics_lowest = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_logistics_lowest }
+		value = var:pp_cplan_ds_logistics_lowest
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_need_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_102_1 }
+		value = var:pp_cplan_hn_102_1
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_spent_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_102_1 }
+		value = var:pp_cplan_hs_102_1
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_need_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_102_2 }
+		value = var:pp_cplan_hn_102_2
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_spent_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_102_2 }
+		value = var:pp_cplan_hs_102_2
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_need_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_102_3 }
+		value = var:pp_cplan_hn_102_3
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_spent_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_102_3 }
+		value = var:pp_cplan_hs_102_3
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_need_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_102_4 }
+		value = var:pp_cplan_hn_102_4
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_spent_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_102_4 }
+		value = var:pp_cplan_hs_102_4
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_need_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_102_5 }
+		value = var:pp_cplan_hn_102_5
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_spent_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_102_5 }
+		value = var:pp_cplan_hs_102_5
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_need_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_102_6 }
+		value = var:pp_cplan_hn_102_6
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_spent_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_102_6 }
+		value = var:pp_cplan_hs_102_6
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_need_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_102_7 }
+		value = var:pp_cplan_hn_102_7
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_spent_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_102_7 }
+		value = var:pp_cplan_hs_102_7
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_need_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_102_8 }
+		value = var:pp_cplan_hn_102_8
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_spent_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_102_8 }
+		value = var:pp_cplan_hs_102_8
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_need_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_102_9 }
+		value = var:pp_cplan_hn_102_9
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_spent_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_102_9 }
+		value = var:pp_cplan_hs_102_9
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_need_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_102_10 }
+		value = var:pp_cplan_hn_102_10
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_spent_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_102_10 }
+		value = var:pp_cplan_hs_102_10
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_need_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_102_11 }
+		value = var:pp_cplan_hn_102_11
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_spent_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_102_11 }
+		value = var:pp_cplan_hs_102_11
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_need_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_102_12 }
+		value = var:pp_cplan_hn_102_12
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_spent_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_102_12 }
+		value = var:pp_cplan_hs_102_12
+		subtract = 100
+	}
+}
+pp_cplan_h_logistics_max = {
+	value = 1
+	min = pp_cplan_h_logistics_need_1
+	min = pp_cplan_h_logistics_need_2
+	min = pp_cplan_h_logistics_need_3
+	min = pp_cplan_h_logistics_need_4
+	min = pp_cplan_h_logistics_need_5
+	min = pp_cplan_h_logistics_need_6
+	min = pp_cplan_h_logistics_need_7
+	min = pp_cplan_h_logistics_need_8
+	min = pp_cplan_h_logistics_need_9
+	min = pp_cplan_h_logistics_need_10
+	min = pp_cplan_h_logistics_need_11
+	min = pp_cplan_h_logistics_need_12
+}
+pp_cplan_h_logistics_needp_1 = {
+	value = pp_cplan_h_logistics_need_1
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_spentp_1 = {
+	value = pp_cplan_h_logistics_spent_1
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_needp_2 = {
+	value = pp_cplan_h_logistics_need_2
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_spentp_2 = {
+	value = pp_cplan_h_logistics_spent_2
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_needp_3 = {
+	value = pp_cplan_h_logistics_need_3
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_spentp_3 = {
+	value = pp_cplan_h_logistics_spent_3
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_needp_4 = {
+	value = pp_cplan_h_logistics_need_4
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_spentp_4 = {
+	value = pp_cplan_h_logistics_spent_4
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_needp_5 = {
+	value = pp_cplan_h_logistics_need_5
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_spentp_5 = {
+	value = pp_cplan_h_logistics_spent_5
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_needp_6 = {
+	value = pp_cplan_h_logistics_need_6
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_spentp_6 = {
+	value = pp_cplan_h_logistics_spent_6
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_needp_7 = {
+	value = pp_cplan_h_logistics_need_7
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_spentp_7 = {
+	value = pp_cplan_h_logistics_spent_7
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_needp_8 = {
+	value = pp_cplan_h_logistics_need_8
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_spentp_8 = {
+	value = pp_cplan_h_logistics_spent_8
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_needp_9 = {
+	value = pp_cplan_h_logistics_need_9
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_spentp_9 = {
+	value = pp_cplan_h_logistics_spent_9
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_needp_10 = {
+	value = pp_cplan_h_logistics_need_10
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_spentp_10 = {
+	value = pp_cplan_h_logistics_spent_10
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_needp_11 = {
+	value = pp_cplan_h_logistics_need_11
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_spentp_11 = {
+	value = pp_cplan_h_logistics_spent_11
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_needp_12 = {
+	value = pp_cplan_h_logistics_need_12
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_spentp_12 = {
+	value = pp_cplan_h_logistics_spent_12
+	multiply = 100
+	divide = pp_cplan_h_logistics_max
+}
+pp_cplan_h_logistics_sum_need = {
+	value = 0
+	add = pp_cplan_h_logistics_need_1
+	add = pp_cplan_h_logistics_need_2
+	add = pp_cplan_h_logistics_need_3
+	add = pp_cplan_h_logistics_need_4
+	add = pp_cplan_h_logistics_need_5
+	add = pp_cplan_h_logistics_need_6
+	add = pp_cplan_h_logistics_need_7
+	add = pp_cplan_h_logistics_need_8
+	add = pp_cplan_h_logistics_need_9
+	add = pp_cplan_h_logistics_need_10
+	add = pp_cplan_h_logistics_need_11
+	add = pp_cplan_h_logistics_need_12
+}
+pp_cplan_h_logistics_sum_spent = {
+	value = 0
+	add = pp_cplan_h_logistics_spent_1
+	add = pp_cplan_h_logistics_spent_2
+	add = pp_cplan_h_logistics_spent_3
+	add = pp_cplan_h_logistics_spent_4
+	add = pp_cplan_h_logistics_spent_5
+	add = pp_cplan_h_logistics_spent_6
+	add = pp_cplan_h_logistics_spent_7
+	add = pp_cplan_h_logistics_spent_8
+	add = pp_cplan_h_logistics_spent_9
+	add = pp_cplan_h_logistics_spent_10
+	add = pp_cplan_h_logistics_spent_11
+	add = pp_cplan_h_logistics_spent_12
+}
+
+# improve (construction code 106)
+pp_cplan_d_improve_ran = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dran_106 }
+		value = 1
+	}
+}
+pp_cplan_d_improve_had = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dhad_106 }
+		value = var:pp_cplan_dhad_106
+		subtract = 100
+	}
+}
+pp_cplan_d_improve_spent = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dspent_106 }
+		value = var:pp_cplan_dspent_106
+		subtract = 100
+	}
+}
+pp_cplan_d_improve_started = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dn_106 }
+		value = var:pp_cplan_dn_106
+		subtract = 100
+	}
+}
+pp_cplan_d_improve_wait = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dwait_106 }
+		value = var:pp_cplan_dwait_106
+		subtract = 100
+	}
+}
+pp_cplan_d_improve_waitn = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dwn_106 }
+		value = var:pp_cplan_dwn_106
+		subtract = 100
+	}
+}
+pp_cplan_d_improve_need = {
+	value = pp_cplan_d_improve_spent
+	add = pp_cplan_d_improve_wait
+}
+pp_cplan_d_improve_over = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_improve_over }
+		value = var:pp_cplan_ds_improve_over
+		subtract = 100
+	}
+}
+pp_cplan_d_improve_fullest = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_improve_fullest }
+		value = var:pp_cplan_ds_improve_fullest
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_need_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_106_1 }
+		value = var:pp_cplan_hn_106_1
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_spent_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_106_1 }
+		value = var:pp_cplan_hs_106_1
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_need_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_106_2 }
+		value = var:pp_cplan_hn_106_2
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_spent_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_106_2 }
+		value = var:pp_cplan_hs_106_2
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_need_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_106_3 }
+		value = var:pp_cplan_hn_106_3
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_spent_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_106_3 }
+		value = var:pp_cplan_hs_106_3
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_need_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_106_4 }
+		value = var:pp_cplan_hn_106_4
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_spent_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_106_4 }
+		value = var:pp_cplan_hs_106_4
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_need_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_106_5 }
+		value = var:pp_cplan_hn_106_5
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_spent_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_106_5 }
+		value = var:pp_cplan_hs_106_5
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_need_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_106_6 }
+		value = var:pp_cplan_hn_106_6
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_spent_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_106_6 }
+		value = var:pp_cplan_hs_106_6
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_need_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_106_7 }
+		value = var:pp_cplan_hn_106_7
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_spent_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_106_7 }
+		value = var:pp_cplan_hs_106_7
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_need_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_106_8 }
+		value = var:pp_cplan_hn_106_8
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_spent_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_106_8 }
+		value = var:pp_cplan_hs_106_8
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_need_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_106_9 }
+		value = var:pp_cplan_hn_106_9
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_spent_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_106_9 }
+		value = var:pp_cplan_hs_106_9
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_need_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_106_10 }
+		value = var:pp_cplan_hn_106_10
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_spent_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_106_10 }
+		value = var:pp_cplan_hs_106_10
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_need_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_106_11 }
+		value = var:pp_cplan_hn_106_11
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_spent_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_106_11 }
+		value = var:pp_cplan_hs_106_11
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_need_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_106_12 }
+		value = var:pp_cplan_hn_106_12
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_spent_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_106_12 }
+		value = var:pp_cplan_hs_106_12
+		subtract = 100
+	}
+}
+pp_cplan_h_improve_max = {
+	value = 1
+	min = pp_cplan_h_improve_need_1
+	min = pp_cplan_h_improve_need_2
+	min = pp_cplan_h_improve_need_3
+	min = pp_cplan_h_improve_need_4
+	min = pp_cplan_h_improve_need_5
+	min = pp_cplan_h_improve_need_6
+	min = pp_cplan_h_improve_need_7
+	min = pp_cplan_h_improve_need_8
+	min = pp_cplan_h_improve_need_9
+	min = pp_cplan_h_improve_need_10
+	min = pp_cplan_h_improve_need_11
+	min = pp_cplan_h_improve_need_12
+}
+pp_cplan_h_improve_needp_1 = {
+	value = pp_cplan_h_improve_need_1
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_spentp_1 = {
+	value = pp_cplan_h_improve_spent_1
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_needp_2 = {
+	value = pp_cplan_h_improve_need_2
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_spentp_2 = {
+	value = pp_cplan_h_improve_spent_2
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_needp_3 = {
+	value = pp_cplan_h_improve_need_3
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_spentp_3 = {
+	value = pp_cplan_h_improve_spent_3
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_needp_4 = {
+	value = pp_cplan_h_improve_need_4
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_spentp_4 = {
+	value = pp_cplan_h_improve_spent_4
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_needp_5 = {
+	value = pp_cplan_h_improve_need_5
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_spentp_5 = {
+	value = pp_cplan_h_improve_spent_5
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_needp_6 = {
+	value = pp_cplan_h_improve_need_6
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_spentp_6 = {
+	value = pp_cplan_h_improve_spent_6
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_needp_7 = {
+	value = pp_cplan_h_improve_need_7
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_spentp_7 = {
+	value = pp_cplan_h_improve_spent_7
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_needp_8 = {
+	value = pp_cplan_h_improve_need_8
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_spentp_8 = {
+	value = pp_cplan_h_improve_spent_8
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_needp_9 = {
+	value = pp_cplan_h_improve_need_9
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_spentp_9 = {
+	value = pp_cplan_h_improve_spent_9
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_needp_10 = {
+	value = pp_cplan_h_improve_need_10
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_spentp_10 = {
+	value = pp_cplan_h_improve_spent_10
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_needp_11 = {
+	value = pp_cplan_h_improve_need_11
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_spentp_11 = {
+	value = pp_cplan_h_improve_spent_11
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_needp_12 = {
+	value = pp_cplan_h_improve_need_12
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_spentp_12 = {
+	value = pp_cplan_h_improve_spent_12
+	multiply = 100
+	divide = pp_cplan_h_improve_max
+}
+pp_cplan_h_improve_sum_need = {
+	value = 0
+	add = pp_cplan_h_improve_need_1
+	add = pp_cplan_h_improve_need_2
+	add = pp_cplan_h_improve_need_3
+	add = pp_cplan_h_improve_need_4
+	add = pp_cplan_h_improve_need_5
+	add = pp_cplan_h_improve_need_6
+	add = pp_cplan_h_improve_need_7
+	add = pp_cplan_h_improve_need_8
+	add = pp_cplan_h_improve_need_9
+	add = pp_cplan_h_improve_need_10
+	add = pp_cplan_h_improve_need_11
+	add = pp_cplan_h_improve_need_12
+}
+pp_cplan_h_improve_sum_spent = {
+	value = 0
+	add = pp_cplan_h_improve_spent_1
+	add = pp_cplan_h_improve_spent_2
+	add = pp_cplan_h_improve_spent_3
+	add = pp_cplan_h_improve_spent_4
+	add = pp_cplan_h_improve_spent_5
+	add = pp_cplan_h_improve_spent_6
+	add = pp_cplan_h_improve_spent_7
+	add = pp_cplan_h_improve_spent_8
+	add = pp_cplan_h_improve_spent_9
+	add = pp_cplan_h_improve_spent_10
+	add = pp_cplan_h_improve_spent_11
+	add = pp_cplan_h_improve_spent_12
+}
+
+# business (construction code 103)
+pp_cplan_d_business_ran = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dran_103 }
+		value = 1
+	}
+}
+pp_cplan_d_business_had = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dhad_103 }
+		value = var:pp_cplan_dhad_103
+		subtract = 100
+	}
+}
+pp_cplan_d_business_spent = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dspent_103 }
+		value = var:pp_cplan_dspent_103
+		subtract = 100
+	}
+}
+pp_cplan_d_business_started = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dn_103 }
+		value = var:pp_cplan_dn_103
+		subtract = 100
+	}
+}
+pp_cplan_d_business_wait = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dwait_103 }
+		value = var:pp_cplan_dwait_103
+		subtract = 100
+	}
+}
+pp_cplan_d_business_waitn = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dwn_103 }
+		value = var:pp_cplan_dwn_103
+		subtract = 100
+	}
+}
+pp_cplan_d_business_need = {
+	value = pp_cplan_d_business_spent
+	add = pp_cplan_d_business_wait
+}
+pp_cplan_d_business_sites = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_business_sites }
+		value = var:pp_cplan_ds_business_sites
+		subtract = 100
+	}
+}
+pp_cplan_d_business_best = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_business_best }
+		value = var:pp_cplan_ds_business_best
+		subtract = 100
+	}
+}
+pp_cplan_h_business_need_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_103_1 }
+		value = var:pp_cplan_hn_103_1
+		subtract = 100
+	}
+}
+pp_cplan_h_business_spent_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_103_1 }
+		value = var:pp_cplan_hs_103_1
+		subtract = 100
+	}
+}
+pp_cplan_h_business_need_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_103_2 }
+		value = var:pp_cplan_hn_103_2
+		subtract = 100
+	}
+}
+pp_cplan_h_business_spent_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_103_2 }
+		value = var:pp_cplan_hs_103_2
+		subtract = 100
+	}
+}
+pp_cplan_h_business_need_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_103_3 }
+		value = var:pp_cplan_hn_103_3
+		subtract = 100
+	}
+}
+pp_cplan_h_business_spent_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_103_3 }
+		value = var:pp_cplan_hs_103_3
+		subtract = 100
+	}
+}
+pp_cplan_h_business_need_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_103_4 }
+		value = var:pp_cplan_hn_103_4
+		subtract = 100
+	}
+}
+pp_cplan_h_business_spent_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_103_4 }
+		value = var:pp_cplan_hs_103_4
+		subtract = 100
+	}
+}
+pp_cplan_h_business_need_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_103_5 }
+		value = var:pp_cplan_hn_103_5
+		subtract = 100
+	}
+}
+pp_cplan_h_business_spent_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_103_5 }
+		value = var:pp_cplan_hs_103_5
+		subtract = 100
+	}
+}
+pp_cplan_h_business_need_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_103_6 }
+		value = var:pp_cplan_hn_103_6
+		subtract = 100
+	}
+}
+pp_cplan_h_business_spent_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_103_6 }
+		value = var:pp_cplan_hs_103_6
+		subtract = 100
+	}
+}
+pp_cplan_h_business_need_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_103_7 }
+		value = var:pp_cplan_hn_103_7
+		subtract = 100
+	}
+}
+pp_cplan_h_business_spent_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_103_7 }
+		value = var:pp_cplan_hs_103_7
+		subtract = 100
+	}
+}
+pp_cplan_h_business_need_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_103_8 }
+		value = var:pp_cplan_hn_103_8
+		subtract = 100
+	}
+}
+pp_cplan_h_business_spent_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_103_8 }
+		value = var:pp_cplan_hs_103_8
+		subtract = 100
+	}
+}
+pp_cplan_h_business_need_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_103_9 }
+		value = var:pp_cplan_hn_103_9
+		subtract = 100
+	}
+}
+pp_cplan_h_business_spent_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_103_9 }
+		value = var:pp_cplan_hs_103_9
+		subtract = 100
+	}
+}
+pp_cplan_h_business_need_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_103_10 }
+		value = var:pp_cplan_hn_103_10
+		subtract = 100
+	}
+}
+pp_cplan_h_business_spent_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_103_10 }
+		value = var:pp_cplan_hs_103_10
+		subtract = 100
+	}
+}
+pp_cplan_h_business_need_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_103_11 }
+		value = var:pp_cplan_hn_103_11
+		subtract = 100
+	}
+}
+pp_cplan_h_business_spent_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_103_11 }
+		value = var:pp_cplan_hs_103_11
+		subtract = 100
+	}
+}
+pp_cplan_h_business_need_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_103_12 }
+		value = var:pp_cplan_hn_103_12
+		subtract = 100
+	}
+}
+pp_cplan_h_business_spent_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_103_12 }
+		value = var:pp_cplan_hs_103_12
+		subtract = 100
+	}
+}
+pp_cplan_h_business_max = {
+	value = 1
+	min = pp_cplan_h_business_need_1
+	min = pp_cplan_h_business_need_2
+	min = pp_cplan_h_business_need_3
+	min = pp_cplan_h_business_need_4
+	min = pp_cplan_h_business_need_5
+	min = pp_cplan_h_business_need_6
+	min = pp_cplan_h_business_need_7
+	min = pp_cplan_h_business_need_8
+	min = pp_cplan_h_business_need_9
+	min = pp_cplan_h_business_need_10
+	min = pp_cplan_h_business_need_11
+	min = pp_cplan_h_business_need_12
+}
+pp_cplan_h_business_needp_1 = {
+	value = pp_cplan_h_business_need_1
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_spentp_1 = {
+	value = pp_cplan_h_business_spent_1
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_needp_2 = {
+	value = pp_cplan_h_business_need_2
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_spentp_2 = {
+	value = pp_cplan_h_business_spent_2
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_needp_3 = {
+	value = pp_cplan_h_business_need_3
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_spentp_3 = {
+	value = pp_cplan_h_business_spent_3
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_needp_4 = {
+	value = pp_cplan_h_business_need_4
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_spentp_4 = {
+	value = pp_cplan_h_business_spent_4
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_needp_5 = {
+	value = pp_cplan_h_business_need_5
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_spentp_5 = {
+	value = pp_cplan_h_business_spent_5
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_needp_6 = {
+	value = pp_cplan_h_business_need_6
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_spentp_6 = {
+	value = pp_cplan_h_business_spent_6
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_needp_7 = {
+	value = pp_cplan_h_business_need_7
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_spentp_7 = {
+	value = pp_cplan_h_business_spent_7
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_needp_8 = {
+	value = pp_cplan_h_business_need_8
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_spentp_8 = {
+	value = pp_cplan_h_business_spent_8
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_needp_9 = {
+	value = pp_cplan_h_business_need_9
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_spentp_9 = {
+	value = pp_cplan_h_business_spent_9
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_needp_10 = {
+	value = pp_cplan_h_business_need_10
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_spentp_10 = {
+	value = pp_cplan_h_business_spent_10
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_needp_11 = {
+	value = pp_cplan_h_business_need_11
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_spentp_11 = {
+	value = pp_cplan_h_business_spent_11
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_needp_12 = {
+	value = pp_cplan_h_business_need_12
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_spentp_12 = {
+	value = pp_cplan_h_business_spent_12
+	multiply = 100
+	divide = pp_cplan_h_business_max
+}
+pp_cplan_h_business_sum_need = {
+	value = 0
+	add = pp_cplan_h_business_need_1
+	add = pp_cplan_h_business_need_2
+	add = pp_cplan_h_business_need_3
+	add = pp_cplan_h_business_need_4
+	add = pp_cplan_h_business_need_5
+	add = pp_cplan_h_business_need_6
+	add = pp_cplan_h_business_need_7
+	add = pp_cplan_h_business_need_8
+	add = pp_cplan_h_business_need_9
+	add = pp_cplan_h_business_need_10
+	add = pp_cplan_h_business_need_11
+	add = pp_cplan_h_business_need_12
+}
+pp_cplan_h_business_sum_spent = {
+	value = 0
+	add = pp_cplan_h_business_spent_1
+	add = pp_cplan_h_business_spent_2
+	add = pp_cplan_h_business_spent_3
+	add = pp_cplan_h_business_spent_4
+	add = pp_cplan_h_business_spent_5
+	add = pp_cplan_h_business_spent_6
+	add = pp_cplan_h_business_spent_7
+	add = pp_cplan_h_business_spent_8
+	add = pp_cplan_h_business_spent_9
+	add = pp_cplan_h_business_spent_10
+	add = pp_cplan_h_business_spent_11
+	add = pp_cplan_h_business_spent_12
+}

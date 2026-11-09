@@ -1,11 +1,16 @@
 ﻿# Prosper or Perish - Construction Plan window buttons (gui/pp_construction_plan.gui, Global settings tab).
 # Flags passed from the GUI: scope:pp_key (which setting or rule group), scope:pp_dir (up / down), scope:pp_n (w1..w10).
 
-# Country scope: the plan on / off.
+# Country scope: the plan on / off. Switched on, the detail panes' chart starts afresh (pp_cplan_history_clear), so its
+# twelve columns are always months the plan ran.
 pp_cplan_toggle_on = {
 	scope = country
 	effect = {
 		pp_cplan_flip = { var = pp_cplan_on }
+		if = {
+			limit = { has_variable = pp_cplan_on }
+			pp_cplan_history_clear = yes
+		}
 	}
 }
 

@@ -947,7 +947,7 @@ def chart_builds_per_year(by_year: pl.DataFrame, out: Path) -> str | None:
     if by_year.is_empty():
         return None
     groups = [g for g in GROUPS if g in by_year.columns]
-    groups += [c for c in by_year.columns if c not in GROUPS and c != "year"]
+    groups += [c for c in by_year.columns if c not in GROUPS and c not in ("year", "total")]  # total is the stack
 
     def draw(ax: Any, theme: dict[str, Any]) -> None:
         years = by_year["year"].to_list()

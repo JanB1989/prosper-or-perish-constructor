@@ -77,6 +77,17 @@ test switch lets it run for an AI country in the test world). 2026-11-09: see "B
   data context in this build (ROOT and saved scopes are null in its text) and `debug_log_date` writes nothing.
   `uv run ppc plan-report --save ... --baseline ...` (`plan_test_report.py`) turns saves and logs into
   `artifacts/plan_test/<date>/report/index.html`. Runbook in `pp_testing\README.md`, setup `run\pp_plan_ai_setup.txt`.
+- **AI test runs 2026-11-09** (test world, Castile as AI, 1337-1352, the Balanced preset with 10 constructions a month,
+  the six example profiles on 258 of 424 locations, +20,000 gold; control run with the same gold and no plan;
+  `artifacts/plan_test/2026-11-09/report_ai/`): no plan error in error.log over the 15 years (every plan line there came
+  from the console's description pass of the setup file); about 2 s a game year either way; the monthly pass 0.43 s a
+  game year in the script profiler (profiles 0.38 of it). Found and fixed on the way: profiles took all the gold when
+  money was tight (order now turns with the month), one construction at a time per location, the Granary before the
+  kitchen (no Granary in 15 years before). Last run: +141 levels over the control (Cookshops 59, wheat farms 45,
+  Drainage Ditches 34, Granaries 24, Spinners' Guilds 21 for cloth on Expand), 43 provinces at 24+ months of food against
+  34. The global rules built in profile locations only what the profile does not set (Cookshops and improvements yes;
+  logistics never where the profile has a market access rule; nothing in hands-off locations). Mines (payback 100-240
+  years at the start) and naval buildings stayed unbuilt under their payback limits, as intended.
 
 ## Built (v1)
 

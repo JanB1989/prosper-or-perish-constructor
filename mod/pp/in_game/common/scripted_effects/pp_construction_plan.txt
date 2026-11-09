@@ -242,9 +242,12 @@ pp_cplan_group_goods = {
 #   1. famine (below the player's famine line): a Tavern in the province capital, where its market holds victuals;
 #   2. hungry (below the low end of the focus band): a staple food maker (crop farm, orchard, fishery, herd, forest
 #      village), the line that pays back fastest, in the province location where it pays back fastest;
-#   3. a kitchen whenever the Cookshop budget allows (its successor first);
-#   4. hungry and nothing above built: a Tavern, where its market holds victuals (provinces that cannot farm);
-#   5. a Granary while the store holds less than the player's months, is nearly full and a normal month adds food;
+#   3. a Granary while the store holds less than the player's months, is nearly full and a normal month adds food
+#      (before the kitchen: food a kitchen adds to a full, capped store only spoils; AI test run 2026-11-09: with the
+#      kitchen first, the Cookshops took the capital year after year, one construction at a time, and 15 years built
+#      no Granary in the 22-33 provinces where one was due);
+#   4. a kitchen whenever the Cookshop budget allows (its successor first);
+#   5. hungry and nothing above built: a Tavern, where its market holds victuals (provinces that cannot farm);
 #   6. a Grange where the store holds 24 months and a normal month adds the player's share on top;
 #   7. a Victualling Yard: the next level while it pays back within the player's line, a first one where victuals
 #      cost at least their default price.
@@ -303,7 +306,20 @@ pp_cplan_food_province = {
 				}
 			}
 		}
-		# 3. a kitchen, whenever it can be built
+		# 3. a Granary, while it is due (before the kitchen: a full, capped store spoils what a kitchen adds)
+		if = {
+			limit = {
+				pp_cplan_may_try = yes
+				pp_cplan_granary_due = yes
+			}
+			province_capital ?= {
+				if = {
+					limit = { pp_cplan_food_ok = yes }
+					pp_cplan_try_granary_here = yes
+				}
+			}
+		}
+		# 4. a kitchen, whenever it can be built
 		if = {
 			limit = { pp_cplan_may_try = yes }
 			province_capital ?= {
@@ -313,7 +329,7 @@ pp_cplan_food_province = {
 				}
 			}
 		}
-		# 4. hungry and nothing else possible: a Tavern
+		# 5. hungry and nothing else possible: a Tavern
 		if = {
 			limit = {
 				pp_cplan_may_try = yes
@@ -327,19 +343,6 @@ pp_cplan_food_province = {
 						pp_cplan_victuals_here = yes
 					}
 					pp_cplan_try_tavern_here = yes
-				}
-			}
-		}
-		# 5. a Granary
-		if = {
-			limit = {
-				pp_cplan_may_try = yes
-				pp_cplan_granary_due = yes
-			}
-			province_capital ?= {
-				if = {
-					limit = { pp_cplan_food_ok = yes }
-					pp_cplan_try_granary_here = yes
 				}
 			}
 		}

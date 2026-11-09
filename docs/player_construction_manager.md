@@ -109,11 +109,12 @@ test switch lets it run for an AI country in the test world). 2026-11-09: see "B
      inputs at market prices (production efficiency, staffing and market access left out: the same for every line
      there), yearly return in % of the tier's base price. No farm where no line makes a profit (it would lay off its
      workers and make no food);
-  3. a kitchen whenever the Cookshop budget allows, Public Kitchen first;
-  4. hungry and nothing above built: a Tavern (provinces that cannot farm), where the market holds victuals;
-  5. a Granary while the store can hold less than N months (`province_max_food` / normal consumption, setting 24), is
+  3. a Granary while the store can hold less than N months (`province_max_food` / normal consumption, setting 24), is
      at least X % full (setting 85) and a normal month still adds food: room helps only a store that fills, in run
-     057c295e half of all provinces had room but sat at ~13 months;
+     057c295e half of all provinces had room but sat at ~13 months; before the kitchen since 2026-11-09 (food a kitchen
+     adds to a full, capped store spoils; with the kitchen first the AI test run built no Granary in 15 years);
+  4. a kitchen whenever the Cookshop budget allows, Public Kitchen first;
+  5. hungry and nothing above built: a Tavern (provinces that cannot farm), where the market holds victuals;
   6. a Grange where the store holds 24 months and a normal month still adds S % of consumption (setting 5): a working
      Grange packs the store below 24 months, so the next level waits until it is full again;
   7. a Victualling Yard at Yard sites and market centres: the next level of a standing Yard while it pays back within Y

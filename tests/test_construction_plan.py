@@ -270,7 +270,7 @@ def test_nothing_is_kept_between_passes() -> None:
 
 
 def test_food_pass_order() -> None:
-    """One food construction a province a month: famine Tavern, farm, kitchen, Tavern, Granary, Grange, Yard."""
+    """One food construction a province a month: famine Tavern, farm, Granary (while due), kitchen, Tavern, Grange, Yard."""
     body = _effect(_read(EFFECTS), "pp_cplan_food_province")
     steps = ["# 1.", "# 2.", "# 3.", "# 4.", "# 5.", "# 6.", "# 7.", "# the state"]
     places = [body.index(step) for step in steps]
@@ -279,13 +279,13 @@ def test_food_pass_order() -> None:
     assert "pp_cplan_famine = yes" in part[1] and "pp_cplan_try_tavern_here" in part[1]
     assert "pp_cplan_hungry = yes" in part[2] and "pp_cplan_try_farm_here" in part[2]
     assert "order_by = pp_cplan_farm_best_roi" in part[2]
-    assert "pp_cplan_hungry" not in part[3] and "pp_cplan_try_kitchen_here" in part[3]
-    assert "pp_cplan_hungry = yes" in part[4] and "pp_cplan_try_tavern_here" in part[4]
-    assert "pp_cplan_granary_due = yes" in part[5] and "pp_cplan_try_granary_here" in part[5]
+    assert "pp_cplan_granary_due = yes" in part[3] and "pp_cplan_try_granary_here" in part[3]
+    assert "pp_cplan_hungry" not in part[4] and "pp_cplan_try_kitchen_here" in part[4]
+    assert "pp_cplan_hungry = yes" in part[5] and "pp_cplan_try_tavern_here" in part[5]
     assert "pp_cplan_grange_due = yes" in part[6] and "pp_cplan_try_grange_here" in part[6]
     assert "pp_cplan_try_yard_here" in part[7]
     # Taverns only where the market holds victuals; every step after the first asks whether the province built already
-    assert "pp_cplan_victuals_here = yes" in part[1] and "pp_cplan_victuals_here = yes" in part[4]
+    assert "pp_cplan_victuals_here = yes" in part[1] and "pp_cplan_victuals_here = yes" in part[5]
     for n in range(2, 8):
         assert "pp_cplan_may_try = yes" in part[n], n
 
@@ -454,3 +454,13 @@ def test_game_automation_is_shown_and_respected() -> None:
     # one construction at a time per location: the engine builds them one after another (test world 2026-11-09)
     assert "num_civil_constructions < 1" in scoped
     assert "limit = { num_civil_constructions > 0 }" in _effect(_read(MOD / "in_game/common/scripted_effects/pp_location_profiles.txt"), "pp_lprof_rule")
+
+
+def test_granary_before_kitchen_while_due() -> None:
+    """AI test run 2026-11-09: with the kitchen first, Cookshops took the province capital year after year (one
+    construction at a time per location) and 15 years built no Granary where one was due. A full, capped store spoils
+    what a kitchen adds, so the Granary goes first while it is due."""
+    food = _effect(_read(EFFECTS), "pp_cplan_food_province")
+    assert food.index("pp_cplan_try_granary_here = yes") < food.index("pp_cplan_try_kitchen_here = yes")
+    granary = food[food.index("# 3. a Granary"):food.index("pp_cplan_try_granary_here = yes")]
+    assert "pp_cplan_granary_due = yes" in granary

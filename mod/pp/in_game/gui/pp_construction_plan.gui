@@ -683,7 +683,6 @@ widget = {
 														text_single = { parentanchor = center visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_cplan_logi_n'), '(CFixedPoint)1')]" text = "PP_CPLAN_ALWAYS" }
 														text_single = { parentanchor = center visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_cplan_logi_n'), '(CFixedPoint)2')]" text = "PP_CPLAN_NEVER" }
 													}
-													pp_cplan_location_mode_button = {}
 													expand = {}
 												}
 											}

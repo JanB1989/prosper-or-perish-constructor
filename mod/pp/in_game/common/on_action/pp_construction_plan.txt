@@ -10,10 +10,14 @@ monthly_country_pulse = {
 	}
 }
 
-# Country scope.
+# Country scope. A test run lets the plan run for an AI country too (pp_cplan_ai_test, set only by the console, e.g. in
+# the test world as observer: no event pop-ups; the AI's own building then plays the game's Buildings automation).
 pp_construction_plan_monthly = {
 	trigger = {
-		is_ai = no
+		OR = {
+			is_ai = no
+			has_variable = pp_cplan_ai_test
+		}
 		has_variable = pp_cplan_on
 	}
 	effect = {

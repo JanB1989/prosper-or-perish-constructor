@@ -4182,66 +4182,6 @@ pp_cplan_metric_count = { value = 18 }
 pp_cplan_metric_last100 = { value = 118 }
 # Any scope: the highest level a rule can ask for, + 100.
 pp_cplan_max_rule_level100 = { value = 130 }
-# Country scope: the mode template 1 sets (0 the plan's rules, 1 own rules, 2 hands off).
-pp_cplan_t1_mode_n = {
-	value = 0
-	if = {
-		limit = { has_variable = pp_cplan_t1_mode }
-		value = var:pp_cplan_t1_mode
-		subtract = 100
-	}
-}
-# Country scope: the mode template 2 sets (0 the plan's rules, 1 own rules, 2 hands off).
-pp_cplan_t2_mode_n = {
-	value = 0
-	if = {
-		limit = { has_variable = pp_cplan_t2_mode }
-		value = var:pp_cplan_t2_mode
-		subtract = 100
-	}
-}
-# Country scope: the mode template 3 sets (0 the plan's rules, 1 own rules, 2 hands off).
-pp_cplan_t3_mode_n = {
-	value = 0
-	if = {
-		limit = { has_variable = pp_cplan_t3_mode }
-		value = var:pp_cplan_t3_mode
-		subtract = 100
-	}
-}
-# Country scope: the mode template 4 sets (0 the plan's rules, 1 own rules, 2 hands off).
-pp_cplan_t4_mode_n = {
-	value = 0
-	if = {
-		limit = { has_variable = pp_cplan_t4_mode }
-		value = var:pp_cplan_t4_mode
-		subtract = 100
-	}
-}
-# Country scope: 1 once profile 1 is saved.
-pp_cplan_p1_saved_n = {
-	value = 0
-	if = {
-		limit = { has_variable = pp_cplan_p1_saved }
-		value = 1
-	}
-}
-# Country scope: 1 once profile 2 is saved.
-pp_cplan_p2_saved_n = {
-	value = 0
-	if = {
-		limit = { has_variable = pp_cplan_p2_saved }
-		value = 1
-	}
-}
-# Country scope: 1 once profile 3 is saved.
-pp_cplan_p3_saved_n = {
-	value = 0
-	if = {
-		limit = { has_variable = pp_cplan_p3_saved }
-		value = 1
-	}
-}
 
 # ---- Rule 1 of a location (location scope) ----
 # 1 while the rule names a building.

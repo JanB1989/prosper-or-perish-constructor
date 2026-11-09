@@ -1,9 +1,22 @@
 # Location Profiles (design contract, branch `location-profiles`, 2026-11-07)
 
 Jan, 2026-11-07: the player defines **profiles** ("my furniture town": an icon, a colour, ordered build rules) and
-assigns them to locations straight on the map. Global Construction Plan rules run everywhere **except** in a location
-with a profile: there the profile's rules have priority (the global rules leave it alone, like v2's Own Rules mode).
-The map shows each location's profile as a badge (its icon on its colour) beside the plan icons.
+assigns them to locations straight on the map. The map shows each location's profile as a badge (its icon on its
+colour) beside the plan icons.
+
+**Profiles and the global rules (Jan, 2026-11-09):** the local setting overrides the global one, but only for what it
+sets; whatever a profile does not set, the global Construction Plan rules still do in its locations (no need to repeat
+"logistics where needed" in every profile). In detail:
+
+- The profile's rules run first each month, as their own rule group.
+- A rule's target takes that target from the global rules there: a good takes that good's goods rule (Keep / Expand /
+  Never) and, for a staple food, the food rule's farm step (the profile decides which food is made here); victuals
+  take the Grange and Victualling Yard steps; market access takes the logistics rule.
+- A profile can switch whole global groups off in its locations: Food, Logistics, Improvements, Goods (checkboxes
+  "Global rules here" in the editor; unticked = off). An empty profile with all four off is "hands off".
+- Example: global logistics on, a profile "iron mines" (rule: iron). When the location's market access drops, the
+  logistics rule builds there, because the profile names no market access. With a market-access rule in the profile,
+  that rule decides (its own payback limit) and the global logistics rule stays out.
 
 Branch `location-profiles` = `location-plan` + `player-construction-manager` (merge 91019fcb). Worktree
 `../ProsperOrPerishConstructor-locplan`. Builds on: `location_plan.py` (plan items, map markers),
@@ -132,7 +145,7 @@ Location:
 |---|---|
 | `pp_lprof` | assigned slot k (+100); unset = no profile |
 | `pp_lprof_ig` / `_ic` / `_in` / `_col` / `_r<r>_g` / `_r<r>_c` / `_r<r>_pb` | the location's copy of its profile (the pass and the badge read only this; no rule frames, the badge draws no rule icon) |
-| `pp_lprof_r<r>_st` | rule r state after the last pass (+100): 1 started, 2 nothing to build (all standing levels' payback too long / at max), 3 a level under construction, 5 payback too long, 6 cannot be built here, 7 budget, 8 market lacks the construction goods, 9 waiting for an earlier rule's construction this month |
+| `pp_lprof_r<r>_st` | rule r state after the last pass (+100): 1 started, 2 nothing to build (all standing levels' payback too long / at max), 3 a construction is under way here (a location builds one at a time), 5 payback too long, 6 cannot be built here, 7 budget, 8 market lacks the construction goods, 9 waiting for an earlier rule's construction this month |
 | `pp_lprof_r<r>_est` | the shortest payback the rule found (years + 100; 1099 = no profit), shown beside state 5 |
 
 Flags are copied by a switch (`pp_lprof_pull_icon`, `pp_lprof_pull_cat`: compared, then set), never as a variable's value;
@@ -162,26 +175,43 @@ buttons pass this), `none` (assign) or `next` (new: the first free slot).
 | `pp_lprof_rule_clear` | country | `pp_slot`, `pp_field` | empty rule r (and its states in the slot's locations) |
 | `pp_lprof_rule_move` | country | `pp_slot`, `pp_field`, `pp_dir` | swap rule r with its neighbour (and their states) |
 | `pp_lprof_delete` | country | `pp_slot` | clear the slot, unassign it from every location (their copies go), empty the edit buffer when it holds the slot |
+| `pp_lprof_global` | country | `pp_slot`, `pp_field` (`global_food` / `global_logistics` / `global_improve` / `global_goods`) | switch a global rule group off in the slot's locations, or on again (`pp_lprof_<k>_xf` / `_xl` / `_xi` / `_xg`, copied to the locations as `pp_lprof_xf` ...) |
+| `pp_lprof_examples` | country | none | the example profiles (`[[location_profiles.examples]]`) in the next free slots, made with the buttons' own effects (`pp_lprof_examples_do`); the editor offers it while the country has no profile |
 
 Every button that changes a slot ends in `pp_lprof_commit` = `pp_lprof_write` (staged copy → slot) +
 `pp_lprof_publish` (staged copy → edit buffer and → every location with the slot) + `refresh_map_colors = yes`.
 
 ## Monthly pass (in `pp_cplan_run`, first group, own share like the other groups)
 
-Only when the Construction Plan is on (`pp_cplan_on`). `pp_cplan_location_ok` also requires `NOT = { has_variable =
-pp_lprof }`, so every global rule (food, logistics, goods) leaves profile locations alone. For each location in
-`pp_lprof_locs` still owned: rules 1..rules of its copy in order (`pp_lprof_location_rules` = `pp_lprof_rule = { r }`
-per rule; no slot is looked at); the first rule that starts a construction ends that location for the month (later
-rules get state 9). A rule with a goods target: expand a standing producer of the good whose next level pays back
-within the limit (highest tier first, as v2's Expand), else, when no producer stands here, start the first buildable
-producer (v2's try order; the first level has no profit to measure, so no payback check). `logistics` = v2's logistics
-try for this location. A category target: the same over the buildings of that category (generated list per category:
-player-buildable building types whose `category` is it). Guards as v2: `location_and_owner_can_build`, construction
-goods in the market, never a second level under construction, budget (`pp_cplan_budget_left`). The monthly cleanup
-takes the profile and its copy from locations that lost it (`pp_lprof_clear_location`).
+Only when the Construction Plan is on (`pp_cplan_on`). The global groups ask per group whether they may build in a
+location (`scripted_triggers/pp_construction_plan.txt`): `pp_cplan_location_ok` (owner, no own-rules / hands-off mode)
+plus `pp_cplan_food_ok` (no `pp_lprof_xf`), `pp_cplan_farm_ok` (and no staple food rule: `pp_lprof_food_target`),
+`pp_cplan_victuals_ok` (no victuals rule), `pp_cplan_logistics_ok` (no `pp_lprof_xl`, no market access rule),
+`pp_cplan_improve_ok` (no `pp_lprof_xi`), `pp_cplan_goods_ok = { g = <good> }` (no `pp_lprof_xg`, no rule for that good;
+`pp_lprof_has_good`). One construction at a time in a location (2026-11-09): the engine builds a location's
+constructions one after another (test world: a Cookshop moved 344 days in a year while the Granary, Grange and Carrier
+Inn the plan had started beside it moved 0), so `pp_cplan_construct_scoped` starts nothing where
+`num_civil_constructions` > 0, whoever started it, and a profile rule then shows state 3.
+
+For each location in `pp_lprof_locs` still owned (fewest building levels first): rules 1..rules of its copy in order
+(`pp_lprof_location_rules` = `pp_lprof_rule = { r }` per rule; no slot is looked at); the first rule that starts a
+construction ends that location for the month (later rules get state 9). A rule with a goods target: expand a standing
+producer of the good whose next level pays back within the limit (highest tier first, as v2 Expand), else, when no
+producer stands here, start the cheapest buildable producer (the first level has no profit to measure, so no payback
+check). `logistics` = the logistics try for this location. A category target: the same over the buildings of that
+category (generated list per category: player-buildable building types whose `category` is it). Guards:
+`location_and_owner_can_build`, construction goods in the market (12 months of the draw), one construction at a time
+in the location, never a level for a closed building, budget (`pp_cplan_budget_left`). The monthly cleanup takes the
+profile and its copy from locations that lost it (`pp_lprof_clear_location`).
 
 ## UI
 
+- **Location window, Infrastructure tab** (2026-11-09, Jan: "the same style as the other buttons there"): its own
+  type `pp_lprof_location_row`, styled like the tab's rows (vanilla `location_conditions_item`): a paper card in a
+  wooden frame (`bg_paper_card`, `bg_cabinet_card_frame`), the badge in a dark header strip (`bg_card_header_01`),
+  plain white text, the profiles as vanilla toggle tiles (road builder style, pressed + gold glow = this location's),
+  and two round icon buttons at the right (Edit profiles, No profile). The header buttons are vanilla's
+  `button_round_shortcut` (Location Plan) and `button_automation_shortcut` (the plan's cog), 30 px apart.
 - **Location Plan window**: a "Profile" row: the location's badge, None, "Edit profiles", the slot tiles (icon on
   colour, 8 per row, rows only while they hold a used slot) to assign. The location window's Infrastructure tab starts
   with the same row (`pp_lprof_location_row` = `pp_lprof_plan_row`).
@@ -201,6 +231,14 @@ takes the profile and its copy from locations that lost it (`pp_lprof_clear_loca
   plan icons. Badge tooltip (`PP_LPROF_UI_BADGE`, one text for every slot): "Location Profile: <icon name>", the rules
   with targets, limits, this location's states and the payback found.
 - Tile tooltips (per slot): "Location Profile: <icon name>" and the rule targets, then what a click does.
+
+## Example profiles (2026-11-09, Jan: "baseline settings I could take a look at")
+
+`[[location_profiles.examples]]` in constructor.toml: breadbasket (wheat, legumes, livestock < 20 years), mining town
+(iron, copper, lead, tin < 30), lumber camp (lumber < 50, market access), market town (market access, trade buildings
+and tools < 20), harbour (fish < 30, naval buildings < 30, market access), hands off (no rules, all four global groups
+off). "Start with the examples" in the editor (while the country has no profile) makes them; the test world's setup
+(`run pp_plan_ai_setup.txt`) uses the same effect and assigns them by raw material and location kind.
 
 ## Not in v1
 

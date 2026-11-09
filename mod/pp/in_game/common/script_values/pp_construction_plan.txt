@@ -391,13 +391,43 @@ pp_cplan_reserve_gold_n = {
 	value = pp_cplan_reserve_gold
 }
 
-# Country scope: the profile last loaded (0 none).
-pp_cplan_profile_n = {
+# Country scope: the preset last loaded (0 none; 1.. in [construction_plan.presets] order).
+pp_cplan_preset_n = {
 	value = 0
 	if = {
-		limit = { has_variable = pp_cplan_profile }
-		value = var:pp_cplan_profile
+		limit = { has_variable = pp_cplan_preset }
+		value = var:pp_cplan_preset
 		subtract = 100
+	}
+}
+
+# Country scope: the game's own building automation (the Automation panel), 1 while on (Plan tab).
+pp_cplan_auto_buildings_n = {
+	value = 0
+	if = {
+		limit = { is_system_automated = buildings }
+		value = 1
+	}
+}
+pp_cplan_auto_expand_n = {
+	value = 0
+	if = {
+		limit = { is_system_automated = expandbuildings }
+		value = 1
+	}
+}
+pp_cplan_auto_close_n = {
+	value = 0
+	if = {
+		limit = { is_system_automated = closebuildings }
+		value = 1
+	}
+}
+pp_cplan_auto_destroy_n = {
+	value = 0
+	if = {
+		limit = { is_system_automated = destroybuildings }
+		value = 1
 	}
 }
 
@@ -433,21 +463,12 @@ pp_cplan_logi_n = {
 	}
 }
 
-# Location scope: the mode (0 the plan's global rules, 1 own rules, 2 hands off) and the template last applied (0 none
-# or edited since).
+# Location scope: the mode (0 the plan's global rules, 1 own rules, 2 hands off).
 pp_cplan_mode_n = {
 	value = 0
 	if = {
 		limit = { has_variable = pp_cplan_mode }
 		value = var:pp_cplan_mode
-		subtract = 100
-	}
-}
-pp_cplan_tpl_n = {
-	value = 0
-	if = {
-		limit = { has_variable = pp_cplan_tpl }
-		value = var:pp_cplan_tpl
 		subtract = 100
 	}
 }

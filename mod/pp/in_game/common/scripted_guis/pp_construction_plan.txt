@@ -1,7 +1,6 @@
 ﻿# Prosper or Perish - Construction Plan panel buttons (gui/pp_construction_plan*.gui, gui/location_window.gui).
 # Flags passed from the GUI: scope:pp_key (which setting), scope:pp_dir (up / down), scope:pp_good + scope:pp_mode
-# (goods modes), scope:pp_rule (r1..r4), scope:pp_slot (t1..t4 templates, p1..p3 profiles); scope:pp_btype is a
-# building type.
+# (goods modes), scope:pp_rule (r1..r4); scope:pp_btype is a building type.
 
 # Country scope: the plan on / off.
 pp_cplan_toggle_on = {
@@ -55,11 +54,11 @@ pp_cplan_good_mode = {
 	}
 }
 
-# Country scope: save or load a global profile (scope:pp_slot = p1..p3, scope:pp_key = save / load).
-pp_cplan_profile = {
+# Country scope: a preset (scope:pp_key = its flag, [construction_plan.presets]): every setting, rule group and goods mode.
+pp_cplan_preset = {
 	scope = country
 	effect = {
-		pp_cplan_profile_do = yes
+		pp_cplan_preset_do = yes
 	}
 }
 
@@ -83,8 +82,8 @@ pp_cplan_cycle_focus = {
 	}
 }
 
-# Province scope: moves one end of the band (scope:pp_key = lo / hi, scope:pp_dir = up / down); the province becomes
-# Custom with the band it had, and the band never turns over.
+# Province scope: moves the low end of the band (scope:pp_key = lo, scope:pp_dir = up / down; the upper end is unused
+# since 2026-11-08); the province becomes Custom with the band it had, and the band never turns over.
 pp_cplan_step_band = {
 	scope = province
 	effect = {
@@ -99,21 +98,6 @@ pp_cplan_step_band = {
 				set_variable = { name = pp_cplan_hi value = var:pp_cplan_lo }
 			}
 		}
-		else = {
-			pp_cplan_step_var = { var = pp_cplan_hi current = pp_cplan_band_hi step = 1 min = 100 max = 124 }
-			if = {
-				limit = { var:pp_cplan_hi < var:pp_cplan_lo }
-				set_variable = { name = pp_cplan_lo value = var:pp_cplan_hi }
-			}
-		}
-	}
-}
-
-# Province scope: apply a saved location template to every location of the province (scope:pp_slot = t1..t4).
-pp_cplan_template_province = {
-	scope = province
-	effect = {
-		pp_cplan_template_province_do = yes
 	}
 }
 
@@ -174,15 +158,6 @@ pp_cplan_rule_edit = {
 	scope = location
 	effect = {
 		pp_cplan_rule_edit_switch = yes
-	}
-}
-
-# Location scope: save this location as a template, or apply one to it or to its whole province (scope:pp_slot =
-# t1..t4, scope:pp_key = save / apply / province).
-pp_cplan_template = {
-	scope = location
-	effect = {
-		pp_cplan_template_do = yes
 	}
 }
 

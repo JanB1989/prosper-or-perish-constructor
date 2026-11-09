@@ -47,6 +47,23 @@ pp_lprof_color = {
 	}
 }
 
+# Country scope: a global rule group (scope:pp_field: global_food / global_logistics / global_improve /
+# global_goods) of slot scope:pp_slot off in its locations, or on again.
+pp_lprof_global = {
+	scope = country
+	effect = {
+		pp_lprof_global_do = yes
+	}
+}
+
+# Country scope: the example profiles ([[location_profiles.examples]]), each in the next free slot.
+pp_lprof_examples = {
+	scope = country
+	effect = {
+		pp_lprof_examples_do = yes
+	}
+}
+
 # Country scope: one step (scope:pp_dir) of the payback limit of rule scope:pp_field of slot scope:pp_slot.
 pp_lprof_payback = {
 	scope = country

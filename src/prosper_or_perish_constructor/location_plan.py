@@ -312,10 +312,10 @@ BUTTON = f"""
 		widget = {{ {BUTTON_MARK} (gui/pp_location_plan.gui)
 			parentanchor = right|vcenter
 			size = {{ 40 40 }}
-			position = {{ -92 0 }}
+			position = {{ -90 0 }}
 			visible = "[And(LocationView.GetLocation.GetOwner.IsPlayer, Not(IsObserving))]"
 
-			button_minimize = {{
+			button_round_shortcut = {{
 				parentanchor = right|vcenter
 				size = {{ 25 25 }}
 
@@ -329,8 +329,6 @@ BUTTON = f"""
 					on_action = "[GetScriptedGui('pp_lplan_select').Execute(GuiScope.SetRoot(LocationView.GetLocation.MakeScope).End)]"
 					on_action = "[GetVariableSystem.Set('pp_lplan_open', 'yes')]"
 				}}
-
-				tooltipwidget = {{ BasicFunctionalTooltip = {{}} }}
 			}}
 		}}
 """

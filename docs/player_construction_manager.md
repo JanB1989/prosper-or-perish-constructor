@@ -1,9 +1,10 @@
 # Player Construction Manager: design brainstorm
 
 Status 2026-11-06: **v2 built** on branch `player-construction-manager` (architecture B; v1 and v2 tested in new games as
-England, error.log clean of plan lines). Player-only: the AI keeps its own logic and is never touched.
+England, error.log clean of plan lines). Player-only: the AI keeps its own logic and is never touched (a console-only
+test switch lets it run for an AI country in the test world). 2026-11-09: see "Built 2026-11-09" below.
 
-## Built (v2, Jan 2026-11-06: payback instead of cost/profit, a location layer, templates, profiles)
+## Built (v2, Jan 2026-11-06: payback instead of cost/profit, a location layer, profiles)
 
 - **Payback is the one money number.** Payback = the gold the next level costs here over the profit one level makes
   here each month, in years. The cost is the engine's own formula, fitted in game on 158 real constructions (all within
@@ -28,13 +29,13 @@ England, error.log clean of plan lines). Player-only: the AI keeps its own logic
   waiting for the condition, done, a level under construction, payback above the limit, cannot be built now, budget,
   market lacks the construction goods).
 - **Getting there:** a cog in the location window header (player-owned locations) opens the Here tab on that location;
-  the Locations tab lists every province and location with its mode, Edit, and template buttons. The Here tab lists the
+  the Locations tab lists every province and location with its mode and an Edit button. The Here tab lists the
   buildings standing there and the ones that could be built there, each with its payback, and an Add button.
-- **Templates** (4 per country): save a location's mode and rules, apply them to one location (Here or Locations tab) or to
-  every location of a province (province row in Locations, or the Province button in Here). A location shows "template
-  N" until edited.
-- **Profiles** (3 per country, Plan tab): save and load the country settings (reserve, limit, logistics line, stock
-  line, payback line, which rule groups run, every good's mode). Province focuses and location rules are not in them.
+- Templates removed 2026-11-09: Location Profiles do this (reusable, assigned on the map).
+- **Presets** (2026-11-09, Jan: "baseline settings I could take a look at"; replace the 3 saved "Profiles", whose
+  name clashed with Location Profiles): Balanced, Food and growth, Builder, Cautious (`[construction_plan.presets]`).
+  A preset sets every setting (unnamed ones back to the default), which rule groups run and every good's mode, so
+  loading one never leaves a mix. Province focuses, location profiles and location rules stay.
 - **Guards found in the in-game tests:** the construction goods must be in the location's market (one unit's need of each;
   the engine stalls a construction whose market lacks them: 3 Cookshops in Northumberland stalled on Edinburgh masonry);
   never a second level of the same building in a location while one is under construction (a Granary had +5 queued in
@@ -44,8 +45,38 @@ England, error.log clean of plan lines). Player-only: the AI keeps its own logic
   `allow` and max levels; building conditions of foreign and jewelry buildings read `scope:actor` (the plan sets it);
   `num_pop_type:peasants` (colon form); a GUI reads a scope variable with `Scope.Var('x')`, `.IsSet`.
 - Not built yet: Upgrades rule group; filter by the game's own search filters inside our lists (the conditions mirror their
-  numbers instead); per-template names; "Expand" and "Never" for farms bought by the food rule are untested at scale; a
+  numbers instead); "Expand" and "Never" for farms bought by the food rule are untested at scale; a
   long run (cost not profiled).
+
+## Built 2026-11-09 (Jan: test it, make it clean, let it work with the game's own automation)
+
+- **Global and local together.** A location profile takes from the global rules only what it sets: its rules' targets
+  (a good, market access; a staple food also takes the farm step, victuals the Grange and Yard steps) and the global
+  groups it switches off (Food, Logistics, Improvements, Goods; checkboxes in the profile editor). Everything else the
+  global rules still build in profile locations, after the profile's own rules (`pp_cplan_*_ok` triggers). Before,
+  every global rule left a profile location alone, which also kept Cookshops and Granaries out of province capitals
+  with a profile. Details: `docs/location_profiles.md`.
+- **The game's own automation** (Automation panel): the Plan tab shows whether Buildings, Auto-Expand, Close and Open
+  and Destroy are on (`is_system_automated = buildings / expandbuildings / closebuildings / destroybuildings`, read in
+  game). They work together: the plan only starts constructions (never closes, destroys or switches methods); neither
+  queues a second level of a building in a location while one is under construction; the plan never adds a level to
+  a closed building (`is_opened`); with Buildings on, the game also builds by its own judgement everywhere, from the
+  same treasury (the plan keeps its reserve). The AI's own destroy paths are forts, proximity sources and late "swap"
+  pairs only (private notes `queue_logic.md`), so no destroy-rebuild loop with the plan's buildings.
+- **One construction at a time per location.** The engine builds a location's constructions one after another (test
+  world: a Cookshop moved 344 days in a year while the Granary, Grange and Carrier Inn the plan had started beside it
+  moved 0). The plan starts nothing where `num_civil_constructions` > 0, whoever started it (gold paid for a waiting
+  construction is gold lost to everything else).
+- **Location window style.** The Profile row on top of the Infrastructure tab and the two header buttons use vanilla's
+  types (card, header strip, toggle tiles, `button_round_shortcut`, `button_automation_shortcut`): see
+  `docs/location_profiles.md`, UI.
+- **Templates removed** (Location Profiles do the same, on the map).
+- **Test mode for an AI country:** `pp_cplan_ai_test` (console only) lets the monthly pass run for an AI country (the
+  test world as observer: no event pop-ups; the AI's own building plays the game's Buildings automation) and writes
+  per construction a marker and two `debug_log_scopes` lines to debug.log, and one line per pass. `debug_log` has no
+  data context in this build (ROOT and saved scopes are null in its text) and `debug_log_date` writes nothing.
+  `uv run ppc plan-report --save ... --baseline ...` (`plan_test_report.py`) turns saves and logs into
+  `artifacts/plan_test/<date>/report/index.html`. Runbook in `pp_testing\README.md`, setup `run\pp_plan_ai_setup.txt`.
 
 ## Built (v1)
 

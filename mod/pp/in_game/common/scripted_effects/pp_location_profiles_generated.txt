@@ -2429,6 +2429,50 @@ pp_lprof_set_staged = {
 	}
 }
 
+# The global rule group scope:pp_field (global_food / ...) switched off in the profile's locations, or on again
+# (unset = on: the group builds there too, except the targets of the profile's own rules).
+pp_lprof_global_staged = {
+	switch = {
+		trigger = scope:pp_field
+		flag:global_food = {
+			if = {
+				limit = { has_variable = pp_lprof_s_xf }
+				remove_variable = pp_lprof_s_xf
+			}
+			else = {
+				set_variable = { name = pp_lprof_s_xf value = 101 }
+			}
+		}
+		flag:global_logistics = {
+			if = {
+				limit = { has_variable = pp_lprof_s_xl }
+				remove_variable = pp_lprof_s_xl
+			}
+			else = {
+				set_variable = { name = pp_lprof_s_xl value = 101 }
+			}
+		}
+		flag:global_improve = {
+			if = {
+				limit = { has_variable = pp_lprof_s_xi }
+				remove_variable = pp_lprof_s_xi
+			}
+			else = {
+				set_variable = { name = pp_lprof_s_xi value = 101 }
+			}
+		}
+		flag:global_goods = {
+			if = {
+				limit = { has_variable = pp_lprof_s_xg }
+				remove_variable = pp_lprof_s_xg
+			}
+			else = {
+				set_variable = { name = pp_lprof_s_xg value = 101 }
+			}
+		}
+	}
+}
+
 # The colour scope:pp_col (c1..cN).
 pp_lprof_color_staged = {
 	switch = {
@@ -2642,6 +2686,10 @@ pp_lprof_copy_profile = {
 	pp_lprof_pull_g = { from = $from$_r5_g to = $to$_r5_g }
 	pp_lprof_pull_cat = { from = $from$_r5_c to = $to$_r5_c }
 	pp_lprof_pull_n = { from = $from$_r5_pb to = $to$_r5_pb }
+	pp_lprof_pull_n = { from = $from$_xf to = $to$_xf }
+	pp_lprof_pull_n = { from = $from$_xl to = $to$_xl }
+	pp_lprof_pull_n = { from = $from$_xi to = $to$_xi }
+	pp_lprof_pull_n = { from = $from$_xg to = $to$_xg }
 }
 
 # Any scope: the frame numbers of the rules' category targets, scope:pp_lprof_country's $from$_* -> this scope's
@@ -2677,6 +2725,10 @@ pp_lprof_clear_copies = {
 	remove_variable = $p$_r5_g
 	remove_variable = $p$_r5_c
 	remove_variable = $p$_r5_pb
+	remove_variable = $p$_xf
+	remove_variable = $p$_xl
+	remove_variable = $p$_xi
+	remove_variable = $p$_xg
 }
 
 # Any scope but a location: the rules' frame numbers of a copy ($p$_*) removed.
@@ -2763,6 +2815,188 @@ pp_lprof_pull_cat = {
 	}
 }
 
+# Country scope (root = the country): the example profiles ([[location_profiles.examples]]), each in the next free
+# slot (none once all are used), made with the buttons' own effects. The profile editor offers them while the
+# country has no profile; the test world's setup uses them too.
+pp_lprof_examples_do = {
+	# example 1: pp_sym_farming
+	if = {
+		limit = { pp_lprof_first_free > 0 }
+		save_scope_value_as = { name = pp_slot value = flag:next }
+		pp_lprof_new_do = yes
+		save_scope_value_as = { name = pp_slot value = flag:e }
+		save_scope_value_as = { name = pp_field value = flag:icon }
+		save_scope_value_as = { name = pp_key value = flag:pp_sym_farming }
+		pp_lprof_set_do = yes
+		save_scope_value_as = { name = pp_col value = flag:c4 }
+		pp_lprof_color_do = yes
+		save_scope_value_as = { name = pp_field value = flag:r1 }
+		save_scope_value_as = { name = pp_key value = flag:wheat }
+		pp_lprof_set_do = yes
+		save_scope_value_as = { name = pp_dir value = flag:down }
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		save_scope_value_as = { name = pp_field value = flag:r2 }
+		save_scope_value_as = { name = pp_key value = flag:legumes }
+		pp_lprof_set_do = yes
+		save_scope_value_as = { name = pp_dir value = flag:down }
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		save_scope_value_as = { name = pp_field value = flag:r3 }
+		save_scope_value_as = { name = pp_key value = flag:livestock }
+		pp_lprof_set_do = yes
+		save_scope_value_as = { name = pp_dir value = flag:down }
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+	}
+	# example 2: pp_sym_mining
+	if = {
+		limit = { pp_lprof_first_free > 0 }
+		save_scope_value_as = { name = pp_slot value = flag:next }
+		pp_lprof_new_do = yes
+		save_scope_value_as = { name = pp_slot value = flag:e }
+		save_scope_value_as = { name = pp_field value = flag:icon }
+		save_scope_value_as = { name = pp_key value = flag:pp_sym_mining }
+		pp_lprof_set_do = yes
+		save_scope_value_as = { name = pp_col value = flag:c2 }
+		pp_lprof_color_do = yes
+		save_scope_value_as = { name = pp_field value = flag:r1 }
+		save_scope_value_as = { name = pp_key value = flag:iron }
+		pp_lprof_set_do = yes
+		save_scope_value_as = { name = pp_dir value = flag:down }
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		save_scope_value_as = { name = pp_field value = flag:r2 }
+		save_scope_value_as = { name = pp_key value = flag:copper }
+		pp_lprof_set_do = yes
+		save_scope_value_as = { name = pp_dir value = flag:down }
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		save_scope_value_as = { name = pp_field value = flag:r3 }
+		save_scope_value_as = { name = pp_key value = flag:lead }
+		pp_lprof_set_do = yes
+		save_scope_value_as = { name = pp_dir value = flag:down }
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		save_scope_value_as = { name = pp_field value = flag:r4 }
+		save_scope_value_as = { name = pp_key value = flag:tin }
+		pp_lprof_set_do = yes
+		save_scope_value_as = { name = pp_dir value = flag:down }
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+	}
+	# example 3: pp_sym_forest
+	if = {
+		limit = { pp_lprof_first_free > 0 }
+		save_scope_value_as = { name = pp_slot value = flag:next }
+		pp_lprof_new_do = yes
+		save_scope_value_as = { name = pp_slot value = flag:e }
+		save_scope_value_as = { name = pp_field value = flag:icon }
+		save_scope_value_as = { name = pp_key value = flag:pp_sym_forest }
+		pp_lprof_set_do = yes
+		save_scope_value_as = { name = pp_col value = flag:c5 }
+		pp_lprof_color_do = yes
+		save_scope_value_as = { name = pp_field value = flag:r1 }
+		save_scope_value_as = { name = pp_key value = flag:lumber }
+		pp_lprof_set_do = yes
+		save_scope_value_as = { name = pp_dir value = flag:down }
+		pp_lprof_payback_do = yes
+		save_scope_value_as = { name = pp_field value = flag:r2 }
+		save_scope_value_as = { name = pp_key value = flag:logistics }
+		pp_lprof_set_do = yes
+	}
+	# example 4: pp_sym_market
+	if = {
+		limit = { pp_lprof_first_free > 0 }
+		save_scope_value_as = { name = pp_slot value = flag:next }
+		pp_lprof_new_do = yes
+		save_scope_value_as = { name = pp_slot value = flag:e }
+		save_scope_value_as = { name = pp_field value = flag:icon }
+		save_scope_value_as = { name = pp_key value = flag:pp_sym_market }
+		pp_lprof_set_do = yes
+		save_scope_value_as = { name = pp_col value = flag:c3 }
+		pp_lprof_color_do = yes
+		save_scope_value_as = { name = pp_field value = flag:r1 }
+		save_scope_value_as = { name = pp_key value = flag:logistics }
+		pp_lprof_set_do = yes
+		save_scope_value_as = { name = pp_field value = flag:r2 }
+		save_scope_value_as = { name = pp_key value = flag:trade_category }
+		pp_lprof_set_do = yes
+		save_scope_value_as = { name = pp_dir value = flag:down }
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		save_scope_value_as = { name = pp_field value = flag:r3 }
+		save_scope_value_as = { name = pp_key value = flag:tools }
+		pp_lprof_set_do = yes
+		save_scope_value_as = { name = pp_dir value = flag:down }
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+	}
+	# example 5: pp_sym_harbour
+	if = {
+		limit = { pp_lprof_first_free > 0 }
+		save_scope_value_as = { name = pp_slot value = flag:next }
+		pp_lprof_new_do = yes
+		save_scope_value_as = { name = pp_slot value = flag:e }
+		save_scope_value_as = { name = pp_field value = flag:icon }
+		save_scope_value_as = { name = pp_key value = flag:pp_sym_harbour }
+		pp_lprof_set_do = yes
+		save_scope_value_as = { name = pp_col value = flag:c6 }
+		pp_lprof_color_do = yes
+		save_scope_value_as = { name = pp_field value = flag:r1 }
+		save_scope_value_as = { name = pp_key value = flag:fish }
+		pp_lprof_set_do = yes
+		save_scope_value_as = { name = pp_dir value = flag:down }
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		save_scope_value_as = { name = pp_field value = flag:r2 }
+		save_scope_value_as = { name = pp_key value = flag:naval_category }
+		pp_lprof_set_do = yes
+		save_scope_value_as = { name = pp_dir value = flag:down }
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		pp_lprof_payback_do = yes
+		save_scope_value_as = { name = pp_field value = flag:r3 }
+		save_scope_value_as = { name = pp_key value = flag:logistics }
+		pp_lprof_set_do = yes
+	}
+	# example 6: pp_sym_stronghold
+	if = {
+		limit = { pp_lprof_first_free > 0 }
+		save_scope_value_as = { name = pp_slot value = flag:next }
+		pp_lprof_new_do = yes
+		save_scope_value_as = { name = pp_slot value = flag:e }
+		save_scope_value_as = { name = pp_field value = flag:icon }
+		save_scope_value_as = { name = pp_key value = flag:pp_sym_stronghold }
+		pp_lprof_set_do = yes
+		save_scope_value_as = { name = pp_col value = flag:c7 }
+		pp_lprof_color_do = yes
+		save_scope_value_as = { name = pp_field value = flag:global_food }
+		pp_lprof_global_do = yes
+		save_scope_value_as = { name = pp_field value = flag:global_logistics }
+		pp_lprof_global_do = yes
+		save_scope_value_as = { name = pp_field value = flag:global_improve }
+		pp_lprof_global_do = yes
+		save_scope_value_as = { name = pp_field value = flag:global_goods }
+		pp_lprof_global_do = yes
+	}
+}
+
 # Any scope, never run (pp_cplan_run calls it under always = no): declares the flags the GUI passes and reads
 # the variables only the GUI reads, so the script check logs no 'used but never set' line for them.
 pp_lprof_declare_flags = {
@@ -2805,6 +3039,10 @@ pp_lprof_declare_flags = {
 	set_variable = { name = pp_lprof_flag value = flag:furniture }
 	set_variable = { name = pp_lprof_flag value = flag:gems }
 	set_variable = { name = pp_lprof_flag value = flag:glass }
+	set_variable = { name = pp_lprof_flag value = flag:global_food }
+	set_variable = { name = pp_lprof_flag value = flag:global_goods }
+	set_variable = { name = pp_lprof_flag value = flag:global_improve }
+	set_variable = { name = pp_lprof_flag value = flag:global_logistics }
 	set_variable = { name = pp_lprof_flag value = flag:goods_gold }
 	set_variable = { name = pp_lprof_flag value = flag:government_category }
 	set_variable = { name = pp_lprof_flag value = flag:horses }
@@ -3018,6 +3256,10 @@ pp_lprof_declare_flags = {
 				has_variable = pp_lprof_e_r5_g
 				has_variable = pp_lprof_e_r5_c
 				has_variable = pp_lprof_e_r5_pb
+				has_variable = pp_lprof_e_xf
+				has_variable = pp_lprof_e_xl
+				has_variable = pp_lprof_e_xi
+				has_variable = pp_lprof_e_xg
 				has_variable = pp_lprof_e_r1_cn
 				has_variable = pp_lprof_e_r2_cn
 				has_variable = pp_lprof_e_r3_cn

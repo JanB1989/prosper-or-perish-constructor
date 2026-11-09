@@ -50,3 +50,29 @@ pp_lprof_has_locations = {
 		has_variable = pp_lprof
 	}
 }
+
+# Location scope: a rule of the location's profile has the good $g$ as its target (that good is the profile's here:
+# the global rules for it stand back; pp_construction_plan.txt's triggers).
+pp_lprof_has_good = {
+	has_variable = pp_lprof
+	OR = {
+		AND = { has_variable = pp_lprof_r1_g var:pp_lprof_r1_g = goods:$g$ }
+		AND = { has_variable = pp_lprof_r2_g var:pp_lprof_r2_g = goods:$g$ }
+		AND = { has_variable = pp_lprof_r3_g var:pp_lprof_r3_g = goods:$g$ }
+		AND = { has_variable = pp_lprof_r4_g var:pp_lprof_r4_g = goods:$g$ }
+		AND = { has_variable = pp_lprof_r5_g var:pp_lprof_r5_g = goods:$g$ }
+	}
+}
+
+# Location scope: a rule of the location's profile has a staple food as its target (the profile decides which
+# food is made here: the food rule's farm step stands back). Staple foods: legumes, maize, millet, potato, rice, wheat, camels, livestock, wool, fish, wild_game, fruit, olives.
+pp_lprof_food_target = {
+	has_variable = pp_lprof
+	OR = {
+		AND = { has_variable = pp_lprof_r1_g var:pp_lprof_r1_g = { OR = { this = goods:legumes this = goods:maize this = goods:millet this = goods:potato this = goods:rice this = goods:wheat this = goods:camels this = goods:livestock this = goods:wool this = goods:fish this = goods:wild_game this = goods:fruit this = goods:olives } } }
+		AND = { has_variable = pp_lprof_r2_g var:pp_lprof_r2_g = { OR = { this = goods:legumes this = goods:maize this = goods:millet this = goods:potato this = goods:rice this = goods:wheat this = goods:camels this = goods:livestock this = goods:wool this = goods:fish this = goods:wild_game this = goods:fruit this = goods:olives } } }
+		AND = { has_variable = pp_lprof_r3_g var:pp_lprof_r3_g = { OR = { this = goods:legumes this = goods:maize this = goods:millet this = goods:potato this = goods:rice this = goods:wheat this = goods:camels this = goods:livestock this = goods:wool this = goods:fish this = goods:wild_game this = goods:fruit this = goods:olives } } }
+		AND = { has_variable = pp_lprof_r4_g var:pp_lprof_r4_g = { OR = { this = goods:legumes this = goods:maize this = goods:millet this = goods:potato this = goods:rice this = goods:wheat this = goods:camels this = goods:livestock this = goods:wool this = goods:fish this = goods:wild_game this = goods:fruit this = goods:olives } } }
+		AND = { has_variable = pp_lprof_r5_g var:pp_lprof_r5_g = { OR = { this = goods:legumes this = goods:maize this = goods:millet this = goods:potato this = goods:rice this = goods:wheat this = goods:camels this = goods:livestock this = goods:wool this = goods:fish this = goods:wild_game this = goods:fruit this = goods:olives } } }
+	}
+}

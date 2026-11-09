@@ -1135,6 +1135,25 @@ hidden_goods = ["offset", "logistics", "local_food", "manual_labor", "province_f
 # Icons per row in the picker.
 per_row = 11
 
+# Presets (Jan 2026-11-09: baseline settings to start from; Plan tab). A preset sets every setting: the ones it names
+# (in the panel's units: months, constructions, %, years), the rest back to the defaults above; which rule groups run
+# (off = the groups named: food, logistics, improve, goods); every good's mode (keep / expand / never; goods it does not
+# name are off, "*" = every good not named). The order here is the order of the buttons.
+[construction_plan.presets.balanced]   # the defaults; construction goods kept stocked
+goods = { lumber = "keep", masonry = "keep", tools = "keep" }
+
+[construction_plan.presets.food]       # food and growth: food, logistics, improvements from 80 %; no goods rules
+settings = { max = 4, famine = 4, imp = 80 }
+off = ["goods"]
+
+[construction_plan.presets.builder]    # grow the economy: a short reserve, many constructions, every producer that pays back in 15 years
+settings = { reserve = 3, max = 6, payback = 15 }
+goods = { "*" = "expand", lumber = "keep", masonry = "keep", tools = "keep" }
+
+[construction_plan.presets.cautious]   # a long reserve, one construction a month: food and logistics only
+settings = { reserve = 12, max = 1 }
+off = ["improve", "goods"]
+
 [location_profiles]
 # Location Profiles (branch location-profiles, 2026-11-07, Jan; docs/location_profiles.md): player profiles = an icon, a
 # colour and ordered build rules, assigned to locations on the map; their rules replace the global Construction Plan
@@ -1145,6 +1164,41 @@ slots = 100           # profiles per country (Jan 2026-11-07: up to 100; script 
 rules = 5             # ordered rules per profile
 payback_steps = [1, 2, 3, 4, 5, 7, 10, 15, 20, 30, 40, 50]   # years a rule's limit steps through (Jan 2026-11-07: up to 50); past the last = any payback
 colors = [[0.80, 0.25, 0.20], [0.90, 0.55, 0.15], [0.85, 0.80, 0.25], [0.30, 0.65, 0.30], [0.25, 0.60, 0.70], [0.25, 0.40, 0.80], [0.55, 0.35, 0.75], [0.75, 0.40, 0.60]]
+
+# Example profiles (Jan 2026-11-09: baseline profiles to look at and start from). The profile editor's "Start with the
+# examples" (shown while the country has no profile) makes each in the next free slot; the test world's setup uses
+# them too. icon: a good, a building category or a symbol; color: 1..8 (the colors above); rules in order: target (a
+# good, "logistics" = market access, or a building category) and payback (years, one of payback_steps; left out = any
+# payback); off: the global rule groups kept out of its locations (food, logistics, improvements, goods).
+[[location_profiles.examples]]   # breadbasket: its staple foods decide the food made here
+icon = "pp_sym_farming"
+color = 4
+rules = [{ target = "wheat", payback = 20 }, { target = "legumes", payback = 20 }, { target = "livestock", payback = 20 }]
+
+[[location_profiles.examples]]   # mining town: its ores while they pay back
+icon = "pp_sym_mining"
+color = 2
+rules = [{ target = "iron", payback = 30 }, { target = "copper", payback = 30 }, { target = "lead", payback = 30 }, { target = "tin", payback = 30 }]
+
+[[location_profiles.examples]]   # lumber camp: lumber, then market access
+icon = "pp_sym_forest"
+color = 5
+rules = [{ target = "lumber", payback = 50 }, { target = "logistics" }]
+
+[[location_profiles.examples]]   # market town: market access first, then trade buildings and tools
+icon = "pp_sym_market"
+color = 3
+rules = [{ target = "logistics" }, { target = "trade_category", payback = 20 }, { target = "tools", payback = 20 }]
+
+[[location_profiles.examples]]   # harbour: fish, naval buildings, market access
+icon = "pp_sym_harbour"
+color = 6
+rules = [{ target = "fish", payback = 30 }, { target = "naval_category", payback = 30 }, { target = "logistics" }]
+
+[[location_profiles.examples]]   # hands off: no rules, and the global rules stay out: the plan builds nothing here
+icon = "pp_sym_stronghold"
+color = 7
+off = ["food", "logistics", "improvements", "goods"]
 
 [location_profiles.symbols]
 # Generic pictures a profile can carry as its icon (Jan 2026-11-07: "a city, rural, food, ... so you are not forced to
@@ -1225,8 +1279,6 @@ hidden_goods = ["offset", "logistics", "local_food", "manual_labor", "province_f
 payback_years = 10            # goods "Expand": add a level while it pays back within this many years
 # Two layers: the global rules above and, per location, own rules that override them there.
 rule_slots = 4                # rules one location can hold (the panel's Here tab shows this many rows)
-template_slots = 4            # location templates a country can save and apply to other locations
-profile_slots = 3             # global profiles (the country settings, rule groups and goods modes) a country can save
 max_rule_level = 30           # the highest level a location rule can ask for
 # Conditions of the location rules, in the panel's cycle order. They mirror the game's own location filters
 # (in_game/gui/filters/05_location.txt: control, proximity, market access, employment, population, RGO profit, coast,

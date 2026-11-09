@@ -140,7 +140,7 @@ def test_scripted_guis_of_the_contract() -> None:
     guis = _read(MOD / lpf.SCRIPTED_GUIS)
     effects = _defined("scripted_effects")
     rows = re.findall(r"^\| `(pp_lprof_[a-z_]+)` \| (location|country)", _read(CONTRACT), re.MULTILINE)
-    assert len(rows) == 9
+    assert len(rows) == 11  # + pp_lprof_global, pp_lprof_examples (2026-11-09)
     for name, scope in rows:
         block = _block(guis, name)
         assert f"scope = {scope}" in block, name
@@ -169,21 +169,63 @@ def test_flags_and_scopes_are_declared() -> None:
     assert "pp_lprof_declare_flags = yes" in never
 
 
+GROUPS = ("profiles", "own", "food", "logistics", "improve", "goods")
+
+
 def test_monthly_pass_order_and_global_rules() -> None:
-    """Profiles run first with their own share; every global rule leaves a profile location alone."""
-    run = _block(_code(PLAN_EFFECTS), "pp_cplan_run")
-    order = [run.index(marker) for marker in ("pp_lprof_run = yes", "pp_cplan_has_own_locations = yes",
-                                               "pp_cplan_food_province = yes", "pp_cplan_try_logistics_here = yes",
-                                               "pp_cplan_goods_run = yes")]
-    assert order == sorted(order)
-    assert run.index("set_variable = { name = pp_cplan_cap value = 100 }") < order[0]
-    assert "NOT = { has_variable = pp_lprof }" in _block(_code(PLAN_TRIGGERS), "pp_cplan_location_ok")
+    """Every rule group with its own share; the order turns with the month (each group first twice a year: with
+    little gold the first group took it every month, AI test run 2026-11-09). A profile takes from the global rules only
+    what it sets (Jan 2026-11-09): its rules' targets and the groups it switches off; the rest build there too."""
+    effects = _code(PLAN_EFFECTS)
+    run = _block(effects, "pp_cplan_run")
+    branches = re.findall(r"limit = \{ OR = \{ current_month = (\d+) current_month = (\d+) \} \}\n((?:\t*pp_cplan_group_\w+ = yes\n)+)", run)
+    assert [(int(a), int(b)) for a, b, _ in branches] == [(m, m + 6) for m in range(1, 7)]
+    firsts = []
+    for _, _, calls in branches:
+        seq = re.findall(r"pp_cplan_group_(\w+) = yes", calls)
+        assert sorted(seq) == sorted(GROUPS)
+        firsts.append(seq[0])
+    assert sorted(firsts) == sorted(GROUPS)  # every group goes first in one pair of months
+    assert run.index("set_variable = { name = pp_cplan_cap value = 100 }") < run.index("current_month = 1")
+    for group, marker in (("profiles", "pp_lprof_run = yes"), ("own", "pp_cplan_location_rules = yes"),
+                          ("food", "pp_cplan_food_province = yes"), ("logistics", "pp_cplan_try_logistics_here = yes"),
+                          ("improve", "pp_cplan_try_improve_here = yes"), ("goods", "pp_cplan_goods_run = yes")):
+        assert marker in _block(effects, f"pp_cplan_group_{group}"), group
+    triggers = _code(PLAN_TRIGGERS)
+    assert "pp_lprof" not in _block(triggers, "pp_cplan_location_ok")
+    # each global group: the base check, its own switch, and the targets a profile rule takes over
+    expect = {
+        "pp_cplan_food_ok": ("pp_cplan_location_ok = yes", "has_variable = pp_lprof_xf"),
+        "pp_cplan_farm_ok": ("pp_cplan_food_ok = yes", "pp_lprof_food_target = yes"),
+        "pp_cplan_victuals_ok": ("pp_cplan_food_ok = yes", "pp_lprof_has_good = { g = victuals }"),
+        "pp_cplan_logistics_ok": ("has_variable = pp_lprof_xl", "pp_lprof_has_good = { g = logistics }"),
+        "pp_cplan_improve_ok": ("pp_cplan_location_ok = yes", "has_variable = pp_lprof_xi"),
+        "pp_cplan_goods_ok": ("has_variable = pp_lprof_xg", "pp_lprof_has_good = { g = $g$ }"),
+    }
+    for name, needles in expect.items():
+        block = _block(triggers, name)
+        for needle in needles:
+            assert needle in block, (name, needle)
     assert "add = pp_lprof_group_n" in _block(_code(PLAN_VALUES), "pp_cplan_groups_on")
-    # the global groups pick their locations through pp_cplan_location_ok
+    # the goods rules pick their locations per good, logistics and improvements through their group check
     plan = _code(MOD / cp.EFFECTS)
-    for limit in re.findall(r"ordered_owned_location = \{\n\t*limit = \{([^\n]*)", plan):
-        assert "pp_cplan_location_ok = yes" in limit
-    assert "pp_cplan_location_ok = yes" in run.split("ordered_owned_location")[1].split("order_by")[0]
+    limits = re.findall(r"ordered_owned_location = \{\n\t*limit = \{([^\n]*)", plan)
+    assert limits
+    for limit in limits:
+        assert re.search(r"pp_cplan_goods_ok = \{ g = \w+ \}", limit), limit
+    for group, check in (("logistics", "pp_cplan_logistics_ok = yes"), ("improve", "pp_cplan_improve_ok = yes")):
+        block = _block(effects, f"pp_cplan_group_{group}")
+        assert check in block.split("ordered_owned_location")[1].split("order_by")[0], group
+    food = _block(_code(PLAN_EFFECTS), "pp_cplan_food_province")
+    assert "pp_cplan_farm_ok = yes" in food and "pp_cplan_victuals_ok = yes" in food and "pp_cplan_food_ok = yes" in food
+    assert "pp_cplan_location_ok" not in food
+    # the location copy carries the switches; the profile triggers read the rules' goods
+    fields = lpf.profile_fields(lpf.load_config(PROJECT))
+    for name, _, _ in lpf.GLOBAL_GROUPS:
+        assert name in fields
+    generated = _code(MOD / lpf.TRIGGERS)
+    assert "var:pp_lprof_r1_g = goods:$g$" in _block(generated, "pp_lprof_has_good")
+    assert "goods:wheat" in _block(generated, "pp_lprof_food_target")
     hand = _code(MOD / lpf.HAND_EFFECTS)
     group = _block(hand, "pp_lprof_run")
     assert "change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }" in group
@@ -508,3 +550,22 @@ def test_rules_keep_the_payback_they_found() -> None:
     loc = (MOD / "main_menu/localization/english/pp_location_profiles_gui_l_english.yml").read_text(encoding="utf-8-sig")
     for r in range(1, lpf.load_config(PROJECT).rules + 1):
         assert f"'PP_LPROF_UI_EST_{r}'" in loc and f"pp_lprof_r{r}_est" in loc
+
+
+def test_example_profiles_use_the_buttons_effects() -> None:
+    """Jan 2026-11-09: ready profiles to look at. Each example is made in the next free slot with the buttons own
+    effects; the editor offers them while the country has no profile."""
+    config = lpf.load_config(PROJECT)
+    assert len(config.examples) >= 5
+    body = _block(_code(MOD / lpf.EFFECTS), "pp_lprof_examples_do")
+    assert body.count("pp_lprof_new_do = yes") == len(config.examples)
+    assert body.count("limit = { pp_lprof_first_free > 0 }") == len(config.examples)
+    # a payback of 20 years from "any": down to 50, 40, 30, 20
+    steps = config.payback_steps
+    assert len(steps) - steps.index(20) == 4
+    hands_off = [example for example in config.examples if not example.rules]
+    assert hands_off and set(hands_off[0].off) == {group for _, _, group in lpf.GLOBAL_GROUPS}
+    for _, flag, _ in lpf.GLOBAL_GROUPS:
+        assert f"value = flag:{flag} }}" in body
+    window = _code(MOD / "in_game/gui/pp_location_profiles.gui")
+    assert "GetScriptedGui(\x27pp_lprof_examples\x27)" in window

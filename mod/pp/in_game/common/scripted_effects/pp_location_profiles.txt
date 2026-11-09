@@ -1,7 +1,10 @@
 ﻿# Prosper or Perish - Location Profiles (branch location-profiles, 2026-11-07, Jan; docs/location_profiles.md).
 # The player defines profiles (an icon, a colour, ordered build rules) and assigns them to locations on the map. In a
-# location with a profile the global Construction Plan rules stand back (pp_cplan_location_ok) and the profile's rules
-# build there: the first rule group of the plan's monthly pass (pp_cplan_run), with its own share of the monthly limit.
+# location with a profile the profile's rules build first: the first rule group of the plan's monthly pass
+# (pp_cplan_run), with its own share of the monthly limit. A profile takes from the global Construction Plan rules only
+# what it sets (Jan 2026-11-09): its rules' targets (a good, market access) and the global groups it switches off
+# (pp_lprof_xf / _xl / _xi / _xg: food, logistics, improvements, goods); the rest of the global rules build there too
+# (pp_cplan_*_ok in scripted_triggers/pp_construction_plan.txt).
 # Player-only like the plan: the pass runs for human countries that switched the plan on, the edits are scripted GUIs.
 # Up to 100 profiles cost little: every location with a profile carries a COPY of it (written on assign and whenever its
 # slot is edited), and the monthly pass and the map badge read only the copy; the editor shows one edit buffer (a copy
@@ -110,6 +113,11 @@ pp_lprof_rule = {
 		if = {
 			limit = { scope:pp_cplan_country = { has_variable = pp_cplan_hit } }
 			set_variable = { name = pp_lprof_st value = 109 }
+		}
+		else_if = {
+			# one construction at a time in a location (pp_cplan_construct_scoped): wait for the one under way here
+			limit = { num_civil_constructions > 0 }
+			set_variable = { name = pp_lprof_st value = 103 }
 		}
 		else = {
 			save_temporary_scope_value_as = { name = pp_lprof_pb value = 1000000 }
@@ -408,6 +416,12 @@ pp_lprof_color_do = {
 	pp_lprof_edit = { do = pp_lprof_color_staged }
 }
 
+# Country scope: the global rule group scope:pp_field (global_food / global_logistics / global_improve /
+# global_goods) of slot scope:pp_slot off in its locations, or on again.
+pp_lprof_global_do = {
+	pp_lprof_edit = { do = pp_lprof_global_staged }
+}
+
 # Country scope: one step (scope:pp_dir) of the payback limit of rule scope:pp_field of slot scope:pp_slot.
 pp_lprof_payback_do = {
 	pp_lprof_edit = { do = pp_lprof_payback_staged }
@@ -669,7 +683,6 @@ pp_lprof_assign_to = {
 		}
 	}
 	remove_variable = pp_cplan_mode
-	remove_variable = pp_cplan_tpl
 	pp_cplan_own_sync = yes
 }
 

@@ -1,11 +1,11 @@
 ﻿# Prosper or Perish - Construction Plan panel (branch player-construction-manager, 2026-11-06, Jan).
 # A scripted widget (gui/scripted_widgets/pp_construction_plan.txt), so no vanilla window is overridden. It holds the
 # opener button and the panel: tabs Plan / Food / Goods / Logistics (the global rules), Locations (every location's
-# mode and template) and Here (one location's own rules, picked in Locations or with the cog in the location window).
+# mode) and Here (one location's own rules, picked in Locations or with the cog in the location window).
 # Every button runs a scripted GUI in common/scripted_guis/pp_construction_plan.txt; every number is a script value
 # (common/script_values/pp_construction_plan*.txt). Payback shown for a building is the engine's own: the next level's
 # build cost (GetBuildOrExpandBuildingCost) over its profit per level here (GetBuildingTypeProfitInLocation).
-# Generated parts: pp_construction_plan_goods.gui (Goods rows), pp_construction_plan_here.gui (rule rows, templates).
+# Generated parts: pp_construction_plan_goods.gui (Goods rows), pp_construction_plan_here.gui (rule rows).
 # Shown only to a player who plays a country (not to observers: their scripted GUIs do nothing).
 
 types PPConstructionPlan
@@ -298,78 +298,50 @@ widget = {
 						}
 					}
 
+					# the game's own building automation and how the plan works beside it (Jan 2026-11-09)
 					hbox = {
 						layoutpolicy_horizontal = expanding
 						spacing = 6
-						pp_cplan_title = { text = "PP_CPLAN_PROFILES" tooltip = "PP_CPLAN_PROFILES_TT" }
+						pp_cplan_label = { text = "PP_CPLAN_GAME_AUTO" tooltip = "PP_CPLAN_GAME_AUTO_TT" }
 						expand = {}
-						pp_cplan_label = { visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_profile_n'), '(CFixedPoint)0.5')]" text = "PP_CPLAN_PROFILE_LOADED" }
+						pp_cplan_label = { text = "PP_CPLAN_GAME_AUTO_VALUE" tooltip = "PP_CPLAN_GAME_AUTO_TT" }
+					}
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						spacing = 6
+						pp_cplan_title = { text = "PP_CPLAN_PRESETS" tooltip = "PP_CPLAN_PRESETS_TT" }
+						expand = {}
+						pp_cplan_label = { visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_preset_n'), '(CFixedPoint)0.5')]" text = "PP_CPLAN_PRESET_LOADED" }
 					}
 					hbox = {
 						layoutpolicy_horizontal = expanding
 						spacing = 6
-						pp_cplan_label = { text = "PP_CPLAN_PROFILE" }
-						pp_cplan_label = { raw_text = "1" }
-						pp_cplan_label = { visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_p1_saved_n'), '(CFixedPoint)0.5')]" text = "PP_CPLAN_SAVED" }
-						pp_cplan_label = { visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_p1_saved_n'), '(CFixedPoint)0.5'))]" text = "PP_CPLAN_EMPTY_SLOT" }
+						pp_cplan_step_button = {
+							size = { 120 26 }
+							text = "PP_CPLAN_PRESET_BALANCED"
+							tooltip = "PP_CPLAN_PRESET_BALANCED_TT"
+							onclick = "[GetScriptedGui('pp_cplan_preset').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('balanced')).End)]"
+						}
+						pp_cplan_step_button = {
+							size = { 120 26 }
+							text = "PP_CPLAN_PRESET_FOOD"
+							tooltip = "PP_CPLAN_PRESET_FOOD_TT"
+							onclick = "[GetScriptedGui('pp_cplan_preset').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('food')).End)]"
+						}
+						pp_cplan_step_button = {
+							size = { 120 26 }
+							text = "PP_CPLAN_PRESET_BUILDER"
+							tooltip = "PP_CPLAN_PRESET_BUILDER_TT"
+							onclick = "[GetScriptedGui('pp_cplan_preset').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('builder')).End)]"
+						}
+						pp_cplan_step_button = {
+							size = { 120 26 }
+							text = "PP_CPLAN_PRESET_CAUTIOUS"
+							tooltip = "PP_CPLAN_PRESET_CAUTIOUS_TT"
+							onclick = "[GetScriptedGui('pp_cplan_preset').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('cautious')).End)]"
+						}
 						expand = {}
-						pp_cplan_step_button = {
-							size = { 60 24 }
-							text = "PP_CPLAN_SAVE"
-							tooltip = "PP_CPLAN_PROFILE_SAVE_TT"
-							onclick = "[GetScriptedGui('pp_cplan_profile').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_slot', MakeScopeFlag('p1')).AddScope('pp_key', MakeScopeFlag('save')).End)]"
-						}
-						pp_cplan_step_button = {
-							visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_p1_saved_n'), '(CFixedPoint)0.5')]"
-							size = { 60 24 }
-							text = "PP_CPLAN_LOAD"
-							tooltip = "PP_CPLAN_PROFILE_LOAD_TT"
-							onclick = "[GetScriptedGui('pp_cplan_profile').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_slot', MakeScopeFlag('p1')).AddScope('pp_key', MakeScopeFlag('load')).End)]"
-						}
-					}
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 6
-						pp_cplan_label = { text = "PP_CPLAN_PROFILE" }
-						pp_cplan_label = { raw_text = "2" }
-						pp_cplan_label = { visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_p2_saved_n'), '(CFixedPoint)0.5')]" text = "PP_CPLAN_SAVED" }
-						pp_cplan_label = { visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_p2_saved_n'), '(CFixedPoint)0.5'))]" text = "PP_CPLAN_EMPTY_SLOT" }
-						expand = {}
-						pp_cplan_step_button = {
-							size = { 60 24 }
-							text = "PP_CPLAN_SAVE"
-							tooltip = "PP_CPLAN_PROFILE_SAVE_TT"
-							onclick = "[GetScriptedGui('pp_cplan_profile').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_slot', MakeScopeFlag('p2')).AddScope('pp_key', MakeScopeFlag('save')).End)]"
-						}
-						pp_cplan_step_button = {
-							visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_p2_saved_n'), '(CFixedPoint)0.5')]"
-							size = { 60 24 }
-							text = "PP_CPLAN_LOAD"
-							tooltip = "PP_CPLAN_PROFILE_LOAD_TT"
-							onclick = "[GetScriptedGui('pp_cplan_profile').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_slot', MakeScopeFlag('p2')).AddScope('pp_key', MakeScopeFlag('load')).End)]"
-						}
-					}
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 6
-						pp_cplan_label = { text = "PP_CPLAN_PROFILE" }
-						pp_cplan_label = { raw_text = "3" }
-						pp_cplan_label = { visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_p3_saved_n'), '(CFixedPoint)0.5')]" text = "PP_CPLAN_SAVED" }
-						pp_cplan_label = { visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_p3_saved_n'), '(CFixedPoint)0.5'))]" text = "PP_CPLAN_EMPTY_SLOT" }
-						expand = {}
-						pp_cplan_step_button = {
-							size = { 60 24 }
-							text = "PP_CPLAN_SAVE"
-							tooltip = "PP_CPLAN_PROFILE_SAVE_TT"
-							onclick = "[GetScriptedGui('pp_cplan_profile').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_slot', MakeScopeFlag('p3')).AddScope('pp_key', MakeScopeFlag('save')).End)]"
-						}
-						pp_cplan_step_button = {
-							visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_p3_saved_n'), '(CFixedPoint)0.5')]"
-							size = { 60 24 }
-							text = "PP_CPLAN_LOAD"
-							tooltip = "PP_CPLAN_PROFILE_LOAD_TT"
-							onclick = "[GetScriptedGui('pp_cplan_profile').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_slot', MakeScopeFlag('p3')).AddScope('pp_key', MakeScopeFlag('load')).End)]"
-						}
 					}
 
 					pp_cplan_title = { text = "PP_CPLAN_LAST" }
@@ -755,8 +727,6 @@ widget = {
 												margin = { 4 2 }
 												pp_cplan_label = { raw_text = "[Province.GetName]" default_format = "#high" }
 												expand = {}
-												pp_cplan_label = { text = "PP_CPLAN_WHOLE_PROVINCE" tooltip = "PP_CPLAN_TP_TT" }
-												pp_cplan_template_province_quick = {}
 											}
 										}
 										flowcontainer = {
@@ -772,11 +742,6 @@ widget = {
 														margin = { 14 1 }
 														pp_cplan_label = { raw_text = "[Location.GetName]" minimumsize = { 160 -1 } maximumsize = { 160 -1 } }
 														pp_cplan_location_mode_button = {}
-														pp_cplan_label = {
-															visible = "[GreaterThan_CFixedPoint(Location.MakeScope.ScriptValue('pp_cplan_tpl_n'), '(CFixedPoint)0.5')]"
-															text = "PP_CPLAN_TPL_TAG"
-															tooltip = "PP_CPLAN_TPL_TAG_TT"
-														}
 														expand = {}
 														button_regular = {
 															size = { 60 24 }
@@ -789,7 +754,6 @@ widget = {
 																on_action = "[GetVariableSystem.Set('pp_cplan_tab', 'here')]"
 															}
 														}
-														pp_cplan_template_quick = {}
 													}
 												}
 											}
@@ -942,9 +906,6 @@ widget = {
 												}
 											}
 										}
-
-										pp_cplan_title = { text = "PP_CPLAN_TEMPLATES" tooltip = "PP_CPLAN_TEMPLATES_TT" }
-										pp_cplan_template_rows = {}
 									}
 								}
 							}

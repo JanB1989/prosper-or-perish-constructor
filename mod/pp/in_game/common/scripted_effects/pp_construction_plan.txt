@@ -2,9 +2,11 @@
 # Player-only construction rules, run once a month by on_action/pp_construction_plan.txt for each human country that
 # switched the plan on. Two layers: the global rules (Food per province, Logistics per location, Goods per good) and
 # per-location own rules, which replace the global rules in that location. Location profiles (branch location-profiles,
-# pp_location_profiles.txt) run first: a location with a profile follows only the profile's rules, and the global rules
-# and own rules leave it alone (one layer per location). The pickers per building and good, the
-# build cost data, rule edits, templates and profiles are generated from [construction_plan] into
+# pp_location_profiles.txt) run first; a profile takes from the global rules only what it sets (its rules' targets and
+# the global groups it switches off), the rest of the global rules still build in its locations (Jan 2026-11-09;
+# pp_cplan_*_ok in scripted_triggers). Own rules leave no room for profiles (one of the two per location). The pickers
+# per building and good, the
+# build cost data, rule edits and presets are generated from [construction_plan] into
 # pp_construction_plan_generated.txt (construction_plan.py). Constructions are normal, paid constructions
 # (construct_building), so they show in the construction queue like the player's own.
 # Variables carry + 100 (a variable at 0 counts as unset; var:x = n compares scopes, so only < / > ranges are used).
@@ -14,11 +16,11 @@
 # defaults in [construction_plan]),
 # pp_cplan_g_<good> (101 keep stocked, 102 expand within the payback line, 103 never), the pass's pp_cplan_started /
 # _spent / _cap / _hit, the lists pp_cplan_log (locations built in by the last pass) and pp_cplan_own (locations with
-# own rules), pp_cplan_sel (the location the Here tab shows), templates pp_cplan_t<k>_* and profiles pp_cplan_p<k>_*.
+# own rules), pp_cplan_sel (the location the Here tab shows), pp_cplan_preset (the preset loaded last).
 # Province: pp_cplan_focus (+ pp_cplan_lo / _hi for Custom), pp_cplan_status + list pp_cplan_status_types. The
 # baseline rules keep nothing between passes (Jan 2026-11-08).
 # Location: pp_cplan_mode (101 own rules, 102 hands off, unset = the global rules), the rules pp_cplan_r<n>_b
-# (building type) / _lv / _m / _c / _t / _pb / _st / _est, pp_cplan_tpl (the template last applied), pp_cplan_logi (101
+# (building type) / _lv / _m / _c / _t / _pb / _st / _est, pp_cplan_logi (101
 # always, 102 never), the list pp_cplan_cands (the Here tab's buildings), pp_cplan_log_why + list pp_cplan_log_types.
 
 # Country scope: the monthly pass.
@@ -36,89 +38,72 @@ pp_cplan_run = {
 	remove_variable = pp_cplan_hit
 	# each rule group running gets an equal share of the monthly limit; a share left unused passes on to the next
 	set_variable = { name = pp_cplan_cap value = 100 }
-	# Location profiles first (pp_location_profiles.txt): a location with a profile follows only its profile's rules.
-	pp_lprof_run = yes
-	# Location rules next: a location set to Own Rules follows only its own list.
+	# The rule groups, each with an equal share of the monthly limit (a share left unused passes on to the next). Their
+	# order turns with the game's month, so every group goes first twice a year: with little gold above the reserve
+	# the group that went first took it every month (test world 2026-11-09, AI run: after the first year only the
+	# location profiles built, the food, goods and logistics rules nothing). Stateless: the month is the game's.
+	# Who may build what in a location does not depend on the order: a profile takes from the global groups what it
+	# sets (pp_cplan_*_ok); the order only decides who gets the gold and a free construction site first.
 	if = {
-		limit = { pp_cplan_has_own_locations = yes }
-		change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }
-		every_in_list = {
-			variable = pp_cplan_own
-			limit = {
-				owner ?= scope:pp_cplan_country
-				has_variable = pp_cplan_mode
-				var:pp_cplan_mode < 101.5
-			}
-			pp_cplan_location_rules = yes
-		}
+		limit = { OR = { current_month = 1 current_month = 7 } }
+		pp_cplan_group_profiles = yes
+		pp_cplan_group_own = yes
+		pp_cplan_group_food = yes
+		pp_cplan_group_logistics = yes
+		pp_cplan_group_improve = yes
+		pp_cplan_group_goods = yes
 	}
-	if = {
-		limit = { NOT = { has_variable = pp_cplan_food_off } }
-		change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }
-		every_province = {
-			pp_cplan_food_province = yes
-		}
+	else_if = {
+		limit = { OR = { current_month = 2 current_month = 8 } }
+		pp_cplan_group_own = yes
+		pp_cplan_group_food = yes
+		pp_cplan_group_logistics = yes
+		pp_cplan_group_improve = yes
+		pp_cplan_group_goods = yes
+		pp_cplan_group_profiles = yes
 	}
-	if = {
-		limit = { NOT = { has_variable = pp_cplan_logistics_off } }
-		change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }
+	else_if = {
+		limit = { OR = { current_month = 3 current_month = 9 } }
+		pp_cplan_group_food = yes
+		pp_cplan_group_logistics = yes
+		pp_cplan_group_improve = yes
+		pp_cplan_group_goods = yes
+		pp_cplan_group_profiles = yes
+		pp_cplan_group_own = yes
 	}
-	if = {
-		limit = {
-			NOT = { has_variable = pp_cplan_logistics_off }
-			pp_cplan_budget_left = yes
-		}
-		ordered_owned_location = {
-			limit = {
-				pp_cplan_location_ok = yes
-				pp_cplan_logistics_wanted = yes
-			}
-			order_by = pp_logistics_urgency_weight
-			max = 200
-			check_range_bounds = no
-			if = {
-				limit = { pp_cplan_budget_left = yes }
-				pp_cplan_try_logistics_here = yes
-			}
-		}
+	else_if = {
+		limit = { OR = { current_month = 4 current_month = 10 } }
+		pp_cplan_group_logistics = yes
+		pp_cplan_group_improve = yes
+		pp_cplan_group_goods = yes
+		pp_cplan_group_profiles = yes
+		pp_cplan_group_own = yes
+		pp_cplan_group_food = yes
 	}
-	# Improvements (Jan 2026-11-08): where people fill the player's share of a location's capacity, the improvement
-	# that adds the most capacity per gold; the fullest locations first.
-	if = {
-		limit = { NOT = { has_variable = pp_cplan_improve_off } }
-		change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }
+	else_if = {
+		limit = { OR = { current_month = 5 current_month = 11 } }
+		pp_cplan_group_improve = yes
+		pp_cplan_group_goods = yes
+		pp_cplan_group_profiles = yes
+		pp_cplan_group_own = yes
+		pp_cplan_group_food = yes
+		pp_cplan_group_logistics = yes
 	}
-	if = {
-		limit = {
-			NOT = { has_variable = pp_cplan_improve_off }
-			pp_cplan_budget_left = yes
-		}
-		ordered_owned_location = {
-			limit = {
-				pp_cplan_location_ok = yes
-				location_population_percentage >= scope:pp_cplan_country.pp_cplan_improve_line
-			}
-			order_by = pp_cplan_fill_here
-			max = 200
-			check_range_bounds = no
-			if = {
-				limit = { pp_cplan_budget_left = yes }
-				pp_cplan_try_improve_here = yes
-			}
-		}
-	}
-	if = {
-		limit = { NOT = { has_variable = pp_cplan_goods_off } }
-		change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }
-	}
-	if = {
-		limit = {
-			NOT = { has_variable = pp_cplan_goods_off }
-			pp_cplan_budget_left = yes
-		}
-		pp_cplan_goods_run = yes
+	else_if = {
+		limit = { OR = { current_month = 6 current_month = 12 } }
+		pp_cplan_group_goods = yes
+		pp_cplan_group_profiles = yes
+		pp_cplan_group_own = yes
+		pp_cplan_group_food = yes
+		pp_cplan_group_logistics = yes
+		pp_cplan_group_improve = yes
 	}
 	remove_variable = pp_cplan_hit
+	# test runs: one line per monthly pass (ppc plan-report counts the months by it; debug_log_date writes nothing)
+	if = {
+		limit = { has_variable = pp_cplan_ai_test }
+		debug_log = PP_CPLAN_TLOG_PASS
+	}
 	# Never runs: tells the script check that the panel's button scopes (set by the GUI with AddScope) exist, so the
 	# log has no "used but never set" lines for them.
 	if = {
@@ -134,6 +119,7 @@ pp_cplan_run = {
 		save_scope_as = pp_col # Location Profiles
 		pp_cplan_declare_flags = yes
 		pp_lprof_declare_flags = yes
+		set_variable = { name = pp_cplan_ai_test value = yes } # set only by the console (test runs)
 		if = {
 			limit = {
 				has_variable = pp_cplan_flag
@@ -141,6 +127,112 @@ pp_cplan_run = {
 			}
 			remove_variable = pp_cplan_flag
 		}
+	}
+}
+
+# ---- The rule groups (country scope, inside pp_cplan_run; each adds its share of the monthly limit when it runs) ----
+
+# Location profiles (pp_location_profiles.txt): their rules have priority in their locations; the global groups still
+# build there what a profile does not set (pp_cplan_*_ok).
+pp_cplan_group_profiles = {
+	pp_lprof_run = yes
+}
+
+# Location rules: a location set to Own Rules follows only its own list.
+pp_cplan_group_own = {
+	if = {
+		limit = { pp_cplan_has_own_locations = yes }
+		change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }
+		every_in_list = {
+			variable = pp_cplan_own
+			limit = {
+				owner ?= scope:pp_cplan_country
+				has_variable = pp_cplan_mode
+				var:pp_cplan_mode < 101.5
+			}
+			pp_cplan_location_rules = yes
+		}
+	}
+}
+
+# Food, per province (pp_cplan_food_province).
+pp_cplan_group_food = {
+	if = {
+		limit = { NOT = { has_variable = pp_cplan_food_off } }
+		change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }
+		every_province = {
+			pp_cplan_food_province = yes
+		}
+	}
+}
+
+# Logistics, per location: where market access without event modifiers is below the line, the most urgent first.
+pp_cplan_group_logistics = {
+	if = {
+		limit = { NOT = { has_variable = pp_cplan_logistics_off } }
+		change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }
+	}
+	if = {
+		limit = {
+			NOT = { has_variable = pp_cplan_logistics_off }
+			pp_cplan_budget_left = yes
+		}
+		ordered_owned_location = {
+			limit = {
+				pp_cplan_logistics_ok = yes
+				pp_cplan_logistics_wanted = yes
+			}
+			order_by = pp_logistics_urgency_weight
+			max = 200
+			check_range_bounds = no
+			if = {
+				limit = { pp_cplan_budget_left = yes }
+				pp_cplan_try_logistics_here = yes
+			}
+		}
+	}
+}
+
+# Improvements (Jan 2026-11-08): where people fill the player's share of a location's capacity, the improvement that
+# adds the most capacity per gold; the fullest locations first.
+pp_cplan_group_improve = {
+	if = {
+		limit = { NOT = { has_variable = pp_cplan_improve_off } }
+		change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }
+	}
+	if = {
+		limit = {
+			NOT = { has_variable = pp_cplan_improve_off }
+			pp_cplan_budget_left = yes
+		}
+		ordered_owned_location = {
+			limit = {
+				pp_cplan_improve_ok = yes
+				location_population_percentage >= scope:pp_cplan_country.pp_cplan_improve_line
+			}
+			order_by = pp_cplan_fill_here
+			max = 200
+			check_range_bounds = no
+			if = {
+				limit = { pp_cplan_budget_left = yes }
+				pp_cplan_try_improve_here = yes
+			}
+		}
+	}
+}
+
+# Goods, per good (generated pp_cplan_goods_run).
+pp_cplan_group_goods = {
+	if = {
+		limit = { NOT = { has_variable = pp_cplan_goods_off } }
+		change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }
+	}
+	if = {
+		limit = {
+			NOT = { has_variable = pp_cplan_goods_off }
+			pp_cplan_budget_left = yes
+		}
+		pp_cplan_goods_run = yes
 	}
 }
 
@@ -156,7 +248,8 @@ pp_cplan_run = {
 #   6. a Grange where the store holds 24 months and a normal month adds the player's share on top;
 #   7. a Victualling Yard: the next level while it pays back within the player's line, a first one where victuals
 #      cost at least their default price.
-# Locations with own rules, hands off or a profile are left out. While a farm or Tavern of the province has a
+# Locations with own rules or hands off are left out, and profile locations where the profile switched the food rule
+# off; a profile with a staple food rule keeps the farm step out, one with a victuals rule the Grange and Yard steps. While a farm or Tavern of the province has a
 # level under construction, the hunger steps 2 and 4 wait (the store only moves once it stands). The state goes into
 # pp_cplan_status for the panel.
 pp_cplan_food_province = {
@@ -182,7 +275,7 @@ pp_cplan_food_province = {
 			province_capital ?= {
 				if = {
 					limit = {
-						pp_cplan_location_ok = yes
+						pp_cplan_food_ok = yes
 						pp_cplan_victuals_here = yes
 					}
 					pp_cplan_try_tavern_here = yes
@@ -198,7 +291,7 @@ pp_cplan_food_province = {
 			}
 			ordered_location_in_province = {
 				limit = {
-					pp_cplan_location_ok = yes
+					pp_cplan_farm_ok = yes
 					pp_cplan_farm_best_roi > 0
 				}
 				order_by = pp_cplan_farm_best_roi
@@ -215,7 +308,7 @@ pp_cplan_food_province = {
 			limit = { pp_cplan_may_try = yes }
 			province_capital ?= {
 				if = {
-					limit = { pp_cplan_location_ok = yes }
+					limit = { pp_cplan_food_ok = yes }
 					pp_cplan_try_kitchen_here = yes
 				}
 			}
@@ -230,7 +323,7 @@ pp_cplan_food_province = {
 			province_capital ?= {
 				if = {
 					limit = {
-						pp_cplan_location_ok = yes
+						pp_cplan_food_ok = yes
 						pp_cplan_victuals_here = yes
 					}
 					pp_cplan_try_tavern_here = yes
@@ -245,7 +338,7 @@ pp_cplan_food_province = {
 			}
 			province_capital ?= {
 				if = {
-					limit = { pp_cplan_location_ok = yes }
+					limit = { pp_cplan_food_ok = yes }
 					pp_cplan_try_granary_here = yes
 				}
 			}
@@ -258,7 +351,7 @@ pp_cplan_food_province = {
 			}
 			province_capital ?= {
 				if = {
-					limit = { pp_cplan_location_ok = yes }
+					limit = { pp_cplan_victuals_ok = yes }
 					pp_cplan_try_grange_here = yes
 				}
 			}
@@ -268,7 +361,7 @@ pp_cplan_food_province = {
 			limit = { pp_cplan_may_try = yes }
 			every_location_in_province = {
 				limit = {
-					pp_cplan_location_ok = yes
+					pp_cplan_victuals_ok = yes
 					OR = {
 						pp_victualling_yard_site = yes
 						is_market_center = yes
@@ -318,11 +411,26 @@ pp_cplan_construct = {
 	pp_cplan_construct_scoped = { why = $why$ }
 }
 
-# Location scope: the same for the building type scope:pp_cplan_btype (never a second level of it here while one is
-# under construction: the rules see a level only once it stands).
+# Location scope: the same for the building type scope:pp_cplan_btype. Only where nothing is under construction here
+# (whoever started it: a rule, the game's own building automation, the player): the engine builds a location's
+# constructions one after another, so a second one paid now only waits (test world 2026-11-09: in Ocana a Cookshop
+# moved 344 days in a year while the Granary, Grange and Carrier Inn the plan had started beside it moved 0). Never a
+# level for a building that is closed: whoever closed it (the player or the game's Close and Open Buildings
+# automation) found it does not pay, and the plan does not argue (Jan 2026-11-09: the plan and the game's automation
+# must not undo each other).
 pp_cplan_construct_scoped = {
 	if = {
-		limit = { pp_cplan_bt_queued < 0.5 }
+		limit = {
+			num_civil_constructions < 1
+			pp_cplan_bt_queued < 0.5
+			NOT = {
+				any_buildings_in_location = {
+					building_type = scope:pp_cplan_btype
+					building_level > 0
+					is_opened = no
+				}
+			}
+		}
 		pp_cplan_construct_now = { why = $why$ }
 	}
 }
@@ -344,6 +452,16 @@ pp_cplan_construct_now = {
 	}
 	add_to_variable_list = { name = pp_cplan_log_types target = scope:pp_cplan_btype }
 	set_variable = { name = pp_cplan_log_why value = $why$ }
+	# test runs (pp_cplan_ai_test, set by the console): three lines per construction in debug.log, read by ppc
+	# plan-report: the rule group, the building type ("Building Type 'Granary' (350)") and the location ("Location
+	# 'Valladolid' (2584)", its id). debug_log gets no data context (in game 2026-11-09: ROOT and saved scopes are null
+	# in its text), debug_log_scopes writes the current scope.
+	if = {
+		limit = { scope:pp_cplan_country = { has_variable = pp_cplan_ai_test } }
+		debug_log = PP_CPLAN_TLOG_$why$
+		scope:pp_cplan_btype = { debug_log_scopes = no }
+		debug_log_scopes = no
+	}
 }
 
 # Location scope: the same for the food rule, which also tells the province what it started.
@@ -426,7 +544,7 @@ pp_cplan_rule = {
 }
 
 # Location scope: one change to rule $n$ (scope:pp_key = lv / metric / cmp / t / tbig / pb / clear, scope:pp_dir =
-# up / down). An edited location no longer counts as following its template.
+# up / down).
 pp_cplan_rule_edit = {
 	switch = {
 		trigger = scope:pp_key
@@ -526,7 +644,6 @@ pp_cplan_rule_edit = {
 			remove_variable = pp_cplan_r$n$_has
 		}
 	}
-	remove_variable = pp_cplan_tpl
 }
 
 # Location scope: puts the building type scope:pp_btype into the first free rule (up to one level more than stands
@@ -569,7 +686,6 @@ pp_cplan_add_rule = {
 		limit = { var:pp_cplan_mode > 101.5 }
 		set_variable = { name = pp_cplan_mode value = 101 }
 	}
-	remove_variable = pp_cplan_tpl
 	pp_cplan_own_sync = yes
 }
 
@@ -607,7 +723,6 @@ pp_cplan_cycle_mode = {
 	else = {
 		remove_variable = pp_cplan_mode
 	}
-	remove_variable = pp_cplan_tpl
 	pp_cplan_own_sync = yes
 }
 
@@ -677,50 +792,7 @@ pp_cplan_fill_cands = {
 	}
 }
 
-# ---- Copies for templates (location <-> country) and profiles (within the country) ----
-
-# Location scope (scope:pp_cplan_loc = this location, scope:pp_cplan_country = its owner): this location's variable
-# $from$ -> the country's $to$ (a number, or a scope with _scope).
-pp_cplan_put_num = {
-	if = {
-		limit = { has_variable = $from$ }
-		scope:pp_cplan_country = { set_variable = { name = $to$ value = scope:pp_cplan_loc.var:$from$ } }
-	}
-	else = {
-		scope:pp_cplan_country = { remove_variable = $to$ }
-	}
-}
-pp_cplan_put_scope = {
-	if = {
-		limit = { has_variable = $from$ }
-		var:$from$ = { save_temporary_scope_as = pp_cplan_tmp }
-		scope:pp_cplan_country = { set_variable = { name = $to$ value = scope:pp_cplan_tmp } }
-	}
-	else = {
-		scope:pp_cplan_country = { remove_variable = $to$ }
-	}
-}
-
-# Location scope: the country's variable $from$ -> this location's $to$.
-pp_cplan_take_num = {
-	if = {
-		limit = { scope:pp_cplan_country = { has_variable = $from$ } }
-		set_variable = { name = $to$ value = scope:pp_cplan_country.var:$from$ }
-	}
-	else = {
-		remove_variable = $to$
-	}
-}
-pp_cplan_take_scope = {
-	if = {
-		limit = { scope:pp_cplan_country = { has_variable = $from$ } }
-		scope:pp_cplan_country = { var:$from$ = { save_temporary_scope_as = pp_cplan_tmp } }
-		set_variable = { name = $to$ value = scope:pp_cplan_tmp }
-	}
-	else = {
-		remove_variable = $to$
-	}
-}
+# ---- Copies within one scope (location profiles, pp_location_profiles*.txt) ----
 
 # Any scope: variable $from$ -> $to$ on the same scope (a number, or present / absent with _flag).
 pp_cplan_copy_num = {

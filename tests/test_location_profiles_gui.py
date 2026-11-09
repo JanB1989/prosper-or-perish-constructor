@@ -11,6 +11,7 @@ from pathlib import Path
 import pytest
 
 from prosper_or_perish_constructor import location_plan as lp
+from prosper_or_perish_constructor import location_profiles as lpf
 from prosper_or_perish_constructor import location_profiles_gui as m
 from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
@@ -40,6 +41,8 @@ PARAMS = {
     "pp_lprof_rule_clear": {"pp_slot", "pp_field"},
     "pp_lprof_rule_move": {"pp_slot", "pp_field", "pp_dir"},
     "pp_lprof_delete": {"pp_slot"},
+    "pp_lprof_global": {"pp_slot", "pp_field"},
+    "pp_lprof_examples": set(),
 }
 
 
@@ -114,7 +117,7 @@ def test_calls_pass_the_contract_parameters() -> None:
                    "pp_lprof_new": {m.NEXT}, "pp_lprof_select": slots}
     allowed = {
         "pp_slot": {m.EDITED},
-        "pp_field": fields | {"GetVariableSystem.Get('pp_lprof_pick')"},
+        "pp_field": fields | {"GetVariableSystem.Get('pp_lprof_pick')"} | {flag for _, flag, _ in lpf.GLOBAL_GROUPS},
         "pp_dir": {"up", "down"},
         "pp_col": {f"c{index}" for index in range(1, len(config.colors) + 1)},
         "pp_key": keys,
@@ -332,7 +335,18 @@ def test_location_window_has_the_profile_row() -> None:
     assert f"{m.LOCATION_ROW} = {{}}" in block.group(0)
     assert window.index(m.ROW_MARK) < window.index("# INFRASTRUCTURE HUB")
     generated = (MOD / "in_game/gui/pp_location_profiles_generated.gui").read_text(encoding="utf-8-sig")
-    assert f"type {m.LOCATION_ROW} = pp_lprof_plan_row {{}}" in generated and "type pp_lprof_plan_row = vbox" in generated
+    assert "type pp_lprof_plan_row = vbox" in generated
+    # Jan 2026-11-09: the row looks like the tab's other rows (vanilla's card, header strip, toggle tiles)
+    row = generated[generated.index(f"type {m.LOCATION_ROW} = hbox"):]
+    row = row[:row.index("\n\t}\n") + 3]
+    for needle in ("using = bg_paper_card", "using = bg_cabinet_card_frame", "using = bg_card_header_01",
+                   "using = button_tab_toggle_properties_template", "down = \"[", "header_button_left = {"):
+        assert needle in row, needle
+    assert "pp_lprof_gold" not in row and "button_regular = {" not in row and "#yellow_titles" not in row
+    # the header buttons: vanilla's shortcut types, 30 px apart (rename sits at 30, go to at -30)
+    assert "button_minimize" not in window[window.index(lp.BUTTON_MARK) - 200:window.index(lp.BUTTON_MARK) + 2000]
+    assert "position = { -90 0 }" in window and "position = { -60 0 }" in window
+    assert "button_round_shortcut = {" in window and "button_automation_shortcut = {" in window
 
 
 def _with_slots(config: m.Config, slots: int) -> m.Config:

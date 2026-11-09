@@ -70,7 +70,7 @@ def test_panel_references_exist() -> None:
 
 
 def test_slot_counts_match_the_hand_written_parts() -> None:
-    """The rule, template and profile slots of [construction_plan] are also spelled out by hand in the engine and panel."""
+    """The rule slots and presets of [construction_plan] are also spelled out by hand in the engine and panel."""
     config = cp.load_config(PROJECT)
     effects = _read(EFFECTS)
     rules = re.search(r"^pp_cplan_location_rules = \{(.*?)^\}", effects, re.MULTILINE | re.DOTALL).group(1)
@@ -79,11 +79,25 @@ def test_slot_counts_match_the_hand_written_parts() -> None:
     assert sorted(set(re.findall(r"pp_cplan_fill_rule = \{ n = (\d) \}", add))) == [str(n) for n in range(1, config.rule_slots + 1)]
     gui = _read(GUI_FILES[0])
     assert re.findall(r"pp_cplan_rule_row_(\d) = \{\}", gui) == [str(n) for n in range(1, config.rule_slots + 1)]
-    profiles = sorted(set(re.findall(r"MakeScopeFlag\('p(\d)'\)", gui)))
-    assert profiles == [str(k) for k in range(1, config.profile_slots + 1)]
+    presets = re.findall(r"pp_cplan_preset'\)\.Execute\(GuiScope\.SetRoot\(GetPlayer\.MakeScope\)\.AddScope\('pp_key', MakeScopeFlag\('(\w+)'\)", gui)
+    assert presets == [preset.key for preset in config.presets]
     values = _read(MOD / "in_game/common/script_values/pp_construction_plan.txt")
     for n in range(1, config.rule_slots + 1):
         assert f"pp_cplan_r{n}_est_n = {{" in values
+
+
+def test_no_location_templates_left() -> None:
+    """Jan 2026-11-09: location templates are gone (Location Profiles do this: reusable, assigned on the map); no
+    button, script, variable, text or setting of them is left."""
+    assert "template_slots" not in _read(PROJECT)
+    assert not hasattr(cp.load_config(PROJECT), "template_slots")
+    files = [*GUI_FILES, LOC, *_plan_script_files(), MOD / "in_game/common/scripted_effects/pp_location_profiles.txt"]
+    for path in files:
+        text = _read(path)
+        for gone in ("pp_cplan_template", "pp_cplan_tpl", "PP_CPLAN_TEMPLATE", "PP_CPLAN_TPL", "pp_cplan_put_",
+                     "pp_cplan_take_", "PP_CPLAN_TQ_TT", "PP_CPLAN_TP_TT"):
+            assert gone not in text, f"{path.name}: {gone}"
+        assert not re.search(r"pp_cplan_t\d", text), f"{path.name}: a template variable"
 
 
 def test_every_condition_has_a_label() -> None:
@@ -349,7 +363,7 @@ def test_new_settings_step_and_travel_in_profiles() -> None:
     for flag, var in (("granary_cap", "pp_cplan_gcap"), ("granary_fill", "pp_cplan_gfill"),
                       ("grange_surplus", "pp_cplan_gsur"), ("famine", "pp_cplan_famine"), ("yard_payback", "pp_cplan_ypb")):
         assert f"flag:{flag} = {{ pp_cplan_step_var = {{ var = {var} " in guis, flag
-        assert var in cp.PROFILE_NUMBERS
+        assert var in cp.PRESET_NUMBERS
         assert f"MakeScopeFlag('{flag}')" in _read(GUI_FILES[0]), flag
     assert "flag:access_line = { pp_cplan_step_var = { var = pp_cplan_access current = pp_cplan_access_pct step = 1" in guis
 
@@ -376,12 +390,12 @@ def test_improvements_cheap_and_much_first() -> None:
         assert f"location_and_owner_can_build = {{ building_type = {key} }}" in picker, key
         value = _effect(generated, f"pp_cplan_imp_{key}")
         assert f"building_type:{key}.building_base_cost_in_gold" in value
-    run = _effect(_read(EFFECTS), "pp_cplan_run")
+    run = _effect(_read(EFFECTS), "pp_cplan_group_improve")
     block = run[run.index("pp_cplan_improve_off"):run.index("pp_cplan_try_improve_here")]
     assert "location_population_percentage >= scope:pp_cplan_country.pp_cplan_improve_line" in block
     assert "order_by = pp_cplan_fill_here" in block
     assert cp.load_config(PROJECT).improve_fill_pct == 90
-    assert "pp_cplan_improve_off" in cp.PROFILE_FLAGS and "pp_cplan_imp" in cp.PROFILE_NUMBERS
+    assert "pp_cplan_improve_off" in cp.PRESET_FLAGS and "pp_cplan_imp" in cp.PRESET_NUMBERS
 
 
 def test_construction_goods_cover_months_of_draw() -> None:
@@ -400,3 +414,43 @@ def test_profile_pass_gives_every_location_a_turn() -> None:
     assert "ordered_in_list = {" in run and "order_by = pp_lprof_turn" in run
     assert "every_in_list" not in run.split("ordered_in_list")[1]
     assert "subtract = total_building_levels" in _effect(_read(VALUES), "pp_lprof_turn")
+
+
+def test_presets_set_every_setting_group_and_good() -> None:
+    """Jan 2026-11-09: built-in presets to start from (the Plan tab). Each sets every setting (unnamed ones back to the
+    default), every rule group switch and every good's mode, so loading one never leaves a mix behind."""
+    config = cp.load_config(PROJECT)
+    assert [preset.key for preset in config.presets] == ["balanced", "food", "builder", "cautious"]
+    result = cp.apply(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT), write=False)
+    effects = _read(MOD / cp.EFFECTS)
+    switch = _effect(effects, "pp_cplan_preset_do")
+    for preset in config.presets:
+        assert f"flag:{preset.key} = {{ pp_cplan_preset_{preset.key} = yes }}" in switch
+        body = _effect(effects, f"pp_cplan_preset_{preset.key}")
+        for var in cp.PRESET_NUMBERS + cp.PRESET_FLAGS:
+            assert re.search(rf"(set_variable = {{ name = {var} value|remove_variable = {var}\n)", body + "\n"), (preset.key, var)
+        for good in result.goods:
+            assert f"pp_cplan_g_{good}" in body, (preset.key, good)
+    builder = _effect(effects, "pp_cplan_preset_builder")
+    assert "set_variable = { name = pp_cplan_g_cloth value = 102 }" in builder  # "*" = expand
+    assert "set_variable = { name = pp_cplan_g_lumber value = 101 }" in builder
+    cautious = _effect(effects, "pp_cplan_preset_cautious")
+    assert "set_variable = { name = pp_cplan_reserve value = 112 }" in cautious
+    assert "set_variable = { name = pp_cplan_goods_off value = yes }" in cautious
+    assert "remove_variable = pp_cplan_food_off" in cautious
+    assert "pp_cplan_preset_do = yes" in _read(SCRIPTED_GUIS)
+
+
+def test_game_automation_is_shown_and_respected() -> None:
+    """Jan 2026-11-09: the plan and the game's own automation must not undo each other. The Plan tab shows which of the
+    game's building automations are on; the plan never adds a level to a closed building and never a second level
+    while one is under construction (whoever started it)."""
+    values = _read(MOD / "in_game/common/script_values/pp_construction_plan.txt")
+    for name, system in (("buildings", "buildings"), ("expand", "expandbuildings"), ("close", "closebuildings"),
+                         ("destroy", "destroybuildings")):
+        assert f"limit = {{ is_system_automated = {system} }}" in _effect(values, f"pp_cplan_auto_{name}_n")
+    scoped = _effect(_read(EFFECTS), "pp_cplan_construct_scoped")
+    assert "pp_cplan_bt_queued < 0.5" in scoped and "is_opened = no" in scoped
+    # one construction at a time per location: the engine builds them one after another (test world 2026-11-09)
+    assert "num_civil_constructions < 1" in scoped
+    assert "limit = { num_civil_constructions > 0 }" in _effect(_read(MOD / "in_game/common/scripted_effects/pp_location_profiles.txt"), "pp_lprof_rule")

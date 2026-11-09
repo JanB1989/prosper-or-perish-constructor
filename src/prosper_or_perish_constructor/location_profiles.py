@@ -48,6 +48,7 @@ from pathlib import Path
 from prosper_or_perish_constructor import construction_plan as cp
 from prosper_or_perish_constructor import location_plan as lp
 from prosper_or_perish_constructor import market_short_weight
+from prosper_or_perish_constructor import staple_foods
 
 EFFECTS = Path("in_game/common/scripted_effects/pp_location_profiles_generated.txt")
 VALUES = Path("in_game/common/script_values/pp_location_profiles_generated.txt")
@@ -63,7 +64,7 @@ WHY_PROFILE = 105  # the plan ledger's reason code (+ 100) for a construction a 
 STATES = {
     1: "started",
     2: "nothing to build",
-    3: "a level under construction",
+    3: "a construction under way here",
     5: "payback too long",
     6: "cannot be built here",
     7: "budget",
@@ -76,6 +77,11 @@ DIRECTIONS = ("up", "down")
 EDITED = "e"  # the pp_slot flag of the editor's buttons: the slot in the edit buffer (pp_lprof_e_k)
 NEXT = "next"  # the pp_slot flag of the new profile button: the first slot not in use
 SYMBOL_PREFIX = "pp_sym_"  # a symbol's flag, loc key and texture name: pp_sym_<name>
+# The global Construction Plan rule groups a profile can switch off in its locations: (copy field, pp_field flag, the
+# plan's group). Unset = the group builds there too (Jan 2026-11-09: what a profile does not set, the global rules do;
+# a rule of the profile for a target takes that target from them).
+GLOBAL_GROUPS = (("xf", "global_food", "food"), ("xl", "global_logistics", "logistics"),
+                 ("xi", "global_improve", "improvements"), ("xg", "global_goods", "goods"))
 BUFFER = "pp_lprof_e"  # the edit buffer's variable prefix (country)
 COPY = "pp_lprof"  # a location's copy of its profile (variable prefix)
 # A flag is drawn as a frame of one picture strip (location_profiles_gui.render_textures), never through its name: the
@@ -97,12 +103,24 @@ class Symbol:
 
 
 @dataclass(frozen=True)
+class Example:
+    """A ready profile ([[location_profiles.examples]]): its icon, colour, rules (target, payback limit in years or None
+    for any) and the global rule groups it switches off (GLOBAL_GROUPS' plan group names)."""
+
+    icon: str
+    color: int
+    rules: tuple[tuple[str, int | None], ...] = ()
+    off: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
 class Config:
     slots: int
     rules: int
     payback_steps: tuple[int, ...]
     colors: tuple[tuple[float, float, float], ...]
     symbols: tuple[Symbol, ...] = ()
+    examples: tuple[Example, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -141,6 +159,16 @@ def load_config(project: Path) -> Config:
         payback_steps=tuple(int(step) for step in data["payback_steps"]),
         colors=tuple(tuple(float(part) for part in color) for color in data["colors"]),
         symbols=load_symbols(project),
+        examples=tuple(
+            Example(
+                icon=str(row["icon"]),
+                color=int(row["color"]),
+                rules=tuple((str(rule["target"]), int(rule["payback"]) if "payback" in rule else None)
+                            for rule in row.get("rules", [])),
+                off=tuple(str(group) for group in row.get("off", [])),
+            )
+            for row in data.get("examples", [])
+        ),
     )
 
 
@@ -384,6 +412,18 @@ def render_edits(items: list[lp.Item], config: Config, categories: list[str]) ->
         + "\t}\n}\n"
     )
     parts.append(
+        "\n# The global rule group scope:pp_field (global_food / ...) switched off in the profile's locations, or on again\n"
+        "# (unset = on: the group builds there too, except the targets of the profile's own rules).\n"
+        "pp_lprof_global_staged = {\n\tswitch = {\n\t\ttrigger = scope:pp_field\n"
+        + "".join(
+            f"\t\tflag:{flag} = {{\n\t\t\tif = {{\n\t\t\t\tlimit = {{ has_variable = pp_lprof_s_{name} }}\n"
+            f"\t\t\t\tremove_variable = pp_lprof_s_{name}\n\t\t\t}}\n"
+            f"\t\t\telse = {{\n\t\t\t\tset_variable = {{ name = pp_lprof_s_{name} value = 101 }}\n\t\t\t}}\n\t\t}}\n"
+            for name, flag, _ in GLOBAL_GROUPS
+        )
+        + "\t}\n}\n"
+    )
+    parts.append(
         "\n# The colour scope:pp_col (c1..cN).\npp_lprof_color_staged = {\n\tswitch = {\n\t\ttrigger = scope:pp_col\n"
         + "".join(f"\t\tflag:c{n} = {{ set_variable = {{ name = pp_lprof_s_col value = {100 + n} }} }}\n"
                   for n in range(1, len(config.colors) + 1))
@@ -497,6 +537,7 @@ def render_edits(items: list[lp.Item], config: Config, categories: list[str]) ->
 def declared_flags(items: list[lp.Item], config: Config) -> list[str]:
     """Every flag the GUI passes to the scripted GUIs."""
     flags = {f"s{k}" for k in range(1, config.slots + 1)} | {"none", EDITED, NEXT} | set(fields(config)) | set(DIRECTIONS)
+    flags |= {flag for _, flag, _ in GLOBAL_GROUPS}
     flags |= {f"c{n}" for n in range(1, len(config.colors) + 1)}
     flags |= {item.key for item in items} | {symbol.key for symbol in config.symbols}
     return sorted(flags)
@@ -507,6 +548,7 @@ def _profile_pulls(config: Config) -> list[tuple[str, str]]:
     pulls = [("g", "ig"), ("icon", "ic"), ("n", "in"), ("n", "col")]
     for r in range(1, config.rules + 1):
         pulls += [("g", f"r{r}_g"), ("cat", f"r{r}_c"), ("n", f"r{r}_pb")]
+    pulls += [("n", name) for name, _, _ in GLOBAL_GROUPS]
     return pulls
 
 
@@ -549,6 +591,52 @@ def render_declarations(items: list[lp.Item], config: Config) -> str:
     )
 
 
+def render_examples(items: list[lp.Item], config: Config) -> str:
+    """The example profiles ([[location_profiles.examples]]), each made in the next free slot with the buttons' own
+    effects (new, then the edit buffer's slot e: icon, colour, rules, payback steps, global groups)."""
+    keys = {item.key for item in items}
+    symbols = {symbol.key for symbol in config.symbols}
+    groups = {group: flag for _, flag, group in GLOBAL_GROUPS}
+    steps = config.payback_steps
+
+    def scope(name: str, value: str) -> str:
+        return f"\t\tsave_scope_value_as = {{ name = {name} value = flag:{value} }}\n"
+
+    parts = [
+        "\n# Country scope (root = the country): the example profiles ([[location_profiles.examples]]), each in the next free\n"
+        "# slot (none once all are used), made with the buttons' own effects. The profile editor offers them while the\n"
+        "# country has no profile; the test world's setup uses them too.\npp_lprof_examples_do = {\n"
+    ]
+    for number, example in enumerate(config.examples, 1):
+        if example.icon not in keys | symbols:
+            raise ValueError(f"example profile {number}: unknown icon {example.icon}")
+        if not 1 <= example.color <= len(config.colors):
+            raise ValueError(f"example profile {number}: colour {example.color} out of range")
+        if len(example.rules) > config.rules:
+            raise ValueError(f"example profile {number}: more than {config.rules} rules")
+        body = [scope("pp_slot", NEXT), "\t\tpp_lprof_new_do = yes\n", scope("pp_slot", EDITED),
+                scope("pp_field", "icon"), scope("pp_key", example.icon), "\t\tpp_lprof_set_do = yes\n",
+                scope("pp_col", f"c{example.color}"), "\t\tpp_lprof_color_do = yes\n"]
+        for r, (target, payback) in enumerate(example.rules, 1):
+            if target not in keys:
+                raise ValueError(f"example profile {number}: unknown rule target {target}")
+            body += [scope("pp_field", f"r{r}"), scope("pp_key", target), "\t\tpp_lprof_set_do = yes\n"]
+            if payback is not None:
+                if payback not in steps:
+                    raise ValueError(f"example profile {number}: payback {payback} is not one of {steps}")
+                # down from any payback: the last step, then one step down each
+                body.append(scope("pp_dir", "down"))
+                body += ["\t\tpp_lprof_payback_do = yes\n"] * (len(steps) - steps.index(payback))
+        for group in example.off:
+            if group not in groups:
+                raise ValueError(f"example profile {number}: unknown global group {group}")
+            body += [scope("pp_field", groups[group]), "\t\tpp_lprof_global_do = yes\n"]
+        parts.append(f"\t# example {number}: {example.icon}\n\tif = {{\n\t\tlimit = {{ pp_lprof_first_free > 0 }}\n"
+                     + "".join(body) + "\t}\n")
+    parts.append("}\n")
+    return "".join(parts)
+
+
 def render_effects(items: list[lp.Item], found: dict[str, list[Candidate]], config: Config, categories: list[str]) -> str:
     return (
         HEADER
@@ -556,6 +644,7 @@ def render_effects(items: list[lp.Item], found: dict[str, list[Candidate]], conf
         + render_dispatch(items, found, config)
         + render_slots(config)
         + render_edits(items, config, categories)
+        + render_examples(items, config)
         + render_declarations(items, config)
     )
 
@@ -625,7 +714,24 @@ def render_triggers(categories: list[str], config: Config) -> str:
         "\n# Country scope (root = this country, in the pass and in the panel): a location the country owns has a profile.\n"
         "pp_lprof_has_locations = {\n\tany_in_list = {\n\t\tvariable = pp_lprof_locs\n\t\towner ?= root\n"
         "\t\thas_variable = pp_lprof\n\t}\n}\n"
+        "\n# Location scope: a rule of the location's profile has the good $g$ as its target (that good is the profile's here:\n"
+        "# the global rules for it stand back; pp_construction_plan.txt's triggers).\n"
+        "pp_lprof_has_good = {\n\thas_variable = pp_lprof\n\tOR = {\n"
+        + "".join(f"\t\tAND = {{ has_variable = pp_lprof_r{r}_g var:pp_lprof_r{r}_g = goods:$g$ }}\n"
+                  for r in range(1, config.rules + 1))
+        + "\t}\n}\n"
+        "\n# Location scope: a rule of the location's profile has a staple food as its target (the profile decides which\n"
+        f"# food is made here: the food rule's farm step stands back). Staple foods: {', '.join(staple_foods.staple_foods())}.\n"
+        "pp_lprof_food_target = {\n\thas_variable = pp_lprof\n\tOR = {\n"
+        + "".join(f"\t\tAND = {{ has_variable = pp_lprof_r{r}_g var:pp_lprof_r{r}_g = {{ {_any_goods(staple_foods.staple_foods())} }} }}\n"
+                  for r in range(1, config.rules + 1))
+        + "\t}\n}\n"
     )
+
+
+def _any_goods(goods: tuple[str, ...]) -> str:
+    """A trigger in goods scope: this is one of the goods."""
+    return "OR = { " + " ".join(f"this = goods:{good}" for good in goods) + " }"
 
 
 # ---------------------------------------------------------------------------------------------------------------------

@@ -16,8 +16,8 @@ constructions with ``construct_building`` (a normal, paid construction). The AI 
     (a standing producer's next level pays back within the payback line) / Never.
 * Location rules, per location (Jan 2026-11-06): a location set to Own Rules leaves the global rules and follows its
   own list: build a building up to a level when a condition holds (the game's location filter numbers plus PP's food
-  and land) and its next level pays back within a limit. A location's rules can be saved as a template and applied to
-  other locations or a whole province; the country settings can be saved as profiles.
+  and land) and its next level pays back within a limit. Location Profiles (``location_profiles.py``) give many
+  locations the same rules; presets set the country settings at once (templates removed 2026-11-09).
 
 Payback is the one money number (Jan: cost and profit alone say nothing across buildings): the level's build cost
 over the profit per level of the standing building. The cost follows the engine's own formula, calibrated in game on
@@ -30,12 +30,12 @@ The engine (monthly pass, panel, settings) is hand-written in the mod (``pp_cons
 ``[construction_plan]`` settings, so they stay in step with every rebalance:
 
 * ``scripted_effects/pp_construction_plan_generated.txt``: the farm, logistics and producer pickers, the goods pass,
-  the building cost data lookup, the rule edit, template and profile copies;
+  the building cost data lookup, the rule edit and the presets;
 * ``script_values/pp_construction_plan_generated.txt``: defaults, focus bands, farm scores, per-good stock months and
   site order, the construction goods price factors, the conditions and the per-rule readouts;
 * ``scripted_triggers/pp_construction_plan_generated.txt``: per-good producer checks;
 * ``gui/pp_construction_plan_goods.gui``: the Goods tab rows; ``gui/pp_construction_plan_here.gui``: the location
-  rule rows and the template list.
+  rule rows.
 
 Producers of a good are the buildings whose main good it is (``market_short_weight.main_good``). Variables carry + 100
 (a variable at 0 counts as unset; ``var:x = n`` compares scopes), thresholds + 100000 (they can be negative).
@@ -70,8 +70,9 @@ WHY_IMPROVE = 106  # 105 is the location profiles (pp_location_profiles.txt)
 DEFAULT_DEMAND = "default_construct_building"  # vanilla: the construction demand of a building that names none
 # location rule status codes (+ 100), set by pp_cplan_rule (hand-written) and shown by the rule rows
 RULE_STATUS = ("started", "waiting", "done", "building", "payback", "blocked", "budget", "goods")
-# the setting variables a global profile carries (numbers) and the switches (present or not)
-PROFILE_NUMBERS = ("pp_cplan_reserve", "pp_cplan_max", "pp_cplan_access", "pp_cplan_keep", "pp_cplan_payback",
+# the setting variables a preset sets (numbers, + 100; unset = the default) and the rule group switches (present =
+# the group is off)
+PRESET_NUMBERS = ("pp_cplan_reserve", "pp_cplan_max", "pp_cplan_access", "pp_cplan_keep", "pp_cplan_payback",
                    "pp_cplan_gcap", "pp_cplan_gfill", "pp_cplan_gsur", "pp_cplan_famine", "pp_cplan_ypb", "pp_cplan_imp")
 # the Variable Harvest modifiers (one per sub-continent and severity) whose peasant food consumption the food rules
 # take out ([construction_plan] baseline rules)
@@ -80,9 +81,39 @@ HARVEST_SEVERITIES = ("abysmal", "very_poor", "poor", "good", "very_good", "boun
 STATIC_MODIFIERS = (Path("main_menu/common/static_modifiers"), Path("in_game/common/static_modifiers"))
 POP_TYPES = Path("in_game/common/pop_types")
 BLUEPRINT_BUILDINGS = Path("blueprints/accepted/buildings")
-PROFILE_FLAGS = ("pp_cplan_food_off", "pp_cplan_logistics_off", "pp_cplan_goods_off", "pp_cplan_improve_off")
-# the variables of one location rule (pp_cplan_r<n>_<field>): the building type is a scope, the rest numbers
-RULE_NUMBER_FIELDS = ("lv", "m", "c", "t", "pb")
+PRESET_FLAGS = ("pp_cplan_food_off", "pp_cplan_logistics_off", "pp_cplan_goods_off", "pp_cplan_improve_off")
+
+
+@dataclass(frozen=True)
+class Preset:
+    """Built-in country settings to start from (Plan tab; Jan 2026-11-09). A preset sets every setting: the ones it
+    names (PRESET_NUMBERS without the prefix, in the panel's units), the rest back to the defaults; which rule groups
+    run (off = the groups named); every good's mode (goods it does not name: off; "*" = every good not named)."""
+
+    key: str
+    settings: tuple[tuple[str, int], ...] = ()
+    off: tuple[str, ...] = ()
+    goods: tuple[tuple[str, str], ...] = ()
+
+    @staticmethod
+    def read(key: str, row: dict) -> "Preset":
+        settings = tuple((name, int(value)) for name, value in row.get("settings", {}).items())
+        for name, _ in settings:
+            if f"pp_cplan_{name}" not in PRESET_NUMBERS:
+                raise ValueError(f"[construction_plan.presets.{key}]: unknown setting {name}")
+        off = tuple(row.get("off", ()))
+        for group in off:
+            if f"pp_cplan_{group}_off" not in PRESET_FLAGS:
+                raise ValueError(f"[construction_plan.presets.{key}]: unknown rule group {group}")
+        goods = tuple((good, mode) for good, mode in row.get("goods", {}).items())
+        for _, mode in goods:
+            if mode not in MODE_KEYS[1:]:
+                raise ValueError(f"[construction_plan.presets.{key}]: unknown goods mode {mode}")
+        return Preset(key=key, settings=settings, off=off, goods=goods)
+
+    def mode_of(self, good: str) -> str:
+        named = dict(self.goods)
+        return named.get(good, named.get("*", "off"))
 
 
 @dataclass(frozen=True)
@@ -120,8 +151,7 @@ class Config:
     access_blacklist: tuple[str, ...] = ()
     payback_years: int = 10
     rule_slots: int = 4
-    template_slots: int = 4
-    profile_slots: int = 3
+    presets: tuple[Preset, ...] = ()
     max_rule_level: int = 30
     metrics: tuple[Metric, ...] = ()
 
@@ -187,8 +217,7 @@ def load_config(project: Path) -> Config:
         access_blacklist=tuple(data["access_blacklist"]),
         payback_years=int(data["payback_years"]),
         rule_slots=int(data["rule_slots"]),
-        template_slots=int(data["template_slots"]),
-        profile_slots=int(data["profile_slots"]),
+        presets=tuple(Preset.read(key, row) for key, row in data.get("presets", {}).items()),
         max_rule_level=int(data["max_rule_level"]),
         metrics=metrics,
     )
@@ -538,12 +567,6 @@ def render_rule_values(config: Config) -> str:
         f"# Any scope: the highest level a rule can ask for, + 100.\n"
         f"pp_cplan_max_rule_level100 = {{ value = {config.max_rule_level + 100} }}\n"
     )
-    for k in range(1, config.template_slots + 1):
-        parts.append(_var_n(f"pp_cplan_t{k}_mode_n", f"pp_cplan_t{k}_mode", "0",
-                            f"Country scope: the mode template {k} sets (0 the plan's rules, 1 own rules, 2 hands off)."))
-    for k in range(1, config.profile_slots + 1):
-        parts.append(f"# Country scope: 1 once profile {k} is saved.\npp_cplan_p{k}_saved_n = {{\n\tvalue = 0\n"
-                     f"\tif = {{\n\t\tlimit = {{ has_variable = pp_cplan_p{k}_saved }}\n\t\tvalue = 1\n\t}}\n}}\n")
     for n in range(1, config.rule_slots + 1):
         r = f"pp_cplan_r{n}"
         parts.append(f"\n# ---- Rule {n} of a location (location scope) ----\n")
@@ -898,94 +921,41 @@ def render_rule_edit(config: Config) -> str:
     )
 
 
-def render_templates(config: Config) -> str:
-    slots = range(1, config.rule_slots + 1)
+def render_presets(config: Config, goods: list[str]) -> str:
+    """The presets (scripted GUI pp_cplan_preset, scope:pp_key = the preset's flag): every setting, rule group and
+    goods mode at once."""
+    modes = {"keep": 101, "expand": 102, "never": 103}
     parts = [
-        "\n# ---- Location templates (scripted GUI pp_cplan_template): a location's mode and rules saved on the country ----\n"
-        "# Location scope; scope:pp_slot = flag t1..tN, scope:pp_key = flag save / apply / province.\n"
-        "pp_cplan_template_do = {\n\tsave_scope_as = pp_cplan_loc\n\towner = { save_scope_as = pp_cplan_country }\n"
-        "\tswitch = {\n\t\ttrigger = scope:pp_slot\n"
+        "\n# ---- Presets (scripted GUI pp_cplan_preset, Plan tab): built-in settings to start from ([construction_plan.presets]) ----\n"
+        "# Country scope; scope:pp_key = the preset's flag. A preset sets every setting (unnamed ones back to the default),\n"
+        "# which rule groups run and every good's mode.\n"
+        "pp_cplan_preset_do = {\n\tswitch = {\n\t\ttrigger = scope:pp_key\n"
+        + "".join(f"\t\tflag:{preset.key} = {{ pp_cplan_preset_{preset.key} = yes }}\n" for preset in config.presets)
+        + "\t}\n}\n"
     ]
-    for k in range(1, config.template_slots + 1):
-        parts.append(
-            f"\t\tflag:t{k} = {{\n"
-            f"\t\t\tif = {{\n\t\t\t\tlimit = {{ scope:pp_key = flag:save }}\n\t\t\t\tpp_cplan_template_save_{k} = yes\n\t\t\t}}\n"
-            f"\t\t\telse_if = {{\n\t\t\t\tlimit = {{ scope:pp_key = flag:province }}\n"
-            f"\t\t\t\tprovince ?= {{\n\t\t\t\t\tevery_location_in_province = {{\n"
-            f"\t\t\t\t\t\tlimit = {{ owner ?= scope:pp_cplan_country }}\n"
-            f"\t\t\t\t\t\tsave_scope_as = pp_cplan_loc\n\t\t\t\t\t\tpp_cplan_template_apply_{k} = yes\n"
-            f"\t\t\t\t\t}}\n\t\t\t\t}}\n\t\t\t}}\n"
-            f"\t\t\telse = {{\n\t\t\t\tpp_cplan_template_apply_{k} = yes\n\t\t\t}}\n"
-            "\t\t}\n"
-        )
-    parts.append("\t}\n}\n")
-    parts.append(
-        "\n# Province scope: apply template scope:pp_slot (flag t1..tN) to every location of the province its owner owns\n"
-        "# (scripted GUI pp_cplan_template_province).\n"
-        "pp_cplan_template_province_do = {\n\towner ?= {\n\t\tsave_scope_as = pp_cplan_country\n\t}\n"
-        "\tif = {\n\t\tlimit = { exists = scope:pp_cplan_country }\n"
-        "\t\tevery_location_in_province = {\n\t\t\tlimit = { owner ?= scope:pp_cplan_country }\n"
-        "\t\t\tsave_scope_as = pp_cplan_loc\n\t\t\tswitch = {\n\t\t\t\ttrigger = scope:pp_slot\n"
-        + "".join(f"\t\t\t\tflag:t{k} = {{ pp_cplan_template_apply_{k} = yes }}\n" for k in range(1, config.template_slots + 1))
-        + "\t\t\t}\n\t\t}\n\t}\n}\n"
-    )
-    for k in range(1, config.template_slots + 1):
-        t = f"pp_cplan_t{k}_"
-        parts.append(
-            f"\n# Location scope (scope:pp_cplan_loc = this location, scope:pp_cplan_country = its owner): template {k}.\n"
-            f"pp_cplan_template_save_{k} = {{\n"
-            f"\tscope:pp_cplan_country = {{ set_variable = {{ name = {t}saved value = 101 }} }}\n"
-            f"\tpp_cplan_put_num = {{ from = pp_cplan_mode to = {t}mode }}\n"
-        )
-        for n in slots:
-            parts.append(f"\tpp_cplan_put_scope = {{ from = pp_cplan_r{n}_b to = {t}r{n}_b }}\n")
-            for field_name in RULE_NUMBER_FIELDS:
-                parts.append(f"\tpp_cplan_put_num = {{ from = pp_cplan_r{n}_{field_name} to = {t}r{n}_{field_name} }}\n")
-        parts.append(f"\tset_variable = {{ name = pp_cplan_tpl value = {100 + k} }}\n}}\n")
-        parts.append(
-            f"pp_cplan_template_apply_{k} = {{\n"
-            f"\tif = {{\n\t\tlimit = {{ scope:pp_cplan_country = {{ has_variable = {t}saved }} }}\n"
-            f"\t\tpp_cplan_take_num = {{ from = {t}mode to = pp_cplan_mode }}\n"
-        )
-        for n in slots:
-            parts.append(f"\t\tpp_cplan_take_scope = {{ from = {t}r{n}_b to = pp_cplan_r{n}_b }}\n")
-            for field_name in RULE_NUMBER_FIELDS:
-                parts.append(f"\t\tpp_cplan_take_num = {{ from = {t}r{n}_{field_name} to = pp_cplan_r{n}_{field_name} }}\n")
-            for state in ("st", "est", "has"):
-                parts.append(f"\t\tremove_variable = pp_cplan_r{n}_{state}\n")
-        parts.append(f"\t\tset_variable = {{ name = pp_cplan_tpl value = {100 + k} }}\n\t\tpp_cplan_own_sync = yes\n\t}}\n}}\n")
-    return "".join(parts)
-
-
-def render_profiles(config: Config, goods: list[str]) -> str:
-    parts = [
-        "\n# ---- Global profiles (scripted GUI pp_cplan_profile): the country settings, rule groups and goods modes ----\n"
-        "# Country scope; scope:pp_slot = flag p1..pN, scope:pp_key = flag save / load.\n"
-        "pp_cplan_profile_do = {\n\tswitch = {\n\t\ttrigger = scope:pp_slot\n"
-    ]
-    for k in range(1, config.profile_slots + 1):
-        parts.append(
-            f"\t\tflag:p{k} = {{\n\t\t\tif = {{\n\t\t\t\tlimit = {{ scope:pp_key = flag:save }}\n"
-            f"\t\t\t\tpp_cplan_profile_save_{k} = yes\n\t\t\t}}\n"
-            f"\t\t\telse_if = {{\n\t\t\t\tlimit = {{ has_variable = pp_cplan_p{k}_saved }}\n"
-            f"\t\t\t\tpp_cplan_profile_load_{k} = yes\n\t\t\t}}\n\t\t}}\n"
-        )
-    parts.append("\t}\n}\n")
-    numbers = list(PROFILE_NUMBERS) + [f"pp_cplan_g_{good}" for good in goods]
-    for k in range(1, config.profile_slots + 1):
-        p = f"pp_cplan_p{k}_"
-        save = [f"\tset_variable = {{ name = {p}saved value = 101 }}\n"]
-        load = []
-        for var in numbers:
+    for index, preset in enumerate(config.presets, 1):
+        settings = dict(preset.settings)
+        body = []
+        for var in PRESET_NUMBERS:
             short = var.removeprefix("pp_cplan_")
-            save.append(f"\tpp_cplan_copy_num = {{ from = {var} to = {p}{short} }}\n")
-            load.append(f"\tpp_cplan_copy_num = {{ from = {p}{short} to = {var} }}\n")
-        for var in PROFILE_FLAGS:
-            short = var.removeprefix("pp_cplan_")
-            save.append(f"\tpp_cplan_copy_flag = {{ from = {var} to = {p}{short} }}\n")
-            load.append(f"\tpp_cplan_copy_flag = {{ from = {p}{short} to = {var} }}\n")
-        parts.append(f"\n# Country scope: profile {k}.\npp_cplan_profile_save_{k} = {{\n" + "".join(save) + "}\n")
-        parts.append(f"pp_cplan_profile_load_{k} = {{\n" + "".join(load) + f"\tset_variable = {{ name = pp_cplan_profile value = {100 + k} }}\n}}\n")
+            if short in settings:
+                body.append(f"\tset_variable = {{ name = {var} value = {settings[short] + 100} }}\n")
+            else:
+                body.append(f"\tremove_variable = {var}\n")
+        for var in PRESET_FLAGS:
+            group = var.removeprefix("pp_cplan_").removesuffix("_off")
+            if group in preset.off:
+                body.append(f"\tset_variable = {{ name = {var} value = yes }}\n")
+            else:
+                body.append(f"\tremove_variable = {var}\n")
+        for good in goods:
+            mode = preset.mode_of(good)
+            if mode == "off":
+                body.append(f"\tremove_variable = pp_cplan_g_{good}\n")
+            else:
+                body.append(f"\tset_variable = {{ name = pp_cplan_g_{good} value = {modes[mode]} }}\n")
+        body.append(f"\tset_variable = {{ name = pp_cplan_preset value = {100 + index} }}\n")
+        parts.append(f"\n# Country scope: the preset {preset.key}.\npp_cplan_preset_{preset.key} = {{\n" + "".join(body) + "}\n")
     return "".join(parts)
 
 
@@ -1117,7 +1087,7 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]], farm_goods:
             f"\tif = {{\n\t\tlimit = {{ pp_cplan_mode_{good} > 0.5 pp_cplan_mode_{good} < 1.5 pp_cplan_budget_left = yes }}\n"
             "\t\tremove_variable = pp_cplan_hit\n"
             "\t\tordered_owned_location = {\n"
-            f"\t\t\tlimit = {{ pp_cplan_location_ok = yes pp_cplan_months_{good} < scope:pp_cplan_country.pp_cplan_keep_months }}\n"
+            f"\t\t\tlimit = {{ pp_cplan_goods_ok = {{ g = {good} }} pp_cplan_months_{good} < scope:pp_cplan_country.pp_cplan_keep_months }}\n"
             f"\t\t\torder_by = pp_cplan_site_{good}\n"
             "\t\t\tmax = 30\n\t\t\tcheck_range_bounds = no\n"
             "\t\t\tif = {\n\t\t\t\tlimit = { pp_cplan_may_try = yes }\n"
@@ -1126,7 +1096,7 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]], farm_goods:
             f"\telse_if = {{\n\t\tlimit = {{ pp_cplan_mode_{good} > 1.5 pp_cplan_mode_{good} < 2.5 pp_cplan_budget_left = yes }}\n"
             "\t\tremove_variable = pp_cplan_hit\n"
             "\t\tordered_owned_location = {\n"
-            f"\t\t\tlimit = {{ pp_cplan_location_ok = yes pp_cplan_has_producer_{good} = yes }}\n"
+            f"\t\t\tlimit = {{ pp_cplan_goods_ok = {{ g = {good} }} pp_cplan_has_producer_{good} = yes }}\n"
             f"\t\t\torder_by = pp_cplan_site_{good}\n"
             "\t\t\tmax = 30\n\t\t\tcheck_range_bounds = no\n"
             "\t\t\tif = {\n\t\t\t\tlimit = { pp_cplan_may_try = yes }\n"
@@ -1149,17 +1119,15 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]], farm_goods:
         parts.append(render_btype_data(costs))
     if config.metrics:
         parts.append(render_rule_edit(config))
-        parts.append(render_templates(config))
-        parts.append(render_profiles(config, goods))
+        parts.append(render_presets(config, goods))
 
     flags = sorted(
         set(goods) | set(MODE_KEYS)
-        | {"food", "logistics", "goods", "reserve", "max", "access_line", "keep", "payback", "up", "down", "lo", "hi"}
+        | {"food", "logistics", "goods", "reserve", "max", "access_line", "keep", "payback", "up", "down", "lo"}
         | {"granary_cap", "granary_fill", "grange_surplus", "famine", "yard_payback", "improve", "improve_line"}
-        | {"lv", "metric", "cmp", "t", "tbig", "pb", "clear", "save", "apply", "province", "load"}
+        | {"lv", "metric", "cmp", "t", "tbig", "pb", "clear"}
         | {f"r{n}" for n in range(1, config.rule_slots + 1)}
-        | {f"t{k}" for k in range(1, config.template_slots + 1)}
-        | {f"p{k}" for k in range(1, config.profile_slots + 1)}
+        | {preset.key for preset in config.presets}
     )
     parts.append(
         "\n# Any scope, never run (pp_cplan_run calls it under always = no): declares the flags the panel passes, so the\n"
@@ -1282,8 +1250,7 @@ def _step_buttons(n: int, key: str, big: str | None = None) -> tuple[str, str]:
 
 
 def render_here_gui(config: Config) -> str:
-    """The Here tab's rule rows (one type per slot, datacontext Location = the selected location) and the template
-    list (datacontext Location too)."""
+    """The Here tab's rule rows (one type per slot, datacontext Location = the selected location)."""
     out = [HEADER, "\ntypes PPConstructionPlanHere\n{\n"]
     payback_cost = "GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self)"
     payback_profit = "GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self)"
@@ -1398,60 +1365,6 @@ def render_here_gui(config: Config) -> str:
 
 """
         )
-    # templates
-    rows = []
-    for k in range(1, config.template_slots + 1):
-        names = "\n".join(
-            f"\t\t\t\tpp_cplan_label = {{ visible = \"[GetPlayer.MakeScope.Var('pp_cplan_t{k}_r{n}_b').IsSet]\" raw_text = \"[GetPlayer.MakeScope.Var('pp_cplan_t{k}_r{n}_b').GetBuildingType.GetName]\" }}"
-            for n in range(1, config.rule_slots + 1)
-        )
-        saved = f"GetPlayer.MakeScope.Var('pp_cplan_t{k}_saved').IsSet"
-        call = ("[GetScriptedGui('pp_cplan_template').Execute(GuiScope.SetRoot(Location.MakeScope)"
-                f".AddScope('pp_slot', MakeScopeFlag('t{k}')).AddScope('pp_key', MakeScopeFlag('{{key}}')).End)]")
-        rows.append(
-            f"""		hbox = {{
-			layoutpolicy_horizontal = expanding
-			spacing = 4
-			margin = {{ 4 2 }}
-			pp_cplan_label = {{ text = "PP_CPLAN_TEMPLATE" }}
-			pp_cplan_label = {{ raw_text = "{k}" minimumsize = {{ 16 -1 }} }}
-			hbox = {{
-				spacing = 6
-				pp_cplan_label = {{ visible = "[Not({saved})]" text = "PP_CPLAN_TEMPLATE_EMPTY" }}
-				pp_cplan_label = {{ visible = "[{_eq('GetPlayer', f'pp_cplan_t{k}_mode_n', 2)}]" text = "PP_CPLAN_MODE_HANDS_OFF_SHORT" }}
-{names}
-			}}
-			expand = {{}}
-			pp_cplan_step_button = {{ size = {{ 54 24 }} text = "PP_CPLAN_SAVE" tooltip = "PP_CPLAN_TEMPLATE_SAVE_TT" onclick = "{call.replace('{key}', 'save')}" }}
-			pp_cplan_step_button = {{ size = {{ 54 24 }} visible = "[{saved}]" text = "PP_CPLAN_APPLY" tooltip = "PP_CPLAN_TEMPLATE_APPLY_TT" onclick = "{call.replace('{key}', 'apply')}" }}
-			pp_cplan_step_button = {{ size = {{ 70 24 }} visible = "[{saved}]" text = "PP_CPLAN_PROVINCE" tooltip = "PP_CPLAN_TEMPLATE_PROVINCE_TT" onclick = "{call.replace('{key}', 'province')}" }}
-		}}
-"""
-        )
-    out.append("\t# The Here tab's templates (datacontext Location = the selected location).\n"
-               "\ttype pp_cplan_template_rows = vbox {\n\t\tlayoutpolicy_horizontal = expanding\n"
-               + "".join(rows) + "\t}\n")
-    # template quick buttons for the Locations tab rows
-    quick = []
-    for k in range(1, config.template_slots + 1):
-        call = ("[GetScriptedGui('pp_cplan_template').Execute(GuiScope.SetRoot(Location.MakeScope)"
-                f".AddScope('pp_slot', MakeScopeFlag('t{k}')).AddScope('pp_key', MakeScopeFlag('apply')).End)]")
-        quick.append(
-            f"\t\tpp_cplan_step_button = {{ visible = \"[GetPlayer.MakeScope.Var('pp_cplan_t{k}_saved').IsSet]\" "
-            f"raw_text = \"{k}\" tooltip = \"PP_CPLAN_TQ_TT\" onclick = \"{call}\" }}\n"
-        )
-    out.append("\t# The Locations tab: apply a saved template to the row's location (datacontext Location).\n"
-               "\ttype pp_cplan_template_quick = hbox {\n\t\tspacing = 2\n" + "".join(quick) + "\t}\n")
-    whole = []
-    for k in range(1, config.template_slots + 1):
-        call = ("[GetScriptedGui('pp_cplan_template_province').Execute(GuiScope.SetRoot(Province.MakeScope)"
-                f".AddScope('pp_slot', MakeScopeFlag('t{k}')).End)]")
-        whole.append(
-            f"\t\tpp_cplan_step_button = {{ visible = \"[GetPlayer.MakeScope.Var('pp_cplan_t{k}_saved').IsSet]\" "
-            f"raw_text = \"{k}\" tooltip = \"PP_CPLAN_TP_TT\" onclick = \"{call}\" }}\n"
-        )
-    out.append("\t# The Locations tab: apply a saved template to every location of the row's province (datacontext Province).\n"
-               "\ttype pp_cplan_template_province_quick = hbox {\n\t\tspacing = 2\n" + "".join(whole) + "\t}\n")
     out.append("}\n")
     return "".join(out)
 
@@ -1464,17 +1377,12 @@ COG = f"""
 		widget = {{ {COG_MARK} (gui/pp_construction_plan.gui, Here tab)
 			parentanchor = right|vcenter
 			size = {{ 40 40 }}
-			position = {{ -62 0 }}
+			position = {{ -60 0 }}
 			visible = "[And(LocationView.GetLocation.GetOwner.IsPlayer, Not(IsObserving))]"
 
-			button_minimize = {{
+			button_automation_shortcut = {{
 				parentanchor = right|vcenter
 				size = {{ 25 25 }}
-
-				blockoverride "button_texture" {{
-					texture = "gfx/interface/buttons/flats/automation_cog.dds"
-					texture_density = 2
-				}}
 
 				action_tooltip = {{
 					title = "PP_CPLAN_LOCATION_COG"
@@ -1482,8 +1390,6 @@ COG = f"""
 					on_action = "[GetVariableSystem.Set('pp_cplan_open', 'yes')]"
 					on_action = "[GetVariableSystem.Set('pp_cplan_tab', 'here')]"
 				}}
-
-				tooltipwidget = {{ BasicFunctionalTooltip = {{}} }}
 			}}
 		}}
 """

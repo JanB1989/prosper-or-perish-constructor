@@ -5791,7 +5791,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_camels > 0.5 pp_cplan_mode_camels < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_camels < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = camels } pp_cplan_months_camels < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_camels
 			max = 30
 			check_range_bounds = no
@@ -5805,7 +5805,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_camels > 1.5 pp_cplan_mode_camels < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_camels = yes }
+			limit = { pp_cplan_goods_ok = { g = camels } pp_cplan_has_producer_camels = yes }
 			order_by = pp_cplan_site_camels
 			max = 30
 			check_range_bounds = no
@@ -5820,7 +5820,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_elephants > 0.5 pp_cplan_mode_elephants < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_elephants < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = elephants } pp_cplan_months_elephants < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_elephants
 			max = 30
 			check_range_bounds = no
@@ -5834,7 +5834,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_elephants > 1.5 pp_cplan_mode_elephants < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_elephants = yes }
+			limit = { pp_cplan_goods_ok = { g = elephants } pp_cplan_has_producer_elephants = yes }
 			order_by = pp_cplan_site_elephants
 			max = 30
 			check_range_bounds = no
@@ -5849,7 +5849,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_horses > 0.5 pp_cplan_mode_horses < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_horses < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = horses } pp_cplan_months_horses < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_horses
 			max = 30
 			check_range_bounds = no
@@ -5863,7 +5863,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_horses > 1.5 pp_cplan_mode_horses < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_horses = yes }
+			limit = { pp_cplan_goods_ok = { g = horses } pp_cplan_has_producer_horses = yes }
 			order_by = pp_cplan_site_horses
 			max = 30
 			check_range_bounds = no
@@ -5878,7 +5878,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_livestock > 0.5 pp_cplan_mode_livestock < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_livestock < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = livestock } pp_cplan_months_livestock < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_livestock
 			max = 30
 			check_range_bounds = no
@@ -5892,7 +5892,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_livestock > 1.5 pp_cplan_mode_livestock < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_livestock = yes }
+			limit = { pp_cplan_goods_ok = { g = livestock } pp_cplan_has_producer_livestock = yes }
 			order_by = pp_cplan_site_livestock
 			max = 30
 			check_range_bounds = no
@@ -5907,7 +5907,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_wool > 0.5 pp_cplan_mode_wool < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_wool < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = wool } pp_cplan_months_wool < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_wool
 			max = 30
 			check_range_bounds = no
@@ -5921,7 +5921,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_wool > 1.5 pp_cplan_mode_wool < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_wool = yes }
+			limit = { pp_cplan_goods_ok = { g = wool } pp_cplan_has_producer_wool = yes }
 			order_by = pp_cplan_site_wool
 			max = 30
 			check_range_bounds = no
@@ -5936,7 +5936,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_beeswax > 0.5 pp_cplan_mode_beeswax < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_beeswax < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = beeswax } pp_cplan_months_beeswax < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_beeswax
 			max = 30
 			check_range_bounds = no
@@ -5950,7 +5950,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_beeswax > 1.5 pp_cplan_mode_beeswax < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_beeswax = yes }
+			limit = { pp_cplan_goods_ok = { g = beeswax } pp_cplan_has_producer_beeswax = yes }
 			order_by = pp_cplan_site_beeswax
 			max = 30
 			check_range_bounds = no
@@ -5965,7 +5965,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_dyes > 0.5 pp_cplan_mode_dyes < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_dyes < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = dyes } pp_cplan_months_dyes < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_dyes
 			max = 30
 			check_range_bounds = no
@@ -5979,7 +5979,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_dyes > 1.5 pp_cplan_mode_dyes < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_dyes = yes }
+			limit = { pp_cplan_goods_ok = { g = dyes } pp_cplan_has_producer_dyes = yes }
 			order_by = pp_cplan_site_dyes
 			max = 30
 			check_range_bounds = no
@@ -5994,7 +5994,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_incense > 0.5 pp_cplan_mode_incense < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_incense < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = incense } pp_cplan_months_incense < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_incense
 			max = 30
 			check_range_bounds = no
@@ -6008,7 +6008,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_incense > 1.5 pp_cplan_mode_incense < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_incense = yes }
+			limit = { pp_cplan_goods_ok = { g = incense } pp_cplan_has_producer_incense = yes }
 			order_by = pp_cplan_site_incense
 			max = 30
 			check_range_bounds = no
@@ -6023,7 +6023,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_tobacco > 0.5 pp_cplan_mode_tobacco < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_tobacco < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = tobacco } pp_cplan_months_tobacco < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_tobacco
 			max = 30
 			check_range_bounds = no
@@ -6037,7 +6037,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_tobacco > 1.5 pp_cplan_mode_tobacco < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_tobacco = yes }
+			limit = { pp_cplan_goods_ok = { g = tobacco } pp_cplan_has_producer_tobacco = yes }
 			order_by = pp_cplan_site_tobacco
 			max = 30
 			check_range_bounds = no
@@ -6052,7 +6052,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_cotton > 0.5 pp_cplan_mode_cotton < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_cotton < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = cotton } pp_cplan_months_cotton < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_cotton
 			max = 30
 			check_range_bounds = no
@@ -6066,7 +6066,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_cotton > 1.5 pp_cplan_mode_cotton < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_cotton = yes }
+			limit = { pp_cplan_goods_ok = { g = cotton } pp_cplan_has_producer_cotton = yes }
 			order_by = pp_cplan_site_cotton
 			max = 30
 			check_range_bounds = no
@@ -6081,7 +6081,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_fiber_crops > 0.5 pp_cplan_mode_fiber_crops < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_fiber_crops < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = fiber_crops } pp_cplan_months_fiber_crops < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_fiber_crops
 			max = 30
 			check_range_bounds = no
@@ -6095,7 +6095,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_fiber_crops > 1.5 pp_cplan_mode_fiber_crops < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_fiber_crops = yes }
+			limit = { pp_cplan_goods_ok = { g = fiber_crops } pp_cplan_has_producer_fiber_crops = yes }
 			order_by = pp_cplan_site_fiber_crops
 			max = 30
 			check_range_bounds = no
@@ -6110,7 +6110,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_silk > 0.5 pp_cplan_mode_silk < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_silk < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = silk } pp_cplan_months_silk < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_silk
 			max = 30
 			check_range_bounds = no
@@ -6124,7 +6124,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_silk > 1.5 pp_cplan_mode_silk < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_silk = yes }
+			limit = { pp_cplan_goods_ok = { g = silk } pp_cplan_has_producer_silk = yes }
 			order_by = pp_cplan_site_silk
 			max = 30
 			check_range_bounds = no
@@ -6139,7 +6139,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_chili > 0.5 pp_cplan_mode_chili < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_chili < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = chili } pp_cplan_months_chili < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_chili
 			max = 30
 			check_range_bounds = no
@@ -6153,7 +6153,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_chili > 1.5 pp_cplan_mode_chili < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_chili = yes }
+			limit = { pp_cplan_goods_ok = { g = chili } pp_cplan_has_producer_chili = yes }
 			order_by = pp_cplan_site_chili
 			max = 30
 			check_range_bounds = no
@@ -6168,7 +6168,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_cloves > 0.5 pp_cplan_mode_cloves < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_cloves < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = cloves } pp_cplan_months_cloves < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_cloves
 			max = 30
 			check_range_bounds = no
@@ -6182,7 +6182,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_cloves > 1.5 pp_cplan_mode_cloves < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_cloves = yes }
+			limit = { pp_cplan_goods_ok = { g = cloves } pp_cplan_has_producer_cloves = yes }
 			order_by = pp_cplan_site_cloves
 			max = 30
 			check_range_bounds = no
@@ -6197,7 +6197,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_pepper > 0.5 pp_cplan_mode_pepper < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_pepper < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = pepper } pp_cplan_months_pepper < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_pepper
 			max = 30
 			check_range_bounds = no
@@ -6211,7 +6211,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_pepper > 1.5 pp_cplan_mode_pepper < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_pepper = yes }
+			limit = { pp_cplan_goods_ok = { g = pepper } pp_cplan_has_producer_pepper = yes }
 			order_by = pp_cplan_site_pepper
 			max = 30
 			check_range_bounds = no
@@ -6226,7 +6226,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_saffron > 0.5 pp_cplan_mode_saffron < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_saffron < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = saffron } pp_cplan_months_saffron < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_saffron
 			max = 30
 			check_range_bounds = no
@@ -6240,7 +6240,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_saffron > 1.5 pp_cplan_mode_saffron < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_saffron = yes }
+			limit = { pp_cplan_goods_ok = { g = saffron } pp_cplan_has_producer_saffron = yes }
 			order_by = pp_cplan_site_saffron
 			max = 30
 			check_range_bounds = no
@@ -6255,7 +6255,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_legumes > 0.5 pp_cplan_mode_legumes < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_legumes < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = legumes } pp_cplan_months_legumes < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_legumes
 			max = 30
 			check_range_bounds = no
@@ -6269,7 +6269,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_legumes > 1.5 pp_cplan_mode_legumes < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_legumes = yes }
+			limit = { pp_cplan_goods_ok = { g = legumes } pp_cplan_has_producer_legumes = yes }
 			order_by = pp_cplan_site_legumes
 			max = 30
 			check_range_bounds = no
@@ -6284,7 +6284,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_maize > 0.5 pp_cplan_mode_maize < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_maize < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = maize } pp_cplan_months_maize < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_maize
 			max = 30
 			check_range_bounds = no
@@ -6298,7 +6298,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_maize > 1.5 pp_cplan_mode_maize < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_maize = yes }
+			limit = { pp_cplan_goods_ok = { g = maize } pp_cplan_has_producer_maize = yes }
 			order_by = pp_cplan_site_maize
 			max = 30
 			check_range_bounds = no
@@ -6313,7 +6313,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_millet > 0.5 pp_cplan_mode_millet < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_millet < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = millet } pp_cplan_months_millet < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_millet
 			max = 30
 			check_range_bounds = no
@@ -6327,7 +6327,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_millet > 1.5 pp_cplan_mode_millet < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_millet = yes }
+			limit = { pp_cplan_goods_ok = { g = millet } pp_cplan_has_producer_millet = yes }
 			order_by = pp_cplan_site_millet
 			max = 30
 			check_range_bounds = no
@@ -6342,7 +6342,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_potato > 0.5 pp_cplan_mode_potato < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_potato < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = potato } pp_cplan_months_potato < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_potato
 			max = 30
 			check_range_bounds = no
@@ -6356,7 +6356,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_potato > 1.5 pp_cplan_mode_potato < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_potato = yes }
+			limit = { pp_cplan_goods_ok = { g = potato } pp_cplan_has_producer_potato = yes }
 			order_by = pp_cplan_site_potato
 			max = 30
 			check_range_bounds = no
@@ -6371,7 +6371,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_rice > 0.5 pp_cplan_mode_rice < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_rice < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = rice } pp_cplan_months_rice < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_rice
 			max = 30
 			check_range_bounds = no
@@ -6385,7 +6385,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_rice > 1.5 pp_cplan_mode_rice < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_rice = yes }
+			limit = { pp_cplan_goods_ok = { g = rice } pp_cplan_has_producer_rice = yes }
 			order_by = pp_cplan_site_rice
 			max = 30
 			check_range_bounds = no
@@ -6400,7 +6400,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_wheat > 0.5 pp_cplan_mode_wheat < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_wheat < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = wheat } pp_cplan_months_wheat < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_wheat
 			max = 30
 			check_range_bounds = no
@@ -6414,7 +6414,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_wheat > 1.5 pp_cplan_mode_wheat < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_wheat = yes }
+			limit = { pp_cplan_goods_ok = { g = wheat } pp_cplan_has_producer_wheat = yes }
 			order_by = pp_cplan_site_wheat
 			max = 30
 			check_range_bounds = no
@@ -6429,7 +6429,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_cocoa > 0.5 pp_cplan_mode_cocoa < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_cocoa < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = cocoa } pp_cplan_months_cocoa < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_cocoa
 			max = 30
 			check_range_bounds = no
@@ -6443,7 +6443,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_cocoa > 1.5 pp_cplan_mode_cocoa < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_cocoa = yes }
+			limit = { pp_cplan_goods_ok = { g = cocoa } pp_cplan_has_producer_cocoa = yes }
 			order_by = pp_cplan_site_cocoa
 			max = 30
 			check_range_bounds = no
@@ -6458,7 +6458,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_coffee > 0.5 pp_cplan_mode_coffee < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_coffee < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = coffee } pp_cplan_months_coffee < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_coffee
 			max = 30
 			check_range_bounds = no
@@ -6472,7 +6472,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_coffee > 1.5 pp_cplan_mode_coffee < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_coffee = yes }
+			limit = { pp_cplan_goods_ok = { g = coffee } pp_cplan_has_producer_coffee = yes }
 			order_by = pp_cplan_site_coffee
 			max = 30
 			check_range_bounds = no
@@ -6487,7 +6487,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_tea > 0.5 pp_cplan_mode_tea < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_tea < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = tea } pp_cplan_months_tea < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_tea
 			max = 30
 			check_range_bounds = no
@@ -6501,7 +6501,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_tea > 1.5 pp_cplan_mode_tea < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_tea = yes }
+			limit = { pp_cplan_goods_ok = { g = tea } pp_cplan_has_producer_tea = yes }
 			order_by = pp_cplan_site_tea
 			max = 30
 			check_range_bounds = no
@@ -6516,7 +6516,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_sugar > 0.5 pp_cplan_mode_sugar < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_sugar < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = sugar } pp_cplan_months_sugar < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_sugar
 			max = 30
 			check_range_bounds = no
@@ -6530,7 +6530,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_sugar > 1.5 pp_cplan_mode_sugar < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_sugar = yes }
+			limit = { pp_cplan_goods_ok = { g = sugar } pp_cplan_has_producer_sugar = yes }
 			order_by = pp_cplan_site_sugar
 			max = 30
 			check_range_bounds = no
@@ -6545,7 +6545,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_fruit > 0.5 pp_cplan_mode_fruit < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_fruit < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = fruit } pp_cplan_months_fruit < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_fruit
 			max = 30
 			check_range_bounds = no
@@ -6559,7 +6559,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_fruit > 1.5 pp_cplan_mode_fruit < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_fruit = yes }
+			limit = { pp_cplan_goods_ok = { g = fruit } pp_cplan_has_producer_fruit = yes }
 			order_by = pp_cplan_site_fruit
 			max = 30
 			check_range_bounds = no
@@ -6574,7 +6574,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_olives > 0.5 pp_cplan_mode_olives < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_olives < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = olives } pp_cplan_months_olives < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_olives
 			max = 30
 			check_range_bounds = no
@@ -6588,7 +6588,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_olives > 1.5 pp_cplan_mode_olives < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_olives = yes }
+			limit = { pp_cplan_goods_ok = { g = olives } pp_cplan_has_producer_olives = yes }
 			order_by = pp_cplan_site_olives
 			max = 30
 			check_range_bounds = no
@@ -6603,7 +6603,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_wine > 0.5 pp_cplan_mode_wine < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_wine < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = wine } pp_cplan_months_wine < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_wine
 			max = 30
 			check_range_bounds = no
@@ -6617,7 +6617,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_wine > 1.5 pp_cplan_mode_wine < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_wine = yes }
+			limit = { pp_cplan_goods_ok = { g = wine } pp_cplan_has_producer_wine = yes }
 			order_by = pp_cplan_site_wine
 			max = 30
 			check_range_bounds = no
@@ -6632,7 +6632,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_lumber > 0.5 pp_cplan_mode_lumber < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_lumber < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = lumber } pp_cplan_months_lumber < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_lumber
 			max = 30
 			check_range_bounds = no
@@ -6646,7 +6646,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_lumber > 1.5 pp_cplan_mode_lumber < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_lumber = yes }
+			limit = { pp_cplan_goods_ok = { g = lumber } pp_cplan_has_producer_lumber = yes }
 			order_by = pp_cplan_site_lumber
 			max = 30
 			check_range_bounds = no
@@ -6661,7 +6661,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_fish > 0.5 pp_cplan_mode_fish < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_fish < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = fish } pp_cplan_months_fish < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_fish
 			max = 30
 			check_range_bounds = no
@@ -6675,7 +6675,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_fish > 1.5 pp_cplan_mode_fish < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_fish = yes }
+			limit = { pp_cplan_goods_ok = { g = fish } pp_cplan_has_producer_fish = yes }
 			order_by = pp_cplan_site_fish
 			max = 30
 			check_range_bounds = no
@@ -6690,7 +6690,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_pearls > 0.5 pp_cplan_mode_pearls < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_pearls < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = pearls } pp_cplan_months_pearls < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_pearls
 			max = 30
 			check_range_bounds = no
@@ -6704,7 +6704,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_pearls > 1.5 pp_cplan_mode_pearls < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_pearls = yes }
+			limit = { pp_cplan_goods_ok = { g = pearls } pp_cplan_has_producer_pearls = yes }
 			order_by = pp_cplan_site_pearls
 			max = 30
 			check_range_bounds = no
@@ -6719,7 +6719,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_clay > 0.5 pp_cplan_mode_clay < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_clay < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = clay } pp_cplan_months_clay < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_clay
 			max = 30
 			check_range_bounds = no
@@ -6733,7 +6733,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_clay > 1.5 pp_cplan_mode_clay < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_clay = yes }
+			limit = { pp_cplan_goods_ok = { g = clay } pp_cplan_has_producer_clay = yes }
 			order_by = pp_cplan_site_clay
 			max = 30
 			check_range_bounds = no
@@ -6748,7 +6748,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_sand > 0.5 pp_cplan_mode_sand < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_sand < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = sand } pp_cplan_months_sand < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_sand
 			max = 30
 			check_range_bounds = no
@@ -6762,7 +6762,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_sand > 1.5 pp_cplan_mode_sand < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_sand = yes }
+			limit = { pp_cplan_goods_ok = { g = sand } pp_cplan_has_producer_sand = yes }
 			order_by = pp_cplan_site_sand
 			max = 30
 			check_range_bounds = no
@@ -6777,7 +6777,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_medicaments > 0.5 pp_cplan_mode_medicaments < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_medicaments < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = medicaments } pp_cplan_months_medicaments < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_medicaments
 			max = 30
 			check_range_bounds = no
@@ -6791,7 +6791,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_medicaments > 1.5 pp_cplan_mode_medicaments < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_medicaments = yes }
+			limit = { pp_cplan_goods_ok = { g = medicaments } pp_cplan_has_producer_medicaments = yes }
 			order_by = pp_cplan_site_medicaments
 			max = 30
 			check_range_bounds = no
@@ -6806,7 +6806,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_salt > 0.5 pp_cplan_mode_salt < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_salt < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = salt } pp_cplan_months_salt < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_salt
 			max = 30
 			check_range_bounds = no
@@ -6820,7 +6820,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_salt > 1.5 pp_cplan_mode_salt < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_salt = yes }
+			limit = { pp_cplan_goods_ok = { g = salt } pp_cplan_has_producer_salt = yes }
 			order_by = pp_cplan_site_salt
 			max = 30
 			check_range_bounds = no
@@ -6835,7 +6835,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_amber > 0.5 pp_cplan_mode_amber < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_amber < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = amber } pp_cplan_months_amber < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_amber
 			max = 30
 			check_range_bounds = no
@@ -6849,7 +6849,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_amber > 1.5 pp_cplan_mode_amber < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_amber = yes }
+			limit = { pp_cplan_goods_ok = { g = amber } pp_cplan_has_producer_amber = yes }
 			order_by = pp_cplan_site_amber
 			max = 30
 			check_range_bounds = no
@@ -6864,7 +6864,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_ivory > 0.5 pp_cplan_mode_ivory < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_ivory < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = ivory } pp_cplan_months_ivory < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_ivory
 			max = 30
 			check_range_bounds = no
@@ -6878,7 +6878,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_ivory > 1.5 pp_cplan_mode_ivory < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_ivory = yes }
+			limit = { pp_cplan_goods_ok = { g = ivory } pp_cplan_has_producer_ivory = yes }
 			order_by = pp_cplan_site_ivory
 			max = 30
 			check_range_bounds = no
@@ -6893,7 +6893,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_wild_game > 0.5 pp_cplan_mode_wild_game < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_wild_game < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = wild_game } pp_cplan_months_wild_game < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_wild_game
 			max = 30
 			check_range_bounds = no
@@ -6907,7 +6907,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_wild_game > 1.5 pp_cplan_mode_wild_game < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_wild_game = yes }
+			limit = { pp_cplan_goods_ok = { g = wild_game } pp_cplan_has_producer_wild_game = yes }
 			order_by = pp_cplan_site_wild_game
 			max = 30
 			check_range_bounds = no
@@ -6922,7 +6922,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_beer > 0.5 pp_cplan_mode_beer < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_beer < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = beer } pp_cplan_months_beer < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_beer
 			max = 30
 			check_range_bounds = no
@@ -6936,7 +6936,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_beer > 1.5 pp_cplan_mode_beer < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_beer = yes }
+			limit = { pp_cplan_goods_ok = { g = beer } pp_cplan_has_producer_beer = yes }
 			order_by = pp_cplan_site_beer
 			max = 30
 			check_range_bounds = no
@@ -6951,7 +6951,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_liquor > 0.5 pp_cplan_mode_liquor < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_liquor < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = liquor } pp_cplan_months_liquor < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_liquor
 			max = 30
 			check_range_bounds = no
@@ -6965,7 +6965,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_liquor > 1.5 pp_cplan_mode_liquor < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_liquor = yes }
+			limit = { pp_cplan_goods_ok = { g = liquor } pp_cplan_has_producer_liquor = yes }
 			order_by = pp_cplan_site_liquor
 			max = 30
 			check_range_bounds = no
@@ -6980,7 +6980,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_books > 0.5 pp_cplan_mode_books < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_books < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = books } pp_cplan_months_books < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_books
 			max = 30
 			check_range_bounds = no
@@ -6994,7 +6994,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_books > 1.5 pp_cplan_mode_books < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_books = yes }
+			limit = { pp_cplan_goods_ok = { g = books } pp_cplan_has_producer_books = yes }
 			order_by = pp_cplan_site_books
 			max = 30
 			check_range_bounds = no
@@ -7009,7 +7009,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_paper > 0.5 pp_cplan_mode_paper < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_paper < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = paper } pp_cplan_months_paper < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_paper
 			max = 30
 			check_range_bounds = no
@@ -7023,7 +7023,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_paper > 1.5 pp_cplan_mode_paper < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_paper = yes }
+			limit = { pp_cplan_goods_ok = { g = paper } pp_cplan_has_producer_paper = yes }
 			order_by = pp_cplan_site_paper
 			max = 30
 			check_range_bounds = no
@@ -7038,7 +7038,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_slaves_goods > 0.5 pp_cplan_mode_slaves_goods < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_slaves_goods < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = slaves_goods } pp_cplan_months_slaves_goods < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_slaves_goods
 			max = 30
 			check_range_bounds = no
@@ -7052,7 +7052,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_slaves_goods > 1.5 pp_cplan_mode_slaves_goods < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_slaves_goods = yes }
+			limit = { pp_cplan_goods_ok = { g = slaves_goods } pp_cplan_has_producer_slaves_goods = yes }
 			order_by = pp_cplan_site_slaves_goods
 			max = 30
 			check_range_bounds = no
@@ -7067,7 +7067,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_glass > 0.5 pp_cplan_mode_glass < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_glass < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = glass } pp_cplan_months_glass < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_glass
 			max = 30
 			check_range_bounds = no
@@ -7081,7 +7081,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_glass > 1.5 pp_cplan_mode_glass < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_glass = yes }
+			limit = { pp_cplan_goods_ok = { g = glass } pp_cplan_has_producer_glass = yes }
 			order_by = pp_cplan_site_glass
 			max = 30
 			check_range_bounds = no
@@ -7096,7 +7096,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_masonry > 0.5 pp_cplan_mode_masonry < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_masonry < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = masonry } pp_cplan_months_masonry < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_masonry
 			max = 30
 			check_range_bounds = no
@@ -7110,7 +7110,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_masonry > 1.5 pp_cplan_mode_masonry < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_masonry = yes }
+			limit = { pp_cplan_goods_ok = { g = masonry } pp_cplan_has_producer_masonry = yes }
 			order_by = pp_cplan_site_masonry
 			max = 30
 			check_range_bounds = no
@@ -7125,7 +7125,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_pottery > 0.5 pp_cplan_mode_pottery < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_pottery < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = pottery } pp_cplan_months_pottery < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_pottery
 			max = 30
 			check_range_bounds = no
@@ -7139,7 +7139,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_pottery > 1.5 pp_cplan_mode_pottery < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_pottery = yes }
+			limit = { pp_cplan_goods_ok = { g = pottery } pp_cplan_has_producer_pottery = yes }
 			order_by = pp_cplan_site_pottery
 			max = 30
 			check_range_bounds = no
@@ -7154,7 +7154,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_tar > 0.5 pp_cplan_mode_tar < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_tar < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = tar } pp_cplan_months_tar < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_tar
 			max = 30
 			check_range_bounds = no
@@ -7168,7 +7168,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_tar > 1.5 pp_cplan_mode_tar < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_tar = yes }
+			limit = { pp_cplan_goods_ok = { g = tar } pp_cplan_has_producer_tar = yes }
 			order_by = pp_cplan_site_tar
 			max = 30
 			check_range_bounds = no
@@ -7183,7 +7183,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_furniture > 0.5 pp_cplan_mode_furniture < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_furniture < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = furniture } pp_cplan_months_furniture < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_furniture
 			max = 30
 			check_range_bounds = no
@@ -7197,7 +7197,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_furniture > 1.5 pp_cplan_mode_furniture < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_furniture = yes }
+			limit = { pp_cplan_goods_ok = { g = furniture } pp_cplan_has_producer_furniture = yes }
 			order_by = pp_cplan_site_furniture
 			max = 30
 			check_range_bounds = no
@@ -7212,7 +7212,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_jewelry > 0.5 pp_cplan_mode_jewelry < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_jewelry < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = jewelry } pp_cplan_months_jewelry < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_jewelry
 			max = 30
 			check_range_bounds = no
@@ -7226,7 +7226,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_jewelry > 1.5 pp_cplan_mode_jewelry < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_jewelry = yes }
+			limit = { pp_cplan_goods_ok = { g = jewelry } pp_cplan_has_producer_jewelry = yes }
 			order_by = pp_cplan_site_jewelry
 			max = 30
 			check_range_bounds = no
@@ -7241,7 +7241,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_lacquerware > 0.5 pp_cplan_mode_lacquerware < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_lacquerware < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = lacquerware } pp_cplan_months_lacquerware < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_lacquerware
 			max = 30
 			check_range_bounds = no
@@ -7255,7 +7255,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_lacquerware > 1.5 pp_cplan_mode_lacquerware < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_lacquerware = yes }
+			limit = { pp_cplan_goods_ok = { g = lacquerware } pp_cplan_has_producer_lacquerware = yes }
 			order_by = pp_cplan_site_lacquerware
 			max = 30
 			check_range_bounds = no
@@ -7270,7 +7270,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_porcelain > 0.5 pp_cplan_mode_porcelain < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_porcelain < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = porcelain } pp_cplan_months_porcelain < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_porcelain
 			max = 30
 			check_range_bounds = no
@@ -7284,7 +7284,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_porcelain > 1.5 pp_cplan_mode_porcelain < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_porcelain = yes }
+			limit = { pp_cplan_goods_ok = { g = porcelain } pp_cplan_has_producer_porcelain = yes }
 			order_by = pp_cplan_site_porcelain
 			max = 30
 			check_range_bounds = no
@@ -7299,7 +7299,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_steel > 0.5 pp_cplan_mode_steel < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_steel < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = steel } pp_cplan_months_steel < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_steel
 			max = 30
 			check_range_bounds = no
@@ -7313,7 +7313,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_steel > 1.5 pp_cplan_mode_steel < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_steel = yes }
+			limit = { pp_cplan_goods_ok = { g = steel } pp_cplan_has_producer_steel = yes }
 			order_by = pp_cplan_site_steel
 			max = 30
 			check_range_bounds = no
@@ -7328,7 +7328,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_tools > 0.5 pp_cplan_mode_tools < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_tools < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = tools } pp_cplan_months_tools < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_tools
 			max = 30
 			check_range_bounds = no
@@ -7342,7 +7342,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_tools > 1.5 pp_cplan_mode_tools < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_tools = yes }
+			limit = { pp_cplan_goods_ok = { g = tools } pp_cplan_has_producer_tools = yes }
 			order_by = pp_cplan_site_tools
 			max = 30
 			check_range_bounds = no
@@ -7357,7 +7357,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_cannons > 0.5 pp_cplan_mode_cannons < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_cannons < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = cannons } pp_cplan_months_cannons < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_cannons
 			max = 30
 			check_range_bounds = no
@@ -7371,7 +7371,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_cannons > 1.5 pp_cplan_mode_cannons < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_cannons = yes }
+			limit = { pp_cplan_goods_ok = { g = cannons } pp_cplan_has_producer_cannons = yes }
 			order_by = pp_cplan_site_cannons
 			max = 30
 			check_range_bounds = no
@@ -7386,7 +7386,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_firearms > 0.5 pp_cplan_mode_firearms < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_firearms < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = firearms } pp_cplan_months_firearms < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_firearms
 			max = 30
 			check_range_bounds = no
@@ -7400,7 +7400,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_firearms > 1.5 pp_cplan_mode_firearms < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_firearms = yes }
+			limit = { pp_cplan_goods_ok = { g = firearms } pp_cplan_has_producer_firearms = yes }
 			order_by = pp_cplan_site_firearms
 			max = 30
 			check_range_bounds = no
@@ -7415,7 +7415,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_weaponry > 0.5 pp_cplan_mode_weaponry < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_weaponry < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = weaponry } pp_cplan_months_weaponry < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_weaponry
 			max = 30
 			check_range_bounds = no
@@ -7429,7 +7429,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_weaponry > 1.5 pp_cplan_mode_weaponry < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_weaponry = yes }
+			limit = { pp_cplan_goods_ok = { g = weaponry } pp_cplan_has_producer_weaponry = yes }
 			order_by = pp_cplan_site_weaponry
 			max = 30
 			check_range_bounds = no
@@ -7444,7 +7444,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_naval_supplies > 0.5 pp_cplan_mode_naval_supplies < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_naval_supplies < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = naval_supplies } pp_cplan_months_naval_supplies < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_naval_supplies
 			max = 30
 			check_range_bounds = no
@@ -7458,7 +7458,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_naval_supplies > 1.5 pp_cplan_mode_naval_supplies < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_naval_supplies = yes }
+			limit = { pp_cplan_goods_ok = { g = naval_supplies } pp_cplan_has_producer_naval_supplies = yes }
 			order_by = pp_cplan_site_naval_supplies
 			max = 30
 			check_range_bounds = no
@@ -7473,7 +7473,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_victuals > 0.5 pp_cplan_mode_victuals < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_victuals < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = victuals } pp_cplan_months_victuals < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_victuals
 			max = 30
 			check_range_bounds = no
@@ -7487,7 +7487,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_victuals > 1.5 pp_cplan_mode_victuals < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_victuals = yes }
+			limit = { pp_cplan_goods_ok = { g = victuals } pp_cplan_has_producer_victuals = yes }
 			order_by = pp_cplan_site_victuals
 			max = 30
 			check_range_bounds = no
@@ -7502,7 +7502,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_cloth > 0.5 pp_cplan_mode_cloth < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_cloth < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = cloth } pp_cplan_months_cloth < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_cloth
 			max = 30
 			check_range_bounds = no
@@ -7516,7 +7516,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_cloth > 1.5 pp_cplan_mode_cloth < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_cloth = yes }
+			limit = { pp_cplan_goods_ok = { g = cloth } pp_cplan_has_producer_cloth = yes }
 			order_by = pp_cplan_site_cloth
 			max = 30
 			check_range_bounds = no
@@ -7531,7 +7531,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_fine_cloth > 0.5 pp_cplan_mode_fine_cloth < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_fine_cloth < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = fine_cloth } pp_cplan_months_fine_cloth < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_fine_cloth
 			max = 30
 			check_range_bounds = no
@@ -7545,7 +7545,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_fine_cloth > 1.5 pp_cplan_mode_fine_cloth < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_fine_cloth = yes }
+			limit = { pp_cplan_goods_ok = { g = fine_cloth } pp_cplan_has_producer_fine_cloth = yes }
 			order_by = pp_cplan_site_fine_cloth
 			max = 30
 			check_range_bounds = no
@@ -7560,7 +7560,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_leather > 0.5 pp_cplan_mode_leather < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_leather < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = leather } pp_cplan_months_leather < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_leather
 			max = 30
 			check_range_bounds = no
@@ -7574,7 +7574,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_leather > 1.5 pp_cplan_mode_leather < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_leather = yes }
+			limit = { pp_cplan_goods_ok = { g = leather } pp_cplan_has_producer_leather = yes }
 			order_by = pp_cplan_site_leather
 			max = 30
 			check_range_bounds = no
@@ -7589,7 +7589,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_marble > 0.5 pp_cplan_mode_marble < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_marble < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = marble } pp_cplan_months_marble < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_marble
 			max = 30
 			check_range_bounds = no
@@ -7603,7 +7603,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_marble > 1.5 pp_cplan_mode_marble < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_marble = yes }
+			limit = { pp_cplan_goods_ok = { g = marble } pp_cplan_has_producer_marble = yes }
 			order_by = pp_cplan_site_marble
 			max = 30
 			check_range_bounds = no
@@ -7618,7 +7618,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_stone > 0.5 pp_cplan_mode_stone < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_stone < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = stone } pp_cplan_months_stone < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_stone
 			max = 30
 			check_range_bounds = no
@@ -7632,7 +7632,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_stone > 1.5 pp_cplan_mode_stone < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_stone = yes }
+			limit = { pp_cplan_goods_ok = { g = stone } pp_cplan_has_producer_stone = yes }
 			order_by = pp_cplan_site_stone
 			max = 30
 			check_range_bounds = no
@@ -7647,7 +7647,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_coal > 0.5 pp_cplan_mode_coal < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_coal < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = coal } pp_cplan_months_coal < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_coal
 			max = 30
 			check_range_bounds = no
@@ -7661,7 +7661,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_coal > 1.5 pp_cplan_mode_coal < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_coal = yes }
+			limit = { pp_cplan_goods_ok = { g = coal } pp_cplan_has_producer_coal = yes }
 			order_by = pp_cplan_site_coal
 			max = 30
 			check_range_bounds = no
@@ -7676,7 +7676,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_alum > 0.5 pp_cplan_mode_alum < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_alum < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = alum } pp_cplan_months_alum < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_alum
 			max = 30
 			check_range_bounds = no
@@ -7690,7 +7690,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_alum > 1.5 pp_cplan_mode_alum < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_alum = yes }
+			limit = { pp_cplan_goods_ok = { g = alum } pp_cplan_has_producer_alum = yes }
 			order_by = pp_cplan_site_alum
 			max = 30
 			check_range_bounds = no
@@ -7705,7 +7705,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_mercury > 0.5 pp_cplan_mode_mercury < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_mercury < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = mercury } pp_cplan_months_mercury < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_mercury
 			max = 30
 			check_range_bounds = no
@@ -7719,7 +7719,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_mercury > 1.5 pp_cplan_mode_mercury < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_mercury = yes }
+			limit = { pp_cplan_goods_ok = { g = mercury } pp_cplan_has_producer_mercury = yes }
 			order_by = pp_cplan_site_mercury
 			max = 30
 			check_range_bounds = no
@@ -7734,7 +7734,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_saltpeter > 0.5 pp_cplan_mode_saltpeter < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_saltpeter < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = saltpeter } pp_cplan_months_saltpeter < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_saltpeter
 			max = 30
 			check_range_bounds = no
@@ -7748,7 +7748,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_saltpeter > 1.5 pp_cplan_mode_saltpeter < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_saltpeter = yes }
+			limit = { pp_cplan_goods_ok = { g = saltpeter } pp_cplan_has_producer_saltpeter = yes }
 			order_by = pp_cplan_site_saltpeter
 			max = 30
 			check_range_bounds = no
@@ -7763,7 +7763,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_copper > 0.5 pp_cplan_mode_copper < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_copper < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = copper } pp_cplan_months_copper < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_copper
 			max = 30
 			check_range_bounds = no
@@ -7777,7 +7777,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_copper > 1.5 pp_cplan_mode_copper < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_copper = yes }
+			limit = { pp_cplan_goods_ok = { g = copper } pp_cplan_has_producer_copper = yes }
 			order_by = pp_cplan_site_copper
 			max = 30
 			check_range_bounds = no
@@ -7792,7 +7792,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_iron > 0.5 pp_cplan_mode_iron < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_iron < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = iron } pp_cplan_months_iron < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_iron
 			max = 30
 			check_range_bounds = no
@@ -7806,7 +7806,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_iron > 1.5 pp_cplan_mode_iron < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_iron = yes }
+			limit = { pp_cplan_goods_ok = { g = iron } pp_cplan_has_producer_iron = yes }
 			order_by = pp_cplan_site_iron
 			max = 30
 			check_range_bounds = no
@@ -7821,7 +7821,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_lead > 0.5 pp_cplan_mode_lead < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_lead < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = lead } pp_cplan_months_lead < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_lead
 			max = 30
 			check_range_bounds = no
@@ -7835,7 +7835,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_lead > 1.5 pp_cplan_mode_lead < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_lead = yes }
+			limit = { pp_cplan_goods_ok = { g = lead } pp_cplan_has_producer_lead = yes }
 			order_by = pp_cplan_site_lead
 			max = 30
 			check_range_bounds = no
@@ -7850,7 +7850,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_tin > 0.5 pp_cplan_mode_tin < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_tin < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = tin } pp_cplan_months_tin < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_tin
 			max = 30
 			check_range_bounds = no
@@ -7864,7 +7864,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_tin > 1.5 pp_cplan_mode_tin < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_tin = yes }
+			limit = { pp_cplan_goods_ok = { g = tin } pp_cplan_has_producer_tin = yes }
 			order_by = pp_cplan_site_tin
 			max = 30
 			check_range_bounds = no
@@ -7879,7 +7879,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_gems > 0.5 pp_cplan_mode_gems < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_gems < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = gems } pp_cplan_months_gems < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_gems
 			max = 30
 			check_range_bounds = no
@@ -7893,7 +7893,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_gems > 1.5 pp_cplan_mode_gems < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_gems = yes }
+			limit = { pp_cplan_goods_ok = { g = gems } pp_cplan_has_producer_gems = yes }
 			order_by = pp_cplan_site_gems
 			max = 30
 			check_range_bounds = no
@@ -7908,7 +7908,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_goods_gold > 0.5 pp_cplan_mode_goods_gold < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_goods_gold < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = goods_gold } pp_cplan_months_goods_gold < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_goods_gold
 			max = 30
 			check_range_bounds = no
@@ -7922,7 +7922,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_goods_gold > 1.5 pp_cplan_mode_goods_gold < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_goods_gold = yes }
+			limit = { pp_cplan_goods_ok = { g = goods_gold } pp_cplan_has_producer_goods_gold = yes }
 			order_by = pp_cplan_site_goods_gold
 			max = 30
 			check_range_bounds = no
@@ -7937,7 +7937,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_silver > 0.5 pp_cplan_mode_silver < 1.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_months_silver < scope:pp_cplan_country.pp_cplan_keep_months }
+			limit = { pp_cplan_goods_ok = { g = silver } pp_cplan_months_silver < scope:pp_cplan_country.pp_cplan_keep_months }
 			order_by = pp_cplan_site_silver
 			max = 30
 			check_range_bounds = no
@@ -7951,7 +7951,7 @@ pp_cplan_goods_run = {
 		limit = { pp_cplan_mode_silver > 1.5 pp_cplan_mode_silver < 2.5 pp_cplan_budget_left = yes }
 		remove_variable = pp_cplan_hit
 		ordered_owned_location = {
-			limit = { pp_cplan_location_ok = yes pp_cplan_has_producer_silver = yes }
+			limit = { pp_cplan_goods_ok = { g = silver } pp_cplan_has_producer_silver = yes }
 			order_by = pp_cplan_site_silver
 			max = 30
 			check_range_bounds = no
@@ -8637,1014 +8637,397 @@ pp_cplan_rule_edit_switch = {
 	}
 }
 
-# ---- Location templates (scripted GUI pp_cplan_template): a location's mode and rules saved on the country ----
-# Location scope; scope:pp_slot = flag t1..tN, scope:pp_key = flag save / apply / province.
-pp_cplan_template_do = {
-	save_scope_as = pp_cplan_loc
-	owner = { save_scope_as = pp_cplan_country }
+# ---- Presets (scripted GUI pp_cplan_preset, Plan tab): built-in settings to start from ([construction_plan.presets]) ----
+# Country scope; scope:pp_key = the preset's flag. A preset sets every setting (unnamed ones back to the default),
+# which rule groups run and every good's mode.
+pp_cplan_preset_do = {
 	switch = {
-		trigger = scope:pp_slot
-		flag:t1 = {
-			if = {
-				limit = { scope:pp_key = flag:save }
-				pp_cplan_template_save_1 = yes
-			}
-			else_if = {
-				limit = { scope:pp_key = flag:province }
-				province ?= {
-					every_location_in_province = {
-						limit = { owner ?= scope:pp_cplan_country }
-						save_scope_as = pp_cplan_loc
-						pp_cplan_template_apply_1 = yes
-					}
-				}
-			}
-			else = {
-				pp_cplan_template_apply_1 = yes
-			}
-		}
-		flag:t2 = {
-			if = {
-				limit = { scope:pp_key = flag:save }
-				pp_cplan_template_save_2 = yes
-			}
-			else_if = {
-				limit = { scope:pp_key = flag:province }
-				province ?= {
-					every_location_in_province = {
-						limit = { owner ?= scope:pp_cplan_country }
-						save_scope_as = pp_cplan_loc
-						pp_cplan_template_apply_2 = yes
-					}
-				}
-			}
-			else = {
-				pp_cplan_template_apply_2 = yes
-			}
-		}
-		flag:t3 = {
-			if = {
-				limit = { scope:pp_key = flag:save }
-				pp_cplan_template_save_3 = yes
-			}
-			else_if = {
-				limit = { scope:pp_key = flag:province }
-				province ?= {
-					every_location_in_province = {
-						limit = { owner ?= scope:pp_cplan_country }
-						save_scope_as = pp_cplan_loc
-						pp_cplan_template_apply_3 = yes
-					}
-				}
-			}
-			else = {
-				pp_cplan_template_apply_3 = yes
-			}
-		}
-		flag:t4 = {
-			if = {
-				limit = { scope:pp_key = flag:save }
-				pp_cplan_template_save_4 = yes
-			}
-			else_if = {
-				limit = { scope:pp_key = flag:province }
-				province ?= {
-					every_location_in_province = {
-						limit = { owner ?= scope:pp_cplan_country }
-						save_scope_as = pp_cplan_loc
-						pp_cplan_template_apply_4 = yes
-					}
-				}
-			}
-			else = {
-				pp_cplan_template_apply_4 = yes
-			}
-		}
+		trigger = scope:pp_key
+		flag:balanced = { pp_cplan_preset_balanced = yes }
+		flag:food = { pp_cplan_preset_food = yes }
+		flag:builder = { pp_cplan_preset_builder = yes }
+		flag:cautious = { pp_cplan_preset_cautious = yes }
 	}
 }
 
-# Province scope: apply template scope:pp_slot (flag t1..tN) to every location of the province its owner owns
-# (scripted GUI pp_cplan_template_province).
-pp_cplan_template_province_do = {
-	owner ?= {
-		save_scope_as = pp_cplan_country
-	}
-	if = {
-		limit = { exists = scope:pp_cplan_country }
-		every_location_in_province = {
-			limit = { owner ?= scope:pp_cplan_country }
-			save_scope_as = pp_cplan_loc
-			switch = {
-				trigger = scope:pp_slot
-				flag:t1 = { pp_cplan_template_apply_1 = yes }
-				flag:t2 = { pp_cplan_template_apply_2 = yes }
-				flag:t3 = { pp_cplan_template_apply_3 = yes }
-				flag:t4 = { pp_cplan_template_apply_4 = yes }
-			}
-		}
-	}
+# Country scope: the preset balanced.
+pp_cplan_preset_balanced = {
+	remove_variable = pp_cplan_reserve
+	remove_variable = pp_cplan_max
+	remove_variable = pp_cplan_access
+	remove_variable = pp_cplan_keep
+	remove_variable = pp_cplan_payback
+	remove_variable = pp_cplan_gcap
+	remove_variable = pp_cplan_gfill
+	remove_variable = pp_cplan_gsur
+	remove_variable = pp_cplan_famine
+	remove_variable = pp_cplan_ypb
+	remove_variable = pp_cplan_imp
+	remove_variable = pp_cplan_food_off
+	remove_variable = pp_cplan_logistics_off
+	remove_variable = pp_cplan_goods_off
+	remove_variable = pp_cplan_improve_off
+	remove_variable = pp_cplan_g_camels
+	remove_variable = pp_cplan_g_elephants
+	remove_variable = pp_cplan_g_horses
+	remove_variable = pp_cplan_g_livestock
+	remove_variable = pp_cplan_g_wool
+	remove_variable = pp_cplan_g_beeswax
+	remove_variable = pp_cplan_g_dyes
+	remove_variable = pp_cplan_g_incense
+	remove_variable = pp_cplan_g_tobacco
+	remove_variable = pp_cplan_g_cotton
+	remove_variable = pp_cplan_g_fiber_crops
+	remove_variable = pp_cplan_g_silk
+	remove_variable = pp_cplan_g_chili
+	remove_variable = pp_cplan_g_cloves
+	remove_variable = pp_cplan_g_pepper
+	remove_variable = pp_cplan_g_saffron
+	remove_variable = pp_cplan_g_legumes
+	remove_variable = pp_cplan_g_maize
+	remove_variable = pp_cplan_g_millet
+	remove_variable = pp_cplan_g_potato
+	remove_variable = pp_cplan_g_rice
+	remove_variable = pp_cplan_g_wheat
+	remove_variable = pp_cplan_g_cocoa
+	remove_variable = pp_cplan_g_coffee
+	remove_variable = pp_cplan_g_tea
+	remove_variable = pp_cplan_g_sugar
+	remove_variable = pp_cplan_g_fruit
+	remove_variable = pp_cplan_g_olives
+	remove_variable = pp_cplan_g_wine
+	set_variable = { name = pp_cplan_g_lumber value = 101 }
+	remove_variable = pp_cplan_g_fish
+	remove_variable = pp_cplan_g_pearls
+	remove_variable = pp_cplan_g_clay
+	remove_variable = pp_cplan_g_sand
+	remove_variable = pp_cplan_g_medicaments
+	remove_variable = pp_cplan_g_salt
+	remove_variable = pp_cplan_g_amber
+	remove_variable = pp_cplan_g_ivory
+	remove_variable = pp_cplan_g_wild_game
+	remove_variable = pp_cplan_g_beer
+	remove_variable = pp_cplan_g_liquor
+	remove_variable = pp_cplan_g_books
+	remove_variable = pp_cplan_g_paper
+	remove_variable = pp_cplan_g_slaves_goods
+	remove_variable = pp_cplan_g_glass
+	set_variable = { name = pp_cplan_g_masonry value = 101 }
+	remove_variable = pp_cplan_g_pottery
+	remove_variable = pp_cplan_g_tar
+	remove_variable = pp_cplan_g_furniture
+	remove_variable = pp_cplan_g_jewelry
+	remove_variable = pp_cplan_g_lacquerware
+	remove_variable = pp_cplan_g_porcelain
+	remove_variable = pp_cplan_g_steel
+	set_variable = { name = pp_cplan_g_tools value = 101 }
+	remove_variable = pp_cplan_g_cannons
+	remove_variable = pp_cplan_g_firearms
+	remove_variable = pp_cplan_g_weaponry
+	remove_variable = pp_cplan_g_naval_supplies
+	remove_variable = pp_cplan_g_victuals
+	remove_variable = pp_cplan_g_cloth
+	remove_variable = pp_cplan_g_fine_cloth
+	remove_variable = pp_cplan_g_leather
+	remove_variable = pp_cplan_g_marble
+	remove_variable = pp_cplan_g_stone
+	remove_variable = pp_cplan_g_coal
+	remove_variable = pp_cplan_g_alum
+	remove_variable = pp_cplan_g_mercury
+	remove_variable = pp_cplan_g_saltpeter
+	remove_variable = pp_cplan_g_copper
+	remove_variable = pp_cplan_g_iron
+	remove_variable = pp_cplan_g_lead
+	remove_variable = pp_cplan_g_tin
+	remove_variable = pp_cplan_g_gems
+	remove_variable = pp_cplan_g_goods_gold
+	remove_variable = pp_cplan_g_silver
+	set_variable = { name = pp_cplan_preset value = 101 }
 }
 
-# Location scope (scope:pp_cplan_loc = this location, scope:pp_cplan_country = its owner): template 1.
-pp_cplan_template_save_1 = {
-	scope:pp_cplan_country = { set_variable = { name = pp_cplan_t1_saved value = 101 } }
-	pp_cplan_put_num = { from = pp_cplan_mode to = pp_cplan_t1_mode }
-	pp_cplan_put_scope = { from = pp_cplan_r1_b to = pp_cplan_t1_r1_b }
-	pp_cplan_put_num = { from = pp_cplan_r1_lv to = pp_cplan_t1_r1_lv }
-	pp_cplan_put_num = { from = pp_cplan_r1_m to = pp_cplan_t1_r1_m }
-	pp_cplan_put_num = { from = pp_cplan_r1_c to = pp_cplan_t1_r1_c }
-	pp_cplan_put_num = { from = pp_cplan_r1_t to = pp_cplan_t1_r1_t }
-	pp_cplan_put_num = { from = pp_cplan_r1_pb to = pp_cplan_t1_r1_pb }
-	pp_cplan_put_scope = { from = pp_cplan_r2_b to = pp_cplan_t1_r2_b }
-	pp_cplan_put_num = { from = pp_cplan_r2_lv to = pp_cplan_t1_r2_lv }
-	pp_cplan_put_num = { from = pp_cplan_r2_m to = pp_cplan_t1_r2_m }
-	pp_cplan_put_num = { from = pp_cplan_r2_c to = pp_cplan_t1_r2_c }
-	pp_cplan_put_num = { from = pp_cplan_r2_t to = pp_cplan_t1_r2_t }
-	pp_cplan_put_num = { from = pp_cplan_r2_pb to = pp_cplan_t1_r2_pb }
-	pp_cplan_put_scope = { from = pp_cplan_r3_b to = pp_cplan_t1_r3_b }
-	pp_cplan_put_num = { from = pp_cplan_r3_lv to = pp_cplan_t1_r3_lv }
-	pp_cplan_put_num = { from = pp_cplan_r3_m to = pp_cplan_t1_r3_m }
-	pp_cplan_put_num = { from = pp_cplan_r3_c to = pp_cplan_t1_r3_c }
-	pp_cplan_put_num = { from = pp_cplan_r3_t to = pp_cplan_t1_r3_t }
-	pp_cplan_put_num = { from = pp_cplan_r3_pb to = pp_cplan_t1_r3_pb }
-	pp_cplan_put_scope = { from = pp_cplan_r4_b to = pp_cplan_t1_r4_b }
-	pp_cplan_put_num = { from = pp_cplan_r4_lv to = pp_cplan_t1_r4_lv }
-	pp_cplan_put_num = { from = pp_cplan_r4_m to = pp_cplan_t1_r4_m }
-	pp_cplan_put_num = { from = pp_cplan_r4_c to = pp_cplan_t1_r4_c }
-	pp_cplan_put_num = { from = pp_cplan_r4_t to = pp_cplan_t1_r4_t }
-	pp_cplan_put_num = { from = pp_cplan_r4_pb to = pp_cplan_t1_r4_pb }
-	set_variable = { name = pp_cplan_tpl value = 101 }
-}
-pp_cplan_template_apply_1 = {
-	if = {
-		limit = { scope:pp_cplan_country = { has_variable = pp_cplan_t1_saved } }
-		pp_cplan_take_num = { from = pp_cplan_t1_mode to = pp_cplan_mode }
-		pp_cplan_take_scope = { from = pp_cplan_t1_r1_b to = pp_cplan_r1_b }
-		pp_cplan_take_num = { from = pp_cplan_t1_r1_lv to = pp_cplan_r1_lv }
-		pp_cplan_take_num = { from = pp_cplan_t1_r1_m to = pp_cplan_r1_m }
-		pp_cplan_take_num = { from = pp_cplan_t1_r1_c to = pp_cplan_r1_c }
-		pp_cplan_take_num = { from = pp_cplan_t1_r1_t to = pp_cplan_r1_t }
-		pp_cplan_take_num = { from = pp_cplan_t1_r1_pb to = pp_cplan_r1_pb }
-		remove_variable = pp_cplan_r1_st
-		remove_variable = pp_cplan_r1_est
-		remove_variable = pp_cplan_r1_has
-		pp_cplan_take_scope = { from = pp_cplan_t1_r2_b to = pp_cplan_r2_b }
-		pp_cplan_take_num = { from = pp_cplan_t1_r2_lv to = pp_cplan_r2_lv }
-		pp_cplan_take_num = { from = pp_cplan_t1_r2_m to = pp_cplan_r2_m }
-		pp_cplan_take_num = { from = pp_cplan_t1_r2_c to = pp_cplan_r2_c }
-		pp_cplan_take_num = { from = pp_cplan_t1_r2_t to = pp_cplan_r2_t }
-		pp_cplan_take_num = { from = pp_cplan_t1_r2_pb to = pp_cplan_r2_pb }
-		remove_variable = pp_cplan_r2_st
-		remove_variable = pp_cplan_r2_est
-		remove_variable = pp_cplan_r2_has
-		pp_cplan_take_scope = { from = pp_cplan_t1_r3_b to = pp_cplan_r3_b }
-		pp_cplan_take_num = { from = pp_cplan_t1_r3_lv to = pp_cplan_r3_lv }
-		pp_cplan_take_num = { from = pp_cplan_t1_r3_m to = pp_cplan_r3_m }
-		pp_cplan_take_num = { from = pp_cplan_t1_r3_c to = pp_cplan_r3_c }
-		pp_cplan_take_num = { from = pp_cplan_t1_r3_t to = pp_cplan_r3_t }
-		pp_cplan_take_num = { from = pp_cplan_t1_r3_pb to = pp_cplan_r3_pb }
-		remove_variable = pp_cplan_r3_st
-		remove_variable = pp_cplan_r3_est
-		remove_variable = pp_cplan_r3_has
-		pp_cplan_take_scope = { from = pp_cplan_t1_r4_b to = pp_cplan_r4_b }
-		pp_cplan_take_num = { from = pp_cplan_t1_r4_lv to = pp_cplan_r4_lv }
-		pp_cplan_take_num = { from = pp_cplan_t1_r4_m to = pp_cplan_r4_m }
-		pp_cplan_take_num = { from = pp_cplan_t1_r4_c to = pp_cplan_r4_c }
-		pp_cplan_take_num = { from = pp_cplan_t1_r4_t to = pp_cplan_r4_t }
-		pp_cplan_take_num = { from = pp_cplan_t1_r4_pb to = pp_cplan_r4_pb }
-		remove_variable = pp_cplan_r4_st
-		remove_variable = pp_cplan_r4_est
-		remove_variable = pp_cplan_r4_has
-		set_variable = { name = pp_cplan_tpl value = 101 }
-		pp_cplan_own_sync = yes
-	}
-}
-
-# Location scope (scope:pp_cplan_loc = this location, scope:pp_cplan_country = its owner): template 2.
-pp_cplan_template_save_2 = {
-	scope:pp_cplan_country = { set_variable = { name = pp_cplan_t2_saved value = 101 } }
-	pp_cplan_put_num = { from = pp_cplan_mode to = pp_cplan_t2_mode }
-	pp_cplan_put_scope = { from = pp_cplan_r1_b to = pp_cplan_t2_r1_b }
-	pp_cplan_put_num = { from = pp_cplan_r1_lv to = pp_cplan_t2_r1_lv }
-	pp_cplan_put_num = { from = pp_cplan_r1_m to = pp_cplan_t2_r1_m }
-	pp_cplan_put_num = { from = pp_cplan_r1_c to = pp_cplan_t2_r1_c }
-	pp_cplan_put_num = { from = pp_cplan_r1_t to = pp_cplan_t2_r1_t }
-	pp_cplan_put_num = { from = pp_cplan_r1_pb to = pp_cplan_t2_r1_pb }
-	pp_cplan_put_scope = { from = pp_cplan_r2_b to = pp_cplan_t2_r2_b }
-	pp_cplan_put_num = { from = pp_cplan_r2_lv to = pp_cplan_t2_r2_lv }
-	pp_cplan_put_num = { from = pp_cplan_r2_m to = pp_cplan_t2_r2_m }
-	pp_cplan_put_num = { from = pp_cplan_r2_c to = pp_cplan_t2_r2_c }
-	pp_cplan_put_num = { from = pp_cplan_r2_t to = pp_cplan_t2_r2_t }
-	pp_cplan_put_num = { from = pp_cplan_r2_pb to = pp_cplan_t2_r2_pb }
-	pp_cplan_put_scope = { from = pp_cplan_r3_b to = pp_cplan_t2_r3_b }
-	pp_cplan_put_num = { from = pp_cplan_r3_lv to = pp_cplan_t2_r3_lv }
-	pp_cplan_put_num = { from = pp_cplan_r3_m to = pp_cplan_t2_r3_m }
-	pp_cplan_put_num = { from = pp_cplan_r3_c to = pp_cplan_t2_r3_c }
-	pp_cplan_put_num = { from = pp_cplan_r3_t to = pp_cplan_t2_r3_t }
-	pp_cplan_put_num = { from = pp_cplan_r3_pb to = pp_cplan_t2_r3_pb }
-	pp_cplan_put_scope = { from = pp_cplan_r4_b to = pp_cplan_t2_r4_b }
-	pp_cplan_put_num = { from = pp_cplan_r4_lv to = pp_cplan_t2_r4_lv }
-	pp_cplan_put_num = { from = pp_cplan_r4_m to = pp_cplan_t2_r4_m }
-	pp_cplan_put_num = { from = pp_cplan_r4_c to = pp_cplan_t2_r4_c }
-	pp_cplan_put_num = { from = pp_cplan_r4_t to = pp_cplan_t2_r4_t }
-	pp_cplan_put_num = { from = pp_cplan_r4_pb to = pp_cplan_t2_r4_pb }
-	set_variable = { name = pp_cplan_tpl value = 102 }
-}
-pp_cplan_template_apply_2 = {
-	if = {
-		limit = { scope:pp_cplan_country = { has_variable = pp_cplan_t2_saved } }
-		pp_cplan_take_num = { from = pp_cplan_t2_mode to = pp_cplan_mode }
-		pp_cplan_take_scope = { from = pp_cplan_t2_r1_b to = pp_cplan_r1_b }
-		pp_cplan_take_num = { from = pp_cplan_t2_r1_lv to = pp_cplan_r1_lv }
-		pp_cplan_take_num = { from = pp_cplan_t2_r1_m to = pp_cplan_r1_m }
-		pp_cplan_take_num = { from = pp_cplan_t2_r1_c to = pp_cplan_r1_c }
-		pp_cplan_take_num = { from = pp_cplan_t2_r1_t to = pp_cplan_r1_t }
-		pp_cplan_take_num = { from = pp_cplan_t2_r1_pb to = pp_cplan_r1_pb }
-		remove_variable = pp_cplan_r1_st
-		remove_variable = pp_cplan_r1_est
-		remove_variable = pp_cplan_r1_has
-		pp_cplan_take_scope = { from = pp_cplan_t2_r2_b to = pp_cplan_r2_b }
-		pp_cplan_take_num = { from = pp_cplan_t2_r2_lv to = pp_cplan_r2_lv }
-		pp_cplan_take_num = { from = pp_cplan_t2_r2_m to = pp_cplan_r2_m }
-		pp_cplan_take_num = { from = pp_cplan_t2_r2_c to = pp_cplan_r2_c }
-		pp_cplan_take_num = { from = pp_cplan_t2_r2_t to = pp_cplan_r2_t }
-		pp_cplan_take_num = { from = pp_cplan_t2_r2_pb to = pp_cplan_r2_pb }
-		remove_variable = pp_cplan_r2_st
-		remove_variable = pp_cplan_r2_est
-		remove_variable = pp_cplan_r2_has
-		pp_cplan_take_scope = { from = pp_cplan_t2_r3_b to = pp_cplan_r3_b }
-		pp_cplan_take_num = { from = pp_cplan_t2_r3_lv to = pp_cplan_r3_lv }
-		pp_cplan_take_num = { from = pp_cplan_t2_r3_m to = pp_cplan_r3_m }
-		pp_cplan_take_num = { from = pp_cplan_t2_r3_c to = pp_cplan_r3_c }
-		pp_cplan_take_num = { from = pp_cplan_t2_r3_t to = pp_cplan_r3_t }
-		pp_cplan_take_num = { from = pp_cplan_t2_r3_pb to = pp_cplan_r3_pb }
-		remove_variable = pp_cplan_r3_st
-		remove_variable = pp_cplan_r3_est
-		remove_variable = pp_cplan_r3_has
-		pp_cplan_take_scope = { from = pp_cplan_t2_r4_b to = pp_cplan_r4_b }
-		pp_cplan_take_num = { from = pp_cplan_t2_r4_lv to = pp_cplan_r4_lv }
-		pp_cplan_take_num = { from = pp_cplan_t2_r4_m to = pp_cplan_r4_m }
-		pp_cplan_take_num = { from = pp_cplan_t2_r4_c to = pp_cplan_r4_c }
-		pp_cplan_take_num = { from = pp_cplan_t2_r4_t to = pp_cplan_r4_t }
-		pp_cplan_take_num = { from = pp_cplan_t2_r4_pb to = pp_cplan_r4_pb }
-		remove_variable = pp_cplan_r4_st
-		remove_variable = pp_cplan_r4_est
-		remove_variable = pp_cplan_r4_has
-		set_variable = { name = pp_cplan_tpl value = 102 }
-		pp_cplan_own_sync = yes
-	}
+# Country scope: the preset food.
+pp_cplan_preset_food = {
+	remove_variable = pp_cplan_reserve
+	set_variable = { name = pp_cplan_max value = 104 }
+	remove_variable = pp_cplan_access
+	remove_variable = pp_cplan_keep
+	remove_variable = pp_cplan_payback
+	remove_variable = pp_cplan_gcap
+	remove_variable = pp_cplan_gfill
+	remove_variable = pp_cplan_gsur
+	set_variable = { name = pp_cplan_famine value = 104 }
+	remove_variable = pp_cplan_ypb
+	set_variable = { name = pp_cplan_imp value = 180 }
+	remove_variable = pp_cplan_food_off
+	remove_variable = pp_cplan_logistics_off
+	set_variable = { name = pp_cplan_goods_off value = yes }
+	remove_variable = pp_cplan_improve_off
+	remove_variable = pp_cplan_g_camels
+	remove_variable = pp_cplan_g_elephants
+	remove_variable = pp_cplan_g_horses
+	remove_variable = pp_cplan_g_livestock
+	remove_variable = pp_cplan_g_wool
+	remove_variable = pp_cplan_g_beeswax
+	remove_variable = pp_cplan_g_dyes
+	remove_variable = pp_cplan_g_incense
+	remove_variable = pp_cplan_g_tobacco
+	remove_variable = pp_cplan_g_cotton
+	remove_variable = pp_cplan_g_fiber_crops
+	remove_variable = pp_cplan_g_silk
+	remove_variable = pp_cplan_g_chili
+	remove_variable = pp_cplan_g_cloves
+	remove_variable = pp_cplan_g_pepper
+	remove_variable = pp_cplan_g_saffron
+	remove_variable = pp_cplan_g_legumes
+	remove_variable = pp_cplan_g_maize
+	remove_variable = pp_cplan_g_millet
+	remove_variable = pp_cplan_g_potato
+	remove_variable = pp_cplan_g_rice
+	remove_variable = pp_cplan_g_wheat
+	remove_variable = pp_cplan_g_cocoa
+	remove_variable = pp_cplan_g_coffee
+	remove_variable = pp_cplan_g_tea
+	remove_variable = pp_cplan_g_sugar
+	remove_variable = pp_cplan_g_fruit
+	remove_variable = pp_cplan_g_olives
+	remove_variable = pp_cplan_g_wine
+	remove_variable = pp_cplan_g_lumber
+	remove_variable = pp_cplan_g_fish
+	remove_variable = pp_cplan_g_pearls
+	remove_variable = pp_cplan_g_clay
+	remove_variable = pp_cplan_g_sand
+	remove_variable = pp_cplan_g_medicaments
+	remove_variable = pp_cplan_g_salt
+	remove_variable = pp_cplan_g_amber
+	remove_variable = pp_cplan_g_ivory
+	remove_variable = pp_cplan_g_wild_game
+	remove_variable = pp_cplan_g_beer
+	remove_variable = pp_cplan_g_liquor
+	remove_variable = pp_cplan_g_books
+	remove_variable = pp_cplan_g_paper
+	remove_variable = pp_cplan_g_slaves_goods
+	remove_variable = pp_cplan_g_glass
+	remove_variable = pp_cplan_g_masonry
+	remove_variable = pp_cplan_g_pottery
+	remove_variable = pp_cplan_g_tar
+	remove_variable = pp_cplan_g_furniture
+	remove_variable = pp_cplan_g_jewelry
+	remove_variable = pp_cplan_g_lacquerware
+	remove_variable = pp_cplan_g_porcelain
+	remove_variable = pp_cplan_g_steel
+	remove_variable = pp_cplan_g_tools
+	remove_variable = pp_cplan_g_cannons
+	remove_variable = pp_cplan_g_firearms
+	remove_variable = pp_cplan_g_weaponry
+	remove_variable = pp_cplan_g_naval_supplies
+	remove_variable = pp_cplan_g_victuals
+	remove_variable = pp_cplan_g_cloth
+	remove_variable = pp_cplan_g_fine_cloth
+	remove_variable = pp_cplan_g_leather
+	remove_variable = pp_cplan_g_marble
+	remove_variable = pp_cplan_g_stone
+	remove_variable = pp_cplan_g_coal
+	remove_variable = pp_cplan_g_alum
+	remove_variable = pp_cplan_g_mercury
+	remove_variable = pp_cplan_g_saltpeter
+	remove_variable = pp_cplan_g_copper
+	remove_variable = pp_cplan_g_iron
+	remove_variable = pp_cplan_g_lead
+	remove_variable = pp_cplan_g_tin
+	remove_variable = pp_cplan_g_gems
+	remove_variable = pp_cplan_g_goods_gold
+	remove_variable = pp_cplan_g_silver
+	set_variable = { name = pp_cplan_preset value = 102 }
 }
 
-# Location scope (scope:pp_cplan_loc = this location, scope:pp_cplan_country = its owner): template 3.
-pp_cplan_template_save_3 = {
-	scope:pp_cplan_country = { set_variable = { name = pp_cplan_t3_saved value = 101 } }
-	pp_cplan_put_num = { from = pp_cplan_mode to = pp_cplan_t3_mode }
-	pp_cplan_put_scope = { from = pp_cplan_r1_b to = pp_cplan_t3_r1_b }
-	pp_cplan_put_num = { from = pp_cplan_r1_lv to = pp_cplan_t3_r1_lv }
-	pp_cplan_put_num = { from = pp_cplan_r1_m to = pp_cplan_t3_r1_m }
-	pp_cplan_put_num = { from = pp_cplan_r1_c to = pp_cplan_t3_r1_c }
-	pp_cplan_put_num = { from = pp_cplan_r1_t to = pp_cplan_t3_r1_t }
-	pp_cplan_put_num = { from = pp_cplan_r1_pb to = pp_cplan_t3_r1_pb }
-	pp_cplan_put_scope = { from = pp_cplan_r2_b to = pp_cplan_t3_r2_b }
-	pp_cplan_put_num = { from = pp_cplan_r2_lv to = pp_cplan_t3_r2_lv }
-	pp_cplan_put_num = { from = pp_cplan_r2_m to = pp_cplan_t3_r2_m }
-	pp_cplan_put_num = { from = pp_cplan_r2_c to = pp_cplan_t3_r2_c }
-	pp_cplan_put_num = { from = pp_cplan_r2_t to = pp_cplan_t3_r2_t }
-	pp_cplan_put_num = { from = pp_cplan_r2_pb to = pp_cplan_t3_r2_pb }
-	pp_cplan_put_scope = { from = pp_cplan_r3_b to = pp_cplan_t3_r3_b }
-	pp_cplan_put_num = { from = pp_cplan_r3_lv to = pp_cplan_t3_r3_lv }
-	pp_cplan_put_num = { from = pp_cplan_r3_m to = pp_cplan_t3_r3_m }
-	pp_cplan_put_num = { from = pp_cplan_r3_c to = pp_cplan_t3_r3_c }
-	pp_cplan_put_num = { from = pp_cplan_r3_t to = pp_cplan_t3_r3_t }
-	pp_cplan_put_num = { from = pp_cplan_r3_pb to = pp_cplan_t3_r3_pb }
-	pp_cplan_put_scope = { from = pp_cplan_r4_b to = pp_cplan_t3_r4_b }
-	pp_cplan_put_num = { from = pp_cplan_r4_lv to = pp_cplan_t3_r4_lv }
-	pp_cplan_put_num = { from = pp_cplan_r4_m to = pp_cplan_t3_r4_m }
-	pp_cplan_put_num = { from = pp_cplan_r4_c to = pp_cplan_t3_r4_c }
-	pp_cplan_put_num = { from = pp_cplan_r4_t to = pp_cplan_t3_r4_t }
-	pp_cplan_put_num = { from = pp_cplan_r4_pb to = pp_cplan_t3_r4_pb }
-	set_variable = { name = pp_cplan_tpl value = 103 }
-}
-pp_cplan_template_apply_3 = {
-	if = {
-		limit = { scope:pp_cplan_country = { has_variable = pp_cplan_t3_saved } }
-		pp_cplan_take_num = { from = pp_cplan_t3_mode to = pp_cplan_mode }
-		pp_cplan_take_scope = { from = pp_cplan_t3_r1_b to = pp_cplan_r1_b }
-		pp_cplan_take_num = { from = pp_cplan_t3_r1_lv to = pp_cplan_r1_lv }
-		pp_cplan_take_num = { from = pp_cplan_t3_r1_m to = pp_cplan_r1_m }
-		pp_cplan_take_num = { from = pp_cplan_t3_r1_c to = pp_cplan_r1_c }
-		pp_cplan_take_num = { from = pp_cplan_t3_r1_t to = pp_cplan_r1_t }
-		pp_cplan_take_num = { from = pp_cplan_t3_r1_pb to = pp_cplan_r1_pb }
-		remove_variable = pp_cplan_r1_st
-		remove_variable = pp_cplan_r1_est
-		remove_variable = pp_cplan_r1_has
-		pp_cplan_take_scope = { from = pp_cplan_t3_r2_b to = pp_cplan_r2_b }
-		pp_cplan_take_num = { from = pp_cplan_t3_r2_lv to = pp_cplan_r2_lv }
-		pp_cplan_take_num = { from = pp_cplan_t3_r2_m to = pp_cplan_r2_m }
-		pp_cplan_take_num = { from = pp_cplan_t3_r2_c to = pp_cplan_r2_c }
-		pp_cplan_take_num = { from = pp_cplan_t3_r2_t to = pp_cplan_r2_t }
-		pp_cplan_take_num = { from = pp_cplan_t3_r2_pb to = pp_cplan_r2_pb }
-		remove_variable = pp_cplan_r2_st
-		remove_variable = pp_cplan_r2_est
-		remove_variable = pp_cplan_r2_has
-		pp_cplan_take_scope = { from = pp_cplan_t3_r3_b to = pp_cplan_r3_b }
-		pp_cplan_take_num = { from = pp_cplan_t3_r3_lv to = pp_cplan_r3_lv }
-		pp_cplan_take_num = { from = pp_cplan_t3_r3_m to = pp_cplan_r3_m }
-		pp_cplan_take_num = { from = pp_cplan_t3_r3_c to = pp_cplan_r3_c }
-		pp_cplan_take_num = { from = pp_cplan_t3_r3_t to = pp_cplan_r3_t }
-		pp_cplan_take_num = { from = pp_cplan_t3_r3_pb to = pp_cplan_r3_pb }
-		remove_variable = pp_cplan_r3_st
-		remove_variable = pp_cplan_r3_est
-		remove_variable = pp_cplan_r3_has
-		pp_cplan_take_scope = { from = pp_cplan_t3_r4_b to = pp_cplan_r4_b }
-		pp_cplan_take_num = { from = pp_cplan_t3_r4_lv to = pp_cplan_r4_lv }
-		pp_cplan_take_num = { from = pp_cplan_t3_r4_m to = pp_cplan_r4_m }
-		pp_cplan_take_num = { from = pp_cplan_t3_r4_c to = pp_cplan_r4_c }
-		pp_cplan_take_num = { from = pp_cplan_t3_r4_t to = pp_cplan_r4_t }
-		pp_cplan_take_num = { from = pp_cplan_t3_r4_pb to = pp_cplan_r4_pb }
-		remove_variable = pp_cplan_r4_st
-		remove_variable = pp_cplan_r4_est
-		remove_variable = pp_cplan_r4_has
-		set_variable = { name = pp_cplan_tpl value = 103 }
-		pp_cplan_own_sync = yes
-	}
-}
-
-# Location scope (scope:pp_cplan_loc = this location, scope:pp_cplan_country = its owner): template 4.
-pp_cplan_template_save_4 = {
-	scope:pp_cplan_country = { set_variable = { name = pp_cplan_t4_saved value = 101 } }
-	pp_cplan_put_num = { from = pp_cplan_mode to = pp_cplan_t4_mode }
-	pp_cplan_put_scope = { from = pp_cplan_r1_b to = pp_cplan_t4_r1_b }
-	pp_cplan_put_num = { from = pp_cplan_r1_lv to = pp_cplan_t4_r1_lv }
-	pp_cplan_put_num = { from = pp_cplan_r1_m to = pp_cplan_t4_r1_m }
-	pp_cplan_put_num = { from = pp_cplan_r1_c to = pp_cplan_t4_r1_c }
-	pp_cplan_put_num = { from = pp_cplan_r1_t to = pp_cplan_t4_r1_t }
-	pp_cplan_put_num = { from = pp_cplan_r1_pb to = pp_cplan_t4_r1_pb }
-	pp_cplan_put_scope = { from = pp_cplan_r2_b to = pp_cplan_t4_r2_b }
-	pp_cplan_put_num = { from = pp_cplan_r2_lv to = pp_cplan_t4_r2_lv }
-	pp_cplan_put_num = { from = pp_cplan_r2_m to = pp_cplan_t4_r2_m }
-	pp_cplan_put_num = { from = pp_cplan_r2_c to = pp_cplan_t4_r2_c }
-	pp_cplan_put_num = { from = pp_cplan_r2_t to = pp_cplan_t4_r2_t }
-	pp_cplan_put_num = { from = pp_cplan_r2_pb to = pp_cplan_t4_r2_pb }
-	pp_cplan_put_scope = { from = pp_cplan_r3_b to = pp_cplan_t4_r3_b }
-	pp_cplan_put_num = { from = pp_cplan_r3_lv to = pp_cplan_t4_r3_lv }
-	pp_cplan_put_num = { from = pp_cplan_r3_m to = pp_cplan_t4_r3_m }
-	pp_cplan_put_num = { from = pp_cplan_r3_c to = pp_cplan_t4_r3_c }
-	pp_cplan_put_num = { from = pp_cplan_r3_t to = pp_cplan_t4_r3_t }
-	pp_cplan_put_num = { from = pp_cplan_r3_pb to = pp_cplan_t4_r3_pb }
-	pp_cplan_put_scope = { from = pp_cplan_r4_b to = pp_cplan_t4_r4_b }
-	pp_cplan_put_num = { from = pp_cplan_r4_lv to = pp_cplan_t4_r4_lv }
-	pp_cplan_put_num = { from = pp_cplan_r4_m to = pp_cplan_t4_r4_m }
-	pp_cplan_put_num = { from = pp_cplan_r4_c to = pp_cplan_t4_r4_c }
-	pp_cplan_put_num = { from = pp_cplan_r4_t to = pp_cplan_t4_r4_t }
-	pp_cplan_put_num = { from = pp_cplan_r4_pb to = pp_cplan_t4_r4_pb }
-	set_variable = { name = pp_cplan_tpl value = 104 }
-}
-pp_cplan_template_apply_4 = {
-	if = {
-		limit = { scope:pp_cplan_country = { has_variable = pp_cplan_t4_saved } }
-		pp_cplan_take_num = { from = pp_cplan_t4_mode to = pp_cplan_mode }
-		pp_cplan_take_scope = { from = pp_cplan_t4_r1_b to = pp_cplan_r1_b }
-		pp_cplan_take_num = { from = pp_cplan_t4_r1_lv to = pp_cplan_r1_lv }
-		pp_cplan_take_num = { from = pp_cplan_t4_r1_m to = pp_cplan_r1_m }
-		pp_cplan_take_num = { from = pp_cplan_t4_r1_c to = pp_cplan_r1_c }
-		pp_cplan_take_num = { from = pp_cplan_t4_r1_t to = pp_cplan_r1_t }
-		pp_cplan_take_num = { from = pp_cplan_t4_r1_pb to = pp_cplan_r1_pb }
-		remove_variable = pp_cplan_r1_st
-		remove_variable = pp_cplan_r1_est
-		remove_variable = pp_cplan_r1_has
-		pp_cplan_take_scope = { from = pp_cplan_t4_r2_b to = pp_cplan_r2_b }
-		pp_cplan_take_num = { from = pp_cplan_t4_r2_lv to = pp_cplan_r2_lv }
-		pp_cplan_take_num = { from = pp_cplan_t4_r2_m to = pp_cplan_r2_m }
-		pp_cplan_take_num = { from = pp_cplan_t4_r2_c to = pp_cplan_r2_c }
-		pp_cplan_take_num = { from = pp_cplan_t4_r2_t to = pp_cplan_r2_t }
-		pp_cplan_take_num = { from = pp_cplan_t4_r2_pb to = pp_cplan_r2_pb }
-		remove_variable = pp_cplan_r2_st
-		remove_variable = pp_cplan_r2_est
-		remove_variable = pp_cplan_r2_has
-		pp_cplan_take_scope = { from = pp_cplan_t4_r3_b to = pp_cplan_r3_b }
-		pp_cplan_take_num = { from = pp_cplan_t4_r3_lv to = pp_cplan_r3_lv }
-		pp_cplan_take_num = { from = pp_cplan_t4_r3_m to = pp_cplan_r3_m }
-		pp_cplan_take_num = { from = pp_cplan_t4_r3_c to = pp_cplan_r3_c }
-		pp_cplan_take_num = { from = pp_cplan_t4_r3_t to = pp_cplan_r3_t }
-		pp_cplan_take_num = { from = pp_cplan_t4_r3_pb to = pp_cplan_r3_pb }
-		remove_variable = pp_cplan_r3_st
-		remove_variable = pp_cplan_r3_est
-		remove_variable = pp_cplan_r3_has
-		pp_cplan_take_scope = { from = pp_cplan_t4_r4_b to = pp_cplan_r4_b }
-		pp_cplan_take_num = { from = pp_cplan_t4_r4_lv to = pp_cplan_r4_lv }
-		pp_cplan_take_num = { from = pp_cplan_t4_r4_m to = pp_cplan_r4_m }
-		pp_cplan_take_num = { from = pp_cplan_t4_r4_c to = pp_cplan_r4_c }
-		pp_cplan_take_num = { from = pp_cplan_t4_r4_t to = pp_cplan_r4_t }
-		pp_cplan_take_num = { from = pp_cplan_t4_r4_pb to = pp_cplan_r4_pb }
-		remove_variable = pp_cplan_r4_st
-		remove_variable = pp_cplan_r4_est
-		remove_variable = pp_cplan_r4_has
-		set_variable = { name = pp_cplan_tpl value = 104 }
-		pp_cplan_own_sync = yes
-	}
+# Country scope: the preset builder.
+pp_cplan_preset_builder = {
+	set_variable = { name = pp_cplan_reserve value = 103 }
+	set_variable = { name = pp_cplan_max value = 106 }
+	remove_variable = pp_cplan_access
+	remove_variable = pp_cplan_keep
+	set_variable = { name = pp_cplan_payback value = 115 }
+	remove_variable = pp_cplan_gcap
+	remove_variable = pp_cplan_gfill
+	remove_variable = pp_cplan_gsur
+	remove_variable = pp_cplan_famine
+	remove_variable = pp_cplan_ypb
+	remove_variable = pp_cplan_imp
+	remove_variable = pp_cplan_food_off
+	remove_variable = pp_cplan_logistics_off
+	remove_variable = pp_cplan_goods_off
+	remove_variable = pp_cplan_improve_off
+	set_variable = { name = pp_cplan_g_camels value = 102 }
+	set_variable = { name = pp_cplan_g_elephants value = 102 }
+	set_variable = { name = pp_cplan_g_horses value = 102 }
+	set_variable = { name = pp_cplan_g_livestock value = 102 }
+	set_variable = { name = pp_cplan_g_wool value = 102 }
+	set_variable = { name = pp_cplan_g_beeswax value = 102 }
+	set_variable = { name = pp_cplan_g_dyes value = 102 }
+	set_variable = { name = pp_cplan_g_incense value = 102 }
+	set_variable = { name = pp_cplan_g_tobacco value = 102 }
+	set_variable = { name = pp_cplan_g_cotton value = 102 }
+	set_variable = { name = pp_cplan_g_fiber_crops value = 102 }
+	set_variable = { name = pp_cplan_g_silk value = 102 }
+	set_variable = { name = pp_cplan_g_chili value = 102 }
+	set_variable = { name = pp_cplan_g_cloves value = 102 }
+	set_variable = { name = pp_cplan_g_pepper value = 102 }
+	set_variable = { name = pp_cplan_g_saffron value = 102 }
+	set_variable = { name = pp_cplan_g_legumes value = 102 }
+	set_variable = { name = pp_cplan_g_maize value = 102 }
+	set_variable = { name = pp_cplan_g_millet value = 102 }
+	set_variable = { name = pp_cplan_g_potato value = 102 }
+	set_variable = { name = pp_cplan_g_rice value = 102 }
+	set_variable = { name = pp_cplan_g_wheat value = 102 }
+	set_variable = { name = pp_cplan_g_cocoa value = 102 }
+	set_variable = { name = pp_cplan_g_coffee value = 102 }
+	set_variable = { name = pp_cplan_g_tea value = 102 }
+	set_variable = { name = pp_cplan_g_sugar value = 102 }
+	set_variable = { name = pp_cplan_g_fruit value = 102 }
+	set_variable = { name = pp_cplan_g_olives value = 102 }
+	set_variable = { name = pp_cplan_g_wine value = 102 }
+	set_variable = { name = pp_cplan_g_lumber value = 101 }
+	set_variable = { name = pp_cplan_g_fish value = 102 }
+	set_variable = { name = pp_cplan_g_pearls value = 102 }
+	set_variable = { name = pp_cplan_g_clay value = 102 }
+	set_variable = { name = pp_cplan_g_sand value = 102 }
+	set_variable = { name = pp_cplan_g_medicaments value = 102 }
+	set_variable = { name = pp_cplan_g_salt value = 102 }
+	set_variable = { name = pp_cplan_g_amber value = 102 }
+	set_variable = { name = pp_cplan_g_ivory value = 102 }
+	set_variable = { name = pp_cplan_g_wild_game value = 102 }
+	set_variable = { name = pp_cplan_g_beer value = 102 }
+	set_variable = { name = pp_cplan_g_liquor value = 102 }
+	set_variable = { name = pp_cplan_g_books value = 102 }
+	set_variable = { name = pp_cplan_g_paper value = 102 }
+	set_variable = { name = pp_cplan_g_slaves_goods value = 102 }
+	set_variable = { name = pp_cplan_g_glass value = 102 }
+	set_variable = { name = pp_cplan_g_masonry value = 101 }
+	set_variable = { name = pp_cplan_g_pottery value = 102 }
+	set_variable = { name = pp_cplan_g_tar value = 102 }
+	set_variable = { name = pp_cplan_g_furniture value = 102 }
+	set_variable = { name = pp_cplan_g_jewelry value = 102 }
+	set_variable = { name = pp_cplan_g_lacquerware value = 102 }
+	set_variable = { name = pp_cplan_g_porcelain value = 102 }
+	set_variable = { name = pp_cplan_g_steel value = 102 }
+	set_variable = { name = pp_cplan_g_tools value = 101 }
+	set_variable = { name = pp_cplan_g_cannons value = 102 }
+	set_variable = { name = pp_cplan_g_firearms value = 102 }
+	set_variable = { name = pp_cplan_g_weaponry value = 102 }
+	set_variable = { name = pp_cplan_g_naval_supplies value = 102 }
+	set_variable = { name = pp_cplan_g_victuals value = 102 }
+	set_variable = { name = pp_cplan_g_cloth value = 102 }
+	set_variable = { name = pp_cplan_g_fine_cloth value = 102 }
+	set_variable = { name = pp_cplan_g_leather value = 102 }
+	set_variable = { name = pp_cplan_g_marble value = 102 }
+	set_variable = { name = pp_cplan_g_stone value = 102 }
+	set_variable = { name = pp_cplan_g_coal value = 102 }
+	set_variable = { name = pp_cplan_g_alum value = 102 }
+	set_variable = { name = pp_cplan_g_mercury value = 102 }
+	set_variable = { name = pp_cplan_g_saltpeter value = 102 }
+	set_variable = { name = pp_cplan_g_copper value = 102 }
+	set_variable = { name = pp_cplan_g_iron value = 102 }
+	set_variable = { name = pp_cplan_g_lead value = 102 }
+	set_variable = { name = pp_cplan_g_tin value = 102 }
+	set_variable = { name = pp_cplan_g_gems value = 102 }
+	set_variable = { name = pp_cplan_g_goods_gold value = 102 }
+	set_variable = { name = pp_cplan_g_silver value = 102 }
+	set_variable = { name = pp_cplan_preset value = 103 }
 }
 
-# ---- Global profiles (scripted GUI pp_cplan_profile): the country settings, rule groups and goods modes ----
-# Country scope; scope:pp_slot = flag p1..pN, scope:pp_key = flag save / load.
-pp_cplan_profile_do = {
-	switch = {
-		trigger = scope:pp_slot
-		flag:p1 = {
-			if = {
-				limit = { scope:pp_key = flag:save }
-				pp_cplan_profile_save_1 = yes
-			}
-			else_if = {
-				limit = { has_variable = pp_cplan_p1_saved }
-				pp_cplan_profile_load_1 = yes
-			}
-		}
-		flag:p2 = {
-			if = {
-				limit = { scope:pp_key = flag:save }
-				pp_cplan_profile_save_2 = yes
-			}
-			else_if = {
-				limit = { has_variable = pp_cplan_p2_saved }
-				pp_cplan_profile_load_2 = yes
-			}
-		}
-		flag:p3 = {
-			if = {
-				limit = { scope:pp_key = flag:save }
-				pp_cplan_profile_save_3 = yes
-			}
-			else_if = {
-				limit = { has_variable = pp_cplan_p3_saved }
-				pp_cplan_profile_load_3 = yes
-			}
-		}
-	}
-}
-
-# Country scope: profile 1.
-pp_cplan_profile_save_1 = {
-	set_variable = { name = pp_cplan_p1_saved value = 101 }
-	pp_cplan_copy_num = { from = pp_cplan_reserve to = pp_cplan_p1_reserve }
-	pp_cplan_copy_num = { from = pp_cplan_max to = pp_cplan_p1_max }
-	pp_cplan_copy_num = { from = pp_cplan_access to = pp_cplan_p1_access }
-	pp_cplan_copy_num = { from = pp_cplan_keep to = pp_cplan_p1_keep }
-	pp_cplan_copy_num = { from = pp_cplan_payback to = pp_cplan_p1_payback }
-	pp_cplan_copy_num = { from = pp_cplan_gcap to = pp_cplan_p1_gcap }
-	pp_cplan_copy_num = { from = pp_cplan_gfill to = pp_cplan_p1_gfill }
-	pp_cplan_copy_num = { from = pp_cplan_gsur to = pp_cplan_p1_gsur }
-	pp_cplan_copy_num = { from = pp_cplan_famine to = pp_cplan_p1_famine }
-	pp_cplan_copy_num = { from = pp_cplan_ypb to = pp_cplan_p1_ypb }
-	pp_cplan_copy_num = { from = pp_cplan_imp to = pp_cplan_p1_imp }
-	pp_cplan_copy_num = { from = pp_cplan_g_camels to = pp_cplan_p1_g_camels }
-	pp_cplan_copy_num = { from = pp_cplan_g_elephants to = pp_cplan_p1_g_elephants }
-	pp_cplan_copy_num = { from = pp_cplan_g_horses to = pp_cplan_p1_g_horses }
-	pp_cplan_copy_num = { from = pp_cplan_g_livestock to = pp_cplan_p1_g_livestock }
-	pp_cplan_copy_num = { from = pp_cplan_g_wool to = pp_cplan_p1_g_wool }
-	pp_cplan_copy_num = { from = pp_cplan_g_beeswax to = pp_cplan_p1_g_beeswax }
-	pp_cplan_copy_num = { from = pp_cplan_g_dyes to = pp_cplan_p1_g_dyes }
-	pp_cplan_copy_num = { from = pp_cplan_g_incense to = pp_cplan_p1_g_incense }
-	pp_cplan_copy_num = { from = pp_cplan_g_tobacco to = pp_cplan_p1_g_tobacco }
-	pp_cplan_copy_num = { from = pp_cplan_g_cotton to = pp_cplan_p1_g_cotton }
-	pp_cplan_copy_num = { from = pp_cplan_g_fiber_crops to = pp_cplan_p1_g_fiber_crops }
-	pp_cplan_copy_num = { from = pp_cplan_g_silk to = pp_cplan_p1_g_silk }
-	pp_cplan_copy_num = { from = pp_cplan_g_chili to = pp_cplan_p1_g_chili }
-	pp_cplan_copy_num = { from = pp_cplan_g_cloves to = pp_cplan_p1_g_cloves }
-	pp_cplan_copy_num = { from = pp_cplan_g_pepper to = pp_cplan_p1_g_pepper }
-	pp_cplan_copy_num = { from = pp_cplan_g_saffron to = pp_cplan_p1_g_saffron }
-	pp_cplan_copy_num = { from = pp_cplan_g_legumes to = pp_cplan_p1_g_legumes }
-	pp_cplan_copy_num = { from = pp_cplan_g_maize to = pp_cplan_p1_g_maize }
-	pp_cplan_copy_num = { from = pp_cplan_g_millet to = pp_cplan_p1_g_millet }
-	pp_cplan_copy_num = { from = pp_cplan_g_potato to = pp_cplan_p1_g_potato }
-	pp_cplan_copy_num = { from = pp_cplan_g_rice to = pp_cplan_p1_g_rice }
-	pp_cplan_copy_num = { from = pp_cplan_g_wheat to = pp_cplan_p1_g_wheat }
-	pp_cplan_copy_num = { from = pp_cplan_g_cocoa to = pp_cplan_p1_g_cocoa }
-	pp_cplan_copy_num = { from = pp_cplan_g_coffee to = pp_cplan_p1_g_coffee }
-	pp_cplan_copy_num = { from = pp_cplan_g_tea to = pp_cplan_p1_g_tea }
-	pp_cplan_copy_num = { from = pp_cplan_g_sugar to = pp_cplan_p1_g_sugar }
-	pp_cplan_copy_num = { from = pp_cplan_g_fruit to = pp_cplan_p1_g_fruit }
-	pp_cplan_copy_num = { from = pp_cplan_g_olives to = pp_cplan_p1_g_olives }
-	pp_cplan_copy_num = { from = pp_cplan_g_wine to = pp_cplan_p1_g_wine }
-	pp_cplan_copy_num = { from = pp_cplan_g_lumber to = pp_cplan_p1_g_lumber }
-	pp_cplan_copy_num = { from = pp_cplan_g_fish to = pp_cplan_p1_g_fish }
-	pp_cplan_copy_num = { from = pp_cplan_g_pearls to = pp_cplan_p1_g_pearls }
-	pp_cplan_copy_num = { from = pp_cplan_g_clay to = pp_cplan_p1_g_clay }
-	pp_cplan_copy_num = { from = pp_cplan_g_sand to = pp_cplan_p1_g_sand }
-	pp_cplan_copy_num = { from = pp_cplan_g_medicaments to = pp_cplan_p1_g_medicaments }
-	pp_cplan_copy_num = { from = pp_cplan_g_salt to = pp_cplan_p1_g_salt }
-	pp_cplan_copy_num = { from = pp_cplan_g_amber to = pp_cplan_p1_g_amber }
-	pp_cplan_copy_num = { from = pp_cplan_g_ivory to = pp_cplan_p1_g_ivory }
-	pp_cplan_copy_num = { from = pp_cplan_g_wild_game to = pp_cplan_p1_g_wild_game }
-	pp_cplan_copy_num = { from = pp_cplan_g_beer to = pp_cplan_p1_g_beer }
-	pp_cplan_copy_num = { from = pp_cplan_g_liquor to = pp_cplan_p1_g_liquor }
-	pp_cplan_copy_num = { from = pp_cplan_g_books to = pp_cplan_p1_g_books }
-	pp_cplan_copy_num = { from = pp_cplan_g_paper to = pp_cplan_p1_g_paper }
-	pp_cplan_copy_num = { from = pp_cplan_g_slaves_goods to = pp_cplan_p1_g_slaves_goods }
-	pp_cplan_copy_num = { from = pp_cplan_g_glass to = pp_cplan_p1_g_glass }
-	pp_cplan_copy_num = { from = pp_cplan_g_masonry to = pp_cplan_p1_g_masonry }
-	pp_cplan_copy_num = { from = pp_cplan_g_pottery to = pp_cplan_p1_g_pottery }
-	pp_cplan_copy_num = { from = pp_cplan_g_tar to = pp_cplan_p1_g_tar }
-	pp_cplan_copy_num = { from = pp_cplan_g_furniture to = pp_cplan_p1_g_furniture }
-	pp_cplan_copy_num = { from = pp_cplan_g_jewelry to = pp_cplan_p1_g_jewelry }
-	pp_cplan_copy_num = { from = pp_cplan_g_lacquerware to = pp_cplan_p1_g_lacquerware }
-	pp_cplan_copy_num = { from = pp_cplan_g_porcelain to = pp_cplan_p1_g_porcelain }
-	pp_cplan_copy_num = { from = pp_cplan_g_steel to = pp_cplan_p1_g_steel }
-	pp_cplan_copy_num = { from = pp_cplan_g_tools to = pp_cplan_p1_g_tools }
-	pp_cplan_copy_num = { from = pp_cplan_g_cannons to = pp_cplan_p1_g_cannons }
-	pp_cplan_copy_num = { from = pp_cplan_g_firearms to = pp_cplan_p1_g_firearms }
-	pp_cplan_copy_num = { from = pp_cplan_g_weaponry to = pp_cplan_p1_g_weaponry }
-	pp_cplan_copy_num = { from = pp_cplan_g_naval_supplies to = pp_cplan_p1_g_naval_supplies }
-	pp_cplan_copy_num = { from = pp_cplan_g_victuals to = pp_cplan_p1_g_victuals }
-	pp_cplan_copy_num = { from = pp_cplan_g_cloth to = pp_cplan_p1_g_cloth }
-	pp_cplan_copy_num = { from = pp_cplan_g_fine_cloth to = pp_cplan_p1_g_fine_cloth }
-	pp_cplan_copy_num = { from = pp_cplan_g_leather to = pp_cplan_p1_g_leather }
-	pp_cplan_copy_num = { from = pp_cplan_g_marble to = pp_cplan_p1_g_marble }
-	pp_cplan_copy_num = { from = pp_cplan_g_stone to = pp_cplan_p1_g_stone }
-	pp_cplan_copy_num = { from = pp_cplan_g_coal to = pp_cplan_p1_g_coal }
-	pp_cplan_copy_num = { from = pp_cplan_g_alum to = pp_cplan_p1_g_alum }
-	pp_cplan_copy_num = { from = pp_cplan_g_mercury to = pp_cplan_p1_g_mercury }
-	pp_cplan_copy_num = { from = pp_cplan_g_saltpeter to = pp_cplan_p1_g_saltpeter }
-	pp_cplan_copy_num = { from = pp_cplan_g_copper to = pp_cplan_p1_g_copper }
-	pp_cplan_copy_num = { from = pp_cplan_g_iron to = pp_cplan_p1_g_iron }
-	pp_cplan_copy_num = { from = pp_cplan_g_lead to = pp_cplan_p1_g_lead }
-	pp_cplan_copy_num = { from = pp_cplan_g_tin to = pp_cplan_p1_g_tin }
-	pp_cplan_copy_num = { from = pp_cplan_g_gems to = pp_cplan_p1_g_gems }
-	pp_cplan_copy_num = { from = pp_cplan_g_goods_gold to = pp_cplan_p1_g_goods_gold }
-	pp_cplan_copy_num = { from = pp_cplan_g_silver to = pp_cplan_p1_g_silver }
-	pp_cplan_copy_flag = { from = pp_cplan_food_off to = pp_cplan_p1_food_off }
-	pp_cplan_copy_flag = { from = pp_cplan_logistics_off to = pp_cplan_p1_logistics_off }
-	pp_cplan_copy_flag = { from = pp_cplan_goods_off to = pp_cplan_p1_goods_off }
-	pp_cplan_copy_flag = { from = pp_cplan_improve_off to = pp_cplan_p1_improve_off }
-}
-pp_cplan_profile_load_1 = {
-	pp_cplan_copy_num = { from = pp_cplan_p1_reserve to = pp_cplan_reserve }
-	pp_cplan_copy_num = { from = pp_cplan_p1_max to = pp_cplan_max }
-	pp_cplan_copy_num = { from = pp_cplan_p1_access to = pp_cplan_access }
-	pp_cplan_copy_num = { from = pp_cplan_p1_keep to = pp_cplan_keep }
-	pp_cplan_copy_num = { from = pp_cplan_p1_payback to = pp_cplan_payback }
-	pp_cplan_copy_num = { from = pp_cplan_p1_gcap to = pp_cplan_gcap }
-	pp_cplan_copy_num = { from = pp_cplan_p1_gfill to = pp_cplan_gfill }
-	pp_cplan_copy_num = { from = pp_cplan_p1_gsur to = pp_cplan_gsur }
-	pp_cplan_copy_num = { from = pp_cplan_p1_famine to = pp_cplan_famine }
-	pp_cplan_copy_num = { from = pp_cplan_p1_ypb to = pp_cplan_ypb }
-	pp_cplan_copy_num = { from = pp_cplan_p1_imp to = pp_cplan_imp }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_camels to = pp_cplan_g_camels }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_elephants to = pp_cplan_g_elephants }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_horses to = pp_cplan_g_horses }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_livestock to = pp_cplan_g_livestock }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_wool to = pp_cplan_g_wool }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_beeswax to = pp_cplan_g_beeswax }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_dyes to = pp_cplan_g_dyes }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_incense to = pp_cplan_g_incense }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_tobacco to = pp_cplan_g_tobacco }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_cotton to = pp_cplan_g_cotton }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_fiber_crops to = pp_cplan_g_fiber_crops }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_silk to = pp_cplan_g_silk }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_chili to = pp_cplan_g_chili }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_cloves to = pp_cplan_g_cloves }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_pepper to = pp_cplan_g_pepper }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_saffron to = pp_cplan_g_saffron }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_legumes to = pp_cplan_g_legumes }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_maize to = pp_cplan_g_maize }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_millet to = pp_cplan_g_millet }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_potato to = pp_cplan_g_potato }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_rice to = pp_cplan_g_rice }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_wheat to = pp_cplan_g_wheat }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_cocoa to = pp_cplan_g_cocoa }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_coffee to = pp_cplan_g_coffee }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_tea to = pp_cplan_g_tea }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_sugar to = pp_cplan_g_sugar }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_fruit to = pp_cplan_g_fruit }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_olives to = pp_cplan_g_olives }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_wine to = pp_cplan_g_wine }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_lumber to = pp_cplan_g_lumber }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_fish to = pp_cplan_g_fish }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_pearls to = pp_cplan_g_pearls }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_clay to = pp_cplan_g_clay }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_sand to = pp_cplan_g_sand }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_medicaments to = pp_cplan_g_medicaments }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_salt to = pp_cplan_g_salt }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_amber to = pp_cplan_g_amber }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_ivory to = pp_cplan_g_ivory }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_wild_game to = pp_cplan_g_wild_game }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_beer to = pp_cplan_g_beer }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_liquor to = pp_cplan_g_liquor }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_books to = pp_cplan_g_books }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_paper to = pp_cplan_g_paper }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_slaves_goods to = pp_cplan_g_slaves_goods }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_glass to = pp_cplan_g_glass }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_masonry to = pp_cplan_g_masonry }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_pottery to = pp_cplan_g_pottery }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_tar to = pp_cplan_g_tar }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_furniture to = pp_cplan_g_furniture }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_jewelry to = pp_cplan_g_jewelry }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_lacquerware to = pp_cplan_g_lacquerware }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_porcelain to = pp_cplan_g_porcelain }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_steel to = pp_cplan_g_steel }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_tools to = pp_cplan_g_tools }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_cannons to = pp_cplan_g_cannons }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_firearms to = pp_cplan_g_firearms }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_weaponry to = pp_cplan_g_weaponry }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_naval_supplies to = pp_cplan_g_naval_supplies }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_victuals to = pp_cplan_g_victuals }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_cloth to = pp_cplan_g_cloth }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_fine_cloth to = pp_cplan_g_fine_cloth }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_leather to = pp_cplan_g_leather }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_marble to = pp_cplan_g_marble }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_stone to = pp_cplan_g_stone }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_coal to = pp_cplan_g_coal }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_alum to = pp_cplan_g_alum }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_mercury to = pp_cplan_g_mercury }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_saltpeter to = pp_cplan_g_saltpeter }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_copper to = pp_cplan_g_copper }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_iron to = pp_cplan_g_iron }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_lead to = pp_cplan_g_lead }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_tin to = pp_cplan_g_tin }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_gems to = pp_cplan_g_gems }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_goods_gold to = pp_cplan_g_goods_gold }
-	pp_cplan_copy_num = { from = pp_cplan_p1_g_silver to = pp_cplan_g_silver }
-	pp_cplan_copy_flag = { from = pp_cplan_p1_food_off to = pp_cplan_food_off }
-	pp_cplan_copy_flag = { from = pp_cplan_p1_logistics_off to = pp_cplan_logistics_off }
-	pp_cplan_copy_flag = { from = pp_cplan_p1_goods_off to = pp_cplan_goods_off }
-	pp_cplan_copy_flag = { from = pp_cplan_p1_improve_off to = pp_cplan_improve_off }
-	set_variable = { name = pp_cplan_profile value = 101 }
-}
-
-# Country scope: profile 2.
-pp_cplan_profile_save_2 = {
-	set_variable = { name = pp_cplan_p2_saved value = 101 }
-	pp_cplan_copy_num = { from = pp_cplan_reserve to = pp_cplan_p2_reserve }
-	pp_cplan_copy_num = { from = pp_cplan_max to = pp_cplan_p2_max }
-	pp_cplan_copy_num = { from = pp_cplan_access to = pp_cplan_p2_access }
-	pp_cplan_copy_num = { from = pp_cplan_keep to = pp_cplan_p2_keep }
-	pp_cplan_copy_num = { from = pp_cplan_payback to = pp_cplan_p2_payback }
-	pp_cplan_copy_num = { from = pp_cplan_gcap to = pp_cplan_p2_gcap }
-	pp_cplan_copy_num = { from = pp_cplan_gfill to = pp_cplan_p2_gfill }
-	pp_cplan_copy_num = { from = pp_cplan_gsur to = pp_cplan_p2_gsur }
-	pp_cplan_copy_num = { from = pp_cplan_famine to = pp_cplan_p2_famine }
-	pp_cplan_copy_num = { from = pp_cplan_ypb to = pp_cplan_p2_ypb }
-	pp_cplan_copy_num = { from = pp_cplan_imp to = pp_cplan_p2_imp }
-	pp_cplan_copy_num = { from = pp_cplan_g_camels to = pp_cplan_p2_g_camels }
-	pp_cplan_copy_num = { from = pp_cplan_g_elephants to = pp_cplan_p2_g_elephants }
-	pp_cplan_copy_num = { from = pp_cplan_g_horses to = pp_cplan_p2_g_horses }
-	pp_cplan_copy_num = { from = pp_cplan_g_livestock to = pp_cplan_p2_g_livestock }
-	pp_cplan_copy_num = { from = pp_cplan_g_wool to = pp_cplan_p2_g_wool }
-	pp_cplan_copy_num = { from = pp_cplan_g_beeswax to = pp_cplan_p2_g_beeswax }
-	pp_cplan_copy_num = { from = pp_cplan_g_dyes to = pp_cplan_p2_g_dyes }
-	pp_cplan_copy_num = { from = pp_cplan_g_incense to = pp_cplan_p2_g_incense }
-	pp_cplan_copy_num = { from = pp_cplan_g_tobacco to = pp_cplan_p2_g_tobacco }
-	pp_cplan_copy_num = { from = pp_cplan_g_cotton to = pp_cplan_p2_g_cotton }
-	pp_cplan_copy_num = { from = pp_cplan_g_fiber_crops to = pp_cplan_p2_g_fiber_crops }
-	pp_cplan_copy_num = { from = pp_cplan_g_silk to = pp_cplan_p2_g_silk }
-	pp_cplan_copy_num = { from = pp_cplan_g_chili to = pp_cplan_p2_g_chili }
-	pp_cplan_copy_num = { from = pp_cplan_g_cloves to = pp_cplan_p2_g_cloves }
-	pp_cplan_copy_num = { from = pp_cplan_g_pepper to = pp_cplan_p2_g_pepper }
-	pp_cplan_copy_num = { from = pp_cplan_g_saffron to = pp_cplan_p2_g_saffron }
-	pp_cplan_copy_num = { from = pp_cplan_g_legumes to = pp_cplan_p2_g_legumes }
-	pp_cplan_copy_num = { from = pp_cplan_g_maize to = pp_cplan_p2_g_maize }
-	pp_cplan_copy_num = { from = pp_cplan_g_millet to = pp_cplan_p2_g_millet }
-	pp_cplan_copy_num = { from = pp_cplan_g_potato to = pp_cplan_p2_g_potato }
-	pp_cplan_copy_num = { from = pp_cplan_g_rice to = pp_cplan_p2_g_rice }
-	pp_cplan_copy_num = { from = pp_cplan_g_wheat to = pp_cplan_p2_g_wheat }
-	pp_cplan_copy_num = { from = pp_cplan_g_cocoa to = pp_cplan_p2_g_cocoa }
-	pp_cplan_copy_num = { from = pp_cplan_g_coffee to = pp_cplan_p2_g_coffee }
-	pp_cplan_copy_num = { from = pp_cplan_g_tea to = pp_cplan_p2_g_tea }
-	pp_cplan_copy_num = { from = pp_cplan_g_sugar to = pp_cplan_p2_g_sugar }
-	pp_cplan_copy_num = { from = pp_cplan_g_fruit to = pp_cplan_p2_g_fruit }
-	pp_cplan_copy_num = { from = pp_cplan_g_olives to = pp_cplan_p2_g_olives }
-	pp_cplan_copy_num = { from = pp_cplan_g_wine to = pp_cplan_p2_g_wine }
-	pp_cplan_copy_num = { from = pp_cplan_g_lumber to = pp_cplan_p2_g_lumber }
-	pp_cplan_copy_num = { from = pp_cplan_g_fish to = pp_cplan_p2_g_fish }
-	pp_cplan_copy_num = { from = pp_cplan_g_pearls to = pp_cplan_p2_g_pearls }
-	pp_cplan_copy_num = { from = pp_cplan_g_clay to = pp_cplan_p2_g_clay }
-	pp_cplan_copy_num = { from = pp_cplan_g_sand to = pp_cplan_p2_g_sand }
-	pp_cplan_copy_num = { from = pp_cplan_g_medicaments to = pp_cplan_p2_g_medicaments }
-	pp_cplan_copy_num = { from = pp_cplan_g_salt to = pp_cplan_p2_g_salt }
-	pp_cplan_copy_num = { from = pp_cplan_g_amber to = pp_cplan_p2_g_amber }
-	pp_cplan_copy_num = { from = pp_cplan_g_ivory to = pp_cplan_p2_g_ivory }
-	pp_cplan_copy_num = { from = pp_cplan_g_wild_game to = pp_cplan_p2_g_wild_game }
-	pp_cplan_copy_num = { from = pp_cplan_g_beer to = pp_cplan_p2_g_beer }
-	pp_cplan_copy_num = { from = pp_cplan_g_liquor to = pp_cplan_p2_g_liquor }
-	pp_cplan_copy_num = { from = pp_cplan_g_books to = pp_cplan_p2_g_books }
-	pp_cplan_copy_num = { from = pp_cplan_g_paper to = pp_cplan_p2_g_paper }
-	pp_cplan_copy_num = { from = pp_cplan_g_slaves_goods to = pp_cplan_p2_g_slaves_goods }
-	pp_cplan_copy_num = { from = pp_cplan_g_glass to = pp_cplan_p2_g_glass }
-	pp_cplan_copy_num = { from = pp_cplan_g_masonry to = pp_cplan_p2_g_masonry }
-	pp_cplan_copy_num = { from = pp_cplan_g_pottery to = pp_cplan_p2_g_pottery }
-	pp_cplan_copy_num = { from = pp_cplan_g_tar to = pp_cplan_p2_g_tar }
-	pp_cplan_copy_num = { from = pp_cplan_g_furniture to = pp_cplan_p2_g_furniture }
-	pp_cplan_copy_num = { from = pp_cplan_g_jewelry to = pp_cplan_p2_g_jewelry }
-	pp_cplan_copy_num = { from = pp_cplan_g_lacquerware to = pp_cplan_p2_g_lacquerware }
-	pp_cplan_copy_num = { from = pp_cplan_g_porcelain to = pp_cplan_p2_g_porcelain }
-	pp_cplan_copy_num = { from = pp_cplan_g_steel to = pp_cplan_p2_g_steel }
-	pp_cplan_copy_num = { from = pp_cplan_g_tools to = pp_cplan_p2_g_tools }
-	pp_cplan_copy_num = { from = pp_cplan_g_cannons to = pp_cplan_p2_g_cannons }
-	pp_cplan_copy_num = { from = pp_cplan_g_firearms to = pp_cplan_p2_g_firearms }
-	pp_cplan_copy_num = { from = pp_cplan_g_weaponry to = pp_cplan_p2_g_weaponry }
-	pp_cplan_copy_num = { from = pp_cplan_g_naval_supplies to = pp_cplan_p2_g_naval_supplies }
-	pp_cplan_copy_num = { from = pp_cplan_g_victuals to = pp_cplan_p2_g_victuals }
-	pp_cplan_copy_num = { from = pp_cplan_g_cloth to = pp_cplan_p2_g_cloth }
-	pp_cplan_copy_num = { from = pp_cplan_g_fine_cloth to = pp_cplan_p2_g_fine_cloth }
-	pp_cplan_copy_num = { from = pp_cplan_g_leather to = pp_cplan_p2_g_leather }
-	pp_cplan_copy_num = { from = pp_cplan_g_marble to = pp_cplan_p2_g_marble }
-	pp_cplan_copy_num = { from = pp_cplan_g_stone to = pp_cplan_p2_g_stone }
-	pp_cplan_copy_num = { from = pp_cplan_g_coal to = pp_cplan_p2_g_coal }
-	pp_cplan_copy_num = { from = pp_cplan_g_alum to = pp_cplan_p2_g_alum }
-	pp_cplan_copy_num = { from = pp_cplan_g_mercury to = pp_cplan_p2_g_mercury }
-	pp_cplan_copy_num = { from = pp_cplan_g_saltpeter to = pp_cplan_p2_g_saltpeter }
-	pp_cplan_copy_num = { from = pp_cplan_g_copper to = pp_cplan_p2_g_copper }
-	pp_cplan_copy_num = { from = pp_cplan_g_iron to = pp_cplan_p2_g_iron }
-	pp_cplan_copy_num = { from = pp_cplan_g_lead to = pp_cplan_p2_g_lead }
-	pp_cplan_copy_num = { from = pp_cplan_g_tin to = pp_cplan_p2_g_tin }
-	pp_cplan_copy_num = { from = pp_cplan_g_gems to = pp_cplan_p2_g_gems }
-	pp_cplan_copy_num = { from = pp_cplan_g_goods_gold to = pp_cplan_p2_g_goods_gold }
-	pp_cplan_copy_num = { from = pp_cplan_g_silver to = pp_cplan_p2_g_silver }
-	pp_cplan_copy_flag = { from = pp_cplan_food_off to = pp_cplan_p2_food_off }
-	pp_cplan_copy_flag = { from = pp_cplan_logistics_off to = pp_cplan_p2_logistics_off }
-	pp_cplan_copy_flag = { from = pp_cplan_goods_off to = pp_cplan_p2_goods_off }
-	pp_cplan_copy_flag = { from = pp_cplan_improve_off to = pp_cplan_p2_improve_off }
-}
-pp_cplan_profile_load_2 = {
-	pp_cplan_copy_num = { from = pp_cplan_p2_reserve to = pp_cplan_reserve }
-	pp_cplan_copy_num = { from = pp_cplan_p2_max to = pp_cplan_max }
-	pp_cplan_copy_num = { from = pp_cplan_p2_access to = pp_cplan_access }
-	pp_cplan_copy_num = { from = pp_cplan_p2_keep to = pp_cplan_keep }
-	pp_cplan_copy_num = { from = pp_cplan_p2_payback to = pp_cplan_payback }
-	pp_cplan_copy_num = { from = pp_cplan_p2_gcap to = pp_cplan_gcap }
-	pp_cplan_copy_num = { from = pp_cplan_p2_gfill to = pp_cplan_gfill }
-	pp_cplan_copy_num = { from = pp_cplan_p2_gsur to = pp_cplan_gsur }
-	pp_cplan_copy_num = { from = pp_cplan_p2_famine to = pp_cplan_famine }
-	pp_cplan_copy_num = { from = pp_cplan_p2_ypb to = pp_cplan_ypb }
-	pp_cplan_copy_num = { from = pp_cplan_p2_imp to = pp_cplan_imp }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_camels to = pp_cplan_g_camels }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_elephants to = pp_cplan_g_elephants }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_horses to = pp_cplan_g_horses }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_livestock to = pp_cplan_g_livestock }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_wool to = pp_cplan_g_wool }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_beeswax to = pp_cplan_g_beeswax }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_dyes to = pp_cplan_g_dyes }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_incense to = pp_cplan_g_incense }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_tobacco to = pp_cplan_g_tobacco }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_cotton to = pp_cplan_g_cotton }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_fiber_crops to = pp_cplan_g_fiber_crops }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_silk to = pp_cplan_g_silk }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_chili to = pp_cplan_g_chili }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_cloves to = pp_cplan_g_cloves }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_pepper to = pp_cplan_g_pepper }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_saffron to = pp_cplan_g_saffron }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_legumes to = pp_cplan_g_legumes }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_maize to = pp_cplan_g_maize }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_millet to = pp_cplan_g_millet }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_potato to = pp_cplan_g_potato }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_rice to = pp_cplan_g_rice }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_wheat to = pp_cplan_g_wheat }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_cocoa to = pp_cplan_g_cocoa }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_coffee to = pp_cplan_g_coffee }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_tea to = pp_cplan_g_tea }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_sugar to = pp_cplan_g_sugar }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_fruit to = pp_cplan_g_fruit }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_olives to = pp_cplan_g_olives }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_wine to = pp_cplan_g_wine }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_lumber to = pp_cplan_g_lumber }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_fish to = pp_cplan_g_fish }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_pearls to = pp_cplan_g_pearls }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_clay to = pp_cplan_g_clay }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_sand to = pp_cplan_g_sand }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_medicaments to = pp_cplan_g_medicaments }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_salt to = pp_cplan_g_salt }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_amber to = pp_cplan_g_amber }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_ivory to = pp_cplan_g_ivory }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_wild_game to = pp_cplan_g_wild_game }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_beer to = pp_cplan_g_beer }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_liquor to = pp_cplan_g_liquor }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_books to = pp_cplan_g_books }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_paper to = pp_cplan_g_paper }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_slaves_goods to = pp_cplan_g_slaves_goods }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_glass to = pp_cplan_g_glass }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_masonry to = pp_cplan_g_masonry }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_pottery to = pp_cplan_g_pottery }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_tar to = pp_cplan_g_tar }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_furniture to = pp_cplan_g_furniture }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_jewelry to = pp_cplan_g_jewelry }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_lacquerware to = pp_cplan_g_lacquerware }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_porcelain to = pp_cplan_g_porcelain }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_steel to = pp_cplan_g_steel }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_tools to = pp_cplan_g_tools }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_cannons to = pp_cplan_g_cannons }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_firearms to = pp_cplan_g_firearms }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_weaponry to = pp_cplan_g_weaponry }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_naval_supplies to = pp_cplan_g_naval_supplies }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_victuals to = pp_cplan_g_victuals }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_cloth to = pp_cplan_g_cloth }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_fine_cloth to = pp_cplan_g_fine_cloth }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_leather to = pp_cplan_g_leather }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_marble to = pp_cplan_g_marble }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_stone to = pp_cplan_g_stone }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_coal to = pp_cplan_g_coal }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_alum to = pp_cplan_g_alum }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_mercury to = pp_cplan_g_mercury }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_saltpeter to = pp_cplan_g_saltpeter }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_copper to = pp_cplan_g_copper }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_iron to = pp_cplan_g_iron }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_lead to = pp_cplan_g_lead }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_tin to = pp_cplan_g_tin }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_gems to = pp_cplan_g_gems }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_goods_gold to = pp_cplan_g_goods_gold }
-	pp_cplan_copy_num = { from = pp_cplan_p2_g_silver to = pp_cplan_g_silver }
-	pp_cplan_copy_flag = { from = pp_cplan_p2_food_off to = pp_cplan_food_off }
-	pp_cplan_copy_flag = { from = pp_cplan_p2_logistics_off to = pp_cplan_logistics_off }
-	pp_cplan_copy_flag = { from = pp_cplan_p2_goods_off to = pp_cplan_goods_off }
-	pp_cplan_copy_flag = { from = pp_cplan_p2_improve_off to = pp_cplan_improve_off }
-	set_variable = { name = pp_cplan_profile value = 102 }
-}
-
-# Country scope: profile 3.
-pp_cplan_profile_save_3 = {
-	set_variable = { name = pp_cplan_p3_saved value = 101 }
-	pp_cplan_copy_num = { from = pp_cplan_reserve to = pp_cplan_p3_reserve }
-	pp_cplan_copy_num = { from = pp_cplan_max to = pp_cplan_p3_max }
-	pp_cplan_copy_num = { from = pp_cplan_access to = pp_cplan_p3_access }
-	pp_cplan_copy_num = { from = pp_cplan_keep to = pp_cplan_p3_keep }
-	pp_cplan_copy_num = { from = pp_cplan_payback to = pp_cplan_p3_payback }
-	pp_cplan_copy_num = { from = pp_cplan_gcap to = pp_cplan_p3_gcap }
-	pp_cplan_copy_num = { from = pp_cplan_gfill to = pp_cplan_p3_gfill }
-	pp_cplan_copy_num = { from = pp_cplan_gsur to = pp_cplan_p3_gsur }
-	pp_cplan_copy_num = { from = pp_cplan_famine to = pp_cplan_p3_famine }
-	pp_cplan_copy_num = { from = pp_cplan_ypb to = pp_cplan_p3_ypb }
-	pp_cplan_copy_num = { from = pp_cplan_imp to = pp_cplan_p3_imp }
-	pp_cplan_copy_num = { from = pp_cplan_g_camels to = pp_cplan_p3_g_camels }
-	pp_cplan_copy_num = { from = pp_cplan_g_elephants to = pp_cplan_p3_g_elephants }
-	pp_cplan_copy_num = { from = pp_cplan_g_horses to = pp_cplan_p3_g_horses }
-	pp_cplan_copy_num = { from = pp_cplan_g_livestock to = pp_cplan_p3_g_livestock }
-	pp_cplan_copy_num = { from = pp_cplan_g_wool to = pp_cplan_p3_g_wool }
-	pp_cplan_copy_num = { from = pp_cplan_g_beeswax to = pp_cplan_p3_g_beeswax }
-	pp_cplan_copy_num = { from = pp_cplan_g_dyes to = pp_cplan_p3_g_dyes }
-	pp_cplan_copy_num = { from = pp_cplan_g_incense to = pp_cplan_p3_g_incense }
-	pp_cplan_copy_num = { from = pp_cplan_g_tobacco to = pp_cplan_p3_g_tobacco }
-	pp_cplan_copy_num = { from = pp_cplan_g_cotton to = pp_cplan_p3_g_cotton }
-	pp_cplan_copy_num = { from = pp_cplan_g_fiber_crops to = pp_cplan_p3_g_fiber_crops }
-	pp_cplan_copy_num = { from = pp_cplan_g_silk to = pp_cplan_p3_g_silk }
-	pp_cplan_copy_num = { from = pp_cplan_g_chili to = pp_cplan_p3_g_chili }
-	pp_cplan_copy_num = { from = pp_cplan_g_cloves to = pp_cplan_p3_g_cloves }
-	pp_cplan_copy_num = { from = pp_cplan_g_pepper to = pp_cplan_p3_g_pepper }
-	pp_cplan_copy_num = { from = pp_cplan_g_saffron to = pp_cplan_p3_g_saffron }
-	pp_cplan_copy_num = { from = pp_cplan_g_legumes to = pp_cplan_p3_g_legumes }
-	pp_cplan_copy_num = { from = pp_cplan_g_maize to = pp_cplan_p3_g_maize }
-	pp_cplan_copy_num = { from = pp_cplan_g_millet to = pp_cplan_p3_g_millet }
-	pp_cplan_copy_num = { from = pp_cplan_g_potato to = pp_cplan_p3_g_potato }
-	pp_cplan_copy_num = { from = pp_cplan_g_rice to = pp_cplan_p3_g_rice }
-	pp_cplan_copy_num = { from = pp_cplan_g_wheat to = pp_cplan_p3_g_wheat }
-	pp_cplan_copy_num = { from = pp_cplan_g_cocoa to = pp_cplan_p3_g_cocoa }
-	pp_cplan_copy_num = { from = pp_cplan_g_coffee to = pp_cplan_p3_g_coffee }
-	pp_cplan_copy_num = { from = pp_cplan_g_tea to = pp_cplan_p3_g_tea }
-	pp_cplan_copy_num = { from = pp_cplan_g_sugar to = pp_cplan_p3_g_sugar }
-	pp_cplan_copy_num = { from = pp_cplan_g_fruit to = pp_cplan_p3_g_fruit }
-	pp_cplan_copy_num = { from = pp_cplan_g_olives to = pp_cplan_p3_g_olives }
-	pp_cplan_copy_num = { from = pp_cplan_g_wine to = pp_cplan_p3_g_wine }
-	pp_cplan_copy_num = { from = pp_cplan_g_lumber to = pp_cplan_p3_g_lumber }
-	pp_cplan_copy_num = { from = pp_cplan_g_fish to = pp_cplan_p3_g_fish }
-	pp_cplan_copy_num = { from = pp_cplan_g_pearls to = pp_cplan_p3_g_pearls }
-	pp_cplan_copy_num = { from = pp_cplan_g_clay to = pp_cplan_p3_g_clay }
-	pp_cplan_copy_num = { from = pp_cplan_g_sand to = pp_cplan_p3_g_sand }
-	pp_cplan_copy_num = { from = pp_cplan_g_medicaments to = pp_cplan_p3_g_medicaments }
-	pp_cplan_copy_num = { from = pp_cplan_g_salt to = pp_cplan_p3_g_salt }
-	pp_cplan_copy_num = { from = pp_cplan_g_amber to = pp_cplan_p3_g_amber }
-	pp_cplan_copy_num = { from = pp_cplan_g_ivory to = pp_cplan_p3_g_ivory }
-	pp_cplan_copy_num = { from = pp_cplan_g_wild_game to = pp_cplan_p3_g_wild_game }
-	pp_cplan_copy_num = { from = pp_cplan_g_beer to = pp_cplan_p3_g_beer }
-	pp_cplan_copy_num = { from = pp_cplan_g_liquor to = pp_cplan_p3_g_liquor }
-	pp_cplan_copy_num = { from = pp_cplan_g_books to = pp_cplan_p3_g_books }
-	pp_cplan_copy_num = { from = pp_cplan_g_paper to = pp_cplan_p3_g_paper }
-	pp_cplan_copy_num = { from = pp_cplan_g_slaves_goods to = pp_cplan_p3_g_slaves_goods }
-	pp_cplan_copy_num = { from = pp_cplan_g_glass to = pp_cplan_p3_g_glass }
-	pp_cplan_copy_num = { from = pp_cplan_g_masonry to = pp_cplan_p3_g_masonry }
-	pp_cplan_copy_num = { from = pp_cplan_g_pottery to = pp_cplan_p3_g_pottery }
-	pp_cplan_copy_num = { from = pp_cplan_g_tar to = pp_cplan_p3_g_tar }
-	pp_cplan_copy_num = { from = pp_cplan_g_furniture to = pp_cplan_p3_g_furniture }
-	pp_cplan_copy_num = { from = pp_cplan_g_jewelry to = pp_cplan_p3_g_jewelry }
-	pp_cplan_copy_num = { from = pp_cplan_g_lacquerware to = pp_cplan_p3_g_lacquerware }
-	pp_cplan_copy_num = { from = pp_cplan_g_porcelain to = pp_cplan_p3_g_porcelain }
-	pp_cplan_copy_num = { from = pp_cplan_g_steel to = pp_cplan_p3_g_steel }
-	pp_cplan_copy_num = { from = pp_cplan_g_tools to = pp_cplan_p3_g_tools }
-	pp_cplan_copy_num = { from = pp_cplan_g_cannons to = pp_cplan_p3_g_cannons }
-	pp_cplan_copy_num = { from = pp_cplan_g_firearms to = pp_cplan_p3_g_firearms }
-	pp_cplan_copy_num = { from = pp_cplan_g_weaponry to = pp_cplan_p3_g_weaponry }
-	pp_cplan_copy_num = { from = pp_cplan_g_naval_supplies to = pp_cplan_p3_g_naval_supplies }
-	pp_cplan_copy_num = { from = pp_cplan_g_victuals to = pp_cplan_p3_g_victuals }
-	pp_cplan_copy_num = { from = pp_cplan_g_cloth to = pp_cplan_p3_g_cloth }
-	pp_cplan_copy_num = { from = pp_cplan_g_fine_cloth to = pp_cplan_p3_g_fine_cloth }
-	pp_cplan_copy_num = { from = pp_cplan_g_leather to = pp_cplan_p3_g_leather }
-	pp_cplan_copy_num = { from = pp_cplan_g_marble to = pp_cplan_p3_g_marble }
-	pp_cplan_copy_num = { from = pp_cplan_g_stone to = pp_cplan_p3_g_stone }
-	pp_cplan_copy_num = { from = pp_cplan_g_coal to = pp_cplan_p3_g_coal }
-	pp_cplan_copy_num = { from = pp_cplan_g_alum to = pp_cplan_p3_g_alum }
-	pp_cplan_copy_num = { from = pp_cplan_g_mercury to = pp_cplan_p3_g_mercury }
-	pp_cplan_copy_num = { from = pp_cplan_g_saltpeter to = pp_cplan_p3_g_saltpeter }
-	pp_cplan_copy_num = { from = pp_cplan_g_copper to = pp_cplan_p3_g_copper }
-	pp_cplan_copy_num = { from = pp_cplan_g_iron to = pp_cplan_p3_g_iron }
-	pp_cplan_copy_num = { from = pp_cplan_g_lead to = pp_cplan_p3_g_lead }
-	pp_cplan_copy_num = { from = pp_cplan_g_tin to = pp_cplan_p3_g_tin }
-	pp_cplan_copy_num = { from = pp_cplan_g_gems to = pp_cplan_p3_g_gems }
-	pp_cplan_copy_num = { from = pp_cplan_g_goods_gold to = pp_cplan_p3_g_goods_gold }
-	pp_cplan_copy_num = { from = pp_cplan_g_silver to = pp_cplan_p3_g_silver }
-	pp_cplan_copy_flag = { from = pp_cplan_food_off to = pp_cplan_p3_food_off }
-	pp_cplan_copy_flag = { from = pp_cplan_logistics_off to = pp_cplan_p3_logistics_off }
-	pp_cplan_copy_flag = { from = pp_cplan_goods_off to = pp_cplan_p3_goods_off }
-	pp_cplan_copy_flag = { from = pp_cplan_improve_off to = pp_cplan_p3_improve_off }
-}
-pp_cplan_profile_load_3 = {
-	pp_cplan_copy_num = { from = pp_cplan_p3_reserve to = pp_cplan_reserve }
-	pp_cplan_copy_num = { from = pp_cplan_p3_max to = pp_cplan_max }
-	pp_cplan_copy_num = { from = pp_cplan_p3_access to = pp_cplan_access }
-	pp_cplan_copy_num = { from = pp_cplan_p3_keep to = pp_cplan_keep }
-	pp_cplan_copy_num = { from = pp_cplan_p3_payback to = pp_cplan_payback }
-	pp_cplan_copy_num = { from = pp_cplan_p3_gcap to = pp_cplan_gcap }
-	pp_cplan_copy_num = { from = pp_cplan_p3_gfill to = pp_cplan_gfill }
-	pp_cplan_copy_num = { from = pp_cplan_p3_gsur to = pp_cplan_gsur }
-	pp_cplan_copy_num = { from = pp_cplan_p3_famine to = pp_cplan_famine }
-	pp_cplan_copy_num = { from = pp_cplan_p3_ypb to = pp_cplan_ypb }
-	pp_cplan_copy_num = { from = pp_cplan_p3_imp to = pp_cplan_imp }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_camels to = pp_cplan_g_camels }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_elephants to = pp_cplan_g_elephants }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_horses to = pp_cplan_g_horses }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_livestock to = pp_cplan_g_livestock }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_wool to = pp_cplan_g_wool }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_beeswax to = pp_cplan_g_beeswax }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_dyes to = pp_cplan_g_dyes }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_incense to = pp_cplan_g_incense }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_tobacco to = pp_cplan_g_tobacco }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_cotton to = pp_cplan_g_cotton }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_fiber_crops to = pp_cplan_g_fiber_crops }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_silk to = pp_cplan_g_silk }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_chili to = pp_cplan_g_chili }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_cloves to = pp_cplan_g_cloves }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_pepper to = pp_cplan_g_pepper }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_saffron to = pp_cplan_g_saffron }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_legumes to = pp_cplan_g_legumes }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_maize to = pp_cplan_g_maize }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_millet to = pp_cplan_g_millet }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_potato to = pp_cplan_g_potato }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_rice to = pp_cplan_g_rice }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_wheat to = pp_cplan_g_wheat }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_cocoa to = pp_cplan_g_cocoa }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_coffee to = pp_cplan_g_coffee }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_tea to = pp_cplan_g_tea }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_sugar to = pp_cplan_g_sugar }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_fruit to = pp_cplan_g_fruit }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_olives to = pp_cplan_g_olives }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_wine to = pp_cplan_g_wine }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_lumber to = pp_cplan_g_lumber }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_fish to = pp_cplan_g_fish }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_pearls to = pp_cplan_g_pearls }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_clay to = pp_cplan_g_clay }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_sand to = pp_cplan_g_sand }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_medicaments to = pp_cplan_g_medicaments }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_salt to = pp_cplan_g_salt }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_amber to = pp_cplan_g_amber }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_ivory to = pp_cplan_g_ivory }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_wild_game to = pp_cplan_g_wild_game }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_beer to = pp_cplan_g_beer }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_liquor to = pp_cplan_g_liquor }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_books to = pp_cplan_g_books }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_paper to = pp_cplan_g_paper }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_slaves_goods to = pp_cplan_g_slaves_goods }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_glass to = pp_cplan_g_glass }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_masonry to = pp_cplan_g_masonry }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_pottery to = pp_cplan_g_pottery }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_tar to = pp_cplan_g_tar }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_furniture to = pp_cplan_g_furniture }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_jewelry to = pp_cplan_g_jewelry }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_lacquerware to = pp_cplan_g_lacquerware }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_porcelain to = pp_cplan_g_porcelain }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_steel to = pp_cplan_g_steel }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_tools to = pp_cplan_g_tools }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_cannons to = pp_cplan_g_cannons }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_firearms to = pp_cplan_g_firearms }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_weaponry to = pp_cplan_g_weaponry }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_naval_supplies to = pp_cplan_g_naval_supplies }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_victuals to = pp_cplan_g_victuals }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_cloth to = pp_cplan_g_cloth }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_fine_cloth to = pp_cplan_g_fine_cloth }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_leather to = pp_cplan_g_leather }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_marble to = pp_cplan_g_marble }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_stone to = pp_cplan_g_stone }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_coal to = pp_cplan_g_coal }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_alum to = pp_cplan_g_alum }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_mercury to = pp_cplan_g_mercury }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_saltpeter to = pp_cplan_g_saltpeter }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_copper to = pp_cplan_g_copper }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_iron to = pp_cplan_g_iron }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_lead to = pp_cplan_g_lead }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_tin to = pp_cplan_g_tin }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_gems to = pp_cplan_g_gems }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_goods_gold to = pp_cplan_g_goods_gold }
-	pp_cplan_copy_num = { from = pp_cplan_p3_g_silver to = pp_cplan_g_silver }
-	pp_cplan_copy_flag = { from = pp_cplan_p3_food_off to = pp_cplan_food_off }
-	pp_cplan_copy_flag = { from = pp_cplan_p3_logistics_off to = pp_cplan_logistics_off }
-	pp_cplan_copy_flag = { from = pp_cplan_p3_goods_off to = pp_cplan_goods_off }
-	pp_cplan_copy_flag = { from = pp_cplan_p3_improve_off to = pp_cplan_improve_off }
-	set_variable = { name = pp_cplan_profile value = 103 }
+# Country scope: the preset cautious.
+pp_cplan_preset_cautious = {
+	set_variable = { name = pp_cplan_reserve value = 112 }
+	set_variable = { name = pp_cplan_max value = 101 }
+	remove_variable = pp_cplan_access
+	remove_variable = pp_cplan_keep
+	remove_variable = pp_cplan_payback
+	remove_variable = pp_cplan_gcap
+	remove_variable = pp_cplan_gfill
+	remove_variable = pp_cplan_gsur
+	remove_variable = pp_cplan_famine
+	remove_variable = pp_cplan_ypb
+	remove_variable = pp_cplan_imp
+	remove_variable = pp_cplan_food_off
+	remove_variable = pp_cplan_logistics_off
+	set_variable = { name = pp_cplan_goods_off value = yes }
+	set_variable = { name = pp_cplan_improve_off value = yes }
+	remove_variable = pp_cplan_g_camels
+	remove_variable = pp_cplan_g_elephants
+	remove_variable = pp_cplan_g_horses
+	remove_variable = pp_cplan_g_livestock
+	remove_variable = pp_cplan_g_wool
+	remove_variable = pp_cplan_g_beeswax
+	remove_variable = pp_cplan_g_dyes
+	remove_variable = pp_cplan_g_incense
+	remove_variable = pp_cplan_g_tobacco
+	remove_variable = pp_cplan_g_cotton
+	remove_variable = pp_cplan_g_fiber_crops
+	remove_variable = pp_cplan_g_silk
+	remove_variable = pp_cplan_g_chili
+	remove_variable = pp_cplan_g_cloves
+	remove_variable = pp_cplan_g_pepper
+	remove_variable = pp_cplan_g_saffron
+	remove_variable = pp_cplan_g_legumes
+	remove_variable = pp_cplan_g_maize
+	remove_variable = pp_cplan_g_millet
+	remove_variable = pp_cplan_g_potato
+	remove_variable = pp_cplan_g_rice
+	remove_variable = pp_cplan_g_wheat
+	remove_variable = pp_cplan_g_cocoa
+	remove_variable = pp_cplan_g_coffee
+	remove_variable = pp_cplan_g_tea
+	remove_variable = pp_cplan_g_sugar
+	remove_variable = pp_cplan_g_fruit
+	remove_variable = pp_cplan_g_olives
+	remove_variable = pp_cplan_g_wine
+	remove_variable = pp_cplan_g_lumber
+	remove_variable = pp_cplan_g_fish
+	remove_variable = pp_cplan_g_pearls
+	remove_variable = pp_cplan_g_clay
+	remove_variable = pp_cplan_g_sand
+	remove_variable = pp_cplan_g_medicaments
+	remove_variable = pp_cplan_g_salt
+	remove_variable = pp_cplan_g_amber
+	remove_variable = pp_cplan_g_ivory
+	remove_variable = pp_cplan_g_wild_game
+	remove_variable = pp_cplan_g_beer
+	remove_variable = pp_cplan_g_liquor
+	remove_variable = pp_cplan_g_books
+	remove_variable = pp_cplan_g_paper
+	remove_variable = pp_cplan_g_slaves_goods
+	remove_variable = pp_cplan_g_glass
+	remove_variable = pp_cplan_g_masonry
+	remove_variable = pp_cplan_g_pottery
+	remove_variable = pp_cplan_g_tar
+	remove_variable = pp_cplan_g_furniture
+	remove_variable = pp_cplan_g_jewelry
+	remove_variable = pp_cplan_g_lacquerware
+	remove_variable = pp_cplan_g_porcelain
+	remove_variable = pp_cplan_g_steel
+	remove_variable = pp_cplan_g_tools
+	remove_variable = pp_cplan_g_cannons
+	remove_variable = pp_cplan_g_firearms
+	remove_variable = pp_cplan_g_weaponry
+	remove_variable = pp_cplan_g_naval_supplies
+	remove_variable = pp_cplan_g_victuals
+	remove_variable = pp_cplan_g_cloth
+	remove_variable = pp_cplan_g_fine_cloth
+	remove_variable = pp_cplan_g_leather
+	remove_variable = pp_cplan_g_marble
+	remove_variable = pp_cplan_g_stone
+	remove_variable = pp_cplan_g_coal
+	remove_variable = pp_cplan_g_alum
+	remove_variable = pp_cplan_g_mercury
+	remove_variable = pp_cplan_g_saltpeter
+	remove_variable = pp_cplan_g_copper
+	remove_variable = pp_cplan_g_iron
+	remove_variable = pp_cplan_g_lead
+	remove_variable = pp_cplan_g_tin
+	remove_variable = pp_cplan_g_gems
+	remove_variable = pp_cplan_g_goods_gold
+	remove_variable = pp_cplan_g_silver
+	set_variable = { name = pp_cplan_preset value = 104 }
 }
 
 # Any scope, never run (pp_cplan_run calls it under always = no): declares the flags the panel passes, so the
@@ -9653,12 +9036,14 @@ pp_cplan_declare_flags = {
 	set_variable = { name = pp_cplan_flag value = flag:access_line }
 	set_variable = { name = pp_cplan_flag value = flag:alum }
 	set_variable = { name = pp_cplan_flag value = flag:amber }
-	set_variable = { name = pp_cplan_flag value = flag:apply }
+	set_variable = { name = pp_cplan_flag value = flag:balanced }
 	set_variable = { name = pp_cplan_flag value = flag:beer }
 	set_variable = { name = pp_cplan_flag value = flag:beeswax }
 	set_variable = { name = pp_cplan_flag value = flag:books }
+	set_variable = { name = pp_cplan_flag value = flag:builder }
 	set_variable = { name = pp_cplan_flag value = flag:camels }
 	set_variable = { name = pp_cplan_flag value = flag:cannons }
+	set_variable = { name = pp_cplan_flag value = flag:cautious }
 	set_variable = { name = pp_cplan_flag value = flag:chili }
 	set_variable = { name = pp_cplan_flag value = flag:clay }
 	set_variable = { name = pp_cplan_flag value = flag:clear }
@@ -9689,7 +9074,6 @@ pp_cplan_declare_flags = {
 	set_variable = { name = pp_cplan_flag value = flag:granary_cap }
 	set_variable = { name = pp_cplan_flag value = flag:granary_fill }
 	set_variable = { name = pp_cplan_flag value = flag:grange_surplus }
-	set_variable = { name = pp_cplan_flag value = flag:hi }
 	set_variable = { name = pp_cplan_flag value = flag:horses }
 	set_variable = { name = pp_cplan_flag value = flag:improve }
 	set_variable = { name = pp_cplan_flag value = flag:improve_line }
@@ -9705,7 +9089,6 @@ pp_cplan_declare_flags = {
 	set_variable = { name = pp_cplan_flag value = flag:liquor }
 	set_variable = { name = pp_cplan_flag value = flag:livestock }
 	set_variable = { name = pp_cplan_flag value = flag:lo }
-	set_variable = { name = pp_cplan_flag value = flag:load }
 	set_variable = { name = pp_cplan_flag value = flag:logistics }
 	set_variable = { name = pp_cplan_flag value = flag:lumber }
 	set_variable = { name = pp_cplan_flag value = flag:lv }
@@ -9721,9 +9104,6 @@ pp_cplan_declare_flags = {
 	set_variable = { name = pp_cplan_flag value = flag:never }
 	set_variable = { name = pp_cplan_flag value = flag:off }
 	set_variable = { name = pp_cplan_flag value = flag:olives }
-	set_variable = { name = pp_cplan_flag value = flag:p1 }
-	set_variable = { name = pp_cplan_flag value = flag:p2 }
-	set_variable = { name = pp_cplan_flag value = flag:p3 }
 	set_variable = { name = pp_cplan_flag value = flag:paper }
 	set_variable = { name = pp_cplan_flag value = flag:payback }
 	set_variable = { name = pp_cplan_flag value = flag:pb }
@@ -9732,7 +9112,6 @@ pp_cplan_declare_flags = {
 	set_variable = { name = pp_cplan_flag value = flag:porcelain }
 	set_variable = { name = pp_cplan_flag value = flag:potato }
 	set_variable = { name = pp_cplan_flag value = flag:pottery }
-	set_variable = { name = pp_cplan_flag value = flag:province }
 	set_variable = { name = pp_cplan_flag value = flag:r1 }
 	set_variable = { name = pp_cplan_flag value = flag:r2 }
 	set_variable = { name = pp_cplan_flag value = flag:r3 }
@@ -9743,7 +9122,6 @@ pp_cplan_declare_flags = {
 	set_variable = { name = pp_cplan_flag value = flag:salt }
 	set_variable = { name = pp_cplan_flag value = flag:saltpeter }
 	set_variable = { name = pp_cplan_flag value = flag:sand }
-	set_variable = { name = pp_cplan_flag value = flag:save }
 	set_variable = { name = pp_cplan_flag value = flag:silk }
 	set_variable = { name = pp_cplan_flag value = flag:silver }
 	set_variable = { name = pp_cplan_flag value = flag:slaves_goods }
@@ -9751,10 +9129,6 @@ pp_cplan_declare_flags = {
 	set_variable = { name = pp_cplan_flag value = flag:stone }
 	set_variable = { name = pp_cplan_flag value = flag:sugar }
 	set_variable = { name = pp_cplan_flag value = flag:t }
-	set_variable = { name = pp_cplan_flag value = flag:t1 }
-	set_variable = { name = pp_cplan_flag value = flag:t2 }
-	set_variable = { name = pp_cplan_flag value = flag:t3 }
-	set_variable = { name = pp_cplan_flag value = flag:t4 }
 	set_variable = { name = pp_cplan_flag value = flag:tar }
 	set_variable = { name = pp_cplan_flag value = flag:tbig }
 	set_variable = { name = pp_cplan_flag value = flag:tea }

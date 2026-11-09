@@ -93,6 +93,14 @@ window = {
 						onclick = "[GetScriptedGui('pp_lprof_new').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_slot', MakeScopeFlag('next')).End)]"
 						onclick = "[GetVariableSystem.Clear('pp_lprof_pick')]"
 					}
+					button_regular = {
+						visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_lprof_used_n'), '(CFixedPoint)0'))]"
+						size = { 160 26 }
+						text = "PP_LPROF_UI_EXAMPLES"
+						tooltip = "PP_LPROF_UI_EXAMPLES_TT"
+						onclick = "[GetScriptedGui('pp_lprof_examples').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						onclick = "[GetVariableSystem.Clear('pp_lprof_pick')]"
+					}
 					expand = {}
 					button_regular = {
 						size = { 120 26 }

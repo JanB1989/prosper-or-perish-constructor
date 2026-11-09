@@ -1922,7 +1922,9 @@ def test_yearly_closed_building_review_is_removed() -> None:
     for path in scripts:
         text = path.read_text(encoding="utf-8-sig", errors="replace")
         assert "pp_ai_building_review" not in text, path
-        assert "is_opened = no" not in text, path
+        # no script culls closed levels again (the Construction Plan reads a closed building only to leave it alone)
+        if "is_opened = no" in text:
+            assert not re.search(r"destroy_building|remove_building|change_building_level|set_building_level", text), path
 
 
 CULL_LOG_FIELDS = (

@@ -51,7 +51,7 @@ def test_references_exist() -> None:
     guis = _read(SCRIPTED_GUIS)
     values = _script_values()
     loc = _loc_keys()
-    button = re.search(re.escape(lp.BUTTON_MARK) + r".*?BasicFunctionalTooltip", _read(LOCATION_WINDOW), re.DOTALL)
+    button = re.search(re.escape(lp.BUTTON_MARK) + r".*?action_tooltip = \{.*?\n\t*\}", _read(LOCATION_WINDOW), re.DOTALL)
     assert button, "the location window lost the Location Plan button"
     text = "".join(_read(path) for path in GUI_FILES) + "".join(_read(path) for path in LOC_FILES) + button.group(0)
     text += _read(MAP_MODE)

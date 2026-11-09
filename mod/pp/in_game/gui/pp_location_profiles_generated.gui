@@ -2543,6 +2543,53 @@ types PPLocationProfilesGenerated
 				onclick = "[GetScriptedGui('pp_lprof_rule_clear').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_slot', MakeScopeFlag('e')).AddScope('pp_field', MakeScopeFlag('r5')).End)]"
 			}
 		}
+		pp_lprof_title = { text = "PP_LPROF_UI_GLOBAL" }
+		pp_lprof_note = { text = "PP_LPROF_UI_GLOBAL_NOTE" }
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 14
+			hbox = {
+				spacing = 4
+				button_checkbox = {
+					size = { 22 22 }
+					down = "[Not(GetPlayer.MakeScope.Var('pp_lprof_e_xf').IsSet)]"
+					tooltip = "PP_LPROF_UI_GLOBAL_FOOD_TT"
+					onclick = "[GetScriptedGui('pp_lprof_global').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_slot', MakeScopeFlag('e')).AddScope('pp_field', MakeScopeFlag('global_food')).End)]"
+				}
+				pp_lprof_label = { text = "PP_LPROF_UI_GLOBAL_FOOD" }
+			}
+			hbox = {
+				spacing = 4
+				button_checkbox = {
+					size = { 22 22 }
+					down = "[Not(GetPlayer.MakeScope.Var('pp_lprof_e_xl').IsSet)]"
+					tooltip = "PP_LPROF_UI_GLOBAL_LOGISTICS_TT"
+					onclick = "[GetScriptedGui('pp_lprof_global').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_slot', MakeScopeFlag('e')).AddScope('pp_field', MakeScopeFlag('global_logistics')).End)]"
+				}
+				pp_lprof_label = { text = "PP_LPROF_UI_GLOBAL_LOGISTICS" }
+			}
+			hbox = {
+				spacing = 4
+				button_checkbox = {
+					size = { 22 22 }
+					down = "[Not(GetPlayer.MakeScope.Var('pp_lprof_e_xi').IsSet)]"
+					tooltip = "PP_LPROF_UI_GLOBAL_IMPROVE_TT"
+					onclick = "[GetScriptedGui('pp_lprof_global').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_slot', MakeScopeFlag('e')).AddScope('pp_field', MakeScopeFlag('global_improve')).End)]"
+				}
+				pp_lprof_label = { text = "PP_LPROF_UI_GLOBAL_IMPROVE" }
+			}
+			hbox = {
+				spacing = 4
+				button_checkbox = {
+					size = { 22 22 }
+					down = "[Not(GetPlayer.MakeScope.Var('pp_lprof_e_xg').IsSet)]"
+					tooltip = "PP_LPROF_UI_GLOBAL_GOODS_TT"
+					onclick = "[GetScriptedGui('pp_lprof_global').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_slot', MakeScopeFlag('e')).AddScope('pp_field', MakeScopeFlag('global_goods')).End)]"
+				}
+				pp_lprof_label = { text = "PP_LPROF_UI_GLOBAL_GOODS" }
+			}
+			expand = {}
+		}
 	}
 
 	# The items: click one to make it the edited profile's icon or rule target (pp_lprof_pick).
@@ -5129,8 +5176,1434 @@ types PPLocationProfilesGenerated
 		}
 	}
 
-	# The location window's Infrastructure tab: the same row.
-	type pp_lprof_location_row = pp_lprof_plan_row {}
+	# The Profile row of the location window's Infrastructure tab (datacontext Location), styled like the tab's
+	# other rows: a paper card in a wooden frame, the badge in the header strip, the profiles as toggle tiles.
+	type pp_lprof_location_row = hbox {
+		layoutpolicy_horizontal = expanding
+		minimumsize = { -1 45 }
+		margin = { 5 5 }
+		using = bg_paper_card
+		using = bg_cabinet_card_frame
+		widget = {
+			size = { 40 -1 }
+			layoutpolicy_vertical = expanding
+			using = bg_card_header_01
+			using = bg_card_header_01
+			pp_lprof_badge = { size = { 28 28 } parentanchor = center }
+		}
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			margin = { 5 0 }
+			margin_right = 2
+			spacing = 4
+			using = bg_corner_flavor
+			blockoverride "corner_flavor_texture" {
+				texture = "gfx/interface/component_decoration/bg_corner_flavor_06.dds"
+				texture_density = 2
+				spriteType = Corneredstretched
+				spriteborder = { 35 35 }
+				alpha = 0.4
+			}
+			blockoverride "corner_flavor_color" {
+				modify_texture = { using = color_bg_blue_texture blend_mode = multiply }
+			}
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				margin_top = 3
+				margin_bottom = 3
+				spacing = 3
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					spacing = 5
+					text_single = { text = "PP_LPROF_UI_ROW_TITLE" align = left|nobaseline }
+					text_single = { visible = "[Not(Location.MakeScope.Var('pp_lprof').IsSet)]" text = "PP_LPROF_UI_ROW_NONE" align = left|nobaseline default_format = "#medium" }
+					expand = {}
+				}
+				flowcontainer = {
+					visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_1_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_2_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_3_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_4_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_5_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_6_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_7_on').IsSet, Or4(GetPlayer.MakeScope.Var('pp_lprof_8_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_9_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_10_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_11_on').IsSet))]"
+					direction = horizontal
+					ignoreinvisible = yes
+					spacing = 3
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_1_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)1')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)1')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_1"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s1')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_1 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_2_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)2')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)2')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_2"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s2')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_2 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_3_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)3')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)3')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_3"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s3')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_3 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_4_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)4')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)4')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_4"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s4')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_4 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_5_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)5')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)5')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_5"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s5')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_5 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_6_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)6')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)6')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_6"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s6')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_6 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_7_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)7')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)7')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_7"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s7')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_7 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_8_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)8')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)8')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_8"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s8')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_8 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_9_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)9')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)9')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_9"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s9')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_9 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_10_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)10')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)10')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_10"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s10')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_10 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_11_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)11')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)11')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_11"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s11')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_11 = {} }
+					}
+				}
+				flowcontainer = {
+					visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_12_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_13_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_14_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_15_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_16_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_17_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_18_on').IsSet, Or4(GetPlayer.MakeScope.Var('pp_lprof_19_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_20_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_21_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_22_on').IsSet))]"
+					direction = horizontal
+					ignoreinvisible = yes
+					spacing = 3
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_12_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)12')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)12')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_12"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s12')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_12 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_13_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)13')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)13')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_13"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s13')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_13 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_14_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)14')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)14')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_14"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s14')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_14 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_15_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)15')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)15')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_15"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s15')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_15 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_16_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)16')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)16')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_16"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s16')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_16 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_17_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)17')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)17')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_17"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s17')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_17 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_18_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)18')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)18')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_18"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s18')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_18 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_19_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)19')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)19')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_19"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s19')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_19 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_20_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)20')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)20')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_20"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s20')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_20 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_21_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)21')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)21')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_21"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s21')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_21 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_22_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)22')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)22')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_22"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s22')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_22 = {} }
+					}
+				}
+				flowcontainer = {
+					visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_23_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_24_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_25_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_26_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_27_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_28_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_29_on').IsSet, Or4(GetPlayer.MakeScope.Var('pp_lprof_30_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_31_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_32_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_33_on').IsSet))]"
+					direction = horizontal
+					ignoreinvisible = yes
+					spacing = 3
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_23_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)23')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)23')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_23"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s23')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_23 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_24_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)24')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)24')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_24"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s24')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_24 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_25_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)25')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)25')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_25"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s25')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_25 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_26_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)26')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)26')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_26"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s26')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_26 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_27_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)27')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)27')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_27"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s27')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_27 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_28_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)28')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)28')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_28"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s28')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_28 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_29_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)29')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)29')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_29"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s29')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_29 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_30_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)30')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)30')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_30"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s30')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_30 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_31_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)31')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)31')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_31"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s31')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_31 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_32_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)32')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)32')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_32"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s32')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_32 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_33_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)33')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)33')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_33"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s33')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_33 = {} }
+					}
+				}
+				flowcontainer = {
+					visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_34_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_35_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_36_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_37_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_38_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_39_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_40_on').IsSet, Or4(GetPlayer.MakeScope.Var('pp_lprof_41_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_42_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_43_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_44_on').IsSet))]"
+					direction = horizontal
+					ignoreinvisible = yes
+					spacing = 3
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_34_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)34')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)34')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_34"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s34')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_34 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_35_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)35')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)35')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_35"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s35')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_35 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_36_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)36')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)36')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_36"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s36')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_36 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_37_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)37')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)37')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_37"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s37')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_37 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_38_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)38')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)38')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_38"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s38')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_38 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_39_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)39')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)39')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_39"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s39')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_39 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_40_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)40')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)40')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_40"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s40')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_40 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_41_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)41')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)41')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_41"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s41')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_41 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_42_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)42')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)42')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_42"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s42')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_42 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_43_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)43')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)43')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_43"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s43')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_43 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_44_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)44')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)44')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_44"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s44')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_44 = {} }
+					}
+				}
+				flowcontainer = {
+					visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_45_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_46_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_47_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_48_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_49_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_50_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_51_on').IsSet, Or4(GetPlayer.MakeScope.Var('pp_lprof_52_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_53_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_54_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_55_on').IsSet))]"
+					direction = horizontal
+					ignoreinvisible = yes
+					spacing = 3
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_45_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)45')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)45')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_45"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s45')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_45 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_46_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)46')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)46')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_46"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s46')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_46 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_47_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)47')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)47')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_47"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s47')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_47 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_48_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)48')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)48')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_48"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s48')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_48 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_49_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)49')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)49')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_49"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s49')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_49 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_50_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)50')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)50')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_50"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s50')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_50 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_51_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)51')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)51')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_51"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s51')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_51 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_52_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)52')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)52')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_52"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s52')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_52 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_53_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)53')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)53')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_53"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s53')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_53 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_54_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)54')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)54')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_54"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s54')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_54 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_55_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)55')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)55')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_55"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s55')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_55 = {} }
+					}
+				}
+				flowcontainer = {
+					visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_56_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_57_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_58_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_59_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_60_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_61_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_62_on').IsSet, Or4(GetPlayer.MakeScope.Var('pp_lprof_63_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_64_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_65_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_66_on').IsSet))]"
+					direction = horizontal
+					ignoreinvisible = yes
+					spacing = 3
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_56_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)56')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)56')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_56"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s56')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_56 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_57_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)57')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)57')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_57"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s57')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_57 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_58_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)58')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)58')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_58"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s58')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_58 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_59_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)59')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)59')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_59"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s59')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_59 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_60_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)60')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)60')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_60"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s60')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_60 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_61_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)61')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)61')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_61"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s61')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_61 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_62_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)62')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)62')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_62"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s62')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_62 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_63_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)63')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)63')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_63"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s63')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_63 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_64_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)64')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)64')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_64"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s64')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_64 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_65_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)65')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)65')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_65"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s65')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_65 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_66_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)66')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)66')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_66"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s66')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_66 = {} }
+					}
+				}
+				flowcontainer = {
+					visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_67_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_68_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_69_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_70_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_71_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_72_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_73_on').IsSet, Or4(GetPlayer.MakeScope.Var('pp_lprof_74_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_75_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_76_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_77_on').IsSet))]"
+					direction = horizontal
+					ignoreinvisible = yes
+					spacing = 3
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_67_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)67')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)67')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_67"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s67')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_67 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_68_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)68')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)68')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_68"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s68')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_68 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_69_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)69')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)69')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_69"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s69')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_69 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_70_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)70')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)70')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_70"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s70')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_70 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_71_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)71')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)71')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_71"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s71')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_71 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_72_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)72')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)72')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_72"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s72')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_72 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_73_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)73')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)73')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_73"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s73')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_73 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_74_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)74')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)74')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_74"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s74')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_74 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_75_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)75')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)75')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_75"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s75')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_75 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_76_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)76')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)76')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_76"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s76')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_76 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_77_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)77')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)77')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_77"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s77')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_77 = {} }
+					}
+				}
+				flowcontainer = {
+					visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_78_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_79_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_80_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_81_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_82_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_83_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_84_on').IsSet, Or4(GetPlayer.MakeScope.Var('pp_lprof_85_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_86_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_87_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_88_on').IsSet))]"
+					direction = horizontal
+					ignoreinvisible = yes
+					spacing = 3
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_78_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)78')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)78')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_78"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s78')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_78 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_79_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)79')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)79')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_79"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s79')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_79 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_80_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)80')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)80')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_80"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s80')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_80 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_81_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)81')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)81')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_81"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s81')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_81 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_82_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)82')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)82')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_82"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s82')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_82 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_83_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)83')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)83')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_83"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s83')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_83 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_84_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)84')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)84')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_84"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s84')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_84 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_85_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)85')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)85')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_85"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s85')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_85 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_86_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)86')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)86')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_86"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s86')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_86 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_87_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)87')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)87')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_87"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s87')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_87 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_88_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)88')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)88')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_88"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s88')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_88 = {} }
+					}
+				}
+				flowcontainer = {
+					visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_89_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_90_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_91_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_92_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_93_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_94_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_95_on').IsSet, Or4(GetPlayer.MakeScope.Var('pp_lprof_96_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_97_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_98_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_99_on').IsSet))]"
+					direction = horizontal
+					ignoreinvisible = yes
+					spacing = 3
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_89_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)89')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)89')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_89"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s89')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_89 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_90_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)90')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)90')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_90"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s90')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_90 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_91_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)91')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)91')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_91"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s91')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_91 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_92_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)92')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)92')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_92"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s92')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_92 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_93_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)93')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)93')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_93"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s93')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_93 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_94_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)94')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)94')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_94"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s94')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_94 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_95_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)95')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)95')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_95"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s95')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_95 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_96_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)96')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)96')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_96"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s96')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_96 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_97_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)97')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)97')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_97"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s97')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_97 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_98_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)98')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)98')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_98"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s98')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_98 = {} }
+					}
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_99_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)99')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)99')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_99"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s99')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_99 = {} }
+					}
+				}
+				flowcontainer = {
+					visible = "[GetPlayer.MakeScope.Var('pp_lprof_100_on').IsSet]"
+					direction = horizontal
+					ignoreinvisible = yes
+					spacing = 3
+					button = {
+						visible = "[GetPlayer.MakeScope.Var('pp_lprof_100_on').IsSet]"
+						using = header_button_template
+						blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+						blockoverride "header_button_template_texture" { using = pressed_button_texture }
+						blockoverride "header_button_full_content" {}
+						size = { 34 34 }
+						down = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)100')]"
+						glow = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lprof_n'), '(CFixedPoint)100')]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+						tooltip = "PP_LPROF_UI_ASSIGN_100"
+						onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('s100')).End)]"
+						widget = { size = { 26 26 } parentanchor = center pp_lprof_face_100 = {} }
+					}
+				}
+			}
+			vbox = {
+				layoutpolicy_vertical = expanding
+				margin = { 0 5 }
+				spacing = 3
+				header_button_left = {
+					blockoverride "header_button_full_content" {}
+					size = { 30 30 }
+					tooltip = "PP_LPROF_UI_EDIT_PROFILES_TT"
+					onclick = "[GetVariableSystem.Set('pp_lprof_open', 'yes')]"
+					icon = { size = { 20 20 } parentanchor = center texture = "gfx/interface/buttons/flats/list_button.dds" using = button_regular_icon_color }
+				}
+				header_button_left = {
+					visible = "[Location.MakeScope.Var('pp_lprof').IsSet]"
+					blockoverride "header_button_full_content" {}
+					size = { 30 30 }
+					tooltip = "PP_LPROF_UI_NONE_TT"
+					onclick = "[GetScriptedGui('pp_lprof_assign').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_slot', MakeScopeFlag('none')).End)]"
+					icon = { size = { 20 20 } parentanchor = center texture = "gfx/interface/buttons/flats/remove.dds" using = button_regular_icon_color }
+				}
+				expand = {}
+			}
+		}
+	}
 
 	# The paint palette: the brush (pp_lprof_brush) is a profile or the eraser; the selected one again stops.
 	type pp_lprof_palette_tiles = vbox {

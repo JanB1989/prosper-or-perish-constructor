@@ -1,12 +1,51 @@
 ﻿# Prosper or Perish - Construction Plan triggers (player-only construction rules; see on_action/pp_construction_plan.txt).
 # Every trigger here runs inside pp_cplan_run, where scope:pp_cplan_country is the player country, unless noted.
 
-# Location scope: the global rules may build here (the player's own location, neither own rules nor hands off nor a
-# location profile, whose rules have priority there: pp_location_profiles.txt).
+# Location scope: the global rules may build here (the player's own location, neither own rules nor hands off).
+# A location profile takes from the global rules only what it sets (Jan 2026-11-09): the targets of its rules and the
+# global groups it switches off (pp_lprof_x*); everything else the global groups still build there, so a profile need
+# not repeat them. The profile's rules run first each month. The checks per group follow.
 pp_cplan_location_ok = {
 	owner ?= scope:pp_cplan_country
 	NOT = { has_variable = pp_cplan_mode }
-	NOT = { has_variable = pp_lprof }
+}
+
+# Location scope: the food rule may build here (the province capital's Tavern, kitchen, Granary).
+pp_cplan_food_ok = {
+	pp_cplan_location_ok = yes
+	NOT = { has_variable = pp_lprof_xf }
+}
+
+# Location scope: the food rule's farm step may build here (a profile with a staple food rule decides the food here).
+pp_cplan_farm_ok = {
+	pp_cplan_food_ok = yes
+	NOT = { pp_lprof_food_target = yes }
+}
+
+# Location scope: the food rule may build a victuals maker here (Grange, Victualling Yard).
+pp_cplan_victuals_ok = {
+	pp_cplan_food_ok = yes
+	NOT = { pp_lprof_has_good = { g = victuals } }
+}
+
+# Location scope: the logistics rule may build here (a profile with a market access rule decides it here).
+pp_cplan_logistics_ok = {
+	pp_cplan_location_ok = yes
+	NOT = { has_variable = pp_lprof_xl }
+	NOT = { pp_lprof_has_good = { g = logistics } }
+}
+
+# Location scope: the improvements rule may build here.
+pp_cplan_improve_ok = {
+	pp_cplan_location_ok = yes
+	NOT = { has_variable = pp_lprof_xi }
+}
+
+# Location scope: the goods rule of $g$ may build here (a profile with a rule for $g$ decides it here).
+pp_cplan_goods_ok = {
+	pp_cplan_location_ok = yes
+	NOT = { has_variable = pp_lprof_xg }
+	NOT = { pp_lprof_has_good = { g = $g$ } }
 }
 
 # Any scope: the month's budget is not used up (constructions started this month, also within the share of the

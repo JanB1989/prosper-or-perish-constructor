@@ -51,6 +51,19 @@ pp_cplan_business_site = {
 	market ?= { always = yes }
 }
 
+# Location scope, scope:pp_cplan_free_peasants saved (pp_cplan_free_peasants_here): a level of a building that employs
+# $type$ finds its $size$ workers here (thousands; Jan 2026-11-09: no business where nobody can work in it). Idle
+# peasants left after the open jobs here staff any building (they are promoted), idle pops of its own class too.
+pp_cplan_staff = {
+	OR = {
+		scope:pp_cplan_free_peasants >= $size$
+		AND = {
+			NOT = { pop_type:$type$ = pop_type:peasants }
+			"unemployed_pops_of_pop_type_in_location(pop_type:$type$)" >= $size$
+		}
+	}
+}
+
 # Any scope: the month's budget is not used up (the gold of the rule groups so far, and gold above the reserve).
 pp_cplan_budget_left = {
 	scope:pp_cplan_country = {

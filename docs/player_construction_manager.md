@@ -12,7 +12,7 @@ logic and is never touched (a console-only test switch lets it run for an AI cou
   editor window opens this tab: `docs/location_profiles.md`). Nothing else.
 - **Global Settings:** run the plan every month (on/off); the gold reserve in gold (default 1,000; - and + move it 100,
   a right-click 1,000; a script cannot read typed text, the game's typed fields such as the loan amount are wired into
-  the engine); four rule groups, each with on/off and one line: Food per province (no line; its numbers stay at the
+  the engine); the rule groups, each with a weight bar (see below) and the last three with one line: Food per province (no line; its numbers stay at the
   `[construction_plan]` defaults), Logistics per location (market access below the line, default 97 %, steps of 1),
   Improvements per location (population over capacity from the line, default 90 %, steps of 10 from 50 to 300 %:
   `location_population_percentage`, Jan's "old school" population / population capacity), Businesses (payback within
@@ -39,6 +39,22 @@ logic and is never touched (a console-only test switch lets it run for an AI cou
   formula), in %; the line in years is 100 / return. Left out like the farm estimate: production efficiency, staffing,
   market access, method unlocks (a method not researched yet still counts). Farms are businesses too: the food rule
   builds them where a province is short, the business rule where they pay.
+- **Weights instead of on/off** (Jan 2026-11-09, later the same day: "allocate percentages, maybe slider-based; every
+  slider on full divides it"): each of the five rule groups (Location profiles, Food, Logistics, Improvements,
+  Businesses) has a weight 0..10 (default 5; `[construction_plan] weights`); its part of the gold above the reserve =
+  its weight over the sum of the weights that count (`pp_cplan_share_<group>`; the profiles count only while a location
+  has a profile), shown in % beside the bar (`pp_cplan_part_<group>`). 0 = the group is off. A part one group leaves
+  passes on, as before. The bar (generated, `gui/pp_construction_plan_weights.gui`): vanilla's slider - and + buttons
+  and a gold progress bar whose ten steps set the weight when clicked. A real slider is not possible: vanilla's
+  sliders report their value only to engine functions (`onvaluechanged = "[AutomatedSystemsItem.OnChangedGoldSlider]"`),
+  a scripted GUI cannot receive it.
+- **Workers** (Jan 2026-11-09: "we don't want to build endless businesses in a location that doesn't have the
+  peasants"): a business or a profile rule's building gets a level only where it finds the workers one level needs
+  (`employment_size` of the building, a number or a script value such as `manpower_employment`, in thousands like the
+  pops): the idle peasants left after the open jobs of the buildings there (`pp_cplan_free_peasants_here`: idle
+  peasants minus each building's `building_employment_size_amount - building_employed_amount`; peasants are promoted
+  into the other classes), or idle pops of the building's own class (`pp_cplan_staff`). A profile rule that finds no
+  workers shows "No free workers here" (state 4). The food, logistics and improvement rules do not check workers.
 - **Gone** (Jan: "the rest for now can go"): the Food, Goods, Logistics, Locations and Here tabs; the monthly
   construction limit; the presets; the line about the game's own automation (the guards stay: no level for a closed
   building, nothing where a construction is under way); the goods modes (Off / Keep / Expand / Never); the per-location

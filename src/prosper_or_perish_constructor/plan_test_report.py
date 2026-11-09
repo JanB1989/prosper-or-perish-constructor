@@ -64,7 +64,7 @@ ERROR_PATTERNS = ("pp_cplan", "pp_lprof", "pp_construction_plan", "pp_location_p
 # ---------------------------------------------------------------------------------------------------------------------
 # State codes (+ 100 in the game; docs/location_profiles.md and docs/player_construction_manager.md)
 # ---------------------------------------------------------------------------------------------------------------------
-RULE_STATES = {1: "started", 2: "nothing to build", 3: "under construction", 4: "code 4", 5: "payback too long",
+RULE_STATES = {1: "started", 2: "nothing to build", 3: "under construction", 4: "no free workers", 5: "payback too long",
                6: "cannot be built here", 7: "budget", 8: "market lacks construction goods",
                9: "waiting for an earlier rule"}
 NO_PROFIT = 999.0  # pp_lprof_r<r>_est 1099 - 100: the rule found no profit

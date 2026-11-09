@@ -14,12 +14,12 @@ pp_lprof_t_camels = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:camel_stud building_type = building_type:camel_herders } } }
-		pp_lprof_expand = { type = camel_stud demand = workshop_construction cat = std ipl = 0.08 }
-		pp_lprof_expand = { type = camel_herders demand = basic_construction_needs cat = std ipl = 0.08 }
+		pp_lprof_expand = { type = camel_stud demand = workshop_construction cat = std ipl = 0.08 pt = laborers sz = 1.25 }
+		pp_lprof_expand = { type = camel_herders demand = basic_construction_needs cat = std ipl = 0.08 pt = laborers sz = 1.25 }
 	}
 	else = {
-		pp_lprof_start = { type = camel_stud demand = workshop_construction cat = std ipl = 0.08 }
-		pp_lprof_start = { type = camel_herders demand = basic_construction_needs cat = std ipl = 0.08 }
+		pp_lprof_start = { type = camel_stud demand = workshop_construction cat = std ipl = 0.08 pt = laborers sz = 1.25 }
+		pp_lprof_start = { type = camel_herders demand = basic_construction_needs cat = std ipl = 0.08 pt = laborers sz = 1.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -31,10 +31,10 @@ pp_lprof_t_elephants = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:elephant_kraal } } }
-		pp_lprof_expand = { type = elephant_kraal demand = basic_construction_needs cat = std ipl = 0.08 }
+		pp_lprof_expand = { type = elephant_kraal demand = basic_construction_needs cat = std ipl = 0.08 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = elephant_kraal demand = basic_construction_needs cat = std ipl = 0.08 }
+		pp_lprof_start = { type = elephant_kraal demand = basic_construction_needs cat = std ipl = 0.08 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -46,12 +46,12 @@ pp_lprof_t_horses = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:stud_farm building_type = building_type:horse_breeders } } }
-		pp_lprof_expand = { type = stud_farm demand = workshop_construction cat = std ipl = 0.08 }
-		pp_lprof_expand = { type = horse_breeders demand = horse_breeders_construction cat = std ipl = 0.08 }
+		pp_lprof_expand = { type = stud_farm demand = workshop_construction cat = std ipl = 0.08 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = horse_breeders demand = horse_breeders_construction cat = std ipl = 0.08 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = stud_farm demand = workshop_construction cat = std ipl = 0.08 }
-		pp_lprof_start = { type = horse_breeders demand = horse_breeders_construction cat = std ipl = 0.08 }
+		pp_lprof_start = { type = stud_farm demand = workshop_construction cat = std ipl = 0.08 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = horse_breeders demand = horse_breeders_construction cat = std ipl = 0.08 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -63,16 +63,16 @@ pp_lprof_t_livestock = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:cattle_model_farm building_type = building_type:cattle_rotations building_type = building_type:cattle_farmstead building_type = building_type:cattle_farm } } }
-		pp_lprof_expand = { type = cattle_model_farm demand = workshop_construction cat = std ipl = 0.08 }
-		pp_lprof_expand = { type = cattle_rotations demand = workshop_construction cat = std ipl = 0.08 }
-		pp_lprof_expand = { type = cattle_farmstead demand = workshop_construction cat = std ipl = 0.08 }
-		pp_lprof_expand = { type = cattle_farm demand = village_construction cat = std ipl = 0.08 }
+		pp_lprof_expand = { type = cattle_model_farm demand = workshop_construction cat = std ipl = 0.08 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = cattle_rotations demand = workshop_construction cat = std ipl = 0.08 pt = peasants sz = 1 }
+		pp_lprof_expand = { type = cattle_farmstead demand = workshop_construction cat = std ipl = 0.08 pt = peasants sz = 1.25 }
+		pp_lprof_expand = { type = cattle_farm demand = village_construction cat = std ipl = 0.08 pt = peasants sz = 1.25 }
 	}
 	else = {
-		pp_lprof_start = { type = cattle_model_farm demand = workshop_construction cat = std ipl = 0.08 }
-		pp_lprof_start = { type = cattle_rotations demand = workshop_construction cat = std ipl = 0.08 }
-		pp_lprof_start = { type = cattle_farmstead demand = workshop_construction cat = std ipl = 0.08 }
-		pp_lprof_start = { type = cattle_farm demand = village_construction cat = std ipl = 0.08 }
+		pp_lprof_start = { type = cattle_model_farm demand = workshop_construction cat = std ipl = 0.08 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = cattle_rotations demand = workshop_construction cat = std ipl = 0.08 pt = peasants sz = 1 }
+		pp_lprof_start = { type = cattle_farmstead demand = workshop_construction cat = std ipl = 0.08 pt = peasants sz = 1.25 }
+		pp_lprof_start = { type = cattle_farm demand = village_construction cat = std ipl = 0.08 pt = peasants sz = 1.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -84,14 +84,14 @@ pp_lprof_t_wool = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:enclosed_sheep_walks building_type = building_type:hurdled_sheepcotes building_type = building_type:sheep_farms } } }
-		pp_lprof_expand = { type = enclosed_sheep_walks demand = workshop_construction cat = std ipl = 0.08 }
-		pp_lprof_expand = { type = hurdled_sheepcotes demand = workshop_construction cat = std ipl = 0.08 }
-		pp_lprof_expand = { type = sheep_farms demand = farm_constructions cat = std ipl = 0.08 }
+		pp_lprof_expand = { type = enclosed_sheep_walks demand = workshop_construction cat = std ipl = 0.08 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = hurdled_sheepcotes demand = workshop_construction cat = std ipl = 0.08 pt = peasants sz = 1.25 }
+		pp_lprof_expand = { type = sheep_farms demand = farm_constructions cat = std ipl = 0.08 pt = peasants sz = 1.25 }
 	}
 	else = {
-		pp_lprof_start = { type = enclosed_sheep_walks demand = workshop_construction cat = std ipl = 0.08 }
-		pp_lprof_start = { type = hurdled_sheepcotes demand = workshop_construction cat = std ipl = 0.08 }
-		pp_lprof_start = { type = sheep_farms demand = farm_constructions cat = std ipl = 0.08 }
+		pp_lprof_start = { type = enclosed_sheep_walks demand = workshop_construction cat = std ipl = 0.08 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = hurdled_sheepcotes demand = workshop_construction cat = std ipl = 0.08 pt = peasants sz = 1.25 }
+		pp_lprof_start = { type = sheep_farms demand = farm_constructions cat = std ipl = 0.08 pt = peasants sz = 1.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -103,10 +103,10 @@ pp_lprof_t_beeswax = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:forest_village } } }
-		pp_lprof_expand = { type = forest_village demand = village_construction cat = std ipl = 0.1 }
+		pp_lprof_expand = { type = forest_village demand = village_construction cat = std ipl = 0.1 pt = peasants sz = 1.25 }
 	}
 	else = {
-		pp_lprof_start = { type = forest_village demand = village_construction cat = std ipl = 0.1 }
+		pp_lprof_start = { type = forest_village demand = village_construction cat = std ipl = 0.1 pt = peasants sz = 1.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -118,18 +118,18 @@ pp_lprof_t_dyes = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:dyes_mill building_type = building_type:dyesworks building_type = building_type:dyes_workshop building_type = building_type:dye_plantation building_type = building_type:dyes_guild } } }
-		pp_lprof_expand = { type = dyes_mill demand = manufactory_construction cat = mill ipl = 0.15 }
-		pp_lprof_expand = { type = dyesworks demand = manufactory_construction cat = std ipl = 0.15 }
-		pp_lprof_expand = { type = dyes_workshop demand = workshop_construction cat = std ipl = 0.15 }
-		pp_lprof_expand = { type = dye_plantation demand = basic_construction_needs cat = std ipl = 0.09 }
-		pp_lprof_expand = { type = dyes_guild demand = guild_construction cat = std ipl = 0.45 }
+		pp_lprof_expand = { type = dyes_mill demand = manufactory_construction cat = mill ipl = 0.15 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = dyesworks demand = manufactory_construction cat = std ipl = 0.15 pt = burghers sz = 0.25 }
+		pp_lprof_expand = { type = dyes_workshop demand = workshop_construction cat = std ipl = 0.15 pt = burghers sz = 0.25 }
+		pp_lprof_expand = { type = dye_plantation demand = basic_construction_needs cat = std ipl = 0.09 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = dyes_guild demand = guild_construction cat = std ipl = 0.45 pt = burghers sz = 0.25 }
 	}
 	else = {
-		pp_lprof_start = { type = dyes_mill demand = manufactory_construction cat = mill ipl = 0.15 }
-		pp_lprof_start = { type = dyesworks demand = manufactory_construction cat = std ipl = 0.15 }
-		pp_lprof_start = { type = dyes_workshop demand = workshop_construction cat = std ipl = 0.15 }
-		pp_lprof_start = { type = dye_plantation demand = basic_construction_needs cat = std ipl = 0.09 }
-		pp_lprof_start = { type = dyes_guild demand = guild_construction cat = std ipl = 0.45 }
+		pp_lprof_start = { type = dyes_mill demand = manufactory_construction cat = mill ipl = 0.15 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = dyesworks demand = manufactory_construction cat = std ipl = 0.15 pt = burghers sz = 0.25 }
+		pp_lprof_start = { type = dyes_workshop demand = workshop_construction cat = std ipl = 0.15 pt = burghers sz = 0.25 }
+		pp_lprof_start = { type = dye_plantation demand = basic_construction_needs cat = std ipl = 0.09 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = dyes_guild demand = guild_construction cat = std ipl = 0.45 pt = burghers sz = 0.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -141,12 +141,12 @@ pp_lprof_t_incense = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:incense_grove building_type = building_type:perfumery } } }
-		pp_lprof_expand = { type = incense_grove demand = basic_construction_needs cat = std ipl = 0.09 }
-		pp_lprof_expand = { type = perfumery demand = mill_construction cat = std ipl = 0.15 }
+		pp_lprof_expand = { type = incense_grove demand = basic_construction_needs cat = std ipl = 0.09 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = perfumery demand = mill_construction cat = std ipl = 0.15 pt = burghers sz = 0.2 }
 	}
 	else = {
-		pp_lprof_start = { type = incense_grove demand = basic_construction_needs cat = std ipl = 0.09 }
-		pp_lprof_start = { type = perfumery demand = mill_construction cat = std ipl = 0.15 }
+		pp_lprof_start = { type = incense_grove demand = basic_construction_needs cat = std ipl = 0.09 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = perfumery demand = mill_construction cat = std ipl = 0.15 pt = burghers sz = 0.2 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -158,14 +158,14 @@ pp_lprof_t_tobacco = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:market_tobacco_farm building_type = building_type:tobacco_farm building_type = building_type:tobacco_plantation } } }
-		pp_lprof_expand = { type = market_tobacco_farm demand = workshop_construction cat = std ipl = 0.09 }
-		pp_lprof_expand = { type = tobacco_farm demand = basic_construction_needs cat = std ipl = 0.09 }
-		pp_lprof_expand = { type = tobacco_plantation demand = plantation_construction cat = std ipl = 0.09 }
+		pp_lprof_expand = { type = market_tobacco_farm demand = workshop_construction cat = std ipl = 0.09 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = tobacco_farm demand = basic_construction_needs cat = std ipl = 0.09 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = tobacco_plantation demand = plantation_construction cat = std ipl = 0.09 pt = slaves sz = 1 }
 	}
 	else = {
-		pp_lprof_start = { type = market_tobacco_farm demand = workshop_construction cat = std ipl = 0.09 }
-		pp_lprof_start = { type = tobacco_farm demand = basic_construction_needs cat = std ipl = 0.09 }
-		pp_lprof_start = { type = tobacco_plantation demand = plantation_construction cat = std ipl = 0.09 }
+		pp_lprof_start = { type = market_tobacco_farm demand = workshop_construction cat = std ipl = 0.09 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = tobacco_farm demand = basic_construction_needs cat = std ipl = 0.09 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = tobacco_plantation demand = plantation_construction cat = std ipl = 0.09 pt = slaves sz = 1 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -177,14 +177,14 @@ pp_lprof_t_cotton = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:market_cotton_farm building_type = building_type:cotton_farm building_type = building_type:cotton_plantation } } }
-		pp_lprof_expand = { type = market_cotton_farm demand = workshop_construction cat = std ipl = 0.08 }
-		pp_lprof_expand = { type = cotton_farm demand = basic_construction_needs cat = std ipl = 0.08 }
-		pp_lprof_expand = { type = cotton_plantation demand = plantation_construction cat = std ipl = 0.08 }
+		pp_lprof_expand = { type = market_cotton_farm demand = workshop_construction cat = std ipl = 0.08 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = cotton_farm demand = basic_construction_needs cat = std ipl = 0.08 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = cotton_plantation demand = plantation_construction cat = std ipl = 0.08 pt = slaves sz = 1 }
 	}
 	else = {
-		pp_lprof_start = { type = market_cotton_farm demand = workshop_construction cat = std ipl = 0.08 }
-		pp_lprof_start = { type = cotton_farm demand = basic_construction_needs cat = std ipl = 0.08 }
-		pp_lprof_start = { type = cotton_plantation demand = plantation_construction cat = std ipl = 0.08 }
+		pp_lprof_start = { type = market_cotton_farm demand = workshop_construction cat = std ipl = 0.08 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = cotton_farm demand = basic_construction_needs cat = std ipl = 0.08 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = cotton_plantation demand = plantation_construction cat = std ipl = 0.08 pt = slaves sz = 1 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -196,12 +196,12 @@ pp_lprof_t_fiber_crops = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:fiber_dressing_yard building_type = building_type:fiber_crops_farm } } }
-		pp_lprof_expand = { type = fiber_dressing_yard demand = workshop_construction cat = std ipl = 0.08 }
-		pp_lprof_expand = { type = fiber_crops_farm demand = farm_constructions cat = std ipl = 0.08 }
+		pp_lprof_expand = { type = fiber_dressing_yard demand = workshop_construction cat = std ipl = 0.08 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = fiber_crops_farm demand = farm_constructions cat = std ipl = 0.08 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = fiber_dressing_yard demand = workshop_construction cat = std ipl = 0.08 }
-		pp_lprof_start = { type = fiber_crops_farm demand = farm_constructions cat = std ipl = 0.08 }
+		pp_lprof_start = { type = fiber_dressing_yard demand = workshop_construction cat = std ipl = 0.08 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = fiber_crops_farm demand = farm_constructions cat = std ipl = 0.08 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -213,16 +213,16 @@ pp_lprof_t_silk = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:regulated_sericulture_farm building_type = building_type:ablaq_palace building_type = building_type:sericulture_farm building_type = building_type:silk_production_guild } } }
-		pp_lprof_expand = { type = regulated_sericulture_farm demand = basic_construction_needs cat = std ipl = 0.08 }
-		pp_lprof_expand = { type = ablaq_palace demand = guild_construction cat = std ipl = 0.41 }
-		pp_lprof_expand = { type = sericulture_farm demand = basic_construction_needs cat = std ipl = 0.08 }
-		pp_lprof_expand = { type = silk_production_guild demand = guild_construction cat = std ipl = 0.41 }
+		pp_lprof_expand = { type = regulated_sericulture_farm demand = basic_construction_needs cat = std ipl = 0.08 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = ablaq_palace demand = guild_construction cat = std ipl = 0.41 pt = burghers sz = 0.25 }
+		pp_lprof_expand = { type = sericulture_farm demand = basic_construction_needs cat = std ipl = 0.08 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = silk_production_guild demand = guild_construction cat = std ipl = 0.41 pt = burghers sz = 0.25 }
 	}
 	else = {
-		pp_lprof_start = { type = regulated_sericulture_farm demand = basic_construction_needs cat = std ipl = 0.08 }
-		pp_lprof_start = { type = ablaq_palace demand = guild_construction cat = std ipl = 0.41 }
-		pp_lprof_start = { type = sericulture_farm demand = basic_construction_needs cat = std ipl = 0.08 }
-		pp_lprof_start = { type = silk_production_guild demand = guild_construction cat = std ipl = 0.41 }
+		pp_lprof_start = { type = regulated_sericulture_farm demand = basic_construction_needs cat = std ipl = 0.08 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = ablaq_palace demand = guild_construction cat = std ipl = 0.41 pt = burghers sz = 0.25 }
+		pp_lprof_start = { type = sericulture_farm demand = basic_construction_needs cat = std ipl = 0.08 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = silk_production_guild demand = guild_construction cat = std ipl = 0.41 pt = burghers sz = 0.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -234,10 +234,10 @@ pp_lprof_t_chili = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:chili_plantation } } }
-		pp_lprof_expand = { type = chili_plantation demand = basic_construction_needs cat = std ipl = 0.13 }
+		pp_lprof_expand = { type = chili_plantation demand = basic_construction_needs cat = std ipl = 0.13 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = chili_plantation demand = basic_construction_needs cat = std ipl = 0.13 }
+		pp_lprof_start = { type = chili_plantation demand = basic_construction_needs cat = std ipl = 0.13 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -249,10 +249,10 @@ pp_lprof_t_cloves = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:clove_grove } } }
-		pp_lprof_expand = { type = clove_grove demand = basic_construction_needs cat = std ipl = 0.13 }
+		pp_lprof_expand = { type = clove_grove demand = basic_construction_needs cat = std ipl = 0.13 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = clove_grove demand = basic_construction_needs cat = std ipl = 0.13 }
+		pp_lprof_start = { type = clove_grove demand = basic_construction_needs cat = std ipl = 0.13 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -264,12 +264,12 @@ pp_lprof_t_pepper = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:managed_pepper_garden building_type = building_type:pepper_garden } } }
-		pp_lprof_expand = { type = managed_pepper_garden demand = basic_construction_needs cat = std ipl = 0.13 }
-		pp_lprof_expand = { type = pepper_garden demand = basic_construction_needs cat = std ipl = 0.13 }
+		pp_lprof_expand = { type = managed_pepper_garden demand = basic_construction_needs cat = std ipl = 0.13 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = pepper_garden demand = basic_construction_needs cat = std ipl = 0.13 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = managed_pepper_garden demand = basic_construction_needs cat = std ipl = 0.13 }
-		pp_lprof_start = { type = pepper_garden demand = basic_construction_needs cat = std ipl = 0.13 }
+		pp_lprof_start = { type = managed_pepper_garden demand = basic_construction_needs cat = std ipl = 0.13 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = pepper_garden demand = basic_construction_needs cat = std ipl = 0.13 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -281,12 +281,12 @@ pp_lprof_t_saffron = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:saffron_kiln_croft building_type = building_type:saffron_croft } } }
-		pp_lprof_expand = { type = saffron_kiln_croft demand = basic_construction_needs cat = std ipl = 0.11 }
-		pp_lprof_expand = { type = saffron_croft demand = basic_construction_needs cat = std ipl = 0.13 }
+		pp_lprof_expand = { type = saffron_kiln_croft demand = basic_construction_needs cat = std ipl = 0.11 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = saffron_croft demand = basic_construction_needs cat = std ipl = 0.13 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = saffron_kiln_croft demand = basic_construction_needs cat = std ipl = 0.11 }
-		pp_lprof_start = { type = saffron_croft demand = basic_construction_needs cat = std ipl = 0.13 }
+		pp_lprof_start = { type = saffron_kiln_croft demand = basic_construction_needs cat = std ipl = 0.11 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = saffron_croft demand = basic_construction_needs cat = std ipl = 0.13 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -298,16 +298,16 @@ pp_lprof_t_legumes = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:legume_model_farm building_type = building_type:legume_rotations building_type = building_type:legume_farmstead building_type = building_type:legume_farm } } }
-		pp_lprof_expand = { type = legume_model_farm demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_expand = { type = legume_rotations demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_expand = { type = legume_farmstead demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_expand = { type = legume_farm demand = village_construction cat = std ipl = 0.07 }
+		pp_lprof_expand = { type = legume_model_farm demand = workshop_construction cat = std ipl = 0.07 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = legume_rotations demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1 }
+		pp_lprof_expand = { type = legume_farmstead demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
+		pp_lprof_expand = { type = legume_farm demand = village_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
 	}
 	else = {
-		pp_lprof_start = { type = legume_model_farm demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_start = { type = legume_rotations demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_start = { type = legume_farmstead demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_start = { type = legume_farm demand = village_construction cat = std ipl = 0.07 }
+		pp_lprof_start = { type = legume_model_farm demand = workshop_construction cat = std ipl = 0.07 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = legume_rotations demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1 }
+		pp_lprof_start = { type = legume_farmstead demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
+		pp_lprof_start = { type = legume_farm demand = village_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -319,16 +319,16 @@ pp_lprof_t_maize = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:maize_model_farm building_type = building_type:maize_rotations building_type = building_type:maize_farmstead building_type = building_type:maize_farm } } }
-		pp_lprof_expand = { type = maize_model_farm demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_expand = { type = maize_rotations demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_expand = { type = maize_farmstead demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_expand = { type = maize_farm demand = village_construction cat = std ipl = 0.07 }
+		pp_lprof_expand = { type = maize_model_farm demand = workshop_construction cat = std ipl = 0.07 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = maize_rotations demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1 }
+		pp_lprof_expand = { type = maize_farmstead demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
+		pp_lprof_expand = { type = maize_farm demand = village_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
 	}
 	else = {
-		pp_lprof_start = { type = maize_model_farm demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_start = { type = maize_rotations demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_start = { type = maize_farmstead demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_start = { type = maize_farm demand = village_construction cat = std ipl = 0.07 }
+		pp_lprof_start = { type = maize_model_farm demand = workshop_construction cat = std ipl = 0.07 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = maize_rotations demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1 }
+		pp_lprof_start = { type = maize_farmstead demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
+		pp_lprof_start = { type = maize_farm demand = village_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -340,16 +340,16 @@ pp_lprof_t_millet = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:millet_model_farm building_type = building_type:millet_rotations building_type = building_type:millet_farmstead building_type = building_type:millet_farm } } }
-		pp_lprof_expand = { type = millet_model_farm demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_expand = { type = millet_rotations demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_expand = { type = millet_farmstead demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_expand = { type = millet_farm demand = village_construction cat = std ipl = 0.07 }
+		pp_lprof_expand = { type = millet_model_farm demand = workshop_construction cat = std ipl = 0.07 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = millet_rotations demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1 }
+		pp_lprof_expand = { type = millet_farmstead demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
+		pp_lprof_expand = { type = millet_farm demand = village_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
 	}
 	else = {
-		pp_lprof_start = { type = millet_model_farm demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_start = { type = millet_rotations demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_start = { type = millet_farmstead demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_start = { type = millet_farm demand = village_construction cat = std ipl = 0.07 }
+		pp_lprof_start = { type = millet_model_farm demand = workshop_construction cat = std ipl = 0.07 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = millet_rotations demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1 }
+		pp_lprof_start = { type = millet_farmstead demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
+		pp_lprof_start = { type = millet_farm demand = village_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -361,16 +361,16 @@ pp_lprof_t_potato = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:potato_model_farm building_type = building_type:potato_rotations building_type = building_type:potato_farmstead building_type = building_type:potato_farm } } }
-		pp_lprof_expand = { type = potato_model_farm demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_expand = { type = potato_rotations demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_expand = { type = potato_farmstead demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_expand = { type = potato_farm demand = village_construction cat = std ipl = 0.07 }
+		pp_lprof_expand = { type = potato_model_farm demand = workshop_construction cat = std ipl = 0.07 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = potato_rotations demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1 }
+		pp_lprof_expand = { type = potato_farmstead demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
+		pp_lprof_expand = { type = potato_farm demand = village_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
 	}
 	else = {
-		pp_lprof_start = { type = potato_model_farm demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_start = { type = potato_rotations demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_start = { type = potato_farmstead demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_start = { type = potato_farm demand = village_construction cat = std ipl = 0.07 }
+		pp_lprof_start = { type = potato_model_farm demand = workshop_construction cat = std ipl = 0.07 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = potato_rotations demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1 }
+		pp_lprof_start = { type = potato_farmstead demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
+		pp_lprof_start = { type = potato_farm demand = village_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -382,16 +382,16 @@ pp_lprof_t_rice = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:rice_model_farm building_type = building_type:rice_rotations building_type = building_type:rice_farmstead building_type = building_type:rice_farm } } }
-		pp_lprof_expand = { type = rice_model_farm demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_expand = { type = rice_rotations demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_expand = { type = rice_farmstead demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_expand = { type = rice_farm demand = village_construction cat = std ipl = 0.07 }
+		pp_lprof_expand = { type = rice_model_farm demand = workshop_construction cat = std ipl = 0.07 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = rice_rotations demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1 }
+		pp_lprof_expand = { type = rice_farmstead demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
+		pp_lprof_expand = { type = rice_farm demand = village_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
 	}
 	else = {
-		pp_lprof_start = { type = rice_model_farm demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_start = { type = rice_rotations demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_start = { type = rice_farmstead demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_start = { type = rice_farm demand = village_construction cat = std ipl = 0.07 }
+		pp_lprof_start = { type = rice_model_farm demand = workshop_construction cat = std ipl = 0.07 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = rice_rotations demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1 }
+		pp_lprof_start = { type = rice_farmstead demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
+		pp_lprof_start = { type = rice_farm demand = village_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -403,16 +403,16 @@ pp_lprof_t_wheat = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:wheat_model_farm building_type = building_type:wheat_rotations building_type = building_type:wheat_farmstead building_type = building_type:wheat_farm } } }
-		pp_lprof_expand = { type = wheat_model_farm demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_expand = { type = wheat_rotations demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_expand = { type = wheat_farmstead demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_expand = { type = wheat_farm demand = village_construction cat = std ipl = 0.07 }
+		pp_lprof_expand = { type = wheat_model_farm demand = workshop_construction cat = std ipl = 0.07 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = wheat_rotations demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1 }
+		pp_lprof_expand = { type = wheat_farmstead demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
+		pp_lprof_expand = { type = wheat_farm demand = village_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
 	}
 	else = {
-		pp_lprof_start = { type = wheat_model_farm demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_start = { type = wheat_rotations demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_start = { type = wheat_farmstead demand = workshop_construction cat = std ipl = 0.07 }
-		pp_lprof_start = { type = wheat_farm demand = village_construction cat = std ipl = 0.07 }
+		pp_lprof_start = { type = wheat_model_farm demand = workshop_construction cat = std ipl = 0.07 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = wheat_rotations demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1 }
+		pp_lprof_start = { type = wheat_farmstead demand = workshop_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
+		pp_lprof_start = { type = wheat_farm demand = village_construction cat = std ipl = 0.07 pt = peasants sz = 1.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -424,12 +424,12 @@ pp_lprof_t_cocoa = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:managed_cocoa_grove building_type = building_type:cocoa_grove } } }
-		pp_lprof_expand = { type = managed_cocoa_grove demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_expand = { type = cocoa_grove demand = basic_construction_needs cat = std ipl = 0.11 }
+		pp_lprof_expand = { type = managed_cocoa_grove demand = workshop_construction cat = std ipl = 0.11 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = cocoa_grove demand = basic_construction_needs cat = std ipl = 0.11 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = managed_cocoa_grove demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_start = { type = cocoa_grove demand = basic_construction_needs cat = std ipl = 0.11 }
+		pp_lprof_start = { type = managed_cocoa_grove demand = workshop_construction cat = std ipl = 0.11 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = cocoa_grove demand = basic_construction_needs cat = std ipl = 0.11 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -441,12 +441,12 @@ pp_lprof_t_coffee = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:terraced_coffee_grove building_type = building_type:coffee_grove } } }
-		pp_lprof_expand = { type = terraced_coffee_grove demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_expand = { type = coffee_grove demand = basic_construction_needs cat = std ipl = 0.11 }
+		pp_lprof_expand = { type = terraced_coffee_grove demand = workshop_construction cat = std ipl = 0.11 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = coffee_grove demand = basic_construction_needs cat = std ipl = 0.11 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = terraced_coffee_grove demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_start = { type = coffee_grove demand = basic_construction_needs cat = std ipl = 0.11 }
+		pp_lprof_start = { type = terraced_coffee_grove demand = workshop_construction cat = std ipl = 0.11 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = coffee_grove demand = basic_construction_needs cat = std ipl = 0.11 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -458,12 +458,12 @@ pp_lprof_t_tea = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:tea_sorting_garden building_type = building_type:tea_garden } } }
-		pp_lprof_expand = { type = tea_sorting_garden demand = basic_construction_needs cat = std ipl = 0.11 }
-		pp_lprof_expand = { type = tea_garden demand = basic_construction_needs cat = std ipl = 0.11 }
+		pp_lprof_expand = { type = tea_sorting_garden demand = basic_construction_needs cat = std ipl = 0.11 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = tea_garden demand = basic_construction_needs cat = std ipl = 0.11 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = tea_sorting_garden demand = basic_construction_needs cat = std ipl = 0.11 }
-		pp_lprof_start = { type = tea_garden demand = basic_construction_needs cat = std ipl = 0.11 }
+		pp_lprof_start = { type = tea_sorting_garden demand = basic_construction_needs cat = std ipl = 0.11 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = tea_garden demand = basic_construction_needs cat = std ipl = 0.11 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -475,14 +475,14 @@ pp_lprof_t_sugar = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:trapiche_sugarcane_farm building_type = building_type:sugar_plantation building_type = building_type:sugarcane_farm } } }
-		pp_lprof_expand = { type = trapiche_sugarcane_farm demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_expand = { type = sugar_plantation demand = plantation_construction cat = std ipl = 0.11 }
-		pp_lprof_expand = { type = sugarcane_farm demand = basic_construction_needs cat = std ipl = 0.11 }
+		pp_lprof_expand = { type = trapiche_sugarcane_farm demand = workshop_construction cat = std ipl = 0.11 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = sugar_plantation demand = plantation_construction cat = std ipl = 0.11 pt = slaves sz = 1 }
+		pp_lprof_expand = { type = sugarcane_farm demand = basic_construction_needs cat = std ipl = 0.11 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = trapiche_sugarcane_farm demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_start = { type = sugar_plantation demand = plantation_construction cat = std ipl = 0.11 }
-		pp_lprof_start = { type = sugarcane_farm demand = basic_construction_needs cat = std ipl = 0.11 }
+		pp_lprof_start = { type = trapiche_sugarcane_farm demand = workshop_construction cat = std ipl = 0.11 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = sugar_plantation demand = plantation_construction cat = std ipl = 0.11 pt = slaves sz = 1 }
+		pp_lprof_start = { type = sugarcane_farm demand = basic_construction_needs cat = std ipl = 0.11 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -494,16 +494,16 @@ pp_lprof_t_fruit = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:pomological_orchard building_type = building_type:nursery_orchard building_type = building_type:fruit_orchard building_type = building_type:maghreb_palm_irrigation } } }
-		pp_lprof_expand = { type = pomological_orchard demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_expand = { type = nursery_orchard demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_expand = { type = fruit_orchard demand = farm_constructions cat = std ipl = 0.11 }
-		pp_lprof_expand = { type = maghreb_palm_irrigation demand = maghreb_palm_irrigation_building_construction cat = std ipl = 0.19 }
+		pp_lprof_expand = { type = pomological_orchard demand = workshop_construction cat = std ipl = 0.11 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = nursery_orchard demand = workshop_construction cat = std ipl = 0.11 pt = peasants sz = 1.25 }
+		pp_lprof_expand = { type = fruit_orchard demand = farm_constructions cat = std ipl = 0.11 pt = peasants sz = 1.25 }
+		pp_lprof_expand = { type = maghreb_palm_irrigation demand = maghreb_palm_irrigation_building_construction cat = std ipl = 0.19 pt = peasants sz = 1.25 }
 	}
 	else = {
-		pp_lprof_start = { type = pomological_orchard demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_start = { type = nursery_orchard demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_start = { type = fruit_orchard demand = farm_constructions cat = std ipl = 0.11 }
-		pp_lprof_start = { type = maghreb_palm_irrigation demand = maghreb_palm_irrigation_building_construction cat = std ipl = 0.19 }
+		pp_lprof_start = { type = pomological_orchard demand = workshop_construction cat = std ipl = 0.11 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = nursery_orchard demand = workshop_construction cat = std ipl = 0.11 pt = peasants sz = 1.25 }
+		pp_lprof_start = { type = fruit_orchard demand = farm_constructions cat = std ipl = 0.11 pt = peasants sz = 1.25 }
+		pp_lprof_start = { type = maghreb_palm_irrigation demand = maghreb_palm_irrigation_building_construction cat = std ipl = 0.19 pt = peasants sz = 1.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -515,16 +515,16 @@ pp_lprof_t_olives = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:olive_model_farm building_type = building_type:olive_rotations building_type = building_type:olive_farmstead building_type = building_type:olive_farm } } }
-		pp_lprof_expand = { type = olive_model_farm demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_expand = { type = olive_rotations demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_expand = { type = olive_farmstead demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_expand = { type = olive_farm demand = village_construction cat = std ipl = 0.11 }
+		pp_lprof_expand = { type = olive_model_farm demand = workshop_construction cat = std ipl = 0.11 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = olive_rotations demand = workshop_construction cat = std ipl = 0.11 pt = peasants sz = 1 }
+		pp_lprof_expand = { type = olive_farmstead demand = workshop_construction cat = std ipl = 0.11 pt = peasants sz = 1.25 }
+		pp_lprof_expand = { type = olive_farm demand = village_construction cat = std ipl = 0.11 pt = peasants sz = 1.25 }
 	}
 	else = {
-		pp_lprof_start = { type = olive_model_farm demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_start = { type = olive_rotations demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_start = { type = olive_farmstead demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_start = { type = olive_farm demand = village_construction cat = std ipl = 0.11 }
+		pp_lprof_start = { type = olive_model_farm demand = workshop_construction cat = std ipl = 0.11 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = olive_rotations demand = workshop_construction cat = std ipl = 0.11 pt = peasants sz = 1 }
+		pp_lprof_start = { type = olive_farmstead demand = workshop_construction cat = std ipl = 0.11 pt = peasants sz = 1.25 }
+		pp_lprof_start = { type = olive_farm demand = village_construction cat = std ipl = 0.11 pt = peasants sz = 1.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -536,14 +536,14 @@ pp_lprof_t_wine = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:winery_manufactory building_type = building_type:vineyard_estate building_type = building_type:winery } } }
-		pp_lprof_expand = { type = winery_manufactory demand = manufactory_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = vineyard_estate demand = farm_constructions cat = std ipl = 0.11 }
-		pp_lprof_expand = { type = winery demand = default_construct_building cat = std ipl = 0.56 }
+		pp_lprof_expand = { type = winery_manufactory demand = manufactory_construction cat = std ipl = 0.19 pt = burghers sz = 0.25 }
+		pp_lprof_expand = { type = vineyard_estate demand = farm_constructions cat = std ipl = 0.11 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = winery demand = default_construct_building cat = std ipl = 0.56 pt = burghers sz = 0.25 }
 	}
 	else = {
-		pp_lprof_start = { type = winery_manufactory demand = manufactory_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = vineyard_estate demand = farm_constructions cat = std ipl = 0.11 }
-		pp_lprof_start = { type = winery demand = default_construct_building cat = std ipl = 0.56 }
+		pp_lprof_start = { type = winery_manufactory demand = manufactory_construction cat = std ipl = 0.19 pt = burghers sz = 0.25 }
+		pp_lprof_start = { type = vineyard_estate demand = farm_constructions cat = std ipl = 0.11 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = winery demand = default_construct_building cat = std ipl = 0.56 pt = burghers sz = 0.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -555,16 +555,16 @@ pp_lprof_t_lumber = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:lumber_mill_improved building_type = building_type:water_sawmill building_type = building_type:lumber_mill building_type = building_type:shoen } } }
-		pp_lprof_expand = { type = lumber_mill_improved demand = workshop_construction cat = std ipl = 0.2 }
-		pp_lprof_expand = { type = water_sawmill demand = workshop_construction cat = std ipl = 0.2 }
-		pp_lprof_expand = { type = lumber_mill demand = basic_construction_needs cat = std ipl = 0.2 }
-		pp_lprof_expand = { type = shoen demand = japanese_clan_building_construction cat = foreign ipl = 0.11 }
+		pp_lprof_expand = { type = lumber_mill_improved demand = workshop_construction cat = std ipl = 0.2 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = water_sawmill demand = workshop_construction cat = std ipl = 0.2 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = lumber_mill demand = basic_construction_needs cat = std ipl = 0.2 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = shoen demand = japanese_clan_building_construction cat = foreign ipl = 0.11 pt = peasants sz = 1 }
 	}
 	else = {
-		pp_lprof_start = { type = lumber_mill_improved demand = workshop_construction cat = std ipl = 0.2 }
-		pp_lprof_start = { type = water_sawmill demand = workshop_construction cat = std ipl = 0.2 }
-		pp_lprof_start = { type = lumber_mill demand = basic_construction_needs cat = std ipl = 0.2 }
-		pp_lprof_start = { type = shoen demand = japanese_clan_building_construction cat = foreign ipl = 0.11 }
+		pp_lprof_start = { type = lumber_mill_improved demand = workshop_construction cat = std ipl = 0.2 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = water_sawmill demand = workshop_construction cat = std ipl = 0.2 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = lumber_mill demand = basic_construction_needs cat = std ipl = 0.2 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = shoen demand = japanese_clan_building_construction cat = foreign ipl = 0.11 pt = peasants sz = 1 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -576,18 +576,18 @@ pp_lprof_t_fish = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:offshore_fishery building_type = building_type:drift_net_fishery building_type = building_type:net_curing_yard building_type = building_type:fishing_village building_type = building_type:ocean_fishery } } }
-		pp_lprof_expand = { type = offshore_fishery demand = workshop_construction cat = std ipl = 0.18 }
-		pp_lprof_expand = { type = drift_net_fishery demand = workshop_construction cat = std ipl = 0.18 }
-		pp_lprof_expand = { type = net_curing_yard demand = workshop_construction cat = std ipl = 0.18 }
-		pp_lprof_expand = { type = fishing_village demand = village_construction cat = std ipl = 0.18 }
-		pp_lprof_expand = { type = ocean_fishery demand = village_construction cat = std ipl = 0.18 }
+		pp_lprof_expand = { type = offshore_fishery demand = workshop_construction cat = std ipl = 0.18 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = drift_net_fishery demand = workshop_construction cat = std ipl = 0.18 pt = laborers sz = 1.25 }
+		pp_lprof_expand = { type = net_curing_yard demand = workshop_construction cat = std ipl = 0.18 pt = peasants sz = 1.25 }
+		pp_lprof_expand = { type = fishing_village demand = village_construction cat = std ipl = 0.18 pt = peasants sz = 1.25 }
+		pp_lprof_expand = { type = ocean_fishery demand = village_construction cat = std ipl = 0.18 pt = laborers sz = 1.25 }
 	}
 	else = {
-		pp_lprof_start = { type = offshore_fishery demand = workshop_construction cat = std ipl = 0.18 }
-		pp_lprof_start = { type = drift_net_fishery demand = workshop_construction cat = std ipl = 0.18 }
-		pp_lprof_start = { type = net_curing_yard demand = workshop_construction cat = std ipl = 0.18 }
-		pp_lprof_start = { type = fishing_village demand = village_construction cat = std ipl = 0.18 }
-		pp_lprof_start = { type = ocean_fishery demand = village_construction cat = std ipl = 0.18 }
+		pp_lprof_start = { type = offshore_fishery demand = workshop_construction cat = std ipl = 0.18 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = drift_net_fishery demand = workshop_construction cat = std ipl = 0.18 pt = laborers sz = 1.25 }
+		pp_lprof_start = { type = net_curing_yard demand = workshop_construction cat = std ipl = 0.18 pt = peasants sz = 1.25 }
+		pp_lprof_start = { type = fishing_village demand = village_construction cat = std ipl = 0.18 pt = peasants sz = 1.25 }
+		pp_lprof_start = { type = ocean_fishery demand = village_construction cat = std ipl = 0.18 pt = laborers sz = 1.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -599,10 +599,10 @@ pp_lprof_t_pearls = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:pearl_fishery } } }
-		pp_lprof_expand = { type = pearl_fishery demand = basic_construction_needs cat = std ipl = 0.18 }
+		pp_lprof_expand = { type = pearl_fishery demand = basic_construction_needs cat = std ipl = 0.18 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = pearl_fishery demand = basic_construction_needs cat = std ipl = 0.18 }
+		pp_lprof_start = { type = pearl_fishery demand = basic_construction_needs cat = std ipl = 0.18 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -614,12 +614,12 @@ pp_lprof_t_clay = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:clay_washmill building_type = building_type:clay_pit } } }
-		pp_lprof_expand = { type = clay_washmill demand = workshop_construction cat = std ipl = 0.1 }
-		pp_lprof_expand = { type = clay_pit demand = basic_construction_needs cat = std ipl = 0.1 }
+		pp_lprof_expand = { type = clay_washmill demand = workshop_construction cat = std ipl = 0.1 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = clay_pit demand = basic_construction_needs cat = std ipl = 0.1 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = clay_washmill demand = workshop_construction cat = std ipl = 0.1 }
-		pp_lprof_start = { type = clay_pit demand = basic_construction_needs cat = std ipl = 0.1 }
+		pp_lprof_start = { type = clay_washmill demand = workshop_construction cat = std ipl = 0.1 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = clay_pit demand = basic_construction_needs cat = std ipl = 0.1 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -631,12 +631,12 @@ pp_lprof_t_sand = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:sand_washery building_type = building_type:sand_pit } } }
-		pp_lprof_expand = { type = sand_washery demand = workshop_construction cat = std ipl = 0.1 }
-		pp_lprof_expand = { type = sand_pit demand = basic_construction_needs cat = std ipl = 0.1 }
+		pp_lprof_expand = { type = sand_washery demand = workshop_construction cat = std ipl = 0.1 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = sand_pit demand = basic_construction_needs cat = std ipl = 0.1 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = sand_washery demand = workshop_construction cat = std ipl = 0.1 }
-		pp_lprof_start = { type = sand_pit demand = basic_construction_needs cat = std ipl = 0.1 }
+		pp_lprof_start = { type = sand_washery demand = workshop_construction cat = std ipl = 0.1 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = sand_pit demand = basic_construction_needs cat = std ipl = 0.1 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -648,12 +648,12 @@ pp_lprof_t_medicaments = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:apothecary building_type = building_type:simplers_grove } } }
-		pp_lprof_expand = { type = apothecary demand = guild_construction cat = std ipl = 0.52 }
-		pp_lprof_expand = { type = simplers_grove demand = basic_construction_needs cat = std ipl = 0.11 }
+		pp_lprof_expand = { type = apothecary demand = guild_construction cat = std ipl = 0.52 pt = burghers sz = 0.25 }
+		pp_lprof_expand = { type = simplers_grove demand = basic_construction_needs cat = std ipl = 0.11 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = apothecary demand = guild_construction cat = std ipl = 0.52 }
-		pp_lprof_start = { type = simplers_grove demand = basic_construction_needs cat = std ipl = 0.11 }
+		pp_lprof_start = { type = apothecary demand = guild_construction cat = std ipl = 0.52 pt = burghers sz = 0.25 }
+		pp_lprof_start = { type = simplers_grove demand = basic_construction_needs cat = std ipl = 0.11 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -665,18 +665,18 @@ pp_lprof_t_salt = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:engineered_brine_saltworks building_type = building_type:salt_mine_improved building_type = building_type:inland_saltworks building_type = building_type:salt_collector building_type = building_type:salt_mine } } }
-		pp_lprof_expand = { type = engineered_brine_saltworks demand = workshop_construction cat = std ipl = 0.16 }
-		pp_lprof_expand = { type = salt_mine_improved demand = workshop_construction cat = std ipl = 0.16 }
-		pp_lprof_expand = { type = inland_saltworks demand = basic_construction_needs cat = std ipl = 0.16 }
-		pp_lprof_expand = { type = salt_collector demand = farm_constructions cat = std ipl = 0.16 }
-		pp_lprof_expand = { type = salt_mine demand = basic_construction_needs cat = std ipl = 0.16 }
+		pp_lprof_expand = { type = engineered_brine_saltworks demand = workshop_construction cat = std ipl = 0.16 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = salt_mine_improved demand = workshop_construction cat = std ipl = 0.16 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = inland_saltworks demand = basic_construction_needs cat = std ipl = 0.16 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = salt_collector demand = farm_constructions cat = std ipl = 0.16 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = salt_mine demand = basic_construction_needs cat = std ipl = 0.16 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = engineered_brine_saltworks demand = workshop_construction cat = std ipl = 0.16 }
-		pp_lprof_start = { type = salt_mine_improved demand = workshop_construction cat = std ipl = 0.16 }
-		pp_lprof_start = { type = inland_saltworks demand = basic_construction_needs cat = std ipl = 0.16 }
-		pp_lprof_start = { type = salt_collector demand = farm_constructions cat = std ipl = 0.16 }
-		pp_lprof_start = { type = salt_mine demand = basic_construction_needs cat = std ipl = 0.16 }
+		pp_lprof_start = { type = engineered_brine_saltworks demand = workshop_construction cat = std ipl = 0.16 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = salt_mine_improved demand = workshop_construction cat = std ipl = 0.16 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = inland_saltworks demand = basic_construction_needs cat = std ipl = 0.16 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = salt_collector demand = farm_constructions cat = std ipl = 0.16 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = salt_mine demand = basic_construction_needs cat = std ipl = 0.16 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -688,12 +688,12 @@ pp_lprof_t_amber = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:amber_diggings building_type = building_type:amber_collector } } }
-		pp_lprof_expand = { type = amber_diggings demand = workshop_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = amber_collector demand = basic_construction_needs cat = std ipl = 0.19 }
+		pp_lprof_expand = { type = amber_diggings demand = workshop_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = amber_collector demand = basic_construction_needs cat = std ipl = 0.19 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = amber_diggings demand = workshop_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = amber_collector demand = basic_construction_needs cat = std ipl = 0.19 }
+		pp_lprof_start = { type = amber_diggings demand = workshop_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = amber_collector demand = basic_construction_needs cat = std ipl = 0.19 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -705,12 +705,12 @@ pp_lprof_t_ivory = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:elephant_hunting_grounds building_type = building_type:ivory_hunting_camp } } }
-		pp_lprof_expand = { type = elephant_hunting_grounds demand = village_construction cat = std ipl = 0.12 }
-		pp_lprof_expand = { type = ivory_hunting_camp demand = basic_construction_needs cat = std ipl = 0.2 }
+		pp_lprof_expand = { type = elephant_hunting_grounds demand = village_construction cat = std ipl = 0.12 pt = peasants sz = 1 }
+		pp_lprof_expand = { type = ivory_hunting_camp demand = basic_construction_needs cat = std ipl = 0.2 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = elephant_hunting_grounds demand = village_construction cat = std ipl = 0.12 }
-		pp_lprof_start = { type = ivory_hunting_camp demand = basic_construction_needs cat = std ipl = 0.2 }
+		pp_lprof_start = { type = elephant_hunting_grounds demand = village_construction cat = std ipl = 0.12 pt = peasants sz = 1 }
+		pp_lprof_start = { type = ivory_hunting_camp demand = basic_construction_needs cat = std ipl = 0.2 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -722,10 +722,10 @@ pp_lprof_t_wild_game = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:eng_royal_forest } } }
-		pp_lprof_expand = { type = eng_royal_forest demand = village_construction cat = std ipl = 0.11 }
+		pp_lprof_expand = { type = eng_royal_forest demand = village_construction cat = std ipl = 0.11 pt = peasants sz = 1.25 }
 	}
 	else = {
-		pp_lprof_start = { type = eng_royal_forest demand = village_construction cat = std ipl = 0.11 }
+		pp_lprof_start = { type = eng_royal_forest demand = village_construction cat = std ipl = 0.11 pt = peasants sz = 1.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -737,16 +737,16 @@ pp_lprof_t_beer = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:brewery_mill building_type = building_type:brewery_manufactory building_type = building_type:beer_workshop building_type = building_type:brewery } } }
-		pp_lprof_expand = { type = brewery_mill demand = mill_construction cat = mill ipl = 0.11 }
-		pp_lprof_expand = { type = brewery_manufactory demand = manufactory_construction cat = std ipl = 0.11 }
-		pp_lprof_expand = { type = beer_workshop demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_expand = { type = brewery demand = guild_construction cat = std ipl = 0.34 }
+		pp_lprof_expand = { type = brewery_mill demand = mill_construction cat = mill ipl = 0.11 pt = laborers sz = 1.16 }
+		pp_lprof_expand = { type = brewery_manufactory demand = manufactory_construction cat = std ipl = 0.11 pt = burghers sz = 0.325 }
+		pp_lprof_expand = { type = beer_workshop demand = workshop_construction cat = std ipl = 0.11 pt = burghers sz = 0.287 }
+		pp_lprof_expand = { type = brewery demand = guild_construction cat = std ipl = 0.34 pt = burghers sz = 0.25 }
 	}
 	else = {
-		pp_lprof_start = { type = brewery_mill demand = mill_construction cat = mill ipl = 0.11 }
-		pp_lprof_start = { type = brewery_manufactory demand = manufactory_construction cat = std ipl = 0.11 }
-		pp_lprof_start = { type = beer_workshop demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_start = { type = brewery demand = guild_construction cat = std ipl = 0.34 }
+		pp_lprof_start = { type = brewery_mill demand = mill_construction cat = mill ipl = 0.11 pt = laborers sz = 1.16 }
+		pp_lprof_start = { type = brewery_manufactory demand = manufactory_construction cat = std ipl = 0.11 pt = burghers sz = 0.325 }
+		pp_lprof_start = { type = beer_workshop demand = workshop_construction cat = std ipl = 0.11 pt = burghers sz = 0.287 }
+		pp_lprof_start = { type = brewery demand = guild_construction cat = std ipl = 0.34 pt = burghers sz = 0.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -758,16 +758,16 @@ pp_lprof_t_liquor = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:distiller_mill building_type = building_type:distiller_manufactory building_type = building_type:distillers_workshop building_type = building_type:distillers_guild } } }
-		pp_lprof_expand = { type = distiller_mill demand = mill_construction cat = mill ipl = 0.11 }
-		pp_lprof_expand = { type = distiller_manufactory demand = manufactory_construction cat = std ipl = 0.11 }
-		pp_lprof_expand = { type = distillers_workshop demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_expand = { type = distillers_guild demand = guild_construction cat = std ipl = 0.34 }
+		pp_lprof_expand = { type = distiller_mill demand = mill_construction cat = mill ipl = 0.11 pt = laborers sz = 1.16 }
+		pp_lprof_expand = { type = distiller_manufactory demand = manufactory_construction cat = std ipl = 0.11 pt = burghers sz = 0.325 }
+		pp_lprof_expand = { type = distillers_workshop demand = workshop_construction cat = std ipl = 0.11 pt = burghers sz = 0.287 }
+		pp_lprof_expand = { type = distillers_guild demand = guild_construction cat = std ipl = 0.34 pt = burghers sz = 0.25 }
 	}
 	else = {
-		pp_lprof_start = { type = distiller_mill demand = mill_construction cat = mill ipl = 0.11 }
-		pp_lprof_start = { type = distiller_manufactory demand = manufactory_construction cat = std ipl = 0.11 }
-		pp_lprof_start = { type = distillers_workshop demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_start = { type = distillers_guild demand = guild_construction cat = std ipl = 0.34 }
+		pp_lprof_start = { type = distiller_mill demand = mill_construction cat = mill ipl = 0.11 pt = laborers sz = 1.16 }
+		pp_lprof_start = { type = distiller_manufactory demand = manufactory_construction cat = std ipl = 0.11 pt = burghers sz = 0.325 }
+		pp_lprof_start = { type = distillers_workshop demand = workshop_construction cat = std ipl = 0.11 pt = burghers sz = 0.287 }
+		pp_lprof_start = { type = distillers_guild demand = guild_construction cat = std ipl = 0.34 pt = burghers sz = 0.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -779,16 +779,16 @@ pp_lprof_t_books = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:printing_mill building_type = building_type:printing_manufactory building_type = building_type:printing_press_shop building_type = building_type:scriptorium } } }
-		pp_lprof_expand = { type = printing_mill demand = mill_construction cat = mill ipl = 0.16 }
-		pp_lprof_expand = { type = printing_manufactory demand = manufactory_construction cat = std ipl = 0.16 }
-		pp_lprof_expand = { type = printing_press_shop demand = workshop_construction cat = std ipl = 0.16 }
-		pp_lprof_expand = { type = scriptorium demand = guild_construction cat = std ipl = 0.47 }
+		pp_lprof_expand = { type = printing_mill demand = mill_construction cat = mill ipl = 0.16 pt = laborers sz = 1.16 }
+		pp_lprof_expand = { type = printing_manufactory demand = manufactory_construction cat = std ipl = 0.16 pt = burghers sz = 0.325 }
+		pp_lprof_expand = { type = printing_press_shop demand = workshop_construction cat = std ipl = 0.16 pt = burghers sz = 0.287 }
+		pp_lprof_expand = { type = scriptorium demand = guild_construction cat = std ipl = 0.47 pt = clergy sz = 0.3 }
 	}
 	else = {
-		pp_lprof_start = { type = printing_mill demand = mill_construction cat = mill ipl = 0.16 }
-		pp_lprof_start = { type = printing_manufactory demand = manufactory_construction cat = std ipl = 0.16 }
-		pp_lprof_start = { type = printing_press_shop demand = workshop_construction cat = std ipl = 0.16 }
-		pp_lprof_start = { type = scriptorium demand = guild_construction cat = std ipl = 0.47 }
+		pp_lprof_start = { type = printing_mill demand = mill_construction cat = mill ipl = 0.16 pt = laborers sz = 1.16 }
+		pp_lprof_start = { type = printing_manufactory demand = manufactory_construction cat = std ipl = 0.16 pt = burghers sz = 0.325 }
+		pp_lprof_start = { type = printing_press_shop demand = workshop_construction cat = std ipl = 0.16 pt = burghers sz = 0.287 }
+		pp_lprof_start = { type = scriptorium demand = guild_construction cat = std ipl = 0.47 pt = clergy sz = 0.3 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -800,16 +800,16 @@ pp_lprof_t_paper = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:paper_mill building_type = building_type:paper_manufactory building_type = building_type:paper_workshop building_type = building_type:paper_guild } } }
-		pp_lprof_expand = { type = paper_mill demand = mill_construction cat = mill ipl = 0.16 }
-		pp_lprof_expand = { type = paper_manufactory demand = manufactory_construction cat = std ipl = 0.16 }
-		pp_lprof_expand = { type = paper_workshop demand = workshop_construction cat = std ipl = 0.16 }
-		pp_lprof_expand = { type = paper_guild demand = guild_construction cat = std ipl = 0.47 }
+		pp_lprof_expand = { type = paper_mill demand = mill_construction cat = mill ipl = 0.16 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = paper_manufactory demand = manufactory_construction cat = std ipl = 0.16 pt = burghers sz = 0.25 }
+		pp_lprof_expand = { type = paper_workshop demand = workshop_construction cat = std ipl = 0.16 pt = burghers sz = 0.25 }
+		pp_lprof_expand = { type = paper_guild demand = guild_construction cat = std ipl = 0.47 pt = burghers sz = 0.25 }
 	}
 	else = {
-		pp_lprof_start = { type = paper_mill demand = mill_construction cat = mill ipl = 0.16 }
-		pp_lprof_start = { type = paper_manufactory demand = manufactory_construction cat = std ipl = 0.16 }
-		pp_lprof_start = { type = paper_workshop demand = workshop_construction cat = std ipl = 0.16 }
-		pp_lprof_start = { type = paper_guild demand = guild_construction cat = std ipl = 0.47 }
+		pp_lprof_start = { type = paper_mill demand = mill_construction cat = mill ipl = 0.16 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = paper_manufactory demand = manufactory_construction cat = std ipl = 0.16 pt = burghers sz = 0.25 }
+		pp_lprof_start = { type = paper_workshop demand = workshop_construction cat = std ipl = 0.16 pt = burghers sz = 0.25 }
+		pp_lprof_start = { type = paper_guild demand = guild_construction cat = std ipl = 0.47 pt = burghers sz = 0.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -821,12 +821,12 @@ pp_lprof_t_slaves_goods = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:slave_center building_type = building_type:slave_market } } }
-		pp_lprof_expand = { type = slave_center demand = simple_colony_construction cat = foreign ipl = 0.15 }
-		pp_lprof_expand = { type = slave_market demand = town_building_construction cat = std ipl = 0.15 }
+		pp_lprof_expand = { type = slave_center demand = simple_colony_construction cat = foreign ipl = 0.15 pt = burghers sz = 0.25 }
+		pp_lprof_expand = { type = slave_market demand = town_building_construction cat = std ipl = 0.15 pt = burghers sz = 0.25 }
 	}
 	else = {
-		pp_lprof_start = { type = slave_center demand = simple_colony_construction cat = foreign ipl = 0.15 }
-		pp_lprof_start = { type = slave_market demand = town_building_construction cat = std ipl = 0.15 }
+		pp_lprof_start = { type = slave_center demand = simple_colony_construction cat = foreign ipl = 0.15 pt = burghers sz = 0.25 }
+		pp_lprof_start = { type = slave_market demand = town_building_construction cat = std ipl = 0.15 pt = burghers sz = 0.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -838,18 +838,18 @@ pp_lprof_t_glass = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:glass_mill building_type = building_type:glassworks building_type = building_type:glass_workshop building_type = building_type:glass_guild building_type = building_type:rural_glassmaker } } }
-		pp_lprof_expand = { type = glass_mill demand = manufactory_construction cat = mill ipl = 0.11 }
-		pp_lprof_expand = { type = glassworks demand = manufactory_construction cat = std ipl = 0.11 }
-		pp_lprof_expand = { type = glass_workshop demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_expand = { type = glass_guild demand = guild_construction cat = std ipl = 0.34 }
-		pp_lprof_expand = { type = rural_glassmaker demand = village_construction cat = std ipl = 0.34 }
+		pp_lprof_expand = { type = glass_mill demand = manufactory_construction cat = mill ipl = 0.11 pt = laborers sz = 1.16 }
+		pp_lprof_expand = { type = glassworks demand = manufactory_construction cat = std ipl = 0.11 pt = burghers sz = 0.325 }
+		pp_lprof_expand = { type = glass_workshop demand = workshop_construction cat = std ipl = 0.11 pt = burghers sz = 0.287 }
+		pp_lprof_expand = { type = glass_guild demand = guild_construction cat = std ipl = 0.34 pt = burghers sz = 0.25 }
+		pp_lprof_expand = { type = rural_glassmaker demand = village_construction cat = std ipl = 0.34 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = glass_mill demand = manufactory_construction cat = mill ipl = 0.11 }
-		pp_lprof_start = { type = glassworks demand = manufactory_construction cat = std ipl = 0.11 }
-		pp_lprof_start = { type = glass_workshop demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_start = { type = glass_guild demand = guild_construction cat = std ipl = 0.34 }
-		pp_lprof_start = { type = rural_glassmaker demand = village_construction cat = std ipl = 0.34 }
+		pp_lprof_start = { type = glass_mill demand = manufactory_construction cat = mill ipl = 0.11 pt = laborers sz = 1.16 }
+		pp_lprof_start = { type = glassworks demand = manufactory_construction cat = std ipl = 0.11 pt = burghers sz = 0.325 }
+		pp_lprof_start = { type = glass_workshop demand = workshop_construction cat = std ipl = 0.11 pt = burghers sz = 0.287 }
+		pp_lprof_start = { type = glass_guild demand = guild_construction cat = std ipl = 0.34 pt = burghers sz = 0.25 }
+		pp_lprof_start = { type = rural_glassmaker demand = village_construction cat = std ipl = 0.34 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -861,10 +861,10 @@ pp_lprof_t_masonry = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:mason } } }
-		pp_lprof_expand = { type = mason demand = basic_construction_needs cat = std ipl = 0.11 }
+		pp_lprof_expand = { type = mason demand = basic_construction_needs cat = std ipl = 0.11 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = mason demand = basic_construction_needs cat = std ipl = 0.11 }
+		pp_lprof_start = { type = mason demand = basic_construction_needs cat = std ipl = 0.11 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -876,16 +876,16 @@ pp_lprof_t_pottery = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:pottery_mill building_type = building_type:pottery_manufactory building_type = building_type:pottery_workshop building_type = building_type:pottery_guild } } }
-		pp_lprof_expand = { type = pottery_mill demand = mill_construction cat = mill ipl = 0.11 }
-		pp_lprof_expand = { type = pottery_manufactory demand = manufactory_construction cat = std ipl = 0.11 }
-		pp_lprof_expand = { type = pottery_workshop demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_expand = { type = pottery_guild demand = guild_construction cat = std ipl = 0.34 }
+		pp_lprof_expand = { type = pottery_mill demand = mill_construction cat = mill ipl = 0.11 pt = laborers sz = 1.16 }
+		pp_lprof_expand = { type = pottery_manufactory demand = manufactory_construction cat = std ipl = 0.11 pt = burghers sz = 0.325 }
+		pp_lprof_expand = { type = pottery_workshop demand = workshop_construction cat = std ipl = 0.11 pt = burghers sz = 0.287 }
+		pp_lprof_expand = { type = pottery_guild demand = guild_construction cat = std ipl = 0.34 pt = burghers sz = 0.25 }
 	}
 	else = {
-		pp_lprof_start = { type = pottery_mill demand = mill_construction cat = mill ipl = 0.11 }
-		pp_lprof_start = { type = pottery_manufactory demand = manufactory_construction cat = std ipl = 0.11 }
-		pp_lprof_start = { type = pottery_workshop demand = workshop_construction cat = std ipl = 0.11 }
-		pp_lprof_start = { type = pottery_guild demand = guild_construction cat = std ipl = 0.34 }
+		pp_lprof_start = { type = pottery_mill demand = mill_construction cat = mill ipl = 0.11 pt = laborers sz = 1.16 }
+		pp_lprof_start = { type = pottery_manufactory demand = manufactory_construction cat = std ipl = 0.11 pt = burghers sz = 0.325 }
+		pp_lprof_start = { type = pottery_workshop demand = workshop_construction cat = std ipl = 0.11 pt = burghers sz = 0.287 }
+		pp_lprof_start = { type = pottery_guild demand = guild_construction cat = std ipl = 0.34 pt = burghers sz = 0.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -897,10 +897,10 @@ pp_lprof_t_tar = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:tar_kiln } } }
-		pp_lprof_expand = { type = tar_kiln demand = guild_construction cat = std ipl = 0.17 }
+		pp_lprof_expand = { type = tar_kiln demand = guild_construction cat = std ipl = 0.17 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = tar_kiln demand = guild_construction cat = std ipl = 0.17 }
+		pp_lprof_start = { type = tar_kiln demand = guild_construction cat = std ipl = 0.17 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -912,16 +912,16 @@ pp_lprof_t_furniture = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:furniture_mill building_type = building_type:furniture_manufactory building_type = building_type:furniture_workshop building_type = building_type:furniture_guild } } }
-		pp_lprof_expand = { type = furniture_mill demand = mill_construction cat = mill ipl = 0.19 }
-		pp_lprof_expand = { type = furniture_manufactory demand = manufactory_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = furniture_workshop demand = workshop_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = furniture_guild demand = guild_construction cat = std ipl = 0.56 }
+		pp_lprof_expand = { type = furniture_mill demand = mill_construction cat = mill ipl = 0.19 pt = laborers sz = 1.16 }
+		pp_lprof_expand = { type = furniture_manufactory demand = manufactory_construction cat = std ipl = 0.19 pt = burghers sz = 0.325 }
+		pp_lprof_expand = { type = furniture_workshop demand = workshop_construction cat = std ipl = 0.19 pt = burghers sz = 0.287 }
+		pp_lprof_expand = { type = furniture_guild demand = guild_construction cat = std ipl = 0.56 pt = burghers sz = 0.25 }
 	}
 	else = {
-		pp_lprof_start = { type = furniture_mill demand = mill_construction cat = mill ipl = 0.19 }
-		pp_lprof_start = { type = furniture_manufactory demand = manufactory_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = furniture_workshop demand = workshop_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = furniture_guild demand = guild_construction cat = std ipl = 0.56 }
+		pp_lprof_start = { type = furniture_mill demand = mill_construction cat = mill ipl = 0.19 pt = laborers sz = 1.16 }
+		pp_lprof_start = { type = furniture_manufactory demand = manufactory_construction cat = std ipl = 0.19 pt = burghers sz = 0.325 }
+		pp_lprof_start = { type = furniture_workshop demand = workshop_construction cat = std ipl = 0.19 pt = burghers sz = 0.287 }
+		pp_lprof_start = { type = furniture_guild demand = guild_construction cat = std ipl = 0.56 pt = burghers sz = 0.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -933,12 +933,12 @@ pp_lprof_t_jewelry = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:jewelry_guild building_type = building_type:pounamou_carver } } }
-		pp_lprof_expand = { type = jewelry_guild demand = guild_construction cat = std ipl = 0.56 }
-		pp_lprof_expand = { type = pounamou_carver demand = guild_construction cat = std ipl = 0.56 }
+		pp_lprof_expand = { type = jewelry_guild demand = guild_construction cat = std ipl = 0.56 pt = burghers sz = 0.25 }
+		pp_lprof_expand = { type = pounamou_carver demand = guild_construction cat = std ipl = 0.56 pt = burghers sz = 0.25 }
 	}
 	else = {
-		pp_lprof_start = { type = jewelry_guild demand = guild_construction cat = std ipl = 0.56 }
-		pp_lprof_start = { type = pounamou_carver demand = guild_construction cat = std ipl = 0.56 }
+		pp_lprof_start = { type = jewelry_guild demand = guild_construction cat = std ipl = 0.56 pt = burghers sz = 0.25 }
+		pp_lprof_start = { type = pounamou_carver demand = guild_construction cat = std ipl = 0.56 pt = burghers sz = 0.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -950,12 +950,12 @@ pp_lprof_t_lacquerware = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:lacquerware_manufactory building_type = building_type:lacquerware_guild } } }
-		pp_lprof_expand = { type = lacquerware_manufactory demand = manufactory_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = lacquerware_guild demand = guild_construction cat = std ipl = 0.56 }
+		pp_lprof_expand = { type = lacquerware_manufactory demand = manufactory_construction cat = std ipl = 0.19 pt = burghers sz = 0.325 }
+		pp_lprof_expand = { type = lacquerware_guild demand = guild_construction cat = std ipl = 0.56 pt = burghers sz = 0.25 }
 	}
 	else = {
-		pp_lprof_start = { type = lacquerware_manufactory demand = manufactory_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = lacquerware_guild demand = guild_construction cat = std ipl = 0.56 }
+		pp_lprof_start = { type = lacquerware_manufactory demand = manufactory_construction cat = std ipl = 0.19 pt = burghers sz = 0.325 }
+		pp_lprof_start = { type = lacquerware_guild demand = guild_construction cat = std ipl = 0.56 pt = burghers sz = 0.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -967,12 +967,12 @@ pp_lprof_t_porcelain = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:porcelain_manufactory building_type = building_type:porcelain_guild } } }
-		pp_lprof_expand = { type = porcelain_manufactory demand = manufactory_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = porcelain_guild demand = guild_construction cat = std ipl = 0.56 }
+		pp_lprof_expand = { type = porcelain_manufactory demand = manufactory_construction cat = std ipl = 0.19 pt = burghers sz = 0.325 }
+		pp_lprof_expand = { type = porcelain_guild demand = guild_construction cat = std ipl = 0.56 pt = burghers sz = 0.25 }
 	}
 	else = {
-		pp_lprof_start = { type = porcelain_manufactory demand = manufactory_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = porcelain_guild demand = guild_construction cat = std ipl = 0.56 }
+		pp_lprof_start = { type = porcelain_manufactory demand = manufactory_construction cat = std ipl = 0.19 pt = burghers sz = 0.325 }
+		pp_lprof_start = { type = porcelain_guild demand = guild_construction cat = std ipl = 0.56 pt = burghers sz = 0.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -984,10 +984,10 @@ pp_lprof_t_steel = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:steel_mill } } }
-		pp_lprof_expand = { type = steel_mill demand = mill_construction cat = mill ipl = 0.16 }
+		pp_lprof_expand = { type = steel_mill demand = mill_construction cat = mill ipl = 0.16 pt = laborers sz = 1.16 }
 	}
 	else = {
-		pp_lprof_start = { type = steel_mill demand = mill_construction cat = mill ipl = 0.16 }
+		pp_lprof_start = { type = steel_mill demand = mill_construction cat = mill ipl = 0.16 pt = laborers sz = 1.16 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -999,20 +999,20 @@ pp_lprof_t_tools = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:iron_mill building_type = building_type:iron_foundry building_type = building_type:tools_workshop building_type = building_type:market_village building_type = building_type:tatara building_type = building_type:tools_guild } } }
-		pp_lprof_expand = { type = iron_mill demand = mill_construction cat = mill ipl = 0.16 }
-		pp_lprof_expand = { type = iron_foundry demand = manufactory_construction cat = std ipl = 0.16 }
-		pp_lprof_expand = { type = tools_workshop demand = workshop_construction cat = std ipl = 0.16 }
-		pp_lprof_expand = { type = market_village demand = village_construction cat = std ipl = 0.16 }
-		pp_lprof_expand = { type = tatara demand = japanese_clan_building_construction cat = foreign ipl = 0.47 }
-		pp_lprof_expand = { type = tools_guild demand = guild_construction cat = std ipl = 0.47 }
+		pp_lprof_expand = { type = iron_mill demand = mill_construction cat = mill ipl = 0.16 pt = laborers sz = 1.16 }
+		pp_lprof_expand = { type = iron_foundry demand = manufactory_construction cat = std ipl = 0.16 pt = laborers sz = 1.04 }
+		pp_lprof_expand = { type = tools_workshop demand = workshop_construction cat = std ipl = 0.16 pt = burghers sz = 0.287 }
+		pp_lprof_expand = { type = market_village demand = village_construction cat = std ipl = 0.16 pt = peasants sz = 1 }
+		pp_lprof_expand = { type = tatara demand = japanese_clan_building_construction cat = foreign ipl = 0.47 pt = peasants sz = 1 }
+		pp_lprof_expand = { type = tools_guild demand = guild_construction cat = std ipl = 0.47 pt = burghers sz = 0.25 }
 	}
 	else = {
-		pp_lprof_start = { type = iron_mill demand = mill_construction cat = mill ipl = 0.16 }
-		pp_lprof_start = { type = iron_foundry demand = manufactory_construction cat = std ipl = 0.16 }
-		pp_lprof_start = { type = tools_workshop demand = workshop_construction cat = std ipl = 0.16 }
-		pp_lprof_start = { type = market_village demand = village_construction cat = std ipl = 0.16 }
-		pp_lprof_start = { type = tatara demand = japanese_clan_building_construction cat = foreign ipl = 0.47 }
-		pp_lprof_start = { type = tools_guild demand = guild_construction cat = std ipl = 0.47 }
+		pp_lprof_start = { type = iron_mill demand = mill_construction cat = mill ipl = 0.16 pt = laborers sz = 1.16 }
+		pp_lprof_start = { type = iron_foundry demand = manufactory_construction cat = std ipl = 0.16 pt = laborers sz = 1.04 }
+		pp_lprof_start = { type = tools_workshop demand = workshop_construction cat = std ipl = 0.16 pt = burghers sz = 0.287 }
+		pp_lprof_start = { type = market_village demand = village_construction cat = std ipl = 0.16 pt = peasants sz = 1 }
+		pp_lprof_start = { type = tatara demand = japanese_clan_building_construction cat = foreign ipl = 0.47 pt = peasants sz = 1 }
+		pp_lprof_start = { type = tools_guild demand = guild_construction cat = std ipl = 0.47 pt = burghers sz = 0.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1024,16 +1024,16 @@ pp_lprof_t_cannons = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:cannons_factory building_type = building_type:cannon_foundry building_type = building_type:cannon_workshop building_type = building_type:cannon_maker } } }
-		pp_lprof_expand = { type = cannons_factory demand = mill_construction cat = mill ipl = 0.19 }
-		pp_lprof_expand = { type = cannon_foundry demand = mill_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = cannon_workshop demand = workshop_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = cannon_maker demand = guild_construction cat = std ipl = 0.56 }
+		pp_lprof_expand = { type = cannons_factory demand = mill_construction cat = mill ipl = 0.19 pt = laborers sz = 1.16 }
+		pp_lprof_expand = { type = cannon_foundry demand = mill_construction cat = std ipl = 0.19 pt = burghers sz = 0.325 }
+		pp_lprof_expand = { type = cannon_workshop demand = workshop_construction cat = std ipl = 0.19 pt = burghers sz = 0.287 }
+		pp_lprof_expand = { type = cannon_maker demand = guild_construction cat = std ipl = 0.56 pt = burghers sz = 0.25 }
 	}
 	else = {
-		pp_lprof_start = { type = cannons_factory demand = mill_construction cat = mill ipl = 0.19 }
-		pp_lprof_start = { type = cannon_foundry demand = mill_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = cannon_workshop demand = workshop_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = cannon_maker demand = guild_construction cat = std ipl = 0.56 }
+		pp_lprof_start = { type = cannons_factory demand = mill_construction cat = mill ipl = 0.19 pt = laborers sz = 1.16 }
+		pp_lprof_start = { type = cannon_foundry demand = mill_construction cat = std ipl = 0.19 pt = burghers sz = 0.325 }
+		pp_lprof_start = { type = cannon_workshop demand = workshop_construction cat = std ipl = 0.19 pt = burghers sz = 0.287 }
+		pp_lprof_start = { type = cannon_maker demand = guild_construction cat = std ipl = 0.56 pt = burghers sz = 0.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1045,18 +1045,18 @@ pp_lprof_t_firearms = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:firearms_factory building_type = building_type:firearms_manufactory building_type = building_type:guns_workshop building_type = building_type:gun_smith building_type = building_type:hand_cannon_guild } } }
-		pp_lprof_expand = { type = firearms_factory demand = mill_construction cat = mill ipl = 0.19 }
-		pp_lprof_expand = { type = firearms_manufactory demand = manufactory_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = guns_workshop demand = workshop_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = gun_smith demand = guild_construction cat = std ipl = 0.56 }
-		pp_lprof_expand = { type = hand_cannon_guild demand = guild_construction cat = std ipl = 0.56 }
+		pp_lprof_expand = { type = firearms_factory demand = mill_construction cat = mill ipl = 0.19 pt = laborers sz = 1.16 }
+		pp_lprof_expand = { type = firearms_manufactory demand = manufactory_construction cat = std ipl = 0.19 pt = burghers sz = 0.325 }
+		pp_lprof_expand = { type = guns_workshop demand = workshop_construction cat = std ipl = 0.19 pt = burghers sz = 0.287 }
+		pp_lprof_expand = { type = gun_smith demand = guild_construction cat = std ipl = 0.56 pt = burghers sz = 0.25 }
+		pp_lprof_expand = { type = hand_cannon_guild demand = guild_construction cat = std ipl = 0.56 pt = burghers sz = 0.25 }
 	}
 	else = {
-		pp_lprof_start = { type = firearms_factory demand = mill_construction cat = mill ipl = 0.19 }
-		pp_lprof_start = { type = firearms_manufactory demand = manufactory_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = guns_workshop demand = workshop_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = gun_smith demand = guild_construction cat = std ipl = 0.56 }
-		pp_lprof_start = { type = hand_cannon_guild demand = guild_construction cat = std ipl = 0.56 }
+		pp_lprof_start = { type = firearms_factory demand = mill_construction cat = mill ipl = 0.19 pt = laborers sz = 1.16 }
+		pp_lprof_start = { type = firearms_manufactory demand = manufactory_construction cat = std ipl = 0.19 pt = burghers sz = 0.325 }
+		pp_lprof_start = { type = guns_workshop demand = workshop_construction cat = std ipl = 0.19 pt = burghers sz = 0.287 }
+		pp_lprof_start = { type = gun_smith demand = guild_construction cat = std ipl = 0.56 pt = burghers sz = 0.25 }
+		pp_lprof_start = { type = hand_cannon_guild demand = guild_construction cat = std ipl = 0.56 pt = burghers sz = 0.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1068,16 +1068,16 @@ pp_lprof_t_weaponry = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:weapon_factory building_type = building_type:weapon_manufactory building_type = building_type:weapon_workshop building_type = building_type:weapon_guild } } }
-		pp_lprof_expand = { type = weapon_factory demand = mill_construction cat = mill ipl = 0.19 }
-		pp_lprof_expand = { type = weapon_manufactory demand = manufactory_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = weapon_workshop demand = workshop_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = weapon_guild demand = guild_construction cat = std ipl = 0.56 }
+		pp_lprof_expand = { type = weapon_factory demand = mill_construction cat = mill ipl = 0.19 pt = laborers sz = 1.16 }
+		pp_lprof_expand = { type = weapon_manufactory demand = manufactory_construction cat = std ipl = 0.19 pt = burghers sz = 0.325 }
+		pp_lprof_expand = { type = weapon_workshop demand = workshop_construction cat = std ipl = 0.19 pt = burghers sz = 0.287 }
+		pp_lprof_expand = { type = weapon_guild demand = guild_construction cat = std ipl = 0.56 pt = burghers sz = 0.25 }
 	}
 	else = {
-		pp_lprof_start = { type = weapon_factory demand = mill_construction cat = mill ipl = 0.19 }
-		pp_lprof_start = { type = weapon_manufactory demand = manufactory_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = weapon_workshop demand = workshop_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = weapon_guild demand = guild_construction cat = std ipl = 0.56 }
+		pp_lprof_start = { type = weapon_factory demand = mill_construction cat = mill ipl = 0.19 pt = laborers sz = 1.16 }
+		pp_lprof_start = { type = weapon_manufactory demand = manufactory_construction cat = std ipl = 0.19 pt = burghers sz = 0.325 }
+		pp_lprof_start = { type = weapon_workshop demand = workshop_construction cat = std ipl = 0.19 pt = burghers sz = 0.287 }
+		pp_lprof_start = { type = weapon_guild demand = guild_construction cat = std ipl = 0.56 pt = burghers sz = 0.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1089,16 +1089,16 @@ pp_lprof_t_naval_supplies = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:naval_supplies_mill building_type = building_type:naval_supplies_manufactory building_type = building_type:naval_supplies_workshop building_type = building_type:naval_supplies_guild } } }
-		pp_lprof_expand = { type = naval_supplies_mill demand = mill_construction cat = mill ipl = 0.2 }
-		pp_lprof_expand = { type = naval_supplies_manufactory demand = manufactory_construction cat = std ipl = 0.2 }
-		pp_lprof_expand = { type = naval_supplies_workshop demand = workshop_construction cat = std ipl = 0.2 }
-		pp_lprof_expand = { type = naval_supplies_guild demand = guild_construction cat = std ipl = 0.59 }
+		pp_lprof_expand = { type = naval_supplies_mill demand = mill_construction cat = mill ipl = 0.2 pt = laborers sz = 1.16 }
+		pp_lprof_expand = { type = naval_supplies_manufactory demand = manufactory_construction cat = std ipl = 0.2 pt = burghers sz = 0.325 }
+		pp_lprof_expand = { type = naval_supplies_workshop demand = workshop_construction cat = std ipl = 0.2 pt = burghers sz = 0.287 }
+		pp_lprof_expand = { type = naval_supplies_guild demand = guild_construction cat = std ipl = 0.59 pt = burghers sz = 0.25 }
 	}
 	else = {
-		pp_lprof_start = { type = naval_supplies_mill demand = mill_construction cat = mill ipl = 0.2 }
-		pp_lprof_start = { type = naval_supplies_manufactory demand = manufactory_construction cat = std ipl = 0.2 }
-		pp_lprof_start = { type = naval_supplies_workshop demand = workshop_construction cat = std ipl = 0.2 }
-		pp_lprof_start = { type = naval_supplies_guild demand = guild_construction cat = std ipl = 0.59 }
+		pp_lprof_start = { type = naval_supplies_mill demand = mill_construction cat = mill ipl = 0.2 pt = laborers sz = 1.16 }
+		pp_lprof_start = { type = naval_supplies_manufactory demand = manufactory_construction cat = std ipl = 0.2 pt = burghers sz = 0.325 }
+		pp_lprof_start = { type = naval_supplies_workshop demand = workshop_construction cat = std ipl = 0.2 pt = burghers sz = 0.287 }
+		pp_lprof_start = { type = naval_supplies_guild demand = guild_construction cat = std ipl = 0.59 pt = burghers sz = 0.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1110,12 +1110,12 @@ pp_lprof_t_victuals = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:grange building_type = building_type:victualling_yard } } }
-		pp_lprof_expand = { type = grange demand = victuals_trade_construction cat = std ipl = 0.26 }
-		pp_lprof_expand = { type = victualling_yard demand = victuals_trade_construction cat = std ipl = 0.75 }
+		pp_lprof_expand = { type = grange demand = victuals_trade_construction cat = std ipl = 0.26 pt = nobles sz = 0.001 }
+		pp_lprof_expand = { type = victualling_yard demand = victuals_trade_construction cat = std ipl = 0.75 pt = burghers sz = 0.2 }
 	}
 	else = {
-		pp_lprof_start = { type = grange demand = victuals_trade_construction cat = std ipl = 0.26 }
-		pp_lprof_start = { type = victualling_yard demand = victuals_trade_construction cat = std ipl = 0.75 }
+		pp_lprof_start = { type = grange demand = victuals_trade_construction cat = std ipl = 0.26 pt = nobles sz = 0.001 }
+		pp_lprof_start = { type = victualling_yard demand = victuals_trade_construction cat = std ipl = 0.75 pt = burghers sz = 0.2 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1127,18 +1127,18 @@ pp_lprof_t_cloth = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:textile_mill building_type = building_type:cloth_manufactory building_type = building_type:cloth_workshop building_type = building_type:cloth_guild building_type = building_type:rural_clothmaker } } }
-		pp_lprof_expand = { type = textile_mill demand = mill_construction cat = mill ipl = 0.14 }
-		pp_lprof_expand = { type = cloth_manufactory demand = guild_construction cat = std ipl = 0.14 }
-		pp_lprof_expand = { type = cloth_workshop demand = workshop_construction cat = std ipl = 0.14 }
-		pp_lprof_expand = { type = cloth_guild demand = guild_construction cat = std ipl = 0.43 }
-		pp_lprof_expand = { type = rural_clothmaker demand = village_construction cat = std ipl = 0.43 }
+		pp_lprof_expand = { type = textile_mill demand = mill_construction cat = mill ipl = 0.14 pt = laborers sz = 1.16 }
+		pp_lprof_expand = { type = cloth_manufactory demand = guild_construction cat = std ipl = 0.14 pt = burghers sz = 0.325 }
+		pp_lprof_expand = { type = cloth_workshop demand = workshop_construction cat = std ipl = 0.14 pt = burghers sz = 0.287 }
+		pp_lprof_expand = { type = cloth_guild demand = guild_construction cat = std ipl = 0.43 pt = burghers sz = 0.25 }
+		pp_lprof_expand = { type = rural_clothmaker demand = village_construction cat = std ipl = 0.43 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = textile_mill demand = mill_construction cat = mill ipl = 0.14 }
-		pp_lprof_start = { type = cloth_manufactory demand = guild_construction cat = std ipl = 0.14 }
-		pp_lprof_start = { type = cloth_workshop demand = workshop_construction cat = std ipl = 0.14 }
-		pp_lprof_start = { type = cloth_guild demand = guild_construction cat = std ipl = 0.43 }
-		pp_lprof_start = { type = rural_clothmaker demand = village_construction cat = std ipl = 0.43 }
+		pp_lprof_start = { type = textile_mill demand = mill_construction cat = mill ipl = 0.14 pt = laborers sz = 1.16 }
+		pp_lprof_start = { type = cloth_manufactory demand = guild_construction cat = std ipl = 0.14 pt = burghers sz = 0.325 }
+		pp_lprof_start = { type = cloth_workshop demand = workshop_construction cat = std ipl = 0.14 pt = burghers sz = 0.287 }
+		pp_lprof_start = { type = cloth_guild demand = guild_construction cat = std ipl = 0.43 pt = burghers sz = 0.25 }
+		pp_lprof_start = { type = rural_clothmaker demand = village_construction cat = std ipl = 0.43 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1150,16 +1150,16 @@ pp_lprof_t_fine_cloth = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:fine_cloth_mill building_type = building_type:fine_cloth_manufactory building_type = building_type:fine_cloth_workshop building_type = building_type:fine_cloth_guild } } }
-		pp_lprof_expand = { type = fine_cloth_mill demand = mill_construction cat = mill ipl = 0.14 }
-		pp_lprof_expand = { type = fine_cloth_manufactory demand = guild_construction cat = std ipl = 0.14 }
-		pp_lprof_expand = { type = fine_cloth_workshop demand = workshop_construction cat = std ipl = 0.14 }
-		pp_lprof_expand = { type = fine_cloth_guild demand = guild_construction cat = std ipl = 0.43 }
+		pp_lprof_expand = { type = fine_cloth_mill demand = mill_construction cat = mill ipl = 0.14 pt = laborers sz = 1.16 }
+		pp_lprof_expand = { type = fine_cloth_manufactory demand = guild_construction cat = std ipl = 0.14 pt = burghers sz = 0.325 }
+		pp_lprof_expand = { type = fine_cloth_workshop demand = workshop_construction cat = std ipl = 0.14 pt = burghers sz = 0.287 }
+		pp_lprof_expand = { type = fine_cloth_guild demand = guild_construction cat = std ipl = 0.43 pt = burghers sz = 0.25 }
 	}
 	else = {
-		pp_lprof_start = { type = fine_cloth_mill demand = mill_construction cat = mill ipl = 0.14 }
-		pp_lprof_start = { type = fine_cloth_manufactory demand = guild_construction cat = std ipl = 0.14 }
-		pp_lprof_start = { type = fine_cloth_workshop demand = workshop_construction cat = std ipl = 0.14 }
-		pp_lprof_start = { type = fine_cloth_guild demand = guild_construction cat = std ipl = 0.43 }
+		pp_lprof_start = { type = fine_cloth_mill demand = mill_construction cat = mill ipl = 0.14 pt = laborers sz = 1.16 }
+		pp_lprof_start = { type = fine_cloth_manufactory demand = guild_construction cat = std ipl = 0.14 pt = burghers sz = 0.325 }
+		pp_lprof_start = { type = fine_cloth_workshop demand = workshop_construction cat = std ipl = 0.14 pt = burghers sz = 0.287 }
+		pp_lprof_start = { type = fine_cloth_guild demand = guild_construction cat = std ipl = 0.43 pt = burghers sz = 0.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1171,18 +1171,18 @@ pp_lprof_t_leather = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:tannery_mill building_type = building_type:tannery_manufactory building_type = building_type:managed_forest_village building_type = building_type:tanning_workshop building_type = building_type:tannery } } }
-		pp_lprof_expand = { type = tannery_mill demand = mill_construction cat = mill ipl = 0.14 }
-		pp_lprof_expand = { type = tannery_manufactory demand = manufactory_construction cat = std ipl = 0.14 }
-		pp_lprof_expand = { type = managed_forest_village demand = workshop_construction cat = std ipl = 0.14 }
-		pp_lprof_expand = { type = tanning_workshop demand = workshop_construction cat = std ipl = 0.14 }
-		pp_lprof_expand = { type = tannery demand = guild_construction cat = std ipl = 0.43 }
+		pp_lprof_expand = { type = tannery_mill demand = mill_construction cat = mill ipl = 0.14 pt = laborers sz = 1.16 }
+		pp_lprof_expand = { type = tannery_manufactory demand = manufactory_construction cat = std ipl = 0.14 pt = burghers sz = 0.325 }
+		pp_lprof_expand = { type = managed_forest_village demand = workshop_construction cat = std ipl = 0.14 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = tanning_workshop demand = workshop_construction cat = std ipl = 0.14 pt = burghers sz = 0.287 }
+		pp_lprof_expand = { type = tannery demand = guild_construction cat = std ipl = 0.43 pt = burghers sz = 0.25 }
 	}
 	else = {
-		pp_lprof_start = { type = tannery_mill demand = mill_construction cat = mill ipl = 0.14 }
-		pp_lprof_start = { type = tannery_manufactory demand = manufactory_construction cat = std ipl = 0.14 }
-		pp_lprof_start = { type = managed_forest_village demand = workshop_construction cat = std ipl = 0.14 }
-		pp_lprof_start = { type = tanning_workshop demand = workshop_construction cat = std ipl = 0.14 }
-		pp_lprof_start = { type = tannery demand = guild_construction cat = std ipl = 0.43 }
+		pp_lprof_start = { type = tannery_mill demand = mill_construction cat = mill ipl = 0.14 pt = laborers sz = 1.16 }
+		pp_lprof_start = { type = tannery_manufactory demand = manufactory_construction cat = std ipl = 0.14 pt = burghers sz = 0.325 }
+		pp_lprof_start = { type = managed_forest_village demand = workshop_construction cat = std ipl = 0.14 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = tanning_workshop demand = workshop_construction cat = std ipl = 0.14 pt = burghers sz = 0.287 }
+		pp_lprof_start = { type = tannery demand = guild_construction cat = std ipl = 0.43 pt = burghers sz = 0.25 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1194,12 +1194,12 @@ pp_lprof_t_marble = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:marble_saw_yard building_type = building_type:marble_quarry } } }
-		pp_lprof_expand = { type = marble_saw_yard demand = workshop_construction cat = std ipl = 0.1 }
-		pp_lprof_expand = { type = marble_quarry demand = mercury_patio_construction cat = std ipl = 0.1 }
+		pp_lprof_expand = { type = marble_saw_yard demand = workshop_construction cat = std ipl = 0.1 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = marble_quarry demand = mercury_patio_construction cat = std ipl = 0.1 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = marble_saw_yard demand = workshop_construction cat = std ipl = 0.1 }
-		pp_lprof_start = { type = marble_quarry demand = mercury_patio_construction cat = std ipl = 0.1 }
+		pp_lprof_start = { type = marble_saw_yard demand = workshop_construction cat = std ipl = 0.1 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = marble_quarry demand = mercury_patio_construction cat = std ipl = 0.1 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1211,12 +1211,12 @@ pp_lprof_t_stone = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:stone_quarry_improved building_type = building_type:stone_quarry } } }
-		pp_lprof_expand = { type = stone_quarry_improved demand = workshop_construction cat = std ipl = 0.1 }
-		pp_lprof_expand = { type = stone_quarry demand = basic_construction_needs cat = std ipl = 0.1 }
+		pp_lprof_expand = { type = stone_quarry_improved demand = workshop_construction cat = std ipl = 0.1 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = stone_quarry demand = basic_construction_needs cat = std ipl = 0.1 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = stone_quarry_improved demand = workshop_construction cat = std ipl = 0.1 }
-		pp_lprof_start = { type = stone_quarry demand = basic_construction_needs cat = std ipl = 0.1 }
+		pp_lprof_start = { type = stone_quarry_improved demand = workshop_construction cat = std ipl = 0.1 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = stone_quarry demand = basic_construction_needs cat = std ipl = 0.1 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1228,18 +1228,18 @@ pp_lprof_t_coal = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:coal_mine_revolutions building_type = building_type:coal_mine_improved building_type = building_type:improved_charcoal_maker building_type = building_type:charcoal_maker building_type = building_type:coal_mine } } }
-		pp_lprof_expand = { type = coal_mine_revolutions demand = manufactory_construction cat = std ipl = 0.18 }
-		pp_lprof_expand = { type = coal_mine_improved demand = workshop_construction cat = std ipl = 0.18 }
-		pp_lprof_expand = { type = improved_charcoal_maker demand = guild_construction cat = std ipl = 0.18 }
-		pp_lprof_expand = { type = charcoal_maker demand = guild_construction cat = std ipl = 0.18 }
-		pp_lprof_expand = { type = coal_mine demand = mercury_patio_construction cat = std ipl = 0.18 }
+		pp_lprof_expand = { type = coal_mine_revolutions demand = manufactory_construction cat = std ipl = 0.18 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = coal_mine_improved demand = workshop_construction cat = std ipl = 0.18 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = improved_charcoal_maker demand = guild_construction cat = std ipl = 0.18 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = charcoal_maker demand = guild_construction cat = std ipl = 0.18 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = coal_mine demand = mercury_patio_construction cat = std ipl = 0.18 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = coal_mine_revolutions demand = manufactory_construction cat = std ipl = 0.18 }
-		pp_lprof_start = { type = coal_mine_improved demand = workshop_construction cat = std ipl = 0.18 }
-		pp_lprof_start = { type = improved_charcoal_maker demand = guild_construction cat = std ipl = 0.18 }
-		pp_lprof_start = { type = charcoal_maker demand = guild_construction cat = std ipl = 0.18 }
-		pp_lprof_start = { type = coal_mine demand = mercury_patio_construction cat = std ipl = 0.18 }
+		pp_lprof_start = { type = coal_mine_revolutions demand = manufactory_construction cat = std ipl = 0.18 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = coal_mine_improved demand = workshop_construction cat = std ipl = 0.18 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = improved_charcoal_maker demand = guild_construction cat = std ipl = 0.18 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = charcoal_maker demand = guild_construction cat = std ipl = 0.18 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = coal_mine demand = mercury_patio_construction cat = std ipl = 0.18 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1251,12 +1251,12 @@ pp_lprof_t_alum = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:alum_works building_type = building_type:alum_quarry } } }
-		pp_lprof_expand = { type = alum_works demand = workshop_construction cat = std ipl = 0.14 }
-		pp_lprof_expand = { type = alum_quarry demand = mercury_patio_construction cat = std ipl = 0.14 }
+		pp_lprof_expand = { type = alum_works demand = workshop_construction cat = std ipl = 0.14 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = alum_quarry demand = mercury_patio_construction cat = std ipl = 0.14 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = alum_works demand = workshop_construction cat = std ipl = 0.14 }
-		pp_lprof_start = { type = alum_quarry demand = mercury_patio_construction cat = std ipl = 0.14 }
+		pp_lprof_start = { type = alum_works demand = workshop_construction cat = std ipl = 0.14 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = alum_quarry demand = mercury_patio_construction cat = std ipl = 0.14 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1268,12 +1268,12 @@ pp_lprof_t_mercury = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:quicksilver_retort building_type = building_type:cinnabar_pit } } }
-		pp_lprof_expand = { type = quicksilver_retort demand = workshop_construction cat = std ipl = 0.14 }
-		pp_lprof_expand = { type = cinnabar_pit demand = mercury_patio_construction cat = std ipl = 0.14 }
+		pp_lprof_expand = { type = quicksilver_retort demand = workshop_construction cat = std ipl = 0.14 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = cinnabar_pit demand = mercury_patio_construction cat = std ipl = 0.14 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = quicksilver_retort demand = workshop_construction cat = std ipl = 0.14 }
-		pp_lprof_start = { type = cinnabar_pit demand = mercury_patio_construction cat = std ipl = 0.14 }
+		pp_lprof_start = { type = quicksilver_retort demand = workshop_construction cat = std ipl = 0.14 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = cinnabar_pit demand = mercury_patio_construction cat = std ipl = 0.14 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1285,18 +1285,18 @@ pp_lprof_t_saltpeter = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:putrefaction_mill building_type = building_type:putrefaction_works building_type = building_type:saltpeter_workshop building_type = building_type:saltpeter_beds building_type = building_type:saltpeter_guild } } }
-		pp_lprof_expand = { type = putrefaction_mill demand = mill_construction cat = std ipl = 0.14 }
-		pp_lprof_expand = { type = putrefaction_works demand = manufactory_construction cat = std ipl = 0.14 }
-		pp_lprof_expand = { type = saltpeter_workshop demand = workshop_construction cat = std ipl = 0.14 }
-		pp_lprof_expand = { type = saltpeter_beds demand = basic_construction_needs cat = std ipl = 0.14 }
-		pp_lprof_expand = { type = saltpeter_guild demand = guild_construction cat = std ipl = 0.41 }
+		pp_lprof_expand = { type = putrefaction_mill demand = mill_construction cat = std ipl = 0.14 pt = laborers sz = 0.5 }
+		pp_lprof_expand = { type = putrefaction_works demand = manufactory_construction cat = std ipl = 0.14 pt = burghers sz = 0.2 }
+		pp_lprof_expand = { type = saltpeter_workshop demand = workshop_construction cat = std ipl = 0.14 pt = burghers sz = 0.1 }
+		pp_lprof_expand = { type = saltpeter_beds demand = basic_construction_needs cat = std ipl = 0.14 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = saltpeter_guild demand = guild_construction cat = std ipl = 0.41 pt = burghers sz = 0.1 }
 	}
 	else = {
-		pp_lprof_start = { type = putrefaction_mill demand = mill_construction cat = std ipl = 0.14 }
-		pp_lprof_start = { type = putrefaction_works demand = manufactory_construction cat = std ipl = 0.14 }
-		pp_lprof_start = { type = saltpeter_workshop demand = workshop_construction cat = std ipl = 0.14 }
-		pp_lprof_start = { type = saltpeter_beds demand = basic_construction_needs cat = std ipl = 0.14 }
-		pp_lprof_start = { type = saltpeter_guild demand = guild_construction cat = std ipl = 0.41 }
+		pp_lprof_start = { type = putrefaction_mill demand = mill_construction cat = std ipl = 0.14 pt = laborers sz = 0.5 }
+		pp_lprof_start = { type = putrefaction_works demand = manufactory_construction cat = std ipl = 0.14 pt = burghers sz = 0.2 }
+		pp_lprof_start = { type = saltpeter_workshop demand = workshop_construction cat = std ipl = 0.14 pt = burghers sz = 0.1 }
+		pp_lprof_start = { type = saltpeter_beds demand = basic_construction_needs cat = std ipl = 0.14 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = saltpeter_guild demand = guild_construction cat = std ipl = 0.41 pt = burghers sz = 0.1 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1308,14 +1308,14 @@ pp_lprof_t_copper = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:copper_mine_deep building_type = building_type:copper_mine_adit building_type = building_type:copper_mine } } }
-		pp_lprof_expand = { type = copper_mine_deep demand = manufactory_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = copper_mine_adit demand = workshop_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = copper_mine demand = mercury_patio_construction cat = std ipl = 0.19 }
+		pp_lprof_expand = { type = copper_mine_deep demand = manufactory_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = copper_mine_adit demand = workshop_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = copper_mine demand = mercury_patio_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = copper_mine_deep demand = manufactory_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = copper_mine_adit demand = workshop_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = copper_mine demand = mercury_patio_construction cat = std ipl = 0.19 }
+		pp_lprof_start = { type = copper_mine_deep demand = manufactory_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = copper_mine_adit demand = workshop_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = copper_mine demand = mercury_patio_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1327,20 +1327,20 @@ pp_lprof_t_iron = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:bog_iron_smelter_coke_blast_furnace building_type = building_type:iron_mine_deep building_type = building_type:bog_iron_smelter_blast_furnace building_type = building_type:iron_mine_improved building_type = building_type:bog_iron_smelter building_type = building_type:iron_mine } } }
-		pp_lprof_expand = { type = bog_iron_smelter_coke_blast_furnace demand = manufactory_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = iron_mine_deep demand = manufactory_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = bog_iron_smelter_blast_furnace demand = workshop_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = iron_mine_improved demand = workshop_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = bog_iron_smelter demand = basic_construction_needs cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = iron_mine demand = mercury_patio_construction cat = std ipl = 0.19 }
+		pp_lprof_expand = { type = bog_iron_smelter_coke_blast_furnace demand = manufactory_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = iron_mine_deep demand = manufactory_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = bog_iron_smelter_blast_furnace demand = workshop_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = iron_mine_improved demand = workshop_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = bog_iron_smelter demand = basic_construction_needs cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = iron_mine demand = mercury_patio_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = bog_iron_smelter_coke_blast_furnace demand = manufactory_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = iron_mine_deep demand = manufactory_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = bog_iron_smelter_blast_furnace demand = workshop_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = iron_mine_improved demand = workshop_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = bog_iron_smelter demand = basic_construction_needs cat = std ipl = 0.19 }
-		pp_lprof_start = { type = iron_mine demand = mercury_patio_construction cat = std ipl = 0.19 }
+		pp_lprof_start = { type = bog_iron_smelter_coke_blast_furnace demand = manufactory_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = iron_mine_deep demand = manufactory_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = bog_iron_smelter_blast_furnace demand = workshop_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = iron_mine_improved demand = workshop_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = bog_iron_smelter demand = basic_construction_needs cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = iron_mine demand = mercury_patio_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1352,14 +1352,14 @@ pp_lprof_t_lead = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:lead_mine_cupola_smelting building_type = building_type:lead_mine_bole_smelting building_type = building_type:lead_mine } } }
-		pp_lprof_expand = { type = lead_mine_cupola_smelting demand = manufactory_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = lead_mine_bole_smelting demand = manufactory_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = lead_mine demand = mercury_patio_construction cat = std ipl = 0.19 }
+		pp_lprof_expand = { type = lead_mine_cupola_smelting demand = manufactory_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = lead_mine_bole_smelting demand = manufactory_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = lead_mine demand = mercury_patio_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = lead_mine_cupola_smelting demand = manufactory_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = lead_mine_bole_smelting demand = manufactory_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = lead_mine demand = mercury_patio_construction cat = std ipl = 0.19 }
+		pp_lprof_start = { type = lead_mine_cupola_smelting demand = manufactory_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = lead_mine_bole_smelting demand = manufactory_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = lead_mine demand = mercury_patio_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1371,12 +1371,12 @@ pp_lprof_t_tin = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:tin_stamping_mill building_type = building_type:tin_streamworks } } }
-		pp_lprof_expand = { type = tin_stamping_mill demand = workshop_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = tin_streamworks demand = mercury_patio_construction cat = std ipl = 0.19 }
+		pp_lprof_expand = { type = tin_stamping_mill demand = workshop_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = tin_streamworks demand = mercury_patio_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = tin_stamping_mill demand = workshop_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = tin_streamworks demand = mercury_patio_construction cat = std ipl = 0.19 }
+		pp_lprof_start = { type = tin_stamping_mill demand = workshop_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = tin_streamworks demand = mercury_patio_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1388,12 +1388,12 @@ pp_lprof_t_gems = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:gem_sluice building_type = building_type:gem_gravel_pit } } }
-		pp_lprof_expand = { type = gem_sluice demand = workshop_construction cat = std ipl = 0.21 }
-		pp_lprof_expand = { type = gem_gravel_pit demand = mercury_patio_construction cat = std ipl = 0.21 }
+		pp_lprof_expand = { type = gem_sluice demand = workshop_construction cat = std ipl = 0.21 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = gem_gravel_pit demand = mercury_patio_construction cat = std ipl = 0.21 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = gem_sluice demand = workshop_construction cat = std ipl = 0.21 }
-		pp_lprof_start = { type = gem_gravel_pit demand = mercury_patio_construction cat = std ipl = 0.21 }
+		pp_lprof_start = { type = gem_sluice demand = workshop_construction cat = std ipl = 0.21 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = gem_gravel_pit demand = mercury_patio_construction cat = std ipl = 0.21 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1405,12 +1405,12 @@ pp_lprof_t_goods_gold = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:gold_stamp_mill building_type = building_type:gold_diggings } } }
-		pp_lprof_expand = { type = gold_stamp_mill demand = workshop_construction cat = std ipl = 0.21 }
-		pp_lprof_expand = { type = gold_diggings demand = mercury_patio_construction cat = std ipl = 0.21 }
+		pp_lprof_expand = { type = gold_stamp_mill demand = workshop_construction cat = std ipl = 0.21 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = gold_diggings demand = mercury_patio_construction cat = std ipl = 0.21 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = gold_stamp_mill demand = workshop_construction cat = std ipl = 0.21 }
-		pp_lprof_start = { type = gold_diggings demand = mercury_patio_construction cat = std ipl = 0.21 }
+		pp_lprof_start = { type = gold_stamp_mill demand = workshop_construction cat = std ipl = 0.21 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = gold_diggings demand = mercury_patio_construction cat = std ipl = 0.21 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1422,14 +1422,14 @@ pp_lprof_t_silver = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:silver_mine_improved building_type = building_type:schwaz_mine building_type = building_type:silver_mine } } }
-		pp_lprof_expand = { type = silver_mine_improved demand = workshop_construction cat = std ipl = 0.21 }
-		pp_lprof_expand = { type = schwaz_mine demand = basic_construction_needs cat = std ipl = 0.21 }
-		pp_lprof_expand = { type = silver_mine demand = mercury_patio_construction cat = std ipl = 0.21 }
+		pp_lprof_expand = { type = silver_mine_improved demand = workshop_construction cat = std ipl = 0.21 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = schwaz_mine demand = basic_construction_needs cat = std ipl = 0.21 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = silver_mine demand = mercury_patio_construction cat = std ipl = 0.21 pt = laborers sz = 0.8 }
 	}
 	else = {
-		pp_lprof_start = { type = silver_mine_improved demand = workshop_construction cat = std ipl = 0.21 }
-		pp_lprof_start = { type = schwaz_mine demand = basic_construction_needs cat = std ipl = 0.21 }
-		pp_lprof_start = { type = silver_mine demand = mercury_patio_construction cat = std ipl = 0.21 }
+		pp_lprof_start = { type = silver_mine_improved demand = workshop_construction cat = std ipl = 0.21 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = schwaz_mine demand = basic_construction_needs cat = std ipl = 0.21 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = silver_mine demand = mercury_patio_construction cat = std ipl = 0.21 pt = laborers sz = 0.8 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1440,15 +1440,15 @@ pp_lprof_t_logistics = {
 		set_variable = { name = pp_lprof_st value = 103 }
 	}
 	else = {
-		pp_lprof_try = { type = river_boatmen_yard demand = pp_river_boatmen_yard_construction cat = std ipl = 0.15 }
-		pp_lprof_try = { type = coastal_shipping_office demand = pp_coastal_shipping_office_construction cat = std ipl = 0.15 }
-		pp_lprof_try = { type = transport_office demand = pp_transport_office_construction cat = std ipl = 0.23 }
-		pp_lprof_try = { type = carrier_inn demand = pp_carrier_inn_construction cat = std ipl = 0.19 }
-		pp_lprof_try = { type = pp_caravanserai demand = pp_caravanserai_construction cat = std ipl = 0.19 }
-		pp_lprof_try = { type = pp_oasis_caravan_station demand = pp_oasis_caravan_station_construction cat = std ipl = 0.19 }
-		pp_lprof_try = { type = pp_yam_station demand = pp_yam_station_construction cat = std ipl = 0.19 }
-		pp_lprof_try = { type = pp_banjara_tanda demand = pp_banjara_tanda_construction cat = std ipl = 0.19 }
-		pp_lprof_try = { type = pp_llama_caravan_post demand = pp_llama_caravan_post_construction cat = std ipl = 0.19 }
+		pp_lprof_try = { type = river_boatmen_yard demand = pp_river_boatmen_yard_construction cat = std ipl = 0.15 pt = laborers sz = 0.8 }
+		pp_lprof_try = { type = coastal_shipping_office demand = pp_coastal_shipping_office_construction cat = std ipl = 0.15 pt = laborers sz = 0.8 }
+		pp_lprof_try = { type = transport_office demand = pp_transport_office_construction cat = std ipl = 0.23 pt = laborers sz = 0.8 }
+		pp_lprof_try = { type = carrier_inn demand = pp_carrier_inn_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_try = { type = pp_caravanserai demand = pp_caravanserai_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_try = { type = pp_oasis_caravan_station demand = pp_oasis_caravan_station_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_try = { type = pp_yam_station demand = pp_yam_station_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_try = { type = pp_banjara_tanda demand = pp_banjara_tanda_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_try = { type = pp_llama_caravan_post demand = pp_llama_caravan_post_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
 	}
 }
 
@@ -1459,36 +1459,36 @@ pp_lprof_t_trade_category = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:commerce_center building_type = building_type:grand_marketplace building_type = building_type:merchants_quarters building_type = building_type:al_qaysariyya_market building_type = building_type:clearing_house building_type = building_type:customs_house building_type = building_type:entrepot building_type = building_type:hired_labor_yard building_type = building_type:market_warehouse building_type = building_type:marketplace building_type = building_type:port_authority building_type = building_type:smuggler_cove building_type = building_type:stock_exchange building_type = building_type:trading_hub } } }
-		pp_lprof_expand = { type = commerce_center demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = grand_marketplace demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = merchants_quarters demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = al_qaysariyya_market demand = market_center_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = clearing_house demand = market_center_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = customs_house demand = market_center_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = entrepot demand = market_center_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = hired_labor_yard demand = workshop_construction cat = std ipl = 0.14 }
-		pp_lprof_expand = { type = market_warehouse demand = warehouse_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = marketplace demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = port_authority demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = smuggler_cove demand = default_construct_building cat = std ipl = 0 }
-		pp_lprof_expand = { type = stock_exchange demand = market_center_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = trading_hub demand = market_center_building_construction cat = std ipl = 0 }
+		pp_lprof_expand = { type = commerce_center demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_expand = { type = grand_marketplace demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_expand = { type = merchants_quarters demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_expand = { type = al_qaysariyya_market demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_expand = { type = clearing_house demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_expand = { type = customs_house demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_expand = { type = entrepot demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_expand = { type = hired_labor_yard demand = workshop_construction cat = std ipl = 0.14 pt = laborers sz = 2 }
+		pp_lprof_expand = { type = market_warehouse demand = warehouse_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_expand = { type = marketplace demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_expand = { type = port_authority demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_expand = { type = smuggler_cove demand = default_construct_building cat = std ipl = 0 pt = peasants sz = 0.1 }
+		pp_lprof_expand = { type = stock_exchange demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_expand = { type = trading_hub demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
 	}
 	else = {
-		pp_lprof_start = { type = commerce_center demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = grand_marketplace demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = merchants_quarters demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = al_qaysariyya_market demand = market_center_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = clearing_house demand = market_center_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = customs_house demand = market_center_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = entrepot demand = market_center_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = hired_labor_yard demand = workshop_construction cat = std ipl = 0.14 }
-		pp_lprof_start = { type = market_warehouse demand = warehouse_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = marketplace demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = port_authority demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = smuggler_cove demand = default_construct_building cat = std ipl = 0 }
-		pp_lprof_start = { type = stock_exchange demand = market_center_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = trading_hub demand = market_center_building_construction cat = std ipl = 0 }
+		pp_lprof_start = { type = commerce_center demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_start = { type = grand_marketplace demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_start = { type = merchants_quarters demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_start = { type = al_qaysariyya_market demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_start = { type = clearing_house demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_start = { type = customs_house demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_start = { type = entrepot demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_start = { type = hired_labor_yard demand = workshop_construction cat = std ipl = 0.14 pt = laborers sz = 2 }
+		pp_lprof_start = { type = market_warehouse demand = warehouse_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_start = { type = marketplace demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_start = { type = port_authority demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_start = { type = smuggler_cove demand = default_construct_building cat = std ipl = 0 pt = peasants sz = 0.1 }
+		pp_lprof_start = { type = stock_exchange demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_start = { type = trading_hub demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1500,60 +1500,60 @@ pp_lprof_t_government_category = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:modern_council_hall building_type = building_type:council_hall building_type = building_type:admiralty building_type = building_type:bailiff building_type = building_type:central_bank building_type = building_type:chancery building_type = building_type:chieftain_hall building_type = building_type:counting_house building_type = building_type:early_council_hall building_type = building_type:house_of_parliament building_type = building_type:italian_administration_center building_type = building_type:khan_ordu building_type = building_type:local_governor building_type = building_type:minting_office building_type = building_type:naval_governor building_type = building_type:order_headquarters building_type = building_type:patrician_hall building_type = building_type:provincial_chancery building_type = building_type:republican_assembly building_type = building_type:royal_court building_type = building_type:royal_garden building_type = building_type:sacred_council building_type = building_type:slave_market building_type = building_type:supreme_court building_type = building_type:tax_assessor building_type = building_type:war_college } } }
-		pp_lprof_expand = { type = modern_council_hall demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = council_hall demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = admiralty demand = admiralty_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = bailiff demand = default_construct_building cat = std ipl = 0 }
-		pp_lprof_expand = { type = central_bank demand = important_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = chancery demand = pp_early_capital_jewelry_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = chieftain_hall demand = pp_early_capital_jewelry_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = counting_house demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = early_council_hall demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = house_of_parliament demand = pp_early_capital_jewelry_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = italian_administration_center demand = local_governor_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = khan_ordu demand = pp_early_capital_jewelry_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = local_governor demand = pp_local_governor_jewelry_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = minting_office demand = minting_office_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = naval_governor demand = pp_local_governor_jewelry_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = order_headquarters demand = early_capital_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = patrician_hall demand = pp_early_capital_jewelry_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = provincial_chancery demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = republican_assembly demand = pp_early_capital_jewelry_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = royal_court demand = pp_early_capital_jewelry_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = royal_garden demand = pp_prestige_jewelry_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = sacred_council demand = pp_early_capital_jewelry_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = slave_market demand = town_building_construction cat = std ipl = 0.15 }
-		pp_lprof_expand = { type = supreme_court demand = important_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = tax_assessor demand = important_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = war_college demand = important_building_construction cat = std ipl = 0 }
+		pp_lprof_expand = { type = modern_council_hall demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_expand = { type = council_hall demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_expand = { type = admiralty demand = admiralty_construction cat = std ipl = 0 pt = burghers sz = 0.3 }
+		pp_lprof_expand = { type = bailiff demand = default_construct_building cat = std ipl = 0 pt = soldiers sz = 0.2 }
+		pp_lprof_expand = { type = central_bank demand = important_building_construction cat = std ipl = 0 pt = burghers sz = 0.3 }
+		pp_lprof_expand = { type = chancery demand = pp_early_capital_jewelry_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_expand = { type = chieftain_hall demand = pp_early_capital_jewelry_construction cat = std ipl = 0 pt = nobles sz = 0.1 }
+		pp_lprof_expand = { type = counting_house demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_expand = { type = early_council_hall demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_expand = { type = house_of_parliament demand = pp_early_capital_jewelry_construction cat = std ipl = 0 pt = nobles sz = 0.2 }
+		pp_lprof_expand = { type = italian_administration_center demand = local_governor_construction cat = std ipl = 0 pt = nobles sz = 0.1 }
+		pp_lprof_expand = { type = khan_ordu demand = pp_early_capital_jewelry_construction cat = std ipl = 0 pt = nobles sz = 0.1 }
+		pp_lprof_expand = { type = local_governor demand = pp_local_governor_jewelry_construction cat = std ipl = 0 pt = nobles sz = 0.1 }
+		pp_lprof_expand = { type = minting_office demand = minting_office_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_expand = { type = naval_governor demand = pp_local_governor_jewelry_construction cat = std ipl = 0 pt = nobles sz = 0.1 }
+		pp_lprof_expand = { type = order_headquarters demand = early_capital_building_construction cat = std ipl = 0 pt = clergy sz = 0.05 }
+		pp_lprof_expand = { type = patrician_hall demand = pp_early_capital_jewelry_construction cat = std ipl = 0 pt = burghers sz = 0.3 }
+		pp_lprof_expand = { type = provincial_chancery demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_expand = { type = republican_assembly demand = pp_early_capital_jewelry_construction cat = std ipl = 0 pt = nobles sz = 0.1 }
+		pp_lprof_expand = { type = royal_court demand = pp_early_capital_jewelry_construction cat = std ipl = 0 pt = nobles sz = 0.1 }
+		pp_lprof_expand = { type = royal_garden demand = pp_prestige_jewelry_construction cat = std ipl = 0 pt = nobles sz = 0.05 }
+		pp_lprof_expand = { type = sacred_council demand = pp_early_capital_jewelry_construction cat = std ipl = 0 pt = clergy sz = 0.1 }
+		pp_lprof_expand = { type = slave_market demand = town_building_construction cat = std ipl = 0.15 pt = burghers sz = 0.25 }
+		pp_lprof_expand = { type = supreme_court demand = important_building_construction cat = std ipl = 0 pt = nobles sz = 0.1 }
+		pp_lprof_expand = { type = tax_assessor demand = important_building_construction cat = std ipl = 0 pt = burghers sz = 0.3 }
+		pp_lprof_expand = { type = war_college demand = important_building_construction cat = std ipl = 0 pt = burghers sz = 0.3 }
 	}
 	else = {
-		pp_lprof_start = { type = modern_council_hall demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = council_hall demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = admiralty demand = admiralty_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = bailiff demand = default_construct_building cat = std ipl = 0 }
-		pp_lprof_start = { type = central_bank demand = important_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = chancery demand = pp_early_capital_jewelry_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = chieftain_hall demand = pp_early_capital_jewelry_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = counting_house demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = early_council_hall demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = house_of_parliament demand = pp_early_capital_jewelry_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = italian_administration_center demand = local_governor_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = khan_ordu demand = pp_early_capital_jewelry_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = local_governor demand = pp_local_governor_jewelry_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = minting_office demand = minting_office_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = naval_governor demand = pp_local_governor_jewelry_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = order_headquarters demand = early_capital_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = patrician_hall demand = pp_early_capital_jewelry_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = provincial_chancery demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = republican_assembly demand = pp_early_capital_jewelry_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = royal_court demand = pp_early_capital_jewelry_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = royal_garden demand = pp_prestige_jewelry_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = sacred_council demand = pp_early_capital_jewelry_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = slave_market demand = town_building_construction cat = std ipl = 0.15 }
-		pp_lprof_start = { type = supreme_court demand = important_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = tax_assessor demand = important_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = war_college demand = important_building_construction cat = std ipl = 0 }
+		pp_lprof_start = { type = modern_council_hall demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_start = { type = council_hall demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_start = { type = admiralty demand = admiralty_construction cat = std ipl = 0 pt = burghers sz = 0.3 }
+		pp_lprof_start = { type = bailiff demand = default_construct_building cat = std ipl = 0 pt = soldiers sz = 0.2 }
+		pp_lprof_start = { type = central_bank demand = important_building_construction cat = std ipl = 0 pt = burghers sz = 0.3 }
+		pp_lprof_start = { type = chancery demand = pp_early_capital_jewelry_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_start = { type = chieftain_hall demand = pp_early_capital_jewelry_construction cat = std ipl = 0 pt = nobles sz = 0.1 }
+		pp_lprof_start = { type = counting_house demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_start = { type = early_council_hall demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_start = { type = house_of_parliament demand = pp_early_capital_jewelry_construction cat = std ipl = 0 pt = nobles sz = 0.2 }
+		pp_lprof_start = { type = italian_administration_center demand = local_governor_construction cat = std ipl = 0 pt = nobles sz = 0.1 }
+		pp_lprof_start = { type = khan_ordu demand = pp_early_capital_jewelry_construction cat = std ipl = 0 pt = nobles sz = 0.1 }
+		pp_lprof_start = { type = local_governor demand = pp_local_governor_jewelry_construction cat = std ipl = 0 pt = nobles sz = 0.1 }
+		pp_lprof_start = { type = minting_office demand = minting_office_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_start = { type = naval_governor demand = pp_local_governor_jewelry_construction cat = std ipl = 0 pt = nobles sz = 0.1 }
+		pp_lprof_start = { type = order_headquarters demand = early_capital_building_construction cat = std ipl = 0 pt = clergy sz = 0.05 }
+		pp_lprof_start = { type = patrician_hall demand = pp_early_capital_jewelry_construction cat = std ipl = 0 pt = burghers sz = 0.3 }
+		pp_lprof_start = { type = provincial_chancery demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_start = { type = republican_assembly demand = pp_early_capital_jewelry_construction cat = std ipl = 0 pt = nobles sz = 0.1 }
+		pp_lprof_start = { type = royal_court demand = pp_early_capital_jewelry_construction cat = std ipl = 0 pt = nobles sz = 0.1 }
+		pp_lprof_start = { type = royal_garden demand = pp_prestige_jewelry_construction cat = std ipl = 0 pt = nobles sz = 0.05 }
+		pp_lprof_start = { type = sacred_council demand = pp_early_capital_jewelry_construction cat = std ipl = 0 pt = clergy sz = 0.1 }
+		pp_lprof_start = { type = slave_market demand = town_building_construction cat = std ipl = 0.15 pt = burghers sz = 0.25 }
+		pp_lprof_start = { type = supreme_court demand = important_building_construction cat = std ipl = 0 pt = nobles sz = 0.1 }
+		pp_lprof_start = { type = tax_assessor demand = important_building_construction cat = std ipl = 0 pt = burghers sz = 0.3 }
+		pp_lprof_start = { type = war_college demand = important_building_construction cat = std ipl = 0 pt = burghers sz = 0.3 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1565,28 +1565,28 @@ pp_lprof_t_military_category = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:conscription_center building_type = building_type:barracks building_type = building_type:armory building_type = building_type:regimental_camp building_type = building_type:city_guard building_type = building_type:pirate_tavern building_type = building_type:provincial_garrison building_type = building_type:sergeantry building_type = building_type:temple_militia building_type = building_type:training_fields } } }
-		pp_lprof_expand = { type = conscription_center demand = soldier_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = barracks demand = soldier_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = armory demand = early_soldier_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = regimental_camp demand = soldier_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = city_guard demand = early_soldier_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = pirate_tavern demand = default_construct_building cat = std ipl = 0 }
-		pp_lprof_expand = { type = provincial_garrison demand = soldier_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = sergeantry demand = early_soldier_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = temple_militia demand = early_soldier_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = training_fields demand = soldier_building_construction cat = std ipl = 0 }
+		pp_lprof_expand = { type = conscription_center demand = soldier_building_construction cat = std ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_expand = { type = barracks demand = soldier_building_construction cat = std ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_expand = { type = armory demand = early_soldier_building_construction cat = std ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_expand = { type = regimental_camp demand = soldier_building_construction cat = std ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_expand = { type = city_guard demand = early_soldier_building_construction cat = std ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_expand = { type = pirate_tavern demand = default_construct_building cat = std ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_expand = { type = provincial_garrison demand = soldier_building_construction cat = std ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_expand = { type = sergeantry demand = early_soldier_building_construction cat = std ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_expand = { type = temple_militia demand = early_soldier_building_construction cat = std ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_expand = { type = training_fields demand = soldier_building_construction cat = std ipl = 0 pt = soldiers sz = 1 }
 	}
 	else = {
-		pp_lprof_start = { type = conscription_center demand = soldier_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = barracks demand = soldier_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = armory demand = early_soldier_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = regimental_camp demand = soldier_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = city_guard demand = early_soldier_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = pirate_tavern demand = default_construct_building cat = std ipl = 0 }
-		pp_lprof_start = { type = provincial_garrison demand = soldier_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = sergeantry demand = early_soldier_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = temple_militia demand = early_soldier_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = training_fields demand = soldier_building_construction cat = std ipl = 0 }
+		pp_lprof_start = { type = conscription_center demand = soldier_building_construction cat = std ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_start = { type = barracks demand = soldier_building_construction cat = std ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_start = { type = armory demand = early_soldier_building_construction cat = std ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_start = { type = regimental_camp demand = soldier_building_construction cat = std ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_start = { type = city_guard demand = early_soldier_building_construction cat = std ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_start = { type = pirate_tavern demand = default_construct_building cat = std ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_start = { type = provincial_garrison demand = soldier_building_construction cat = std ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_start = { type = sergeantry demand = early_soldier_building_construction cat = std ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_start = { type = temple_militia demand = early_soldier_building_construction cat = std ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_start = { type = training_fields demand = soldier_building_construction cat = std ipl = 0 pt = soldiers sz = 1 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1598,26 +1598,26 @@ pp_lprof_t_defense_category = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:fortress building_type = building_type:star_fort building_type = building_type:bastion building_type = building_type:castle building_type = building_type:naval_battery building_type = building_type:city_walls building_type = building_type:coastal_fort building_type = building_type:fortress_church building_type = building_type:stockade } } }
-		pp_lprof_expand = { type = fortress demand = fort_construction cat = fort ipl = 0 }
-		pp_lprof_expand = { type = star_fort demand = fort_construction cat = fort ipl = 0 }
-		pp_lprof_expand = { type = bastion demand = fort_construction cat = fort ipl = 0 }
-		pp_lprof_expand = { type = castle demand = castle_construction cat = fort ipl = 0 }
-		pp_lprof_expand = { type = naval_battery demand = fort_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = city_walls demand = city_walls_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = coastal_fort demand = fort_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = fortress_church demand = fortress_church_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = stockade demand = stockade_construction cat = fort ipl = 0 }
+		pp_lprof_expand = { type = fortress demand = fort_construction cat = fort ipl = 0 pt = soldiers sz = 4 }
+		pp_lprof_expand = { type = star_fort demand = fort_construction cat = fort ipl = 0 pt = soldiers sz = 2 }
+		pp_lprof_expand = { type = bastion demand = fort_construction cat = fort ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_expand = { type = castle demand = castle_construction cat = fort ipl = 0 pt = soldiers sz = 0.5 }
+		pp_lprof_expand = { type = naval_battery demand = fort_construction cat = std ipl = 0 pt = soldiers sz = 2 }
+		pp_lprof_expand = { type = city_walls demand = city_walls_construction cat = std ipl = 0 pt = soldiers sz = 0.5 }
+		pp_lprof_expand = { type = coastal_fort demand = fort_construction cat = std ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_expand = { type = fortress_church demand = fortress_church_construction cat = std ipl = 0 pt = clergy sz = 0.1 }
+		pp_lprof_expand = { type = stockade demand = stockade_construction cat = fort ipl = 0 pt = soldiers sz = 0.1 }
 	}
 	else = {
-		pp_lprof_start = { type = fortress demand = fort_construction cat = fort ipl = 0 }
-		pp_lprof_start = { type = star_fort demand = fort_construction cat = fort ipl = 0 }
-		pp_lprof_start = { type = bastion demand = fort_construction cat = fort ipl = 0 }
-		pp_lprof_start = { type = castle demand = castle_construction cat = fort ipl = 0 }
-		pp_lprof_start = { type = naval_battery demand = fort_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = city_walls demand = city_walls_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = coastal_fort demand = fort_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = fortress_church demand = fortress_church_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = stockade demand = stockade_construction cat = fort ipl = 0 }
+		pp_lprof_start = { type = fortress demand = fort_construction cat = fort ipl = 0 pt = soldiers sz = 4 }
+		pp_lprof_start = { type = star_fort demand = fort_construction cat = fort ipl = 0 pt = soldiers sz = 2 }
+		pp_lprof_start = { type = bastion demand = fort_construction cat = fort ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_start = { type = castle demand = castle_construction cat = fort ipl = 0 pt = soldiers sz = 0.5 }
+		pp_lprof_start = { type = naval_battery demand = fort_construction cat = std ipl = 0 pt = soldiers sz = 2 }
+		pp_lprof_start = { type = city_walls demand = city_walls_construction cat = std ipl = 0 pt = soldiers sz = 0.5 }
+		pp_lprof_start = { type = coastal_fort demand = fort_construction cat = std ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_start = { type = fortress_church demand = fortress_church_construction cat = std ipl = 0 pt = clergy sz = 0.1 }
+		pp_lprof_start = { type = stockade demand = stockade_construction cat = fort ipl = 0 pt = soldiers sz = 0.1 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1629,20 +1629,20 @@ pp_lprof_t_religious_category = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:madrasa building_type = building_type:miaphysite_monastery building_type = building_type:monastery building_type = building_type:orthodox_monastery building_type = building_type:sufi_lodge building_type = building_type:temple } } }
-		pp_lprof_expand = { type = madrasa demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = miaphysite_monastery demand = village_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = monastery demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = orthodox_monastery demand = village_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = sufi_lodge demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = temple demand = town_building_construction cat = std ipl = 0 }
+		pp_lprof_expand = { type = madrasa demand = town_building_construction cat = std ipl = 0 pt = clergy sz = 0.1 }
+		pp_lprof_expand = { type = miaphysite_monastery demand = village_construction cat = std ipl = 0 pt = clergy sz = 0.1 }
+		pp_lprof_expand = { type = monastery demand = town_building_construction cat = std ipl = 0 pt = clergy sz = 0.1 }
+		pp_lprof_expand = { type = orthodox_monastery demand = village_construction cat = std ipl = 0 pt = clergy sz = 0.1 }
+		pp_lprof_expand = { type = sufi_lodge demand = town_building_construction cat = std ipl = 0 pt = clergy sz = 0.05 }
+		pp_lprof_expand = { type = temple demand = town_building_construction cat = std ipl = 0 pt = clergy sz = 0.05 }
 	}
 	else = {
-		pp_lprof_start = { type = madrasa demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = miaphysite_monastery demand = village_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = monastery demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = orthodox_monastery demand = village_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = sufi_lodge demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = temple demand = town_building_construction cat = std ipl = 0 }
+		pp_lprof_start = { type = madrasa demand = town_building_construction cat = std ipl = 0 pt = clergy sz = 0.1 }
+		pp_lprof_start = { type = miaphysite_monastery demand = village_construction cat = std ipl = 0 pt = clergy sz = 0.1 }
+		pp_lprof_start = { type = monastery demand = town_building_construction cat = std ipl = 0 pt = clergy sz = 0.1 }
+		pp_lprof_start = { type = orthodox_monastery demand = village_construction cat = std ipl = 0 pt = clergy sz = 0.1 }
+		pp_lprof_start = { type = sufi_lodge demand = town_building_construction cat = std ipl = 0 pt = clergy sz = 0.05 }
+		pp_lprof_start = { type = temple demand = town_building_construction cat = std ipl = 0 pt = clergy sz = 0.05 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1654,24 +1654,24 @@ pp_lprof_t_cultural_category = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:arts_academy building_type = building_type:art_school building_type = building_type:brothel building_type = building_type:hippodrome building_type = building_type:library building_type = building_type:opera_house building_type = building_type:theater building_type = building_type:university } } }
-		pp_lprof_expand = { type = arts_academy demand = art_school_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = art_school demand = art_school_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = brothel demand = default_construct_building cat = std ipl = 0 }
-		pp_lprof_expand = { type = hippodrome demand = soldier_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = library demand = library_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = opera_house demand = opera_house_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = theater demand = theater_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = university demand = university_construction cat = std ipl = 0 }
+		pp_lprof_expand = { type = arts_academy demand = art_school_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_expand = { type = art_school demand = art_school_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_expand = { type = brothel demand = default_construct_building cat = std ipl = 0 pt = peasants sz = 0.1 }
+		pp_lprof_expand = { type = hippodrome demand = soldier_building_construction cat = std ipl = 0 pt = laborers sz = 0.5 }
+		pp_lprof_expand = { type = library demand = library_construction cat = std ipl = 0 pt = clergy sz = 0.1 }
+		pp_lprof_expand = { type = opera_house demand = opera_house_construction cat = std ipl = 0 pt = burghers sz = 0.2 }
+		pp_lprof_expand = { type = theater demand = theater_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_expand = { type = university demand = university_construction cat = std ipl = 0 pt = clergy sz = 0.05 }
 	}
 	else = {
-		pp_lprof_start = { type = arts_academy demand = art_school_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = art_school demand = art_school_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = brothel demand = default_construct_building cat = std ipl = 0 }
-		pp_lprof_start = { type = hippodrome demand = soldier_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = library demand = library_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = opera_house demand = opera_house_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = theater demand = theater_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = university demand = university_construction cat = std ipl = 0 }
+		pp_lprof_start = { type = arts_academy demand = art_school_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_start = { type = art_school demand = art_school_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_start = { type = brothel demand = default_construct_building cat = std ipl = 0 pt = peasants sz = 0.1 }
+		pp_lprof_start = { type = hippodrome demand = soldier_building_construction cat = std ipl = 0 pt = laborers sz = 0.5 }
+		pp_lprof_start = { type = library demand = library_construction cat = std ipl = 0 pt = clergy sz = 0.1 }
+		pp_lprof_start = { type = opera_house demand = opera_house_construction cat = std ipl = 0 pt = burghers sz = 0.2 }
+		pp_lprof_start = { type = theater demand = theater_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_start = { type = university demand = university_construction cat = std ipl = 0 pt = clergy sz = 0.05 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1683,22 +1683,22 @@ pp_lprof_t_naval_category = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:naval_base building_type = building_type:grand_shipyard building_type = building_type:shipyard building_type = building_type:dry_dock building_type = building_type:dock building_type = building_type:protected_harbor building_type = building_type:wharf } } }
-		pp_lprof_expand = { type = naval_base demand = port_building_construction cat = port ipl = 0 }
-		pp_lprof_expand = { type = grand_shipyard demand = port_building_construction cat = port ipl = 0 }
-		pp_lprof_expand = { type = shipyard demand = port_building_construction cat = port ipl = 0 }
-		pp_lprof_expand = { type = dry_dock demand = port_building_construction cat = port ipl = 0 }
-		pp_lprof_expand = { type = dock demand = port_building_construction cat = port ipl = 0 }
-		pp_lprof_expand = { type = protected_harbor demand = port_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = wharf demand = town_building_construction cat = std ipl = 0 }
+		pp_lprof_expand = { type = naval_base demand = port_building_construction cat = port ipl = 0 pt = soldiers sz = 5 }
+		pp_lprof_expand = { type = grand_shipyard demand = port_building_construction cat = port ipl = 0 pt = soldiers sz = 4 }
+		pp_lprof_expand = { type = shipyard demand = port_building_construction cat = port ipl = 0 pt = soldiers sz = 3 }
+		pp_lprof_expand = { type = dry_dock demand = port_building_construction cat = port ipl = 0 pt = soldiers sz = 2 }
+		pp_lprof_expand = { type = dock demand = port_building_construction cat = port ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_expand = { type = protected_harbor demand = port_building_construction cat = std ipl = 0 pt = laborers sz = 1 }
+		pp_lprof_expand = { type = wharf demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
 	}
 	else = {
-		pp_lprof_start = { type = naval_base demand = port_building_construction cat = port ipl = 0 }
-		pp_lprof_start = { type = grand_shipyard demand = port_building_construction cat = port ipl = 0 }
-		pp_lprof_start = { type = shipyard demand = port_building_construction cat = port ipl = 0 }
-		pp_lprof_start = { type = dry_dock demand = port_building_construction cat = port ipl = 0 }
-		pp_lprof_start = { type = dock demand = port_building_construction cat = port ipl = 0 }
-		pp_lprof_start = { type = protected_harbor demand = port_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = wharf demand = town_building_construction cat = std ipl = 0 }
+		pp_lprof_start = { type = naval_base demand = port_building_construction cat = port ipl = 0 pt = soldiers sz = 5 }
+		pp_lprof_start = { type = grand_shipyard demand = port_building_construction cat = port ipl = 0 pt = soldiers sz = 4 }
+		pp_lprof_start = { type = shipyard demand = port_building_construction cat = port ipl = 0 pt = soldiers sz = 3 }
+		pp_lprof_start = { type = dry_dock demand = port_building_construction cat = port ipl = 0 pt = soldiers sz = 2 }
+		pp_lprof_start = { type = dock demand = port_building_construction cat = port ipl = 0 pt = soldiers sz = 1 }
+		pp_lprof_start = { type = protected_harbor demand = port_building_construction cat = std ipl = 0 pt = laborers sz = 1 }
+		pp_lprof_start = { type = wharf demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
 		pp_lprof_start_pick = yes
 	}
 }
@@ -1710,74 +1710,74 @@ pp_lprof_t_infrastructure_category = {
 	}
 	else_if = {
 		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:field_management_improved building_type = building_type:field_management_convertible building_type = building_type:aqueduct_system building_type = building_type:bridge_infrastructure building_type = building_type:carrier_inn building_type = building_type:coastal_shipping_office building_type = building_type:construction_center building_type = building_type:field_drainage building_type = building_type:field_management building_type = building_type:grain_house building_type = building_type:granary building_type = building_type:hospital building_type = building_type:irrigated_fields building_type = building_type:irrigation_systems building_type = building_type:jiangnan_canal_network building_type = building_type:jiangnan_hill_terraces building_type = building_type:land_clearance building_type = building_type:lazaretto building_type = building_type:medical_school building_type = building_type:paddy_water_control building_type = building_type:pest_house building_type = building_type:pirate_stronghold building_type = building_type:pound_lock_canal_infrastructure building_type = building_type:pp_banjara_tanda building_type = building_type:pp_caravanserai building_type = building_type:pp_llama_caravan_post building_type = building_type:pp_oasis_caravan_station building_type = building_type:pp_yam_station building_type = building_type:qanats building_type = building_type:river_boatmen_yard building_type = building_type:settlement_building building_type = building_type:transport_office building_type = building_type:village_granary } } }
-		pp_lprof_expand = { type = field_management_improved demand = village_construction cat = std ipl = 0.05 }
-		pp_lprof_expand = { type = field_management_convertible demand = village_construction cat = std ipl = 0.05 }
-		pp_lprof_expand = { type = aqueduct_system demand = aqueduct_system_construction cat = std ipl = 0.3 }
-		pp_lprof_expand = { type = bridge_infrastructure demand = bridge_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = carrier_inn demand = pp_carrier_inn_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = coastal_shipping_office demand = pp_coastal_shipping_office_construction cat = std ipl = 0.15 }
-		pp_lprof_expand = { type = construction_center demand = town_building_construction cat = std ipl = 0.5 }
-		pp_lprof_expand = { type = field_drainage demand = village_construction cat = std ipl = 0.05 }
-		pp_lprof_expand = { type = field_management demand = village_construction cat = std ipl = 0.05 }
-		pp_lprof_expand = { type = grain_house demand = granary_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = granary demand = granary_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = hospital demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = irrigated_fields demand = village_construction cat = std ipl = 0.05 }
-		pp_lprof_expand = { type = irrigation_systems demand = village_construction cat = std ipl = 0.05 }
-		pp_lprof_expand = { type = jiangnan_canal_network demand = village_construction cat = std ipl = 0.05 }
-		pp_lprof_expand = { type = jiangnan_hill_terraces demand = village_construction cat = std ipl = 0.05 }
-		pp_lprof_expand = { type = land_clearance demand = village_construction cat = std ipl = 0.05 }
-		pp_lprof_expand = { type = lazaretto demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = medical_school demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = paddy_water_control demand = village_construction cat = std ipl = 0.05 }
-		pp_lprof_expand = { type = pest_house demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = pirate_stronghold demand = capital_building_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = pound_lock_canal_infrastructure demand = pound_lock_canal_infrastructure_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = pp_banjara_tanda demand = pp_banjara_tanda_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = pp_caravanserai demand = pp_caravanserai_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = pp_llama_caravan_post demand = pp_llama_caravan_post_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = pp_oasis_caravan_station demand = pp_oasis_caravan_station_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = pp_yam_station demand = pp_yam_station_construction cat = std ipl = 0.19 }
-		pp_lprof_expand = { type = qanats demand = village_construction cat = std ipl = 0.05 }
-		pp_lprof_expand = { type = river_boatmen_yard demand = pp_river_boatmen_yard_construction cat = std ipl = 0.15 }
-		pp_lprof_expand = { type = settlement_building demand = colony_construction cat = std ipl = 0 }
-		pp_lprof_expand = { type = transport_office demand = pp_transport_office_construction cat = std ipl = 0.23 }
-		pp_lprof_expand = { type = village_granary demand = village_granary_construction cat = std ipl = 0 }
+		pp_lprof_expand = { type = field_management_improved demand = village_construction cat = std ipl = 0.05 pt = peasants sz = 0.2 }
+		pp_lprof_expand = { type = field_management_convertible demand = village_construction cat = std ipl = 0.05 pt = peasants sz = 0.15 }
+		pp_lprof_expand = { type = aqueduct_system demand = aqueduct_system_construction cat = std ipl = 0.3 pt = laborers sz = 1 }
+		pp_lprof_expand = { type = bridge_infrastructure demand = bridge_construction cat = std ipl = 0 pt = laborers sz = 0.25 }
+		pp_lprof_expand = { type = carrier_inn demand = pp_carrier_inn_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = coastal_shipping_office demand = pp_coastal_shipping_office_construction cat = std ipl = 0.15 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = construction_center demand = town_building_construction cat = std ipl = 0.5 pt = laborers sz = 0.5 }
+		pp_lprof_expand = { type = field_drainage demand = village_construction cat = std ipl = 0.05 pt = peasants sz = 0 }
+		pp_lprof_expand = { type = field_management demand = village_construction cat = std ipl = 0.05 pt = peasants sz = 0.1 }
+		pp_lprof_expand = { type = grain_house demand = granary_construction cat = std ipl = 0 pt = laborers sz = 0.05 }
+		pp_lprof_expand = { type = granary demand = granary_construction cat = std ipl = 0 pt = laborers sz = 0.25 }
+		pp_lprof_expand = { type = hospital demand = town_building_construction cat = std ipl = 0 pt = clergy sz = 0.1 }
+		pp_lprof_expand = { type = irrigated_fields demand = village_construction cat = std ipl = 0.05 pt = peasants sz = 0 }
+		pp_lprof_expand = { type = irrigation_systems demand = village_construction cat = std ipl = 0.05 pt = peasants sz = 0 }
+		pp_lprof_expand = { type = jiangnan_canal_network demand = village_construction cat = std ipl = 0.05 pt = peasants sz = 0.15 }
+		pp_lprof_expand = { type = jiangnan_hill_terraces demand = village_construction cat = std ipl = 0.05 pt = peasants sz = 0.15 }
+		pp_lprof_expand = { type = land_clearance demand = village_construction cat = std ipl = 0.05 pt = peasants sz = 0 }
+		pp_lprof_expand = { type = lazaretto demand = town_building_construction cat = std ipl = 0 pt = clergy sz = 0.1 }
+		pp_lprof_expand = { type = medical_school demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_expand = { type = paddy_water_control demand = village_construction cat = std ipl = 0.05 pt = peasants sz = 0 }
+		pp_lprof_expand = { type = pest_house demand = town_building_construction cat = std ipl = 0 pt = peasants sz = 0.1 }
+		pp_lprof_expand = { type = pirate_stronghold demand = capital_building_construction cat = std ipl = 0 pt = peasants sz = 2 }
+		pp_lprof_expand = { type = pound_lock_canal_infrastructure demand = pound_lock_canal_infrastructure_construction cat = std ipl = 0 pt = laborers sz = 0.25 }
+		pp_lprof_expand = { type = pp_banjara_tanda demand = pp_banjara_tanda_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = pp_caravanserai demand = pp_caravanserai_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = pp_llama_caravan_post demand = pp_llama_caravan_post_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = pp_oasis_caravan_station demand = pp_oasis_caravan_station_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = pp_yam_station demand = pp_yam_station_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = qanats demand = village_construction cat = std ipl = 0.05 pt = peasants sz = 0 }
+		pp_lprof_expand = { type = river_boatmen_yard demand = pp_river_boatmen_yard_construction cat = std ipl = 0.15 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = settlement_building demand = colony_construction cat = std ipl = 0 pt = peasants sz = 0.25 }
+		pp_lprof_expand = { type = transport_office demand = pp_transport_office_construction cat = std ipl = 0.23 pt = laborers sz = 0.8 }
+		pp_lprof_expand = { type = village_granary demand = village_granary_construction cat = std ipl = 0 pt = laborers sz = 0.05 }
 	}
 	else = {
-		pp_lprof_start = { type = field_management_improved demand = village_construction cat = std ipl = 0.05 }
-		pp_lprof_start = { type = field_management_convertible demand = village_construction cat = std ipl = 0.05 }
-		pp_lprof_start = { type = aqueduct_system demand = aqueduct_system_construction cat = std ipl = 0.3 }
-		pp_lprof_start = { type = bridge_infrastructure demand = bridge_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = carrier_inn demand = pp_carrier_inn_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = coastal_shipping_office demand = pp_coastal_shipping_office_construction cat = std ipl = 0.15 }
-		pp_lprof_start = { type = construction_center demand = town_building_construction cat = std ipl = 0.5 }
-		pp_lprof_start = { type = field_drainage demand = village_construction cat = std ipl = 0.05 }
-		pp_lprof_start = { type = field_management demand = village_construction cat = std ipl = 0.05 }
-		pp_lprof_start = { type = grain_house demand = granary_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = granary demand = granary_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = hospital demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = irrigated_fields demand = village_construction cat = std ipl = 0.05 }
-		pp_lprof_start = { type = irrigation_systems demand = village_construction cat = std ipl = 0.05 }
-		pp_lprof_start = { type = jiangnan_canal_network demand = village_construction cat = std ipl = 0.05 }
-		pp_lprof_start = { type = jiangnan_hill_terraces demand = village_construction cat = std ipl = 0.05 }
-		pp_lprof_start = { type = land_clearance demand = village_construction cat = std ipl = 0.05 }
-		pp_lprof_start = { type = lazaretto demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = medical_school demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = paddy_water_control demand = village_construction cat = std ipl = 0.05 }
-		pp_lprof_start = { type = pest_house demand = town_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = pirate_stronghold demand = capital_building_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = pound_lock_canal_infrastructure demand = pound_lock_canal_infrastructure_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = pp_banjara_tanda demand = pp_banjara_tanda_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = pp_caravanserai demand = pp_caravanserai_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = pp_llama_caravan_post demand = pp_llama_caravan_post_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = pp_oasis_caravan_station demand = pp_oasis_caravan_station_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = pp_yam_station demand = pp_yam_station_construction cat = std ipl = 0.19 }
-		pp_lprof_start = { type = qanats demand = village_construction cat = std ipl = 0.05 }
-		pp_lprof_start = { type = river_boatmen_yard demand = pp_river_boatmen_yard_construction cat = std ipl = 0.15 }
-		pp_lprof_start = { type = settlement_building demand = colony_construction cat = std ipl = 0 }
-		pp_lprof_start = { type = transport_office demand = pp_transport_office_construction cat = std ipl = 0.23 }
-		pp_lprof_start = { type = village_granary demand = village_granary_construction cat = std ipl = 0 }
+		pp_lprof_start = { type = field_management_improved demand = village_construction cat = std ipl = 0.05 pt = peasants sz = 0.2 }
+		pp_lprof_start = { type = field_management_convertible demand = village_construction cat = std ipl = 0.05 pt = peasants sz = 0.15 }
+		pp_lprof_start = { type = aqueduct_system demand = aqueduct_system_construction cat = std ipl = 0.3 pt = laborers sz = 1 }
+		pp_lprof_start = { type = bridge_infrastructure demand = bridge_construction cat = std ipl = 0 pt = laborers sz = 0.25 }
+		pp_lprof_start = { type = carrier_inn demand = pp_carrier_inn_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = coastal_shipping_office demand = pp_coastal_shipping_office_construction cat = std ipl = 0.15 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = construction_center demand = town_building_construction cat = std ipl = 0.5 pt = laborers sz = 0.5 }
+		pp_lprof_start = { type = field_drainage demand = village_construction cat = std ipl = 0.05 pt = peasants sz = 0 }
+		pp_lprof_start = { type = field_management demand = village_construction cat = std ipl = 0.05 pt = peasants sz = 0.1 }
+		pp_lprof_start = { type = grain_house demand = granary_construction cat = std ipl = 0 pt = laborers sz = 0.05 }
+		pp_lprof_start = { type = granary demand = granary_construction cat = std ipl = 0 pt = laborers sz = 0.25 }
+		pp_lprof_start = { type = hospital demand = town_building_construction cat = std ipl = 0 pt = clergy sz = 0.1 }
+		pp_lprof_start = { type = irrigated_fields demand = village_construction cat = std ipl = 0.05 pt = peasants sz = 0 }
+		pp_lprof_start = { type = irrigation_systems demand = village_construction cat = std ipl = 0.05 pt = peasants sz = 0 }
+		pp_lprof_start = { type = jiangnan_canal_network demand = village_construction cat = std ipl = 0.05 pt = peasants sz = 0.15 }
+		pp_lprof_start = { type = jiangnan_hill_terraces demand = village_construction cat = std ipl = 0.05 pt = peasants sz = 0.15 }
+		pp_lprof_start = { type = land_clearance demand = village_construction cat = std ipl = 0.05 pt = peasants sz = 0 }
+		pp_lprof_start = { type = lazaretto demand = town_building_construction cat = std ipl = 0 pt = clergy sz = 0.1 }
+		pp_lprof_start = { type = medical_school demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 }
+		pp_lprof_start = { type = paddy_water_control demand = village_construction cat = std ipl = 0.05 pt = peasants sz = 0 }
+		pp_lprof_start = { type = pest_house demand = town_building_construction cat = std ipl = 0 pt = peasants sz = 0.1 }
+		pp_lprof_start = { type = pirate_stronghold demand = capital_building_construction cat = std ipl = 0 pt = peasants sz = 2 }
+		pp_lprof_start = { type = pound_lock_canal_infrastructure demand = pound_lock_canal_infrastructure_construction cat = std ipl = 0 pt = laborers sz = 0.25 }
+		pp_lprof_start = { type = pp_banjara_tanda demand = pp_banjara_tanda_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = pp_caravanserai demand = pp_caravanserai_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = pp_llama_caravan_post demand = pp_llama_caravan_post_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = pp_oasis_caravan_station demand = pp_oasis_caravan_station_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = pp_yam_station demand = pp_yam_station_construction cat = std ipl = 0.19 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = qanats demand = village_construction cat = std ipl = 0.05 pt = peasants sz = 0 }
+		pp_lprof_start = { type = river_boatmen_yard demand = pp_river_boatmen_yard_construction cat = std ipl = 0.15 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = settlement_building demand = colony_construction cat = std ipl = 0 pt = peasants sz = 0.25 }
+		pp_lprof_start = { type = transport_office demand = pp_transport_office_construction cat = std ipl = 0.23 pt = laborers sz = 0.8 }
+		pp_lprof_start = { type = village_granary demand = village_granary_construction cat = std ipl = 0 pt = laborers sz = 0.05 }
 		pp_lprof_start_pick = yes
 	}
 }

@@ -1,16 +1,17 @@
 ﻿# Prosper or Perish - Construction Plan (branch player-construction-manager, 2026-11-06, Jan; two tabs since 2026-11-09).
 # Player-only construction rules, run once a month by on_action/pp_construction_plan.txt for each human country that
-# switched the plan on. Global settings: a gold reserve and four rule groups (Food per province, Logistics per location,
-# Improvements per location, Businesses), each on or off with its line. Location profiles (pp_location_profiles.txt)
-# are the only per-location layer: a profile takes from the rule groups only what it sets (its rules' targets and the
+# switched the plan on. Global settings: a gold reserve and five rule groups (Location profiles, Food per province,
+# Logistics per location, Improvements per location, Businesses), each with a weight (its part of the gold above the
+# reserve = its weight over the sum of the weights; 0 = off) and the last three with a line. Location profiles
+# (pp_location_profiles.txt) are the only per-location layer: a profile takes from the rule groups only what it sets (its rules' targets and the
 # groups it switches off; pp_cplan_*_ok in scripted_triggers), the rest still build in its locations. The pickers per
 # building, the profit estimates and the build cost data are generated from [construction_plan] into
 # pp_construction_plan_generated.txt (construction_plan.py). Constructions are normal, paid constructions
 # (construct_building), so they show in the construction queue like the player's own.
 # Variables carry + 100 (a variable at 0 counts as unset; var:x = n compares scopes, so only < / > ranges are used).
 #
-# Country variables: pp_cplan_on (the plan runs), pp_cplan_food_off / _logistics_off / _improve_off / _business_off (a
-# rule group is off), pp_cplan_reserve / _access / _imp / _biz (the window's lines; defaults in [construction_plan]),
+# Country variables: pp_cplan_on (the plan runs), pp_cplan_w_profiles / _food / _logistics / _improve / _business (the
+# rule groups' weights), pp_cplan_reserve / _access / _imp / _biz (the window's lines; defaults in [construction_plan]),
 # the list pp_cplan_log (locations built in by the last pass), the last pass's pp_cplan_started / _spent, and during a
 # pass only: pp_cplan_pot (gold above the reserve at its start), pp_cplan_cap (gold the rule groups so far may have
 # spent), pp_cplan_hit, pp_cplan_bz_<type> (the business types the country can build).
@@ -31,8 +32,9 @@ pp_cplan_run = {
 	set_variable = { name = pp_cplan_spent value = 100 }
 	remove_variable = pp_cplan_hit
 	# The gold above the reserve is this month's budget (Jan 2026-11-09: no limit on the number of constructions). Each
-	# rule group that runs adds an equal part of it to pp_cplan_cap, so a part one group leaves passes on to the next;
-	# a group may go past its part with its last construction. No construction takes the treasury below the reserve
+	# rule group that runs adds its part of it to pp_cplan_cap (its weight over the sum of the weights,
+	# pp_cplan_share_<group>), so a part one group leaves passes on to the next; a group may go past its part with its
+	# last construction. No construction takes the treasury below the reserve
 	# (pp_cplan_construct_scoped).
 	set_variable = { name = pp_cplan_pot value = { value = pp_cplan_free_gold min = 0 add = 100 } }
 	set_variable = { name = pp_cplan_cap value = 100 }
@@ -94,6 +96,7 @@ pp_cplan_run = {
 		limit = { always = no }
 		save_scope_as = pp_key
 		save_scope_as = pp_dir
+		save_scope_as = pp_n
 		save_scope_as = pp_slot # Location Profiles
 		save_scope_as = pp_field # Location Profiles
 		save_scope_as = pp_col # Location Profiles
@@ -107,7 +110,8 @@ pp_cplan_run = {
 	}
 }
 
-# ---- The rule groups (country scope, inside pp_cplan_run; each adds its part of the month's gold when it runs) ----
+# ---- The rule groups (country scope, inside pp_cplan_run; each with a weight above 0 adds its part of the month's gold
+# when it runs) ----
 
 # Location profiles (pp_location_profiles.txt): their rules have priority in their locations; the global groups still
 # build there what a profile does not set (pp_cplan_*_ok).
@@ -118,8 +122,8 @@ pp_cplan_group_profiles = {
 # Food, per province (pp_cplan_food_province).
 pp_cplan_group_food = {
 	if = {
-		limit = { NOT = { has_variable = pp_cplan_food_off } }
-		change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }
+		limit = { pp_cplan_food_w > 0 }
+		change_variable = { name = pp_cplan_cap add = pp_cplan_share_food }
 		every_province = {
 			pp_cplan_food_province = yes
 		}
@@ -129,12 +133,12 @@ pp_cplan_group_food = {
 # Logistics, per location: where market access without event modifiers is below the line, the most urgent first.
 pp_cplan_group_logistics = {
 	if = {
-		limit = { NOT = { has_variable = pp_cplan_logistics_off } }
-		change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }
+		limit = { pp_cplan_logistics_w > 0 }
+		change_variable = { name = pp_cplan_cap add = pp_cplan_share_logistics }
 	}
 	if = {
 		limit = {
-			NOT = { has_variable = pp_cplan_logistics_off }
+			pp_cplan_logistics_w > 0
 			pp_cplan_budget_left = yes
 		}
 		ordered_owned_location = {
@@ -157,12 +161,12 @@ pp_cplan_group_logistics = {
 # the most capacity per gold; the fullest locations first.
 pp_cplan_group_improve = {
 	if = {
-		limit = { NOT = { has_variable = pp_cplan_improve_off } }
-		change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }
+		limit = { pp_cplan_improve_w > 0 }
+		change_variable = { name = pp_cplan_cap add = pp_cplan_share_improve }
 	}
 	if = {
 		limit = {
-			NOT = { has_variable = pp_cplan_improve_off }
+			pp_cplan_improve_w > 0
 			pp_cplan_budget_left = yes
 		}
 		ordered_owned_location = {
@@ -188,12 +192,12 @@ pp_cplan_group_improve = {
 # runs once (pp_cplan_business_types), not once per location.
 pp_cplan_group_business = {
 	if = {
-		limit = { NOT = { has_variable = pp_cplan_business_off } }
-		change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }
+		limit = { pp_cplan_business_w > 0 }
+		change_variable = { name = pp_cplan_cap add = pp_cplan_share_business }
 	}
 	if = {
 		limit = {
-			NOT = { has_variable = pp_cplan_business_off }
+			pp_cplan_business_w > 0
 			pp_cplan_budget_left = yes
 		}
 		pp_cplan_business_types = yes
@@ -454,6 +458,30 @@ pp_cplan_flip = {
 	}
 	else = {
 		set_variable = { name = $var$ value = yes }
+	}
+}
+
+# Country scope: the weight $var$ (+ 100) of a rule group: the step scope:pp_n (flag w1..w10, a step of its bar clicked)
+# or one step in the direction scope:pp_dir (- / +); 0 = the group is off. $current$ is the weight with its default.
+pp_cplan_set_weight = {
+	if = {
+		limit = { exists = scope:pp_n }
+		switch = {
+			trigger = scope:pp_n
+			flag:w1 = { set_variable = { name = $var$ value = 101 } }
+			flag:w2 = { set_variable = { name = $var$ value = 102 } }
+			flag:w3 = { set_variable = { name = $var$ value = 103 } }
+			flag:w4 = { set_variable = { name = $var$ value = 104 } }
+			flag:w5 = { set_variable = { name = $var$ value = 105 } }
+			flag:w6 = { set_variable = { name = $var$ value = 106 } }
+			flag:w7 = { set_variable = { name = $var$ value = 107 } }
+			flag:w8 = { set_variable = { name = $var$ value = 108 } }
+			flag:w9 = { set_variable = { name = $var$ value = 109 } }
+			flag:w10 = { set_variable = { name = $var$ value = 110 } }
+		}
+	}
+	else = {
+		pp_cplan_step_var = { var = $var$ current = $current$ step = 1 min = 100 max = 110 }
 	}
 }
 

@@ -1,7 +1,7 @@
 ﻿# Prosper or Perish - Construction Plan window (branch player-construction-manager, 2026-11-06, Jan; two tabs since
 # 2026-11-09). A scripted widget (gui/scripted_widgets/pp_construction_plan.txt), so no vanilla window is overridden.
-# Tabs (vanilla main tabs): Global settings (the plan on or off, the gold reserve, the four rule groups with their
-# lines, what the last pass built) and Location profiles (the editor, type pp_lprof_editor_tab in
+# Tabs (vanilla main tabs): Global settings (the plan on or off, the gold reserve, the five rule groups with their
+# weight bars and lines, what the last pass built) and Location profiles (the editor, type pp_lprof_editor_tab in
 # pp_location_profiles.gui). GUI variables: pp_cplan_open (window open), pp_cplan_tab ('profiles' = the second tab).
 # Every button runs a scripted GUI in common/scripted_guis/pp_construction_plan.txt; every number is a script value
 # (common/script_values/pp_construction_plan*.txt).
@@ -27,13 +27,6 @@ types PPConstructionPlan
 		autoresize = yes
 		align = left|nobaseline
 		default_format = "#yellow_titles"
-	}
-
-	# One rule group: its name, its line with the arrows (blockoverride "line"), its switch.
-	type pp_cplan_group_row = hbox {
-		layoutpolicy_horizontal = expanding
-		spacing = 6
-		block "line" {}
 	}
 }
 
@@ -145,109 +138,85 @@ widget = {
 							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('reserve')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
 							onrightclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('reserve_big')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
 						}
-						# lines up with the rule groups' switches below
-						widget = { size = { 70 1 } }
 					}
 
-					pp_cplan_title = { text = "PP_CPLAN_RULES" }
-
-					# Food, per province
-					pp_cplan_group_row = {
-						blockoverride "line" {
-							pp_cplan_label = { text = "PP_CPLAN_FOOD_RULE" tooltip = "PP_CPLAN_FOOD_RULE_TT" }
-							expand = {}
-							pp_cplan_switch_button = {
-								visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_food_n'), '(CFixedPoint)0.5')]"
-								text = "PP_CPLAN_ON"
-								onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('food')).End)]"
-							}
-							pp_cplan_switch_button = {
-								visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_food_n'), '(CFixedPoint)0.5'))]"
-								text = "PP_CPLAN_OFF"
-								onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('food')).End)]"
-							}
-						}
+					# the rule groups: name, line, weight bar (generated, pp_construction_plan_weights.gui) and part in %
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						pp_cplan_title = { text = "PP_CPLAN_RULES" }
+						expand = {}
+						pp_cplan_label = { text = "PP_CPLAN_SHARE_HEAD" tooltip = "PP_CPLAN_SHARE_TT" default_format = "#weak" }
 					}
 
-					# Logistics, per location: below this market access
-					pp_cplan_group_row = {
-						blockoverride "line" {
-							pp_cplan_label = { text = "PP_CPLAN_LOGISTICS_RULE" tooltip = "PP_CPLAN_LOGISTICS_RULE_TT" }
-							expand = {}
+					# profiles
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						spacing = 6
+						pp_cplan_label = { text = "PP_CPLAN_PROFILES_RULE" tooltip = "PP_CPLAN_PROFILES_RULE_TT" minimumsize = { 150 -1 } maximumsize = { 150 -1 } }
+						widget = { size = { 220 1 } }
+						expand = {}
+						pp_cplan_weight_bar_profiles = {}
+					}
+
+					# food
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						spacing = 6
+						pp_cplan_label = { text = "PP_CPLAN_FOOD_RULE" tooltip = "PP_CPLAN_FOOD_RULE_TT" minimumsize = { 150 -1 } maximumsize = { 150 -1 } }
+						widget = { size = { 220 1 } }
+						expand = {}
+						pp_cplan_weight_bar_food = {}
+					}
+
+					# logistics
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						spacing = 6
+						pp_cplan_label = { text = "PP_CPLAN_LOGISTICS_RULE" tooltip = "PP_CPLAN_LOGISTICS_RULE_TT" minimumsize = { 150 -1 } maximumsize = { 150 -1 } }
+						hbox = {
+							minimumsize = { 220 -1 }
+							spacing = 4
 							pp_cplan_label = { text = "PP_CPLAN_ACCESS_VALUE" tooltip = "PP_CPLAN_LOGISTICS_RULE_TT" }
-							pp_cplan_step_button = {
-								text = "PP_CPLAN_MINUS"
-								onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('access_line')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
-							}
-							pp_cplan_step_button = {
-								text = "PP_CPLAN_PLUS"
-								onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('access_line')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
-							}
-							pp_cplan_switch_button = {
-								visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_logistics_n'), '(CFixedPoint)0.5')]"
-								text = "PP_CPLAN_ON"
-								onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('logistics')).End)]"
-							}
-							pp_cplan_switch_button = {
-								visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_logistics_n'), '(CFixedPoint)0.5'))]"
-								text = "PP_CPLAN_OFF"
-								onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('logistics')).End)]"
-							}
+							expand = {}
+							pp_cplan_step_button = { text = "PP_CPLAN_MINUS" onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('access_line')).AddScope('pp_dir', MakeScopeFlag('down')).End)]" }
+							pp_cplan_step_button = { text = "PP_CPLAN_PLUS" onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('access_line')).AddScope('pp_dir', MakeScopeFlag('up')).End)]" }
 						}
+						expand = {}
+						pp_cplan_weight_bar_logistics = {}
 					}
 
-					# Improvements, per location: from this population over capacity
-					pp_cplan_group_row = {
-						blockoverride "line" {
-							pp_cplan_label = { text = "PP_CPLAN_IMPROVE_RULE" tooltip = "PP_CPLAN_IMPROVE_RULE_TT" }
-							expand = {}
+					# improve
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						spacing = 6
+						pp_cplan_label = { text = "PP_CPLAN_IMPROVE_RULE" tooltip = "PP_CPLAN_IMPROVE_RULE_TT" minimumsize = { 150 -1 } maximumsize = { 150 -1 } }
+						hbox = {
+							minimumsize = { 220 -1 }
+							spacing = 4
 							pp_cplan_label = { text = "PP_CPLAN_IMPROVE_LINE_VALUE" tooltip = "PP_CPLAN_IMPROVE_RULE_TT" }
-							pp_cplan_step_button = {
-								text = "PP_CPLAN_MINUS"
-								onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve_line')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
-							}
-							pp_cplan_step_button = {
-								text = "PP_CPLAN_PLUS"
-								onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve_line')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
-							}
-							pp_cplan_switch_button = {
-								visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_improve_n'), '(CFixedPoint)0.5')]"
-								text = "PP_CPLAN_ON"
-								onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve')).End)]"
-							}
-							pp_cplan_switch_button = {
-								visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_improve_n'), '(CFixedPoint)0.5'))]"
-								text = "PP_CPLAN_OFF"
-								onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve')).End)]"
-							}
+							expand = {}
+							pp_cplan_step_button = { text = "PP_CPLAN_MINUS" onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve_line')).AddScope('pp_dir', MakeScopeFlag('down')).End)]" }
+							pp_cplan_step_button = { text = "PP_CPLAN_PLUS" onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve_line')).AddScope('pp_dir', MakeScopeFlag('up')).End)]" }
 						}
+						expand = {}
+						pp_cplan_weight_bar_improve = {}
 					}
 
-					# Businesses: within this payback
-					pp_cplan_group_row = {
-						blockoverride "line" {
-							pp_cplan_label = { text = "PP_CPLAN_BUSINESS_RULE" tooltip = "PP_CPLAN_BUSINESS_RULE_TT" }
-							expand = {}
+					# business
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						spacing = 6
+						pp_cplan_label = { text = "PP_CPLAN_BUSINESS_RULE" tooltip = "PP_CPLAN_BUSINESS_RULE_TT" minimumsize = { 150 -1 } maximumsize = { 150 -1 } }
+						hbox = {
+							minimumsize = { 220 -1 }
+							spacing = 4
 							pp_cplan_label = { text = "PP_CPLAN_BUSINESS_LINE_VALUE" tooltip = "PP_CPLAN_BUSINESS_RULE_TT" }
-							pp_cplan_step_button = {
-								text = "PP_CPLAN_MINUS"
-								onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business_line')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
-							}
-							pp_cplan_step_button = {
-								text = "PP_CPLAN_PLUS"
-								onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business_line')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
-							}
-							pp_cplan_switch_button = {
-								visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_business_n'), '(CFixedPoint)0.5')]"
-								text = "PP_CPLAN_ON"
-								onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business')).End)]"
-							}
-							pp_cplan_switch_button = {
-								visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_business_n'), '(CFixedPoint)0.5'))]"
-								text = "PP_CPLAN_OFF"
-								onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business')).End)]"
-							}
+							expand = {}
+							pp_cplan_step_button = { text = "PP_CPLAN_MINUS" onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business_line')).AddScope('pp_dir', MakeScopeFlag('down')).End)]" }
+							pp_cplan_step_button = { text = "PP_CPLAN_PLUS" onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business_line')).AddScope('pp_dir', MakeScopeFlag('up')).End)]" }
 						}
+						expand = {}
+						pp_cplan_weight_bar_business = {}
 					}
 
 					pp_cplan_title = { text = "PP_CPLAN_LAST" }

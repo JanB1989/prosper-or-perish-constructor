@@ -38,6 +38,162 @@ pp_cplan_business_years = {
 		subtract = 100
 	}
 }
+
+# ---- Rule group weights (country scope; 0 = off) ----
+
+# Country scope: the profiles group's weight, 0..10.
+pp_cplan_profiles_w = {
+	value = 5
+	if = {
+		limit = { has_variable = pp_cplan_w_profiles }
+		value = var:pp_cplan_w_profiles
+		subtract = 100
+	}
+}
+# Country scope: the food group's weight, 0..10.
+pp_cplan_food_w = {
+	value = 5
+	if = {
+		limit = { has_variable = pp_cplan_w_food }
+		value = var:pp_cplan_w_food
+		subtract = 100
+	}
+}
+# Country scope: the logistics group's weight, 0..10.
+pp_cplan_logistics_w = {
+	value = 5
+	if = {
+		limit = { has_variable = pp_cplan_w_logistics }
+		value = var:pp_cplan_w_logistics
+		subtract = 100
+	}
+}
+# Country scope: the improve group's weight, 0..10.
+pp_cplan_improve_w = {
+	value = 5
+	if = {
+		limit = { has_variable = pp_cplan_w_improve }
+		value = var:pp_cplan_w_improve
+		subtract = 100
+	}
+}
+# Country scope: the business group's weight, 0..10.
+pp_cplan_business_w = {
+	value = 5
+	if = {
+		limit = { has_variable = pp_cplan_w_business }
+		value = var:pp_cplan_w_business
+		subtract = 100
+	}
+}
+# Country scope: the location profiles' weight counts only while a location of the country has a profile.
+pp_cplan_profiles_cw = {
+	value = pp_cplan_profiles_w
+	multiply = pp_lprof_group_n
+}
+# Country scope: the sum of the weights that count.
+pp_cplan_w_total = {
+	value = pp_cplan_profiles_cw
+	add = pp_cplan_food_w
+	add = pp_cplan_logistics_w
+	add = pp_cplan_improve_w
+	add = pp_cplan_business_w
+}
+# Country scope: the profiles group's part of the budget, in % (the window) and in gold (the pass).
+pp_cplan_part_profiles = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_profiles_cw
+		multiply = 100
+		divide = pp_cplan_w_total
+	}
+}
+pp_cplan_share_profiles = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_pot_n
+		multiply = pp_cplan_profiles_cw
+		divide = pp_cplan_w_total
+	}
+}
+# Country scope: the food group's part of the budget, in % (the window) and in gold (the pass).
+pp_cplan_part_food = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_food_w
+		multiply = 100
+		divide = pp_cplan_w_total
+	}
+}
+pp_cplan_share_food = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_pot_n
+		multiply = pp_cplan_food_w
+		divide = pp_cplan_w_total
+	}
+}
+# Country scope: the logistics group's part of the budget, in % (the window) and in gold (the pass).
+pp_cplan_part_logistics = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_logistics_w
+		multiply = 100
+		divide = pp_cplan_w_total
+	}
+}
+pp_cplan_share_logistics = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_pot_n
+		multiply = pp_cplan_logistics_w
+		divide = pp_cplan_w_total
+	}
+}
+# Country scope: the improve group's part of the budget, in % (the window) and in gold (the pass).
+pp_cplan_part_improve = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_improve_w
+		multiply = 100
+		divide = pp_cplan_w_total
+	}
+}
+pp_cplan_share_improve = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_pot_n
+		multiply = pp_cplan_improve_w
+		divide = pp_cplan_w_total
+	}
+}
+# Country scope: the business group's part of the budget, in % (the window) and in gold (the pass).
+pp_cplan_part_business = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_business_w
+		multiply = 100
+		divide = pp_cplan_w_total
+	}
+}
+pp_cplan_share_business = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_pot_n
+		multiply = pp_cplan_business_w
+		divide = pp_cplan_w_total
+	}
+}
 # Country scope: the improvement line as a share of capacity (location_population_percentage).
 pp_cplan_improve_line = {
 	value = pp_cplan_improve_pct

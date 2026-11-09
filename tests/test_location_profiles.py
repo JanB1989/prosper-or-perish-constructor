@@ -86,10 +86,15 @@ def test_every_candidate_has_cost_data_and_guards() -> None:
     plan_triggers = _read(MOD / cp.TRIGGERS)
     plan_values = _read(MOD / cp.VALUES) + _read(PLAN_VALUES)
     known = cp.defined_buildings(MOD, vanilla_root(ROOT, PROJECT))
-    calls = re.findall(r"pp_lprof_(?:expand|start|try) = \{ type = (\w+) demand = (\w+) cat = (\w+) ipl = ([0-9.]+) \}", effects)
+    calls = re.findall(r"pp_lprof_(?:expand|start|try) = \{ type = (\w+) demand = (\w+) cat = (\w+) ipl = ([0-9.]+) "
+                       r"pt = (\w+) sz = ([0-9.]+) \}", effects)
     assert len(calls) > 300
-    for name, demand, category, _ in calls:
+    staff = cp.staffing(cp._database(MOD, vanilla_root(ROOT, PROJECT), cp.BUILDING_TYPES),
+                        cp.script_value_numbers(MOD, vanilla_root(ROOT, PROJECT)))
+    for name, demand, category, _, pop_type, size in calls:
         assert name in known, name
+        # the workers one level needs (Jan 2026-11-09: no building where nobody can work in it)
+        assert (pop_type, float(size)) == staff.get(name, ("peasants", 0.0)), name
         assert f"pp_cplan_goods_here_{demand} = {{" in plan_triggers, demand
         assert f"pp_cplan_cd_{demand} = {{" in plan_values, demand
         assert f"pp_cplan_eff_{category} = {{" in plan_values, category
@@ -98,6 +103,7 @@ def test_every_candidate_has_cost_data_and_guards() -> None:
         body = _block(hand, name)
         assert "location_and_owner_can_build = { building_type = $type$ }" in body, name
         assert "pp_cplan_goods_here_$demand$ = yes" in body, name
+        assert "pp_cplan_staff = { type = $pt$ size = $sz$ }" in body, name
     # every construction goes through the plan's budget check and its construct (ledger, never twice while queued)
     build = _block(hand, "pp_lprof_build")
     assert "pp_cplan_budget_left = yes" in build and f"pp_cplan_construct_scoped = {{ why = {lpf.WHY_PROFILE} }}" in build
@@ -198,7 +204,9 @@ def test_global_rules_read_the_profile() -> None:
     assert "goods:wheat" in _block(generated, "pp_lprof_food_target")
     hand = _code(MOD / lpf.HAND_EFFECTS)
     group = _block(hand, "pp_lprof_run")
-    assert "change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }" in group
+    assert "change_variable = { name = pp_cplan_cap add = pp_cplan_share_profiles }" in group
+    assert "pp_cplan_profiles_w > 0" in group  # the profiles' weight bar at 0 switches them off
+    assert "save_temporary_scope_value_as = { name = pp_cplan_free_peasants value = pp_cplan_free_peasants_here }" in group
     assert "owner ?= scope:pp_cplan_country" in group and "pp_lprof_location_rules = yes" in group
     # the first rule that starts a construction ends the location for the month
     rule = _block(hand, "pp_lprof_rule")

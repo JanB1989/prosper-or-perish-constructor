@@ -1,5 +1,5 @@
 ﻿# Prosper or Perish - Construction Plan window buttons (gui/pp_construction_plan.gui, Global settings tab).
-# Flags passed from the GUI: scope:pp_key (which setting or rule group), scope:pp_dir (up / down).
+# Flags passed from the GUI: scope:pp_key (which setting or rule group), scope:pp_dir (up / down), scope:pp_n (w1..w10).
 
 # Country scope: the plan on / off.
 pp_cplan_toggle_on = {
@@ -9,16 +9,18 @@ pp_cplan_toggle_on = {
 	}
 }
 
-# Country scope: a rule group on / off (scope:pp_key = food / logistics / improve / business).
-pp_cplan_toggle_module = {
+# Country scope: a rule group's weight (scope:pp_key = profiles / food / logistics / improve / business; scope:pp_n = the
+# step of its bar clicked, w1..w10, or scope:pp_dir = up / down from its - and + buttons).
+pp_cplan_weight = {
 	scope = country
 	effect = {
 		switch = {
 			trigger = scope:pp_key
-			flag:food = { pp_cplan_flip = { var = pp_cplan_food_off } }
-			flag:logistics = { pp_cplan_flip = { var = pp_cplan_logistics_off } }
-			flag:improve = { pp_cplan_flip = { var = pp_cplan_improve_off } }
-			flag:business = { pp_cplan_flip = { var = pp_cplan_business_off } }
+			flag:profiles = { pp_cplan_set_weight = { var = pp_cplan_w_profiles current = pp_cplan_profiles_w } }
+			flag:food = { pp_cplan_set_weight = { var = pp_cplan_w_food current = pp_cplan_food_w } }
+			flag:logistics = { pp_cplan_set_weight = { var = pp_cplan_w_logistics current = pp_cplan_logistics_w } }
+			flag:improve = { pp_cplan_set_weight = { var = pp_cplan_w_improve current = pp_cplan_improve_w } }
+			flag:business = { pp_cplan_set_weight = { var = pp_cplan_w_business current = pp_cplan_business_w } }
 		}
 	}
 }

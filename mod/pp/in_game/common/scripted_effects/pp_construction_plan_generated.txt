@@ -1026,9 +1026,20 @@ pp_cplan_declare_flags = {
 	set_variable = { name = pp_cplan_flag value = flag:improve }
 	set_variable = { name = pp_cplan_flag value = flag:improve_line }
 	set_variable = { name = pp_cplan_flag value = flag:logistics }
+	set_variable = { name = pp_cplan_flag value = flag:profiles }
 	set_variable = { name = pp_cplan_flag value = flag:reserve }
 	set_variable = { name = pp_cplan_flag value = flag:reserve_big }
 	set_variable = { name = pp_cplan_flag value = flag:up }
+	set_variable = { name = pp_cplan_flag value = flag:w1 }
+	set_variable = { name = pp_cplan_flag value = flag:w10 }
+	set_variable = { name = pp_cplan_flag value = flag:w2 }
+	set_variable = { name = pp_cplan_flag value = flag:w3 }
+	set_variable = { name = pp_cplan_flag value = flag:w4 }
+	set_variable = { name = pp_cplan_flag value = flag:w5 }
+	set_variable = { name = pp_cplan_flag value = flag:w6 }
+	set_variable = { name = pp_cplan_flag value = flag:w7 }
+	set_variable = { name = pp_cplan_flag value = flag:w8 }
+	set_variable = { name = pp_cplan_flag value = flag:w9 }
 }
 
 # Location scope: one level of the improvement that adds the most capacity per gold here (pp_cplan_imp_<key>),
@@ -1820,16 +1831,18 @@ pp_cplan_business_types_clear = {
 # Location scope (a business site of scope:pp_cplan_country): the business with the best yearly return here that
 # reaches the owner's line (pp_cplan_business_min_roi = 100 / years), as pp_cplan_bz_pick (a building type) and
 # pp_cplan_bz_roi (its return, %); neither where none does. A candidate: the country can build it, so can this
-# location (max level, allow, potential), the market holds its construction goods, no level of it here is
-# closed (the player or the game's Close and Open automation found it does not pay), and a profile here leaves
-# its good and building category to the plan.
+# location (max level, allow, potential), a level finds its workers here (pp_cplan_staff), the market holds its
+# construction goods, no level of it here is closed (the player or the game's Close and Open automation found
+# it does not pay), and a profile here leaves its good and building category to the plan.
 pp_cplan_business_pick = {
 	pp_cplan_business_harvest = yes
+	save_temporary_scope_value_as = { name = pp_cplan_free_peasants value = pp_cplan_free_peasants_here }
 	remove_variable = pp_cplan_bz_pick
 	set_variable = { name = pp_cplan_bz_roi value = scope:pp_cplan_country.pp_cplan_business_min_roi }
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_ablaq_palace }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:ablaq_palace
 			NOT = { pp_lprof_has_good = { g = silk } }
 			NOT = { pp_lprof_has_category = { c = government_category } }
@@ -1848,6 +1861,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_alum_quarry }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:alum_quarry
 			NOT = { pp_lprof_has_good = { g = alum } }
 			pp_cplan_goods_here_mercury_patio_construction = yes
@@ -1865,6 +1879,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_alum_works }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:alum_works
 			NOT = { pp_lprof_has_good = { g = alum } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -1882,6 +1897,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_amber_collector }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:amber_collector
 			NOT = { pp_lprof_has_good = { g = amber } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -1899,6 +1915,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_amber_diggings }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:amber_diggings
 			NOT = { pp_lprof_has_good = { g = amber } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -1916,6 +1933,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_apothecary }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:apothecary
 			NOT = { pp_lprof_has_good = { g = medicaments } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -1933,6 +1951,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_beer_workshop }
+			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:beer_workshop
 			NOT = { pp_lprof_has_good = { g = beer } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -1950,6 +1969,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_bog_iron_smelter }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:bog_iron_smelter
 			NOT = { pp_lprof_has_good = { g = iron } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -1967,6 +1987,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_bog_iron_smelter_blast_furnace }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:bog_iron_smelter_blast_furnace
 			NOT = { pp_lprof_has_good = { g = iron } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -1984,6 +2005,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_bog_iron_smelter_coke_blast_furnace }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:bog_iron_smelter_coke_blast_furnace
 			NOT = { pp_lprof_has_good = { g = iron } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -2001,6 +2023,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_brewery }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:brewery
 			NOT = { pp_lprof_has_good = { g = beer } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -2018,6 +2041,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_brewery_manufactory }
+			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:brewery_manufactory
 			NOT = { pp_lprof_has_good = { g = beer } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -2035,6 +2059,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_brewery_mill }
+			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:brewery_mill
 			NOT = { pp_lprof_has_good = { g = beer } }
 			pp_cplan_goods_here_mill_construction = yes
@@ -2052,6 +2077,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_camel_herders }
+			pp_cplan_staff = { type = laborers size = 1.25 }
 			can_build_building = building_type:camel_herders
 			NOT = { pp_lprof_has_good = { g = camels } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -2069,6 +2095,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_camel_stud }
+			pp_cplan_staff = { type = laborers size = 1.25 }
 			can_build_building = building_type:camel_stud
 			NOT = { pp_lprof_has_good = { g = camels } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -2086,6 +2113,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cannon_foundry }
+			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:cannon_foundry
 			NOT = { pp_lprof_has_good = { g = cannons } }
 			pp_cplan_goods_here_mill_construction = yes
@@ -2103,6 +2131,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cannon_maker }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:cannon_maker
 			NOT = { pp_lprof_has_good = { g = cannons } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -2120,6 +2149,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cannon_workshop }
+			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:cannon_workshop
 			NOT = { pp_lprof_has_good = { g = cannons } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -2137,6 +2167,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cannons_factory }
+			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:cannons_factory
 			NOT = { pp_lprof_has_good = { g = cannons } }
 			pp_cplan_goods_here_mill_construction = yes
@@ -2154,6 +2185,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cattle_farm }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:cattle_farm
 			NOT = { pp_lprof_has_good = { g = livestock } }
 			pp_cplan_goods_here_village_construction = yes
@@ -2171,6 +2203,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cattle_farmstead }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:cattle_farmstead
 			NOT = { pp_lprof_has_good = { g = livestock } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -2188,6 +2221,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cattle_model_farm }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:cattle_model_farm
 			NOT = { pp_lprof_has_good = { g = livestock } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -2205,6 +2239,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cattle_rotations }
+			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:cattle_rotations
 			NOT = { pp_lprof_has_good = { g = livestock } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -2222,6 +2257,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_charcoal_maker }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:charcoal_maker
 			NOT = { pp_lprof_has_good = { g = coal } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -2239,6 +2275,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_chili_plantation }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:chili_plantation
 			NOT = { pp_lprof_has_good = { g = chili } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -2256,6 +2293,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cinnabar_pit }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:cinnabar_pit
 			NOT = { pp_lprof_has_good = { g = mercury } }
 			pp_cplan_goods_here_mercury_patio_construction = yes
@@ -2273,6 +2311,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_clay_pit }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:clay_pit
 			NOT = { pp_lprof_has_good = { g = clay } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -2290,6 +2329,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_clay_washmill }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:clay_washmill
 			NOT = { pp_lprof_has_good = { g = clay } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -2307,6 +2347,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cloth_guild }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:cloth_guild
 			NOT = { pp_lprof_has_good = { g = cloth } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -2324,6 +2365,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cloth_manufactory }
+			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:cloth_manufactory
 			NOT = { pp_lprof_has_good = { g = cloth } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -2341,6 +2383,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cloth_workshop }
+			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:cloth_workshop
 			NOT = { pp_lprof_has_good = { g = cloth } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -2358,6 +2401,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_clove_grove }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:clove_grove
 			NOT = { pp_lprof_has_good = { g = cloves } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -2375,6 +2419,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_coal_mine }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:coal_mine
 			NOT = { pp_lprof_has_good = { g = coal } }
 			pp_cplan_goods_here_mercury_patio_construction = yes
@@ -2392,6 +2437,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_coal_mine_improved }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:coal_mine_improved
 			NOT = { pp_lprof_has_good = { g = coal } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -2409,6 +2455,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_coal_mine_revolutions }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:coal_mine_revolutions
 			NOT = { pp_lprof_has_good = { g = coal } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -2426,6 +2473,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cocoa_grove }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:cocoa_grove
 			NOT = { pp_lprof_has_good = { g = cocoa } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -2443,6 +2491,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_coffee_grove }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:coffee_grove
 			NOT = { pp_lprof_has_good = { g = coffee } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -2460,6 +2509,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_copper_mine }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:copper_mine
 			NOT = { pp_lprof_has_good = { g = copper } }
 			pp_cplan_goods_here_mercury_patio_construction = yes
@@ -2477,6 +2527,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_copper_mine_adit }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:copper_mine_adit
 			NOT = { pp_lprof_has_good = { g = copper } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -2494,6 +2545,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_copper_mine_deep }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:copper_mine_deep
 			NOT = { pp_lprof_has_good = { g = copper } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -2511,6 +2563,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cotton_farm }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:cotton_farm
 			NOT = { pp_lprof_has_good = { g = cotton } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -2528,6 +2581,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cotton_plantation }
+			pp_cplan_staff = { type = slaves size = 1 }
 			can_build_building = building_type:cotton_plantation
 			NOT = { pp_lprof_has_good = { g = cotton } }
 			pp_cplan_goods_here_plantation_construction = yes
@@ -2545,6 +2599,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_distiller_manufactory }
+			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:distiller_manufactory
 			NOT = { pp_lprof_has_good = { g = liquor } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -2562,6 +2617,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_distiller_mill }
+			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:distiller_mill
 			NOT = { pp_lprof_has_good = { g = liquor } }
 			pp_cplan_goods_here_mill_construction = yes
@@ -2579,6 +2635,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_distillers_guild }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:distillers_guild
 			NOT = { pp_lprof_has_good = { g = liquor } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -2596,6 +2653,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_distillers_workshop }
+			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:distillers_workshop
 			NOT = { pp_lprof_has_good = { g = liquor } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -2613,6 +2671,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_drift_net_fishery }
+			pp_cplan_staff = { type = laborers size = 1.25 }
 			can_build_building = building_type:drift_net_fishery
 			NOT = { pp_lprof_has_good = { g = fish } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -2630,6 +2689,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_dye_plantation }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:dye_plantation
 			NOT = { pp_lprof_has_good = { g = dyes } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -2647,6 +2707,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_dyes_guild }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:dyes_guild
 			NOT = { pp_lprof_has_good = { g = dyes } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -2664,6 +2725,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_dyes_mill }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:dyes_mill
 			NOT = { pp_lprof_has_good = { g = dyes } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -2681,6 +2743,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_dyes_workshop }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:dyes_workshop
 			NOT = { pp_lprof_has_good = { g = dyes } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -2698,6 +2761,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_dyesworks }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:dyesworks
 			NOT = { pp_lprof_has_good = { g = dyes } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -2715,6 +2779,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_elephant_hunting_grounds }
+			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:elephant_hunting_grounds
 			NOT = { pp_lprof_has_good = { g = ivory } }
 			pp_cplan_goods_here_village_construction = yes
@@ -2732,6 +2797,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_elephant_kraal }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:elephant_kraal
 			NOT = { pp_lprof_has_good = { g = elephants } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -2749,6 +2815,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_enclosed_sheep_walks }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:enclosed_sheep_walks
 			NOT = { pp_lprof_has_good = { g = wool } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -2766,6 +2833,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_eng_royal_forest }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:eng_royal_forest
 			NOT = { pp_lprof_has_good = { g = wild_game } }
 			NOT = { pp_lprof_has_category = { c = government_category } }
@@ -2784,6 +2852,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_engineered_brine_saltworks }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:engineered_brine_saltworks
 			NOT = { pp_lprof_has_good = { g = salt } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -2801,6 +2870,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_fiber_crops_farm }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:fiber_crops_farm
 			NOT = { pp_lprof_has_good = { g = fiber_crops } }
 			pp_cplan_goods_here_farm_constructions = yes
@@ -2818,6 +2888,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_fiber_dressing_yard }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:fiber_dressing_yard
 			NOT = { pp_lprof_has_good = { g = fiber_crops } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -2835,6 +2906,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_fine_cloth_guild }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:fine_cloth_guild
 			NOT = { pp_lprof_has_good = { g = fine_cloth } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -2852,6 +2924,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_fine_cloth_manufactory }
+			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:fine_cloth_manufactory
 			NOT = { pp_lprof_has_good = { g = fine_cloth } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -2869,6 +2942,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_fine_cloth_mill }
+			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:fine_cloth_mill
 			NOT = { pp_lprof_has_good = { g = fine_cloth } }
 			pp_cplan_goods_here_mill_construction = yes
@@ -2886,6 +2960,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_fine_cloth_workshop }
+			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:fine_cloth_workshop
 			NOT = { pp_lprof_has_good = { g = fine_cloth } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -2903,6 +2978,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_firearms_factory }
+			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:firearms_factory
 			NOT = { pp_lprof_has_good = { g = firearms } }
 			pp_cplan_goods_here_mill_construction = yes
@@ -2920,6 +2996,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_firearms_manufactory }
+			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:firearms_manufactory
 			NOT = { pp_lprof_has_good = { g = firearms } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -2937,6 +3014,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_fishing_village }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:fishing_village
 			NOT = { pp_lprof_has_good = { g = fish } }
 			pp_cplan_goods_here_village_construction = yes
@@ -2954,6 +3032,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_forest_village }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:forest_village
 			NOT = { pp_lprof_has_good = { g = beeswax } }
 			pp_cplan_goods_here_village_construction = yes
@@ -2971,6 +3050,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_fruit_orchard }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:fruit_orchard
 			NOT = { pp_lprof_has_good = { g = fruit } }
 			pp_cplan_goods_here_farm_constructions = yes
@@ -2988,6 +3068,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_furniture_guild }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:furniture_guild
 			NOT = { pp_lprof_has_good = { g = furniture } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -3005,6 +3086,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_furniture_manufactory }
+			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:furniture_manufactory
 			NOT = { pp_lprof_has_good = { g = furniture } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -3022,6 +3104,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_furniture_mill }
+			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:furniture_mill
 			NOT = { pp_lprof_has_good = { g = furniture } }
 			pp_cplan_goods_here_mill_construction = yes
@@ -3039,6 +3122,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_furniture_workshop }
+			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:furniture_workshop
 			NOT = { pp_lprof_has_good = { g = furniture } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -3056,6 +3140,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_gem_gravel_pit }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:gem_gravel_pit
 			NOT = { pp_lprof_has_good = { g = gems } }
 			pp_cplan_goods_here_mercury_patio_construction = yes
@@ -3073,6 +3158,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_gem_sluice }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:gem_sluice
 			NOT = { pp_lprof_has_good = { g = gems } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -3090,6 +3176,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_glass_guild }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:glass_guild
 			NOT = { pp_lprof_has_good = { g = glass } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -3107,6 +3194,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_glass_mill }
+			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:glass_mill
 			NOT = { pp_lprof_has_good = { g = glass } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -3124,6 +3212,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_glass_workshop }
+			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:glass_workshop
 			NOT = { pp_lprof_has_good = { g = glass } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -3141,6 +3230,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_glassworks }
+			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:glassworks
 			NOT = { pp_lprof_has_good = { g = glass } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -3158,6 +3248,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_gold_diggings }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:gold_diggings
 			NOT = { pp_lprof_has_good = { g = goods_gold } }
 			pp_cplan_goods_here_mercury_patio_construction = yes
@@ -3175,6 +3266,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_gold_stamp_mill }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:gold_stamp_mill
 			NOT = { pp_lprof_has_good = { g = goods_gold } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -3192,6 +3284,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_gun_smith }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:gun_smith
 			NOT = { pp_lprof_has_good = { g = firearms } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -3209,6 +3302,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_guns_workshop }
+			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:guns_workshop
 			NOT = { pp_lprof_has_good = { g = firearms } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -3226,6 +3320,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_hand_cannon_guild }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:hand_cannon_guild
 			NOT = { pp_lprof_has_good = { g = firearms } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -3243,6 +3338,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_horse_breeders }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:horse_breeders
 			NOT = { pp_lprof_has_good = { g = horses } }
 			pp_cplan_goods_here_horse_breeders_construction = yes
@@ -3260,6 +3356,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_hurdled_sheepcotes }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:hurdled_sheepcotes
 			NOT = { pp_lprof_has_good = { g = wool } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -3277,6 +3374,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_improved_charcoal_maker }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:improved_charcoal_maker
 			NOT = { pp_lprof_has_good = { g = coal } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -3294,6 +3392,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_incense_grove }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:incense_grove
 			NOT = { pp_lprof_has_good = { g = incense } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -3311,6 +3410,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_inland_saltworks }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:inland_saltworks
 			NOT = { pp_lprof_has_good = { g = salt } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -3328,6 +3428,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_iron_foundry }
+			pp_cplan_staff = { type = laborers size = 1.04 }
 			can_build_building = building_type:iron_foundry
 			NOT = { pp_lprof_has_good = { g = tools } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -3345,6 +3446,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_iron_mill }
+			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:iron_mill
 			NOT = { pp_lprof_has_good = { g = tools } }
 			pp_cplan_goods_here_mill_construction = yes
@@ -3362,6 +3464,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_iron_mine }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:iron_mine
 			NOT = { pp_lprof_has_good = { g = iron } }
 			pp_cplan_goods_here_mercury_patio_construction = yes
@@ -3379,6 +3482,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_iron_mine_deep }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:iron_mine_deep
 			NOT = { pp_lprof_has_good = { g = iron } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -3396,6 +3500,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_iron_mine_improved }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:iron_mine_improved
 			NOT = { pp_lprof_has_good = { g = iron } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -3413,6 +3518,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_ivory_hunting_camp }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:ivory_hunting_camp
 			NOT = { pp_lprof_has_good = { g = ivory } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -3430,6 +3536,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_jewelry_guild }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:jewelry_guild
 			NOT = { pp_lprof_has_good = { g = jewelry } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -3447,6 +3554,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_lacquerware_guild }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:lacquerware_guild
 			NOT = { pp_lprof_has_good = { g = lacquerware } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -3464,6 +3572,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_lacquerware_manufactory }
+			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:lacquerware_manufactory
 			NOT = { pp_lprof_has_good = { g = lacquerware } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -3481,6 +3590,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_lead_mine }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:lead_mine
 			NOT = { pp_lprof_has_good = { g = lead } }
 			pp_cplan_goods_here_mercury_patio_construction = yes
@@ -3498,6 +3608,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_lead_mine_bole_smelting }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:lead_mine_bole_smelting
 			NOT = { pp_lprof_has_good = { g = lead } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -3515,6 +3626,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_lead_mine_cupola_smelting }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:lead_mine_cupola_smelting
 			NOT = { pp_lprof_has_good = { g = lead } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -3532,6 +3644,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_legume_farm }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:legume_farm
 			NOT = { pp_lprof_has_good = { g = legumes } }
 			pp_cplan_goods_here_village_construction = yes
@@ -3549,6 +3662,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_legume_farmstead }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:legume_farmstead
 			NOT = { pp_lprof_has_good = { g = legumes } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -3566,6 +3680,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_legume_model_farm }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:legume_model_farm
 			NOT = { pp_lprof_has_good = { g = legumes } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -3583,6 +3698,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_legume_rotations }
+			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:legume_rotations
 			NOT = { pp_lprof_has_good = { g = legumes } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -3600,6 +3716,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_lumber_mill }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:lumber_mill
 			NOT = { pp_lprof_has_good = { g = lumber } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -3617,6 +3734,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_lumber_mill_improved }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:lumber_mill_improved
 			NOT = { pp_lprof_has_good = { g = lumber } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -3634,6 +3752,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_maghreb_palm_irrigation }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:maghreb_palm_irrigation
 			NOT = { pp_lprof_has_good = { g = fruit } }
 			NOT = { pp_lprof_has_category = { c = trade_category } }
@@ -3652,6 +3771,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_maize_farm }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:maize_farm
 			NOT = { pp_lprof_has_good = { g = maize } }
 			pp_cplan_goods_here_village_construction = yes
@@ -3669,6 +3789,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_maize_farmstead }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:maize_farmstead
 			NOT = { pp_lprof_has_good = { g = maize } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -3686,6 +3807,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_maize_model_farm }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:maize_model_farm
 			NOT = { pp_lprof_has_good = { g = maize } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -3703,6 +3825,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_maize_rotations }
+			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:maize_rotations
 			NOT = { pp_lprof_has_good = { g = maize } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -3720,6 +3843,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_managed_cocoa_grove }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:managed_cocoa_grove
 			NOT = { pp_lprof_has_good = { g = cocoa } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -3737,6 +3861,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_managed_forest_village }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:managed_forest_village
 			NOT = { pp_lprof_has_good = { g = leather } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -3754,6 +3879,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_managed_pepper_garden }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:managed_pepper_garden
 			NOT = { pp_lprof_has_good = { g = pepper } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -3771,6 +3897,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_marble_quarry }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:marble_quarry
 			NOT = { pp_lprof_has_good = { g = marble } }
 			pp_cplan_goods_here_mercury_patio_construction = yes
@@ -3788,6 +3915,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_marble_saw_yard }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:marble_saw_yard
 			NOT = { pp_lprof_has_good = { g = marble } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -3805,6 +3933,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_market_cotton_farm }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:market_cotton_farm
 			NOT = { pp_lprof_has_good = { g = cotton } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -3822,6 +3951,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_market_tobacco_farm }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:market_tobacco_farm
 			NOT = { pp_lprof_has_good = { g = tobacco } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -3839,6 +3969,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_market_village }
+			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:market_village
 			NOT = { pp_lprof_has_good = { g = tools } }
 			pp_cplan_goods_here_village_construction = yes
@@ -3856,6 +3987,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_mason }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:mason
 			NOT = { pp_lprof_has_good = { g = masonry } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -3873,6 +4005,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_millet_farm }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:millet_farm
 			NOT = { pp_lprof_has_good = { g = millet } }
 			pp_cplan_goods_here_village_construction = yes
@@ -3890,6 +4023,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_millet_farmstead }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:millet_farmstead
 			NOT = { pp_lprof_has_good = { g = millet } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -3907,6 +4041,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_millet_model_farm }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:millet_model_farm
 			NOT = { pp_lprof_has_good = { g = millet } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -3924,6 +4059,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_millet_rotations }
+			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:millet_rotations
 			NOT = { pp_lprof_has_good = { g = millet } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -3941,6 +4077,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_naval_supplies_guild }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:naval_supplies_guild
 			NOT = { pp_lprof_has_good = { g = naval_supplies } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -3958,6 +4095,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_naval_supplies_manufactory }
+			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:naval_supplies_manufactory
 			NOT = { pp_lprof_has_good = { g = naval_supplies } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -3975,6 +4113,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_naval_supplies_mill }
+			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:naval_supplies_mill
 			NOT = { pp_lprof_has_good = { g = naval_supplies } }
 			pp_cplan_goods_here_mill_construction = yes
@@ -3992,6 +4131,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_naval_supplies_workshop }
+			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:naval_supplies_workshop
 			NOT = { pp_lprof_has_good = { g = naval_supplies } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -4009,6 +4149,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_net_curing_yard }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:net_curing_yard
 			NOT = { pp_lprof_has_good = { g = fish } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -4026,6 +4167,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_nursery_orchard }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:nursery_orchard
 			NOT = { pp_lprof_has_good = { g = fruit } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -4043,6 +4185,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_ocean_fishery }
+			pp_cplan_staff = { type = laborers size = 1.25 }
 			can_build_building = building_type:ocean_fishery
 			NOT = { pp_lprof_has_good = { g = fish } }
 			pp_cplan_goods_here_village_construction = yes
@@ -4060,6 +4203,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_offshore_fishery }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:offshore_fishery
 			NOT = { pp_lprof_has_good = { g = fish } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -4077,6 +4221,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_olive_farm }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:olive_farm
 			NOT = { pp_lprof_has_good = { g = olives } }
 			pp_cplan_goods_here_village_construction = yes
@@ -4094,6 +4239,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_olive_farmstead }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:olive_farmstead
 			NOT = { pp_lprof_has_good = { g = olives } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -4111,6 +4257,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_olive_model_farm }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:olive_model_farm
 			NOT = { pp_lprof_has_good = { g = olives } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -4128,6 +4275,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_olive_rotations }
+			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:olive_rotations
 			NOT = { pp_lprof_has_good = { g = olives } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -4145,6 +4293,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_paper_guild }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:paper_guild
 			NOT = { pp_lprof_has_good = { g = paper } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -4162,6 +4311,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_paper_manufactory }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:paper_manufactory
 			NOT = { pp_lprof_has_good = { g = paper } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -4179,6 +4329,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_paper_mill }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:paper_mill
 			NOT = { pp_lprof_has_good = { g = paper } }
 			pp_cplan_goods_here_mill_construction = yes
@@ -4196,6 +4347,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_paper_workshop }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:paper_workshop
 			NOT = { pp_lprof_has_good = { g = paper } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -4213,6 +4365,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_pearl_fishery }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:pearl_fishery
 			NOT = { pp_lprof_has_good = { g = pearls } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -4230,6 +4383,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_pepper_garden }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:pepper_garden
 			NOT = { pp_lprof_has_good = { g = pepper } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -4247,6 +4401,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_perfumery }
+			pp_cplan_staff = { type = burghers size = 0.2 }
 			can_build_building = building_type:perfumery
 			NOT = { pp_lprof_has_good = { g = incense } }
 			pp_cplan_goods_here_mill_construction = yes
@@ -4264,6 +4419,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_pomological_orchard }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:pomological_orchard
 			NOT = { pp_lprof_has_good = { g = fruit } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -4281,6 +4437,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_porcelain_guild }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:porcelain_guild
 			NOT = { pp_lprof_has_good = { g = porcelain } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -4298,6 +4455,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_porcelain_manufactory }
+			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:porcelain_manufactory
 			NOT = { pp_lprof_has_good = { g = porcelain } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -4315,6 +4473,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_potato_farm }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:potato_farm
 			NOT = { pp_lprof_has_good = { g = potato } }
 			pp_cplan_goods_here_village_construction = yes
@@ -4332,6 +4491,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_potato_farmstead }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:potato_farmstead
 			NOT = { pp_lprof_has_good = { g = potato } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -4349,6 +4509,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_potato_model_farm }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:potato_model_farm
 			NOT = { pp_lprof_has_good = { g = potato } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -4366,6 +4527,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_potato_rotations }
+			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:potato_rotations
 			NOT = { pp_lprof_has_good = { g = potato } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -4383,6 +4545,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_pottery_guild }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:pottery_guild
 			NOT = { pp_lprof_has_good = { g = pottery } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -4400,6 +4563,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_pottery_manufactory }
+			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:pottery_manufactory
 			NOT = { pp_lprof_has_good = { g = pottery } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -4417,6 +4581,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_pottery_mill }
+			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:pottery_mill
 			NOT = { pp_lprof_has_good = { g = pottery } }
 			pp_cplan_goods_here_mill_construction = yes
@@ -4434,6 +4599,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_pottery_workshop }
+			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:pottery_workshop
 			NOT = { pp_lprof_has_good = { g = pottery } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -4451,6 +4617,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_pounamou_carver }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:pounamou_carver
 			NOT = { pp_lprof_has_good = { g = jewelry } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -4468,6 +4635,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_printing_manufactory }
+			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:printing_manufactory
 			NOT = { pp_lprof_has_good = { g = books } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -4485,6 +4653,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_printing_mill }
+			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:printing_mill
 			NOT = { pp_lprof_has_good = { g = books } }
 			pp_cplan_goods_here_mill_construction = yes
@@ -4502,6 +4671,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_printing_press_shop }
+			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:printing_press_shop
 			NOT = { pp_lprof_has_good = { g = books } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -4519,6 +4689,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_putrefaction_mill }
+			pp_cplan_staff = { type = laborers size = 0.5 }
 			can_build_building = building_type:putrefaction_mill
 			NOT = { pp_lprof_has_good = { g = saltpeter } }
 			pp_cplan_goods_here_mill_construction = yes
@@ -4536,6 +4707,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_putrefaction_works }
+			pp_cplan_staff = { type = burghers size = 0.2 }
 			can_build_building = building_type:putrefaction_works
 			NOT = { pp_lprof_has_good = { g = saltpeter } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -4553,6 +4725,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_quicksilver_retort }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:quicksilver_retort
 			NOT = { pp_lprof_has_good = { g = mercury } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -4570,6 +4743,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_regulated_sericulture_farm }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:regulated_sericulture_farm
 			NOT = { pp_lprof_has_good = { g = silk } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -4587,6 +4761,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_rice_farm }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:rice_farm
 			NOT = { pp_lprof_has_good = { g = rice } }
 			pp_cplan_goods_here_village_construction = yes
@@ -4604,6 +4779,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_rice_farmstead }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:rice_farmstead
 			NOT = { pp_lprof_has_good = { g = rice } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -4621,6 +4797,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_rice_model_farm }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:rice_model_farm
 			NOT = { pp_lprof_has_good = { g = rice } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -4638,6 +4815,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_rice_rotations }
+			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:rice_rotations
 			NOT = { pp_lprof_has_good = { g = rice } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -4655,6 +4833,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_rural_clothmaker }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:rural_clothmaker
 			NOT = { pp_lprof_has_good = { g = cloth } }
 			pp_cplan_goods_here_village_construction = yes
@@ -4672,6 +4851,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_rural_glassmaker }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:rural_glassmaker
 			NOT = { pp_lprof_has_good = { g = glass } }
 			pp_cplan_goods_here_village_construction = yes
@@ -4689,6 +4869,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_saffron_croft }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:saffron_croft
 			NOT = { pp_lprof_has_good = { g = saffron } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -4706,6 +4887,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_saffron_kiln_croft }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:saffron_kiln_croft
 			NOT = { pp_lprof_has_good = { g = saffron } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -4723,6 +4905,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_salt_collector }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:salt_collector
 			NOT = { pp_lprof_has_good = { g = salt } }
 			pp_cplan_goods_here_farm_constructions = yes
@@ -4740,6 +4923,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_salt_mine }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:salt_mine
 			NOT = { pp_lprof_has_good = { g = salt } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -4757,6 +4941,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_salt_mine_improved }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:salt_mine_improved
 			NOT = { pp_lprof_has_good = { g = salt } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -4774,6 +4959,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_saltpeter_beds }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:saltpeter_beds
 			NOT = { pp_lprof_has_good = { g = saltpeter } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -4791,6 +4977,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_saltpeter_guild }
+			pp_cplan_staff = { type = burghers size = 0.1 }
 			can_build_building = building_type:saltpeter_guild
 			NOT = { pp_lprof_has_good = { g = saltpeter } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -4808,6 +4995,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_saltpeter_workshop }
+			pp_cplan_staff = { type = burghers size = 0.1 }
 			can_build_building = building_type:saltpeter_workshop
 			NOT = { pp_lprof_has_good = { g = saltpeter } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -4825,6 +5013,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_sand_pit }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:sand_pit
 			NOT = { pp_lprof_has_good = { g = sand } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -4842,6 +5031,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_sand_washery }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:sand_washery
 			NOT = { pp_lprof_has_good = { g = sand } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -4859,6 +5049,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_schwaz_mine }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:schwaz_mine
 			NOT = { pp_lprof_has_good = { g = silver } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -4876,6 +5067,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_scriptorium }
+			pp_cplan_staff = { type = clergy size = 0.3 }
 			can_build_building = building_type:scriptorium
 			NOT = { pp_lprof_has_good = { g = books } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -4893,6 +5085,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_sericulture_farm }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:sericulture_farm
 			NOT = { pp_lprof_has_good = { g = silk } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -4910,6 +5103,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_sheep_farms }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:sheep_farms
 			NOT = { pp_lprof_has_good = { g = wool } }
 			pp_cplan_goods_here_farm_constructions = yes
@@ -4927,6 +5121,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_shoen }
+			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:shoen
 			NOT = { pp_lprof_has_good = { g = lumber } }
 			pp_cplan_goods_here_japanese_clan_building_construction = yes
@@ -4944,6 +5139,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_silk_production_guild }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:silk_production_guild
 			NOT = { pp_lprof_has_good = { g = silk } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -4961,6 +5157,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_silver_mine }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:silver_mine
 			NOT = { pp_lprof_has_good = { g = silver } }
 			pp_cplan_goods_here_mercury_patio_construction = yes
@@ -4978,6 +5175,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_silver_mine_improved }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:silver_mine_improved
 			NOT = { pp_lprof_has_good = { g = silver } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -4995,6 +5193,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_simplers_grove }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:simplers_grove
 			NOT = { pp_lprof_has_good = { g = medicaments } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -5012,6 +5211,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_slave_center }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:slave_center
 			NOT = { pp_lprof_has_good = { g = slaves_goods } }
 			pp_cplan_goods_here_simple_colony_construction = yes
@@ -5029,6 +5229,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_slave_market }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:slave_market
 			NOT = { pp_lprof_has_good = { g = slaves_goods } }
 			NOT = { pp_lprof_has_category = { c = government_category } }
@@ -5047,6 +5248,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_steel_mill }
+			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:steel_mill
 			NOT = { pp_lprof_has_good = { g = steel } }
 			pp_cplan_goods_here_mill_construction = yes
@@ -5064,6 +5266,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_stone_quarry }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:stone_quarry
 			NOT = { pp_lprof_has_good = { g = stone } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -5081,6 +5284,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_stone_quarry_improved }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:stone_quarry_improved
 			NOT = { pp_lprof_has_good = { g = stone } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -5098,6 +5302,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_stud_farm }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:stud_farm
 			NOT = { pp_lprof_has_good = { g = horses } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -5115,6 +5320,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_sugar_plantation }
+			pp_cplan_staff = { type = slaves size = 1 }
 			can_build_building = building_type:sugar_plantation
 			NOT = { pp_lprof_has_good = { g = sugar } }
 			pp_cplan_goods_here_plantation_construction = yes
@@ -5132,6 +5338,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_sugarcane_farm }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:sugarcane_farm
 			NOT = { pp_lprof_has_good = { g = sugar } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -5149,6 +5356,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tannery }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:tannery
 			NOT = { pp_lprof_has_good = { g = leather } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -5166,6 +5374,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tannery_manufactory }
+			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:tannery_manufactory
 			NOT = { pp_lprof_has_good = { g = leather } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -5183,6 +5392,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tannery_mill }
+			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:tannery_mill
 			NOT = { pp_lprof_has_good = { g = leather } }
 			pp_cplan_goods_here_mill_construction = yes
@@ -5200,6 +5410,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tanning_workshop }
+			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:tanning_workshop
 			NOT = { pp_lprof_has_good = { g = leather } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -5217,6 +5428,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tar_kiln }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:tar_kiln
 			NOT = { pp_lprof_has_good = { g = tar } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -5234,6 +5446,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tatara }
+			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:tatara
 			NOT = { pp_lprof_has_good = { g = tools } }
 			pp_cplan_goods_here_japanese_clan_building_construction = yes
@@ -5251,6 +5464,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tea_garden }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:tea_garden
 			NOT = { pp_lprof_has_good = { g = tea } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -5268,6 +5482,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tea_sorting_garden }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:tea_sorting_garden
 			NOT = { pp_lprof_has_good = { g = tea } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -5285,6 +5500,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_terraced_coffee_grove }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:terraced_coffee_grove
 			NOT = { pp_lprof_has_good = { g = coffee } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -5302,6 +5518,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_textile_mill }
+			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:textile_mill
 			NOT = { pp_lprof_has_good = { g = cloth } }
 			pp_cplan_goods_here_mill_construction = yes
@@ -5319,6 +5536,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tin_stamping_mill }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:tin_stamping_mill
 			NOT = { pp_lprof_has_good = { g = tin } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -5336,6 +5554,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tin_streamworks }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:tin_streamworks
 			NOT = { pp_lprof_has_good = { g = tin } }
 			pp_cplan_goods_here_mercury_patio_construction = yes
@@ -5353,6 +5572,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tobacco_farm }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:tobacco_farm
 			NOT = { pp_lprof_has_good = { g = tobacco } }
 			pp_cplan_goods_here_basic_construction_needs = yes
@@ -5370,6 +5590,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tobacco_plantation }
+			pp_cplan_staff = { type = slaves size = 1 }
 			can_build_building = building_type:tobacco_plantation
 			NOT = { pp_lprof_has_good = { g = tobacco } }
 			pp_cplan_goods_here_plantation_construction = yes
@@ -5387,6 +5608,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tools_guild }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:tools_guild
 			NOT = { pp_lprof_has_good = { g = tools } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -5404,6 +5626,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tools_workshop }
+			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:tools_workshop
 			NOT = { pp_lprof_has_good = { g = tools } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -5421,6 +5644,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_trapiche_sugarcane_farm }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:trapiche_sugarcane_farm
 			NOT = { pp_lprof_has_good = { g = sugar } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -5438,6 +5662,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_vineyard_estate }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:vineyard_estate
 			NOT = { pp_lprof_has_good = { g = wine } }
 			pp_cplan_goods_here_farm_constructions = yes
@@ -5455,6 +5680,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_water_sawmill }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:water_sawmill
 			NOT = { pp_lprof_has_good = { g = lumber } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -5472,6 +5698,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_weapon_factory }
+			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:weapon_factory
 			NOT = { pp_lprof_has_good = { g = weaponry } }
 			pp_cplan_goods_here_mill_construction = yes
@@ -5489,6 +5716,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_weapon_guild }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:weapon_guild
 			NOT = { pp_lprof_has_good = { g = weaponry } }
 			pp_cplan_goods_here_guild_construction = yes
@@ -5506,6 +5734,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_weapon_manufactory }
+			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:weapon_manufactory
 			NOT = { pp_lprof_has_good = { g = weaponry } }
 			pp_cplan_goods_here_manufactory_construction = yes
@@ -5523,6 +5752,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_weapon_workshop }
+			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:weapon_workshop
 			NOT = { pp_lprof_has_good = { g = weaponry } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -5540,6 +5770,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_wheat_farm }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:wheat_farm
 			NOT = { pp_lprof_has_good = { g = wheat } }
 			pp_cplan_goods_here_village_construction = yes
@@ -5557,6 +5788,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_wheat_farmstead }
+			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:wheat_farmstead
 			NOT = { pp_lprof_has_good = { g = wheat } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -5574,6 +5806,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_wheat_model_farm }
+			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:wheat_model_farm
 			NOT = { pp_lprof_has_good = { g = wheat } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -5591,6 +5824,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_wheat_rotations }
+			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:wheat_rotations
 			NOT = { pp_lprof_has_good = { g = wheat } }
 			pp_cplan_goods_here_workshop_construction = yes
@@ -5608,6 +5842,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_winery }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:winery
 			NOT = { pp_lprof_has_good = { g = wine } }
 			pp_cplan_goods_here_default_construct_building = yes
@@ -5625,6 +5860,7 @@ pp_cplan_business_pick = {
 	if = {
 		limit = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_winery_manufactory }
+			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:winery_manufactory
 			NOT = { pp_lprof_has_good = { g = wine } }
 			pp_cplan_goods_here_manufactory_construction = yes

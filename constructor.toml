@@ -1225,11 +1225,12 @@ not_goods = ["offset", "logistics", "local_food", "manual_labor", "province_food
 # generated parts at finalize, docs/player_construction_manager.md). The AI never runs them: the monthly pass fires only
 # for countries with is_ai = no that switched the plan on. The window has two tabs (Jan 2026-11-09): Global settings
 # (these defaults, the player changes them there) and Location profiles ([location_profiles]). Each month the plan may
-# spend the gold above the reserve; every rule group that is on gets an equal part, and a part one group leaves passes
-# on to the next.
+# spend the gold above the reserve; every rule group gets its weight over the sum of the weights, and a part one group
+# leaves passes on to the next.
 reserve_gold = 1000           # gold kept back: no construction starts that would take the treasury below it (Jan 2026-11-09)
 access_threshold = 97         # logistics: build where market access is below this, in % (Jan 2026-11-08)
 improve_fill_pct = 90         # improvements: build where population over capacity reaches this, in % (Jan 2026-11-08; steps of 10)
+weights = { profiles = 5, food = 5, logistics = 5, improve = 5, business = 5 }   # each rule group, 0 (off) .. 10: its part of the gold above the reserve = its weight / the sum (Jan 2026-11-09)
 business_years = 10           # businesses: a level of any building that makes goods while it pays back within this many years (Jan 2026-11-09)
 farm_sites_per_province = 4   # food: locations tried for a staple food maker, best payback first
 hungry_months = 6             # food: a farm (or a Tavern where none can be built) where a normal year leaves less than this a year from now

@@ -3,7 +3,9 @@
 The player sets the rules once in the Construction Plan window (two tabs since 2026-11-09, Jan: Global settings and
 Location profiles); a monthly pass for countries with ``is_ai = no`` starts the constructions with
 ``construct_building`` (a normal, paid construction). The AI never runs it. Global settings: the plan on or off, a gold
-reserve in gold, and four rule groups, each on or off with one line:
+reserve in gold, and five rule groups (the location profiles and the four below), each with a weight: its part of the
+gold above the reserve is its weight over the sum of the weights (0 = off; Jan 2026-11-09), and the four below with
+one line each:
 
 * Food, per province, one construction a month, first that applies (baseline rules, Jan 2026-11-08). Nothing is kept
   between passes; the hunger checks read the store a year from now in a normal year (this year's Variable Harvest and
@@ -19,7 +21,8 @@ reserve in gold, and four rule groups, each on or off with one line:
   without the food, logistics and improvement rules' own buildings) wherever a level pays back within the player's
   line, shortest payback first across the country. Profit = each slot's best recipe at the market's prices and the
   location's output with this year's Variable Harvest taken out, the same estimate for a new building and for one more
-  level, so both compare.
+  level, so both compare. A level is only built where it finds its workers: idle peasants left after the open jobs of
+  the buildings there (peasants are promoted into the other classes), or idle pops of its own class.
 
 Location Profiles (``location_profiles.py``) are the only per-location layer: a profile takes from these groups only
 what it sets.
@@ -37,9 +40,10 @@ The engine (monthly pass, window, settings) is hand-written in the mod (``pp_con
 
 * ``scripted_effects/pp_construction_plan_generated.txt``: the farm, logistics, improvement and business pickers and
   the building cost data lookup;
-* ``script_values/pp_construction_plan_generated.txt``: the defaults, farm and business profit estimates, the
-  construction goods price factors and the baseline rules' blacklists;
-* ``scripted_triggers/pp_construction_plan_generated.txt``: the construction goods and food queue checks.
+* ``script_values/pp_construction_plan_generated.txt``: the defaults, the rule groups' weights and parts, farm and
+  business profit estimates, the construction goods price factors and the baseline rules' blacklists;
+* ``scripted_triggers/pp_construction_plan_generated.txt``: the construction goods and food queue checks;
+* ``gui/pp_construction_plan_weights.gui``: the weight bar of each rule group.
 
 Variables carry + 100 (a variable at 0 counts as unset; ``var:x = n`` compares scopes).
 """
@@ -57,6 +61,12 @@ from prosper_or_perish_constructor import market_short_weight
 EFFECTS = Path("in_game/common/scripted_effects/pp_construction_plan_generated.txt")
 VALUES = Path("in_game/common/script_values/pp_construction_plan_generated.txt")
 TRIGGERS = Path("in_game/common/scripted_triggers/pp_construction_plan_generated.txt")
+WEIGHT_GUI = Path("in_game/gui/pp_construction_plan_weights.gui")
+SCRIPT_VALUES = (Path("main_menu/common/script_values"), Path("in_game/common/script_values"))
+# the rule groups with a weight (their order in the window); a weight runs 0 (off) .. WEIGHT_STEPS
+GROUPS = ("profiles", "food", "logistics", "improve", "business")
+WEIGHT_STEPS = 10
+SEGMENT = 14  # px of one weight step in the bar
 BUILDING_TYPES = Path("in_game/common/building_types")
 GOODS_DEMAND = Path("in_game/common/goods_demand")
 DEFINES = Path("loading_screen/common/defines")
@@ -100,6 +110,7 @@ class Config:
     access_blacklist: tuple[str, ...] = ()
     business_years: int = 10
     profile_categories: tuple[str, ...] = ()
+    weights: tuple[tuple[str, int], ...] = tuple((group, 5) for group in GROUPS)
 
 
 @dataclass(frozen=True)
@@ -114,6 +125,7 @@ class BuildingCost:
 @dataclass
 class Result:
     businesses: dict[str, str] = field(default_factory=dict)  # building type -> its main good (the business rule)
+    staff: dict[str, tuple[str, float]] = field(default_factory=dict)  # building type -> (pop type, workers a level)
     farm_lines: dict[str, list[str]] = field(default_factory=dict)
     food_lines: dict[str, list[str]] = field(default_factory=dict)
     improvements: list[str] = field(default_factory=list)
@@ -150,7 +162,18 @@ def load_config(project: Path) -> Config:
         access_blacklist=tuple(data["access_blacklist"]),
         business_years=int(data["business_years"]),
         profile_categories=tuple(whole.get(PROFILE_CATEGORIES_KEY, {}).get("categories", ())),
+        weights=_weights(data["weights"]),
     )
+
+
+def _weights(table: dict) -> tuple[tuple[str, int], ...]:
+    if set(table) != set(GROUPS):
+        raise ValueError(f"[construction_plan] weights: give exactly {', '.join(GROUPS)}")
+    weights = tuple((group, int(table[group])) for group in GROUPS)
+    for group, weight in weights:
+        if not 0 <= weight <= WEIGHT_STEPS:
+            raise ValueError(f"[construction_plan] weights.{group}: 0..{WEIGHT_STEPS}")
+    return weights
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -219,6 +242,52 @@ def _database(mod_root: Path, vanilla_root: Path, folder: Path) -> dict[str, tup
             else:
                 data[block] = (keys, body)
     return data
+
+
+def script_value_numbers(mod_root: Path, vanilla_root: Path) -> dict[str, float]:
+    """Script values that are a plain number (``name = 0.5`` at the top of a file), the mod's files over vanilla's of the
+    same name (buildings name their workers through them: employment_size = manpower_employment)."""
+    files: dict[str, Path] = {}
+    for folder in SCRIPT_VALUES:
+        for root in (vanilla_root / "game", mod_root):
+            directory = root / folder
+            if directory.is_dir():
+                for path in directory.glob("*.txt"):
+                    files[f"{folder}/{path.name}"] = path
+    found: dict[str, float] = {}
+    for key in sorted(files):
+        depth = 0
+        for line in _strip_comments(files[key].read_text(encoding="utf-8-sig", errors="replace")).splitlines():
+            if depth == 0:
+                match = re.match(r"\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(-?[0-9.]+)\s*$", line)
+                if match:
+                    found[match.group(1)] = float(match.group(2))
+            depth += line.count("{") - line.count("}")
+    return found
+
+
+def staffing(database: dict[str, tuple[dict[str, str], str]], numbers: dict[str, float]) -> dict[str, tuple[str, float]]:
+    """Building -> (the pop type it employs, the workers one level needs, in thousands like the pops); buildings
+    without workers are left out."""
+    found: dict[str, tuple[str, float]] = {}
+    for name, (keys, _) in database.items():
+        pop, size = keys.get("pop_type"), keys.get("employment_size")
+        if not pop or size is None:
+            continue
+        try:
+            value = float(size)
+        except ValueError:
+            value = numbers.get(size, 0.0)
+        if value > 0:
+            found[name] = (pop, value)
+    return found
+
+
+def staff_check(staff: tuple[str, float] | None) -> str:
+    """The worker check of one building (pp_cplan_staff), or nothing for a building without workers."""
+    if not staff:
+        return ""
+    return f"pp_cplan_staff = {{ type = {staff[0]} size = {_num(staff[1])} }}"
 
 
 def defined_buildings(mod_root: Path, vanilla_root: Path) -> set[str]:
@@ -478,6 +547,79 @@ def render_price_factors(demands: dict[str, dict[str, float]], bounds: tuple[flo
     return "".join(parts)
 
 
+def render_weight_values(config: Config) -> str:
+    """The rule groups' weights (Jan 2026-11-09): a group's part of the gold above the reserve = its weight over the sum
+    of the weights that count (0 = the group is off; the location profiles count only while a location has one)."""
+    parts = ["\n# ---- Rule group weights (country scope; 0 = off) ----\n\n"]
+    for group, default in config.weights:
+        parts.append(_default_value(f"pp_cplan_{group}_w", f"pp_cplan_w_{group}", default,
+                                    f"Country scope: the {group} group's weight, 0..{WEIGHT_STEPS}."))
+    parts.append(
+        "# Country scope: the location profiles' weight counts only while a location of the country has a profile.\n"
+        "pp_cplan_profiles_cw = {\n\tvalue = pp_cplan_profiles_w\n\tmultiply = pp_lprof_group_n\n}\n"
+        "# Country scope: the sum of the weights that count.\npp_cplan_w_total = {\n\tvalue = pp_cplan_profiles_cw\n"
+        + "".join(f"\tadd = pp_cplan_{group}_w\n" for group in GROUPS if group != "profiles")
+        + "}\n"
+    )
+    for group in GROUPS:
+        weight = "pp_cplan_profiles_cw" if group == "profiles" else f"pp_cplan_{group}_w"
+        parts.append(
+            f"# Country scope: the {group} group's part of the budget, in % (the window) and in gold (the pass).\n"
+            f"pp_cplan_part_{group} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ pp_cplan_w_total > 0 }}\n"
+            f"\t\tvalue = {weight}\n\t\tmultiply = 100\n\t\tdivide = pp_cplan_w_total\n\t}}\n}}\n"
+            f"pp_cplan_share_{group} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ pp_cplan_w_total > 0 }}\n"
+            f"\t\tvalue = pp_cplan_pot_n\n\t\tmultiply = {weight}\n\t\tdivide = pp_cplan_w_total\n\t}}\n}}\n"
+        )
+    return "".join(parts)
+
+
+def render_weight_gui() -> str:
+    """One weight bar per rule group: - and + (vanilla's slider buttons), a gold bar of WEIGHT_STEPS steps whose every
+    step sets the weight when clicked, and the group's part in %. A real slider cannot be used: its value only reaches
+    the engine's own functions, never a script."""
+
+    def call(group: str, extra: str) -> str:
+        return (f"[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope)"
+                f".AddScope('pp_key', MakeScopeFlag('{group}')){extra}.End)]")
+
+    out = [HEADER, "\ntypes PPConstructionPlanWeights\n{\n"]
+    for group in GROUPS:
+        value = f"GetPlayer.MakeScope.ScriptValue('pp_cplan_{group}_w')"
+        down = call(group, ".AddScope('pp_dir', MakeScopeFlag('down'))")
+        up = call(group, ".AddScope('pp_dir', MakeScopeFlag('up'))")
+        zones = "".join(
+            "\t\t\tbutton = {\n"
+            f"\t\t\t\tposition = {{ {(n - 1) * SEGMENT} 0 }}\n"
+            f"\t\t\t\tsize = {{ {SEGMENT} 14 }}\n"
+            "\t\t\t\ttooltip = \"PP_CPLAN_WEIGHT_TT\"\n"
+            f"\t\t\t\tonclick = \"{call(group, f".AddScope('pp_n', MakeScopeFlag('w{n}'))")}\"\n"
+            "\t\t\t}\n"
+            for n in range(1, WEIGHT_STEPS + 1)
+        )
+        out.append(
+            f"\t# the {group} group\n"
+            f"\ttype pp_cplan_weight_bar_{group} = hbox {{\n"
+            "\t\tspacing = 4\n"
+            "\t\tbutton_square_minus = {\n\t\t\tsize = { 15 15 }\n\t\t\ttooltip = \"PP_CPLAN_WEIGHT_TT\"\n"
+            f"\t\t\tonclick = \"{down}\"\n\t\t}}\n"
+            "\t\twidget = {\n"
+            f"\t\t\tsize = {{ {SEGMENT * WEIGHT_STEPS} 14 }}\n"
+            "\t\t\tprogressbar_framed = {\n\t\t\t\tsize = { 100% 100% }\n\t\t\t\tusing = progress_bar_goldish\n"
+            f"\t\t\t\tmin = 0\n\t\t\t\tmax = {WEIGHT_STEPS}\n\t\t\t\tvalue = \"[FixedPointToFloat({value})]\"\n\t\t\t}}\n"
+            + zones
+            + "\t\t}\n"
+            "\t\tbutton_square_plus = {\n\t\t\tsize = { 15 15 }\n\t\t\ttooltip = \"PP_CPLAN_WEIGHT_TT\"\n"
+            f"\t\t\tonclick = \"{up}\"\n\t\t}}\n"
+            "\t\ttext_single = {\n"
+            f"\t\t\traw_text = \"[GetPlayer.MakeScope.ScriptValue('pp_cplan_part_{group}')|0]%\"\n"
+            "\t\t\ttooltip = \"PP_CPLAN_SHARE_TT\"\n\t\t\tminimumsize = { 44 -1 }\n\t\t\tmaximumsize = { 44 -1 }\n"
+            "\t\t\talign = right|nobaseline\n\t\t}\n"
+            "\t}\n\n"
+        )
+    out.append("}\n")
+    return "".join(out)
+
+
 def render_values(config: Config, demands: dict[str, dict[str, float]] | None = None,
                   bounds: tuple[float, float] = (0.5, 2.5)) -> str:
     parts = [HEADER, "\n# ---- Global settings with their defaults ([construction_plan]; the window's lines) ----\n\n"]
@@ -489,6 +631,7 @@ def render_values(config: Config, demands: dict[str, dict[str, float]] | None = 
                                 "Country scope: improvements where population reaches this % of a location's capacity."))
     parts.append(_default_value("pp_cplan_business_years", "pp_cplan_biz", config.business_years,
                                 "Country scope: the business line, payback of a level in years."))
+    parts.append(render_weight_values(config))
     parts.append(
         "# Country scope: the improvement line as a share of capacity (location_population_percentage).\n"
         "pp_cplan_improve_line = {\n\tvalue = pp_cplan_improve_pct\n\tdivide = 100\n}\n"
@@ -810,8 +953,8 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]],
     if costs:
         parts.append(render_btype_data(costs))
 
-    flags = sorted({"food", "logistics", "improve", "business", "reserve", "reserve_big", "access_line",
-                    "improve_line", "business_line", "up", "down"})
+    flags = sorted({*GROUPS, "reserve", "reserve_big", "access_line", "improve_line", "business_line", "up", "down"}
+                   | {f"w{n}" for n in range(1, WEIGHT_STEPS + 1)})
     parts.append(
         "\n# Any scope, never run (pp_cplan_run calls it under always = no): declares the flags the window passes, so the\n"
         "# script check logs no 'used but never set' line for them.\npp_cplan_declare_flags = {\n"
@@ -841,7 +984,8 @@ def _business_method(name: str, recipe: Recipe, harvest_goods: set[str]) -> str:
 
 def render_business(businesses: dict[str, str], recipes: dict[str, list[list[Recipe]]],
                     costs: dict[str, BuildingCost], harvest: dict[str, dict[str, dict[str, float]]],
-                    categories: dict[str, str], profile_categories: tuple[str, ...]) -> tuple[str, str]:
+                    categories: dict[str, str], profile_categories: tuple[str, ...],
+                    staff: dict[str, tuple[str, float]] | None = None) -> tuple[str, str]:
     """Values and effects of the business rule (Jan 2026-11-09): every building that makes goods, wherever a level pays
     back within the player's line, shortest payback first. A level's monthly profit = each slot's best method at the
     market's prices and the location's output with this year's Variable Harvest taken out; the same for a new building
@@ -920,11 +1064,12 @@ def render_business(businesses: dict[str, str], recipes: dict[str, list[list[Rec
         "\n# Location scope (a business site of scope:pp_cplan_country): the business with the best yearly return here that\n"
         "# reaches the owner's line (pp_cplan_business_min_roi = 100 / years), as pp_cplan_bz_pick (a building type) and\n"
         "# pp_cplan_bz_roi (its return, %); neither where none does. A candidate: the country can build it, so can this\n"
-        "# location (max level, allow, potential), the market holds its construction goods, no level of it here is\n"
-        "# closed (the player or the game's Close and Open automation found it does not pay), and a profile here leaves\n"
-        "# its good and building category to the plan.\n"
+        "# location (max level, allow, potential), a level finds its workers here (pp_cplan_staff), the market holds its\n"
+        "# construction goods, no level of it here is closed (the player or the game's Close and Open automation found\n"
+        "# it does not pay), and a profile here leaves its good and building category to the plan.\n"
         "pp_cplan_business_pick = {\n"
         "\tpp_cplan_business_harvest = yes\n"
+        "\tsave_temporary_scope_value_as = { name = pp_cplan_free_peasants value = pp_cplan_free_peasants_here }\n"
         "\tremove_variable = pp_cplan_bz_pick\n"
         "\tset_variable = { name = pp_cplan_bz_roi value = scope:pp_cplan_country.pp_cplan_business_min_roi }\n"
     )
@@ -933,10 +1078,12 @@ def render_business(businesses: dict[str, str], recipes: dict[str, list[list[Rec
         profile = f"\t\t\tNOT = {{ pp_lprof_has_good = {{ g = {businesses[name]} }} }}\n"
         if categories.get(name) in profile_categories:
             profile += f"\t\t\tNOT = {{ pp_lprof_has_category = {{ c = {categories[name]} }} }}\n"
+        workers = staff_check((staff or {}).get(name))
         effects.append(
             "\tif = {\n\t\tlimit = {\n"
             f"\t\t\tscope:pp_cplan_country = {{ has_variable = pp_cplan_bz_{name} }}\n"
-            f"\t\t\tcan_build_building = building_type:{name}\n"
+            + (f"\t\t\t{workers}\n" if workers else "")
+            + f"\t\t\tcan_build_building = building_type:{name}\n"
             + profile
             + f"\t\t\tpp_cplan_goods_here_{cost.demand} = yes\n"
             f"\t\t\tNOT = {{ any_buildings_in_location = {{ building_type = building_type:{name} building_level > 0 is_opened = no }} }}\n"
@@ -1030,9 +1177,10 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
     result.businesses = {building: good for building, good in sorted(short.main_good.items())
                          if good not in config.hidden_goods and building not in own}
     categories = {name: database[name][0].get("category", "") for name in result.businesses if name in database}
+    result.staff = staffing(database, script_value_numbers(mod_root, vanilla_root))
     business_values, business_effects = render_business(
         result.businesses, built_recipes(database, list(result.businesses)), costs, harvest_outputs(mod_root),
-        categories, config.profile_categories)
+        categories, config.profile_categories, result.staff)
 
     wanted = food_buildings + list(config.kitchens) + list(config.taverns) + result.improvements
     wanted += list(config.granaries) + list(config.granges) + list(config.yards) + list(config.logistics_order)
@@ -1052,6 +1200,7 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
         # not hold farms back for the year a Cookshop takes (seen in game 2026-11-08)
         mod_root / TRIGGERS: render_triggers(demands, food_buildings + list(config.taverns),
                                              config.construction_goods_months),
+        mod_root / WEIGHT_GUI: render_weight_gui(),
     }
     for path, text in texts.items():
         if _write(path, text, write):

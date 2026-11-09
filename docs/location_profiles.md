@@ -9,7 +9,8 @@ sets; whatever a profile does not set, the global Construction Plan rules still 
 "logistics where needed" in every profile). In detail:
 
 - The profile's rules run as their own rule group of the monthly pass, with its part of the month's budget like every
-  group that is on.
+  group: the Location profiles weight bar on the Global Settings tab (its weight over the sum of the weights; 0 = the
+  profiles build nothing).
 - A rule's target takes that target from the global rules there: a good takes the Businesses rule's buildings that
   make it and, for a staple food, the food rule's farm step (the profile decides which food is made here); a building
   category takes the Businesses rule's buildings of that category; victuals take the Grange and Victualling Yard steps;
@@ -149,7 +150,7 @@ Location:
 |---|---|
 | `pp_lprof` | assigned slot k (+100); unset = no profile |
 | `pp_lprof_ig` / `_ic` / `_in` / `_col` / `_r<r>_g` / `_r<r>_c` / `_r<r>_pb` | the location's copy of its profile (the pass and the badge read only this; no rule frames, the badge draws no rule icon) |
-| `pp_lprof_r<r>_st` | rule r state after the last pass (+100): 1 started, 2 nothing to build (all standing levels' payback too long / at max), 3 a construction is under way here (a location builds one at a time), 5 payback too long, 6 cannot be built here, 7 budget, 8 market lacks the construction goods, 9 waiting for an earlier rule's construction this month |
+| `pp_lprof_r<r>_st` | rule r state after the last pass (+100): 1 started, 2 nothing to build (all standing levels' payback too long / at max), 3 a construction is under way here (a location builds one at a time), 4 no free workers here, 5 payback too long, 6 cannot be built here, 7 budget, 8 market lacks the construction goods, 9 waiting for an earlier rule's construction this month |
 | `pp_lprof_r<r>_est` | the shortest payback the rule found (years + 100; 1099 = no profit), shown beside state 5 |
 
 Flags are copied by a switch (`pp_lprof_pull_icon`, `pp_lprof_pull_cat`: compared, then set), never as a variable's value;
@@ -185,7 +186,7 @@ buttons pass this), `none` (assign) or `next` (new: the first free slot).
 Every button that changes a slot ends in `pp_lprof_commit` = `pp_lprof_write` (staged copy → slot) +
 `pp_lprof_publish` (staged copy → edit buffer and → every location with the slot) + `refresh_map_colors = yes`.
 
-## Monthly pass (in `pp_cplan_run`, a rule group with its part of the month's budget like the others)
+## Monthly pass (in `pp_cplan_run`, a rule group with its weighted part of the month's budget like the others)
 
 Only when the Construction Plan is on (`pp_cplan_on`). The global groups ask per group whether they may build in a
 location (`scripted_triggers/pp_construction_plan.txt`: the owner's location, then the profile's side, read from the
@@ -206,8 +207,10 @@ producer of the good whose next level pays back within the limit (highest tier f
 producer stands here, start the cheapest buildable producer (the first level has no profit to measure, so no payback
 check). `logistics` = the logistics try for this location. A category target: the same over the buildings of that
 category (generated list per category: player-buildable building types whose `category` is it). Guards:
-`location_and_owner_can_build`, construction goods in the market (12 months of the draw), one construction at a time
-in the location, never a level for a closed building, budget (`pp_cplan_budget_left`). The monthly cleanup takes the
+`location_and_owner_can_build`, the workers one level needs (`pp_cplan_staff`, Jan 2026-11-09: idle peasants left
+after the open jobs of the location's buildings, or idle pops of the building's own class; candidates carry `pt` /
+`sz`, state 4 when none finds them), construction goods in the market (12 months of the draw), one construction at a
+time in the location, never a level for a closed building, budget (`pp_cplan_budget_left`). The monthly cleanup takes the
 profile and its copy from locations that lost it (`pp_lprof_clear_location`).
 
 ## UI

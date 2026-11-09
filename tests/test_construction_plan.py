@@ -121,26 +121,76 @@ def test_lines_step_as_jan_asked() -> None:
 
 
 def test_budget_is_the_gold_above_the_reserve() -> None:
-    """No monthly count any more: each pass may spend the gold above the reserve; every rule group that runs adds an
-    equal part (a part left unused passes on); no construction takes the treasury below the reserve."""
+    """No monthly count any more: each pass may spend the gold above the reserve; every rule group gets its weight over
+    the sum of the weights (Jan 2026-11-09: a part per group, every bar full = equal parts, an empty bar = off), a part
+    left unused passes on; no construction takes the treasury below the reserve."""
     run = _effect(_read(EFFECTS), "pp_cplan_run")
     assert "set_variable = { name = pp_cplan_pot value = { value = pp_cplan_free_gold min = 0 add = 100 } }" in run
     values = _read(VALUES)
     assert "subtract = pp_cplan_reserve_gold" in _effect(values, "pp_cplan_free_gold")
-    share = _effect(values, "pp_cplan_group_share")
-    assert "value = var:pp_cplan_pot" in share and "divide = pp_cplan_groups_on" in share
-    groups = _effect(values, "pp_cplan_groups_on")
-    for name in ("pp_cplan_food_n", "pp_cplan_logistics_n", "pp_cplan_improve_n", "pp_cplan_business_n", "pp_lprof_group_n"):
-        assert name in groups, name
+    generated = _read(MOD / cp.VALUES)
+    total = _effect(generated, "pp_cplan_w_total")
+    assert "value = pp_cplan_profiles_cw" in total and "multiply = pp_lprof_group_n" in _effect(generated, "pp_cplan_profiles_cw")
+    for group in cp.GROUPS:
+        share = _effect(generated, f"pp_cplan_share_{group}")
+        weight = "pp_cplan_profiles_cw" if group == "profiles" else f"pp_cplan_{group}_w"
+        assert "value = pp_cplan_pot_n" in share and f"multiply = {weight}" in share and "divide = pp_cplan_w_total" in share
+        assert f"multiply = 100\n\t\tdivide = pp_cplan_w_total" in _effect(generated, f"pp_cplan_part_{group}")
+        if group != "profiles":
+            assert f"add = pp_cplan_{group}_w" in total
+            body = _effect(_read(EFFECTS), f"pp_cplan_group_{group}")
+            assert f"limit = {{ pp_cplan_{group}_w > 0 }}\n\t\tchange_variable = {{ name = pp_cplan_cap add = pp_cplan_share_{group} }}" in body
+    config = cp.load_config(PROJECT)
+    assert dict(config.weights) == {group: 5 for group in cp.GROUPS}
     triggers = _read(TRIGGERS)
     budget = _effect(triggers, "pp_cplan_budget_left")
     assert "pp_cplan_spent_n < pp_cplan_cap_n" in budget and "pp_cplan_free_gold > 0" in budget
     assert "pp_cplan_est_cost <= scope:pp_cplan_country.pp_cplan_free_gold" in _effect(triggers, "pp_cplan_affordable")
     scoped = _effect(_read(EFFECTS), "pp_cplan_construct_scoped")
     assert scoped.index("pp_cplan_btype_data = yes") < scoped.index("pp_cplan_affordable = yes") < scoped.index("pp_cplan_construct_now")
-    for group in ("food", "logistics", "improve", "business"):
-        assert "change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }" in _effect(_read(EFFECTS), f"pp_cplan_group_{group}")
-    assert "change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }" in _effect(_read(PROFILE_EFFECTS), "pp_lprof_run")
+
+
+def test_weight_bars() -> None:
+    """One bar per rule group: - and +, ten steps that set the weight when clicked, the part in %; 0..10."""
+    gui = _read(MOD / cp.WEIGHT_GUI)
+    window = _read(WINDOW)
+    effects = _read(EFFECTS)
+    for group in cp.GROUPS:
+        bar = re.search(rf"type pp_cplan_weight_bar_{group} = hbox \{{(.*?)\n\t\}}\n", gui, re.DOTALL).group(1)
+        for n in range(1, cp.WEIGHT_STEPS + 1):
+            assert f"AddScope('pp_key', MakeScopeFlag('{group}')).AddScope('pp_n', MakeScopeFlag('w{n}'))" in bar, (group, n)
+        assert "MakeScopeFlag('down')" in bar and "MakeScopeFlag('up')" in bar
+        assert f"ScriptValue('pp_cplan_{group}_w')" in bar and f"ScriptValue('pp_cplan_part_{group}')" in bar
+        assert f"pp_cplan_weight_bar_{group} = {{}}" in window, group
+        assert f"flag:{group} = {{ pp_cplan_set_weight = {{ var = pp_cplan_w_{group} current = pp_cplan_{group}_w }} }}" in _read(SCRIPTED_GUIS)
+    setter = _effect(effects, "pp_cplan_set_weight")
+    for n in range(1, cp.WEIGHT_STEPS + 1):
+        assert f"flag:w{n} = {{ set_variable = {{ name = $var$ value = {100 + n} }} }}" in setter
+    assert "step = 1 min = 100 max = 110" in setter
+    assert "toggle_module" not in window + _read(SCRIPTED_GUIS)
+
+
+def test_businesses_and_profiles_need_workers() -> None:
+    """Jan 2026-11-09: no business where nobody can work in it. A level finds its workers in the idle peasants the
+    buildings there do not already need (they are promoted into any class) or in idle pops of its own class."""
+    result = _result()
+    assert result.staff["iron_mine"] == ("laborers", 0.8)
+    assert all(size > 0 for _, size in result.staff.values())
+    # a size given through a script value is read as its number
+    numbers = cp.script_value_numbers(MOD, vanilla_root(ROOT, PROJECT))
+    assert numbers["manpower_employment"] > 0
+    pick = _effect(_read(MOD / cp.EFFECTS), "pp_cplan_business_pick")
+    assert "save_temporary_scope_value_as = { name = pp_cplan_free_peasants value = pp_cplan_free_peasants_here }" in pick
+    for name in result.businesses:
+        if name in result.staff:
+            pop, size = result.staff[name]
+            assert f"pp_cplan_staff = {{ type = {pop} size = {cp._num(size)} }}" in pick, name
+    staff = _effect(_read(TRIGGERS), "pp_cplan_staff")
+    assert "scope:pp_cplan_free_peasants >= $size$" in staff
+    assert "NOT = { pop_type:$type$ = pop_type:peasants }" in staff
+    free = _effect(_read(VALUES), "pp_cplan_free_peasants_here")
+    assert '"unemployed_pops_of_pop_type_in_location(pop_type:peasants)"' in free
+    assert "value = building_employment_size_amount" in free and "subtract = building_employed_amount" in free
 
 
 def test_groups_take_turns_by_month() -> None:
@@ -492,7 +542,7 @@ def test_improvements_cheap_and_much_first() -> None:
         value = _effect(generated, f"pp_cplan_imp_{key}")
         assert f"building_type:{key}.building_base_cost_in_gold" in value
     run = _effect(_read(EFFECTS), "pp_cplan_group_improve")
-    block = run[run.index("pp_cplan_improve_off"):run.index("pp_cplan_try_improve_here")]
+    block = run[run.index("pp_cplan_improve_w > 0"):run.index("pp_cplan_try_improve_here")]
     assert "location_population_percentage >= scope:pp_cplan_country.pp_cplan_improve_line" in block
     assert "order_by = pp_cplan_fill_here" in block
 
@@ -522,3 +572,14 @@ def test_granary_before_kitchen_while_due() -> None:
     assert food.index("pp_cplan_try_granary_here = yes") < food.index("pp_cplan_try_kitchen_here = yes")
     granary = food[food.index("# 3. a Granary"):food.index("pp_cplan_try_granary_here = yes")]
     assert "pp_cplan_granary_due = yes" in granary
+
+
+def test_no_name_is_defined_twice() -> None:
+    """A script value, effect or trigger defined twice silently takes the last body (the weight part pp_cplan_improve_pct
+    once shadowed the improvement line of the same name)."""
+    for kind in ("script_values", "scripted_effects", "scripted_triggers"):
+        seen: dict[str, str] = {}
+        for path in sorted((MOD / "in_game/common" / kind).glob("pp_*.txt")):
+            for name in re.findall(r"^([A-Za-z_][A-Za-z0-9_]*) = \{", _read(path), re.MULTILINE):
+                assert name not in seen, f"{kind}: {name} in {seen.get(name)} and {path.name}"
+                seen[name] = path.name

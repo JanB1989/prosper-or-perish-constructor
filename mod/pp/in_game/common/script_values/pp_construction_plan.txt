@@ -11,23 +11,14 @@ pp_cplan_free_gold = {
 	subtract = pp_cplan_reserve_gold
 }
 
-# The rule groups that run (location profiles when a location has a profile; at least 1), and each one's equal part of
-# the gold above the reserve at the pass's start (pp_cplan_pot).
-pp_cplan_groups_on = {
-	value = pp_cplan_food_n
-	add = pp_cplan_logistics_n
-	add = pp_cplan_improve_n
-	add = pp_cplan_business_n
-	add = pp_lprof_group_n
-	min = 1
-}
-pp_cplan_group_share = {
+# The gold above the reserve at the pass's start (0 outside a pass); each rule group's part of it is generated
+# (pp_cplan_share_<group>: its weight over the sum of the weights, pp_construction_plan_generated.txt).
+pp_cplan_pot_n = {
 	value = 0
 	if = {
 		limit = { has_variable = pp_cplan_pot }
 		value = var:pp_cplan_pot
 		subtract = 100
-		divide = pp_cplan_groups_on
 	}
 }
 # Gold the pass may have spent by the end of the current rule group (0 outside a pass).
@@ -255,6 +246,21 @@ pp_cplan_est_payback_years = {
 	max = 999
 }
 
+# Location scope: idle peasants left for a new building here, in thousands like the pops: the idle peasants minus the
+# open jobs of the buildings here (workers they could still take). Peasants are promoted into the other classes, so
+# they staff any building (Jan 2026-11-09); pp_cplan_staff reads it as scope:pp_cplan_free_peasants.
+pp_cplan_free_peasants_here = {
+	value = "unemployed_pops_of_pop_type_in_location(pop_type:peasants)"
+	every_buildings_in_location = {
+		subtract = {
+			value = building_employment_size_amount
+			subtract = building_employed_amount
+			min = 0
+		}
+	}
+	min = 0
+}
+
 # Location scope: the business picked here this pass, its yearly return in % (the business group's order).
 pp_cplan_bz_roi_n = {
 	value = 0
@@ -272,36 +278,6 @@ pp_cplan_on_n = {
 	if = {
 		limit = { has_variable = pp_cplan_on }
 		value = 1
-	}
-}
-
-# Country scope: 1 while a rule group runs (they run by default).
-pp_cplan_food_n = {
-	value = 1
-	if = {
-		limit = { has_variable = pp_cplan_food_off }
-		value = 0
-	}
-}
-pp_cplan_logistics_n = {
-	value = 1
-	if = {
-		limit = { has_variable = pp_cplan_logistics_off }
-		value = 0
-	}
-}
-pp_cplan_improve_n = {
-	value = 1
-	if = {
-		limit = { has_variable = pp_cplan_improve_off }
-		value = 0
-	}
-}
-pp_cplan_business_n = {
-	value = 1
-	if = {
-		limit = { has_variable = pp_cplan_business_off }
-		value = 0
 	}
 }
 

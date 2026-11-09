@@ -67,6 +67,7 @@ STATES = {
     1: "started",
     2: "nothing to build",
     3: "a construction under way here",
+    4: "no free workers here",
     5: "payback too long",
     6: "cannot be built here",
     7: "budget",
@@ -74,7 +75,7 @@ STATES = {
     9: "waiting for an earlier rule's construction this month",
 }
 # why a candidate failed, ranked (+ 100 in pp_lprof_fail; the highest rank of a rule's candidates gives its state)
-FAIL_STATE = {101: 2, 102: 6, 103: 5, 104: 8, 105: 7}
+FAIL_STATE = {101: 2, 102: 6, 103: 5, 104: 4, 105: 8, 106: 7}
 DIRECTIONS = ("up", "down")
 EDITED = "e"  # the pp_slot flag of the editor's buttons: the slot in the edit buffer (pp_lprof_e_k)
 NEXT = "next"  # the pp_slot flag of the new profile button: the first slot not in use
@@ -133,10 +134,13 @@ class Candidate:
     demand: str
     category: str
     ipl: float
+    pop_type: str = "peasants"  # the workers a level needs (pp_cplan_staff); none = 0 peasants
+    workers: float = 0.0
 
     @property
     def params(self) -> str:
-        return f"type = {self.name} demand = {self.demand} cat = {self.category} ipl = {cp._num(self.ipl)}"
+        return (f"type = {self.name} demand = {self.demand} cat = {self.category} ipl = {cp._num(self.ipl)} "
+                f"pt = {self.pop_type} sz = {cp._num(self.workers)}")
 
 
 @dataclass
@@ -263,13 +267,15 @@ def targets(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -> tu
     category lists."""
     plan = cp.load_config(project)
     database = cp._database(mod_root, vanilla_root, cp.BUILDING_TYPES)
-    costs, _ = cp.building_costs(mod_root, vanilla_root)
+    costs, _ = cp.building_costs(mod_root, vanilla_root, database)
+    staff = cp.staffing(database, cp.script_value_numbers(mod_root, vanilla_root))
     depths = tier_depths(database)
     defined = {name for name, (keys, _) in database.items() if "category" in keys}  # DLC-only types carry none here
 
     def candidate(name: str) -> Candidate:
         cost = costs.get(name, cp.BuildingCost(0.0, cp.DEFAULT_DEMAND, "std"))
-        return Candidate(name, cost.demand, cost.category, cost.ipl)
+        pop_type, workers = staff.get(name, ("peasants", 0.0))
+        return Candidate(name, cost.demand, cost.category, cost.ipl, pop_type, workers)
 
     def ordered(names: list[str]) -> list[Candidate]:
         return [candidate(name) for name in sorted(set(names) & defined, key=lambda name: (-depths[name], name))]

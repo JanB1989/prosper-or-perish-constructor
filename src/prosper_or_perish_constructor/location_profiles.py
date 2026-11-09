@@ -1,10 +1,11 @@
 """Location Profiles (script side: storage, edits, assignment, the monthly pass). Contract: docs/location_profiles.md.
 
 Branch location-profiles, 2026-11-07, Jan: the player defines profiles (an icon, a colour, ordered build rules) and
-assigns them to locations on the map. In a location with a profile the global Construction Plan rules stand back and
-the profile's rules build there, as the first rule group of the monthly pass (``pp_cplan_run``) with its own share of
-the monthly limit. Script cannot create named data while the game runs, so a profile is a generated slot
-``k = 1..slots``.
+assigns them to locations on the map. In a location with a profile the profile's rules build, as a rule group of the
+monthly pass (``pp_cplan_run``) with its own share of the month's budget; the global Construction Plan rules still
+build there what the profile does not set (its rules' targets, the global groups it switches off). A profile is all a
+location carries; nothing else per location exists. Script cannot create named data while the game runs, so a profile
+is a generated slot ``k = 1..slots``.
 
 Cost independent of the slot count (2026-11-07, Jan: up to 100 profiles): every location with a profile carries a copy
 of it (icon, colour, each rule's target and payback limit), written on assign and whenever its slot is edited; the
@@ -24,8 +25,9 @@ The engine is hand-written in the mod (``scripted_effects/pp_location_profiles.t
   declarations;
 * ``script_values/pp_location_profiles_generated.txt``: readouts (slot, buffer slot, rule states, first free slot,
   profiles in use) and the pass's helper values;
-* ``scripted_triggers/pp_location_profiles_generated.txt``: the category and symbol key checks and "the country has
-  profile locations".
+* ``scripted_triggers/pp_location_profiles_generated.txt``: the category and symbol key checks, "the country has
+  profile locations" and the checks the global rules ask before they build in a profile's location (a rule of it
+  names this good, a staple food, this building category).
 
 A profile's icon is a good (a goods scope) or a flag: a building category or a symbol (``[location_profiles.symbols]``,
 generic pictures such as a city or a harbour that build nothing; flag ``pp_sym_<name>``).
@@ -79,9 +81,9 @@ NEXT = "next"  # the pp_slot flag of the new profile button: the first slot not 
 SYMBOL_PREFIX = "pp_sym_"  # a symbol's flag, loc key and texture name: pp_sym_<name>
 # The global Construction Plan rule groups a profile can switch off in its locations: (copy field, pp_field flag, the
 # plan's group). Unset = the group builds there too (Jan 2026-11-09: what a profile does not set, the global rules do;
-# a rule of the profile for a target takes that target from them).
+# a rule of the profile for a target takes that target from them). Businesses = any building that makes goods.
 GLOBAL_GROUPS = (("xf", "global_food", "food"), ("xl", "global_logistics", "logistics"),
-                 ("xi", "global_improve", "improvements"), ("xg", "global_goods", "goods"))
+                 ("xi", "global_improve", "improvements"), ("xg", "global_business", "businesses"))
 BUFFER = "pp_lprof_e"  # the edit buffer's variable prefix (country)
 COPY = "pp_lprof"  # a location's copy of its profile (variable prefix)
 # A flag is drawn as a frame of one picture strip (location_profiles_gui.render_textures), never through its name: the
@@ -413,7 +415,7 @@ def render_edits(items: list[lp.Item], config: Config, categories: list[str]) ->
     )
     parts.append(
         "\n# The global rule group scope:pp_field (global_food / ...) switched off in the profile's locations, or on again\n"
-        "# (unset = on: the group builds there too, except the targets of the profile's own rules).\n"
+        "# (unset = on: the group builds there too, except the targets of the profile's rules).\n"
         "pp_lprof_global_staged = {\n\tswitch = {\n\t\ttrigger = scope:pp_field\n"
         + "".join(
             f"\t\tflag:{flag} = {{\n\t\t\tif = {{\n\t\t\t\tlimit = {{ has_variable = pp_lprof_s_{name} }}\n"
@@ -718,6 +720,12 @@ def render_triggers(categories: list[str], config: Config) -> str:
         "# the global rules for it stand back; pp_construction_plan.txt's triggers).\n"
         "pp_lprof_has_good = {\n\thas_variable = pp_lprof\n\tOR = {\n"
         + "".join(f"\t\tAND = {{ has_variable = pp_lprof_r{r}_g var:pp_lprof_r{r}_g = goods:$g$ }}\n"
+                  for r in range(1, config.rules + 1))
+        + "\t}\n}\n"
+        "\n# Location scope: a rule of the location's profile has the building category $c$ (a category key such as\n"
+        "# trade_category) as its target (that category is the profile's here: the global rules leave its buildings to it).\n"
+        "pp_lprof_has_category = {\n\thas_variable = pp_lprof\n\tOR = {\n"
+        + "".join(f"\t\tAND = {{ has_variable = pp_lprof_r{r}_c var:pp_lprof_r{r}_c = flag:$c$ }}\n"
                   for r in range(1, config.rules + 1))
         + "\t}\n}\n"
         "\n# Location scope: a rule of the location's profile has a staple food as its target (the profile decides which\n"

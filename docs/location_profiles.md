@@ -8,12 +8,15 @@ colour) beside the plan icons.
 sets; whatever a profile does not set, the global Construction Plan rules still do in its locations (no need to repeat
 "logistics where needed" in every profile). In detail:
 
-- The profile's rules run first each month, as their own rule group.
-- A rule's target takes that target from the global rules there: a good takes that good's goods rule (Keep / Expand /
-  Never) and, for a staple food, the food rule's farm step (the profile decides which food is made here); victuals
-  take the Grange and Victualling Yard steps; market access takes the logistics rule.
-- A profile can switch whole global groups off in its locations: Food, Logistics, Improvements, Goods (checkboxes
-  "Global rules here" in the editor; unticked = off). An empty profile with all four off is "hands off".
+- The profile's rules run as their own rule group of the monthly pass, with its part of the month's budget like every
+  group that is on.
+- A rule's target takes that target from the global rules there: a good takes the Businesses rule's buildings that
+  make it and, for a staple food, the food rule's farm step (the profile decides which food is made here); a building
+  category takes the Businesses rule's buildings of that category; victuals take the Grange and Victualling Yard steps;
+  market access takes the logistics rule.
+- A profile can switch whole global groups off in its locations: Food, Logistics, Improvements, Businesses (checkboxes
+  "Global rules here" in the editor; unticked = off). An empty profile with all four off keeps the plan out.
+- A profile is all a location carries: the plan has no other per-location setting.
 - Example: global logistics on, a profile "iron mines" (rule: iron). When the location's market access drops, the
   logistics rule builds there, because the profile names no market access. With a market-access rule in the profile,
   that rule decides (its own payback limit) and the global logistics rule stays out.
@@ -22,7 +25,8 @@ Branch `location-profiles` = `location-plan` + `player-construction-manager` (me
 `../ProsperOrPerishConstructor-locplan`. Builds on: `location_plan.py` (plan items, map markers),
 `construction_plan.py` + `pp_construction_plan*.txt` (monthly pass, budget, payback, producers per good).
 
-UI name: **Location Profiles** (the v2 "Profiles" on the Plan tab are saved country settings; different thing).
+UI name: **Location Profiles**; the editor is the Construction Plan window's second tab, "Location profiles" (the
+first is "Global settings", 2026-11-09, Jan).
 
 ## Why slots, and what grows with them
 
@@ -166,8 +170,8 @@ buttons pass this), `none` (assign) or `next` (new: the first free slot).
 
 | Scripted GUI | Scope | Params | Effect |
 |---|---|---|---|
-| `pp_lprof_assign` | location (root) | `pp_slot` (`s<k>` or `none`) | set / remove the location's profile and its copy; keep `pp_lprof_locs`; a profile replaces the location's v2 own-rules mode (removes `pp_cplan_mode` and its `pp_cplan_own` entry); a location that has the slot already keeps it (and its states); `refresh_map_colors = yes` |
-| `pp_lprof_new` | country (root = player) | `pp_slot` (`next`; `s<k>` works too) | switches the slot on: icon `goods:lumber`, colour k (wrapping at 8, script value `pp_lprof_new_color`), no rules; the editor shows it. The window's header has the "+" button while `pp_lprof_first_free` > 0 |
+| `pp_lprof_assign` | location (root) | `pp_slot` (`s<k>` or `none`) | set / remove the location's profile and its copy; keep `pp_lprof_locs`; a location that has the slot already keeps it (and its states); `refresh_map_colors = yes` |
+| `pp_lprof_new` | country (root = player) | `pp_slot` (`next`; `s<k>` works too) | switches the slot on: icon `goods:lumber`, colour k (wrapping at 8, script value `pp_lprof_new_color`), no rules; the editor shows it. The editor's "Your profiles" row has the "+" button while `pp_lprof_first_free` > 0 |
 | `pp_lprof_select` | country | `pp_slot` (`s<k>`) | the editor shows slot k (its data into the edit buffer); its locations get its data again |
 | `pp_lprof_set` | country | `pp_slot`, `pp_field`, `pp_key` | icon or rule target of the slot = item `pp_key` (goods → `_g`/`_ig`, category or symbol → `_c`/`_ic`, clears the other; a symbol only for the icon) |
 | `pp_lprof_color` | country | `pp_slot`, `pp_col` | colour |
@@ -175,20 +179,22 @@ buttons pass this), `none` (assign) or `next` (new: the first free slot).
 | `pp_lprof_rule_clear` | country | `pp_slot`, `pp_field` | empty rule r (and its states in the slot's locations) |
 | `pp_lprof_rule_move` | country | `pp_slot`, `pp_field`, `pp_dir` | swap rule r with its neighbour (and their states) |
 | `pp_lprof_delete` | country | `pp_slot` | clear the slot, unassign it from every location (their copies go), empty the edit buffer when it holds the slot |
-| `pp_lprof_global` | country | `pp_slot`, `pp_field` (`global_food` / `global_logistics` / `global_improve` / `global_goods`) | switch a global rule group off in the slot's locations, or on again (`pp_lprof_<k>_xf` / `_xl` / `_xi` / `_xg`, copied to the locations as `pp_lprof_xf` ...) |
+| `pp_lprof_global` | country | `pp_slot`, `pp_field` (`global_food` / `global_logistics` / `global_improve` / `global_business`) | switch a global rule group off in the slot's locations, or on again (`pp_lprof_<k>_xf` / `_xl` / `_xi` / `_xg`, copied to the locations as `pp_lprof_xf` ...; `_xg` = Businesses) |
 | `pp_lprof_examples` | country | none | the example profiles (`[[location_profiles.examples]]`) in the next free slots, made with the buttons' own effects (`pp_lprof_examples_do`); the editor offers it while the country has no profile |
 
 Every button that changes a slot ends in `pp_lprof_commit` = `pp_lprof_write` (staged copy → slot) +
 `pp_lprof_publish` (staged copy → edit buffer and → every location with the slot) + `refresh_map_colors = yes`.
 
-## Monthly pass (in `pp_cplan_run`, first group, own share like the other groups)
+## Monthly pass (in `pp_cplan_run`, a rule group with its part of the month's budget like the others)
 
 Only when the Construction Plan is on (`pp_cplan_on`). The global groups ask per group whether they may build in a
-location (`scripted_triggers/pp_construction_plan.txt`): `pp_cplan_location_ok` (owner, no own-rules / hands-off mode)
-plus `pp_cplan_food_ok` (no `pp_lprof_xf`), `pp_cplan_farm_ok` (and no staple food rule: `pp_lprof_food_target`),
-`pp_cplan_victuals_ok` (no victuals rule), `pp_cplan_logistics_ok` (no `pp_lprof_xl`, no market access rule),
-`pp_cplan_improve_ok` (no `pp_lprof_xi`), `pp_cplan_goods_ok = { g = <good> }` (no `pp_lprof_xg`, no rule for that good;
-`pp_lprof_has_good`). One construction at a time in a location (2026-11-09): the engine builds a location's
+location (`scripted_triggers/pp_construction_plan.txt`: the owner's location, then the profile's side, read from the
+location's copy): food not where `pp_lprof_xf` is set, its farm step not where a rule names a staple food
+(`pp_lprof_food_target`), its victuals makers not where a rule names victuals; logistics not where `pp_lprof_xl` is set
+or a rule names market access; improvements not where `pp_lprof_xi` is set; businesses not where `pp_lprof_xg` is set,
+and no building whose good (`pp_lprof_has_good = { g = <good> }`) or category (`pp_lprof_has_category = { c =
+<category key> }`, e.g. `trade_category`) a rule names (generated `scripted_triggers/pp_location_profiles_generated.txt`).
+One construction at a time in a location (2026-11-09): the engine builds a location's
 constructions one after another (test world: a Cookshop moved 344 days in a year while the Granary, Grange and Carrier
 Inn the plan had started beside it moved 0), so `pp_cplan_construct_scoped` starts nothing where
 `num_civil_constructions` > 0, whoever started it, and a profile rule then shows state 3.
@@ -215,11 +221,18 @@ profile and its copy from locations that lost it (`pp_lprof_clear_location`).
 - **Location Plan window**: a "Profile" row: the location's badge, None, "Edit profiles", the slot tiles (icon on
   colour, 8 per row, rows only while they hold a used slot) to assign. The location window's Infrastructure tab starts
   with the same row (`pp_lprof_location_row` = `pp_lprof_plan_row`).
-- **Profile editor** (`gui/pp_location_profiles.gui`, scripted widget): the header's "+" (new profile in the first
-  free slot), the profile list (used slots; a click selects one, `pp_lprof_select`), the edited profile (one body, the
-  edit buffer): icon (click → picker mode `icon`), 8 colour swatches, rules 1..5 (target icon → picker mode `r<r>`,
-  payback `< N years` / `any` with - / +, up / down, clear), Delete. One shared item picker (the plan's items + Market
-  access, and the Symbols group for the icon only); clicking an item calls `pp_lprof_set` with the open picker mode.
+- **Profile editor** (2026-11-09, Jan: the plan window has two tabs): the Construction Plan window's second tab,
+  "Location profiles" (GUI variable `pp_cplan_tab` = `profiles`; `pp_cplan_open` opens the window). Its body is the
+  type `pp_lprof_editor_tab` (`gui/pp_location_profiles.gui`, a vbox expanding both ways, made for the tab's inner area
+  of about 650 x 700 px), which `pp_construction_plan.gui` places in the tab; the plan window's close button clears
+  `pp_lprof_pick`. Every "Edit profiles" (the palette, the Location Plan window's and the location window's Profile
+  rows, the right-click menu; `location_profiles_gui.OPEN_EDITOR`) sets `pp_cplan_open` = `yes` and `pp_cplan_tab` =
+  `profiles`. The body: the note; "Your profiles" with "+" (new profile in the first free slot), "Start with the
+  examples" (while the country has none) and "Paint on map"; the profile list (used slots; a click selects one,
+  `pp_lprof_select`); the edited profile (one body, the edit buffer): icon (click → picker mode `icon`), 8 colour
+  swatches, Delete, rules 1..5 (target icon → picker mode `r<r>`, payback `< N years` / `any` with - / +, up / down,
+  clear), the four "Global rules here" checkboxes; one shared item picker (the plan's items + Market access, and the
+  Symbols group for the icon only); clicking an item calls `pp_lprof_set` with the open picker mode.
 - **Map right-click menu** (vanilla `LocationContextMenu` in `context_menu.gui`, patched at finalize like
   `map_markers.gui`: a copy of vanilla with one section added, a test checks the rest is vanilla): for player locations,
   a "Location Profile" section with the badge, the slot tiles (7 per row, rows only while used), None, "Location Plan",
@@ -242,8 +255,7 @@ off). "Start with the examples" in the editor (while the country has no profile)
 
 ## Not in v1
 
-Profile names (typed text cannot be stored); profiles carried to a new game; level caps per rule; conditions per rule
-(the v2 location rules keep those).
+Profile names (typed text cannot be stored); profiles carried to a new game; level caps per rule; conditions per rule.
 
 ## Status (2026-11-07)
 

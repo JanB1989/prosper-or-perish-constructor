@@ -1,49 +1,51 @@
 """Construction Plan (branch player-construction-manager, 2026-11-06, Jan): player-only construction rules.
 
-The player sets rules once in the Construction Plan panel; a monthly pass for countries with ``is_ai = no`` starts the
-constructions with ``construct_building`` (a normal, paid construction). The AI never runs it. Two layers:
+The player sets the rules once in the Construction Plan window (two tabs since 2026-11-09, Jan: Global settings and
+Location profiles); a monthly pass for countries with ``is_ai = no`` starts the constructions with
+``construct_building`` (a normal, paid construction). The AI never runs it. Global settings: the plan on or off, a gold
+reserve in gold, and four rule groups, each on or off with one line:
 
-* Global rules, per country (rule groups Food, Logistics, Goods):
-  * Food, per province, one construction a month, first that applies (baseline rules, Jan 2026-11-08). Nothing is
-    kept between passes; the hunger checks read the store a year from now in a normal year (this year's Variable
-    Harvest and spoilage taken out). Famine: a Tavern; hungry: the crop farm that pays back fastest (recipe profit at
-    the market's prices and the location's output); a kitchen whenever the Cookshop budget allows; hungry without a
-    farm: a Tavern; a Granary while the store can hold less than the player's months, is nearly full and grows; a
-    Grange where a two-year store still grows by the player's share; a Victualling Yard by payback.
-  * Logistics, per location: market access without event modifiers below the player's line while the owner controls
-    the location: the first logistics building that can be built.
-  * Goods, per good: Off / Keep stocked (the market holds fewer months of its demand than the player's line) / Expand
-    (a standing producer's next level pays back within the payback line) / Never.
-* Location rules, per location (Jan 2026-11-06): a location set to Own Rules leaves the global rules and follows its
-  own list: build a building up to a level when a condition holds (the game's location filter numbers plus PP's food
-  and land) and its next level pays back within a limit. Location Profiles (``location_profiles.py``) give many
-  locations the same rules; presets set the country settings at once (templates removed 2026-11-09).
+* Food, per province, one construction a month, first that applies (baseline rules, Jan 2026-11-08). Nothing is kept
+  between passes; the hunger checks read the store a year from now in a normal year (this year's Variable Harvest and
+  spoilage taken out). Famine: a Tavern; hungry: the staple food maker that pays back fastest (recipe profit at the
+  market's prices and the location's output); a Granary while the store can hold less than the line's months, is
+  nearly full and grows; a kitchen whenever the Cookshop budget allows; hungry without a farm: a Tavern; a Grange where
+  a two-year store still grows; a Victualling Yard by payback.
+* Logistics, per location: market access without event modifiers below the player's line while the owner controls
+  the location: the first logistics building that can be built.
+* Improvements, per location: where population over capacity reaches the player's line, the improvement with the most
+  capacity per gold.
+* Businesses (Jan 2026-11-09): every building that makes goods (the producers of ``market_short_weight.main_good``,
+  without the food, logistics and improvement rules' own buildings) wherever a level pays back within the player's
+  line, shortest payback first across the country. Profit = each slot's best recipe at the market's prices and the
+  location's output with this year's Variable Harvest taken out, the same estimate for a new building and for one more
+  level, so both compare.
 
-Payback is the one money number (Jan: cost and profit alone say nothing across buildings): the level's build cost
-over the profit per level of the standing building. The cost follows the engine's own formula, calibrated in game on
-158 constructions (all within 1 %): base x (1 + increase_per_level_cost x levels) / max(0.5, 1 + build efficiency)
-x the construction goods' price factor (each good's price / default clamped to 1 + MIN/MAX_PRICE_IMPACT, averaged by
-amount; vanilla default_construct_building when a building names none).
+Location Profiles (``location_profiles.py``) are the only per-location layer: a profile takes from these groups only
+what it sets.
 
-The engine (monthly pass, panel, settings) is hand-written in the mod (``pp_construction_plan*.txt``,
+Payback is the one money number (Jan: cost and profit alone say nothing across buildings): a level's build cost over
+its monthly profit. The cost follows the engine's own formula, calibrated in game on 158 constructions (all within
+1 %): base x (1 + increase_per_level_cost x levels) / max(0.5, 1 + build efficiency) x the construction goods' price
+factor (each good's price / default clamped to 1 + MIN/MAX_PRICE_IMPACT, averaged by amount; vanilla
+default_construct_building when a building names none). The same cost keeps the gold reserve: no construction starts
+that would take the treasury below it.
+
+The engine (monthly pass, window, settings) is hand-written in the mod (``pp_construction_plan*.txt``,
 ``pp_construction_plan.gui``). This module writes the parts that follow the mod's buildings, goods and the
 ``[construction_plan]`` settings, so they stay in step with every rebalance:
 
-* ``scripted_effects/pp_construction_plan_generated.txt``: the farm, logistics and producer pickers, the goods pass,
-  the building cost data lookup, the rule edit and the presets;
-* ``script_values/pp_construction_plan_generated.txt``: defaults, focus bands, farm scores, per-good stock months and
-  site order, the construction goods price factors, the conditions and the per-rule readouts;
-* ``scripted_triggers/pp_construction_plan_generated.txt``: per-good producer checks;
-* ``gui/pp_construction_plan_goods.gui``: the Goods tab rows; ``gui/pp_construction_plan_here.gui``: the location
-  rule rows.
+* ``scripted_effects/pp_construction_plan_generated.txt``: the farm, logistics, improvement and business pickers and
+  the building cost data lookup;
+* ``script_values/pp_construction_plan_generated.txt``: the defaults, farm and business profit estimates, the
+  construction goods price factors and the baseline rules' blacklists;
+* ``scripted_triggers/pp_construction_plan_generated.txt``: the construction goods and food queue checks.
 
-Producers of a good are the buildings whose main good it is (``market_short_weight.main_good``). Variables carry + 100
-(a variable at 0 counts as unset; ``var:x = n`` compares scopes), thresholds + 100000 (they can be negative).
+Variables carry + 100 (a variable at 0 counts as unset; ``var:x = n`` compares scopes).
 """
 
 from __future__ import annotations
 
-import csv
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -55,89 +57,36 @@ from prosper_or_perish_constructor import market_short_weight
 EFFECTS = Path("in_game/common/scripted_effects/pp_construction_plan_generated.txt")
 VALUES = Path("in_game/common/script_values/pp_construction_plan_generated.txt")
 TRIGGERS = Path("in_game/common/scripted_triggers/pp_construction_plan_generated.txt")
-GUI = Path("in_game/gui/pp_construction_plan_goods.gui")
-HERE_GUI = Path("in_game/gui/pp_construction_plan_here.gui")
-GOODS_CATEGORIES = Path("config/goods_categories.csv")
 BUILDING_TYPES = Path("in_game/common/building_types")
 GOODS_DEMAND = Path("in_game/common/goods_demand")
 DEFINES = Path("loading_screen/common/defines")
 HEADER = "﻿# Generated by ppc finalize (construction_plan.py) from [construction_plan]; do not edit by hand.\n"
-FOCUS_EXTRA = ("hands_off", "custom")
-MODE_KEYS = ("off", "keep", "expand", "never")
-# why codes (+ 100) the ledger shows
-WHY_FOOD, WHY_LOGISTICS, WHY_GOODS, WHY_RULE = 101, 102, 103, 104
-WHY_IMPROVE = 106  # 105 is the location profiles (pp_location_profiles.txt)
+# why codes (+ 100) the ledger shows; 105 is the location profiles (pp_location_profiles.txt)
+WHY_FOOD, WHY_LOGISTICS, WHY_BUSINESS, WHY_IMPROVE = 101, 102, 103, 106
 DEFAULT_DEMAND = "default_construct_building"  # vanilla: the construction demand of a building that names none
-# location rule status codes (+ 100), set by pp_cplan_rule (hand-written) and shown by the rule rows
-RULE_STATUS = ("started", "waiting", "done", "building", "payback", "blocked", "budget", "goods")
-# the setting variables a preset sets (numbers, + 100; unset = the default) and the rule group switches (present =
-# the group is off)
-PRESET_NUMBERS = ("pp_cplan_reserve", "pp_cplan_max", "pp_cplan_access", "pp_cplan_keep", "pp_cplan_payback",
-                   "pp_cplan_gcap", "pp_cplan_gfill", "pp_cplan_gsur", "pp_cplan_famine", "pp_cplan_ypb", "pp_cplan_imp")
-# the Variable Harvest modifiers (one per sub-continent and severity) whose peasant food consumption the food rules
-# take out ([construction_plan] baseline rules)
+# the Variable Harvest modifiers (one per sub-continent and severity): the food rules take out their peasant food
+# consumption, the business rule their goods output ([construction_plan] baseline rules)
 HARVEST_MODIFIERS = Path("in_game/common/static_modifiers/pp_variable_harvest_modifiers.txt")
 HARVEST_SEVERITIES = ("abysmal", "very_poor", "poor", "good", "very_good", "bountiful")
 STATIC_MODIFIERS = (Path("main_menu/common/static_modifiers"), Path("in_game/common/static_modifiers"))
 POP_TYPES = Path("in_game/common/pop_types")
 BLUEPRINT_BUILDINGS = Path("blueprints/accepted/buildings")
-PRESET_FLAGS = ("pp_cplan_food_off", "pp_cplan_logistics_off", "pp_cplan_goods_off", "pp_cplan_improve_off")
-
-
-@dataclass(frozen=True)
-class Preset:
-    """Built-in country settings to start from (Plan tab; Jan 2026-11-09). A preset sets every setting: the ones it
-    names (PRESET_NUMBERS without the prefix, in the panel's units), the rest back to the defaults; which rule groups
-    run (off = the groups named); every good's mode (goods it does not name: off; "*" = every good not named)."""
-
-    key: str
-    settings: tuple[tuple[str, int], ...] = ()
-    off: tuple[str, ...] = ()
-    goods: tuple[tuple[str, str], ...] = ()
-
-    @staticmethod
-    def read(key: str, row: dict) -> "Preset":
-        settings = tuple((name, int(value)) for name, value in row.get("settings", {}).items())
-        for name, _ in settings:
-            if f"pp_cplan_{name}" not in PRESET_NUMBERS:
-                raise ValueError(f"[construction_plan.presets.{key}]: unknown setting {name}")
-        off = tuple(row.get("off", ()))
-        for group in off:
-            if f"pp_cplan_{group}_off" not in PRESET_FLAGS:
-                raise ValueError(f"[construction_plan.presets.{key}]: unknown rule group {group}")
-        goods = tuple((good, mode) for good, mode in row.get("goods", {}).items())
-        for _, mode in goods:
-            if mode not in MODE_KEYS[1:]:
-                raise ValueError(f"[construction_plan.presets.{key}]: unknown goods mode {mode}")
-        return Preset(key=key, settings=settings, off=off, goods=goods)
-
-    def mode_of(self, good: str) -> str:
-        named = dict(self.goods)
-        return named.get(good, named.get("*", "off"))
-
-
-@dataclass(frozen=True)
-class Metric:
-    key: str
-    value: str | None
-    trigger: str | None
-    multiply: float
-    step: float
+# building categories a location profile rule can name ([location_plan] categories): the business rule leaves a
+# building of such a category to the profile that names it
+PROFILE_CATEGORIES_KEY = "location_plan"
 
 
 @dataclass(frozen=True)
 class Config:
-    reserve_months: int
-    max_per_month: int
+    reserve_gold: int
     access_threshold: int
-    keep_months: int
     farm_sites_per_province: int
     kitchens: tuple[str, ...]
     taverns: tuple[str, ...]
     granaries: tuple[str, ...]
     logistics_order: tuple[str, ...]
     hidden_goods: frozenset[str]
-    focus: tuple[tuple[str, int, int], ...]
+    hungry_months: int = 6
     granges: tuple[str, ...] = ("grange",)
     yards: tuple[str, ...] = ("victualling_yard",)
     granary_capacity_months: int = 24
@@ -149,11 +98,8 @@ class Config:
     improve_fill_pct: int = 90
     construction_goods_months: int = 12
     access_blacklist: tuple[str, ...] = ()
-    payback_years: int = 10
-    rule_slots: int = 4
-    presets: tuple[Preset, ...] = ()
-    max_rule_level: int = 30
-    metrics: tuple[Metric, ...] = ()
+    business_years: int = 10
+    profile_categories: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -167,8 +113,7 @@ class BuildingCost:
 
 @dataclass
 class Result:
-    goods: list[str] = field(default_factory=list)
-    producers: dict[str, list[str]] = field(default_factory=dict)
+    businesses: dict[str, str] = field(default_factory=dict)  # building type -> its main good (the business rule)
     farm_lines: dict[str, list[str]] = field(default_factory=dict)
     food_lines: dict[str, list[str]] = field(default_factory=dict)
     improvements: list[str] = field(default_factory=list)
@@ -180,30 +125,18 @@ class Result:
 
 
 def load_config(project: Path) -> Config:
-    data = tomllib.loads(project.read_text(encoding="utf-8"))["construction_plan"]
-    focus = tuple((name, int(band[0]), int(band[1])) for name, band in data["focus"].items())
-    metrics = tuple(
-        Metric(
-            key=row["key"],
-            value=row.get("value"),
-            trigger=row.get("trigger"),
-            multiply=float(row.get("multiply", 1)),
-            step=float(row["step"]),
-        )
-        for row in data.get("metrics", [])
-    )
+    whole = tomllib.loads(project.read_text(encoding="utf-8"))
+    data = whole["construction_plan"]
     return Config(
-        reserve_months=int(data["reserve_months"]),
-        max_per_month=int(data["max_per_month"]),
+        reserve_gold=int(data["reserve_gold"]),
         access_threshold=int(data["access_threshold"]),
-        keep_months=int(data["keep_months"]),
         farm_sites_per_province=int(data["farm_sites_per_province"]),
         kitchens=tuple(data["kitchens"]),
         taverns=tuple(data["taverns"]),
         granaries=tuple(data["granaries"]),
         logistics_order=tuple(data["logistics_order"]),
         hidden_goods=frozenset(data["hidden_goods"]),
-        focus=focus,
+        hungry_months=int(data["hungry_months"]),
         granges=tuple(data["granges"]),
         yards=tuple(data["yards"]),
         granary_capacity_months=int(data["granary_capacity_months"]),
@@ -215,23 +148,9 @@ def load_config(project: Path) -> Config:
         improve_fill_pct=int(data["improve_fill_pct"]),
         construction_goods_months=int(data["construction_goods_months"]),
         access_blacklist=tuple(data["access_blacklist"]),
-        payback_years=int(data["payback_years"]),
-        rule_slots=int(data["rule_slots"]),
-        presets=tuple(Preset.read(key, row) for key, row in data.get("presets", {}).items()),
-        max_rule_level=int(data["max_rule_level"]),
-        metrics=metrics,
+        business_years=int(data["business_years"]),
+        profile_categories=tuple(whole.get(PROFILE_CATEGORIES_KEY, {}).get("categories", ())),
     )
-
-
-def focus_ids(config: Config) -> dict[str, int]:
-    """Focus key -> id (1-based, the panel's cycle order): the bands, then hands off, then custom."""
-    names = [name for name, _, _ in config.focus] + list(FOCUS_EXTRA)
-    return {name: index + 1 for index, name in enumerate(names)}
-
-
-def goods_order(repo: Path) -> list[str]:
-    with (repo / GOODS_CATEGORIES).open(encoding="utf-8") as handle:
-        return [row["good"] for row in csv.DictReader(handle)]
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -315,12 +234,14 @@ def _modifier_number(body: str, key: str) -> float:
     return 0.0
 
 
-def building_costs(mod_root: Path, vanilla_root: Path) -> tuple[dict[str, BuildingCost], dict[str, dict[str, float]]]:
+def building_costs(mod_root: Path, vanilla_root: Path,
+                   database: dict[str, tuple[dict[str, str], str]] | None = None,
+                   ) -> tuple[dict[str, BuildingCost], dict[str, dict[str, float]]]:
     """Per building type the cost data (increase_per_level_cost, construction demand, efficiency category) and the
     construction demands they use (good -> amount). Category as the engine picks it: a fort_level in the building's
     modifier -> fort, max_ships_built_at_same_time -> port, is_foreign -> foreign, is_mill -> mill (no category term),
     else urban or rural by the location (construction_efficiency_140.md, calibrated 2026-11-06)."""
-    buildings = _database(mod_root, vanilla_root, BUILDING_TYPES)
+    buildings = database if database is not None else _database(mod_root, vanilla_root, BUILDING_TYPES)
     demand_blocks = _database(mod_root, vanilla_root, GOODS_DEMAND)
     costs: dict[str, BuildingCost] = {}
     used: dict[str, dict[str, float]] = {}
@@ -382,6 +303,28 @@ def harvest_rates(mod_root: Path) -> dict[str, dict[str, float]]:
         if severity and value is not None:
             rates.setdefault(rest[: -len(severity) - 1], {})[severity] = float(value)
     return rates
+
+
+def harvest_outputs(mod_root: Path) -> dict[str, dict[str, dict[str, float]]]:
+    """Sub-continent -> severity -> good -> the local goods output modifier of that Variable Harvest modifier."""
+    found: dict[str, dict[str, dict[str, float]]] = {}
+    path = mod_root / HARVEST_MODIFIERS
+    if not path.is_file():
+        return found
+    for name, body in _blocks(path.read_text(encoding="utf-8-sig")):
+        if not name.startswith("pp_harvest_"):
+            continue
+        rest = name[len("pp_harvest_"):]
+        severity = next((s for s in sorted(HARVEST_SEVERITIES, key=len, reverse=True) if rest.endswith("_" + s)), None)
+        if not severity:
+            continue
+        goods = {
+            match.group(1): float(value)
+            for key, value in _top_keys(body).items()
+            if (match := re.fullmatch(r"local_(\w+)_output_modifier", key))
+        }
+        found.setdefault(rest[: -len(severity) - 1], {})[severity] = goods
+    return found
 
 
 def peasant_food_consumption(mod_root: Path, vanilla_root: Path) -> float:
@@ -467,6 +410,24 @@ def farm_recipes(repo: Path, buildings: list[str]) -> dict[str, list[list[Recipe
     return found
 
 
+def built_recipes(database: dict[str, tuple[dict[str, str], str]], buildings: list[str]) -> dict[str, list[list[Recipe]]]:
+    """Building -> its slots, each a list of methods, from the building files the game loads (the mod over vanilla, after
+    every finalize pass that rewrites methods)."""
+    from prosper_or_perish_constructor import production_gate as pg
+
+    found: dict[str, list[list[Recipe]]] = {}
+    for key in buildings:
+        if key not in database:
+            continue
+        slots, _ = pg.body_slots(database[key][1], key)
+        found[key] = [
+            [Recipe(m.produced, float(m.output or 0.0), tuple(sorted((g, float(a)) for g, a in (m.inputs or {}).items())))
+             for m in slot.methods]
+            for slot in slots
+        ]
+    return found
+
+
 # ---------------------------------------------------------------------------------------------------------------------
 # script values
 
@@ -489,100 +450,8 @@ def _default_value(name: str, var: str, default: int, scope_note: str) -> str:
     )
 
 
-def _band_value(name: str, config: Config, index: int, custom_var: str) -> str:
-    ids = focus_ids(config)
-    default = config.focus[0][index + 1]
-    lines = [
-        "# Province scope: the focus band ("
-        + ("build below" if index == 0 else "stop above")
-        + ", stored months). No focus set = the first preset.",
-        f"{name} = {{",
-        f"\tvalue = {default}",
-        "\tif = {",
-        "\t\tlimit = { has_variable = pp_cplan_focus }",
-    ]
-    first = True
-    for focus_name, low, high in config.focus:
-        number = ids[focus_name] + 100
-        keyword = "if" if first else "else_if"
-        first = False
-        lines += [
-            f"\t\t{keyword} = {{",
-            f"\t\t\tlimit = {{ var:pp_cplan_focus > {number - 0.5:g} var:pp_cplan_focus < {number + 0.5:g} }}",
-            f"\t\t\tvalue = {low if index == 0 else high}",
-            "\t\t}",
-        ]
-    custom = ids["custom"] + 100
-    lines += [
-        "\t\telse_if = {",
-        f"\t\t\tlimit = {{ var:pp_cplan_focus > {custom - 0.5:g} has_variable = {custom_var} }}",
-        f"\t\t\tvalue = var:{custom_var}",
-        "\t\t\tsubtract = 100",
-        "\t\t}",
-        "\t}",
-        "}",
-        "",
-    ]
-    return "\n".join(lines)
-
-
-def _var_n(name: str, var: str, default: str, comment: str, offset: int = 100) -> str:
-    return (
-        f"# {comment}\n{name} = {{\n\tvalue = {default}\n\tif = {{\n\t\tlimit = {{ has_variable = {var} }}\n"
-        f"\t\tvalue = var:{var}\n\t\tsubtract = {offset}\n\t}}\n}}\n"
-    )
-
-
-def _metric_body(metric: Metric) -> str:
-    if metric.trigger:
-        return f"\tvalue = 0\n\tif = {{\n\t\tlimit = {{ {metric.trigger} }}\n\t\tvalue = 1\n\t}}\n"
-    text = f"\tvalue = {metric.value}\n"
-    if metric.multiply != 1:
-        text += f"\tmultiply = {_num(metric.multiply)}\n"
-    return text
-
-
-def _by_metric(var: str, metrics: tuple[Metric, ...], pick, default: str) -> list[str]:
-    lines = [f"\tvalue = {default}", "\tif = {", f"\t\tlimit = {{ has_variable = {var} }}"]
-    for index, metric in enumerate(metrics, start=1):
-        keyword = "if" if index == 1 else "else_if"
-        number = index + 100
-        lines.append(
-            f"\t\t{keyword} = {{ limit = {{ var:{var} > {number - 0.5:g} var:{var} < {number + 0.5:g} }} {pick(metric)} }}"
-        )
-    lines.append("\t}")
-    return lines
-
-
-def render_rule_values(config: Config) -> str:
-    """The conditions and the per-rule readouts of the location rules."""
-    metrics = config.metrics
-    parts = ["\n# ---- Location rules: conditions (location scope, in the panel's units) ----\n\n"]
-    for metric in metrics:
-        parts.append(f"pp_cplan_m_{metric.key} = {{\n{_metric_body(metric)}}}\n")
-    parts.append(
-        f"\n# Any scope: the conditions' count and the last id + 100 (the cycle wraps after it).\n"
-        f"pp_cplan_metric_count = {{ value = {len(metrics)} }}\n"
-        f"pp_cplan_metric_last100 = {{ value = {len(metrics) + 100} }}\n"
-        f"# Any scope: the highest level a rule can ask for, + 100.\n"
-        f"pp_cplan_max_rule_level100 = {{ value = {config.max_rule_level + 100} }}\n"
-    )
-    for n in range(1, config.rule_slots + 1):
-        r = f"pp_cplan_r{n}"
-        parts.append(f"\n# ---- Rule {n} of a location (location scope) ----\n")
-        parts.append(f"# 1 while the rule names a building.\n{r}_set_n = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ has_variable = {r}_b }}\n\t\tvalue = 1\n\t}}\n}}\n")
-        parts.append(_var_n(f"{r}_lv_n", f"{r}_lv", "1", "The level the rule builds up to."))
-        parts.append(_var_n(f"{r}_has_n", f"{r}_has", "0", "The levels that stood here at the plan's last look."))
-        parts.append(_var_n(f"{r}_m_n", f"{r}_m", "0", "The condition id (0 = always)."))
-        parts.append(_var_n(f"{r}_below_n", f"{r}_c", "0", "1 = the condition holds below the threshold, 0 = at it or above."))
-        parts.append(_var_n(f"{r}_t_n", f"{r}_t", "0", "The threshold, in the condition's units.", offset=100000))
-        parts.append(_var_n(f"{r}_pb_n", f"{r}_pb", "0", "The payback limit in years (0 = any)."))
-        parts.append(_var_n(f"{r}_st_n", f"{r}_st", "0", "The rule's state after the last pass (0 not run yet, 1 started, 2 waiting for its condition, 3 done, 4 a level under construction, 5 payback too long, 6 cannot be built now, 7 held back by the budget, 8 the market lacks its construction goods)."))
-        parts.append(f"# The condition's value here now.\n{r}_now = {{\n")
-        parts.append("\n".join(_by_metric(f"{r}_m", metrics, lambda m: f"value = pp_cplan_m_{m.key}", "0")) + "\n}\n")
-        parts.append(f"# One step of the threshold arrows.\n{r}_step = {{\n")
-        parts.append("\n".join(_by_metric(f"{r}_m", metrics, lambda m: f"value = {_num(m.step)}", "1")) + "\n}\n")
-    return "".join(parts)
+def _constant(name: str, value: float, comment: str) -> str:
+    return f"# {comment}\n{name} = {{ value = {_num(value)} }}\n"
 
 
 def render_price_factors(demands: dict[str, dict[str, float]], bounds: tuple[float, float]) -> str:
@@ -609,98 +478,46 @@ def render_price_factors(demands: dict[str, dict[str, float]], bounds: tuple[flo
     return "".join(parts)
 
 
-def render_values(config: Config, farm_lines: dict[str, list[str]], farm_goods: dict[str, str],
-                  goods: list[str], producers: dict[str, list[str]],
-                  demands: dict[str, dict[str, float]] | None = None,
+def render_values(config: Config, demands: dict[str, dict[str, float]] | None = None,
                   bounds: tuple[float, float] = (0.5, 2.5)) -> str:
-    parts = [HEADER, "\n# ---- Settings with their defaults ([construction_plan]) ----\n\n"]
-    parts.append(_default_value("pp_cplan_reserve_months", "pp_cplan_reserve", config.reserve_months,
-                                "Country scope: gold reserve in months of total income."))
-    parts.append(_default_value("pp_cplan_max_per_month", "pp_cplan_max", config.max_per_month,
-                                "Country scope: most new constructions a month."))
+    parts = [HEADER, "\n# ---- Global settings with their defaults ([construction_plan]; the window's lines) ----\n\n"]
+    parts.append(_default_value("pp_cplan_reserve_gold", "pp_cplan_reserve", config.reserve_gold,
+                                "Country scope: the gold reserve in gold; the plan starts nothing that would spend below it."))
     parts.append(_default_value("pp_cplan_access_pct", "pp_cplan_access", config.access_threshold,
                                 "Country scope: the logistics line, market access in %."))
-    parts.append(_default_value("pp_cplan_keep_months", "pp_cplan_keep", config.keep_months,
-                                "Country scope: the Keep stocked line, months of the market's demand in stock."))
-    parts.append(_default_value("pp_cplan_payback_line", "pp_cplan_payback", config.payback_years,
-                                "Country scope: the Expand line, payback of the next level in years."))
-    parts.append(_default_value("pp_cplan_granary_cap", "pp_cplan_gcap", config.granary_capacity_months,
-                                "Country scope: Granary while the store holds less than this many months."))
-    parts.append(_default_value("pp_cplan_granary_fill", "pp_cplan_gfill", config.granary_fill_pct,
-                                "Country scope: Granary only while the store is at least this full, in %."))
-    parts.append(_default_value("pp_cplan_grange_surplus", "pp_cplan_gsur", config.grange_surplus_pct,
-                                "Country scope: Grange where a full store still gains this % of consumption a month."))
-    parts.append(_default_value("pp_cplan_famine_months", "pp_cplan_famine", config.famine_months,
-                                "Country scope: the famine line, months in the store a year from now."))
-    parts.append(_default_value("pp_cplan_yard_payback", "pp_cplan_ypb", config.yard_payback_years,
-                                "Country scope: Victualling Yard levels while they pay back within this many years."))
     parts.append(_default_value("pp_cplan_improve_pct", "pp_cplan_imp", config.improve_fill_pct,
-                                "Country scope: improvements where people fill this % of a location's capacity."))
+                                "Country scope: improvements where population reaches this % of a location's capacity."))
+    parts.append(_default_value("pp_cplan_business_years", "pp_cplan_biz", config.business_years,
+                                "Country scope: the business line, payback of a level in years."))
     parts.append(
         "# Country scope: the improvement line as a share of capacity (location_population_percentage).\n"
         "pp_cplan_improve_line = {\n\tvalue = pp_cplan_improve_pct\n\tdivide = 100\n}\n"
+        "# Country scope: the business line as the yearly return a level must reach, in % of its cost (100 / years).\n"
+        "pp_cplan_business_min_roi = {\n\tvalue = 100\n\tdivide = { value = pp_cplan_business_years min = 1 }\n}\n"
     )
-    parts.append(
-        "# Any scope: victuals a Tavern's market must hold ([construction_plan] tavern_victuals).\n"
-        f"pp_cplan_tavern_victuals = {{ value = {_num(config.tavern_victuals)} }}\n\n"
-    )
-    parts.append(
-        "# Country scope: the province focus count, for the panel's cycle (bands + hands off + custom).\n"
-        f"pp_cplan_focus_count = {{ value = {len(focus_ids(config))} }}\n"
-        f"# Country scope: farm sites tried per province.\npp_cplan_farm_sites = {{ value = {config.farm_sites_per_province} }}\n\n"
-    )
-    ids = focus_ids(config)
-    parts.append(
-        "# Province scope: the focus id (1 = the first preset, also when nothing is set; "
-        + ", ".join(f"{number} {name}" for name, number in ids.items())
-        + ").\n"
-        "pp_cplan_focus_n = {\n\tvalue = 1\n\tif = {\n\t\tlimit = { has_variable = pp_cplan_focus }\n"
-        "\t\tvalue = var:pp_cplan_focus\n\t\tsubtract = 100\n\t}\n}\n\n"
-    )
-    hands_off = ids["hands_off"] + 100
-    parts.append(
-        "# Province scope: 1 where the province is set to Hands off.\n"
-        "pp_cplan_hands_off_n = {\n\tvalue = 0\n\tif = {\n\t\tlimit = { has_variable = pp_cplan_focus }\n\t\tif = {\n"
-        f"\t\t\tlimit = {{ var:pp_cplan_focus > {hands_off - 0.5:g} var:pp_cplan_focus < {hands_off + 0.5:g} }}\n"
-        "\t\t\tvalue = 1\n\t\t}\n\t}\n}\n"
-        "# Any scope: the Custom focus id + 100 and the last focus id + 100 (the cycle wraps after it).\n"
-        f"pp_cplan_custom_id100 = {{ value = {ids['custom'] + 100} }}\n"
-        f"pp_cplan_focus_last100 = {{ value = {max(ids.values()) + 100} }}\n\n"
-    )
-    parts.append(_band_value("pp_cplan_band_lo", config, 0, "pp_cplan_lo"))
-    parts.append(_band_value("pp_cplan_band_hi", config, 1, "pp_cplan_hi"))
-    parts.append("\n# ---- Goods, per good ----\n\n")
-    for good in goods:
-        standing = " ".join(f"has_building = building_type:{name}" for name in producers[good])
-        parts.append(
-            f"# {good}: Country scope: the mode (0 off, 1 keep stocked, 2 expand within the payback line, 3 never).\n"
-            f"pp_cplan_mode_{good} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ has_variable = pp_cplan_g_{good} }}\n"
-            f"\t\tvalue = var:pp_cplan_g_{good}\n\t\tsubtract = 100\n\t}}\n}}\n"
-            f"# Location scope: months of the market's demand its stock holds (99 where nobody asks for it).\n"
-            f"pp_cplan_months_{good} = {{\n\tvalue = 99\n\tif = {{\n"
-            f"\t\tlimit = {{ market ?= {{ \"goods_demand_in_market(goods:{good})\" > 0.01 }} }}\n"
-            f"\t\tvalue = \"market.stockpile_in_market(goods:{good})\"\n"
-            f"\t\tdivide = \"market.goods_demand_in_market(goods:{good})\"\n"
-            "\t}\n\tmax = 99\n}\n"
-            f"# Country scope: the same for the capital's market (the panel).\n"
-            f"pp_cplan_cap_months_{good} = {{\n\tvalue = 0\n\tcapital ?= {{ add = pp_cplan_months_{good} }}\n\tmax = 99\n}}\n"
-            f"# Location scope: where to build first (output modifier, standing producers far first).\n"
-            f"pp_cplan_site_{good} = {{\n\tvalue = 100\n\tadd = {{ value = modifier:local_{good}_output_modifier multiply = 100 }}\n"
-            f"\tif = {{\n\t\tlimit = {{ OR = {{ {standing} }} }}\n\t\tadd = 1000\n\t}}\n\tmin = 1\n}}\n\n"
-        )
+    parts.append("\n# ---- Food rule numbers ([construction_plan]; no window line) ----\n\n")
+    for name, value, comment in (
+        ("pp_cplan_hungry_months", config.hungry_months,
+         "Province scope: hungry = a normal year leaves less than this many months in the store a year from now."),
+        ("pp_cplan_famine_months", config.famine_months, "Any scope: the famine line, months in the store a year from now."),
+        ("pp_cplan_granary_cap", config.granary_capacity_months,
+         "Any scope: a Granary while the store can hold fewer months of consumption than this."),
+        ("pp_cplan_granary_fill", config.granary_fill_pct, "Any scope: a Granary only while the store is at least this full, in %."),
+        ("pp_cplan_grange_surplus", config.grange_surplus_pct,
+         "Any scope: a Grange where a full store still gains this % of consumption a month."),
+        ("pp_cplan_yard_payback", config.yard_payback_years,
+         "Any scope: Victualling Yard levels while they pay back within this many years."),
+        ("pp_cplan_tavern_victuals", config.tavern_victuals, "Any scope: victuals a Tavern's market must hold."),
+        ("pp_cplan_farm_sites", config.farm_sites_per_province, "Any scope: locations tried per province for a staple food maker."),
+    ):
+        parts.append(_constant(name, value, comment))
     if demands is not None:
         parts.append(render_price_factors(demands, bounds))
-    if config.metrics:
-        parts.append(render_rule_values(config))
     return "".join(parts)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 # scripted effects
-
-
-def _not_never(good: str) -> str:
-    return f"scope:pp_cplan_country = {{ pp_cplan_mode_{good} < 2.5 }}"
 
 
 def _can_build(name: str, costs: dict[str, BuildingCost]) -> str:
@@ -763,7 +580,7 @@ def render_improvements(improvements: list[tuple[str, float]], costs: dict[str, 
     return "".join(values), "".join(effects)
 
 
-def render_baseline_values(config: Config, farm_lines: dict[str, list[str]], farm_goods: dict[str, str],
+def render_baseline_values(config: Config, farm_lines: dict[str, list[str]],
                            recipes: dict[str, list[list[Recipe]]], harvest: dict[str, dict[str, float]],
                            peasant_rate: float, access_amounts: dict[str, float],
                            costs: dict[str, BuildingCost]) -> str:
@@ -837,16 +654,14 @@ def render_baseline_values(config: Config, farm_lines: dict[str, list[str]], far
                 f"pp_cplan_farm_roi_{tier} = {{\n\tvalue = pp_cplan_farm_est_{tier}\n\tmultiply = 1200\n"
                 f"\tdivide = {{ value = building_type:{tier}.building_base_cost_in_gold min = 1 }}\n}}\n\n"
             )
-        good = farm_goods.get(line)
-        never = _not_never(good) if good else "always = yes"
-        parts.append(f"# Location scope: the {line} line's return here (0 where no tier can be built or its good is set to Never).\n"
-                     f"pp_cplan_farm_line_roi_{line} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ {never} }}\n")
+        parts.append(f"# Location scope: the {line} line's return here (0 where no tier can be built).\n"
+                     f"pp_cplan_farm_line_roi_{line} = {{\n\tvalue = 0\n")
         for position, tier in enumerate(reversed(tiers)):
             parts.append(
-                f"\t\t{'if' if position == 0 else 'else_if'} = {{\n\t\t\tlimit = {{ {_can_build(tier, costs)} }}\n"
-                f"\t\t\tvalue = pp_cplan_farm_roi_{tier}\n\t\t}}\n"
+                f"\t{'if' if position == 0 else 'else_if'} = {{\n\t\tlimit = {{ {_can_build(tier, costs)} }}\n"
+                f"\t\tvalue = pp_cplan_farm_roi_{tier}\n\t}}\n"
             )
-        parts.append("\t}\n}\n")
+        parts.append("}\n")
     lines = list(farm_lines)
     parts.append(
         "# Location scope: the best line's return here (the farm sites' order).\n"
@@ -911,56 +726,7 @@ def render_btype_data(costs: dict[str, BuildingCost]) -> str:
     return "".join(parts)
 
 
-def render_rule_edit(config: Config) -> str:
-    slots = range(1, config.rule_slots + 1)
-    return (
-        "\n# Location scope: one change to rule scope:pp_rule (flag r1..rN) of this location (scripted GUI pp_cplan_rule_edit).\n"
-        "pp_cplan_rule_edit_switch = {\n\tswitch = {\n\t\ttrigger = scope:pp_rule\n"
-        + "".join(f"\t\tflag:r{n} = {{ pp_cplan_rule_edit = {{ n = {n} }} }}\n" for n in slots)
-        + "\t}\n}\n"
-    )
-
-
-def render_presets(config: Config, goods: list[str]) -> str:
-    """The presets (scripted GUI pp_cplan_preset, scope:pp_key = the preset's flag): every setting, rule group and
-    goods mode at once."""
-    modes = {"keep": 101, "expand": 102, "never": 103}
-    parts = [
-        "\n# ---- Presets (scripted GUI pp_cplan_preset, Plan tab): built-in settings to start from ([construction_plan.presets]) ----\n"
-        "# Country scope; scope:pp_key = the preset's flag. A preset sets every setting (unnamed ones back to the default),\n"
-        "# which rule groups run and every good's mode.\n"
-        "pp_cplan_preset_do = {\n\tswitch = {\n\t\ttrigger = scope:pp_key\n"
-        + "".join(f"\t\tflag:{preset.key} = {{ pp_cplan_preset_{preset.key} = yes }}\n" for preset in config.presets)
-        + "\t}\n}\n"
-    ]
-    for index, preset in enumerate(config.presets, 1):
-        settings = dict(preset.settings)
-        body = []
-        for var in PRESET_NUMBERS:
-            short = var.removeprefix("pp_cplan_")
-            if short in settings:
-                body.append(f"\tset_variable = {{ name = {var} value = {settings[short] + 100} }}\n")
-            else:
-                body.append(f"\tremove_variable = {var}\n")
-        for var in PRESET_FLAGS:
-            group = var.removeprefix("pp_cplan_").removesuffix("_off")
-            if group in preset.off:
-                body.append(f"\tset_variable = {{ name = {var} value = yes }}\n")
-            else:
-                body.append(f"\tremove_variable = {var}\n")
-        for good in goods:
-            mode = preset.mode_of(good)
-            if mode == "off":
-                body.append(f"\tremove_variable = pp_cplan_g_{good}\n")
-            else:
-                body.append(f"\tset_variable = {{ name = pp_cplan_g_{good} value = {modes[mode]} }}\n")
-        body.append(f"\tset_variable = {{ name = pp_cplan_preset value = {100 + index} }}\n")
-        parts.append(f"\n# Country scope: the preset {preset.key}.\npp_cplan_preset_{preset.key} = {{\n" + "".join(body) + "}\n")
-    return "".join(parts)
-
-
-def render_effects(config: Config, farm_lines: dict[str, list[str]], farm_goods: dict[str, str],
-                   goods: list[str], producers: dict[str, list[str]],
+def render_effects(config: Config, farm_lines: dict[str, list[str]],
                    costs: dict[str, BuildingCost] | None = None) -> str:
     costs = costs or {}
 
@@ -972,8 +738,8 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]], farm_goods:
     parts.append(
         "\n# Location scope (owned by scope:pp_cplan_country). Builds a level of the staple food line (crop farms, orchards,\n"
         "# fisheries, herds, forest villages) that pays back fastest here (pp_cplan_farm_line_roi_<line>: the market's\n"
-        "# prices, the location's output, lines of a good set to Never left out), at its highest tier that can be built;\n"
-        "# none where no line makes a profit (a building that loses money lays off its workers and makes no food).\n"
+        "# prices, the location's output), at its highest tier that can be built; none where no line makes a profit (a\n"
+        "# building that loses money lays off its workers and makes no food).\n"
         "pp_cplan_try_farm_here = {\n"
         "\tset_variable = { name = pp_cplan_best value = 0.001 }\n"
         "\tset_variable = { name = pp_cplan_pick value = 100 }\n"
@@ -997,7 +763,7 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]], farm_goods:
     # --- Victualling Yard
     parts.append(
         "\n# Location scope: a Victualling Yard level here: the next level of a standing Yard while it pays back within the\n"
-        "# player's line (pp_cplan_yard_payback), a first level where victuals cost at least their default price here.\n"
+        "# food rule's line (pp_cplan_yard_payback), a first level where victuals cost at least their default price here.\n"
         "pp_cplan_try_yard_here = {\n"
     )
     for position, building in enumerate(config.yards):
@@ -1007,7 +773,7 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]], farm_goods:
             "\t\tpp_cplan_btype_data = yes\n"
             "\t\tif = {\n\t\t\tlimit = {\n\t\t\t\tOR = {\n"
             "\t\t\t\t\tAND = {\n\t\t\t\t\t\tpp_cplan_bt_levels > 0.5\n"
-            "\t\t\t\t\t\tpp_cplan_est_payback_years <= scope:pp_cplan_country.pp_cplan_yard_payback\n\t\t\t\t\t}\n"
+            "\t\t\t\t\t\tpp_cplan_est_payback_years <= pp_cplan_yard_payback\n\t\t\t\t\t}\n"
             "\t\t\t\t\tAND = {\n\t\t\t\t\t\tpp_cplan_bt_levels < 0.5\n\t\t\t\t\t\tpp_cplan_victuals_price_ratio >= 1\n\t\t\t\t\t}\n"
             "\t\t\t\t}\n\t\t\t}\n"
             f"\t\t\tpp_cplan_construct_food = {{ type = {building} }}\n\t\t}}\n\t}}\n"
@@ -1041,96 +807,13 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]], farm_goods:
         )
     parts.append("}\n")
 
-    # --- goods
-    parts.append("\n# ---- Goods ----\n")
-    for good in goods:
-        names = producers[good]
-        parts.append(f"\n# Location scope: a producer of {good}, a standing one first.\npp_cplan_try_goods_{good} = {{\n")
-        first = True
-        for name in names:
-            parts.append(
-                f"\t{'if' if first else 'else_if'} = {{\n\t\tlimit = {{ has_building = building_type:{name} {can(name)} }}\n"
-                f"\t\tpp_cplan_construct = {{ type = {name} why = {WHY_GOODS} }}\n\t}}\n"
-            )
-            first = False
-        for name in names:
-            parts.append(
-                f"\telse_if = {{\n\t\tlimit = {{ {can(name)} }}\n"
-                f"\t\tpp_cplan_construct = {{ type = {name} why = {WHY_GOODS} }}\n\t}}\n"
-            )
-        parts.append("}\n")
-        parts.append(
-            f"# Location scope: one more level of a standing {good} producer whose next level pays back within the\n"
-            f"# owner's payback line.\npp_cplan_expand_goods_{good} = {{\n"
-        )
-        for name in names:
-            cost = costs.get(name, BuildingCost(0.0, DEFAULT_DEMAND, "std"))
-            parts.append(
-                "\tif = {\n\t\tlimit = {\n"
-                "\t\t\tscope:pp_cplan_country = { NOT = { has_variable = pp_cplan_hit } }\n"
-                f"\t\t\tany_buildings_in_location = {{ building_type = building_type:{name} building_level > 0 is_at_max_level = no }}\n"
-                f"\t\t\t{can(name)}\n\t\t}}\n"
-                f"\t\tbuilding_type:{name} = {{ save_scope_as = pp_cplan_btype }}\n"
-                f"\t\t{_cost_data(cost)}\n"
-                "\t\tif = {\n\t\t\tlimit = { pp_cplan_est_payback_years <= scope:pp_cplan_country.pp_cplan_payback_line }\n"
-                f"\t\t\tpp_cplan_construct_scoped = {{ why = {WHY_GOODS} }}\n\t\t}}\n\t}}\n"
-            )
-        parts.append("}\n")
-
-    parts.append(
-        "\n# Country scope (scope:pp_cplan_country): one construction per good and month at most, while the budget lasts.\n"
-        "pp_cplan_goods_run = {\n"
-    )
-    for good in goods:
-        parts.append(
-            f"\t# {good}\n"
-            f"\tif = {{\n\t\tlimit = {{ pp_cplan_mode_{good} > 0.5 pp_cplan_mode_{good} < 1.5 pp_cplan_budget_left = yes }}\n"
-            "\t\tremove_variable = pp_cplan_hit\n"
-            "\t\tordered_owned_location = {\n"
-            f"\t\t\tlimit = {{ pp_cplan_goods_ok = {{ g = {good} }} pp_cplan_months_{good} < scope:pp_cplan_country.pp_cplan_keep_months }}\n"
-            f"\t\t\torder_by = pp_cplan_site_{good}\n"
-            "\t\t\tmax = 30\n\t\t\tcheck_range_bounds = no\n"
-            "\t\t\tif = {\n\t\t\t\tlimit = { pp_cplan_may_try = yes }\n"
-            f"\t\t\t\tpp_cplan_try_goods_{good} = yes\n\t\t\t}}\n"
-            "\t\t}\n\t}\n"
-            f"\telse_if = {{\n\t\tlimit = {{ pp_cplan_mode_{good} > 1.5 pp_cplan_mode_{good} < 2.5 pp_cplan_budget_left = yes }}\n"
-            "\t\tremove_variable = pp_cplan_hit\n"
-            "\t\tordered_owned_location = {\n"
-            f"\t\t\tlimit = {{ pp_cplan_goods_ok = {{ g = {good} }} pp_cplan_has_producer_{good} = yes }}\n"
-            f"\t\t\torder_by = pp_cplan_site_{good}\n"
-            "\t\t\tmax = 30\n\t\t\tcheck_range_bounds = no\n"
-            "\t\t\tif = {\n\t\t\t\tlimit = { pp_cplan_may_try = yes }\n"
-            f"\t\t\t\tpp_cplan_expand_goods_{good} = yes\n\t\t\t}}\n"
-            "\t\t}\n\t}\n"
-        )
-    parts.append("\tremove_variable = pp_cplan_hit\n}\n")
-
-    # --- goods mode setter (scripted GUI pp_cplan_good_mode)
-    parts.append(
-        "\n# Country scope: sets the mode of the good named by the flag scope:pp_good to the flag scope:pp_mode\n"
-        "# (off / keep / expand / never). Called by the scripted GUI pp_cplan_good_mode.\n"
-        "pp_cplan_set_good_mode = {\n\tswitch = {\n\t\ttrigger = scope:pp_good\n"
-    )
-    for good in goods:
-        parts.append(f"\t\tflag:{good} = {{ pp_cplan_apply_mode = {{ var = pp_cplan_g_{good} }} }}\n")
-    parts.append("\t}\n}\n")
-
     if costs:
         parts.append(render_btype_data(costs))
-    if config.metrics:
-        parts.append(render_rule_edit(config))
-        parts.append(render_presets(config, goods))
 
-    flags = sorted(
-        set(goods) | set(MODE_KEYS)
-        | {"food", "logistics", "goods", "reserve", "max", "access_line", "keep", "payback", "up", "down", "lo"}
-        | {"granary_cap", "granary_fill", "grange_surplus", "famine", "yard_payback", "improve", "improve_line"}
-        | {"lv", "metric", "cmp", "t", "tbig", "pb", "clear"}
-        | {f"r{n}" for n in range(1, config.rule_slots + 1)}
-        | {preset.key for preset in config.presets}
-    )
+    flags = sorted({"food", "logistics", "improve", "business", "reserve", "reserve_big", "access_line",
+                    "improve_line", "business_line", "up", "down"})
     parts.append(
-        "\n# Any scope, never run (pp_cplan_run calls it under always = no): declares the flags the panel passes, so the\n"
+        "\n# Any scope, never run (pp_cplan_run calls it under always = no): declares the flags the window passes, so the\n"
         "# script check logs no 'used but never set' line for them.\npp_cplan_declare_flags = {\n"
         + "".join(f"\tset_variable = {{ name = pp_cplan_flag value = flag:{flag} }}\n" for flag in flags)
         + "}\n"
@@ -1138,8 +821,138 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]], farm_goods:
     return "".join(parts)
 
 
-def render_triggers(goods: list[str], producers: dict[str, list[str]],
-                    demands: dict[str, dict[str, float]] | None = None,
+def _business_method(name: str, recipe: Recipe, harvest_goods: set[str]) -> str:
+    """A script value: one level's monthly profit of this method at the location's market prices and its output, this
+    year's Variable Harvest taken out (scope:pp_cplan_hv_<good>, set by pp_cplan_business_harvest)."""
+    lines = [f"{name} = {{", "\tvalue = 0"]
+    if recipe.produced:
+        good = recipe.produced
+        normal = f" subtract = scope:pp_cplan_hv_{good}" if good in harvest_goods else ""
+        lines.append(
+            f"\tadd = {{ value = \"market.market_price(goods:{good})\" "
+            f"multiply = {{ value = modifier:local_{good}_output_modifier add = 1{normal} min = 0 }} "
+            f"multiply = {_num(recipe.output)} }}"
+        )
+    for good, amount in recipe.inputs:
+        lines.append(f"\tsubtract = {{ value = \"market.market_price(goods:{good})\" multiply = {_num(amount)} }}")
+    lines.append("}")
+    return "\n".join(lines) + "\n"
+
+
+def render_business(businesses: dict[str, str], recipes: dict[str, list[list[Recipe]]],
+                    costs: dict[str, BuildingCost], harvest: dict[str, dict[str, dict[str, float]]],
+                    categories: dict[str, str], profile_categories: tuple[str, ...]) -> tuple[str, str]:
+    """Values and effects of the business rule (Jan 2026-11-09): every building that makes goods, wherever a level pays
+    back within the player's line, shortest payback first. A level's monthly profit = each slot's best method at the
+    market's prices and the location's output with this year's Variable Harvest taken out; the same for a new building
+    and for one more level, so the two compare. Its yearly return = profit x 12 over the level's build cost (the
+    engine's formula), in %."""
+    harvest_goods = sorted({good for severities in harvest.values() for goods in severities.values() for good in goods})
+    hv = set(harvest_goods)
+    values = [
+        "\n# ---- Businesses (location scope, its market): a level's monthly profit and yearly return ----\n"
+        "# pp_cplan_bm_<type>_<slot>_<method>: one method's profit (goods made at the market's price x the location's\n"
+        "# output without this year's harvest, minus its inputs at the market's prices); pp_cplan_bs_*: the slot's best;\n"
+        "# pp_cplan_bz_est_<type>: the level's profit; pp_cplan_bz_roi_<type>: x 12 over its build cost, in %\n"
+        "# (scope:pp_cplan_btype and the cost data set by pp_cplan_business_pick).\n\n"
+    ]
+    effects = []
+    # this year's harvest, taken out of the goods output
+    effects.append(
+        "\n# Location scope: this year's Variable Harvest per good (its local output modifier, 0 in a normal year) as\n"
+        "# scope:pp_cplan_hv_<good>; the business estimates take it out.\npp_cplan_business_harvest = {\n"
+        + "".join(f"\tsave_temporary_scope_value_as = {{ name = pp_cplan_hv_{good} value = 0 }}\n" for good in harvest_goods)
+    )
+    first = True
+    for sub_name, severities in sorted(harvest.items()):
+        effects.append(f"\t{'if' if first else 'else_if'} = {{\n\t\tlimit = {{ sub_continent = sub_continent:{sub_name} }}\n")
+        inner = True
+        for severity in HARVEST_SEVERITIES:
+            goods = severities.get(severity)
+            if goods is None:
+                continue
+            body = " ".join(f"save_temporary_scope_value_as = {{ name = pp_cplan_hv_{good} value = {_num(amount)} }}"
+                            for good, amount in sorted(goods.items()))
+            effects.append(f"\t\t{'if' if inner else 'else_if'} = {{ limit = {{ has_location_modifier = pp_harvest_{sub_name}_{severity} }} {body} }}\n")
+            inner = False
+        effects.append("\t}\n")
+        first = False
+    effects.append("}\n")
+
+    names = [name for name in businesses if recipes.get(name)]
+    for name in names:
+        slot_names = []
+        for s_index, slot in enumerate(recipes[name], 1):
+            producing = [m for m in slot if m.produced or m.inputs]
+            method_names = []
+            for m_index, recipe in enumerate(producing, 1):
+                method = f"pp_cplan_bm_{name}_{s_index}_{m_index}"
+                values.append(_business_method(method, recipe, hv))
+                method_names.append(method)
+            if not method_names:
+                continue
+            slot_name = f"pp_cplan_bs_{name}_{s_index}"
+            body = [f"{slot_name} = {{", f"\tvalue = {method_names[0]}"]
+            body += [f"\tmin = {other}" for other in method_names[1:]]  # min = x floors at x: the best method
+            if len(producing) < len(slot):
+                body.append("\tmin = 0")  # a method without goods is the slot's other choice
+            values.append("\n".join(body) + "\n}\n")
+            slot_names.append(slot_name)
+        values.append(
+            f"pp_cplan_bz_est_{name} = {{\n\tvalue = 0\n" + "".join(f"\tadd = {s}\n" for s in slot_names) + "}\n"
+            f"pp_cplan_bz_roi_{name} = {{\n\tvalue = pp_cplan_bz_est_{name}\n\tmultiply = 1200\n"
+            "\tdivide = { value = pp_cplan_est_cost min = 0.01 }\n}\n\n"
+        )
+
+    # the country's buildable types, once a month
+    effects.append(
+        "\n# Country scope: marks every business type the country can build now (pp_cplan_bz_<type>; the country's part of the\n"
+        "# can-build check, once a pass instead of once per location), and clears the marks after the pass.\n"
+        "pp_cplan_business_types = {\n"
+        + "".join(f"\tif = {{ limit = {{ can_build_building = building_type:{name} }} set_variable = {{ name = pp_cplan_bz_{name} value = yes }} }}\n"
+                  for name in names)
+        + "}\npp_cplan_business_types_clear = {\n"
+        + "".join(f"\tremove_variable = pp_cplan_bz_{name}\n" for name in names)
+        + "}\n"
+    )
+    # the pick per location
+    effects.append(
+        "\n# Location scope (a business site of scope:pp_cplan_country): the business with the best yearly return here that\n"
+        "# reaches the owner's line (pp_cplan_business_min_roi = 100 / years), as pp_cplan_bz_pick (a building type) and\n"
+        "# pp_cplan_bz_roi (its return, %); neither where none does. A candidate: the country can build it, so can this\n"
+        "# location (max level, allow, potential), the market holds its construction goods, no level of it here is\n"
+        "# closed (the player or the game's Close and Open automation found it does not pay), and a profile here leaves\n"
+        "# its good and building category to the plan.\n"
+        "pp_cplan_business_pick = {\n"
+        "\tpp_cplan_business_harvest = yes\n"
+        "\tremove_variable = pp_cplan_bz_pick\n"
+        "\tset_variable = { name = pp_cplan_bz_roi value = scope:pp_cplan_country.pp_cplan_business_min_roi }\n"
+    )
+    for name in names:
+        cost = costs.get(name, BuildingCost(0.0, DEFAULT_DEMAND, "std"))
+        profile = f"\t\t\tNOT = {{ pp_lprof_has_good = {{ g = {businesses[name]} }} }}\n"
+        if categories.get(name) in profile_categories:
+            profile += f"\t\t\tNOT = {{ pp_lprof_has_category = {{ c = {categories[name]} }} }}\n"
+        effects.append(
+            "\tif = {\n\t\tlimit = {\n"
+            f"\t\t\tscope:pp_cplan_country = {{ has_variable = pp_cplan_bz_{name} }}\n"
+            f"\t\t\tcan_build_building = building_type:{name}\n"
+            + profile
+            + f"\t\t\tpp_cplan_goods_here_{cost.demand} = yes\n"
+            f"\t\t\tNOT = {{ any_buildings_in_location = {{ building_type = building_type:{name} building_level > 0 is_opened = no }} }}\n"
+            "\t\t}\n"
+            f"\t\tbuilding_type:{name} = {{ save_scope_as = pp_cplan_btype }}\n"
+            f"\t\t{_cost_data(cost)}\n"
+            f"\t\tsave_temporary_scope_value_as = {{ name = pp_cplan_r value = pp_cplan_bz_roi_{name} }}\n"
+            "\t\tif = {\n\t\t\tlimit = { scope:pp_cplan_r > var:pp_cplan_bz_roi }\n"
+            "\t\t\tset_variable = { name = pp_cplan_bz_roi value = scope:pp_cplan_r }\n"
+            f"\t\t\tset_variable = {{ name = pp_cplan_bz_pick value = building_type:{name} }}\n\t\t}}\n\t}}\n"
+        )
+    effects.append("\tif = {\n\t\tlimit = { NOT = { has_variable = pp_cplan_bz_pick } }\n\t\tremove_variable = pp_cplan_bz_roi\n\t}\n}\n")
+    return "".join(values), "".join(effects)
+
+
+def render_triggers(demands: dict[str, dict[str, float]] | None = None,
                     food_buildings: list[str] | None = None, goods_months: int = 12) -> str:
     parts = [HEADER]
     if demands is not None:
@@ -1161,258 +974,7 @@ def render_triggers(goods: list[str], producers: dict[str, list[str]],
             + "".join(f"\t\t\tbuilding_type = building_type:{name}\n" for name in food_buildings)
             + "\t\t}\n\t}\n}\n"
         )
-    for good in goods:
-        parts.append(
-            f"\n# Location scope: a standing {good} producer that can take another level.\n"
-            f"pp_cplan_has_producer_{good} = {{\n"
-            "\tOR = {\n"
-            + "".join(
-                f"\t\tany_buildings_in_location = {{ building_type = building_type:{name} building_level > 0 is_at_max_level = no }}\n"
-                for name in producers[good]
-            )
-            + "\t}\n}\n"
-        )
     return "".join(parts)
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-# GUI
-
-
-def render_gui(goods: list[str]) -> str:
-    rows = []
-    for good in goods:
-        mode = f"GetPlayer.MakeScope.ScriptValue('pp_cplan_mode_{good}')"
-        months = f"GetPlayer.MakeScope.ScriptValue('pp_cplan_cap_months_{good}')"
-        buttons = []
-        for number, key in enumerate(MODE_KEYS):
-            buttons.append(
-                f"\t\t\t\tpp_cplan_mode_button = {{\n"
-                f"\t\t\t\t\ttext = \"[SelectLocalization(EqualTo_CFixedPoint({mode}, '(CFixedPoint){number}'), "
-                f"'PP_CPLAN_MODE_{key.upper()}_ON', 'PP_CPLAN_MODE_{key.upper()}')]\"\n"
-                f"\t\t\t\t\tonclick = \"[GetScriptedGui('pp_cplan_good_mode').Execute(GuiScope.SetRoot(GetPlayer.MakeScope)"
-                f".AddScope('pp_good', MakeScopeFlag('{good}')).AddScope('pp_mode', MakeScopeFlag('{key}')).End)]\"\n"
-                f"\t\t\t\t\ttooltip = \"PP_CPLAN_MODE_{key.upper()}_TT\"\n"
-                f"\t\t\t\t}}\n"
-            )
-        rows.append(
-            "\t\t\thbox = {\n"
-            "\t\t\t\tlayoutpolicy_horizontal = expanding\n"
-            "\t\t\t\tspacing = 4\n"
-            "\t\t\t\tmargin = { 4 2 }\n"
-            f"\t\t\t\ttext_single = {{ raw_text = \"@{good}! [ShowGoodsName('{good}')]\" minimumsize = {{ 150 -1 }} maximumsize = {{ 150 -1 }} }}\n"
-            f"\t\t\t\tpp_cplan_months_pie = {{\n"
-            f"\t\t\t\t\tblockoverride \"pp_cplan_fill\" {{ value = \"[FixedPointToFloat(Divide_CFixedPoint(Min_CFixedPoint({months}, '(CFixedPoint)12'), '(CFixedPoint)12'))]\" }}\n"
-            f"\t\t\t\t\tblockoverride \"pp_cplan_rest\" {{ value = \"[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint(Min_CFixedPoint({months}, '(CFixedPoint)12'), '(CFixedPoint)12')))]\" }}\n"
-            f"\t\t\t\t}}\n"
-            f"\t\t\t\ttext_single = {{ raw_text = \"[{months}|1]\" tooltip = \"PP_CPLAN_GOOD_MONTHS_TT\" minimumsize = {{ 44 -1 }} align = right|nobaseline }}\n"
-            + "".join(buttons)
-            + "\t\t\t}\n"
-        )
-    return (
-        HEADER
-        + "\ntypes PPConstructionPlanGoods\n{\n"
-        + "\t# The Goods tab: one row per good (name, months of demand in the capital's market, the four modes).\n"
-        + "\ttype pp_cplan_goods_rows = vbox {\n"
-        + "\t\tlayoutpolicy_horizontal = expanding\n"
-        + "".join(rows)
-        + "\t}\n}\n"
-    )
-
-
-def _sv(scope: str, name: str) -> str:
-    return f"{scope}.MakeScope.ScriptValue('{name}')"
-
-
-def _eq(scope: str, name: str, number: int | float) -> str:
-    return f"EqualTo_CFixedPoint({_sv(scope, name)}, '(CFixedPoint){_num(number)}')"
-
-
-def _rule_edit(n: int, key: str, direction: str | None = None) -> str:
-    call = (f"GetScriptedGui('pp_cplan_rule_edit').Execute(GuiScope.SetRoot(Location.MakeScope)"
-            f".AddScope('pp_rule', MakeScopeFlag('r{n}')).AddScope('pp_key', MakeScopeFlag('{key}'))")
-    if direction:
-        call += f".AddScope('pp_dir', MakeScopeFlag('{direction}'))"
-    return f"[{call}.End)]"
-
-
-def _step_buttons(n: int, key: str, big: str | None = None) -> tuple[str, str]:
-    """(the minus buttons, the plus buttons) of one stepper."""
-    minus = []
-    plus = []
-    if big:
-        minus.append(f"pp_cplan_step_button = {{ text = \"PP_CPLAN_MINUS_BIG\" tooltip = \"PP_CPLAN_STEP_BIG_TT\" onclick = \"{_rule_edit(n, big, 'down')}\" }}")
-    minus.append(f"pp_cplan_step_button = {{ text = \"PP_CPLAN_MINUS\" onclick = \"{_rule_edit(n, key, 'down')}\" }}")
-    plus.append(f"pp_cplan_step_button = {{ text = \"PP_CPLAN_PLUS\" onclick = \"{_rule_edit(n, key, 'up')}\" }}")
-    if big:
-        plus.append(f"pp_cplan_step_button = {{ text = \"PP_CPLAN_PLUS_BIG\" tooltip = \"PP_CPLAN_STEP_BIG_TT\" onclick = \"{_rule_edit(n, big, 'up')}\" }}")
-    return "\n".join(minus), "\n".join(plus)
-
-
-def render_here_gui(config: Config) -> str:
-    """The Here tab's rule rows (one type per slot, datacontext Location = the selected location)."""
-    out = [HEADER, "\ntypes PPConstructionPlanHere\n{\n"]
-    payback_cost = "GetBuildOrExpandBuildingCost(BuildingType.Self, Location.Self)"
-    payback_profit = "GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self)"
-    for n in range(1, config.rule_slots + 1):
-        r = f"pp_cplan_r{n}"
-        lv_minus, lv_plus = _step_buttons(n, "lv")
-        t_minus, t_plus = (text.replace("\n", "\n\t\t\t\t") for text in _step_buttons(n, "t", "tbig"))
-        pb_minus, pb_plus = _step_buttons(n, "pb")
-        metric_texts = [
-            f"text_single = {{ parentanchor = center visible = \"[{_eq('Location', f'{r}_m_n', 0)}]\" text = \"PP_CPLAN_M_ALWAYS\" }}"
-        ] + [
-            f"text_single = {{ parentanchor = center visible = \"[{_eq('Location', f'{r}_m_n', index)}]\" text = \"PP_CPLAN_M_{metric.key.upper()}\" }}"
-            for index, metric in enumerate(config.metrics, start=1)
-        ]
-        status_texts = [
-            f"pp_cplan_label = {{ visible = \"[{_eq('Location', f'{r}_st_n', code)}]\" text = \"PP_CPLAN_RULE_ST_{code}\" }}"
-            for code in range(0, len(RULE_STATUS) + 1)
-        ]
-        has_rule = f"GreaterThan_CFixedPoint({_sv('Location', f'{r}_set_n')}, '(CFixedPoint)0.5')"
-        est_some = f"GreaterThan_CFixedPoint({_sv('Location', f'{r}_est_n')}, '(CFixedPoint)0')"
-        est_none = f"GreaterThan_CFixedPoint({_sv('Location', f'{r}_est_n')}, '(CFixedPoint)998')"
-        has_metric = f"GreaterThan_CFixedPoint({_sv('Location', f'{r}_m_n')}, '(CFixedPoint)0.5')"
-        out.append(
-            f"""	type pp_cplan_rule_row_{n} = vbox {{
-		layoutpolicy_horizontal = expanding
-		margin = {{ 6 4 }}
-		spacing = 3
-		using = bg_main_inner_notabs_alt
-
-		pp_cplan_label = {{ visible = "[Not({has_rule})]" text = "PP_CPLAN_RULE_EMPTY" }}
-
-		hbox = {{
-			visible = "[{has_rule}]"
-			layoutpolicy_horizontal = expanding
-			spacing = 4
-			datacontext = "[Location.MakeScope.Var('{r}_b').GetBuildingType]"
-			pp_cplan_label = {{ text = "PP_CPLAN_RULE_BUILD" fontsize = 16 }}
-			pp_cplan_label = {{ raw_text = "[BuildingType.GetName]" fontsize = 16 default_format = "#high" }}
-			pp_cplan_label = {{ text = "PP_CPLAN_RULE_UP_TO" }}
-			{lv_minus}
-			pp_cplan_label = {{ raw_text = "[{_sv('Location', f'{r}_lv_n')}|0]" minimumsize = {{ 22 -1 }} align = center|nobaseline }}
-			{lv_plus}
-			pp_cplan_label = {{ text = "PP_CPLAN_RULE_HAS" tooltip = "PP_CPLAN_RULE_HAS_TT" }}
-			pp_cplan_label = {{ raw_text = "[{_sv('Location', f'{r}_has_n')}|0]" tooltip = "PP_CPLAN_RULE_HAS_TT" }}
-			expand = {{}}
-			# a standing building: the plan's own payback (its next level's cost over the profit one level makes here)
-			pp_cplan_label = {{ visible = "[And({est_some}, Not({est_none}))]" text = "PP_CPLAN_PAYS_BACK_IN" tooltip = "PP_CPLAN_PAYBACK_STANDING_TT" }}
-			pp_cplan_label = {{ visible = "[And({est_some}, Not({est_none}))]" raw_text = "[{_sv('Location', f'{r}_est_n')}|1]" tooltip = "PP_CPLAN_PAYBACK_STANDING_TT" }}
-			pp_cplan_label = {{ visible = "[And({est_some}, Not({est_none}))]" text = "PP_CPLAN_YEARS" tooltip = "PP_CPLAN_PAYBACK_STANDING_TT" }}
-			pp_cplan_label = {{ visible = "[{est_none}]" text = "PP_CPLAN_PAYBACK_NONE" tooltip = "PP_CPLAN_PAYBACK_STANDING_TT" }}
-			# not standing yet: the engine's estimate for a new level here
-			pp_cplan_label = {{
-				visible = "[And(Not({est_some}), GreaterThan_CFixedPoint({payback_profit}, '(CFixedPoint)0'))]"
-				text = "PP_CPLAN_PAYBACK_YEARS"
-				tooltip = "PP_CPLAN_PAYBACK_TT"
-			}}
-			pp_cplan_label = {{
-				visible = "[And(Not({est_some}), Not(GreaterThan_CFixedPoint({payback_profit}, '(CFixedPoint)0')))]"
-				text = "PP_CPLAN_PAYBACK_NONE"
-				tooltip = "PP_CPLAN_PAYBACK_TT"
-			}}
-			pp_cplan_step_button = {{ size = {{ 60 24 }} text = "PP_CPLAN_RULE_CLEAR" tooltip = "PP_CPLAN_RULE_CLEAR_TT" onclick = "{_rule_edit(n, 'clear')}" }}
-		}}
-
-		hbox = {{
-			visible = "[{has_rule}]"
-			layoutpolicy_horizontal = expanding
-			spacing = 4
-			pp_cplan_label = {{ text = "PP_CPLAN_RULE_WHEN" minimumsize = {{ 46 -1 }} }}
-			pp_cplan_step_button = {{ text = "PP_CPLAN_PREV" tooltip = "PP_CPLAN_METRIC_TT" onclick = "{_rule_edit(n, 'metric', 'down')}" }}
-			button_regular = {{
-				size = {{ 150 24 }}
-				tooltip = "PP_CPLAN_METRIC_TT"
-				onclick = "{_rule_edit(n, 'metric', 'up')}"
-				{chr(10).join('				' + text for text in metric_texts).lstrip()}
-			}}
-			pp_cplan_step_button = {{ text = "PP_CPLAN_NEXT" tooltip = "PP_CPLAN_METRIC_TT" onclick = "{_rule_edit(n, 'metric', 'up')}" }}
-			button_regular = {{
-				visible = "[{has_metric}]"
-				size = {{ 70 24 }}
-				tooltip = "PP_CPLAN_CMP_TT"
-				onclick = "{_rule_edit(n, 'cmp')}"
-				text_single = {{ parentanchor = center visible = "[{_eq('Location', f'{r}_below_n', 0)}]" text = "PP_CPLAN_AT_LEAST" }}
-				text_single = {{ parentanchor = center visible = "[{_eq('Location', f'{r}_below_n', 1)}]" text = "PP_CPLAN_BELOW" }}
-			}}
-			hbox = {{
-				visible = "[{has_metric}]"
-				spacing = 2
-				{t_minus}
-				pp_cplan_label = {{ raw_text = "[{_sv('Location', f'{r}_t_n')}|1]" minimumsize = {{ 50 -1 }} align = center|nobaseline }}
-				{t_plus}
-			}}
-			expand = {{}}
-			pp_cplan_label = {{ visible = "[{has_metric}]" text = "PP_CPLAN_NOW" tooltip = "PP_CPLAN_RULE_NOW_TT" }}
-			pp_cplan_label = {{ visible = "[{has_metric}]" raw_text = "[{_sv('Location', f'{r}_now')}|1]" tooltip = "PP_CPLAN_RULE_NOW_TT" }}
-		}}
-
-		hbox = {{
-			visible = "[{has_rule}]"
-			layoutpolicy_horizontal = expanding
-			spacing = 4
-			pp_cplan_label = {{ text = "PP_CPLAN_RULE_PAYBACK" tooltip = "PP_CPLAN_RULE_PAYBACK_TT" }}
-			{pb_minus}
-			pp_cplan_label = {{ visible = "[{_eq('Location', f'{r}_pb_n', 0)}]" text = "PP_CPLAN_ANY" minimumsize = {{ 50 -1 }} align = center|nobaseline }}
-			pp_cplan_label = {{ visible = "[Not({_eq('Location', f'{r}_pb_n', 0)})]" raw_text = "[{_sv('Location', f'{r}_pb_n')}|0]" minimumsize = {{ 30 -1 }} align = right|nobaseline }}
-			pp_cplan_label = {{ visible = "[Not({_eq('Location', f'{r}_pb_n', 0)})]" text = "PP_CPLAN_YEARS" }}
-			{pb_plus}
-			expand = {{}}
-			{chr(10).join('			' + text for text in status_texts).lstrip()}
-		}}
-	}}
-
-"""
-        )
-    out.append("}\n")
-    return "".join(out)
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-# the location window's cog (patched in by location_view.build_window)
-
-COG_MARK = "# PP: Construction Plan, this location's own rules"
-COG = f"""
-		widget = {{ {COG_MARK} (gui/pp_construction_plan.gui, Here tab)
-			parentanchor = right|vcenter
-			size = {{ 40 40 }}
-			position = {{ -60 0 }}
-			visible = "[And(LocationView.GetLocation.GetOwner.IsPlayer, Not(IsObserving))]"
-
-			button_automation_shortcut = {{
-				parentanchor = right|vcenter
-				size = {{ 25 25 }}
-
-				action_tooltip = {{
-					title = "PP_CPLAN_LOCATION_COG"
-					on_action = "[GetScriptedGui('pp_cplan_select').Execute(GuiScope.SetRoot(LocationView.GetLocation.MakeScope).End)]"
-					on_action = "[GetVariableSystem.Set('pp_cplan_open', 'yes')]"
-					on_action = "[GetVariableSystem.Set('pp_cplan_tab', 'here')]"
-				}}
-			}}
-		}}
-"""
-
-
-def add_location_cog(text: str) -> str:
-    """The location window's header gets a cog (player-owned locations) that opens the plan's Here tab on it."""
-    if COG_MARK in text:
-        return text
-    anchor = 'blockoverride "lateralview_topbuttons_extra" {'
-    if text.count(anchor) != 1:
-        raise ValueError("location window: lateralview_topbuttons_extra block not found once")
-    start = text.index(anchor) + len(anchor)
-    depth, index = 1, start
-    while depth:
-        if text[index] == "{":
-            depth += 1
-        elif text[index] == "}":
-            depth -= 1
-        index += 1
-    close = index - 1  # the block's closing brace
-    line_start = text.rindex("\n", 0, close) + 1
-    return text[:line_start] + COG.lstrip("\n") + text[line_start:]
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -1431,7 +993,8 @@ def _write(path: Path, text: str, write: bool) -> bool:
 def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: bool = True) -> Result:
     config = load_config(project)
     result = Result()
-    costs, demands = building_costs(mod_root, vanilla_root)
+    database = _database(mod_root, vanilla_root, BUILDING_TYPES)
+    costs, demands = building_costs(mod_root, vanilla_root, database)
     known = set(costs)
     result.buildings = costs
     result.demands = demands
@@ -1445,24 +1008,13 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
         lines.setdefault(line, []).append(building)
     farm_goods = {line: farm_goods_by_building[tiers[0]] for line, tiers in lines.items()}
     result.farm_lines = lines
-
-    short = market_short_weight.apply(project, mod_root, vanilla_root, write=False)
-    by_good: dict[str, list[str]] = {}
-    for building, good in sorted(short.main_good.items()):
-        if good in config.hidden_goods or building in config.logistics_order:
-            continue
-        by_good.setdefault(good, []).append(building)
-    order = goods_order(repo)
-    rank = {good: index for index, good in enumerate(order)}
-    goods = sorted(by_good, key=lambda good: (rank.get(good, len(order)), good))
-    result.goods = goods
-    result.producers = by_good
     result.logistics = list(config.logistics_order)
 
+    short = market_short_weight.apply(project, mod_root, vanilla_root, write=False)
     # the hunger rule's candidates: crop farm lines and every other staple food maker (orchards, fisheries, herds,
     # forest villages), one bucket ranked by payback (Jan 2026-11-08)
-    food_lines, food_goods = staple_food_lines(repo, mod_root, lines, farm_goods, short.main_good,
-                                               set(config.kitchens) | set(config.taverns))
+    food_lines, _ = staple_food_lines(repo, mod_root, lines, farm_goods, short.main_good,
+                                      set(config.kitchens) | set(config.taverns))
     result.food_lines = food_lines
     food_buildings = [b for tiers in food_lines.values() for b in tiers]
 
@@ -1472,26 +1024,34 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
     result.improvements = [key for key, _ in improvements]
     improve_values, improve_effects = render_improvements(improvements, costs)
 
+    # businesses (Jan 2026-11-09): every producer of a market good, without the other rules' own buildings
+    own = set(config.kitchens) | set(config.taverns) | set(config.granaries) | set(config.granges) | set(config.yards)
+    own |= set(config.logistics_order) | set(result.improvements)
+    result.businesses = {building: good for building, good in sorted(short.main_good.items())
+                         if good not in config.hidden_goods and building not in own}
+    categories = {name: database[name][0].get("category", "") for name in result.businesses if name in database}
+    business_values, business_effects = render_business(
+        result.businesses, built_recipes(database, list(result.businesses)), costs, harvest_outputs(mod_root),
+        categories, config.profile_categories)
+
     wanted = food_buildings + list(config.kitchens) + list(config.taverns) + result.improvements
     wanted += list(config.granaries) + list(config.granges) + list(config.yards) + list(config.logistics_order)
-    wanted += [name for names in by_good.values() for name in names]
+    wanted += list(result.businesses)
     result.missing = sorted({name for name in wanted if name not in known})
 
     texts = {
-        mod_root / VALUES: render_values(config, lines, farm_goods, goods, by_good, demands, bounds)
+        mod_root / VALUES: render_values(config, demands, bounds)
         + render_baseline_values(
-            config, food_lines, food_goods, farm_recipes(repo, food_buildings),
+            config, food_lines, farm_recipes(repo, food_buildings),
             harvest_rates(mod_root), peasant_food_consumption(mod_root, vanilla_root),
             access_modifier_amounts(mod_root, vanilla_root, config.access_blacklist), costs,
         )
-        + improve_values,
-        mod_root / EFFECTS: render_effects(config, food_lines, food_goods, goods, by_good, costs) + improve_effects,
+        + improve_values + business_values,
+        mod_root / EFFECTS: render_effects(config, food_lines, costs) + improve_effects + business_effects,
         # the hunger steps wait for what they start (staple food makers, Taverns); kitchens are built anyway and must
         # not hold farms back for the year a Cookshop takes (seen in game 2026-11-08)
-        mod_root / TRIGGERS: render_triggers(goods, by_good, demands, food_buildings + list(config.taverns),
+        mod_root / TRIGGERS: render_triggers(demands, food_buildings + list(config.taverns),
                                              config.construction_goods_months),
-        mod_root / GUI: render_gui(goods),
-        mod_root / HERE_GUI: render_here_gui(config),
     }
     for path, text in texts.items():
         if _write(path, text, write):

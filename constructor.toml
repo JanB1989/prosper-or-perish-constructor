@@ -1135,29 +1135,11 @@ hidden_goods = ["offset", "logistics", "local_food", "manual_labor", "province_f
 # Icons per row in the picker.
 per_row = 11
 
-# Presets (Jan 2026-11-09: baseline settings to start from; Plan tab). A preset sets every setting: the ones it names
-# (in the panel's units: months, constructions, %, years), the rest back to the defaults above; which rule groups run
-# (off = the groups named: food, logistics, improve, goods); every good's mode (keep / expand / never; goods it does not
-# name are off, "*" = every good not named). The order here is the order of the buttons.
-[construction_plan.presets.balanced]   # the defaults; construction goods kept stocked
-goods = { lumber = "keep", masonry = "keep", tools = "keep" }
-
-[construction_plan.presets.food]       # food and growth: food, logistics, improvements from 80 %; no goods rules
-settings = { max = 4, famine = 4, imp = 80 }
-off = ["goods"]
-
-[construction_plan.presets.builder]    # grow the economy: a short reserve, many constructions, every producer that pays back in 15 years
-settings = { reserve = 3, max = 6, payback = 15 }
-goods = { "*" = "expand", lumber = "keep", masonry = "keep", tools = "keep" }
-
-[construction_plan.presets.cautious]   # a long reserve, one construction a month: food and logistics only
-settings = { reserve = 12, max = 1 }
-off = ["improve", "goods"]
-
 [location_profiles]
 # Location Profiles (branch location-profiles, 2026-11-07, Jan; docs/location_profiles.md): player profiles = an icon, a
-# colour and ordered build rules, assigned to locations on the map; their rules replace the global Construction Plan
-# rules there. location_profiles.py (script) and location_profiles_gui.py (windows, map) write the generated parts.
+# colour and ordered build rules, assigned to locations on the map; their rules build there, and the global Construction
+# Plan rules still build what a profile does not set. The editor is the Construction Plan window's Location profiles
+# tab. location_profiles.py (script) and location_profiles_gui.py (editor, map) write the generated parts.
 # Every location with a profile carries a copy of it (the monthly pass and the map badge read only that), and the editor
 # shows one edit buffer, so only the slot tiles grow with the slot count.
 slots = 100           # profiles per country (Jan 2026-11-07: up to 100; script cannot create named data at runtime: each profile is a slot, only used ones show)
@@ -1169,7 +1151,7 @@ colors = [[0.80, 0.25, 0.20], [0.90, 0.55, 0.15], [0.85, 0.80, 0.25], [0.30, 0.6
 # examples" (shown while the country has no profile) makes each in the next free slot; the test world's setup uses
 # them too. icon: a good, a building category or a symbol; color: 1..8 (the colors above); rules in order: target (a
 # good, "logistics" = market access, or a building category) and payback (years, one of payback_steps; left out = any
-# payback); off: the global rule groups kept out of its locations (food, logistics, improvements, goods).
+# payback); off: the global rule groups kept out of its locations (food, logistics, improvements, businesses).
 [[location_profiles.examples]]   # breadbasket: its staple foods decide the food made here
 icon = "pp_sym_farming"
 color = 4
@@ -1198,7 +1180,7 @@ rules = [{ target = "fish", payback = 30 }, { target = "naval_category", payback
 [[location_profiles.examples]]   # hands off: no rules, and the global rules stay out: the plan builds nothing here
 icon = "pp_sym_stronghold"
 color = 7
-off = ["food", "logistics", "improvements", "goods"]
+off = ["food", "logistics", "improvements", "businesses"]
 
 [location_profiles.symbols]
 # Generic pictures a profile can carry as its icon (Jan 2026-11-07: "a city, rural, food, ... so you are not forced to
@@ -1241,12 +1223,16 @@ not_goods = ["offset", "logistics", "local_food", "manual_labor", "province_food
 [construction_plan]
 # Player-only construction rules (branch player-construction-manager, 2026-11-06, Jan; construction_plan.py writes the
 # generated parts at finalize, docs/player_construction_manager.md). The AI never runs them: the monthly pass fires only
-# for countries with is_ai = no that switched the plan on. Defaults the player can change in the Construction Plan panel:
-reserve_months = 6            # gold kept back, in months of total income
-max_per_month = 3             # most new constructions the plan starts in a month
+# for countries with is_ai = no that switched the plan on. The window has two tabs (Jan 2026-11-09): Global settings
+# (these defaults, the player changes them there) and Location profiles ([location_profiles]). Each month the plan may
+# spend the gold above the reserve; every rule group that is on gets an equal part, and a part one group leaves passes
+# on to the next.
+reserve_gold = 1000           # gold kept back: no construction starts that would take the treasury below it (Jan 2026-11-09)
 access_threshold = 97         # logistics: build where market access is below this, in % (Jan 2026-11-08)
-keep_months = 3               # goods "Keep stocked": build while the market holds less than this many months of its demand
+improve_fill_pct = 90         # improvements: build where population over capacity reaches this, in % (Jan 2026-11-08; steps of 10)
+business_years = 10           # businesses: a level of any building that makes goods while it pays back within this many years (Jan 2026-11-09)
 farm_sites_per_province = 4   # food: locations tried for a staple food maker, best payback first
+hungry_months = 6             # food: a farm (or a Tavern where none can be built) where a normal year leaves less than this a year from now
 # Baseline rules (Jan 2026-11-08). Every check reads the game as it stands; nothing is counted from pass to pass, so
 # the pass can run at any rhythm (Jan: no stored history). Short-lived effects are taken out instead (a blacklist):
 # this year's Variable Harvest (its peasant food consumption, read from the pp_harvest_* modifiers) and spoilage are
@@ -1258,7 +1244,6 @@ grange_surplus_pct = 5        # Grange: the store holds 24 months and a normal m
 famine_months = 3             # Tavern first where a normal year leaves less than this in the store a year from now
 yard_payback_years = 10       # Victualling Yard: next level while it pays back within this; a first one where victuals cost their default price or more
 tavern_victuals = 10          # a Tavern only where its market holds at least this much victuals
-improve_fill_pct = 90         # improvements: build where people fill this share of a location's capacity, in % (Jan 2026-11-08)
 construction_goods_months = 12  # start a construction only where its market holds this many months of its goods draw (test world 2026-11-08)
 access_blacklist = ["staple_port_commercial_stagnation_modifier"]   # event modifiers taken out of market access
 # Food chain answers, first one that can be built. Kitchens are built whenever the Cookshop budget allows (Jan
@@ -1271,47 +1256,12 @@ granges = ["grange"]
 yards = ["victualling_yard"]
 # Logistics buildings, first that can be built wins (their zones never overlap; river and coast before roads).
 logistics_order = ["river_boatmen_yard", "coastal_shipping_office", "transport_office", "carrier_inn", "pp_caravanserai", "pp_oasis_caravan_station", "pp_yam_station", "pp_banjara_tanda", "pp_llama_caravan_post"]
-# Goods never listed in the Goods tab (not traded or not built for).
+# Goods no business is built for (not traded, or another rule makes them).
 hidden_goods = ["offset", "logistics", "local_food", "manual_labor", "province_food_sales"]
-# Payback (Jan 2026-11-06: the one money number the plan shows and decides on, not cost or profit): a level's build cost
-# (the engine's own formula, calibrated in game: base x (1 + increase_per_level_cost x levels) / max(0.5, 1 + build
-# efficiency) x the construction goods' clamped price factor) over the profit per level of the standing building.
-payback_years = 10            # goods "Expand": add a level while it pays back within this many years
-# Two layers: the global rules above and, per location, own rules that override them there.
-rule_slots = 4                # rules one location can hold (the panel's Here tab shows this many rows)
-max_rule_level = 30           # the highest level a location rule can ask for
-# Conditions of the location rules, in the panel's cycle order. They mirror the game's own location filters
-# (in_game/gui/filters/05_location.txt: control, proximity, market access, employment, population, RGO profit, coast,
-# river) plus PP's food and land numbers. value: a location-scope script value expression, times multiply (percent).
-# trigger: a yes/no condition (1 or 0). step: one click of the threshold arrows (the double arrows move ten).
-metrics = [
-    { key = "population", value = "population", step = 1 },
-    { key = "peasants", value = "num_pop_type:peasants", step = 1 },
-    { key = "idle_peasants", value = '"unemployed_pops_of_pop_type_in_location(pop_type:peasants)"', step = 0.5 },
-    { key = "idle_laborers", value = '"unemployed_pops_of_pop_type_in_location(pop_type:laborers)"', step = 0.5 },
-    { key = "employment", value = "employment_percentage", multiply = 100, step = 5 },
-    { key = "market_access", value = "market_access", multiply = 100, step = 5 },
-    { key = "control", value = "local_control", multiply = 100, step = 5 },
-    { key = "proximity", value = "proximity", step = 5 },
-    { key = "development", value = "development", step = 1 },
-    { key = "prosperity", value = "prosperity", multiply = 100, step = 5 },
-    { key = "stored_food", value = "pp_cplan_stored_here", step = 1 },
-    { key = "arable_land", value = "pp_cplan_farm_site", step = 1 },
-    { key = "building_levels", value = "total_building_levels", step = 1 },
-    { key = "tax_base", value = "location_tax_base", step = 0.5 },
-    { key = "rgo_profit", value = "rgo_profit", step = 0.1 },
-    { key = "literacy", value = "average_location_literacy", step = 5 },
-    { key = "coastal", trigger = "is_coastal = yes", step = 1 },
-    { key = "river", trigger = "has_river = yes", step = 1 },
-]
-
-[construction_plan.focus]
-# Province focus -> [build below, stop above] stored months. Order = the cycle order in the panel; "hands_off" and "custom"
-# follow these. The first one is the default for a province nobody set.
-standard = [6, 18]
-breadbasket = [8, 20]
-market_town = [6, 14]
-workshop = [4, 12]
+# Payback (Jan 2026-11-06: the one money number the plan decides on, not cost or profit): a level's build cost (the
+# engine's own formula, calibrated in game: base x (1 + increase_per_level_cost x levels) / max(0.5, 1 + build
+# efficiency) x the construction goods' clamped price factor) over its monthly profit x 12. A business's profit: each
+# slot's best recipe at the market's prices and the location's output, this year's Variable Harvest taken out.
 
 [rural_town_goods]
 # The AI does not build a rural-capable producer (rural_settlement = yes) at a rural location whose province has a town of

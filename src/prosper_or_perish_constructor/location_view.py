@@ -618,8 +618,6 @@ def build_window(export_text: str, mod_root: Path, vanilla: Path | None, stored_
     merged = arable_land_bar.add_to_window(merged, location_status.land_state(land_rows, "pp_land_bar_state"))
     # the Location Plan's button in the header (location_plan.py)
     merged = location_plan.add_location_button(merged)
-    # the Construction Plan's cog in the header (construction_plan.py)
-    merged = construction_plan.add_location_cog(merged)
     # the Location Profile row on top of the Infrastructure tab (location_profiles_gui.py)
     merged = location_profiles_gui.add_location_row(merged)
     return widen_window(chip_frames(merged))

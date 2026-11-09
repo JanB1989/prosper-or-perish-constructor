@@ -1,26 +1,16 @@
-﻿# Prosper or Perish - Construction Plan panel (branch player-construction-manager, 2026-11-06, Jan).
-# A scripted widget (gui/scripted_widgets/pp_construction_plan.txt), so no vanilla window is overridden. It holds the
-# opener button and the panel: tabs Plan / Food / Goods / Logistics (the global rules), Locations (every location's
-# mode) and Here (one location's own rules, picked in Locations or with the cog in the location window).
+﻿# Prosper or Perish - Construction Plan window (branch player-construction-manager, 2026-11-06, Jan; two tabs since
+# 2026-11-09). A scripted widget (gui/scripted_widgets/pp_construction_plan.txt), so no vanilla window is overridden.
+# Tabs (vanilla main tabs): Global settings (the plan on or off, the gold reserve, the four rule groups with their
+# lines, what the last pass built) and Location profiles (the editor, type pp_lprof_editor_tab in
+# pp_location_profiles.gui). GUI variables: pp_cplan_open (window open), pp_cplan_tab ('profiles' = the second tab).
 # Every button runs a scripted GUI in common/scripted_guis/pp_construction_plan.txt; every number is a script value
-# (common/script_values/pp_construction_plan*.txt). Payback shown for a building is the engine's own: the next level's
-# build cost (GetBuildOrExpandBuildingCost) over its profit per level here (GetBuildingTypeProfitInLocation).
-# Generated parts: pp_construction_plan_goods.gui (Goods rows), pp_construction_plan_here.gui (rule rows).
+# (common/script_values/pp_construction_plan*.txt).
 # Shown only to a player who plays a country (not to observers: their scripted GUIs do nothing).
 
 types PPConstructionPlan
 {
-	type pp_cplan_tab_button = button_regular {
-		size = { 104 30 }
-	}
-
-	type pp_cplan_mode_button = button_regular {
-		size = { 66 26 }
-	}
-
 	type pp_cplan_step_button = button_regular {
 		size = { 26 24 }
-		tooltip = "PP_CPLAN_STEP_TT"
 	}
 
 	type pp_cplan_switch_button = button_regular {
@@ -33,44 +23,17 @@ types PPConstructionPlan
 		align = left|nobaseline
 	}
 
-	type pp_cplan_note = text_multi {
-		autoresize = yes
-		maximumsize = { 620 -1 }
-		minimumsize = { 620 -1 }
-		default_format = "#weak"
-	}
-
 	type pp_cplan_title = text_single {
 		autoresize = yes
 		align = left|nobaseline
 		default_format = "#yellow_titles"
 	}
 
-	type pp_cplan_months_pie = piechart {
-		size = { 24 24 }
-		using = bg_circle
-		using = bg_circle_piechart
-		using = piechart_angles
-		pieslice_no_highlight = {
-			texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
-			block "pp_cplan_fill" { value = 0 }
-			color = { 1 1 1 1 }
-		}
-		pieslice_no_highlight = {
-			texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
-			block "pp_cplan_rest" { value = 1 }
-			color = { 1 1 1 1 }
-		}
-	}
-
-	# The mode of the location in the datacontext, click for the next (the plan's rules / own rules / hands off).
-	type pp_cplan_location_mode_button = button_regular {
-		size = { 120 26 }
-		tooltip = "PP_CPLAN_LOCATION_MODE_TT"
-		onclick = "[GetScriptedGui('pp_cplan_cycle_mode').Execute(GuiScope.SetRoot(Location.MakeScope).End)]"
-		text_single = { parentanchor = center visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_cplan_mode_n'), '(CFixedPoint)0')]" text = "PP_CPLAN_MODE_PLAN" }
-		text_single = { parentanchor = center visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_cplan_mode_n'), '(CFixedPoint)1')]" text = "PP_CPLAN_MODE_OWN" }
-		text_single = { parentanchor = center visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_cplan_mode_n'), '(CFixedPoint)2')]" text = "PP_CPLAN_MODE_HANDS_OFF" }
+	# One rule group: its name, its line with the arrows (blockoverride "line"), its switch.
+	type pp_cplan_group_row = hbox {
+		layoutpolicy_horizontal = expanding
+		spacing = 6
+		block "line" {}
 	}
 }
 
@@ -91,12 +54,12 @@ widget = {
 	}
 }
 
-# ---- Panel ----
+# ---- Window ----
 	window = {
 		name = "pp_construction_plan_window"
 		visible = "[And3(GetVariableSystem.Exists('pp_cplan_open'), GetPlayer.Exists, Not(IsObserving))]"
 		position = { 90 110 }
-		size = { 690 800 }
+		size = { 690 820 }
 		movable = yes
 		using = bg_window_default_alt
 		filter_mouse = all
@@ -110,55 +73,42 @@ widget = {
 				}
 			}
 
-			hbox = {
+			header_main_tabs = {
 				layoutpolicy_horizontal = expanding
-				margin = { 8 6 }
-				spacing = 4
-				pp_cplan_tab_button = {
-					text = "PP_CPLAN_TAB_PLAN"
-					tooltip = "PP_CPLAN_TAB_PLAN_TT"
-					onclick = "[GetVariableSystem.Set('pp_cplan_tab', 'plan')]"
+				blockoverride "content" {
+					button_main_tab_alt = {
+						layoutpolicy_horizontal = expanding
+						blockoverride "tab_text" {
+							text = "PP_CPLAN_TAB_PLAN"
+						}
+						tooltip = "PP_CPLAN_TAB_PLAN_TT"
+						down = "[Not(GetVariableSystem.HasValue('pp_cplan_tab', 'profiles'))]"
+						onclick = "[GetVariableSystem.Set('pp_cplan_tab', 'plan')]"
+					}
+					button_main_tab_alt = {
+						layoutpolicy_horizontal = expanding
+						blockoverride "tab_text" {
+							text = "PP_CPLAN_TAB_PROFILES"
+						}
+						tooltip = "PP_CPLAN_TAB_PROFILES_TT"
+						down = "[GetVariableSystem.HasValue('pp_cplan_tab', 'profiles')]"
+						onclick = "[GetVariableSystem.Set('pp_cplan_tab', 'profiles')]"
+					}
 				}
-				pp_cplan_tab_button = {
-					text = "PP_CPLAN_TAB_FOOD"
-					tooltip = "PP_CPLAN_TAB_FOOD_TT"
-					onclick = "[GetVariableSystem.Set('pp_cplan_tab', 'food')]"
-				}
-				pp_cplan_tab_button = {
-					text = "PP_CPLAN_TAB_GOODS"
-					tooltip = "PP_CPLAN_TAB_GOODS_TT"
-					onclick = "[GetVariableSystem.Set('pp_cplan_tab', 'goods')]"
-				}
-				pp_cplan_tab_button = {
-					text = "PP_CPLAN_TAB_LOGISTICS"
-					tooltip = "PP_CPLAN_TAB_LOGISTICS_TT"
-					onclick = "[GetVariableSystem.Set('pp_cplan_tab', 'logistics')]"
-				}
-				pp_cplan_tab_button = {
-					text = "PP_CPLAN_TAB_LOCATIONS"
-					tooltip = "PP_CPLAN_TAB_LOCATIONS_TT"
-					onclick = "[GetVariableSystem.Set('pp_cplan_tab', 'locations')]"
-				}
-				pp_cplan_tab_button = {
-					text = "PP_CPLAN_TAB_HERE"
-					tooltip = "PP_CPLAN_TAB_HERE_TT"
-					onclick = "[GetVariableSystem.Set('pp_cplan_tab', 'here')]"
-				}
-				expand = {}
 			}
 
 			vbox = {
 				using = layoutpolicy_expanding
-				using = bg_main_inner_notabs_alt
+				using = bg_main_inner_alt
 				using = window_main_tabs_margin_alt
 
-				# ======================== Plan ========================
+				# ======================== Global settings ========================
 				vbox = {
-					visible = "[Or(GetVariableSystem.HasValue('pp_cplan_tab', 'plan'), Not(GetVariableSystem.Exists('pp_cplan_tab')))]"
+					visible = "[Not(GetVariableSystem.HasValue('pp_cplan_tab', 'profiles'))]"
 					layoutpolicy_horizontal = expanding
 					layoutpolicy_vertical = expanding
 					margin = { 10 8 }
-					spacing = 7
+					spacing = 8
 
 					hbox = {
 						layoutpolicy_horizontal = expanding
@@ -182,166 +132,122 @@ widget = {
 						spacing = 6
 						pp_cplan_label = { text = "PP_CPLAN_RESERVE" tooltip = "PP_CPLAN_RESERVE_TT" }
 						expand = {}
-						pp_cplan_label = { text = "PP_CPLAN_RESERVE_VALUE" }
+						pp_cplan_label = { text = "PP_CPLAN_RESERVE_VALUE" tooltip = "PP_CPLAN_RESERVE_TT" }
 						pp_cplan_step_button = {
 							text = "PP_CPLAN_MINUS"
+							tooltip = "PP_CPLAN_RESERVE_STEP_TT"
 							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('reserve')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
+							onrightclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('reserve_big')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
 						}
 						pp_cplan_step_button = {
 							text = "PP_CPLAN_PLUS"
+							tooltip = "PP_CPLAN_RESERVE_STEP_TT"
 							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('reserve')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
+							onrightclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('reserve_big')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
 						}
-					}
-
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 6
-						pp_cplan_label = { text = "PP_CPLAN_MAX" tooltip = "PP_CPLAN_MAX_TT" }
-						expand = {}
-						pp_cplan_label = { raw_text = "[GetPlayer.MakeScope.ScriptValue('pp_cplan_max_per_month')|0]" }
-						pp_cplan_step_button = {
-							text = "PP_CPLAN_MINUS"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('max')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
-						}
-						pp_cplan_step_button = {
-							text = "PP_CPLAN_PLUS"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('max')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
-						}
+						# lines up with the rule groups' switches below
+						widget = { size = { 70 1 } }
 					}
 
 					pp_cplan_title = { text = "PP_CPLAN_RULES" }
 
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 8
-						pp_cplan_label = { text = "PP_CPLAN_OWN_RULE" tooltip = "PP_CPLAN_OWN_RULE_TT" }
-						expand = {}
-						pp_cplan_label = { text = "PP_CPLAN_OWN_COUNT" }
-					}
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 8
-						pp_cplan_label = { text = "PP_CPLAN_FOOD_RULE" tooltip = "PP_CPLAN_FOOD_RULE_TT" }
-						expand = {}
-						pp_cplan_switch_button = {
-							visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_food_n'), '(CFixedPoint)0.5')]"
-							text = "PP_CPLAN_ON"
-							onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('food')).End)]"
-						}
-						pp_cplan_switch_button = {
-							visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_food_n'), '(CFixedPoint)0.5'))]"
-							text = "PP_CPLAN_OFF"
-							onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('food')).End)]"
-						}
-					}
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 8
-						pp_cplan_label = { text = "PP_CPLAN_LOGISTICS_RULE" tooltip = "PP_CPLAN_LOGISTICS_RULE_TT" }
-						expand = {}
-						pp_cplan_switch_button = {
-							visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_logistics_n'), '(CFixedPoint)0.5')]"
-							text = "PP_CPLAN_ON"
-							onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('logistics')).End)]"
-						}
-						pp_cplan_switch_button = {
-							visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_logistics_n'), '(CFixedPoint)0.5'))]"
-							text = "PP_CPLAN_OFF"
-							onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('logistics')).End)]"
-						}
-					}
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 8
-						pp_cplan_label = { text = "PP_CPLAN_IMPROVE_RULE" tooltip = "PP_CPLAN_IMPROVE_RULE_TT" }
-						expand = {}
-						pp_cplan_switch_button = {
-							visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_improve_n'), '(CFixedPoint)0.5')]"
-							text = "PP_CPLAN_ON"
-							onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve')).End)]"
-						}
-						pp_cplan_switch_button = {
-							visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_improve_n'), '(CFixedPoint)0.5'))]"
-							text = "PP_CPLAN_OFF"
-							onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve')).End)]"
-						}
-					}
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 6
-						pp_cplan_label = { text = "PP_CPLAN_IMPROVE_LINE" tooltip = "PP_CPLAN_IMPROVE_LINE_TT" }
-						expand = {}
-						pp_cplan_label = { text = "PP_CPLAN_IMPROVE_LINE_VALUE" }
-						pp_cplan_step_button = {
-							text = "PP_CPLAN_MINUS"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve_line')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
-						}
-						pp_cplan_step_button = {
-							text = "PP_CPLAN_PLUS"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve_line')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
-						}
-					}
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 8
-						pp_cplan_label = { text = "PP_CPLAN_GOODS_RULE" tooltip = "PP_CPLAN_GOODS_RULE_TT" }
-						expand = {}
-						pp_cplan_switch_button = {
-							visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_goods_n'), '(CFixedPoint)0.5')]"
-							text = "PP_CPLAN_ON"
-							onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('goods')).End)]"
-						}
-						pp_cplan_switch_button = {
-							visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_goods_n'), '(CFixedPoint)0.5'))]"
-							text = "PP_CPLAN_OFF"
-							onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('goods')).End)]"
+					# Food, per province
+					pp_cplan_group_row = {
+						blockoverride "line" {
+							pp_cplan_label = { text = "PP_CPLAN_FOOD_RULE" tooltip = "PP_CPLAN_FOOD_RULE_TT" }
+							expand = {}
+							pp_cplan_switch_button = {
+								visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_food_n'), '(CFixedPoint)0.5')]"
+								text = "PP_CPLAN_ON"
+								onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('food')).End)]"
+							}
+							pp_cplan_switch_button = {
+								visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_food_n'), '(CFixedPoint)0.5'))]"
+								text = "PP_CPLAN_OFF"
+								onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('food')).End)]"
+							}
 						}
 					}
 
-					# the game's own building automation and how the plan works beside it (Jan 2026-11-09)
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 6
-						pp_cplan_label = { text = "PP_CPLAN_GAME_AUTO" tooltip = "PP_CPLAN_GAME_AUTO_TT" }
-						expand = {}
-						pp_cplan_label = { text = "PP_CPLAN_GAME_AUTO_VALUE" tooltip = "PP_CPLAN_GAME_AUTO_TT" }
+					# Logistics, per location: below this market access
+					pp_cplan_group_row = {
+						blockoverride "line" {
+							pp_cplan_label = { text = "PP_CPLAN_LOGISTICS_RULE" tooltip = "PP_CPLAN_LOGISTICS_RULE_TT" }
+							expand = {}
+							pp_cplan_label = { text = "PP_CPLAN_ACCESS_VALUE" tooltip = "PP_CPLAN_LOGISTICS_RULE_TT" }
+							pp_cplan_step_button = {
+								text = "PP_CPLAN_MINUS"
+								onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('access_line')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
+							}
+							pp_cplan_step_button = {
+								text = "PP_CPLAN_PLUS"
+								onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('access_line')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
+							}
+							pp_cplan_switch_button = {
+								visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_logistics_n'), '(CFixedPoint)0.5')]"
+								text = "PP_CPLAN_ON"
+								onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('logistics')).End)]"
+							}
+							pp_cplan_switch_button = {
+								visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_logistics_n'), '(CFixedPoint)0.5'))]"
+								text = "PP_CPLAN_OFF"
+								onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('logistics')).End)]"
+							}
+						}
 					}
 
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 6
-						pp_cplan_title = { text = "PP_CPLAN_PRESETS" tooltip = "PP_CPLAN_PRESETS_TT" }
-						expand = {}
-						pp_cplan_label = { visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_preset_n'), '(CFixedPoint)0.5')]" text = "PP_CPLAN_PRESET_LOADED" }
+					# Improvements, per location: from this population over capacity
+					pp_cplan_group_row = {
+						blockoverride "line" {
+							pp_cplan_label = { text = "PP_CPLAN_IMPROVE_RULE" tooltip = "PP_CPLAN_IMPROVE_RULE_TT" }
+							expand = {}
+							pp_cplan_label = { text = "PP_CPLAN_IMPROVE_LINE_VALUE" tooltip = "PP_CPLAN_IMPROVE_RULE_TT" }
+							pp_cplan_step_button = {
+								text = "PP_CPLAN_MINUS"
+								onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve_line')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
+							}
+							pp_cplan_step_button = {
+								text = "PP_CPLAN_PLUS"
+								onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve_line')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
+							}
+							pp_cplan_switch_button = {
+								visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_improve_n'), '(CFixedPoint)0.5')]"
+								text = "PP_CPLAN_ON"
+								onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve')).End)]"
+							}
+							pp_cplan_switch_button = {
+								visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_improve_n'), '(CFixedPoint)0.5'))]"
+								text = "PP_CPLAN_OFF"
+								onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve')).End)]"
+							}
+						}
 					}
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 6
-						pp_cplan_step_button = {
-							size = { 120 26 }
-							text = "PP_CPLAN_PRESET_BALANCED"
-							tooltip = "PP_CPLAN_PRESET_BALANCED_TT"
-							onclick = "[GetScriptedGui('pp_cplan_preset').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('balanced')).End)]"
+
+					# Businesses: within this payback
+					pp_cplan_group_row = {
+						blockoverride "line" {
+							pp_cplan_label = { text = "PP_CPLAN_BUSINESS_RULE" tooltip = "PP_CPLAN_BUSINESS_RULE_TT" }
+							expand = {}
+							pp_cplan_label = { text = "PP_CPLAN_BUSINESS_LINE_VALUE" tooltip = "PP_CPLAN_BUSINESS_RULE_TT" }
+							pp_cplan_step_button = {
+								text = "PP_CPLAN_MINUS"
+								onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business_line')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
+							}
+							pp_cplan_step_button = {
+								text = "PP_CPLAN_PLUS"
+								onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business_line')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
+							}
+							pp_cplan_switch_button = {
+								visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_business_n'), '(CFixedPoint)0.5')]"
+								text = "PP_CPLAN_ON"
+								onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business')).End)]"
+							}
+							pp_cplan_switch_button = {
+								visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_business_n'), '(CFixedPoint)0.5'))]"
+								text = "PP_CPLAN_OFF"
+								onclick = "[GetScriptedGui('pp_cplan_toggle_module').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business')).End)]"
+							}
 						}
-						pp_cplan_step_button = {
-							size = { 120 26 }
-							text = "PP_CPLAN_PRESET_FOOD"
-							tooltip = "PP_CPLAN_PRESET_FOOD_TT"
-							onclick = "[GetScriptedGui('pp_cplan_preset').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('food')).End)]"
-						}
-						pp_cplan_step_button = {
-							size = { 120 26 }
-							text = "PP_CPLAN_PRESET_BUILDER"
-							tooltip = "PP_CPLAN_PRESET_BUILDER_TT"
-							onclick = "[GetScriptedGui('pp_cplan_preset').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('builder')).End)]"
-						}
-						pp_cplan_step_button = {
-							size = { 120 26 }
-							text = "PP_CPLAN_PRESET_CAUTIOUS"
-							tooltip = "PP_CPLAN_PRESET_CAUTIOUS_TT"
-							onclick = "[GetScriptedGui('pp_cplan_preset').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('cautious')).End)]"
-						}
-						expand = {}
 					}
 
 					pp_cplan_title = { text = "PP_CPLAN_LAST" }
@@ -380,11 +286,7 @@ widget = {
 										}
 										pp_cplan_label = {
 											visible = "[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)3')]"
-											text = "PP_CPLAN_WHY_GOODS"
-										}
-										pp_cplan_label = {
-											visible = "[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)4')]"
-											text = "PP_CPLAN_WHY_RULE"
+											text = "PP_CPLAN_WHY_BUSINESS"
 										}
 										pp_cplan_label = {
 											visible = "[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)5')]"
@@ -401,515 +303,13 @@ widget = {
 					}
 				}
 
-				# ======================== Food ========================
+				# ======================== Location profiles ========================
 				vbox = {
-					visible = "[GetVariableSystem.HasValue('pp_cplan_tab', 'food')]"
+					visible = "[GetVariableSystem.HasValue('pp_cplan_tab', 'profiles')]"
 					layoutpolicy_horizontal = expanding
 					layoutpolicy_vertical = expanding
-					margin = { 6 6 }
-					spacing = 4
 
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 6
-						pp_cplan_label = { text = "PP_CPLAN_GRANARY_CAP" tooltip = "PP_CPLAN_GRANARY_CAP_TT" }
-						expand = {}
-						pp_cplan_label = { text = "PP_CPLAN_GRANARY_CAP_VALUE" }
-						pp_cplan_step_button = {
-							text = "PP_CPLAN_MINUS"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('granary_cap')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
-						}
-						pp_cplan_step_button = {
-							text = "PP_CPLAN_PLUS"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('granary_cap')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
-						}
-					}
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 6
-						pp_cplan_label = { text = "PP_CPLAN_GRANARY_FILL" tooltip = "PP_CPLAN_GRANARY_FILL_TT" }
-						expand = {}
-						pp_cplan_label = { text = "PP_CPLAN_GRANARY_FILL_VALUE" }
-						pp_cplan_step_button = {
-							text = "PP_CPLAN_MINUS"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('granary_fill')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
-						}
-						pp_cplan_step_button = {
-							text = "PP_CPLAN_PLUS"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('granary_fill')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
-						}
-					}
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 6
-						pp_cplan_label = { text = "PP_CPLAN_GRANGE_SURPLUS" tooltip = "PP_CPLAN_GRANGE_SURPLUS_TT" }
-						expand = {}
-						pp_cplan_label = { text = "PP_CPLAN_GRANGE_SURPLUS_VALUE" }
-						pp_cplan_step_button = {
-							text = "PP_CPLAN_MINUS"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('grange_surplus')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
-						}
-						pp_cplan_step_button = {
-							text = "PP_CPLAN_PLUS"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('grange_surplus')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
-						}
-					}
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 6
-						pp_cplan_label = { text = "PP_CPLAN_FAMINE" tooltip = "PP_CPLAN_FAMINE_TT" }
-						expand = {}
-						pp_cplan_label = { text = "PP_CPLAN_FAMINE_VALUE" }
-						pp_cplan_step_button = {
-							text = "PP_CPLAN_MINUS"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('famine')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
-						}
-						pp_cplan_step_button = {
-							text = "PP_CPLAN_PLUS"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('famine')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
-						}
-					}
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 6
-						pp_cplan_label = { text = "PP_CPLAN_YARD_PAYBACK" tooltip = "PP_CPLAN_YARD_PAYBACK_TT" }
-						expand = {}
-						pp_cplan_label = { text = "PP_CPLAN_YARD_PAYBACK_VALUE" }
-						pp_cplan_step_button = {
-							text = "PP_CPLAN_MINUS"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('yard_payback')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
-						}
-						pp_cplan_step_button = {
-							text = "PP_CPLAN_PLUS"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('yard_payback')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
-						}
-					}
-					pp_cplan_note = { text = "PP_CPLAN_FOOD_NOTE" }
-
-					scrollarea = {
-						layoutpolicy_horizontal = expanding
-						layoutpolicy_vertical = expanding
-						scrollbarpolicy_horizontal = always_off
-						scrollbar_vertical = { using = Scrollbar_Vertical }
-						scrollwidget = {
-							vbox = {
-								layoutpolicy_horizontal = expanding
-								datamodel = "[GetPlayer.GetProvinces]"
-								item = {
-									vbox = {
-										layoutpolicy_horizontal = expanding
-										margin = { 4 4 }
-										spacing = 2
-										background = { using = bg_main_inner_notabs_alt }
-
-										hbox = {
-											layoutpolicy_horizontal = expanding
-											spacing = 6
-											pp_cplan_label = { raw_text = "[Province.GetName]" minimumsize = { 150 -1 } maximumsize = { 150 -1 } }
-											button_regular = {
-												size = { 120 26 }
-												tooltip = "PP_CPLAN_FOCUS_TT"
-												onclick = "[GetScriptedGui('pp_cplan_cycle_focus').Execute(GuiScope.SetRoot(Province.MakeScope).End)]"
-												text_single = { parentanchor = center visible = "[EqualTo_CFixedPoint(Province.MakeScope.ScriptValue('pp_cplan_focus_n'), '(CFixedPoint)1')]" text = "PP_CPLAN_FOCUS_STANDARD" }
-												text_single = { parentanchor = center visible = "[EqualTo_CFixedPoint(Province.MakeScope.ScriptValue('pp_cplan_focus_n'), '(CFixedPoint)2')]" text = "PP_CPLAN_FOCUS_BREADBASKET" }
-												text_single = { parentanchor = center visible = "[EqualTo_CFixedPoint(Province.MakeScope.ScriptValue('pp_cplan_focus_n'), '(CFixedPoint)3')]" text = "PP_CPLAN_FOCUS_MARKET_TOWN" }
-												text_single = { parentanchor = center visible = "[EqualTo_CFixedPoint(Province.MakeScope.ScriptValue('pp_cplan_focus_n'), '(CFixedPoint)4')]" text = "PP_CPLAN_FOCUS_WORKSHOP" }
-												text_single = { parentanchor = center visible = "[EqualTo_CFixedPoint(Province.MakeScope.ScriptValue('pp_cplan_focus_n'), '(CFixedPoint)5')]" text = "PP_CPLAN_FOCUS_HANDS_OFF" }
-												text_single = { parentanchor = center visible = "[EqualTo_CFixedPoint(Province.MakeScope.ScriptValue('pp_cplan_focus_n'), '(CFixedPoint)6')]" text = "PP_CPLAN_FOCUS_CUSTOM" }
-											}
-											pp_cplan_months_pie = {
-												tooltip = "PP_CPLAN_STORED_TT"
-												blockoverride "pp_cplan_fill" { value = "[FixedPointToFloat(Divide_CFixedPoint(Min_CFixedPoint(Province.MakeScope.ScriptValue('pp_cplan_stored_n'), '(CFixedPoint)24'), '(CFixedPoint)24'))]" }
-												blockoverride "pp_cplan_rest" { value = "[Subtract_float('(float)1.0', FixedPointToFloat(Divide_CFixedPoint(Min_CFixedPoint(Province.MakeScope.ScriptValue('pp_cplan_stored_n'), '(CFixedPoint)24'), '(CFixedPoint)24')))]" }
-											}
-											pp_cplan_label = { text = "PP_CPLAN_STORED_VALUE" minimumsize = { 70 -1 } }
-											pp_cplan_label = { text = "PP_CPLAN_CAPACITY_VALUE" tooltip = "PP_CPLAN_CAPACITY_TT" }
-											expand = {}
-										}
-
-										hbox = {
-											layoutpolicy_horizontal = expanding
-											spacing = 4
-											pp_cplan_label = { text = "PP_CPLAN_BAND_BELOW" }
-											pp_cplan_step_button = {
-												text = "PP_CPLAN_MINUS"
-												onclick = "[GetScriptedGui('pp_cplan_step_band').Execute(GuiScope.SetRoot(Province.MakeScope).AddScope('pp_key', MakeScopeFlag('lo')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
-											}
-											pp_cplan_label = { raw_text = "[Province.MakeScope.ScriptValue('pp_cplan_band_lo')|0]" minimumsize = { 22 -1 } align = center|nobaseline }
-											pp_cplan_step_button = {
-												text = "PP_CPLAN_PLUS"
-												onclick = "[GetScriptedGui('pp_cplan_step_band').Execute(GuiScope.SetRoot(Province.MakeScope).AddScope('pp_key', MakeScopeFlag('lo')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
-											}
-											widget = { size = { 10 1 } }
-											pp_cplan_label = { text = "PP_CPLAN_IN_A_YEAR" tooltip = "PP_CPLAN_IN_A_YEAR_TT" }
-											expand = {}
-										}
-
-										hbox = {
-											layoutpolicy_horizontal = expanding
-											spacing = 4
-											pp_cplan_label = { visible = "[EqualTo_CFixedPoint(Province.MakeScope.ScriptValue('pp_cplan_status_n'), '(CFixedPoint)0')]" text = "PP_CPLAN_ST_0" }
-											pp_cplan_label = { visible = "[EqualTo_CFixedPoint(Province.MakeScope.ScriptValue('pp_cplan_status_n'), '(CFixedPoint)1')]" text = "PP_CPLAN_ST_1" }
-											hbox = {
-												visible = "[EqualTo_CFixedPoint(Province.MakeScope.ScriptValue('pp_cplan_status_n'), '(CFixedPoint)1')]"
-												datamodel = "[Province.MakeScope.GetList('pp_cplan_status_types')]"
-												spacing = 4
-												item = {
-													pp_cplan_label = { raw_text = "[Scope.GetBuildingType.GetName]" }
-												}
-											}
-											pp_cplan_label = { visible = "[EqualTo_CFixedPoint(Province.MakeScope.ScriptValue('pp_cplan_status_n'), '(CFixedPoint)2')]" text = "PP_CPLAN_ST_2" }
-											pp_cplan_label = { visible = "[EqualTo_CFixedPoint(Province.MakeScope.ScriptValue('pp_cplan_status_n'), '(CFixedPoint)3')]" text = "PP_CPLAN_ST_3" }
-											pp_cplan_label = { visible = "[EqualTo_CFixedPoint(Province.MakeScope.ScriptValue('pp_cplan_status_n'), '(CFixedPoint)5')]" text = "PP_CPLAN_ST_5" }
-											pp_cplan_label = { visible = "[EqualTo_CFixedPoint(Province.MakeScope.ScriptValue('pp_cplan_status_n'), '(CFixedPoint)7')]" text = "PP_CPLAN_ST_7" }
-											pp_cplan_label = { visible = "[EqualTo_CFixedPoint(Province.MakeScope.ScriptValue('pp_cplan_status_n'), '(CFixedPoint)8')]" text = "PP_CPLAN_ST_8" }
-											pp_cplan_label = { visible = "[EqualTo_CFixedPoint(Province.MakeScope.ScriptValue('pp_cplan_status_n'), '(CFixedPoint)9')]" text = "PP_CPLAN_ST_9" }
-											pp_cplan_label = { visible = "[EqualTo_CFixedPoint(Province.MakeScope.ScriptValue('pp_cplan_status_n'), '(CFixedPoint)10')]" text = "PP_CPLAN_ST_10" }
-											expand = {}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-
-				# ======================== Goods ========================
-				vbox = {
-					visible = "[GetVariableSystem.HasValue('pp_cplan_tab', 'goods')]"
-					layoutpolicy_horizontal = expanding
-					layoutpolicy_vertical = expanding
-					margin = { 6 6 }
-					spacing = 4
-
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 6
-						pp_cplan_label = { text = "PP_CPLAN_KEEP" tooltip = "PP_CPLAN_KEEP_TT" }
-						expand = {}
-						pp_cplan_label = { text = "PP_CPLAN_KEEP_VALUE" }
-						pp_cplan_step_button = {
-							text = "PP_CPLAN_MINUS"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('keep')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
-						}
-						pp_cplan_step_button = {
-							text = "PP_CPLAN_PLUS"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('keep')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
-						}
-					}
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 6
-						pp_cplan_label = { text = "PP_CPLAN_PAYBACK_LINE" tooltip = "PP_CPLAN_PAYBACK_LINE_TT" }
-						expand = {}
-						pp_cplan_label = { text = "PP_CPLAN_PAYBACK_LINE_VALUE" }
-						pp_cplan_step_button = {
-							text = "PP_CPLAN_MINUS"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('payback')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
-						}
-						pp_cplan_step_button = {
-							text = "PP_CPLAN_PLUS"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('payback')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
-						}
-					}
-					pp_cplan_note = { text = "PP_CPLAN_GOODS_NOTE" }
-
-					scrollarea = {
-						layoutpolicy_horizontal = expanding
-						layoutpolicy_vertical = expanding
-						scrollbarpolicy_horizontal = always_off
-						scrollbar_vertical = { using = Scrollbar_Vertical }
-						scrollwidget = {
-							pp_cplan_goods_rows = {}
-						}
-					}
-				}
-
-				# ======================== Logistics ========================
-				vbox = {
-					visible = "[GetVariableSystem.HasValue('pp_cplan_tab', 'logistics')]"
-					layoutpolicy_horizontal = expanding
-					layoutpolicy_vertical = expanding
-					margin = { 6 6 }
-					spacing = 4
-
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 6
-						pp_cplan_label = { text = "PP_CPLAN_ACCESS" tooltip = "PP_CPLAN_ACCESS_TT" }
-						expand = {}
-						pp_cplan_label = { text = "PP_CPLAN_ACCESS_VALUE" }
-						pp_cplan_step_button = {
-							text = "PP_CPLAN_MINUS"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('access_line')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
-						}
-						pp_cplan_step_button = {
-							text = "PP_CPLAN_PLUS"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('access_line')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
-						}
-					}
-					pp_cplan_note = { text = "PP_CPLAN_LOGISTICS_NOTE" }
-
-					scrollarea = {
-						layoutpolicy_horizontal = expanding
-						layoutpolicy_vertical = expanding
-						scrollbarpolicy_horizontal = always_off
-						scrollbar_vertical = { using = Scrollbar_Vertical }
-						scrollwidget = {
-							flowcontainer = {
-								direction = vertical
-								ignoreinvisible = yes
-								datamodel = "[GetPlayer.GetProvinces]"
-								item = {
-									flowcontainer = {
-										direction = vertical
-										ignoreinvisible = yes
-										datamodel = "[Province.GetLocations]"
-										item = {
-											# a container takes no hbox as a direct child: the row is a widget holding the hbox
-											widget = {
-												visible = "[GetScriptedGui('pp_cplan_logistics_row').IsShown(GuiScope.SetRoot(Location.MakeScope).End)]"
-												size = { 600 30 }
-												hbox = {
-													using = layoutpolicy_expanding
-													spacing = 6
-													margin = { 4 2 }
-													pp_cplan_label = { raw_text = "[Location.GetName]" minimumsize = { 170 -1 } maximumsize = { 170 -1 } }
-													pp_cplan_label = { text = "PP_CPLAN_ACCESS_HERE" minimumsize = { 60 -1 } tooltip = "PP_CPLAN_ACCESS_HERE_TT" }													button_regular = {
-														size = { 120 26 }
-														tooltip = "PP_CPLAN_LOGI_TT"
-														onclick = "[GetScriptedGui('pp_cplan_cycle_logi').Execute(GuiScope.SetRoot(Location.MakeScope).End)]"
-														text_single = { parentanchor = center visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_cplan_logi_n'), '(CFixedPoint)0')]" text = "PP_CPLAN_FOLLOW" }
-														text_single = { parentanchor = center visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_cplan_logi_n'), '(CFixedPoint)1')]" text = "PP_CPLAN_ALWAYS" }
-														text_single = { parentanchor = center visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_cplan_logi_n'), '(CFixedPoint)2')]" text = "PP_CPLAN_NEVER" }
-													}
-													expand = {}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-
-				# ======================== Locations ========================
-				vbox = {
-					visible = "[GetVariableSystem.HasValue('pp_cplan_tab', 'locations')]"
-					layoutpolicy_horizontal = expanding
-					layoutpolicy_vertical = expanding
-					margin = { 6 6 }
-					spacing = 4
-
-					pp_cplan_note = { text = "PP_CPLAN_LOCATIONS_NOTE" }
-
-					scrollarea = {
-						layoutpolicy_horizontal = expanding
-						layoutpolicy_vertical = expanding
-						scrollbarpolicy_horizontal = always_off
-						scrollbar_vertical = { using = Scrollbar_Vertical }
-						scrollwidget = {
-							flowcontainer = {
-								direction = vertical
-								ignoreinvisible = yes
-								datamodel = "[GetPlayer.GetProvinces]"
-								item = {
-									flowcontainer = {
-										direction = vertical
-										ignoreinvisible = yes
-										widget = {
-											size = { 600 30 }
-											hbox = {
-												using = layoutpolicy_expanding
-												spacing = 6
-												margin = { 4 2 }
-												pp_cplan_label = { raw_text = "[Province.GetName]" default_format = "#high" }
-												expand = {}
-											}
-										}
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											datamodel = "[Province.GetLocations]"
-											item = {
-												widget = {
-													size = { 600 28 }
-													hbox = {
-														using = layoutpolicy_expanding
-														spacing = 6
-														margin = { 14 1 }
-														pp_cplan_label = { raw_text = "[Location.GetName]" minimumsize = { 160 -1 } maximumsize = { 160 -1 } }
-														pp_cplan_location_mode_button = {}
-														expand = {}
-														button_regular = {
-															size = { 60 24 }
-															text = "PP_CPLAN_EDIT"
-															action_tooltip = {
-																click_type = left
-																click_mode = single
-																title = "PP_CPLAN_EDIT_TT"
-																on_action = "[GetScriptedGui('pp_cplan_select').Execute(GuiScope.SetRoot(Location.MakeScope).End)]"
-																on_action = "[GetVariableSystem.Set('pp_cplan_tab', 'here')]"
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-
-				# ======================== Here: one location's own rules ========================
-				vbox = {
-					visible = "[GetVariableSystem.HasValue('pp_cplan_tab', 'here')]"
-					layoutpolicy_horizontal = expanding
-					layoutpolicy_vertical = expanding
-					margin = { 6 6 }
-					spacing = 4
-
-					pp_cplan_note = {
-						visible = "[Not(GetPlayer.MakeScope.Var('pp_cplan_sel').IsSet)]"
-						text = "PP_CPLAN_HERE_NONE"
-					}
-
-					vbox = {
-						visible = "[GetPlayer.MakeScope.Var('pp_cplan_sel').IsSet]"
-						layoutpolicy_horizontal = expanding
-						layoutpolicy_vertical = expanding
-
-						vbox = {
-							datacontext = "[GetPlayer.MakeScope.Var('pp_cplan_sel').GetLocation]"
-							layoutpolicy_horizontal = expanding
-							layoutpolicy_vertical = expanding
-							spacing = 4
-
-							hbox = {
-								layoutpolicy_horizontal = expanding
-								spacing = 6
-								pp_cplan_label = { raw_text = "[Location.GetName]" fontsize = 20 }
-								pp_cplan_label = { raw_text = "[Location.GetProvince.GetName]" default_format = "#weak" }
-								expand = {}
-								pp_cplan_location_mode_button = {}
-								pp_cplan_step_button = {
-									size = { 60 24 }
-									text = "PP_CPLAN_GOTO"
-									tooltip = "PP_CPLAN_GOTO_TT"
-									onclick = "[PanToLocation(Location.Self)]"
-								}
-							}
-							pp_cplan_note = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_cplan_mode_n'), '(CFixedPoint)0')]" text = "PP_CPLAN_HERE_MODE_PLAN" }
-							pp_cplan_note = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_cplan_mode_n'), '(CFixedPoint)1')]" text = "PP_CPLAN_HERE_MODE_OWN" }
-							pp_cplan_note = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_cplan_mode_n'), '(CFixedPoint)2')]" text = "PP_CPLAN_HERE_MODE_HANDS_OFF" }
-
-							scrollarea = {
-								layoutpolicy_horizontal = expanding
-								layoutpolicy_vertical = expanding
-								scrollbarpolicy_horizontal = always_off
-								scrollbar_vertical = { using = Scrollbar_Vertical }
-								scrollwidget = {
-									vbox = {
-										minimumsize = { 600 -1 }
-										maximumsize = { 600 -1 }
-										spacing = 4
-
-										pp_cplan_title = { text = "PP_CPLAN_HERE_RULES" tooltip = "PP_CPLAN_HERE_RULES_TT" }
-										pp_cplan_rule_row_1 = {}
-										pp_cplan_rule_row_2 = {}
-										pp_cplan_rule_row_3 = {}
-										pp_cplan_rule_row_4 = {}
-
-										hbox = {
-											layoutpolicy_horizontal = expanding
-											spacing = 6
-											pp_cplan_title = { text = "PP_CPLAN_HERE_ADD" tooltip = "PP_CPLAN_HERE_ADD_TT" }
-											expand = {}
-											pp_cplan_step_button = {
-												size = { 80 24 }
-												text = "PP_CPLAN_REFRESH"
-												tooltip = "PP_CPLAN_REFRESH_TT"
-												onclick = "[GetScriptedGui('pp_cplan_refresh').Execute(GuiScope.SetRoot(Location.MakeScope).End)]"
-											}
-										}
-										# standing here: payback from the profit one standing level makes (as the plan reckons it)
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											datamodel = "[Location.MakeScope.GetList('pp_cplan_cands_built')]"
-											item = {
-												widget = {
-													size = { 600 28 }
-													hbox = {
-														using = layoutpolicy_expanding
-														spacing = 6
-														margin = { 4 1 }
-														datacontext = "[Scope.GetBuilding]"
-														pp_cplan_label = { raw_text = "[Building.GetType.GetName]" minimumsize = { 210 -1 } maximumsize = { 210 -1 } }
-														pp_cplan_label = {
-															visible = "[GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0')]"
-															text = "PP_CPLAN_PAYBACK_YEARS_STANDING"
-															tooltip = "PP_CPLAN_PAYBACK_STANDING_TT"
-														}
-														pp_cplan_label = {
-															visible = "[Not(GreaterThan_CFixedPoint(Building.GetProfitPerLevel, '(CFixedPoint)0'))]"
-															text = "PP_CPLAN_PAYBACK_NONE"
-															tooltip = "PP_CPLAN_PAYBACK_STANDING_TT"
-														}
-														expand = {}
-														pp_cplan_step_button = {
-															size = { 60 24 }
-															text = "PP_CPLAN_ADD"
-															tooltip = "PP_CPLAN_ADD_TT"
-															onclick = "[GetScriptedGui('pp_cplan_add_rule').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_btype', Building.GetType.MakeScope).End)]"
-														}
-													}
-												}
-											}
-										}
-										# not standing yet: the engine's estimate for a new building here
-										flowcontainer = {
-											direction = vertical
-											ignoreinvisible = yes
-											datamodel = "[Location.MakeScope.GetList('pp_cplan_cands')]"
-											item = {
-												widget = {
-													size = { 600 28 }
-													hbox = {
-														using = layoutpolicy_expanding
-														spacing = 6
-														margin = { 4 1 }
-														datacontext = "[Scope.GetBuildingType]"
-														pp_cplan_label = { raw_text = "[BuildingType.GetName]" minimumsize = { 210 -1 } maximumsize = { 210 -1 } }
-														pp_cplan_label = {
-															visible = "[GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0')]"
-															text = "PP_CPLAN_PAYBACK_YEARS"
-															tooltip = "PP_CPLAN_PAYBACK_TT"
-														}
-														pp_cplan_label = {
-															visible = "[Not(GreaterThan_CFixedPoint(GetBuildingTypeProfitInLocation(BuildingType.Self, Location.Self), '(CFixedPoint)0'))]"
-															text = "PP_CPLAN_PAYBACK_NONE"
-															tooltip = "PP_CPLAN_PAYBACK_TT"
-														}
-														expand = {}
-														pp_cplan_step_button = {
-															size = { 60 24 }
-															text = "PP_CPLAN_ADD"
-															tooltip = "PP_CPLAN_ADD_TT"
-															onclick = "[GetScriptedGui('pp_cplan_add_rule').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_btype', BuildingType.MakeScope).End)]"
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
+					pp_lprof_editor_tab = {}
 				}
 			}
 		}
@@ -919,7 +319,10 @@ widget = {
 			position = { -5 5 }
 			size = { 40 40 }
 			button_close_alt = {
-				blockoverride "close_on_action" { on_action = "[GetVariableSystem.Clear('pp_cplan_open')]" }
+				blockoverride "close_on_action" {
+					on_action = "[GetVariableSystem.Clear('pp_cplan_open')]"
+					on_action = "[GetVariableSystem.Clear('pp_lprof_pick')]"
+				}
 			}
 		}
 	}

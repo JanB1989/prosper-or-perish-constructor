@@ -1,36 +1,38 @@
 ﻿# Prosper or Perish - Construction Plan values (player-only construction rules). The settings with their defaults
-# (pp_cplan_reserve_months, pp_cplan_max_per_month, pp_cplan_access_pct, pp_cplan_keep_months, pp_cplan_payback_line,
-# the focus bands), the conditions and the per-rule readouts are generated from [construction_plan] into
+# (pp_cplan_reserve_gold, pp_cplan_access_pct, pp_cplan_improve_pct, pp_cplan_business_years), the food rule's numbers,
+# the farm and business profit estimates and the build cost price factors are generated from [construction_plan] into
 # pp_construction_plan_generated.txt. Variables carry + 100.
 
-# Country scope: the month's construction limit + 100 (compared with var:pp_cplan_started).
-pp_cplan_max100 = {
-	value = pp_cplan_max_per_month
-	add = 100
+# ---- The month's gold (country scope) ----
+
+# Gold above the reserve.
+pp_cplan_free_gold = {
+	value = gold
+	subtract = pp_cplan_reserve_gold
 }
 
-# Country scope: the rule groups that run (location rules when a location has own rules, location profiles when a
-# location has a profile; at least 1), and each one's share of the monthly limit, rounded up.
+# The rule groups that run (location profiles when a location has a profile; at least 1), and each one's equal part of
+# the gold above the reserve at the pass's start (pp_cplan_pot).
 pp_cplan_groups_on = {
 	value = pp_cplan_food_n
 	add = pp_cplan_logistics_n
 	add = pp_cplan_improve_n
-	add = pp_cplan_goods_n
-	add = pp_cplan_location_rules_n
+	add = pp_cplan_business_n
 	add = pp_lprof_group_n
 	min = 1
 }
 pp_cplan_group_share = {
-	value = pp_cplan_max_per_month
-	add = pp_cplan_groups_on
-	subtract = 1
-	divide = pp_cplan_groups_on
-	floor = yes
-	min = 1
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_pot }
+		value = var:pp_cplan_pot
+		subtract = 100
+		divide = pp_cplan_groups_on
+	}
 }
-# Country scope: constructions the pass may have started by the end of the current rule group (99 outside a pass).
+# Gold the pass may have spent by the end of the current rule group (0 outside a pass).
 pp_cplan_cap_n = {
-	value = 99
+	value = 0
 	if = {
 		limit = { has_variable = pp_cplan_cap }
 		value = var:pp_cplan_cap
@@ -38,28 +40,11 @@ pp_cplan_cap_n = {
 	}
 }
 
-# Country scope: gold kept back.
-pp_cplan_reserve_gold = {
-	value = monthly_income_total
-	multiply = pp_cplan_reserve_months
-	min = 0
-}
-
 # Location scope: the owner's logistics line as a market access fraction.
 pp_cplan_access_line = {
 	value = 0
 	owner ?= { add = pp_cplan_access_pct }
 	divide = 100
-}
-
-# Province scope: the band + 100, compared with var:pp_stored_food_months (stored_food.py keeps it + 100).
-pp_cplan_band_lo100 = {
-	value = pp_cplan_band_lo
-	add = 100
-}
-pp_cplan_band_hi100 = {
-	value = pp_cplan_band_hi
-	add = 100
 }
 
 # ---- Baseline rules: the food numbers as a normal year would have them (province scope; Jan 2026-11-08) ----
@@ -146,20 +131,9 @@ pp_cplan_fill_pct = {
 	value = province_food_percentage
 	multiply = 100
 }
-# Province scope, for the panel: the store a year from now (0..36), the normal month's gain in % of consumption, and
-# this year's harvest in % of consumption (+ = the peasants eat more).
-pp_cplan_food_in_a_year_n = {
-	value = pp_cplan_food_in_a_year
-	min = 0
-	max = 36
-}
+# Province scope: the normal month's gain in % of consumption (the Grange rule).
 pp_cplan_normal_gain_pct = {
 	value = pp_cplan_normal_gain
-	multiply = 100
-}
-pp_cplan_harvest_pct = {
-	value = pp_cplan_harvest_food
-	divide = pp_cplan_normal_consumption
 	multiply = 100
 }
 # Location scope: victuals' price in this location's market over their default price (0 without a market).
@@ -172,21 +146,8 @@ pp_cplan_victuals_price_ratio = {
 	}
 }
 
-# Location scope: arable land left for farms, in thousands of people (the farm caps' Free Arable Land before the land
-# per level).
-pp_cplan_farm_site = {
-	value = modifier:local_population_capacity
-	subtract = pp_townsfolk_capacity
-}
-
-# Location scope: the province's stored food in months (a location rule condition).
-pp_cplan_stored_here = {
-	value = 0
-	province ?= { add = pp_cplan_stored_n }
-}
-
 # ---- Build cost and payback (location scope; scope:pp_cplan_btype = the building type, the temporary values
-# pp_cplan_ipl / pp_cplan_pf / pp_cplan_ef set by pp_cplan_btype_data or the goods pickers) ----
+# pp_cplan_ipl / pp_cplan_pf / pp_cplan_ef set by pp_cplan_btype_data or the generated pickers) ----
 # The engine's formula, calibrated in game on 158 constructions (2026-11-06, all within 1 %): base price
 # x (1 + increase_per_level_cost x standing levels) / max(0.5, 1 + build efficiency) x the construction goods' price
 # factor. Efficiency = the location's local term + the owner's global term + one category term (urban or rural by the
@@ -282,7 +243,7 @@ pp_cplan_est_cost = {
 }
 
 # Years the next level of scope:pp_cplan_btype takes to pay back its cost from the profit per level standing here
-# (999 without profit).
+# (999 without profit; the Victualling Yard step and the location profiles read it).
 pp_cplan_est_payback_years = {
 	value = 999
 	if = {
@@ -294,7 +255,16 @@ pp_cplan_est_payback_years = {
 	max = 999
 }
 
-# ---- Panel readouts ----
+# Location scope: the business picked here this pass, its yearly return in % (the business group's order).
+pp_cplan_bz_roi_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_bz_roi }
+		value = var:pp_cplan_bz_roi
+	}
+}
+
+# ---- Window readouts ----
 
 # Country scope: 1 while the plan runs.
 pp_cplan_on_n = {
@@ -305,7 +275,7 @@ pp_cplan_on_n = {
 	}
 }
 
-# Country scope: 1 while a rule group runs (they run by default; location rules while a location has its own).
+# Country scope: 1 while a rule group runs (they run by default).
 pp_cplan_food_n = {
 	value = 1
 	if = {
@@ -320,17 +290,17 @@ pp_cplan_logistics_n = {
 		value = 0
 	}
 }
-pp_cplan_goods_n = {
-	value = 1
-	if = {
-		limit = { has_variable = pp_cplan_goods_off }
-		value = 0
-	}
-}
 pp_cplan_improve_n = {
 	value = 1
 	if = {
 		limit = { has_variable = pp_cplan_improve_off }
+		value = 0
+	}
+}
+pp_cplan_business_n = {
+	value = 1
+	if = {
+		limit = { has_variable = pp_cplan_business_off }
 		value = 0
 	}
 }
@@ -345,27 +315,6 @@ pp_lprof_turn = {
 # Location scope: how full the location is (population over capacity), the improvement rule's order.
 pp_cplan_fill_here = {
 	value = location_population_percentage
-}
-pp_cplan_location_rules_n = {
-	value = 0
-	if = {
-		limit = { pp_cplan_has_own_locations = yes }
-		value = 1
-	}
-}
-
-# Country scope: locations of the country with own rules.
-pp_cplan_own_count = {
-	value = 0
-	every_in_list = {
-		variable = pp_cplan_own
-		limit = {
-			owner ?= root
-			has_variable = pp_cplan_mode
-			var:pp_cplan_mode < 101.5
-		}
-		add = 1
-	}
 }
 
 # Country scope: constructions the plan started in its last pass, and the gold they took.
@@ -386,128 +335,8 @@ pp_cplan_spent_n = {
 	}
 }
 
-# Country scope: the reserve in gold, for the panel.
-pp_cplan_reserve_gold_n = {
-	value = pp_cplan_reserve_gold
-}
-
-# Country scope: the preset last loaded (0 none; 1.. in [construction_plan.presets] order).
-pp_cplan_preset_n = {
-	value = 0
-	if = {
-		limit = { has_variable = pp_cplan_preset }
-		value = var:pp_cplan_preset
-		subtract = 100
-	}
-}
-
-# Country scope: the game's own building automation (the Automation panel), 1 while on (Plan tab).
-pp_cplan_auto_buildings_n = {
-	value = 0
-	if = {
-		limit = { is_system_automated = buildings }
-		value = 1
-	}
-}
-pp_cplan_auto_expand_n = {
-	value = 0
-	if = {
-		limit = { is_system_automated = expandbuildings }
-		value = 1
-	}
-}
-pp_cplan_auto_close_n = {
-	value = 0
-	if = {
-		limit = { is_system_automated = closebuildings }
-		value = 1
-	}
-}
-pp_cplan_auto_destroy_n = {
-	value = 0
-	if = {
-		limit = { is_system_automated = destroybuildings }
-		value = 1
-	}
-}
-
-# Province scope: the rule's state after the last pass (0 not run yet, 1 building, 2 blocked, 3 in band, 4 above band,
-# 5 hands off, 7 held back by the budget, 8 store not counted yet, 9 store full and no Granary possible).
-pp_cplan_status_n = {
-	value = 0
-	if = {
-		limit = { has_variable = pp_cplan_status }
-		value = var:pp_cplan_status
-		subtract = 100
-	}
-}
-
-# Province scope: stored months (the store the AI weights read).
-pp_cplan_stored_n = {
-	value = 0
-	if = {
-		limit = { has_variable = pp_stored_food_months }
-		value = var:pp_stored_food_months
-		subtract = 100
-	}
-	min = 0
-}
-
-# Location scope: the logistics override (0 follow the plan, 1 always, 2 never).
-pp_cplan_logi_n = {
-	value = 0
-	if = {
-		limit = { has_variable = pp_cplan_logi }
-		value = var:pp_cplan_logi
-		subtract = 100
-	}
-}
-
-# Location scope: the mode (0 the plan's global rules, 1 own rules, 2 hands off).
-pp_cplan_mode_n = {
-	value = 0
-	if = {
-		limit = { has_variable = pp_cplan_mode }
-		value = var:pp_cplan_mode
-		subtract = 100
-	}
-}
-
-# Location scope: the plan's payback estimate (years) of rule 1..4 at its last pass (0 none yet).
-pp_cplan_r1_est_n = {
-	value = 0
-	if = {
-		limit = { has_variable = pp_cplan_r1_est }
-		value = var:pp_cplan_r1_est
-		subtract = 100
-	}
-}
-pp_cplan_r2_est_n = {
-	value = 0
-	if = {
-		limit = { has_variable = pp_cplan_r2_est }
-		value = var:pp_cplan_r2_est
-		subtract = 100
-	}
-}
-pp_cplan_r3_est_n = {
-	value = 0
-	if = {
-		limit = { has_variable = pp_cplan_r3_est }
-		value = var:pp_cplan_r3_est
-		subtract = 100
-	}
-}
-pp_cplan_r4_est_n = {
-	value = 0
-	if = {
-		limit = { has_variable = pp_cplan_r4_est }
-		value = var:pp_cplan_r4_est
-		subtract = 100
-	}
-}
-
-# Location scope: why the plan built here last month (1 food, 2 logistics, 3 goods, 4 a location rule).
+# Location scope: why the plan built here last month (1 food, 2 logistics, 3 business, 5 a location profile,
+# 6 improvements).
 pp_cplan_why_n = {
 	value = 0
 	if = {
@@ -515,10 +344,4 @@ pp_cplan_why_n = {
 		value = var:pp_cplan_log_why
 		subtract = 100
 	}
-}
-
-# Location scope: market access in % as the logistics rule reads it (event modifiers taken out), for the Logistics tab.
-pp_cplan_access_here = {
-	value = pp_cplan_access_normal
-	multiply = 100
 }

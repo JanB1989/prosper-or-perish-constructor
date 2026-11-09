@@ -3,8 +3,11 @@ mod/pp/.../pp_location_profiles*; contract docs/location_profiles.md)."""
 
 from __future__ import annotations
 
+import dataclasses
 import re
 from pathlib import Path
+
+import pytest
 
 from prosper_or_perish_constructor import construction_plan as cp
 from prosper_or_perish_constructor import location_plan as lp
@@ -169,62 +172,29 @@ def test_flags_and_scopes_are_declared() -> None:
     assert "pp_lprof_declare_flags = yes" in never
 
 
-GROUPS = ("profiles", "own", "food", "logistics", "improve", "goods")
-
-
-def test_monthly_pass_order_and_global_rules() -> None:
-    """Every rule group with its own share; the order turns with the month (each group first twice a year: with
-    little gold the first group took it every month, AI test run 2026-11-09). A profile takes from the global rules only
-    what it sets (Jan 2026-11-09): its rules' targets and the groups it switches off; the rest build there too."""
-    effects = _code(PLAN_EFFECTS)
-    run = _block(effects, "pp_cplan_run")
-    branches = re.findall(r"limit = \{ OR = \{ current_month = (\d+) current_month = (\d+) \} \}\n((?:\t*pp_cplan_group_\w+ = yes\n)+)", run)
-    assert [(int(a), int(b)) for a, b, _ in branches] == [(m, m + 6) for m in range(1, 7)]
-    firsts = []
-    for _, _, calls in branches:
-        seq = re.findall(r"pp_cplan_group_(\w+) = yes", calls)
-        assert sorted(seq) == sorted(GROUPS)
-        firsts.append(seq[0])
-    assert sorted(firsts) == sorted(GROUPS)  # every group goes first in one pair of months
-    assert run.index("set_variable = { name = pp_cplan_cap value = 100 }") < run.index("current_month = 1")
-    for group, marker in (("profiles", "pp_lprof_run = yes"), ("own", "pp_cplan_location_rules = yes"),
-                          ("food", "pp_cplan_food_province = yes"), ("logistics", "pp_cplan_try_logistics_here = yes"),
-                          ("improve", "pp_cplan_try_improve_here = yes"), ("goods", "pp_cplan_goods_run = yes")):
-        assert marker in _block(effects, f"pp_cplan_group_{group}"), group
-    triggers = _code(PLAN_TRIGGERS)
-    assert "pp_lprof" not in _block(triggers, "pp_cplan_location_ok")
-    # each global group: the base check, its own switch, and the targets a profile rule takes over
-    expect = {
-        "pp_cplan_food_ok": ("pp_cplan_location_ok = yes", "has_variable = pp_lprof_xf"),
-        "pp_cplan_farm_ok": ("pp_cplan_food_ok = yes", "pp_lprof_food_target = yes"),
-        "pp_cplan_victuals_ok": ("pp_cplan_food_ok = yes", "pp_lprof_has_good = { g = victuals }"),
-        "pp_cplan_logistics_ok": ("has_variable = pp_lprof_xl", "pp_lprof_has_good = { g = logistics }"),
-        "pp_cplan_improve_ok": ("pp_cplan_location_ok = yes", "has_variable = pp_lprof_xi"),
-        "pp_cplan_goods_ok": ("has_variable = pp_lprof_xg", "pp_lprof_has_good = { g = $g$ }"),
-    }
-    for name, needles in expect.items():
-        block = _block(triggers, name)
-        for needle in needles:
-            assert needle in block, (name, needle)
-    assert "add = pp_lprof_group_n" in _block(_code(PLAN_VALUES), "pp_cplan_groups_on")
-    # the goods rules pick their locations per good, logistics and improvements through their group check
-    plan = _code(MOD / cp.EFFECTS)
-    limits = re.findall(r"ordered_owned_location = \{\n\t*limit = \{([^\n]*)", plan)
-    assert limits
-    for limit in limits:
-        assert re.search(r"pp_cplan_goods_ok = \{ g = \w+ \}", limit), limit
-    for group, check in (("logistics", "pp_cplan_logistics_ok = yes"), ("improve", "pp_cplan_improve_ok = yes")):
-        block = _block(effects, f"pp_cplan_group_{group}")
-        assert check in block.split("ordered_owned_location")[1].split("order_by")[0], group
-    food = _block(_code(PLAN_EFFECTS), "pp_cplan_food_province")
-    assert "pp_cplan_farm_ok = yes" in food and "pp_cplan_victuals_ok = yes" in food and "pp_cplan_food_ok = yes" in food
-    assert "pp_cplan_location_ok" not in food
-    # the location copy carries the switches; the profile triggers read the rules' goods
-    fields = lpf.profile_fields(lpf.load_config(PROJECT))
+def test_global_rules_read_the_profile() -> None:
+    """A profile takes from the global rules only what it sets (Jan 2026-11-09): its rules' targets and the groups it
+    switches off; the rest build there too. The plan's group checks read the location's copy: every switch and every
+    target trigger reaches them. The profile group takes its part of the month's budget, and the first rule that starts
+    a construction ends the location's month."""
+    config = lpf.load_config(PROJECT)
+    plan = _code(PLAN_TRIGGERS) + _code(PLAN_EFFECTS) + _code(MOD / cp.EFFECTS)
+    fields = lpf.profile_fields(config)
     for name, _, _ in lpf.GLOBAL_GROUPS:
-        assert name in fields
+        assert name in fields, name  # the location copy carries the switch
+        assert f"has_variable = pp_lprof_{name}" in plan, f"no global group reads pp_lprof_{name}"
+    for trigger in ("pp_lprof_food_target = yes", "pp_lprof_has_good = { g = ", "pp_lprof_has_category = { c = "):
+        assert trigger in plan, f"no global group reads {trigger}"
+    assert "pp_lprof_group_n" in _code(PLAN_VALUES) + _code(MOD / cp.VALUES), "the profile group counts as a rule group"
+    # the triggers read the rules' targets in the location's copy (a category is a flag, compared as vanilla does)
     generated = _code(MOD / lpf.TRIGGERS)
-    assert "var:pp_lprof_r1_g = goods:$g$" in _block(generated, "pp_lprof_has_good")
+    has_good, has_category = _block(generated, "pp_lprof_has_good"), _block(generated, "pp_lprof_has_category")
+    for r in range(1, config.rules + 1):
+        assert f"AND = {{ has_variable = pp_lprof_r{r}_g var:pp_lprof_r{r}_g = goods:$g$ }}" in has_good, r
+        assert f"AND = {{ has_variable = pp_lprof_r{r}_c var:pp_lprof_r{r}_c = flag:$c$ }}" in has_category, r
+        assert f"r{r}_c" in fields, r
+    for name in ("pp_lprof_has_good", "pp_lprof_has_category", "pp_lprof_food_target"):
+        assert _block(generated, name).startswith("\n\thas_variable = pp_lprof\n"), name
     assert "goods:wheat" in _block(generated, "pp_lprof_food_target")
     hand = _code(MOD / lpf.HAND_EFFECTS)
     group = _block(hand, "pp_lprof_run")
@@ -235,9 +205,10 @@ def test_monthly_pass_order_and_global_rules() -> None:
     assert "has_variable = pp_cplan_hit" in rule and "value = 109" in rule
     rules = _block(_code(MOD / lpf.EFFECTS), "pp_lprof_location_rules")
     assert rules.count("remove_variable = pp_cplan_hit") == 2
-    # one layer per location: a profile drops own rules, own rules drop a profile
-    assert "remove_variable = pp_cplan_mode" in _block(hand, "pp_lprof_assign_to")
-    assert "pp_lprof_unassign = yes" in _block(_code(PLAN_EFFECTS), "pp_cplan_own_sync")
+    # a profile is all a location carries: the profile side knows no other per-location plan setting
+    for path in OWN_FILES:
+        text = _code(path)
+        assert "pp_cplan_mode" not in text and "pp_cplan_own" not in text, path.name
 
 
 def test_only_the_player() -> None:
@@ -567,5 +538,11 @@ def test_example_profiles_use_the_buttons_effects() -> None:
     assert hands_off and set(hands_off[0].off) == {group for _, _, group in lpf.GLOBAL_GROUPS}
     for _, flag, _ in lpf.GLOBAL_GROUPS:
         assert f"value = flag:{flag} }}" in body
-    window = _code(MOD / "in_game/gui/pp_location_profiles.gui")
-    assert "GetScriptedGui(\x27pp_lprof_examples\x27)" in window
+    # off names a plan group; the old goods group is the businesses group now (2026-11-09)
+    assert "businesses" in {group for _, _, group in lpf.GLOBAL_GROUPS}
+    wrong = dataclasses.replace(config, examples=(lpf.Example(lpf.DEFAULT_ICON, 1, off=("goods",)),))
+    with pytest.raises(ValueError, match="unknown global group goods"):
+        lpf.render_examples(lpf.profile_items(ROOT, PROJECT), wrong)
+    editor = _code(MOD / "in_game/gui/pp_location_profiles.gui")
+    editor = editor[editor.index("type pp_lprof_editor_tab = vbox"):editor.index('name = "pp_location_profiles_palette"')]
+    assert "GetScriptedGui(\x27pp_lprof_examples\x27)" in editor

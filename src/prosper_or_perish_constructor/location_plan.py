@@ -312,7 +312,7 @@ BUTTON = f"""
 		widget = {{ {BUTTON_MARK} (gui/pp_location_plan.gui)
 			parentanchor = right|vcenter
 			size = {{ 40 40 }}
-			position = {{ -90 0 }}
+			position = {{ -60 0 }}
 			visible = "[And(LocationView.GetLocation.GetOwner.IsPlayer, Not(IsObserving))]"
 
 			button_round_shortcut = {{

@@ -2980,7 +2980,8 @@ types ContextMenuSpecificTypes
 					ContextMenuEntry = {
 						blockoverride "click_action" {
 							title = "PP_LPROF_UI_MENU_EDIT_TT"
-							on_action = "[GetVariableSystem.Set('pp_lprof_open', 'yes')]"
+							on_action = "[GetVariableSystem.Set('pp_cplan_open', 'yes')]"
+							on_action = "[GetVariableSystem.Set('pp_cplan_tab', 'profiles')]"
 						}
 						blockoverride "entry_icon_texture" {
 							texture = "gfx/interface/buttons/flats/rename.dds"

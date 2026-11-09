@@ -10,17 +10,16 @@ copy), <out>/summary.md (plain tables for a terminal) and the CSVs behind every 
 The plan's test log (written by `debug_log` in test mode; the text may still change, so ALL of its parsing sits in
 `parse_debug_log` and the regex constants below). Every line of interest contains `PPCPLAN;`:
 - a construction: `PPCPLAN;B;<group>;<location key>;<building name>`, group a word of GROUPS or its why code
-  (101 food, 102 logistics, 103 goods, 104 rule, 105 profile, 106 improve);
+  (101 food, 102 logistics, 103 business, 105 profile, 106 improve);
 - a monthly pass: `PPCPLAN;P;<constructions started>;<gold spent>` (numbers may carry decimals);
 - the game date: the engine's `debug_log_date` writes its own line before each pass; the last date seen (DATE_RE or
   DATE_WORDS_RE) on a line without the tag, or before the tag on a tagged line, is the current game date.
 Lines start with a `[hh:mm:ss]` wall clock and often a `[file:line]:` prefix; the clock gives seconds per game year.
 When the game date jumps back (a save was loaded), the later play replaces the earlier from that date on.
 
-Save tables come from the Rust engine (`eu5gameparser.savegame.quick`). Not in its tables (2026-11-09): province
-variables (the food rule's `pp_cplan_status`), a location's population capacity (the improvement rule's fill line),
-scope-valued variables (a profile rule's target good) and a construction's missing goods. Their sections say so and
-use what is there instead.
+Save tables come from the Rust engine (`eu5gameparser.savegame.quick`). Not in its tables (2026-11-09): a location's
+population capacity (the improvement rule's fill line), scope-valued variables (a profile rule's target good) and a
+construction's missing goods. Their sections say so and use what is there instead.
 """
 
 from __future__ import annotations
@@ -57,8 +56,8 @@ MONTHS = ("january", "february", "march", "april", "may", "june", "july", "augus
 # 1 April 1337
 DATE_WORDS_RE = re.compile(r"\b(\d{1,2})\s+(" + "|".join(MONTHS) + r")\s*,?\s+(\d{3,4})\b", re.IGNORECASE)
 GAME_YEARS = (1000, 1999)  # a date outside these years is not the game date (keeps out real-world dates)
-GROUPS = ("food", "logistics", "goods", "rule", "profile", "improve")
-WHY_CODES = {str(100 + i): g for i, g in enumerate(GROUPS, start=1)}  # the plan's why codes 101..106
+GROUPS = ("food", "logistics", "business", "profile", "improve")
+WHY_CODES = {"101": "food", "102": "logistics", "103": "business", "105": "profile", "106": "improve"}  # the plan's why codes
 # error.log lines that belong to the plan
 ERROR_PATTERNS = ("pp_cplan", "pp_lprof", "pp_construction_plan", "pp_location_profiles", "construction_plan")
 
@@ -68,12 +67,9 @@ ERROR_PATTERNS = ("pp_cplan", "pp_lprof", "pp_construction_plan", "pp_location_p
 RULE_STATES = {1: "started", 2: "nothing to build", 3: "under construction", 4: "code 4", 5: "payback too long",
                6: "cannot be built here", 7: "budget", 8: "market lacks construction goods",
                9: "waiting for an earlier rule"}
-FOOD_STATES = {1: "building", 2: "short, nothing can be built", 3: "nothing due", 5: "hands off",
-               7: "held back (budget)", 8: "stored food not counted yet", 9: "granary due, none can be built",
-               10: "waiting: food building under construction"}
 NO_PROFIT = 999.0  # pp_lprof_r<r>_est 1099 - 100: the rule found no profit
 STORE_BANDS = ((0, 3, "under 3"), (3, 6, "3-6"), (6, 12, "6-12"), (12, 24, "12-24"), (24, math.inf, "24+"))
-KINDS = ("food", "logistics", "improve", "goods", "other")
+KINDS = ("food", "logistics", "improve", "business", "other")
 
 # chart colours: the run report's validated categorical order (light, and its steps for the dark surface)
 LIGHT_SERIES = ("#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#6250d6", "#e34948")
@@ -625,25 +621,6 @@ def food_stores(series: Sequence[tuple[str, Snapshot]], tag: str, settings: Sett
     return pl.DataFrame(rows, infer_schema_length=None)
 
 
-def food_statuses(series: Sequence[tuple[str, Snapshot]], tag: str) -> pl.DataFrame | None:
-    """Per save: provinces by the food rule's state (province variable pp_cplan_status), when the engine extracts
-    province variables (a `province_variables` table with province_id, name, value); None otherwise."""
-    rows = []
-    any_table = False
-    for label, snap in series:
-        pv, mine = _table(snap, "province_variables"), country_provinces(snap, tag)
-        if pv is None or mine is None:
-            continue
-        any_table = True
-        st = pv.filter(pl.col("name") == "pp_cplan_status").join(mine, on="province_id")
-        for code, n in st.group_by((pl.col("value") - 100).round(0).cast(pl.Int64).alias("c")).len().iter_rows():
-            rows.append({"series": label, "save": snap.name, "state": FOOD_STATES.get(code, f"code {code}"),
-                         "provinces": n})
-    if not any_table:
-        return None
-    return pl.DataFrame(rows, schema={"series": pl.Utf8, "save": pl.Utf8, "state": pl.Utf8, "provinces": pl.Int64})
-
-
 def market_access(series: Sequence[tuple[str, Snapshot]], tag: str, kinds: dict[str, str],
                   settings: Settings) -> pl.DataFrame:
     """Per save: owned locations the country controls, those below the logistics line, and logistics levels."""
@@ -857,7 +834,7 @@ def error_summary(lines: Iterable[str], patterns: Sequence[str] = ERROR_PATTERNS
 # ---------------------------------------------------------------------------------------------------------------------
 def building_kinds(repo: Path, project: Path, mod_root: Path, game_root: Path,
                    log: Callable[[str], None] = print) -> dict[str, str]:
-    """building type -> food / logistics / improve / goods, from the plan's own generated lists
+    """building type -> food / logistics / improve / business, from the plan's own generated lists
     (construction_plan.apply without writing); only the config's lists when that fails."""
     from prosper_or_perish_constructor import construction_plan
 
@@ -865,8 +842,7 @@ def building_kinds(repo: Path, project: Path, mod_root: Path, game_root: Path,
     try:
         res = construction_plan.apply(repo, project, mod_root, game_root, write=False)
         cfg = construction_plan.load_config(project)
-        for names in res.producers.values():
-            kinds.update({n: "goods" for n in names})
+        kinds.update({n: "business" for n in res.businesses})
         food = [b for tiers in res.food_lines.values() for b in tiers]
         food += [*cfg.kitchens, *cfg.taverns, *cfg.granaries, *cfg.granges, *cfg.yards]
         kinds.update({n: "food" for n in food})
@@ -1318,7 +1294,7 @@ def build_report(run: Sequence[Snapshot], out: Path, *, baseline: Sequence[Snaps
     sec.chart("Levels added per kind of building", chart_grouped_barh(by_kind, "kind", cols, out, "levels_by_kind",
                                                                        "building levels added"),
               "Kinds from the plan's own lists: food (farms, kitchens, Taverns, Granaries, Granges, Yards), logistics, "
-              "improvements, goods producers; other = everything else.")
+              "improvements, businesses; other = everything else.")
     sec.table("Levels added per kind", by_kind, _write_csv(by_kind, out, "levels_by_kind.csv"))
     key = "plan_extra" if "plan_extra" in by_type.columns else "run_added"
     top = by_type.sort(key, descending=True).head(15)
@@ -1384,12 +1360,6 @@ def build_report(run: Sequence[Snapshot], out: Path, *, baseline: Sequence[Snaps
     # 4. global rule groups
     sec = Section("global", "Global rule groups",
                   "What the food, logistics and improvement rules look at, in every save.")
-    statuses = food_statuses(series, tag)
-    if statuses is None:
-        sec.note("Food: the save tables have no province variables, so the food rule's state per province "
-                 "(pp_cplan_status) is not shown. The province stores below are the numbers it reads.")
-    else:
-        sec.table("Food rule state per province", statuses, _write_csv(statuses, out, "food_status.csv"))
     stores = food_stores(series, tag, settings)
     if stores.height:
         sec.chart("Provinces by stored months", chart_food_bands(stores, out),

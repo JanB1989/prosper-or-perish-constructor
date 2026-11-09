@@ -1,13 +1,12 @@
 ﻿# Prosper or Perish - Construction Plan triggers (player-only construction rules; see on_action/pp_construction_plan.txt).
 # Every trigger here runs inside pp_cplan_run, where scope:pp_cplan_country is the player country, unless noted.
 
-# Location scope: the global rules may build here (the player's own location, neither own rules nor hands off).
+# Location scope: the global rules may build here (the player's own location).
 # A location profile takes from the global rules only what it sets (Jan 2026-11-09): the targets of its rules and the
 # global groups it switches off (pp_lprof_x*); everything else the global groups still build there, so a profile need
-# not repeat them. The profile's rules run first each month. The checks per group follow.
+# not repeat them. The checks per group follow.
 pp_cplan_location_ok = {
 	owner ?= scope:pp_cplan_country
-	NOT = { has_variable = pp_cplan_mode }
 }
 
 # Location scope: the food rule may build here (the province capital's Tavern, kitchen, Granary).
@@ -41,21 +40,29 @@ pp_cplan_improve_ok = {
 	NOT = { has_variable = pp_lprof_xi }
 }
 
-# Location scope: the goods rule of $g$ may build here (a profile with a rule for $g$ decides it here).
-pp_cplan_goods_ok = {
+# Location scope: the business rule looks for a business here: the player's location, held by the player, with a
+# market, no construction under way (a location builds one at a time), and no profile here that keeps the businesses
+# out. A profile's own goods and categories are left out per building (generated pp_cplan_business_pick).
+pp_cplan_business_site = {
 	pp_cplan_location_ok = yes
 	NOT = { has_variable = pp_lprof_xg }
-	NOT = { pp_lprof_has_good = { g = $g$ } }
+	controller ?= scope:pp_cplan_country
+	num_civil_constructions < 1
+	market ?= { always = yes }
 }
 
-# Any scope: the month's budget is not used up (constructions started this month, also within the share of the
-# rule groups so far, gold above the reserve).
+# Any scope: the month's budget is not used up (the gold of the rule groups so far, and gold above the reserve).
 pp_cplan_budget_left = {
 	scope:pp_cplan_country = {
-		pp_cplan_started_n < pp_cplan_max_per_month
-		pp_cplan_started_n < pp_cplan_cap_n
-		gold > pp_cplan_reserve_gold
+		pp_cplan_spent_n < pp_cplan_cap_n
+		pp_cplan_free_gold > 0
 	}
+}
+
+# Location scope, after pp_cplan_btype_data: the next level of scope:pp_cplan_btype here fits in the gold above the
+# reserve (its cost by the engine's formula).
+pp_cplan_affordable = {
+	pp_cplan_est_cost <= scope:pp_cplan_country.pp_cplan_free_gold
 }
 
 # Any scope: the current rule has not built yet and the budget lasts.
@@ -64,32 +71,26 @@ pp_cplan_may_try = {
 	pp_cplan_budget_left = yes
 }
 
-# Location scope: the logistics rule wants a level here (location override Always, or market access without event
-# modifiers below the line while the owner controls the location; Never blocks it). The building's own gates (access,
-# building levels, one level at a time) still apply. No market-switch wait (Jan: no history): in run af7dce96, 98.7 %
-# of the owned locations below 97 % at a save were below it five years earlier too.
+# Location scope: the logistics rule wants a level here: market access without event modifiers below the line while
+# the owner controls the location. The building's own gates (access, building levels, one level at a time) still
+# apply. No market-switch wait (Jan: no history): in run af7dce96, 98.7 % of the owned locations below 97 % at a save
+# were below it five years earlier too.
 pp_cplan_logistics_wanted = {
-	pp_cplan_logi_n < 1.5
-	OR = {
-		pp_cplan_logi_n > 0.5
-		AND = {
-			controller ?= owner
-			pp_cplan_access_normal < pp_cplan_access_line
-		}
-	}
+	controller ?= owner
+	pp_cplan_access_normal < pp_cplan_access_line
 }
 
-# Province scope: the hunger rule: a normal year leaves less than the low end of the focus band in the store a year
-# from now (a bad harvest alone does not count, a province that refills by itself within the year neither).
+# Province scope: the hunger rule: a normal year leaves less than pp_cplan_hungry_months in the store a year from now
+# (a bad harvest alone does not count, a province that refills by itself within the year neither).
 pp_cplan_hungry = {
 	has_variable = pp_stored_food_months
-	pp_cplan_food_in_a_year < pp_cplan_band_lo
+	pp_cplan_food_in_a_year < pp_cplan_hungry_months
 }
 
-# Province scope: the famine rule (scope:pp_cplan_country's line): the same, below the famine line.
+# Province scope: the famine rule: the same, below the famine line.
 pp_cplan_famine = {
 	has_variable = pp_stored_food_months
-	pp_cplan_food_in_a_year < scope:pp_cplan_country.pp_cplan_famine_months
+	pp_cplan_food_in_a_year < pp_cplan_famine_months
 }
 
 # Province scope: the Granary rule: the store can hold less than the line's months of consumption, it is at least the
@@ -98,8 +99,8 @@ pp_cplan_famine = {
 pp_cplan_granary_due = {
 	has_variable = pp_stored_food_months
 	pp_cplan_capacity_months > 0
-	pp_cplan_capacity_months < scope:pp_cplan_country.pp_cplan_granary_cap
-	pp_cplan_fill_pct >= scope:pp_cplan_country.pp_cplan_granary_fill
+	pp_cplan_capacity_months < pp_cplan_granary_cap
+	pp_cplan_fill_pct >= pp_cplan_granary_fill
 	pp_cplan_normal_gain > 0
 }
 
@@ -109,48 +110,12 @@ pp_cplan_granary_due = {
 pp_cplan_grange_due = {
 	has_variable = pp_stored_food_months
 	var:pp_stored_food_months > 123.5
-	pp_cplan_normal_gain_pct >= scope:pp_cplan_country.pp_cplan_grange_surplus
+	pp_cplan_normal_gain_pct >= pp_cplan_grange_surplus
 }
 
 # Location scope: the location's market holds the victuals a Tavern would serve.
 pp_cplan_victuals_here = {
 	market ?= {
 		"stockpile_in_market(goods:victuals)" >= pp_cplan_tavern_victuals
-	}
-}
-
-# Country scope (root = this country, in the pass and in the panel): at least one location of the country follows its
-# own rules.
-pp_cplan_has_own_locations = {
-	any_in_list = {
-		variable = pp_cplan_own
-		owner ?= root
-		has_variable = pp_cplan_mode
-		var:pp_cplan_mode < 101.5
-	}
-}
-
-# Location scope: the condition of rule $n$ holds (no condition = always).
-pp_cplan_rule_cond = {
-	OR = {
-		NOT = { has_variable = pp_cplan_r$n$_m }
-		AND = {
-			NOT = { has_variable = pp_cplan_r$n$_c }
-			pp_cplan_r$n$_now >= pp_cplan_r$n$_t_n
-		}
-		AND = {
-			has_variable = pp_cplan_r$n$_c
-			pp_cplan_r$n$_now < pp_cplan_r$n$_t_n
-		}
-	}
-}
-
-# Location scope, after pp_cplan_btype_data: rule $n$'s payback limit allows the next level (no limit, or a building
-# that does not stand yet, or the plan's estimate within the limit).
-pp_cplan_rule_payback_ok = {
-	OR = {
-		NOT = { has_variable = pp_cplan_r$n$_pb }
-		pp_cplan_bt_levels < 0.5
-		pp_cplan_est_payback_years <= pp_cplan_r$n$_pb_n
 	}
 }

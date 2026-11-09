@@ -1,13 +1,16 @@
-﻿# Prosper or Perish - Location Profiles: the editor window and the paint palette (branch location-profiles,
-# 2026-11-07, Jan; docs/location_profiles.md). Scripted widgets (gui/scripted_widgets/pp_location_profiles.txt), so no
-# vanilla window is overridden. A profile is an icon, a colour and ordered build rules; the player gives it to
-# locations (Location Plan window row, the map's right-click menu, the paint palette in the Location Plan map mode),
-# and there its rules replace the Construction Plan's rules. The parts that follow [location_profiles] (slots, rules,
-# colours, symbols) and the items are generated (pp_location_profiles_generated.gui, location_profiles_gui.py); every
-# button runs a scripted GUI of common/scripted_guis/pp_location_profiles.txt (the script side). The editor shows the
-# script's edit buffer (pp_lprof_e_*: the slot pp_lprof_e_k), one body for every slot.
-# GUI variables: pp_lprof_open (window open), pp_lprof_pick (icon / r<r>: the item list is open for that field),
-# pp_lprof_brush (s<k> / none: paint mode).
+﻿# Prosper or Perish - Location Profiles: the editor and the paint palette (branch location-profiles, 2026-11-07, Jan;
+# docs/location_profiles.md). A profile is an icon, a colour and ordered build rules; the player gives it to locations
+# (Location Plan window row, the location window's Infrastructure tab, the map's right-click menu, the paint palette in
+# the Location Plan map mode), and there its rules build first, while the Construction Plan's global rules build what
+# it does not set. The editor is the type pp_lprof_editor_tab, the Construction Plan window's Location Profiles tab
+# (pp_construction_plan.gui; GUI variables pp_cplan_open = yes, pp_cplan_tab = profiles); every "Edit profiles" opens
+# that tab. The palette is a scripted widget (gui/scripted_widgets/pp_location_profiles.txt), so no vanilla window is
+# overridden. The parts that follow [location_profiles] (slots, rules, colours, symbols) and the items are generated
+# (pp_location_profiles_generated.gui, location_profiles_gui.py); every button runs a scripted GUI of
+# common/scripted_guis/pp_location_profiles.txt (the script side). The editor shows the script's edit buffer
+# (pp_lprof_e_*: the slot pp_lprof_e_k), one body for every slot.
+# GUI variables: pp_lprof_pick (icon / r<r>: the item list is open for that field), pp_lprof_brush (s<k> / none: paint
+# mode).
 # Shown only to a player who plays a country (observers' scripted GUIs do nothing).
 
 types PPLocationProfiles
@@ -25,8 +28,8 @@ types PPLocationProfiles
 
 	type pp_lprof_note = text_multi {
 		autoresize = yes
-		maximumsize = { 520 -1 }
-		minimumsize = { 520 -1 }
+		maximumsize = { 600 -1 }
+		minimumsize = { 600 -1 }
 		default_format = "#weak"
 	}
 
@@ -49,107 +52,71 @@ types PPLocationProfiles
 			}
 		}
 	}
-}
 
-# ---- Editor ----
-window = {
-	name = "pp_location_profiles_window"
-	visible = "[And3(GetVariableSystem.Exists('pp_lprof_open'), GetPlayer.Exists, Not(IsObserving))]"
-	position = { 1170 110 }
-	size = { 580 820 }
-	movable = yes
-	using = bg_window_default_alt
-	filter_mouse = all
+	# ---- Editor: the Construction Plan window's Location Profiles tab. Its parent is the tab's vbox (expanding both
+	# ways, inside the window's inner background, about 650 x 700): the note, the profiles in use with New / Start with
+	# the examples / Paint on the map, the edited profile (the edit buffer) and the item picker ----
+	type pp_lprof_editor_tab = vbox {
+		layoutpolicy_horizontal = expanding
+		layoutpolicy_vertical = expanding
+		margin = { 8 6 }
+		spacing = 5
 
-	vbox = {
-		using = window_margin_alt
+		pp_lprof_note = { text = "PP_LPROF_UI_NOTE" }
 
-		window_header_alt = {
-			blockoverride "header_text" {
-				text = "PP_LPROF_UI_TITLE"
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 6
+			pp_lprof_title = { text = "PP_LPROF_UI_YOURS" }
+			pp_lprof_icon_button = {
+				visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_lprof_first_free'), '(CFixedPoint)0')]"
+				tooltip = "PP_LPROF_UI_NEW_TT"
+				onclick = "[GetScriptedGui('pp_lprof_new').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_slot', MakeScopeFlag('next')).End)]"
+				onclick = "[GetVariableSystem.Clear('pp_lprof_pick')]"
+			}
+			button_regular = {
+				visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_lprof_used_n'), '(CFixedPoint)0'))]"
+				size = { 160 26 }
+				text = "PP_LPROF_UI_EXAMPLES"
+				tooltip = "PP_LPROF_UI_EXAMPLES_TT"
+				onclick = "[GetScriptedGui('pp_lprof_examples').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+				onclick = "[GetVariableSystem.Clear('pp_lprof_pick')]"
+			}
+			expand = {}
+			button_regular = {
+				size = { 120 26 }
+				text = "PP_LPROF_UI_PAINT_MAP"
+				tooltip = "PP_LPROF_UI_PAINT_MAP_TT"
+				onclick = "[GetMapMode('pp_location_plan').SetMapMode]"
 			}
 		}
 
-		vbox = {
-			using = layoutpolicy_expanding
-			using = bg_main_inner_notabs_alt
-			using = window_main_tabs_margin_alt
+		pp_lprof_slot_strip = {}
 
-			vbox = {
-				layoutpolicy_horizontal = expanding
-				layoutpolicy_vertical = expanding
-				margin = { 8 6 }
-				spacing = 5
+		pp_lprof_note = {
+			visible = "[Not(GetPlayer.MakeScope.Var('pp_lprof_e_k').IsSet)]"
+			text = "PP_LPROF_UI_PICK_SLOT"
+		}
 
-				pp_lprof_note = { text = "PP_LPROF_UI_NOTE" }
+		pp_lprof_editor = {}
 
-				hbox = {
-					layoutpolicy_horizontal = expanding
-					spacing = 6
-					pp_lprof_title = { text = "PP_LPROF_UI_YOURS" }
-					pp_lprof_icon_button = {
-						visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_lprof_first_free'), '(CFixedPoint)0')]"
-						tooltip = "PP_LPROF_UI_NEW_TT"
-						onclick = "[GetScriptedGui('pp_lprof_new').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_slot', MakeScopeFlag('next')).End)]"
-						onclick = "[GetVariableSystem.Clear('pp_lprof_pick')]"
-					}
-					button_regular = {
-						visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_lprof_used_n'), '(CFixedPoint)0'))]"
-						size = { 160 26 }
-						text = "PP_LPROF_UI_EXAMPLES"
-						tooltip = "PP_LPROF_UI_EXAMPLES_TT"
-						onclick = "[GetScriptedGui('pp_lprof_examples').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
-						onclick = "[GetVariableSystem.Clear('pp_lprof_pick')]"
-					}
-					expand = {}
-					button_regular = {
-						size = { 120 26 }
-						text = "PP_LPROF_UI_PAINT_MAP"
-						tooltip = "PP_LPROF_UI_PAINT_MAP_TT"
-						onclick = "[GetMapMode('pp_location_plan').SetMapMode]"
-					}
-				}
-
-				pp_lprof_slot_strip = {}
-
-				pp_lprof_note = {
-					visible = "[Not(GetPlayer.MakeScope.Var('pp_lprof_e_k').IsSet)]"
-					text = "PP_LPROF_UI_PICK_SLOT"
-				}
-
-				pp_lprof_editor = {}
-
-				scrollarea = {
-					visible = "[And(GetVariableSystem.Exists('pp_lprof_pick'), GetPlayer.MakeScope.Var('pp_lprof_e_k').IsSet)]"
-					layoutpolicy_horizontal = expanding
-					layoutpolicy_vertical = expanding
-					scrollbarpolicy_horizontal = always_off
-					scrollbar_vertical = { using = Scrollbar_Vertical }
-					scrollwidget = {
-						vbox = {
-							minimumsize = { 530 -1 }
-							maximumsize = { 530 -1 }
-							pp_lprof_picker = {}
-						}
-					}
-				}
-
-				expand = {
-					visible = "[Not(And(GetVariableSystem.Exists('pp_lprof_pick'), GetPlayer.MakeScope.Var('pp_lprof_e_k').IsSet))]"
+		scrollarea = {
+			visible = "[And(GetVariableSystem.Exists('pp_lprof_pick'), GetPlayer.MakeScope.Var('pp_lprof_e_k').IsSet)]"
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			scrollbarpolicy_horizontal = always_off
+			scrollbar_vertical = { using = Scrollbar_Vertical }
+			scrollwidget = {
+				vbox = {
+					minimumsize = { 590 -1 }
+					maximumsize = { 590 -1 }
+					pp_lprof_picker = {}
 				}
 			}
 		}
-	}
 
-	widget = {
-		parentanchor = right
-		position = { -5 5 }
-		size = { 40 40 }
-		button_close_alt = {
-			blockoverride "close_on_action" {
-				on_action = "[GetVariableSystem.Clear('pp_lprof_open')]"
-				on_action = "[GetVariableSystem.Clear('pp_lprof_pick')]"
-			}
+		expand = {
+			visible = "[Not(And(GetVariableSystem.Exists('pp_lprof_pick'), GetPlayer.MakeScope.Var('pp_lprof_e_k').IsSet))]"
 		}
 	}
 }
@@ -186,7 +153,8 @@ widget = {
 				size = { 110 26 }
 				text = "PP_LPROF_UI_EDIT_PROFILES"
 				tooltip = "PP_LPROF_UI_EDIT_PROFILES_TT"
-				onclick = "[GetVariableSystem.Set('pp_lprof_open', 'yes')]"
+				onclick = "[GetVariableSystem.Set('pp_cplan_open', 'yes')]"
+				onclick = "[GetVariableSystem.Set('pp_cplan_tab', 'profiles')]"
 			}
 			expand = {}
 		}

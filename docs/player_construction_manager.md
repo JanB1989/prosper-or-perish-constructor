@@ -1,10 +1,56 @@
 # Player Construction Manager: design brainstorm
 
-Status 2026-11-06: **v2 built** on branch `player-construction-manager` (architecture B; v1 and v2 tested in new games as
-England, error.log clean of plan lines). Player-only: the AI keeps its own logic and is never touched (a console-only
-test switch lets it run for an AI country in the test world). 2026-11-09: see "Built 2026-11-09" below.
+Status 2026-11-09: **two tabs** (Jan: "global settings that are very easy to set, and then our profiles, and that's
+it"), branch `location-profiles`; see the next section. The sections below it are the history (v1, v2, the first
+2026-11-09 pass); what they describe and the next section no longer lists is gone. Player-only: the AI keeps its own
+logic and is never touched (a console-only test switch lets it run for an AI country in the test world).
+
+## Two tabs (Jan 2026-11-09, evening)
+
+- **The window** (`in_game/gui/pp_construction_plan.gui`, vanilla main tabs): **Global Settings** and **Location
+  Profiles** (the profile editor, type `pp_lprof_editor_tab` in `pp_location_profiles.gui`; every opener of the old
+  editor window opens this tab: `docs/location_profiles.md`). Nothing else.
+- **Global Settings:** run the plan every month (on/off); the gold reserve in gold (default 1,000; - and + move it 100,
+  a right-click 1,000; a script cannot read typed text, the game's typed fields such as the loan amount are wired into
+  the engine); four rule groups, each with on/off and one line: Food per province (no line; its numbers stay at the
+  `[construction_plan]` defaults), Logistics per location (market access below the line, default 97 %, steps of 1),
+  Improvements per location (population over capacity from the line, default 90 %, steps of 10 from 50 to 300 %:
+  `location_population_percentage`, Jan's "old school" population / population capacity), Businesses (payback within
+  the line, default 10 years, steps of 1 from 1 to 50); "Last month": what the last pass built where and by which rule.
+- **The month's gold:** no limit on the number of constructions any more. A pass may spend the gold above the reserve
+  (`pp_cplan_pot`); each rule group that runs adds an equal part to `pp_cplan_cap`, so a part one group leaves passes
+  on; a group may go past its part with its last construction. No construction takes the treasury below the reserve:
+  `pp_cplan_construct_scoped` prices the level with the engine's formula (`pp_cplan_btype_data`, `pp_cplan_est_cost`)
+  and starts it only when it fits in the gold above the reserve (`pp_cplan_affordable`). The groups' order still turns
+  with the month (five groups now: every group goes first two or three times a year).
+- **Businesses (new rule group):** every building whose main good is a market good (the producers of
+  `market_short_weight.main_good`, 224 types; not the food rule's Taverns, kitchens, Granaries, Granges and Yards, not
+  logistics or improvements, not the hidden goods) wherever a level pays back within the line, the best yearly return
+  first across the country. Each pass: the country's part of the can-build check once per type
+  (`pp_cplan_business_types`, `can_build_building` in country scope, marks cleared after the group); then every free
+  site (the player's location, held by the player, with a market, no construction under way, no profile there that
+  keeps businesses out) picks its best candidate (`pp_cplan_business_pick`: the location can build it, max level and
+  allow included, the market holds its construction goods, no level of it here is closed, a profile here does not name
+  its good or its building category); then the picks are built in the order of their return while the gold lasts.
+  **Profit**, the same for a new building and one more level so the two compare: each slot's best method at the
+  market's prices and the location's output modifier of the good it makes, inputs at market prices, with **this year's
+  Variable Harvest taken out** (the `local_<good>_output_modifier` of the location's `pp_harvest_*` modifier, read per
+  sub-continent and severity into `scope:pp_cplan_hv_<good>`). Return = profit x 12 over the level's cost (the engine's
+  formula), in %; the line in years is 100 / return. Left out like the farm estimate: production efficiency, staffing,
+  market access, method unlocks (a method not researched yet still counts). Farms are businesses too: the food rule
+  builds them where a province is short, the business rule where they pay.
+- **Gone** (Jan: "the rest for now can go"): the Food, Goods, Logistics, Locations and Here tabs; the monthly
+  construction limit; the presets; the line about the game's own automation (the guards stay: no level for a closed
+  building, nothing where a construction is under way); the goods modes (Off / Keep / Expand / Never); the per-location
+  own rules and modes (Own Rules / Hands Off) and the location window's cog (the Location Plan button took its place);
+  the logistics overrides per location; the province focus and the food rule's state per province (the hunger line is
+  `hungry_months`, 6). A hands-off location is a profile with no rules and every global group switched off (the example
+  "hands off").
 
 ## Built (v2, Jan 2026-11-06: payback instead of cost/profit, a location layer, profiles)
+
+History: the location layer, the Here and Locations tabs, the cog, the presets and the goods modes below were removed
+on 2026-11-09 (two tabs). Payback and the guards stay.
 
 - **Payback is the one money number.** Payback = the gold the next level costs here over the profit one level makes
   here each month, in years. The cost is the engine's own formula, fitted in game on 158 real constructions (all within
@@ -91,6 +137,9 @@ test switch lets it run for an AI country in the test world). 2026-11-09: see "B
 
 ## Built (v1)
 
+History: the Food, Goods and Logistics tabs, the monthly limit, the reserve in months of income, the province focus and
+the logistics overrides below were removed on 2026-11-09 (two tabs). The food and logistics rules themselves stay.
+
 - **Construction Plan** panel (scripted widgets `pp_construction_plan` = opener button, `pp_construction_plan_window`;
   `in_game/gui/pp_construction_plan.gui`), tabs Plan / Food / Goods / Logistics. Off by default per country.
 - **Plan:** on/off, gold reserve (months of total income), most new constructions a month, rule groups on/off, "Last
@@ -172,11 +221,11 @@ test switch lets it run for an AI country in the test world). 2026-11-09: see "B
 
 ## Not built yet (from the mock-up and this doc)
 
-- Controls in PP's own windows (food panel rows, market goods list, location window); all controls sit in the panel.
-- "Next from the plan / blocked by" per location; pins per building (only per-location Hands Off).
-- Upgrades rule group; province focus preset from geography (every province starts on Standard).
-- The Logistics tab lists every location below full access, also those under the 15-level gate.
-- Not exercised in game: Expand while profitable, Never, multiplayer, a long run (cost not profiled; one country).
+- Lines for the food rule in the window (Jan 2026-11-09: "I'll take a look at that later"); its numbers are the
+  `[construction_plan]` defaults.
+- "Next from the plan / blocked by" per location; pins per building.
+- Upgrades rule group.
+- Not exercised in game: multiplayer, a long run of the business rule in a full world (cost not profiled there).
 Goal (Jan): a player sets rules once, coarse or fine, and buildings get queued when the conditions hold. It has to
 understand PP's own systems (Province Food and stores, logistics, farm land, the Cookshop budget), which Construction
 Manager does not.

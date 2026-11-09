@@ -2430,7 +2430,7 @@ pp_lprof_set_staged = {
 }
 
 # The global rule group scope:pp_field (global_food / ...) switched off in the profile's locations, or on again
-# (unset = on: the group builds there too, except the targets of the profile's own rules).
+# (unset = on: the group builds there too, except the targets of the profile's rules).
 pp_lprof_global_staged = {
 	switch = {
 		trigger = scope:pp_field
@@ -2461,7 +2461,7 @@ pp_lprof_global_staged = {
 				set_variable = { name = pp_lprof_s_xi value = 101 }
 			}
 		}
-		flag:global_goods = {
+		flag:global_business = {
 			if = {
 				limit = { has_variable = pp_lprof_s_xg }
 				remove_variable = pp_lprof_s_xg
@@ -2992,7 +2992,7 @@ pp_lprof_examples_do = {
 		pp_lprof_global_do = yes
 		save_scope_value_as = { name = pp_field value = flag:global_improve }
 		pp_lprof_global_do = yes
-		save_scope_value_as = { name = pp_field value = flag:global_goods }
+		save_scope_value_as = { name = pp_field value = flag:global_business }
 		pp_lprof_global_do = yes
 	}
 }
@@ -3039,8 +3039,8 @@ pp_lprof_declare_flags = {
 	set_variable = { name = pp_lprof_flag value = flag:furniture }
 	set_variable = { name = pp_lprof_flag value = flag:gems }
 	set_variable = { name = pp_lprof_flag value = flag:glass }
+	set_variable = { name = pp_lprof_flag value = flag:global_business }
 	set_variable = { name = pp_lprof_flag value = flag:global_food }
-	set_variable = { name = pp_lprof_flag value = flag:global_goods }
 	set_variable = { name = pp_lprof_flag value = flag:global_improve }
 	set_variable = { name = pp_lprof_flag value = flag:global_logistics }
 	set_variable = { name = pp_lprof_flag value = flag:goods_gold }

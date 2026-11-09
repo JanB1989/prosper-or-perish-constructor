@@ -638,12 +638,12 @@ types PPLocationProfilesGenerated
 		widget = { visible = "[GetPlayer.MakeScope.Var('pp_lprof_100_in').IsSet]" size = { 100% 100% } pp_lprof_flag = { frame = "[FixedPointToInt(Subtract_CFixedPoint(GetPlayer.MakeScope.Var('pp_lprof_100_in').GetValue, '(CFixedPoint)100'))]" } }
 	}
 
-	# The editor's profiles: click one to edit it (the new profile button sits in the window's header).
+	# The editor's profiles: click one to edit it (the new profile button sits in the row above them).
 	type pp_lprof_slot_strip = vbox {
 		layoutpolicy_horizontal = expanding
 		spacing = 2
 		flowcontainer = {
-			visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_1_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_2_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_3_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_4_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_5_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_6_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_7_on').IsSet, Or3(GetPlayer.MakeScope.Var('pp_lprof_8_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_9_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_10_on').IsSet))]"
+			visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_1_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_2_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_3_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_4_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_5_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_6_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_7_on').IsSet, Or5(GetPlayer.MakeScope.Var('pp_lprof_8_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_9_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_10_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_11_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_12_on').IsSet))]"
 			direction = horizontal
 			ignoreinvisible = yes
 			spacing = 4
@@ -777,12 +777,6 @@ types PPLocationProfilesGenerated
 					pp_lprof_face_10 = {}
 				}
 			}
-		}
-		flowcontainer = {
-			visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_11_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_12_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_13_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_14_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_15_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_16_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_17_on').IsSet, Or3(GetPlayer.MakeScope.Var('pp_lprof_18_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_19_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_20_on').IsSet))]"
-			direction = horizontal
-			ignoreinvisible = yes
-			spacing = 4
 			widget = {
 				visible = "[GetPlayer.MakeScope.Var('pp_lprof_11_on').IsSet]"
 				size = { 46 46 }
@@ -809,6 +803,12 @@ types PPLocationProfilesGenerated
 					pp_lprof_face_12 = {}
 				}
 			}
+		}
+		flowcontainer = {
+			visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_13_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_14_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_15_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_16_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_17_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_18_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_19_on').IsSet, Or5(GetPlayer.MakeScope.Var('pp_lprof_20_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_21_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_22_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_23_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_24_on').IsSet))]"
+			direction = horizontal
+			ignoreinvisible = yes
+			spacing = 4
 			widget = {
 				visible = "[GetPlayer.MakeScope.Var('pp_lprof_13_on').IsSet]"
 				size = { 46 46 }
@@ -913,12 +913,6 @@ types PPLocationProfilesGenerated
 					pp_lprof_face_20 = {}
 				}
 			}
-		}
-		flowcontainer = {
-			visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_21_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_22_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_23_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_24_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_25_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_26_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_27_on').IsSet, Or3(GetPlayer.MakeScope.Var('pp_lprof_28_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_29_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_30_on').IsSet))]"
-			direction = horizontal
-			ignoreinvisible = yes
-			spacing = 4
 			widget = {
 				visible = "[GetPlayer.MakeScope.Var('pp_lprof_21_on').IsSet]"
 				size = { 46 46 }
@@ -971,6 +965,12 @@ types PPLocationProfilesGenerated
 					pp_lprof_face_24 = {}
 				}
 			}
+		}
+		flowcontainer = {
+			visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_25_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_26_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_27_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_28_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_29_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_30_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_31_on').IsSet, Or5(GetPlayer.MakeScope.Var('pp_lprof_32_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_33_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_34_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_35_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_36_on').IsSet))]"
+			direction = horizontal
+			ignoreinvisible = yes
+			spacing = 4
 			widget = {
 				visible = "[GetPlayer.MakeScope.Var('pp_lprof_25_on').IsSet]"
 				size = { 46 46 }
@@ -1049,12 +1049,6 @@ types PPLocationProfilesGenerated
 					pp_lprof_face_30 = {}
 				}
 			}
-		}
-		flowcontainer = {
-			visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_31_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_32_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_33_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_34_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_35_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_36_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_37_on').IsSet, Or3(GetPlayer.MakeScope.Var('pp_lprof_38_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_39_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_40_on').IsSet))]"
-			direction = horizontal
-			ignoreinvisible = yes
-			spacing = 4
 			widget = {
 				visible = "[GetPlayer.MakeScope.Var('pp_lprof_31_on').IsSet]"
 				size = { 46 46 }
@@ -1133,6 +1127,12 @@ types PPLocationProfilesGenerated
 					pp_lprof_face_36 = {}
 				}
 			}
+		}
+		flowcontainer = {
+			visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_37_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_38_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_39_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_40_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_41_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_42_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_43_on').IsSet, Or5(GetPlayer.MakeScope.Var('pp_lprof_44_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_45_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_46_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_47_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_48_on').IsSet))]"
+			direction = horizontal
+			ignoreinvisible = yes
+			spacing = 4
 			widget = {
 				visible = "[GetPlayer.MakeScope.Var('pp_lprof_37_on').IsSet]"
 				size = { 46 46 }
@@ -1185,12 +1185,6 @@ types PPLocationProfilesGenerated
 					pp_lprof_face_40 = {}
 				}
 			}
-		}
-		flowcontainer = {
-			visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_41_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_42_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_43_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_44_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_45_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_46_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_47_on').IsSet, Or3(GetPlayer.MakeScope.Var('pp_lprof_48_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_49_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_50_on').IsSet))]"
-			direction = horizontal
-			ignoreinvisible = yes
-			spacing = 4
 			widget = {
 				visible = "[GetPlayer.MakeScope.Var('pp_lprof_41_on').IsSet]"
 				size = { 46 46 }
@@ -1295,6 +1289,12 @@ types PPLocationProfilesGenerated
 					pp_lprof_face_48 = {}
 				}
 			}
+		}
+		flowcontainer = {
+			visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_49_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_50_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_51_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_52_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_53_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_54_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_55_on').IsSet, Or5(GetPlayer.MakeScope.Var('pp_lprof_56_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_57_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_58_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_59_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_60_on').IsSet))]"
+			direction = horizontal
+			ignoreinvisible = yes
+			spacing = 4
 			widget = {
 				visible = "[GetPlayer.MakeScope.Var('pp_lprof_49_on').IsSet]"
 				size = { 46 46 }
@@ -1321,12 +1321,6 @@ types PPLocationProfilesGenerated
 					pp_lprof_face_50 = {}
 				}
 			}
-		}
-		flowcontainer = {
-			visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_51_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_52_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_53_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_54_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_55_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_56_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_57_on').IsSet, Or3(GetPlayer.MakeScope.Var('pp_lprof_58_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_59_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_60_on').IsSet))]"
-			direction = horizontal
-			ignoreinvisible = yes
-			spacing = 4
 			widget = {
 				visible = "[GetPlayer.MakeScope.Var('pp_lprof_51_on').IsSet]"
 				size = { 46 46 }
@@ -1459,7 +1453,7 @@ types PPLocationProfilesGenerated
 			}
 		}
 		flowcontainer = {
-			visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_61_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_62_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_63_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_64_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_65_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_66_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_67_on').IsSet, Or3(GetPlayer.MakeScope.Var('pp_lprof_68_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_69_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_70_on').IsSet))]"
+			visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_61_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_62_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_63_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_64_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_65_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_66_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_67_on').IsSet, Or5(GetPlayer.MakeScope.Var('pp_lprof_68_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_69_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_70_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_71_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_72_on').IsSet))]"
 			direction = horizontal
 			ignoreinvisible = yes
 			spacing = 4
@@ -1593,12 +1587,6 @@ types PPLocationProfilesGenerated
 					pp_lprof_face_70 = {}
 				}
 			}
-		}
-		flowcontainer = {
-			visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_71_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_72_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_73_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_74_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_75_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_76_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_77_on').IsSet, Or3(GetPlayer.MakeScope.Var('pp_lprof_78_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_79_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_80_on').IsSet))]"
-			direction = horizontal
-			ignoreinvisible = yes
-			spacing = 4
 			widget = {
 				visible = "[GetPlayer.MakeScope.Var('pp_lprof_71_on').IsSet]"
 				size = { 46 46 }
@@ -1625,6 +1613,12 @@ types PPLocationProfilesGenerated
 					pp_lprof_face_72 = {}
 				}
 			}
+		}
+		flowcontainer = {
+			visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_73_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_74_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_75_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_76_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_77_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_78_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_79_on').IsSet, Or5(GetPlayer.MakeScope.Var('pp_lprof_80_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_81_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_82_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_83_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_84_on').IsSet))]"
+			direction = horizontal
+			ignoreinvisible = yes
+			spacing = 4
 			widget = {
 				visible = "[GetPlayer.MakeScope.Var('pp_lprof_73_on').IsSet]"
 				size = { 46 46 }
@@ -1729,12 +1723,6 @@ types PPLocationProfilesGenerated
 					pp_lprof_face_80 = {}
 				}
 			}
-		}
-		flowcontainer = {
-			visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_81_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_82_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_83_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_84_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_85_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_86_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_87_on').IsSet, Or3(GetPlayer.MakeScope.Var('pp_lprof_88_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_89_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_90_on').IsSet))]"
-			direction = horizontal
-			ignoreinvisible = yes
-			spacing = 4
 			widget = {
 				visible = "[GetPlayer.MakeScope.Var('pp_lprof_81_on').IsSet]"
 				size = { 46 46 }
@@ -1787,6 +1775,12 @@ types PPLocationProfilesGenerated
 					pp_lprof_face_84 = {}
 				}
 			}
+		}
+		flowcontainer = {
+			visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_85_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_86_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_87_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_88_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_89_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_90_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_91_on').IsSet, Or5(GetPlayer.MakeScope.Var('pp_lprof_92_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_93_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_94_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_95_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_96_on').IsSet))]"
+			direction = horizontal
+			ignoreinvisible = yes
+			spacing = 4
 			widget = {
 				visible = "[GetPlayer.MakeScope.Var('pp_lprof_85_on').IsSet]"
 				size = { 46 46 }
@@ -1865,12 +1859,6 @@ types PPLocationProfilesGenerated
 					pp_lprof_face_90 = {}
 				}
 			}
-		}
-		flowcontainer = {
-			visible = "[Or8(GetPlayer.MakeScope.Var('pp_lprof_91_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_92_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_93_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_94_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_95_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_96_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_97_on').IsSet, Or3(GetPlayer.MakeScope.Var('pp_lprof_98_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_99_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_100_on').IsSet))]"
-			direction = horizontal
-			ignoreinvisible = yes
-			spacing = 4
 			widget = {
 				visible = "[GetPlayer.MakeScope.Var('pp_lprof_91_on').IsSet]"
 				size = { 46 46 }
@@ -1949,6 +1937,12 @@ types PPLocationProfilesGenerated
 					pp_lprof_face_96 = {}
 				}
 			}
+		}
+		flowcontainer = {
+			visible = "[Or4(GetPlayer.MakeScope.Var('pp_lprof_97_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_98_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_99_on').IsSet, GetPlayer.MakeScope.Var('pp_lprof_100_on').IsSet)]"
+			direction = horizontal
+			ignoreinvisible = yes
+			spacing = 4
 			widget = {
 				visible = "[GetPlayer.MakeScope.Var('pp_lprof_97_on').IsSet]"
 				size = { 46 46 }
@@ -2583,10 +2577,10 @@ types PPLocationProfilesGenerated
 				button_checkbox = {
 					size = { 22 22 }
 					down = "[Not(GetPlayer.MakeScope.Var('pp_lprof_e_xg').IsSet)]"
-					tooltip = "PP_LPROF_UI_GLOBAL_GOODS_TT"
-					onclick = "[GetScriptedGui('pp_lprof_global').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_slot', MakeScopeFlag('e')).AddScope('pp_field', MakeScopeFlag('global_goods')).End)]"
+					tooltip = "PP_LPROF_UI_GLOBAL_BUSINESS_TT"
+					onclick = "[GetScriptedGui('pp_lprof_global').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_slot', MakeScopeFlag('e')).AddScope('pp_field', MakeScopeFlag('global_business')).End)]"
 				}
-				pp_lprof_label = { text = "PP_LPROF_UI_GLOBAL_GOODS" }
+				pp_lprof_label = { text = "PP_LPROF_UI_GLOBAL_BUSINESS" }
 			}
 			expand = {}
 		}
@@ -3893,7 +3887,8 @@ types PPLocationProfilesGenerated
 				size = { 110 26 }
 				text = "PP_LPROF_UI_EDIT_PROFILES"
 				tooltip = "PP_LPROF_UI_EDIT_PROFILES_TT"
-				onclick = "[GetVariableSystem.Set('pp_lprof_open', 'yes')]"
+				onclick = "[GetVariableSystem.Set('pp_cplan_open', 'yes')]"
+				onclick = "[GetVariableSystem.Set('pp_cplan_tab', 'profiles')]"
 			}
 		}
 		flowcontainer = {
@@ -6589,7 +6584,8 @@ types PPLocationProfilesGenerated
 					blockoverride "header_button_full_content" {}
 					size = { 30 30 }
 					tooltip = "PP_LPROF_UI_EDIT_PROFILES_TT"
-					onclick = "[GetVariableSystem.Set('pp_lprof_open', 'yes')]"
+					onclick = "[GetVariableSystem.Set('pp_cplan_open', 'yes')]"
+					onclick = "[GetVariableSystem.Set('pp_cplan_tab', 'profiles')]"
 					icon = { size = { 20 20 } parentanchor = center texture = "gfx/interface/buttons/flats/list_button.dds" using = button_regular_icon_color }
 				}
 				header_button_left = {

@@ -163,7 +163,7 @@ def test_every_profile_part_is_there() -> None:
     for symbol in config.symbols:
         assert f"MakeScopeFlag('{symbol.key}')" in generated, symbol.key
     assert lp.icon_exists(lp.Item(m.MARKET_ACCESS, "good", "access"), MOD, vanilla_root(ROOT, PROJECT))
-    # a new profile: one button in the window's header, shown while a slot is free
+    # a new profile: one button in the editor's "Your profiles" row, shown while a slot is free
     window = _read(WINDOW)
     assert m.player_call("pp_lprof_new", pp_slot=m.NEXT) in window
     assert "ScriptValue('pp_lprof_first_free')" in window
@@ -179,12 +179,14 @@ def test_types_are_defined() -> None:
 
 
 def test_scripted_widgets_are_registered() -> None:
+    """Only the paint palette is a scripted widget; the editor is a tab of the Construction Plan window."""
     lines = [line.split(" = ") for line in _read(WIDGETS).splitlines() if line.strip()]
     window = _read(WINDOW)
     assert {path for path, _ in lines} == {"gui/pp_location_profiles.gui"}
     for _, name in lines:
         assert f'name = "{name}"' in window, name
-    assert {name for _, name in lines} == {"pp_location_profiles_window", "pp_location_profiles_palette"}
+    assert {name for _, name in lines} == {"pp_location_profiles_palette"}
+    assert len(re.findall(r"^(?:window|widget) = \{", window, re.MULTILINE)) == 1
 
 
 def test_loc_keys_exist() -> None:
@@ -296,10 +298,41 @@ def test_plan_window_row_and_player_only() -> None:
     assert "pp_lprof_plan_row = {}" in _read(PLAN_WINDOW)
     assert "type pp_lprof_plan_row = vbox" in _read(GENERATED)
     window = _read(WINDOW)
-    for name in ("pp_location_profiles_window", "pp_location_profiles_palette"):
-        block = window[window.index(f'name = "{name}"'):][:300]
-        assert "Not(IsObserving)" in block and "GetPlayer.Exists" in block, name
-    assert "GetMapMode('pp_location_plan').IsSet" in window[window.index('name = "pp_location_profiles_palette"'):][:300]
+    block = window[window.index('name = "pp_location_profiles_palette"'):][:300]
+    assert "Not(IsObserving)" in block and "GetPlayer.Exists" in block
+    assert "GetMapMode('pp_location_plan').IsSet" in block
+
+
+def test_editor_is_the_plan_window_tab() -> None:
+    """Jan 2026-11-09: the Construction Plan window has two tabs, Global settings and Location profiles. The editor's
+    body is the type pp_lprof_editor_tab, which the plan window shows on its profiles tab (it fills the tab's vbox)."""
+    window = _read(WINDOW)
+    start = window.index("\ttype pp_lprof_editor_tab = vbox {")
+    tab = window[start:lp._marker_block_end(window, start)]
+    for needle in ("layoutpolicy_horizontal = expanding", "layoutpolicy_vertical = expanding", "pp_lprof_slot_strip = {}",
+                   "pp_lprof_editor = {}", "pp_lprof_picker = {}", 'text = "PP_LPROF_UI_NOTE"', 'text = "PP_LPROF_UI_YOURS"',
+                   "GetScriptedGui('pp_lprof_new')", "GetScriptedGui('pp_lprof_examples')", "GetMapMode('pp_location_plan').SetMapMode"):
+        assert needle in tab, needle
+    plan = _read(MOD / "in_game/gui/pp_construction_plan.gui")
+    assert plan.count("pp_lprof_editor_tab = {}") == 1, "the plan window shows the editor tab once"
+    assert "'pp_cplan_tab', 'profiles'" in plan
+
+
+def test_every_editor_opener_opens_the_plan_tab() -> None:
+    """Every "Edit profiles" (the palette, the Location Plan window's and the location window's Profile rows, the
+    right-click menu) opens the Construction Plan window on its Location profiles tab; no editor window of its own."""
+    assert m.OPEN_EDITOR == ("[GetVariableSystem.Set('pp_cplan_open', 'yes')]",
+                             "[GetVariableSystem.Set('pp_cplan_tab', 'profiles')]")
+    texts = _gui_texts()
+    assert "pp_lprof_open" not in _all_text() + _read(WIDGETS) + _read(PLAN_WINDOW) + _read(MOD / "in_game/gui/location_window.gui")
+    found = {}
+    for name, text in texts.items():
+        for match in re.finditer(r'(?:tooltip|title) = "PP_LPROF_UI_(?:EDIT_PROFILES|MENU_EDIT)_TT"', text):
+            actions = re.findall(r'(?:onclick|on_action) = "([^"]+)"', text[match.end():text.index("}", match.end())])
+            assert tuple(actions) == m.OPEN_EDITOR, f"{name}: {actions}"
+            found[name] = found.get(name, 0) + 1
+    # the palette; the Location Plan window's and the location window's Profile rows; the right-click menu
+    assert found == {WINDOW.name: 1, GENERATED.name: 2, "context_menu section": 1}
 
 
 def test_gui_functions_exist_in_the_data_type_dump() -> None:
@@ -345,8 +378,8 @@ def test_location_window_has_the_profile_row() -> None:
     assert "pp_lprof_gold" not in row and "button_regular = {" not in row and "#yellow_titles" not in row
     # the header buttons: vanilla's shortcut types, 30 px apart (rename sits at 30, go to at -30)
     assert "button_minimize" not in window[window.index(lp.BUTTON_MARK) - 200:window.index(lp.BUTTON_MARK) + 2000]
-    assert "position = { -90 0 }" in window and "position = { -60 0 }" in window
-    assert "button_round_shortcut = {" in window and "button_automation_shortcut = {" in window
+    assert "position = { -60 0 }" in window and "position = { -90 0 }" not in window
+    assert "button_round_shortcut = {" in window and "button_automation_shortcut = {" not in window
 
 
 def _with_slots(config: m.Config, slots: int) -> m.Config:

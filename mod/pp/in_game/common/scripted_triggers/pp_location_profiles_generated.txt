@@ -64,6 +64,19 @@ pp_lprof_has_good = {
 	}
 }
 
+# Location scope: a rule of the location's profile has the building category $c$ (a category key such as
+# trade_category) as its target (that category is the profile's here: the global rules leave its buildings to it).
+pp_lprof_has_category = {
+	has_variable = pp_lprof
+	OR = {
+		AND = { has_variable = pp_lprof_r1_c var:pp_lprof_r1_c = flag:$c$ }
+		AND = { has_variable = pp_lprof_r2_c var:pp_lprof_r2_c = flag:$c$ }
+		AND = { has_variable = pp_lprof_r3_c var:pp_lprof_r3_c = flag:$c$ }
+		AND = { has_variable = pp_lprof_r4_c var:pp_lprof_r4_c = flag:$c$ }
+		AND = { has_variable = pp_lprof_r5_c var:pp_lprof_r5_c = flag:$c$ }
+	}
+}
+
 # Location scope: a rule of the location's profile has a staple food as its target (the profile decides which
 # food is made here: the food rule's farm step stands back). Staple foods: legumes, maize, millet, potato, rice, wheat, camels, livestock, wool, fish, wild_game, fruit, olives.
 pp_lprof_food_target = {

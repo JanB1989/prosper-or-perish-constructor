@@ -1940,8 +1940,7 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
 
     plan = construction_plan.apply(repo, project, mod_root, vanilla_root(repo, project))
     print(
-        f"Construction Plan (player rules): {len(plan.goods)} goods with "
-        f"{sum(len(names) for names in plan.producers.values())} producers, {len(plan.farm_lines)} farm lines, "
+        f"Construction Plan (player rules): {len(plan.businesses)} business types, {len(plan.farm_lines)} farm lines, "
         f"{len(plan.logistics)} logistics buildings, {plan.files_changed} files changed"
         + (f"; UNKNOWN buildings: {', '.join(plan.missing)}." if plan.missing else "."),
         flush=True,

@@ -4,6 +4,7 @@ mod/pp/.../pp_construction_plan*)."""
 from __future__ import annotations
 
 import re
+from functools import lru_cache
 from pathlib import Path
 
 from prosper_or_perish_constructor import construction_plan as cp
@@ -12,12 +13,16 @@ from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT / "constructor.toml"
 MOD = ROOT / "mod" / "pp"
-GUI_FILES = (MOD / "in_game/gui/pp_construction_plan.gui", MOD / cp.GUI, MOD / cp.HERE_GUI)
+WINDOW = MOD / "in_game/gui/pp_construction_plan.gui"
+PROFILES_GUI = MOD / "in_game/gui/pp_location_profiles.gui"
 LOC = MOD / "main_menu/localization/english/pp_construction_plan_l_english.yml"
 SCRIPTED_GUIS = MOD / "in_game/common/scripted_guis/pp_construction_plan.txt"
 ON_ACTION = MOD / "in_game/common/on_action/pp_construction_plan.txt"
 EFFECTS = MOD / "in_game/common/scripted_effects/pp_construction_plan.txt"
+TRIGGERS = MOD / "in_game/common/scripted_triggers/pp_construction_plan.txt"
+VALUES = MOD / "in_game/common/script_values/pp_construction_plan.txt"
 LOCATION_WINDOW = MOD / "in_game/gui/location_window.gui"
+PROFILE_EFFECTS = MOD / "in_game/common/scripted_effects/pp_location_profiles.txt"
 
 
 def _read(path: Path) -> str:
@@ -32,86 +37,214 @@ def _defined_keys(folder: Path) -> set[str]:
     return keys
 
 
+def _effect(text: str, name: str) -> str:
+    match = re.search(rf"^{name} = \{{\n(.*?)^\}}", text, re.MULTILINE | re.DOTALL)
+    assert match, name
+    return match.group(1)
+
+
+def _plan_script_files() -> list[Path]:
+    common = MOD / "in_game/common"
+    return sorted(common.glob("*/pp_construction_plan*.txt"))
+
+
+@lru_cache(maxsize=1)
+def _result() -> cp.Result:
+    return cp.apply(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT), write=False)
+
+
 def test_built_mod_is_in_step() -> None:
-    result = cp.apply(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT), write=False)
+    result = _result()
     assert result.files_changed == 0, "run ppc finalize"
     assert result.missing == [], f"buildings the game does not know: {result.missing}"
-    assert len(result.goods) > 60
-    assert "iron_mine" in result.producers["iron"]
+    assert len(result.businesses) > 150
+    assert result.businesses["iron_mine"] == "iron" and result.businesses["wheat_farm"] == "wheat"
     assert result.farm_lines["wheat"][0] == "wheat_farm"
 
 
-def test_focus_ids_match_the_panel() -> None:
-    """The panel's focus labels are written by hand for these ids."""
-    ids = cp.focus_ids(cp.load_config(PROJECT))
-    assert ids == {"standard": 1, "breadbasket": 2, "market_town": 3, "workshop": 4, "hands_off": 5, "custom": 6}
-    gui = _read(GUI_FILES[0])
-    loc = _read(LOC)
-    for name, number in ids.items():
-        key = f"PP_CPLAN_FOCUS_{name.upper()}"
-        assert f"'(CFixedPoint){number}')]\" text = \"{key}\"" in gui
-        assert f"  {key}:" in loc
+# ---- The window: two tabs (Jan 2026-11-09) ----
 
 
-def test_panel_references_exist() -> None:
+def test_window_references_exist() -> None:
     guis = _read(SCRIPTED_GUIS) + "\n"
     script_values = _defined_keys(MOD / "in_game/common/script_values")
     loc = _read(LOC)
     loc_keys = set(re.findall(r"^  ([A-Z0-9_]+):", loc, re.MULTILINE))
-    cog = re.search(r"# PP: Construction Plan.*?BasicFunctionalTooltip", _read(LOCATION_WINDOW), re.DOTALL)
-    assert cog, "the location window lost the Construction Plan cog"
-    text = "".join(_read(path) for path in GUI_FILES) + loc + cog.group(0)
+    text = _read(WINDOW) + loc
     for name in set(re.findall(r"GetScriptedGui\('([a-z0-9_]+)'\)", text)):
         assert re.search(rf"^{name} = \{{", guis, re.MULTILINE), f"scripted GUI {name} missing"
     for name in set(re.findall(r"ScriptValue\('([a-z0-9_]+)'\)", text)):
         assert name in script_values, f"script value {name} missing"
     for key in set(re.findall(r"\"(PP_CPLAN_[A-Z0-9_]+)\"", text)):
         assert key in loc_keys, f"text {key} missing"
+    # the second tab is the profile editor, a type of the profiles' GUI file
+    assert "pp_lprof_editor_tab = {}" in _read(WINDOW)
+    assert re.search(r"type pp_lprof_editor_tab = vbox", _read(PROFILES_GUI))
 
 
-def test_slot_counts_match_the_hand_written_parts() -> None:
-    """The rule slots and presets of [construction_plan] are also spelled out by hand in the engine and panel."""
-    config = cp.load_config(PROJECT)
-    effects = _read(EFFECTS)
-    rules = re.search(r"^pp_cplan_location_rules = \{(.*?)^\}", effects, re.MULTILINE | re.DOTALL).group(1)
-    assert re.findall(r"pp_cplan_rule = \{ n = (\d) \}", rules) == [str(n) for n in range(1, config.rule_slots + 1)]
-    add = re.search(r"^pp_cplan_add_rule = \{(.*?)^\}", effects, re.MULTILINE | re.DOTALL).group(1)
-    assert sorted(set(re.findall(r"pp_cplan_fill_rule = \{ n = (\d) \}", add))) == [str(n) for n in range(1, config.rule_slots + 1)]
-    gui = _read(GUI_FILES[0])
-    assert re.findall(r"pp_cplan_rule_row_(\d) = \{\}", gui) == [str(n) for n in range(1, config.rule_slots + 1)]
-    presets = re.findall(r"pp_cplan_preset'\)\.Execute\(GuiScope\.SetRoot\(GetPlayer\.MakeScope\)\.AddScope\('pp_key', MakeScopeFlag\('(\w+)'\)", gui)
-    assert presets == [preset.key for preset in config.presets]
-    values = _read(MOD / "in_game/common/script_values/pp_construction_plan.txt")
-    for n in range(1, config.rule_slots + 1):
-        assert f"pp_cplan_r{n}_est_n = {{" in values
-
-
-def test_no_location_templates_left() -> None:
-    """Jan 2026-11-09: location templates are gone (Location Profiles do this: reusable, assigned on the map); no
-    button, script, variable, text or setting of them is left."""
-    assert "template_slots" not in _read(PROJECT)
-    assert not hasattr(cp.load_config(PROJECT), "template_slots")
-    files = [*GUI_FILES, LOC, *_plan_script_files(), MOD / "in_game/common/scripted_effects/pp_location_profiles.txt"]
+def test_two_tabs_and_nothing_else() -> None:
+    """Jan 2026-11-09: Global settings and Location profiles. The Food, Goods, Logistics, Locations and Here tabs, the
+    monthly construction limit, the presets, the goods modes, the per-location own rules and modes, the logistics
+    overrides and the province focus are gone from the window, the scripts and the texts."""
+    window = _read(WINDOW)
+    tabs = re.findall(r"button_main_tab_alt = \{.*?text = \"(PP_CPLAN_TAB_\w+)\"", window, re.DOTALL)
+    assert tabs == ["PP_CPLAN_TAB_PLAN", "PP_CPLAN_TAB_PROFILES"]
+    files = [WINDOW, LOC, *_plan_script_files(), PROFILE_EFFECTS, LOCATION_WINDOW]
+    gone = re.compile(
+        r"pp_cplan_(?:max|preset|g_|mode|own|rule|r\d_|logi(?!stics)|focus|status|sel\b|select|cands|goods_run|keep|"
+        r"auto_|template|band_)|PP_CPLAN_(?:TAB_HERE|TAB_GOODS|TAB_FOOD|TAB_LOGISTICS|TAB_LOCATIONS|PRESET|MAX|"
+        r"LOCATION_COG|MODE_|RULE_|FOCUS)")
     for path in files:
-        text = _read(path)
-        for gone in ("pp_cplan_template", "pp_cplan_tpl", "PP_CPLAN_TEMPLATE", "PP_CPLAN_TPL", "pp_cplan_put_",
-                     "pp_cplan_take_", "PP_CPLAN_TQ_TT", "PP_CPLAN_TP_TT"):
-            assert gone not in text, f"{path.name}: {gone}"
-        assert not re.search(r"pp_cplan_t\d", text), f"{path.name}: a template variable"
+        found = gone.search(_read(path))
+        assert not found, f"{path.name}: {found.group(0) if found else ''}"
+    assert not (MOD / "in_game/gui/pp_construction_plan_goods.gui").exists()
+    assert not (MOD / "in_game/gui/pp_construction_plan_here.gui").exists()
+    assert "Construction Plan, this location's own rules" not in _read(LOCATION_WINDOW)
+    assert not hasattr(cp, "add_location_cog")
 
 
-def test_every_condition_has_a_label() -> None:
+def test_lines_step_as_jan_asked() -> None:
+    """Gold reserve in gold (default 1,000; 100 a click, 1,000 a right-click); improvements in steps of ten percent up
+    to three times the capacity; businesses in whole years; logistics in steps of one percent."""
     config = cp.load_config(PROJECT)
-    loc = _read(LOC)
-    assert config.metrics
-    for metric in config.metrics:
-        assert (metric.value is None) != (metric.trigger is None), metric.key
-        assert f"  PP_CPLAN_M_{metric.key.upper()}:" in loc, metric.key
+    assert config.reserve_gold == 1000 and config.improve_fill_pct == 90 and config.business_years == 10
+    guis = _read(SCRIPTED_GUIS)
+    assert "flag:reserve = { pp_cplan_step_var = { var = pp_cplan_reserve current = pp_cplan_reserve_gold step = 100 min = 100" in guis
+    assert "flag:reserve_big = { pp_cplan_step_var = { var = pp_cplan_reserve current = pp_cplan_reserve_gold step = 1000 min = 100" in guis
+    assert "flag:improve_line = { pp_cplan_step_var = { var = pp_cplan_imp current = pp_cplan_improve_pct step = 10 min = 150 max = 400 }" in guis
+    assert "flag:business_line = { pp_cplan_step_var = { var = pp_cplan_biz current = pp_cplan_business_years step = 1 min = 101 max = 150 }" in guis
+    assert "flag:access_line = { pp_cplan_step_var = { var = pp_cplan_access current = pp_cplan_access_pct step = 1" in guis
+    window = _read(WINDOW)
+    assert window.count("MakeScopeFlag('reserve_big')") == 2 and window.count("onrightclick") == 2
+    values = _read(MOD / cp.VALUES)
+    assert "pp_cplan_reserve_gold = {\n\tvalue = 1000\n" in values
+
+
+def test_budget_is_the_gold_above_the_reserve() -> None:
+    """No monthly count any more: each pass may spend the gold above the reserve; every rule group that runs adds an
+    equal part (a part left unused passes on); no construction takes the treasury below the reserve."""
+    run = _effect(_read(EFFECTS), "pp_cplan_run")
+    assert "set_variable = { name = pp_cplan_pot value = { value = pp_cplan_free_gold min = 0 add = 100 } }" in run
+    values = _read(VALUES)
+    assert "subtract = pp_cplan_reserve_gold" in _effect(values, "pp_cplan_free_gold")
+    share = _effect(values, "pp_cplan_group_share")
+    assert "value = var:pp_cplan_pot" in share and "divide = pp_cplan_groups_on" in share
+    groups = _effect(values, "pp_cplan_groups_on")
+    for name in ("pp_cplan_food_n", "pp_cplan_logistics_n", "pp_cplan_improve_n", "pp_cplan_business_n", "pp_lprof_group_n"):
+        assert name in groups, name
+    triggers = _read(TRIGGERS)
+    budget = _effect(triggers, "pp_cplan_budget_left")
+    assert "pp_cplan_spent_n < pp_cplan_cap_n" in budget and "pp_cplan_free_gold > 0" in budget
+    assert "pp_cplan_est_cost <= scope:pp_cplan_country.pp_cplan_free_gold" in _effect(triggers, "pp_cplan_affordable")
+    scoped = _effect(_read(EFFECTS), "pp_cplan_construct_scoped")
+    assert scoped.index("pp_cplan_btype_data = yes") < scoped.index("pp_cplan_affordable = yes") < scoped.index("pp_cplan_construct_now")
+    for group in ("food", "logistics", "improve", "business"):
+        assert "change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }" in _effect(_read(EFFECTS), f"pp_cplan_group_{group}")
+    assert "change_variable = { name = pp_cplan_cap add = pp_cplan_group_share }" in _effect(_read(PROFILE_EFFECTS), "pp_lprof_run")
+
+
+def test_groups_take_turns_by_month() -> None:
+    """With little gold the group that went first took it every month (AI run 2026-11-09): the order turns with the
+    game's month, every month has an order and every group goes first at least twice a year."""
+    run = _effect(_read(EFFECTS), "pp_cplan_run")
+    blocks = re.findall(r"(?:if|else_if|else) = \{\n(?:\t\tlimit = \{ OR = \{ ([^}]*) \} \}\n)?((?:\t\tpp_cplan_group_\w+ = yes\n)+)", run)
+    assert len(blocks) == 5
+    months: dict[int, str] = {}
+    for limit, body in blocks:
+        order = re.findall(r"pp_cplan_group_(\w+) = yes", body)
+        assert sorted(order) == ["business", "food", "improve", "logistics", "profiles"], order
+        for month in (re.findall(r"current_month = (\d+)", limit) if limit else ["else"]):
+            months[month if month == "else" else int(month)] = order[0]
+    covered = {m for m in months if m != "else"}
+    assert covered | ({5, 10} if "else" in months else set()) == set(range(1, 13))
+    firsts = {}
+    for month in range(1, 13):
+        first = months.get(month, months.get("else"))
+        firsts[first] = firsts.get(first, 0) + 1
+    assert all(count >= 2 for count in firsts.values()) and len(firsts) == 5, firsts
+
+
+# ---- Businesses (Jan 2026-11-09) ----
+
+
+def test_business_types_leave_the_other_rules_their_buildings() -> None:
+    result = _result()
+    config = cp.load_config(PROJECT)
+    own = set(config.kitchens) | set(config.taverns) | set(config.granaries) | set(config.granges) | set(config.yards)
+    own |= set(config.logistics_order) | set(result.improvements)
+    assert not own & set(result.businesses)
+    assert not set(result.businesses.values()) & config.hidden_goods
+    # farms are businesses too: the food rule builds them when a province is short, the business rule when they pay
+    assert {"wheat_farm", "iron_mine", "lumber_mill"} <= set(result.businesses)
+
+
+def test_business_pick_checks_every_candidate() -> None:
+    result = _result()
+    effects = _read(MOD / cp.EFFECTS)
+    pick = _effect(effects, "pp_cplan_business_pick")
+    types = _effect(effects, "pp_cplan_business_types")
+    clear = _effect(effects, "pp_cplan_business_types_clear")
+    assert pick.startswith("\tpp_cplan_business_harvest = yes\n")
+    assert "set_variable = { name = pp_cplan_bz_roi value = scope:pp_cplan_country.pp_cplan_business_min_roi }" in pick
+    for name, good in result.businesses.items():
+        block = re.search(rf"has_variable = pp_cplan_bz_{name} \}}\n(.*?)set_variable = {{ name = pp_cplan_bz_pick value = building_type:{name} }}",
+                          pick, re.DOTALL)
+        assert block, name
+        body = block.group(1)
+        assert f"can_build_building = building_type:{name}\n" in body, name
+        assert f"NOT = {{ pp_lprof_has_good = {{ g = {good} }} }}" in body, name
+        assert re.search(r"pp_cplan_goods_here_\w+ = yes", body), name
+        assert f"building_type = building_type:{name} building_level > 0 is_opened = no" in body, name
+        assert f"building_type:{name} = {{ save_scope_as = pp_cplan_btype }}" in body, name
+        assert f"value = pp_cplan_bz_roi_{name} }}" in body and "limit = { scope:pp_cplan_r > var:pp_cplan_bz_roi }" in body, name
+        assert f"limit = {{ can_build_building = building_type:{name} }} set_variable = {{ name = pp_cplan_bz_{name} value = yes }}" in types
+        assert f"remove_variable = pp_cplan_bz_{name}\n" in clear
+    # a profile's building category stays the profile's (trade buildings are businesses and a profile category)
+    assert "NOT = { pp_lprof_has_category = { c = trade_category } }" in pick
+
+
+def test_business_estimate_takes_this_years_harvest_out() -> None:
+    """The same estimate for a new building and one more level: each slot's best method at the market's prices and the
+    location's output without this year's Variable Harvest, x 12 over the level's build cost (the engine's formula)."""
+    values = _read(MOD / cp.VALUES)
+    roi = _effect(values, "pp_cplan_bz_roi_wheat_farm")
+    assert "value = pp_cplan_bz_est_wheat_farm" in roi and "multiply = 1200" in roi
+    assert "divide = { value = pp_cplan_est_cost min = 0.01 }" in roi
+    est = _effect(values, "pp_cplan_bz_est_wheat_farm")
+    slots = re.findall(r"add = (pp_cplan_bs_wheat_farm_\d+)", est)
+    assert slots
+    method = _effect(values, "pp_cplan_bm_wheat_farm_1_1")
+    assert '"market.market_price(goods:wheat)"' in method
+    assert "modifier:local_wheat_output_modifier add = 1 subtract = scope:pp_cplan_hv_wheat min = 0" in method
+    # goods no harvest touches keep their output modifier alone
+    iron = "".join(_effect(values, name) for name in re.findall(r"^(pp_cplan_bm_iron_mine_\d+_\d+) = \{", values, re.MULTILINE))
+    assert "modifier:local_iron_output_modifier add = 1 min = 0" in iron and "pp_cplan_hv_iron" not in iron
+    harvest = _effect(_read(MOD / cp.EFFECTS), "pp_cplan_business_harvest")
+    names = re.findall(r"^(pp_harvest_\w+) = \{", _read(MOD / cp.HARVEST_MODIFIERS), re.MULTILINE)
+    for name in names:
+        assert f"has_location_modifier = {name} }}" in harvest, name
+    assert "save_temporary_scope_value_as = { name = pp_cplan_hv_wheat value = -0.26 }" in harvest
+    assert "pp_cplan_business_min_roi = {\n\tvalue = 100\n\tdivide = { value = pp_cplan_business_years min = 1 }" in values
+
+
+def test_business_group_builds_the_best_returns_first() -> None:
+    group = _effect(_read(EFFECTS), "pp_cplan_group_business")
+    assert group.index("pp_cplan_business_types = yes") < group.index("pp_cplan_business_pick = yes") < group.index("order_by = pp_cplan_bz_roi_n")
+    assert "limit = { pp_cplan_business_site = yes }" in group
+    assert "pp_cplan_construct_scoped = { why = 103 }" in group
+    assert group.rstrip().endswith("pp_cplan_business_types_clear = yes\n\t}")
+    site = _effect(_read(TRIGGERS), "pp_cplan_business_site")
+    for part in ("pp_cplan_location_ok = yes", "NOT = { has_variable = pp_lprof_xg }", "num_civil_constructions < 1",
+                 "market ?= { always = yes }"):
+        assert part in site, part
+
+
+# ---- Shared guards ----
 
 
 def test_build_cost_data() -> None:
     """The cost formula's inputs per building (calibrated in game 2026-11-06 on 158 constructions)."""
-    result = cp.apply(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT), write=False)
+    result = _result()
     costs, demands = result.buildings, result.demands
     assert costs["castle"].category == "fort"
     assert costs["stockade"].category == "fort"
@@ -126,16 +259,6 @@ def test_build_cost_data() -> None:
     assert (low, high) == (0.5, 2.5)
     block = re.search(r"^pp_cplan_cd_granary_construction = \{(.*?)^\}", values, re.MULTILINE | re.DOTALL).group(1)
     assert "min = 0.5 max = 2.5 multiply = 0.5" in block and "divide = 1" in block
-    # every building the goods pass can expand has its own cost data in the generated effects
-    effects = _read(MOD / cp.EFFECTS)
-    for names in result.producers.values():
-        for name in names:
-            assert f"building_type:{name} = {{ save_scope_as = pp_cplan_btype }}" in effects, name
-
-
-def _plan_script_files() -> list[Path]:
-    common = MOD / "in_game/common"
-    return sorted(common.glob("*/pp_construction_plan*.txt"))
 
 
 def test_no_not_with_several_conditions() -> None:
@@ -161,8 +284,8 @@ def test_no_not_with_several_conditions() -> None:
 
 
 def test_constructions_check_market_goods_and_queue() -> None:
-    """Every can-build check of the generated pickers also asks for the construction goods in the market (else the
-    construction stalls) and for no level of the building under construction here (else levels pile up)."""
+    """Every can-build check of the generated food, logistics and improvement pickers also asks for the construction
+    goods in the market (else the construction stalls) and for no level of the building under construction here."""
     effects = _read(MOD / cp.EFFECTS)
     triggers = _read(MOD / cp.TRIGGERS)
     checks = re.findall(r"location_and_owner_can_build = \{ building_type = (\w+) \}([^\n]*)", effects)
@@ -172,22 +295,6 @@ def test_constructions_check_market_goods_and_queue() -> None:
         assert demand, name
         assert f"pp_cplan_goods_here_{demand.group(1)} = {{" in triggers, demand.group(1)
         assert f"building_type = building_type:{name} building_levels_under_construction > 0" in rest, name
-
-
-def test_expand_checks_can_build_and_payback() -> None:
-    effects = _read(MOD / cp.EFFECTS)
-    blocks = re.findall(
-        r"limit = \{\n\t\t\tscope:pp_cplan_country = \{ NOT = \{ has_variable = pp_cplan_hit \} \}\n"
-        r"\t\t\tany_buildings_in_location = \{ building_type = building_type:(\w+) [^\n]*\n"
-        r"\t\t\tlocation_and_owner_can_build = \{ building_type = (\w+) \}[^\n]*\n\t\t\}\n"
-        r"\t\tbuilding_type:(\w+) = \{ save_scope_as = pp_cplan_btype \}\n[^\n]*\n"
-        r"\t\tif = \{\n\t\t\tlimit = \{ pp_cplan_est_payback_years <= scope:pp_cplan_country.pp_cplan_payback_line \}",
-        effects,
-    )
-    assert len(blocks) == sum(len(names) for names in cp.apply(
-        ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT), write=False).producers.values())
-    for standing, checked, scoped in blocks:
-        assert standing == checked == scoped
 
 
 def _widget_tree(text: str) -> list[tuple[str, str | None]]:
@@ -211,15 +318,13 @@ def _widget_tree(text: str) -> list[tuple[str, str | None]]:
 
 def test_no_box_directly_inside_a_container() -> None:
     """EU5 refuses an hbox/vbox as a direct child of a (flow)container; a hot reload with one crashed the game."""
-    for path in GUI_FILES:
-        for name, parent in _widget_tree(_read(path)):
-            if parent in {"flowcontainer", "container", "dynamicgridbox", "fixedgridbox"}:
-                assert name not in {"hbox", "vbox"}, f"{path.name}: {name} directly inside {parent}"
+    for name, parent in _widget_tree(_read(WINDOW)):
+        if parent in {"flowcontainer", "container", "dynamicgridbox", "fixedgridbox"}:
+            assert name not in {"hbox", "vbox"}, f"{name} directly inside {parent}"
 
 
 def test_raw_text_never_replaced_other_properties() -> None:
-    for path in GUI_FILES:
-        assert "conraw_text" not in _read(path)
+    assert "conraw_text" not in _read(WINDOW)
 
 
 def test_only_human_countries_run_the_plan() -> None:
@@ -229,31 +334,32 @@ def test_only_human_countries_run_the_plan() -> None:
 
 
 def test_effects_use_the_vanilla_can_build_check() -> None:
-    """Every construction the plan starts is guarded by the location and owner can-build check."""
+    """Every construction the generated pickers start is guarded by the location and owner can-build check."""
     effects = _read(MOD / cp.EFFECTS)
     blocks = re.findall(r"limit = \{([^\n]*)\}\n\t*pp_cplan_construct(?:_food)? = \{ type = (\w+)", effects)
     assert blocks
     for limit, building in blocks:
         if "pp_cplan_pick" in limit:
-            continue  # the farm picker checked the candidate before it picked it
+            continue  # the farm and improvement pickers checked the candidate before they picked it
         assert f"location_and_owner_can_build = {{ building_type = {building} }}" in limit, building
+
+
+def test_game_automation_is_respected() -> None:
+    """Jan 2026-11-09: the plan and the game's own automation must not undo each other: the plan never adds a level to a
+    closed building and never starts a construction where one is under way (whoever started it)."""
+    scoped = _effect(_read(EFFECTS), "pp_cplan_construct_scoped")
+    assert "pp_cplan_bt_queued < 0.5" in scoped and "is_opened = no" in scoped
+    # one construction at a time per location: the engine builds them one after another (test world 2026-11-09)
+    assert "num_civil_constructions < 1" in scoped
+    assert "limit = { num_civil_constructions > 0 }" in _effect(_read(PROFILE_EFFECTS), "pp_lprof_rule")
 
 
 # ---- Baseline rules (Jan 2026-11-08) ----
 
-TRIGGERS = MOD / "in_game/common/scripted_triggers/pp_construction_plan.txt"
-VALUES = MOD / "in_game/common/script_values/pp_construction_plan.txt"
-
-
-def _effect(text: str, name: str) -> str:
-    match = re.search(rf"^{name} = \{{\n(.*?)^\}}", text, re.MULTILINE | re.DOTALL)
-    assert match, name
-    return match.group(1)
-
 
 def test_baseline_defaults() -> None:
     config = cp.load_config(PROJECT)
-    assert config.access_threshold == 97
+    assert config.access_threshold == 97 and config.hungry_months == 6
     assert (config.granary_capacity_months, config.granary_fill_pct) == (24, 85)
     assert (config.grange_surplus_pct, config.famine_months, config.yard_payback_years) == (5, 3, 10)
     assert config.granges == ("grange",) and config.yards == ("victualling_yard",)
@@ -261,19 +367,22 @@ def test_baseline_defaults() -> None:
 
 
 def test_nothing_is_kept_between_passes() -> None:
-    """Jan: no history. The baseline rules read the game as it stands; no counter variables, no watch effects."""
+    """Jan: no history. The baseline rules read the game as it stands; no counter variables, no watch effects; the
+    pass's own budget and business marks go at its end."""
     for path in (EFFECTS, TRIGGERS, VALUES, SCRIPTED_GUIS):
         text = _read(path)
         for gone in ("pp_cplan_gw", "pp_cplan_fw", "pp_cplan_al", "pp_cplan_mm", "pp_cplan_mkt",
                      "pp_cplan_count_up", "pp_cplan_reset_watch", "_watch = yes"):
             assert gone not in text, f"{path.name}: {gone}"
+    run = _effect(_read(EFFECTS), "pp_cplan_run")
+    assert "remove_variable = pp_cplan_pot" in run and "remove_variable = pp_cplan_cap" in run
 
 
 def test_food_pass_order() -> None:
     """One food construction a province a month: famine Tavern, farm, Granary (while due), kitchen, Tavern, Grange, Yard."""
     body = _effect(_read(EFFECTS), "pp_cplan_food_province")
-    steps = ["# 1.", "# 2.", "# 3.", "# 4.", "# 5.", "# 6.", "# 7.", "# the state"]
-    places = [body.index(step) for step in steps]
+    steps = ["# 1.", "# 2.", "# 3.", "# 4.", "# 5.", "# 6.", "# 7."]
+    places = [body.index(step) for step in steps] + [len(body)]
     assert places == sorted(places)
     part = {n: body[places[n - 1]:places[n]] for n in range(1, 8)}
     assert "pp_cplan_famine = yes" in part[1] and "pp_cplan_try_tavern_here" in part[1]
@@ -292,35 +401,37 @@ def test_food_pass_order() -> None:
 
 def test_hunger_reads_a_normal_year() -> None:
     triggers = _read(TRIGGERS)
-    assert "pp_cplan_food_in_a_year < pp_cplan_band_lo" in _effect(triggers, "pp_cplan_hungry")
-    assert "pp_cplan_food_in_a_year < scope:pp_cplan_country.pp_cplan_famine_months" in _effect(triggers, "pp_cplan_famine")
+    assert "pp_cplan_food_in_a_year < pp_cplan_hungry_months" in _effect(triggers, "pp_cplan_hungry")
+    assert "pp_cplan_food_in_a_year < pp_cplan_famine_months" in _effect(triggers, "pp_cplan_famine")
     values = _read(VALUES)
     gain = _effect(values, "pp_cplan_normal_gain")
     assert "add = pp_cplan_harvest_food" in gain and "pp_cplan_spoil_rate" in gain
     assert "subtract = pp_cplan_harvest_food" in _effect(values, "pp_cplan_normal_consumption")
     granary = _effect(triggers, "pp_cplan_granary_due")
-    for part in ("pp_cplan_capacity_months < scope:pp_cplan_country.pp_cplan_granary_cap",
-                 "pp_cplan_fill_pct >= scope:pp_cplan_country.pp_cplan_granary_fill", "pp_cplan_normal_gain > 0"):
+    for part in ("pp_cplan_capacity_months < pp_cplan_granary_cap", "pp_cplan_fill_pct >= pp_cplan_granary_fill",
+                 "pp_cplan_normal_gain > 0"):
         assert part in granary
-    assert "pp_cplan_normal_gain_pct >= scope:pp_cplan_country.pp_cplan_grange_surplus" in _effect(triggers, "pp_cplan_grange_due")
+    assert "pp_cplan_normal_gain_pct >= pp_cplan_grange_surplus" in _effect(triggers, "pp_cplan_grange_due")
+    generated = _read(MOD / cp.VALUES)
+    assert "pp_cplan_hungry_months = { value = 6 }" in generated
 
 
 def test_harvest_blacklist_covers_every_harvest_modifier() -> None:
     rates = cp.harvest_rates(MOD)
     assert len(rates) >= 15
     names = re.findall(r"^(pp_harvest_\w+) = \{", _read(MOD / cp.HARVEST_MODIFIERS), re.MULTILINE)
-    generated = _read(MOD / cp.VALUES)
-    block = _effect(generated, "pp_cplan_harvest_rate")
+    block = _effect(_read(MOD / cp.VALUES), "pp_cplan_harvest_rate")
     for name in names:
         assert f"has_location_modifier = {name} }}" in block, name
     # bad years make the peasants eat more, good years less
     assert rates["western_europe"]["abysmal"] > 0 > rates["western_europe"]["bountiful"]
     assert all(set(found) == set(cp.HARVEST_SEVERITIES) for found in rates.values()), rates
+    outputs = cp.harvest_outputs(MOD)
+    assert outputs["western_europe"]["abysmal"]["wheat"] == -0.26
 
 
 def test_logistics_reads_access_without_events() -> None:
-    triggers = _read(TRIGGERS)
-    wanted = _effect(triggers, "pp_cplan_logistics_wanted")
+    wanted = _effect(_read(TRIGGERS), "pp_cplan_logistics_wanted")
     assert "controller ?= owner" in wanted and "pp_cplan_access_normal < pp_cplan_access_line" in wanted
     block = _effect(_read(MOD / cp.VALUES), "pp_cplan_access_normal")
     assert "has_location_modifier = staple_port_commercial_stagnation_modifier } subtract = -0.25" in block
@@ -335,7 +446,7 @@ def test_farms_pick_the_fastest_payback() -> None:
     assert lines and len(lines) == len(set(lines))
     for line in lines:
         block = _effect(generated, f"pp_cplan_farm_line_roi_{line}")
-        assert "location_and_owner_can_build" in block and "pp_cplan_mode_" in block
+        assert "location_and_owner_can_build" in block
         assert f"min = pp_cplan_farm_line_roi_{line}" in _effect(generated, "pp_cplan_farm_best_roi")
     # the estimate reads the market's prices and the location's output of the good a method makes
     est = _effect(generated, "pp_cplan_fm_wheat_farmstead_2_1")
@@ -358,19 +469,9 @@ def test_hunger_rule_waits_only_for_food_makers() -> None:
     assert "building_type:granary" not in queued and "building_type:grange" not in queued
 
 
-def test_new_settings_step_and_travel_in_profiles() -> None:
-    guis = _read(SCRIPTED_GUIS)
-    for flag, var in (("granary_cap", "pp_cplan_gcap"), ("granary_fill", "pp_cplan_gfill"),
-                      ("grange_surplus", "pp_cplan_gsur"), ("famine", "pp_cplan_famine"), ("yard_payback", "pp_cplan_ypb")):
-        assert f"flag:{flag} = {{ pp_cplan_step_var = {{ var = {var} " in guis, flag
-        assert var in cp.PRESET_NUMBERS
-        assert f"MakeScopeFlag('{flag}')" in _read(GUI_FILES[0]), flag
-    assert "flag:access_line = { pp_cplan_step_var = { var = pp_cplan_access current = pp_cplan_access_pct step = 1" in guis
-
-
 def test_hunger_bucket_holds_every_staple_food_maker() -> None:
     """Farms, orchards, fisheries, herds and forest villages compete in one bucket by payback (Jan 2026-11-08)."""
-    result = cp.apply(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT), write=False)
+    result = _result()
     buildings = {b for tiers in result.food_lines.values() for b in tiers}
     for name in ("wheat_farm", "fruit_orchard", "fishing_village", "ocean_fishery", "forest_village", "sheep_farms"):
         assert name in buildings, name
@@ -379,9 +480,9 @@ def test_hunger_bucket_holds_every_staple_food_maker() -> None:
 
 
 def test_improvements_cheap_and_much_first() -> None:
-    """Jan 2026-11-08: where people fill the line of a location's capacity, the improvement with the most capacity
-    per gold; the fullest locations first."""
-    result = cp.apply(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT), write=False)
+    """Jan 2026-11-08: where population over capacity reaches the line, the improvement with the most capacity per
+    gold; the fullest locations first."""
+    result = _result()
     assert {"land_clearance", "field_management", "irrigation_systems", "polders"} <= set(result.improvements)
     generated = _read(MOD / cp.VALUES)
     picker = _effect(_read(MOD / cp.EFFECTS), "pp_cplan_try_improve_here")
@@ -394,8 +495,6 @@ def test_improvements_cheap_and_much_first() -> None:
     block = run[run.index("pp_cplan_improve_off"):run.index("pp_cplan_try_improve_here")]
     assert "location_population_percentage >= scope:pp_cplan_country.pp_cplan_improve_line" in block
     assert "order_by = pp_cplan_fill_here" in block
-    assert cp.load_config(PROJECT).improve_fill_pct == 90
-    assert "pp_cplan_improve_off" in cp.PRESET_FLAGS and "pp_cplan_imp" in cp.PRESET_NUMBERS
 
 
 def test_construction_goods_cover_months_of_draw() -> None:
@@ -403,57 +502,16 @@ def test_construction_goods_cover_months_of_draw() -> None:
     A construction starts only where its market holds construction_goods_months of its draw."""
     config = cp.load_config(PROJECT)
     assert config.construction_goods_months == 12
-    triggers = _read(MOD / cp.TRIGGERS)
-    yard = _effect(triggers, "pp_cplan_goods_here_pp_river_boatmen_yard_construction")
+    yard = _effect(_read(MOD / cp.TRIGGERS), "pp_cplan_goods_here_pp_river_boatmen_yard_construction")
     assert '"stockpile_in_market(goods:naval_supplies)" >= 2.4' in yard  # 0.2 a month x 12
 
 
 def test_profile_pass_gives_every_location_a_turn() -> None:
     """Test world 2026-11-08: in the list's own order the profile assigned last built nothing in ten years."""
-    run = _effect(_read(MOD / "in_game/common/scripted_effects/pp_location_profiles.txt"), "pp_lprof_run")
+    run = _effect(_read(PROFILE_EFFECTS), "pp_lprof_run")
     assert "ordered_in_list = {" in run and "order_by = pp_lprof_turn" in run
     assert "every_in_list" not in run.split("ordered_in_list")[1]
     assert "subtract = total_building_levels" in _effect(_read(VALUES), "pp_lprof_turn")
-
-
-def test_presets_set_every_setting_group_and_good() -> None:
-    """Jan 2026-11-09: built-in presets to start from (the Plan tab). Each sets every setting (unnamed ones back to the
-    default), every rule group switch and every good's mode, so loading one never leaves a mix behind."""
-    config = cp.load_config(PROJECT)
-    assert [preset.key for preset in config.presets] == ["balanced", "food", "builder", "cautious"]
-    result = cp.apply(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT), write=False)
-    effects = _read(MOD / cp.EFFECTS)
-    switch = _effect(effects, "pp_cplan_preset_do")
-    for preset in config.presets:
-        assert f"flag:{preset.key} = {{ pp_cplan_preset_{preset.key} = yes }}" in switch
-        body = _effect(effects, f"pp_cplan_preset_{preset.key}")
-        for var in cp.PRESET_NUMBERS + cp.PRESET_FLAGS:
-            assert re.search(rf"(set_variable = {{ name = {var} value|remove_variable = {var}\n)", body + "\n"), (preset.key, var)
-        for good in result.goods:
-            assert f"pp_cplan_g_{good}" in body, (preset.key, good)
-    builder = _effect(effects, "pp_cplan_preset_builder")
-    assert "set_variable = { name = pp_cplan_g_cloth value = 102 }" in builder  # "*" = expand
-    assert "set_variable = { name = pp_cplan_g_lumber value = 101 }" in builder
-    cautious = _effect(effects, "pp_cplan_preset_cautious")
-    assert "set_variable = { name = pp_cplan_reserve value = 112 }" in cautious
-    assert "set_variable = { name = pp_cplan_goods_off value = yes }" in cautious
-    assert "remove_variable = pp_cplan_food_off" in cautious
-    assert "pp_cplan_preset_do = yes" in _read(SCRIPTED_GUIS)
-
-
-def test_game_automation_is_shown_and_respected() -> None:
-    """Jan 2026-11-09: the plan and the game's own automation must not undo each other. The Plan tab shows which of the
-    game's building automations are on; the plan never adds a level to a closed building and never a second level
-    while one is under construction (whoever started it)."""
-    values = _read(MOD / "in_game/common/script_values/pp_construction_plan.txt")
-    for name, system in (("buildings", "buildings"), ("expand", "expandbuildings"), ("close", "closebuildings"),
-                         ("destroy", "destroybuildings")):
-        assert f"limit = {{ is_system_automated = {system} }}" in _effect(values, f"pp_cplan_auto_{name}_n")
-    scoped = _effect(_read(EFFECTS), "pp_cplan_construct_scoped")
-    assert "pp_cplan_bt_queued < 0.5" in scoped and "is_opened = no" in scoped
-    # one construction at a time per location: the engine builds them one after another (test world 2026-11-09)
-    assert "num_civil_constructions < 1" in scoped
-    assert "limit = { num_civil_constructions > 0 }" in _effect(_read(MOD / "in_game/common/scripted_effects/pp_location_profiles.txt"), "pp_lprof_rule")
 
 
 def test_granary_before_kitchen_while_due() -> None:

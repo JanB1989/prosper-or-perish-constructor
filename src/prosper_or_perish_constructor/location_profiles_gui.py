@@ -1,11 +1,12 @@
-"""Location Profiles: the windows and the map (editor, plan window row, right-click menu, paint mode, marker badge).
+"""Location Profiles: the editor and the map (editor tab, plan window row, right-click menu, paint mode, marker badge).
 
 Contract: docs/location_profiles.md. The script side (``location_profiles.py``, ``scripted_guis/pp_location_profiles.txt``)
 keeps the profiles; this module writes the GUI parts that follow ``[location_profiles]`` (slots, rules, colours,
 symbols) and the items (the Location Plan's items plus Market access = the good ``logistics``):
 
-* ``gui/pp_location_profiles_generated.gui``: the types the hand-written ``gui/pp_location_profiles.gui`` (editor window,
-  paint palette) and ``gui/pp_location_plan.gui`` (the Profile row) use: each slot's face (its icon on its colour), the
+* ``gui/pp_location_profiles_generated.gui``: the types the hand-written ``gui/pp_location_profiles.gui`` (the editor
+  tab ``pp_lprof_editor_tab``, which the Construction Plan window shows as its Location Profiles tab, and the paint
+  palette) and ``gui/pp_location_plan.gui`` (the Profile row) use: each slot's face (its icon on its colour), the
   location's badge, the slot strip, the editor (one body: the edit buffer), the item picker, the Profile row, the
   palette tiles;
 * ``gui/context_menu.gui``: vanilla's, with a "Location Profile" section in ``LocationContextMenu`` (player locations);
@@ -22,9 +23,10 @@ buffer (``pp_lprof_e_*``). Only the slot tiles (a button with the slot's face) a
 
 The map marker's badge and paint frame sit in ``location_plan.render_markers`` (it reads ``marker_cell`` from here).
 
-GUI variables: ``pp_lprof_open`` (editor open), ``pp_lprof_pick`` (``icon`` / ``r<r>``: the item picker is open for that
-field), ``pp_lprof_brush`` (``s<k>`` / ``none``: paint mode, clicking a location's frame on the map gives it that
-profile). The profile the editor shows is the script's edit buffer (``pp_lprof_e_k``).
+GUI variables: ``pp_lprof_pick`` (``icon`` / ``r<r>``: the item picker is open for that field), ``pp_lprof_brush``
+(``s<k>`` / ``none``: paint mode, clicking a location's frame on the map gives it that profile). Every "Edit profiles"
+opens the Construction Plan window (``pp_cplan_open``) on its Location Profiles tab (``pp_cplan_tab`` = ``profiles``):
+``OPEN_EDITOR``. The profile the editor shows is the script's edit buffer (``pp_lprof_e_k``).
 """
 
 from __future__ import annotations
@@ -67,7 +69,9 @@ SCRIPTED_GUIS = (
 )
 STATES = 9  # rule states 1..9 (+100), texts PP_LPROF_ST_<n> from the script side
 MARKET_ACCESS = "logistics"
-OPEN, PICK, BRUSH = "pp_lprof_open", "pp_lprof_pick", "pp_lprof_brush"
+PICK, BRUSH = "pp_lprof_pick", "pp_lprof_brush"
+# The editor is the Construction Plan window's Location Profiles tab: every "Edit profiles" opens the window on it.
+OPEN_EDITOR = ("[GetVariableSystem.Set('pp_cplan_open', 'yes')]", "[GetVariableSystem.Set('pp_cplan_tab', 'profiles')]")
 EDITED, NEXT = lpf.EDITED, lpf.NEXT
 TILE = lp.TILE
 GOLD = "0.9 0.7 0.25 0.95"
@@ -79,7 +83,7 @@ _MENU_TYPE = "type LocationContextMenu = ContextMenuBase {"
 _MENU_ANCHOR = '\t\t\tContextMenuSectionSet = {\n\t\t\t\tvisible = "[Location.IsPlayerLocation]"\n'
 ROW_TILES = 8  # tiles per row in the Location Plan window's Profile row
 LOCATION_TILES = 11  # in the location window's Profile row (vanilla card, 37 px a tile)
-STRIP_TILES = 10  # in the editor's profile list
+STRIP_TILES = 12  # in the editor's profile list (50 px a tile; the plan window's tab is about 650 px wide)
 PALETTE_TILES = 4
 MENU_TILES = 7
 
@@ -325,7 +329,7 @@ def _faces(config: Config) -> str:
 
 def _slot_strip(config: Config) -> str:
     """The editor's profile list: each profile in use; a click shows it in the editor (pp_lprof_select)."""
-    out = ["\n\t# The editor's profiles: click one to edit it (the new profile button sits in the window's header).\n"
+    out = ["\n\t# The editor's profiles: click one to edit it (the new profile button sits in the row above them).\n"
            "\ttype pp_lprof_slot_strip = vbox {\n\t\tlayoutpolicy_horizontal = expanding\n\t\tspacing = 2\n"]
     for row in _rows(config.slots, STRIP_TILES):
         out.append(f"\t\tflowcontainer = {{\n\t\t\tvisible = \"[{_row_visible(row)}]\"\n"
@@ -558,7 +562,8 @@ def _plan_row(config: Config) -> str:
         f"\t\t\t\tonclick = \"{assign_call('none')}\"\n\t\t\t}}\n"
         "\t\t\tbutton_regular = {\n\t\t\t\tsize = { 110 26 }\n\t\t\t\ttext = \"PP_LPROF_UI_EDIT_PROFILES\"\n"
         "\t\t\t\ttooltip = \"PP_LPROF_UI_EDIT_PROFILES_TT\"\n"
-        f"\t\t\t\tonclick = \"[GetVariableSystem.Set('{OPEN}', 'yes')]\"\n\t\t\t}}\n\t\t}}\n",
+        + "".join(f"\t\t\t\tonclick = \"{action}\"\n" for action in OPEN_EDITOR)
+        + "\t\t\t}\n\t\t}\n",
     ]
     for row in _rows(config.slots, ROW_TILES):
         out.append(f"\t\tflowcontainer = {{\n\t\t\tvisible = \"[{_row_visible(row)}]\"\n"
@@ -606,15 +611,15 @@ def _location_row(config: Config) -> str:
         "\t\t\t\tmodify_texture = { using = color_bg_blue_texture blend_mode = multiply }\n\t\t\t}\n"
     )
 
-    def icon_button(tooltip: str, onclick: str, icon: str, visible: str = "") -> str:
+    def icon_button(tooltip: str, onclicks: tuple[str, ...], icon: str, visible: str = "") -> str:
         return (
             "\t\t\t\theader_button_left = {\n"
             + (f"\t\t\t\t\tvisible = \"[{visible}]\"\n" if visible else "")
             + "\t\t\t\t\tblockoverride \"header_button_full_content\" {}\n"
             "\t\t\t\t\tsize = { 30 30 }\n"
             f"\t\t\t\t\ttooltip = \"{tooltip}\"\n"
-            f"\t\t\t\t\tonclick = \"{onclick}\"\n"
-            f"\t\t\t\t\ticon = {{ size = {{ 20 20 }} parentanchor = center texture = \"{FLAT.format(icon)}\" using = button_regular_icon_color }}\n"
+            + "".join(f"\t\t\t\t\tonclick = \"{onclick}\"\n" for onclick in onclicks)
+            + f"\t\t\t\t\ticon = {{ size = {{ 20 20 }} parentanchor = center texture = \"{FLAT.format(icon)}\" using = button_regular_icon_color }}\n"
             "\t\t\t\t}\n"
         )
 
@@ -647,8 +652,8 @@ def _location_row(config: Config) -> str:
     out.append(
         "\t\t\t}\n"
         "\t\t\tvbox = {\n\t\t\t\tlayoutpolicy_vertical = expanding\n\t\t\t\tmargin = { 0 5 }\n\t\t\t\tspacing = 3\n"
-        + icon_button("PP_LPROF_UI_EDIT_PROFILES_TT", f"[GetVariableSystem.Set('{OPEN}', 'yes')]", "list_button")
-        + icon_button("PP_LPROF_UI_NONE_TT", assign_call("none"), "remove", f"{lvar('pp_lprof')}.IsSet")
+        + icon_button("PP_LPROF_UI_EDIT_PROFILES_TT", OPEN_EDITOR, "list_button")
+        + icon_button("PP_LPROF_UI_NONE_TT", (assign_call("none"),), "remove", f"{lvar('pp_lprof')}.IsSet")
         + "\t\t\t\texpand = {}\n\t\t\t}\n\t\t}\n\t}\n"
     )
     return "".join(out)
@@ -795,7 +800,7 @@ def menu_section(config: Config) -> str:
         "[GetScriptedGui('pp_lplan_select').Execute(GuiScope.SetRoot(Location.MakeScope).End)]",
         "[GetVariableSystem.Set('pp_lplan_open', 'yes')]",
     ]))
-    out.append(entry("PP_LPROF_UI_MENU_EDIT", FLAT.format("rename"), [f"[GetVariableSystem.Set('{OPEN}', 'yes')]"]))
+    out.append(entry("PP_LPROF_UI_MENU_EDIT", FLAT.format("rename"), list(OPEN_EDITOR)))
     out.append("\t\t\t\t}\n\t\t\t}\n" + MENU_END)
     return "".join(out)
 
@@ -820,10 +825,10 @@ def patch_context_menu(vanilla: str, config: Config) -> str:
 TEXTS = {
     "PP_LPROF_UI_TITLE": "Location Profiles",
     "PP_LPROF_UI_NOTE": "A profile is an icon, a colour and build rules in order. Give it to your locations in the "
-                        "Location Plan window, with the map's right-click menu, or paint it onto the map in the Location "
-                        "Plan map mode. Where a location has a profile, its rules build there first; the "
-                        "Construction Plan's global rules still build there what the profile does not name, unless "
-                        "the profile switches them off.",
+                        "location window, the Location Plan window, with the map's right-click menu, or paint it onto "
+                        "the map in the Location Plan map mode. Where a location has a profile, its rules build there; "
+                        "the global settings still build there what the profile does not name, unless the profile "
+                        "switches them off.",
     "PP_LPROF_UI_YOURS": "Your profiles",
     "PP_LPROF_UI_PAINT_MAP": "Paint on map",
     "PP_LPROF_UI_PAINT_MAP_TT": "Switch to the Location Plan map mode: each location shows its profile, and the palette "
@@ -850,9 +855,9 @@ TEXTS = {
                               "A good expands a producer of it that pays back in time, or starts one where none stands; "
                               "a building category does the same for its buildings.",
     "PP_LPROF_UI_GLOBAL": "Global rules here",
-    "PP_LPROF_UI_GLOBAL_NOTE": "The Construction Plan's global rule groups still build in this profile's locations, "
-                               "after its own rules, except what the profile's rules name (a good, market access). "
-                               "Untick a group to keep it out of these locations.",
+    "PP_LPROF_UI_GLOBAL_NOTE": "The global rule groups still build in this profile's locations, except what the "
+                               "profile's rules name (a good, a building category, market access). Untick a group to "
+                               "keep it out of these locations.",
     "PP_LPROF_UI_GLOBAL_FOOD": "Food",
     "PP_LPROF_UI_GLOBAL_FOOD_TT": "#T Food rule here#!\nTicked: the food rule builds here too (farms, kitchens, Taverns, "
                                   "Granaries, Granges, Victualling Yards), except staple food makers when a rule here "
@@ -863,9 +868,10 @@ TEXTS = {
     "PP_LPROF_UI_GLOBAL_IMPROVE": "Improvements",
     "PP_LPROF_UI_GLOBAL_IMPROVE_TT": "#T Improvements rule here#!\nTicked: the improvements rule builds here too. Click to "
                                      "switch.",
-    "PP_LPROF_UI_GLOBAL_GOODS": "Goods",
-    "PP_LPROF_UI_GLOBAL_GOODS_TT": "#T Goods rules here#!\nTicked: the goods rules (Keep stocked, Expand) build here too, "
-                                   "except for goods a rule here names. Click to switch.",
+    "PP_LPROF_UI_GLOBAL_BUSINESS": "Businesses",
+    "PP_LPROF_UI_GLOBAL_BUSINESS_TT": "#T Businesses rule here#!\nTicked: the businesses rule builds here too (buildings "
+                                      "that make goods and pay back in time), except buildings of the goods and "
+                                      "building categories a rule here names. Click to switch.",
     "PP_LPROF_UI_GOFF": "#weak off#!",
     "PP_LPROF_UI_GON": "on",
     "PP_LPROF_UI_TARGET_TT": "Click to choose what this rule builds from the list below",
@@ -894,14 +900,15 @@ TEXTS = {
     "PP_LPROF_UI_NONE": "None",
     "PP_LPROF_UI_NONE_TT": "Take the profile away from this location: the Construction Plan's rules apply here again",
     "PP_LPROF_UI_EDIT_PROFILES": "Edit profiles",
-    "PP_LPROF_UI_EDIT_PROFILES_TT": "Open the Location Profiles window: make profiles and set their icon, colour and rules",
+    "PP_LPROF_UI_EDIT_PROFILES_TT": "Open the Construction Plan on its Location profiles tab: make profiles and set their "
+                                    "icon, colour and rules",
     "PP_LPROF_UI_MENU_TITLE": "Location Profile",
     "PP_LPROF_UI_MENU_NONE": "No profile",
     "PP_LPROF_UI_MENU_NONE_TT": "Take the profile away from this location",
     "PP_LPROF_UI_MENU_PLAN": "Location Plan",
     "PP_LPROF_UI_MENU_PLAN_TT": "Open this location in the Location Plan window",
     "PP_LPROF_UI_MENU_EDIT": "Edit profiles",
-    "PP_LPROF_UI_MENU_EDIT_TT": "Open the Location Profiles window",
+    "PP_LPROF_UI_MENU_EDIT_TT": "Open the Construction Plan on its Location profiles tab",
     "PP_LPROF_UI_PALETTE_TITLE": "Paint profiles",
     "PP_LPROF_UI_PALETTE_NOTE": "Pick a profile or the eraser, then click your locations on the map. Click the picked "
                                 "one again to stop.",

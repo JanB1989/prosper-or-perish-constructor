@@ -1,5 +1,6 @@
-﻿# Prosper or Perish - Location Profiles buttons (docs/location_profiles.md): the profile editor, the Location Plan
-# window's profile row, the location window's row, the map's right-click menu and the paint mode call these. Parameters
+﻿# Prosper or Perish - Location Profiles buttons (docs/location_profiles.md): the profile editor (the Construction Plan
+# window's Location profiles tab), the Location Plan window's profile row, the location window's row, the map's
+# right-click menu and the paint mode call these. Parameters
 # are flag scopes the GUI adds with AddScope: scope:pp_slot (s1..sN; e = the profile in the editor's buffer; none for
 # assign; next = the first free slot for new), scope:pp_field (icon, r1..rN), scope:pp_key (an item: a good, logistics =
 # market access, a building category, or a symbol for the icon), scope:pp_dir (up / down), scope:pp_col (c1..cN).
@@ -48,7 +49,7 @@ pp_lprof_color = {
 }
 
 # Country scope: a global rule group (scope:pp_field: global_food / global_logistics / global_improve /
-# global_goods) of slot scope:pp_slot off in its locations, or on again.
+# global_business) of slot scope:pp_slot off in its locations, or on again.
 pp_lprof_global = {
 	scope = country
 	effect = {

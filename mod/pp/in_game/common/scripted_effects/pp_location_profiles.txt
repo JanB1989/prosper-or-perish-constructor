@@ -1,10 +1,10 @@
 ﻿# Prosper or Perish - Location Profiles (branch location-profiles, 2026-11-07, Jan; docs/location_profiles.md).
 # The player defines profiles (an icon, a colour, ordered build rules) and assigns them to locations on the map. In a
-# location with a profile the profile's rules build first: the first rule group of the plan's monthly pass
-# (pp_cplan_run), with its own share of the monthly limit. A profile takes from the global Construction Plan rules only
-# what it sets (Jan 2026-11-09): its rules' targets (a good, market access) and the global groups it switches off
-# (pp_lprof_xf / _xl / _xi / _xg: food, logistics, improvements, goods); the rest of the global rules build there too
-# (pp_cplan_*_ok in scripted_triggers/pp_construction_plan.txt).
+# location with a profile the profile's rules build: a rule group of the plan's monthly pass (pp_cplan_run), with its
+# own share of the month's budget. A profile takes from the global Construction Plan rules only what it sets (Jan
+# 2026-11-09): its rules' targets (a good, a building category, market access) and the global groups it switches off
+# (pp_lprof_xf / _xl / _xi / _xg: food, logistics, improvements, businesses); the rest of the global rules build there
+# too (scripted_triggers/pp_construction_plan.txt). A profile is all a location carries; nothing else per location.
 # Player-only like the plan: the pass runs for human countries that switched the plan on, the edits are scripted GUIs.
 # Up to 100 profiles cost little: every location with a profile carries a COPY of it (written on assign and whenever its
 # slot is edited), and the monthly pass and the map badge read only the copy; the editor shows one edit buffer (a copy
@@ -344,8 +344,8 @@ pp_lprof_build = {
 # and passes it on: the edit buffer and every location with the slot get it (pp_lprof_publish). Only the reads and
 # writes are written per slot; every edit works on fixed names. ----
 
-# Location scope (root = the location): its profile scope:pp_slot (a slot that is on), or none. A profile replaces the
-# location's own rules or hands off; refresh_map_colors redraws the badges.
+# Location scope (root = the location): its profile scope:pp_slot (a slot that is on), or none; refresh_map_colors
+# redraws the badges.
 pp_lprof_assign_do = {
 	owner ?= { save_scope_as = pp_lprof_country }
 	if = {
@@ -417,7 +417,7 @@ pp_lprof_color_do = {
 }
 
 # Country scope: the global rule group scope:pp_field (global_food / global_logistics / global_improve /
-# global_goods) of slot scope:pp_slot off in its locations, or on again.
+# global_business) of slot scope:pp_slot off in its locations, or on again.
 pp_lprof_global_do = {
 	pp_lprof_edit = { do = pp_lprof_global_staged }
 }
@@ -671,8 +671,7 @@ pp_lprof_assign_staged = {
 	}
 }
 
-# Location scope (scope:pp_lprof_country = its owner, pp_lprof set): the old states go, the location joins the list,
-# and the profile replaces the location's own rules or hands off (its stored own rules stay for later).
+# Location scope (scope:pp_lprof_country = its owner, pp_lprof set): the old states go, the location joins the list.
 pp_lprof_assign_to = {
 	pp_lprof_clear_states = yes
 	save_temporary_scope_as = pp_lprof_this
@@ -682,11 +681,9 @@ pp_lprof_assign_to = {
 			add_to_variable_list = { name = pp_lprof_locs target = scope:pp_lprof_this }
 		}
 	}
-	remove_variable = pp_cplan_mode
-	pp_cplan_own_sync = yes
 }
 
-# Location scope: no profile here (also called when the location gets own rules or hands off, pp_cplan_own_sync).
+# Location scope: no profile here.
 pp_lprof_unassign = {
 	pp_lprof_clear_location = yes
 	save_temporary_scope_as = pp_lprof_this

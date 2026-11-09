@@ -36,7 +36,7 @@ def test_parse_debug_log_reads_builds_passes_and_dates() -> None:
     log = ptr.parse_debug_log(DEBUG_LOG.splitlines())
     assert log.lines == 15 and log.plan_lines == 9
     b = log.builds
-    assert b["group"].to_list() == ["food", "profile", "goods", "improve", "logistics"]
+    assert b["group"].to_list() == ["food", "profile", "business", "improve", "logistics"]
     assert b["location"].to_list() == ["burgos", "avila", "sevilla", "lisboa", "burgos"]
     assert b["building"].to_list() == ["granary", "lumber_mill", "mason", "field_drainage", "carrier_inn"]
     assert b["date"].to_list() == ["1337.5.1", "1337.5.1", "1337.6.1", "1337.6.1", "1337.6.1"]
@@ -141,7 +141,7 @@ def snap(name: str, date: str, levels: dict[tuple[int, str], float], *, owned: s
     return ptr.Snapshot(name, date, ptr.parse_game_date(date), None, tables)
 
 
-KINDS = {"granary": "food", "lumber_mill": "goods", "carrier_inn": "logistics", "field_drainage": "improve"}
+KINDS = {"granary": "food", "lumber_mill": "business", "carrier_inn": "logistics", "field_drainage": "improve"}
 
 
 def test_levels_by_type_against_the_baseline_over_common_locations() -> None:
@@ -161,7 +161,7 @@ def test_levels_by_type_against_the_baseline_over_common_locations() -> None:
     assert rows["lumber_mill"]["plan_extra"] == 1
     assert rows["carrier_inn"]["kind"] == "logistics"
     kinds = {r["kind"]: r["plan_extra"] for r in ptr.levels_by_kind(by_type).iter_rows(named=True)}
-    assert kinds == {"food": 6, "logistics": 1, "goods": 1}
+    assert kinds == {"food": 6, "logistics": 1, "business": 1}
     # without a baseline: first to last save, over the locations owned in both (4 was lost)
     plain = ptr.levels_by_type(ptr.comparison([run0, run1, run2], [], "CAS"), "CAS", KINDS)
     assert dict(plain.select("building_type", "run_added").iter_rows()) == {"granary": 3, "lumber_mill": -2}
@@ -222,7 +222,6 @@ def test_food_stores_and_market_access() -> None:
     row = stores.row(0, named=True)
     assert row["provinces"] == 2 and row["months_under 3"] == 1 and row["months_12-24"] == 1
     assert row["granary_due"] == 1 and row["grange_due"] == 0
-    assert ptr.food_statuses([("run", s)], "CAS") is None  # no province variables in the tables
     access = ptr.market_access([("run", s)], "CAS", KINDS, ptr.Settings()).row(0, named=True)
     assert access["below_line"] == 2 and access["logistics_levels"] == 2
     assert ptr.improvement_fill([("run", s)], "CAS", 90) is None
@@ -245,7 +244,7 @@ def test_build_report_writes_page_summary_and_csvs(tmp_path) -> None:
         assert heading in text
     assert "prefers-color-scheme: dark" in text and "builds_per_year.png" in text
     summary = (tmp_path / "summary.md").read_text(encoding="utf-8")
-    assert "Plan extra levels: +3" in summary and "no province variables" in summary
+    assert "Plan extra levels: +3" in summary
     for name in ("overview.csv", "builds_by_year.csv", "builds_by_building.csv", "passes_by_year.csv",
                  "levels_by_type.csv", "profile_rule_states.csv", "food_stores.csv", "market_access.csv",
                  "constructions.csv", "errors.csv", "speed_log.csv", "builds_per_year.png", "builds_per_year_dark.png"):

@@ -1,0 +1,44 @@
+﻿# Unit experience decays a fifth as fast as in vanilla (2026-11-10, Jan: "5 times less decay ... I like the idea of
+# drilled armies being stronger"). Decay is the modifier experience_decay: each month a unit loses that share of its
+# experience, and every source adds up to one rate. So every source is cut to a fifth, with an inject that adds the
+# difference to vanilla's line (vanilla value -> the sum in the comment). Not tested in game.
+
+TRY_INJECT:is_army_levy = {
+	experience_decay = -0.016 # 0.02 -> 0.004
+}
+
+TRY_INJECT:is_army_regular = {
+	experience_decay = 0.008 # -0.01 -> -0.002
+}
+
+TRY_INJECT:is_navy_levy = {
+	experience_decay = -0.016 # 0.02 -> 0.004
+}
+
+TRY_INJECT:is_navy_regular = {
+	experience_decay = 0.008 # -0.01 -> -0.002
+}
+
+TRY_INJECT:in_combat = {
+	experience_decay = 0.04 # -0.05 -> -0.01
+}
+
+TRY_INJECT:in_siege = {
+	experience_decay = 0.024 # -0.03 -> -0.006
+}
+
+TRY_INJECT:is_blockading = {
+	experience_decay = 0.024 # -0.03 -> -0.006
+}
+
+TRY_INJECT:extensive_training_modifier = {
+	experience_decay = 0.02 # -0.025 -> -0.005
+}
+
+TRY_INJECT:battle_hardened_veterans_modifier = {
+	experience_decay = 0.04 # -0.05 -> -0.01
+}
+
+TRY_INJECT:receiving_support_military = {
+	experience_decay = 0.008 # -0.01 -> -0.002
+}

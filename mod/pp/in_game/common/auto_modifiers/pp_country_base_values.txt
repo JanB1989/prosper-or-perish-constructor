@@ -7,6 +7,10 @@ TRY_INJECT:country_base_values = {
 	global_raw_material_output = -0.65
 	# province store spoilage: vanilla's 0.005 + this = 0.004 a month (2026-10-04, Jan; was +0.01 = 0.015)
 	global_food_decay = -0.001
+	# unit experience decay: vanilla's 0.05 + this = 0.01 a month, a fifth (2026-11-10, Jan); the other sources are cut
+	# the same way in static_modifiers/pp_experience_decay.txt, advances/pp_experience_decay.txt and
+	# religious_aspects/pp_experience_decay.txt
+	experience_decay = -0.04
 	# No base values for the province store: the store lever (Low Stores / Full Stores, static_modifiers/pp_stored_food.txt)
 	# is zero at 12 stored months, so the old constants (-100 % Surplus Sales, +1900 % offset)
 	# are gone since 2026-10-02.

@@ -1,0 +1,8 @@
+﻿# Unit experience decays a fifth as fast as in vanilla (2026-11-10, Jan: "5 times less decay ... I like the idea of
+# drilled armies being stronger"). Decay is the modifier experience_decay: each month a unit loses that share of its
+# experience, and every source adds up to one rate. So every source is cut to a fifth, with an inject that adds the
+# difference to vanilla's line (vanilla value -> the sum in the comment). Not tested in game.
+
+TRY_INJECT:military_traditions = {
+	experience_decay = 0.008 # -0.01 -> -0.002
+}

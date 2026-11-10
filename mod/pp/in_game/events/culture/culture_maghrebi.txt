@@ -2169,6 +2169,7 @@ maghrebi_cultural_change_events.1004 = {
 	outcome = negative
 
 	trigger = {
+		religion.group = religion_group:muslim
 		any_owned_non_rural_location = {
 			region = region:maghreb_region
 			any_pop = {

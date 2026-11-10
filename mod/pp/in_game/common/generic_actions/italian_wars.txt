@@ -208,6 +208,7 @@ create_italian_league = {
 	
 	potential = {
 		scope:actor ?= {
+			country_type = location
 			capital.region = region:italy_region
 			religion.group = religion_group:christian
 			is_leader_of_any_league = no
@@ -330,6 +331,7 @@ create_italian_league = {
 				every_related_country = {
 					type = alliance
 					limit = {
+						country_type = location
 						at_war = no
 						NOT = { has_cooldown = join_a_league }
 						NOR = {
@@ -1348,6 +1350,7 @@ challenge_league_leadership = {
 	type = internationalorganization
 
 	potential = {
+		scope:actor ?= { country_type = location }
 	}
 
 	allow = {

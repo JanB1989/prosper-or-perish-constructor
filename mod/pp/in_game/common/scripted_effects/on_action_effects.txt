@@ -667,55 +667,60 @@ remove_cardinal_variables = {
 
 # location scope
 set_up_cardinal = {
-	save_temporary_scope_as = cardinal_seat_location
-    owner = {
-		if = {
-			limit = {
-				any_character = {
-					is_alive = yes
-					is_adult = yes
-					is_female = no
-					has_estate = estate_type:clergy_estate
-					religion = this.religion
-					is_artist = no
-					is_religious_order_member = no
-					or = {
-						is_religious_figure = no
-						religious_figure != religious_figure:cardinal
-					}
-				}
-			}
-			#someone in the country
-			random_character = {
+	if = {
+		limit = {
+			owner ?= { religion = religion:catholic }
+		}
+		save_temporary_scope_as = cardinal_seat_location
+	    owner = {
+			if = {
 				limit = {
-					is_alive = yes
-					is_adult = yes
-					is_female = no
-					has_estate = estate_type:clergy_estate
-					religion = this.religion
-					is_artist = no
-					is_religious_order_member = no
-					or = {
-						is_religious_figure = no
-						religious_figure != religious_figure:cardinal
+					any_character = {
+						is_alive = yes
+						is_adult = yes
+						is_female = no
+						has_estate = estate_type:clergy_estate
+						religion = religion:catholic
+						is_artist = no
+						is_religious_order_member = no
+						or = {
+							is_religious_figure = no
+							religious_figure != religious_figure:cardinal
+						}
 					}
 				}
-				save_temporary_scope_as = target_cardinal
+				#someone in the country
+				random_character = {
+					limit = {
+						is_alive = yes
+						is_adult = yes
+						is_female = no
+						has_estate = estate_type:clergy_estate
+						religion = religion:catholic
+						is_artist = no
+						is_religious_order_member = no
+						or = {
+							is_religious_figure = no
+							religious_figure != religious_figure:cardinal
+						}
+					}
+					save_temporary_scope_as = target_cardinal
+				}
 			}
-		}
-		else = {
-			#nobody suitable, create one
-			create_character = {
-				religion = this.religion
-				female = no
-				estate = estate_type:clergy_estate
-				age = { 40 65 }
-				save_temporary_scope_as = target_cardinal
+			else = {
+				#nobody suitable, create one
+				create_character = {
+					religion = religion:catholic
+					female = no
+					estate = estate_type:clergy_estate
+					age = { 40 65 }
+					save_temporary_scope_as = target_cardinal
+				}
 			}
-		}
-    }
-    scope:target_cardinal = {
-		set_character_location = scope:cardinal_seat_location
-		set_character_religious_figure = religious_figure:cardinal
-    }
+	    }
+	    scope:target_cardinal = {
+			set_character_location = scope:cardinal_seat_location
+			set_character_religious_figure = religious_figure:cardinal
+	    }
+	}
 }

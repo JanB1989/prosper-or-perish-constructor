@@ -319,29 +319,14 @@ REPLACE:local_governor = {
 	city = yes
 	megalopolis = yes
 	allow = {
-		trigger_if = {
-			limit = { has_dlc = "d009_across_the_pillars" }
-			custom_tooltip = {
-				text = local_governor_dlc_tt
-				scope:actor = {
-					total_building_levels_including_construction:local_governor < {
-						value = effective_num_local_governors
-						subtract = total_building_levels_including_construction:itinerant_court_seat
-						subtract = total_building_levels_including_construction:kings_manor
-					}
-				}
-			}
-		}
-		trigger_else = {
-			custom_tooltip = {
-				text = local_governor_tt
-				scope:actor = {
-					total_building_levels_including_construction:local_governor < {
-						value = effective_num_local_governors
-						subtract = total_building_levels_including_construction:lieutenancy
-						subtract = total_building_levels_including_construction:itinerant_court_seat
-						subtract = total_building_levels_including_construction:kings_manor
-					}
+		custom_tooltip = {
+			text = local_governor_tt
+			scope:actor = {
+				total_building_levels_including_construction:local_governor < {
+					value = effective_num_local_governors
+					subtract = lieutenancies_in_governor_pool
+					subtract = total_building_levels_including_construction:itinerant_court_seat
+					subtract = total_building_levels_including_construction:kings_manor
 				}
 			}
 		}

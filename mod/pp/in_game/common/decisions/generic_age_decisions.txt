@@ -203,6 +203,7 @@ construct_a_grand_palace_decision = {
 	potential = {
 		current_age_or_later = { age = age_2_renaissance }
 		exists = capital
+		NOT = { country_type = building }
 		government_type = government_type:monarchy
 		capital = {
 			has_great_or_unique_palace = no

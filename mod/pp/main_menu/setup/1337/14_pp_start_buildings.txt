@@ -79,6 +79,7 @@ building_manager = {
 	cattle_farm = { tag = HLG level = 1 location = abdanan }
 	cattle_farm = { tag = ETH level = 1 location = abiy_addi }
 	cattle_farm = { tag = HUT level = 1 location = abu_qasr }
+	cattle_farm = { tag = SBY level = 1 location = ad_dilam }
 	cattle_farm = { tag = JAP level = 2 location = adachi }
 	cattle_farm = { tag = JAP level = 2 location = adachi_kanto }
 	cattle_farm = { tag = CIL level = 1 location = adana }
@@ -115,7 +116,7 @@ building_manager = {
 	cattle_farm = { tag = YEM level = 1 location = al_khosuf }
 	cattle_farm = { tag = ALO level = 2 location = al_matamma }
 	cattle_farm = { tag = MEC level = 1 location = al_muthainiyah }
-	cattle_farm = { tag = YEM level = 2 location = al_qara }
+	cattle_farm = { tag = YEM level = 1 location = al_qara }
 	cattle_farm = { tag = HLG level = 2 location = al_qatr }
 	cattle_farm = { tag = FDL level = 2 location = al_thulayma }
 	cattle_farm = { tag = HLL level = 1 location = al_udayb }
@@ -1216,6 +1217,7 @@ building_manager = {
 	cattle_farm = { tag = ARK level = 2 location = launggyet }
 	cattle_farm = { tag = AMG level = 2 location = lautrec }
 	cattle_farm = { tag = MIE level = 2 location = laval }
+	cattle_farm = { tag = YEM level = 2 location = lawdar }
 	cattle_farm = { tag = INA level = 1 location = lazkiye }
 	cattle_farm = { tag = BRI level = 2 location = le_faou }
 	cattle_farm = { tag = ANJ level = 2 location = le_lude }
@@ -3233,7 +3235,7 @@ building_manager = {
 	cookshop = { tag = KSW level = 1 location = kishtwar }
 	cookshop = { tag = UFF level = 1 location = kitzingen }
 	cookshop = { tag = HAB level = 1 location = klagenfurt }
-	cookshop = { tag = CRO level = 1 location = knin }
+	cookshop = { tag = CRO level = 2 location = knin }
 	cookshop = { tag = VND level = 4 location = kollam }
 	cookshop = { tag = MOS level = 1 location = kolomna }
 	cookshop = { tag = GRG level = 1 location = konjikala }
@@ -9589,7 +9591,6 @@ building_manager = {
 	granary = { tag = CDL level = 1 location = yongping_yongchang }
 	granary = { tag = ZAP level = 1 location = yucucui }
 	granary = { tag = TPL level = 1 location = yucundaa }
-	granary = { tag = VEN level = 1 location = zadar }
 	granary = { tag = HAL level = 1 location = zalishchyky }
 	granary = { tag = ZNK level = 1 location = zangla }
 	granary = { tag = KRT level = 1 location = zaveh }
@@ -16668,7 +16669,7 @@ building_manager = {
 	ocean_fishery = { tag = CHI level = 2 location = shuangxi }
 	ocean_fishery = { tag = CHI level = 2 location = shunde }
 	ocean_fishery = { tag = YEM level = 2 location = shuqra }
-	ocean_fishery = { tag = CRO level = 3 location = sibenik }
+	ocean_fishery = { tag = VEN level = 3 location = sibenik }
 	ocean_fishery = { tag = BUS level = 2 location = sibolga }
 	ocean_fishery = { tag = LIG level = 1 location = sichon }
 	ocean_fishery = { tag = SDR level = 2 location = sidenreng }
@@ -17164,7 +17165,7 @@ building_manager = {
 	olive_farm = { tag = HSN level = 2 location = savur }
 	olive_farm = { tag = GRM level = 1 location = seyhli }
 	olive_farm = { tag = BYZ level = 1 location = siatista }
-	olive_farm = { tag = CRO level = 2 location = sibenik }
+	olive_farm = { tag = VEN level = 2 location = sibenik }
 	olive_farm = { tag = SIE level = 1 location = siena }
 	olive_farm = { tag = ARA level = 1 location = sitges }
 	olive_farm = { tag = NAP level = 1 location = sora }
@@ -20566,7 +20567,6 @@ building_manager = {
 	tavern = { tag = ZAP level = 1 location = zaachila }
 	tavern = { tag = ZAT level = 1 location = zacatlan }
 	tavern = { tag = ZCZ level = 1 location = zacazonapan }
-	tavern = { tag = VEN level = 1 location = zadar }
 	tavern = { tag = CHI level = 1 location = zag_suujiyn_gobi }
 	tavern = { tag = HAL level = 1 location = zalishchyky }
 	tavern = { tag = GLH level = 1 location = zamyany }
@@ -20715,7 +20715,7 @@ building_manager = {
 	tools_guild = { tag = INJ level = 2 location = isfahan }
 	tools_guild = { tag = CHI level = 2 location = jiangning }
 	tools_guild = { tag = CHI level = 2 location = jiaxing }
-	tools_guild = { tag = ACH level = 2 location = kalamata }
+	tools_guild = { tag = ACH level = 1 location = kalamata }
 	tools_guild = { tag = KAN level = 2 location = kano }
 	tools_guild = { tag = KTS level = 2 location = katsina }
 	tools_guild = { tag = RKL level = 1 location = kermanshah }

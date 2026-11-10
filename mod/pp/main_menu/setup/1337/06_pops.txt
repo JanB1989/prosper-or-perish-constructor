@@ -26447,8 +26447,7 @@ sinj = {
 zadar = {
 	define_pop = {	type = peasants	size = 1.077	culture = croatian	religion = catholic }
 	define_pop = {	type = peasants	size = 0.806	culture = venetian	religion = catholic }
-	define_pop = {	type = peasants	size = 3.484	culture = dalmatian	religion = catholic }
-	define_pop = {	type = laborers	size = 0.022	culture = dalmatian	religion = catholic }	# pp start: converted from peasants
+	define_pop = {	type = peasants	size = 3.506	culture = dalmatian	religion = catholic }
 }
 dinaric_alps1 = {
 }
@@ -80384,10 +80383,9 @@ igli = {
 	define_pop = {	type = peasants	size = 2.787	culture = mozabite	religion = ibadi }
 }
 tabelbala = {
-	define_pop = {	type = tribesmen	size = 1.052	culture = zenati	religion = sunni }
-	define_pop = {	type = tribesmen	size = 2.456	culture = mozabite	religion = ibadi }
-	define_pop = {	type = peasants	size = 0.249	culture = zenati	religion = sunni }
-	define_pop = {	type = peasants	size = 0.581	culture = mozabite	religion = ibadi }
+	define_pop = {	type = peasants	size = 3.170	culture = songhai	religion = sunni }
+	define_pop = {	type = tribesmen	size = 0.868	culture = messufa_culture	religion = sunni }
+	define_pop = {	type = peasants	size = 0.300	culture = zenati	religion = sunni }
 }
 taghit = {
 	define_pop = {	type = peasants	size = 0.746	culture = zenati	religion = sunni }

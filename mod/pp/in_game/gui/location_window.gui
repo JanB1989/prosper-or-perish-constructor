@@ -1075,7 +1075,7 @@
 					size = { 63 63 }
 					# UPGRADE RANK
 					button_regular = {
-						visible = "[Location.GetOwner.IsPlayer]"
+						visible = "[Or(Location.GetOwner.IsPlayer, Location.GetOwner.GetDiplomacy.IsSubjectOf(GetPlayer))]"
 						size = { 100% 100% }
 						position = {0 1}
 	
@@ -1117,14 +1117,14 @@
 					}
 
 					icon = {
-						visible = "[Location.GetOwner.IsPlayer]"
+						visible = "[Or(Location.GetOwner.IsPlayer, Location.GetOwner.GetDiplomacy.IsSubjectOf(GetPlayer))]"
 						size = { 40 40 }
 						parentanchor = center
 						texture = "[Location.GetRankIcon]"
 					}
 					
 					icon = {
-						visible = "[Not(Location.GetOwner.IsPlayer)]"
+						visible = "[Not(Or(Location.GetOwner.IsPlayer, Location.GetOwner.GetDiplomacy.IsSubjectOf(GetPlayer)))]"
 						size = { 40 40 }
 						parentanchor = center
 						texture = "[Location.GetRankIcon]"
@@ -1176,6 +1176,7 @@
 						button = {
 							visible = "[And(Location.IsColonized, Location.GetOwner.IsPlayer)]"
 							size = { 22 22 }
+							tooltipwidget = { BasicFunctionalTooltip = {} }
 							action_tooltip = {
 								click_type = left
 								click_mode = single
@@ -1773,7 +1774,7 @@
 					size = { 63 63 }
 					# UPGRADE RANK
 					button_regular = {
-						visible = "[Location.GetOwner.IsPlayer]"
+						visible = "[Or(Location.GetOwner.IsPlayer, Location.GetOwner.GetDiplomacy.IsSubjectOf(GetPlayer))]"
 						size = { 100% 100% }
 						position = {0 1}
 	
@@ -1815,14 +1816,14 @@
 					}
 
 					icon = {
-						visible = "[Location.GetOwner.IsPlayer]"
+						visible = "[Or(Location.GetOwner.IsPlayer, Location.GetOwner.GetDiplomacy.IsSubjectOf(GetPlayer))]"
 						size = { 40 40 }
 						parentanchor = center
 						texture = "[Location.GetRankIcon]"
 					}
 					
 					icon = {
-						visible = "[Not(Location.GetOwner.IsPlayer)]"
+						visible = "[Not(Or(Location.GetOwner.IsPlayer, Location.GetOwner.GetDiplomacy.IsSubjectOf(GetPlayer)))]"
 						size = { 40 40 }
 						parentanchor = center
 						texture = "[Location.GetRankIcon]"
@@ -1874,6 +1875,7 @@
 						button = {
 							visible = "[And(Location.IsColonized, Location.GetOwner.IsPlayer)]"
 							size = { 22 22 }
+							tooltipwidget = { BasicFunctionalTooltip = {} }
 							action_tooltip = {
 								click_type = left
 								click_mode = single
@@ -5304,6 +5306,7 @@ lateralview = {
 										blockoverride "market_contextmenu_post_entries" {
 											ContextMenuEntry = {
 												visible = "[And(Not(IsLobbyOpen), Not(Location.IsMarketCenter))]"
+												enabled = "[Location.CanCreateMarket]"
 
 												blockoverride "entry_button" {
 													button = {
@@ -10959,7 +10962,7 @@ pp_land_potential_chip = {}
 										fontsize = 13
 										align = right|nobaseline
 										visible = "[And(HasMigrationIntelOn(Location.Self), Not(StringIsEmpty(LocationView.GetLocation.GetMigrationInformation)))]"
-										raw_text = "[LocationView.GetLocation.GetMigrationChange]@population!   |"
+										raw_text = "[LocationView.GetLocation.GetMigrationChangeCompact]@population!   |"
 									}
 									text_single = {
 										fontsize = 13
@@ -10993,7 +10996,7 @@ pp_land_potential_chip = {}
 										fontsize = 13
 										align = right|nobaseline
 										visible = "[And(HasMigrationIntelOn(Location.Self), Not(StringIsEmpty(LocationView.GetLocation.GetMigrationInformation)))]"
-										raw_text = "[LocationView.GetLocation.GetMigrationChange]@population!   |"
+										raw_text = "[LocationView.GetLocation.GetMigrationChangeCompact]@population!   |"
 									}
 									text_single = {
 										fontsize = 13
@@ -11609,7 +11612,7 @@ pp_land_potential_chip = {}
 												widget = {
 													size = { 28 28 }
 													icon = {
-														visible = "[Not(LocationView.GetLocation.CanAssimilate)]"
+														visible = "[And(Not(LocationView.GetLocation.CanAssimilate), Not(LocationView.GetLocation.IsAssimilatingToCulture(PopCultureItem.GetCulture)))]"
 														size = { 28 28 }
 														texture = "gfx/interface/icons/location_icons/new/cannot_assimilate.dds"
 														tooltipwidget = {
@@ -11928,7 +11931,7 @@ pp_land_potential_chip = {}
 											widget = {
 												size = { 28 28 }
 												icon = {
-													visible = "[Not(LocationView.GetLocation.CanConvert)]"
+													visible = "[And(Not(LocationView.GetLocation.CanConvert), Not(LocationView.GetLocation.IsConvertingToReligion(PopReligionItem.GetReligion)))]"
 													size = { 28 28 }
 													texture = "gfx/interface/icons/location_icons/new/cannot_convert.dds"
 													tooltipwidget = {

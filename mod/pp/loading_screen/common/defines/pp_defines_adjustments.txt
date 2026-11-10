@@ -253,7 +253,9 @@ NCountry = {
 NUnit = {
 	# 2026-10-11 (Jan): ships sail 50 % faster. The AI needed 9-18 months from Europe round the Cape to India (about
 	# 6 historically), so troops ran out of food and wars were over before they landed (trade-expedition ferry tests).
-	NAVY_MOVEMENT_SPEED = 5.2875 # 3.525
+	# EU5 1.4.8 split the define by time step (game rule tick_rate): both get the same +50 %.
+	NAVY_MOVEMENT_SPEED_DAILY = 5.2875 # 3.525
+	NAVY_MOVEMENT_SPEED_HOURLY = 0.75 # 0.5
 }
 
 NDiplomacy = {

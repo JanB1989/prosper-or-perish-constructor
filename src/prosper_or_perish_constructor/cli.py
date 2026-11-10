@@ -738,6 +738,35 @@ def _build_parser() -> argparse.ArgumentParser:
         help="error.log to scan for plan lines (default: the game's logs/error.log); repeat for rotated logs.",
     )
     plan_report.add_argument("--out", type=Path, default=None, help="Output folder (default artifacts/plan_test/<today>/report).")
+    plan_run_report = _add_command(
+        subcommands,
+        "plan-run-report",
+        "Compare an unattended Construction Plan run with a control run for one country (yearly saves of both): "
+        "buildings by kind, closed and under-staffed levels, treasury, income, tax base, population, stored food, "
+        "market access, the plan's constructions, purses and savings, the markets it built for, stops, a verdict.",
+        _plan_run_report,
+    )
+    for side, what in (("plan", "the plan run"), ("control", "the control run (the normal AI builds)")):
+        plan_run_report.add_argument(
+            f"--{side}", action="append", default=[],
+            help=f"A save of {what}: a name in the save folder or a path; repeat.",
+        )
+        plan_run_report.add_argument(f"--{side}-glob", default=None, help=f"Saves of {what} by a file pattern in the save folder.")
+        plan_run_report.add_argument(
+            f"--{side}-dir", type=Path, default=None,
+            help=f"A folder with the saves of {what} (pp_run_loop.ps1 writes pp_testing/runs/<label>): every *.eu5 in it.",
+        )
+    plan_run_report.add_argument("--country", default=None, help="Country tag in the plan run's first save (default: the country that runs the plan).")
+    plan_run_report.add_argument(
+        "--debug-log", type=Path, default=None,
+        help="The plan run's debug.log (default: logs/debug.log in --plan-dir, else the game's logs/debug.log).",
+    )
+    plan_run_report.add_argument(
+        "--error-log", type=Path, action="append", default=None,
+        help="The plan run's error.log (default: logs/error*.log in --plan-dir, else the game's logs/error.log); repeat.",
+    )
+    plan_run_report.add_argument("--run-log", type=Path, default=None, help="pp_run_loop.ps1's run.log of the plan run (default: run.log in --plan-dir).")
+    plan_run_report.add_argument("--out", type=Path, default=None, help="Output folder (default artifacts/plan_test/<today>/run_report).")
     publish_wip = _add_command(
         subcommands,
         "publish-wip",
@@ -3862,6 +3891,72 @@ def _plan_report(args: argparse.Namespace, extra: Sequence[str], repo: Path, pro
         error_lines=error_lines, error_source=", ".join(str(p) for p in error_paths), kinds=kinds,
         settings=ptr.settings_from_config(project),
         improve_fill_pct=float(construction_plan.load_config(project).improve_fill_pct),
+    )
+    print(f"open: {page}", flush=True)
+    return 0
+
+
+def _plan_run_report(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("plan-run-report does not accept extra arguments.")
+    from datetime import date
+
+    from prosper_or_perish_constructor import plan_run_report as prr
+    from prosper_or_perish_constructor import plan_test_report as ptr
+    from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
+
+    save_dir = _resolve_save_dir(repo, None)
+
+    def saves(names: Sequence[str], pattern: str | None, folder: Path | None) -> list[Path]:
+        paths = []
+        for name in names:
+            path = Path(name).expanduser()
+            if not path.is_file():
+                path = save_dir / (name if name.endswith(".eu5") else f"{name}.eu5")
+            if not path.is_file():
+                raise SystemExit(f"no save {name!r} (looked for {path})")
+            paths.append(path)
+        if pattern:
+            paths += sorted(p for p in save_dir.glob(pattern) if p.suffix == ".eu5")
+        if folder is not None:
+            paths += sorted(folder.expanduser().glob("*.eu5"))
+        return list(dict.fromkeys(paths))
+
+    plan_paths = saves(args.plan, args.plan_glob, args.plan_dir)
+    if not plan_paths:
+        raise SystemExit("plan-run-report needs the plan run's saves (--plan, --plan-glob or --plan-dir).")
+    control_paths = saves(args.control, args.control_glob, args.control_dir)
+    load_order = repo / "constructor.load_order.toml"
+    plan = [ptr.load_snapshot(path, load_order) for path in plan_paths]
+    control = [ptr.load_snapshot(path, load_order) for path in control_paths]
+
+    # the logs: given, else the ones pp_run_loop.ps1 copied beside the plan run's saves, else the game's own
+    run_dir = args.plan_dir.expanduser() if args.plan_dir is not None else None
+    game_logs = save_dir.parent / "logs"
+    kept = run_dir / "logs" if run_dir is not None and (run_dir / "logs" / "debug.log").is_file() else None
+    debug = args.debug_log.expanduser() if args.debug_log else (kept or game_logs) / "debug.log"
+    debug_lines = ptr.read_lines(debug) if debug.is_file() else None
+    if debug_lines is None:
+        print(f"plan-run-report: no debug log at {debug}", flush=True)
+    if args.error_log:
+        error_paths = [p.expanduser() for p in args.error_log]
+    elif kept is not None:
+        error_paths = sorted(kept.glob("error*.log"))
+    else:
+        error_paths = [game_logs / "error.log"]
+    error_lines: list[str] | None = None
+    for path in error_paths:
+        if path.is_file():
+            error_lines = (error_lines or []) + ptr.read_lines(path)
+    run_log = args.run_log.expanduser() if args.run_log else (run_dir / "run.log" if run_dir is not None else None)
+    run_log_lines = ptr.read_lines(run_log) if run_log is not None and run_log.is_file() else None
+
+    kinds = ptr.building_kinds(repo, project, _project_mod_root(repo, project), vanilla_root(repo, project))
+    out = _repo_path(repo, args.out) if args.out else repo / "artifacts" / "plan_test" / date.today().isoformat() / "run_report"
+    page = prr.build_run_report(
+        plan, out, control_saves=control, country=args.country, debug_lines=debug_lines, debug_source=str(debug),
+        error_lines=error_lines, error_source=", ".join(str(p) for p in error_paths), run_log_lines=run_log_lines,
+        kinds=kinds, settings=ptr.settings_from_config(project),
     )
     print(f"open: {page}", flush=True)
     return 0

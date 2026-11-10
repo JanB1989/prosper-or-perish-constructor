@@ -234,8 +234,13 @@ def test_every_locations_turn_comes_exactly_once_a_cycle() -> None:
     after the country's place in that order, a window's worth, then moves the place on and starts again after the
     last number. Simulated here as the script does it."""
     config = _config()
-    assert _window(LOCATIONS) == config.business_sites == 16  # a 330-location country: the fixed few
-    assert _window(1200) == pytest.approx(1200 / config.business_cycle_months)  # a large one: seen within the cycle
+    assert _window(100) == config.business_sites == 16  # a small country: the fixed few
+    assert _window(LOCATIONS) == pytest.approx(LOCATIONS / cp.business_refresh_passes(config))  # 330 locations
+    # a large one: seen within the cycle (the refresh rests in the food look's months: the passes that are left)
+    assert cp.business_refresh_passes(config) == config.business_cycle_months * 8 / 12
+    assert _window(1200) == pytest.approx(1200 / cp.business_refresh_passes(config))
+    group = _effect(_read(EFFECTS), "pp_cplan_group_business")
+    assert "limit = { NOT = { pp_cplan_looks_food = yes } }\n\t\t\tpp_cplan_business_refresh = yes" in group
     assert _window(0) == config.business_sites
     turn = _effect(_read(TRIGGERS), "pp_cplan_business_turn")
     assert turn.split() == "var:pp_cplan_seq > scope:pp_cplan_from var:pp_cplan_seq <= scope:pp_cplan_to".split()
@@ -251,7 +256,7 @@ def test_every_locations_turn_comes_exactly_once_a_cycle() -> None:
         numbers = [100 + n for n in range(1, locations + 1)]  # pp_cplan_seq, + 100 like the counter
         counter, cursor, turns, passes = 100 + locations, 100.0, {n: 0 for n in numbers}, 0
         while True:
-            window = max(config.business_sites, (counter - 100) / config.business_cycle_months)
+            window = max(config.business_sites, (counter - 100) / cp.business_refresh_passes(config))
             low, high = cursor, cursor + window
             for n in numbers:
                 if low < n <= high:
@@ -273,9 +278,9 @@ def test_cost_model_a_pass_scores_a_tenth_or_less() -> None:
     before = LOCATIONS * TYPES
     refresh = _window(LOCATIONS) * TYPES
     worst = refresh + config.business_tries * TYPES  # a pass with a look that tries every pick
-    assert refresh <= before / 20 and worst <= before / 10, (before, refresh, worst)
+    assert refresh <= before / cp.business_refresh_passes(config) + 1 and worst <= before / 10, (before, refresh, worst)
     # ... and it no longer grows with locations x types: ten times the locations, not ten times the sites
-    assert _window(10 * LOCATIONS) * TYPES <= (10 * LOCATIONS * TYPES) / config.business_cycle_months + 1
+    assert _window(10 * LOCATIONS) * TYPES <= (10 * LOCATIONS * TYPES) / cp.business_refresh_passes(config) + 1
     # walks over all owned locations a year (each a cheap limit per location; the ticked public buildings walk once
     # each): before every pass, now only in the look months
     ticked = len(cpc.load_config(PROJECT).public_buildings)

@@ -513,7 +513,13 @@ pp_cplan_improve_target = {
 pp_cplan_group_business = {
 	if = {
 		limit = { pp_cplan_business_w > 0 }
-		pp_cplan_business_refresh = yes
+		# not in the months of the food look, the dearest of the year (in game 2026-11-10: a food look 27-29 ms plus
+		# a refresh made the months above 50 ms); the window is sized for the months that are left
+		# (construction_plan.business_refresh_passes)
+		if = {
+			limit = { NOT = { pp_cplan_looks_food = yes } }
+			pp_cplan_business_refresh = yes
+		}
 		if = {
 			limit = {
 				OR = {

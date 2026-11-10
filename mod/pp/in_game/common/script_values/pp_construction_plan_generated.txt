@@ -200,7 +200,7 @@ pp_cplan_bz_window = {
 		limit = { has_variable = pp_cplan_seq_n }
 		value = var:pp_cplan_seq_n
 		subtract = 100
-		divide = 24
+		divide = 16
 	}
 	min = 16
 }

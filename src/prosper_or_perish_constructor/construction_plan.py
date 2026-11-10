@@ -207,6 +207,13 @@ LOOKS = (
 )
 
 
+def business_refresh_passes(config: "Config") -> float:
+    """The passes in which the business refresh runs within one cycle of [construction_plan] business_cycle_months:
+    it rests in the months of the food look (the dearest of the year), so the window is sized for the others."""
+    food = len(dict(config.look_months)["food"])
+    return config.business_cycle_months * (12 - food) / 12
+
+
 def _look_months(table: dict) -> tuple[tuple[str, tuple[int, ...]], ...]:
     if set(table) != set(LOOKS):
         raise ValueError(f"[construction_plan] look_months: give exactly {', '.join(LOOKS)}")
@@ -999,7 +1006,7 @@ def render_values(config: Config, demands: dict[str, dict[str, float]] | None = 
         "# Country scope: the sites whose business pick the pass refreshes: a fixed few, or as many as it takes to see\n"
         "# every location the country ever numbered (pp_cplan_seq_n) within the cycle.\n"
         "pp_cplan_bz_window = {\n\tvalue = 0\n\tif = {\n\t\tlimit = { has_variable = pp_cplan_seq_n }\n"
-        f"\t\tvalue = var:pp_cplan_seq_n\n\t\tsubtract = 100\n\t\tdivide = {config.business_cycle_months}\n\t}}\n"
+        f"\t\tvalue = var:pp_cplan_seq_n\n\t\tsubtract = 100\n\t\tdivide = {_num(business_refresh_passes(config))}\n\t}}\n"
         f"\tmin = {config.business_sites}\n}}\n"
         "# Any scope: the stored picks a look of the business group tries to build, best first.\n"
         f"pp_cplan_bz_tries = {{ value = {config.business_tries} }}\n"

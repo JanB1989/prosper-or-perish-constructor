@@ -28,11 +28,14 @@
 # that waited for gold), the list pp_cplan_log_<why>, the group's situation pp_cplan_ds_<name>, and the last 12 passes
 # pp_cplan_hn_<why>_<k> / pp_cplan_hs_<why>_<k> (wanted / spent, k = 1 the last; generated pp_cplan_stats_reset,
 # pp_cplan_history_push). The rules never read any of it: the window only.
-# Location: pp_cplan_log_why + list pp_cplan_log_types (the last pass's constructions here) and the construction's
-# pp_cplan_log_cost (gold), pp_cplan_log_val (its reason value + 100: the food store a year from now in months, market
-# access %, population % of capacity, payback years) and pp_cplan_log_step (the food rule's step, a profile's rule;
-# towns and buildings: 1 a building, 2 a town or city upgrade, which is no building: that group writes the entry
-# itself and leaves pp_cplan_log_types empty, the window then names the upgrade, type pp_cplan_rank_upgrade);
+# Location, per rule group <why> that built here in the last pass (a location with two construction slots can get
+# two constructions in one pass, from two groups or from one: in game 2026-11-10 one line per location named both
+# buildings in both groups' lists with the later one's cost and reason): the list pp_cplan_log_types_<why> (its
+# buildings here), pp_cplan_log_cost_<why> (the gold it paid here, two constructions added up), pp_cplan_log_val_<why>
+# (the reason value + 100: the food store a year from now in months, market access %, population % of capacity,
+# payback years) and pp_cplan_log_step_<why> (the food rule's step, a profile's rule; towns and buildings: 1 a
+# building, 2 a town or city upgrade, 3 a building's upgrade). A town or city upgrade is no building: that group
+# writes the entry itself and sets pp_cplan_log_rank, the window then names the upgrade (type pp_cplan_rank_upgrade);
 # pp_cplan_bz_pick / pp_cplan_bz_roi during the business group only.
 
 # Country scope: the monthly pass.
@@ -41,11 +44,13 @@ pp_cplan_run = {
 	save_scope_as = actor # building conditions read the builder as scope:actor
 	every_in_list = {
 		variable = pp_cplan_log
-		clear_variable_list = pp_cplan_log_types
-		remove_variable = pp_cplan_log_why
-		remove_variable = pp_cplan_log_cost
-		remove_variable = pp_cplan_log_val
-		remove_variable = pp_cplan_log_step
+		pp_cplan_log_clear = { why = 101 }
+		pp_cplan_log_clear = { why = 102 }
+		pp_cplan_log_clear = { why = 103 }
+		pp_cplan_log_clear = { why = 105 }
+		pp_cplan_log_clear = { why = 106 }
+		pp_cplan_log_clear = { why = 107 }
+		remove_variable = pp_cplan_log_rank
 	}
 	clear_variable_list = pp_cplan_log
 	set_variable = { name = pp_cplan_started value = 100 }
@@ -566,12 +571,18 @@ pp_cplan_construct_now = {
 		}
 		add_to_variable_list = { name = pp_cplan_log_$why$ target = scope:pp_cplan_site }
 	}
-	add_to_variable_list = { name = pp_cplan_log_types target = scope:pp_cplan_btype }
-	set_variable = { name = pp_cplan_log_why value = $why$ }
-	# the window: what it cost and why (the group's reason value and step, scope:pp_cplan_rv / _rs)
-	set_variable = { name = pp_cplan_log_cost value = scope:pp_cplan_paid }
-	set_variable = { name = pp_cplan_log_val value = scope:pp_cplan_rv }
-	set_variable = { name = pp_cplan_log_step value = scope:pp_cplan_rs }
+	# the window, per rule group: what it built here, what that cost (a second construction of the group here in
+	# this pass adds up) and why (the group's reason value and step, scope:pp_cplan_rv / _rs)
+	add_to_variable_list = { name = pp_cplan_log_types_$why$ target = scope:pp_cplan_btype }
+	if = {
+		limit = { has_variable = pp_cplan_log_cost_$why$ }
+		change_variable = { name = pp_cplan_log_cost_$why$ add = scope:pp_cplan_paid }
+	}
+	else = {
+		set_variable = { name = pp_cplan_log_cost_$why$ value = scope:pp_cplan_paid }
+	}
+	set_variable = { name = pp_cplan_log_val_$why$ value = scope:pp_cplan_rv }
+	set_variable = { name = pp_cplan_log_step_$why$ value = scope:pp_cplan_rs }
 	# test runs (pp_cplan_ai_test, set by the console): three lines per construction in debug.log, read by ppc
 	# plan-report: the rule group, the building type ("Building Type 'Granary' (350)") and the location ("Location
 	# 'Valladolid' (2584)", its id). debug_log gets no data context (in game 2026-11-09: ROOT and saved scopes are null
@@ -582,6 +593,14 @@ pp_cplan_construct_now = {
 		scope:pp_cplan_btype = { debug_log_scopes = no }
 		debug_log_scopes = no
 	}
+}
+
+# Location scope: forget what the rule group $why$ built here in the last pass (the window's lists).
+pp_cplan_log_clear = {
+	clear_variable_list = pp_cplan_log_types_$why$
+	remove_variable = pp_cplan_log_cost_$why$
+	remove_variable = pp_cplan_log_val_$why$
+	remove_variable = pp_cplan_log_step_$why$
 }
 
 # Location scope: the same for the food rule.

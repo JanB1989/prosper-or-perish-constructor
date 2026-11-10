@@ -539,14 +539,32 @@ def test_also_build_row_tiles() -> None:
     position = 0
     for item in items:
         toggle = m.execute("pp_lplan_toggle", "Location.MakeScope", pp_key=item.key)
-        tile = (f"visible = \"[Location.MakeScope.Var('{item.var}').IsSet]\"\n\t\t\t\t\t\tsize = {{ {m.MARK_TILE} 34 }}")
+        tile = (f"visible = \"[Location.MakeScope.Var('{item.var}').IsSet]\"\n\t\t\t\t\t\t\t\tsize = {{ {m.MARK_TILE} 34 }}")
         at = marked.index(tile, position)  # the picker's order
         position = at + 1
-        block = marked[at:marked.index("\n\t\t\t\t\t}\n", at)]
+        block = marked[at:marked.index("\n\t\t\t\t\t\t\t}\n", at)]
         assert f"down = \"[Location.MakeScope.Var('{item.var}').IsSet]\"" in block, item.key
         assert f'tooltip = "PP_LPLAN_PICK_{item.key.upper()}"' in block and f'onclick = "{toggle}"' in block, item.key
         assert f'texture = "{item.icon}"' in block, item.key
     assert marked.count("pp_lplan_toggle") == len(items)
+    # the line is as wide as its tiles and cut there: marked tiles are never hidden, so twelve or more made the line
+    # wider than the card (in game 2026-11-10: thirteen marks pushed the round buttons out of the window); the title
+    # then says how many are marked
+    line = (f"hbox = {{\n\t\t\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\t\t\twidget = {{\n\t\t\t\t\t\tsize = {{ {lpf.QUICK_ROW * m.MARK_TILE} 34 }}"
+            "\n\t\t\t\t\t\tscissor = yes\n\t\t\t\t\t\tflowcontainer = {")
+    assert row.count(line) == 1 and row.index(line) < row.index("pp_lplan_toggle")
+    # at the left, under the title, as the Profile row's tiles above it (the two rows read as one block)
+    assert "\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t\texpand = {}\n\t\t\t\t}\n" in row
+    profile = _read(GENERATED)
+    profile = profile[profile.index(f"type {m.LOCATION_ROW} = hbox"):]
+    profile = profile[:profile.index("\n\t}\n")]
+    assert profile.count("\t\t\t\t\tflowcontainer = {\n\t\t\t\t\t\tdirection = horizontal") >= 1
+    assert profile.count("\t\t\t\t\t}\n\t\t\t\t\texpand = {}\n\t\t\t\t}\n") == profile.count("\t\t\t\t\tflowcontainer = {\n\t\t\t\t\t\tdirection = horizontal")
+    count = (f"visible = \"[GreaterThan_CFixedPoint(Location.MakeScope.ScriptValue('pp_lplan_planned_n'), "
+             f"'(CFixedPoint){lpf.QUICK_ROW}')]\" text = \"PP_LPLAN_ALSO_COUNT\"")
+    assert count in row
+    assert "pp_lplan_planned_n" in re.search(r"^  PP_LPLAN_ALSO_COUNT: \"(.+)\"$", _read(
+        MOD / "main_menu/localization/english/pp_location_plan_l_english.yml"), re.MULTILINE).group(1)
     # the quick candidates: goods only, each once, in their chunks; not pressed; the same toggle and tooltip
     values = _read(MOD / lpf.VALUES)
     shown = re.findall(r"ScriptValue\('pp_lplan_quick_(?!room_)(\w+)'\), '\(CFixedPoint\)1'\)", quick)

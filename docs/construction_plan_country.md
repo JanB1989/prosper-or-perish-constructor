@@ -5,7 +5,8 @@ universities and stuff like that. Upgrading cities and applying town rights. We 
 tight."
 
 Status: built on `location-profiles`; generator-level tests pass. The engine facts the rules stand on were tested in
-game on 2026-11-10 (below); the rules themselves and the tab have not run in game yet.
+game on 2026-11-10 (below), and the same day the tab and every rule ran in game in the test world ("In game: the
+rules", at the end).
 
 The third tab of the Construction Plan window. Everything is off until the player ticks it, nothing is kept between
 passes. Module `src/prosper_or_perish_constructor/construction_plan_country.py` (run by `ppc build` right after
@@ -166,8 +167,11 @@ Ledger (`pp_cplan_log_step`): 1 a public building, 2 a town or city upgrade, 3 a
 building upgrades go through `pp_cplan_construct_now` (the upgrade's building type in the list is the successor; its
 reason value is the location's maximum control in %). A town or city upgrade writes its own entry (it has no building
 type): lists `pp_cplan_log` and `pp_cplan_log_107`, the country's started / spent / `_107` numbers, and the location's
-`pp_cplan_log_why` 107, `_cost`, `_step` 2, `_val` (population, thousand + 100), unless another group already built
-there in the pass; in a test run the lines `PP_CPLAN_TLOG_107` and the location.
+`pp_cplan_log_rank` (the window names the upgrade by it), `pp_cplan_log_cost_107` (added to the cost of a building the
+group started there in the pass) and, unless such a building left its reason, `pp_cplan_log_step_107` 2 and
+`pp_cplan_log_val_107` (population, thousand + 100); in a test run the lines `PP_CPLAN_TLOG_107` and the location.
+Every rule group keeps its own entry of a location (docs/player_construction_manager.md, "The ledger is per rule
+group and location").
 
 ## The tab
 
@@ -178,19 +182,34 @@ glow = ticked) with the building's or right's picture; its tooltip is the game's
 right's potential) or while it is ticked. Rows of 11; a row takes no room while none of its tiles shows. The 26 rights
 every country sees come first (full rows), the rest follow in the rule's order; the rights scroll.
 
-## Not verified in game
+## In game: the rules (2026-11-10, test world, new game as Castile, EU5 1.4.7)
 
-1. The three rules and the rights rule as a whole in a monthly pass (only their engine calls were tested by hand).
-2. The upgrade rule's parts: `building_can_be_upgraded_by` inside `any_buildings_in_location` /
-   `every_buildings_in_location`, `building_type = building_type:<key>` in building scope, an upgrade to a successor
-   that is not the direct one, and the budget check against a new building's cost.
-3. `pp_cplan_country_cost_<rank>` against the gold the game takes in markets with dear or cheap construction goods
-   (one market checked: it matched).
-4. Whether a town or city under construction counts in `num_civil_constructions` (`pp_cplan_site_free`); the test saw
-   it hold the slot.
-5. Rights' `allow` blocks run from a scripted trigger with the location saved as `scope:target`; `root` in the
-   Stapelrecht potential; the scale of `political_influence`.
-6. Macro arguments inside names (`pp_cplan_pub_line_$line$`, `pp_cplan_goods_here_$demand$`,
-   `pp_cplan_country_cost_$rank$`, `pp_cplan_right_allow_$right$`).
-7. The cost of the tab: about 100 script values a frame while it is open (not profiled).
-8. Layout: the header rows' widths, rows with hidden tiles, the scroll area.
+Seven monthly passes over two sessions; gold, political influence, advances and market goods by console; the plan's
+test lines (`pp_cplan_ai_test`) in debug.log. No plan line in error.log from a load or a pass.
+
+- **Upgrades.** With `tools_workshop_advance` and `pottery_workshop_advance` researched the first pass started 16
+  Tools Workshops over Tools Guilds, later passes Pottery Workshops; the ledger booked 181 to 502 gold each (what the
+  game took).
+- **Public buildings.** A ticked Library started in Valladolid once the market held the books its construction needs;
+  before that the goods guard held it back in every location (24 books asked, none in the four markets).
+- **Towns.** No rural settlement started until the market held glass (12 asked): then Sepulveda and Medina del Campo
+  (50.6 and 49.3 thousand people, line 25) started "Founding a Town", 564 gold each booked.
+- **Cities.** Salamanca and Leon (43.8 and 43.7 thousand people) started the city upgrade, 1,366 gold each booked,
+  with the building upgrades and the Library switched off (a town with one slot gives it to those first).
+- **Urban rights.** Market Charter went to Granada, then to Sevilla (the game's own message each time); political
+  influence 100 -> 80 and 84.1 -> 64.1 (the price 20). At 82.7 with 65 kept nothing was granted (85 needed).
+- **Two slots.** Nine locations have two; the first pass started two constructions in each. `finish_constructions
+  <location>` (console) frees a location for the next pass.
+- **The tab.** Ticks, the two rank switches, the upgrade and rights switches and the three lines change their
+  variables; tooltips name buildings and rights. The rights' rows stood spread over the whole scroll area (a vbox
+  there is stretched): they are flowcontainers in a vertical flowcontainer now. Cost: 0.07 ms of script a frame.
+
+## Open
+
+1. The buildings' rows keep their eleven places: a country that can build ten of the 39 sees four short rows (Castile
+   at the start: 4, 3, 2 and 1 tiles). Static rows cannot wrap; packing them needs a list the script keeps (a
+   datamodel grid) or tiles that always show.
+2. An upgrade to a successor that is not the direct one, and `pp_cplan_country_cost_<rank>` against the game's price
+   (the plan's check uses the price times the goods' price factor; booked is what the game took).
+3. `root` in the Stapelrecht potential; rights other than Market Charter (Fuero Real was ticked and found no
+   location).

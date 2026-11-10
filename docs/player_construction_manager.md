@@ -14,7 +14,16 @@ logic and is never touched (a console-only test switch lets it run for an AI cou
   `country`; the settings of the rule group of that name, type `pp_cplan_country_tab`, hosted the same way; the type,
   the group's effect `pp_cplan_group_country` and `pp_cplan_country_rights` are `construction_plan_country.py`'s).
   Nothing else.
-- **Maintenance 2026-11-10** (not tested in game):
+- **In-game test 2026-11-10** (test world, new game as Castile, seven monthly passes over two sessions; the engine
+  facts and what each rule did are in `docs/construction_plan_country.md` and `docs/location_plan.md`): the three tabs,
+  the six panes and every rule ran; no plan line in `error.log` from a load or a pass. Fixed from it: the ledger per
+  rule group (below), the rights' rows in the scroll area, the cut tile line of "Also build here", the - / + buttons
+  of the three lines without a tooltip, and the panes' "did not run" texts (they said "its bar is empty" for a plan
+  that was off and for Towns and Buildings with nothing switched on). Script time, profiler self times at 30 frames
+  a second: the location window 4.3 ms a frame, its Infrastructure tab 1.3 ms more, 0.7 of them the Profile and
+  "Also build here" rows (7,300 script calls a frame); the Towns and Buildings tab 0.07 ms, Global Settings 0.10 ms.
+  Frame time 33.4 ms (the 30 frames cap) in every state, paused and running.
+- **Maintenance 2026-11-10**:
   - *Six rule groups.* `GROUPS` = profiles, food, logistics, improve, business, country (code 107). The player's names
     of two differ from their keys: profiles = **Locations** (what the player set for single locations: their
     profiles' rules, then their marks, the Location Plan's "Also build here", `docs/location_plan.md`; the tab keeps
@@ -27,15 +36,24 @@ logic and is never touched (a console-only test switch lets it run for an AI cou
     `pp_cplan_log_val`). The order turns with the month as before, now every group first exactly twice a
     year; the group's urban rights cost no gold, so `pp_cplan_country_rights` runs once after all groups, without a
     part of the gold. A town or city upgrade is no building: that group writes the ledger entry itself (the lists
-    `pp_cplan_log` / `pp_cplan_log_107`, location `pp_cplan_log_why` 107, `_cost`, `_step` 2, no building type) and
-    the lists name it (type `pp_cplan_rank_upgrade`, "Upgrade to a higher Location Rank"); nothing shows blank. Where
-    another group built in the same location in that pass the upgrade leaves the location's line to it; the group's
-    own pane then still shows the upgrade (without the other group's building, cost and reason).
-  - *One place says when a site is free:* the scripted trigger `pp_cplan_site_free` (`num_civil_constructions < 1`).
-    The construction itself, the business sites, the food rule's farm sites and the logistics and improvement groups
-    ask it; no other plan script reads the count (a test checks). The engine's `max_constructions_at_same_time`
-    (vanilla: 1, a megalopolis 2, one town building + 1) would allow more in some locations; not verified in game, so
-    the rule is unchanged. The farm step now takes its sites only among free locations: a busy one among the four
+    `pp_cplan_log` / `pp_cplan_log_107`, the location's `pp_cplan_log_rank`, `pp_cplan_log_cost_107`, `_step_107` 2,
+    no building type) and the lists name it (type `pp_cplan_rank_upgrade`, "Upgrade to a higher Location Rank");
+    nothing shows blank.
+  - *The ledger is per rule group and location* (in-game test 2026-11-10). A location with two construction slots
+    gets two constructions in one pass, from two groups (Valladolid: a business and a building upgrade) or from one
+    (an upgrade and a Library). With one line per location the window named both buildings under both groups, with
+    the later group's cost and reason, and a Tools Workshop upgrade next to a Cookshop read "Upgrade to a higher
+    Location Rank". So each group keeps its own entry of a location: the list `pp_cplan_log_types_<why>`,
+    `pp_cplan_log_cost_<why>` (its gold there, two constructions added up), `pp_cplan_log_val_<why>`,
+    `pp_cplan_log_step_<why>` (`pp_cplan_construct_now`; cleared by `pp_cplan_log_clear = { why }` at the next pass;
+    read through `pp_cplan_log_<name>_<why>_n`). The "Last month" list is generated (`pp_cplan_last_list`,
+    construction_plan_detail.py): a line per rule group and location, the groups in the window's order. Two
+    constructions of one group in one location stay one line: both names, the gold of both, the later one's reason.
+  - *One place says when a site is free:* the scripted trigger `pp_cplan_site_free` (`num_civil_constructions <
+    pp_cplan_site_slots`, the location's `max_constructions_at_same_time`). The construction itself, the business
+    sites, the food rule's farm sites and the logistics and improvement groups ask it; no other plan script reads the
+    count (a test checks). In game 2026-11-10 (test world): nine locations have two slots, and the first pass started
+    two constructions in each of the nine. The farm step now takes its sites only among free locations: a busy one among the four
     best used up a try and built nothing, and the province went on to a Tavern although it could farm.
   - *Worker check* (`pp_cplan_staff`): the idle pops of a building's own class are read through one generated value
     per pop type (`pp_cplan_idle_<pop type>`, the type written out as vanilla writes the call). With the pop type

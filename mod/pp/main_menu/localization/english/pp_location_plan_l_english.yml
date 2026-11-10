@@ -26,6 +26,7 @@
   # the location window's row under the Profile row
   PP_LPLAN_ALSO_TITLE: "Also build here"
   PP_LPLAN_ALSO_NONE: "Nothing marked"
+  PP_LPLAN_ALSO_COUNT: "[Location.MakeScope.ScriptValue('pp_lplan_planned_n')|0] marked, more in the Location Plan"
   PP_LPLAN_ALSO_MORE_TT: "#T Location Plan#!\nOpen this location in the Location Plan window, with every good and kind of building to mark."
   # map mode
   game_concept_pp_location_plan: "Location Plan"

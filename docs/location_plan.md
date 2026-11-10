@@ -79,10 +79,13 @@ Fur has no building that makes it: its mark always shows state 6.
 - Row width: the line holds `QUICK_ROW` = 11 tiles (37 px each, as the Profile row). The quick candidates come in
   chunks of `QUICK_CHUNK` = 4 goods in the picker's order; a chunk shows while marks + candidates before it <= 7, so
   candidates never push the line past 11 tiles and a cut line still shows at least 8 (the rest is in the Location Plan
-  window). An exact cut would count the candidates before every tile each frame. Marked tiles are never hidden (12 or
-  more marks overflow the line). Cost while the tab is open: about 760 `pp_lplan_quick_*` evaluations a frame (75
-  tiles + the chunk sums; each one `has_variable` and about three `has_building`), not measured in game; fewer, larger
-  chunks are cheaper.
+  window). An exact cut would count the candidates before every tile each frame. Marked tiles are never hidden by a
+  count: the line is a widget of 11 tiles' width with `scissor = yes` (vanilla's mission view), so a twelfth mark is
+  cut and the title then reads "N marked, more in the Location Plan" (`PP_LPLAN_ALSO_COUNT`; in game 2026-11-10
+  thirteen marks made the card wider than the window and pushed the round buttons out). Both rows' tiles start at
+  the left, under their titles (an hbox with an expand). Cost while the tab is open, measured in game 2026-11-10
+  (script profiler, self times, Burgos): 0.7 ms a frame for the two rows (7,300 script calls) on top of the location
+  window's 4.3 ms; frame time stays at the 30 frames cap. Fewer, larger chunks would be cheaper.
 - The window's detail pane counts the marks' states with the profile rules' (`pp_cplan_ds_profiles_st<n>`); a mark's
   construction is in the ledger as the profile group's with step 0 (`pp_cplan_log_step`; a profile rule's step is its
   number).
@@ -90,7 +93,11 @@ Fur has no building that makes it: its mark always shows state 6.
   (the pass: same targets as the rules, the Businesses line, the lists, the row's values and cap),
   `tests/test_location_profiles_gui.py` (the row).
 
-Not tested in game (2026-11-10): the pass with marks, the row.
+Tested in game 2026-11-10 (test world, Burgos): a click on a quick candidate marks it and moves it to the marked
+tiles, a second click unmarks; the round button opens the Location Plan window; thirteen marks; after a pass the
+tooltips read "Waiting: a construction is under way here" (a business had taken the location's slot) and, once the
+slot was free, "Started a construction here last month" (a Dye Maker for the dyes mark; the Locations pane and the
+"Last month" list name it).
 
 ## Map icons
 

@@ -312,41 +312,142 @@ pp_cplan_spent_n = {
 	}
 }
 
-# Location scope: why the plan built here last month (1 food, 2 logistics, 3 business, 5 a location profile,
-# 6 improvements, 7 towns and buildings).
-pp_cplan_why_n = {
+# Location scope, the window's lists of the last pass, per rule group <why> (101 food, 102 logistics, 103 business,
+# 105 a location profile or mark, 106 improvements, 107 towns and buildings): what the group's constructions here
+# cost, its reason value (the food store a year from now in months, market access %, population % of capacity,
+# payback years, maximum control %, people in thousands) and its step (the food rule's step, the profile rule it
+# came from, the kind of the Towns and Buildings group: 1 a building, 2 a town or city upgrade, 3 a building's
+# upgrade) (pp_cplan_construct_now).
+pp_cplan_log_cost_101_n = {
 	value = 0
 	if = {
-		limit = { has_variable = pp_cplan_log_why }
-		value = var:pp_cplan_log_why
+		limit = { has_variable = pp_cplan_log_cost_101 }
+		value = var:pp_cplan_log_cost_101
+	}
+}
+pp_cplan_log_val_101_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_log_val_101 }
+		value = var:pp_cplan_log_val_101
 		subtract = 100
 	}
 }
-
-# Location scope, the window's detail panes: what last month's construction here cost, its reason value (the food
-# store a year from now in months, market access %, population % of capacity, payback years) and the food rule's step,
-# the profile rule it came from, or the kind of the Towns and Buildings group (1 a building, 2 a town or city upgrade)
-# (pp_cplan_construct_now).
-pp_cplan_log_cost_n = {
+pp_cplan_log_step_101_n = {
 	value = 0
 	if = {
-		limit = { has_variable = pp_cplan_log_cost }
-		value = var:pp_cplan_log_cost
+		limit = { has_variable = pp_cplan_log_step_101 }
+		value = var:pp_cplan_log_step_101
 	}
 }
-pp_cplan_log_val_n = {
+pp_cplan_log_cost_102_n = {
 	value = 0
 	if = {
-		limit = { has_variable = pp_cplan_log_val }
-		value = var:pp_cplan_log_val
+		limit = { has_variable = pp_cplan_log_cost_102 }
+		value = var:pp_cplan_log_cost_102
+	}
+}
+pp_cplan_log_val_102_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_log_val_102 }
+		value = var:pp_cplan_log_val_102
 		subtract = 100
 	}
 }
-pp_cplan_log_step_n = {
+pp_cplan_log_step_102_n = {
 	value = 0
 	if = {
-		limit = { has_variable = pp_cplan_log_step }
-		value = var:pp_cplan_log_step
+		limit = { has_variable = pp_cplan_log_step_102 }
+		value = var:pp_cplan_log_step_102
+	}
+}
+pp_cplan_log_cost_103_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_log_cost_103 }
+		value = var:pp_cplan_log_cost_103
+	}
+}
+pp_cplan_log_val_103_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_log_val_103 }
+		value = var:pp_cplan_log_val_103
+		subtract = 100
+	}
+}
+pp_cplan_log_step_103_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_log_step_103 }
+		value = var:pp_cplan_log_step_103
+	}
+}
+pp_cplan_log_cost_105_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_log_cost_105 }
+		value = var:pp_cplan_log_cost_105
+	}
+}
+pp_cplan_log_val_105_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_log_val_105 }
+		value = var:pp_cplan_log_val_105
+		subtract = 100
+	}
+}
+pp_cplan_log_step_105_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_log_step_105 }
+		value = var:pp_cplan_log_step_105
+	}
+}
+pp_cplan_log_cost_106_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_log_cost_106 }
+		value = var:pp_cplan_log_cost_106
+	}
+}
+pp_cplan_log_val_106_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_log_val_106 }
+		value = var:pp_cplan_log_val_106
+		subtract = 100
+	}
+}
+pp_cplan_log_step_106_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_log_step_106 }
+		value = var:pp_cplan_log_step_106
+	}
+}
+pp_cplan_log_cost_107_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_log_cost_107 }
+		value = var:pp_cplan_log_cost_107
+	}
+}
+pp_cplan_log_val_107_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_log_val_107 }
+		value = var:pp_cplan_log_val_107
+		subtract = 100
+	}
+}
+pp_cplan_log_step_107_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_log_step_107 }
+		value = var:pp_cplan_log_step_107
 	}
 }
 

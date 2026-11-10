@@ -246,7 +246,8 @@ country did not mark (`pp_lplan_cleanup`, the same rule for the list `pp_lplan_l
   `button_round_shortcut` (Location Plan) and `button_automation_shortcut` (the plan's cog), 30 px apart.
   Right under it, in the same wrapper and the same card style, the row **Also build here** (2026-11-10,
   `pp_lplan_location_row`): the location's marks as the same toggle tiles (marked first, then the goods standing
-  buildings make) and one round button to the Location Plan window; `docs/location_plan.md`.
+  buildings make) and one round button to the Location Plan window; `docs/location_plan.md`. Both rows' tiles start
+  at the left, under their titles (in game 2026-11-10: one block).
 - **Location Plan window**: a "Profile" row: the location's badge, None, "Edit profiles", the slot tiles (icon on
   colour, 8 per row, rows only while they hold a used slot) to assign. The location window's Infrastructure tab starts
   with the same row (`pp_lprof_location_row` = `pp_lprof_plan_row`).

@@ -429,13 +429,13 @@ def test_rank_upgrade_checks_the_budget_and_books_only_what_was_paid() -> None:
     places = [up.index(line) for line in order]
     assert places == sorted(places)
     # the effect refuses silently where the game's own conditions fail: nothing is booked unless gold was paid
-    booked = up[up.index("limit = { scope:pp_cplan_paid > 0 }"):up.index("else = {")]
+    booked = up[up.index("limit = { scope:pp_cplan_paid > 0 }"):up.rindex("else = {")]
     for name in ("pp_cplan_spent", "pp_cplan_started", "pp_cplan_dspent_107", "pp_cplan_dn_107", "pp_cplan_hit",
-                 "pp_cplan_log ", "pp_cplan_log_107", "pp_cplan_log_why", "pp_cplan_log_cost", "pp_cplan_log_step",
-                 "pp_cplan_log_val", "PP_CPLAN_TLOG_107"):
+                 "pp_cplan_log ", "pp_cplan_log_107", "pp_cplan_log_rank", "pp_cplan_log_cost_107",
+                 "pp_cplan_log_step_107", "pp_cplan_log_val_107", "PP_CPLAN_TLOG_107"):
         assert up.index(name) > up.index("limit = { scope:pp_cplan_paid > 0 }"), name
     assert "construct_location_rank" not in booked
-    paid, waiting = booked, up[up.index("else = {"):]
+    paid, waiting = booked, up[up.rindex("else = {"):]
     assert "save_temporary_scope_value_as = { name = pp_cplan_wc value = pp_cplan_country_cost_$rank$ }" in waiting
     for line in ("change_variable = { name = pp_cplan_spent add = scope:pp_cplan_paid }",
                  "change_variable = { name = pp_cplan_started add = 1 }",
@@ -444,16 +444,19 @@ def test_rank_upgrade_checks_the_budget_and_books_only_what_was_paid() -> None:
                  "set_variable = { name = pp_cplan_hit value = yes }",
                  "add_to_variable_list = { name = pp_cplan_log target = scope:pp_cplan_site }",
                  "add_to_variable_list = { name = pp_cplan_log_107 target = scope:pp_cplan_site }",
-                 "set_variable = { name = pp_cplan_log_why value = 107 }",
-                 "set_variable = { name = pp_cplan_log_cost value = scope:pp_cplan_paid }",
-                 "set_variable = { name = pp_cplan_log_step value = 2 }",
-                 "set_variable = { name = pp_cplan_log_val value = scope:pp_cplan_rv }"):
+                 "set_variable = { name = pp_cplan_log_rank value = yes }",
+                 "set_variable = { name = pp_cplan_log_cost_107 value = scope:pp_cplan_paid }",
+                 "change_variable = { name = pp_cplan_log_cost_107 add = scope:pp_cplan_paid }",
+                 "set_variable = { name = pp_cplan_log_step_107 value = 2 }",
+                 "set_variable = { name = pp_cplan_log_val_107 value = scope:pp_cplan_rv }"):
         assert line in paid, line
-    # the location's line in the window stays another rule group's when one built here in this pass
-    guard = paid[paid.index("limit = { NOT = { has_variable = pp_cplan_log_why } }"):]
+    # the group's own entry of the location (another rule group's stays untouched: each has its own); the reason of a
+    # building the group started here in the same pass (a location with two construction slots) stays
+    guard = paid[paid.index("limit = { NOT = { has_variable = pp_cplan_log_step_107 } }"):]
     written = guard[:guard.index("\n\t\t\t}\n")]
-    assert all(f"name = pp_cplan_log_{name} " in written for name in ("why", "cost", "step", "val"))
-    assert "pp_cplan_log_types" not in up  # an upgrade is no building: the window names it by code 107 and step 2
+    assert all(f"name = pp_cplan_log_{name}_107 " in written for name in ("step", "val"))
+    assert "pp_cplan_log_why" not in up
+    assert "pp_cplan_log_types" not in up  # an upgrade is no building: the window names it by pp_cplan_log_rank
     # test runs: the rule group and the location in debug.log, as pp_cplan_construct_now writes them (ppc plan-report)
     assert _tokens(paid[paid.index("has_variable = pp_cplan_ai_test"):]).startswith(
         "has_variable = pp_cplan_ai_test } } debug_log = PP_CPLAN_TLOG_107 debug_log_scopes = no }")
@@ -871,7 +874,8 @@ def test_tab_is_one_type_made_of_known_parts() -> None:
             assert name not in {"hbox", "vbox"}, f"{name} directly inside {parent}"
     # only widget kinds the plan window and the profile editor already use; the tab's own three small types
     kinds = {name for name, _ in _widget_tree(gui)} - {"types", "type", "size", "margin", "color", "minimumsize", "maximumsize"}
-    assert kinds <= {"vbox", "hbox", "button", "widget", "icon", "glow", "expand", "scrollarea", "scrollwidget",
+    # (flowcontainer: the scroll area's list of the rights, as the detail panes' lists)
+    assert kinds <= {"vbox", "hbox", "flowcontainer", "button", "widget", "icon", "glow", "expand", "scrollarea", "scrollwidget",
                      "scrollbar_vertical", "blockoverride", "button_checkbox", "pp_cplan_country_label",
                      "pp_cplan_country_title", "pp_cplan_country_step_button", "text_single", "button_regular"}, kinds
     assert "Concatenate" not in gui and "GetFlagName" not in gui and "datamodel" not in gui
@@ -908,9 +912,17 @@ def test_tiles_are_toggles_in_rows() -> None:
     always = [right.key for right in result.rights if right.always_shown]
     assert len(always) >= 20 and all(f"pp_cplan_right_show_{key} =" not in _read(MOD / cc.VALUES) for key in always)
     # rows of at most tiles_per_row, a row hidden while none of its tiles shows
-    rows = re.findall(r"hbox = \{\n(?:\t+visible = \"[^\n]*\"\n)?\t+layoutpolicy_horizontal = expanding\n\t+ignoreinvisible = yes\n"
-                      r"\t+spacing = 3\n(.*?)\t+expand = \{\}\n", gui, re.DOTALL)
+    # (the buildings' rows are hboxes of the tab; the rights' rows flowcontainers in the scroll area's vertical
+    # flowcontainer: a vbox there was stretched over the scroll area and spread four rows over its height, in game
+    # 2026-11-10)
+    header = (r"(?:hbox = \{\n(?:\t+visible = \"[^\n]*\"\n)?\t+layoutpolicy_horizontal = expanding"
+              r"|flowcontainer = \{\n(?:\t+visible = \"[^\n]*\"\n)?\t+direction = horizontal)\n\t+ignoreinvisible = yes\n\t+spacing = 3\n")
+    rows = re.split(header, gui)[1:]
     counts = [row.count("using = header_button_template") for row in rows]
+    listed = gui[gui.index("scrollwidget = {"):]
+    assert listed.startswith("scrollwidget = {\n\t\t\t\tflowcontainer = {\n\t\t\t\t\tdirection = vertical\n")
+    assert "hbox = {" not in listed and "vbox = {" not in listed
+    assert listed.count("using = header_button_template") == len(result.rights)
     assert sum(counts) == 120 and max(counts) == config.tiles_per_row == 11
     # the rights do not have to fit: they scroll
     assert gui.index("scrollarea = {") < gui.index("MakeScopeFlag('right_")

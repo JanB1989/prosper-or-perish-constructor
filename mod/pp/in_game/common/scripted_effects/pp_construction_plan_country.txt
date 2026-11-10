@@ -1108,13 +1108,20 @@ pp_cplan_country_rank_up = {
 				}
 				add_to_variable_list = { name = pp_cplan_log_107 target = scope:pp_cplan_site }
 			}
-			# the window's line of this location: only where no other rule group built here in this pass (its line stays)
+			# the window's line of this location in the group's lists: the upgrade (no building: pp_cplan_log_rank names
+			# it), what the group paid here, and its reason unless a building of the group left one here in this pass
+			set_variable = { name = pp_cplan_log_rank value = yes }
 			if = {
-				limit = { NOT = { has_variable = pp_cplan_log_why } }
-				set_variable = { name = pp_cplan_log_why value = 107 }
-				set_variable = { name = pp_cplan_log_cost value = scope:pp_cplan_paid }
-				set_variable = { name = pp_cplan_log_step value = 2 }
-				set_variable = { name = pp_cplan_log_val value = scope:pp_cplan_rv }
+				limit = { has_variable = pp_cplan_log_cost_107 }
+				change_variable = { name = pp_cplan_log_cost_107 add = scope:pp_cplan_paid }
+			}
+			else = {
+				set_variable = { name = pp_cplan_log_cost_107 value = scope:pp_cplan_paid }
+			}
+			if = {
+				limit = { NOT = { has_variable = pp_cplan_log_step_107 } }
+				set_variable = { name = pp_cplan_log_step_107 value = 2 }
+				set_variable = { name = pp_cplan_log_val_107 value = scope:pp_cplan_rv }
 			}
 			# test runs (pp_cplan_ai_test, set by the console): the rule group and the location in debug.log, as
 			# pp_cplan_construct_now writes them for a building (ppc plan-report reads them); an upgrade has no building

@@ -666,8 +666,9 @@ def _also_row(items: list[lp.Item], chunks: list[list[lp.Item]]) -> str:
     window for everything else. ``items``: the markable items in the picker's order; ``chunks``: the quick candidate
     goods in chunks (lpf.quick_chunks); chunk n shows while the row has room for it (pp_lplan_quick_room_<n>), so the
     line never grows past lpf.QUICK_ROW tiles by its candidates."""
-    tab = "\t\t\t\t\t"
+    tab = "\t\t\t\t\t\t\t"
     none = value_is("Location.MakeScope", "pp_lplan_planned_n", 0)
+    cut = f"GreaterThan_CFixedPoint(Location.MakeScope.ScriptValue('pp_lplan_planned_n'), {fixed(lpf.QUICK_ROW)})"
     out = [
         "\n\t# The row \"Also build here\" of the location window's Infrastructure tab (datacontext Location), the Profile\n"
         "\t# row's card: the location's marks as toggle tiles (marked first, then the goods standing buildings make), and\n"
@@ -687,8 +688,17 @@ def _also_row(items: list[lp.Item], chunks: list[list[lp.Item]]) -> str:
         "\t\t\t\t\ttext_single = { text = \"PP_LPLAN_ALSO_TITLE\" align = left|nobaseline }\n"
         f"\t\t\t\t\ttext_single = {{ visible = \"[{none}]\" text = \"PP_LPLAN_ALSO_NONE\" "
         "align = left|nobaseline default_format = \"#medium\" }\n"
+        # more marks than the line holds: the count (the rest is in the Location Plan window, the round button)
+        f"\t\t\t\t\ttext_single = {{ visible = \"[{cut}]\" text = \"PP_LPLAN_ALSO_COUNT\" "
+        "align = left|nobaseline default_format = \"#medium\" }\n"
         "\t\t\t\t\texpand = {}\n\t\t\t\t}\n"
-        "\t\t\t\tflowcontainer = {\n\t\t\t\t\tdirection = horizontal\n\t\t\t\t\tignoreinvisible = yes\n",
+        # the line: lpf.QUICK_ROW tiles wide and cut there (vanilla's scissor, mission_lateralview.gui). Marked tiles
+        # are never hidden by a count, so twelve or more marks made the line wider than the card (in game 2026-11-10:
+        # thirteen marks pushed the round buttons out of the window)
+        # (in an hbox with an expand: at the left, under the title, as the Profile row's tiles)
+        "\t\t\t\thbox = {\n\t\t\t\t\tlayoutpolicy_horizontal = expanding\n"
+        f"\t\t\t\t\twidget = {{\n\t\t\t\t\t\tsize = {{ {lpf.QUICK_ROW * MARK_TILE} 34 }}\n\t\t\t\t\t\tscissor = yes\n"
+        "\t\t\t\t\t\tflowcontainer = {\n\t\t\t\t\t\t\tdirection = horizontal\n\t\t\t\t\t\t\tignoreinvisible = yes\n",
     ]
     out += [_mark_tile(item, tab, True) for item in items]
     for number, chunk in enumerate(chunks, 1):
@@ -697,7 +707,7 @@ def _also_row(items: list[lp.Item], chunks: list[list[lp.Item]]) -> str:
         out += [_mark_tile(item, tab + "\t", False) for item in chunk]
         out.append(f"{tab}}}\n")
     out.append(
-        "\t\t\t\t}\n\t\t\t}\n"
+        "\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t\texpand = {}\n\t\t\t\t}\n\t\t\t}\n"
         "\t\t\tvbox = {\n\t\t\t\tlayoutpolicy_vertical = expanding\n\t\t\t\tmargin = { 0 5 }\n\t\t\t\tspacing = 3\n"
         + _card_button("PP_LPLAN_ALSO_MORE_TT", OPEN_PLAN, "plus")
         + "\t\t\t\texpand = {}\n\t\t\t}\n\t\t}\n\t}\n"
@@ -732,11 +742,15 @@ def _location_row(config: Config) -> str:
         "\t\t\t\t\texpand = {}\n\t\t\t\t}\n",
     ]
     for row in _rows(config.slots, LOCATION_TILES):
-        out.append(f"\t\t\t\tflowcontainer = {{\n\t\t\t\t\tvisible = \"[{_row_visible(row)}]\"\n"
-                   "\t\t\t\t\tdirection = horizontal\n\t\t\t\t\tignoreinvisible = yes\n\t\t\t\t\tspacing = 3\n")
+        # the tiles at the left, under the title (an hbox with an expand; a flowcontainer alone is centred): the row
+        # "Also build here" under it starts at the same place, the two read as one block
+        out.append(f"\t\t\t\thbox = {{\n\t\t\t\t\tvisible = \"[{_row_visible(row)}]\"\n"
+                   "\t\t\t\t\tlayoutpolicy_horizontal = expanding\n"
+                   "\t\t\t\t\tflowcontainer = {\n"
+                   "\t\t\t\t\t\tdirection = horizontal\n\t\t\t\t\t\tignoreinvisible = yes\n\t\t\t\t\t\tspacing = 3\n")
         for k in row:
-            out.append(_toggle_tile(k, "\t\t\t\t\t"))
-        out.append("\t\t\t\t}\n")
+            out.append(_toggle_tile(k, "\t\t\t\t\t\t"))
+        out.append("\t\t\t\t\t}\n\t\t\t\t\texpand = {}\n\t\t\t\t}\n")
     out.append(
         "\t\t\t}\n"
         "\t\t\tvbox = {\n\t\t\t\tlayoutpolicy_vertical = expanding\n\t\t\t\tmargin = { 0 5 }\n\t\t\t\tspacing = 3\n"

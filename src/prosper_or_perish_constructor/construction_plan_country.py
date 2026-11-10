@@ -878,13 +878,20 @@ def render_effects(buildings: list[Building], rights: list[Right], costs: dict[s
         "\t\t\t\t}\n"
         f"\t\t\t\tadd_to_variable_list = {{ name = pp_cplan_log_{WHY} target = scope:pp_cplan_site }}\n"
         "\t\t\t}\n"
-        "\t\t\t# the window's line of this location: only where no other rule group built here in this pass (its line stays)\n"
+        "\t\t\t# the window's line of this location in the group's lists: the upgrade (no building: pp_cplan_log_rank names\n"
+        "\t\t\t# it), what the group paid here, and its reason unless a building of the group left one here in this pass\n"
+        "\t\t\tset_variable = { name = pp_cplan_log_rank value = yes }\n"
         "\t\t\tif = {\n"
-        "\t\t\t\tlimit = { NOT = { has_variable = pp_cplan_log_why } }\n"
-        f"\t\t\t\tset_variable = {{ name = pp_cplan_log_why value = {WHY} }}\n"
-        "\t\t\t\tset_variable = { name = pp_cplan_log_cost value = scope:pp_cplan_paid }\n"
-        f"\t\t\t\tset_variable = {{ name = pp_cplan_log_step value = {STEP_RANK} }}\n"
-        "\t\t\t\tset_variable = { name = pp_cplan_log_val value = scope:pp_cplan_rv }\n"
+        f"\t\t\t\tlimit = {{ has_variable = pp_cplan_log_cost_{WHY} }}\n"
+        f"\t\t\t\tchange_variable = {{ name = pp_cplan_log_cost_{WHY} add = scope:pp_cplan_paid }}\n"
+        "\t\t\t}\n"
+        "\t\t\telse = {\n"
+        f"\t\t\t\tset_variable = {{ name = pp_cplan_log_cost_{WHY} value = scope:pp_cplan_paid }}\n"
+        "\t\t\t}\n"
+        "\t\t\tif = {\n"
+        f"\t\t\t\tlimit = {{ NOT = {{ has_variable = pp_cplan_log_step_{WHY} }} }}\n"
+        f"\t\t\t\tset_variable = {{ name = pp_cplan_log_step_{WHY} value = {STEP_RANK} }}\n"
+        f"\t\t\t\tset_variable = {{ name = pp_cplan_log_val_{WHY} value = scope:pp_cplan_rv }}\n"
         "\t\t\t}\n"
         "\t\t\t# test runs (pp_cplan_ai_test, set by the console): the rule group and the location in debug.log, as\n"
         "\t\t\t# pp_cplan_construct_now writes them for a building (ppc plan-report reads them); an upgrade has no building\n"
@@ -1094,18 +1101,24 @@ def _tile(tile: Tile, tab: str) -> str:
     )
 
 
-def _tile_rows(tiles: list[Tile], per_row: int, tab: str) -> str:
-    """Rows of tiles; a row takes no room while none of its tiles shows."""
+def _tile_rows(tiles: list[Tile], per_row: int, tab: str, flow: bool = False) -> str:
+    """Rows of tiles; a row takes no room while none of its tiles shows. ``flow``: rows for a vertical flowcontainer
+    (a scroll area's list, as the detail panes' lists): a flowcontainer may not hold an hbox, and a vbox there is
+    stretched over the scroll area and spreads its rows (in game 2026-11-10: four rows of rights over the whole
+    height)."""
     out: list[str] = []
     for start in range(0, len(tiles), per_row):
         row = tiles[start:start + per_row]
         shown = [_tile_visible(tile) for tile in row]
-        out.append(f"{tab}hbox = {{\n")
+        out.append(f"{tab}{'flowcontainer' if flow else 'hbox'} = {{\n")
         if all(shown):
             out.append(f"{tab}\tvisible = \"[{_any([term for term in shown if term])}]\"\n")
-        out.append(f"{tab}\tlayoutpolicy_horizontal = expanding\n{tab}\tignoreinvisible = yes\n{tab}\tspacing = 3\n")
+        if flow:
+            out.append(f"{tab}\tdirection = horizontal\n{tab}\tignoreinvisible = yes\n{tab}\tspacing = 3\n")
+        else:
+            out.append(f"{tab}\tlayoutpolicy_horizontal = expanding\n{tab}\tignoreinvisible = yes\n{tab}\tspacing = 3\n")
         out += [_tile(tile, tab + "\t") for tile in row]
-        out.append(f"{tab}\texpand = {{}}\n{tab}}}\n")
+        out.append(f"{tab}}}\n" if flow else f"{tab}\texpand = {{}}\n{tab}}}\n")
     return "".join(out)
 
 
@@ -1179,9 +1192,9 @@ def render_gui(config: Config, buildings: list[Building], rights: list[Right]) -
         "\t\t\tscrollbarpolicy_horizontal = always_off\n"
         "\t\t\tscrollbar_vertical = { using = Scrollbar_Vertical }\n"
         "\t\t\tscrollwidget = {\n"
-        "\t\t\t\tvbox = {\n\t\t\t\t\tminimumsize = { 590 -1 }\n\t\t\t\t\tmaximumsize = { 590 -1 }\n"
+        "\t\t\t\tflowcontainer = {\n\t\t\t\t\tdirection = vertical\n"
         "\t\t\t\t\tignoreinvisible = yes\n\t\t\t\t\tspacing = 4\n"
-        + _tile_rows(right_tiles(rights), per_row, "\t\t\t\t\t")
+        + _tile_rows(right_tiles(rights), per_row, "\t\t\t\t\t", flow=True)
         + "\t\t\t\t}\n\t\t\t}\n\t\t}\n"
         "\t}\n}\n"
     )

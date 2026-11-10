@@ -636,13 +636,12 @@ types PPConstructionPlanCountry
 			scrollbarpolicy_horizontal = always_off
 			scrollbar_vertical = { using = Scrollbar_Vertical }
 			scrollwidget = {
-				vbox = {
-					minimumsize = { 590 -1 }
-					maximumsize = { 590 -1 }
+				flowcontainer = {
+					direction = vertical
 					ignoreinvisible = yes
 					spacing = 4
-					hbox = {
-						layoutpolicy_horizontal = expanding
+					flowcontainer = {
+						direction = horizontal
 						ignoreinvisible = yes
 						spacing = 3
 						button = {
@@ -777,10 +776,9 @@ types PPConstructionPlanCountry
 							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_pp_liquor_charter')).End)]"
 							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/pp_liquor_charter.dds" } }
 						}
-						expand = {}
 					}
-					hbox = {
-						layoutpolicy_horizontal = expanding
+					flowcontainer = {
+						direction = horizontal
 						ignoreinvisible = yes
 						spacing = 3
 						button = {
@@ -915,10 +913,9 @@ types PPConstructionPlanCountry
 							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_free_town_charter')).End)]"
 							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/free_town_charter.dds" } }
 						}
-						expand = {}
 					}
-					hbox = {
-						layoutpolicy_horizontal = expanding
+					flowcontainer = {
+						direction = horizontal
 						ignoreinvisible = yes
 						spacing = 3
 						button = {
@@ -1060,11 +1057,10 @@ types PPConstructionPlanCountry
 							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_pp_leather_rights')).End)]"
 							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/pp_leather_rights.dds" } }
 						}
-						expand = {}
 					}
-					hbox = {
+					flowcontainer = {
 						visible = "[Or8(Or(GetPlayer.MakeScope.Var('pp_cplan_right_pp_pottery_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_pp_pottery_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_pp_furniture_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_pp_furniture_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_pp_glass_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_pp_glass_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_pp_jewelry_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_pp_jewelry_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_pp_porcelain_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_pp_porcelain_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_pp_lacquerware_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_pp_lacquerware_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_pp_beer_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_pp_beer_rights'), '(CFixedPoint)0')), Or4(Or(GetPlayer.MakeScope.Var('pp_cplan_right_pp_liquor_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_pp_liquor_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_pp_books_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_pp_books_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_pp_tools_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_pp_tools_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_pp_weaponry_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_pp_weaponry_rights'), '(CFixedPoint)0'))))]"
-						layoutpolicy_horizontal = expanding
+						direction = horizontal
 						ignoreinvisible = yes
 						spacing = 3
 						button = {
@@ -1210,11 +1206,10 @@ types PPConstructionPlanCountry
 							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_pp_weaponry_rights')).End)]"
 							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/pp_weaponry_rights.dds" } }
 						}
-						expand = {}
 					}
-					hbox = {
+					flowcontainer = {
 						visible = "[Or8(Or(GetPlayer.MakeScope.Var('pp_cplan_right_pp_firearms_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_pp_firearms_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_pp_cannons_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_pp_cannons_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_pp_naval_supplies_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_pp_naval_supplies_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_royal_market_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_royal_market_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_royal_staple_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_royal_staple_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_royal_free_cities_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_royal_free_cities_town_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_bohemian_royal_cities_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_bohemian_royal_cities_town_rights'), '(CFixedPoint)0')), Or4(Or(GetPlayer.MakeScope.Var('pp_cplan_right_swedish_city_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_swedish_city_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_norwegian_city_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_norwegian_city_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_ville_franche_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_ville_franche_town_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_borgo_franco_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_borgo_franco_town_rights'), '(CFixedPoint)0'))))]"
-						layoutpolicy_horizontal = expanding
+						direction = horizontal
 						ignoreinvisible = yes
 						spacing = 3
 						button = {
@@ -1360,11 +1355,10 @@ types PPConstructionPlanCountry
 							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_borgo_franco_town_rights')).End)]"
 							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/borgo_franco_town_rights.dds" } }
 						}
-						expand = {}
 					}
-					hbox = {
+					flowcontainer = {
 						visible = "[Or8(Or(GetPlayer.MakeScope.Var('pp_cplan_right_agrarian_community_town_right').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_agrarian_community_town_right'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_enlightened_leadership_reform_town_right').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_enlightened_leadership_reform_town_right'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_scandinavian_fishing_privileges').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_scandinavian_fishing_privileges'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_scandinavian_thing_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_scandinavian_thing_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_magdeburg_rights_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_magdeburg_rights_town_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_lubeck_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_lubeck_town_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_nuremberg_rights_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_nuremberg_rights_town_rights'), '(CFixedPoint)0')), Or4(Or(GetPlayer.MakeScope.Var('pp_cplan_right_upper_bergregal').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_upper_bergregal'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_lower_bergregal').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_lower_bergregal'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_stapelrecht_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_stapelrecht_town_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_kulm_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_kulm_town_rights'), '(CFixedPoint)0'))))]"
-						layoutpolicy_horizontal = expanding
+						direction = horizontal
 						ignoreinvisible = yes
 						spacing = 3
 						button = {
@@ -1510,11 +1504,10 @@ types PPConstructionPlanCountry
 							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_kulm_town_rights')).End)]"
 							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/kulm_town_rights.dds" } }
 						}
-						expand = {}
 					}
-					hbox = {
+					flowcontainer = {
 						visible = "[Or8(Or(GetPlayer.MakeScope.Var('pp_cplan_right_novi_fori_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_novi_fori_town_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_novo_brdo_charter').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_novo_brdo_charter'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_borough_customals').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_borough_customals'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_manorial_customals').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_manorial_customals'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_foros_extensos_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_foros_extensos_town_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_fuero_juzgo_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_fuero_juzgo_town_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_fuero_real_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_fuero_real_town_rights'), '(CFixedPoint)0')), Or4(Or(GetPlayer.MakeScope.Var('pp_cplan_right_fuero_general_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_fuero_general_town_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_fuero_de_aragon_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_fuero_de_aragon_town_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_usatges_de_barcelona_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_usatges_de_barcelona_town_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_furs_de_valencia_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_furs_de_valencia_town_rights'), '(CFixedPoint)0'))))]"
-						layoutpolicy_horizontal = expanding
+						direction = horizontal
 						ignoreinvisible = yes
 						spacing = 3
 						button = {
@@ -1660,11 +1653,10 @@ types PPConstructionPlanCountry
 							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_furs_de_valencia_town_rights')).End)]"
 							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/furs_de_valencia_town_rights.dds" } }
 						}
-						expand = {}
 					}
-					hbox = {
+					flowcontainer = {
 						visible = "[Or4(Or(GetPlayer.MakeScope.Var('pp_cplan_right_ara_consulate_sea_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_ara_consulate_sea_town_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_imperial_breadbasket_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_imperial_breadbasket_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_scholai_literacy_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_scholai_literacy_rights'), '(CFixedPoint)0')), Or(GetPlayer.MakeScope.Var('pp_cplan_right_municipia_privilegia').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_right_show_municipia_privilegia'), '(CFixedPoint)0')))]"
-						layoutpolicy_horizontal = expanding
+						direction = horizontal
 						ignoreinvisible = yes
 						spacing = 3
 						button = {
@@ -1719,7 +1711,6 @@ types PPConstructionPlanCountry
 							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_municipia_privilegia')).End)]"
 							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/municipia_privilegia.dds" } }
 						}
-						expand = {}
 					}
 				}
 			}

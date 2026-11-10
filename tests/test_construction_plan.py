@@ -200,20 +200,35 @@ def test_weight_bars() -> None:
 
 
 def test_last_month_list_names_every_entry() -> None:
-    """Nothing shows blank: an entry is its building types, or, for a town or city upgrade of the Towns and Buildings
-    group (no building: code 7 with kind 2, an empty list of types), the upgrade's own name; then the location and the
-    rule group in brackets, one label per group, the ones that do not apply taking no room."""
+    """Nothing shows blank, and nothing is another rule group's: a line per rule group and location (a location with
+    two construction slots can get two constructions in one pass; in game 2026-11-10 one line per location named both
+    buildings under both groups with the later one's reason). A line is the group's own building types there, or, for
+    a town or city upgrade of the Towns and Buildings group (no building), the upgrade's own name; then the location
+    and the rule group in brackets."""
     window = _read(WINDOW)
     last = window[window.index('text = "PP_CPLAN_LAST"'):window.index("# the rule groups' detail panes")]
-    assert "ignoreinvisible = yes" in last
-    assert (last.index("GetList('pp_cplan_log_types')") < last.index("pp_cplan_rank_upgrade = {}")
-            < last.index('text = "PP_CPLAN_IN_LOCATION"'))
-    for group, why in cp.GROUP_WHY.items():
-        shown = f"visible = \"[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint){why - 100}')]\""
-        assert last.count(shown) == 1, group
+    assert "pp_cplan_last_list = {}" in last and "datamodel" not in last
+    panes = _read(MOD / "in_game/gui/pp_construction_plan_detail.gui")
+    listed = panes[panes.index("type pp_cplan_last_list = scrollarea"):]
+    listed = listed[:listed.index("\n\t}\n")]
+    assert "ignoreinvisible = yes" in listed and "GetList('pp_cplan_log')" not in listed
+    words = {"profiles": "PROFILE", "food": "FOOD", "logistics": "LOGISTICS", "improve": "IMPROVE", "business": "BUSINESS",
+             "country": "COUNTRY"}
+    places = []
+    for group in cp.GROUPS:
+        why = cp.GROUP_WHY[group]
+        assert listed.count(f"datamodel = \"[GetPlayer.MakeScope.GetList('pp_cplan_log_{why}')]\"") == 1, group
+        assert listed.count(f"datamodel = \"[Scope.GetList('pp_cplan_log_types_{why}')]\"") == 1, group
+        assert listed.count(f'text = "PP_CPLAN_WHY_{words[group]}"') == 1, group
+        places += [listed.index(f"GetList('pp_cplan_log_{why}')"), listed.index(f"GetList('pp_cplan_log_types_{why}')"),
+                   listed.index(f'text = "PP_CPLAN_WHY_{words[group]}"')]
+    assert places == sorted(places)  # each group's own types and name inside its own list, the window's order
+    assert listed.count("pp_cplan_rank_upgrade = {}") == 1
+    assert (listed.index("GetList('pp_cplan_log_types_107')") < listed.index("pp_cplan_rank_upgrade = {}")
+            < listed.index('text = "PP_CPLAN_WHY_COUNTRY"'))
+    assert listed.count('text = "PP_CPLAN_IN_LOCATION"') == len(cp.GROUPS)
     upgrade = window[window.index("type pp_cplan_rank_upgrade = text_single"):window.index("# ---- Opener")]
-    assert ("And(EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)7'), "
-            "EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_log_step_n'), '(CFixedPoint)2'))") in upgrade
+    assert "visible = \"[Scope.Var('pp_cplan_log_rank').IsSet]\"" in upgrade
     assert 'text = "PP_CPLAN_RANK_UPGRADE"' in upgrade
     loc = _read(LOC)
     assert re.search(r"^  PP_CPLAN_RANK_UPGRADE: \".*\[location_rank\|e\].*\"$", loc, re.MULTILINE)
@@ -767,15 +782,28 @@ def test_detail_numbers_per_group() -> None:
     for line in ("change_variable = { name = pp_cplan_dspent_$why$ add = scope:pp_cplan_paid }",
                  "change_variable = { name = pp_cplan_dn_$why$ add = 1 }",
                  "add_to_variable_list = { name = pp_cplan_log_$why$ target = scope:pp_cplan_site }",
-                 "set_variable = { name = pp_cplan_log_cost value = scope:pp_cplan_paid }",
-                 "set_variable = { name = pp_cplan_log_val value = scope:pp_cplan_rv }",
-                 "set_variable = { name = pp_cplan_log_step value = scope:pp_cplan_rs }"):
+                 "add_to_variable_list = { name = pp_cplan_log_types_$why$ target = scope:pp_cplan_btype }",
+                 "set_variable = { name = pp_cplan_log_cost_$why$ value = scope:pp_cplan_paid }",
+                 "change_variable = { name = pp_cplan_log_cost_$why$ add = scope:pp_cplan_paid }",
+                 "set_variable = { name = pp_cplan_log_val_$why$ value = scope:pp_cplan_rv }",
+                 "set_variable = { name = pp_cplan_log_step_$why$ value = scope:pp_cplan_rs }"):
         assert line in now, line
+    # one entry per rule group and location: no line of the location that the next group would overwrite
+    for name in ("pp_cplan_log_why", "pp_cplan_log_types ", "name = pp_cplan_log_cost ", "name = pp_cplan_log_val ",
+                 "name = pp_cplan_log_step "):
+        assert name not in effects, name
     run = _effect(effects, "pp_cplan_run")
     assert run.index("pp_cplan_stats_reset = yes") < run.index("pp_cplan_group_profiles = yes")
     assert run.rindex("pp_cplan_group_improve = yes") < run.index("pp_cplan_history_push = yes")
+    forget = _effect(effects, "pp_cplan_log_clear")
+    assert "clear_variable_list = pp_cplan_log_types_$why$" in forget
     for name in ("pp_cplan_log_cost", "pp_cplan_log_val", "pp_cplan_log_step"):
-        assert f"remove_variable = {name}" in run, name
+        assert f"remove_variable = {name}_$why$" in forget, name
+    for why in cp.GROUP_WHY.values():
+        assert f"pp_cplan_log_clear = {{ why = {why} }}" in run, why
+        for name in ("cost", "val", "step"):
+            assert re.search(rf"^pp_cplan_log_{name}_{why}_n = \{{", _read(VALUES), re.MULTILINE), (name, why)
+    assert "remove_variable = pp_cplan_log_rank" in run
     reset = _effect(generated, "pp_cplan_stats_reset")
     push = _effect(generated, "pp_cplan_history_push")
     clear = _effect(generated, "pp_cplan_history_clear")

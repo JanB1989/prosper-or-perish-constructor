@@ -47,6 +47,11 @@ TITLES = {
 # a town or city upgrade in a list of constructions (the window's type, pp_construction_plan.gui): the Towns and
 # Buildings group's upgrades are no buildings, so their list of building types is empty and this names them
 RANK_UPGRADE = "pp_cplan_rank_upgrade"
+# the window's "Last month" list (generated here, placed by pp_construction_plan.gui) and its words per rule group
+# (pp_construction_plan_l_english.yml)
+LAST_LIST = "pp_cplan_last_list"
+LAST_WHY = {"profiles": "PP_CPLAN_WHY_PROFILE", "food": "PP_CPLAN_WHY_FOOD", "logistics": "PP_CPLAN_WHY_LOGISTICS",
+            "improve": "PP_CPLAN_WHY_IMPROVE", "business": "PP_CPLAN_WHY_BUSINESS", "country": "PP_CPLAN_WHY_COUNTRY"}
 # the Towns and Buildings group's kinds (pp_cplan_log_step, pp_construction_plan_country.txt): 1 a public building,
 # 2 a town or city upgrade, 3 the upgrade of an older building
 COUNTRY_KINDS = (1, 2, 3)
@@ -138,18 +143,22 @@ def texts() -> dict[str, str]:
     out: dict[str, str] = {
         "PP_CPLAN_D_SHOW": "Show what this rule group checked, spent and built last month",
         "PP_CPLAN_D_HIDE": "Close the details and show last month's list again",
-        "PP_CPLAN_D_OFF": "Off last month: its bar is empty, so it checked nothing.",
-        "PP_CPLAN_D_OFF_PROFILES": ("Off last month: its bar is empty, or no [location|e] has a profile or a mark, so "
-                                    "it checked nothing."),
+        # a group did not run: the plan was off (also before its first month), its bar is empty, or it has nothing to
+        # do (no profile or mark anywhere; nothing switched on in the Towns and Buildings tab)
+        "PP_CPLAN_D_OFF": "It did not run last month: the plan was off, or its bar is empty.",
+        "PP_CPLAN_D_OFF_PROFILES": ("It did not run last month: the plan was off, its bar is empty, or no [location|e] "
+                                    "has a profile or a mark."),
+        "PP_CPLAN_D_OFF_COUNTRY": ("It did not run last month: the plan was off, its bar is empty, or nothing is "
+                                   "switched on in its tab."),
         "PP_CPLAN_D_NO_WAIT": "Nothing waited for gold.",
         "PP_CPLAN_D_BUILT": "Built last month",
         "PP_CPLAN_D_NOTHING": "Nothing was built.",
         "PP_CPLAN_D_YEAR_AGO": _ago(),
         "PP_CPLAN_D_LAST_MONTH": "last month",
-        "PP_CPLAN_D_COST": f"[{_item('pp_cplan_log_cost_n')}|0]{GOLD_ICON}",
     }
     for group in cp.GROUPS:
         key = group.upper()
+        out[f"PP_CPLAN_D_COST_{key}"] = f"[{log_value(group, 'cost')}|0]{GOLD_ICON}"
         out[f"PP_CPLAN_D_TITLE_{key}"] = TITLES[group]
         out[f"PP_CPLAN_D_GOLD_{key}"] = (
             f"It had {_show(d(group, 'had'))}{GOLD_ICON} to spend and wanted {_show(d(group, 'need'))}{GOLD_ICON}: "
@@ -195,24 +204,26 @@ def texts() -> dict[str, str]:
         "It had no gold to spend, so it did not look for businesses: what they would have cost is not counted.")
     # the group runs a location's profile rules and its marks (the Location Plan's "Also build here"); both count
     out["PP_CPLAN_D_PROFILES_SIT"] = (
-        f"{_show(d('profiles', 'locs'))} [locations|e] have a profile or marks. Their rules and marks last month:")
+        f"[locations|e] with a profile or marks: {_show(d('profiles', 'locs'))}. Their rules and marks last month:")
     for state, text in PROFILE_STATES.items():
         out[f"PP_CPLAN_D_PROFILES_ST{state}"] = f"{_show(d('profiles', f'st{state}'))} {text}"
 
     # why a listed construction was started (location scope: the list items)
-    months = f"[{_item('pp_cplan_log_val_n')}|1]"
+    months = f"[{log_value('food', 'val')}|1]"
     for step, text in FOOD_STEPS.items():
         out[f"PP_CPLAN_D_FOOD_WHY_{step}"] = f"#weak ({text.format(months=months)})#!"
-    value = _item("pp_cplan_log_val_n")
-    out["PP_CPLAN_D_LOGISTICS_WHY"] = f"#weak ([market_access|e] [{value}|0]% without event effects)#!"
-    out["PP_CPLAN_D_IMPROVE_WHY"] = f"#weak (population at [{value}|0]% of its [population_capacity|e])#!"
-    out["PP_CPLAN_D_BUSINESS_WHY"] = f"#weak (pays back in [{value}|1] years)#!"
+    out["PP_CPLAN_D_LOGISTICS_WHY"] = (
+        f"#weak ([market_access|e] [{log_value('logistics', 'val')}|0]% without event effects)#!")
+    out["PP_CPLAN_D_IMPROVE_WHY"] = (
+        f"#weak (population at [{log_value('improve', 'val')}|0]% of its [population_capacity|e])#!")
+    out["PP_CPLAN_D_BUSINESS_WHY"] = f"#weak (pays back in [{log_value('business', 'val')}|1] years)#!"
     # the Locations group: a rule of the location's profile (its number), or one of its marks (step 0; the Location
     # Plan's words: marked, "Also build here")
-    out["PP_CPLAN_D_PROFILES_WHY"] = f"#weak (rule [{_item('pp_cplan_log_step_n')}|0] of its profile)#!"
+    out["PP_CPLAN_D_PROFILES_WHY"] = f"#weak (rule [{log_value('profiles', 'step')}|0] of its profile)#!"
     out["PP_CPLAN_D_PROFILES_WHY_MARK"] = "#weak (marked there: Also build here)#!"
     # Towns and Buildings (COUNTRY_KINDS): a building where the location's maximum control reaches the line, an
-    # upgrade by the location's people in thousands (what its group leaves in pp_cplan_log_val)
+    # upgrade by the location's people in thousands (what its group leaves in pp_cplan_log_val_107)
+    value = log_value("country", "val")
     out["PP_CPLAN_D_COUNTRY_WHY_1"] = f"#weak ([max_control|e] [{value}|0]%)#!"
     out["PP_CPLAN_D_COUNTRY_WHY_2"] = f"#weak ([{value}|1] thousand people)#!"
     out["PP_CPLAN_D_COUNTRY_WHY_3"] = f"#weak (upgrade of the older building, [max_control|e] [{value}|0]%)#!"
@@ -353,15 +364,45 @@ def _chart(group: str) -> list[str]:
     ])
 
 
+def log_value(group: str, name: str) -> str:
+    """A list item's number (location scope): what the rule group left there in the last pass (``name``: cost, val,
+    step; script values pp_cplan_log_<name>_<why>_n over the location's pp_cplan_log_<name>_<why>)."""
+    return _item(f"pp_cplan_log_{name}_{cp.GROUP_WHY[group]}_n")
+
+
+def _names(group: str) -> list[str]:
+    """The buildings the rule group started in the item's location (its own list: a location with two construction
+    slots can hold another group's construction of the same pass). Towns and Buildings: a town or city upgrade is no
+    building, so the list is empty then and takes no room (step 2 is left only where the group built nothing else)."""
+    hidden = [f'visible = "[{_not(_equals(log_value(group, "step"), 2))}]"'] if group == "country" else []
+    return _block("flowcontainer", [
+        *hidden,
+        "direction = horizontal",
+        f"datamodel = \"[Scope.GetList('pp_cplan_log_types_{cp.GROUP_WHY[group]}')]\"",
+        "spacing = 4",
+        *_block("item", ['pp_cplan_label = { raw_text = "[Scope.GetBuildingType.GetName]" }']),
+    ])
+
+
+def _row(group: str, tail: list[str]) -> list[str]:
+    """One line of a list: the group's buildings in the location (and its town or city upgrade), the location, then
+    ``tail``."""
+    return _block("flowcontainer", [
+        "direction = horizontal",
+        "ignoreinvisible = yes",
+        "spacing = 4",
+        "margin = { 2 1 }",
+        *_names(group),
+        *(_block(RANK_UPGRADE, []) if group == "country" else []),
+        'pp_cplan_label = { text = "PP_CPLAN_IN_LOCATION" }',
+        *tail,
+    ])
+
+
 def _list(group: str) -> list[str]:
     why = cp.GROUP_WHY[group]
     reasons: list[str] = []
-    step = _item("pp_cplan_log_step_n")
-    # Towns and Buildings: an upgrade leaves the location's line to another rule group that built there in the same
-    # pass (pp_cplan_country_rank_up), so the line is this group's only while the location's code is 7. A location
-    # of its list with another group's line can only be such an upgrade: it shows as the upgrade, without the other
-    # group's buildings, cost and reason.
-    own = _equals(_item("pp_cplan_why_n"), why - 100) if group == "country" else None
+    step = log_value(group, "step")
 
     def label(key: str, visible: str | None = None) -> list[str]:
         return _block("pp_cplan_label", ([f'visible = "[{visible}]"'] if visible else []) + [f'text = "{key}"'])
@@ -375,28 +416,10 @@ def _list(group: str) -> list[str]:
         reasons += label("PP_CPLAN_D_PROFILES_WHY_MARK", _not(_above(step)))
     elif group == "country":
         for n in COUNTRY_KINDS:
-            reasons += label(f"PP_CPLAN_D_COUNTRY_WHY_{n}", _both(own, _equals(step, n)))
+            reasons += label(f"PP_CPLAN_D_COUNTRY_WHY_{n}", _equals(step, n))
     else:
         reasons.append(f'pp_cplan_label = {{ text = "PP_CPLAN_D_{group.upper()}_WHY" }}')
-    names = _block("flowcontainer", [
-        *([f'visible = "[{own}]"'] if own else []),
-        "direction = horizontal",
-        "datamodel = \"[Scope.GetList('pp_cplan_log_types')]\"",
-        "spacing = 4",
-        *_block("item", ['pp_cplan_label = { raw_text = "[Scope.GetBuildingType.GetName]" }']),
-    ])
-    upgrade = _block(RANK_UPGRADE, [f'visible = "[{_either(_not(own), _equals(step, 2))}]"']) if own else []
-    row = _block("flowcontainer", [
-        "direction = horizontal",
-        "ignoreinvisible = yes",
-        "spacing = 4",
-        "margin = { 2 1 }",
-        *names,
-        *upgrade,
-        'pp_cplan_label = { text = "PP_CPLAN_IN_LOCATION" }',
-        *(label("PP_CPLAN_D_COST", own) if own else ['pp_cplan_label = { text = "PP_CPLAN_D_COST" }']),
-        *reasons,
-    ])
+    row = _row(group, [f'pp_cplan_label = {{ text = "PP_CPLAN_D_COST_{group.upper()}" }}', *reasons])
     return _block("scrollarea", [
         "layoutpolicy_horizontal = expanding",
         "layoutpolicy_vertical = expanding",
@@ -410,12 +433,32 @@ def _list(group: str) -> list[str]:
     ])
 
 
+def _last_list() -> list[str]:
+    """The window's "Last month" list: every construction of the last pass, a line per rule group and location (the
+    groups in the window's order), each with its group's name."""
+    groups: list[str] = []
+    for group in cp.GROUPS:
+        groups += _block("flowcontainer", [
+            "direction = vertical",
+            f"datamodel = \"[GetPlayer.MakeScope.GetList('pp_cplan_log_{cp.GROUP_WHY[group]}')]\"",
+            *_block("item", _row(group, [f'pp_cplan_label = {{ text = "{LAST_WHY[group]}" }}'])),
+        ])
+    return ["# the window's \"Last month\" list: what the last pass built, a line per rule group and location",
+            *_block(f"type {LAST_LIST} = scrollarea", [
+                "layoutpolicy_horizontal = expanding",
+                "layoutpolicy_vertical = expanding",
+                "scrollbarpolicy_horizontal = always_off",
+                "scrollbar_vertical = { using = Scrollbar_Vertical }",
+                *_block("scrollwidget", _block("flowcontainer", ["direction = vertical", *groups])),
+            ])]
+
+
 def _pane(group: str) -> list[str]:
     d = detail_value
     ran = _above(_country(d(group, "ran")))
     waited = _above(_country(d(group, "waitn")))
     started = _above(_country(d(group, "started")))
-    off = "PP_CPLAN_D_OFF_PROFILES" if group == "profiles" else "PP_CPLAN_D_OFF"
+    off = {"profiles": "PP_CPLAN_D_OFF_PROFILES", "country": "PP_CPLAN_D_OFF_COUNTRY"}.get(group, "PP_CPLAN_D_OFF")
     # "nothing waited for gold" only where the group looked (the business group does not without gold)
     quiet = _both(_not(waited), _not(_skipped())) if group == "business" else _not(waited)
     shown = _block("vbox", [
@@ -492,7 +535,7 @@ def _bar(texture: str, block: str) -> list[str]:
 
 def render_gui() -> str:
     """The cogs and the panes, one each per rule group (cp.GROUPS)."""
-    body = _shared_types()
+    body = [*_shared_types(), "", *_last_list()]
     for group in cp.GROUPS:
         body += ["", *_button(group), "", *_pane(group)]
     out = [
@@ -503,7 +546,7 @@ def render_gui() -> str:
         "# variable pp_cplan_detail = <group>: the gold it had, wanted and spent, what waited for gold, the situation",
         f"# its rule read, the last {cp.HISTORY_MONTHS} months (grey wanted, gold spent) and what it built and why.",
         "# Every number is a script value the monthly pass leaves (pp_cplan_d_*, pp_cplan_h_*, the list items'",
-        "# pp_cplan_log_*_n).",
+        "# pp_cplan_log_*_<why>_n). Also the window's own \"Last month\" list ({LAST_LIST}).",
         "",
         *_block("types PPConstructionPlanDetail", body),
     ]

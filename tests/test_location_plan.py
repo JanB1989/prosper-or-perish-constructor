@@ -293,11 +293,23 @@ def test_a_mark_is_a_good_or_a_building() -> None:
     select = _effect(_read(EFFECTS), "pp_lplan_select")
     assert select.index("limit = { always = no }") < select.index("pp_lplan_declare_flags = yes")
     assert switch.count("pp_lplan_declare_flags") == 1 and "pp_lplan_declare_flags = yes" not in _read(PROFILE_EFFECTS)
-    # at the look, before the list is cleaned (a location left with no mark then leaves the list)
-    cleanup = _effect(_read(PROFILE_EFFECTS), "pp_lplan_cleanup")
-    assert cleanup.index("pp_lplan_drop_categories = yes") < cleanup.index("limit = { NOT = { has_variable = pp_lplan_n } }")
-    assert "pp_lplan_cleanup = yes" in _effect(_read(PROFILE_EFFECTS), "pp_lprof_look")
-    assert "pp_lplan_cleanup = yes" not in _effect(_read(PROFILE_EFFECTS), "pp_lprof_run")
+    # once per country, from the country's list, at the first pass whatever the group's weight (no walk at every
+    # look), and before the list is cleaned (a location left with no mark then leaves the list); a toggle, Clear and
+    # the window take them off the location they touch
+    hand = _read(PROFILE_EFFECTS)
+    cleanup = _effect(hand, "pp_lplan_cleanup")
+    assert cleanup.index("pp_lplan_drop_categories_once = yes") < cleanup.index("limit = { NOT = { has_variable = pp_lplan_n } }")
+    assert cleanup.count("pp_lplan_drop_categories = yes") == 0
+    once = _effect(hand, "pp_lplan_drop_categories_once")
+    assert once.index("limit = { NOT = { has_variable = pp_lplan_cats_gone } }") < once.index(
+        "set_variable = { name = pp_lplan_cats_gone value = yes }") < once.index("variable = pp_lplan_locs") < once.index(
+        "pp_lplan_drop_categories = yes")
+    run = _effect(hand, "pp_lprof_run")
+    assert run.index("pp_lplan_drop_categories_once = yes") < run.index("pp_cplan_profiles_w > 0")
+    assert "pp_lplan_cleanup = yes" in _effect(hand, "pp_lprof_look") and "pp_lplan_cleanup = yes" not in run
+    plan = _read(EFFECTS)
+    for name in ("pp_lplan_flip", "pp_lplan_bflip", "pp_lplan_select"):
+        assert _effect(plan, name).lstrip().startswith("pp_lplan_drop_categories = yes"), name
 
 
 def test_a_building_is_marked_on_a_list_by_script() -> None:
@@ -307,7 +319,7 @@ def test_a_building_is_marked_on_a_list_by_script() -> None:
     plan = _read(EFFECTS)
     flip = _effect(plan, "pp_lplan_bflip")
     listed = f"{{ name = {lp.BUILDING_MARKS} target = scope:pp_bt }}"
-    assert flip.lstrip().startswith("if = {\n\t\tlimit = { exists = scope:pp_bt }")  # a click without a building: nothing
+    assert "pp_lplan_maps_ready = yes\n\tif = {\n\t\tlimit = { exists = scope:pp_bt }" in flip  # a click without a building: nothing
     assert f"limit = {{ is_target_in_variable_list = {listed} }}" in flip
     assert f"remove_list_variable = {listed}" in flip and f"add_to_variable_list = {listed}" in flip
     assert "change_variable = { name = pp_lplan_n subtract = 1 }" in flip and "change_variable = { name = pp_lplan_n add = 1 }" in flip
@@ -383,7 +395,7 @@ def test_marked_buildings_show_with_their_own_icons() -> None:
     assert "hbox" not in strip and "vbox" not in strip
     assert "pp_lplan_bstrip = {" in _read(WINDOW)
     texts = _texts()
-    assert texts["PP_LPLAN_BMARK_TILE"] == "#T [Scope.GetBuildingType.GetName]#!\\n$PP_LPLAN_BMARK_TILE_TEXT$"
+    assert texts["PP_LPLAN_BMARK_TILE"].startswith("#T [Scope.GetBuildingType.GetName]#!\\n$PP_LPLAN_BMARK_TILE_TEXT$\\n")
     for key in ("PP_LPLAN_BMARK_ON", "PP_LPLAN_BMARK_OFF", "PP_LPLAN_BMARK_ICON", "PP_LPLAN_BMARK_TILE_TEXT"):
         assert "Construction Plan" in texts[key] and not re.search(r"\d", texts[key]), key
     assert "Ctrl" in texts["PP_LPLAN_BMARK_ICON"] and "Ctrl" in texts["PP_LPLAN_NOTE"]
@@ -399,3 +411,102 @@ def test_texts_say_a_mark_is_forced() -> None:
         assert "whether it pays or not" in texts[key], key
     for key, text in texts.items():
         assert "Businesses limit" not in text and "pays back within" not in text and "kind of building" not in text, key
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# a building mark's state and its icon on the map (2026-11-11)
+
+
+def test_a_building_mark_keeps_its_state() -> None:
+    """A building mark keeps its state after the last pass like a goods mark, with the same state texts. Script cannot
+    name a variable per building type, so the state is an entry of the location's variable map pp_lplan_bst, keyed by
+    the marked building type (the list entry, not the later tier the pass may build). Every mark writes its state in
+    the second go, a waiting one too; the entry goes with the mark, with Clear and when the location is lost. An old
+    save has no map: every removal asks first."""
+    hand = _read(PROFILE_EFFECTS)
+    walk = _effect(hand, "pp_lplan_building_marks")
+    assert "scope:pp_lplan_mode > 1.5" in walk and "save_scope_as = pp_lplan_bkey" in walk
+    mark = _effect(hand, "pp_lplan_building_mark")
+    second = mark[mark.index("\telse = {\n\t\t# a construction started"):]
+    assert second.index("pp_lprof_open = yes") < second.index("pp_lplan_b_finish = yes")
+    for reason in ("pp_lprof_fail = { r = 101 }", "pp_lprof_fail = { r = 102 }", "pp_lprof_fail = { r = 104 }",
+                   "pp_lprof_fail = { r = 105 }", "pp_lprof_fail = { r = 107 }",
+                   "set_variable = { name = pp_lprof_st value = 103 }", "set_variable = { name = pp_lprof_st value = 101 }",
+                   "pp_lprof_build = yes", "pp_cplan_note_goods = { why = 105 }"):
+        assert reason in second, reason
+    assert "pp_lprof_build = yes" not in mark[:mark.index(second)]  # measuring builds nothing
+    finish = _effect(hand, "pp_lplan_b_finish")
+    assert finish.index("pp_lprof_finish = { st = pp_lplan_bst_now est = pp_lplan_best_now }") < finish.index(
+        "pp_lplan_b_state_off = { key = scope:pp_lplan_bkey }") < finish.index(
+        f"add_to_variable_map = {{ name = {lp.BUILDING_STATES} key = scope:pp_lplan_bkey value = var:pp_lplan_bst_now }}")
+    assert "remove_variable = pp_lplan_bst_now" in finish and "remove_variable = pp_lplan_best_now" in finish
+    plan = _read(EFFECTS)
+    off = _effect(plan, "pp_lplan_b_state_off")
+    assert off.index(f"has_variable_map = {lp.BUILDING_STATES}") < off.index("any_key_in_variable_map") < off.index(
+        f"remove_from_variable_map = {{ name = {lp.BUILDING_STATES} key = $key$ }}")
+    assert "this = $key$" in off and '"$' not in off
+    flip = _effect(plan, "pp_lplan_bflip")
+    assert flip.index("remove_list_variable") < flip.index("pp_lplan_b_state_off = { key = scope:pp_bt }") < flip.index("else = {")
+    clear = _effect(_read(MOD / lp.EFFECTS), "pp_lplan_clear_all")
+    assert (f"limit = {{ has_variable_map = {lp.BUILDING_STATES} }}\n\t\tclear_variable_map = {lp.BUILDING_STATES}") in clear
+    cleanup = _effect(hand, "pp_lplan_cleanup")
+    lost = cleanup[cleanup.index("NOT = { owner ?= scope:pp_cplan_country }"):]
+    assert lost.index(f"has_variable_map = {lp.BUILDING_STATES}") < lost.index(f"clear_variable_map = {lp.BUILDING_STATES}")
+    # the texts: the tile (the row and the Location Plan window) and the map icon read the map entry
+    texts = _texts()
+    state = lp.building_state("Location.MakeScope", "Scope.GetBuildingType.MakeScope")
+    assert state == f"Location.MakeScope.GetVariableFromVariableMap('{lp.BUILDING_STATES}', Scope.GetBuildingType.MakeScope)"
+    line = f"[SelectLocalization({state}.IsSet, 'PP_LPLAN_BMSTS', 'PP_LPROF_ST_0')]"
+    assert texts["PP_LPLAN_BMARK_TILE"].endswith(line) and texts["PP_LPLAN_BMARK_MAP"].endswith(line)
+    for n in lp.MARK_STATES:
+        assert (f"[AddTextIf(EqualTo_CFixedPoint({state}.GetValue, '(CFixedPoint){100 + n}'), "
+                f"Localize('PP_LPROF_ST_{n}'))]") in texts["PP_LPLAN_BMSTS"], n
+    assert "PP_LPROF_ST_5'" not in texts["PP_LPLAN_BMSTS"] and "PP_LPROF_ST_10'" not in texts["PP_LPLAN_BMSTS"]
+    assert 'tooltip = "PP_LPLAN_BMARK_TILE"' in _read(MOD / lp.GUI)
+
+
+def test_marked_buildings_on_the_map() -> None:
+    """In the Location Plan map mode each marked building shows as its icon over the location after the goods: green
+    once a level of it or of a later tier of its line stands there, red while not. The marker is drawn for every
+    location, so it reads only the location's own list, capped, inside the part shown only where the location has
+    marks; nothing in it is per building type (the line lookup is the generated trigger, asked per icon)."""
+    from prosper_or_perish_constructor import location_profiles as lpf
+
+    marker = _read(MOD / lp.MARKERS)
+    plan = marker[marker.rindex("widget = {", 0, marker.index('name = "pp_lplan_marker"')):]
+    plan = plan[:lp._marker_block_end(plan, 0)]
+    model = f"datamodel = \"[DataModelFirst({lp.BUILDING_MARKS_MODEL}, '(int32){lp.BUILDING_MAP_ICONS}')]\""
+    assert plan.count(model) == 1 and 0 < lp.BUILDING_MAP_ICONS <= 8
+    buildings = plan[plan.rindex("flowcontainer = {", 0, plan.index(model)):]
+    assert buildings.lstrip("flowcontainer = {\n\t").startswith("visible = \"[Location.MakeScope.Var('pp_lplan_n').IsSet]\"")
+    done = lp.building_done("Location.MakeScope", "Scope.GetBuildingType.MakeScope")
+    # the done check once per icon: one tile, its colour picked by it
+    assert buildings.count(done) == 1
+    assert f"color = \"[Select_CVector4f({done}, '(CVector4f)0.25,0.7,0.3,0.85', '(CVector4f)0.75,0.25,0.2,0.85')]\"" in buildings
+    assert 'texture = "[GetBuildingIcon(Scope.GetBuildingType)]"' in buildings and 'tooltip = "PP_LPLAN_BMARK_MAP"' in buildings
+    assert "building_type:" not in plan and plan.count(lp.BUILDING_DONE_GUI) == 1
+    assert "hbox" not in buildings and "vbox" not in buildings
+    # the scripted GUI and its trigger
+    asked = _effect(_read(SCRIPTED_GUIS), lp.BUILDING_DONE_GUI)
+    assert "scope = location" in asked and "effect" not in asked
+    assert "is_shown = {\n\t\texists = scope:pp_bt\n\t\tpp_lplan_b_done = yes" in asked
+    # the done check: one key lookup, one walk over the location's buildings, each compared with the type and its
+    # main line's later tiers (global maps pp_lplan_up<k>); a type without a later tier: the type alone
+    done_trigger = _effect(_read(MOD / lpf.TRIGGERS), "pp_lplan_b_done")
+    maps = lpf.building_mark_maps(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT))
+    pairs, _ = lpf.building_mark_data(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT))
+    assert "building_type:" not in done_trigger and done_trigger.count("any_buildings_in_location") == 2
+    assert done_trigger.count("is_key_in_global_variable_map = { name = pp_lplan_up1 target = scope:pp_bt }") == 2
+    for k in range(1, maps.depth + 1):
+        assert f'building_type = "global_variable_map(pp_lplan_up{k}|scope:pp_bt)"' in done_trigger, k
+    # every later tier of a line is on its main line (the maps hold the main line only)
+    for old, names in lpf.newer_tiers(pairs).items():
+        assert set(names) == set(maps.up[old]), old
+    assert lpf.main_chain([("a", "b"), ("b", "c"), ("a", "c"), ("x", "y")]) == {"a": ["b", "c"], "b": ["c"], "x": ["y"]}
+    # later tiers: the whole line up, a cycle ends
+    assert lpf.newer_tiers([("a", "b"), ("b", "c"), ("x", "y"), ("c", "a")]) == {
+        "a": ["b", "c"], "b": ["c", "a"], "x": ["y"], "c": ["a", "b"]}
+    texts = _texts()
+    assert "'PP_LPLAN_BMARK_DONE', 'PP_LPLAN_STATE_OPEN'" in texts["PP_LPLAN_BMARK_MAP"] and done in texts["PP_LPLAN_BMARK_MAP"]
+    assert "newer kind" in texts["PP_LPLAN_BMARK_DONE"] and not re.search(r"\d", texts["PP_LPLAN_BMARK_DONE"])
+    assert "building" in texts["PP_LPLAN_NOTE"].split("map mode")[1]

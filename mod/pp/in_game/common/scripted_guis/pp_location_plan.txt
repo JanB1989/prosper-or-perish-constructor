@@ -37,6 +37,16 @@ pp_lplan_bmarked = {
 	}
 }
 
+# Location scope, scope:pp_bt = a marked building type: shown while a level of it, or of a later tier of its line,
+# stands here (the map icon's green tile; generated trigger pp_lplan_b_done). No effect.
+pp_lplan_bdone = {
+	scope = location
+	is_shown = {
+		exists = scope:pp_bt
+		pp_lplan_b_done = yes
+	}
+}
+
 # Location scope: remove every mark.
 pp_lplan_clear = {
 	scope = location

@@ -31,6 +31,69 @@ Jan's marks (typical 30, no month above 50) by a little; the next step would be 
 A 12-month business cycle doubles the sites a month (35 instead of 18, about +12 ms a month), so the cycle stays 24.
 No plan line in error.log from 57 real passes; console effects and run files log artefact lines only.
 
+**Measured in game (2026-11-10, fourth round; EU5 1.4.8, the same test world and setup, Castile with 424 locations,
+24 months in a row; 07dbb7ca).** The business refresh now rests in the food look's months (the next step named
+above). 24 months: median 30.5 ms, worst 49 ms: at Jan's marks (typical 30, no month above 50). A 12-month business
+cycle measured median 41, worst 54 ms, so `business_cycle_months` stays 24. For comparison: the monthly version before
+the rework took 320-390 ms every pass.
+
+**What 2b053cff adds to a Locations look (2026-11-10 evening; counted from the generated script at 71c29c6c against
+2b053cff^, not measured).** Before the commit the Locations look alone measured about 29 ms (third round). L owned
+locations, P with a profile, M with marks, N = the look's locations (P + M without the overlap), B marked buildings per
+marked location, K buildings standing in a location; example 424 / 20 / 20, N = 40.
+
+| part | before | after | at 424 / 20 / 20 |
+| --- | --- | --- | --- |
+| turn order | `pp_lprof_turn` = `total_building_levels`, once per location in the ordered list | 1 `has_variable` + 1-2 comparisons per location; the cursor: 2 country checks, at most N numbers given once, 3 effects after the list; between looks 2 checks in `pp_lprof_target_turn` | about +100 cheap evaluations a look; no new walk over L |
+| old save's category marks | none | `pp_lplan_drop_categories`, 9 `has_variable` per marked location (every look) | +180 |
+| goods marks, the lines | 76 `has_variable` (one go over `pp_lplan_location_marks`) per marked location | two goes: 152, plus `pp_lplan_measuring` (2 comparisons) per marked good per go | +1,520 checks |
+| goods marks, the work | each marked good's target until the first one starts a construction (the rest get state 9) | go 1 runs the expand path of EVERY marked good (no early stop: measuring builds nothing; first levels are skipped there), go 2 runs every target again when go 1 built nothing; per standing candidate `pp_lprof_payback100` (3 walks over K: `pp_cplan_bt_profit` twice, `pp_cplan_bt_levels`) is evaluated up to 3 more times in `pp_lplan_measure` | per standing producer of a marked good about 2 to 3 times the old walks |
+| building marks | none | per mark and go: `pp_lplan_b_newest` = 4 x 155 type comparisons (620, nearly always all of them) + up to 4 `can_build_building`; `pp_cplan_bt_queued`, max level and `pp_cplan_bt_levels`: 3 walks over K; `can_build_building` in country and location scope, else `pp_lplan_b_upgrade_here` (up to 148 comparisons + 1 walk); `pp_lplan_b_staff` (up to 620 comparisons in 60 groups, about half on average); `pp_cplan_btype_data` (up to 954 comparisons in its chains, roughly half on average); a standing one measures its payback (3 x 3 walks). Go 2 repeats it unless go 1 started a construction; a level built adds `pp_cplan_btype_data` twice more (once before the build, once in `pp_cplan_construct_scoped`) | per mark and go about 1,400-2,350 type comparisons and 3-13 walks over K; 20 marked locations x 2 goes: B = 1 about 56,000-94,000 comparisons, B = 3 about 170,000-280,000 |
+
+Only locations where a construction can start pay for the marks' work: with a construction under way or after one this
+turn, both building-mark goes and go 1 are skipped (`pp_cplan_site_free`, `pp_cplan_hit`) and the goods marks cost
+their 152 checks. A type comparison (`scope:pp_cplan_btype = building_type:x`) is the cheapest trigger there is; how
+many ms 100,000 of them take was never measured (the 73,920 type checks of the old business pick took 0.20 s, but each
+was a `can_build_building` with a worker check). The turn cursor costs nothing worth measuring; the building marks may.
+
+Worth measuring in game (console `effect c:CAS = { pp_cplan_test_profiles = yes }`, script profiler, the test world
+at 424 / 20 profile / 20 marked locations with free construction slots and gold): (a) goods marks only, against the 29
+ms; (b) the same with 1 marked building per marked location, (c) with 3; (d) (b) with a construction under way in
+every marked location (should cost about (a)). If (b) or (c) adds more than a few ms: the newest tier and the workers
+of a marked building type are the same for every location of the country within a look, so they could be worked out
+once per type, and `pp_lplan_measure` could read `pp_lprof_payback100` once.
+
+**Building marks after the rework (2026-11-11; counted from the generated script, not measured).** A building mark
+no longer runs a chain over the building types. What it needs of its type sits in global variable maps keyed by the
+type (`add_to_global_variable_map`, read with `"global_variable_map(name|key)"` and `is_key_in_global_variable_map`, the
+forms vanilla uses for the HRE kingdoms and migration weights): `pp_lplan_up1..4` (the later tiers of its main line;
+every later tier of a line lies on it), `pp_lplan_dn1..2` (its direct older tiers), `pp_lplan_wk` / `_wp` (workers and
+pop type), `pp_lplan_ipl` / `_dm` / `_ct` (the cost data `pp_cplan_btype_data` holds). The generated
+`pp_lplan_maps_fill` writes them (2,949 entries) once per save and game data version (stamp `pp_lplan_maps_v`;
+`pp_lplan_maps_ready` at the Locations group's monthly start, a building toggle and the Location Plan window: 1-3
+checks). Lookups over a number halve their range: 108 construction demands take 7 comparisons, 4 categories 2, 8 pop
+types 3. Old category marks go once per country from the country's list (`pp_lplan_drop_categories_once`, any weight)
+and from each location a toggle or the window touches, no longer at every look (-180 checks a look).
+
+| part | before | after |
+| --- | --- | --- |
+| newest tier | 4 x 155 type comparisons + up to 4 `can_build_building` | 1 key check + up to 4 `can_build_building` (top tier first) |
+| older tier standing (upgrade) | up to 148 comparisons + 1 walk over K | up to 2 key checks + 2 walks over K |
+| workers | up to 620 comparisons | 1 key check + 3 comparisons + 1 worker check |
+| cost data | up to 954 comparisons | 3 key checks + 7 + 2 comparisons |
+| payback while measuring | `pp_lprof_payback100` up to 3 times (9 walks over K) | once (3 walks) |
+| a mark that cannot be built | every check, both goes | measuring: newest + 1 `can_build_building`; second go the same, then its state |
+| a location where a construction started or one is under way | building marks skipped (no state) | 2 checks + its state into the map |
+| map icon, per icon and frame | about 155 comparisons + 1 walk, twice | 1 key check + 1 walk over K with up to 5 comparisons per building, once (one tile coloured by `Select_CVector4f`) |
+
+Per mark and go about 15-35 evaluations and 3-6 walks over K (a standing one 3 more for its payback), instead of
+about 1,400-2,350 comparisons and 3-13 walks. At 20 marked locations x 2 goes: B = 1 about 600-1,400 evaluations
+(before 56,000-94,000), B = 3 about 1,800-4,200 (before 170,000-280,000). Left as it was: a construction that starts
+runs the plan's own `pp_cplan_construct_scoped`, whose `pp_cplan_btype_data` is the old chain (once a location and
+look at most; the business, food and Towns and Buildings groups use it too and could read the same maps). Tests:
+`tests/test_location_profiles.py::test_a_building_mark_costs_a_few_lookups` (nothing on a mark's path names a
+building type; the halving depth; the fill and its stamp).
+
 **Where the time went** (L owned locations, P provinces, T = 224 business types, B ticked public buildings, every
 month):
 
@@ -161,8 +224,9 @@ the effect reads every new amount first and writes afterwards, so one group's ch
 province first (`ordered_province` over the country's provinces by `pp_cplan_food_order` = minus the store a year from
 now; the engine has that ordered iterator, so no workaround was needed; it costs one more reading of the store a year
 from now per province), logistics the most urgent location, improvements the fullest, Towns and Buildings its own
-order (upgrades of buildings, the ticked buildings in the tab's order, towns, cities), the Locations group as before
-(its location order, each location's rules then its marks). The first thing a group wants and cannot pay for becomes
+order (upgrades of buildings, the ticked buildings in the tab's order, towns, cities), the Locations group its
+locations in turns (since 2026-11-10 evening; before, fewest building levels first), each location's rules then its
+marks (`docs/location_profiles.md`, Monthly pass). The first thing a group wants and cannot pay for becomes
 what it saves for (`pp_cplan_note_wait`: `pp_cplan_save_cost_<why>` + 100, `pp_cplan_save_loc_<why>`,
 `pp_cplan_save_type_<why>`; for a town or city upgrade `pp_cplan_save_rank_107` = 101 / 102 instead of a type), and
 from then on the group builds nothing more in this pass, even things that would fit (`pp_cplan_saving`); they are
@@ -186,7 +250,8 @@ business_market_share` % (10, Jan's placeholder) of the market's monthly demand 
 with nothing of G under construction one level is always allowed (`pp_cplan_market_room = { g out }`,
 `pp_cplan_mroom_<good>`). The ONE place: `pp_cplan_construct_scoped` asks through the generated dispatch
 `pp_cplan_market_do = { do = gate }` for the rule groups of `MARKET_LIMITED` (`pp_cplan_limits_market_<why>`: the
-Businesses group, and the Locations group = profile rules and marks; decided: not the food rule, which builds for
+Businesses group, and the Locations group's profile rules; since 2026-11-10 evening not a location's marks, which are
+forced: `scope:pp_cplan_forced` = 1 while they run, set to 0 in `pp_cplan_pass_begin`; decided: not the food rule, which builds for
 hunger, nor Towns and Buildings, whose ticked buildings the player asked for everywhere). The business pick asks the
 same trigger (`pp_cplan_business_take`), so a site moves on to its next best good. "Under construction" is counted
 once per market and good per pass, only when a pick needs it (`pp_cplan_market_load`), kept on the market's centre
@@ -199,8 +264,8 @@ which asks for 11 horses a month). With the count on the centre location the sam
 Stud Farms, one or two a market; `every_location_in_market` in a script value and the macro in the effect name
 (`pp_cplan_market_$do$_good`) both work. A pick stopped by the limit is not waiting for gold: it is counted apart
 (`pp_cplan_dml_<why>`, the Businesses pane: "passed over because their market already has enough of that good on the
-way"); a profile rule or mark stopped by it gets the new state 10 (`PP_LPROF_ST_10`; fail code 106, the gold code
-moved to 107).
+way"); a profile rule stopped by it gets the new state 10 (`PP_LPROF_ST_10`; fail code 106, the gold code moved to
+107). Marks had it too until 2b053cff.
 
 **E. Handing on.** At the end of the pass (`pp_cplan_purses_hand_on`) every group that ran and saves for nothing gives
 what is left in its purse to the groups that do save, by their weights (next month's money; `pp_cplan_hand_<why>`
@@ -549,7 +614,8 @@ the logistics overrides below were removed on 2026-11-09 (two tabs). The food an
   plan off and 21 s with it on; profiler at 1347: 0.53 s a year for the pass (profiles 0.23, food 0.22). +396
   levels over 10 years. Fixed from it (3accd8fe): construction goods must cover 12 months of the draw
   (`construction_goods_months`; four River Boatmen's Yards had stood still a year on 0.65 naval supplies), and the
-  profile pass goes fewest building levels first (the profile assigned last had built nothing). The test world
+  profile pass goes fewest building levels first (the profile assigned last had built nothing; replaced on 2026-11-10
+  evening by turns from a cursor on the country, because that order always served the same places first). The test world
   falls apart after ~25 years (Catalan independence, rebels, Black Death): use 10-15 year runs.
 - **Goods (per good):** Off / Keep / Expand / Never, months of stock in the capital's market, a Keep line (months).
   Keep built a Stud Farm in Woking for horses (0 months) in the test.
@@ -567,7 +633,8 @@ the logistics overrides below were removed on 2026-11-09 (two tabs). The food an
 
 - Lines for the food rule in the window (Jan 2026-11-09: "I'll take a look at that later"); its numbers are the
   `[construction_plan]` defaults.
-- "Next from the plan / blocked by" per location; pins per building.
+- "Next from the plan / blocked by" per location. Pins per building: since 2026-11-10 evening a building can be
+  marked in a location and is then built there, forced (`docs/location_plan.md`).
 - Upgrades rule group.
 - Not exercised in game: multiplayer, a long run of the business rule in a full world (cost not profiled there).
 Goal (Jan): a player sets rules once, coarse or fine, and buildings get queued when the conditions hold. It has to

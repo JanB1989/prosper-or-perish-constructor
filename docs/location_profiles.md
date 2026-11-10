@@ -19,10 +19,11 @@ sets; whatever a profile does not set, the global Construction Plan rules still 
   Buildings (checkboxes "Global rules here" in the editor; unticked = off; the fifth since 2026-11-10: `xc`, field
   `global_country`, location variable `pp_lprof_xc`, read by that group's own triggers,
   `construction_plan_country.py`). An empty profile with all five off keeps the plan out.
-- Beside its profile a location carries its **marks** (Jan, 2026-11-10: "in this location, also expand wheat"): the
-  Location Plan's items, which the same pass builds after the profile's rules, each as a profile rule with that target
-  and the player's Businesses line as its limit. Marks add; they switch nothing off and do not depend on the
-  checkboxes above. `docs/location_plan.md` has the feature; the Monthly pass section below the mechanics.
+- Beside its profile a location carries its **marks** (Jan, 2026-11-10: "in this location, also expand wheat"): goods
+  and, since that evening, single buildings, which the same pass builds after the profile's rules, **forced**: no
+  payback limit, no market limit (until 2b053cff each ran as a profile rule with the player's Businesses line as its
+  limit). Marks add; they switch nothing off and do not depend on the checkboxes above. `docs/location_plan.md` has the
+  feature and the marks' mechanics; the Monthly pass section below the order.
 - Example: global logistics on, a profile "iron mines" (rule: iron). When the location's market access drops, the
   logistics rule builds there, because the profile names no market access. With a market-access rule in the profile,
   that rule decides (its own payback limit) and the global logistics rule stays out.
@@ -90,7 +91,12 @@ city = { name = "City", texture = "map_modes/cities.dds" }
 The plan items of `location_plan.plan_items` (goods by goods category, then the 8 building categories) plus the target
 **market access** = the good `logistics` (its producers are the logistics buildings; hidden from the plan picker, shown
 as "Market access" in profiles). Every item has a flag key: the good key (`furniture`, `logistics`) or the category key
-(`trade_category`).
+(`trade_category`). Since 2026-11-10 evening the categories are profile items only (rule targets and icons): the
+Location Plan's picker offers the goods (`location_plan.mark_items`). A category's tooltips list the buildings a rule
+with that target tries (`location_profiles_gui.category_list`, the same list and order as `location_profiles.targets`,
+the first 12 by name and "and N more"; `PP_LPROF_UI_CATL_<category>` in the picker, `PP_LPROF_UI_TARGET_TT_R<r>` /
+`PP_LPROF_UI_TARGET_LIST_R<r>` on the edited profile's rule r, chosen by the rule's frame number), Jan: "trade
+buildings" did not say what is in it. Not seen in game yet.
 
 **Symbols** (Jan, 2026-11-07: "a city, rural, food, ... so you are not forced to use the iron icon for a metal town"):
 generic pictures a profile can carry as its **icon only** (they build nothing, so the picker shows them only for the
@@ -155,14 +161,17 @@ Location:
 |---|---|
 | `pp_lprof` | assigned slot k (+100); unset = no profile |
 | `pp_lprof_ig` / `_ic` / `_in` / `_col` / `_r<r>_g` / `_r<r>_c` / `_r<r>_pb` | the location's copy of its profile (the pass and the badge read only this; no rule frames, the badge draws no rule icon) |
-| `pp_lprof_r<r>_st` | rule r state after the last pass (+100): 1 started, 2 nothing to build (all standing levels' payback too long / at max), 3 a construction is under way here (a location builds one at a time), 4 no free workers here, 5 payback too long, 6 cannot be built here, 7 budget, 8 market lacks the construction goods, 9 waiting for an earlier rule's or mark's construction this month |
+| `pp_lprof_r<r>_st` | rule r state after the last pass (+100): 1 started, 2 nothing to build (all standing levels' payback too long / at max), 3 a construction is under way here (a location builds one at a time), 4 no free workers here, 5 payback too long, 6 cannot be built here, 7 gold, 8 market lacks the construction goods, 9 waiting for an earlier rule's or mark's construction this turn, 10 the market limit |
 | `pp_lprof_r<r>_est` | the shortest payback the rule found (years + 100; 1099 = no profit), shown beside state 5 |
 | `pp_lprof_xf` / `_xl` / `_xi` / `_xg` / `_xc` | the profile's copy of its switches: set = that global group stays out here (food, logistics, improvements, businesses, towns and buildings) |
-| `pp_lplan_g_<good>` / `pp_lplan_c_<category>`, `pp_lplan_n` | the location's marks (present = marked) and their count + 100 (`location_plan.py`) |
-| `pp_lplan_st_g_<good>` / `pp_lplan_st_c_<category>`, `pp_lplan_est_...` | a mark's state and payback found, as a rule's `_st` / `_est` |
+| `pp_lplan_g_<good>`, list `pp_lplan_b`, `pp_lplan_n` | the location's marks: goods (present = marked), marked building types (since 2026-11-10 evening), their count + 100 (`location_plan.py`); `pp_lplan_c_<category>` only in older saves, taken off at the first look |
+| `pp_lplan_st_g_<good>`, `pp_lplan_est_g_<good>` | a goods mark's state and payback found, as a rule's `_st` / `_est` (never 5 or 10: a mark is forced); a building mark has none |
+| `pp_lplan_bt` / `_bp` / `_bn` / `_bo` / `_bq` | during a location's turn only: the marks' measuring (`docs/location_plan.md`) |
+| `pp_lprof_seq` | the location's number in the Locations group's turn order (+ 100; given when it first joins a look, never taken away) |
 
-Country, for the marks: the list `pp_lplan_locs` (locations the country marked) and, during a pass, `pp_lprof_turns`
-(this pass's locations: with a profile, with marks, or both) and `pp_lplan_gone`.
+Country, for the marks and the turns: the list `pp_lplan_locs` (locations the country marked), `pp_lprof_seq_n` (the
+last number given, + 100), `pp_lprof_cursor` (the place in the turn order where the next look starts, + 100) and,
+during a pass, `pp_lprof_turns` (this pass's locations: with a profile, with marks, or both) and `pp_lplan_gone`.
 
 Flags are copied by a switch (`pp_lprof_pull_icon`, `pp_lprof_pull_cat`: compared, then set), never as a variable's value;
 their frame numbers are plain numbers (`pp_lprof_copy_profile` carries `_in`, `pp_lprof_copy_frames` the rules' `_cn`).
@@ -212,16 +221,26 @@ Inn the plan had started beside it moved 0), so `pp_cplan_construct_scoped` star
 `num_civil_constructions` > 0, whoever started it, and a profile rule then shows state 3.
 
 For each owned location with a profile (`pp_lprof_locs`) or with marks (`pp_lplan_locs`), each once (`pp_lprof_gather`
-builds the pass's list `pp_lprof_turns`; fewest building levels first): rules 1..rules of its copy in order
-(`pp_lprof_location_rules` = `pp_lprof_rule = { r }` per rule; no slot is looked at), then its marks in the picker's
-order (`pp_lplan_location_marks` = `pp_lplan_mark = { v = g_<good> do = pp_lprof_t_<good> }` per item). The first rule
-or mark that starts a construction ends that location for the month (later ones get state 9; `pp_cplan_hit` is cleared
-once a location by `pp_lprof_run`). A rule and a mark share their start and end: `pp_lprof_open` (waits: 9 after this
-month's construction here, 3 while one is under way, the plan's trigger `pp_cplan_site_free`) and `pp_lprof_finish =
-{ st = <state variable> est = <payback variable> }`; between them a rule dispatches its stored target
-(`pp_lprof_goods_target` / `pp_lprof_category_target`) and a mark calls its target's effect directly, the same
-generated `pp_lprof_t_<target>`. A mark's payback limit is the player's Businesses line (`pp_cplan_business_years` of
-the country, saved as `scope:pp_lprof_pb` + 100 like a rule's). The profile group runs, and counts for the weights,
+builds the pass's list `pp_lprof_turns`), **in turns** (2026-11-10 evening, 2b053cff, Jan; not seen in game yet):
+every location gets a number when it first joins a look (`pp_lprof_take_turn`: `pp_lprof_seq`, counted on the country
+as `pp_lprof_seq_n`), a look starts after the country's place in that order (`pp_lprof_cursor`, read into
+`scope:pp_lprof_cur`; script value `pp_lprof_turn`: minus the number, minus 1,000,000 more for numbers up to the place,
+so the numbers after the place come first, lowest first, then the rest) and wraps around. After the look the place
+moves to just before the location the group saves for (`pp_cplan_save_loc_105`), so the next look starts there; once
+the group builds there between looks (`pp_lprof_target_turn`, called by `pp_cplan_group_target`) the place moves past
+it. A look that could pay for everything leaves the place where it was. Until then the order was fewest building
+levels first (`subtract = total_building_levels`, since 2026-11-08), which always served the same places first.
+Per location (`pp_lprof_location_turn`): rules 1..rules of its copy in order (`pp_lprof_location_rules` = `pp_lprof_rule
+= { r }` per rule; no slot is looked at), then its marks (`pp_lplan_location_turn`: forced, best measurable payback
+first, then the goods in the picker's order and the marked buildings; `docs/location_plan.md`). The first rule or mark
+that starts a construction ends that location's turn (later ones get state 9; `pp_cplan_hit` is cleared once a
+location). A rule and a goods mark share their start and end: `pp_lprof_open` (waits: 9 after this turn's
+construction here, 3 while one is under way, the plan's trigger `pp_cplan_site_free`) and `pp_lprof_finish = { st =
+<state variable> est = <payback variable> }`; between them a rule dispatches its stored target (`pp_lprof_goods_target`
+/ `pp_lprof_category_target`) and a goods mark calls its target's effect directly, the same generated
+`pp_lprof_t_<good>`. A rule's payback limit is its own (`scope:pp_lprof_pb`, years + 100; unset = any); a mark has none
+(`scope:pp_lprof_pb` = 1,000,000) and is not held by the market limit (`scope:pp_cplan_forced` = 1; until 2b053cff a
+mark's limit was the player's Businesses line, `pp_cplan_business_years`). The profile group runs, and counts for the weights,
 while a location has a profile or a mark (`pp_lprof_has_locations`). A rule with a goods target: expand a standing
 producer of the good whose next level pays back within the limit (highest tier first, as v2 Expand), else, when no
 producer stands here, start the cheapest buildable producer (the first level has no profit to measure, so no payback
@@ -230,7 +249,7 @@ category (generated list per category: player-buildable building types whose `ca
 `location_and_owner_can_build`, the workers one level needs (`pp_cplan_staff`, Jan 2026-11-09: idle peasants left
 after the open jobs of the location's buildings, or idle pops of the building's own class; candidates carry `pt` /
 `sz`, state 4 when none finds them), construction goods in the market (12 months of the draw), one construction at a
-time in the location, never a level for a closed building, the market limit (state 10 since 2026-11-10: enough of the good is on the way in its market), the group's purse (state 7: the purse cannot pay it, or the group already saves for something that comes before it; checked by `pp_cplan_construct_scoped`; a level the
+time in the location, never a level for a closed building, the market limit for rules (state 10 since 2026-11-10: enough of the good is on the way in its market; not for marks), the group's purse (state 7: the purse cannot pay it, or the group already saves for something that comes before it; checked by `pp_cplan_construct_scoped`; a level the
 gold does not reach is state 7 and counts once a location as waiting for gold in the Location profiles detail pane,
 which also counts the rules and marks by state, `pp_lprof_count_state`). The monthly cleanup takes the
 profile and its copy from locations that lost it (`pp_lprof_clear_location`), and the marks from own locations the
@@ -332,5 +351,6 @@ the engine logged "used but never set"). Error log clean of profile lines.
 
 The Locations group looks at its locations in its months only (`[construction_plan] look_months` profiles: 3, 6, 9,
 12; `pp_lprof_look`); between two looks it only goes back to the location it saves for once its purse can pay
-(`pp_cplan_group_target` runs `pp_lprof_location_turn` there: the profile's rules, then the marks). Rule and mark
-states are those of the last look. docs/player_construction_manager.md "Script time".
+(`pp_cplan_group_target` runs `pp_lprof_target_turn` there: `pp_lprof_location_turn`, the profile's rules, then the
+marks, and the turn order's place moves past it when it built). Rule and mark states are those of the last look.
+docs/player_construction_manager.md "Script time" has the measured times and what 2b053cff adds to a look.

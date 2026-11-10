@@ -38,7 +38,8 @@ The location window's row "Also build here" (the marks as toggle tiles under the
 
 Location variables: ``pp_lplan_g_<good>`` (present = marked), the list ``pp_lplan_b`` (marked building types),
 ``pp_lplan_n`` (goods and buildings marked + 100), ``pp_lplan_st_g_<good>`` (the mark's state after the last pass +
-100, ``location_profiles.STATES``) and ``pp_lplan_est_g_<good>`` (the shortest payback found, years + 100). Country:
+100, ``location_profiles.STATES``) and ``pp_lplan_est_g_<good>`` (the shortest payback found, years + 100); a building
+mark's state is an entry of the variable map ``pp_lplan_bst`` (key: the building type, value: the state + 100). Country:
 ``pp_lplan_sel`` (the location the window shows), the list ``pp_lplan_locs`` (the locations the country marked).
 """
 
@@ -145,6 +146,13 @@ def legacy_marks(config: Config) -> list[Item]:
 BUILDING_MARKS = "pp_lplan_b"  # location variable list: the marked building types
 BUILDING_MARK_GUI = "pp_lplan_bmark"  # scripted GUI (root = the location, scope:pp_bt = a building type): the toggle
 BUILDING_MARKED_GUI = "pp_lplan_bmarked"  # scripted GUI: is_shown while that building type is marked there
+# location variable map: marked building type -> the mark's state after the last pass (+ 100, the goods marks' states).
+# Script cannot name a variable per building type, but a variable map is keyed by a scope (vanilla's pentarchy map:
+# key a location, value a character; migrations.txt: key a province, value a number); the GUI reads one entry with
+# Scope.GetVariableFromVariableMap(name, key scope) (vanilla religious_doctrine.gui).
+BUILDING_STATES = "pp_lplan_bst"
+BUILDING_DONE_GUI = "pp_lplan_bdone"  # scripted GUI: is_shown while the marked building (or a later tier) stands there
+BUILDING_MAP_ICONS = 6  # the map marker draws at most this many building marks per location (DataModelFirst)
 
 
 def groups(items: list[Item]) -> list[tuple[str, list[Item]]]:
@@ -215,7 +223,9 @@ def render_effects(items: list[Item], legacy: list[Item] | None = None) -> str:
                  "# buildings, and what an older save marked).\npp_lplan_clear_all = {\n")
     for item in items + legacy:
         parts.append(f"\tremove_variable = {item.var}\n\tremove_variable = {item.state}\n\tremove_variable = {item.est}\n")
-    parts.append(f"\tclear_variable_list = {BUILDING_MARKS}\n\tremove_variable = pp_lplan_n\n}}\n")
+    parts.append(f"\tclear_variable_list = {BUILDING_MARKS}\n"
+                 f"\tif = {{\n\t\tlimit = {{ has_variable_map = {BUILDING_STATES} }}\n\t\tclear_variable_map = {BUILDING_STATES}\n\t}}\n"
+                 "\tremove_variable = pp_lplan_n\n}\n")
     parts.append(
         "\n# Location scope (a location with marks, at the Locations group's look): the marks of a building category go\n"
         "# (a save from before 2026-11-10 evening; a mark is a good or a building now), quietly, each off the count.\n"
@@ -331,8 +341,18 @@ def render_loc(items: list[Item]) -> str:
         lines.append(f'  PP_LPLAN_MST_{upper}: "\\n[SelectLocalization({state}.IsSet, \'PP_LPLAN_MSTS_{upper}\', \'PP_LPROF_ST_0\')]"')
         lines.append(f'  PP_LPLAN_MSTS_{upper}: "' + "".join(
             f"[AddTextIf({_state_is(item, n)}, Localize('PP_LPROF_ST_{n}'))]" for n in MARK_STATES) + '"')
-    # the tile of a marked building (the Location Plan window's strip, the location window's row): its name
-    lines.append('  PP_LPLAN_BMARK_TILE: "#T [Scope.GetBuildingType.GetName]#!\\n$PP_LPLAN_BMARK_TILE_TEXT$"')
+    # the tile of a marked building (the Location Plan window's strip, the location window's row): its name, what the
+    # mark does and the mark's state after the last pass (the map pp_lplan_bst; datacontext Scope = the building type)
+    state = building_state("Location.MakeScope", BUILDING_ITEM_TYPE)
+    state_line = f"[SelectLocalization({state}.IsSet, 'PP_LPLAN_BMSTS', 'PP_LPROF_ST_0')]"
+    lines.append(f'  PP_LPLAN_BMARK_TILE: "#T [Scope.GetBuildingType.GetName]#!\\n$PP_LPLAN_BMARK_TILE_TEXT$\\n{state_line}"')
+    lines.append('  PP_LPLAN_BMSTS: "' + "".join(
+        f"[AddTextIf(EqualTo_CFixedPoint({state}.GetValue, '(CFixedPoint){100 + n}'), Localize('PP_LPROF_ST_{n}'))]"
+        for n in MARK_STATES) + '"')
+    # the map icon of a marked building: its name, whether it stands here (or a later tier of it), the state
+    done = building_done("Location.MakeScope", BUILDING_ITEM_TYPE)
+    lines.append(f'  PP_LPLAN_BMARK_MAP: "#T [Scope.GetBuildingType.GetName]#!\\n'
+                 f'[SelectLocalization({done}, \'PP_LPLAN_BMARK_DONE\', \'PP_LPLAN_STATE_OPEN\')]\\n{state_line}"')
     return "\n".join(lines) + "\n"
 
 
@@ -355,6 +375,21 @@ def building_marked(location: str, building_type: str) -> str:
     """True while the building type is marked for the location. The GUI cannot look into a variable list, so it asks
     a scripted GUI's is_shown trigger."""
     return (f"GetScriptedGui('{BUILDING_MARKED_GUI}').IsShown(GuiScope.SetRoot({location})"
+            f".AddScope('pp_bt', {building_type}).End)")
+
+
+BUILDING_ITEM_TYPE = "Scope.GetBuildingType.MakeScope"  # in an item of BUILDING_MARKS_MODEL: the marked type as a scope
+
+
+def building_state(location: str, building_type: str) -> str:
+    """The mark's state after the last pass (an entry of the map pp_lplan_bst; .IsSet, .GetValue = state + 100)."""
+    return f"{location}.GetVariableFromVariableMap('{BUILDING_STATES}', {building_type})"
+
+
+def building_done(location: str, building_type: str) -> str:
+    """True while a level of the marked building type, or of a later tier of its line, stands there (the generated
+    trigger pp_lplan_b_done, asked through a scripted GUI's is_shown)."""
+    return (f"GetScriptedGui('{BUILDING_DONE_GUI}').IsShown(GuiScope.SetRoot({location})"
             f".AddScope('pp_bt', {building_type}).End)")
 
 
@@ -501,6 +536,27 @@ def _marker_block_end(text: str, start: int) -> int:
             return index
 
 
+def render_marker_buildings(tab: str) -> str:
+    """The body of the marker's flowcontainer of the marked buildings: a datamodel over the location's own list
+    pp_lplan_b (the first BUILDING_MAP_ICONS entries), each the building's icon on a green tile while it (or a later tier
+    of it) stands here, red while not. Nothing per building type: the marker is drawn for every location, so it reads
+    only the list (and the whole marker shows only where the location has marks, pp_lplan_n)."""
+    done = building_done("Location.MakeScope", BUILDING_ITEM_TYPE)
+    return (
+        f"{tab}datamodel = \"[DataModelFirst({BUILDING_MARKS_MODEL}, '(int32){BUILDING_MAP_ICONS}')]\"\n"
+        f"{tab}item = {{\n"
+        f"{tab}\twidget = {{\n"
+        f"{tab}\t\tsize = \"{_ICON_SIZE}\"\n"
+        f"{tab}\t\ttooltip = \"PP_LPLAN_BMARK_MAP\"\n"
+        # one tile, its colour picked by the done check (evaluated once per icon; vanilla colours icons by expression)
+        f"{tab}\t\ticon = {{ size = {{ 100% 100% }} texture = \"{TILE}\" "
+        f"color = \"[Select_CVector4f({done}, '(CVector4f)0.25,0.7,0.3,0.85', '(CVector4f)0.75,0.25,0.2,0.85')]\" }}\n"
+        f"{tab}\t\ticon = {{ size = {{ 84% 84% }} parentanchor = center texture = \"[{BUILDING_MARK_ICON}]\" }}\n"
+        f"{tab}\t}}\n"
+        f"{tab}}}\n"
+    )
+
+
 def render_markers(vanilla: str, items: list[Item], profiles=None) -> str:
     """Vanilla's map_markers.gui with the raw goods marker split in two: its own content outside the Location Plan map
     mode, and the plan's icons (green tile once done, red while still to do) in it, for the player's locations with a
@@ -509,7 +565,9 @@ def render_markers(vanilla: str, items: list[Item], profiles=None) -> str:
     With ``profiles`` (location_profiles_gui.Config) the plan icons follow a Location Profiles cell: the location's
     profile badge and, while the paint brush (GUI variable pp_lprof_brush) is set, a frame on every player location that
     paints the brush's profile onto it. The marker then also shows for player locations with a profile or while
-    painting; the plan icons stay behind pp_lplan_n."""
+    painting; the plan icons stay behind pp_lplan_n.
+
+    After the goods the marked buildings (render_marker_buildings), at most BUILDING_MAP_ICONS a location."""
     if vanilla.count(_MARKER_HEAD) != 1:
         raise ValueError("map_markers.gui: raw goods marker not found once")
     start = vanilla.index(_MARKER_HEAD)
@@ -532,6 +590,7 @@ def render_markers(vanilla: str, items: list[Item], profiles=None) -> str:
             f"{tab}}}\n"
         )
     has_plan = "Location.MakeScope.Var('pp_lplan_n').IsSet"
+    buildings = render_marker_buildings("\t\t\t\t")  # the marked buildings, after the goods (one flowcontainer)
     if profiles:
         from prosper_or_perish_constructor import location_profiles_gui
 
@@ -543,9 +602,15 @@ def render_markers(vanilla: str, items: list[Item], profiles=None) -> str:
             + "\t\t\t\tignoreinvisible = yes\n\t\t\t\tallow_outside = yes\n\t\t\t\tspacing = 2\n"
             + "".join(icons)
             + "\t\t\t}\n"
+            + f"\t\t\tflowcontainer = {{\n\t\t\t\tvisible = \"[{has_plan}]\"\n\t\t\t\tdirection = horizontal\n"
+            + "\t\t\t\tallow_outside = yes\n\t\t\t\tspacing = 2\n"
+            + buildings
+            + "\t\t\t}\n"
         )
     else:
-        shown, content = has_plan, "".join(icons)
+        shown = has_plan
+        content = ("".join(icons) + "\t\t\tflowcontainer = {\n\t\t\t\tdirection = horizontal\n\t\t\t\tallow_outside = yes\n"
+                   "\t\t\t\tspacing = 2\n" + buildings + "\t\t\t}\n")
     patched = (
         head
         + f"\n\t# PP Location Plan (location_plan.py): vanilla's content outside the {MAP_MODE_KEY} map mode\n"

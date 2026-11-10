@@ -339,6 +339,10 @@ pp_lplan_clear_all = {
 	remove_variable = pp_lplan_st_c_infrastructure_category
 	remove_variable = pp_lplan_est_c_infrastructure_category
 	clear_variable_list = pp_lplan_b
+	if = {
+		limit = { has_variable_map = pp_lplan_bst }
+		clear_variable_map = pp_lplan_bst
+	}
 	remove_variable = pp_lplan_n
 }
 

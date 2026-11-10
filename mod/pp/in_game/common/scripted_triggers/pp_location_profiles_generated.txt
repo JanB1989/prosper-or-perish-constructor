@@ -2,158 +2,35 @@
 
 # Location scope (a building's mark): a tier of the line just below scope:pp_cplan_btype stands here, open, and
 # the country can upgrade it (pp_cplan_country_upgradable, the Towns and Buildings rule's check): a
-# construction of scope:pp_cplan_btype here is the game's upgrade of one level of it.
+# construction of scope:pp_cplan_btype here is the game's upgrade of one level of it. Its older tiers: the maps
+# pp_lplan_dn<k> (pp_lplan_maps_fill).
 pp_lplan_b_upgrade_here = {
 	OR = {
-		AND = { scope:pp_cplan_btype = building_type:naval_battery any_buildings_in_location = { building_type = building_type:coastal_fort pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:council_hall any_buildings_in_location = { building_type = building_type:early_council_hall pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:modern_council_hall any_buildings_in_location = { building_type = building_type:council_hall pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:arts_academy any_buildings_in_location = { building_type = building_type:art_school pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:castle any_buildings_in_location = { building_type = building_type:stockade pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:bastion any_buildings_in_location = { building_type = building_type:castle pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:star_fort any_buildings_in_location = { building_type = building_type:bastion pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:fortress any_buildings_in_location = { building_type = building_type:star_fort pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:armory any_buildings_in_location = { OR = { building_type = building_type:provincial_garrison building_type = building_type:korean_barracks } pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:barracks any_buildings_in_location = { building_type = building_type:armory pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:regimental_camp any_buildings_in_location = { building_type = building_type:training_fields pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:conscription_center any_buildings_in_location = { OR = { building_type = building_type:regimental_camp building_type = building_type:barracks } pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:dry_dock any_buildings_in_location = { building_type = building_type:dock pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:shipyard any_buildings_in_location = { building_type = building_type:dry_dock pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:grand_shipyard any_buildings_in_location = { building_type = building_type:shipyard pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:naval_base any_buildings_in_location = { building_type = building_type:grand_shipyard pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:beer_workshop any_buildings_in_location = { building_type = building_type:brewery pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:brewery_manufactory any_buildings_in_location = { building_type = building_type:beer_workshop pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:brewery_mill any_buildings_in_location = { building_type = building_type:brewery_manufactory pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:printing_press_shop any_buildings_in_location = { building_type = building_type:scriptorium pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:printing_manufactory any_buildings_in_location = { building_type = building_type:printing_press_shop pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:printing_mill any_buildings_in_location = { building_type = building_type:printing_manufactory pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:cannon_workshop any_buildings_in_location = { building_type = building_type:cannon_maker pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:cannon_foundry any_buildings_in_location = { building_type = building_type:cannon_workshop pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:cannons_factory any_buildings_in_location = { building_type = building_type:cannon_foundry pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:cloth_workshop any_buildings_in_location = { building_type = building_type:cloth_guild pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:cloth_manufactory any_buildings_in_location = { building_type = building_type:cloth_workshop pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:textile_mill any_buildings_in_location = { building_type = building_type:cloth_manufactory pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:dyes_workshop any_buildings_in_location = { building_type = building_type:dyes_guild pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:dyesworks any_buildings_in_location = { building_type = building_type:dyes_workshop pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:dyes_mill any_buildings_in_location = { building_type = building_type:dyesworks pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:fine_cloth_workshop any_buildings_in_location = { building_type = building_type:fine_cloth_guild pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:fine_cloth_manufactory any_buildings_in_location = { building_type = building_type:fine_cloth_workshop pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:fine_cloth_mill any_buildings_in_location = { building_type = building_type:fine_cloth_manufactory pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:gun_smith any_buildings_in_location = { building_type = building_type:hand_cannon_guild pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:guns_workshop any_buildings_in_location = { building_type = building_type:gun_smith pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:firearms_manufactory any_buildings_in_location = { building_type = building_type:guns_workshop pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:firearms_factory any_buildings_in_location = { building_type = building_type:firearms_manufactory pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:furniture_workshop any_buildings_in_location = { building_type = building_type:furniture_guild pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:furniture_manufactory any_buildings_in_location = { building_type = building_type:furniture_workshop pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:furniture_mill any_buildings_in_location = { building_type = building_type:furniture_manufactory pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:glass_workshop any_buildings_in_location = { building_type = building_type:glass_guild pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:glassworks any_buildings_in_location = { building_type = building_type:glass_workshop pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:glass_mill any_buildings_in_location = { building_type = building_type:glassworks pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:lacquerware_manufactory any_buildings_in_location = { building_type = building_type:lacquerware_guild pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:tanning_workshop any_buildings_in_location = { building_type = building_type:tannery pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:tannery_manufactory any_buildings_in_location = { building_type = building_type:tanning_workshop pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:tannery_mill any_buildings_in_location = { building_type = building_type:tannery_manufactory pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:distillers_workshop any_buildings_in_location = { building_type = building_type:distillers_guild pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:distiller_manufactory any_buildings_in_location = { building_type = building_type:distillers_workshop pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:distiller_mill any_buildings_in_location = { building_type = building_type:distiller_manufactory pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:naval_supplies_workshop any_buildings_in_location = { building_type = building_type:naval_supplies_guild pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:naval_supplies_manufactory any_buildings_in_location = { building_type = building_type:naval_supplies_workshop pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:naval_supplies_mill any_buildings_in_location = { building_type = building_type:naval_supplies_manufactory pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:paper_workshop any_buildings_in_location = { building_type = building_type:paper_guild pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:paper_manufactory any_buildings_in_location = { building_type = building_type:paper_workshop pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:paper_mill any_buildings_in_location = { building_type = building_type:paper_manufactory pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:porcelain_manufactory any_buildings_in_location = { building_type = building_type:porcelain_guild pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:pottery_workshop any_buildings_in_location = { building_type = building_type:pottery_guild pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:pottery_manufactory any_buildings_in_location = { building_type = building_type:pottery_workshop pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:pottery_mill any_buildings_in_location = { building_type = building_type:pottery_manufactory pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:saltpeter_workshop any_buildings_in_location = { building_type = building_type:saltpeter_guild pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:putrefaction_works any_buildings_in_location = { building_type = building_type:saltpeter_workshop pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:putrefaction_mill any_buildings_in_location = { building_type = building_type:putrefaction_works pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:tools_workshop any_buildings_in_location = { building_type = building_type:tools_guild pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:iron_foundry any_buildings_in_location = { building_type = building_type:tools_workshop pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:iron_mill any_buildings_in_location = { building_type = building_type:iron_foundry pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:weapon_workshop any_buildings_in_location = { building_type = building_type:weapon_guild pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:weapon_manufactory any_buildings_in_location = { building_type = building_type:weapon_workshop pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:weapon_factory any_buildings_in_location = { building_type = building_type:weapon_manufactory pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:winery_manufactory any_buildings_in_location = { building_type = building_type:winery pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:improved_charcoal_maker any_buildings_in_location = { building_type = building_type:charcoal_maker pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:merchants_quarters any_buildings_in_location = { building_type = building_type:marketplace pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:grand_marketplace any_buildings_in_location = { building_type = building_type:merchants_quarters pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:commerce_center any_buildings_in_location = { building_type = building_type:grand_marketplace pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:repaired_great_wall_of_china any_buildings_in_location = { building_type = building_type:ruined_great_wall_of_china pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:alum_works any_buildings_in_location = { building_type = building_type:alum_quarry pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:amber_diggings any_buildings_in_location = { building_type = building_type:amber_collector pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:bog_iron_smelter_blast_furnace any_buildings_in_location = { building_type = building_type:bog_iron_smelter pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:bog_iron_smelter_coke_blast_furnace any_buildings_in_location = { building_type = building_type:bog_iron_smelter_blast_furnace pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:camel_stud any_buildings_in_location = { building_type = building_type:camel_herders pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:cattle_farmstead any_buildings_in_location = { building_type = building_type:cattle_farm pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:cattle_rotations any_buildings_in_location = { building_type = building_type:cattle_farmstead pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:cattle_model_farm any_buildings_in_location = { building_type = building_type:cattle_rotations pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:clay_washmill any_buildings_in_location = { building_type = building_type:clay_pit pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:coal_mine_improved any_buildings_in_location = { building_type = building_type:coal_mine pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:coal_mine_revolutions any_buildings_in_location = { OR = { building_type = building_type:coal_mine_improved building_type = building_type:coal_mine } pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:copper_mine_adit any_buildings_in_location = { building_type = building_type:copper_mine pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:copper_mine_deep any_buildings_in_location = { OR = { building_type = building_type:copper_mine_adit building_type = building_type:copper_mine } pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:fiber_dressing_yard any_buildings_in_location = { building_type = building_type:fiber_crops_farm pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:field_management_convertible any_buildings_in_location = { building_type = building_type:field_management pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:field_management_improved any_buildings_in_location = { building_type = building_type:field_management_convertible pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:gem_sluice any_buildings_in_location = { building_type = building_type:gem_gravel_pit pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:gold_stamp_mill any_buildings_in_location = { building_type = building_type:gold_diggings pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:engineered_brine_saltworks any_buildings_in_location = { building_type = building_type:inland_saltworks pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:iron_mine_improved any_buildings_in_location = { building_type = building_type:iron_mine pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:iron_mine_deep any_buildings_in_location = { OR = { building_type = building_type:iron_mine_improved building_type = building_type:iron_mine } pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:lead_mine_bole_smelting any_buildings_in_location = { building_type = building_type:lead_mine pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:lead_mine_cupola_smelting any_buildings_in_location = { OR = { building_type = building_type:lead_mine_bole_smelting building_type = building_type:lead_mine } pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:legume_farmstead any_buildings_in_location = { building_type = building_type:legume_farm pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:legume_rotations any_buildings_in_location = { building_type = building_type:legume_farmstead pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:legume_model_farm any_buildings_in_location = { building_type = building_type:legume_rotations pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:water_sawmill any_buildings_in_location = { building_type = building_type:lumber_mill pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:lumber_mill_improved any_buildings_in_location = { OR = { building_type = building_type:water_sawmill building_type = building_type:lumber_mill } pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:maize_farmstead any_buildings_in_location = { building_type = building_type:maize_farm pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:maize_rotations any_buildings_in_location = { building_type = building_type:maize_farmstead pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:maize_model_farm any_buildings_in_location = { building_type = building_type:maize_rotations pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:managed_cocoa_grove any_buildings_in_location = { building_type = building_type:cocoa_grove pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:managed_forest_village any_buildings_in_location = { building_type = building_type:forest_village pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:marble_saw_yard any_buildings_in_location = { building_type = building_type:marble_quarry pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:market_cotton_farm any_buildings_in_location = { building_type = building_type:cotton_farm pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:millet_farmstead any_buildings_in_location = { building_type = building_type:millet_farm pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:millet_rotations any_buildings_in_location = { building_type = building_type:millet_farmstead pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:millet_model_farm any_buildings_in_location = { building_type = building_type:millet_rotations pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:net_curing_yard any_buildings_in_location = { building_type = building_type:fishing_village pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:nursery_orchard any_buildings_in_location = { building_type = building_type:fruit_orchard pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:drift_net_fishery any_buildings_in_location = { building_type = building_type:ocean_fishery pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:offshore_fishery any_buildings_in_location = { building_type = building_type:drift_net_fishery pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:olive_farmstead any_buildings_in_location = { building_type = building_type:olive_farm pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:olive_rotations any_buildings_in_location = { building_type = building_type:olive_farmstead pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:olive_model_farm any_buildings_in_location = { building_type = building_type:olive_rotations pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:managed_pepper_garden any_buildings_in_location = { building_type = building_type:pepper_garden pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:pomological_orchard any_buildings_in_location = { building_type = building_type:nursery_orchard pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:potato_farmstead any_buildings_in_location = { building_type = building_type:potato_farm pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:potato_rotations any_buildings_in_location = { building_type = building_type:potato_farmstead pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:potato_model_farm any_buildings_in_location = { building_type = building_type:potato_rotations pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:public_kitchen any_buildings_in_location = { building_type = building_type:cookshop pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:quicksilver_retort any_buildings_in_location = { building_type = building_type:cinnabar_pit pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:rice_farmstead any_buildings_in_location = { building_type = building_type:rice_farm pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:rice_rotations any_buildings_in_location = { building_type = building_type:rice_farmstead pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:rice_model_farm any_buildings_in_location = { building_type = building_type:rice_rotations pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:saffron_kiln_croft any_buildings_in_location = { building_type = building_type:saffron_croft pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:salt_mine_improved any_buildings_in_location = { building_type = building_type:salt_mine pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:sand_washery any_buildings_in_location = { building_type = building_type:sand_pit pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:regulated_sericulture_farm any_buildings_in_location = { building_type = building_type:sericulture_farm pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:hurdled_sheepcotes any_buildings_in_location = { building_type = building_type:sheep_farms pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:enclosed_sheep_walks any_buildings_in_location = { building_type = building_type:hurdled_sheepcotes pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:silver_mine_improved any_buildings_in_location = { building_type = building_type:silver_mine pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:stone_quarry_improved any_buildings_in_location = { building_type = building_type:stone_quarry pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:stud_farm any_buildings_in_location = { building_type = building_type:horse_breeders pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:tea_sorting_garden any_buildings_in_location = { building_type = building_type:tea_garden pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:terraced_coffee_grove any_buildings_in_location = { building_type = building_type:coffee_grove pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:tin_stamping_mill any_buildings_in_location = { building_type = building_type:tin_streamworks pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:market_tobacco_farm any_buildings_in_location = { building_type = building_type:tobacco_farm pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:trapiche_sugarcane_farm any_buildings_in_location = { building_type = building_type:sugarcane_farm pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:wheat_farmstead any_buildings_in_location = { building_type = building_type:wheat_farm pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:wheat_rotations any_buildings_in_location = { building_type = building_type:wheat_farmstead pp_cplan_country_upgradable = yes } }
-		AND = { scope:pp_cplan_btype = building_type:wheat_model_farm any_buildings_in_location = { building_type = building_type:wheat_rotations pp_cplan_country_upgradable = yes } }
+		AND = {
+			is_key_in_global_variable_map = { name = pp_lplan_dn1 target = scope:pp_cplan_btype }
+			any_buildings_in_location = { building_type = "global_variable_map(pp_lplan_dn1|scope:pp_cplan_btype)" pp_cplan_country_upgradable = yes }
+		}
+		AND = {
+			is_key_in_global_variable_map = { name = pp_lplan_dn2 target = scope:pp_cplan_btype }
+			any_buildings_in_location = { building_type = "global_variable_map(pp_lplan_dn2|scope:pp_cplan_btype)" pp_cplan_country_upgradable = yes }
+		}
 		always = no
+	}
+}
+
+# Location scope (scope:pp_bt = a marked building type; the Location Plan map icon, scripted GUI pp_lplan_bdone):
+# a level of it, or of a later tier of its main line (the maps pp_lplan_up<k>), stands here. One walk over the
+# location's buildings.
+pp_lplan_b_done = {
+	OR = {
+		AND = {
+			is_key_in_global_variable_map = { name = pp_lplan_up1 target = scope:pp_bt }
+			any_buildings_in_location = { building_level > 0 OR = { building_type = scope:pp_bt building_type = "global_variable_map(pp_lplan_up1|scope:pp_bt)" building_type = "global_variable_map(pp_lplan_up2|scope:pp_bt)" building_type = "global_variable_map(pp_lplan_up3|scope:pp_bt)" building_type = "global_variable_map(pp_lplan_up4|scope:pp_bt)" } }
+		}
+		AND = {
+			NOT = { is_key_in_global_variable_map = { name = pp_lplan_up1 target = scope:pp_bt } }
+			any_buildings_in_location = { building_type = scope:pp_bt building_level > 0 }
+		}
 	}
 }
 

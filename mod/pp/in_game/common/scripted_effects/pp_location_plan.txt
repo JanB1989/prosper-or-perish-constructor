@@ -8,7 +8,9 @@
 # Location variables: pp_lplan_g_<good> (present = marked), the list pp_lplan_b (the marked building types),
 # pp_lplan_n (goods and buildings marked + 100; a variable at 0 counts as unset), pp_lplan_st_g_<good> (the mark's
 # state after the last pass + 100, the profile rule states) and pp_lplan_est_g_<good> (the shortest payback found,
-# years + 100). Marks of a building category (pp_lplan_c_<category>, a save from before 2026-11-10 evening) are
+# years + 100); a building mark's state is an entry of the variable map pp_lplan_bst (key: the building type scope,
+# value: the state + 100; script cannot name a variable per building type, a map is keyed by a scope; removed with
+# the mark, by Clear and when the location is lost). Marks of a building category (pp_lplan_c_<category>, a save from before 2026-11-10 evening) are
 # taken off at the first look (pp_lplan_drop_categories).
 # Country: pp_lplan_sel (the location the window shows), the list pp_lplan_locs (the locations the country marked: the
 # monthly cleanup takes marks from own locations that are not on it, an earlier owner's; pp_lplan_cleanup).
@@ -16,6 +18,7 @@
 # Location scope: marks or unmarks the item $v$ (g_<good>) and keeps the count and the owner's list. A mark removed
 # takes its state along.
 pp_lplan_flip = {
+	pp_lplan_drop_categories = yes
 	if = {
 		limit = { has_variable = pp_lplan_$v$ }
 		remove_variable = pp_lplan_$v$
@@ -48,11 +51,15 @@ pp_lplan_flip = {
 # Location scope (root, from the scripted GUI pp_lplan_bmark; scope:pp_bt = a building type): marks or unmarks that
 # building for this location (the list pp_lplan_b) and keeps the count and the owner's list.
 pp_lplan_bflip = {
+	pp_lplan_drop_categories = yes
+	# the maps the map icon's done check reads (filled once; pp_location_profiles_generated.txt)
+	pp_lplan_maps_ready = yes
 	if = {
 		limit = { exists = scope:pp_bt }
 		if = {
 			limit = { is_target_in_variable_list = { name = pp_lplan_b target = scope:pp_bt } }
 			remove_list_variable = { name = pp_lplan_b target = scope:pp_bt }
+			pp_lplan_b_state_off = { key = scope:pp_bt }
 			if = {
 				limit = { has_variable = pp_lplan_n }
 				change_variable = { name = pp_lplan_n subtract = 1 }
@@ -75,6 +82,21 @@ pp_lplan_bflip = {
 		}
 		pp_lplan_keep_list = yes
 		refresh_map_colors = yes
+	}
+}
+
+# Location scope: the state of the building mark $key$ (a building type scope) leaves the map pp_lplan_bst (asked
+# first: an old save, or a mark the pass has not looked at yet, has no entry).
+pp_lplan_b_state_off = {
+	if = {
+		limit = {
+			has_variable_map = pp_lplan_bst
+			any_key_in_variable_map = {
+				variable = pp_lplan_bst
+				this = $key$
+			}
+		}
+		remove_from_variable_map = { name = pp_lplan_bst key = $key$ }
 	}
 }
 
@@ -105,6 +127,8 @@ pp_lplan_clear_do = {
 
 # Location scope (root, from the scripted GUI): the window shows this location.
 pp_lplan_select = {
+	pp_lplan_drop_categories = yes
+	pp_lplan_maps_ready = yes
 	owner ?= { set_variable = { name = pp_lplan_sel value = root } }
 	# Never runs: declares the window's flag scope and the flags it passes, and uses the variable only the window reads.
 	if = {

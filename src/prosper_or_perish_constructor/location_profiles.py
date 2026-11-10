@@ -457,62 +457,238 @@ def line_depth(pairs: list[tuple[str, str]]) -> int:
     return max((depth(older, frozenset()) for older in newer), default=0)
 
 
-def render_building_marks(pairs: list[tuple[str, str]], staff: dict[str, tuple[str, float]]) -> str:
-    """The generated effects of a building's mark (the hand-written pp_lplan_building_mark calls them). ``pairs``: (older
-    tier, its direct successor) in the upgrade rule's order (construction_plan_country.upgrade_pairs); ``staff``:
-    building type -> (pop type, workers a level)."""
-    steps = "".join(
-        f"\t{'if' if position == 0 else 'else_if'} = {{\n"
-        f"\t\tlimit = {{ scope:pp_cplan_btype = building_type:{older} "
-        f"scope:pp_cplan_country = {{ can_build_building = building_type:{successor} }} }}\n"
-        f"\t\tbuilding_type:{successor} = {{ save_scope_as = pp_cplan_btype }}\n\t}}\n"
-        for position, (older, successor) in enumerate(pairs)
+def main_chain(pairs: list[tuple[str, str]]) -> dict[str, list[str]]:
+    """Every building type with a later tier -> its later tiers one by one up the main line: at each step the
+    successor with the longest way up (of equals the first in the upgrade rule's order). A skip link (coal_mine ->
+    coal_mine_revolutions beside coal_mine -> coal_mine_improved -> coal_mine_revolutions) lies on that line."""
+    direct: dict[str, list[str]] = {}
+    for old, successor in pairs:
+        direct.setdefault(old, []).append(successor)
+
+    def height(name: str, seen: frozenset[str]) -> int:
+        return 1 + max((height(later, seen | {name}) for later in direct.get(name, ()) if later not in seen), default=-1)
+
+    out: dict[str, list[str]] = {}
+    for start in direct:
+        line: list[str] = []
+        here, seen = start, {start}
+        while True:
+            options = [name for name in direct.get(here, ()) if name not in seen]
+            if not options:
+                break
+            here = max(options, key=lambda name: (height(name, frozenset(seen)), -options.index(name)))
+            line.append(here)
+            seen.add(here)
+        out[start] = line
+    return out
+
+
+def newer_tiers(pairs: list[tuple[str, str]]) -> dict[str, list[str]]:
+    """Every building type with a later tier -> all its later tiers up the line (direct successors first)."""
+    direct: dict[str, list[str]] = {}
+    for old, successor in pairs:
+        direct.setdefault(old, []).append(successor)
+    out: dict[str, list[str]] = {}
+    for start in direct:
+        seen: list[str] = []
+        todo = list(direct[start])
+        while todo:
+            name = todo.pop(0)
+            if name != start and name not in seen:
+                seen.append(name)
+                todo += direct.get(name, [])
+        out[start] = seen
+    return out
+
+
+@dataclass(frozen=True)
+class MarkMaps:
+    """What a building's mark reads of a building type, as global variable maps keyed by the type (filled once per save
+    and game data version, pp_lplan_maps_fill): up<k> the k-th later tier on its main line (the top once the line
+    ends), dn<k> its k-th direct older tier, wk / wp its workers a level and their pop type (number 101..), ipl / dm /
+    ct its cost data (increase per level, construction demand number 101.., efficiency category number 101..)."""
+
+    up: dict[str, list[str]]
+    down: dict[str, list[str]]
+    staff: dict[str, tuple[str, float]]
+    pop_types: tuple[str, ...]
+    costs: dict
+    demands: tuple[str, ...]
+    categories: tuple[str, ...]
+
+    @property
+    def depth(self) -> int:
+        return max((len(line) for line in self.up.values()), default=0)
+
+    @property
+    def older(self) -> int:
+        return max((len(olds) for olds in self.down.values()), default=0)
+
+
+def mark_maps(pairs: list[tuple[str, str]], staff: dict[str, tuple[str, float]], costs: dict) -> MarkMaps:
+    down: dict[str, list[str]] = {}
+    for old, successor in pairs:
+        down.setdefault(successor, []).append(old)
+    staffed = {name: value for name, value in staff.items() if value[1] > 0}
+    return MarkMaps(
+        up=main_chain(pairs), down=down, staff=staffed,
+        pop_types=tuple(sorted({pop for pop, _ in staffed.values()})), costs=costs,
+        demands=tuple(sorted({c.demand for c in costs.values() if c.demand != cp.DEFAULT_DEMAND})),
+        categories=tuple(sorted({c.category for c in costs.values() if c.category != "std"})),
     )
-    groups: dict[tuple[str, float], list[str]] = {}
-    for name, (pop_type, workers) in sorted(staff.items()):
-        if workers > 0:
-            groups.setdefault((pop_type, workers), []).append(name)
-    checks = "".join(
-        f"\t{'if' if position == 0 else 'else_if'} = {{\n\t\tlimit = {{ OR = {{ "
-        + " ".join(f"scope:pp_cplan_btype = building_type:{name}" for name in names)
-        + f" }} }}\n\t\tif = {{\n\t\t\tlimit = {{ NOT = {{ pp_cplan_staff = {{ type = {pop_type} size = {cp._num(workers)} }} }} }}\n"
-        "\t\t\tsave_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }\n\t\t}\n\t}\n"
-        for position, ((pop_type, workers), names) in enumerate(sorted(groups.items()))
-    )
+
+
+def _map(name: str) -> str:
+    return f"pp_lplan_{name}"
+
+
+def _key(name: str, target: str = "scope:pp_cplan_btype") -> str:
+    return f"is_key_in_global_variable_map = {{ name = {_map(name)} target = {target} }}"
+
+
+def _get(name: str, target: str = "scope:pp_cplan_btype") -> str:
+    return f'"global_variable_map({_map(name)}|{target})"'
+
+
+def _fill_lines(maps: MarkMaps) -> list[str]:
+    lines: list[str] = []
+
+    def add(name: str, key: str, value: str) -> None:
+        lines.append(f"\tadd_to_global_variable_map = {{ name = {_map(name)} key = building_type:{key} value = {value} }}\n")
+
+    for start, line in maps.up.items():
+        for k in range(1, maps.depth + 1):
+            add(f"up{k}", start, f"building_type:{line[min(k, len(line)) - 1]}")
+    for successor, olds in maps.down.items():
+        for k, old in enumerate(olds, 1):
+            add(f"dn{k}", successor, f"building_type:{old}")
+    for name, (pop_type, workers) in sorted(maps.staff.items()):
+        add("wk", name, cp._num(workers))
+        add("wp", name, str(101 + maps.pop_types.index(pop_type)))
+    for name, cost in sorted(maps.costs.items()):
+        if cost.ipl:
+            add("ipl", name, cp._num(cost.ipl))
+        if cost.demand != cp.DEFAULT_DEMAND:
+            add("dm", name, str(101 + maps.demands.index(cost.demand)))
+        if cost.category != "std":
+            add("ct", name, str(101 + maps.categories.index(cost.category)))
+    return lines
+
+
+def map_names(maps: MarkMaps) -> list[str]:
+    return ([f"up{k}" for k in range(1, maps.depth + 1)] + [f"dn{k}" for k in range(1, maps.older + 1)]
+            + ["wk", "wp", "ipl", "dm", "ct"])
+
+
+def maps_version(maps: MarkMaps) -> int:
+    """The game data's stamp in the save (global variable pp_lplan_maps_v): another stamp fills the maps afresh."""
+    import zlib
+
+    return 100 + zlib.crc32("".join(_fill_lines(maps)).encode()) % 900000
+
+
+def _chain(value: str, count: int, body, depth: int = 2) -> str:
+    """A halving search over a number 101..100+count held in the scope value ``value``: about log2(count) comparisons
+    (108 construction demands: 7), then ``body(index)``."""
+    tab = "\t" * depth
+
+    def tree(lo: int, hi: int, tab: str) -> str:
+        if lo == hi:
+            return f"{tab}{body(lo)}\n"
+        mid = (lo + hi) // 2
+        return (f"{tab}if = {{\n{tab}\tlimit = {{ scope:{value} < {101 + mid + 0.5:g} }}\n" + tree(lo, mid, tab + "\t")
+                + f"{tab}}}\n{tab}else = {{\n" + tree(mid + 1, hi, tab + "\t") + f"{tab}}}\n")
+
+    return tree(0, count - 1, tab) if count else ""
+
+
+def render_building_marks(maps: MarkMaps) -> str:
+    """The generated effects of a building's mark (the hand-written pp_lplan_building_mark calls them). Nothing in them
+    walks the building types: each reads the global maps (MarkMaps) by the type, a few lookups and comparisons."""
+    version = maps_version(maps)
+    clear = "".join(
+        f"\tif = {{ limit = {{ has_global_variable_map = {_map(name)} }} clear_global_variable_map = {_map(name)} }}\n"
+        for name in map_names(maps))
+    newest = "".join(
+        f"\t\t{'if' if k == maps.depth else 'else_if'} = {{\n"
+        f"\t\t\tlimit = {{ scope:pp_cplan_country = {{ can_build_building = {_get(f'up{k}', 'scope:pp_lplan_base')} }} }}\n"
+        f"\t\t\t{_get(f'up{k}', 'scope:pp_lplan_base')} = {{ save_scope_as = pp_cplan_btype }}\n\t\t}}\n"
+        for k in range(maps.depth, 0, -1))
+    staff = _chain("pp_lplan_wt", len(maps.pop_types), lambda i: (
+        f"if = {{ limit = {{ NOT = {{ pp_cplan_staff = {{ type = {maps.pop_types[i]} size = scope:pp_lplan_wn }} }} }} "
+        "save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 } }"))
+    demand = _chain("pp_lplan_dmi", len(maps.demands), lambda i: (
+        f"save_temporary_scope_value_as = {{ name = pp_cplan_pf value = pp_cplan_cd_{maps.demands[i]} }} "
+        "save_temporary_scope_value_as = { name = pp_cplan_gok value = 1 } "
+        f"if = {{ limit = {{ NOT = {{ pp_cplan_goods_here_{maps.demands[i]} = yes }} }} "
+        "save_temporary_scope_value_as = { name = pp_cplan_gok value = 0 } }"))
+    category = _chain("pp_lplan_cti", len(maps.categories), lambda i: (
+        f"save_temporary_scope_value_as = {{ name = pp_cplan_ef value = pp_cplan_eff_{maps.categories[i]} }}"))
+    default = cp.DEFAULT_DEMAND
     return (
         "\n# ---- A building's mark (pp_lplan_building_mark, pp_location_profiles.txt; scope:pp_cplan_btype = the building type) ----\n"
-        "\n# Any scope: where the country has researched the direct successor of scope:pp_cplan_btype (the building type that\n"
-        "# names it with obsolete = <older tier>; of several the first in the game's file order the country can build),\n"
-        "# the successor becomes scope:pp_cplan_btype: one step up its line.\n"
-        "pp_lplan_b_step = {\n" + steps + "}\n"
-        f"\n# Any scope: scope:pp_cplan_btype becomes the newest tier of its line the country can build ({line_depth(pairs)} steps: the\n"
-        "# longest line). A building the country has made obsolete is not built any more; its successor is.\n"
-        "pp_lplan_b_newest = {\n" + "\tpp_lplan_b_step = yes\n" * max(line_depth(pairs), 1) + "}\n"
+        "# What a mark needs of its building type sits in global variable maps keyed by the type (pp_lplan_maps_fill),\n"
+        "# so a mark reads a few entries instead of testing the type against every building type.\n"
+        f"\n# Any scope: the maps are filled once per save and game data version (stamp {version}).\n"
+        "pp_lplan_maps_ready = {\n\tif = {\n\t\tlimit = {\n\t\t\tOR = {\n"
+        "\t\t\t\tNOT = { has_global_variable = pp_lplan_maps_v }\n"
+        f"\t\t\t\tglobal_var:pp_lplan_maps_v < {version - 0.5:g}\n\t\t\t\tglobal_var:pp_lplan_maps_v > {version + 0.5:g}\n"
+        "\t\t\t}\n\t\t}\n\t\tpp_lplan_maps_fill = yes\n\t}\n}\n"
+        "\n# Any scope (pp_lplan_maps_ready): up<k> = the k-th later tier on the type's main line (the line's top past its\n"
+        "# end), dn<k> = its k-th direct older tier, wk / wp = workers a level and their pop type (101..), ipl / dm / ct =\n"
+        "# its cost data (increase per level, construction demand 101.., efficiency category 101..).\n"
+        "pp_lplan_maps_fill = {\n" + clear + "".join(_fill_lines(maps))
+        + f"\tset_global_variable = {{ name = pp_lplan_maps_v value = {version} }}\n}}\n"
+        "\n# Any scope: scope:pp_cplan_btype becomes the newest tier of its main line the country can build (the highest\n"
+        f"# of its {maps.depth} later tiers it can build; itself when none). A building the country has made obsolete is not\n"
+        "# built any more; its successor is.\n"
+        f"pp_lplan_b_newest = {{\n\tif = {{\n\t\tlimit = {{ {_key('up1')} }}\n"
+        "\t\tscope:pp_cplan_btype = { save_scope_as = pp_lplan_base }\n" + newest + "\t}\n}\n"
         "\n# Location scope: scope:pp_lplan_sok = 1 where one level of scope:pp_cplan_btype finds its workers here\n"
         "# (pp_cplan_staff with the type's pop type and workers a level; a building without workers always does).\n"
-        "pp_lplan_b_staff = {\n\tsave_temporary_scope_value_as = { name = pp_lplan_sok value = 1 }\n" + checks + "}\n"
+        "pp_lplan_b_staff = {\n\tsave_temporary_scope_value_as = { name = pp_lplan_sok value = 1 }\n"
+        f"\tif = {{\n\t\tlimit = {{ {_key('wk')} }}\n"
+        f"\t\tsave_temporary_scope_value_as = {{ name = pp_lplan_wn value = {_get('wk')} }}\n"
+        f"\t\tsave_temporary_scope_value_as = {{ name = pp_lplan_wt value = {_get('wp')} }}\n" + staff + "\t}\n}\n"
+        "\n# Location scope: the build cost data of scope:pp_cplan_btype for pp_cplan_est_* (the values pp_cplan_btype_data\n"
+        "# sets, read from the maps).\n"
+        "pp_lplan_b_data = {\n\tsave_temporary_scope_value_as = { name = pp_cplan_ipl value = 0 }\n"
+        f"\tif = {{ limit = {{ {_key('ipl')} }} save_temporary_scope_value_as = {{ name = pp_cplan_ipl value = {_get('ipl')} }} }}\n"
+        f"\tsave_temporary_scope_value_as = {{ name = pp_cplan_pf value = pp_cplan_cd_{default} }}\n"
+        "\tsave_temporary_scope_value_as = { name = pp_cplan_gok value = 1 }\n"
+        f"\tif = {{ limit = {{ NOT = {{ pp_cplan_goods_here_{default} = yes }} }} save_temporary_scope_value_as = {{ name = pp_cplan_gok value = 0 }} }}\n"
+        f"\tif = {{\n\t\tlimit = {{ {_key('dm')} }}\n"
+        f"\t\tsave_temporary_scope_value_as = {{ name = pp_lplan_dmi value = {_get('dm')} }}\n" + demand + "\t}\n"
+        "\tsave_temporary_scope_value_as = { name = pp_cplan_ef value = pp_cplan_eff_std }\n"
+        f"\tif = {{\n\t\tlimit = {{ {_key('ct')} }}\n"
+        f"\t\tsave_temporary_scope_value_as = {{ name = pp_lplan_cti value = {_get('ct')} }}\n" + category + "\t}\n}\n"
     )
 
 
-def render_building_mark_triggers(pairs: list[tuple[str, str]]) -> str:
+def render_building_mark_triggers(maps: MarkMaps) -> str:
     """pp_lplan_b_upgrade_here: an older tier of scope:pp_cplan_btype stands here and the country can upgrade it, so
-    construct_building with scope:pp_cplan_btype is the game's Upgrade button (in game 2026-11-10)."""
-    older: dict[str, list[str]] = {}
-    for old, successor in pairs:
-        older.setdefault(successor, []).append(old)
+    construct_building with scope:pp_cplan_btype is the game's Upgrade button (in game 2026-11-10); pp_lplan_b_done:
+    the marked type or a later tier of its line stands here (the map icon). Both read the maps, no type list."""
+    upgrade = "".join(
+        f"\t\tAND = {{\n\t\t\t{_key(f'dn{k}')}\n"
+        f"\t\t\tany_buildings_in_location = {{ building_type = {_get(f'dn{k}')} pp_cplan_country_upgradable = yes }}\n\t\t}}\n"
+        for k in range(1, maps.older + 1))
+    line = " ".join(f"building_type = {_get(f'up{k}', 'scope:pp_bt')}" for k in range(1, maps.depth + 1))
     return (
         "\n# Location scope (a building's mark): a tier of the line just below scope:pp_cplan_btype stands here, open, and\n"
         "# the country can upgrade it (pp_cplan_country_upgradable, the Towns and Buildings rule's check): a\n"
-        "# construction of scope:pp_cplan_btype here is the game's upgrade of one level of it.\n"
-        "pp_lplan_b_upgrade_here = {\n\tOR = {\n"
-        + "".join(
-            f"\t\tAND = {{ scope:pp_cplan_btype = building_type:{successor} any_buildings_in_location = {{ "
-            + (f"OR = {{ {' '.join(f'building_type = building_type:{old}' for old in olds)} }}" if len(olds) > 1
-               else f"building_type = building_type:{olds[0]}")
-            + " pp_cplan_country_upgradable = yes } }\n"
-            for successor, olds in older.items()
-        )
-        + "\t\talways = no\n\t}\n}\n"
+        "# construction of scope:pp_cplan_btype here is the game's upgrade of one level of it. Its older tiers: the maps\n"
+        "# pp_lplan_dn<k> (pp_lplan_maps_fill).\n"
+        "pp_lplan_b_upgrade_here = {\n\tOR = {\n" + upgrade + "\t\talways = no\n\t}\n}\n"
+        "\n# Location scope (scope:pp_bt = a marked building type; the Location Plan map icon, scripted GUI pp_lplan_bdone):\n"
+        "# a level of it, or of a later tier of its main line (the maps pp_lplan_up<k>), stands here. One walk over the\n"
+        "# location's buildings.\n"
+        "pp_lplan_b_done = {\n\tOR = {\n"
+        f"\t\tAND = {{\n\t\t\t{_key('up1', 'scope:pp_bt')}\n"
+        f"\t\t\tany_buildings_in_location = {{ building_level > 0 OR = {{ building_type = scope:pp_bt {line} }} }}\n\t\t}}\n"
+        f"\t\tAND = {{\n\t\t\tNOT = {{ {_key('up1', 'scope:pp_bt')} }}\n"
+        "\t\t\tany_buildings_in_location = { building_type = scope:pp_bt building_level > 0 }\n\t\t}\n"
+        "\t}\n}\n"
     )
 
 
@@ -537,6 +713,14 @@ def building_mark_data(repo: Path, project: Path, mod_root: Path, vanilla_root: 
                  if name in defined and name in types and not types[name].dlc_only}
         _MARK_DATA[stamp] = (pairs, staff)
     return _MARK_DATA[stamp]
+
+
+def building_mark_maps(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -> MarkMaps:
+    """The maps of a building's mark: the upgrade pairs and workers (building_mark_data) and the cost data
+    pp_cplan_btype_data holds (construction_plan.building_costs, the same table)."""
+    pairs, staff = building_mark_data(repo, project, mod_root, vanilla_root)
+    costs, _ = cp.building_costs(mod_root, vanilla_root, cp._database(mod_root, vanilla_root, cp.BUILDING_TYPES))
+    return mark_maps(pairs, staff, costs)
 
 
 def quick_goods(items: list[lp.Item], found: dict[str, list[Candidate]]) -> list[lp.Item]:
@@ -866,13 +1050,13 @@ def render_examples(items: list[lp.Item], config: Config) -> str:
 
 
 def render_effects(items: list[lp.Item], found: dict[str, list[Candidate]], config: Config, categories: list[str],
-                   pairs: list[tuple[str, str]] | None = None, staff: dict[str, tuple[str, float]] | None = None) -> str:
+                   maps: MarkMaps | None = None) -> str:
     return (
         HEADER
         + render_targets(found)
         + render_dispatch(items, found, config)
         + render_marks(items, found)
-        + render_building_marks(pairs or [], staff or {})
+        + render_building_marks(maps or mark_maps([], {}, {}))
         + render_slots(config)
         + render_edits(items, config, categories)
         + render_examples(items, config)
@@ -934,10 +1118,10 @@ def render_values(config: Config, categories: list[str], items: list[lp.Item] | 
     return "".join(parts) + quick
 
 
-def render_triggers(categories: list[str], config: Config, pairs: list[tuple[str, str]] | None = None) -> str:
+def render_triggers(categories: list[str], config: Config, maps: MarkMaps | None = None) -> str:
     return (
         HEADER
-        + render_building_mark_triggers(pairs or [])
+        + render_building_mark_triggers(maps or mark_maps([], {}, {}))
         + "\n# Any scope: the flag scope:pp_key names a building category item.\npp_lprof_category_key = {\n\tOR = {\n"
         + "".join(f"\t\tscope:pp_key = flag:{category}\n" for category in categories)
         + "\t}\n}\n"
@@ -995,11 +1179,11 @@ def build(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -> tupl
     found, categories = targets(repo, project, mod_root, vanilla_root)
     result = Result(items=items, targets=found, categories=categories)
     category_keys = [item.key for item in items if item.kind == "category"]
-    pairs, staff = building_mark_data(repo, project, mod_root, vanilla_root)
+    maps = building_mark_maps(repo, project, mod_root, vanilla_root)
     texts = {
-        mod_root / EFFECTS: render_effects(items, found, config, category_keys, pairs, staff),
+        mod_root / EFFECTS: render_effects(items, found, config, category_keys, maps),
         mod_root / VALUES: render_values(config, category_keys, items, found),
-        mod_root / TRIGGERS: render_triggers(category_keys, config, pairs),
+        mod_root / TRIGGERS: render_triggers(category_keys, config, maps),
     }
     return result, texts
 

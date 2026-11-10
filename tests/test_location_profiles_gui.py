@@ -356,9 +356,10 @@ def test_gui_functions_exist_in_the_data_type_dump() -> None:
     plan = _read(MOD / lp.GUI)
     marks = (lp.window_mark_action("") + lp.window_mark_icon("") + lp.build_panel_mark("")
              + plan[plan.index("type pp_lplan_bstrip"):plan.index("type pp_lplan_picker")]
-             + "".join(line for line in _read(MOD / lp.LOC).splitlines(keepends=True) if "PP_LPLAN_BMARK" in line))
+             + "".join(line for line in _read(MOD / lp.LOC).splitlines(keepends=True) if "PP_LPLAN_BM" in line)
+             + _marker())
     for function in ("IsShown", "GetList", "GetBuildingType", "GetBuildingIcon", "MakeScope", "IsPlayer", "GetLocation",
-                     "GetType", "ObjectsEqual", "GetName"):
+                     "GetType", "ObjectsEqual", "GetName", "GetVariableFromVariableMap", "DataModelFirst"):
         assert function in marks, function
     text = _all_text() + marks
     used_globals, used_members = set(), set()

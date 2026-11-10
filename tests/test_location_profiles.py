@@ -711,7 +711,10 @@ def test_measurable_marks_go_first_by_payback() -> None:
     assert tail.index("limit = { pp_lplan_measuring = yes }\n\t\t\t\tpp_lplan_measure = yes") < tail.index("pp_lprof_build = yes")
     # ... only with a profit to measure (no profit = 999 years, + 100), and only when it pays back sooner
     measure = _block(hand, "pp_lplan_measure")
-    assert "pp_lprof_payback100 < 1098" in measure and "var:pp_lplan_bp > pp_lprof_payback100" in measure
+    # (the payback worked out once: three walks over the location's buildings)
+    assert measure.count("pp_lprof_payback100") == 1
+    assert measure.lstrip().startswith("save_temporary_scope_value_as = { name = pp_lplan_pb100 value = pp_lprof_payback100 }")
+    assert "scope:pp_lplan_pb100 < 1098" in measure and "var:pp_lplan_bp > scope:pp_lplan_pb100" in measure
     assert "set_variable = { name = pp_lplan_bt value = scope:pp_cplan_btype }" in measure
     assert "value = 999" in _block(_code(PLAN_VALUES), "pp_cplan_est_payback_years")
     # ... and a first level (nothing standing, nothing to measure) is not looked at while measuring
@@ -815,50 +818,68 @@ def test_a_marked_building_is_built() -> None:
     assert "save_scope_as = pp_cplan_btype" in walk and "scope:pp_lplan_here = { pp_lplan_building_mark = yes }" in walk
     assert "save_temporary_scope_as = pp_lplan_here" in _block(hand, "pp_lplan_location_turn")
     mark = _block(hand, "pp_lplan_building_mark")
-    # the newest tier of the line the country can build: one step per pair, as many steps as the longest line
-    step = _block(effects, "pp_lplan_b_step")
+    maps = lpf.building_mark_maps(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT))
+    fill = _block(effects, "pp_lplan_maps_fill")
+    # the newest tier of the line the country can build: the highest of the main line's later tiers (global maps
+    # pp_lplan_up<k>, filled once) the country can build; every pair's successor is on its older tier's main line
+    assert maps.depth == lpf.line_depth(pairs) >= 2
     for older, successor in pairs:
-        assert (f"limit = {{ scope:pp_cplan_btype = building_type:{older} scope:pp_cplan_country = {{ can_build_building = "
-                f"building_type:{successor} }} }}\n\t\tbuilding_type:{successor} = {{ save_scope_as = pp_cplan_btype }}") in step
-    assert step.count("save_scope_as = pp_cplan_btype") == len(pairs)
-    assert lpf.line_depth([("a", "b"), ("b", "c"), ("x", "y")]) == 2 and lpf.line_depth([]) == 0
-    assert _block(effects, "pp_lplan_b_newest").count("pp_lplan_b_step = yes") == lpf.line_depth(pairs) >= 2
+        assert successor in maps.up[older] or any(successor in maps.up[later] for later in maps.up[older] if later in maps.up), (older, successor)
+    for older, line in maps.up.items():
+        for k in range(1, maps.depth + 1):
+            top = line[min(k, len(line)) - 1]
+            assert (f"add_to_global_variable_map = {{ name = pp_lplan_up{k} key = building_type:{older} "
+                    f"value = building_type:{top} }}") in fill, (older, k)
+    newest = _block(effects, "pp_lplan_b_newest")
+    assert newest.count("can_build_building") == maps.depth and "pp_lplan_b_step" not in effects
+    assert newest.index("is_key_in_global_variable_map = { name = pp_lplan_up1 target = scope:pp_cplan_btype }") < newest.index(
+        f"global_variable_map(pp_lplan_up{maps.depth}|scope:pp_lplan_base)")
     assert mark.index("pp_lplan_b_newest = yes") < mark.index("can_build_building = scope:pp_cplan_btype")
     # the upgrade: an older tier of it stands here and the country can upgrade it (the Towns and Buildings rule's check)
     upgrade = _block(triggers, "pp_lplan_b_upgrade_here")
     for older, successor in pairs:
-        line = next(line for line in upgrade.splitlines() if f"scope:pp_cplan_btype = building_type:{successor} " in line)
-        assert f"building_type = building_type:{older}" in line and "pp_cplan_country_upgradable = yes" in line
+        k = maps.down[successor].index(older) + 1
+        assert (f"add_to_global_variable_map = {{ name = pp_lplan_dn{k} key = building_type:{successor} "
+                f"value = building_type:{older} }}") in fill, (older, successor)
+    for k in range(1, maps.older + 1):
+        assert (f"is_key_in_global_variable_map = {{ name = pp_lplan_dn{k} target = scope:pp_cplan_btype }}\n\t\t\t"
+                f"any_buildings_in_location = {{ building_type = \"global_variable_map(pp_lplan_dn{k}|scope:pp_cplan_btype)\" "
+                "pp_cplan_country_upgradable = yes }") in upgrade, k
     assert "pp_cplan_country_upgradable" in _defined("scripted_triggers")
     # what it needs: nothing of it under construction, not at its highest level, the country's and the location's part
     # of the can-build check (an upgrade does not ask the location's), the workers (not an upgrade), the goods
-    for check in ("pp_cplan_bt_queued < 0.5", "is_at_max_level = yes",
+    for check in ("pp_cplan_bt_queued < 0.5", "pp_cplan_bt_queued > 0.5", "is_at_max_level = yes",
                   "scope:pp_cplan_country = { can_build_building = scope:pp_cplan_btype }",
                   "can_build_building = scope:pp_cplan_btype\n\t\t\t\t\tpp_lplan_b_upgrade_here = yes",
-                  "pp_lplan_b_staff = yes", "pp_cplan_btype_data = yes", "scope:pp_cplan_gok > 0.5", "scope:pp_lplan_sok > 0.5"):
+                  "pp_lplan_b_staff = yes", "pp_lplan_b_data = yes", "scope:pp_cplan_gok > 0.5", "scope:pp_lplan_sok > 0.5"):
         assert check in mark, check
-    assert mark.index("pp_cplan_btype_data = yes") < mark.index("pp_lprof_build = yes")
+    assert mark.rindex("pp_lplan_b_data = yes") < mark.index("pp_lprof_build = yes")
+    assert "pp_cplan_btype_data" not in mark  # the plan's cost lookup tests the type against every building type
     assert "pp_cplan_note_goods = { why = 105 }" in mark  # the window counts what the construction goods held back
     # forced like every mark: built through the profiles' one build effect, no payback and no market check of its own
     assert "pp_lprof_payback100 >" not in mark and "pp_cplan_market" not in mark and "scope:pp_lprof_pb" not in mark
     # measured like a goods mark when it stands and earns; the measured one is not tried twice
-    assert "limit = { pp_lplan_measuring = yes }" in mark and "limit = { pp_cplan_bt_levels > 0.5 }" in mark
+    assert "limit = { pp_lplan_measuring = yes }" in mark and "\t\t\t\tpp_cplan_bt_levels > 0.5\n" in mark
     assert f"pp_lplan_measure_after = {{ n = {lpf.BUILDING_MARK_NUMBER} }}" in mark
     assert "var:pp_lplan_bn > 999.5" in mark and "var:pp_lplan_bt = scope:pp_cplan_btype" in mark
-    # the workers: every building type with workers is in one group of the dispatch, with its pop type and size
+    # the workers: every building type with workers has its size and pop type in the maps
     check = _block(effects, "pp_lplan_b_staff")
     assert check.lstrip().startswith("save_temporary_scope_value_as = { name = pp_lplan_sok value = 1 }")
     idle = _defined("script_values")
     for name, (pop_type, workers) in staff.items():
         if workers > 0:
-            assert check.count(f"scope:pp_cplan_btype = building_type:{name} ") + check.count(f"scope:pp_cplan_btype = building_type:{name}\n") == 1, name
+            assert f"add_to_global_variable_map = {{ name = pp_lplan_wk key = building_type:{name} value = {cp._num(workers)} }}" in fill, name
+            assert (f"add_to_global_variable_map = {{ name = pp_lplan_wp key = building_type:{name} "
+                    f"value = {101 + maps.pop_types.index(pop_type)} }}") in fill, name
             assert f"pp_cplan_idle_{pop_type}" in idle, pop_type
-    assert len(set(re.findall(r"pp_cplan_staff = \{ type = (\w+) size = ([\d.]+) \}", check))) == check.count("pp_cplan_staff = {")
+    for pop_type in maps.pop_types:
+        assert check.count(f"pp_cplan_staff = {{ type = {pop_type} size = scope:pp_lplan_wn }}") == 1, pop_type
     # no DLC-only building type is named
     types = cc.database(MOD, vanilla_root(ROOT, PROJECT), cc.BUILDING_TYPES)
     dlc = {name for name, entry in types.items() if entry.dlc_only}
-    named = set(re.findall(r"building_type:(\w+)", step + upgrade + check))
-    assert named and not named & dlc
+    named = set(re.findall(r"building_type:(\w+)", fill + newest + upgrade + check)) - set(maps.costs)
+    assert not named & dlc
+    assert set(re.findall(r"building_type:(\w+)", fill)) & set(pairs[0])
     # a NOT never holds two conditions (NOT = { a b } is NOR in the engine)
     for body in (mark, walk, _block(hand, "pp_lplan_location_turn"), _block(hand, "pp_lplan_mark")):
         for inner in re.findall(r"NOT = \{ ([^{}]*(?:\{[^{}]*\}[^{}]*)*) \}", body):
@@ -994,3 +1015,96 @@ def test_quick_candidates_never_overflow_the_row() -> None:
             assert shown == marked + len(standing), "nothing is hidden while the row has room"
         elif marked <= lpf.QUICK_ROW - lpf.QUICK_CHUNK:
             assert shown > lpf.QUICK_ROW - 2 * lpf.QUICK_CHUNK, "a cut row is still well filled"
+
+
+def _all_blocks() -> dict[str, str]:
+    """Every scripted effect, scripted trigger and script value of the mod by name (comments out)."""
+    blocks: dict[str, str] = {}
+    for folder in ("scripted_effects", "scripted_triggers", "script_values"):
+        for path in sorted((COMMON / folder).glob("*.txt")):
+            for name, body in re.findall(r"^([A-Za-z_][A-Za-z0-9_]*) = \{(.*?)^\}", _code(path), re.MULTILINE | re.DOTALL):
+                blocks.setdefault(name, body)
+    return blocks
+
+
+def _reached(start: str, blocks: dict[str, str], stop: set[str]) -> dict[str, str]:
+    """What ``start`` runs or reads, through every effect, trigger and value it names (not past ``stop``)."""
+    seen: dict[str, str] = {}
+    todo = [start]
+    while todo:
+        name = todo.pop()
+        if name in seen or name in stop or name not in blocks:
+            continue
+        seen[name] = blocks[name]
+        todo += re.findall(r"\b(pp_[a-z0-9_]+)\b", blocks[name])
+    return seen
+
+
+def test_a_building_mark_costs_a_few_lookups() -> None:
+    """Script time (2026-11-11): a marked building read what it needs of its type (the newest tier it can build, the
+    older tier that stands, its workers, its cost data) through chains that tested the type against every building
+    type, about 1,400-2,350 comparisons a mark and go. Now global variable maps keyed by the type hold it, filled once
+    per save and game data version; nothing on a mark's path (the measuring and the second go, the map icon's done
+    check) names a building type, and the lookups over a number (pop type, construction demand, efficiency category)
+    halve their range. Only an actual construction runs the plan's own build (pp_lprof_build: the cost lookup of
+    pp_cplan_construct_scoped), once a location at most."""
+    blocks = _all_blocks()
+    stop = {"pp_lprof_build", "pp_lplan_maps_ready", "pp_lplan_maps_fill"}
+    for start in ("pp_lplan_building_mark", "pp_lplan_building_marks", "pp_lplan_b_done", "pp_lplan_b_finish"):
+        path = _reached(start, blocks, stop)
+        assert "pp_lplan_b_newest" in path or start in ("pp_lplan_b_done", "pp_lplan_b_finish"), start
+        for name, body in path.items():
+            assert "building_type:" not in body, (start, name)
+    # the location's turn builds its measured best with the maps' cost data, not the plan's lookup
+    turn = _all_blocks()["pp_lplan_location_turn"]
+    assert "pp_lplan_b_data = yes" in turn and "pp_cplan_btype_data" not in turn
+    # the halving lookups: at most ceil(log2(n)) + 1 comparisons deep
+    maps = lpf.building_mark_maps(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT))
+    assert len(maps.demands) > 50
+    effects = _code(MOD / lpf.EFFECTS)
+    for name, value, count in (("pp_lplan_b_data", "pp_lplan_dmi", len(maps.demands)),
+                               ("pp_lplan_b_data", "pp_lplan_cti", len(maps.categories)),
+                               ("pp_lplan_b_staff", "pp_lplan_wt", len(maps.pop_types))):
+        body = _block(effects, name)
+        depth = max(len(re.match(r"\t*", line).group(0)) for line in body.splitlines() if f"scope:{value} <" in line)
+        assert depth - 2 <= 2 * (count - 1).bit_length(), (name, value, depth)
+        assert body.count(f"scope:{value} <") == count - 1, (name, value)
+    # the lookup chain is gone; its replacement is filled once, and only when the stamp in the save differs
+    assert "pp_lplan_b_step" not in effects
+    ready = _block(effects, "pp_lplan_maps_ready")
+    version = lpf.maps_version(maps)
+    assert f"global_var:pp_lplan_maps_v < {version - 0.5:g}" in ready and "pp_lplan_maps_fill = yes" in ready
+    fill = _block(effects, "pp_lplan_maps_fill")
+    assert f"set_global_variable = {{ name = pp_lplan_maps_v value = {version} }}" in fill
+    for name in lpf.map_names(maps):
+        assert f"clear_global_variable_map = pp_lplan_{name} }}" in fill, name
+    # where the maps are made ready: the pass (every month, any weight), a building toggle, the window
+    hand = _code(MOD / lpf.HAND_EFFECTS)
+    plan = _code(COMMON / "scripted_effects/pp_location_plan.txt")
+    assert "pp_lplan_maps_ready = yes" in _block(hand, "pp_lprof_run")
+    assert "pp_lplan_maps_ready = yes" in _block(plan, "pp_lplan_bflip") and "pp_lplan_maps_ready = yes" in _block(plan, "pp_lplan_select")
+    # the same cost data as the plan's lookup: per type the values pp_cplan_btype_data sets
+    for type_name, cost in maps.costs.items():
+        if cost.ipl:
+            assert f"name = pp_lplan_ipl key = building_type:{type_name} value = {cp._num(cost.ipl)} }}" in fill, type_name
+        if cost.demand != cp.DEFAULT_DEMAND:
+            assert f"name = pp_lplan_dm key = building_type:{type_name} value = {101 + maps.demands.index(cost.demand)} }}" in fill
+    data = _block(effects, "pp_lplan_b_data")
+    for index, demand in enumerate(maps.demands):
+        assert f"pp_cplan_cd_{demand} }}" in data and f"pp_cplan_goods_here_{demand} = yes" in data, demand
+    for category in maps.categories:
+        assert f"pp_cplan_eff_{category} }}" in data, category
+    # the halving search finds every number
+    tree = lpf._chain("v", 5, lambda i: f"hit {i}")
+    for n in range(5):
+        lines, here, depth = tree.splitlines(), 0, 2
+        # walk it: take the if when 101 + n < bound, else the else
+        position = 0
+        while not lines[position].strip().startswith("hit"):
+            bound = float(re.search(r"< ([\d.]+)", lines[position + 1]).group(1))
+            if 101 + n < bound:
+                position += 2
+            else:
+                tab = re.match(r"\t*", lines[position]).group(0)
+                position = lines.index(f"{tab}else = {{", position) + 1
+        assert lines[position].strip() == f"hit {n}", n

@@ -66,6 +66,19 @@ every owned location that passes `pp_cplan_country_site`, has `max_control` at o
 of the line standing, passes the location's part of `can_build_building` and whose market holds the construction
 goods (`pp_cplan_goods_here_<demand>`), highest maximum control first. No worker check.
 
+*Boosters only where their goods are made* (2026-11-10 evening, Jan, 2b053cff; not seen in game yet): a building of
+the list whose modifier blocks (`modifier`, `raw_modifier`; every tier, the definition and what was injected) hold
+nothing but `local_<good>_output_modifier` lines, at least one above 0, is a booster (`booster_goods`, read from the
+building itself, nothing to configure). Today that is **Sawmill, Windmill, Local Smelters and Terraces**; the build
+summary counts them ("N public buildings (M boosters)"). A booster is built only in locations that make one of its
+goods: its raw material is the good, or a standing building there produces it (generated location trigger
+`pp_cplan_pub_where_<key>`: `raw_material ?= goods:<good>` or `any_buildings_in_location` with `building_produced_goods`,
+the Location Plan's "made here"); every other public building asks `pp_cplan_pub_anywhere` (always yes). The trigger is
+passed as `where` to `pp_cplan_country_public` and sits in its location filter before `can_build_building`. The tile's
+tooltip names the goods and says to mark the building in a location to have one anywhere else (a building mark is
+forced, `docs/location_plan.md`). Before, a ticked Windmill went into every location that could have one, whether
+anything there was milled or not.
+
 **3. Towns and cities** (ledger step 2). Two switches. Every owned location that passes `pp_cplan_country_site`, has
 the rank below, `modifier:cannot_upgrade_location = no`, the game's own population minimum of the rank (read at
 generation from the rank's `allow` in `location_ranks`, mod over vanilla: town 5, city 30 thousand), for a town also

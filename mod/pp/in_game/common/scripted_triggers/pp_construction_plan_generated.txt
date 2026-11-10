@@ -427,7 +427,7 @@ pp_cplan_looks_profiles = {
 	OR = { current_month = 3 current_month = 6 current_month = 9 current_month = 12 }
 }
 pp_cplan_looks_business = {
-	OR = { current_month = 1 current_month = 7 }
+	OR = { current_month = 2 current_month = 8 }
 }
 pp_cplan_looks_upgrades = {
 	OR = { current_month = 4 current_month = 10 }
@@ -442,8 +442,8 @@ pp_cplan_looks_rights = {
 	OR = { current_month = 5 current_month = 11 }
 }
 pp_cplan_looks_market_count = {
-	OR = { current_month = 1 current_month = 4 current_month = 7 current_month = 10 }
+	OR = { current_month = 2 current_month = 5 current_month = 8 current_month = 11 }
 }
 pp_cplan_looks_business_types = {
-	OR = { current_month = 1 current_month = 7 }
+	OR = { current_month = 5 current_month = 11 }
 }

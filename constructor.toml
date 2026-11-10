@@ -1245,7 +1245,7 @@ business_years = 10           # businesses: a level of any building that makes g
 # saves (when it does not save it ranks them every month); upgrades / public / ranks / rights = the rules of Towns and
 # Buildings, one a look; market_count = when the market limit counts afresh what is under construction; business_types =
 # when the country's part of the business can-build check is asked again. Placeholders (Jan tunes them).
-look_months = { food = [1, 4, 7, 10], logistics = [2, 5, 8, 11], improve = [3, 9], profiles = [3, 6, 9, 12], business = [1, 7], upgrades = [4, 10], public = [6, 12], ranks = [2, 8], rights = [5, 11], market_count = [1, 4, 7, 10], business_types = [1, 7] }
+look_months = { food = [1, 4, 7, 10], logistics = [2, 5, 8, 11], improve = [3, 9], profiles = [3, 6, 9, 12], business = [2, 8], upgrades = [4, 10], public = [6, 12], ranks = [2, 8], rights = [5, 11], market_count = [2, 5, 8, 11], business_types = [5, 11] }
 business_sites = 16           # businesses: the sites whose pick (their best business) is worked out anew each month; the picks are kept on the locations
 business_cycle_months = 24    # ... but at least so many that every location is seen within this many months, however large the country
 business_tries = 6            # businesses: the stored picks a look tries to build, best first

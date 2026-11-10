@@ -532,9 +532,13 @@ pp_cplan_group_business = {
 # Country scope, every pass: the business picks of the next few sites. Every owned location has a number in the
 # order the plan first saw it (pp_cplan_seq, counted on the country as pp_cplan_seq_n, both + 100); the pass takes the
 # numbers after the country's place in that order (pp_cplan_cursor) up to pp_cplan_bz_window more, then moves the
-# place on, back to the start after the last number. So every location's turn comes round, each exactly once a cycle,
-# and one walk over the owned locations with two cheap comparisons finds this pass's few. The country's part of the
-# can-build check (pp_cplan_bz_<type>) is asked again only in its months.
+# place on, back to the start after the last number. So every location's turn comes round, each exactly once a cycle.
+# The pass finds its few without a walk over the country: a location is put on the list of its block of the order
+# when it gets its number (pp_cplan_bzb_<n>, generated pp_cplan_business_block), and the pass reads only the lists of
+# the blocks its numbers fall in (generated pp_cplan_business_walk). In game 2026-11-10 the walk over every owned
+# location with its two comparisons was 11 of the refresh's 21 ms a pass in a country of 424 locations. New
+# locations get their numbers in the months of the country's can-build check (pp_cplan_bz_<type>), and in the first
+# pass.
 pp_cplan_business_refresh = {
 	if = {
 		limit = {
@@ -546,6 +550,24 @@ pp_cplan_business_refresh = {
 		pp_cplan_business_types_clear = yes
 		pp_cplan_business_types = yes
 		set_variable = { name = pp_cplan_bz_known value = yes }
+		# the order starts afresh where the blocks' lists are not kept yet (the first pass; a game from before them)
+		if = {
+			limit = { NOT = { has_variable = pp_cplan_bzb_kept } }
+			set_variable = { name = pp_cplan_bzb_kept value = yes }
+			set_variable = { name = pp_cplan_seq_n value = 100 }
+			set_variable = { name = pp_cplan_cursor value = 100 }
+			every_owned_location = {
+				limit = { has_variable = pp_cplan_seq }
+				remove_variable = pp_cplan_seq
+			}
+		}
+		# locations without a number (all of them at first, later the new ones): the next number and its block's list
+		every_owned_location = {
+			limit = { NOT = { has_variable = pp_cplan_seq } }
+			scope:pp_cplan_country = { change_variable = { name = pp_cplan_seq_n add = 1 } }
+			set_variable = { name = pp_cplan_seq value = scope:pp_cplan_country.var:pp_cplan_seq_n }
+			pp_cplan_business_block = yes
+		}
 	}
 	if = {
 		limit = { NOT = { has_variable = pp_cplan_seq_n } }
@@ -557,26 +579,21 @@ pp_cplan_business_refresh = {
 	}
 	save_temporary_scope_value_as = { name = pp_cplan_from value = var:pp_cplan_cursor }
 	save_temporary_scope_value_as = { name = pp_cplan_to value = { value = var:pp_cplan_cursor add = pp_cplan_bz_window } }
-	every_owned_location = {
-		if = {
-			limit = { NOT = { has_variable = pp_cplan_seq } }
-			scope:pp_cplan_country = { change_variable = { name = pp_cplan_seq_n add = 1 } }
-			set_variable = { name = pp_cplan_seq value = scope:pp_cplan_country.var:pp_cplan_seq_n }
-		}
-		if = {
-			limit = { pp_cplan_business_turn = yes }
-			# a site that cannot take a business now (a construction under way, a profile that keeps them out, no
-			# market) keeps the pick it had: the look works it out afresh before it builds
-			if = {
-				limit = { pp_cplan_business_site = yes }
-				pp_cplan_business_pick = yes
-			}
-		}
-	}
+	pp_cplan_business_walk = yes
 	set_variable = { name = pp_cplan_cursor value = scope:pp_cplan_to }
 	if = {
 		limit = { var:pp_cplan_cursor >= var:pp_cplan_seq_n }
 		set_variable = { name = pp_cplan_cursor value = 100 }
+	}
+}
+
+# Location scope, from pp_cplan_business_walk: it is this location's turn. A site that cannot take a business now
+# (a construction under way, a profile that keeps them out, no market) keeps the pick it had: the look works it out
+# afresh before it builds.
+pp_cplan_business_turn_here = {
+	if = {
+		limit = { pp_cplan_business_site = yes }
+		pp_cplan_business_pick = yes
 	}
 }
 
@@ -972,14 +989,16 @@ pp_cplan_note_goods = {
 # scope holds no variables (in game 2026-11-10: "This scope doesn't support variables. Scope: Market Burgos Market",
 # about 2,000 error lines a pass, and the limit never held: 39 Stud Farms started in the Burgos market in one pass
 # where the market asks for 10.8 horses a month).
+# One walk counts every good of the market (in game 2026-11-10, third round: a walk per market and good, over every
+# building of every location with a construction, was 7 ms each and 4 to 27 ms in most months): the market's
+# locations with a construction, their buildings under construction, and for each of those the generated dispatch
+# adds its levels x its recipe's output to its main good's count (pp_cplan_market_count_building). The centre's
+# pp_cplan_uc_counted says the market is counted; a good without a count then has nothing under construction.
 pp_cplan_market_load = {
 	if = {
-		limit = { market.location ?= { NOT = { has_variable = pp_cplan_uc_$g$ } } }
-		market ?= {
-			save_temporary_scope_value_as = { name = pp_cplan_uc_now value = pp_cplan_uc_market_$g$ }
-		}
+		limit = { market.location ?= { NOR = { has_variable = pp_cplan_uc_counted has_variable = pp_cplan_uc_$g$ } } }
 		market.location ?= {
-			set_variable = { name = pp_cplan_uc_$g$ value = { value = scope:pp_cplan_uc_now add = 100 } }
+			set_variable = { name = pp_cplan_uc_counted value = yes }
 			save_temporary_scope_as = pp_cplan_this_market
 			scope:pp_cplan_country = {
 				if = {
@@ -988,6 +1007,27 @@ pp_cplan_market_load = {
 				}
 			}
 		}
+		market ?= {
+			every_location_in_market = {
+				every_buildings_in_location = {
+					limit = { building_levels_under_construction > 0 }
+					save_temporary_scope_value_as = { name = pp_cplan_uc_levels value = building_levels_under_construction }
+					pp_cplan_market_count_building = yes
+				}
+			}
+		}
+	}
+}
+
+# A market's centre location, from pp_cplan_market_count_building: scope:pp_cplan_uc_levels levels under construction
+# of a building that makes $out$ of the good $g$ a level.
+pp_cplan_market_count_add = {
+	if = {
+		limit = { has_variable = pp_cplan_uc_$g$ }
+		change_variable = { name = pp_cplan_uc_$g$ add = { value = scope:pp_cplan_uc_levels multiply = $out$ } }
+	}
+	else = {
+		set_variable = { name = pp_cplan_uc_$g$ value = { value = scope:pp_cplan_uc_levels multiply = $out$ add = 100 } }
 	}
 }
 
@@ -1009,6 +1049,11 @@ pp_cplan_market_add_good = {
 		if = {
 			limit = { has_variable = pp_cplan_uc_$g$ }
 			change_variable = { name = pp_cplan_uc_$g$ add = $out$ }
+		}
+		# the market is counted and had nothing of the good under construction: this level is its first
+		else_if = {
+			limit = { has_variable = pp_cplan_uc_counted }
+			set_variable = { name = pp_cplan_uc_$g$ value = { value = $out$ add = 100 } }
 		}
 	}
 }

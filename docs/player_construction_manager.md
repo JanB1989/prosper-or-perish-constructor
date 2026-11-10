@@ -14,6 +14,23 @@ saving information." Measured in the plan test world (Castile owns Iberia: about
 script profiler: 0.32-0.39 s a pass, 0.20 s of it the business pick. Not profiled since the rework: the numbers below
 are counts of what the script evaluates, taken from the generators (`tests/test_construction_plan_cost.py`).
 
+**Measured in game (2026-11-10, third round; EU5 1.4.8, test world, Castile with 424 locations, every group
+counting, ten public buildings, 20 profile and 20 marked locations, +400 gold a month; script profiler, the on_action's
+time a month).** The monthly version: 320-390 ms a pass. The rebuilt pass as committed (ce65b3fe): 24 months, median
+31, mean 38, worst 81 ms; alone: business refresh 21, business look 8, food 35, logistics 4, improvements 1, Locations
+29, Towns and Buildings 20, rights 0, an empty pass 0 ms. Two things cost more than the counts said and were changed:
+the refresh's walk over every owned location (two comparisons each: 11 of its 21 ms; now the locations stand on lists
+of blocks of the order, `pp_cplan_bzb_<n>`, and a pass reads only its blocks' lists; new locations get their number
+in the can-build check's months), and the market limit's count (a walk per market AND good over every building: 7 ms
+each, 4-27 ms in most months; now one walk per market counts every good through a dispatch on the building type,
+`pp_cplan_market_count_building`, and the centre's `pp_cplan_uc_counted` says the market is counted). The business
+look moved out of the food look's months (`look_months`: business 2 / 8, the can-build check 5 / 11, market counts
+2 / 5 / 8 / 11). After that: 24 months, median 33, mean 33, worst 53 ms (a food look, 27-29 ms, plus the refresh,
+6-25 ms, about 0.7 ms a site); with every public building ticked, 9 months: median 24, worst 45 ms. Still above
+Jan's marks (typical 30, no month above 50) by a little; the next step would be no refresh in the food look's months.
+A 12-month business cycle doubles the sites a month (35 instead of 18, about +12 ms a month), so the cycle stays 24.
+No plan line in error.log from 57 real passes; console effects and run files log artefact lines only.
+
 **Where the time went** (L owned locations, P provinces, T = 224 business types, B ticked public buildings, every
 month):
 

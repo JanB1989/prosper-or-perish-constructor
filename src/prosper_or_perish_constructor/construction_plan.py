@@ -1557,6 +1557,47 @@ def market_outputs(businesses: dict[str, str], recipes: dict[str, list[list[Reci
     return found
 
 
+BUSINESS_BLOCKS = 64  # lists of the business order's blocks; the last one takes every number past them
+
+
+def render_business_blocks(block: int) -> str:
+    """The business refresh without a walk over the country (in game 2026-11-10: that walk was half the refresh's
+    script time): every numbered location is on the list of its block of ``block`` numbers of the order
+    (pp_cplan_bzb_<n> on the country), and a pass reads only the lists its numbers (scope:pp_cplan_from, exclusive, to
+    scope:pp_cplan_to) fall in."""
+    walk = [
+        "\n# ---- Script time: the business order in blocks ----\n\n"
+        "# Country scope, in pp_cplan_business_refresh (scope:pp_cplan_from / _to: this pass's numbers of the order, + 100):\n"
+        f"# the lists of the blocks of {block} numbers they fall in, and of those the locations whose turn it is and that\n"
+        "# are still the country's.\n"
+        "pp_cplan_business_walk = {\n"
+    ]
+    place = [
+        "\n# Location scope, once, when the location got its number (pp_cplan_seq, + 100): on the list of its block.\n"
+        "pp_cplan_business_block = {\n\tsave_temporary_scope_as = pp_cplan_numbered\n"
+    ]
+    for n in range(1, BUSINESS_BLOCKS + 1):
+        low, high = 100 + (n - 1) * block, 100 + n * block
+        last = n == BUSINESS_BLOCKS
+        within = f"scope:pp_cplan_to > {low}" if last else f"scope:pp_cplan_from < {high} scope:pp_cplan_to > {low}"
+        walk.append(
+            f"\tif = {{\n\t\tlimit = {{ {within} }}\n"
+            f"\t\tevery_in_list = {{\n\t\t\tvariable = pp_cplan_bzb_{n}\n"
+            "\t\t\tlimit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }\n"
+            "\t\t\tpp_cplan_business_turn_here = yes\n\t\t}\n\t}\n"
+        )
+        add = (f"scope:pp_cplan_country = {{ add_to_variable_list = {{ name = pp_cplan_bzb_{n} "
+               "target = scope:pp_cplan_numbered } }")
+        if last:
+            place.append(f"\telse = {{\n\t\t{add}\n\t}}\n")
+        else:
+            place.append(f"\t{'if' if n == 1 else 'else_if'} = {{\n\t\tlimit = {{ var:pp_cplan_seq <= {high} }}\n"
+                         f"\t\t{add}\n\t}}\n")
+    walk.append("}\n")
+    place.append("}\n")
+    return "".join(walk) + "".join(place)
+
+
 def render_market(outputs: dict[str, dict[str, float]]) -> tuple[str, str, str]:
     """The market limit's generated parts: values, effects, triggers."""
     values = [
@@ -1609,8 +1650,19 @@ def render_market(outputs: dict[str, dict[str, float]]) -> tuple[str, str, str]:
         )
     effects.append(
         "}\n\n# A market's centre location, at the end of the pass: what the pass counted for its market is gone.\n"
-        "pp_cplan_market_clear = {\n"
+        "pp_cplan_market_clear = {\n\tremove_variable = pp_cplan_uc_counted\n"
         + "".join(f"\tremove_variable = pp_cplan_uc_{good}\n" for good in sorted(outputs))
+        + "}\n"
+        "\n# Building scope, in pp_cplan_market_load's one walk over a market (scope:pp_cplan_this_market = its centre,\n"
+        "# scope:pp_cplan_uc_levels = this building's levels under construction): a business type adds its levels x one\n"
+        "# level's output to its main good's count there. Other building types: nothing.\n"
+        "pp_cplan_market_count_building = {\n"
+        + "".join(
+            f"\t{'if' if position == 0 else 'else_if'} = {{\n\t\tlimit = {{ "
+            + (f"OR = {{ {' '.join(f'building_type = building_type:{name}' for name in names)} }}" if len(names) > 1
+               else f"building_type = building_type:{names[0]}")
+            + f" }}\n\t\tscope:pp_cplan_this_market = {{ pp_cplan_market_count_add = {{ g = {good} out = {_num(output)} }} }}\n\t}}\n"
+            for position, ((good, output), names) in enumerate(sorted(groups.items())))
         + "}\n"
     )
     triggers = [
@@ -1711,6 +1763,7 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
     # the market limit (2026-11-10): one level's output of its main good per business type
     result.market_outputs = market_outputs(result.businesses, recipes)
     market_values, market_effects, market_triggers = render_market(result.market_outputs)
+    market_effects = render_business_blocks(config.business_sites) + market_effects  # (the business order in blocks)
 
     from prosper_or_perish_constructor import construction_plan_detail  # imports this module
 

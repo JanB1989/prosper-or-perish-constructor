@@ -390,8 +390,8 @@ def test_business_group_builds_the_best_returns_first() -> None:
     # (tests/test_construction_plan_cost.py)
     effects = _read(EFFECTS)
     refresh = _effect(effects, "pp_cplan_business_refresh")
-    assert refresh.index("pp_cplan_business_types = yes") < refresh.index("pp_cplan_business_pick = yes")
-    assert "limit = { pp_cplan_business_site = yes }" in refresh
+    assert refresh.index("pp_cplan_business_types = yes") < refresh.index("pp_cplan_business_walk = yes")
+    assert "limit = { pp_cplan_business_site = yes }" in _effect(effects, "pp_cplan_business_turn_here")
     assert "order_by = pp_cplan_bz_order" in _effect(effects, "pp_cplan_look_business")
     here = _effect(effects, "pp_cplan_business_here")
     assert here.index("pp_cplan_business_pick = yes") < here.index("pp_cplan_construct_scoped = { why = 103 }")

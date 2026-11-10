@@ -411,9 +411,21 @@ def test_d_the_limit_covers_every_business_type_in_one_construct_path_and_in_the
 def test_d_under_construction_is_counted_once_a_market_and_kept_for_the_pass() -> None:
     effects = _read(EFFECTS)
     load = _effect(effects, "pp_cplan_market_load")
-    assert "limit = { market.location ?= { NOT = { has_variable = pp_cplan_uc_$g$ } } }" in load, "once a market and good"
-    assert "save_temporary_scope_value_as = { name = pp_cplan_uc_now value = pp_cplan_uc_market_$g$ }" in load
-    assert "set_variable = { name = pp_cplan_uc_$g$ value = { value = scope:pp_cplan_uc_now add = 100 } }" in load
+    assert "limit = { market.location ?= { NOR = { has_variable = pp_cplan_uc_counted has_variable = pp_cplan_uc_$g$ } } }" in load, "once a market"
+    # one walk counts every good of the market (in game 2026-11-10: a walk per market and good cost 7 ms each): the
+    # buildings under construction add their levels x output to their main good's count through the dispatch
+    assert "has_variable = pp_cplan_uc_counted" in load and "set_variable = { name = pp_cplan_uc_counted value = yes }" in load
+    assert load.count("every_location_in_market = {") == 1 and "pp_cplan_market_count_building = yes" in load
+    assert "limit = { building_levels_under_construction > 0 }" in load
+    count = _effect(_read(MOD / cp.EFFECTS), "pp_cplan_market_count_building")
+    outputs = _result().market_outputs
+    for good, types in outputs.items():
+        for name, output in types.items():
+            assert f"building_type = building_type:{name}" in count, name
+        assert f"pp_cplan_market_count_add = {{ g = {good} out = " in count, good
+    add_count = _effect(effects, "pp_cplan_market_count_add")
+    assert "add = { value = scope:pp_cplan_uc_levels multiply = $out$ }" in add_count
+    assert "remove_variable = pp_cplan_uc_counted" in _effect(_read(MOD / cp.EFFECTS), "pp_cplan_market_clear")
     assert "add_to_variable_list = { name = pp_cplan_markets target = scope:pp_cplan_this_market }" in load
     # the plan's own constructions raise the count, whichever group started them
     now = _effect(effects, "pp_cplan_construct_now")

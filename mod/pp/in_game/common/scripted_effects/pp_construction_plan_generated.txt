@@ -5685,6 +5685,786 @@ pp_cplan_business_pick = {
 	}
 }
 
+# ---- Script time: the business order in blocks ----
+
+# Country scope, in pp_cplan_business_refresh (scope:pp_cplan_from / _to: this pass's numbers of the order, + 100):
+# the lists of the blocks of 16 numbers they fall in, and of those the locations whose turn it is and that
+# are still the country's.
+pp_cplan_business_walk = {
+	if = {
+		limit = { scope:pp_cplan_from < 116 scope:pp_cplan_to > 100 }
+		every_in_list = {
+			variable = pp_cplan_bzb_1
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 132 scope:pp_cplan_to > 116 }
+		every_in_list = {
+			variable = pp_cplan_bzb_2
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 148 scope:pp_cplan_to > 132 }
+		every_in_list = {
+			variable = pp_cplan_bzb_3
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 164 scope:pp_cplan_to > 148 }
+		every_in_list = {
+			variable = pp_cplan_bzb_4
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 180 scope:pp_cplan_to > 164 }
+		every_in_list = {
+			variable = pp_cplan_bzb_5
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 196 scope:pp_cplan_to > 180 }
+		every_in_list = {
+			variable = pp_cplan_bzb_6
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 212 scope:pp_cplan_to > 196 }
+		every_in_list = {
+			variable = pp_cplan_bzb_7
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 228 scope:pp_cplan_to > 212 }
+		every_in_list = {
+			variable = pp_cplan_bzb_8
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 244 scope:pp_cplan_to > 228 }
+		every_in_list = {
+			variable = pp_cplan_bzb_9
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 260 scope:pp_cplan_to > 244 }
+		every_in_list = {
+			variable = pp_cplan_bzb_10
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 276 scope:pp_cplan_to > 260 }
+		every_in_list = {
+			variable = pp_cplan_bzb_11
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 292 scope:pp_cplan_to > 276 }
+		every_in_list = {
+			variable = pp_cplan_bzb_12
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 308 scope:pp_cplan_to > 292 }
+		every_in_list = {
+			variable = pp_cplan_bzb_13
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 324 scope:pp_cplan_to > 308 }
+		every_in_list = {
+			variable = pp_cplan_bzb_14
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 340 scope:pp_cplan_to > 324 }
+		every_in_list = {
+			variable = pp_cplan_bzb_15
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 356 scope:pp_cplan_to > 340 }
+		every_in_list = {
+			variable = pp_cplan_bzb_16
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 372 scope:pp_cplan_to > 356 }
+		every_in_list = {
+			variable = pp_cplan_bzb_17
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 388 scope:pp_cplan_to > 372 }
+		every_in_list = {
+			variable = pp_cplan_bzb_18
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 404 scope:pp_cplan_to > 388 }
+		every_in_list = {
+			variable = pp_cplan_bzb_19
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 420 scope:pp_cplan_to > 404 }
+		every_in_list = {
+			variable = pp_cplan_bzb_20
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 436 scope:pp_cplan_to > 420 }
+		every_in_list = {
+			variable = pp_cplan_bzb_21
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 452 scope:pp_cplan_to > 436 }
+		every_in_list = {
+			variable = pp_cplan_bzb_22
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 468 scope:pp_cplan_to > 452 }
+		every_in_list = {
+			variable = pp_cplan_bzb_23
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 484 scope:pp_cplan_to > 468 }
+		every_in_list = {
+			variable = pp_cplan_bzb_24
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 500 scope:pp_cplan_to > 484 }
+		every_in_list = {
+			variable = pp_cplan_bzb_25
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 516 scope:pp_cplan_to > 500 }
+		every_in_list = {
+			variable = pp_cplan_bzb_26
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 532 scope:pp_cplan_to > 516 }
+		every_in_list = {
+			variable = pp_cplan_bzb_27
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 548 scope:pp_cplan_to > 532 }
+		every_in_list = {
+			variable = pp_cplan_bzb_28
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 564 scope:pp_cplan_to > 548 }
+		every_in_list = {
+			variable = pp_cplan_bzb_29
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 580 scope:pp_cplan_to > 564 }
+		every_in_list = {
+			variable = pp_cplan_bzb_30
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 596 scope:pp_cplan_to > 580 }
+		every_in_list = {
+			variable = pp_cplan_bzb_31
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 612 scope:pp_cplan_to > 596 }
+		every_in_list = {
+			variable = pp_cplan_bzb_32
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 628 scope:pp_cplan_to > 612 }
+		every_in_list = {
+			variable = pp_cplan_bzb_33
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 644 scope:pp_cplan_to > 628 }
+		every_in_list = {
+			variable = pp_cplan_bzb_34
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 660 scope:pp_cplan_to > 644 }
+		every_in_list = {
+			variable = pp_cplan_bzb_35
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 676 scope:pp_cplan_to > 660 }
+		every_in_list = {
+			variable = pp_cplan_bzb_36
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 692 scope:pp_cplan_to > 676 }
+		every_in_list = {
+			variable = pp_cplan_bzb_37
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 708 scope:pp_cplan_to > 692 }
+		every_in_list = {
+			variable = pp_cplan_bzb_38
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 724 scope:pp_cplan_to > 708 }
+		every_in_list = {
+			variable = pp_cplan_bzb_39
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 740 scope:pp_cplan_to > 724 }
+		every_in_list = {
+			variable = pp_cplan_bzb_40
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 756 scope:pp_cplan_to > 740 }
+		every_in_list = {
+			variable = pp_cplan_bzb_41
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 772 scope:pp_cplan_to > 756 }
+		every_in_list = {
+			variable = pp_cplan_bzb_42
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 788 scope:pp_cplan_to > 772 }
+		every_in_list = {
+			variable = pp_cplan_bzb_43
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 804 scope:pp_cplan_to > 788 }
+		every_in_list = {
+			variable = pp_cplan_bzb_44
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 820 scope:pp_cplan_to > 804 }
+		every_in_list = {
+			variable = pp_cplan_bzb_45
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 836 scope:pp_cplan_to > 820 }
+		every_in_list = {
+			variable = pp_cplan_bzb_46
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 852 scope:pp_cplan_to > 836 }
+		every_in_list = {
+			variable = pp_cplan_bzb_47
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 868 scope:pp_cplan_to > 852 }
+		every_in_list = {
+			variable = pp_cplan_bzb_48
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 884 scope:pp_cplan_to > 868 }
+		every_in_list = {
+			variable = pp_cplan_bzb_49
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 900 scope:pp_cplan_to > 884 }
+		every_in_list = {
+			variable = pp_cplan_bzb_50
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 916 scope:pp_cplan_to > 900 }
+		every_in_list = {
+			variable = pp_cplan_bzb_51
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 932 scope:pp_cplan_to > 916 }
+		every_in_list = {
+			variable = pp_cplan_bzb_52
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 948 scope:pp_cplan_to > 932 }
+		every_in_list = {
+			variable = pp_cplan_bzb_53
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 964 scope:pp_cplan_to > 948 }
+		every_in_list = {
+			variable = pp_cplan_bzb_54
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 980 scope:pp_cplan_to > 964 }
+		every_in_list = {
+			variable = pp_cplan_bzb_55
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 996 scope:pp_cplan_to > 980 }
+		every_in_list = {
+			variable = pp_cplan_bzb_56
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 1012 scope:pp_cplan_to > 996 }
+		every_in_list = {
+			variable = pp_cplan_bzb_57
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 1028 scope:pp_cplan_to > 1012 }
+		every_in_list = {
+			variable = pp_cplan_bzb_58
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 1044 scope:pp_cplan_to > 1028 }
+		every_in_list = {
+			variable = pp_cplan_bzb_59
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 1060 scope:pp_cplan_to > 1044 }
+		every_in_list = {
+			variable = pp_cplan_bzb_60
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 1076 scope:pp_cplan_to > 1060 }
+		every_in_list = {
+			variable = pp_cplan_bzb_61
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 1092 scope:pp_cplan_to > 1076 }
+		every_in_list = {
+			variable = pp_cplan_bzb_62
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_from < 1108 scope:pp_cplan_to > 1092 }
+		every_in_list = {
+			variable = pp_cplan_bzb_63
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+	if = {
+		limit = { scope:pp_cplan_to > 1108 }
+		every_in_list = {
+			variable = pp_cplan_bzb_64
+			limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }
+			pp_cplan_business_turn_here = yes
+		}
+	}
+}
+
+# Location scope, once, when the location got its number (pp_cplan_seq, + 100): on the list of its block.
+pp_cplan_business_block = {
+	save_temporary_scope_as = pp_cplan_numbered
+	if = {
+		limit = { var:pp_cplan_seq <= 116 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_1 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 132 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_2 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 148 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_3 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 164 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_4 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 180 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_5 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 196 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_6 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 212 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_7 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 228 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_8 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 244 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_9 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 260 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_10 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 276 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_11 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 292 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_12 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 308 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_13 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 324 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_14 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 340 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_15 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 356 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_16 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 372 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_17 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 388 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_18 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 404 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_19 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 420 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_20 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 436 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_21 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 452 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_22 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 468 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_23 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 484 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_24 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 500 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_25 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 516 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_26 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 532 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_27 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 548 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_28 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 564 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_29 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 580 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_30 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 596 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_31 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 612 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_32 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 628 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_33 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 644 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_34 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 660 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_35 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 676 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_36 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 692 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_37 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 708 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_38 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 724 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_39 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 740 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_40 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 756 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_41 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 772 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_42 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 788 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_43 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 804 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_44 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 820 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_45 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 836 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_46 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 852 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_47 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 868 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_48 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 884 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_49 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 900 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_50 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 916 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_51 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 932 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_52 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 948 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_53 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 964 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_54 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 980 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_55 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 996 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_56 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 1012 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_57 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 1028 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_58 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 1044 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_59 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 1060 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_60 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 1076 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_61 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 1092 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_62 target = scope:pp_cplan_numbered } }
+	}
+	else_if = {
+		limit = { var:pp_cplan_seq <= 1108 }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_63 target = scope:pp_cplan_numbered } }
+	}
+	else = {
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_cplan_bzb_64 target = scope:pp_cplan_numbered } }
+	}
+}
+
 # ---- The market limit ----
 
 # Location scope, scope:pp_cplan_btype set: for a business type, the market limit's step $do$ with the type's main
@@ -6591,6 +7371,7 @@ pp_cplan_market_do = {
 
 # A market's centre location, at the end of the pass: what the pass counted for its market is gone.
 pp_cplan_market_clear = {
+	remove_variable = pp_cplan_uc_counted
 	remove_variable = pp_cplan_uc_alum
 	remove_variable = pp_cplan_uc_amber
 	remove_variable = pp_cplan_uc_beer
@@ -6665,6 +7446,908 @@ pp_cplan_market_clear = {
 	remove_variable = pp_cplan_uc_wild_game
 	remove_variable = pp_cplan_uc_wine
 	remove_variable = pp_cplan_uc_wool
+}
+
+# Building scope, in pp_cplan_market_load's one walk over a market (scope:pp_cplan_this_market = its centre,
+# scope:pp_cplan_uc_levels = this building's levels under construction): a business type adds its levels x one
+# level's output to its main good's count there. Other building types: nothing.
+pp_cplan_market_count_building = {
+	if = {
+		limit = { building_type = building_type:alum_quarry }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = alum out = 0.51 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:alum_works }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = alum out = 0.758 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:amber_collector }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = amber out = 0.13 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:amber_diggings }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = amber out = 0.256 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:brewery }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = beer out = 0.849 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:beer_workshop }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = beer out = 1.776 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:brewery_manufactory }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = beer out = 3.728 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:brewery_mill }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = beer out = 8.944 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:forest_village }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = beeswax out = 0.189 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:scriptorium }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = books out = 0.216 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:printing_press_shop }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = books out = 1.366 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:printing_manufactory }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = books out = 3.73 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:printing_mill }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = books out = 8.944 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:camel_herders }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = camels out = 0.246 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:camel_stud }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = camels out = 0.703 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:cannon_maker }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = cannons out = 0.816 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:cannon_workshop }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = cannons out = 1.776 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:cannon_foundry }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = cannons out = 3.737 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:cannons_factory }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = cannons out = 8.946 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:chili_plantation }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = chili out = 0.623 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:clay_pit }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = clay out = 1.476 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:clay_washmill }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = clay out = 1.478 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:rural_clothmaker }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = cloth out = 0.356 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:cloth_guild }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = cloth out = 0.706 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:cloth_workshop }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = cloth out = 1.502 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:cloth_manufactory }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = cloth out = 3.73 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:textile_mill }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = cloth out = 6.703 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:clove_grove }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = cloves out = 0.656 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:charcoal_maker }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = coal out = 0.629 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:improved_charcoal_maker }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = coal out = 0.909 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:coal_mine }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = coal out = 1.129 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:coal_mine_improved }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = coal out = 1.899 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:coal_mine_revolutions }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = coal out = 2.409 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:cocoa_grove }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = cocoa out = 0.731 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:managed_cocoa_grove }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = cocoa out = 1.485 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:coffee_grove }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = coffee out = 0.747 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:terraced_coffee_grove }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = coffee out = 1.563 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:copper_mine }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = copper out = 0.696 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:copper_mine_adit }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = copper out = 0.886 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:copper_mine_deep }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = copper out = 1.106 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:cotton_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = cotton out = 0.785 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:cotton_plantation }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = cotton out = 0.973 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:market_cotton_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = cotton out = 1.052 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:dyes_guild }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = dyes out = 0.304 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:dyes_workshop }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = dyes out = 0.404 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:dye_plantation }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = dyes out = 0.727 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:dyesworks }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = dyes out = 2.004 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:dyes_mill }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = dyes out = 4.004 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:elephant_kraal }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = elephants out = 0.116 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:fiber_crops_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = fiber_crops out = 0.284 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:fiber_dressing_yard }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = fiber_crops out = 0.752 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:fine_cloth_guild }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = fine_cloth out = 0.633 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:fine_cloth_workshop }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = fine_cloth out = 1.434 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:fine_cloth_manufactory }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = fine_cloth out = 4.483 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:fine_cloth_mill }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = fine_cloth out = 8.951 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:hand_cannon_guild }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = firearms out = 0.216 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:gun_smith }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = firearms out = 0.888 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:guns_workshop }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = firearms out = 1.846 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:firearms_manufactory }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = firearms out = 3.729 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:firearms_factory }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = firearms out = 8.943 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:fishing_village }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = fish out = 0.448 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:net_curing_yard }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = fish out = 0.658 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:ocean_fishery }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = fish out = 0.942 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:drift_net_fishery }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = fish out = 1.361 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:offshore_fishery }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = fish out = 3.298 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:fruit_orchard }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = fruit out = 0.244 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:nursery_orchard }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = fruit out = 0.748 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:maghreb_palm_irrigation }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = fruit out = 0.818 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:pomological_orchard }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = fruit out = 3.507 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:furniture_guild }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = furniture out = 0.706 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:furniture_workshop }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = furniture out = 1.503 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:furniture_manufactory }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = furniture out = 3.733 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:furniture_mill }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = furniture out = 8.954 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:gem_gravel_pit }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = gems out = 0.459 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:gem_sluice }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = gems out = 0.55 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:rural_glassmaker }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = glass out = 0.146 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:glass_guild }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = glass out = 0.706 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:glass_workshop }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = glass out = 1.504 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:glassworks }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = glass out = 3.74 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:glass_mill }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = glass out = 8.978 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:gold_diggings }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = goods_gold out = 0.302 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:gold_stamp_mill }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = goods_gold out = 0.362 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:horse_breeders }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = horses out = 0.38 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:stud_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = horses out = 0.703 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:incense_grove }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = incense out = 0.33 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:perfumery }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = incense out = 1.008 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:bog_iron_smelter }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = iron out = 0.313 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:bog_iron_smelter_blast_furnace }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = iron out = 0.413 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:iron_mine }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = iron out = 0.507 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:bog_iron_smelter_coke_blast_furnace }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = iron out = 0.509 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:iron_mine_improved }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = iron out = 0.817 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:iron_mine_deep }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = iron out = 0.923 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:ivory_hunting_camp }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = ivory out = 0.326 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:elephant_hunting_grounds }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = ivory out = 1.004 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:pounamou_carver }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = jewelry out = 0.204 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:jewelry_guild }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = jewelry out = 0.774 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:lacquerware_guild }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = lacquerware out = 0.704 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:lacquerware_manufactory }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = lacquerware out = 3.736 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:lead_mine }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = lead out = 0.729 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:lead_mine_bole_smelting }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = lead out = 1.051 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:lead_mine_cupola_smelting }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = lead out = 1.309 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:tannery }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = leather out = 0.706 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:managed_forest_village }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = leather out = 0.781 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:tanning_workshop }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = leather out = 1.503 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:tannery_manufactory }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = leather out = 3.734 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:tannery_mill }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = leather out = 8.955 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:legume_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = legumes out = 0.226 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:legume_farmstead }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = legumes out = 0.77 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:legume_rotations }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = legumes out = 1.185 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:legume_model_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = legumes out = 1.655 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:distillers_guild }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = liquor out = 0.708 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:distillers_workshop }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = liquor out = 1.503 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:distiller_manufactory }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = liquor out = 3.728 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:distiller_mill }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = liquor out = 8.94 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:cattle_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = livestock out = 0.151 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:cattle_farmstead }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = livestock out = 0.598 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:cattle_rotations }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = livestock out = 0.75 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:cattle_model_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = livestock out = 1.155 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:shoen }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = lumber out = 0.611 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:lumber_mill }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = lumber out = 1.699 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:water_sawmill }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = lumber out = 2.938 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:lumber_mill_improved }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = lumber out = 3.575 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:maize_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = maize out = 0.17 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:maize_farmstead }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = maize out = 0.77 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:maize_rotations }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = maize out = 1.175 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:maize_model_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = maize out = 1.665 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:marble_quarry }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = marble out = 0.375 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:marble_saw_yard }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = marble out = 0.434 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:mason }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = masonry out = 0.518 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:simplers_grove }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = medicaments out = 0.234 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:apothecary }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = medicaments out = 0.518 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:cinnabar_pit }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = mercury out = 0.519 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:quicksilver_retort }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = mercury out = 0.706 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:millet_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = millet out = 0.226 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:millet_farmstead }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = millet out = 0.782 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:millet_rotations }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = millet out = 1.175 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:millet_model_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = millet out = 1.665 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:naval_supplies_guild }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = naval_supplies out = 0.706 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:naval_supplies_workshop }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = naval_supplies out = 1.502 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:naval_supplies_manufactory }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = naval_supplies out = 3.729 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:naval_supplies_mill }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = naval_supplies out = 8.943 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:olive_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = olives out = 0.17 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:olive_farmstead }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = olives out = 0.77 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:olive_rotations }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = olives out = 1.175 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:olive_model_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = olives out = 1.665 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:paper_guild }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = paper out = 1.009 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:paper_workshop }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = paper out = 1.109 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:paper_manufactory }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = paper out = 2.009 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:paper_mill }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = paper out = 4.509 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:pearl_fishery }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = pearls out = 0.182 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:pepper_garden }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = pepper out = 0.556 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:managed_pepper_garden }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = pepper out = 0.848 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:porcelain_guild }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = porcelain out = 0.706 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:porcelain_manufactory }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = porcelain out = 3.735 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:potato_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = potato out = 0.17 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:potato_farmstead }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = potato out = 0.839 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:potato_rotations }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = potato out = 1.185 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:potato_model_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = potato out = 1.695 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:pottery_guild }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = pottery out = 0.718 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:pottery_workshop }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = pottery out = 1.508 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:pottery_manufactory }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = pottery out = 2.778 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:pottery_mill }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = pottery out = 7.238 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:rice_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = rice out = 0.17 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:rice_farmstead }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = rice out = 0.828 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:rice_rotations }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = rice out = 1.175 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:rice_model_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = rice out = 1.685 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:saffron_croft }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = saffron out = 0.378 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:saffron_kiln_croft }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = saffron out = 0.804 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:inland_saltworks }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = salt out = 0.317 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:salt_collector }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = salt out = 0.324 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:salt_mine }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = salt out = 0.374 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:salt_mine_improved }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = salt out = 0.55 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:engineered_brine_saltworks }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = salt out = 0.767 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:saltpeter_beds }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = saltpeter out = 0.331 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:saltpeter_guild }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = saltpeter out = 1.009 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:saltpeter_workshop }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = saltpeter out = 1.109 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:putrefaction_works }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = saltpeter out = 2.009 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:putrefaction_mill }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = saltpeter out = 4.009 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:sand_pit }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = sand out = 0.374 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:sand_washery }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = sand out = 0.817 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:sericulture_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = silk out = 0.204 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:regulated_sericulture_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = silk out = 0.303 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:silk_production_guild }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = silk out = 0.304 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:ablaq_palace }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = silk out = 0.354 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:silver_mine }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = silver out = 0.283 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:silver_mine_improved }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = silver out = 0.347 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:schwaz_mine }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = silver out = 1.003 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:slave_center }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = slaves_goods out = 1.006 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:slave_market }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = slaves_goods out = 2.006 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:steel_mill }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = steel out = 8.948 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:stone_quarry }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = stone out = 0.356 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:stone_quarry_improved }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = stone out = 1.828 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:sugarcane_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = sugar out = 0.784 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:trapiche_sugarcane_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = sugar out = 0.841 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:sugar_plantation }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = sugar out = 0.973 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:tar_kiln }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = tar out = 1.009 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:tea_garden }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = tea out = 0.693 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:tea_sorting_garden }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = tea out = 2.116 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:tin_streamworks }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = tin out = 0.74 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:tin_stamping_mill }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = tin out = 1.059 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:tobacco_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = tobacco out = 0.807 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:tobacco_plantation }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = tobacco out = 0.973 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:market_tobacco_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = tobacco out = 1.045 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:market_village }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = tools out = 0.291 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:tatara }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = tools out = 0.361 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:tools_guild }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = tools out = 0.711 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:tools_workshop }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = tools out = 1.503 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:iron_foundry }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = tools out = 3.709 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:iron_mill }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = tools out = 8.876 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:weapon_guild }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = weaponry out = 0.706 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:weapon_workshop }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = weaponry out = 1.503 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:weapon_manufactory }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = weaponry out = 3.736 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:weapon_factory }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = weaponry out = 8.942 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:wheat_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = wheat out = 0.226 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:wheat_farmstead }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = wheat out = 0.828 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:wheat_rotations }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = wheat out = 1.175 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:wheat_model_farm }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = wheat out = 1.685 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:eng_royal_forest }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = wild_game out = 1.018 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:vineyard_estate }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = wine out = 0.331 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:winery }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = wine out = 1.009 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:winery_manufactory }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = wine out = 2.009 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:sheep_farms }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = wool out = 0.128 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:hurdled_sheepcotes }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = wool out = 0.318 } }
+	}
+	else_if = {
+		limit = { building_type = building_type:enclosed_sheep_walks }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = wool out = 1.548 } }
+	}
 }
 
 # ---- Budgets that save (pp_cplan_run; the amounts are script values, pp_cplan_purse_next_<why> ...) ----

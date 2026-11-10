@@ -185,11 +185,25 @@ def test_only_the_refresh_scores_business_types_and_only_for_a_few_sites() -> No
     assert pick.count("can_build_building = building_type:") >= 200
     callers = [name for name in re.findall(r"^(\w+) = \{", effects, re.MULTILINE)
                if "pp_cplan_business_pick = yes" in _effect(effects, name)]
-    assert sorted(callers) == ["pp_cplan_business_here", "pp_cplan_business_refresh"]
+    assert sorted(callers) == ["pp_cplan_business_here", "pp_cplan_business_turn_here"]  # the refresh, through its walk over the blocks
     refresh = _effect(effects, "pp_cplan_business_refresh")
-    assert len(WALK.findall(refresh)) == 1 and "every_owned_location = {" in refresh
-    assert ("limit = { pp_cplan_business_turn = yes }" in refresh
-            and refresh.index("limit = { pp_cplan_business_turn = yes }") < refresh.index("pp_cplan_business_pick = yes"))
+    # no walk over the country in a normal pass (in game 2026-11-10: that walk, two comparisons a location, was 11 of
+    # the refresh's 21 ms): the locations are numbered, and put on the list of their block of the order, only in the
+    # months of the country's can-build check; the pass reads the lists of the blocks its numbers fall in
+    every_pass = refresh[refresh.index("save_temporary_scope_value_as = { name = pp_cplan_from"):]
+    assert not WALK.findall(every_pass) and "pp_cplan_business_walk = yes" in every_pass
+    seldom = refresh[:refresh.index("save_temporary_scope_value_as = { name = pp_cplan_from")]
+    assert len(WALK.findall(seldom)) == 2 and "pp_cplan_business_block = yes" in seldom
+    assert seldom.index("pp_cplan_looks_business_types = yes") < seldom.index("every_owned_location = {")
+    generated_effects = _read(MOD / cp.EFFECTS)
+    walk = _effect(generated_effects, "pp_cplan_business_walk")
+    assert walk.count("every_in_list = {") == cp.BUSINESS_BLOCKS and not WALK.findall(walk)
+    assert walk.count("limit = { pp_cplan_business_turn = yes owner ?= scope:pp_cplan_country }") == cp.BUSINESS_BLOCKS
+    assert walk.count("pp_cplan_business_turn_here = yes") == cp.BUSINESS_BLOCKS
+    block = _effect(generated_effects, "pp_cplan_business_block")
+    for n in range(1, cp.BUSINESS_BLOCKS + 1):
+        assert f"variable = pp_cplan_bzb_{n}\n" in walk and f"name = pp_cplan_bzb_{n} target = scope:pp_cplan_numbered" in block
+    assert "limit = { pp_cplan_business_site = yes }" in _effect(effects, "pp_cplan_business_turn_here")
     # the country's part of the can-build check: not every pass
     assert "pp_cplan_looks_business_types = yes" in refresh[:refresh.index("pp_cplan_business_types = yes")]
     # the look: the stored picks ranked (no scoring in the limit or the order), the best few tried

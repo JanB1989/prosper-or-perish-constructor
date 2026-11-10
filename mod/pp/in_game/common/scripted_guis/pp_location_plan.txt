@@ -1,6 +1,6 @@
 ﻿# Prosper or Perish - Location plan buttons (gui/pp_location_plan*.gui, the location window's plan button and its row
 # "Also build here"). They set the location's marks: what the Construction Plan also builds there, and what the window
-# and the map mode show. scope:pp_key = the item's flag (a good or a building category).
+# and the map mode show. scope:pp_key = the item's flag (a good); scope:pp_bt = a building type (a building's mark).
 
 # Location scope: show this location in the Location Plan window.
 pp_lplan_select = {
@@ -15,6 +15,25 @@ pp_lplan_toggle = {
 	scope = location
 	effect = {
 		pp_lplan_toggle_switch = yes
+	}
+}
+
+# Location scope, scope:pp_bt = a building type: mark or unmark that building here (the toggle on a building's entry
+# in the location window and the build panel, and the tiles of the row "Also build here").
+pp_lplan_bmark = {
+	scope = location
+	effect = {
+		pp_lplan_bflip = yes
+	}
+}
+
+# Location scope, scope:pp_bt = a building type: shown while that building is marked here (the GUI asks it with
+# IsShown: it cannot look into a variable list itself). No effect.
+pp_lplan_bmarked = {
+	scope = location
+	is_shown = {
+		exists = scope:pp_bt
+		is_target_in_variable_list = { name = pp_lplan_b target = scope:pp_bt }
 	}
 }
 

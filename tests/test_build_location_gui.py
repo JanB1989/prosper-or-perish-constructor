@@ -51,6 +51,39 @@ def test_six_slot_row_fits_the_panel():
     assert row <= tool.BUILD_ROW_WIDTH <= tool.BUILD_PANEL_WIDTH - 45   # list margins, scrollbar (vanilla 570 -> 525)
 
 
+def test_construction_plan_mark_on_the_rows_without_an_own_building():
+    """Jan 2026-11-10: mark a building itself, the way vanilla's auto expand toggles a building. The build panel's
+    rows of the player's locations without an own building of the type carry one checkbox, in a column as wide as
+    vanilla's own-building checkboxes (subsidize, open, auto expand), which those rows do not show: no row gets wider
+    (test_six_slot_row_fits_the_panel counts that column once). Nothing of vanilla's is changed: the port inserts one
+    block."""
+    from prosper_or_perish_constructor import location_plan as lp
+
+    tool = _tool()
+    text = _mod_file()
+    assert text.count(lp.BUILDING_MARK_COMMENT) == 1
+    block = lp.build_panel_mark("\t\t\t\t")
+    assert block in text
+    assert text.replace("\n\n" + block.rstrip("\n"), "").count("ToggleAutoExpandBuilding(Building.Self)") == 1
+    own = f'visible = "[{lp.BUILD_PANEL_OWN}]"'
+    column = "vbox = {\n\t\t\t\t\tmargin = { 5 0 }\n\t\t\t\t\t" + own  # vanilla's column of own-building checkboxes
+    assert text.count(column) == 1
+    assert text.index(column) < text.index(lp.BUILDING_MARK_COMMENT) < text.index("# PP: production-method slots")
+    assert f'visible = "[And3(Not({lp.BUILD_PANEL_OWN}), LocationToBuildItem.GetLocation.GetOwner.IsPlayer, Not(IsObserving))]"' in block
+    for needle in ("margin = { 5 0 }", "button_square_checkbox = {", "size = { 20 16 }", "click_type = left",
+                   "GetScriptedGui('pp_lplan_bmarked').IsShown(", "GetScriptedGui('pp_lplan_bmark').Execute(",
+                   "LocationToBuildItem.GetLocation.MakeScope", "LocationToBuildItem.GetBuildingType.MakeScope",
+                   "'PP_LPLAN_BMARK_ON', 'PP_LPLAN_BMARK_OFF'"):
+        assert needle in block, needle
+    assert block.count("{") == block.count("}") and "datamodel" not in block
+    # the port without the step is the file without the block
+    vanilla = LoadOrderConfig.load(ROOT / "constructor.load_order.toml").vanilla_root / "game"
+    source = tool._read(vanilla / tool.GUI / tool.BUILD_LOCATION)
+    assert lp.BUILDING_MARK_COMMENT not in source
+    marked = tool._construction_plan_mark(source, "vanilla build panel")
+    assert marked.replace("\n\n" + lp.build_panel_mark("\t\t\t\t").rstrip("\n"), "") == source
+
+
 def test_slot_columns_cover_six_slots_two_each():
     text = _mod_file()
     for model in ("LocationToBuildItem.GetBuildingSlots", "Building.GetProductionMethods"):

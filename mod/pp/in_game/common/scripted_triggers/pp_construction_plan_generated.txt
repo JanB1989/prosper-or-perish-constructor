@@ -392,7 +392,8 @@ pp_cplan_food_queued = {
 }
 
 # Any scope: the market limit holds for the constructions of the rule group with this code (the Businesses
-# group, profile rules and marks; the food rule builds for hunger, the others no business types of their own).
+# group and profile rules; a location's marks are forced: scope:pp_cplan_forced; the food rule builds for hunger,
+# the others no business types of their own).
 pp_cplan_limits_market_105 = {
 	always = yes
 }

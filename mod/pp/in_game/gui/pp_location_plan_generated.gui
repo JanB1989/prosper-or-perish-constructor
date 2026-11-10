@@ -615,69 +615,25 @@ types PPLocationPlanGenerated
 			icon = { visible = "[Not(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lplan_done_silver'), '(CFixedPoint)1'))]" size = { 36 36 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.75 0.25 0.2 0.9 } }
 			icon = { size = { 30 30 } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_silver.dds" }
 		}
-		widget = {
-			visible = "[Location.MakeScope.Var('pp_lplan_c_trade_category').IsSet]"
-			size = { 36 36 }
-			tooltip = "PP_LPLAN_STATE_TRADE_CATEGORY"
-			icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lplan_done_trade_category'), '(CFixedPoint)1')]" size = { 36 36 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.25 0.7 0.3 0.9 } }
-			icon = { visible = "[Not(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lplan_done_trade_category'), '(CFixedPoint)1'))]" size = { 36 36 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.75 0.25 0.2 0.9 } }
-			icon = { size = { 30 30 } parentanchor = center texture = "gfx/interface/icons/building_categories/trade_category.dds" }
-		}
-		widget = {
-			visible = "[Location.MakeScope.Var('pp_lplan_c_government_category').IsSet]"
-			size = { 36 36 }
-			tooltip = "PP_LPLAN_STATE_GOVERNMENT_CATEGORY"
-			icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lplan_done_government_category'), '(CFixedPoint)1')]" size = { 36 36 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.25 0.7 0.3 0.9 } }
-			icon = { visible = "[Not(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lplan_done_government_category'), '(CFixedPoint)1'))]" size = { 36 36 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.75 0.25 0.2 0.9 } }
-			icon = { size = { 30 30 } parentanchor = center texture = "gfx/interface/icons/building_categories/government_category.dds" }
-		}
-		widget = {
-			visible = "[Location.MakeScope.Var('pp_lplan_c_military_category').IsSet]"
-			size = { 36 36 }
-			tooltip = "PP_LPLAN_STATE_MILITARY_CATEGORY"
-			icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lplan_done_military_category'), '(CFixedPoint)1')]" size = { 36 36 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.25 0.7 0.3 0.9 } }
-			icon = { visible = "[Not(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lplan_done_military_category'), '(CFixedPoint)1'))]" size = { 36 36 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.75 0.25 0.2 0.9 } }
-			icon = { size = { 30 30 } parentanchor = center texture = "gfx/interface/icons/building_categories/military_category.dds" }
-		}
-		widget = {
-			visible = "[Location.MakeScope.Var('pp_lplan_c_defense_category').IsSet]"
-			size = { 36 36 }
-			tooltip = "PP_LPLAN_STATE_DEFENSE_CATEGORY"
-			icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lplan_done_defense_category'), '(CFixedPoint)1')]" size = { 36 36 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.25 0.7 0.3 0.9 } }
-			icon = { visible = "[Not(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lplan_done_defense_category'), '(CFixedPoint)1'))]" size = { 36 36 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.75 0.25 0.2 0.9 } }
-			icon = { size = { 30 30 } parentanchor = center texture = "gfx/interface/icons/building_categories/defense_category.dds" }
-		}
-		widget = {
-			visible = "[Location.MakeScope.Var('pp_lplan_c_religious_category').IsSet]"
-			size = { 36 36 }
-			tooltip = "PP_LPLAN_STATE_RELIGIOUS_CATEGORY"
-			icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lplan_done_religious_category'), '(CFixedPoint)1')]" size = { 36 36 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.25 0.7 0.3 0.9 } }
-			icon = { visible = "[Not(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lplan_done_religious_category'), '(CFixedPoint)1'))]" size = { 36 36 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.75 0.25 0.2 0.9 } }
-			icon = { size = { 30 30 } parentanchor = center texture = "gfx/interface/icons/building_categories/religious_category.dds" }
-		}
-		widget = {
-			visible = "[Location.MakeScope.Var('pp_lplan_c_cultural_category').IsSet]"
-			size = { 36 36 }
-			tooltip = "PP_LPLAN_STATE_CULTURAL_CATEGORY"
-			icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lplan_done_cultural_category'), '(CFixedPoint)1')]" size = { 36 36 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.25 0.7 0.3 0.9 } }
-			icon = { visible = "[Not(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lplan_done_cultural_category'), '(CFixedPoint)1'))]" size = { 36 36 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.75 0.25 0.2 0.9 } }
-			icon = { size = { 30 30 } parentanchor = center texture = "gfx/interface/icons/building_categories/cultural_category.dds" }
-		}
-		widget = {
-			visible = "[Location.MakeScope.Var('pp_lplan_c_naval_category').IsSet]"
-			size = { 36 36 }
-			tooltip = "PP_LPLAN_STATE_NAVAL_CATEGORY"
-			icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lplan_done_naval_category'), '(CFixedPoint)1')]" size = { 36 36 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.25 0.7 0.3 0.9 } }
-			icon = { visible = "[Not(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lplan_done_naval_category'), '(CFixedPoint)1'))]" size = { 36 36 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.75 0.25 0.2 0.9 } }
-			icon = { size = { 30 30 } parentanchor = center texture = "gfx/interface/icons/building_categories/naval_category.dds" }
-		}
-		widget = {
-			visible = "[Location.MakeScope.Var('pp_lplan_c_infrastructure_category').IsSet]"
-			size = { 36 36 }
-			tooltip = "PP_LPLAN_STATE_INFRASTRUCTURE_CATEGORY"
-			icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lplan_done_infrastructure_category'), '(CFixedPoint)1')]" size = { 36 36 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.25 0.7 0.3 0.9 } }
-			icon = { visible = "[Not(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lplan_done_infrastructure_category'), '(CFixedPoint)1'))]" size = { 36 36 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.75 0.25 0.2 0.9 } }
-			icon = { size = { 30 30 } parentanchor = center texture = "gfx/interface/icons/building_categories/infrastructure_category.dds" }
+	}
+
+	# The marked buildings of the location (the list pp_lplan_b): click one to take its mark off.
+	type pp_lplan_bstrip = flowcontainer {
+		direction = horizontal
+		spacing = 3
+		datamodel = "[Location.MakeScope.GetList('pp_lplan_b')]"
+		item = {
+			widget = {
+				size = { 36 36 }
+				icon = { size = { 36 36 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				button = {
+					size = { 30 30 }
+					parentanchor = center
+					texture = "[GetBuildingIcon(Scope.GetBuildingType)]"
+					tooltip = "PP_LPLAN_BMARK_TILE"
+					onclick = "[GetScriptedGui('pp_lplan_bmark').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_bt', Scope.GetBuildingType.MakeScope).End)]"
+				}
+			}
 		}
 	}
 
@@ -1654,108 +1610,6 @@ types PPLocationPlanGenerated
 					alpha = "[Select_float(Location.MakeScope.Var('pp_lplan_g_silver').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_LPLAN_PICK_SILVER"
 					onclick = "[GetScriptedGui('pp_lplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('silver')).End)]"
-				}
-			}
-			expand = {}
-		}
-		pp_lplan_group_title = { text = "PP_LPLAN_GROUP_BUILDINGS" }
-		hbox = {
-			layoutpolicy_horizontal = expanding
-			spacing = 3
-			widget = {
-				size = { 40 40 }
-				icon = { visible = "[Location.MakeScope.Var('pp_lplan_c_trade_category').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
-				button = {
-					size = { 34 34 }
-					parentanchor = center
-					texture = "gfx/interface/icons/building_categories/trade_category.dds"
-					alpha = "[Select_float(Location.MakeScope.Var('pp_lplan_c_trade_category').IsSet, '(float)1.0', '(float)0.45')]"
-					tooltip = "PP_LPLAN_PICK_TRADE_CATEGORY"
-					onclick = "[GetScriptedGui('pp_lplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('trade_category')).End)]"
-				}
-			}
-			widget = {
-				size = { 40 40 }
-				icon = { visible = "[Location.MakeScope.Var('pp_lplan_c_government_category').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
-				button = {
-					size = { 34 34 }
-					parentanchor = center
-					texture = "gfx/interface/icons/building_categories/government_category.dds"
-					alpha = "[Select_float(Location.MakeScope.Var('pp_lplan_c_government_category').IsSet, '(float)1.0', '(float)0.45')]"
-					tooltip = "PP_LPLAN_PICK_GOVERNMENT_CATEGORY"
-					onclick = "[GetScriptedGui('pp_lplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('government_category')).End)]"
-				}
-			}
-			widget = {
-				size = { 40 40 }
-				icon = { visible = "[Location.MakeScope.Var('pp_lplan_c_military_category').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
-				button = {
-					size = { 34 34 }
-					parentanchor = center
-					texture = "gfx/interface/icons/building_categories/military_category.dds"
-					alpha = "[Select_float(Location.MakeScope.Var('pp_lplan_c_military_category').IsSet, '(float)1.0', '(float)0.45')]"
-					tooltip = "PP_LPLAN_PICK_MILITARY_CATEGORY"
-					onclick = "[GetScriptedGui('pp_lplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('military_category')).End)]"
-				}
-			}
-			widget = {
-				size = { 40 40 }
-				icon = { visible = "[Location.MakeScope.Var('pp_lplan_c_defense_category').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
-				button = {
-					size = { 34 34 }
-					parentanchor = center
-					texture = "gfx/interface/icons/building_categories/defense_category.dds"
-					alpha = "[Select_float(Location.MakeScope.Var('pp_lplan_c_defense_category').IsSet, '(float)1.0', '(float)0.45')]"
-					tooltip = "PP_LPLAN_PICK_DEFENSE_CATEGORY"
-					onclick = "[GetScriptedGui('pp_lplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('defense_category')).End)]"
-				}
-			}
-			widget = {
-				size = { 40 40 }
-				icon = { visible = "[Location.MakeScope.Var('pp_lplan_c_religious_category').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
-				button = {
-					size = { 34 34 }
-					parentanchor = center
-					texture = "gfx/interface/icons/building_categories/religious_category.dds"
-					alpha = "[Select_float(Location.MakeScope.Var('pp_lplan_c_religious_category').IsSet, '(float)1.0', '(float)0.45')]"
-					tooltip = "PP_LPLAN_PICK_RELIGIOUS_CATEGORY"
-					onclick = "[GetScriptedGui('pp_lplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('religious_category')).End)]"
-				}
-			}
-			widget = {
-				size = { 40 40 }
-				icon = { visible = "[Location.MakeScope.Var('pp_lplan_c_cultural_category').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
-				button = {
-					size = { 34 34 }
-					parentanchor = center
-					texture = "gfx/interface/icons/building_categories/cultural_category.dds"
-					alpha = "[Select_float(Location.MakeScope.Var('pp_lplan_c_cultural_category').IsSet, '(float)1.0', '(float)0.45')]"
-					tooltip = "PP_LPLAN_PICK_CULTURAL_CATEGORY"
-					onclick = "[GetScriptedGui('pp_lplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('cultural_category')).End)]"
-				}
-			}
-			widget = {
-				size = { 40 40 }
-				icon = { visible = "[Location.MakeScope.Var('pp_lplan_c_naval_category').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
-				button = {
-					size = { 34 34 }
-					parentanchor = center
-					texture = "gfx/interface/icons/building_categories/naval_category.dds"
-					alpha = "[Select_float(Location.MakeScope.Var('pp_lplan_c_naval_category').IsSet, '(float)1.0', '(float)0.45')]"
-					tooltip = "PP_LPLAN_PICK_NAVAL_CATEGORY"
-					onclick = "[GetScriptedGui('pp_lplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('naval_category')).End)]"
-				}
-			}
-			widget = {
-				size = { 40 40 }
-				icon = { visible = "[Location.MakeScope.Var('pp_lplan_c_infrastructure_category').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
-				button = {
-					size = { 34 34 }
-					parentanchor = center
-					texture = "gfx/interface/icons/building_categories/infrastructure_category.dds"
-					alpha = "[Select_float(Location.MakeScope.Var('pp_lplan_c_infrastructure_category').IsSet, '(float)1.0', '(float)0.45')]"
-					tooltip = "PP_LPLAN_PICK_INFRASTRUCTURE_CATEGORY"
-					onclick = "[GetScriptedGui('pp_lplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('infrastructure_category')).End)]"
 				}
 			}
 			expand = {}

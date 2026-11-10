@@ -80,18 +80,11 @@ pp_lplan_toggle_switch = {
 		flag:gems = { pp_lplan_flip = { v = g_gems } }
 		flag:goods_gold = { pp_lplan_flip = { v = g_goods_gold } }
 		flag:silver = { pp_lplan_flip = { v = g_silver } }
-		flag:trade_category = { pp_lplan_flip = { v = c_trade_category } }
-		flag:government_category = { pp_lplan_flip = { v = c_government_category } }
-		flag:military_category = { pp_lplan_flip = { v = c_military_category } }
-		flag:defense_category = { pp_lplan_flip = { v = c_defense_category } }
-		flag:religious_category = { pp_lplan_flip = { v = c_religious_category } }
-		flag:cultural_category = { pp_lplan_flip = { v = c_cultural_category } }
-		flag:naval_category = { pp_lplan_flip = { v = c_naval_category } }
-		flag:infrastructure_category = { pp_lplan_flip = { v = c_infrastructure_category } }
 	}
 }
 
-# Location scope: the plan emptied (every mark, its state and the payback it found).
+# Location scope: the plan emptied (every marked good with its state and the payback it found, the marked
+# buildings, and what an older save marked).
 pp_lplan_clear_all = {
 	remove_variable = pp_lplan_g_camels
 	remove_variable = pp_lplan_st_g_camels
@@ -345,11 +338,105 @@ pp_lplan_clear_all = {
 	remove_variable = pp_lplan_c_infrastructure_category
 	remove_variable = pp_lplan_st_c_infrastructure_category
 	remove_variable = pp_lplan_est_c_infrastructure_category
+	clear_variable_list = pp_lplan_b
 	remove_variable = pp_lplan_n
 }
 
-# Any scope, never run (pp_lplan_select calls it under always = no): declares the flags the window passes and
-# reads the mark states only the GUI reads, so the script check logs no 'used but never set' line for them.
+# Location scope (a location with marks, at the Locations group's look): the marks of a building category go
+# (a save from before 2026-11-10 evening; a mark is a good or a building now), quietly, each off the count.
+pp_lplan_drop_categories = {
+	if = {
+		limit = { has_variable = pp_lplan_c_trade_category }
+		remove_variable = pp_lplan_c_trade_category
+		remove_variable = pp_lplan_st_c_trade_category
+		remove_variable = pp_lplan_est_c_trade_category
+		if = {
+			limit = { has_variable = pp_lplan_n }
+			change_variable = { name = pp_lplan_n subtract = 1 }
+		}
+	}
+	if = {
+		limit = { has_variable = pp_lplan_c_government_category }
+		remove_variable = pp_lplan_c_government_category
+		remove_variable = pp_lplan_st_c_government_category
+		remove_variable = pp_lplan_est_c_government_category
+		if = {
+			limit = { has_variable = pp_lplan_n }
+			change_variable = { name = pp_lplan_n subtract = 1 }
+		}
+	}
+	if = {
+		limit = { has_variable = pp_lplan_c_military_category }
+		remove_variable = pp_lplan_c_military_category
+		remove_variable = pp_lplan_st_c_military_category
+		remove_variable = pp_lplan_est_c_military_category
+		if = {
+			limit = { has_variable = pp_lplan_n }
+			change_variable = { name = pp_lplan_n subtract = 1 }
+		}
+	}
+	if = {
+		limit = { has_variable = pp_lplan_c_defense_category }
+		remove_variable = pp_lplan_c_defense_category
+		remove_variable = pp_lplan_st_c_defense_category
+		remove_variable = pp_lplan_est_c_defense_category
+		if = {
+			limit = { has_variable = pp_lplan_n }
+			change_variable = { name = pp_lplan_n subtract = 1 }
+		}
+	}
+	if = {
+		limit = { has_variable = pp_lplan_c_religious_category }
+		remove_variable = pp_lplan_c_religious_category
+		remove_variable = pp_lplan_st_c_religious_category
+		remove_variable = pp_lplan_est_c_religious_category
+		if = {
+			limit = { has_variable = pp_lplan_n }
+			change_variable = { name = pp_lplan_n subtract = 1 }
+		}
+	}
+	if = {
+		limit = { has_variable = pp_lplan_c_cultural_category }
+		remove_variable = pp_lplan_c_cultural_category
+		remove_variable = pp_lplan_st_c_cultural_category
+		remove_variable = pp_lplan_est_c_cultural_category
+		if = {
+			limit = { has_variable = pp_lplan_n }
+			change_variable = { name = pp_lplan_n subtract = 1 }
+		}
+	}
+	if = {
+		limit = { has_variable = pp_lplan_c_naval_category }
+		remove_variable = pp_lplan_c_naval_category
+		remove_variable = pp_lplan_st_c_naval_category
+		remove_variable = pp_lplan_est_c_naval_category
+		if = {
+			limit = { has_variable = pp_lplan_n }
+			change_variable = { name = pp_lplan_n subtract = 1 }
+		}
+	}
+	if = {
+		limit = { has_variable = pp_lplan_c_infrastructure_category }
+		remove_variable = pp_lplan_c_infrastructure_category
+		remove_variable = pp_lplan_st_c_infrastructure_category
+		remove_variable = pp_lplan_est_c_infrastructure_category
+		if = {
+			limit = { has_variable = pp_lplan_n }
+			change_variable = { name = pp_lplan_n subtract = 1 }
+		}
+	}
+	if = {
+		limit = {
+			has_variable = pp_lplan_n
+			var:pp_lplan_n < 100.5
+		}
+		remove_variable = pp_lplan_n
+	}
+}
+
+# Any scope, never run (pp_lplan_select calls it under always = no): declares the flags the window passes, sets
+# the marks only an older save holds (they are only ever removed) and reads the mark states only the GUI reads,
+# so the script check logs no 'used but never set' line for them.
 pp_lplan_declare_flags = {
 	set_variable = { name = pp_lplan_flag value = flag:camels }
 	set_variable = { name = pp_lplan_flag value = flag:elephants }
@@ -427,14 +514,30 @@ pp_lplan_declare_flags = {
 	set_variable = { name = pp_lplan_flag value = flag:gems }
 	set_variable = { name = pp_lplan_flag value = flag:goods_gold }
 	set_variable = { name = pp_lplan_flag value = flag:silver }
-	set_variable = { name = pp_lplan_flag value = flag:trade_category }
-	set_variable = { name = pp_lplan_flag value = flag:government_category }
-	set_variable = { name = pp_lplan_flag value = flag:military_category }
-	set_variable = { name = pp_lplan_flag value = flag:defense_category }
-	set_variable = { name = pp_lplan_flag value = flag:religious_category }
-	set_variable = { name = pp_lplan_flag value = flag:cultural_category }
-	set_variable = { name = pp_lplan_flag value = flag:naval_category }
-	set_variable = { name = pp_lplan_flag value = flag:infrastructure_category }
+	set_variable = { name = pp_lplan_c_trade_category value = 100 }
+	set_variable = { name = pp_lplan_st_c_trade_category value = 100 }
+	set_variable = { name = pp_lplan_est_c_trade_category value = 100 }
+	set_variable = { name = pp_lplan_c_government_category value = 100 }
+	set_variable = { name = pp_lplan_st_c_government_category value = 100 }
+	set_variable = { name = pp_lplan_est_c_government_category value = 100 }
+	set_variable = { name = pp_lplan_c_military_category value = 100 }
+	set_variable = { name = pp_lplan_st_c_military_category value = 100 }
+	set_variable = { name = pp_lplan_est_c_military_category value = 100 }
+	set_variable = { name = pp_lplan_c_defense_category value = 100 }
+	set_variable = { name = pp_lplan_st_c_defense_category value = 100 }
+	set_variable = { name = pp_lplan_est_c_defense_category value = 100 }
+	set_variable = { name = pp_lplan_c_religious_category value = 100 }
+	set_variable = { name = pp_lplan_st_c_religious_category value = 100 }
+	set_variable = { name = pp_lplan_est_c_religious_category value = 100 }
+	set_variable = { name = pp_lplan_c_cultural_category value = 100 }
+	set_variable = { name = pp_lplan_st_c_cultural_category value = 100 }
+	set_variable = { name = pp_lplan_est_c_cultural_category value = 100 }
+	set_variable = { name = pp_lplan_c_naval_category value = 100 }
+	set_variable = { name = pp_lplan_st_c_naval_category value = 100 }
+	set_variable = { name = pp_lplan_est_c_naval_category value = 100 }
+	set_variable = { name = pp_lplan_c_infrastructure_category value = 100 }
+	set_variable = { name = pp_lplan_st_c_infrastructure_category value = 100 }
+	set_variable = { name = pp_lplan_est_c_infrastructure_category value = 100 }
 	if = {
 		limit = {
 			OR = {
@@ -590,22 +693,6 @@ pp_lplan_declare_flags = {
 				has_variable = pp_lplan_est_g_goods_gold
 				has_variable = pp_lplan_st_g_silver
 				has_variable = pp_lplan_est_g_silver
-				has_variable = pp_lplan_st_c_trade_category
-				has_variable = pp_lplan_est_c_trade_category
-				has_variable = pp_lplan_st_c_government_category
-				has_variable = pp_lplan_est_c_government_category
-				has_variable = pp_lplan_st_c_military_category
-				has_variable = pp_lplan_est_c_military_category
-				has_variable = pp_lplan_st_c_defense_category
-				has_variable = pp_lplan_est_c_defense_category
-				has_variable = pp_lplan_st_c_religious_category
-				has_variable = pp_lplan_est_c_religious_category
-				has_variable = pp_lplan_st_c_cultural_category
-				has_variable = pp_lplan_est_c_cultural_category
-				has_variable = pp_lplan_st_c_naval_category
-				has_variable = pp_lplan_est_c_naval_category
-				has_variable = pp_lplan_st_c_infrastructure_category
-				has_variable = pp_lplan_est_c_infrastructure_category
 			}
 		}
 		remove_variable = pp_lplan_flag

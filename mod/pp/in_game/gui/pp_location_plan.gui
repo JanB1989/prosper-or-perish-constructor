@@ -2,9 +2,10 @@
 # (gui/scripted_widgets/pp_location_plan.txt), so no vanilla window is overridden; opened by the plan button in the
 # location window's header (location_plan.py patches it in) and by the round button of the location window's row "Also
 # build here". The player marks what the location should produce or have; the Construction Plan builds the marked
-# items there (pp_location_profiles.txt, pp_lplan_mark). The picker grid and the strip of marked icons are generated
-# (pp_location_plan_generated.gui; their tooltips carry each mark's state after the last monthly pass); the map mode
-# pp_location_plan shows the marks as icons. Shown only to a player who plays a country.
+# items there, forced (pp_location_profiles.txt, pp_lplan_location_turn). The picker grid (goods), the strip of marked
+# goods and the strip of marked buildings are generated (pp_location_plan_generated.gui; a goods tooltip carries the
+# mark's state after the last look); the map mode pp_location_plan shows the marked goods as icons. Shown only to a
+# player who plays a country.
 
 types PPLocationPlan
 {
@@ -105,6 +106,10 @@ window = {
 						text = "PP_LPLAN_NOTHING_YET"
 					}
 					pp_lplan_strip = {
+						maximumsize = { 500 -1 }
+					}
+					# the marked buildings (marked on a building's own entry: location window, build panel)
+					pp_lplan_bstrip = {
 						maximumsize = { 500 -1 }
 					}
 

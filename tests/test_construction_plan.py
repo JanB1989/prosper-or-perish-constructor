@@ -753,11 +753,14 @@ def test_construction_goods_cover_months_of_draw() -> None:
 
 
 def test_profile_pass_gives_every_location_a_turn() -> None:
-    """Test world 2026-11-08: in the list's own order the profile assigned last built nothing in ten years."""
+    """Test world 2026-11-08: in the list's own order the profile assigned last built nothing in ten years. Since
+    2026-11-10 the locations take turns (tests/test_location_profiles.py, test_locations_take_turns); fewest building
+    levels first always served the same places."""
     run = _effect(_read(PROFILE_EFFECTS), "pp_lprof_look")
     assert "ordered_in_list = {" in run and "order_by = pp_lprof_turn" in run
     assert "every_in_list" not in run.split("ordered_in_list")[1]
-    assert "subtract = total_building_levels" in _effect(_read(VALUES), "pp_lprof_turn")
+    turn = _effect(_read(VALUES), "pp_lprof_turn")
+    assert "subtract = var:pp_lprof_seq" in turn and "total_building_levels" not in turn
 
 
 def test_granary_before_kitchen_while_due() -> None:

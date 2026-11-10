@@ -11,7 +11,11 @@ Three sections, all off until the player ticks something; nothing is kept betwee
 * Public buildings: a tile per building of ``[construction_plan_country] public_buildings`` (a building with later
   tiers, ``obsolete = <older tier>``, is one tile: the plan builds the highest tier the country can build and never
   where a tier of the line stands). Ticked types get one level in every owned location that can have it, whose maximum
-  control reaches the player's line, highest control first.
+  control reaches the player's line, highest control first. A booster, a building whose modifier does nothing but
+  raise goods' output in its location (Sawmill, Windmill, Local Smelters, Terraces; read from its own
+  ``local_<good>_output_modifier`` lines), only where the location makes one of those goods: its raw material, or a
+  standing building that produces it (Jan 2026-11-10; no setting, the tile's tooltip says it; a player who wants one
+  elsewhere marks the building there, location_plan.py).
 * Towns and cities: rural settlements to towns (from the player's population line) and towns to cities, where the
   rank's own conditions pass (the rank below, the game's population minimum, no modifier that forbids it) and the
   market holds the construction goods, biggest population first (``construct_location_rank``, which charges the
@@ -86,6 +90,9 @@ VAR_MARK = "pp_cplan_right_mark"  # location, during the rights pass only: a rig
 LINES = ("control_line", "town_line", "keep_line")
 INJECT_MODES = frozenset({"INJECT", "TRY_INJECT", "INJECT_OR_CREATE"})
 GLOW = "glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8"
+GOODS = Path("in_game/common/goods")
+MODIFIER_BLOCKS = ("modifier", "raw_modifier")  # a building's effects on its location
+ANYWHERE = "pp_cplan_pub_anywhere"  # the location trigger of a public building that is no booster
 
 
 @dataclass(frozen=True)
@@ -132,6 +139,12 @@ class Building:
     key: str  # the configured key: the tile, its toggle variable and its name
     tiers: tuple[str, ...]  # the line, highest tier first (the key itself last)
     icon: str
+    boosts: tuple[str, ...] = ()  # a booster: the goods whose output in its location it raises (and nothing else)
+
+    @property
+    def where(self) -> str:
+        """The location trigger the public buildings rule asks before it builds the building there."""
+        return f"pp_cplan_pub_where_{self.key}" if self.boosts else ANYWHERE
 
 
 @dataclass(frozen=True)
@@ -399,6 +412,26 @@ def building_lines(buildings: dict[str, Entry], keys: tuple[str, ...]) -> tuple[
     return lines, missing, duplicates
 
 
+def booster_goods(buildings: dict[str, Entry], tiers: tuple[str, ...], goods: set[str]) -> tuple[str, ...]:
+    """The goods a booster raises: a building line whose modifier blocks (every tier, the definition and what was
+    injected) hold nothing but ``local_<good>_output_modifier`` lines, at least one of them above 0. Empty for every
+    other building: one with any other effect (a canal's reach, a granary's food) has a purpose anywhere."""
+    found: dict[str, float] = {}
+    for tier in tiers:
+        for body in buildings[tier].bodies:
+            for key in MODIFIER_BLOCKS:
+                for block in inner_blocks(body, key):
+                    for line, value in re.findall(r"(?m)^\s*([A-Za-z0-9_]+)\s*=\s*(\S+)", cp._strip_comments(block)):
+                        match = re.fullmatch(r"local_(\w+)_output_modifier", line)
+                        if not match or match.group(1) not in goods:
+                            return ()
+                        try:
+                            found[match.group(1)] = max(found.get(match.group(1), 0.0), float(value))
+                        except ValueError:
+                            return ()
+    return tuple(good for good, value in found.items() if value > 0)
+
+
 # ---------------------------------------------------------------------------------------------------------------------
 # the town rights
 
@@ -652,6 +685,22 @@ def render_triggers(buildings: list[Building], rights: list[Right], ranks: list[
         else:
             parts.append(f"pp_cplan_pub_line_{building.key} = {{\n\tOR = {{\n"
                          + "".join(f"\t\t{test}\n" for test in tests) + "\t}\n}\n")
+    parts.append(
+        "\n# ---- Public buildings (location scope): where the rule builds the building ----\n"
+        "# A booster (its modifier does nothing but raise goods' output in its location) is built only where the location\n"
+        "# makes one of those goods: its raw material is the good, or a standing building there produces it (the Location\n"
+        "# Plan's \"made here\"). Every other public building: anywhere.\n"
+        f"{ANYWHERE} = {{\n\talways = yes\n}}\n"
+    )
+    for building in buildings:
+        if building.boosts:
+            parts.append(
+                f"{building.where} = {{\n\tOR = {{\n"
+                + "".join(f"\t\traw_material ?= goods:{good}\n" for good in building.boosts)
+                + "\t\tany_buildings_in_location = {\n\t\t\tbuilding_level > 0\n\t\t\tOR = {\n"
+                + "".join(f"\t\t\t\tbuilding_produced_goods = goods:{good}\n" for good in building.boosts)
+                + "\t\t\t}\n\t\t}\n\t}\n}\n"
+            )
     sources = upgrade_sources(rights)
     parts.append(
         "\n# ---- Urban rights ----\n"
@@ -853,15 +902,17 @@ def render_effects(buildings: list[Building], rights: list[Right], costs: dict[s
             parts.append(
                 f"\t\t{'if' if position == 0 else 'else_if'} = {{\n"
                 f"\t\t\tlimit = {{ can_build_building = building_type:{tier} }}\n"
-                f"\t\t\tpp_cplan_country_public = {{ type = {tier} line = {building.key} demand = {demand} }}\n"
+                f"\t\t\tpp_cplan_country_public = {{ type = {tier} line = {building.key} demand = {demand} "
+                f"where = {building.where} }}\n"
                 "\t\t}\n"
             )
         parts.append("\t}\n")
     parts.append(
         "}\n"
         "\n# Country scope: one level of $type$ in every owned location the group may build in, whose maximum control reaches\n"
-        "# the player's line, where no tier of the line $line$ stands and the location's part of the can-build check\n"
-        "# passes; the highest control first. Where the market lacks the construction goods ($demand$) nothing starts and\n"
+        "# the player's line, where no tier of the line $line$ stands, the building has a purpose ($where$: a booster only\n"
+        "# where the location makes its goods) and the location's part of the can-build check passes; the highest control\n"
+        "# first. Where the market lacks the construction goods ($demand$) nothing starts and\n"
         "# the window counts it (pp_cplan_note_goods; in game 2026-11-10 a ticked Library did nothing where the market had\n"
         "# no books, and the pane gave no reason). The construction itself checks the group's purse and counts a level the\n"
         "# gold does not reach (pp_cplan_construct_scoped, once a location).\n"
@@ -871,6 +922,7 @@ def render_effects(buildings: list[Building], rights: list[Right], costs: dict[s
         "\t\t\tpp_cplan_country_site = yes\n"
         "\t\t\tmax_control >= scope:pp_cplan_country.pp_cplan_country_control_line\n"
         "\t\t\tNOT = { pp_cplan_pub_line_$line$ = yes }\n"
+        "\t\t\t$where$ = yes\n"
         "\t\t\tcan_build_building = building_type:$type$\n"
         "\t\t}\n"
         "\t\torder_by = pp_cplan_country_control_here\n"
@@ -1441,9 +1493,15 @@ def texts(buildings: list[Building], rights: list[Right]) -> dict[str, str]:
     }
     for building in buildings:
         better = " The plan builds its best version you can build." if len(building.tiers) > 1 else ""
+        only = ""
+        if building.boosts:
+            names = [f"[ShowGoodsName('{good}')|e]" for good in building.boosts]
+            listed = names[0] if len(names) == 1 else ", ".join(names[:-1]) + " or " + names[-1]
+            only = (f"\nIt is built only in [locations|e] that make {listed}; to have one anywhere else, mark the "
+                    "building in that location.")
         found[f"PP_CPLANC_PUB_{building.key.upper()}"] = (
             f"[ShowBuildingTypeName('{building.key}')|e]\nTicked: the plan builds one wherever it can stand and none "
-            f"stands yet.{better}\n#weak Click to tick or untick#!"
+            f"stands yet.{better}{only}\n#weak Click to tick or untick#!"
         )
     for right in rights:
         found[f"PP_CPLANC_RIGHT_{right.key.upper()}"] = (
@@ -1492,12 +1550,13 @@ def build(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -> tupl
     result = Result()
     types = database(mod_root, vanilla_root, BUILDING_TYPES)
     lines, result.missing, result.duplicate_lines = building_lines(types, config.public_buildings)
+    goods = {name for name, entry in database(mod_root, vanilla_root, GOODS).items() if not entry.dlc_only}
     for key, tiers in lines.items():
         icon = icon_texture(BUILDING_ICONS, key, mod_root, vanilla_root)
         if icon is None:
             result.missing_icons.append(key)
             continue
-        result.buildings.append(Building(key=key, tiers=tiers, icon=icon))
+        result.buildings.append(Building(key=key, tiers=tiers, icon=icon, boosts=booster_goods(types, tiers, goods)))
     found, result.switched_off, result.dlc_rights = read_rights(mod_root, vanilla_root)
     result.missing_icons += [right.key for right in found if not right.icon]
     found = [right for right in found if right.icon]
@@ -1544,7 +1603,8 @@ def summary(result: Result) -> str:
     if result.unknown_order:
         problems.append(f"rights_order names no right: {', '.join(result.unknown_order)}")
     return (
-        f"Construction Plan, Towns and Buildings: {len(result.buildings)} public buildings, {len(result.upgrades)} "
+        f"Construction Plan, Towns and Buildings: {len(result.buildings)} public buildings "
+        f"({sum(1 for building in result.buildings if building.boosts)} boosters), {len(result.upgrades)} "
         f"building upgrades, {len(result.rights)} urban "
         f"rights ({len(result.switched_off)} switched off, {len(result.dlc_rights)} DLC-only left out), "
         f"{result.files_changed} files changed" + ("; " + "; ".join(problems) if problems else "") + "."

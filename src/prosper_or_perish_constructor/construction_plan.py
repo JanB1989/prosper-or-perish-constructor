@@ -1545,7 +1545,9 @@ def render_business(businesses: dict[str, str], recipes: dict[str, list[list[Rec
 # only when a pick needs it (pp_cplan_market_load), kept on the market's centre location (market.location;
 # pp_cplan_uc_<good>, + 100: a market scope holds no variables, in game 2026-11-10), raised when the plan starts a
 # level, and cleared at the pass's end (the country's list pp_cplan_markets of those centres).
-MARKET_LIMITED = ("business", "profiles")  # the Businesses group; profile rules and marks
+# the Businesses group and the Locations group's profile rules; a location's marks are forced and pass the limit by
+# (scope:pp_cplan_forced, pp_cplan_construct_scoped)
+MARKET_LIMITED = ("business", "profiles")
 
 
 def main_output(slots: list[list[Recipe]], good: str) -> float:
@@ -1674,7 +1676,8 @@ def render_market(outputs: dict[str, dict[str, float]]) -> tuple[str, str, str]:
     )
     triggers = [
         "\n# Any scope: the market limit holds for the constructions of the rule group with this code (the Businesses\n"
-        "# group, profile rules and marks; the food rule builds for hunger, the others no business types of their own).\n"
+        "# group and profile rules; a location's marks are forced: scope:pp_cplan_forced; the food rule builds for hunger,\n"
+        "# the others no business types of their own).\n"
     ]
     limited = {GROUP_WHY[group] for group in MARKET_LIMITED}
     for group in GROUPS:

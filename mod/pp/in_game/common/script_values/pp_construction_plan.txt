@@ -320,11 +320,20 @@ pp_cplan_on_n = {
 	}
 }
 
-# Location scope: the order of the location profiles' pass (pp_location_profiles.txt): the fewest building levels first,
-# so every profiled location gets its turn at the monthly share.
+# Location scope: the order of the Locations group's look (pp_location_profiles.txt; the highest value goes first): the
+# locations take turns by their number (pp_lprof_seq, + 100), starting after the country's place in that order
+# (scope:pp_lprof_cur, saved by the look) and wrapping around: the numbers after the place first, lowest first, then the
+# numbers up to it.
 pp_lprof_turn = {
 	value = 0
-	subtract = total_building_levels
+	if = {
+		limit = { has_variable = pp_lprof_seq }
+		subtract = var:pp_lprof_seq
+		if = {
+			limit = { var:pp_lprof_seq <= scope:pp_lprof_cur }
+			subtract = 1000000
+		}
+	}
 }
 
 # Location scope: how full the location is (population over capacity), the improvement rule's order.

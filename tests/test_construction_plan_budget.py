@@ -284,7 +284,7 @@ def test_b_every_group_goes_in_its_order_of_importance() -> None:
     # the Locations group: its location order, each location's rules then its marks
     assert "order_by = pp_lprof_turn" in _effect(_read(PROFILE_EFFECTS), "pp_lprof_look")
     turn = _effect(_read(PROFILE_EFFECTS), "pp_lprof_location_turn")
-    assert turn.index("pp_lprof_location_rules = yes") < turn.index("pp_lplan_location_marks = yes")
+    assert turn.index("pp_lprof_location_rules = yes") < turn.index("pp_lplan_location_turn = yes")
     # the rotation of the groups is still there: it only decides who gets a free construction slot first
     assert len(re.findall(r"current_month = \d+", _effect(effects, "pp_cplan_run"))) == 10
 
@@ -391,7 +391,10 @@ def test_d_the_limit_covers_every_business_type_in_one_construct_path_and_in_the
              for path in plan_files}
     assert {path: count for path, count in gates.items() if count} == {EFFECTS: 1}
     scoped = _effect(effects, "pp_cplan_construct_scoped")
-    assert "limit = { pp_cplan_limits_market_$why$ = yes }\n\t\t\tpp_cplan_market_do = { do = gate }" in scoped
+    # ... except a location's marks, which are forced (Jan 2026-11-10): the gate is not asked while they run
+    assert ("limit = {\n\t\t\t\tpp_cplan_limits_market_$why$ = yes\n\t\t\t\tscope:pp_cplan_forced < 0.5\n\t\t\t}\n"
+            "\t\t\tpp_cplan_market_do = { do = gate }") in scoped
+    assert "save_temporary_scope_value_as = { name = pp_cplan_forced value = 0 }" in _effect(effects, "pp_cplan_pass_begin")
     assert "limit = { scope:pp_cplan_mok < 0.5 }\n\t\t\tpp_cplan_note_market = { why = $why$ }" in scoped
     triggers = _read(MOD / cp.TRIGGERS)
     limited = {cp.GROUP_WHY[group] for group in cp.MARKET_LIMITED}

@@ -2296,6 +2296,44 @@ template build_location_entry {
 					}
 				}
 
+				vbox = { # PP: Construction Plan mark (location_plan.py)
+					margin = { 5 0 }
+					visible = "[And3(Not(ObjectsEqual(LocationToBuildItem.GetBuilding.GetOwner, Player.Self)), LocationToBuildItem.GetLocation.GetOwner.IsPlayer, Not(IsObserving))]"
+					layoutpolicy_vertical = expanding
+					button_square_checkbox = {
+						size = { 20 16 }
+						blockoverride "check_texture" {
+							texture = "gfx/interface/icons/map_modes/pp_location_plan.dds"
+						}
+						blockoverride "checked_icon_size" {
+							size = { 14 14 }
+						}
+						blockoverride "unchecked_icon_size" {
+							size = { 14 14 }
+						}
+						blockoverride "checked_visible" {
+							visible = "[GetScriptedGui('pp_lplan_bmarked').IsShown(GuiScope.SetRoot(LocationToBuildItem.GetLocation.MakeScope).AddScope('pp_bt', LocationToBuildItem.GetBuildingType.MakeScope).End)]"
+						}
+						blockoverride "unchecked_visible" {
+							visible = "[Not(GetScriptedGui('pp_lplan_bmarked').IsShown(GuiScope.SetRoot(LocationToBuildItem.GetLocation.MakeScope).AddScope('pp_bt', LocationToBuildItem.GetBuildingType.MakeScope).End))]"
+						}
+						background = {
+							texture = "gfx/interface/buttons/checkbox_bg_square.dds"
+							texture_density = 2
+							modify_texture = {
+								using = color_market_grey_texture
+								blend_mode = add
+								alpha = 0.5
+							}
+						}
+						action_tooltip = {
+							click_type = left
+							title = "[SelectLocalization(GetScriptedGui('pp_lplan_bmarked').IsShown(GuiScope.SetRoot(LocationToBuildItem.GetLocation.MakeScope).AddScope('pp_bt', LocationToBuildItem.GetBuildingType.MakeScope).End), 'PP_LPLAN_BMARK_ON', 'PP_LPLAN_BMARK_OFF')]"
+							on_action = "[GetScriptedGui('pp_lplan_bmark').Execute(GuiScope.SetRoot(LocationToBuildItem.GetLocation.MakeScope).AddScope('pp_bt', LocationToBuildItem.GetBuildingType.MakeScope).End)]"
+						}
+					}
+				}
+
 				hbox = { # PP: production-method slots, two per column
 					visible = "[LocationToBuildItem.HasConstructedBuildingLevels]"
 					spacing = 2

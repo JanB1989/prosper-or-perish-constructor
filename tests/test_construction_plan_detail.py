@@ -156,9 +156,10 @@ def test_locations_list_tells_a_rule_from_a_mark() -> None:
     assert "profile or a mark" in loc["PP_CPLAN_D_OFF_PROFILES"]
     assert "a profile or marks" in loc["PP_CPLAN_D_PROFILES_SIT"]
     # the marks' pass writes step 0, a profile rule its number
-    profiles = _read(MOD / "in_game/common/scripted_effects/pp_location_profiles_generated.txt")
-    marks_pass = profiles[profiles.index("pp_lplan_location_marks = {"):]
-    assert "save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }" in marks_pass[:600]
+    profiles = _read(MOD / "in_game/common/scripted_effects/pp_location_profiles.txt")
+    marks_pass = profiles[profiles.index("\npp_lplan_location_turn = {"):]
+    assert "save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }" in marks_pass[:400]
+    assert marks_pass.index("name = pp_cplan_rs value = 0") < marks_pass.index("pp_lplan_location_marks = yes")
 
 
 def test_titles_use_the_players_group_names() -> None:

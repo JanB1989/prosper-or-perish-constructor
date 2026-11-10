@@ -169,6 +169,90 @@ pp_cplan_pub_line_gymnasium_building = {
 	has_building_with_at_least_one_level = gymnasium_building
 }
 
+# ---- Public buildings (location scope): where the rule builds the building ----
+# A booster (its modifier does nothing but raise goods' output in its location) is built only where the location
+# makes one of those goods: its raw material is the good, or a standing building there produces it (the Location
+# Plan's "made here"). Every other public building: anywhere.
+pp_cplan_pub_anywhere = {
+	always = yes
+}
+pp_cplan_pub_where_sawmill = {
+	OR = {
+		raw_material ?= goods:lumber
+		any_buildings_in_location = {
+			building_level > 0
+			OR = {
+				building_produced_goods = goods:lumber
+			}
+		}
+	}
+}
+pp_cplan_pub_where_windmill = {
+	OR = {
+		raw_material ?= goods:wheat
+		raw_material ?= goods:rice
+		raw_material ?= goods:millet
+		any_buildings_in_location = {
+			building_level > 0
+			OR = {
+				building_produced_goods = goods:wheat
+				building_produced_goods = goods:rice
+				building_produced_goods = goods:millet
+			}
+		}
+	}
+}
+pp_cplan_pub_where_local_smelters = {
+	OR = {
+		raw_material ?= goods:iron
+		raw_material ?= goods:copper
+		raw_material ?= goods:tin
+		raw_material ?= goods:lead
+		any_buildings_in_location = {
+			building_level > 0
+			OR = {
+				building_produced_goods = goods:iron
+				building_produced_goods = goods:copper
+				building_produced_goods = goods:tin
+				building_produced_goods = goods:lead
+			}
+		}
+	}
+}
+pp_cplan_pub_where_terraces = {
+	OR = {
+		raw_material ?= goods:maize
+		raw_material ?= goods:potato
+		raw_material ?= goods:rice
+		raw_material ?= goods:wheat
+		raw_material ?= goods:millet
+		raw_material ?= goods:legumes
+		raw_material ?= goods:fiber_crops
+		raw_material ?= goods:cotton
+		raw_material ?= goods:tea
+		raw_material ?= goods:coffee
+		raw_material ?= goods:chili
+		raw_material ?= goods:horses
+		any_buildings_in_location = {
+			building_level > 0
+			OR = {
+				building_produced_goods = goods:maize
+				building_produced_goods = goods:potato
+				building_produced_goods = goods:rice
+				building_produced_goods = goods:wheat
+				building_produced_goods = goods:millet
+				building_produced_goods = goods:legumes
+				building_produced_goods = goods:fiber_crops
+				building_produced_goods = goods:cotton
+				building_produced_goods = goods:tea
+				building_produced_goods = goods:coffee
+				building_produced_goods = goods:chili
+				building_produced_goods = goods:horses
+			}
+		}
+	}
+}
+
 # ---- Urban rights ----
 # Per right, from the game's town rights files in load order (a later definition replaces, an inject adds):
 #   pp_cplan_right_potential_<key>  country scope: the right's potential as written (root = the country), and one

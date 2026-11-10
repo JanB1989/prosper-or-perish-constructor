@@ -141,7 +141,10 @@ def test_calls_pass_the_contract_parameters() -> None:
         for param, value in params.items():
             ok = slot_values.get(name, allowed[param]) if param == "pp_slot" else allowed[param]
             assert value in ok, f"{name}: {param} = {value}"
-    assert found == text.count("Execute("), "a scripted GUI call does not read as SetRoot + AddScope flags + End"
+    # the one call that passes a building type instead of flags: a marked building's tile (click = unmark)
+    building = text.count(lp.building_mark_call("Location.MakeScope", "Scope.GetBuildingType.MakeScope"))
+    assert building == 1
+    assert found + building == text.count("Execute("), "a scripted GUI call does not read as SetRoot + AddScope flags + End"
 
 
 def test_every_profile_part_is_there() -> None:
@@ -347,14 +350,26 @@ def test_gui_functions_exist_in_the_data_type_dump() -> None:
             head = re.match(r"^([A-Za-z_][A-Za-z0-9_]*)(?:\.([A-Za-z_][A-Za-z0-9_]*))?(?:\(| *$)", line)
             if head:
                 (members if head.group(2) else globals_).add(head.group(2) or head.group(1))
-    text = _all_text()
+    # ... and every function of a building's mark: the location window's building tile, the build panel's checkbox,
+    # the tiles of the marked buildings (the row "Also build here" is in the generated file; the Location Plan
+    # window's strip and its tooltip here)
+    plan = _read(MOD / lp.GUI)
+    marks = (lp.window_mark_action("") + lp.window_mark_icon("") + lp.build_panel_mark("")
+             + plan[plan.index("type pp_lplan_bstrip"):plan.index("type pp_lplan_picker")]
+             + "".join(line for line in _read(MOD / lp.LOC).splitlines(keepends=True) if "PP_LPLAN_BMARK" in line))
+    for function in ("IsShown", "GetList", "GetBuildingType", "GetBuildingIcon", "MakeScope", "IsPlayer", "GetLocation",
+                     "GetType", "ObjectsEqual", "GetName"):
+        assert function in marks, function
+    text = _all_text() + marks
     used_globals, used_members = set(), set()
     for expression in re.findall(r"\[([^\]\n]+)\]", text):
         expression = re.sub(r"'[^']*'", "''", expression)
         used_globals |= set(re.findall(r"(?<![.\w])([A-Z][A-Za-z0-9_]*)\(", expression))
         used_globals |= set(re.findall(r"(?<![.\w])([A-Z][A-Za-z0-9_]*)(?=[.),])", expression))
         used_members |= set(re.findall(r"\.([A-Z][A-Za-z0-9_]*)", expression))
-    data_contexts = {"Location", "ExtraTooltipInfo"}  # widget datacontexts, not globals
+    # widget datacontexts, not globals (the last five: the vanilla panels a building's mark sits in)
+    data_contexts = {"Location", "ExtraTooltipInfo", "Building", "BuildingType", "LocationBuildingItem",
+                     "LocationToBuildItem", "Scope", "Player"}
     assert not sorted(used_globals - globals_ - data_contexts), "unknown global GUI functions"
     assert not sorted(used_members - members), "unknown GUI member functions"
 
@@ -537,7 +552,8 @@ def test_also_build_row_tiles() -> None:
     from prosper_or_perish_constructor import location_profiles as lpf
 
     row = _also_row()
-    items = lp.plan_items(ROOT, lp.load_config(PROJECT))
+    items = lp.mark_items(lp.plan_items(ROOT, lp.load_config(PROJECT)))
+    assert "_category" not in row, "no building category tile: a mark is a good or a building"
     found, _ = lpf.targets(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT))
     chunks = lpf.quick_chunks(m.profile_items(ROOT, PROJECT), found)
     first_chunk = row.rindex("flowcontainer = {", 0, row.index("pp_lplan_quick_room_1'"))
@@ -553,6 +569,16 @@ def test_also_build_row_tiles() -> None:
         assert f'tooltip = "PP_LPLAN_PICK_{item.key.upper()}"' in block and f'onclick = "{toggle}"' in block, item.key
         assert f'texture = "{item.icon}"' in block, item.key
     assert marked.count("pp_lplan_toggle") == len(items)
+    # then the marked buildings, from the location's list, each with the building's own icon; a click unmarks
+    buildings = marked[position:]
+    assert f"datamodel = \"[Location.MakeScope.GetList('{lp.BUILDING_MARKS}')]\"" in buildings
+    assert buildings.count("datamodel = ") == 1 and row.count("datamodel = ") == 1
+    assert 'texture = "[GetBuildingIcon(Scope.GetBuildingType)]"' in buildings
+    assert lp.building_mark_call("Location.MakeScope", "Scope.GetBuildingType.MakeScope") in buildings
+    assert 'tooltip = "PP_LPLAN_BMARK_TILE"' in buildings and f"size = {{ {m.MARK_TILE} 34 }}" in buildings
+    assert "using = pressed_button_texture" in buildings and "glow = {" in buildings
+    # a datamodel's item is a widget, never a box (a box directly in a container crashed a hot reload)
+    assert re.search(r"item = \{\n\t+widget = \{", buildings)
     # the line is as wide as its tiles and cut there: marked tiles are never hidden, so twelve or more made the line
     # wider than the card (in game 2026-11-10: thirteen marks pushed the round buttons out of the window); the title
     # then says how many are marked
@@ -609,3 +635,55 @@ def test_global_rules_checkboxes() -> None:
     assert '  PP_LPROF_UI_GLOBAL_COUNTRY: "Towns and Buildings"\n' in loc
     badge = re.search(r"^  PP_LPROF_UI_BADGE: .*$", loc, re.MULTILINE).group(0)
     assert "$PP_LPROF_UI_GLOBAL_COUNTRY$" in badge and "Var('pp_lprof_xc').IsSet" in badge
+
+
+def test_a_category_names_the_buildings_it_builds() -> None:
+    """D. Jan 2026-11-10: "the button for trade buildings: it's very unclear what even is in that." Every building
+    category tile of the profile editor's picker, and a rule's category target, lists the buildings that category
+    builds for the player: the list the rule itself uses, the first by name and how many more."""
+    found, _ = lpf.targets(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT))
+    config = _config()
+    loc = dict(re.findall(r'^  ([A-Za-z0-9_]+): "(.*)"$', _read(LOC), re.MULTILINE))
+    generated = _read(GENERATED)
+    categories = [item.key for item in m.profile_items(ROOT, PROJECT) if item.kind == "category"]
+    assert len(categories) == 8
+    effects = _read(MOD / lpf.EFFECTS)
+    for category in categories:
+        names = [candidate.name for candidate in found[category]]
+        # the same list, the same order, as the rule's target effect
+        target = effects[effects.index(f"\npp_lprof_t_{category} = {{"):]
+        target = target[:target.index("\n}\n")]
+        assert re.findall(r"pp_lprof_start = \{ type = (\w+) ", target) == names, category
+        text = loc[f"PP_LPROF_UI_CATL_{category.upper()}"]
+        assert re.findall(r"\[ShowBuildingTypeName\('(\w+)'\)\|e\]", text) == names[:m.CATEGORY_LIST], category
+        if len(names) > m.CATEGORY_LIST:
+            assert text.endswith(f" and {len(names) - m.CATEGORY_LIST} more."), category
+        else:
+            assert " more." not in text, category
+        assert names and "Builds" in text
+        # the tile's tooltip: the category's name, its buildings, what a click does
+        assert loc[f"PP_LPROF_UI_ITEM_{category.upper()}"] == (
+            f"#T ${category}$#!\\n$PP_LPROF_UI_CATL_{category.upper()}$\\n$PP_LPROF_UI_PICK_ITEM$")
+        assert f'tooltip = "PP_LPROF_UI_ITEM_{category.upper()}"' in generated, "the picker still offers the category"
+    assert m.category_list([]) and "ShowBuildingTypeName" not in m.category_list([])
+    assert m.category_list(["a", "b"]).count("ShowBuildingTypeName") == 2 and "more" not in m.category_list(["a", "b"])
+    many = m.category_list([f"b{n}" for n in range(m.CATEGORY_LIST + 3)])
+    assert many.count("ShowBuildingTypeName") == m.CATEGORY_LIST and many.endswith(" and 3 more.")
+    # a rule's category target in the editor: the target button and the category's name carry the list of the
+    # category the rule holds (picked by its frame number, the picture strip's order)
+    frames = lpf.frame_flags(categories, lpf.load_config(PROJECT))
+    for r in range(1, config.rules + 1):
+        assert f'tooltip = "PP_LPROF_UI_TARGET_TT_R{r}"' in generated and f'tooltip = "PP_LPROF_UI_TARGET_LIST_R{r}"' in generated
+        chain = loc[f"PP_LPROF_UI_CATSEL_R{r}"]
+        for category in categories:
+            number = 100 + frames.index(category) + 1
+            assert (f"[SelectLocalization(EqualTo_CFixedPoint(GetPlayer.MakeScope.Var('pp_lprof_e_r{r}_cn').GetValue, "
+                    f"'(CFixedPoint){number}'), 'PP_LPROF_UI_CATL_{category.upper()}', 'PP_LPROF_UI_EMPTY')]") in chain, (r, category)
+        assert chain.count("SelectLocalization") == len(categories)
+        for key in (f"PP_LPROF_UI_TARGET_TT_R{r}", f"PP_LPROF_UI_TARGET_LIST_R{r}"):
+            assert f"Var('pp_lprof_e_r{r}_cn').IsSet" in loc[key] and f"PP_LPROF_UI_CATSEL" in loc[key], key
+        assert loc[f"PP_LPROF_UI_TARGET_TT_R{r}"].startswith("$PP_LPROF_UI_TARGET_TT$")
+    assert 'tooltip = "PP_LPROF_UI_TARGET_TT"' not in generated
+    # every key the texts name exists
+    for key in set(re.findall(r"'(PP_LPROF_UI_[A-Z0-9_]+)'", "".join(loc.values()))) | set(re.findall(r"\$(PP_LPROF_UI_[A-Z0-9_]+)\$", "".join(loc.values()))):
+        assert key in loc, key

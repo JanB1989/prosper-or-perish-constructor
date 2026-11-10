@@ -168,6 +168,9 @@ pp_cplan_pass_begin = {
 	# a construction's reason for the window (pp_cplan_construct_now): each rule group sets them before it builds
 	save_temporary_scope_value_as = { name = pp_cplan_rv value = 0 }
 	save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }
+	# a location's marks are forced (pp_location_profiles.txt sets 1 while it runs them): the market limit does not
+	# hold them back (pp_cplan_construct_scoped)
+	save_temporary_scope_value_as = { name = pp_cplan_forced value = 0 }
 	pp_cplan_purses_fill = yes
 	# the market limit counts what is under construction afresh only in its months: between them the counts of the
 	# last count stand on the markets' centres, raised by what the plan itself starts (constructions take about a
@@ -327,7 +330,8 @@ pp_cplan_group_target = {
 
 # The player's "Locations" group (pp_location_profiles.txt): the location profiles, whose rules have priority in their
 # locations (the global groups still build there what a profile does not set, pp_cplan_*_ok), and the Location Plan's
-# marks ("Also build here"), which add to them and switch nothing off.
+# marks ("Also build here"), which add to them and switch nothing off. A mark is forced (no payback limit, no market
+# limit), and the group's locations take turns (the country keeps where the last look stopped).
 pp_cplan_group_profiles = {
 	pp_lprof_run = yes
 }
@@ -895,10 +899,11 @@ pp_cplan_construct = {
 # automation) found it does not pay, and the plan does not argue (Jan 2026-11-09: the plan and the game's automation
 # must not undo each other).
 # The market limit (Jan 2026-11-10, against 500 horse farms after one good month): for the rule groups it holds for
-# (pp_cplan_limits_market_<why>: Businesses, profile rules and marks) a level of a business type starts only while its
+# (pp_cplan_limits_market_<why>: Businesses and profile rules) a level of a business type starts only while its
 # market has room for the good (pp_cplan_market_do: scope:pp_cplan_mok); a level stopped by it is counted apart
 # (pp_cplan_note_market) and is not waiting for gold. This is the ONE construct path, so the limit holds for
-# everything those groups build.
+# everything those groups build. Not for a location's marks (Jan 2026-11-10: a mark forces exactly what was clicked;
+# scope:pp_cplan_forced = 1 while the marks of a location run).
 # The gold: the level's cost (the engine's formula) must fit in the purse of the rule group $why$ and in the gold
 # above the reserve (pp_cplan_affordable), and the group must not be saving yet (pp_cplan_saving): the first thing it
 # cannot pay for is what it saves for, and it builds nothing more in the pass. A level the rule wants that it does
@@ -918,7 +923,10 @@ pp_cplan_construct_scoped = {
 		}
 		save_temporary_scope_value_as = { name = pp_cplan_mok value = 1 }
 		if = {
-			limit = { pp_cplan_limits_market_$why$ = yes }
+			limit = {
+				pp_cplan_limits_market_$why$ = yes
+				scope:pp_cplan_forced < 0.5
+			}
 			pp_cplan_market_do = { do = gate }
 		}
 		if = {

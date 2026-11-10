@@ -6,14 +6,22 @@ monthly pass (``pp_cplan_run``) with its own budget that saves (its purse); the 
 build there what the profile does not set (its rules' targets, the global groups it switches off). Script cannot
 create named data while the game runs, so a profile is a generated slot ``k = 1..slots``.
 
-Beside its profile a location carries its marks (Jan, 2026-11-10: "in this location, also expand wheat"): the Location
-Plan's items (``location_plan.py``, ``pp_lplan_g_<good>`` / ``pp_lplan_c_<category>``). The same pass runs them after
-the location's profile rules (a location with marks and no profile gets its turn too), each exactly as a profile rule
-with that target (the same generated ``pp_lprof_t_<target>``), with the player's Businesses line as the payback limit
-(``pp_lplan_pb100``). Marks add: they switch nothing off. This module writes ``pp_lplan_location_marks`` (the marks in
-the picker's order) and, for the location window's row "Also build here", the quick candidates: per good 1 while a
-building that makes it stands in the location and the good is not marked (``pp_lplan_quick_<good>``), and the room the
-row has left for the next chunk of them (``pp_lplan_quick_room_<n>``).
+Beside its profile a location carries its marks (Jan, 2026-11-10: "in this location, also expand wheat"): a good
+(``location_plan.py``, ``pp_lplan_g_<good>``) or a building (a building type on the location's list ``pp_lplan_b``).
+The same pass runs them after the location's profile rules (a location with marks and no profile gets its turn too).
+A mark is forced (Jan, the same evening): no payback limit and no market limit; inside one location the marks whose
+next level has a profit to measure go first, the best payback first, then the rest in mark order (hand-written
+``pp_lplan_location_turn``). A goods mark runs the generated ``pp_lprof_t_<good>`` a profile rule with that target
+runs. Marks add: they switch nothing off. This module writes ``pp_lplan_location_marks`` (the goods marks in the
+picker's order, numbered), the helpers of a building's mark (``pp_lplan_b_newest``: the newest tier of the marked
+building's line the country can build; ``pp_lplan_b_upgrade_here``: an older tier of it stands here, so the
+construction is the game's upgrade; ``pp_lplan_b_staff``: its workers) and, for the location window's row "Also build
+here", the quick candidates: per good 1 while a building that makes it stands in the location and the good is not
+marked (``pp_lplan_quick_<good>``), and the room the row has left for the next chunk of them
+(``pp_lplan_quick_room_<n>``).
+
+The Locations group's locations take turns (Jan, 2026-11-10): a number per location, a place on the country where the
+last look stopped (hand-written ``pp_lprof_look``, script value ``pp_lprof_turn``).
 
 Cost independent of the slot count (2026-11-07, Jan: up to 100 profiles): every location with a profile carries a copy
 of it (icon, colour, each rule's target and payback limit), written on assign and whenever its slot is edited; the
@@ -76,12 +84,12 @@ STATES = {
     2: "nothing to build",
     3: "a construction under way here",
     4: "no free workers here",
-    5: "payback too long",
+    5: "payback too long (a profile rule; a mark has no payback limit)",
     6: "cannot be built here",
     7: "gold: the Locations group's purse cannot pay it, or the group saves for something before it",
     8: "market lacks the construction goods",
     9: "waiting for an earlier rule's or mark's construction this month",
-    10: "the market limit: enough of the good is on the way in its market",
+    10: "the market limit: enough of the good is on the way in its market (a profile rule; a mark is not held by it)",
 }
 # why a candidate failed, ranked (+ 100 in pp_lprof_fail; the highest rank of a rule's candidates gives its state)
 FAIL_STATE = {101: 2, 102: 6, 103: 5, 104: 4, 105: 8, 106: 10, 107: 7}
@@ -102,7 +110,7 @@ GLOBAL_GROUPS = (("xf", "global_food", "food"), ("xl", "global_logistics", "logi
 # count the candidates before every single tile each frame.
 QUICK_ROW = 11
 QUICK_CHUNK = 4
-MARK_LIMIT = "pp_cplan_business_years"  # country script value: the payback limit of a location's marks, in years
+BUILDING_MARK_NUMBER = 1000  # pp_lplan_bn of a building's mark (a goods mark's is 100 + its place in the picker)
 WHY_MARK_STEP = 0  # the ledger's step (pp_cplan_rs) of a construction a mark started; a profile rule's is its number
 BUFFER = "pp_lprof_e"  # the edit buffer's variable prefix (country)
 COPY = "pp_lprof"  # a location's copy of its profile (variable prefix)
@@ -402,34 +410,133 @@ def render_dispatch(items: list[lp.Item], found: dict[str, list[Candidate]], con
 
 
 def mark_items(items: list[lp.Item]) -> list[lp.Item]:
-    """The items a location can be marked with: the Location Plan's (the profile items without market access, which
-    the plan's picker does not offer)."""
-    return [item for item in items if item.key != LOGISTICS]
+    """The items a location can be marked with in the picker: the goods (without market access, which the plan's
+    picker does not offer). A building is marked on its own entry; a building category is a rule target only."""
+    return [item for item in lp.mark_items(items) if item.key != LOGISTICS]
 
 
 def render_marks(items: list[lp.Item], found: dict[str, list[Candidate]]) -> str:
-    """The marks of a location ("also build this here"): each marked item runs its target, the effect a profile rule
-    with that target runs, in the picker's order."""
+    """The goods marks of a location ("also build this here"): each marked good runs its target, the effect a profile
+    rule with that target runs, in the picker's order; n = 100 + its place there (the mark that measured the best
+    payback is known by it), lo / hi the bounds around n."""
     lines = [
-        "\n# ---- The location's marks (the Location Plan's items; Jan 2026-11-10: \"also build this here\") ----\n"
-        "# Location scope (in pp_lprof_run, after the rules of the location's profile): each marked item in the picker's\n"
-        "# order, as a profile rule with that target runs (pp_lplan_mark: the same pp_lprof_t_<target>), within the\n"
-        "# player's Businesses line (the country's pp_cplan_business_years, as scope:pp_lprof_pb + 100 like a rule's limit).\n"
-        "# The first construction of the month in the location, by a rule or a mark, makes the rest wait. The window's\n"
-        f"# ledger shows a mark's construction as the profile group's, step {WHY_MARK_STEP} (a profile rule's step is its number).\n"
+        "\n# ---- The location's marks (Jan 2026-11-10: \"also build this here\", forced) ----\n"
+        "# Location scope (in pp_lplan_location_turn, pp_location_profiles.txt, after the rules of the location's\n"
+        "# profile): each marked good in the picker's order (pp_lplan_mark: the pp_lprof_t_<good> a profile rule with that\n"
+        "# target runs; no payback limit, no market limit). Run twice a turn: once to measure (scope:pp_lplan_mode 1: the\n"
+        "# mark whose next level pays back soonest is built first), once to build and to write the states. The first\n"
+        "# construction of the turn in the location, by a rule or a mark, makes the rest wait. The window's ledger\n"
+        f"# shows a mark's construction as the profile group's, step {WHY_MARK_STEP} (a profile rule's step is its number).\n"
         "pp_lplan_location_marks = {\n"
-        "\tscope:pp_cplan_country = {\n"
-        f"\t\tsave_temporary_scope_value_as = {{ name = pp_lprof_pb value = {{ value = {MARK_LIMIT} add = 100 }} }}\n"
-        "\t}\n"
-        f"\tsave_temporary_scope_value_as = {{ name = pp_cplan_rs value = {WHY_MARK_STEP} }}\n"
     ]
-    for item in mark_items(items):
+    for number, item in enumerate(mark_items(items), 101):
         if found.get(item.key):
-            lines.append(f"\tpp_lplan_mark = {{ v = {item.suffix} do = pp_lprof_t_{item.key} }}\n")
+            lines.append(f"\tpp_lplan_mark = {{ v = {item.suffix} do = pp_lprof_t_{item.key} "
+                         f"n = {number} lo = {number - 0.5:g} hi = {number + 0.5:g} }}\n")
         else:
             lines.append(f"\tpp_lplan_mark_none = {{ v = {item.suffix} }}\n")
+    if len(mark_items(items)) + 101 > BUILDING_MARK_NUMBER:
+        raise ValueError("more goods marks than numbers below the building marks' number")
     lines.append("}\n")
     return "".join(lines)
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# a building's mark: the newest tier of its line, the upgrade, the workers
+
+
+def line_depth(pairs: list[tuple[str, str]]) -> int:
+    """The longest way up a building line: how many steps (older tier -> its successor) the newest tier is away."""
+    newer: dict[str, list[str]] = {}
+    for older, successor in pairs:
+        newer.setdefault(older, []).append(successor)
+
+    def depth(name: str, seen: frozenset[str]) -> int:
+        return 1 + max((depth(later, seen | {name}) for later in newer.get(name, ()) if later not in seen), default=-1)
+
+    return max((depth(older, frozenset()) for older in newer), default=0)
+
+
+def render_building_marks(pairs: list[tuple[str, str]], staff: dict[str, tuple[str, float]]) -> str:
+    """The generated effects of a building's mark (the hand-written pp_lplan_building_mark calls them). ``pairs``: (older
+    tier, its direct successor) in the upgrade rule's order (construction_plan_country.upgrade_pairs); ``staff``:
+    building type -> (pop type, workers a level)."""
+    steps = "".join(
+        f"\t{'if' if position == 0 else 'else_if'} = {{\n"
+        f"\t\tlimit = {{ scope:pp_cplan_btype = building_type:{older} "
+        f"scope:pp_cplan_country = {{ can_build_building = building_type:{successor} }} }}\n"
+        f"\t\tbuilding_type:{successor} = {{ save_scope_as = pp_cplan_btype }}\n\t}}\n"
+        for position, (older, successor) in enumerate(pairs)
+    )
+    groups: dict[tuple[str, float], list[str]] = {}
+    for name, (pop_type, workers) in sorted(staff.items()):
+        if workers > 0:
+            groups.setdefault((pop_type, workers), []).append(name)
+    checks = "".join(
+        f"\t{'if' if position == 0 else 'else_if'} = {{\n\t\tlimit = {{ OR = {{ "
+        + " ".join(f"scope:pp_cplan_btype = building_type:{name}" for name in names)
+        + f" }} }}\n\t\tif = {{\n\t\t\tlimit = {{ NOT = {{ pp_cplan_staff = {{ type = {pop_type} size = {cp._num(workers)} }} }} }}\n"
+        "\t\t\tsave_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }\n\t\t}\n\t}\n"
+        for position, ((pop_type, workers), names) in enumerate(sorted(groups.items()))
+    )
+    return (
+        "\n# ---- A building's mark (pp_lplan_building_mark, pp_location_profiles.txt; scope:pp_cplan_btype = the building type) ----\n"
+        "\n# Any scope: where the country has researched the direct successor of scope:pp_cplan_btype (the building type that\n"
+        "# names it with obsolete = <older tier>; of several the first in the game's file order the country can build),\n"
+        "# the successor becomes scope:pp_cplan_btype: one step up its line.\n"
+        "pp_lplan_b_step = {\n" + steps + "}\n"
+        f"\n# Any scope: scope:pp_cplan_btype becomes the newest tier of its line the country can build ({line_depth(pairs)} steps: the\n"
+        "# longest line). A building the country has made obsolete is not built any more; its successor is.\n"
+        "pp_lplan_b_newest = {\n" + "\tpp_lplan_b_step = yes\n" * max(line_depth(pairs), 1) + "}\n"
+        "\n# Location scope: scope:pp_lplan_sok = 1 where one level of scope:pp_cplan_btype finds its workers here\n"
+        "# (pp_cplan_staff with the type's pop type and workers a level; a building without workers always does).\n"
+        "pp_lplan_b_staff = {\n\tsave_temporary_scope_value_as = { name = pp_lplan_sok value = 1 }\n" + checks + "}\n"
+    )
+
+
+def render_building_mark_triggers(pairs: list[tuple[str, str]]) -> str:
+    """pp_lplan_b_upgrade_here: an older tier of scope:pp_cplan_btype stands here and the country can upgrade it, so
+    construct_building with scope:pp_cplan_btype is the game's Upgrade button (in game 2026-11-10)."""
+    older: dict[str, list[str]] = {}
+    for old, successor in pairs:
+        older.setdefault(successor, []).append(old)
+    return (
+        "\n# Location scope (a building's mark): a tier of the line just below scope:pp_cplan_btype stands here, open, and\n"
+        "# the country can upgrade it (pp_cplan_country_upgradable, the Towns and Buildings rule's check): a\n"
+        "# construction of scope:pp_cplan_btype here is the game's upgrade of one level of it.\n"
+        "pp_lplan_b_upgrade_here = {\n\tOR = {\n"
+        + "".join(
+            f"\t\tAND = {{ scope:pp_cplan_btype = building_type:{successor} any_buildings_in_location = {{ "
+            + (f"OR = {{ {' '.join(f'building_type = building_type:{old}' for old in olds)} }}" if len(olds) > 1
+               else f"building_type = building_type:{olds[0]}")
+            + " pp_cplan_country_upgradable = yes } }\n"
+            for successor, olds in older.items()
+        )
+        + "\t\talways = no\n\t}\n}\n"
+    )
+
+
+_MARK_DATA: dict[tuple, tuple[list[tuple[str, str]], dict[str, tuple[str, float]]]] = {}
+
+
+def building_mark_data(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -> tuple[list[tuple[str, str]], dict[str, tuple[str, float]]]:
+    """What a building's mark needs of the game's building types: the upgrade pairs (older tier, direct successor;
+    the Towns and Buildings rule's list) and the workers a level of each type takes. DLC-only types are left out (the
+    mod's script names no DLC-only key)."""
+    stamp = _targets_stamp(repo, project, mod_root, vanilla_root)
+    if stamp not in _MARK_DATA:
+        from prosper_or_perish_constructor import construction_plan_country as cc
+
+        _MARK_DATA.clear()
+        database = cp._database(mod_root, vanilla_root, cp.BUILDING_TYPES)
+        defined = {name for name, (keys, _) in database.items() if "category" in keys}  # DLC-only types carry none here
+        types = cc.database(mod_root, vanilla_root, cc.BUILDING_TYPES)
+        pairs = [(older, successor) for older, successor in cc.upgrade_pairs(types)
+                 if older in defined and successor in defined]
+        staff = {name: value for name, value in cp.staffing(database, cp.script_value_numbers(mod_root, vanilla_root)).items()
+                 if name in defined and name in types and not types[name].dlc_only}
+        _MARK_DATA[stamp] = (pairs, staff)
+    return _MARK_DATA[stamp]
 
 
 def quick_goods(items: list[lp.Item], found: dict[str, list[Candidate]]) -> list[lp.Item]:
@@ -758,12 +865,14 @@ def render_examples(items: list[lp.Item], config: Config) -> str:
     return "".join(parts)
 
 
-def render_effects(items: list[lp.Item], found: dict[str, list[Candidate]], config: Config, categories: list[str]) -> str:
+def render_effects(items: list[lp.Item], found: dict[str, list[Candidate]], config: Config, categories: list[str],
+                   pairs: list[tuple[str, str]] | None = None, staff: dict[str, tuple[str, float]] | None = None) -> str:
     return (
         HEADER
         + render_targets(found)
         + render_dispatch(items, found, config)
         + render_marks(items, found)
+        + render_building_marks(pairs or [], staff or {})
         + render_slots(config)
         + render_edits(items, config, categories)
         + render_examples(items, config)
@@ -825,9 +934,10 @@ def render_values(config: Config, categories: list[str], items: list[lp.Item] | 
     return "".join(parts) + quick
 
 
-def render_triggers(categories: list[str], config: Config) -> str:
+def render_triggers(categories: list[str], config: Config, pairs: list[tuple[str, str]] | None = None) -> str:
     return (
         HEADER
+        + render_building_mark_triggers(pairs or [])
         + "\n# Any scope: the flag scope:pp_key names a building category item.\npp_lprof_category_key = {\n\tOR = {\n"
         + "".join(f"\t\tscope:pp_key = flag:{category}\n" for category in categories)
         + "\t}\n}\n"
@@ -885,10 +995,11 @@ def build(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -> tupl
     found, categories = targets(repo, project, mod_root, vanilla_root)
     result = Result(items=items, targets=found, categories=categories)
     category_keys = [item.key for item in items if item.kind == "category"]
+    pairs, staff = building_mark_data(repo, project, mod_root, vanilla_root)
     texts = {
-        mod_root / EFFECTS: render_effects(items, found, config, category_keys),
+        mod_root / EFFECTS: render_effects(items, found, config, category_keys, pairs, staff),
         mod_root / VALUES: render_values(config, category_keys, items, found),
-        mod_root / TRIGGERS: render_triggers(category_keys, config),
+        mod_root / TRIGGERS: render_triggers(category_keys, config, pairs),
     }
     return result, texts
 

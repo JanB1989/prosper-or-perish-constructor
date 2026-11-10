@@ -44,8 +44,20 @@ def test_built_mod_is_in_step() -> None:
     assert result.files_changed == 0, "run ppc finalize"
     assert result.missing_icons == [], f"items without an icon: {result.missing_icons}"
     keys = [item.key for item in result.items]
-    assert "lumber" in keys and "furniture" in keys and "trade_category" in keys
+    assert "lumber" in keys and "furniture" in keys
+    assert "trade_category" not in keys  # a mark is a good or a building (test_a_mark_is_a_good_or_a_building)
     assert "offset" not in keys and "manual_labor" not in keys
+
+
+def _marks() -> list[lp.Item]:
+    """What the picker marks: the goods."""
+    return lp.mark_items(lp.plan_items(ROOT, lp.load_config(PROJECT)))
+
+
+def _effect(text: str, name: str) -> str:
+    match = re.search(rf"^{name} = \{{\n(.*?)^\}}", text, re.MULTILINE | re.DOTALL)
+    assert match, f"{name} missing"
+    return match.group(1)
 
 
 def test_references_exist() -> None:
@@ -142,7 +154,7 @@ def test_marker_changes_only_the_raw_goods_marker() -> None:
     assert "raw_goods_marker = yes" in _read(MAP_MODE)
     # the engine creates raw goods markers only with the raw_material color mode (in game 2026-11-07)
     assert "color_mode = raw_material" in _read(MAP_MODE)
-    for item in lp.plan_items(ROOT, lp.load_config(PROJECT)):
+    for item in _marks():
         assert f"'{item.var}'" in mod and f"PP_LPLAN_STATE_{item.key.upper()}" in mod, item.key
     # only locations with a plan look at the items
     assert "Location.MakeScope.Var('pp_lplan_n').IsSet" in mod
@@ -165,9 +177,9 @@ def _texts() -> dict[str, str]:
 
 
 def test_toggle_marks_an_item_with_its_state_names() -> None:
-    """One click marks or unmarks an item: the toggle passes the item's name part (g_<good> / c_<category>), from which
-    the mark, its state and its payback note are named; unmarking takes the state along."""
-    items = lp.plan_items(ROOT, lp.load_config(PROJECT))
+    """One click marks or unmarks a good: the toggle passes the item's name part (g_<good>), from which the mark, its
+    state and its payback note are named; unmarking takes the state along."""
+    items = _marks()
     switch = _read(MOD / lp.EFFECTS)
     for item in items:
         assert f"flag:{item.key} = {{ pp_lplan_flip = {{ v = {item.suffix} }} }}" in switch, item.key
@@ -185,13 +197,14 @@ def test_toggle_marks_an_item_with_its_state_names() -> None:
 def test_every_mark_state_has_a_text() -> None:
     """A mark shows its state after the last monthly pass like a profile rule does, with the profile's state texts: in
     the tile tooltip (picker, location window row) while marked, in the strip's and the map icon's tooltip always."""
-    items = lp.plan_items(ROOT, lp.load_config(PROJECT))
+    items = _marks()
     texts = _texts()
     profile_keys: set[str] = set()
     for path in PROFILE_LOC.glob("pp_location_profiles*_l_english.yml"):
         profile_keys |= set(re.findall(r"^  ([A-Za-z0-9_]+):", _read(path), re.MULTILINE))
-    assert lp.MARK_STATES == 10  # 10: the market limit (2026-11-10)
-    for n in range(0, lp.MARK_STATES + 1):
+    # a forced mark is never held for its payback (5) or by the market limit (10): those states are a profile rule's
+    assert lp.MARK_STATES == (1, 2, 3, 4, 6, 7, 8, 9)
+    for n in (0, *lp.MARK_STATES):
         assert f"PP_LPROF_ST_{n}" in profile_keys, n
     for item in items:
         upper = item.key.upper()
@@ -201,19 +214,19 @@ def test_every_mark_state_has_a_text() -> None:
         # not checked yet = the profile's state 0; else one of its states 1..9, by the mark's own state variable
         assert f"Var('{item.state}').IsSet, 'PP_LPLAN_MSTS_{upper}', 'PP_LPROF_ST_0'" in line, item.key
         states = texts[f"PP_LPLAN_MSTS_{upper}"]
-        for n in range(1, lp.MARK_STATES + 1):
+        for n in lp.MARK_STATES:
             assert (f"[AddTextIf(EqualTo_CFixedPoint(Location.MakeScope.Var('{item.state}').GetValue, '(CFixedPoint){100 + n}'), "
                     f"Localize('PP_LPROF_ST_{n}'))]") in states, (item.key, n)
-        # beside "pays back too slowly" (state 5): the payback found
-        assert f"'(CFixedPoint)105'), Location.MakeScope.Var('{item.est}').IsSet), 'PP_LPLAN_MEST_{upper}'" in line, item.key
-        assert f"Var('{item.est}').GetValue" in texts[f"PP_LPLAN_MESTY_{upper}"], item.key
+        # no "pays back too slowly" for a mark: neither the state nor the payback beside it
+        assert "PP_LPROF_ST_5'" not in states and "PP_LPROF_ST_10'" not in states, item.key
+        assert item.est not in line and f"PP_LPLAN_MEST_{upper}" not in texts and f"PP_LPLAN_MESTY_{upper}" not in texts
     # every profile text the plan's texts use exists
     used = set(re.findall(r"'(PP_LPROF_[A-Z0-9_]+)'", "".join(texts.values())))
-    assert {"PP_LPROF_UI_EMPTY", "PP_LPROF_UI_EST_NO_PROFIT", "PP_LPROF_ST_0"} <= used
+    assert {"PP_LPROF_UI_EMPTY", "PP_LPROF_ST_0"} <= used
     assert used <= profile_keys, sorted(used - profile_keys)
     # state texts: no numbers, and they fit a rule and a mark alike
     hand = dict(re.findall(r'^  ([A-Z0-9_]+): "(.*)"$', _read(PROFILE_LOC / "pp_location_profiles_l_english.yml"), re.MULTILINE))
-    for n in range(0, lp.MARK_STATES + 1):
+    for n in (0, *lp.MARK_STATES):
         assert "this rule" not in hand[f"PP_LPROF_ST_{n}"] and "earlier rule" not in hand[f"PP_LPROF_ST_{n}"], n
 
 
@@ -239,3 +252,150 @@ def test_no_text_says_the_marks_are_only_visual() -> None:
         if key.startswith(("PP_LPLAN_GROUP", "PP_LPLAN_ALSO", "PP_LPLAN_NOTE", "PP_LPLAN_PICK_O", "PP_LPLAN_STATE_", "MAPMODE", "game_concept")):
             plain = re.sub(r"\[[^\]]*\]|\$[A-Z0-9_]+\$", "", text)
             assert not re.search(r"\d", plain), key
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Jan 2026-11-10 (evening): a mark is a good or a building, and it is forced
+
+PROFILE_EFFECTS = MOD / "in_game/common/scripted_effects/pp_location_profiles.txt"
+
+
+def test_a_mark_is_a_good_or_a_building() -> None:
+    """The eight building categories left the picker, the strip, the row and the map ("the button for trade buildings:
+    it's very unclear what even is in that"). A save's category marks go quietly at the first look: each one off the
+    count, with its state and payback note; nothing is logged, nothing redrawn."""
+    config = lp.load_config(PROJECT)
+    marks, legacy = _marks(), lp.legacy_marks(config)
+    assert marks and all(item.kind == "good" for item in marks)
+    assert [item.key for item in legacy] == list(config.categories) and len(legacy) == 8
+    switch = _read(MOD / lp.EFFECTS)
+    loc = "".join(_read(path) for path in LOC_FILES)
+    for item in legacy:
+        for path in (MOD / lp.GUI, MOD / lp.VALUES, MOD / lp.MARKERS):
+            assert item.var not in _read(path), (path.name, item.key)
+        assert f"PP_LPLAN_PICK_{item.key.upper()}" not in loc and f"PP_LPLAN_STATE_{item.key.upper()}" not in loc
+        assert f"flag:{item.key} = " not in switch, "no toggle for a category"
+    assert "PP_LPLAN_GROUP_BUILDINGS" not in _read(MOD / lp.GUI)
+    drop = _effect(switch, "pp_lplan_drop_categories")
+    clear = _effect(switch, "pp_lplan_clear_all")
+    declare = _effect(switch, "pp_lplan_declare_flags")
+    for item in legacy:
+        assert drop.count(f"limit = {{ has_variable = {item.var} }}") == 1, item.key
+        for name in (item.var, item.state, item.est):
+            assert f"remove_variable = {name}\n" in drop and f"remove_variable = {name}\n" in clear, name
+            # the engine logs a variable that is only ever removed: the never-run declaration sets it
+            assert f"set_variable = {{ name = {name} value = 100 }}" in declare, name
+    assert drop.count("change_variable = { name = pp_lplan_n subtract = 1 }") == len(legacy)
+    assert "var:pp_lplan_n < 100.5" in drop and drop.rstrip().endswith("remove_variable = pp_lplan_n\n\t}")
+    for loud in ("refresh_map_colors", "debug_log", "trigger_event", "custom_tooltip"):
+        assert loud not in drop, loud
+    # the declaration never runs
+    select = _effect(_read(EFFECTS), "pp_lplan_select")
+    assert select.index("limit = { always = no }") < select.index("pp_lplan_declare_flags = yes")
+    assert switch.count("pp_lplan_declare_flags") == 1 and "pp_lplan_declare_flags = yes" not in _read(PROFILE_EFFECTS)
+    # at the look, before the list is cleaned (a location left with no mark then leaves the list)
+    cleanup = _effect(_read(PROFILE_EFFECTS), "pp_lplan_cleanup")
+    assert cleanup.index("pp_lplan_drop_categories = yes") < cleanup.index("limit = { NOT = { has_variable = pp_lplan_n } }")
+    assert "pp_lplan_cleanup = yes" in _effect(_read(PROFILE_EFFECTS), "pp_lprof_look")
+    assert "pp_lplan_cleanup = yes" not in _effect(_read(PROFILE_EFFECTS), "pp_lprof_run")
+
+
+def test_a_building_is_marked_on_a_list_by_script() -> None:
+    """Script cannot make a variable name per building type, so a building's mark is the building type on the
+    location's variable list; the toggle keeps the count of marks and the owner's list like a goods mark's, and the GUI
+    asks a scripted GUI's is_shown whether a building is marked (it cannot look into a list)."""
+    plan = _read(EFFECTS)
+    flip = _effect(plan, "pp_lplan_bflip")
+    listed = f"{{ name = {lp.BUILDING_MARKS} target = scope:pp_bt }}"
+    assert flip.lstrip().startswith("if = {\n\t\tlimit = { exists = scope:pp_bt }")  # a click without a building: nothing
+    assert f"limit = {{ is_target_in_variable_list = {listed} }}" in flip
+    assert f"remove_list_variable = {listed}" in flip and f"add_to_variable_list = {listed}" in flip
+    assert "change_variable = { name = pp_lplan_n subtract = 1 }" in flip and "change_variable = { name = pp_lplan_n add = 1 }" in flip
+    assert "set_variable = { name = pp_lplan_n value = 100 }" in flip and "var:pp_lplan_n < 100.5" in flip
+    assert "pp_lplan_keep_list = yes" in flip and "refresh_map_colors = yes" in flip
+    # the GUI's scope is declared in a branch that never runs
+    select = _effect(plan, "pp_lplan_select")
+    assert select.index("limit = { always = no }") < select.index("save_scope_as = pp_bt")
+    guis = _read(SCRIPTED_GUIS)
+    toggle = _effect(guis, lp.BUILDING_MARK_GUI)
+    assert "scope = location" in toggle and "pp_lplan_bflip = yes" in toggle
+    asked = _effect(guis, lp.BUILDING_MARKED_GUI)
+    assert "scope = location" in asked and "effect" not in asked
+    assert "is_shown = {\n\t\texists = scope:pp_bt\n\t\tis_target_in_variable_list = " + listed in asked
+    assert lp.building_mark_call("L", "B") == f"GetScriptedGui('{lp.BUILDING_MARK_GUI}').Execute(GuiScope.SetRoot(L).AddScope('pp_bt', B).End)"
+    assert lp.building_marked("L", "B") == f"GetScriptedGui('{lp.BUILDING_MARKED_GUI}').IsShown(GuiScope.SetRoot(L).AddScope('pp_bt', B).End)"
+    # Clear and an earlier owner's marks: the list goes too
+    assert f"clear_variable_list = {lp.BUILDING_MARKS}\n" in _effect(_read(MOD / lp.EFFECTS), "pp_lplan_clear_all")
+    # the window's counts: every mark, and the goods apart
+    values = _read(MOD / lp.VALUES)
+    goods = _effect(values, "pp_lplan_goods_n")
+    assert all(f"has_variable = {item.var} }} add = 1" in goods for item in _marks())
+    assert "value = pp_lplan_goods_n\n\tsubtract = pp_lplan_open_n" in _effect(values, "pp_lplan_done_n")
+    assert "value = var:pp_lplan_n" in _effect(values, "pp_lplan_planned_n")
+
+
+def test_location_window_building_tiles_carry_the_mark() -> None:
+    """The way vanilla's auto expand toggles a building: beside each of vanilla's two Alt + click actions a Ctrl +
+    click action, beside vanilla's badge a badge. Additive: taking the three blocks out gives the window without
+    them, with every line of vanilla's still there."""
+    import pytest
+
+    window = _read(LOCATION_WINDOW)
+    assert window.count(lp.BUILDING_MARK_COMMENT) == 3
+    assert lp.add_building_marks(window) == window, "once"
+    blocks = re.compile(r"[ \t]*(?:action_tooltip|icon) = \{ " + re.escape(lp.BUILDING_MARK_COMMENT) + r"\n(?:.*\n)*?[ \t]*\}\n")
+    assert len(blocks.findall(window)) == 3
+    without = blocks.sub("", window)
+    assert lp.BUILDING_MARK_COMMENT not in without and lp.add_building_marks(without) == window, "run ppc build"
+    assert without.count(lp._WINDOW_ACTION_ANCHOR) == 2 and without.count(lp._WINDOW_ICON_ANCHOR) == 1
+    with pytest.raises(ValueError):
+        lp.add_building_marks(without.replace(lp._WINDOW_ICON_ANCHOR, ""))
+    # each action sits right after vanilla's auto-expand action, inside the same button
+    for match in re.finditer(re.escape(lp._WINDOW_ACTION_ANCHOR), window):
+        tail = window[match.end():match.end() + 1500]
+        assert tail.index("}") < tail.index(lp.BUILDING_MARK_COMMENT) < tail.index("tooltipwidget")
+    action = lp.window_mark_action("")
+    assert "click_type = left" in action and "click_modifier = ctrl" in action
+    assert "click_modifier = alt" not in action  # vanilla's auto expand keeps Alt
+    assert 'visible = "[And(Building.GetLocation.GetOwner.IsPlayer, Not(IsObserving))]"' in action
+    marked = lp.building_marked("Building.GetLocation.MakeScope", "BuildingType.MakeScope")
+    assert f"title = \"[SelectLocalization({marked}, 'PP_LPLAN_BMARK_ON', 'PP_LPLAN_BMARK_OFF')]\"" in action
+    assert f"on_action = \"[{lp.building_mark_call('Building.GetLocation.MakeScope', 'BuildingType.MakeScope')}]\"" in action
+    icon = lp.window_mark_icon("")
+    assert "parentanchor = bottom|right" in icon and 'tooltip = "PP_LPLAN_BMARK_ICON"' in icon  # vanilla's badge: top|right
+    assert lp.building_marked("LocationBuildingItem.GetBuilding.GetLocation.MakeScope",
+                              "LocationBuildingItem.GetBuilding.GetType.MakeScope") in icon
+    assert (MOD / "main_menu" / lp.MARK_TEXTURE).is_file()
+    # nothing but properties in the blocks: no box, no datamodel, no template of its own
+    for block in (action, icon):
+        assert block.count("{") == block.count("}") and "datamodel" not in block and "hbox" not in block
+
+
+def test_marked_buildings_show_with_their_own_icons() -> None:
+    """The Location Plan window lists the marked buildings from the location's list, each with the building's icon and
+    name; a click takes the mark off. The texts say what a building's mark does."""
+    gui = _read(MOD / lp.GUI)
+    strip = gui[gui.index("type pp_lplan_bstrip = flowcontainer"):gui.index("type pp_lplan_picker")]
+    assert f"datamodel = \"[Location.MakeScope.GetList('{lp.BUILDING_MARKS}')]\"" in strip
+    assert 'texture = "[GetBuildingIcon(Scope.GetBuildingType)]"' in strip
+    assert 'tooltip = "PP_LPLAN_BMARK_TILE"' in strip
+    assert lp.building_mark_call("Location.MakeScope", "Scope.GetBuildingType.MakeScope") in strip
+    assert "hbox" not in strip and "vbox" not in strip
+    assert "pp_lplan_bstrip = {" in _read(WINDOW)
+    texts = _texts()
+    assert texts["PP_LPLAN_BMARK_TILE"] == "#T [Scope.GetBuildingType.GetName]#!\\n$PP_LPLAN_BMARK_TILE_TEXT$"
+    for key in ("PP_LPLAN_BMARK_ON", "PP_LPLAN_BMARK_OFF", "PP_LPLAN_BMARK_ICON", "PP_LPLAN_BMARK_TILE_TEXT"):
+        assert "Construction Plan" in texts[key] and not re.search(r"\d", texts[key]), key
+    assert "Ctrl" in texts["PP_LPLAN_BMARK_ICON"] and "Ctrl" in texts["PP_LPLAN_NOTE"]
+
+
+def test_texts_say_a_mark_is_forced() -> None:
+    """A mark builds this here, level after level, from the Locations budget, whether it pays or not: no text still
+    promises a payback limit for a mark."""
+    texts = _texts()
+    for key in ("PP_LPLAN_NOTE", "PP_LPLAN_PICK_ON", "PP_LPLAN_PICK_OFF", "PP_LPLAN_BMARK_OFF", "PP_LPLAN_BMARK_TILE_TEXT"):
+        assert "level after level" in texts[key] and "Locations budget" in texts[key], key
+    for key in ("PP_LPLAN_NOTE", "PP_LPLAN_PICK_OFF", "PP_LPLAN_BMARK_OFF"):
+        assert "whether it pays or not" in texts[key], key
+    for key, text in texts.items():
+        assert "Businesses limit" not in text and "pays back within" not in text and "kind of building" not in text, key

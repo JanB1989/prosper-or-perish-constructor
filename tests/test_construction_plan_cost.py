@@ -122,9 +122,10 @@ def test_a_group_walks_only_at_its_look() -> None:
     run = _effect(_read(PROFILE_EFFECTS), "pp_lprof_run")
     assert not WALK.search(run.replace("pp_lprof_has_locations", ""))
     assert ("limit = { pp_cplan_looks_profiles = yes }\n\t\t\tpp_lprof_look = yes\n\t\t}\n"
-            "\t\telse = {\n\t\t\tpp_cplan_group_target = { why = 105 do = pp_lprof_location_turn }") in run
-    turn = _effect(_read(PROFILE_EFFECTS), "pp_lprof_location_turn")
-    assert not WALK.search(turn)
+            "\t\telse = {\n\t\t\tpp_cplan_group_target = { why = 105 do = pp_lprof_target_turn }") in run
+    for name in ("pp_lprof_target_turn", "pp_lprof_location_turn", "pp_lplan_location_turn"):
+        assert not WALK.search(_effect(_read(PROFILE_EFFECTS), name)), name
+    assert "pp_lprof_location_turn = yes" in _effect(_read(PROFILE_EFFECTS), "pp_lprof_target_turn")
     # the lists are cleaned at the look only (they walk the owned locations)
     assert "pp_lprof_cleanup" not in run and "pp_lprof_cleanup = yes" in _effect(_read(PROFILE_EFFECTS), "pp_lprof_look")
     # Towns and Buildings: one rule a look, each behind its own months; no look at all while it saves

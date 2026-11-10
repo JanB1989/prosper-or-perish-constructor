@@ -1,17 +1,20 @@
 ﻿# Prosper or Perish - Location plan (branch location-plan, 2026-11-07, Jan): the player marks what a location should
 # produce or have (gui/pp_location_plan.gui, the location window's row "Also build here", map mode pp_location_plan).
 # The marks are the location's build picks (Jan 2026-11-10): the Construction Plan builds a marked item there, in the
-# rule group of the location profiles, after the location's profile rules, as a profile rule with that target would,
-# within the player's Businesses line (the pass: pp_location_profiles.txt, pp_lplan_mark). The toggle switch, clearing
-# and the flag declarations are generated into pp_location_plan_generated.txt (location_plan.py).
-# Location variables: pp_lplan_g_<good> / pp_lplan_c_<category> (present = marked), pp_lplan_n (items marked + 100;
-# a variable at 0 counts as unset), pp_lplan_st_g_<good> / pp_lplan_st_c_<category> (the mark's state after the last
-# pass + 100, the profile rule states) and pp_lplan_est_... (the shortest payback found, years + 100).
+# rule group of the location profiles, after the location's profile rules, forced: whether it pays or not (the pass:
+# pp_location_profiles.txt, pp_lplan_location_turn). A mark is a good (its producers) or a building (that building
+# type; marked on a building's entry in the location window or the build panel). The toggle switch, clearing and the
+# flag declarations are generated into pp_location_plan_generated.txt (location_plan.py).
+# Location variables: pp_lplan_g_<good> (present = marked), the list pp_lplan_b (the marked building types),
+# pp_lplan_n (goods and buildings marked + 100; a variable at 0 counts as unset), pp_lplan_st_g_<good> (the mark's
+# state after the last pass + 100, the profile rule states) and pp_lplan_est_g_<good> (the shortest payback found,
+# years + 100). Marks of a building category (pp_lplan_c_<category>, a save from before 2026-11-10 evening) are
+# taken off at the first look (pp_lplan_drop_categories).
 # Country: pp_lplan_sel (the location the window shows), the list pp_lplan_locs (the locations the country marked: the
 # monthly cleanup takes marks from own locations that are not on it, an earlier owner's; pp_lplan_cleanup).
 
-# Location scope: marks or unmarks the item $v$ (g_<good> / c_<category>) and keeps the count and the owner's list. A
-# mark removed takes its state along.
+# Location scope: marks or unmarks the item $v$ (g_<good>) and keeps the count and the owner's list. A mark removed
+# takes its state along.
 pp_lplan_flip = {
 	if = {
 		limit = { has_variable = pp_lplan_$v$ }
@@ -40,6 +43,39 @@ pp_lplan_flip = {
 	}
 	pp_lplan_keep_list = yes
 	refresh_map_colors = yes
+}
+
+# Location scope (root, from the scripted GUI pp_lplan_bmark; scope:pp_bt = a building type): marks or unmarks that
+# building for this location (the list pp_lplan_b) and keeps the count and the owner's list.
+pp_lplan_bflip = {
+	if = {
+		limit = { exists = scope:pp_bt }
+		if = {
+			limit = { is_target_in_variable_list = { name = pp_lplan_b target = scope:pp_bt } }
+			remove_list_variable = { name = pp_lplan_b target = scope:pp_bt }
+			if = {
+				limit = { has_variable = pp_lplan_n }
+				change_variable = { name = pp_lplan_n subtract = 1 }
+			}
+		}
+		else = {
+			add_to_variable_list = { name = pp_lplan_b target = scope:pp_bt }
+			if = {
+				limit = { NOT = { has_variable = pp_lplan_n } }
+				set_variable = { name = pp_lplan_n value = 100 }
+			}
+			change_variable = { name = pp_lplan_n add = 1 }
+		}
+		if = {
+			limit = {
+				has_variable = pp_lplan_n
+				var:pp_lplan_n < 100.5
+			}
+			remove_variable = pp_lplan_n
+		}
+		pp_lplan_keep_list = yes
+		refresh_map_colors = yes
+	}
 }
 
 # Location scope: the owner's list pp_lplan_locs holds the location while it has a mark.
@@ -74,6 +110,7 @@ pp_lplan_select = {
 	if = {
 		limit = { always = no }
 		save_scope_as = pp_key
+		save_scope_as = pp_bt
 		pp_lplan_declare_flags = yes
 		if = {
 			limit = {

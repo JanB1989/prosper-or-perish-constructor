@@ -208,7 +208,7 @@ def test_public_building_rule() -> None:
     public = _block(effects, "pp_cplan_country_public")
     limit = public[public.index("limit = {"):public.index("order_by")]
     for check in ("pp_cplan_country_site = yes", "max_control >= scope:pp_cplan_country.pp_cplan_country_control_line",
-                  "NOT = { pp_cplan_pub_line_$line$ = yes }", "can_build_building = building_type:$type$"):
+                  "NOT = { pp_cplan_pub_line_$line$ = yes }", "$where$ = yes", "can_build_building = building_type:$type$"):
         assert check in limit, check
     # the construction goods are asked in the body: where the market lacks them nothing starts and the window counts it
     # (in game 2026-11-10 a ticked Library did nothing where the market had no books, and no reason showed)
@@ -229,7 +229,7 @@ def test_public_building_rule() -> None:
     assert re.findall(r"^\tif = \{\n\t\tlimit = \{ has_variable = pp_cplan_pub_(\w+) \}", buildings, re.MULTILINE) \
         == list(_config().public_buildings)
     # the construction goods trigger of every tier exists (construction_plan.py writes one per demand)
-    demands = set(re.findall(r"demand = (\w+) \}", buildings))
+    demands = set(re.findall(r"demand = (\w+) where = ", buildings))
     assert demands and all(f"pp_cplan_goods_here_{demand}" in _defined("scripted_triggers") for demand in demands)
 
 
@@ -789,7 +789,7 @@ def test_every_argument_is_used_and_passed() -> None:
     assert calls > 150
     for name in ("pp_cplan_country_public", "pp_cplan_country_rank_up", "pp_cplan_rank_charge", "pp_cplan_country_grant"):
         assert parameters[name], name
-    assert parameters["pp_cplan_country_public"] == {"type", "line", "demand"}
+    assert parameters["pp_cplan_country_public"] == {"type", "line", "demand", "where"}
     # an effect called with "= yes" takes no argument
     for path in SCRIPT_FILES:
         for name in re.findall(r"\b(pp_cplan_\w+) = yes", _code(MOD / path)):
@@ -1067,3 +1067,67 @@ def test_config_is_checked(tmp_path: Path) -> None:
     good = tmp_path / "good.toml"
     good.write_text(table, encoding="utf-8")
     assert cc.load_config(good) == _config()
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# boosters (Jan 2026-11-10): a public building that only raises goods' output is built only where the goods are made
+
+
+def test_boosters_are_read_from_the_buildings_own_modifier_lines() -> None:
+    """A booster is a configured public building whose modifier blocks hold nothing but local_<good>_output_modifier
+    lines; any other effect (a canal's reach) gives the building a purpose anywhere."""
+    boosters = {building.key: building.boosts for building in _result().buildings if building.boosts}
+    assert {"sawmill", "windmill", "local_smelters"} <= set(boosters)
+    assert boosters["sawmill"] == ("lumber",)
+    assert set(boosters["windmill"]) == {"wheat", "rice", "millet"}
+    assert set(boosters["local_smelters"]) == {"iron", "copper", "tin", "lead"}
+    assert "pound_lock_canal_infrastructure" not in boosters and "library" not in boosters
+    goods = {"lumber", "fish", "wheat"}
+    types = {
+        "mill": cc.Entry(["modifier = {\n\tlocal_lumber_output_modifier = 0.2\n}\n"], False),
+        "canal": cc.Entry(["modifier = {\n\tlocal_fish_output_modifier = 0.025\n\tlocal_market_access = 0.1\n}\n"], False),
+        "drain": cc.Entry(["modifier = {\n\tlocal_wheat_output_modifier = -0.1\n}\n"], False),
+        "hall": cc.Entry(["category = government_category\n"], False),
+        "later": cc.Entry(["obsolete = mill\nraw_modifier = {\n\tlocal_wheat_output_modifier = 0.1 # more\n}\n"], False),
+        "odd": cc.Entry(["modifier = {\n\tlocal_gold_output_modifier = 0.1\n}\n"], False),
+    }
+    assert cc.booster_goods(types, ("mill",), goods) == ("lumber",)
+    assert cc.booster_goods(types, ("later", "mill"), goods) == ("wheat", "lumber")  # every tier of the line
+    assert cc.booster_goods(types, ("canal",), goods) == ()  # another effect: a purpose anywhere
+    assert cc.booster_goods(types, ("drain",), goods) == ()  # nothing raised
+    assert cc.booster_goods(types, ("hall",), goods) == ()
+    assert cc.booster_goods(types, ("odd",), goods) == ()  # not a good of the game
+
+
+def test_a_booster_is_built_only_where_its_goods_are_made() -> None:
+    """The public buildings rule asks each building's "where" before it builds: a booster where the location's raw
+    material is one of its goods or a standing building there produces one, every other building anywhere. No
+    setting; the tile's tooltip says it in one sentence and names the way out (mark the building there)."""
+    result = _result()
+    effects, triggers = _code(MOD / cc.EFFECTS), _code(MOD / cc.TRIGGERS)
+    buildings = _block(effects, "pp_cplan_country_buildings")
+    assert _tokens(_block(triggers, cc.ANYWHERE)) == "always = yes"
+    texts = cc.texts(result.buildings, result.rights)
+    for building in result.buildings:
+        calls = re.findall(rf"pp_cplan_country_public = \{{ type = \w+ line = {building.key} demand = \w+ where = (\w+) \}}", buildings)
+        assert calls and set(calls) == {building.where}, building.key
+        tooltip = texts[f"PP_CPLANC_PUB_{building.key.upper()}"]
+        if not building.boosts:
+            assert building.where == cc.ANYWHERE and "only in" not in tooltip, building.key
+            continue
+        where = _block(triggers, building.where)
+        assert _tokens(where).startswith("OR = {") and where.count("any_buildings_in_location = {") == 1
+        for good in building.boosts:
+            assert f"raw_material ?= goods:{good}\n" in where, (building.key, good)
+            assert f"building_produced_goods = goods:{good}\n" in where, (building.key, good)
+        assert "building_level > 0" in where
+        sentence = [line for line in tooltip.split("\n") if line.startswith("It is built only in")]
+        assert len(sentence) == 1 and sentence[0].count(".") == 1, building.key  # one plain sentence
+        for good in building.boosts:
+            assert f"[ShowGoodsName('{good}')|e]" in sentence[0], (building.key, good)
+        assert "mark the building in that location" in sentence[0] and not re.search(r"\d", re.sub(r"\[[^\]]*\]", "", sentence[0]))
+    # the trigger is asked in the walk's limit, before the game's can-build check
+    public = _block(effects, "pp_cplan_country_public")
+    assert public.index("$where$ = yes") < public.index("can_build_building = building_type:$type$") < public.index("order_by")
+    # no setting for it
+    assert "boost" not in _code(MOD / cc.SCRIPTED_GUIS) and "booster" not in _read(PROJECT).split("[construction_plan_country]")[1].split("\n[")[0].replace("# ", "")

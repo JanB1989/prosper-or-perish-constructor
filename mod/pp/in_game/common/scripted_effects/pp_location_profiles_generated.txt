@@ -1893,101 +1893,1153 @@ pp_lprof_location_rules = {
 	pp_lprof_rule = { r = 5 }
 }
 
-# ---- The location's marks (the Location Plan's items; Jan 2026-11-10: "also build this here") ----
-# Location scope (in pp_lprof_run, after the rules of the location's profile): each marked item in the picker's
-# order, as a profile rule with that target runs (pp_lplan_mark: the same pp_lprof_t_<target>), within the
-# player's Businesses line (the country's pp_cplan_business_years, as scope:pp_lprof_pb + 100 like a rule's limit).
-# The first construction of the month in the location, by a rule or a mark, makes the rest wait. The window's
-# ledger shows a mark's construction as the profile group's, step 0 (a profile rule's step is its number).
+# ---- The location's marks (Jan 2026-11-10: "also build this here", forced) ----
+# Location scope (in pp_lplan_location_turn, pp_location_profiles.txt, after the rules of the location's
+# profile): each marked good in the picker's order (pp_lplan_mark: the pp_lprof_t_<good> a profile rule with that
+# target runs; no payback limit, no market limit). Run twice a turn: once to measure (scope:pp_lplan_mode 1: the
+# mark whose next level pays back soonest is built first), once to build and to write the states. The first
+# construction of the turn in the location, by a rule or a mark, makes the rest wait. The window's ledger
+# shows a mark's construction as the profile group's, step 0 (a profile rule's step is its number).
 pp_lplan_location_marks = {
-	scope:pp_cplan_country = {
-		save_temporary_scope_value_as = { name = pp_lprof_pb value = { value = pp_cplan_business_years add = 100 } }
-	}
-	save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }
-	pp_lplan_mark = { v = g_camels do = pp_lprof_t_camels }
-	pp_lplan_mark = { v = g_elephants do = pp_lprof_t_elephants }
-	pp_lplan_mark = { v = g_horses do = pp_lprof_t_horses }
-	pp_lplan_mark = { v = g_livestock do = pp_lprof_t_livestock }
-	pp_lplan_mark = { v = g_wool do = pp_lprof_t_wool }
-	pp_lplan_mark = { v = g_beeswax do = pp_lprof_t_beeswax }
-	pp_lplan_mark = { v = g_dyes do = pp_lprof_t_dyes }
-	pp_lplan_mark = { v = g_incense do = pp_lprof_t_incense }
-	pp_lplan_mark = { v = g_tobacco do = pp_lprof_t_tobacco }
-	pp_lplan_mark = { v = g_cotton do = pp_lprof_t_cotton }
-	pp_lplan_mark = { v = g_fiber_crops do = pp_lprof_t_fiber_crops }
-	pp_lplan_mark = { v = g_silk do = pp_lprof_t_silk }
-	pp_lplan_mark = { v = g_chili do = pp_lprof_t_chili }
-	pp_lplan_mark = { v = g_cloves do = pp_lprof_t_cloves }
-	pp_lplan_mark = { v = g_pepper do = pp_lprof_t_pepper }
-	pp_lplan_mark = { v = g_saffron do = pp_lprof_t_saffron }
-	pp_lplan_mark = { v = g_legumes do = pp_lprof_t_legumes }
-	pp_lplan_mark = { v = g_maize do = pp_lprof_t_maize }
-	pp_lplan_mark = { v = g_millet do = pp_lprof_t_millet }
-	pp_lplan_mark = { v = g_potato do = pp_lprof_t_potato }
-	pp_lplan_mark = { v = g_rice do = pp_lprof_t_rice }
-	pp_lplan_mark = { v = g_wheat do = pp_lprof_t_wheat }
-	pp_lplan_mark = { v = g_cocoa do = pp_lprof_t_cocoa }
-	pp_lplan_mark = { v = g_coffee do = pp_lprof_t_coffee }
-	pp_lplan_mark = { v = g_tea do = pp_lprof_t_tea }
-	pp_lplan_mark = { v = g_sugar do = pp_lprof_t_sugar }
-	pp_lplan_mark = { v = g_fruit do = pp_lprof_t_fruit }
-	pp_lplan_mark = { v = g_olives do = pp_lprof_t_olives }
-	pp_lplan_mark = { v = g_wine do = pp_lprof_t_wine }
-	pp_lplan_mark = { v = g_lumber do = pp_lprof_t_lumber }
-	pp_lplan_mark = { v = g_fish do = pp_lprof_t_fish }
-	pp_lplan_mark = { v = g_pearls do = pp_lprof_t_pearls }
-	pp_lplan_mark = { v = g_clay do = pp_lprof_t_clay }
-	pp_lplan_mark = { v = g_sand do = pp_lprof_t_sand }
-	pp_lplan_mark = { v = g_medicaments do = pp_lprof_t_medicaments }
-	pp_lplan_mark = { v = g_salt do = pp_lprof_t_salt }
-	pp_lplan_mark = { v = g_amber do = pp_lprof_t_amber }
+	pp_lplan_mark = { v = g_camels do = pp_lprof_t_camels n = 101 lo = 100.5 hi = 101.5 }
+	pp_lplan_mark = { v = g_elephants do = pp_lprof_t_elephants n = 102 lo = 101.5 hi = 102.5 }
+	pp_lplan_mark = { v = g_horses do = pp_lprof_t_horses n = 103 lo = 102.5 hi = 103.5 }
+	pp_lplan_mark = { v = g_livestock do = pp_lprof_t_livestock n = 104 lo = 103.5 hi = 104.5 }
+	pp_lplan_mark = { v = g_wool do = pp_lprof_t_wool n = 105 lo = 104.5 hi = 105.5 }
+	pp_lplan_mark = { v = g_beeswax do = pp_lprof_t_beeswax n = 106 lo = 105.5 hi = 106.5 }
+	pp_lplan_mark = { v = g_dyes do = pp_lprof_t_dyes n = 107 lo = 106.5 hi = 107.5 }
+	pp_lplan_mark = { v = g_incense do = pp_lprof_t_incense n = 108 lo = 107.5 hi = 108.5 }
+	pp_lplan_mark = { v = g_tobacco do = pp_lprof_t_tobacco n = 109 lo = 108.5 hi = 109.5 }
+	pp_lplan_mark = { v = g_cotton do = pp_lprof_t_cotton n = 110 lo = 109.5 hi = 110.5 }
+	pp_lplan_mark = { v = g_fiber_crops do = pp_lprof_t_fiber_crops n = 111 lo = 110.5 hi = 111.5 }
+	pp_lplan_mark = { v = g_silk do = pp_lprof_t_silk n = 112 lo = 111.5 hi = 112.5 }
+	pp_lplan_mark = { v = g_chili do = pp_lprof_t_chili n = 113 lo = 112.5 hi = 113.5 }
+	pp_lplan_mark = { v = g_cloves do = pp_lprof_t_cloves n = 114 lo = 113.5 hi = 114.5 }
+	pp_lplan_mark = { v = g_pepper do = pp_lprof_t_pepper n = 115 lo = 114.5 hi = 115.5 }
+	pp_lplan_mark = { v = g_saffron do = pp_lprof_t_saffron n = 116 lo = 115.5 hi = 116.5 }
+	pp_lplan_mark = { v = g_legumes do = pp_lprof_t_legumes n = 117 lo = 116.5 hi = 117.5 }
+	pp_lplan_mark = { v = g_maize do = pp_lprof_t_maize n = 118 lo = 117.5 hi = 118.5 }
+	pp_lplan_mark = { v = g_millet do = pp_lprof_t_millet n = 119 lo = 118.5 hi = 119.5 }
+	pp_lplan_mark = { v = g_potato do = pp_lprof_t_potato n = 120 lo = 119.5 hi = 120.5 }
+	pp_lplan_mark = { v = g_rice do = pp_lprof_t_rice n = 121 lo = 120.5 hi = 121.5 }
+	pp_lplan_mark = { v = g_wheat do = pp_lprof_t_wheat n = 122 lo = 121.5 hi = 122.5 }
+	pp_lplan_mark = { v = g_cocoa do = pp_lprof_t_cocoa n = 123 lo = 122.5 hi = 123.5 }
+	pp_lplan_mark = { v = g_coffee do = pp_lprof_t_coffee n = 124 lo = 123.5 hi = 124.5 }
+	pp_lplan_mark = { v = g_tea do = pp_lprof_t_tea n = 125 lo = 124.5 hi = 125.5 }
+	pp_lplan_mark = { v = g_sugar do = pp_lprof_t_sugar n = 126 lo = 125.5 hi = 126.5 }
+	pp_lplan_mark = { v = g_fruit do = pp_lprof_t_fruit n = 127 lo = 126.5 hi = 127.5 }
+	pp_lplan_mark = { v = g_olives do = pp_lprof_t_olives n = 128 lo = 127.5 hi = 128.5 }
+	pp_lplan_mark = { v = g_wine do = pp_lprof_t_wine n = 129 lo = 128.5 hi = 129.5 }
+	pp_lplan_mark = { v = g_lumber do = pp_lprof_t_lumber n = 130 lo = 129.5 hi = 130.5 }
+	pp_lplan_mark = { v = g_fish do = pp_lprof_t_fish n = 131 lo = 130.5 hi = 131.5 }
+	pp_lplan_mark = { v = g_pearls do = pp_lprof_t_pearls n = 132 lo = 131.5 hi = 132.5 }
+	pp_lplan_mark = { v = g_clay do = pp_lprof_t_clay n = 133 lo = 132.5 hi = 133.5 }
+	pp_lplan_mark = { v = g_sand do = pp_lprof_t_sand n = 134 lo = 133.5 hi = 134.5 }
+	pp_lplan_mark = { v = g_medicaments do = pp_lprof_t_medicaments n = 135 lo = 134.5 hi = 135.5 }
+	pp_lplan_mark = { v = g_salt do = pp_lprof_t_salt n = 136 lo = 135.5 hi = 136.5 }
+	pp_lplan_mark = { v = g_amber do = pp_lprof_t_amber n = 137 lo = 136.5 hi = 137.5 }
 	pp_lplan_mark_none = { v = g_fur }
-	pp_lplan_mark = { v = g_ivory do = pp_lprof_t_ivory }
-	pp_lplan_mark = { v = g_wild_game do = pp_lprof_t_wild_game }
-	pp_lplan_mark = { v = g_beer do = pp_lprof_t_beer }
-	pp_lplan_mark = { v = g_liquor do = pp_lprof_t_liquor }
-	pp_lplan_mark = { v = g_books do = pp_lprof_t_books }
-	pp_lplan_mark = { v = g_paper do = pp_lprof_t_paper }
-	pp_lplan_mark = { v = g_slaves_goods do = pp_lprof_t_slaves_goods }
-	pp_lplan_mark = { v = g_glass do = pp_lprof_t_glass }
-	pp_lplan_mark = { v = g_masonry do = pp_lprof_t_masonry }
-	pp_lplan_mark = { v = g_pottery do = pp_lprof_t_pottery }
-	pp_lplan_mark = { v = g_tar do = pp_lprof_t_tar }
-	pp_lplan_mark = { v = g_furniture do = pp_lprof_t_furniture }
-	pp_lplan_mark = { v = g_jewelry do = pp_lprof_t_jewelry }
-	pp_lplan_mark = { v = g_lacquerware do = pp_lprof_t_lacquerware }
-	pp_lplan_mark = { v = g_porcelain do = pp_lprof_t_porcelain }
-	pp_lplan_mark = { v = g_steel do = pp_lprof_t_steel }
-	pp_lplan_mark = { v = g_tools do = pp_lprof_t_tools }
-	pp_lplan_mark = { v = g_cannons do = pp_lprof_t_cannons }
-	pp_lplan_mark = { v = g_firearms do = pp_lprof_t_firearms }
-	pp_lplan_mark = { v = g_weaponry do = pp_lprof_t_weaponry }
-	pp_lplan_mark = { v = g_naval_supplies do = pp_lprof_t_naval_supplies }
-	pp_lplan_mark = { v = g_victuals do = pp_lprof_t_victuals }
-	pp_lplan_mark = { v = g_cloth do = pp_lprof_t_cloth }
-	pp_lplan_mark = { v = g_fine_cloth do = pp_lprof_t_fine_cloth }
-	pp_lplan_mark = { v = g_leather do = pp_lprof_t_leather }
-	pp_lplan_mark = { v = g_marble do = pp_lprof_t_marble }
-	pp_lplan_mark = { v = g_stone do = pp_lprof_t_stone }
-	pp_lplan_mark = { v = g_coal do = pp_lprof_t_coal }
-	pp_lplan_mark = { v = g_alum do = pp_lprof_t_alum }
-	pp_lplan_mark = { v = g_mercury do = pp_lprof_t_mercury }
-	pp_lplan_mark = { v = g_saltpeter do = pp_lprof_t_saltpeter }
-	pp_lplan_mark = { v = g_copper do = pp_lprof_t_copper }
-	pp_lplan_mark = { v = g_iron do = pp_lprof_t_iron }
-	pp_lplan_mark = { v = g_lead do = pp_lprof_t_lead }
-	pp_lplan_mark = { v = g_tin do = pp_lprof_t_tin }
-	pp_lplan_mark = { v = g_gems do = pp_lprof_t_gems }
-	pp_lplan_mark = { v = g_goods_gold do = pp_lprof_t_goods_gold }
-	pp_lplan_mark = { v = g_silver do = pp_lprof_t_silver }
-	pp_lplan_mark = { v = c_trade_category do = pp_lprof_t_trade_category }
-	pp_lplan_mark = { v = c_government_category do = pp_lprof_t_government_category }
-	pp_lplan_mark = { v = c_military_category do = pp_lprof_t_military_category }
-	pp_lplan_mark = { v = c_defense_category do = pp_lprof_t_defense_category }
-	pp_lplan_mark = { v = c_religious_category do = pp_lprof_t_religious_category }
-	pp_lplan_mark = { v = c_cultural_category do = pp_lprof_t_cultural_category }
-	pp_lplan_mark = { v = c_naval_category do = pp_lprof_t_naval_category }
-	pp_lplan_mark = { v = c_infrastructure_category do = pp_lprof_t_infrastructure_category }
+	pp_lplan_mark = { v = g_ivory do = pp_lprof_t_ivory n = 139 lo = 138.5 hi = 139.5 }
+	pp_lplan_mark = { v = g_wild_game do = pp_lprof_t_wild_game n = 140 lo = 139.5 hi = 140.5 }
+	pp_lplan_mark = { v = g_beer do = pp_lprof_t_beer n = 141 lo = 140.5 hi = 141.5 }
+	pp_lplan_mark = { v = g_liquor do = pp_lprof_t_liquor n = 142 lo = 141.5 hi = 142.5 }
+	pp_lplan_mark = { v = g_books do = pp_lprof_t_books n = 143 lo = 142.5 hi = 143.5 }
+	pp_lplan_mark = { v = g_paper do = pp_lprof_t_paper n = 144 lo = 143.5 hi = 144.5 }
+	pp_lplan_mark = { v = g_slaves_goods do = pp_lprof_t_slaves_goods n = 145 lo = 144.5 hi = 145.5 }
+	pp_lplan_mark = { v = g_glass do = pp_lprof_t_glass n = 146 lo = 145.5 hi = 146.5 }
+	pp_lplan_mark = { v = g_masonry do = pp_lprof_t_masonry n = 147 lo = 146.5 hi = 147.5 }
+	pp_lplan_mark = { v = g_pottery do = pp_lprof_t_pottery n = 148 lo = 147.5 hi = 148.5 }
+	pp_lplan_mark = { v = g_tar do = pp_lprof_t_tar n = 149 lo = 148.5 hi = 149.5 }
+	pp_lplan_mark = { v = g_furniture do = pp_lprof_t_furniture n = 150 lo = 149.5 hi = 150.5 }
+	pp_lplan_mark = { v = g_jewelry do = pp_lprof_t_jewelry n = 151 lo = 150.5 hi = 151.5 }
+	pp_lplan_mark = { v = g_lacquerware do = pp_lprof_t_lacquerware n = 152 lo = 151.5 hi = 152.5 }
+	pp_lplan_mark = { v = g_porcelain do = pp_lprof_t_porcelain n = 153 lo = 152.5 hi = 153.5 }
+	pp_lplan_mark = { v = g_steel do = pp_lprof_t_steel n = 154 lo = 153.5 hi = 154.5 }
+	pp_lplan_mark = { v = g_tools do = pp_lprof_t_tools n = 155 lo = 154.5 hi = 155.5 }
+	pp_lplan_mark = { v = g_cannons do = pp_lprof_t_cannons n = 156 lo = 155.5 hi = 156.5 }
+	pp_lplan_mark = { v = g_firearms do = pp_lprof_t_firearms n = 157 lo = 156.5 hi = 157.5 }
+	pp_lplan_mark = { v = g_weaponry do = pp_lprof_t_weaponry n = 158 lo = 157.5 hi = 158.5 }
+	pp_lplan_mark = { v = g_naval_supplies do = pp_lprof_t_naval_supplies n = 159 lo = 158.5 hi = 159.5 }
+	pp_lplan_mark = { v = g_victuals do = pp_lprof_t_victuals n = 160 lo = 159.5 hi = 160.5 }
+	pp_lplan_mark = { v = g_cloth do = pp_lprof_t_cloth n = 161 lo = 160.5 hi = 161.5 }
+	pp_lplan_mark = { v = g_fine_cloth do = pp_lprof_t_fine_cloth n = 162 lo = 161.5 hi = 162.5 }
+	pp_lplan_mark = { v = g_leather do = pp_lprof_t_leather n = 163 lo = 162.5 hi = 163.5 }
+	pp_lplan_mark = { v = g_marble do = pp_lprof_t_marble n = 164 lo = 163.5 hi = 164.5 }
+	pp_lplan_mark = { v = g_stone do = pp_lprof_t_stone n = 165 lo = 164.5 hi = 165.5 }
+	pp_lplan_mark = { v = g_coal do = pp_lprof_t_coal n = 166 lo = 165.5 hi = 166.5 }
+	pp_lplan_mark = { v = g_alum do = pp_lprof_t_alum n = 167 lo = 166.5 hi = 167.5 }
+	pp_lplan_mark = { v = g_mercury do = pp_lprof_t_mercury n = 168 lo = 167.5 hi = 168.5 }
+	pp_lplan_mark = { v = g_saltpeter do = pp_lprof_t_saltpeter n = 169 lo = 168.5 hi = 169.5 }
+	pp_lplan_mark = { v = g_copper do = pp_lprof_t_copper n = 170 lo = 169.5 hi = 170.5 }
+	pp_lplan_mark = { v = g_iron do = pp_lprof_t_iron n = 171 lo = 170.5 hi = 171.5 }
+	pp_lplan_mark = { v = g_lead do = pp_lprof_t_lead n = 172 lo = 171.5 hi = 172.5 }
+	pp_lplan_mark = { v = g_tin do = pp_lprof_t_tin n = 173 lo = 172.5 hi = 173.5 }
+	pp_lplan_mark = { v = g_gems do = pp_lprof_t_gems n = 174 lo = 173.5 hi = 174.5 }
+	pp_lplan_mark = { v = g_goods_gold do = pp_lprof_t_goods_gold n = 175 lo = 174.5 hi = 175.5 }
+	pp_lplan_mark = { v = g_silver do = pp_lprof_t_silver n = 176 lo = 175.5 hi = 176.5 }
+}
+
+# ---- A building's mark (pp_lplan_building_mark, pp_location_profiles.txt; scope:pp_cplan_btype = the building type) ----
+
+# Any scope: where the country has researched the direct successor of scope:pp_cplan_btype (the building type that
+# names it with obsolete = <older tier>; of several the first in the game's file order the country can build),
+# the successor becomes scope:pp_cplan_btype: one step up its line.
+pp_lplan_b_step = {
+	if = {
+		limit = { scope:pp_cplan_btype = building_type:coastal_fort scope:pp_cplan_country = { can_build_building = building_type:naval_battery } }
+		building_type:naval_battery = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:early_council_hall scope:pp_cplan_country = { can_build_building = building_type:council_hall } }
+		building_type:council_hall = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:council_hall scope:pp_cplan_country = { can_build_building = building_type:modern_council_hall } }
+		building_type:modern_council_hall = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:art_school scope:pp_cplan_country = { can_build_building = building_type:arts_academy } }
+		building_type:arts_academy = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:stockade scope:pp_cplan_country = { can_build_building = building_type:castle } }
+		building_type:castle = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:castle scope:pp_cplan_country = { can_build_building = building_type:bastion } }
+		building_type:bastion = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:bastion scope:pp_cplan_country = { can_build_building = building_type:star_fort } }
+		building_type:star_fort = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:star_fort scope:pp_cplan_country = { can_build_building = building_type:fortress } }
+		building_type:fortress = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:provincial_garrison scope:pp_cplan_country = { can_build_building = building_type:armory } }
+		building_type:armory = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:korean_barracks scope:pp_cplan_country = { can_build_building = building_type:armory } }
+		building_type:armory = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:armory scope:pp_cplan_country = { can_build_building = building_type:barracks } }
+		building_type:barracks = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:training_fields scope:pp_cplan_country = { can_build_building = building_type:regimental_camp } }
+		building_type:regimental_camp = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:regimental_camp scope:pp_cplan_country = { can_build_building = building_type:conscription_center } }
+		building_type:conscription_center = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:barracks scope:pp_cplan_country = { can_build_building = building_type:conscription_center } }
+		building_type:conscription_center = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:dock scope:pp_cplan_country = { can_build_building = building_type:dry_dock } }
+		building_type:dry_dock = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:dry_dock scope:pp_cplan_country = { can_build_building = building_type:shipyard } }
+		building_type:shipyard = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:shipyard scope:pp_cplan_country = { can_build_building = building_type:grand_shipyard } }
+		building_type:grand_shipyard = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:grand_shipyard scope:pp_cplan_country = { can_build_building = building_type:naval_base } }
+		building_type:naval_base = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:brewery scope:pp_cplan_country = { can_build_building = building_type:beer_workshop } }
+		building_type:beer_workshop = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:beer_workshop scope:pp_cplan_country = { can_build_building = building_type:brewery_manufactory } }
+		building_type:brewery_manufactory = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:brewery_manufactory scope:pp_cplan_country = { can_build_building = building_type:brewery_mill } }
+		building_type:brewery_mill = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:scriptorium scope:pp_cplan_country = { can_build_building = building_type:printing_press_shop } }
+		building_type:printing_press_shop = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:printing_press_shop scope:pp_cplan_country = { can_build_building = building_type:printing_manufactory } }
+		building_type:printing_manufactory = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:printing_manufactory scope:pp_cplan_country = { can_build_building = building_type:printing_mill } }
+		building_type:printing_mill = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:cannon_maker scope:pp_cplan_country = { can_build_building = building_type:cannon_workshop } }
+		building_type:cannon_workshop = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:cannon_workshop scope:pp_cplan_country = { can_build_building = building_type:cannon_foundry } }
+		building_type:cannon_foundry = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:cannon_foundry scope:pp_cplan_country = { can_build_building = building_type:cannons_factory } }
+		building_type:cannons_factory = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:cloth_guild scope:pp_cplan_country = { can_build_building = building_type:cloth_workshop } }
+		building_type:cloth_workshop = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:cloth_workshop scope:pp_cplan_country = { can_build_building = building_type:cloth_manufactory } }
+		building_type:cloth_manufactory = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:cloth_manufactory scope:pp_cplan_country = { can_build_building = building_type:textile_mill } }
+		building_type:textile_mill = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:dyes_guild scope:pp_cplan_country = { can_build_building = building_type:dyes_workshop } }
+		building_type:dyes_workshop = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:dyes_workshop scope:pp_cplan_country = { can_build_building = building_type:dyesworks } }
+		building_type:dyesworks = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:dyesworks scope:pp_cplan_country = { can_build_building = building_type:dyes_mill } }
+		building_type:dyes_mill = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:fine_cloth_guild scope:pp_cplan_country = { can_build_building = building_type:fine_cloth_workshop } }
+		building_type:fine_cloth_workshop = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:fine_cloth_workshop scope:pp_cplan_country = { can_build_building = building_type:fine_cloth_manufactory } }
+		building_type:fine_cloth_manufactory = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:fine_cloth_manufactory scope:pp_cplan_country = { can_build_building = building_type:fine_cloth_mill } }
+		building_type:fine_cloth_mill = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:hand_cannon_guild scope:pp_cplan_country = { can_build_building = building_type:gun_smith } }
+		building_type:gun_smith = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:gun_smith scope:pp_cplan_country = { can_build_building = building_type:guns_workshop } }
+		building_type:guns_workshop = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:guns_workshop scope:pp_cplan_country = { can_build_building = building_type:firearms_manufactory } }
+		building_type:firearms_manufactory = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:firearms_manufactory scope:pp_cplan_country = { can_build_building = building_type:firearms_factory } }
+		building_type:firearms_factory = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:furniture_guild scope:pp_cplan_country = { can_build_building = building_type:furniture_workshop } }
+		building_type:furniture_workshop = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:furniture_workshop scope:pp_cplan_country = { can_build_building = building_type:furniture_manufactory } }
+		building_type:furniture_manufactory = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:furniture_manufactory scope:pp_cplan_country = { can_build_building = building_type:furniture_mill } }
+		building_type:furniture_mill = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:glass_guild scope:pp_cplan_country = { can_build_building = building_type:glass_workshop } }
+		building_type:glass_workshop = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:glass_workshop scope:pp_cplan_country = { can_build_building = building_type:glassworks } }
+		building_type:glassworks = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:glassworks scope:pp_cplan_country = { can_build_building = building_type:glass_mill } }
+		building_type:glass_mill = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:lacquerware_guild scope:pp_cplan_country = { can_build_building = building_type:lacquerware_manufactory } }
+		building_type:lacquerware_manufactory = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:tannery scope:pp_cplan_country = { can_build_building = building_type:tanning_workshop } }
+		building_type:tanning_workshop = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:tanning_workshop scope:pp_cplan_country = { can_build_building = building_type:tannery_manufactory } }
+		building_type:tannery_manufactory = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:tannery_manufactory scope:pp_cplan_country = { can_build_building = building_type:tannery_mill } }
+		building_type:tannery_mill = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:distillers_guild scope:pp_cplan_country = { can_build_building = building_type:distillers_workshop } }
+		building_type:distillers_workshop = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:distillers_workshop scope:pp_cplan_country = { can_build_building = building_type:distiller_manufactory } }
+		building_type:distiller_manufactory = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:distiller_manufactory scope:pp_cplan_country = { can_build_building = building_type:distiller_mill } }
+		building_type:distiller_mill = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:naval_supplies_guild scope:pp_cplan_country = { can_build_building = building_type:naval_supplies_workshop } }
+		building_type:naval_supplies_workshop = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:naval_supplies_workshop scope:pp_cplan_country = { can_build_building = building_type:naval_supplies_manufactory } }
+		building_type:naval_supplies_manufactory = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:naval_supplies_manufactory scope:pp_cplan_country = { can_build_building = building_type:naval_supplies_mill } }
+		building_type:naval_supplies_mill = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:paper_guild scope:pp_cplan_country = { can_build_building = building_type:paper_workshop } }
+		building_type:paper_workshop = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:paper_workshop scope:pp_cplan_country = { can_build_building = building_type:paper_manufactory } }
+		building_type:paper_manufactory = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:paper_manufactory scope:pp_cplan_country = { can_build_building = building_type:paper_mill } }
+		building_type:paper_mill = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:porcelain_guild scope:pp_cplan_country = { can_build_building = building_type:porcelain_manufactory } }
+		building_type:porcelain_manufactory = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:pottery_guild scope:pp_cplan_country = { can_build_building = building_type:pottery_workshop } }
+		building_type:pottery_workshop = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:pottery_workshop scope:pp_cplan_country = { can_build_building = building_type:pottery_manufactory } }
+		building_type:pottery_manufactory = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:pottery_manufactory scope:pp_cplan_country = { can_build_building = building_type:pottery_mill } }
+		building_type:pottery_mill = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:saltpeter_guild scope:pp_cplan_country = { can_build_building = building_type:saltpeter_workshop } }
+		building_type:saltpeter_workshop = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:saltpeter_workshop scope:pp_cplan_country = { can_build_building = building_type:putrefaction_works } }
+		building_type:putrefaction_works = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:putrefaction_works scope:pp_cplan_country = { can_build_building = building_type:putrefaction_mill } }
+		building_type:putrefaction_mill = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:tools_guild scope:pp_cplan_country = { can_build_building = building_type:tools_workshop } }
+		building_type:tools_workshop = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:tools_workshop scope:pp_cplan_country = { can_build_building = building_type:iron_foundry } }
+		building_type:iron_foundry = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:iron_foundry scope:pp_cplan_country = { can_build_building = building_type:iron_mill } }
+		building_type:iron_mill = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:weapon_guild scope:pp_cplan_country = { can_build_building = building_type:weapon_workshop } }
+		building_type:weapon_workshop = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:weapon_workshop scope:pp_cplan_country = { can_build_building = building_type:weapon_manufactory } }
+		building_type:weapon_manufactory = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:weapon_manufactory scope:pp_cplan_country = { can_build_building = building_type:weapon_factory } }
+		building_type:weapon_factory = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:winery scope:pp_cplan_country = { can_build_building = building_type:winery_manufactory } }
+		building_type:winery_manufactory = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:charcoal_maker scope:pp_cplan_country = { can_build_building = building_type:improved_charcoal_maker } }
+		building_type:improved_charcoal_maker = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:marketplace scope:pp_cplan_country = { can_build_building = building_type:merchants_quarters } }
+		building_type:merchants_quarters = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:merchants_quarters scope:pp_cplan_country = { can_build_building = building_type:grand_marketplace } }
+		building_type:grand_marketplace = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:grand_marketplace scope:pp_cplan_country = { can_build_building = building_type:commerce_center } }
+		building_type:commerce_center = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:ruined_great_wall_of_china scope:pp_cplan_country = { can_build_building = building_type:repaired_great_wall_of_china } }
+		building_type:repaired_great_wall_of_china = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:alum_quarry scope:pp_cplan_country = { can_build_building = building_type:alum_works } }
+		building_type:alum_works = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:amber_collector scope:pp_cplan_country = { can_build_building = building_type:amber_diggings } }
+		building_type:amber_diggings = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:bog_iron_smelter scope:pp_cplan_country = { can_build_building = building_type:bog_iron_smelter_blast_furnace } }
+		building_type:bog_iron_smelter_blast_furnace = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:bog_iron_smelter_blast_furnace scope:pp_cplan_country = { can_build_building = building_type:bog_iron_smelter_coke_blast_furnace } }
+		building_type:bog_iron_smelter_coke_blast_furnace = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:camel_herders scope:pp_cplan_country = { can_build_building = building_type:camel_stud } }
+		building_type:camel_stud = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:cattle_farm scope:pp_cplan_country = { can_build_building = building_type:cattle_farmstead } }
+		building_type:cattle_farmstead = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:cattle_farmstead scope:pp_cplan_country = { can_build_building = building_type:cattle_rotations } }
+		building_type:cattle_rotations = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:cattle_rotations scope:pp_cplan_country = { can_build_building = building_type:cattle_model_farm } }
+		building_type:cattle_model_farm = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:clay_pit scope:pp_cplan_country = { can_build_building = building_type:clay_washmill } }
+		building_type:clay_washmill = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:coal_mine scope:pp_cplan_country = { can_build_building = building_type:coal_mine_improved } }
+		building_type:coal_mine_improved = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:coal_mine_improved scope:pp_cplan_country = { can_build_building = building_type:coal_mine_revolutions } }
+		building_type:coal_mine_revolutions = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:coal_mine scope:pp_cplan_country = { can_build_building = building_type:coal_mine_revolutions } }
+		building_type:coal_mine_revolutions = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:copper_mine scope:pp_cplan_country = { can_build_building = building_type:copper_mine_adit } }
+		building_type:copper_mine_adit = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:copper_mine_adit scope:pp_cplan_country = { can_build_building = building_type:copper_mine_deep } }
+		building_type:copper_mine_deep = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:copper_mine scope:pp_cplan_country = { can_build_building = building_type:copper_mine_deep } }
+		building_type:copper_mine_deep = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:fiber_crops_farm scope:pp_cplan_country = { can_build_building = building_type:fiber_dressing_yard } }
+		building_type:fiber_dressing_yard = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:field_management scope:pp_cplan_country = { can_build_building = building_type:field_management_convertible } }
+		building_type:field_management_convertible = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:field_management_convertible scope:pp_cplan_country = { can_build_building = building_type:field_management_improved } }
+		building_type:field_management_improved = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:gem_gravel_pit scope:pp_cplan_country = { can_build_building = building_type:gem_sluice } }
+		building_type:gem_sluice = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:gold_diggings scope:pp_cplan_country = { can_build_building = building_type:gold_stamp_mill } }
+		building_type:gold_stamp_mill = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:inland_saltworks scope:pp_cplan_country = { can_build_building = building_type:engineered_brine_saltworks } }
+		building_type:engineered_brine_saltworks = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:iron_mine scope:pp_cplan_country = { can_build_building = building_type:iron_mine_improved } }
+		building_type:iron_mine_improved = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:iron_mine_improved scope:pp_cplan_country = { can_build_building = building_type:iron_mine_deep } }
+		building_type:iron_mine_deep = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:iron_mine scope:pp_cplan_country = { can_build_building = building_type:iron_mine_deep } }
+		building_type:iron_mine_deep = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:lead_mine scope:pp_cplan_country = { can_build_building = building_type:lead_mine_bole_smelting } }
+		building_type:lead_mine_bole_smelting = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:lead_mine_bole_smelting scope:pp_cplan_country = { can_build_building = building_type:lead_mine_cupola_smelting } }
+		building_type:lead_mine_cupola_smelting = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:lead_mine scope:pp_cplan_country = { can_build_building = building_type:lead_mine_cupola_smelting } }
+		building_type:lead_mine_cupola_smelting = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:legume_farm scope:pp_cplan_country = { can_build_building = building_type:legume_farmstead } }
+		building_type:legume_farmstead = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:legume_farmstead scope:pp_cplan_country = { can_build_building = building_type:legume_rotations } }
+		building_type:legume_rotations = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:legume_rotations scope:pp_cplan_country = { can_build_building = building_type:legume_model_farm } }
+		building_type:legume_model_farm = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:lumber_mill scope:pp_cplan_country = { can_build_building = building_type:water_sawmill } }
+		building_type:water_sawmill = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:water_sawmill scope:pp_cplan_country = { can_build_building = building_type:lumber_mill_improved } }
+		building_type:lumber_mill_improved = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:lumber_mill scope:pp_cplan_country = { can_build_building = building_type:lumber_mill_improved } }
+		building_type:lumber_mill_improved = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:maize_farm scope:pp_cplan_country = { can_build_building = building_type:maize_farmstead } }
+		building_type:maize_farmstead = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:maize_farmstead scope:pp_cplan_country = { can_build_building = building_type:maize_rotations } }
+		building_type:maize_rotations = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:maize_rotations scope:pp_cplan_country = { can_build_building = building_type:maize_model_farm } }
+		building_type:maize_model_farm = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:cocoa_grove scope:pp_cplan_country = { can_build_building = building_type:managed_cocoa_grove } }
+		building_type:managed_cocoa_grove = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:forest_village scope:pp_cplan_country = { can_build_building = building_type:managed_forest_village } }
+		building_type:managed_forest_village = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:marble_quarry scope:pp_cplan_country = { can_build_building = building_type:marble_saw_yard } }
+		building_type:marble_saw_yard = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:cotton_farm scope:pp_cplan_country = { can_build_building = building_type:market_cotton_farm } }
+		building_type:market_cotton_farm = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:millet_farm scope:pp_cplan_country = { can_build_building = building_type:millet_farmstead } }
+		building_type:millet_farmstead = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:millet_farmstead scope:pp_cplan_country = { can_build_building = building_type:millet_rotations } }
+		building_type:millet_rotations = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:millet_rotations scope:pp_cplan_country = { can_build_building = building_type:millet_model_farm } }
+		building_type:millet_model_farm = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:fishing_village scope:pp_cplan_country = { can_build_building = building_type:net_curing_yard } }
+		building_type:net_curing_yard = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:fruit_orchard scope:pp_cplan_country = { can_build_building = building_type:nursery_orchard } }
+		building_type:nursery_orchard = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:ocean_fishery scope:pp_cplan_country = { can_build_building = building_type:drift_net_fishery } }
+		building_type:drift_net_fishery = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:drift_net_fishery scope:pp_cplan_country = { can_build_building = building_type:offshore_fishery } }
+		building_type:offshore_fishery = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:olive_farm scope:pp_cplan_country = { can_build_building = building_type:olive_farmstead } }
+		building_type:olive_farmstead = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:olive_farmstead scope:pp_cplan_country = { can_build_building = building_type:olive_rotations } }
+		building_type:olive_rotations = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:olive_rotations scope:pp_cplan_country = { can_build_building = building_type:olive_model_farm } }
+		building_type:olive_model_farm = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:pepper_garden scope:pp_cplan_country = { can_build_building = building_type:managed_pepper_garden } }
+		building_type:managed_pepper_garden = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:nursery_orchard scope:pp_cplan_country = { can_build_building = building_type:pomological_orchard } }
+		building_type:pomological_orchard = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:potato_farm scope:pp_cplan_country = { can_build_building = building_type:potato_farmstead } }
+		building_type:potato_farmstead = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:potato_farmstead scope:pp_cplan_country = { can_build_building = building_type:potato_rotations } }
+		building_type:potato_rotations = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:potato_rotations scope:pp_cplan_country = { can_build_building = building_type:potato_model_farm } }
+		building_type:potato_model_farm = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:cookshop scope:pp_cplan_country = { can_build_building = building_type:public_kitchen } }
+		building_type:public_kitchen = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:cinnabar_pit scope:pp_cplan_country = { can_build_building = building_type:quicksilver_retort } }
+		building_type:quicksilver_retort = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:rice_farm scope:pp_cplan_country = { can_build_building = building_type:rice_farmstead } }
+		building_type:rice_farmstead = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:rice_farmstead scope:pp_cplan_country = { can_build_building = building_type:rice_rotations } }
+		building_type:rice_rotations = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:rice_rotations scope:pp_cplan_country = { can_build_building = building_type:rice_model_farm } }
+		building_type:rice_model_farm = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:saffron_croft scope:pp_cplan_country = { can_build_building = building_type:saffron_kiln_croft } }
+		building_type:saffron_kiln_croft = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:salt_mine scope:pp_cplan_country = { can_build_building = building_type:salt_mine_improved } }
+		building_type:salt_mine_improved = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:sand_pit scope:pp_cplan_country = { can_build_building = building_type:sand_washery } }
+		building_type:sand_washery = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:sericulture_farm scope:pp_cplan_country = { can_build_building = building_type:regulated_sericulture_farm } }
+		building_type:regulated_sericulture_farm = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:sheep_farms scope:pp_cplan_country = { can_build_building = building_type:hurdled_sheepcotes } }
+		building_type:hurdled_sheepcotes = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:hurdled_sheepcotes scope:pp_cplan_country = { can_build_building = building_type:enclosed_sheep_walks } }
+		building_type:enclosed_sheep_walks = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:silver_mine scope:pp_cplan_country = { can_build_building = building_type:silver_mine_improved } }
+		building_type:silver_mine_improved = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:stone_quarry scope:pp_cplan_country = { can_build_building = building_type:stone_quarry_improved } }
+		building_type:stone_quarry_improved = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:horse_breeders scope:pp_cplan_country = { can_build_building = building_type:stud_farm } }
+		building_type:stud_farm = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:tea_garden scope:pp_cplan_country = { can_build_building = building_type:tea_sorting_garden } }
+		building_type:tea_sorting_garden = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:coffee_grove scope:pp_cplan_country = { can_build_building = building_type:terraced_coffee_grove } }
+		building_type:terraced_coffee_grove = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:tin_streamworks scope:pp_cplan_country = { can_build_building = building_type:tin_stamping_mill } }
+		building_type:tin_stamping_mill = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:tobacco_farm scope:pp_cplan_country = { can_build_building = building_type:market_tobacco_farm } }
+		building_type:market_tobacco_farm = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:sugarcane_farm scope:pp_cplan_country = { can_build_building = building_type:trapiche_sugarcane_farm } }
+		building_type:trapiche_sugarcane_farm = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:wheat_farm scope:pp_cplan_country = { can_build_building = building_type:wheat_farmstead } }
+		building_type:wheat_farmstead = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:wheat_farmstead scope:pp_cplan_country = { can_build_building = building_type:wheat_rotations } }
+		building_type:wheat_rotations = { save_scope_as = pp_cplan_btype }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_btype = building_type:wheat_rotations scope:pp_cplan_country = { can_build_building = building_type:wheat_model_farm } }
+		building_type:wheat_model_farm = { save_scope_as = pp_cplan_btype }
+	}
+}
+
+# Any scope: scope:pp_cplan_btype becomes the newest tier of its line the country can build (4 steps: the
+# longest line). A building the country has made obsolete is not built any more; its successor is.
+pp_lplan_b_newest = {
+	pp_lplan_b_step = yes
+	pp_lplan_b_step = yes
+	pp_lplan_b_step = yes
+	pp_lplan_b_step = yes
+}
+
+# Location scope: scope:pp_lplan_sok = 1 where one level of scope:pp_cplan_btype finds its workers here
+# (pp_cplan_staff with the type's pop type and workers a level; a building without workers always does).
+pp_lplan_b_staff = {
+	save_temporary_scope_value_as = { name = pp_lplan_sok value = 1 }
+	if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:artisan_guilds scope:pp_cplan_btype = building_type:burgher_mansion } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = burghers size = 0.01 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:guild_hall scope:pp_cplan_btype = building_type:local_markets scope:pp_cplan_btype = building_type:local_newspaper scope:pp_cplan_btype = building_type:merchants_guild } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = burghers size = 0.02 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:camara_comptos scope:pp_cplan_btype = building_type:fra_louvre_museum scope:pp_cplan_btype = building_type:german_mountain_toll_castle scope:pp_cplan_btype = building_type:german_river_toll_castle } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = burghers size = 0.05 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:al_qaysariyya_market scope:pp_cplan_btype = building_type:archive_of_the_indies scope:pp_cplan_btype = building_type:art_school scope:pp_cplan_btype = building_type:arts_academy scope:pp_cplan_btype = building_type:banking_office scope:pp_cplan_btype = building_type:bolshoi_theater scope:pp_cplan_btype = building_type:cas_royal_mint_of_segovia scope:pp_cplan_btype = building_type:chancery scope:pp_cplan_btype = building_type:chi_macau_port scope:pp_cplan_btype = building_type:clearing_house scope:pp_cplan_btype = building_type:college_of_poets scope:pp_cplan_btype = building_type:colonial_administration scope:pp_cplan_btype = building_type:commerce_center scope:pp_cplan_btype = building_type:constantinople_observatory scope:pp_cplan_btype = building_type:council_hall scope:pp_cplan_btype = building_type:counting_house scope:pp_cplan_btype = building_type:customs_house scope:pp_cplan_btype = building_type:doges_palace scope:pp_cplan_btype = building_type:dutch_trade_outpost scope:pp_cplan_btype = building_type:early_council_hall scope:pp_cplan_btype = building_type:entrepot scope:pp_cplan_btype = building_type:fondaco scope:pp_cplan_btype = building_type:funduq scope:pp_cplan_btype = building_type:globe_theatre scope:pp_cplan_btype = building_type:grand_marketplace scope:pp_cplan_btype = building_type:husuni_kubwa scope:pp_cplan_btype = building_type:llotja_seda scope:pp_cplan_btype = building_type:market_warehouse scope:pp_cplan_btype = building_type:marketplace scope:pp_cplan_btype = building_type:medical_school scope:pp_cplan_btype = building_type:merchants_quarters scope:pp_cplan_btype = building_type:minting_office scope:pp_cplan_btype = building_type:modern_council_hall scope:pp_cplan_btype = building_type:monument_consulado_de_bilbao scope:pp_cplan_btype = building_type:monument_llotja_de_mar_barcelona scope:pp_cplan_btype = building_type:monument_sa_llotja_de_palma scope:pp_cplan_btype = building_type:monument_torre_de_hercules scope:pp_cplan_btype = building_type:ori_portuguese_quarters scope:pp_cplan_btype = building_type:overseas_trading_post scope:pp_cplan_btype = building_type:piazza_san_marco scope:pp_cplan_btype = building_type:por_feitoria scope:pp_cplan_btype = building_type:por_trading_post scope:pp_cplan_btype = building_type:port_authority scope:pp_cplan_btype = building_type:porto_pisano scope:pp_cplan_btype = building_type:provincial_chancery scope:pp_cplan_btype = building_type:riksbank scope:pp_cplan_btype = building_type:royal_audience_and_chancery scope:pp_cplan_btype = building_type:saltpeter_guild scope:pp_cplan_btype = building_type:saltpeter_workshop scope:pp_cplan_btype = building_type:sevilla_bullfighting_school scope:pp_cplan_btype = building_type:stock_exchange scope:pp_cplan_btype = building_type:stroganov_school_of_iconic_art scope:pp_cplan_btype = building_type:teatro_san_cassiano scope:pp_cplan_btype = building_type:the_cipher_secretary scope:pp_cplan_btype = building_type:theater scope:pp_cplan_btype = building_type:trade_office scope:pp_cplan_btype = building_type:trading_hub scope:pp_cplan_btype = building_type:trans_saharan_trade_outposts scope:pp_cplan_btype = building_type:tribes_of_galway scope:pp_cplan_btype = building_type:urban_parliament_seat scope:pp_cplan_btype = building_type:usa_academy_of_arts_and_sciences scope:pp_cplan_btype = building_type:usa_national_bank scope:pp_cplan_btype = building_type:usa_national_mint scope:pp_cplan_btype = building_type:usa_philosophical_society scope:pp_cplan_btype = building_type:wharf scope:pp_cplan_btype = building_type:wisselbank } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = burghers size = 0.1 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:cinque_port scope:pp_cplan_btype = building_type:galata scope:pp_cplan_btype = building_type:hanseatic_kontor scope:pp_cplan_btype = building_type:moscow_artillery_yard scope:pp_cplan_btype = building_type:opera_house scope:pp_cplan_btype = building_type:perfumery scope:pp_cplan_btype = building_type:putrefaction_works scope:pp_cplan_btype = building_type:seljuk_mint scope:pp_cplan_btype = building_type:trade_company_foreign_influence scope:pp_cplan_btype = building_type:trade_company_garrison scope:pp_cplan_btype = building_type:trade_company_governance scope:pp_cplan_btype = building_type:trade_company_harbor scope:pp_cplan_btype = building_type:trade_company_local_venture scope:pp_cplan_btype = building_type:venetian_quarter scope:pp_cplan_btype = building_type:victualling_yard } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = burghers size = 0.2 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:ablaq_palace scope:pp_cplan_btype = building_type:apothecary scope:pp_cplan_btype = building_type:brewery scope:pp_cplan_btype = building_type:cannon_maker scope:pp_cplan_btype = building_type:cloth_guild scope:pp_cplan_btype = building_type:distillers_guild scope:pp_cplan_btype = building_type:dyes_guild scope:pp_cplan_btype = building_type:dyes_workshop scope:pp_cplan_btype = building_type:dyesworks scope:pp_cplan_btype = building_type:fine_cloth_guild scope:pp_cplan_btype = building_type:furniture_guild scope:pp_cplan_btype = building_type:glass_guild scope:pp_cplan_btype = building_type:gun_smith scope:pp_cplan_btype = building_type:hand_cannon_guild scope:pp_cplan_btype = building_type:jewelry_guild scope:pp_cplan_btype = building_type:lacquerware_guild scope:pp_cplan_btype = building_type:naval_supplies_guild scope:pp_cplan_btype = building_type:paper_guild scope:pp_cplan_btype = building_type:paper_manufactory scope:pp_cplan_btype = building_type:paper_workshop scope:pp_cplan_btype = building_type:porcelain_guild scope:pp_cplan_btype = building_type:pottery_guild scope:pp_cplan_btype = building_type:pounamou_carver scope:pp_cplan_btype = building_type:silk_production_guild scope:pp_cplan_btype = building_type:slave_center scope:pp_cplan_btype = building_type:slave_market scope:pp_cplan_btype = building_type:tannery scope:pp_cplan_btype = building_type:tools_guild scope:pp_cplan_btype = building_type:weapon_guild scope:pp_cplan_btype = building_type:winery scope:pp_cplan_btype = building_type:winery_manufactory } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = burghers size = 0.25 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:beer_workshop scope:pp_cplan_btype = building_type:cannon_workshop scope:pp_cplan_btype = building_type:cloth_workshop scope:pp_cplan_btype = building_type:distillers_workshop scope:pp_cplan_btype = building_type:fine_cloth_workshop scope:pp_cplan_btype = building_type:furniture_workshop scope:pp_cplan_btype = building_type:glass_workshop scope:pp_cplan_btype = building_type:guns_workshop scope:pp_cplan_btype = building_type:naval_supplies_workshop scope:pp_cplan_btype = building_type:pottery_workshop scope:pp_cplan_btype = building_type:printing_press_shop scope:pp_cplan_btype = building_type:tanning_workshop scope:pp_cplan_btype = building_type:tools_workshop scope:pp_cplan_btype = building_type:weapon_workshop } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = burghers size = 0.287 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:admiralty scope:pp_cplan_btype = building_type:central_bank scope:pp_cplan_btype = building_type:corporation_of_london scope:pp_cplan_btype = building_type:patrician_hall scope:pp_cplan_btype = building_type:sie_sienese_port scope:pp_cplan_btype = building_type:tax_assessor scope:pp_cplan_btype = building_type:war_college } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = burghers size = 0.3 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:brewery_manufactory scope:pp_cplan_btype = building_type:cannon_foundry scope:pp_cplan_btype = building_type:cloth_manufactory scope:pp_cplan_btype = building_type:distiller_manufactory scope:pp_cplan_btype = building_type:fine_cloth_manufactory scope:pp_cplan_btype = building_type:firearms_manufactory scope:pp_cplan_btype = building_type:furniture_manufactory scope:pp_cplan_btype = building_type:glassworks scope:pp_cplan_btype = building_type:lacquerware_manufactory scope:pp_cplan_btype = building_type:naval_supplies_manufactory scope:pp_cplan_btype = building_type:porcelain_manufactory scope:pp_cplan_btype = building_type:pottery_manufactory scope:pp_cplan_btype = building_type:printing_manufactory scope:pp_cplan_btype = building_type:tannery_manufactory scope:pp_cplan_btype = building_type:weapon_manufactory } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = burghers size = 0.325 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:ambras_castle scope:pp_cplan_btype = building_type:sukharev_tower scope:pp_cplan_btype = building_type:trade_company_headquarters } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = burghers size = 1 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:adu_jewish_community scope:pp_cplan_btype = building_type:jewish_district scope:pp_cplan_btype = building_type:phanariot_district scope:pp_cplan_btype = building_type:ribeira_das_naus } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = burghers size = 2 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:monument_bou_inania_madrasa scope:pp_cplan_btype = building_type:monument_great_mosque_algiers scope:pp_cplan_btype = building_type:monument_kairouan_mosque scope:pp_cplan_btype = building_type:monument_qarawiyyin } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = clergy size = 0.01 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:calvinist_preachers scope:pp_cplan_btype = building_type:chi_missionary_building scope:pp_cplan_btype = building_type:clerical_archives scope:pp_cplan_btype = building_type:gurgaddi scope:pp_cplan_btype = building_type:jesuit_college scope:pp_cplan_btype = building_type:local_shrine scope:pp_cplan_btype = building_type:lutheran_preachers scope:pp_cplan_btype = building_type:merchant_guild_chapel scope:pp_cplan_btype = building_type:missionary_building scope:pp_cplan_btype = building_type:nobled_sponsored_temple scope:pp_cplan_btype = building_type:order_headquarters scope:pp_cplan_btype = building_type:parish_church scope:pp_cplan_btype = building_type:seat_of_cardinal scope:pp_cplan_btype = building_type:spiritual_retreat scope:pp_cplan_btype = building_type:sufi_lodge scope:pp_cplan_btype = building_type:sufi_mosque scope:pp_cplan_btype = building_type:temple scope:pp_cplan_btype = building_type:university scope:pp_cplan_btype = building_type:wali_songo_shrine } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = clergy size = 0.05 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:calmecac scope:pp_cplan_btype = building_type:charite_of_berlin scope:pp_cplan_btype = building_type:clan_family_shrine scope:pp_cplan_btype = building_type:darussifa scope:pp_cplan_btype = building_type:debere_meshwae scope:pp_cplan_btype = building_type:fortress_church scope:pp_cplan_btype = building_type:great_hill_complex scope:pp_cplan_btype = building_type:great_temple_of_tenochtitlan scope:pp_cplan_btype = building_type:herrenchiemsee_abbey scope:pp_cplan_btype = building_type:hospital scope:pp_cplan_btype = building_type:lazaretto scope:pp_cplan_btype = building_type:library scope:pp_cplan_btype = building_type:madrasa scope:pp_cplan_btype = building_type:magistrato_alla_sanita scope:pp_cplan_btype = building_type:miaphysite_monastery scope:pp_cplan_btype = building_type:monastery scope:pp_cplan_btype = building_type:orthodox_monastery scope:pp_cplan_btype = building_type:quirinal_palace scope:pp_cplan_btype = building_type:ranganathaswamy_temple_building scope:pp_cplan_btype = building_type:ribat scope:pp_cplan_btype = building_type:sacred_council scope:pp_cplan_btype = building_type:swi_collegium_helveticum scope:pp_cplan_btype = building_type:venkateswara_temple scope:pp_cplan_btype = building_type:wat_chaiwatthanaram_temple_building scope:pp_cplan_btype = building_type:woodhenge_of_cahokia } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = clergy size = 0.1 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:cathedral scope:pp_cplan_btype = building_type:scriptorium } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = clergy size = 0.3 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:order_commandery } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = clergy size = 0.4 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:adm_vatican_library scope:pp_cplan_btype = building_type:bajang_ratu scope:pp_cplan_btype = building_type:bibliotheca_corviniana scope:pp_cplan_btype = building_type:bodrum_castle scope:pp_cplan_btype = building_type:city_of_victory scope:pp_cplan_btype = building_type:dip_vatican_library scope:pp_cplan_btype = building_type:great_madrasa scope:pp_cplan_btype = building_type:greek_latin_academy scope:pp_cplan_btype = building_type:gymnasium_building scope:pp_cplan_btype = building_type:ibadat_khana scope:pp_cplan_btype = building_type:library_of_vijayanagar scope:pp_cplan_btype = building_type:mil_vatican_library scope:pp_cplan_btype = building_type:papal_archives scope:pp_cplan_btype = building_type:tibetan_great_monastery } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = clergy size = 0.5 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:al_azhar_madrasa scope:pp_cplan_btype = building_type:delhi_tomb scope:pp_cplan_btype = building_type:mahmud_gawan_madrasa scope:pp_cplan_btype = building_type:school_of_salamanca } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = clergy size = 1 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:grain_house scope:pp_cplan_btype = building_type:oma_falaj scope:pp_cplan_btype = building_type:terraces scope:pp_cplan_btype = building_type:village_granary } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = laborers size = 0.05 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:caravan_stop scope:pp_cplan_btype = building_type:caravanserai scope:pp_cplan_btype = building_type:pomor_outpost } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = laborers size = 0.1 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:bridge_infrastructure scope:pp_cplan_btype = building_type:bubu_building scope:pp_cplan_btype = building_type:granary scope:pp_cplan_btype = building_type:local_smelters scope:pp_cplan_btype = building_type:pound_lock_canal_infrastructure scope:pp_cplan_btype = building_type:sawmill scope:pp_cplan_btype = building_type:stannary_court scope:pp_cplan_btype = building_type:windmill } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = laborers size = 0.25 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:construction_center scope:pp_cplan_btype = building_type:hippodrome scope:pp_cplan_btype = building_type:mercury_patio scope:pp_cplan_btype = building_type:moscow_orphanage scope:pp_cplan_btype = building_type:novodevichy_convent scope:pp_cplan_btype = building_type:putrefaction_mill } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = laborers size = 0.5 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:alum_quarry scope:pp_cplan_btype = building_type:alum_works scope:pp_cplan_btype = building_type:amber_collector scope:pp_cplan_btype = building_type:amber_diggings scope:pp_cplan_btype = building_type:bog_iron_smelter scope:pp_cplan_btype = building_type:bog_iron_smelter_blast_furnace scope:pp_cplan_btype = building_type:bog_iron_smelter_coke_blast_furnace scope:pp_cplan_btype = building_type:carrier_inn scope:pp_cplan_btype = building_type:cattle_model_farm scope:pp_cplan_btype = building_type:charcoal_maker scope:pp_cplan_btype = building_type:chili_plantation scope:pp_cplan_btype = building_type:cinnabar_pit scope:pp_cplan_btype = building_type:clay_pit scope:pp_cplan_btype = building_type:clay_washmill scope:pp_cplan_btype = building_type:clove_grove scope:pp_cplan_btype = building_type:coal_mine scope:pp_cplan_btype = building_type:coal_mine_improved scope:pp_cplan_btype = building_type:coal_mine_revolutions scope:pp_cplan_btype = building_type:coastal_shipping_office scope:pp_cplan_btype = building_type:cocoa_grove scope:pp_cplan_btype = building_type:coffee_grove scope:pp_cplan_btype = building_type:cookshop scope:pp_cplan_btype = building_type:copper_mine scope:pp_cplan_btype = building_type:copper_mine_adit scope:pp_cplan_btype = building_type:copper_mine_deep scope:pp_cplan_btype = building_type:cotton_farm scope:pp_cplan_btype = building_type:dye_plantation scope:pp_cplan_btype = building_type:dyes_mill scope:pp_cplan_btype = building_type:elephant_kraal scope:pp_cplan_btype = building_type:enclosed_sheep_walks scope:pp_cplan_btype = building_type:engineered_brine_saltworks scope:pp_cplan_btype = building_type:fiber_crops_farm scope:pp_cplan_btype = building_type:fiber_dressing_yard scope:pp_cplan_btype = building_type:gem_gravel_pit scope:pp_cplan_btype = building_type:gem_sluice scope:pp_cplan_btype = building_type:gold_diggings scope:pp_cplan_btype = building_type:gold_stamp_mill scope:pp_cplan_btype = building_type:horse_breeders scope:pp_cplan_btype = building_type:improved_charcoal_maker scope:pp_cplan_btype = building_type:incense_grove scope:pp_cplan_btype = building_type:inland_saltworks scope:pp_cplan_btype = building_type:iron_mine scope:pp_cplan_btype = building_type:iron_mine_deep scope:pp_cplan_btype = building_type:iron_mine_improved scope:pp_cplan_btype = building_type:ivory_hunting_camp scope:pp_cplan_btype = building_type:lead_mine scope:pp_cplan_btype = building_type:lead_mine_bole_smelting scope:pp_cplan_btype = building_type:lead_mine_cupola_smelting scope:pp_cplan_btype = building_type:legume_model_farm scope:pp_cplan_btype = building_type:lumber_mill scope:pp_cplan_btype = building_type:lumber_mill_improved scope:pp_cplan_btype = building_type:maize_model_farm scope:pp_cplan_btype = building_type:managed_cocoa_grove scope:pp_cplan_btype = building_type:managed_forest_village scope:pp_cplan_btype = building_type:managed_pepper_garden scope:pp_cplan_btype = building_type:marble_quarry scope:pp_cplan_btype = building_type:marble_saw_yard scope:pp_cplan_btype = building_type:market_cotton_farm scope:pp_cplan_btype = building_type:market_tobacco_farm scope:pp_cplan_btype = building_type:mason scope:pp_cplan_btype = building_type:millet_model_farm scope:pp_cplan_btype = building_type:offshore_fishery scope:pp_cplan_btype = building_type:olive_model_farm scope:pp_cplan_btype = building_type:paper_mill scope:pp_cplan_btype = building_type:pearl_fishery scope:pp_cplan_btype = building_type:pepper_garden scope:pp_cplan_btype = building_type:pomological_orchard scope:pp_cplan_btype = building_type:potato_model_farm scope:pp_cplan_btype = building_type:pp_banjara_tanda scope:pp_cplan_btype = building_type:pp_caravanserai scope:pp_cplan_btype = building_type:pp_llama_caravan_post scope:pp_cplan_btype = building_type:pp_oasis_caravan_station scope:pp_cplan_btype = building_type:pp_yam_station scope:pp_cplan_btype = building_type:public_kitchen scope:pp_cplan_btype = building_type:quicksilver_retort scope:pp_cplan_btype = building_type:regulated_sericulture_farm scope:pp_cplan_btype = building_type:rice_model_farm scope:pp_cplan_btype = building_type:river_boatmen_yard scope:pp_cplan_btype = building_type:rural_clothmaker scope:pp_cplan_btype = building_type:rural_glassmaker scope:pp_cplan_btype = building_type:saffron_croft scope:pp_cplan_btype = building_type:saffron_kiln_croft scope:pp_cplan_btype = building_type:salt_collector scope:pp_cplan_btype = building_type:salt_mine scope:pp_cplan_btype = building_type:salt_mine_improved scope:pp_cplan_btype = building_type:saltpeter_beds scope:pp_cplan_btype = building_type:sand_pit scope:pp_cplan_btype = building_type:sand_washery scope:pp_cplan_btype = building_type:schwaz_mine scope:pp_cplan_btype = building_type:sericulture_farm scope:pp_cplan_btype = building_type:silver_mine scope:pp_cplan_btype = building_type:silver_mine_improved scope:pp_cplan_btype = building_type:simplers_grove scope:pp_cplan_btype = building_type:stone_quarry scope:pp_cplan_btype = building_type:stone_quarry_improved scope:pp_cplan_btype = building_type:stud_farm scope:pp_cplan_btype = building_type:sugarcane_farm scope:pp_cplan_btype = building_type:tar_kiln scope:pp_cplan_btype = building_type:tea_garden scope:pp_cplan_btype = building_type:tea_sorting_garden scope:pp_cplan_btype = building_type:terraced_coffee_grove scope:pp_cplan_btype = building_type:tin_stamping_mill scope:pp_cplan_btype = building_type:tin_streamworks scope:pp_cplan_btype = building_type:tobacco_farm scope:pp_cplan_btype = building_type:transport_office scope:pp_cplan_btype = building_type:trapiche_sugarcane_farm scope:pp_cplan_btype = building_type:vineyard_estate scope:pp_cplan_btype = building_type:water_sawmill scope:pp_cplan_btype = building_type:wheat_model_farm } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = laborers size = 0.8 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:aqueduct_system scope:pp_cplan_btype = building_type:fulani_cattle_rearing_pen scope:pp_cplan_btype = building_type:great_valley_complex scope:pp_cplan_btype = building_type:hanseatic_shipwright_guild scope:pp_cplan_btype = building_type:lighthouse_of_alexandria scope:pp_cplan_btype = building_type:protected_harbor } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = laborers size = 1 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:iron_foundry } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = laborers size = 1.04 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:brewery_mill scope:pp_cplan_btype = building_type:cannons_factory scope:pp_cplan_btype = building_type:distiller_mill scope:pp_cplan_btype = building_type:fine_cloth_mill scope:pp_cplan_btype = building_type:firearms_factory scope:pp_cplan_btype = building_type:furniture_mill scope:pp_cplan_btype = building_type:glass_mill scope:pp_cplan_btype = building_type:iron_mill scope:pp_cplan_btype = building_type:naval_supplies_mill scope:pp_cplan_btype = building_type:pottery_mill scope:pp_cplan_btype = building_type:printing_mill scope:pp_cplan_btype = building_type:steel_mill scope:pp_cplan_btype = building_type:tannery_mill scope:pp_cplan_btype = building_type:textile_mill scope:pp_cplan_btype = building_type:weapon_factory } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = laborers size = 1.16 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:camel_herders scope:pp_cplan_btype = building_type:camel_stud scope:pp_cplan_btype = building_type:drift_net_fishery scope:pp_cplan_btype = building_type:ocean_fishery } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = laborers size = 1.25 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:hired_labor_yard } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = laborers size = 2 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:grange scope:pp_cplan_btype = building_type:tavern } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = nobles size = 0.001 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:eghabho_nore_mansion scope:pp_cplan_btype = building_type:local_estates } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = nobles size = 0.005 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:embassy scope:pp_cplan_btype = building_type:monument_chellah scope:pp_cplan_btype = building_type:monument_hassan_tower scope:pp_cplan_btype = building_type:nobility_fortifications scope:pp_cplan_btype = building_type:noble_courts scope:pp_cplan_btype = building_type:noble_villa scope:pp_cplan_btype = building_type:nobles_mansion scope:pp_cplan_btype = building_type:nobles_recruitment_center scope:pp_cplan_btype = building_type:rotten_borough scope:pp_cplan_btype = building_type:toll_castle scope:pp_cplan_btype = building_type:tur_kodjabashi_office scope:pp_cplan_btype = building_type:zhixian } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = nobles size = 0.01 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:local_noble_delegation } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = nobles size = 0.02 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:academy_of_sciences scope:pp_cplan_btype = building_type:alhambra scope:pp_cplan_btype = building_type:bavarian_academy_of_sciences scope:pp_cplan_btype = building_type:berlin_palace scope:pp_cplan_btype = building_type:bulgarian_administration_center scope:pp_cplan_btype = building_type:confucian_academy scope:pp_cplan_btype = building_type:confucian_school scope:pp_cplan_btype = building_type:forbidden_city scope:pp_cplan_btype = building_type:free_economic_society scope:pp_cplan_btype = building_type:grand_apartment scope:pp_cplan_btype = building_type:grand_palace scope:pp_cplan_btype = building_type:great_enclosure scope:pp_cplan_btype = building_type:hanseatic_town_hall scope:pp_cplan_btype = building_type:imperial_academy_of_arts scope:pp_cplan_btype = building_type:imperial_city_of_hue scope:pp_cplan_btype = building_type:institute_of_noble_maidens scope:pp_cplan_btype = building_type:itinerant_court_seat scope:pp_cplan_btype = building_type:kalari scope:pp_cplan_btype = building_type:lieutenancy scope:pp_cplan_btype = building_type:monument_dar_al_makhzen scope:pp_cplan_btype = building_type:monument_palau_generalitat scope:pp_cplan_btype = building_type:munich_residenz_baroque_expansion scope:pp_cplan_btype = building_type:munich_residenz_founding scope:pp_cplan_btype = building_type:munich_residenz_renaissance_expansion scope:pp_cplan_btype = building_type:qalat_al_mashwar scope:pp_cplan_btype = building_type:royal_academy_of_arts scope:pp_cplan_btype = building_type:royal_garden scope:pp_cplan_btype = building_type:royal_society scope:pp_cplan_btype = building_type:sanssouci scope:pp_cplan_btype = building_type:yakata scope:pp_cplan_btype = building_type:zwinger } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = nobles size = 0.05 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:chieftain_hall scope:pp_cplan_btype = building_type:gosho scope:pp_cplan_btype = building_type:italian_administration_center scope:pp_cplan_btype = building_type:khan_ordu scope:pp_cplan_btype = building_type:kings_manor scope:pp_cplan_btype = building_type:kokufu scope:pp_cplan_btype = building_type:local_governor scope:pp_cplan_btype = building_type:naval_governor scope:pp_cplan_btype = building_type:republican_assembly scope:pp_cplan_btype = building_type:royal_court scope:pp_cplan_btype = building_type:supreme_court scope:pp_cplan_btype = building_type:viceroyalty } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = nobles size = 0.1 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:belvedere_palace scope:pp_cplan_btype = building_type:el_escorial_palace scope:pp_cplan_btype = building_type:general_archive_of_simancas scope:pp_cplan_btype = building_type:house_of_parliament scope:pp_cplan_btype = building_type:rock_of_monaco scope:pp_cplan_btype = building_type:schonbrunn_palace scope:pp_cplan_btype = building_type:sco_palace_of_holyroodhouse scope:pp_cplan_btype = building_type:uffizi scope:pp_cplan_btype = building_type:venetian_palaces } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = nobles size = 0.2 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:versailles } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = nobles size = 0.5 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:bardic_school scope:pp_cplan_btype = building_type:festival_grounds scope:pp_cplan_btype = building_type:fortress_granary scope:pp_cplan_btype = building_type:free_village scope:pp_cplan_btype = building_type:local_assembly scope:pp_cplan_btype = building_type:local_schools scope:pp_cplan_btype = building_type:maniot_toll_guards scope:pp_cplan_btype = building_type:peasants_hunting_grounds scope:pp_cplan_btype = building_type:pirate_haven } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = peasants size = 0.05 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:black_market scope:pp_cplan_btype = building_type:brothel scope:pp_cplan_btype = building_type:field_management scope:pp_cplan_btype = building_type:peasants_training_grounds scope:pp_cplan_btype = building_type:pest_house scope:pp_cplan_btype = building_type:smuggler_cove } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = peasants size = 0.1 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:field_management_convertible scope:pp_cplan_btype = building_type:jiangnan_canal_network scope:pp_cplan_btype = building_type:jiangnan_hill_terraces } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = peasants size = 0.15 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:field_management_improved } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = peasants size = 0.2 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:panaqa_building scope:pp_cplan_btype = building_type:settlement_building } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = peasants size = 0.25 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:rural_daywork_yard } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = peasants size = 0.75 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:cattle_rotations scope:pp_cplan_btype = building_type:clan_shipyards scope:pp_cplan_btype = building_type:coastal_settlements scope:pp_cplan_btype = building_type:elephant_hunting_grounds scope:pp_cplan_btype = building_type:legume_rotations scope:pp_cplan_btype = building_type:maize_rotations scope:pp_cplan_btype = building_type:market_village scope:pp_cplan_btype = building_type:millet_rotations scope:pp_cplan_btype = building_type:olive_rotations scope:pp_cplan_btype = building_type:potato_rotations scope:pp_cplan_btype = building_type:rice_rotations scope:pp_cplan_btype = building_type:shoen scope:pp_cplan_btype = building_type:tatara scope:pp_cplan_btype = building_type:wheat_rotations } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = peasants size = 1 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:cattle_farm scope:pp_cplan_btype = building_type:cattle_farmstead scope:pp_cplan_btype = building_type:eng_royal_forest scope:pp_cplan_btype = building_type:fishing_village scope:pp_cplan_btype = building_type:forest_village scope:pp_cplan_btype = building_type:fruit_orchard scope:pp_cplan_btype = building_type:hurdled_sheepcotes scope:pp_cplan_btype = building_type:legume_farm scope:pp_cplan_btype = building_type:legume_farmstead scope:pp_cplan_btype = building_type:maghreb_palm_irrigation scope:pp_cplan_btype = building_type:maize_farm scope:pp_cplan_btype = building_type:maize_farmstead scope:pp_cplan_btype = building_type:millet_farm scope:pp_cplan_btype = building_type:millet_farmstead scope:pp_cplan_btype = building_type:net_curing_yard scope:pp_cplan_btype = building_type:nursery_orchard scope:pp_cplan_btype = building_type:olive_farm scope:pp_cplan_btype = building_type:olive_farmstead scope:pp_cplan_btype = building_type:potato_farm scope:pp_cplan_btype = building_type:potato_farmstead scope:pp_cplan_btype = building_type:rice_farm scope:pp_cplan_btype = building_type:rice_farmstead scope:pp_cplan_btype = building_type:sheep_farms scope:pp_cplan_btype = building_type:wheat_farm scope:pp_cplan_btype = building_type:wheat_farmstead } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = peasants size = 1.25 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:pirate_stronghold } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = peasants size = 2 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:cotton_plantation scope:pp_cplan_btype = building_type:slave_labor_yard scope:pp_cplan_btype = building_type:sugar_plantation scope:pp_cplan_btype = building_type:tobacco_plantation } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = slaves size = 1 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:galley_barracks scope:pp_cplan_btype = building_type:ghilman_barracks scope:pp_cplan_btype = building_type:janissary_barracks scope:pp_cplan_btype = building_type:mamluk_barracks } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = slaves size = 2 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:gallowglass_sept scope:pp_cplan_btype = building_type:rahdar scope:pp_cplan_btype = building_type:stockade } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = soldiers size = 0.1 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:bailiff } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = soldiers size = 0.2 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:pukara_building scope:pp_cplan_btype = building_type:tambo } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = soldiers size = 0.25 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:hre_imperial_armory_foreign scope:pp_cplan_btype = building_type:hre_imperial_armory_own scope:pp_cplan_btype = building_type:order_stronghold } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = soldiers size = 0.4 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:castel_sant_angelo scope:pp_cplan_btype = building_type:castle scope:pp_cplan_btype = building_type:city_walls scope:pp_cplan_btype = building_type:fortezza_di_sant_andrea scope:pp_cplan_btype = building_type:hexamilion_wall scope:pp_cplan_btype = building_type:hsa_burgtor scope:pp_cplan_btype = building_type:kastellet scope:pp_cplan_btype = building_type:korean_gunnery_coastal_defense scope:pp_cplan_btype = building_type:korean_gunnery_land_defense scope:pp_cplan_btype = building_type:kronborg scope:pp_cplan_btype = building_type:monument_kasbah_udayas scope:pp_cplan_btype = building_type:monument_ksar_ait_benhaddou scope:pp_cplan_btype = building_type:monument_mansourah_tlemcen scope:pp_cplan_btype = building_type:oma_nizwa_fort scope:pp_cplan_btype = building_type:ostrog scope:pp_cplan_btype = building_type:peel_towers scope:pp_cplan_btype = building_type:red_fort scope:pp_cplan_btype = building_type:repaired_great_wall_of_china scope:pp_cplan_btype = building_type:ruined_great_wall_of_china scope:pp_cplan_btype = building_type:tower_of_belem scope:pp_cplan_btype = building_type:walls_of_lucca scope:pp_cplan_btype = building_type:walls_of_ston } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = soldiers size = 0.5 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:amsterdam_admiralty scope:pp_cplan_btype = building_type:armory scope:pp_cplan_btype = building_type:barracks scope:pp_cplan_btype = building_type:bastion scope:pp_cplan_btype = building_type:bey_fortress scope:pp_cplan_btype = building_type:brethren_marsh scope:pp_cplan_btype = building_type:cantonments scope:pp_cplan_btype = building_type:cawa_barracks scope:pp_cplan_btype = building_type:city_guard scope:pp_cplan_btype = building_type:coastal_fort scope:pp_cplan_btype = building_type:conscription_center scope:pp_cplan_btype = building_type:copenhagen_dockyard scope:pp_cplan_btype = building_type:dock scope:pp_cplan_btype = building_type:friesland_admiralty scope:pp_cplan_btype = building_type:jurchen_barracks scope:pp_cplan_btype = building_type:kilwan_shipwrights scope:pp_cplan_btype = building_type:korean_barracks scope:pp_cplan_btype = building_type:kurmina_headquarter scope:pp_cplan_btype = building_type:pirate_tavern scope:pp_cplan_btype = building_type:provincial_garrison scope:pp_cplan_btype = building_type:regimental_camp scope:pp_cplan_btype = building_type:rotterdam_admiralty scope:pp_cplan_btype = building_type:segovia_artillery_academy scope:pp_cplan_btype = building_type:sergeantry scope:pp_cplan_btype = building_type:temple_militia scope:pp_cplan_btype = building_type:the_bock_fortifications scope:pp_cplan_btype = building_type:thema_headquarters scope:pp_cplan_btype = building_type:training_fields scope:pp_cplan_btype = building_type:warrior_monks_training_grounds scope:pp_cplan_btype = building_type:warrior_temple scope:pp_cplan_btype = building_type:west_friesland_admiralty scope:pp_cplan_btype = building_type:yamashiro scope:pp_cplan_btype = building_type:zazzau_walls scope:pp_cplan_btype = building_type:zeeland_admiralty } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = soldiers size = 1 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:barcelona_royal_shipyard scope:pp_cplan_btype = building_type:dry_dock scope:pp_cplan_btype = building_type:enderun_academy scope:pp_cplan_btype = building_type:imperial_halic_shipyards scope:pp_cplan_btype = building_type:kremlin scope:pp_cplan_btype = building_type:naval_battery scope:pp_cplan_btype = building_type:royal_atarazanas_seville scope:pp_cplan_btype = building_type:sofa_barracks scope:pp_cplan_btype = building_type:sofa_stockade scope:pp_cplan_btype = building_type:star_fort scope:pp_cplan_btype = building_type:venetian_arsenal scope:pp_cplan_btype = building_type:walls_of_benin } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = soldiers size = 2 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:telpochcalli } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = soldiers size = 2.5 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:north_sea_shipyards scope:pp_cplan_btype = building_type:shipyard scope:pp_cplan_btype = building_type:theodosian_walls } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = soldiers size = 3 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:fortress scope:pp_cplan_btype = building_type:grand_shipyard } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = soldiers size = 4 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:kurultai scope:pp_cplan_btype = building_type:naval_base } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = soldiers size = 5 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:dun_fort scope:pp_cplan_btype = building_type:guich_garrison } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = tribesmen size = 0.1 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:safaviyya_order_hall scope:pp_cplan_btype = building_type:warrior_lodge } }
+		if = {
+			limit = { NOT = { pp_cplan_staff = { type = tribesmen size = 0.5 } } }
+			save_temporary_scope_value_as = { name = pp_lplan_sok value = 0 }
+		}
+	}
 }
 
 # ---- Slots: the only per-slot script ----

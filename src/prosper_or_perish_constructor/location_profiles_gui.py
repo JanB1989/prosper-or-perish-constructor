@@ -369,7 +369,7 @@ def _rule_row(r: int, config: Config) -> str:
         # the target: click to pick it
         f"{tab}widget = {{\n{tab}\tsize = {{ 40 40 }}\n"
         f"{tab}\tpp_lprof_gold = {{ visible = \"[{gui_has(PICK, field)}]\" }}\n"
-        f"{tab}\tbutton = {{\n{tab}\t\tsize = {{ 34 34 }}\n{tab}\t\tparentanchor = center\n{tab}\t\ttooltip = \"PP_LPROF_UI_TARGET_TT\"\n"
+        f"{tab}\tbutton = {{\n{tab}\t\tsize = {{ 34 34 }}\n{tab}\t\tparentanchor = center\n{tab}\t\ttooltip = \"PP_LPROF_UI_TARGET_TT_R{r}\"\n"
         f"{tab}\t\tonclick = \"[GetVariableSystem.Set('{PICK}', '{field}')]\"\n"
         f"{tab}\t\ticon = {{ size = {{ 100% 100% }} texture = \"{TILE}\" color = {{ {DARK} }} }}\n"
         + target_icons(g, cn, f"{tab}\t\t")
@@ -383,6 +383,8 @@ def _rule_row(r: int, config: Config) -> str:
         f"{tab}\t\tpp_lprof_label = {{ parentanchor = left|vcenter visible = \"[EqualTo_string({g}.GetGoods.GetKey, '{MARKET_ACCESS}')]\" text = \"PP_LPROF_UI_MARKET_ACCESS\" }}\n"
         f"{tab}\t}}\n"
         f"{tab}\twidget = {{\n{tab}\t\tvisible = \"[{c}.IsSet]\"\n{tab}\t\tsize = {{ 100% 100% }}\n"
+        # a building category: its tooltip lists the buildings the rule builds
+        f"{tab}\t\ttooltip = \"PP_LPROF_UI_TARGET_LIST_R{r}\"\n"
         f"{tab}\t\tpp_lprof_label = {{ parentanchor = left|vcenter raw_text = \"{flag_name(c)}\" }}\n"
         f"{tab}\t}}\n"
         f"{tab}\tpp_lprof_label = {{ parentanchor = left|vcenter visible = \"[Not({is_set})]\" text = \"PP_LPROF_UI_EMPTY_RULE\" default_format = \"#weak\" }}\n"
@@ -657,13 +659,38 @@ def _mark_tile(item: lp.Item, tab: str, marked: bool) -> str:
     )
 
 
+def _building_mark_tiles(tab: str) -> str:
+    """The marked buildings of the location (the list pp_lplan_b, a building type each) as tiles of the row "Also build
+    here", after the marked goods: each with the building's own icon, pressed like every marked tile; a click takes
+    the mark off. A building is marked on its own entry (the location window's building tiles, the build panel)."""
+    return (
+        f"{tab}flowcontainer = {{\n{tab}\tdirection = horizontal\n"
+        f"{tab}\tdatamodel = \"[{lp.BUILDING_MARKS_MODEL}]\"\n"
+        f"{tab}\titem = {{\n"
+        f"{tab}\t\twidget = {{\n{tab}\t\t\tsize = {{ {MARK_TILE} 34 }}\n"
+        f"{tab}\t\t\tbutton = {{\n"
+        f"{tab}\t\t\t\tusing = header_button_template\n"
+        f"{tab}\t\t\t\tblockoverride \"header_button_template_push_properties\" {{ using = button_tab_toggle_properties_template }}\n"
+        f"{tab}\t\t\t\tblockoverride \"header_button_template_texture\" {{ using = pressed_button_texture }}\n"
+        f"{tab}\t\t\t\tblockoverride \"header_button_full_content\" {{}}\n"
+        f"{tab}\t\t\t\tsize = {{ 34 34 }}\n"
+        # pressed: the tile exists only while the building is marked (the location then has marks)
+        f"{tab}\t\t\t\tdown = \"[{lvar('pp_lplan_n')}.IsSet]\"\n"
+        f"{tab}\t\t\t\tglow = {{ glow_radius = 5 color = {{ 1.0 0.85 0.55 1.0 }} alpha = 0.8 }}\n"
+        f"{tab}\t\t\t\ttooltip = \"PP_LPLAN_BMARK_TILE\"\n"
+        f"{tab}\t\t\t\tonclick = \"[{lp.building_mark_call('Location.MakeScope', 'Scope.GetBuildingType.MakeScope')}]\"\n"
+        f"{tab}\t\t\t\ticon = {{ size = {{ 26 26 }} parentanchor = center texture = \"[{lp.BUILDING_MARK_ICON}]\" }}\n"
+        f"{tab}\t\t\t}}\n{tab}\t\t}}\n{tab}\t}}\n{tab}}}\n"
+    )
+
+
 def _also_row(items: list[lp.Item], chunks: list[list[lp.Item]]) -> str:
     """The row "Also build here" of the location window's Infrastructure tab, under the Profile row and the same card
     (Jan 2026-11-10: "a second row next to the profile ... I also want to expand this here"; datacontext Location): the
     location's marks (the Location Plan's items, which the Construction Plan builds here) as toggle tiles in one line:
-    the marked items first, then, unmarked, the goods that buildings standing here make (the quick candidates, like
-    vanilla's auto expand on a standing building), and at the right end one round button that opens the Location Plan
-    window for everything else. ``items``: the markable items in the picker's order; ``chunks``: the quick candidate
+    the marked goods first, then the marked buildings (_building_mark_tiles), then, unmarked, the goods that buildings
+    standing here make (the quick candidates, like vanilla's auto expand on a standing building), and at the right end
+    one round button that opens the Location Plan window for every good. ``items``: the markable items in the picker's order; ``chunks``: the quick candidate
     goods in chunks (lpf.quick_chunks); chunk n shows while the row has room for it (pp_lplan_quick_room_<n>), so the
     line never grows past lpf.QUICK_ROW tiles by its candidates."""
     tab = "\t\t\t\t\t\t\t"
@@ -701,6 +728,7 @@ def _also_row(items: list[lp.Item], chunks: list[list[lp.Item]]) -> str:
         "\t\t\t\t\t\tflowcontainer = {\n\t\t\t\t\t\t\tdirection = horizontal\n\t\t\t\t\t\t\tignoreinvisible = yes\n",
     ]
     out += [_mark_tile(item, tab, True) for item in items]
+    out.append(_building_mark_tiles(tab))
     for number, chunk in enumerate(chunks, 1):
         room = f"GreaterThan_CFixedPoint(Location.MakeScope.ScriptValue('pp_lplan_quick_room_{number}'), {fixed(0)})"
         out.append(f"{tab}flowcontainer = {{\n{tab}\tvisible = \"[{room}]\"\n{tab}\tdirection = horizontal\n{tab}\tignoreinvisible = yes\n")
@@ -828,7 +856,7 @@ def add_location_row(text: str) -> str:
 
 def render_gui(items: list[lp.Item], config: Config, quick: list[list[lp.Item]] | None = None) -> str:
     """``quick``: the quick candidate goods of the row "Also build here" in chunks (lpf.quick_chunks); none without."""
-    marks = [item for item in items if item.key != MARKET_ACCESS]
+    marks = lpf.mark_items(items)  # the goods (a building is marked on its own entry)
     return (
         HEADER
         + "\ntypes PPLocationProfilesGenerated\n{\n"
@@ -1067,18 +1095,48 @@ def _none_line(read: Reader, config: Config) -> str:
     return f"[SelectLocalization({any_of(rules)}, 'PP_LPROF_UI_EMPTY', 'PP_LPROF_UI_NO_RULES')]"
 
 
-def render_loc(items: list[lp.Item], config: Config) -> str:
+CATEGORY_LIST = 12  # buildings a category's tooltip names before "and N more"
+
+
+def category_list(names: list[str]) -> str:
+    """What a building category builds for the player, for its tooltips: the buildings a rule with that target tries
+    (location_profiles.targets: the same list, the same order), the first CATEGORY_LIST by name and how many more."""
+    shown = ", ".join(f"[ShowBuildingTypeName('{name}')|e]" for name in names[:CATEGORY_LIST])
+    more = f" and {len(names) - CATEGORY_LIST} more" if len(names) > CATEGORY_LIST else ""
+    if not names:
+        return "No building of this kind can be built by you."
+    return f"Builds, of these, what can stand in the location: {shown}{more}."
+
+
+def render_loc(items: list[lp.Item], config: Config, categories: dict[str, list[str]] | None = None) -> str:
+    """``categories``: building category -> the buildings a rule with that target builds (location_profiles.targets)."""
     def quote(text: str) -> str:
         return '"' + text.replace('"', '\\"').replace("\n", "\\n") + '"'
 
+    categories = categories or {}
     lines = ["﻿l_english:", "  # " + HEADER.strip().lstrip("# ")]
     lines += [f"  {key}: {quote(text)}" for key, text in TEXTS.items()]
-    lines.append("  # the item picker")
+    lines.append("  # the item picker (a building category names the buildings it builds)")
+    category_keys = [item.key for item in items if item.kind == "category"]
     for item in items:
         desc = "\\n$PP_LPROF_UI_ACCESS_DESC$" if item.key == MARKET_ACCESS else ""
+        if item.kind == "category":
+            desc = f"\\n$PP_LPROF_UI_CATL_{item.key.upper()}$"
+            lines.append(f"  PP_LPROF_UI_CATL_{item.key.upper()}: {quote(category_list(categories.get(item.key, [])))}")
         lines.append(f"  PP_LPROF_UI_ITEM_{item.key.upper()}: \"#T {_item_name(item)}#!{desc}\\n$PP_LPROF_UI_PICK_ITEM$\"")
     for r in range(1, config.rules + 1):
         lines.append(f"  PP_LPROF_UI_PICK_R{r}: \"Choose what rule {r} builds\"")
+        # the edited profile's rule r: a category target names its buildings (its frame number picks the list)
+        frame = buffer_reader(f"r{r}_cn")
+        chain = "".join(
+            f"[SelectLocalization({equals(frame, 100 + number)}, 'PP_LPROF_UI_CATL_{category.upper()}', 'PP_LPROF_UI_EMPTY')]"
+            for number, category in enumerate(lpf.frame_flags(category_keys, config), 1) if category in category_keys)
+        lines.append(f"  PP_LPROF_UI_CATSEL_R{r}: \"{chain}\"")
+        lines.append(f"  PP_LPROF_UI_TARGET_TT_R{r}: \"$PP_LPROF_UI_TARGET_TT$"
+                     f"[SelectLocalization({frame}.IsSet, 'PP_LPROF_UI_CATSEL_NL_R{r}', 'PP_LPROF_UI_EMPTY')]\"")
+        lines.append(f"  PP_LPROF_UI_CATSEL_NL_R{r}: \"\\n\\n$PP_LPROF_UI_CATSEL_R{r}$\"")
+        lines.append(f"  PP_LPROF_UI_TARGET_LIST_R{r}: \"#T {flag_name(buffer_reader(f'r{r}_c'))}#!\\n"
+                     f"[SelectLocalization({frame}.IsSet, 'PP_LPROF_UI_CATSEL_R{r}', 'PP_LPROF_UI_EMPTY')]\"")
     lines.append("  # the symbols: names (the loc key is the flag, so GetFlagName shows this name like a category's)")
     for symbol in config.symbols:
         lines.append(f"  {symbol.key}: {quote(symbol.title)}")
@@ -1243,9 +1301,11 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
     config = load_config(project)
     items = profile_items(repo, project)
     found, _ = lpf.targets(repo, project, mod_root, vanilla_root)
+    categories = {item.key: [candidate.name for candidate in found.get(item.key, [])]
+                  for item in items if item.kind == "category"}
     texts = {
         mod_root / GUI: "﻿" + render_gui(items, config, lpf.quick_chunks(items, found)),
-        mod_root / LOC: render_loc(items, config),
+        mod_root / LOC: render_loc(items, config, categories),
     }
     vanilla_menu = vanilla_root / "game" / CONTEXT_MENU
     if vanilla_menu.is_file():

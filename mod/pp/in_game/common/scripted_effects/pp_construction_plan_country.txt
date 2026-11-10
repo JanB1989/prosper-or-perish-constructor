@@ -799,304 +799,305 @@ pp_cplan_country_buildings = {
 		limit = { has_variable = pp_cplan_pub_early_council_hall }
 		if = {
 			limit = { can_build_building = building_type:modern_council_hall }
-			pp_cplan_country_public = { type = modern_council_hall line = early_council_hall demand = town_building_construction }
+			pp_cplan_country_public = { type = modern_council_hall line = early_council_hall demand = town_building_construction where = pp_cplan_pub_anywhere }
 		}
 		else_if = {
 			limit = { can_build_building = building_type:council_hall }
-			pp_cplan_country_public = { type = council_hall line = early_council_hall demand = town_building_construction }
+			pp_cplan_country_public = { type = council_hall line = early_council_hall demand = town_building_construction where = pp_cplan_pub_anywhere }
 		}
 		else_if = {
 			limit = { can_build_building = building_type:early_council_hall }
-			pp_cplan_country_public = { type = early_council_hall line = early_council_hall demand = town_building_construction }
+			pp_cplan_country_public = { type = early_council_hall line = early_council_hall demand = town_building_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_minting_office }
 		if = {
 			limit = { can_build_building = building_type:minting_office }
-			pp_cplan_country_public = { type = minting_office line = minting_office demand = minting_office_construction }
+			pp_cplan_country_public = { type = minting_office line = minting_office demand = minting_office_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_library }
 		if = {
 			limit = { can_build_building = building_type:library }
-			pp_cplan_country_public = { type = library line = library demand = library_construction }
+			pp_cplan_country_public = { type = library line = library demand = library_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_university }
 		if = {
 			limit = { can_build_building = building_type:university }
-			pp_cplan_country_public = { type = university line = university demand = university_construction }
+			pp_cplan_country_public = { type = university line = university demand = university_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_hospital }
 		if = {
 			limit = { can_build_building = building_type:hospital }
-			pp_cplan_country_public = { type = hospital line = hospital demand = town_building_construction }
+			pp_cplan_country_public = { type = hospital line = hospital demand = town_building_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_counting_house }
 		if = {
 			limit = { can_build_building = building_type:counting_house }
-			pp_cplan_country_public = { type = counting_house line = counting_house demand = town_building_construction }
+			pp_cplan_country_public = { type = counting_house line = counting_house demand = town_building_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_wharf }
 		if = {
 			limit = { can_build_building = building_type:wharf }
-			pp_cplan_country_public = { type = wharf line = wharf demand = town_building_construction }
+			pp_cplan_country_public = { type = wharf line = wharf demand = town_building_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_protected_harbor }
 		if = {
 			limit = { can_build_building = building_type:protected_harbor }
-			pp_cplan_country_public = { type = protected_harbor line = protected_harbor demand = port_building_construction }
+			pp_cplan_country_public = { type = protected_harbor line = protected_harbor demand = port_building_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_dock }
 		if = {
 			limit = { can_build_building = building_type:naval_base }
-			pp_cplan_country_public = { type = naval_base line = dock demand = port_building_construction }
+			pp_cplan_country_public = { type = naval_base line = dock demand = port_building_construction where = pp_cplan_pub_anywhere }
 		}
 		else_if = {
 			limit = { can_build_building = building_type:grand_shipyard }
-			pp_cplan_country_public = { type = grand_shipyard line = dock demand = port_building_construction }
+			pp_cplan_country_public = { type = grand_shipyard line = dock demand = port_building_construction where = pp_cplan_pub_anywhere }
 		}
 		else_if = {
 			limit = { can_build_building = building_type:shipyard }
-			pp_cplan_country_public = { type = shipyard line = dock demand = port_building_construction }
+			pp_cplan_country_public = { type = shipyard line = dock demand = port_building_construction where = pp_cplan_pub_anywhere }
 		}
 		else_if = {
 			limit = { can_build_building = building_type:dry_dock }
-			pp_cplan_country_public = { type = dry_dock line = dock demand = port_building_construction }
+			pp_cplan_country_public = { type = dry_dock line = dock demand = port_building_construction where = pp_cplan_pub_anywhere }
 		}
 		else_if = {
 			limit = { can_build_building = building_type:dock }
-			pp_cplan_country_public = { type = dock line = dock demand = port_building_construction }
+			pp_cplan_country_public = { type = dock line = dock demand = port_building_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_bridge_infrastructure }
 		if = {
 			limit = { can_build_building = building_type:bridge_infrastructure }
-			pp_cplan_country_public = { type = bridge_infrastructure line = bridge_infrastructure demand = bridge_construction }
+			pp_cplan_country_public = { type = bridge_infrastructure line = bridge_infrastructure demand = bridge_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_pound_lock_canal_infrastructure }
 		if = {
 			limit = { can_build_building = building_type:pound_lock_canal_infrastructure }
-			pp_cplan_country_public = { type = pound_lock_canal_infrastructure line = pound_lock_canal_infrastructure demand = pound_lock_canal_infrastructure_construction }
+			pp_cplan_country_public = { type = pound_lock_canal_infrastructure line = pound_lock_canal_infrastructure demand = pound_lock_canal_infrastructure_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_fortress_granary }
 		if = {
 			limit = { can_build_building = building_type:fortress_granary }
-			pp_cplan_country_public = { type = fortress_granary line = fortress_granary demand = fortress_granary_construction }
+			pp_cplan_country_public = { type = fortress_granary line = fortress_granary demand = fortress_granary_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_sawmill }
 		if = {
 			limit = { can_build_building = building_type:sawmill }
-			pp_cplan_country_public = { type = sawmill line = sawmill demand = farm_constructions }
+			pp_cplan_country_public = { type = sawmill line = sawmill demand = farm_constructions where = pp_cplan_pub_where_sawmill }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_windmill }
 		if = {
 			limit = { can_build_building = building_type:windmill }
-			pp_cplan_country_public = { type = windmill line = windmill demand = farm_constructions }
+			pp_cplan_country_public = { type = windmill line = windmill demand = farm_constructions where = pp_cplan_pub_where_windmill }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_local_smelters }
 		if = {
 			limit = { can_build_building = building_type:local_smelters }
-			pp_cplan_country_public = { type = local_smelters line = local_smelters demand = farm_constructions }
+			pp_cplan_country_public = { type = local_smelters line = local_smelters demand = farm_constructions where = pp_cplan_pub_where_local_smelters }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_terraces }
 		if = {
 			limit = { can_build_building = building_type:terraces }
-			pp_cplan_country_public = { type = terraces line = terraces demand = terraces_construction }
+			pp_cplan_country_public = { type = terraces line = terraces demand = terraces_construction where = pp_cplan_pub_where_terraces }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_lazaretto }
 		if = {
 			limit = { can_build_building = building_type:lazaretto }
-			pp_cplan_country_public = { type = lazaretto line = lazaretto demand = town_building_construction }
+			pp_cplan_country_public = { type = lazaretto line = lazaretto demand = town_building_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_funduq }
 		if = {
 			limit = { can_build_building = building_type:funduq }
-			pp_cplan_country_public = { type = funduq line = funduq demand = pp_funduq_jewelry_construction }
+			pp_cplan_country_public = { type = funduq line = funduq demand = pp_funduq_jewelry_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_caravan_stop }
 		if = {
 			limit = { can_build_building = building_type:caravan_stop }
-			pp_cplan_country_public = { type = caravan_stop line = caravan_stop demand = caravan_stop_building_construction }
+			pp_cplan_country_public = { type = caravan_stop line = caravan_stop demand = caravan_stop_building_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_maghreb_palm_irrigation }
 		if = {
 			limit = { can_build_building = building_type:maghreb_palm_irrigation }
-			pp_cplan_country_public = { type = maghreb_palm_irrigation line = maghreb_palm_irrigation demand = maghreb_palm_irrigation_building_construction }
+			pp_cplan_country_public = { type = maghreb_palm_irrigation line = maghreb_palm_irrigation demand = maghreb_palm_irrigation_building_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_confucian_academy }
 		if = {
 			limit = { can_build_building = building_type:confucian_academy }
-			pp_cplan_country_public = { type = confucian_academy line = confucian_academy demand = academy_construction }
+			pp_cplan_country_public = { type = confucian_academy line = confucian_academy demand = academy_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_confucian_school }
 		if = {
 			limit = { can_build_building = building_type:confucian_school }
-			pp_cplan_country_public = { type = confucian_school line = confucian_school demand = school_construction }
+			pp_cplan_country_public = { type = confucian_school line = confucian_school demand = school_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_zhixian }
 		if = {
 			limit = { can_build_building = building_type:zhixian }
-			pp_cplan_country_public = { type = zhixian line = zhixian demand = zhixian_construction }
+			pp_cplan_country_public = { type = zhixian line = zhixian demand = zhixian_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_tambo }
 		if = {
 			limit = { can_build_building = building_type:tambo }
-			pp_cplan_country_public = { type = tambo line = tambo demand = tambo_construction }
+			pp_cplan_country_public = { type = tambo line = tambo demand = tambo_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_royal_court }
 		if = {
 			limit = { can_build_building = building_type:royal_court }
-			pp_cplan_country_public = { type = royal_court line = royal_court demand = pp_early_capital_jewelry_construction }
+			pp_cplan_country_public = { type = royal_court line = royal_court demand = pp_early_capital_jewelry_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_house_of_parliament }
 		if = {
 			limit = { can_build_building = building_type:house_of_parliament }
-			pp_cplan_country_public = { type = house_of_parliament line = house_of_parliament demand = pp_early_capital_jewelry_construction }
+			pp_cplan_country_public = { type = house_of_parliament line = house_of_parliament demand = pp_early_capital_jewelry_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_republican_assembly }
 		if = {
 			limit = { can_build_building = building_type:republican_assembly }
-			pp_cplan_country_public = { type = republican_assembly line = republican_assembly demand = pp_early_capital_jewelry_construction }
+			pp_cplan_country_public = { type = republican_assembly line = republican_assembly demand = pp_early_capital_jewelry_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_chancery }
 		if = {
 			limit = { can_build_building = building_type:chancery }
-			pp_cplan_country_public = { type = chancery line = chancery demand = pp_early_capital_jewelry_construction }
+			pp_cplan_country_public = { type = chancery line = chancery demand = pp_early_capital_jewelry_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_supreme_court }
 		if = {
 			limit = { can_build_building = building_type:supreme_court }
-			pp_cplan_country_public = { type = supreme_court line = supreme_court demand = important_building_construction }
+			pp_cplan_country_public = { type = supreme_court line = supreme_court demand = important_building_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_tax_assessor }
 		if = {
 			limit = { can_build_building = building_type:tax_assessor }
-			pp_cplan_country_public = { type = tax_assessor line = tax_assessor demand = important_building_construction }
+			pp_cplan_country_public = { type = tax_assessor line = tax_assessor demand = important_building_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_war_college }
 		if = {
 			limit = { can_build_building = building_type:war_college }
-			pp_cplan_country_public = { type = war_college line = war_college demand = important_building_construction }
+			pp_cplan_country_public = { type = war_college line = war_college demand = important_building_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_admiralty }
 		if = {
 			limit = { can_build_building = building_type:admiralty }
-			pp_cplan_country_public = { type = admiralty line = admiralty demand = admiralty_construction }
+			pp_cplan_country_public = { type = admiralty line = admiralty demand = admiralty_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_order_headquarters }
 		if = {
 			limit = { can_build_building = building_type:order_headquarters }
-			pp_cplan_country_public = { type = order_headquarters line = order_headquarters demand = early_capital_building_construction }
+			pp_cplan_country_public = { type = order_headquarters line = order_headquarters demand = early_capital_building_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_royal_garden }
 		if = {
 			limit = { can_build_building = building_type:royal_garden }
-			pp_cplan_country_public = { type = royal_garden line = royal_garden demand = pp_prestige_jewelry_construction }
+			pp_cplan_country_public = { type = royal_garden line = royal_garden demand = pp_prestige_jewelry_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_chieftain_hall }
 		if = {
 			limit = { can_build_building = building_type:chieftain_hall }
-			pp_cplan_country_public = { type = chieftain_hall line = chieftain_hall demand = pp_early_capital_jewelry_construction }
+			pp_cplan_country_public = { type = chieftain_hall line = chieftain_hall demand = pp_early_capital_jewelry_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_khan_ordu }
 		if = {
 			limit = { can_build_building = building_type:khan_ordu }
-			pp_cplan_country_public = { type = khan_ordu line = khan_ordu demand = pp_early_capital_jewelry_construction }
+			pp_cplan_country_public = { type = khan_ordu line = khan_ordu demand = pp_early_capital_jewelry_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_patrician_hall }
 		if = {
 			limit = { can_build_building = building_type:patrician_hall }
-			pp_cplan_country_public = { type = patrician_hall line = patrician_hall demand = pp_early_capital_jewelry_construction }
+			pp_cplan_country_public = { type = patrician_hall line = patrician_hall demand = pp_early_capital_jewelry_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_sacred_council }
 		if = {
 			limit = { can_build_building = building_type:sacred_council }
-			pp_cplan_country_public = { type = sacred_council line = sacred_council demand = pp_early_capital_jewelry_construction }
+			pp_cplan_country_public = { type = sacred_council line = sacred_council demand = pp_early_capital_jewelry_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_gymnasium_building }
 		if = {
 			limit = { can_build_building = building_type:gymnasium_building }
-			pp_cplan_country_public = { type = gymnasium_building line = gymnasium_building demand = university_construction }
+			pp_cplan_country_public = { type = gymnasium_building line = gymnasium_building demand = university_construction where = pp_cplan_pub_anywhere }
 		}
 	}
 }
 
 # Country scope: one level of $type$ in every owned location the group may build in, whose maximum control reaches
-# the player's line, where no tier of the line $line$ stands and the location's part of the can-build check
-# passes; the highest control first. Where the market lacks the construction goods ($demand$) nothing starts and
+# the player's line, where no tier of the line $line$ stands, the building has a purpose ($where$: a booster only
+# where the location makes its goods) and the location's part of the can-build check passes; the highest control
+# first. Where the market lacks the construction goods ($demand$) nothing starts and
 # the window counts it (pp_cplan_note_goods; in game 2026-11-10 a ticked Library did nothing where the market had
 # no books, and the pane gave no reason). The construction itself checks the group's purse and counts a level the
 # gold does not reach (pp_cplan_construct_scoped, once a location).
@@ -1106,6 +1107,7 @@ pp_cplan_country_public = {
 			pp_cplan_country_site = yes
 			max_control >= scope:pp_cplan_country.pp_cplan_country_control_line
 			NOT = { pp_cplan_pub_line_$line$ = yes }
+			$where$ = yes
 			can_build_building = building_type:$type$
 		}
 		order_by = pp_cplan_country_control_here

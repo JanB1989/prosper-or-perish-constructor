@@ -52,6 +52,14 @@ pp_cplan_site_free = {
 	num_civil_constructions < pp_cplan_site_slots
 }
 
+# Any scope, in a location's turn of the Locations group (pp_lprof_location_turn sets scope:pp_lplan_mode: 0 the
+# profile's rules, 1 the marks being measured, 2 the marks built): the location's marks are being measured: a level
+# that could be built only offers its payback, nothing is built (pp_lplan_location_turn).
+pp_lplan_measuring = {
+	scope:pp_lplan_mode > 0.5
+	scope:pp_lplan_mode < 1.5
+}
+
 # Location scope: the business rule looks for a business here: the player's location, held by the player, with a
 # market, no construction under way (pp_cplan_site_free), and no profile here that keeps the businesses out. A
 # profile's own goods and categories are left out per building (generated pp_cplan_business_pick).

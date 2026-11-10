@@ -1124,14 +1124,16 @@ min_amount = 1             # no line for less
 not_goods = ["offset", "logistics", "local_food", "manual_labor", "province_food_sales"]
 
 [location_plan]
-# Location plan (branch location-plan, 2026-11-07, Jan): the player marks what a location should produce or have (goods
-# icons, building categories); the Location Plan map mode draws them as icons over the locations (green done, red still
-# to do; location_plan.py copies vanilla's map_markers.gui and changes only the raw goods marker). Player-only. The
-# marks are the location's build picks (Jan 2026-11-10): the Construction Plan builds a marked item there, after the
-# location's profile rules and like a profile rule with that target, within the player's Businesses line; the location
-# window shows them as the row "Also build here". location_plan.py writes the generated parts at finalize, the pass and
-# the row come from location_profiles.py / location_profiles_gui.py.
-# Building categories the player can mark (a category counts as done once a building of it stands in the location).
+# Location plan (branch location-plan, 2026-11-07, Jan): the player marks what a location should produce or have; the
+# Location Plan map mode draws the marked goods as icons over the locations (green done, red still to do;
+# location_plan.py copies vanilla's map_markers.gui and changes only the raw goods marker). Player-only. The marks are
+# the location's build picks (Jan 2026-11-10): the Construction Plan builds a marked item there, after the location's
+# profile rules, forced: whether it pays or not, from the Locations budget, level after level. A mark is a good (the
+# picker's icons) or one building (marked on the building's own entry: the location window's building tiles, the build
+# panel's rows); the location window shows them as the row "Also build here". location_plan.py writes the generated
+# parts at finalize, the pass and the row come from location_profiles.py / location_profiles_gui.py.
+# The building categories: rule targets of the location profiles and profile icons (location_profiles.py). They are no
+# marks any more (2026-11-10: a mark is a good or a building); a save's category marks are taken off at the first look.
 categories = ["trade_category", "government_category", "military_category", "defense_category", "religious_category", "cultural_category", "naval_category", "infrastructure_category"]
 # Goods never offered (dummy goods nobody plans for).
 hidden_goods = ["offset", "logistics", "local_food", "manual_labor", "province_food_sales"]
@@ -1293,6 +1295,9 @@ hidden_goods = ["offset", "logistics", "local_food", "manual_labor", "province_f
 # later tiers (obsolete = <older tier>: dock -> dry dock -> ...) is one tile under its first tier's key; the plan
 # builds the highest tier the country can build. Not here: multi-level producers (market_village) and what the other
 # rule groups build (granary, tavern, grange, victualling_yard, kitchens, logistics, improvements).
+# A building here whose modifier does nothing but raise goods' output in its location (sawmill, windmill,
+# local_smelters, terraces: read from its own local_<good>_output_modifier lines, nothing to configure) is built only
+# in locations that make one of those goods (2026-11-10); elsewhere the player marks the building in the location.
 public_buildings = [
     "early_council_hall", "minting_office",
     "library", "university",

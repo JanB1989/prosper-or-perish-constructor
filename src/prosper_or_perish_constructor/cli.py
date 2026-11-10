@@ -4688,10 +4688,43 @@ def _smart_sync(args: argparse.Namespace, repo: Path, project: Path, clock: "_St
     else:
         print("Smart sync: validation inputs unchanged; skipping validation.", flush=True)
     _save_sync_state(repo, state)
-    return clock.run(
+    result = clock.run(
         "deploy", _deploy_built_mod, repo, project, force=args.force_deploy, while_running=args.while_running,
         reload_game_data=args.reload_game_data,
     )
+    if result == 0:
+        clock.run("construction manager patch", _deploy_cm_compat, repo, reload_game_data=args.reload_game_data)
+    return result
+
+
+def _cm_compat_repo(repo: Path) -> Path | None:
+    """The Prosper or Perish x Construction Manager patch (its own repository), if this machine names it:
+    ``[cm_compat] repo`` in constructor.local.toml."""
+    local = repo / "constructor.local.toml"
+    if not local.is_file():
+        return None
+    value = tomllib.loads(local.read_text(encoding="utf-8")).get("cm_compat", {}).get("repo")
+    return Path(value) if value else None
+
+
+def _deploy_cm_compat(repo: Path, *, reload_game_data: bool = False) -> int:
+    """After a sync, rebuild and deploy the Construction Manager patch (2026-11-10, Jan: "this has to work nicely,
+    be integrated"): its location window, building view and shared types are merged copies of the mod's, built from
+    the mod as it stands, so a sync without it would leave the patch's older copies on top of the mod's new GUI.
+    While EU5 runs the patch deploys only interface and text changes (the same hot-reload rule as the mod)."""
+    compat = _cm_compat_repo(repo)
+    if compat is None:
+        return 0
+    if not (compat / "pyproject.toml").is_file():
+        print(f"Construction Manager patch: {compat} is not the patch repository; skipped.", flush=True)
+        return 0
+    command = ["uv", "run", "ppcm", "deploy", "--yes"]
+    if _game_running() and not reload_game_data:
+        command.append("--game-running")
+    result = _run(command, compat)
+    if result != 0:
+        print("Construction Manager patch: NOT deployed (see above); the mod itself is deployed.", flush=True)
+    return result
 
 
 def _sync(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
@@ -4711,8 +4744,11 @@ def _sync(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: P
         if build_result != 0:
             return build_result
         _record_current_sync_state(repo, project)
-        return _deploy_built_mod(repo, project, force=args.force_deploy, while_running=args.while_running,
-                                 reload_game_data=args.reload_game_data)
+        result = _deploy_built_mod(repo, project, force=args.force_deploy, while_running=args.while_running,
+                                   reload_game_data=args.reload_game_data)
+        if result == 0:
+            _deploy_cm_compat(repo, reload_game_data=args.reload_game_data)
+        return result
     clock = _StageClock("ppc sync")
     try:
         return _smart_sync(args, repo, project, clock)

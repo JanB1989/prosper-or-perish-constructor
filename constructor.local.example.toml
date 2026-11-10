@@ -11,3 +11,8 @@ target = "/mnt/c/Users/<windows-user>/Documents/Paradox Interactive/Europa Unive
 # Optional: default logs directory for the profile-analyzer skill.
 # [profiler]
 # logs_dir = "/mnt/c/Users/<windows-user>/Documents/Paradox Interactive/Europa Universalis V/logs"
+
+# Optional: the Prosper or Perish x Construction Manager patch (its own repository, pp-construction-manager-compat).
+# When set, every sync rebuilds and deploys it after the mod: its merged GUI files carry the mod GUI.
+# [cm_compat]
+# repo = "/home/<user>/development/pp-construction-manager-compat"

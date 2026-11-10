@@ -1004,6 +1004,23 @@
 													on_action = "[ToggleAutoExpandBuilding(Building.Self)]"
 													description = "[GetAutoExpandBuildingsAutomationWarning]"
 												}
+												action_tooltip = { # PP: Construction Plan mark (location_plan.py)
+													click_type = left
+													click_mode = single
+													click_modifier = ctrl
+													title = "[SelectLocalization(GetScriptedGui('pp_lplan_bmarked').IsShown(GuiScope.SetRoot(Building.GetLocation.MakeScope).AddScope('pp_bt', Building.GetType.MakeScope).End), 'PP_LPLAN_BMARK_ON', 'PP_LPLAN_BMARK_OFF')]"
+													visible = "[And(Building.GetLocation.GetOwner.IsPlayer, Not(IsObserving))]"
+													on_action = "[GetScriptedGui('pp_lplan_bmark').Execute(GuiScope.SetRoot(Building.GetLocation.MakeScope).AddScope('pp_bt', Building.GetType.MakeScope).End)]"
+												}
+												icon = { # PP: Construction Plan mark (location_plan.py)
+													parentanchor = bottom|right
+													size = { 10 10 }
+													position = { 3 1 }
+													visible = "[GetScriptedGui('pp_lplan_bmarked').IsShown(GuiScope.SetRoot(Building.GetLocation.MakeScope).AddScope('pp_bt', Building.GetType.MakeScope).End)]"
+													texture = "gfx/interface/icons/map_modes/pp_location_plan.dds"
+													using = bg_circle
+													tooltip = "PP_LPLAN_BMARK_ICON"
+												}
 											}
 										}
 

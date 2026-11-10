@@ -61,14 +61,15 @@ def test_construction_plan_mark_on_the_rows_without_an_own_building():
 
     tool = _tool()
     text = _mod_file()
-    assert text.count(lp.BUILDING_MARK_COMMENT) == 1
+    row_mark = "vbox = { " + lp.BUILDING_MARK_COMMENT
+    assert text.count(row_mark) == 1
     block = lp.build_panel_mark("\t\t\t\t")
     assert block in text
     assert text.replace("\n\n" + block.rstrip("\n"), "").count("ToggleAutoExpandBuilding(Building.Self)") == 1
     own = f'visible = "[{lp.BUILD_PANEL_OWN}]"'
     column = "vbox = {\n\t\t\t\t\tmargin = { 5 0 }\n\t\t\t\t\t" + own  # vanilla's column of own-building checkboxes
     assert text.count(column) == 1
-    assert text.index(column) < text.index(lp.BUILDING_MARK_COMMENT) < text.index("# PP: production-method slots")
+    assert text.index(column) < text.index(row_mark) < text.index("# PP: production-method slots")
     assert f'visible = "[And3(Not({lp.BUILD_PANEL_OWN}), LocationToBuildItem.GetLocation.GetOwner.IsPlayer, Not(IsObserving))]"' in block
     for needle in ("margin = { 5 0 }", "button_square_checkbox = {", "size = { 20 16 }", "click_type = left",
                    "GetScriptedGui('pp_lplan_bmarked').IsShown(", "GetScriptedGui('pp_lplan_bmark').Execute(",

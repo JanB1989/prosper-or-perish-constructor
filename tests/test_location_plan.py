@@ -510,3 +510,128 @@ def test_marked_buildings_on_the_map() -> None:
     assert "'PP_LPLAN_BMARK_DONE', 'PP_LPLAN_STATE_OPEN'" in texts["PP_LPLAN_BMARK_MAP"] and done in texts["PP_LPLAN_BMARK_MAP"]
     assert "newer kind" in texts["PP_LPLAN_BMARK_DONE"] and not re.search(r"\d", texts["PP_LPLAN_BMARK_DONE"])
     assert "building" in texts["PP_LPLAN_NOTE"].split("map mode")[1]
+
+
+# Jan 2026-11-10: everywhere vanilla sets auto expand for a building, Ctrl + click marks it for the Construction Plan.
+_SINGLE_CALL = lp.building_mark_call("Building.GetLocation.MakeScope", "Building.GetType.MakeScope")
+_GUI_DIR = MOD / "in_game/gui"
+
+
+def _single_marks(text: str) -> int:
+    """Ctrl + click actions that mark the building in context, each right after one of vanilla's single toggles."""
+    blocks = text.split(lp.AUTO_EXPAND_ACTION)[1:]
+    return sum(1 for b in blocks if "click_modifier = ctrl" in b.split("action_tooltip = {", 2)[1][:900]
+               and _SINGLE_CALL in b[:1500])
+
+
+def test_build_panel_auto_expand_takes_ctrl_click() -> None:
+    text = _read(_GUI_DIR / "build_location_lateralview.gui")
+    assert _single_marks(text) == 1
+    assert text.count(lp.mark_badge("\t\t\t\t\t\t").strip()) == 1
+    mass = lp.building_mark_all_call("BuildInLocationLateralView.GetBuildingType.MakeScope")
+    assert text.count(mass) == 1 and "click_type = right" in text[text.index(mass) - 300:text.index(mass)]
+    # the rows without an own building: the plan's checkbox answers Ctrl + click and Ctrl + right click too
+    row = lp.build_panel_mark("\t\t\t\t")
+    assert row in text and row.count("click_modifier = ctrl") == 2
+    assert lp.building_mark_all_call("LocationToBuildItem.GetBuildingType.MakeScope") in row
+
+
+def test_building_window_auto_expand_takes_ctrl_click() -> None:
+    assert _single_marks(_read(_GUI_DIR / "building_view.gui")) == 1
+
+
+def test_location_view_rows_auto_expand_take_ctrl_click() -> None:
+    assert _single_marks(_read(_GUI_DIR / "shared/pp_location_building_rows.gui")) == 1
+
+
+def test_production_window_rows_take_ctrl_click() -> None:
+    text = _read(_GUI_DIR / "shared/zz_pp_building_type_header.gui")
+    assert "type building_type_header = hbox" in text and "type location_filtered_header_with_candidate = hbox" in text
+    assert _single_marks(text) == 1
+    mass = lp.building_mark_all_call("BuildingItem.GetBuildingType.MakeScope")
+    assert text.count(mass) == 1
+    assert text.index("ToggleAutoExpandBuildings(BuildingItem.GetBuildingsFunc)") < text.index(mass)
+
+
+def test_mass_mark_scripted_gui_and_text() -> None:
+    script = _read(SCRIPTED_GUIS)
+    block = script[script.index(f"{lp.BUILDING_MARK_ALL_GUI} = {{"):]
+    block = block[:block.index("\n}\n")]
+    assert "scope = country" in block and block.count("pp_lplan_bflip = yes") == 2
+    assert block.count("any_buildings_in_location = { building_type = scope:pp_bt }") == 3
+    assert "PP_LPLAN_BMARK_ALL" in _loc_keys()
+    assert block.count("{") == block.count("}") + 1
+
+
+def test_auto_expand_marks_are_additive() -> None:
+    """The inserts only add lines: the file without them is the vanilla text."""
+    vanilla = _read(vanilla_root(ROOT, PROJECT) / "game/in_game/gui/building_view.gui")
+    marked = lp.add_auto_expand_marks(vanilla, "test")
+    assert len(marked) > len(vanilla)
+    removed = re.sub(r"(?m)^[ \t]*(action_tooltip|icon) = \{ # PP: Construction Plan mark \(location_plan\.py\)\n"
+                     r"(?:[ \t]+[^\n]*\n)*?[ \t]*\}\n", "", marked)
+    assert removed == vanilla
+
+
+# Jan 2026-11-10: everywhere vanilla sets auto expand for a building, Ctrl + click marks it for the Construction Plan.
+_SINGLE_CALL = lp.building_mark_call("Building.GetLocation.MakeScope", "Building.GetType.MakeScope")
+_GUI_DIR = MOD / "in_game/gui"
+
+
+def _single_marks(text: str) -> int:
+    """Ctrl + click actions that mark the building in context, each right after one of vanilla's single toggles."""
+    count = 0
+    for after in text.split(lp.AUTO_EXPAND_ACTION)[1:]:
+        head = after[:1500]
+        if lp.BUILDING_MARK_COMMENT in head and "click_modifier = ctrl" in head and _SINGLE_CALL in head:
+            count += 1
+    return count
+
+
+def test_build_panel_auto_expand_takes_ctrl_click() -> None:
+    text = _read(_GUI_DIR / "build_location_lateralview.gui")
+    assert _single_marks(text) == 1
+    mass = lp.building_mark_all_call("BuildInLocationLateralView.GetBuildingType.MakeScope")
+    assert text.count(mass) == 1 and "click_type = right" in text[text.index(mass) - 300:text.index(mass)]
+    # the rows without an own building: the plan's checkbox answers Ctrl + click and Ctrl + right click too
+    row = lp.build_panel_mark("\t\t\t\t")
+    assert row in text and row.count("click_modifier = ctrl") == 2
+    assert lp.building_mark_all_call("LocationToBuildItem.GetBuildingType.MakeScope") in row
+
+
+def test_building_window_auto_expand_takes_ctrl_click() -> None:
+    assert _single_marks(_read(_GUI_DIR / "building_view.gui")) == 1
+
+
+def test_location_view_rows_auto_expand_take_ctrl_click() -> None:
+    assert _single_marks(_read(_GUI_DIR / "shared/pp_location_building_rows.gui")) == 1
+
+
+def test_production_window_rows_take_ctrl_click() -> None:
+    text = _read(_GUI_DIR / "shared/zz_pp_building_type_header.gui")
+    assert "type building_type_header = hbox" in text and "type location_filtered_header_with_candidate = hbox" in text
+    assert _single_marks(text) == 1
+    mass = lp.building_mark_all_call("BuildingItem.GetBuildingType.MakeScope")
+    assert text.count(mass) == 1
+    assert text.index("ToggleAutoExpandBuildings(BuildingItem.GetBuildingsFunc)") < text.index(mass)
+    assert text.count("{") == text.count("}")
+
+
+def test_mass_mark_scripted_gui_and_text() -> None:
+    script = _read(SCRIPTED_GUIS)
+    block = script[script.index(f"{lp.BUILDING_MARK_ALL_GUI} = {{"):]
+    block = block[:block.index("\n}\n") + 2]
+    assert "scope = country" in block and block.count("pp_lplan_bflip = yes") == 2
+    assert block.count("any_buildings_in_location = { building_type = scope:pp_bt }") == 3
+    assert block.count("{") == block.count("}")
+    assert "PP_LPLAN_BMARK_ALL" in _loc_keys()
+
+
+def test_auto_expand_marks_are_additive() -> None:
+    """The inserts only add blocks: the file without them is the vanilla text."""
+    vanilla = _read(vanilla_root(ROOT, PROJECT) / "game/in_game/gui/building_view.gui")
+    marked = lp.add_auto_expand_marks(vanilla, "test")
+    assert len(marked) > len(vanilla)
+    removed = re.sub(r"(?m)^([ \t]*)(action_tooltip|icon) = \{ # PP: Construction Plan mark \(location_plan\.py\)\n"
+                     r"(?:\1\t[^\n]*\n)*\1\}\n", "", marked)
+    assert removed == vanilla

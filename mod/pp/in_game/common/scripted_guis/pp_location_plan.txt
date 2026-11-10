@@ -27,6 +27,39 @@ pp_lplan_bmark = {
 	}
 }
 
+# Country scope, scope:pp_bt = a building type: Ctrl + click on vanilla's auto expand for all buildings of a type (the
+# Production window's rows, the build panel's right click). Marks the type in every own location where it stands; when
+# every one of them is marked already, unmarks them all. Script cannot see the GUI's filtered list.
+pp_lplan_bmark_all = {
+	scope = country
+	effect = {
+		if = {
+			limit = {
+				any_owned_location = {
+					any_buildings_in_location = { building_type = scope:pp_bt }
+					NOT = { is_target_in_variable_list = { name = pp_lplan_b target = scope:pp_bt } }
+				}
+			}
+			every_owned_location = {
+				limit = {
+					any_buildings_in_location = { building_type = scope:pp_bt }
+					NOT = { is_target_in_variable_list = { name = pp_lplan_b target = scope:pp_bt } }
+				}
+				pp_lplan_bflip = yes
+			}
+		}
+		else = {
+			every_owned_location = {
+				limit = {
+					any_buildings_in_location = { building_type = scope:pp_bt }
+					is_target_in_variable_list = { name = pp_lplan_b target = scope:pp_bt }
+				}
+				pp_lplan_bflip = yes
+			}
+		}
+	}
+}
+
 # Location scope, scope:pp_bt = a building type: shown while that building is marked here (the GUI asks it with
 # IsShown: it cannot look into a variable list itself). No effect.
 pp_lplan_bmarked = {

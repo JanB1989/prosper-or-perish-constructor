@@ -2287,11 +2287,36 @@ template build_location_entry {
 							on_action = "[ToggleAutoExpandBuilding(Building.Self)]"
 							description = "[GetAutoExpandBuildingsAutomationWarning]"
 						}
+						action_tooltip = { # PP: Construction Plan mark (location_plan.py)
+							click_type = left
+							click_mode = single
+							click_modifier = ctrl
+							title = "[SelectLocalization(GetScriptedGui('pp_lplan_bmarked').IsShown(GuiScope.SetRoot(Building.GetLocation.MakeScope).AddScope('pp_bt', Building.GetType.MakeScope).End), 'PP_LPLAN_BMARK_ON', 'PP_LPLAN_BMARK_OFF')]"
+							visible = "[And(Building.GetLocation.GetOwner.IsPlayer, Not(IsObserving))]"
+							on_action = "[GetScriptedGui('pp_lplan_bmark').Execute(GuiScope.SetRoot(Building.GetLocation.MakeScope).AddScope('pp_bt', Building.GetType.MakeScope).End)]"
+						}
+						icon = { # PP: Construction Plan mark (location_plan.py)
+							parentanchor = bottom|right
+							size = { 10 10 }
+							position = { 3 1 }
+							visible = "[GetScriptedGui('pp_lplan_bmarked').IsShown(GuiScope.SetRoot(Building.GetLocation.MakeScope).AddScope('pp_bt', Building.GetType.MakeScope).End)]"
+							texture = "gfx/interface/icons/map_modes/pp_location_plan.dds"
+							using = bg_circle
+							tooltip = "PP_LPLAN_BMARK_ICON"
+						}
 						action_tooltip = {
 							click_type = right
 							title = "TOGGLE_AUTO_EXPAND_ALL_BUILDINGS"
 							on_action = "[BuildInLocationLateralView.ToggleAutoExpandAllBuildings]"
 							description = "[GetAutoExpandBuildingsAutomationWarning]"
+						}
+						action_tooltip = { # PP: Construction Plan mark (location_plan.py)
+							click_type = right
+							click_mode = single
+							click_modifier = ctrl
+							title = "PP_LPLAN_BMARK_ALL"
+							visible = "[Not(IsObserving)]"
+							on_action = "[GetScriptedGui('pp_lplan_bmark_all').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_bt', BuildInLocationLateralView.GetBuildingType.MakeScope).End)]"
 						}
 					}
 				}
@@ -2330,6 +2355,22 @@ template build_location_entry {
 							click_type = left
 							title = "[SelectLocalization(GetScriptedGui('pp_lplan_bmarked').IsShown(GuiScope.SetRoot(LocationToBuildItem.GetLocation.MakeScope).AddScope('pp_bt', LocationToBuildItem.GetBuildingType.MakeScope).End), 'PP_LPLAN_BMARK_ON', 'PP_LPLAN_BMARK_OFF')]"
 							on_action = "[GetScriptedGui('pp_lplan_bmark').Execute(GuiScope.SetRoot(LocationToBuildItem.GetLocation.MakeScope).AddScope('pp_bt', LocationToBuildItem.GetBuildingType.MakeScope).End)]"
+						}
+						action_tooltip = { # PP: Construction Plan mark (location_plan.py)
+							click_type = left
+							click_mode = single
+							click_modifier = ctrl
+							title = "[SelectLocalization(GetScriptedGui('pp_lplan_bmarked').IsShown(GuiScope.SetRoot(LocationToBuildItem.GetLocation.MakeScope).AddScope('pp_bt', LocationToBuildItem.GetBuildingType.MakeScope).End), 'PP_LPLAN_BMARK_ON', 'PP_LPLAN_BMARK_OFF')]"
+							visible = "[And(LocationToBuildItem.GetLocation.GetOwner.IsPlayer, Not(IsObserving))]"
+							on_action = "[GetScriptedGui('pp_lplan_bmark').Execute(GuiScope.SetRoot(LocationToBuildItem.GetLocation.MakeScope).AddScope('pp_bt', LocationToBuildItem.GetBuildingType.MakeScope).End)]"
+						}
+						action_tooltip = { # PP: Construction Plan mark (location_plan.py)
+							click_type = right
+							click_mode = single
+							click_modifier = ctrl
+							title = "PP_LPLAN_BMARK_ALL"
+							visible = "[Not(IsObserving)]"
+							on_action = "[GetScriptedGui('pp_lplan_bmark_all').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_bt', LocationToBuildItem.GetBuildingType.MakeScope).End)]"
 						}
 					}
 				}

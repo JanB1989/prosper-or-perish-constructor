@@ -5408,6 +5408,7 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   # a building's own mark (the location window's building tiles, the build panel's checkbox, the tiles of marked buildings)
   PP_LPLAN_BMARK_OFF: "Mark for the Construction Plan: it then builds this building here, level after level, from the Locations budget, whether it pays or not"
   PP_LPLAN_BMARK_ON: "Remove the Construction Plan's mark: it stops building this building here"
+  PP_LPLAN_BMARK_ALL: "Mark this building for the Construction Plan in all your locations where it stands, or remove the mark from all of them when every one is marked already"
   PP_LPLAN_BMARK_ICON: "Marked: the Construction Plan builds this building here, level after level, from the Locations budget. Hold Ctrl and click the building to remove the mark."
   PP_LPLAN_BMARK_TILE_TEXT: "#G Marked:#! the Construction Plan builds this building here, level after level, from the Locations budget: a newer kind once you have researched one, and an upgrade where an older kind stands. Click to remove the mark."
   PP_LPLAN_BMARK_DONE: "#G Here already:#! this building, or a newer kind of it, stands in this location."

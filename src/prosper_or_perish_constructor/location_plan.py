@@ -466,7 +466,8 @@ def add_building_marks(text: str) -> str:
 
 # The build panel's location row (tools/port_vanilla_gui.py inserts it; LocationToBuildItem in context): a checkbox
 # like vanilla's auto-expand checkbox, on the rows of the player's locations without an own building of the type
-# (those rows have no checkboxes of vanilla's; a standing building is marked on its tile in the location window).
+# (those rows have no checkboxes of vanilla's; on the others Ctrl + click on vanilla's auto-expand checkbox marks).
+# It takes a click, Ctrl + click and Ctrl + right click (all of the type), so every row answers Ctrl the same way.
 _ROW_LOCATION = "LocationToBuildItem.GetLocation.MakeScope"
 _ROW_TYPE = "LocationToBuildItem.GetBuildingType.MakeScope"
 BUILD_PANEL_OWN = "ObjectsEqual(LocationToBuildItem.GetBuilding.GetOwner, Player.Self)"
@@ -510,10 +511,101 @@ def build_panel_mark(tab: str) -> str:
         f"\t\t\ttitle = \"{_mark_title(marked)}\"",
         f"\t\t\ton_action = \"[{building_mark_call(_ROW_LOCATION, _ROW_TYPE)}]\"",
         "\t\t}",
-        "\t}",
-        "}",
     ]
+    # Ctrl + click and Ctrl + right click as on the rows with vanilla's auto-expand checkbox (every row the same)
+    lines += [f"\t\t{line}" for line in mark_action("", _ROW_LOCATION, _ROW_TYPE, MARK_VISIBLE_ROW).rstrip("\n").split("\n")]
+    lines += [f"\t\t{line}" for line in mass_mark_action("", "LocationToBuildItem.GetBuildingType.MakeScope",
+                                                     "right").rstrip("\n").split("\n")]
+    lines += ["\t}", "}"]
     return "".join(f"{tab}{line}\n" for line in lines)
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Ctrl + click on vanilla's auto-expand checkboxes (Jan 2026-11-10: everywhere vanilla sets auto expand for a building,
+# Ctrl + click marks it for the Construction Plan). Single checkboxes (a Building in context): the mark for that
+# building's location, plus the badge of the location window's tiles. Mass checkboxes (auto expand for all buildings of
+# a type): pp_lplan_bmark_all on the player's country marks the type in every own location where it stands, or unmarks
+# them all when every one is marked already (script cannot see the GUI's filtered list).
+
+BUILDING_MARK_ALL_GUI = "pp_lplan_bmark_all"  # scripted GUI (root = the country, scope:pp_bt = a building type)
+AUTO_EXPAND_ACTION = 'on_action = "[ToggleAutoExpandBuilding(Building.Self)]"'
+_BUILDING_LOCATION = "Building.GetLocation.MakeScope"
+_BUILDING_TYPE = "Building.GetType.MakeScope"
+MARK_VISIBLE = "And(Building.GetLocation.GetOwner.IsPlayer, Not(IsObserving))"
+MARK_VISIBLE_ROW = "And(LocationToBuildItem.GetLocation.GetOwner.IsPlayer, Not(IsObserving))"
+
+
+def building_mark_all_call(building_type: str) -> str:
+    return (f"GetScriptedGui('{BUILDING_MARK_ALL_GUI}').Execute(GuiScope.SetRoot(GetPlayer.MakeScope)"
+            f".AddScope('pp_bt', {building_type}).End)")
+
+
+def mark_action(tab: str, location: str = _BUILDING_LOCATION, building_type: str = _BUILDING_TYPE,
+                visible: str = MARK_VISIBLE) -> str:
+    """Ctrl + click: mark or unmark the building type for the location."""
+    marked = building_marked(location, building_type)
+    return (
+        f"{tab}action_tooltip = {{ {BUILDING_MARK_COMMENT}\n"
+        f"{tab}\tclick_type = left\n{tab}\tclick_mode = single\n{tab}\tclick_modifier = ctrl\n"
+        f"{tab}\ttitle = \"{_mark_title(marked)}\"\n"
+        f"{tab}\tvisible = \"[{visible}]\"\n"
+        f"{tab}\ton_action = \"[{building_mark_call(location, building_type)}]\"\n"
+        f"{tab}}}\n"
+    )
+
+
+def mass_mark_action(tab: str, building_type: str, click: str = "left") -> str:
+    """Ctrl + click (or Ctrl + right click): mark the type in all own locations where it stands, or unmark them all.
+    The title does not ask the state: that would walk every location each frame."""
+    return (
+        f"{tab}action_tooltip = {{ {BUILDING_MARK_COMMENT}\n"
+        f"{tab}\tclick_type = {click}\n{tab}\tclick_mode = single\n{tab}\tclick_modifier = ctrl\n"
+        f"{tab}\ttitle = \"PP_LPLAN_BMARK_ALL\"\n"
+        f"{tab}\tvisible = \"[Not(IsObserving)]\"\n"
+        f"{tab}\ton_action = \"[{building_mark_all_call(building_type)}]\"\n"
+        f"{tab}}}\n"
+    )
+
+
+def mark_badge(tab: str, location: str = _BUILDING_LOCATION, building_type: str = _BUILDING_TYPE) -> str:
+    """The location window tile's badge, on a checkbox: shown while the building is marked there."""
+    return (
+        f"{tab}icon = {{ {BUILDING_MARK_COMMENT}\n"
+        f"{tab}\tparentanchor = bottom|right\n{tab}\tsize = {{ 10 10 }}\n{tab}\tposition = {{ 3 1 }}\n"
+        f"{tab}\tvisible = \"[{building_marked(location, building_type)}]\"\n"
+        f"{tab}\ttexture = \"{MARK_TEXTURE}\"\n"
+        f"{tab}\tusing = bg_circle\n"
+        f"{tab}\ttooltip = \"PP_LPLAN_BMARK_ICON\"\n"
+        f"{tab}}}\n"
+    )
+
+
+def _after_action(text: str, anchor: str, what: str, expected: int) -> list[tuple[int, str]]:
+    """(end of line after the action_tooltip holding ``anchor``, its indent) for each of the ``expected`` anchors."""
+    if text.count(anchor) != expected:
+        raise ValueError(f"{what}: expected {expected} of {anchor!r}, found {text.count(anchor)}")
+    out = []
+    at = 0
+    for _ in range(expected):
+        at = text.index(anchor, at) + 1
+        line_start, end = _enclosing_block(text, at, "action_tooltip = {")
+        out.append((text.index("\n", end) + 1, text[line_start:text.index("action_tooltip", line_start)]))
+    return out
+
+
+def add_auto_expand_marks(text: str, what: str, *, mass_type: str | None = None, mass_anchor: str = "",
+                          mass_click: str = "left", expected: int = 1) -> str:
+    """Additive: after each of vanilla's single auto-expand actions (``expected`` of them, a Building in context) the
+    Ctrl + click mark and the badge; with ``mass_type`` (a GUI building type scope) after the action holding
+    ``mass_anchor`` (vanilla's auto expand for all buildings of the type) the Ctrl + click mass mark."""
+    if BUILDING_MARK_COMMENT in text:
+        raise ValueError(f"{what}: already marked")
+    inserts = [(pos, mark_action(ind) + mark_badge(ind)) for pos, ind in _after_action(text, AUTO_EXPAND_ACTION, what, expected)]
+    if mass_type:
+        inserts += [(pos, mass_mark_action(ind, mass_type, mass_click)) for pos, ind in _after_action(text, mass_anchor, what, 1)]
+    for position, block in sorted(inserts, reverse=True):
+        text = text[:position] + block + text[position:]
+    return text
 
 
 # ---------------------------------------------------------------------------------------------------------------------

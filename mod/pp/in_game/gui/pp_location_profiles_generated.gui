@@ -7942,7 +7942,7 @@ types PPLocationProfilesGenerated
 											glow = { glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
 											tooltip = "PP_LPLAN_BMARK_TILE"
 											onclick = "[GetScriptedGui('pp_lplan_bmark').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_bt', Scope.GetBuildingType.MakeScope).End)]"
-											icon = { size = { 26 26 } parentanchor = center texture = "[GetBuildingIcon(Scope.GetBuildingType)]" }
+											icon = { size = { 26 26 } parentanchor = center texture = "[GetBuildingIcon(Scope.GetBuildingType.Self)]" }
 										}
 									}
 								}

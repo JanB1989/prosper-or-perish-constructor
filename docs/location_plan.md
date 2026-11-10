@@ -78,7 +78,11 @@ hand-written `pp_lplan_location_turn`). Until then a mark ran as a profile rule 
   tier first, else the cheapest buildable producer starts.
 - **A building mark** (`pp_lplan_building_mark`, one per entry of the list `pp_lplan_b`) builds a level of that
   building; where the country has researched a later tier, that tier (generated `pp_lplan_b_newest`: up to 4 steps of
-  `pp_lplan_b_step`, the 155 upgrade pairs; a building the country has made obsolete is not built any more); where an
+  `pp_lplan_b_step`, the 155 upgrade pairs; a building the country has made obsolete is not built any more). The list
+  entry itself becomes that tier (`pp_lplan_b_promote`, at the mark and at each location turn; an entry whose tier is
+  marked already goes; the new tier's state comes with the pass's second go), so the tiles show what is built now
+  (2026-11-11). The tile icon is `GetBuildingIcon(Scope.GetBuildingType.Self)`: `Scope.GetBuildingType` is only a
+  promote, as an argument it drew a blank icon. Where an
   older tier of it stands here and the country can upgrade it, the upgrade (generated trigger `pp_lplan_b_upgrade_here`:
   a construction of the successor is the game's Upgrade button). It needs no level of it under construction, not its
   highest level, the country's and the location's part of the can-build check (an upgrade does not ask the

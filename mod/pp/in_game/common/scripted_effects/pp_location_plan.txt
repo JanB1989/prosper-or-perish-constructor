@@ -72,6 +72,12 @@ pp_lplan_bflip = {
 				set_variable = { name = pp_lplan_n value = 100 }
 			}
 			change_variable = { name = pp_lplan_n add = 1 }
+			# the tile shows at once the tier the plan builds here (pp_lplan_b_promote)
+			owner ?= { save_scope_as = pp_cplan_country }
+			if = {
+				limit = { exists = scope:pp_cplan_country }
+				pp_lplan_b_promote = yes
+			}
 		}
 		if = {
 			limit = {
@@ -82,6 +88,50 @@ pp_lplan_bflip = {
 		}
 		pp_lplan_keep_list = yes
 		refresh_map_colors = yes
+	}
+}
+
+# Location scope (scope:pp_cplan_country = its owner, the maps ready: pp_lplan_maps_ready): a marked building type
+# whose line the country has researched further (generated pp_lplan_b_newest, the tier the pass builds) becomes that
+# tier on the list pp_lplan_b, so every tile (icon, name, state, done check) shows what the plan builds here now (Jan
+# 2026-11-11). Where that tier is marked already the older entry just goes (one mark less). Its state stays behind:
+# the new tier's is written by the pass's second go. The list is changed only after the walk over it.
+pp_lplan_b_promote = {
+	if = {
+		limit = { has_variable_list = pp_lplan_b }
+		save_temporary_scope_as = pp_lplan_bloc
+		clear_variable_list = pp_lplan_bold
+		every_in_list = {
+			variable = pp_lplan_b
+			save_scope_as = pp_cplan_btype
+			save_scope_as = pp_lplan_bfrom
+			pp_lplan_b_newest = yes
+			if = {
+				limit = { NOT = { scope:pp_cplan_btype = scope:pp_lplan_bfrom } }
+				scope:pp_lplan_bloc = { add_to_variable_list = { name = pp_lplan_bold target = scope:pp_lplan_bfrom } }
+			}
+		}
+		every_in_list = {
+			variable = pp_lplan_bold
+			save_scope_as = pp_cplan_btype
+			save_scope_as = pp_lplan_bfrom
+			pp_lplan_b_newest = yes
+			scope:pp_lplan_bloc = {
+				remove_list_variable = { name = pp_lplan_b target = scope:pp_lplan_bfrom }
+				pp_lplan_b_state_off = { key = scope:pp_lplan_bfrom }
+				if = {
+					limit = { is_target_in_variable_list = { name = pp_lplan_b target = scope:pp_cplan_btype } }
+					if = {
+						limit = { has_variable = pp_lplan_n }
+						change_variable = { name = pp_lplan_n subtract = 1 }
+					}
+				}
+				else = {
+					add_to_variable_list = { name = pp_lplan_b target = scope:pp_cplan_btype }
+				}
+			}
+		}
+		clear_variable_list = pp_lplan_bold
 	}
 }
 

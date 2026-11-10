@@ -360,7 +360,10 @@ def render_loc(items: list[Item]) -> str:
 # a building's mark (Jan 2026-11-10: mark a building itself, the way vanilla's auto expand toggles a building)
 
 BUILDING_MARKS_MODEL = f"Location.MakeScope.GetList('{BUILDING_MARKS}')"  # datamodel: the marked building types (scopes)
-BUILDING_MARK_ICON = "GetBuildingIcon(Scope.GetBuildingType)"  # in an item of that datamodel
+# in an item of that datamodel. Scope.GetBuildingType is only a promote (data_types_script.txt, 1.4.8): as a function
+# argument it passes no object and the icon came out blank (in game 2026-11-11); .Self makes it the object, as vanilla
+# passes GetBuildingIcon(BuildingType.Self). The list entry is the tier the plan builds now (pp_lplan_b_promote).
+BUILDING_MARK_ICON = "GetBuildingIcon(Scope.GetBuildingType.Self)"
 MARK_TEXTURE = "gfx/interface/icons/map_modes/pp_location_plan.dds"  # the Location Plan's icon
 BUILDING_MARK_COMMENT = "# PP: Construction Plan mark (location_plan.py)"
 

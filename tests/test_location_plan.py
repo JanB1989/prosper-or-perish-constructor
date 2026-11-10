@@ -389,7 +389,7 @@ def test_marked_buildings_show_with_their_own_icons() -> None:
     gui = _read(MOD / lp.GUI)
     strip = gui[gui.index("type pp_lplan_bstrip = flowcontainer"):gui.index("type pp_lplan_picker")]
     assert f"datamodel = \"[Location.MakeScope.GetList('{lp.BUILDING_MARKS}')]\"" in strip
-    assert 'texture = "[GetBuildingIcon(Scope.GetBuildingType)]"' in strip
+    assert 'texture = "[GetBuildingIcon(Scope.GetBuildingType.Self)]"' in strip
     assert 'tooltip = "PP_LPLAN_BMARK_TILE"' in strip
     assert lp.building_mark_call("Location.MakeScope", "Scope.GetBuildingType.MakeScope") in strip
     assert "hbox" not in strip and "vbox" not in strip
@@ -483,7 +483,7 @@ def test_marked_buildings_on_the_map() -> None:
     # the done check once per icon: one tile, its colour picked by it
     assert buildings.count(done) == 1
     assert f"color = \"[Select_CVector4f({done}, '(CVector4f)0.25,0.7,0.3,0.85', '(CVector4f)0.75,0.25,0.2,0.85')]\"" in buildings
-    assert 'texture = "[GetBuildingIcon(Scope.GetBuildingType)]"' in buildings and 'tooltip = "PP_LPLAN_BMARK_MAP"' in buildings
+    assert 'texture = "[GetBuildingIcon(Scope.GetBuildingType.Self)]"' in buildings and 'tooltip = "PP_LPLAN_BMARK_MAP"' in buildings
     assert "building_type:" not in plan and plan.count(lp.BUILDING_DONE_GUI) == 1
     assert "hbox" not in buildings and "vbox" not in buildings
     # the scripted GUI and its trigger
@@ -635,3 +635,20 @@ def test_auto_expand_marks_are_additive() -> None:
     removed = re.sub(r"(?m)^([ \t]*)(action_tooltip|icon) = \{ # PP: Construction Plan mark \(location_plan\.py\)\n"
                      r"(?:\1\t[^\n]*\n)*\1\}\n", "", marked)
     assert removed == vanilla
+
+
+def test_a_building_mark_shows_the_tier_the_plan_builds() -> None:
+    """The icon takes the object (Scope.GetBuildingType is only a promote: blank in game 2026-11-11), and a marked type
+    whose line the country researched further becomes that tier on the list: at the mark and at each location turn,
+    changing the list only after the walk over it."""
+    assert lp.BUILDING_MARK_ICON == "GetBuildingIcon(Scope.GetBuildingType.Self)"
+    effects = _read(MOD / "in_game/common/scripted_effects/pp_location_plan.txt")
+    body = effects[effects.index("pp_lplan_b_promote = {"):effects.index("pp_lplan_b_state_off = {\n")]
+    first, second = body.index("variable = pp_lplan_b\n"), body.index("variable = pp_lplan_bold\n")
+    assert first < second and "remove_list_variable" not in body[:second] and "pp_lplan_b_newest = yes" in body[second:]
+    assert "change_variable = { name = pp_lplan_n subtract = 1 }" in body[second:]
+    flip = effects[effects.index("pp_lplan_bflip = {"):effects.index("pp_lplan_b_promote = {")]
+    assert flip.index("add_to_variable_list = { name = pp_lplan_b") < flip.index("pp_lplan_b_promote = yes")
+    turn = _read(MOD / "in_game/common/scripted_effects/pp_location_profiles.txt")
+    turn = turn[turn.index("pp_lplan_location_turn = {"):]
+    assert turn.index("pp_lplan_b_promote = yes") < turn.index("pp_lplan_building_marks = yes")

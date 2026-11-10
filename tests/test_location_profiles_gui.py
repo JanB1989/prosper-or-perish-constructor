@@ -574,7 +574,7 @@ def test_also_build_row_tiles() -> None:
     buildings = marked[position:]
     assert f"datamodel = \"[Location.MakeScope.GetList('{lp.BUILDING_MARKS}')]\"" in buildings
     assert buildings.count("datamodel = ") == 1 and row.count("datamodel = ") == 1
-    assert 'texture = "[GetBuildingIcon(Scope.GetBuildingType)]"' in buildings
+    assert 'texture = "[GetBuildingIcon(Scope.GetBuildingType.Self)]"' in buildings
     assert lp.building_mark_call("Location.MakeScope", "Scope.GetBuildingType.MakeScope") in buildings
     assert 'tooltip = "PP_LPLAN_BMARK_TILE"' in buildings and f"size = {{ {m.MARK_TILE} 34 }}" in buildings
     assert "using = pressed_button_texture" in buildings and "glow = {" in buildings

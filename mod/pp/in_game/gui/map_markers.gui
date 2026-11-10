@@ -4720,7 +4720,7 @@ widget = {
 						size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
 						tooltip = "PP_LPLAN_BMARK_MAP"
 						icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = "[Select_CVector4f(GetScriptedGui('pp_lplan_bdone').IsShown(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_bt', Scope.GetBuildingType.MakeScope).End), '(CVector4f)0.25,0.7,0.3,0.85', '(CVector4f)0.75,0.25,0.2,0.85')]" }
-						icon = { size = { 84% 84% } parentanchor = center texture = "[GetBuildingIcon(Scope.GetBuildingType)]" }
+						icon = { size = { 84% 84% } parentanchor = center texture = "[GetBuildingIcon(Scope.GetBuildingType.Self)]" }
 					}
 				}
 			}

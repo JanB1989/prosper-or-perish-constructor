@@ -174,6 +174,8 @@ pp_lplan_location_turn = {
 	save_temporary_scope_value_as = { name = pp_lprof_pb value = 1000000 }
 	save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }
 	save_temporary_scope_as = pp_lplan_here
+	# a marked building whose line the country has researched further is that tier from now on (pp_location_plan.txt)
+	pp_lplan_b_promote = yes
 	pp_lplan_measure_clear = yes
 	if = {
 		limit = {

@@ -629,7 +629,7 @@ types PPLocationPlanGenerated
 				button = {
 					size = { 30 30 }
 					parentanchor = center
-					texture = "[GetBuildingIcon(Scope.GetBuildingType)]"
+					texture = "[GetBuildingIcon(Scope.GetBuildingType.Self)]"
 					tooltip = "PP_LPLAN_BMARK_TILE"
 					onclick = "[GetScriptedGui('pp_lplan_bmark').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_bt', Scope.GetBuildingType.MakeScope).End)]"
 				}

@@ -14,10 +14,13 @@
 
 # Country scope, inside pp_cplan_run: the gold rule group. The upgrades of standing buildings go first, then the
 # public buildings, then the town and city upgrades (which hold a location's construction slot for a year or two).
+# It pays from its purse like every rule group (pp_construction_plan.txt, "Budgets that save"): the first thing it
+# wants and cannot pay for, a building or a town or city upgrade, is what it saves for, and it starts nothing more
+# in the pass.
 pp_cplan_group_country = {
 	if = {
 		limit = { pp_cplan_country_w > 0 }
-		pp_cplan_group_start = { why = 107 add = pp_cplan_share_country }
+		pp_cplan_group_start = { why = 107 }
 		pp_cplan_country_upgrades = yes
 		pp_cplan_country_buildings = yes
 		pp_cplan_country_ranks = yes
@@ -684,14 +687,18 @@ pp_cplan_country_upgrade_building = {
 	}
 }
 
-# Location scope: start the upgrade to $type$ where the market holds its construction goods ($demand$). The
-# construction is the plan's like any building: the budget, the reserve, the ledger, a level the gold does not reach
-# counted (pp_cplan_construct_scoped; its cost estimate is a new building's, the game charges the upgrade price).
+# Location scope: start the upgrade to $type$ where the market holds its construction goods ($demand$); where it
+# does not, the window counts it as held back for them (pp_cplan_note_goods). The construction is the plan's like
+# any building: the group's purse, the reserve, the ledger, a level the gold does not reach counted and saved for
+# (pp_cplan_construct_scoped; its cost estimate is a new building's, the game charges the upgrade price).
 pp_cplan_country_upgrade_to = {
 	if = {
 		limit = { pp_cplan_goods_here_$demand$ = yes }
 		set_variable = { name = pp_cplan_up_try value = yes }
 		pp_cplan_construct = { type = $type$ why = 107 }
+	}
+	else = {
+		pp_cplan_note_goods = { why = 107 }
 	}
 }
 
@@ -1000,9 +1007,11 @@ pp_cplan_country_buildings = {
 }
 
 # Country scope: one level of $type$ in every owned location the group may build in, whose maximum control reaches
-# the player's line, where no tier of the line $line$ stands, the location's part of the can-build check passes
-# and the market holds the construction goods ($demand$); the highest control first. The construction itself
-# checks the budget and counts a level the gold does not reach (pp_cplan_construct_scoped, once a location).
+# the player's line, where no tier of the line $line$ stands and the location's part of the can-build check
+# passes; the highest control first. Where the market lacks the construction goods ($demand$) nothing starts and
+# the window counts it (pp_cplan_note_goods; in game 2026-11-10 a ticked Library did nothing where the market had
+# no books, and the pane gave no reason). The construction itself checks the group's purse and counts a level the
+# gold does not reach (pp_cplan_construct_scoped, once a location).
 pp_cplan_country_public = {
 	ordered_owned_location = {
 		limit = {
@@ -1010,16 +1019,21 @@ pp_cplan_country_public = {
 			max_control >= scope:pp_cplan_country.pp_cplan_country_control_line
 			NOT = { pp_cplan_pub_line_$line$ = yes }
 			can_build_building = building_type:$type$
-			pp_cplan_goods_here_$demand$ = yes
 		}
 		order_by = pp_cplan_country_control_here
 		max = 100000
 		check_range_bounds = no
-		# the window: the location's maximum control in % (+ 100); a building
-		save_temporary_scope_value_as = { name = pp_cplan_rv value = { value = max_control multiply = 100 add = 100 } }
-		save_temporary_scope_value_as = { name = pp_cplan_rs value = 1 }
-		scope:pp_cplan_country = { remove_variable = pp_cplan_noted }
-		pp_cplan_construct = { type = $type$ why = 107 }
+		if = {
+			limit = { pp_cplan_goods_here_$demand$ = yes }
+			# the window: the location's maximum control in % (+ 100); a building
+			save_temporary_scope_value_as = { name = pp_cplan_rv value = { value = max_control multiply = 100 add = 100 } }
+			save_temporary_scope_value_as = { name = pp_cplan_rs value = 1 }
+			scope:pp_cplan_country = { remove_variable = pp_cplan_noted }
+			pp_cplan_construct = { type = $type$ why = 107 }
+		}
+		else = {
+			pp_cplan_note_goods = { why = 107 }
+		}
 	}
 }
 
@@ -1040,12 +1054,18 @@ pp_cplan_country_ranks = {
 				modifier:cannot_upgrade_location = no
 				population >= 5
 				population >= scope:pp_cplan_country.pp_cplan_country_town_pop
-				pp_cplan_country_goods_town = yes
 			}
 			order_by = pp_cplan_country_pop_here
 			max = 100000
 			check_range_bounds = no
-			pp_cplan_country_rank_up = { rank = town }
+			# where the market lacks the upgrade's construction goods nothing starts; the window counts it
+			if = {
+				limit = { pp_cplan_country_goods_town = yes }
+				pp_cplan_country_rank_up = { rank = town n = 101 }
+			}
+			else = {
+				pp_cplan_note_goods = { why = 107 }
+			}
 		}
 	}
 	if = {
@@ -1056,19 +1076,27 @@ pp_cplan_country_ranks = {
 				location_rank = location_rank:town
 				modifier:cannot_upgrade_location = no
 				population >= 30
-				pp_cplan_country_goods_city = yes
 			}
 			order_by = pp_cplan_country_pop_here
 			max = 100000
 			check_range_bounds = no
-			pp_cplan_country_rank_up = { rank = city }
+			# where the market lacks the upgrade's construction goods nothing starts; the window counts it
+			if = {
+				limit = { pp_cplan_country_goods_city = yes }
+				pp_cplan_country_rank_up = { rank = city n = 102 }
+			}
+			else = {
+				pp_cplan_note_goods = { why = 107 }
+			}
 		}
 	}
 }
 
-# Location scope: start the upgrade to $rank$ where the month's budget lasts and its cost here
-# (pp_cplan_country_cost_<rank>) fits in the gold above the reserve (as pp_cplan_affordable does for a building);
-# else it is counted as waiting for gold (as pp_cplan_note_wait does). In game 2026-11-10: construct_location_rank
+# Location scope: start the upgrade to $rank$ where the group is not saving yet and the upgrade's cost here
+# (pp_cplan_country_cost_<rank>) fits in the group's purse and in the gold above the reserve (as
+# pp_cplan_affordable does for a building); else it is counted as waiting for gold, and the first such thing of
+# the pass is what the group saves for (as pp_cplan_note_wait does: the location, the cost, and $n$ = 101 a town,
+# 102 a city in pp_cplan_save_rank_107, since an upgrade has no building type). In game 2026-11-10: construct_location_rank
 # charges the gold itself, at once, and starts a normal construction that holds the location's construction slot
 # for a year (a city two) and draws construction goods; where the rank's allow fails it starts nothing and charges
 # nothing. So the gold is measured before and after, and the upgrade is booked (started, spent, ledger, test log)
@@ -1081,7 +1109,8 @@ pp_cplan_country_rank_up = {
 	scope:pp_cplan_country = { remove_variable = pp_cplan_noted }
 	if = {
 		limit = {
-			pp_cplan_budget_left = yes
+			NOT = { pp_cplan_saving = { why = 107 } }
+			pp_cplan_country_cost_$rank$ <= scope:pp_cplan_country.pp_cplan_purse_n_107
 			pp_cplan_country_cost_$rank$ <= scope:pp_cplan_country.pp_cplan_free_gold
 		}
 		scope:pp_cplan_country = {
@@ -1102,6 +1131,7 @@ pp_cplan_country_rank_up = {
 				change_variable = { name = pp_cplan_dspent_107 add = scope:pp_cplan_paid }
 				change_variable = { name = pp_cplan_dn_107 add = 1 }
 				set_variable = { name = pp_cplan_hit value = yes }
+				pp_cplan_purse_pay = { why = 107 }
 				if = {
 					limit = { NOT = { is_target_in_variable_list = { name = pp_cplan_log target = scope:pp_cplan_site } } }
 					add_to_variable_list = { name = pp_cplan_log target = scope:pp_cplan_site }
@@ -1142,6 +1172,13 @@ pp_cplan_country_rank_up = {
 				set_variable = { name = pp_cplan_noted value = yes }
 				change_variable = { name = pp_cplan_dwait_107 add = scope:pp_cplan_wc }
 				change_variable = { name = pp_cplan_dwn_107 add = 1 }
+			}
+			# the first thing of the pass the group cannot pay for is what it saves for
+			if = {
+				limit = { NOT = { has_variable = pp_cplan_save_cost_107 } }
+				set_variable = { name = pp_cplan_save_cost_107 value = { value = scope:pp_cplan_wc add = 100 } }
+				set_variable = { name = pp_cplan_save_loc_107 value = scope:pp_cplan_site }
+				set_variable = { name = pp_cplan_save_rank_107 value = $n$ }
 			}
 		}
 	}
@@ -1913,4 +1950,843 @@ pp_cplan_country_declare = {
 	set_variable = { name = pp_cplan_flag value = flag:right_imperial_breadbasket_rights }
 	set_variable = { name = pp_cplan_flag value = flag:right_scholai_literacy_rights }
 	set_variable = { name = pp_cplan_flag value = flag:right_municipia_privilegia }
+}
+
+# Country scope: the place of every tile of the tab's two grids among the tiles that show (the country could
+# use it, or it is ticked), so the grids wrap: pp_cplan_tp_<tile> = its place + 100 (unset = hidden),
+# pp_cplan_tc_pub / pp_cplan_tc_right = the tiles that show + 100. Run when the tab opens and after a tick (the
+# scripted GUIs pp_cplan_country_layout, pp_cplan_country_toggle); the tab reads only these variables.
+pp_cplan_country_layout_do = {
+	set_variable = { name = pp_cplan_tc_pub value = 100 }
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_early_council_hall pp_cplan_pub_show_early_council_hall > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_early_council_hall value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_early_council_hall
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_minting_office pp_cplan_pub_show_minting_office > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_minting_office value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_minting_office
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_library pp_cplan_pub_show_library > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_library value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_library
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_university pp_cplan_pub_show_university > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_university value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_university
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_hospital pp_cplan_pub_show_hospital > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_hospital value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_hospital
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_counting_house pp_cplan_pub_show_counting_house > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_counting_house value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_counting_house
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_wharf pp_cplan_pub_show_wharf > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_wharf value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_wharf
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_protected_harbor pp_cplan_pub_show_protected_harbor > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_protected_harbor value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_protected_harbor
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_dock pp_cplan_pub_show_dock > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_dock value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_dock
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_bridge_infrastructure pp_cplan_pub_show_bridge_infrastructure > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_bridge_infrastructure value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_bridge_infrastructure
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_pound_lock_canal_infrastructure pp_cplan_pub_show_pound_lock_canal_infrastructure > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_pound_lock_canal_infrastructure value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_pound_lock_canal_infrastructure
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_fortress_granary pp_cplan_pub_show_fortress_granary > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_fortress_granary value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_fortress_granary
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_sawmill pp_cplan_pub_show_sawmill > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_sawmill value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_sawmill
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_windmill pp_cplan_pub_show_windmill > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_windmill value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_windmill
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_local_smelters pp_cplan_pub_show_local_smelters > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_local_smelters value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_local_smelters
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_terraces pp_cplan_pub_show_terraces > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_terraces value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_terraces
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_lazaretto pp_cplan_pub_show_lazaretto > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_lazaretto value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_lazaretto
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_funduq pp_cplan_pub_show_funduq > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_funduq value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_funduq
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_caravan_stop pp_cplan_pub_show_caravan_stop > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_caravan_stop value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_caravan_stop
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_maghreb_palm_irrigation pp_cplan_pub_show_maghreb_palm_irrigation > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_maghreb_palm_irrigation value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_maghreb_palm_irrigation
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_confucian_academy pp_cplan_pub_show_confucian_academy > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_confucian_academy value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_confucian_academy
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_confucian_school pp_cplan_pub_show_confucian_school > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_confucian_school value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_confucian_school
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_zhixian pp_cplan_pub_show_zhixian > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_zhixian value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_zhixian
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_tambo pp_cplan_pub_show_tambo > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_tambo value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_tambo
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_royal_court pp_cplan_pub_show_royal_court > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_royal_court value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_royal_court
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_house_of_parliament pp_cplan_pub_show_house_of_parliament > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_house_of_parliament value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_house_of_parliament
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_republican_assembly pp_cplan_pub_show_republican_assembly > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_republican_assembly value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_republican_assembly
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_chancery pp_cplan_pub_show_chancery > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_chancery value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_chancery
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_supreme_court pp_cplan_pub_show_supreme_court > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_supreme_court value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_supreme_court
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_tax_assessor pp_cplan_pub_show_tax_assessor > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_tax_assessor value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_tax_assessor
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_war_college pp_cplan_pub_show_war_college > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_war_college value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_war_college
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_admiralty pp_cplan_pub_show_admiralty > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_admiralty value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_admiralty
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_order_headquarters pp_cplan_pub_show_order_headquarters > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_order_headquarters value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_order_headquarters
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_royal_garden pp_cplan_pub_show_royal_garden > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_royal_garden value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_royal_garden
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_chieftain_hall pp_cplan_pub_show_chieftain_hall > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_chieftain_hall value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_chieftain_hall
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_khan_ordu pp_cplan_pub_show_khan_ordu > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_khan_ordu value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_khan_ordu
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_patrician_hall pp_cplan_pub_show_patrician_hall > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_patrician_hall value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_patrician_hall
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_sacred_council pp_cplan_pub_show_sacred_council > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_sacred_council value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_sacred_council
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_pub_gymnasium_building pp_cplan_pub_show_gymnasium_building > 0 } }
+		change_variable = { name = pp_cplan_tc_pub add = 1 }
+		set_variable = { name = pp_cplan_tp_pub_gymnasium_building value = var:pp_cplan_tc_pub }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_pub_gymnasium_building
+	}
+	set_variable = { name = pp_cplan_tc_right value = 100 }
+	remove_variable = pp_cplan_tp_right_pp_cloth_charter
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_pp_cloth_charter value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_pp_fine_cloth_charter
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_pp_fine_cloth_charter value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_pp_leather_charter
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_pp_leather_charter value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_pp_pottery_charter
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_pp_pottery_charter value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_pp_furniture_charter
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_pp_furniture_charter value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_pp_glass_charter
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_pp_glass_charter value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_pp_jewelry_charter
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_pp_jewelry_charter value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_pp_porcelain_charter
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_pp_porcelain_charter value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_pp_lacquerware_charter
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_pp_lacquerware_charter value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_pp_beer_charter
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_pp_beer_charter value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_pp_liquor_charter
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_pp_liquor_charter value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_pp_books_charter
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_pp_books_charter value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_pp_tools_charter
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_pp_tools_charter value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_pp_weaponry_charter
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_pp_weaponry_charter value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_pp_firearms_charter
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_pp_firearms_charter value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_pp_cannons_charter
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_pp_cannons_charter value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_pp_naval_supplies_charter
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_pp_naval_supplies_charter value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_pp_iron_rights
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_pp_iron_rights value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_staple_port
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_staple_port value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_granary_town
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_granary_town value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_market_charter
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_market_charter value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_free_town_charter
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_free_town_charter value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_fortress_town
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_fortress_town value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_mining_charter
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_mining_charter value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_plantation_charter
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_plantation_charter value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_studium_privileges
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_studium_privileges value = var:pp_cplan_tc_right }
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_flemish_cloth_industries_right pp_cplan_right_show_flemish_cloth_industries_right > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_flemish_cloth_industries_right value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_flemish_cloth_industries_right
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_scandinavian_bergslag_privileges pp_cplan_right_show_scandinavian_bergslag_privileges > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_scandinavian_bergslag_privileges value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_scandinavian_bergslag_privileges
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_scandinavian_tar_privileges pp_cplan_right_show_scandinavian_tar_privileges > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_scandinavian_tar_privileges value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_scandinavian_tar_privileges
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_constantinopolitan_silk_monopoly_rights pp_cplan_right_show_constantinopolitan_silk_monopoly_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_constantinopolitan_silk_monopoly_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_constantinopolitan_silk_monopoly_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_pp_cloth_rights pp_cplan_right_show_pp_cloth_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_pp_cloth_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_pp_cloth_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_pp_fine_cloth_rights pp_cplan_right_show_pp_fine_cloth_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_pp_fine_cloth_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_pp_fine_cloth_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_pp_leather_rights pp_cplan_right_show_pp_leather_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_pp_leather_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_pp_leather_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_pp_pottery_rights pp_cplan_right_show_pp_pottery_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_pp_pottery_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_pp_pottery_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_pp_furniture_rights pp_cplan_right_show_pp_furniture_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_pp_furniture_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_pp_furniture_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_pp_glass_rights pp_cplan_right_show_pp_glass_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_pp_glass_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_pp_glass_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_pp_jewelry_rights pp_cplan_right_show_pp_jewelry_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_pp_jewelry_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_pp_jewelry_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_pp_porcelain_rights pp_cplan_right_show_pp_porcelain_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_pp_porcelain_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_pp_porcelain_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_pp_lacquerware_rights pp_cplan_right_show_pp_lacquerware_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_pp_lacquerware_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_pp_lacquerware_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_pp_beer_rights pp_cplan_right_show_pp_beer_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_pp_beer_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_pp_beer_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_pp_liquor_rights pp_cplan_right_show_pp_liquor_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_pp_liquor_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_pp_liquor_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_pp_books_rights pp_cplan_right_show_pp_books_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_pp_books_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_pp_books_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_pp_tools_rights pp_cplan_right_show_pp_tools_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_pp_tools_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_pp_tools_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_pp_weaponry_rights pp_cplan_right_show_pp_weaponry_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_pp_weaponry_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_pp_weaponry_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_pp_firearms_rights pp_cplan_right_show_pp_firearms_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_pp_firearms_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_pp_firearms_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_pp_cannons_rights pp_cplan_right_show_pp_cannons_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_pp_cannons_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_pp_cannons_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_pp_naval_supplies_rights pp_cplan_right_show_pp_naval_supplies_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_pp_naval_supplies_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_pp_naval_supplies_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_royal_market_rights pp_cplan_right_show_royal_market_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_royal_market_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_royal_market_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_royal_staple_rights pp_cplan_right_show_royal_staple_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_royal_staple_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_royal_staple_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_royal_free_cities_town_rights pp_cplan_right_show_royal_free_cities_town_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_royal_free_cities_town_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_royal_free_cities_town_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_bohemian_royal_cities_town_rights pp_cplan_right_show_bohemian_royal_cities_town_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_bohemian_royal_cities_town_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_bohemian_royal_cities_town_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_swedish_city_rights pp_cplan_right_show_swedish_city_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_swedish_city_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_swedish_city_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_norwegian_city_rights pp_cplan_right_show_norwegian_city_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_norwegian_city_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_norwegian_city_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_ville_franche_town_rights pp_cplan_right_show_ville_franche_town_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_ville_franche_town_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_ville_franche_town_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_borgo_franco_town_rights pp_cplan_right_show_borgo_franco_town_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_borgo_franco_town_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_borgo_franco_town_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_agrarian_community_town_right pp_cplan_right_show_agrarian_community_town_right > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_agrarian_community_town_right value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_agrarian_community_town_right
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_enlightened_leadership_reform_town_right pp_cplan_right_show_enlightened_leadership_reform_town_right > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_enlightened_leadership_reform_town_right value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_enlightened_leadership_reform_town_right
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_scandinavian_fishing_privileges pp_cplan_right_show_scandinavian_fishing_privileges > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_scandinavian_fishing_privileges value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_scandinavian_fishing_privileges
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_scandinavian_thing_rights pp_cplan_right_show_scandinavian_thing_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_scandinavian_thing_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_scandinavian_thing_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_magdeburg_rights_town_rights pp_cplan_right_show_magdeburg_rights_town_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_magdeburg_rights_town_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_magdeburg_rights_town_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_lubeck_town_rights pp_cplan_right_show_lubeck_town_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_lubeck_town_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_lubeck_town_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_nuremberg_rights_town_rights pp_cplan_right_show_nuremberg_rights_town_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_nuremberg_rights_town_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_nuremberg_rights_town_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_upper_bergregal pp_cplan_right_show_upper_bergregal > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_upper_bergregal value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_upper_bergregal
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_lower_bergregal pp_cplan_right_show_lower_bergregal > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_lower_bergregal value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_lower_bergregal
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_stapelrecht_town_rights pp_cplan_right_show_stapelrecht_town_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_stapelrecht_town_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_stapelrecht_town_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_kulm_town_rights pp_cplan_right_show_kulm_town_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_kulm_town_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_kulm_town_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_novi_fori_town_rights pp_cplan_right_show_novi_fori_town_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_novi_fori_town_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_novi_fori_town_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_novo_brdo_charter pp_cplan_right_show_novo_brdo_charter > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_novo_brdo_charter value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_novo_brdo_charter
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_borough_customals pp_cplan_right_show_borough_customals > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_borough_customals value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_borough_customals
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_manorial_customals pp_cplan_right_show_manorial_customals > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_manorial_customals value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_manorial_customals
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_foros_extensos_town_rights pp_cplan_right_show_foros_extensos_town_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_foros_extensos_town_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_foros_extensos_town_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_fuero_juzgo_town_rights pp_cplan_right_show_fuero_juzgo_town_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_fuero_juzgo_town_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_fuero_juzgo_town_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_fuero_real_town_rights pp_cplan_right_show_fuero_real_town_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_fuero_real_town_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_fuero_real_town_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_fuero_general_town_rights pp_cplan_right_show_fuero_general_town_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_fuero_general_town_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_fuero_general_town_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_fuero_de_aragon_town_rights pp_cplan_right_show_fuero_de_aragon_town_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_fuero_de_aragon_town_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_fuero_de_aragon_town_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_usatges_de_barcelona_town_rights pp_cplan_right_show_usatges_de_barcelona_town_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_usatges_de_barcelona_town_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_usatges_de_barcelona_town_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_furs_de_valencia_town_rights pp_cplan_right_show_furs_de_valencia_town_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_furs_de_valencia_town_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_furs_de_valencia_town_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_ara_consulate_sea_town_rights pp_cplan_right_show_ara_consulate_sea_town_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_ara_consulate_sea_town_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_ara_consulate_sea_town_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_imperial_breadbasket_rights pp_cplan_right_show_imperial_breadbasket_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_imperial_breadbasket_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_imperial_breadbasket_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_scholai_literacy_rights pp_cplan_right_show_scholai_literacy_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_scholai_literacy_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_scholai_literacy_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_municipia_privilegia pp_cplan_right_show_municipia_privilegia > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_municipia_privilegia value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_municipia_privilegia
+	}
 }

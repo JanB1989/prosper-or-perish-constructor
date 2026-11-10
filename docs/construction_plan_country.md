@@ -11,7 +11,9 @@ rules", at the end).
 The third tab of the Construction Plan window. Everything is off until the player ticks it, nothing is kept between
 passes. Module `src/prosper_or_perish_constructor/construction_plan_country.py` (run by `ppc build` right after
 `construction_plan.apply`), config `[construction_plan_country]` in `constructor.toml`, tests
-`tests/test_construction_plan_country.py`. The monthly pass, the budget, the weights and the ledger are
+`tests/test_construction_plan_country.py`. The monthly pass, the budgets that save (the group pays from its purse and saves for the first thing it cannot pay
+for, a building or a town or city upgrade; docs/player_construction_manager.md "Budgets that save"), the weights and
+the ledger are
 `construction_plan.py`'s and `pp_construction_plan.txt`'s (docs/player_construction_manager.md).
 
 ## Verified in game (2026-11-10, new game as England, EU5 1.4.7, console and run files)
@@ -48,13 +50,13 @@ order; the monthly pass counts its weight only while `pp_cplan_country_active` i
 `pp_cplan_country_site` (not `integration_level = conquered`, no `pp_lprof_xc`, a free construction slot) and holds a
 standing, open building with `building_can_be_upgraded_by`, highest maximum control first (no control line). There,
 the first such building whose direct successor passes the country's part of `can_build_building`, where the market
-holds the successor's construction goods: `pp_cplan_construct` with the successor (budget, reserve, ledger as any
+holds the successor's construction goods: `pp_cplan_construct` with the successor (the group's purse, reserve, ledger as any
 building). One upgrade a location a month. The location's part of the can-build check is not asked: the game's
 upgrade does not need it, and it is what refuses a new building of an older tier. A closed older tier is left alone.
 The successor map is generated from the building types (`obsolete = <older tier>`, the base game and the mod, DLC-only
 keys left out): **155 pairs over 150 older tiers**; where several types name the same older tier (the mines' and the
 lumber mill's variants), they are tried in the game's file order and the first the country can build wins. The plan's
-cost estimate for the budget check is a new building's (the game charges the upgrade price, which is what is booked).
+cost estimate for the purse check is a new building's (the game charges the upgrade price, which is what is booked).
 
 **2. Public buildings** (ledger step 1). One tile per building of `public_buildings`. A building with later tiers
 (Dock, Dry Dock, Shipyard, Grand Shipyard, Naval Base; Early Council Hall, Council Hall, Modern Council Hall) is one
@@ -70,7 +72,9 @@ generation from the rank's `allow` in `location_ranks`, mod over vanilla: town 5
 the player's population line, and whose market holds the upgrade's construction goods
 (`pp_cplan_country_goods_<rank>`: the plan's months of the draw of every good of the rank's `construction_demand`; the
 core writes its goods checks for building demands only, so these two are generated here by the same rule). Biggest
-population first. The budget check reads `pp_cplan_country_cost_<rank>`: the price of the price database x the
+population first. Where the market lacks an upgrade's or a building's construction goods nothing starts and the
+group's pane counts it (2026-11-10; the goods check sits in the rule's body, not in its location filter). The purse
+check reads `pp_cplan_country_cost_<rank>`: the price of the price database x the
 construction goods' price factor in the location's market (the formula the plan uses for buildings; it matches A).
 `construct_location_rank` then charges by itself; the gold is measured before and after, and the upgrade is **booked
 only when gold was paid** (started, spent, ledger, test-log lines), because the effect refuses silently.
@@ -204,11 +208,29 @@ test lines (`pp_cplan_ai_test`) in debug.log. No plan line in error.log from a l
   variables; tooltips name buildings and rights. The rights' rows stood spread over the whole scroll area (a vbox
   there is stretched): they are flowcontainers in a vertical flowcontainer now. Cost: 0.07 ms of script a frame.
 
+## The grids wrap (2026-11-10, second in-game round)
+
+A hidden tile used to leave its fixed row: Castile saw building rows of 4, 3, 2 and 1 tiles and rights rows of
+unequal length. Static rows cannot wrap, so the place of every tile among the tiles that show is computed by script
+and kept on the country: `pp_cplan_tp_<tile>` = place + 100 (unset = hidden), `pp_cplan_tc_pub` / `pp_cplan_tc_right`
+= the tiles that show + 100 (`pp_cplan_country_layout_do`, generated). It runs when the tab opens (scripted GUI
+`pp_cplan_country_layout`: the tab's button, the window's opener, the button in the location window's header) and
+after every tick of a tile (`pp_cplan_country_toggle`). Row r of a grid holds a copy of every tile from its first
+place on (a tile's place is never past its own number: 90 building tiles in 4 rows, 340 right tiles in 8), each
+shown while its place falls in that row; a row shows while the grid has tiles for it. The conditions read only
+variables: no `pp_cplan_pub_show_*` / `pp_cplan_right_show_*` value a frame any more (they are read by the layout
+alone). In game: Castile's ten buildings in one row, its 28 rights in rows of 11, 11 and 6. The always-shown rights'
+place variables are removed before they are set: the removal is their one use in script, else the game's check at
+load logs "set but never used" for each.
+
+Fuero Real, ticked beside Market Charter in the first round and never granted: its conditions are the game's, copied
+faithfully. The rule goes through the ticked rights in its order and the political influence reached one grant a
+month; Market Charter stands before Fuero Real and always found another location. With Market Charter unticked Fuero
+Real is granted (second round).
+
 ## Open
 
-1. The buildings' rows keep their eleven places: a country that can build ten of the 39 sees four short rows (Castile
-   at the start: 4, 3, 2 and 1 tiles). Static rows cannot wrap; packing them needs a list the script keeps (a
-   datamodel grid) or tiles that always show.
+1. (Done in the second round, 2026-11-10: the grids wrap, "The grids wrap" below.)
 2. An upgrade to a successor that is not the direct one, and `pp_cplan_country_cost_<rank>` against the game's price
    (the plan's check uses the price times the goods' price factor; booked is what the game took).
 3. `root` in the Stapelrecht potential; rights other than Market Charter (Fuero Real was ticked and found no

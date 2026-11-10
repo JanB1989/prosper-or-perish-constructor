@@ -151,8 +151,9 @@ def test_a_line_is_one_tile() -> None:
     seen = [tier for tiers in lines.values() for tier in tiers]
     assert len(seen) == len(set(seen)), "a building is on two tiles"
     gui = _read(MOD / cc.GUI)
-    for key, tiers in lines.items():
-        assert gui.count(f"MakeScopeFlag('pub_{key}')") == 1, key
+    # a tile stands once in every row its place can fall in (the grid wraps: its place is never past its number)
+    for number, (key, tiers) in enumerate(lines.items()):
+        assert gui.count(f"MakeScopeFlag('pub_{key}')") == number // _config().tiles_per_row + 1, key
         for tier in tiers[:-1]:
             assert f"MakeScopeFlag('pub_{tier}')" not in gui and f"buildings/{tier}.dds" not in gui, tier
     # the rule: only the highest tier the country can build, highest first; never where a tier of the line stands
@@ -192,14 +193,19 @@ def test_public_building_rule() -> None:
     effects = _code(MOD / cc.EFFECTS)
     group = _block(effects, "pp_cplan_group_country")
     assert _tokens(group) == _tokens(
-        "if = { limit = { pp_cplan_country_w > 0 } pp_cplan_group_start = { why = 107 add = pp_cplan_share_country } "
+        "if = { limit = { pp_cplan_country_w > 0 } pp_cplan_group_start = { why = 107 } "
         "pp_cplan_country_upgrades = yes pp_cplan_country_buildings = yes pp_cplan_country_ranks = yes }")
     public = _block(effects, "pp_cplan_country_public")
     limit = public[public.index("limit = {"):public.index("order_by")]
     for check in ("pp_cplan_country_site = yes", "max_control >= scope:pp_cplan_country.pp_cplan_country_control_line",
-                  "NOT = { pp_cplan_pub_line_$line$ = yes }", "can_build_building = building_type:$type$",
-                  "pp_cplan_goods_here_$demand$ = yes"):
+                  "NOT = { pp_cplan_pub_line_$line$ = yes }", "can_build_building = building_type:$type$"):
         assert check in limit, check
+    # the construction goods are asked in the body: where the market lacks them nothing starts and the window counts it
+    # (in game 2026-11-10 a ticked Library did nothing where the market had no books, and no reason showed)
+    assert "pp_cplan_goods_here_$demand$" not in limit
+    body = public[public.index("check_range_bounds = no"):]
+    assert _tokens(body).startswith("check_range_bounds = no if = { limit = { pp_cplan_goods_here_$demand$ = yes }")
+    assert _tokens(body).endswith("pp_cplan_construct = { type = $type$ why = 107 } } else = { pp_cplan_note_goods = { why = 107 } } }")
     assert "order_by = pp_cplan_country_control_here" in public
     # the reason for the window and a fresh "waiting for gold" count per location, before the construction
     start = public.index("pp_cplan_construct = { type = $type$ why = 107 }")
@@ -327,11 +333,13 @@ def test_upgrade_rule() -> None:
     assert chain.strip().startswith("if = {\n\t\tlimit = { NOT = { scope:pp_cplan_up_site = { has_variable = pp_cplan_up_try } } }")
     to = _block(effects, "pp_cplan_country_upgrade_to")
     assert _tokens(to) == ("if = { limit = { pp_cplan_goods_here_$demand$ = yes } set_variable = { name = pp_cplan_up_try "
-                           "value = yes } pp_cplan_construct = { type = $type$ why = 107 } }")
+                           "value = yes } pp_cplan_construct = { type = $type$ why = 107 } } "
+                           "else = { pp_cplan_note_goods = { why = 107 } }")
     assert rule.index("remove_variable = pp_cplan_up_try") > start
-    # the construction is the plan's like any building's (budget, reserve, ledger, closed successor, free slot)
+    # the construction is the plan's like any building's (the purse, reserve, ledger, closed successor, free slot)
     scoped = _block(_code(COMMON / "scripted_effects/pp_construction_plan.txt"), "pp_cplan_construct_scoped")
-    for check in ("pp_cplan_site_free = yes", "pp_cplan_budget_left = yes", "pp_cplan_affordable = yes", "is_opened = no"):
+    for check in ("pp_cplan_site_free = yes", "NOT = { pp_cplan_saving = { why = $why$ } }",
+                  "pp_cplan_affordable = { why = $why$ }", "is_opened = no"):
         assert check in scoped, check
     assert "can_build_building" not in scoped  # nothing there asks the location's part again
     # one toggle, in the public buildings' header row, and the group counts while it is on
@@ -389,10 +397,12 @@ def test_rank_upgrades() -> None:
                   "modifier:cannot_upgrade_location = no", f"population >= {rank.population:g}"]
         if rank.key == "town":
             checks.append("population >= scope:pp_cplan_country.pp_cplan_country_town_pop")
-        checks.append(f"pp_cplan_country_goods_{rank.key} = yes")
         assert [line.strip() for line in limit.splitlines()[1:] if line.strip() not in ("", "}")] == checks, rank.key
         assert "order_by = pp_cplan_country_pop_here" in part
-        assert f"pp_cplan_country_rank_up = {{ rank = {rank.key} }}" in part
+        # the construction goods are asked in the body: an upgrade the market lacks them for is counted for the window
+        body = _tokens(part[part.index("check_range_bounds = no"):])
+        assert (f"if = {{ limit = {{ pp_cplan_country_goods_{rank.key} = yes }} pp_cplan_country_rank_up = {{ rank = "
+                f"{rank.key} n = {cc.SAVE_RANK[rank.key]} }} }} else = {{ pp_cplan_note_goods = {{ why = 107 }} }}") in body, rank.key
     # the engine's can_become_rank is not the gate (in game 2026-11-10: false everywhere while the upgrade worked)
     for path in SCRIPT_FILES:
         assert "can_become_rank" not in _code(MOD / path), path
@@ -418,9 +428,13 @@ def test_rank_upgrades() -> None:
 def test_rank_upgrade_checks_the_budget_and_books_only_what_was_paid() -> None:
     up = _block(_code(MOD / cc.EFFECTS), "pp_cplan_country_rank_up")
     limit = up[up.index("limit = {"):up.index("construct_location_rank")]
-    assert "pp_cplan_budget_left = yes" in limit
-    assert "pp_cplan_country_cost_$rank$ <= scope:pp_cplan_country.pp_cplan_free_gold" in limit  # as pp_cplan_affordable
-    assert "pp_cplan_affordable" in _defined("scripted_triggers") and "pp_cplan_budget_left" in _defined("scripted_triggers")
+    # the group's purse pays (budgets that save, 2026-11-10): not while it saves for something, and the cost must fit
+    # in the purse and in the gold above the reserve, as pp_cplan_affordable asks for a building
+    assert "NOT = { pp_cplan_saving = { why = 107 } }" in limit
+    assert "pp_cplan_country_cost_$rank$ <= scope:pp_cplan_country.pp_cplan_purse_n_107" in limit
+    assert "pp_cplan_country_cost_$rank$ <= scope:pp_cplan_country.pp_cplan_free_gold" in limit
+    assert "pp_cplan_affordable" in _defined("scripted_triggers") and "pp_cplan_saving" in _defined("scripted_triggers")
+    assert "pp_cplan_purse_n_107" in _defined("script_values")
     order = ["name = pp_cplan_gold_before value = { value = gold add = 1000000 }",
              "construct_location_rank = location_rank:$rank$", "pp_cplan_rank_charge = { rank = $rank$ }",
              "name = pp_cplan_paid value = { value = var:pp_cplan_gold_before subtract = 1000000 subtract = gold }",
@@ -442,6 +456,7 @@ def test_rank_upgrade_checks_the_budget_and_books_only_what_was_paid() -> None:
                  "change_variable = { name = pp_cplan_dspent_107 add = scope:pp_cplan_paid }",
                  "change_variable = { name = pp_cplan_dn_107 add = 1 }",
                  "set_variable = { name = pp_cplan_hit value = yes }",
+                 "pp_cplan_purse_pay = { why = 107 }",  # the purse falls by what was really paid
                  "add_to_variable_list = { name = pp_cplan_log target = scope:pp_cplan_site }",
                  "add_to_variable_list = { name = pp_cplan_log_107 target = scope:pp_cplan_site }",
                  "set_variable = { name = pp_cplan_log_rank value = yes }",
@@ -465,8 +480,15 @@ def test_rank_upgrade_checks_the_budget_and_books_only_what_was_paid() -> None:
                  "limit = { NOT = { has_variable = pp_cplan_noted } }",
                  "set_variable = { name = pp_cplan_noted value = yes }",
                  "change_variable = { name = pp_cplan_dwait_107 add = scope:pp_cplan_wc }",
-                 "change_variable = { name = pp_cplan_dwn_107 add = 1 }"):
+                 "change_variable = { name = pp_cplan_dwn_107 add = 1 }",
+                 # the first thing of the pass the group cannot pay for is what it saves for: the location, the
+                 # cost and which upgrade (an upgrade has no building type)
+                 "limit = { NOT = { has_variable = pp_cplan_save_cost_107 } }",
+                 "set_variable = { name = pp_cplan_save_cost_107 value = { value = scope:pp_cplan_wc add = 100 } }",
+                 "set_variable = { name = pp_cplan_save_loc_107 value = scope:pp_cplan_site }",
+                 "set_variable = { name = pp_cplan_save_rank_107 value = $n$ }"):
         assert line in waiting, line
+    assert cc.SAVE_RANK == {"town": 101, "city": 102}
 
 
 def test_the_charging_decision_sits_in_one_effect_that_charges_nothing_yet() -> None:
@@ -535,7 +557,8 @@ def test_every_right_of_the_database_is_there_once() -> None:
     for key in keys:
         for name in ("potential", "allow", "site"):
             assert len(re.findall(rf"^pp_cplan_right_{name}_{key} = \{{", triggers, re.MULTILINE)) == 1, (name, key)
-        assert gui.count(f"MakeScopeFlag('right_{key}')") == 1, key
+        number = [right.key for right in cc.tile_order(_result().rights)].index(key)
+        assert gui.count(f"MakeScopeFlag('right_{key}')") == number // _config().tiles_per_row + 1, key
         assert guis.count(f"flag:right_{key} = {{ pp_cplan_flip = {{ var = pp_cplan_right_{key} }} }}") == 1, key
         assert effects.count(f"pp_cplan_country_grant = {{ right = {key} }}") == 1, key
     # a switched-off right has no trigger, tile, toggle or place in the rule (other rights' own conditions may name it)
@@ -778,11 +801,12 @@ def test_every_script_name_exists() -> None:
     for name in ("pp_cplan_group_country", "pp_cplan_country_rights", "pp_cplan_country_declare"):
         assert name in _defined("scripted_effects"), name
     # the names the monthly pass gives this group
-    for name in ("pp_cplan_country_w", "pp_cplan_share_country", "pp_cplan_free_gold"):
+    for name in ("pp_cplan_country_w", "pp_cplan_purse_n_107", "pp_cplan_free_gold"):
         assert name in _defined("script_values"), name
-    for name in ("pp_cplan_site_free", "pp_cplan_budget_left"):
+    for name in ("pp_cplan_site_free", "pp_cplan_saving", "pp_cplan_affordable"):
         assert name in _defined("scripted_triggers"), name
-    for name in ("pp_cplan_group_start", "pp_cplan_construct", "pp_cplan_flip", "pp_cplan_step_var"):
+    for name in ("pp_cplan_group_start", "pp_cplan_construct", "pp_cplan_flip", "pp_cplan_step_var", "pp_cplan_purse_pay",
+                 "pp_cplan_note_goods"):
         assert name in _defined("scripted_effects"), name
 
 
@@ -889,7 +913,14 @@ def test_tiles_are_toggles_in_rows() -> None:
     gui = _read(MOD / cc.GUI)
     result, config = _result(), _config()
     tiles = re.findall(r"\t+button = \{\n(.*?)\n\t+\}\n", gui, re.DOTALL)
-    assert len(tiles) == len(result.buildings) + len(result.rights) == 120
+    per_row = config.tiles_per_row
+    # the grids wrap: row r holds a copy of every tile from its first place on (a tile's place among the tiles that
+    # show is never past its own number), each shown while its place, a country variable the layout effect keeps,
+    # falls in that row
+    copies = lambda count: sum(count - start for start in range(0, count, per_row))
+    assert len(result.buildings) + len(result.rights) == 120
+    assert len(tiles) == copies(len(result.buildings)) + copies(len(result.rights))
+    layout = _block(_code(MOD / cc.EFFECTS), cc.LAYOUT_EFFECT)
     for tile in tiles:
         variable = re.search(r"down = \"\[GetPlayer\.MakeScope\.Var\('(pp_cplan_(?:pub|right)_\w+)'\)\.IsSet\]\"", tile)
         assert variable, tile[:80]
@@ -901,14 +932,24 @@ def test_tiles_are_toggles_in_rows() -> None:
         assert "using = header_button_template" in tile and "using = button_tab_toggle_properties_template" in tile
         assert "size = { 34 34 }" in tile and re.search(r'texture = "gfx/interface/icons/\w+/\w+\.dds"', tile), name
         assert re.search(r'tooltip = "PP_CPLANC_(?:PUB|RIGHT)_[A-Z0-9_]+"', tile), name
-        shown = re.search(r'visible = "\[Or\(GetPlayer\.MakeScope\.Var\(\'(\w+)\'\)\.IsSet, GreaterThan_CFixedPoint\('
-                          r"GetPlayer\.MakeScope\.ScriptValue\('(\w+)'\), '\(CFixedPoint\)0'\)\)\]\"", tile)
-        if shown:  # shown while the country could use it, or while ticked (so it can be unticked)
-            assert shown.group(1) == name
-            assert shown.group(2) == name.replace("pp_cplan_pub_", "pp_cplan_pub_show_").replace("pp_cplan_right_", "pp_cplan_right_show_")
-            assert shown.group(2) in _defined("script_values"), shown.group(2)
-        else:
-            assert "visible" not in tile.split("using =")[0], name
+        # shown while its place falls in this row: only variables are read, no script value a frame
+        place = name.replace("pp_cplan_pub_", "pp_cplan_tp_pub_").replace("pp_cplan_right_", "pp_cplan_tp_right_")
+        shown = re.match(rf"\t+visible = \"\[And3\(GetPlayer\.MakeScope\.Var\('{place}'\)\.IsSet, GreaterThan_CFixedPoint\("
+                         rf"GetPlayer\.MakeScope\.Var\('{place}'\)\.GetValue, '\(CFixedPoint\)(\d+)\.5'\), LessThan_CFixedPoint\("
+                         rf"GetPlayer\.MakeScope\.Var\('{place}'\)\.GetValue, '\(CFixedPoint\)(\d+)\.5'\)\)\]\"\n", tile)
+        assert shown, name
+        low, high = int(shown.group(1)), int(shown.group(2))
+        assert high - low == per_row and (low - 100) % per_row == 0, name
+        assert "ScriptValue" not in tile, name
+        # the layout places it: always, or while the country could use it or it is ticked (so it can be unticked)
+        assert f"set_variable = {{ name = {place} value = var:pp_cplan_tc_" in layout, name
+        show = name.replace("pp_cplan_pub_", "pp_cplan_pub_show_").replace("pp_cplan_right_", "pp_cplan_right_show_")
+        # (a tile that always shows removes its place before it sets it: the variable's one use in script, else the
+        # game's check at load logs "set but never used"; in game 2026-11-10)
+        assert f"remove_variable = {place}\n" in layout, name
+        if f"else = {{\n\t\tremove_variable = {place}\n" in layout:
+            assert f"limit = {{ OR = {{ has_variable = {name} {show} > 0 }} }}" in layout, name
+            assert show in _defined("script_values"), show
     always = [right.key for right in result.rights if right.always_shown]
     assert len(always) >= 20 and all(f"pp_cplan_right_show_{key} =" not in _read(MOD / cc.VALUES) for key in always)
     # rows of at most tiles_per_row, a row hidden while none of its tiles shows
@@ -922,8 +963,18 @@ def test_tiles_are_toggles_in_rows() -> None:
     listed = gui[gui.index("scrollwidget = {"):]
     assert listed.startswith("scrollwidget = {\n\t\t\t\tflowcontainer = {\n\t\t\t\t\tdirection = vertical\n")
     assert "hbox = {" not in listed and "vbox = {" not in listed
-    assert listed.count("using = header_button_template") == len(result.rights)
-    assert sum(counts) == 120 and max(counts) == config.tiles_per_row == 11
+    assert listed.count("using = header_button_template") == copies(len(result.rights))
+    assert sum(counts) == len(tiles) and config.tiles_per_row == 11
+    assert counts == ([len(result.buildings) - start for start in range(0, len(result.buildings), per_row)]
+                      + [len(result.rights) - start for start in range(0, len(result.rights), per_row)])
+    # a row shows while the grid has tiles for it; the layout runs when the tab opens and after every tick
+    assert gui.count("visible = \"[And(GetPlayer.MakeScope.Var('pp_cplan_tc_pub').IsSet, ") == -(-len(result.buildings) // per_row)
+    assert gui.count("visible = \"[And(GetPlayer.MakeScope.Var('pp_cplan_tc_right').IsSet, ") == -(-len(result.rights) // per_row)
+    guis = _code(MOD / cc.SCRIPTED_GUIS)
+    assert f"{cc.LAYOUT_GUI} = {{" in guis and guis.count(f"{cc.LAYOUT_EFFECT} = yes") == 2
+    window = _read(MOD / "in_game/gui/pp_construction_plan.gui")
+    assert window.count(f"onclick = \"{cc.LAYOUT_CALL}\"") == 2  # the opener and the tab's button
+    assert "Not(IsPauseMenuShown)" in window[window.index('name = "pp_construction_plan"'):window.index("button_regular = {", window.index('name = "pp_construction_plan"'))]
     # the rights do not have to fit: they scroll
     assert gui.index("scrollarea = {") < gui.index("MakeScopeFlag('right_")
     assert gui.index("MakeScopeFlag('pub_") < gui.index("scrollarea = {")

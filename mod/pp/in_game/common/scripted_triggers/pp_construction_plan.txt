@@ -78,18 +78,37 @@ pp_cplan_staff = {
 	}
 }
 
-# Any scope: the month's budget is not used up (the gold of the rule groups so far, and gold above the reserve).
-pp_cplan_budget_left = {
-	scope:pp_cplan_country = {
-		pp_cplan_spent_n < pp_cplan_cap_n
-		pp_cplan_free_gold > 0
-	}
+# Any scope: the rule group $why$ saves: this pass it already met something it wants and cannot pay for from its
+# purse (pp_cplan_note_wait), so it builds nothing more in the pass, even things that would fit (Jan 2026-11-10: the
+# plan must not favour cheap buildings because they are cheap).
+pp_cplan_saving = {
+	scope:pp_cplan_country = { has_variable = pp_cplan_save_cost_$why$ }
 }
 
-# Location scope, after pp_cplan_btype_data: the next level of scope:pp_cplan_btype here fits in the gold above the
-# reserve (its cost by the engine's formula).
+# Location scope, after pp_cplan_btype_data: the next level of scope:pp_cplan_btype here (its cost by the engine's
+# formula) fits in the purse of the rule group $why$, and in the gold above the reserve (the purses never hold more
+# than that at the pass's start; the second line keeps the reserve whatever happened since).
 pp_cplan_affordable = {
+	pp_cplan_est_cost <= scope:pp_cplan_country.pp_cplan_purse_n_$why$
 	pp_cplan_est_cost <= scope:pp_cplan_country.pp_cplan_free_gold
+}
+
+# Location scope: the location's market has room for one more level that makes $out$ of the good $g$ a month (the
+# market limit, Jan 2026-11-10): what is under construction of the good in the market (pp_cplan_uc_$g$ on the
+# market's centre location, counted by pp_cplan_market_load, + 100) plus this level stays within the limit's share of
+# the market's monthly demand for it (pp_cplan_mroom_<good>), or nothing of it is under construction there: one level
+# is always allowed. A location without a market has no limit.
+pp_cplan_market_room = {
+	OR = {
+		NOT = { market ?= { always = yes } }
+		market.location ?= {
+			OR = {
+				NOT = { has_variable = pp_cplan_uc_$g$ }
+				var:pp_cplan_uc_$g$ < 100.001
+				pp_cplan_mroom_$g$ >= $out$
+			}
+		}
+	}
 }
 
 # Any scope: the current rule has not built yet. The gold is checked by the construction itself

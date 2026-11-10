@@ -100,7 +100,7 @@ pp_cplan_country_active = {
 # ---- Town and city upgrades (location scope): the gold the game charges here ----
 # The price of the game's price database x the construction goods' price factor in the location's market (each
 # good's price / default price, clamped to 0.5..2.5, averaged by the demand's amounts; in game 2026-11-10 a
-# town cost the price less the market's price impact, the number the game's own button shows). The budget check and
+# town cost the price less the market's price impact, the number the game's own button shows). The purse check and
 # the "waiting for gold" count read it; what is booked is what the game really took.
 pp_cplan_country_cost_town = {
 	value = 1

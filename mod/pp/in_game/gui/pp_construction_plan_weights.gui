@@ -92,6 +92,14 @@ types PPConstructionPlanWeights
 			maximumsize = { 44 -1 }
 			align = right|nobaseline
 		}
+		# what the group has saved (its purse)
+		text_single = {
+			text = "PP_CPLAN_D_PURSE_PROFILES"
+			tooltip = "PP_CPLAN_PURSE_TT"
+			minimumsize = { 64 -1 }
+			maximumsize = { 64 -1 }
+			align = right|nobaseline
+		}
 	}
 
 	# the food group
@@ -182,6 +190,14 @@ types PPConstructionPlanWeights
 			tooltip = "PP_CPLAN_SHARE_TT"
 			minimumsize = { 44 -1 }
 			maximumsize = { 44 -1 }
+			align = right|nobaseline
+		}
+		# what the group has saved (its purse)
+		text_single = {
+			text = "PP_CPLAN_D_PURSE_FOOD"
+			tooltip = "PP_CPLAN_PURSE_TT"
+			minimumsize = { 64 -1 }
+			maximumsize = { 64 -1 }
 			align = right|nobaseline
 		}
 	}
@@ -276,6 +292,14 @@ types PPConstructionPlanWeights
 			maximumsize = { 44 -1 }
 			align = right|nobaseline
 		}
+		# what the group has saved (its purse)
+		text_single = {
+			text = "PP_CPLAN_D_PURSE_LOGISTICS"
+			tooltip = "PP_CPLAN_PURSE_TT"
+			minimumsize = { 64 -1 }
+			maximumsize = { 64 -1 }
+			align = right|nobaseline
+		}
 	}
 
 	# the improve group
@@ -366,6 +390,14 @@ types PPConstructionPlanWeights
 			tooltip = "PP_CPLAN_SHARE_TT"
 			minimumsize = { 44 -1 }
 			maximumsize = { 44 -1 }
+			align = right|nobaseline
+		}
+		# what the group has saved (its purse)
+		text_single = {
+			text = "PP_CPLAN_D_PURSE_IMPROVE"
+			tooltip = "PP_CPLAN_PURSE_TT"
+			minimumsize = { 64 -1 }
+			maximumsize = { 64 -1 }
 			align = right|nobaseline
 		}
 	}
@@ -460,6 +492,14 @@ types PPConstructionPlanWeights
 			maximumsize = { 44 -1 }
 			align = right|nobaseline
 		}
+		# what the group has saved (its purse)
+		text_single = {
+			text = "PP_CPLAN_D_PURSE_BUSINESS"
+			tooltip = "PP_CPLAN_PURSE_TT"
+			minimumsize = { 64 -1 }
+			maximumsize = { 64 -1 }
+			align = right|nobaseline
+		}
 	}
 
 	# the country group
@@ -550,6 +590,14 @@ types PPConstructionPlanWeights
 			tooltip = "PP_CPLAN_SHARE_TT"
 			minimumsize = { 44 -1 }
 			maximumsize = { 44 -1 }
+			align = right|nobaseline
+		}
+		# what the group has saved (its purse)
+		text_single = {
+			text = "PP_CPLAN_D_PURSE_COUNTRY"
+			tooltip = "PP_CPLAN_PURSE_TT"
+			minimumsize = { 64 -1 }
+			maximumsize = { 64 -1 }
 			align = right|nobaseline
 		}
 	}

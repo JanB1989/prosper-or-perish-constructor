@@ -120,7 +120,7 @@ pp_cplan_w_total = {
 	add = pp_cplan_business_w
 	add = pp_cplan_country_cw
 }
-# Country scope: the profiles group's part of the budget, in % (the window) and in gold (the pass).
+# Country scope: the profiles group's part of the new gold, in % (the window; in gold: pp_cplan_purse_new_105).
 pp_cplan_part_profiles = {
 	value = 0
 	if = {
@@ -130,16 +130,7 @@ pp_cplan_part_profiles = {
 		divide = pp_cplan_w_total
 	}
 }
-pp_cplan_share_profiles = {
-	value = 0
-	if = {
-		limit = { pp_cplan_w_total > 0 }
-		value = pp_cplan_pot_n
-		multiply = pp_cplan_profiles_cw
-		divide = pp_cplan_w_total
-	}
-}
-# Country scope: the food group's part of the budget, in % (the window) and in gold (the pass).
+# Country scope: the food group's part of the new gold, in % (the window; in gold: pp_cplan_purse_new_101).
 pp_cplan_part_food = {
 	value = 0
 	if = {
@@ -149,16 +140,7 @@ pp_cplan_part_food = {
 		divide = pp_cplan_w_total
 	}
 }
-pp_cplan_share_food = {
-	value = 0
-	if = {
-		limit = { pp_cplan_w_total > 0 }
-		value = pp_cplan_pot_n
-		multiply = pp_cplan_food_w
-		divide = pp_cplan_w_total
-	}
-}
-# Country scope: the logistics group's part of the budget, in % (the window) and in gold (the pass).
+# Country scope: the logistics group's part of the new gold, in % (the window; in gold: pp_cplan_purse_new_102).
 pp_cplan_part_logistics = {
 	value = 0
 	if = {
@@ -168,16 +150,7 @@ pp_cplan_part_logistics = {
 		divide = pp_cplan_w_total
 	}
 }
-pp_cplan_share_logistics = {
-	value = 0
-	if = {
-		limit = { pp_cplan_w_total > 0 }
-		value = pp_cplan_pot_n
-		multiply = pp_cplan_logistics_w
-		divide = pp_cplan_w_total
-	}
-}
-# Country scope: the improve group's part of the budget, in % (the window) and in gold (the pass).
+# Country scope: the improve group's part of the new gold, in % (the window; in gold: pp_cplan_purse_new_106).
 pp_cplan_part_improve = {
 	value = 0
 	if = {
@@ -187,16 +160,7 @@ pp_cplan_part_improve = {
 		divide = pp_cplan_w_total
 	}
 }
-pp_cplan_share_improve = {
-	value = 0
-	if = {
-		limit = { pp_cplan_w_total > 0 }
-		value = pp_cplan_pot_n
-		multiply = pp_cplan_improve_w
-		divide = pp_cplan_w_total
-	}
-}
-# Country scope: the business group's part of the budget, in % (the window) and in gold (the pass).
+# Country scope: the business group's part of the new gold, in % (the window; in gold: pp_cplan_purse_new_103).
 pp_cplan_part_business = {
 	value = 0
 	if = {
@@ -206,31 +170,13 @@ pp_cplan_part_business = {
 		divide = pp_cplan_w_total
 	}
 }
-pp_cplan_share_business = {
-	value = 0
-	if = {
-		limit = { pp_cplan_w_total > 0 }
-		value = pp_cplan_pot_n
-		multiply = pp_cplan_business_w
-		divide = pp_cplan_w_total
-	}
-}
-# Country scope: the country group's part of the budget, in % (the window) and in gold (the pass).
+# Country scope: the country group's part of the new gold, in % (the window; in gold: pp_cplan_purse_new_107).
 pp_cplan_part_country = {
 	value = 0
 	if = {
 		limit = { pp_cplan_w_total > 0 }
 		value = pp_cplan_country_cw
 		multiply = 100
-		divide = pp_cplan_w_total
-	}
-}
-pp_cplan_share_country = {
-	value = 0
-	if = {
-		limit = { pp_cplan_w_total > 0 }
-		value = pp_cplan_pot_n
-		multiply = pp_cplan_country_cw
 		divide = pp_cplan_w_total
 	}
 }
@@ -244,6 +190,8 @@ pp_cplan_business_min_roi = {
 	value = 100
 	divide = { value = pp_cplan_business_years min = 1 }
 }
+# Any scope: the market limit ([construction_plan] business_market_share): the share of a market's monthly demand for a good that the levels under construction of that good's makers may add up to.
+pp_cplan_market_share = { value = 0.1 }
 
 # ---- Food rule numbers ([construction_plan]; no window line) ----
 
@@ -16129,6 +16077,2243 @@ pp_cplan_bz_roi_winery_manufactory = {
 }
 
 
+# ---- The market limit (construction_plan.py render_market) ----
+# pp_cplan_uc_here_<good> (location scope): the monthly output of the good the levels under construction here
+# will add (the buildings whose main good it is, at their recipe's output a level);
+# pp_cplan_uc_market_<good> (market scope): the same over the market's locations with a construction;
+# pp_cplan_mroom_<good> (the market's centre location): the output of the good that may still start = the
+# market's monthly demand x pp_cplan_market_share minus what is under construction (pp_cplan_uc_<good>, + 100,
+# kept on that location for the pass by pp_cplan_market_load; a market scope holds no variables).
+
+pp_cplan_uc_here_alum = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:alum_quarry }
+		add = { value = building_levels_under_construction multiply = 0.51 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:alum_works }
+		add = { value = building_levels_under_construction multiply = 0.758 }
+	}
+}
+pp_cplan_uc_market_alum = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_alum
+	}
+}
+pp_cplan_mroom_alum = {
+	value = "market.goods_demand_in_market(goods:alum)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_alum }
+		subtract = { value = var:pp_cplan_uc_alum subtract = 100 }
+	}
+}
+pp_cplan_uc_here_amber = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:amber_collector }
+		add = { value = building_levels_under_construction multiply = 0.13 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:amber_diggings }
+		add = { value = building_levels_under_construction multiply = 0.256 }
+	}
+}
+pp_cplan_uc_market_amber = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_amber
+	}
+}
+pp_cplan_mroom_amber = {
+	value = "market.goods_demand_in_market(goods:amber)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_amber }
+		subtract = { value = var:pp_cplan_uc_amber subtract = 100 }
+	}
+}
+pp_cplan_uc_here_beer = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:brewery }
+		add = { value = building_levels_under_construction multiply = 0.849 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:beer_workshop }
+		add = { value = building_levels_under_construction multiply = 1.776 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:brewery_manufactory }
+		add = { value = building_levels_under_construction multiply = 3.728 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:brewery_mill }
+		add = { value = building_levels_under_construction multiply = 8.944 }
+	}
+}
+pp_cplan_uc_market_beer = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_beer
+	}
+}
+pp_cplan_mroom_beer = {
+	value = "market.goods_demand_in_market(goods:beer)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_beer }
+		subtract = { value = var:pp_cplan_uc_beer subtract = 100 }
+	}
+}
+pp_cplan_uc_here_beeswax = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:forest_village }
+		add = { value = building_levels_under_construction multiply = 0.189 }
+	}
+}
+pp_cplan_uc_market_beeswax = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_beeswax
+	}
+}
+pp_cplan_mroom_beeswax = {
+	value = "market.goods_demand_in_market(goods:beeswax)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_beeswax }
+		subtract = { value = var:pp_cplan_uc_beeswax subtract = 100 }
+	}
+}
+pp_cplan_uc_here_books = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:scriptorium }
+		add = { value = building_levels_under_construction multiply = 0.216 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:printing_press_shop }
+		add = { value = building_levels_under_construction multiply = 1.366 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:printing_manufactory }
+		add = { value = building_levels_under_construction multiply = 3.73 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:printing_mill }
+		add = { value = building_levels_under_construction multiply = 8.944 }
+	}
+}
+pp_cplan_uc_market_books = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_books
+	}
+}
+pp_cplan_mroom_books = {
+	value = "market.goods_demand_in_market(goods:books)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_books }
+		subtract = { value = var:pp_cplan_uc_books subtract = 100 }
+	}
+}
+pp_cplan_uc_here_camels = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:camel_herders }
+		add = { value = building_levels_under_construction multiply = 0.246 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:camel_stud }
+		add = { value = building_levels_under_construction multiply = 0.703 }
+	}
+}
+pp_cplan_uc_market_camels = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_camels
+	}
+}
+pp_cplan_mroom_camels = {
+	value = "market.goods_demand_in_market(goods:camels)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_camels }
+		subtract = { value = var:pp_cplan_uc_camels subtract = 100 }
+	}
+}
+pp_cplan_uc_here_cannons = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:cannon_maker }
+		add = { value = building_levels_under_construction multiply = 0.816 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:cannon_workshop }
+		add = { value = building_levels_under_construction multiply = 1.776 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:cannon_foundry }
+		add = { value = building_levels_under_construction multiply = 3.737 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:cannons_factory }
+		add = { value = building_levels_under_construction multiply = 8.946 }
+	}
+}
+pp_cplan_uc_market_cannons = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_cannons
+	}
+}
+pp_cplan_mroom_cannons = {
+	value = "market.goods_demand_in_market(goods:cannons)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_cannons }
+		subtract = { value = var:pp_cplan_uc_cannons subtract = 100 }
+	}
+}
+pp_cplan_uc_here_chili = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:chili_plantation }
+		add = { value = building_levels_under_construction multiply = 0.623 }
+	}
+}
+pp_cplan_uc_market_chili = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_chili
+	}
+}
+pp_cplan_mroom_chili = {
+	value = "market.goods_demand_in_market(goods:chili)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_chili }
+		subtract = { value = var:pp_cplan_uc_chili subtract = 100 }
+	}
+}
+pp_cplan_uc_here_clay = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:clay_pit }
+		add = { value = building_levels_under_construction multiply = 1.476 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:clay_washmill }
+		add = { value = building_levels_under_construction multiply = 1.478 }
+	}
+}
+pp_cplan_uc_market_clay = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_clay
+	}
+}
+pp_cplan_mroom_clay = {
+	value = "market.goods_demand_in_market(goods:clay)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_clay }
+		subtract = { value = var:pp_cplan_uc_clay subtract = 100 }
+	}
+}
+pp_cplan_uc_here_cloth = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:rural_clothmaker }
+		add = { value = building_levels_under_construction multiply = 0.356 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:cloth_guild }
+		add = { value = building_levels_under_construction multiply = 0.706 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:cloth_workshop }
+		add = { value = building_levels_under_construction multiply = 1.502 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:cloth_manufactory }
+		add = { value = building_levels_under_construction multiply = 3.73 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:textile_mill }
+		add = { value = building_levels_under_construction multiply = 6.703 }
+	}
+}
+pp_cplan_uc_market_cloth = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_cloth
+	}
+}
+pp_cplan_mroom_cloth = {
+	value = "market.goods_demand_in_market(goods:cloth)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_cloth }
+		subtract = { value = var:pp_cplan_uc_cloth subtract = 100 }
+	}
+}
+pp_cplan_uc_here_cloves = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:clove_grove }
+		add = { value = building_levels_under_construction multiply = 0.656 }
+	}
+}
+pp_cplan_uc_market_cloves = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_cloves
+	}
+}
+pp_cplan_mroom_cloves = {
+	value = "market.goods_demand_in_market(goods:cloves)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_cloves }
+		subtract = { value = var:pp_cplan_uc_cloves subtract = 100 }
+	}
+}
+pp_cplan_uc_here_coal = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:charcoal_maker }
+		add = { value = building_levels_under_construction multiply = 0.629 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:improved_charcoal_maker }
+		add = { value = building_levels_under_construction multiply = 0.909 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:coal_mine }
+		add = { value = building_levels_under_construction multiply = 1.129 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:coal_mine_improved }
+		add = { value = building_levels_under_construction multiply = 1.899 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:coal_mine_revolutions }
+		add = { value = building_levels_under_construction multiply = 2.409 }
+	}
+}
+pp_cplan_uc_market_coal = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_coal
+	}
+}
+pp_cplan_mroom_coal = {
+	value = "market.goods_demand_in_market(goods:coal)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_coal }
+		subtract = { value = var:pp_cplan_uc_coal subtract = 100 }
+	}
+}
+pp_cplan_uc_here_cocoa = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:cocoa_grove }
+		add = { value = building_levels_under_construction multiply = 0.731 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:managed_cocoa_grove }
+		add = { value = building_levels_under_construction multiply = 1.485 }
+	}
+}
+pp_cplan_uc_market_cocoa = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_cocoa
+	}
+}
+pp_cplan_mroom_cocoa = {
+	value = "market.goods_demand_in_market(goods:cocoa)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_cocoa }
+		subtract = { value = var:pp_cplan_uc_cocoa subtract = 100 }
+	}
+}
+pp_cplan_uc_here_coffee = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:coffee_grove }
+		add = { value = building_levels_under_construction multiply = 0.747 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:terraced_coffee_grove }
+		add = { value = building_levels_under_construction multiply = 1.563 }
+	}
+}
+pp_cplan_uc_market_coffee = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_coffee
+	}
+}
+pp_cplan_mroom_coffee = {
+	value = "market.goods_demand_in_market(goods:coffee)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_coffee }
+		subtract = { value = var:pp_cplan_uc_coffee subtract = 100 }
+	}
+}
+pp_cplan_uc_here_copper = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:copper_mine }
+		add = { value = building_levels_under_construction multiply = 0.696 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:copper_mine_adit }
+		add = { value = building_levels_under_construction multiply = 0.886 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:copper_mine_deep }
+		add = { value = building_levels_under_construction multiply = 1.106 }
+	}
+}
+pp_cplan_uc_market_copper = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_copper
+	}
+}
+pp_cplan_mroom_copper = {
+	value = "market.goods_demand_in_market(goods:copper)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_copper }
+		subtract = { value = var:pp_cplan_uc_copper subtract = 100 }
+	}
+}
+pp_cplan_uc_here_cotton = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:cotton_farm }
+		add = { value = building_levels_under_construction multiply = 0.785 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:cotton_plantation }
+		add = { value = building_levels_under_construction multiply = 0.973 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:market_cotton_farm }
+		add = { value = building_levels_under_construction multiply = 1.052 }
+	}
+}
+pp_cplan_uc_market_cotton = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_cotton
+	}
+}
+pp_cplan_mroom_cotton = {
+	value = "market.goods_demand_in_market(goods:cotton)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_cotton }
+		subtract = { value = var:pp_cplan_uc_cotton subtract = 100 }
+	}
+}
+pp_cplan_uc_here_dyes = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:dyes_guild }
+		add = { value = building_levels_under_construction multiply = 0.304 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:dyes_workshop }
+		add = { value = building_levels_under_construction multiply = 0.404 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:dye_plantation }
+		add = { value = building_levels_under_construction multiply = 0.727 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:dyesworks }
+		add = { value = building_levels_under_construction multiply = 2.004 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:dyes_mill }
+		add = { value = building_levels_under_construction multiply = 4.004 }
+	}
+}
+pp_cplan_uc_market_dyes = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_dyes
+	}
+}
+pp_cplan_mroom_dyes = {
+	value = "market.goods_demand_in_market(goods:dyes)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_dyes }
+		subtract = { value = var:pp_cplan_uc_dyes subtract = 100 }
+	}
+}
+pp_cplan_uc_here_elephants = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:elephant_kraal }
+		add = { value = building_levels_under_construction multiply = 0.116 }
+	}
+}
+pp_cplan_uc_market_elephants = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_elephants
+	}
+}
+pp_cplan_mroom_elephants = {
+	value = "market.goods_demand_in_market(goods:elephants)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_elephants }
+		subtract = { value = var:pp_cplan_uc_elephants subtract = 100 }
+	}
+}
+pp_cplan_uc_here_fiber_crops = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:fiber_crops_farm }
+		add = { value = building_levels_under_construction multiply = 0.284 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:fiber_dressing_yard }
+		add = { value = building_levels_under_construction multiply = 0.752 }
+	}
+}
+pp_cplan_uc_market_fiber_crops = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_fiber_crops
+	}
+}
+pp_cplan_mroom_fiber_crops = {
+	value = "market.goods_demand_in_market(goods:fiber_crops)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_fiber_crops }
+		subtract = { value = var:pp_cplan_uc_fiber_crops subtract = 100 }
+	}
+}
+pp_cplan_uc_here_fine_cloth = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:fine_cloth_guild }
+		add = { value = building_levels_under_construction multiply = 0.633 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:fine_cloth_workshop }
+		add = { value = building_levels_under_construction multiply = 1.434 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:fine_cloth_manufactory }
+		add = { value = building_levels_under_construction multiply = 4.483 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:fine_cloth_mill }
+		add = { value = building_levels_under_construction multiply = 8.951 }
+	}
+}
+pp_cplan_uc_market_fine_cloth = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_fine_cloth
+	}
+}
+pp_cplan_mroom_fine_cloth = {
+	value = "market.goods_demand_in_market(goods:fine_cloth)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_fine_cloth }
+		subtract = { value = var:pp_cplan_uc_fine_cloth subtract = 100 }
+	}
+}
+pp_cplan_uc_here_firearms = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:hand_cannon_guild }
+		add = { value = building_levels_under_construction multiply = 0.216 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:gun_smith }
+		add = { value = building_levels_under_construction multiply = 0.888 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:guns_workshop }
+		add = { value = building_levels_under_construction multiply = 1.846 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:firearms_manufactory }
+		add = { value = building_levels_under_construction multiply = 3.729 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:firearms_factory }
+		add = { value = building_levels_under_construction multiply = 8.943 }
+	}
+}
+pp_cplan_uc_market_firearms = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_firearms
+	}
+}
+pp_cplan_mroom_firearms = {
+	value = "market.goods_demand_in_market(goods:firearms)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_firearms }
+		subtract = { value = var:pp_cplan_uc_firearms subtract = 100 }
+	}
+}
+pp_cplan_uc_here_fish = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:fishing_village }
+		add = { value = building_levels_under_construction multiply = 0.448 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:net_curing_yard }
+		add = { value = building_levels_under_construction multiply = 0.658 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:ocean_fishery }
+		add = { value = building_levels_under_construction multiply = 0.942 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:drift_net_fishery }
+		add = { value = building_levels_under_construction multiply = 1.361 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:offshore_fishery }
+		add = { value = building_levels_under_construction multiply = 3.298 }
+	}
+}
+pp_cplan_uc_market_fish = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_fish
+	}
+}
+pp_cplan_mroom_fish = {
+	value = "market.goods_demand_in_market(goods:fish)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_fish }
+		subtract = { value = var:pp_cplan_uc_fish subtract = 100 }
+	}
+}
+pp_cplan_uc_here_fruit = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:fruit_orchard }
+		add = { value = building_levels_under_construction multiply = 0.244 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:nursery_orchard }
+		add = { value = building_levels_under_construction multiply = 0.748 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:maghreb_palm_irrigation }
+		add = { value = building_levels_under_construction multiply = 0.818 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:pomological_orchard }
+		add = { value = building_levels_under_construction multiply = 3.507 }
+	}
+}
+pp_cplan_uc_market_fruit = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_fruit
+	}
+}
+pp_cplan_mroom_fruit = {
+	value = "market.goods_demand_in_market(goods:fruit)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_fruit }
+		subtract = { value = var:pp_cplan_uc_fruit subtract = 100 }
+	}
+}
+pp_cplan_uc_here_furniture = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:furniture_guild }
+		add = { value = building_levels_under_construction multiply = 0.706 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:furniture_workshop }
+		add = { value = building_levels_under_construction multiply = 1.503 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:furniture_manufactory }
+		add = { value = building_levels_under_construction multiply = 3.733 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:furniture_mill }
+		add = { value = building_levels_under_construction multiply = 8.954 }
+	}
+}
+pp_cplan_uc_market_furniture = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_furniture
+	}
+}
+pp_cplan_mroom_furniture = {
+	value = "market.goods_demand_in_market(goods:furniture)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_furniture }
+		subtract = { value = var:pp_cplan_uc_furniture subtract = 100 }
+	}
+}
+pp_cplan_uc_here_gems = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:gem_gravel_pit }
+		add = { value = building_levels_under_construction multiply = 0.459 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:gem_sluice }
+		add = { value = building_levels_under_construction multiply = 0.55 }
+	}
+}
+pp_cplan_uc_market_gems = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_gems
+	}
+}
+pp_cplan_mroom_gems = {
+	value = "market.goods_demand_in_market(goods:gems)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_gems }
+		subtract = { value = var:pp_cplan_uc_gems subtract = 100 }
+	}
+}
+pp_cplan_uc_here_glass = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:rural_glassmaker }
+		add = { value = building_levels_under_construction multiply = 0.146 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:glass_guild }
+		add = { value = building_levels_under_construction multiply = 0.706 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:glass_workshop }
+		add = { value = building_levels_under_construction multiply = 1.504 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:glassworks }
+		add = { value = building_levels_under_construction multiply = 3.74 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:glass_mill }
+		add = { value = building_levels_under_construction multiply = 8.978 }
+	}
+}
+pp_cplan_uc_market_glass = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_glass
+	}
+}
+pp_cplan_mroom_glass = {
+	value = "market.goods_demand_in_market(goods:glass)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_glass }
+		subtract = { value = var:pp_cplan_uc_glass subtract = 100 }
+	}
+}
+pp_cplan_uc_here_goods_gold = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:gold_diggings }
+		add = { value = building_levels_under_construction multiply = 0.302 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:gold_stamp_mill }
+		add = { value = building_levels_under_construction multiply = 0.362 }
+	}
+}
+pp_cplan_uc_market_goods_gold = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_goods_gold
+	}
+}
+pp_cplan_mroom_goods_gold = {
+	value = "market.goods_demand_in_market(goods:goods_gold)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_goods_gold }
+		subtract = { value = var:pp_cplan_uc_goods_gold subtract = 100 }
+	}
+}
+pp_cplan_uc_here_horses = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:horse_breeders }
+		add = { value = building_levels_under_construction multiply = 0.38 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:stud_farm }
+		add = { value = building_levels_under_construction multiply = 0.703 }
+	}
+}
+pp_cplan_uc_market_horses = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_horses
+	}
+}
+pp_cplan_mroom_horses = {
+	value = "market.goods_demand_in_market(goods:horses)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_horses }
+		subtract = { value = var:pp_cplan_uc_horses subtract = 100 }
+	}
+}
+pp_cplan_uc_here_incense = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:incense_grove }
+		add = { value = building_levels_under_construction multiply = 0.33 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:perfumery }
+		add = { value = building_levels_under_construction multiply = 1.008 }
+	}
+}
+pp_cplan_uc_market_incense = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_incense
+	}
+}
+pp_cplan_mroom_incense = {
+	value = "market.goods_demand_in_market(goods:incense)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_incense }
+		subtract = { value = var:pp_cplan_uc_incense subtract = 100 }
+	}
+}
+pp_cplan_uc_here_iron = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:bog_iron_smelter }
+		add = { value = building_levels_under_construction multiply = 0.313 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:bog_iron_smelter_blast_furnace }
+		add = { value = building_levels_under_construction multiply = 0.413 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:iron_mine }
+		add = { value = building_levels_under_construction multiply = 0.507 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:bog_iron_smelter_coke_blast_furnace }
+		add = { value = building_levels_under_construction multiply = 0.509 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:iron_mine_improved }
+		add = { value = building_levels_under_construction multiply = 0.817 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:iron_mine_deep }
+		add = { value = building_levels_under_construction multiply = 0.923 }
+	}
+}
+pp_cplan_uc_market_iron = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_iron
+	}
+}
+pp_cplan_mroom_iron = {
+	value = "market.goods_demand_in_market(goods:iron)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_iron }
+		subtract = { value = var:pp_cplan_uc_iron subtract = 100 }
+	}
+}
+pp_cplan_uc_here_ivory = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:ivory_hunting_camp }
+		add = { value = building_levels_under_construction multiply = 0.326 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:elephant_hunting_grounds }
+		add = { value = building_levels_under_construction multiply = 1.004 }
+	}
+}
+pp_cplan_uc_market_ivory = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_ivory
+	}
+}
+pp_cplan_mroom_ivory = {
+	value = "market.goods_demand_in_market(goods:ivory)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_ivory }
+		subtract = { value = var:pp_cplan_uc_ivory subtract = 100 }
+	}
+}
+pp_cplan_uc_here_jewelry = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:pounamou_carver }
+		add = { value = building_levels_under_construction multiply = 0.204 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:jewelry_guild }
+		add = { value = building_levels_under_construction multiply = 0.774 }
+	}
+}
+pp_cplan_uc_market_jewelry = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_jewelry
+	}
+}
+pp_cplan_mroom_jewelry = {
+	value = "market.goods_demand_in_market(goods:jewelry)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_jewelry }
+		subtract = { value = var:pp_cplan_uc_jewelry subtract = 100 }
+	}
+}
+pp_cplan_uc_here_lacquerware = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:lacquerware_guild }
+		add = { value = building_levels_under_construction multiply = 0.704 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:lacquerware_manufactory }
+		add = { value = building_levels_under_construction multiply = 3.736 }
+	}
+}
+pp_cplan_uc_market_lacquerware = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_lacquerware
+	}
+}
+pp_cplan_mroom_lacquerware = {
+	value = "market.goods_demand_in_market(goods:lacquerware)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_lacquerware }
+		subtract = { value = var:pp_cplan_uc_lacquerware subtract = 100 }
+	}
+}
+pp_cplan_uc_here_lead = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:lead_mine }
+		add = { value = building_levels_under_construction multiply = 0.729 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:lead_mine_bole_smelting }
+		add = { value = building_levels_under_construction multiply = 1.051 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:lead_mine_cupola_smelting }
+		add = { value = building_levels_under_construction multiply = 1.309 }
+	}
+}
+pp_cplan_uc_market_lead = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_lead
+	}
+}
+pp_cplan_mroom_lead = {
+	value = "market.goods_demand_in_market(goods:lead)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_lead }
+		subtract = { value = var:pp_cplan_uc_lead subtract = 100 }
+	}
+}
+pp_cplan_uc_here_leather = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:tannery }
+		add = { value = building_levels_under_construction multiply = 0.706 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:managed_forest_village }
+		add = { value = building_levels_under_construction multiply = 0.781 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:tanning_workshop }
+		add = { value = building_levels_under_construction multiply = 1.503 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:tannery_manufactory }
+		add = { value = building_levels_under_construction multiply = 3.734 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:tannery_mill }
+		add = { value = building_levels_under_construction multiply = 8.955 }
+	}
+}
+pp_cplan_uc_market_leather = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_leather
+	}
+}
+pp_cplan_mroom_leather = {
+	value = "market.goods_demand_in_market(goods:leather)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_leather }
+		subtract = { value = var:pp_cplan_uc_leather subtract = 100 }
+	}
+}
+pp_cplan_uc_here_legumes = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:legume_farm }
+		add = { value = building_levels_under_construction multiply = 0.226 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:legume_farmstead }
+		add = { value = building_levels_under_construction multiply = 0.77 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:legume_rotations }
+		add = { value = building_levels_under_construction multiply = 1.185 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:legume_model_farm }
+		add = { value = building_levels_under_construction multiply = 1.655 }
+	}
+}
+pp_cplan_uc_market_legumes = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_legumes
+	}
+}
+pp_cplan_mroom_legumes = {
+	value = "market.goods_demand_in_market(goods:legumes)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_legumes }
+		subtract = { value = var:pp_cplan_uc_legumes subtract = 100 }
+	}
+}
+pp_cplan_uc_here_liquor = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:distillers_guild }
+		add = { value = building_levels_under_construction multiply = 0.708 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:distillers_workshop }
+		add = { value = building_levels_under_construction multiply = 1.503 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:distiller_manufactory }
+		add = { value = building_levels_under_construction multiply = 3.728 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:distiller_mill }
+		add = { value = building_levels_under_construction multiply = 8.94 }
+	}
+}
+pp_cplan_uc_market_liquor = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_liquor
+	}
+}
+pp_cplan_mroom_liquor = {
+	value = "market.goods_demand_in_market(goods:liquor)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_liquor }
+		subtract = { value = var:pp_cplan_uc_liquor subtract = 100 }
+	}
+}
+pp_cplan_uc_here_livestock = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:cattle_farm }
+		add = { value = building_levels_under_construction multiply = 0.151 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:cattle_farmstead }
+		add = { value = building_levels_under_construction multiply = 0.598 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:cattle_rotations }
+		add = { value = building_levels_under_construction multiply = 0.75 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:cattle_model_farm }
+		add = { value = building_levels_under_construction multiply = 1.155 }
+	}
+}
+pp_cplan_uc_market_livestock = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_livestock
+	}
+}
+pp_cplan_mroom_livestock = {
+	value = "market.goods_demand_in_market(goods:livestock)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_livestock }
+		subtract = { value = var:pp_cplan_uc_livestock subtract = 100 }
+	}
+}
+pp_cplan_uc_here_lumber = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:shoen }
+		add = { value = building_levels_under_construction multiply = 0.611 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:lumber_mill }
+		add = { value = building_levels_under_construction multiply = 1.699 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:water_sawmill }
+		add = { value = building_levels_under_construction multiply = 2.938 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:lumber_mill_improved }
+		add = { value = building_levels_under_construction multiply = 3.575 }
+	}
+}
+pp_cplan_uc_market_lumber = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_lumber
+	}
+}
+pp_cplan_mroom_lumber = {
+	value = "market.goods_demand_in_market(goods:lumber)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_lumber }
+		subtract = { value = var:pp_cplan_uc_lumber subtract = 100 }
+	}
+}
+pp_cplan_uc_here_maize = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:maize_farm }
+		add = { value = building_levels_under_construction multiply = 0.17 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:maize_farmstead }
+		add = { value = building_levels_under_construction multiply = 0.77 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:maize_rotations }
+		add = { value = building_levels_under_construction multiply = 1.175 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:maize_model_farm }
+		add = { value = building_levels_under_construction multiply = 1.665 }
+	}
+}
+pp_cplan_uc_market_maize = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_maize
+	}
+}
+pp_cplan_mroom_maize = {
+	value = "market.goods_demand_in_market(goods:maize)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_maize }
+		subtract = { value = var:pp_cplan_uc_maize subtract = 100 }
+	}
+}
+pp_cplan_uc_here_marble = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:marble_quarry }
+		add = { value = building_levels_under_construction multiply = 0.375 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:marble_saw_yard }
+		add = { value = building_levels_under_construction multiply = 0.434 }
+	}
+}
+pp_cplan_uc_market_marble = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_marble
+	}
+}
+pp_cplan_mroom_marble = {
+	value = "market.goods_demand_in_market(goods:marble)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_marble }
+		subtract = { value = var:pp_cplan_uc_marble subtract = 100 }
+	}
+}
+pp_cplan_uc_here_masonry = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:mason }
+		add = { value = building_levels_under_construction multiply = 0.518 }
+	}
+}
+pp_cplan_uc_market_masonry = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_masonry
+	}
+}
+pp_cplan_mroom_masonry = {
+	value = "market.goods_demand_in_market(goods:masonry)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_masonry }
+		subtract = { value = var:pp_cplan_uc_masonry subtract = 100 }
+	}
+}
+pp_cplan_uc_here_medicaments = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:simplers_grove }
+		add = { value = building_levels_under_construction multiply = 0.234 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:apothecary }
+		add = { value = building_levels_under_construction multiply = 0.518 }
+	}
+}
+pp_cplan_uc_market_medicaments = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_medicaments
+	}
+}
+pp_cplan_mroom_medicaments = {
+	value = "market.goods_demand_in_market(goods:medicaments)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_medicaments }
+		subtract = { value = var:pp_cplan_uc_medicaments subtract = 100 }
+	}
+}
+pp_cplan_uc_here_mercury = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:cinnabar_pit }
+		add = { value = building_levels_under_construction multiply = 0.519 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:quicksilver_retort }
+		add = { value = building_levels_under_construction multiply = 0.706 }
+	}
+}
+pp_cplan_uc_market_mercury = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_mercury
+	}
+}
+pp_cplan_mroom_mercury = {
+	value = "market.goods_demand_in_market(goods:mercury)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_mercury }
+		subtract = { value = var:pp_cplan_uc_mercury subtract = 100 }
+	}
+}
+pp_cplan_uc_here_millet = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:millet_farm }
+		add = { value = building_levels_under_construction multiply = 0.226 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:millet_farmstead }
+		add = { value = building_levels_under_construction multiply = 0.782 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:millet_rotations }
+		add = { value = building_levels_under_construction multiply = 1.175 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:millet_model_farm }
+		add = { value = building_levels_under_construction multiply = 1.665 }
+	}
+}
+pp_cplan_uc_market_millet = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_millet
+	}
+}
+pp_cplan_mroom_millet = {
+	value = "market.goods_demand_in_market(goods:millet)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_millet }
+		subtract = { value = var:pp_cplan_uc_millet subtract = 100 }
+	}
+}
+pp_cplan_uc_here_naval_supplies = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:naval_supplies_guild }
+		add = { value = building_levels_under_construction multiply = 0.706 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:naval_supplies_workshop }
+		add = { value = building_levels_under_construction multiply = 1.502 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:naval_supplies_manufactory }
+		add = { value = building_levels_under_construction multiply = 3.729 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:naval_supplies_mill }
+		add = { value = building_levels_under_construction multiply = 8.943 }
+	}
+}
+pp_cplan_uc_market_naval_supplies = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_naval_supplies
+	}
+}
+pp_cplan_mroom_naval_supplies = {
+	value = "market.goods_demand_in_market(goods:naval_supplies)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_naval_supplies }
+		subtract = { value = var:pp_cplan_uc_naval_supplies subtract = 100 }
+	}
+}
+pp_cplan_uc_here_olives = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:olive_farm }
+		add = { value = building_levels_under_construction multiply = 0.17 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:olive_farmstead }
+		add = { value = building_levels_under_construction multiply = 0.77 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:olive_rotations }
+		add = { value = building_levels_under_construction multiply = 1.175 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:olive_model_farm }
+		add = { value = building_levels_under_construction multiply = 1.665 }
+	}
+}
+pp_cplan_uc_market_olives = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_olives
+	}
+}
+pp_cplan_mroom_olives = {
+	value = "market.goods_demand_in_market(goods:olives)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_olives }
+		subtract = { value = var:pp_cplan_uc_olives subtract = 100 }
+	}
+}
+pp_cplan_uc_here_paper = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:paper_guild }
+		add = { value = building_levels_under_construction multiply = 1.009 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:paper_workshop }
+		add = { value = building_levels_under_construction multiply = 1.109 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:paper_manufactory }
+		add = { value = building_levels_under_construction multiply = 2.009 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:paper_mill }
+		add = { value = building_levels_under_construction multiply = 4.509 }
+	}
+}
+pp_cplan_uc_market_paper = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_paper
+	}
+}
+pp_cplan_mroom_paper = {
+	value = "market.goods_demand_in_market(goods:paper)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_paper }
+		subtract = { value = var:pp_cplan_uc_paper subtract = 100 }
+	}
+}
+pp_cplan_uc_here_pearls = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:pearl_fishery }
+		add = { value = building_levels_under_construction multiply = 0.182 }
+	}
+}
+pp_cplan_uc_market_pearls = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_pearls
+	}
+}
+pp_cplan_mroom_pearls = {
+	value = "market.goods_demand_in_market(goods:pearls)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_pearls }
+		subtract = { value = var:pp_cplan_uc_pearls subtract = 100 }
+	}
+}
+pp_cplan_uc_here_pepper = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:pepper_garden }
+		add = { value = building_levels_under_construction multiply = 0.556 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:managed_pepper_garden }
+		add = { value = building_levels_under_construction multiply = 0.848 }
+	}
+}
+pp_cplan_uc_market_pepper = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_pepper
+	}
+}
+pp_cplan_mroom_pepper = {
+	value = "market.goods_demand_in_market(goods:pepper)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_pepper }
+		subtract = { value = var:pp_cplan_uc_pepper subtract = 100 }
+	}
+}
+pp_cplan_uc_here_porcelain = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:porcelain_guild }
+		add = { value = building_levels_under_construction multiply = 0.706 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:porcelain_manufactory }
+		add = { value = building_levels_under_construction multiply = 3.735 }
+	}
+}
+pp_cplan_uc_market_porcelain = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_porcelain
+	}
+}
+pp_cplan_mroom_porcelain = {
+	value = "market.goods_demand_in_market(goods:porcelain)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_porcelain }
+		subtract = { value = var:pp_cplan_uc_porcelain subtract = 100 }
+	}
+}
+pp_cplan_uc_here_potato = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:potato_farm }
+		add = { value = building_levels_under_construction multiply = 0.17 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:potato_farmstead }
+		add = { value = building_levels_under_construction multiply = 0.839 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:potato_rotations }
+		add = { value = building_levels_under_construction multiply = 1.185 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:potato_model_farm }
+		add = { value = building_levels_under_construction multiply = 1.695 }
+	}
+}
+pp_cplan_uc_market_potato = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_potato
+	}
+}
+pp_cplan_mroom_potato = {
+	value = "market.goods_demand_in_market(goods:potato)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_potato }
+		subtract = { value = var:pp_cplan_uc_potato subtract = 100 }
+	}
+}
+pp_cplan_uc_here_pottery = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:pottery_guild }
+		add = { value = building_levels_under_construction multiply = 0.718 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:pottery_workshop }
+		add = { value = building_levels_under_construction multiply = 1.508 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:pottery_manufactory }
+		add = { value = building_levels_under_construction multiply = 2.778 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:pottery_mill }
+		add = { value = building_levels_under_construction multiply = 7.238 }
+	}
+}
+pp_cplan_uc_market_pottery = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_pottery
+	}
+}
+pp_cplan_mroom_pottery = {
+	value = "market.goods_demand_in_market(goods:pottery)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_pottery }
+		subtract = { value = var:pp_cplan_uc_pottery subtract = 100 }
+	}
+}
+pp_cplan_uc_here_rice = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:rice_farm }
+		add = { value = building_levels_under_construction multiply = 0.17 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:rice_farmstead }
+		add = { value = building_levels_under_construction multiply = 0.828 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:rice_rotations }
+		add = { value = building_levels_under_construction multiply = 1.175 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:rice_model_farm }
+		add = { value = building_levels_under_construction multiply = 1.685 }
+	}
+}
+pp_cplan_uc_market_rice = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_rice
+	}
+}
+pp_cplan_mroom_rice = {
+	value = "market.goods_demand_in_market(goods:rice)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_rice }
+		subtract = { value = var:pp_cplan_uc_rice subtract = 100 }
+	}
+}
+pp_cplan_uc_here_saffron = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:saffron_croft }
+		add = { value = building_levels_under_construction multiply = 0.378 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:saffron_kiln_croft }
+		add = { value = building_levels_under_construction multiply = 0.804 }
+	}
+}
+pp_cplan_uc_market_saffron = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_saffron
+	}
+}
+pp_cplan_mroom_saffron = {
+	value = "market.goods_demand_in_market(goods:saffron)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_saffron }
+		subtract = { value = var:pp_cplan_uc_saffron subtract = 100 }
+	}
+}
+pp_cplan_uc_here_salt = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:inland_saltworks }
+		add = { value = building_levels_under_construction multiply = 0.317 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:salt_collector }
+		add = { value = building_levels_under_construction multiply = 0.324 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:salt_mine }
+		add = { value = building_levels_under_construction multiply = 0.374 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:salt_mine_improved }
+		add = { value = building_levels_under_construction multiply = 0.55 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:engineered_brine_saltworks }
+		add = { value = building_levels_under_construction multiply = 0.767 }
+	}
+}
+pp_cplan_uc_market_salt = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_salt
+	}
+}
+pp_cplan_mroom_salt = {
+	value = "market.goods_demand_in_market(goods:salt)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_salt }
+		subtract = { value = var:pp_cplan_uc_salt subtract = 100 }
+	}
+}
+pp_cplan_uc_here_saltpeter = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:saltpeter_beds }
+		add = { value = building_levels_under_construction multiply = 0.331 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:saltpeter_guild }
+		add = { value = building_levels_under_construction multiply = 1.009 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:saltpeter_workshop }
+		add = { value = building_levels_under_construction multiply = 1.109 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:putrefaction_works }
+		add = { value = building_levels_under_construction multiply = 2.009 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:putrefaction_mill }
+		add = { value = building_levels_under_construction multiply = 4.009 }
+	}
+}
+pp_cplan_uc_market_saltpeter = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_saltpeter
+	}
+}
+pp_cplan_mroom_saltpeter = {
+	value = "market.goods_demand_in_market(goods:saltpeter)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_saltpeter }
+		subtract = { value = var:pp_cplan_uc_saltpeter subtract = 100 }
+	}
+}
+pp_cplan_uc_here_sand = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:sand_pit }
+		add = { value = building_levels_under_construction multiply = 0.374 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:sand_washery }
+		add = { value = building_levels_under_construction multiply = 0.817 }
+	}
+}
+pp_cplan_uc_market_sand = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_sand
+	}
+}
+pp_cplan_mroom_sand = {
+	value = "market.goods_demand_in_market(goods:sand)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_sand }
+		subtract = { value = var:pp_cplan_uc_sand subtract = 100 }
+	}
+}
+pp_cplan_uc_here_silk = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:sericulture_farm }
+		add = { value = building_levels_under_construction multiply = 0.204 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:regulated_sericulture_farm }
+		add = { value = building_levels_under_construction multiply = 0.303 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:silk_production_guild }
+		add = { value = building_levels_under_construction multiply = 0.304 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:ablaq_palace }
+		add = { value = building_levels_under_construction multiply = 0.354 }
+	}
+}
+pp_cplan_uc_market_silk = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_silk
+	}
+}
+pp_cplan_mroom_silk = {
+	value = "market.goods_demand_in_market(goods:silk)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_silk }
+		subtract = { value = var:pp_cplan_uc_silk subtract = 100 }
+	}
+}
+pp_cplan_uc_here_silver = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:silver_mine }
+		add = { value = building_levels_under_construction multiply = 0.283 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:silver_mine_improved }
+		add = { value = building_levels_under_construction multiply = 0.347 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:schwaz_mine }
+		add = { value = building_levels_under_construction multiply = 1.003 }
+	}
+}
+pp_cplan_uc_market_silver = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_silver
+	}
+}
+pp_cplan_mroom_silver = {
+	value = "market.goods_demand_in_market(goods:silver)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_silver }
+		subtract = { value = var:pp_cplan_uc_silver subtract = 100 }
+	}
+}
+pp_cplan_uc_here_slaves_goods = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:slave_center }
+		add = { value = building_levels_under_construction multiply = 1.006 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:slave_market }
+		add = { value = building_levels_under_construction multiply = 2.006 }
+	}
+}
+pp_cplan_uc_market_slaves_goods = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_slaves_goods
+	}
+}
+pp_cplan_mroom_slaves_goods = {
+	value = "market.goods_demand_in_market(goods:slaves_goods)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_slaves_goods }
+		subtract = { value = var:pp_cplan_uc_slaves_goods subtract = 100 }
+	}
+}
+pp_cplan_uc_here_steel = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:steel_mill }
+		add = { value = building_levels_under_construction multiply = 8.948 }
+	}
+}
+pp_cplan_uc_market_steel = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_steel
+	}
+}
+pp_cplan_mroom_steel = {
+	value = "market.goods_demand_in_market(goods:steel)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_steel }
+		subtract = { value = var:pp_cplan_uc_steel subtract = 100 }
+	}
+}
+pp_cplan_uc_here_stone = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:stone_quarry }
+		add = { value = building_levels_under_construction multiply = 0.356 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:stone_quarry_improved }
+		add = { value = building_levels_under_construction multiply = 1.828 }
+	}
+}
+pp_cplan_uc_market_stone = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_stone
+	}
+}
+pp_cplan_mroom_stone = {
+	value = "market.goods_demand_in_market(goods:stone)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_stone }
+		subtract = { value = var:pp_cplan_uc_stone subtract = 100 }
+	}
+}
+pp_cplan_uc_here_sugar = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:sugarcane_farm }
+		add = { value = building_levels_under_construction multiply = 0.784 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:trapiche_sugarcane_farm }
+		add = { value = building_levels_under_construction multiply = 0.841 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:sugar_plantation }
+		add = { value = building_levels_under_construction multiply = 0.973 }
+	}
+}
+pp_cplan_uc_market_sugar = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_sugar
+	}
+}
+pp_cplan_mroom_sugar = {
+	value = "market.goods_demand_in_market(goods:sugar)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_sugar }
+		subtract = { value = var:pp_cplan_uc_sugar subtract = 100 }
+	}
+}
+pp_cplan_uc_here_tar = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:tar_kiln }
+		add = { value = building_levels_under_construction multiply = 1.009 }
+	}
+}
+pp_cplan_uc_market_tar = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_tar
+	}
+}
+pp_cplan_mroom_tar = {
+	value = "market.goods_demand_in_market(goods:tar)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_tar }
+		subtract = { value = var:pp_cplan_uc_tar subtract = 100 }
+	}
+}
+pp_cplan_uc_here_tea = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:tea_garden }
+		add = { value = building_levels_under_construction multiply = 0.693 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:tea_sorting_garden }
+		add = { value = building_levels_under_construction multiply = 2.116 }
+	}
+}
+pp_cplan_uc_market_tea = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_tea
+	}
+}
+pp_cplan_mroom_tea = {
+	value = "market.goods_demand_in_market(goods:tea)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_tea }
+		subtract = { value = var:pp_cplan_uc_tea subtract = 100 }
+	}
+}
+pp_cplan_uc_here_tin = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:tin_streamworks }
+		add = { value = building_levels_under_construction multiply = 0.74 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:tin_stamping_mill }
+		add = { value = building_levels_under_construction multiply = 1.059 }
+	}
+}
+pp_cplan_uc_market_tin = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_tin
+	}
+}
+pp_cplan_mroom_tin = {
+	value = "market.goods_demand_in_market(goods:tin)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_tin }
+		subtract = { value = var:pp_cplan_uc_tin subtract = 100 }
+	}
+}
+pp_cplan_uc_here_tobacco = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:tobacco_farm }
+		add = { value = building_levels_under_construction multiply = 0.807 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:tobacco_plantation }
+		add = { value = building_levels_under_construction multiply = 0.973 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:market_tobacco_farm }
+		add = { value = building_levels_under_construction multiply = 1.045 }
+	}
+}
+pp_cplan_uc_market_tobacco = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_tobacco
+	}
+}
+pp_cplan_mroom_tobacco = {
+	value = "market.goods_demand_in_market(goods:tobacco)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_tobacco }
+		subtract = { value = var:pp_cplan_uc_tobacco subtract = 100 }
+	}
+}
+pp_cplan_uc_here_tools = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:market_village }
+		add = { value = building_levels_under_construction multiply = 0.291 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:tatara }
+		add = { value = building_levels_under_construction multiply = 0.361 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:tools_guild }
+		add = { value = building_levels_under_construction multiply = 0.711 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:tools_workshop }
+		add = { value = building_levels_under_construction multiply = 1.503 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:iron_foundry }
+		add = { value = building_levels_under_construction multiply = 3.709 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:iron_mill }
+		add = { value = building_levels_under_construction multiply = 8.876 }
+	}
+}
+pp_cplan_uc_market_tools = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_tools
+	}
+}
+pp_cplan_mroom_tools = {
+	value = "market.goods_demand_in_market(goods:tools)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_tools }
+		subtract = { value = var:pp_cplan_uc_tools subtract = 100 }
+	}
+}
+pp_cplan_uc_here_weaponry = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:weapon_guild }
+		add = { value = building_levels_under_construction multiply = 0.706 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:weapon_workshop }
+		add = { value = building_levels_under_construction multiply = 1.503 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:weapon_manufactory }
+		add = { value = building_levels_under_construction multiply = 3.736 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:weapon_factory }
+		add = { value = building_levels_under_construction multiply = 8.942 }
+	}
+}
+pp_cplan_uc_market_weaponry = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_weaponry
+	}
+}
+pp_cplan_mroom_weaponry = {
+	value = "market.goods_demand_in_market(goods:weaponry)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_weaponry }
+		subtract = { value = var:pp_cplan_uc_weaponry subtract = 100 }
+	}
+}
+pp_cplan_uc_here_wheat = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:wheat_farm }
+		add = { value = building_levels_under_construction multiply = 0.226 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:wheat_farmstead }
+		add = { value = building_levels_under_construction multiply = 0.828 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:wheat_rotations }
+		add = { value = building_levels_under_construction multiply = 1.175 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:wheat_model_farm }
+		add = { value = building_levels_under_construction multiply = 1.685 }
+	}
+}
+pp_cplan_uc_market_wheat = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_wheat
+	}
+}
+pp_cplan_mroom_wheat = {
+	value = "market.goods_demand_in_market(goods:wheat)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_wheat }
+		subtract = { value = var:pp_cplan_uc_wheat subtract = 100 }
+	}
+}
+pp_cplan_uc_here_wild_game = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:eng_royal_forest }
+		add = { value = building_levels_under_construction multiply = 1.018 }
+	}
+}
+pp_cplan_uc_market_wild_game = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_wild_game
+	}
+}
+pp_cplan_mroom_wild_game = {
+	value = "market.goods_demand_in_market(goods:wild_game)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_wild_game }
+		subtract = { value = var:pp_cplan_uc_wild_game subtract = 100 }
+	}
+}
+pp_cplan_uc_here_wine = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:vineyard_estate }
+		add = { value = building_levels_under_construction multiply = 0.331 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:winery }
+		add = { value = building_levels_under_construction multiply = 1.009 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:winery_manufactory }
+		add = { value = building_levels_under_construction multiply = 2.009 }
+	}
+}
+pp_cplan_uc_market_wine = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_wine
+	}
+}
+pp_cplan_mroom_wine = {
+	value = "market.goods_demand_in_market(goods:wine)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_wine }
+		subtract = { value = var:pp_cplan_uc_wine subtract = 100 }
+	}
+}
+pp_cplan_uc_here_wool = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:sheep_farms }
+		add = { value = building_levels_under_construction multiply = 0.128 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:hurdled_sheepcotes }
+		add = { value = building_levels_under_construction multiply = 0.318 }
+	}
+	every_buildings_in_location = {
+		limit = { building_levels_under_construction > 0 building_type = building_type:enclosed_sheep_walks }
+		add = { value = building_levels_under_construction multiply = 1.548 }
+	}
+}
+pp_cplan_uc_market_wool = {
+	value = 0
+	every_location_in_market = {
+		limit = { num_civil_constructions > 0 }
+		add = pp_cplan_uc_here_wool
+	}
+}
+pp_cplan_mroom_wool = {
+	value = "market.goods_demand_in_market(goods:wool)"
+	multiply = pp_cplan_market_share
+	if = {
+		limit = { has_variable = pp_cplan_uc_wool }
+		subtract = { value = var:pp_cplan_uc_wool subtract = 100 }
+	}
+}
+
 # ---- Workers (location scope): idle pops of a building's own class, in thousands (pp_cplan_staff) ----
 # Peasants 0: the idle peasants left after the open jobs here are scope:pp_cplan_free_peasants.
 
@@ -16140,6 +18325,698 @@ pp_cplan_idle_peasants = { value = 0 }
 pp_cplan_idle_slaves = { value = "unemployed_pops_of_pop_type_in_location(pop_type:slaves)" }
 pp_cplan_idle_soldiers = { value = "unemployed_pops_of_pop_type_in_location(pop_type:soldiers)" }
 pp_cplan_idle_tribesmen = { value = "unemployed_pops_of_pop_type_in_location(pop_type:tribesmen)" }
+
+# ---- Budgets that save (country scope; pp_cplan_purses_fill, pp_cplan_purses_hand_on) ----
+# pp_cplan_purse_<why> (+ 100): the gold a rule group has saved. The values below are functions of the state as
+# it stands; the two effects read them all before they write.
+
+# The gold above the reserve the purses may hold.
+pp_cplan_purse_free = {
+	value = pp_cplan_free_gold
+	min = 0
+}
+
+# profiles (105)
+pp_cplan_purse_n_105 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_purse_105 }
+		value = var:pp_cplan_purse_105
+		subtract = 100
+	}
+}
+pp_cplan_in_n_105 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_in_105 }
+		value = var:pp_cplan_in_105
+		subtract = 100
+	}
+}
+pp_cplan_hand_n_105 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hand_105 }
+		value = var:pp_cplan_hand_105
+		subtract = 100
+	}
+}
+pp_cplan_save_cost_n_105 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_save_cost_105 }
+		value = var:pp_cplan_save_cost_105
+		subtract = 100
+	}
+}
+pp_cplan_save_rank_n_105 = { value = 0 }
+# what it keeps at the pass's start: nothing while it does not count (its weight 0, or nothing to do)
+pp_cplan_purse_kept_105 = {
+	value = 0
+	if = {
+		limit = { pp_cplan_profiles_cw > 0 }
+		value = pp_cplan_purse_n_105
+	}
+}
+# 1 while it saves for something (the last pass could not pay for what it wanted next)
+pp_cplan_saves_105 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_save_cost_105 }
+		value = 1
+	}
+}
+# 1 when it ran in the pass and saves for nothing: it hands on what it has
+pp_cplan_gives_105 = {
+	value = 0
+	if = {
+		limit = {
+			has_variable = pp_cplan_dran_105
+			NOT = { has_variable = pp_cplan_save_cost_105 }
+		}
+		value = 1
+	}
+}
+
+# food (101)
+pp_cplan_purse_n_101 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_purse_101 }
+		value = var:pp_cplan_purse_101
+		subtract = 100
+	}
+}
+pp_cplan_in_n_101 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_in_101 }
+		value = var:pp_cplan_in_101
+		subtract = 100
+	}
+}
+pp_cplan_hand_n_101 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hand_101 }
+		value = var:pp_cplan_hand_101
+		subtract = 100
+	}
+}
+pp_cplan_save_cost_n_101 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_save_cost_101 }
+		value = var:pp_cplan_save_cost_101
+		subtract = 100
+	}
+}
+pp_cplan_save_rank_n_101 = { value = 0 }
+# what it keeps at the pass's start: nothing while it does not count (its weight 0, or nothing to do)
+pp_cplan_purse_kept_101 = {
+	value = 0
+	if = {
+		limit = { pp_cplan_food_w > 0 }
+		value = pp_cplan_purse_n_101
+	}
+}
+# 1 while it saves for something (the last pass could not pay for what it wanted next)
+pp_cplan_saves_101 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_save_cost_101 }
+		value = 1
+	}
+}
+# 1 when it ran in the pass and saves for nothing: it hands on what it has
+pp_cplan_gives_101 = {
+	value = 0
+	if = {
+		limit = {
+			has_variable = pp_cplan_dran_101
+			NOT = { has_variable = pp_cplan_save_cost_101 }
+		}
+		value = 1
+	}
+}
+
+# logistics (102)
+pp_cplan_purse_n_102 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_purse_102 }
+		value = var:pp_cplan_purse_102
+		subtract = 100
+	}
+}
+pp_cplan_in_n_102 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_in_102 }
+		value = var:pp_cplan_in_102
+		subtract = 100
+	}
+}
+pp_cplan_hand_n_102 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hand_102 }
+		value = var:pp_cplan_hand_102
+		subtract = 100
+	}
+}
+pp_cplan_save_cost_n_102 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_save_cost_102 }
+		value = var:pp_cplan_save_cost_102
+		subtract = 100
+	}
+}
+pp_cplan_save_rank_n_102 = { value = 0 }
+# what it keeps at the pass's start: nothing while it does not count (its weight 0, or nothing to do)
+pp_cplan_purse_kept_102 = {
+	value = 0
+	if = {
+		limit = { pp_cplan_logistics_w > 0 }
+		value = pp_cplan_purse_n_102
+	}
+}
+# 1 while it saves for something (the last pass could not pay for what it wanted next)
+pp_cplan_saves_102 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_save_cost_102 }
+		value = 1
+	}
+}
+# 1 when it ran in the pass and saves for nothing: it hands on what it has
+pp_cplan_gives_102 = {
+	value = 0
+	if = {
+		limit = {
+			has_variable = pp_cplan_dran_102
+			NOT = { has_variable = pp_cplan_save_cost_102 }
+		}
+		value = 1
+	}
+}
+
+# improve (106)
+pp_cplan_purse_n_106 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_purse_106 }
+		value = var:pp_cplan_purse_106
+		subtract = 100
+	}
+}
+pp_cplan_in_n_106 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_in_106 }
+		value = var:pp_cplan_in_106
+		subtract = 100
+	}
+}
+pp_cplan_hand_n_106 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hand_106 }
+		value = var:pp_cplan_hand_106
+		subtract = 100
+	}
+}
+pp_cplan_save_cost_n_106 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_save_cost_106 }
+		value = var:pp_cplan_save_cost_106
+		subtract = 100
+	}
+}
+pp_cplan_save_rank_n_106 = { value = 0 }
+# what it keeps at the pass's start: nothing while it does not count (its weight 0, or nothing to do)
+pp_cplan_purse_kept_106 = {
+	value = 0
+	if = {
+		limit = { pp_cplan_improve_w > 0 }
+		value = pp_cplan_purse_n_106
+	}
+}
+# 1 while it saves for something (the last pass could not pay for what it wanted next)
+pp_cplan_saves_106 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_save_cost_106 }
+		value = 1
+	}
+}
+# 1 when it ran in the pass and saves for nothing: it hands on what it has
+pp_cplan_gives_106 = {
+	value = 0
+	if = {
+		limit = {
+			has_variable = pp_cplan_dran_106
+			NOT = { has_variable = pp_cplan_save_cost_106 }
+		}
+		value = 1
+	}
+}
+
+# business (103)
+pp_cplan_purse_n_103 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_purse_103 }
+		value = var:pp_cplan_purse_103
+		subtract = 100
+	}
+}
+pp_cplan_in_n_103 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_in_103 }
+		value = var:pp_cplan_in_103
+		subtract = 100
+	}
+}
+pp_cplan_hand_n_103 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hand_103 }
+		value = var:pp_cplan_hand_103
+		subtract = 100
+	}
+}
+pp_cplan_save_cost_n_103 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_save_cost_103 }
+		value = var:pp_cplan_save_cost_103
+		subtract = 100
+	}
+}
+pp_cplan_save_rank_n_103 = { value = 0 }
+# what it keeps at the pass's start: nothing while it does not count (its weight 0, or nothing to do)
+pp_cplan_purse_kept_103 = {
+	value = 0
+	if = {
+		limit = { pp_cplan_business_w > 0 }
+		value = pp_cplan_purse_n_103
+	}
+}
+# 1 while it saves for something (the last pass could not pay for what it wanted next)
+pp_cplan_saves_103 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_save_cost_103 }
+		value = 1
+	}
+}
+# 1 when it ran in the pass and saves for nothing: it hands on what it has
+pp_cplan_gives_103 = {
+	value = 0
+	if = {
+		limit = {
+			has_variable = pp_cplan_dran_103
+			NOT = { has_variable = pp_cplan_save_cost_103 }
+		}
+		value = 1
+	}
+}
+
+# country (107)
+pp_cplan_purse_n_107 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_purse_107 }
+		value = var:pp_cplan_purse_107
+		subtract = 100
+	}
+}
+pp_cplan_in_n_107 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_in_107 }
+		value = var:pp_cplan_in_107
+		subtract = 100
+	}
+}
+pp_cplan_hand_n_107 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hand_107 }
+		value = var:pp_cplan_hand_107
+		subtract = 100
+	}
+}
+pp_cplan_save_cost_n_107 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_save_cost_107 }
+		value = var:pp_cplan_save_cost_107
+		subtract = 100
+	}
+}
+pp_cplan_save_rank_n_107 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_save_rank_107 }
+		value = var:pp_cplan_save_rank_107
+		subtract = 100
+	}
+}
+# what it keeps at the pass's start: nothing while it does not count (its weight 0, or nothing to do)
+pp_cplan_purse_kept_107 = {
+	value = 0
+	if = {
+		limit = { pp_cplan_country_cw > 0 }
+		value = pp_cplan_purse_n_107
+	}
+}
+# 1 while it saves for something (the last pass could not pay for what it wanted next)
+pp_cplan_saves_107 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_save_cost_107 }
+		value = 1
+	}
+}
+# 1 when it ran in the pass and saves for nothing: it hands on what it has
+pp_cplan_gives_107 = {
+	value = 0
+	if = {
+		limit = {
+			has_variable = pp_cplan_dran_107
+			NOT = { has_variable = pp_cplan_save_cost_107 }
+		}
+		value = 1
+	}
+}
+
+# The pass's start.
+# What the purses hold together, without the groups that do not count.
+pp_cplan_purse_held = {
+	value = 0
+	add = pp_cplan_purse_kept_105
+	add = pp_cplan_purse_kept_101
+	add = pp_cplan_purse_kept_102
+	add = pp_cplan_purse_kept_106
+	add = pp_cplan_purse_kept_103
+	add = pp_cplan_purse_kept_107
+}
+# The gold above the reserve that is in no purse yet (0 when the purses hold more than there is).
+pp_cplan_purse_rest = {
+	value = pp_cplan_purse_free
+	subtract = pp_cplan_purse_held
+	min = 0
+}
+# profiles: its part of the gold in no purse, and its purse after the pass's start (shrunk like every purse
+# when they hold more than the gold above the reserve)
+pp_cplan_purse_new_105 = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_purse_rest
+		multiply = pp_cplan_profiles_cw
+		divide = pp_cplan_w_total
+	}
+}
+pp_cplan_purse_next_105 = {
+	value = pp_cplan_purse_kept_105
+	if = {
+		limit = { pp_cplan_purse_held > pp_cplan_purse_free }
+		multiply = pp_cplan_purse_free
+		divide = pp_cplan_purse_held
+	}
+	add = pp_cplan_purse_new_105
+}
+# food: its part of the gold in no purse, and its purse after the pass's start (shrunk like every purse
+# when they hold more than the gold above the reserve)
+pp_cplan_purse_new_101 = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_purse_rest
+		multiply = pp_cplan_food_w
+		divide = pp_cplan_w_total
+	}
+}
+pp_cplan_purse_next_101 = {
+	value = pp_cplan_purse_kept_101
+	if = {
+		limit = { pp_cplan_purse_held > pp_cplan_purse_free }
+		multiply = pp_cplan_purse_free
+		divide = pp_cplan_purse_held
+	}
+	add = pp_cplan_purse_new_101
+}
+# logistics: its part of the gold in no purse, and its purse after the pass's start (shrunk like every purse
+# when they hold more than the gold above the reserve)
+pp_cplan_purse_new_102 = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_purse_rest
+		multiply = pp_cplan_logistics_w
+		divide = pp_cplan_w_total
+	}
+}
+pp_cplan_purse_next_102 = {
+	value = pp_cplan_purse_kept_102
+	if = {
+		limit = { pp_cplan_purse_held > pp_cplan_purse_free }
+		multiply = pp_cplan_purse_free
+		divide = pp_cplan_purse_held
+	}
+	add = pp_cplan_purse_new_102
+}
+# improve: its part of the gold in no purse, and its purse after the pass's start (shrunk like every purse
+# when they hold more than the gold above the reserve)
+pp_cplan_purse_new_106 = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_purse_rest
+		multiply = pp_cplan_improve_w
+		divide = pp_cplan_w_total
+	}
+}
+pp_cplan_purse_next_106 = {
+	value = pp_cplan_purse_kept_106
+	if = {
+		limit = { pp_cplan_purse_held > pp_cplan_purse_free }
+		multiply = pp_cplan_purse_free
+		divide = pp_cplan_purse_held
+	}
+	add = pp_cplan_purse_new_106
+}
+# business: its part of the gold in no purse, and its purse after the pass's start (shrunk like every purse
+# when they hold more than the gold above the reserve)
+pp_cplan_purse_new_103 = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_purse_rest
+		multiply = pp_cplan_business_w
+		divide = pp_cplan_w_total
+	}
+}
+pp_cplan_purse_next_103 = {
+	value = pp_cplan_purse_kept_103
+	if = {
+		limit = { pp_cplan_purse_held > pp_cplan_purse_free }
+		multiply = pp_cplan_purse_free
+		divide = pp_cplan_purse_held
+	}
+	add = pp_cplan_purse_new_103
+}
+# country: its part of the gold in no purse, and its purse after the pass's start (shrunk like every purse
+# when they hold more than the gold above the reserve)
+pp_cplan_purse_new_107 = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_purse_rest
+		multiply = pp_cplan_country_cw
+		divide = pp_cplan_w_total
+	}
+}
+pp_cplan_purse_next_107 = {
+	value = pp_cplan_purse_kept_107
+	if = {
+		limit = { pp_cplan_purse_held > pp_cplan_purse_free }
+		multiply = pp_cplan_purse_free
+		divide = pp_cplan_purse_held
+	}
+	add = pp_cplan_purse_new_107
+}
+
+# The pass's end.
+# The gold of the groups that hand on, and the weights of the groups that save.
+pp_cplan_hand_pool = {
+	value = 0
+	add = { value = pp_cplan_purse_n_105 multiply = pp_cplan_gives_105 }
+	add = { value = pp_cplan_purse_n_101 multiply = pp_cplan_gives_101 }
+	add = { value = pp_cplan_purse_n_102 multiply = pp_cplan_gives_102 }
+	add = { value = pp_cplan_purse_n_106 multiply = pp_cplan_gives_106 }
+	add = { value = pp_cplan_purse_n_103 multiply = pp_cplan_gives_103 }
+	add = { value = pp_cplan_purse_n_107 multiply = pp_cplan_gives_107 }
+}
+pp_cplan_hand_weights = {
+	value = 0
+	add = { value = pp_cplan_profiles_cw multiply = pp_cplan_saves_105 }
+	add = { value = pp_cplan_food_w multiply = pp_cplan_saves_101 }
+	add = { value = pp_cplan_logistics_w multiply = pp_cplan_saves_102 }
+	add = { value = pp_cplan_improve_w multiply = pp_cplan_saves_106 }
+	add = { value = pp_cplan_business_w multiply = pp_cplan_saves_103 }
+	add = { value = pp_cplan_country_cw multiply = pp_cplan_saves_107 }
+}
+# profiles: what it gets from the groups that hand on, and its purse after the hand-on
+pp_cplan_hand_get_105 = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_saves_105 > 0
+			pp_cplan_hand_weights > 0
+		}
+		value = pp_cplan_hand_pool
+		multiply = pp_cplan_profiles_cw
+		divide = pp_cplan_hand_weights
+	}
+}
+pp_cplan_hand_next_105 = {
+	value = pp_cplan_purse_n_105
+	if = {
+		limit = {
+			pp_cplan_gives_105 > 0
+			pp_cplan_hand_weights > 0
+		}
+		value = 0
+	}
+	add = pp_cplan_hand_get_105
+}
+# food: what it gets from the groups that hand on, and its purse after the hand-on
+pp_cplan_hand_get_101 = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_saves_101 > 0
+			pp_cplan_hand_weights > 0
+		}
+		value = pp_cplan_hand_pool
+		multiply = pp_cplan_food_w
+		divide = pp_cplan_hand_weights
+	}
+}
+pp_cplan_hand_next_101 = {
+	value = pp_cplan_purse_n_101
+	if = {
+		limit = {
+			pp_cplan_gives_101 > 0
+			pp_cplan_hand_weights > 0
+		}
+		value = 0
+	}
+	add = pp_cplan_hand_get_101
+}
+# logistics: what it gets from the groups that hand on, and its purse after the hand-on
+pp_cplan_hand_get_102 = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_saves_102 > 0
+			pp_cplan_hand_weights > 0
+		}
+		value = pp_cplan_hand_pool
+		multiply = pp_cplan_logistics_w
+		divide = pp_cplan_hand_weights
+	}
+}
+pp_cplan_hand_next_102 = {
+	value = pp_cplan_purse_n_102
+	if = {
+		limit = {
+			pp_cplan_gives_102 > 0
+			pp_cplan_hand_weights > 0
+		}
+		value = 0
+	}
+	add = pp_cplan_hand_get_102
+}
+# improve: what it gets from the groups that hand on, and its purse after the hand-on
+pp_cplan_hand_get_106 = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_saves_106 > 0
+			pp_cplan_hand_weights > 0
+		}
+		value = pp_cplan_hand_pool
+		multiply = pp_cplan_improve_w
+		divide = pp_cplan_hand_weights
+	}
+}
+pp_cplan_hand_next_106 = {
+	value = pp_cplan_purse_n_106
+	if = {
+		limit = {
+			pp_cplan_gives_106 > 0
+			pp_cplan_hand_weights > 0
+		}
+		value = 0
+	}
+	add = pp_cplan_hand_get_106
+}
+# business: what it gets from the groups that hand on, and its purse after the hand-on
+pp_cplan_hand_get_103 = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_saves_103 > 0
+			pp_cplan_hand_weights > 0
+		}
+		value = pp_cplan_hand_pool
+		multiply = pp_cplan_business_w
+		divide = pp_cplan_hand_weights
+	}
+}
+pp_cplan_hand_next_103 = {
+	value = pp_cplan_purse_n_103
+	if = {
+		limit = {
+			pp_cplan_gives_103 > 0
+			pp_cplan_hand_weights > 0
+		}
+		value = 0
+	}
+	add = pp_cplan_hand_get_103
+}
+# country: what it gets from the groups that hand on, and its purse after the hand-on
+pp_cplan_hand_get_107 = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_saves_107 > 0
+			pp_cplan_hand_weights > 0
+		}
+		value = pp_cplan_hand_pool
+		multiply = pp_cplan_country_cw
+		divide = pp_cplan_hand_weights
+	}
+}
+pp_cplan_hand_next_107 = {
+	value = pp_cplan_purse_n_107
+	if = {
+		limit = {
+			pp_cplan_gives_107 > 0
+			pp_cplan_hand_weights > 0
+		}
+		value = 0
+	}
+	add = pp_cplan_hand_get_107
+}
 
 # ---- The window's detail panes (country scope; pp_cplan_stats_reset, pp_cplan_history_push) ----
 
@@ -16188,6 +19065,22 @@ pp_cplan_d_profiles_waitn = {
 	if = {
 		limit = { has_variable = pp_cplan_dwn_105 }
 		value = var:pp_cplan_dwn_105
+		subtract = 100
+	}
+}
+pp_cplan_d_profiles_goods = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dgo_105 }
+		value = var:pp_cplan_dgo_105
+		subtract = 100
+	}
+}
+pp_cplan_d_profiles_limited = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dml_105 }
+		value = var:pp_cplan_dml_105
 		subtract = 100
 	}
 }
@@ -16272,6 +19165,14 @@ pp_cplan_d_profiles_st9 = {
 	if = {
 		limit = { has_variable = pp_cplan_ds_profiles_st9 }
 		value = var:pp_cplan_ds_profiles_st9
+		subtract = 100
+	}
+}
+pp_cplan_d_profiles_st10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_profiles_st10 }
+		value = var:pp_cplan_ds_profiles_st10
 		subtract = 100
 	}
 }
@@ -16678,6 +19579,22 @@ pp_cplan_d_food_waitn = {
 	if = {
 		limit = { has_variable = pp_cplan_dwn_101 }
 		value = var:pp_cplan_dwn_101
+		subtract = 100
+	}
+}
+pp_cplan_d_food_goods = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dgo_101 }
+		value = var:pp_cplan_dgo_101
+		subtract = 100
+	}
+}
+pp_cplan_d_food_limited = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dml_101 }
+		value = var:pp_cplan_dml_101
 		subtract = 100
 	}
 }
@@ -17131,6 +20048,22 @@ pp_cplan_d_logistics_waitn = {
 		subtract = 100
 	}
 }
+pp_cplan_d_logistics_goods = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dgo_102 }
+		value = var:pp_cplan_dgo_102
+		subtract = 100
+	}
+}
+pp_cplan_d_logistics_limited = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dml_102 }
+		value = var:pp_cplan_dml_102
+		subtract = 100
+	}
+}
 pp_cplan_d_logistics_need = {
 	value = pp_cplan_d_logistics_spent
 	add = pp_cplan_d_logistics_wait
@@ -17557,6 +20490,22 @@ pp_cplan_d_improve_waitn = {
 		subtract = 100
 	}
 }
+pp_cplan_d_improve_goods = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dgo_106 }
+		value = var:pp_cplan_dgo_106
+		subtract = 100
+	}
+}
+pp_cplan_d_improve_limited = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dml_106 }
+		value = var:pp_cplan_dml_106
+		subtract = 100
+	}
+}
 pp_cplan_d_improve_need = {
 	value = pp_cplan_d_improve_spent
 	add = pp_cplan_d_improve_wait
@@ -17980,6 +20929,22 @@ pp_cplan_d_business_waitn = {
 	if = {
 		limit = { has_variable = pp_cplan_dwn_103 }
 		value = var:pp_cplan_dwn_103
+		subtract = 100
+	}
+}
+pp_cplan_d_business_goods = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dgo_103 }
+		value = var:pp_cplan_dgo_103
+		subtract = 100
+	}
+}
+pp_cplan_d_business_limited = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dml_103 }
+		value = var:pp_cplan_dml_103
 		subtract = 100
 	}
 }
@@ -18414,6 +21379,22 @@ pp_cplan_d_country_waitn = {
 	if = {
 		limit = { has_variable = pp_cplan_dwn_107 }
 		value = var:pp_cplan_dwn_107
+		subtract = 100
+	}
+}
+pp_cplan_d_country_goods = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dgo_107 }
+		value = var:pp_cplan_dgo_107
+		subtract = 100
+	}
+}
+pp_cplan_d_country_limited = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dml_107 }
+		value = var:pp_cplan_dml_107
 		subtract = 100
 	}
 }

@@ -107,8 +107,11 @@ def test_every_candidate_has_cost_data_and_guards() -> None:
     # every construction goes through the plan's budget check and its construct (ledger, never twice while queued)
     build = _block(hand, "pp_lprof_build")
     assert f"pp_cplan_construct_scoped = {{ why = {lpf.WHY_PROFILE} }}" in build
-    # the plan's construct checks the budget; a level the gold does not reach is the budget state (106 -> 7)
-    assert "limit = { scope:pp_cplan_country = { has_variable = pp_cplan_wait } }\n\t\tpp_lprof_fail = { r = 106 }" in build
+    # the plan's construct checks the group's purse; a level it does not start for gold is the gold state (107 -> 7),
+    # one the market limit stops its own (106 -> 10)
+    assert "limit = { scope:pp_cplan_country = { has_variable = pp_cplan_wait } }\n\t\tpp_lprof_fail = { r = 107 }" in build
+    assert "limit = { scope:pp_cplan_country = { has_variable = pp_cplan_mlim } }\n\t\tpp_lprof_fail = { r = 106 }" in build
+    assert build.index("has_variable = pp_cplan_wait") < build.index("has_variable = pp_cplan_mlim")
     assert "construct_building" not in hand
     assert "pp_lprof_payback100 > scope:pp_lprof_pb" in _block(hand, "pp_lprof_expand")
 
@@ -209,7 +212,7 @@ def test_global_rules_read_the_profile() -> None:
     assert "goods:wheat" in _block(generated, "pp_lprof_food_target")
     hand = _code(MOD / lpf.HAND_EFFECTS)
     group = _block(hand, "pp_lprof_run")
-    assert "pp_cplan_group_start = { why = 105 add = pp_cplan_share_profiles }" in group
+    assert "pp_cplan_group_start = { why = 105 }" in group
     assert "pp_cplan_profiles_w > 0" in group  # the profiles' weight bar at 0 switches them off
     assert "save_temporary_scope_value_as = { name = pp_cplan_free_peasants value = pp_cplan_free_peasants_here }" in group
     assert "pp_lprof_location_rules = yes" in group
@@ -460,7 +463,7 @@ def test_states_and_texts() -> None:
     text = raw.decode("utf-8-sig")
     assert text.splitlines()[0] == "l_english:"
     keys = dict(re.findall(r'^  ([A-Z0-9_]+): "(.*)"$', text, re.MULTILINE))
-    for n in range(0, 10):
+    for n in range(0, len(lpf.STATES) + 1):
         assert f"PP_LPROF_ST_{n}" in keys, n
         assert not re.search(r"\d", keys[f"PP_LPROF_ST_{n}"]), "no numbers in player text"
     assert "PP_CPLAN_WHY_PROFILE" in (MOD / "main_menu/localization/english/pp_construction_plan_l_english.yml").read_text(encoding="utf-8-sig")

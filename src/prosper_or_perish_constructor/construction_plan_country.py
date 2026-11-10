@@ -22,7 +22,8 @@ Three sections, all off until the player ticks something; nothing is kept betwee
   (``unlock_town_rights``) needs one of those advances.
 
 The first three are the gold rule group ``pp_cplan_group_country`` (construction code 107, inside ``pp_cplan_run``); the
-rights cost no gold and run once after the groups (``pp_cplan_country_rights``). The monthly pass, the budget, the
+rights cost no gold and run once after the groups (``pp_cplan_country_rights``). The monthly pass, the budgets that
+save (the group pays from its purse and saves for the first thing it cannot pay for: a building or an upgrade), the
 ledger and the weights are ``construction_plan.py``'s and the hand-written ``pp_construction_plan.txt``; this module
 writes only its own files (docs/construction_plan_country.md):
 
@@ -57,6 +58,9 @@ CONFIG_KEY = "construction_plan_country"
 WHY = 107  # the group's construction code (construction_plan.GROUP_WHY["country"])
 # pp_cplan_log_step of the group's constructions: a public building, a town or city upgrade, a building's upgrade
 STEP_BUILDING, STEP_RANK, STEP_UPGRADE = 1, 2, 3
+# what the group saves for when it is an upgrade of a location's rank (country variable pp_cplan_save_rank_107, + 100;
+# construction_plan_detail.SAVE_RANKS names them in the window)
+SAVE_RANK = {"town": 101, "city": 102}
 BUILDING_TYPES = cp.BUILDING_TYPES
 GOODS_DEMAND = cp.GOODS_DEMAND
 TOWN_RIGHTS = Path("in_game/common/town_rights")
@@ -561,7 +565,7 @@ def render_values(config: Config, buildings: list[Building], rights: list[Right]
         "\n# ---- Town and city upgrades (location scope): the gold the game charges here ----\n"
         "# The price of the game's price database x the construction goods' price factor in the location's market (each\n"
         f"# good's price / default price, clamped to {low:g}..{high:g}, averaged by the demand's amounts; in game 2026-11-10 a\n"
-        "# town cost the price less the market's price impact, the number the game's own button shows). The budget check and\n"
+        "# town cost the price less the market's price impact, the number the game's own button shows). The purse check and\n"
         "# the \"waiting for gold\" count read it; what is booked is what the game really took.\n"
     )
     for rank in ranks:
@@ -723,14 +727,18 @@ def render_upgrades(pairs: list[tuple[str, str]], costs: dict[str, cp.BuildingCo
     parts.append(
         "\t}\n"
         "}\n"
-        "\n# Location scope: start the upgrade to $type$ where the market holds its construction goods ($demand$). The\n"
-        "# construction is the plan's like any building: the budget, the reserve, the ledger, a level the gold does not reach\n"
-        "# counted (pp_cplan_construct_scoped; its cost estimate is a new building's, the game charges the upgrade price).\n"
+        "\n# Location scope: start the upgrade to $type$ where the market holds its construction goods ($demand$); where it\n"
+        "# does not, the window counts it as held back for them (pp_cplan_note_goods). The construction is the plan's like\n"
+        "# any building: the group's purse, the reserve, the ledger, a level the gold does not reach counted and saved for\n"
+        "# (pp_cplan_construct_scoped; its cost estimate is a new building's, the game charges the upgrade price).\n"
         "pp_cplan_country_upgrade_to = {\n"
         "\tif = {\n"
         "\t\tlimit = { pp_cplan_goods_here_$demand$ = yes }\n"
         f"\t\tset_variable = {{ name = {VAR_UPGRADE_TRY} value = yes }}\n"
         f"\t\tpp_cplan_construct = {{ type = $type$ why = {WHY} }}\n"
+        "\t}\n"
+        "\telse = {\n"
+        f"\t\tpp_cplan_note_goods = {{ why = {WHY} }}\n"
         "\t}\n"
         "}\n"
     )
@@ -755,10 +763,13 @@ def render_effects(buildings: list[Building], rights: list[Right], costs: dict[s
         f"# building, {STEP_RANK} = a town or city upgrade, {STEP_UPGRADE} = a building's upgrade).\n"
         "\n# Country scope, inside pp_cplan_run: the gold rule group. The upgrades of standing buildings go first, then the\n"
         "# public buildings, then the town and city upgrades (which hold a location's construction slot for a year or two).\n"
+        "# It pays from its purse like every rule group (pp_construction_plan.txt, \"Budgets that save\"): the first thing it\n"
+        "# wants and cannot pay for, a building or a town or city upgrade, is what it saves for, and it starts nothing more\n"
+        "# in the pass.\n"
         "pp_cplan_group_country = {\n"
         "\tif = {\n"
         "\t\tlimit = { pp_cplan_country_w > 0 }\n"
-        f"\t\tpp_cplan_group_start = {{ why = {WHY} add = pp_cplan_share_country }}\n"
+        f"\t\tpp_cplan_group_start = {{ why = {WHY} }}\n"
         "\t\tpp_cplan_country_upgrades = yes\n"
         "\t\tpp_cplan_country_buildings = yes\n"
         "\t\tpp_cplan_country_ranks = yes\n"
@@ -784,9 +795,11 @@ def render_effects(buildings: list[Building], rights: list[Right], costs: dict[s
     parts.append(
         "}\n"
         "\n# Country scope: one level of $type$ in every owned location the group may build in, whose maximum control reaches\n"
-        "# the player's line, where no tier of the line $line$ stands, the location's part of the can-build check passes\n"
-        "# and the market holds the construction goods ($demand$); the highest control first. The construction itself\n"
-        "# checks the budget and counts a level the gold does not reach (pp_cplan_construct_scoped, once a location).\n"
+        "# the player's line, where no tier of the line $line$ stands and the location's part of the can-build check\n"
+        "# passes; the highest control first. Where the market lacks the construction goods ($demand$) nothing starts and\n"
+        "# the window counts it (pp_cplan_note_goods; in game 2026-11-10 a ticked Library did nothing where the market had\n"
+        "# no books, and the pane gave no reason). The construction itself checks the group's purse and counts a level the\n"
+        "# gold does not reach (pp_cplan_construct_scoped, once a location).\n"
         "pp_cplan_country_public = {\n"
         "\tordered_owned_location = {\n"
         "\t\tlimit = {\n"
@@ -794,16 +807,21 @@ def render_effects(buildings: list[Building], rights: list[Right], costs: dict[s
         "\t\t\tmax_control >= scope:pp_cplan_country.pp_cplan_country_control_line\n"
         "\t\t\tNOT = { pp_cplan_pub_line_$line$ = yes }\n"
         "\t\t\tcan_build_building = building_type:$type$\n"
-        "\t\t\tpp_cplan_goods_here_$demand$ = yes\n"
         "\t\t}\n"
         "\t\torder_by = pp_cplan_country_control_here\n"
         "\t\tmax = 100000\n"
         "\t\tcheck_range_bounds = no\n"
-        "\t\t# the window: the location's maximum control in % (+ 100); a building\n"
-        "\t\tsave_temporary_scope_value_as = { name = pp_cplan_rv value = { value = max_control multiply = 100 add = 100 } }\n"
-        f"\t\tsave_temporary_scope_value_as = {{ name = pp_cplan_rs value = {STEP_BUILDING} }}\n"
-        "\t\tscope:pp_cplan_country = { remove_variable = pp_cplan_noted }\n"
-        f"\t\tpp_cplan_construct = {{ type = $type$ why = {WHY} }}\n"
+        "\t\tif = {\n"
+        "\t\t\tlimit = { pp_cplan_goods_here_$demand$ = yes }\n"
+        "\t\t\t# the window: the location's maximum control in % (+ 100); a building\n"
+        "\t\t\tsave_temporary_scope_value_as = { name = pp_cplan_rv value = { value = max_control multiply = 100 add = 100 } }\n"
+        f"\t\t\tsave_temporary_scope_value_as = {{ name = pp_cplan_rs value = {STEP_BUILDING} }}\n"
+        "\t\t\tscope:pp_cplan_country = { remove_variable = pp_cplan_noted }\n"
+        f"\t\t\tpp_cplan_construct = {{ type = $type$ why = {WHY} }}\n"
+        "\t\t}\n"
+        "\t\telse = {\n"
+        f"\t\t\tpp_cplan_note_goods = {{ why = {WHY} }}\n"
+        "\t\t}\n"
         "\t}\n"
         "}\n"
         "\n# ---- Towns and cities ----\n"
@@ -826,19 +844,27 @@ def render_effects(buildings: list[Building], rights: list[Right], costs: dict[s
             "\t\t\t\tmodifier:cannot_upgrade_location = no\n"
             + minimum
             + line
-            + f"\t\t\t\tpp_cplan_country_goods_{rank.key} = yes\n"
-            "\t\t\t}\n"
+            + "\t\t\t}\n"
             "\t\t\torder_by = pp_cplan_country_pop_here\n"
             "\t\t\tmax = 100000\n"
             "\t\t\tcheck_range_bounds = no\n"
-            f"\t\t\tpp_cplan_country_rank_up = {{ rank = {rank.key} }}\n"
+            "\t\t\t# where the market lacks the upgrade's construction goods nothing starts; the window counts it\n"
+            "\t\t\tif = {\n"
+            f"\t\t\t\tlimit = {{ pp_cplan_country_goods_{rank.key} = yes }}\n"
+            f"\t\t\t\tpp_cplan_country_rank_up = {{ rank = {rank.key} n = {SAVE_RANK[rank.key]} }}\n"
+            "\t\t\t}\n"
+            "\t\t\telse = {\n"
+            f"\t\t\t\tpp_cplan_note_goods = {{ why = {WHY} }}\n"
+            "\t\t\t}\n"
             "\t\t}\n\t}\n"
         )
     parts.append(
         "}\n"
-        "\n# Location scope: start the upgrade to $rank$ where the month's budget lasts and its cost here\n"
-        "# (pp_cplan_country_cost_<rank>) fits in the gold above the reserve (as pp_cplan_affordable does for a building);\n"
-        "# else it is counted as waiting for gold (as pp_cplan_note_wait does). In game 2026-11-10: construct_location_rank\n"
+        "\n# Location scope: start the upgrade to $rank$ where the group is not saving yet and the upgrade's cost here\n"
+        "# (pp_cplan_country_cost_<rank>) fits in the group's purse and in the gold above the reserve (as\n"
+        "# pp_cplan_affordable does for a building); else it is counted as waiting for gold, and the first such thing of\n"
+        "# the pass is what the group saves for (as pp_cplan_note_wait does: the location, the cost, and $n$ = 101 a town,\n"
+        "# 102 a city in pp_cplan_save_rank_107, since an upgrade has no building type). In game 2026-11-10: construct_location_rank\n"
         "# charges the gold itself, at once, and starts a normal construction that holds the location's construction slot\n"
         "# for a year (a city two) and draws construction goods; where the rank's allow fails it starts nothing and charges\n"
         "# nothing. So the gold is measured before and after, and the upgrade is booked (started, spent, ledger, test log)\n"
@@ -851,7 +877,8 @@ def render_effects(buildings: list[Building], rights: list[Right], costs: dict[s
         "\tscope:pp_cplan_country = { remove_variable = pp_cplan_noted }\n"
         "\tif = {\n"
         "\t\tlimit = {\n"
-        "\t\t\tpp_cplan_budget_left = yes\n"
+        f"\t\t\tNOT = {{ pp_cplan_saving = {{ why = {WHY} }} }}\n"
+        f"\t\t\tpp_cplan_country_cost_$rank$ <= scope:pp_cplan_country.{cp.PURSE}_n_{WHY}\n"
         "\t\t\tpp_cplan_country_cost_$rank$ <= scope:pp_cplan_country.pp_cplan_free_gold\n"
         "\t\t}\n"
         "\t\tscope:pp_cplan_country = {\n"
@@ -872,6 +899,7 @@ def render_effects(buildings: list[Building], rights: list[Right], costs: dict[s
         f"\t\t\t\tchange_variable = {{ name = pp_cplan_dspent_{WHY} add = scope:pp_cplan_paid }}\n"
         f"\t\t\t\tchange_variable = {{ name = pp_cplan_dn_{WHY} add = 1 }}\n"
         "\t\t\t\tset_variable = { name = pp_cplan_hit value = yes }\n"
+        f"\t\t\t\tpp_cplan_purse_pay = {{ why = {WHY} }}\n"
         "\t\t\t\tif = {\n"
         "\t\t\t\t\tlimit = { NOT = { is_target_in_variable_list = { name = pp_cplan_log target = scope:pp_cplan_site } } }\n"
         "\t\t\t\t\tadd_to_variable_list = { name = pp_cplan_log target = scope:pp_cplan_site }\n"
@@ -912,6 +940,13 @@ def render_effects(buildings: list[Building], rights: list[Right], costs: dict[s
         "\t\t\t\tset_variable = { name = pp_cplan_noted value = yes }\n"
         f"\t\t\t\tchange_variable = {{ name = pp_cplan_dwait_{WHY} add = scope:pp_cplan_wc }}\n"
         f"\t\t\t\tchange_variable = {{ name = pp_cplan_dwn_{WHY} add = 1 }}\n"
+        "\t\t\t}\n"
+        "\t\t\t# the first thing of the pass the group cannot pay for is what it saves for\n"
+        "\t\t\tif = {\n"
+        f"\t\t\t\tlimit = {{ NOT = {{ has_variable = {cp.SAVE_COST}_{WHY} }} }}\n"
+        f"\t\t\t\tset_variable = {{ name = {cp.SAVE_COST}_{WHY} value = {{ value = scope:pp_cplan_wc add = 100 }} }}\n"
+        f"\t\t\t\tset_variable = {{ name = pp_cplan_save_loc_{WHY} value = scope:pp_cplan_site }}\n"
+        f"\t\t\t\tset_variable = {{ name = pp_cplan_save_rank_{WHY} value = $n$ }}\n"
         "\t\t\t}\n"
         "\t\t}\n"
         "\t}\n"
@@ -995,6 +1030,7 @@ def render_effects(buildings: list[Building], rights: list[Right], costs: dict[s
         + "".join(f"\tset_variable = {{ name = pp_cplan_flag value = flag:{flag} }}\n" for flag in flags(buildings, rights))
         + "}\n"
     )
+    parts.append(render_layout(buildings, rights))
     return "".join(parts)
 
 
@@ -1015,7 +1051,9 @@ def render_scripted_guis(config: Config, buildings: list[Building], rights: list
         "\n# Country scope: tick or untick a tile or a rule (scope:pp_key).\n"
         "pp_cplan_country_toggle = {\n\tscope = country\n\teffect = {\n\t\tswitch = {\n\t\t\ttrigger = scope:pp_key\n"
         + "".join(f"\t\t\tflag:{flag} = {{ pp_cplan_flip = {{ var = {variable} }} }}\n" for flag, variable in toggles)
-        + "\t\t}\n\t}\n}\n"
+        + f"\t\t}}\n\t\t{LAYOUT_EFFECT} = yes # a ticked tile keeps its place, an unticked one may leave the grid\n\t}}\n}}\n"
+        "\n# Country scope: the tab opens: place the tiles of its two grids (the tab button, the window's openers).\n"
+        f"{LAYOUT_GUI} = {{\n\tscope = country\n\teffect = {{\n\t\t{LAYOUT_EFFECT} = yes\n\t}}\n}}\n"
         "\n# Country scope: one step of a line (scope:pp_key, scope:pp_dir = up / down).\n"
         "pp_cplan_country_step = {\n\tscope = country\n\teffect = {\n\t\tswitch = {\n\t\t\ttrigger = scope:pp_key\n"
         + step("control_line", VAR_CONTROL, "pp_cplan_country_control_pct", config.control_step, 0, 100)
@@ -1074,20 +1112,49 @@ def right_tiles(rights: list[Right]) -> list[Tile]:
             for r in tile_order(rights)]
 
 
-def _tile_visible(tile: Tile) -> str | None:
-    """A tile shows while the country could use it, or while it is ticked (so it can always be unticked)."""
-    return None if tile.show is None else f"Or({_is_set(tile.variable)}, {_positive(tile.show)})"
+# The grids wrap (Jan 2026-11-10, after the first in-game test: a country that can build ten of the 39 buildings saw
+# rows of 4, 3, 2 and 1 tiles, because a hidden tile left its fixed row). A static row cannot wrap, so the place of
+# every tile among the tiles that show is computed by script when the tab opens and after every tick
+# (pp_cplan_country_layout_do) and kept on the country: LAYOUT_PLACE_<flag> = its place + 100 (unset = hidden),
+# LAYOUT_COUNT[<grid>] = the tiles that show + 100. Row r of a grid then holds a copy of every tile that can reach it
+# (a tile's place is never past its own number), each shown while its place falls in that row: the conditions read
+# only variables, no script value a frame.
+LAYOUT_PLACE = "pp_cplan_tp"
+LAYOUT_COUNT = {"pub": "pp_cplan_tc_pub", "right": "pp_cplan_tc_right"}
+LAYOUT_EFFECT = "pp_cplan_country_layout_do"
+LAYOUT_GUI = "pp_cplan_country_layout"
+LAYOUT_CALL = f"[GetScriptedGui('{LAYOUT_GUI}').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 
 
-def _tile(tile: Tile, tab: str) -> str:
+def tile_place(tile: Tile) -> str:
+    return f"{LAYOUT_PLACE}_{tile.flag}"
+
+
+def _fixed(value: float) -> str:
+    return f"'(CFixedPoint){value:g}'"
+
+
+def _in_row(variable: str, row: int, per_row: int) -> str:
+    """The variable (a place or a count, + 100) is set and falls in row ``row`` (0-based) or, for a count, reaches it."""
+    value = f"GetPlayer.MakeScope.Var('{variable}').GetValue"
+    return (f"And3(GetPlayer.MakeScope.Var('{variable}').IsSet, "
+            f"GreaterThan_CFixedPoint({value}, {_fixed(100 + row * per_row + 0.5)}), "
+            f"LessThan_CFixedPoint({value}, {_fixed(100 + (row + 1) * per_row + 0.5)}))")
+
+
+def _row_used(count: str, row: int, per_row: int) -> str:
+    return (f"And(GetPlayer.MakeScope.Var('{count}').IsSet, GreaterThan_CFixedPoint("
+            f"GetPlayer.MakeScope.Var('{count}').GetValue, {_fixed(100 + row * per_row + 0.5)}))")
+
+
+def _tile(tile: Tile, tab: str, visible: str) -> str:
     """A toggle tile as vanilla's pick tiles (the road builder's road types, the Location Profile row): pressed and
-    with the gold glow while ticked."""
-    visible = _tile_visible(tile)
+    with the gold glow while ticked. ``visible``: its place falls in the row this copy stands in."""
     ticked = _is_set(tile.variable)
     return (
         f"{tab}button = {{\n"
-        + (f"{tab}\tvisible = \"[{visible}]\"\n" if visible else "")
-        + f"{tab}\tusing = header_button_template\n"
+        f"{tab}\tvisible = \"[{visible}]\"\n"
+        f"{tab}\tusing = header_button_template\n"
         f"{tab}\tblockoverride \"header_button_template_push_properties\" {{ using = button_tab_toggle_properties_template }}\n"
         f"{tab}\tblockoverride \"header_button_template_texture\" {{ using = pressed_button_texture }}\n"
         f"{tab}\tblockoverride \"header_button_full_content\" {{}}\n"
@@ -1101,24 +1168,56 @@ def _tile(tile: Tile, tab: str) -> str:
     )
 
 
-def _tile_rows(tiles: list[Tile], per_row: int, tab: str, flow: bool = False) -> str:
-    """Rows of tiles; a row takes no room while none of its tiles shows. ``flow``: rows for a vertical flowcontainer
-    (a scroll area's list, as the detail panes' lists): a flowcontainer may not hold an hbox, and a vbox there is
-    stretched over the scroll area and spreads its rows (in game 2026-11-10: four rows of rights over the whole
-    height)."""
+def _tile_rows(tiles: list[Tile], per_row: int, tab: str, grid: str, flow: bool = False) -> str:
+    """The rows of a grid that wraps: row r shows while the grid has more than r rows of tiles, and holds a copy of
+    every tile from its first place on, each shown while its place falls in the row. ``flow``: rows for a vertical
+    flowcontainer (a scroll area's list, as the detail panes' lists): a flowcontainer may not hold an hbox, and a vbox
+    there is stretched over the scroll area and spreads its rows (in game 2026-11-10)."""
     out: list[str] = []
-    for start in range(0, len(tiles), per_row):
-        row = tiles[start:start + per_row]
-        shown = [_tile_visible(tile) for tile in row]
+    count = LAYOUT_COUNT[grid]
+    for row, start in enumerate(range(0, len(tiles), per_row)):
         out.append(f"{tab}{'flowcontainer' if flow else 'hbox'} = {{\n")
-        if all(shown):
-            out.append(f"{tab}\tvisible = \"[{_any([term for term in shown if term])}]\"\n")
+        out.append(f"{tab}\tvisible = \"[{_row_used(count, row, per_row)}]\"\n")
         if flow:
             out.append(f"{tab}\tdirection = horizontal\n{tab}\tignoreinvisible = yes\n{tab}\tspacing = 3\n")
         else:
             out.append(f"{tab}\tlayoutpolicy_horizontal = expanding\n{tab}\tignoreinvisible = yes\n{tab}\tspacing = 3\n")
-        out += [_tile(tile, tab + "\t") for tile in row]
+        out += [_tile(tile, tab + "\t", _in_row(tile_place(tile), row, per_row)) for tile in tiles[start:]]
         out.append(f"{tab}}}\n" if flow else f"{tab}\texpand = {{}}\n{tab}}}\n")
+    return "".join(out)
+
+
+def _shows(tile: Tile) -> str | None:
+    """Script: the tile shows (the country could use it, or it is ticked so it can be unticked); None = always."""
+    return None if tile.show is None else f"OR = {{ has_variable = {tile.variable} {tile.show} > 0 }}"
+
+
+def render_layout(buildings: list[Building], rights: list[Right]) -> str:
+    """The scripted effect that places the tiles of both grids (country scope)."""
+    out = [
+        "\n# Country scope: the place of every tile of the tab's two grids among the tiles that show (the country could\n"
+        "# use it, or it is ticked), so the grids wrap: pp_cplan_tp_<tile> = its place + 100 (unset = hidden),\n"
+        "# pp_cplan_tc_pub / pp_cplan_tc_right = the tiles that show + 100. Run when the tab opens and after a tick (the\n"
+        f"# scripted GUIs {LAYOUT_GUI}, pp_cplan_country_toggle); the tab reads only these variables.\n"
+        f"{LAYOUT_EFFECT} = {{\n"
+    ]
+    for grid, tiles in (("pub", building_tiles(buildings)), ("right", right_tiles(rights))):
+        count = LAYOUT_COUNT[grid]
+        out.append(f"\tset_variable = {{ name = {count} value = 100 }}\n")
+        for tile in tiles:
+            place = (f"change_variable = {{ name = {count} add = 1 }}\n"
+                     f"set_variable = {{ name = {tile_place(tile)} value = var:{count} }}\n")
+            shows = _shows(tile)
+            if shows is None:
+                # (the removal first is the variable's one use in script: the tab alone reads it, and the game's check
+                # at load logs a variable that is "set but never used"; in game 2026-11-10)
+                out.append(f"\tremove_variable = {tile_place(tile)}\n"
+                           + "".join(f"\t{line}\n" for line in place.splitlines()))
+            else:
+                out.append(f"\tif = {{\n\t\tlimit = {{ {shows} }}\n"
+                           + "".join(f"\t\t{line}\n" for line in place.splitlines())
+                           + f"\t}}\n\telse = {{\n\t\tremove_variable = {tile_place(tile)}\n\t}}\n")
+    out.append("}\n")
     return "".join(out)
 
 
@@ -1166,7 +1265,7 @@ def render_gui(config: Config, buildings: list[Building], rights: list[Right]) -
         "\t\t\tpp_cplan_country_label = { text = \"PP_CPLANC_CONTROL_VALUE\" tooltip = \"PP_CPLANC_CONTROL_TT\" }\n"
         + _stepper("control_line", "PP_CPLANC_CONTROL_TT", "\t\t\t")
         + "\t\t}\n"
-        + _tile_rows(building_tiles(buildings), per_row, "\t\t")
+        + _tile_rows(building_tiles(buildings), per_row, "\t\t", "pub")
         + "\n\t\t# ---- Towns and cities ----\n"
         + row.replace("spacing = 6", "spacing = 4")
         + "\t\t\tpp_cplan_country_title = { text = \"PP_CPLANC_RANK\" tooltip = \"PP_CPLANC_RANK_TT\" }\n"
@@ -1194,7 +1293,7 @@ def render_gui(config: Config, buildings: list[Building], rights: list[Right]) -
         "\t\t\tscrollwidget = {\n"
         "\t\t\t\tflowcontainer = {\n\t\t\t\t\tdirection = vertical\n"
         "\t\t\t\t\tignoreinvisible = yes\n\t\t\t\t\tspacing = 4\n"
-        + _tile_rows(right_tiles(rights), per_row, "\t\t\t\t\t", flow=True)
+        + _tile_rows(right_tiles(rights), per_row, "\t\t\t\t\t", "right", flow=True)
         + "\t\t\t\t}\n\t\t\t}\n\t\t}\n"
         "\t}\n}\n"
     )
@@ -1241,7 +1340,7 @@ def texts(buildings: list[Building], rights: list[Right]) -> dict[str, str]:
         "PP_CPLANC_RANK": "Towns and cities",
         "PP_CPLANC_RANK_TT": (
             f"#T Towns and cities#!\nThe plan starts the upgrade wherever a [location|e] may become a {town} or a "
-            f"{city}, the most populous first. It is paid from the same part of the month's gold as the public "
+            f"{city}, the most populous first. It is paid from the gold this rule group has saved, like the public "
             "buildings. [conquered|e] locations are left out, and so are locations that are building something."
             f"\n{founding}"
         ),

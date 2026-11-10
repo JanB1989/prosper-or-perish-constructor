@@ -6,6 +6,117 @@ next section. The sections below it are the history (v1, v2, the first
 2026-11-09 pass); what they describe and the next section no longer lists is gone. Player-only: the AI keeps its own
 logic and is never touched (a console-only test switch lets it run for an AI country in the test world).
 
+## Budgets that save (2026-11-10, Jan, after he watched the plan run in game)
+
+Jan's three problems: (1) "it is disproportionately favoring cheap buildings: the part of the budget that is left
+sometimes cannot even build expensive buildings, so it just builds cheap ones"; (2) "if it detects that some building
+is profitable, like horses, it spams 500 buildings of that type, which will likely crash the market ... the user would
+not expect that it suddenly builds 500 buildings for horses just because some random influx of money came in"; (3)
+"maybe we can allocate a construction budget for each of the branches, and the budget cannot go below the floor we
+already set. It needs to be clean and easy to understand, I don't want to overwhelm them with settings; all of this
+needs to happen under the hood in a sensible manner." No new setting in the window.
+
+**Causes.** Every pass offered all the gold above the reserve anew (`pp_cplan_pot` / `pp_cplan_cap`), nothing was saved
+from month to month, and a group walked past what it could not pay for and built whatever cheaper thing fitted. The
+business group scored every site at today's price and built all of them while gold lasted; it never counted what was
+already under construction.
+
+**A. A budget per rule group that saves (its purse).** Country variable `pp_cplan_purse_<why>` (+ 100), readout
+`pp_cplan_purse_n_<why>`. At the start of each pass (`pp_cplan_purses_fill`): free = max(0, gold - reserve); a group
+that does not count this pass (weight 0, the Locations group without a profile or mark, Towns and Buildings with
+nothing ticked) loses its purse; when the purses together exceed free (the player or a war spent the gold) they all
+shrink by free / total; then the gold in no purse yet is shared among the counting groups by their weights.
+`pp_cplan_pot`, `pp_cplan_cap`, `pp_cplan_share_<group>` and `pp_cplan_budget_left` are gone; a group "had" its purse
+(`pp_cplan_dhad_<why>`). A construction is affordable only when its cost fits in the purse of the group that builds
+it (`pp_cplan_affordable = { why }`; also in the gold above the reserve, whatever happened since the pass began);
+after it starts the purse falls by what was really paid, never below 0 (`pp_cplan_purse_pay`). The town and city
+upgrades of Towns and Buildings pay from the same purse by the same rules. The arithmetic sits in generated script
+values of the state as it stands (`pp_cplan_purse_kept_` / `_new_` / `_next_<why>`, `pp_cplan_purse_held` / `_rest`);
+the effect reads every new amount first and writes afterwards, so one group's change never reaches another's sum.
+`tests/test_construction_plan_budget.py` evaluates them offline (`script_eval.py`).
+
+**B. Best pick first.** Each group goes through what it wants in its own order of importance: food the hungriest
+province first (`ordered_province` over the country's provinces by `pp_cplan_food_order` = minus the store a year from
+now; the engine has that ordered iterator, so no workaround was needed; it costs one more reading of the store a year
+from now per province), logistics the most urgent location, improvements the fullest, Towns and Buildings its own
+order (upgrades of buildings, the ticked buildings in the tab's order, towns, cities), the Locations group as before
+(its location order, each location's rules then its marks). The first thing a group wants and cannot pay for becomes
+what it saves for (`pp_cplan_note_wait`: `pp_cplan_save_cost_<why>` + 100, `pp_cplan_save_loc_<why>`,
+`pp_cplan_save_type_<why>`; for a town or city upgrade `pp_cplan_save_rank_107` = 101 / 102 instead of a type), and
+from then on the group builds nothing more in this pass, even things that would fit (`pp_cplan_saving`); they are
+still counted as wanted, so the pane's "how much investment is missing" stays. Things stopped for another reason
+(cannot be built, no workers, construction goods missing, the market limit) are skipped and are not what it saves
+for. What a group saves for is found afresh every pass (the fill clears it); only the gold is kept.
+
+**C. Businesses rank by payback including the time to save.** `pp_cplan_bz_order` (location scope, a site with a
+pick): the pick's payback in years (100 / its yearly return) plus max(0, cost - purse) / (12 x the gold the group
+received for this pass); with nothing coming in, a pick the purse cannot pay ranks behind every pick it can. "Received
+for this pass" (`pp_cplan_in_<why>`) = the group's part of the gold in no purse plus what was handed on to it at the
+end of the last pass (E), since that is how fast it really saves. The picks are built in that order while they fit;
+the first that does not fit is what the group saves for. The player's line ("pays back within N years") still reads
+the plain payback. The group does not look at all while it has neither gold saved nor gold coming in.
+
+**D. A market limit against spam, in one place.** A level of a building whose main good G is a market good starts
+only while, in the location's market, the output of G under construction (every level under construction there of
+the buildings whose main good is G, whoever started them, at that building's recipe output a level:
+`pp_cplan_uc_here_<good>`, `pp_cplan_uc_market_<good>`) plus this level's output stays within `[construction_plan]
+business_market_share` % (10, Jan's placeholder) of the market's monthly demand for G (`goods_demand_in_market`);
+with nothing of G under construction one level is always allowed (`pp_cplan_market_room = { g out }`,
+`pp_cplan_mroom_<good>`). The ONE place: `pp_cplan_construct_scoped` asks through the generated dispatch
+`pp_cplan_market_do = { do = gate }` for the rule groups of `MARKET_LIMITED` (`pp_cplan_limits_market_<why>`: the
+Businesses group, and the Locations group = profile rules and marks; decided: not the food rule, which builds for
+hunger, nor Towns and Buildings, whose ticked buildings the player asked for everywhere). The business pick asks the
+same trigger (`pp_cplan_business_take`), so a site moves on to its next best good. "Under construction" is counted
+once per market and good per pass, only when a pick needs it (`pp_cplan_market_load`), kept on the market's centre
+location (`market.location`; `pp_cplan_uc_<good>`, + 100), raised when the plan starts a level (`pp_cplan_market_do =
+{ do = add }` in `pp_cplan_construct_now`, for every group) and cleared at the pass's end (the country's list
+`pp_cplan_markets` of those centres, `pp_cplan_markets_clear`). Not on the market itself: **a market scope holds no
+variables** (in game 2026-11-10: "This scope doesn't support variables. Scope: Market Burgos Market", about 2,000
+error lines a pass, the limit never held and 81 Stud Farms started in one pass, 39 of them in the Burgos market,
+which asks for 11 horses a month). With the count on the centre location the same influx of 50,000 gold started 4
+Stud Farms, one or two a market; `every_location_in_market` in a script value and the macro in the effect name
+(`pp_cplan_market_$do$_good`) both work. A pick stopped by the limit is not waiting for gold: it is counted apart
+(`pp_cplan_dml_<why>`, the Businesses pane: "passed over because their market already has enough of that good on the
+way"); a profile rule or mark stopped by it gets the new state 10 (`PP_LPROF_ST_10`; fail code 106, the gold code
+moved to 107).
+
+**E. Handing on.** At the end of the pass (`pp_cplan_purses_hand_on`) every group that ran and saves for nothing gives
+what is left in its purse to the groups that do save, by their weights (next month's money; `pp_cplan_hand_<why>`
+keeps what each got, for C). While no group saves, the purses stay as they are.
+
+**In game (2026-11-10, second round; test world, Castile, about 25 passes).** The pane's "saving for Hospital in
+Sevilla: it has 108 of 175" names building and location; with 108 gold the group started no Windmill (59) until the
+Hospitals were paid. Purses add up to gold minus reserve to the gold piece, shrink in proportion when gold is taken
+away, and a group at weight 0 holds none. Food went through its provinces by the store a year from now (2.6, 3.6,
+4.7 months). An influx of 50,000 gold: 111 constructions the first month (Cookshop 45 and Granary 26 by the food rule,
+one a province; 30 businesses of 14 types, at most 4 of one), 35 and 11 the next two; before the market limit's fix
+(D) the same influx started 81 Stud Farms. Twelve months at about 280 gold a month with all six groups counting: 60
+constructions, Locations 23, Businesses 19, Food 16, Logistics 2; Businesses does not take everything. A group
+that got gold handed on after it chose what to save for shows "it has 86 of 47" until the next pass. The pass costs
+0.32 to 0.39 s in the script profiler there (the business pick over 330 sites 0.20 s of it; the 0.036 s of
+2026-11-09 was before the Businesses group existed).
+
+**F. The window.** Each rule group's row shows what the group has saved beside its share (the weight bar's last
+number; the window is 68 px wider for it); its tooltip and every rule tooltip end with the same two sentences on the
+budget (`PP_CPLAN_BUDGET_NOTE`); the cog pane says what the group saves for and how far it is ("it has N of M gold").
+The texts of the old "this month's gold" are reworded. The month rotation of the group order stays: it now only
+decides who gets a free construction slot of a location first.
+
+**G. Construction goods.** A thing the market lacks the construction goods for is counted per group
+(`pp_cplan_note_goods`, `pp_cplan_dgo_<why>`) and shown in its pane ("N were held back because their market lacks the
+construction goods"): the food rule's capital buildings and Victualling Yard, logistics, improvements, the business
+pick (a site that passed a better business over), and Towns and Buildings (ticked buildings, upgrades of buildings,
+town and city upgrades: the goods check moved out of the location filters into the body, the same locations are
+walked). The "first that can be built" pickers still pass a building over that lacks its goods (a Carrier Inn where
+the River Boatmen's Yard lacks naval supplies) and count only when nothing was built. The Locations group shows them
+as its rule state 8, as before. Not counted, because it would take another walk: the food rule's farm step (a farm
+line the market lacks the goods for has no return and is never picked).
+
+Not tested in game. To check there first: the pane's "saving for" line (`Var(...).GetBuildingType.GetName` /
+`.GetLocation.GetName` on a country variable), `every_location_in_market` inside a script value and the cost of the
+market count, `ordered_province`'s order (hungriest first), the purse arithmetic over a few months (the saved gold
+beside the bars), and the pass's cost now that the business group looks whenever it has gold saved or coming in.
+
 ## Two tabs (Jan 2026-11-09, evening), three since 2026-11-10
 
 - **The window** (`in_game/gui/pp_construction_plan.gui`, vanilla main tabs): **Global Settings**, **Location
@@ -60,7 +171,8 @@ logic and is never touched (a console-only test switch lets it run for an AI cou
     passed into the quoted call (`"unemployed_pops_of_pop_type_in_location(pop_type:$type$)"`) the trigger logged
     "Script system error! ... trigger [ pop_type ]" about 2,000 times a session (Jan's game, 2026-11-10); no vanilla
     file puts an argument inside quotes.
-  - *A pass without gold is cheap for the business group:* its pick (every free site against every business type)
+  - *A pass without gold is cheap for the business group* (since the budgets that save: while it has neither gold
+    saved nor gold coming in)*:* its pick (every free site against every business type)
     is the pass's dear part, so the group does not look at all when it starts without gold to spend
     (`pp_cplan_budget_left` right after it got its part). Its pane then says "It had no gold to spend, so it did not
     look for businesses" instead of "Nothing waited for gold", and the chart's tooltip says that such a month shows
@@ -76,12 +188,13 @@ logic and is never touched (a console-only test switch lets it run for an AI cou
   Improvements per location (population over capacity from the line, default 90 %, steps of 10 from 50 to 300 %:
   `location_population_percentage`, Jan's "old school" population / population capacity), Businesses (payback within
   the line, default 10 years, steps of 1 from 1 to 50); "Last month": what the last pass built where and by which rule.
-- **The month's gold:** no limit on the number of constructions any more. A pass may spend the gold above the reserve
-  (`pp_cplan_pot`); each rule group that runs adds an equal part to `pp_cplan_cap`, so a part one group leaves passes
-  on; a group may go past its part with its last construction. No construction takes the treasury below the reserve:
+- **The gold:** no limit on the number of constructions. Until 2026-11-10 a pass could spend all the gold above the
+  reserve anew each month, a part per group that passed on to the next group; since then every group has a budget
+  that saves ("Budgets that save" above). No construction takes the treasury below the reserve:
   `pp_cplan_construct_scoped` prices the level with the engine's formula (`pp_cplan_btype_data`, `pp_cplan_est_cost`)
-  and starts it only when it fits in the gold above the reserve (`pp_cplan_affordable`). The groups' order still turns
-  with the month (six groups since 2026-11-10: every group goes first twice a year).
+  and starts it only when it fits in its group's purse and in the gold above the reserve (`pp_cplan_affordable`).
+  The groups' order still turns with the month (six groups since 2026-11-10: every group goes first twice a year);
+  it now only decides who gets a free construction slot first.
 - **Businesses (new rule group):** every building whose main good is a market good (the producers of
   `market_short_weight.main_good`, 224 types; not the food rule's Taverns, kitchens, Granaries, Granges and Yards, not
   logistics or improvements, not the hidden goods) wherever a level pays back within the line, the best yearly return

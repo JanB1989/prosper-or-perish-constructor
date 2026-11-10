@@ -243,7 +243,7 @@ def _name(item: Item) -> str:
     return f"[ShowGoodsName('{item.key}')]" if item.kind == "good" else f"${item.key}$"
 
 
-MARK_STATES = 9  # a mark's states are the profile rule states 1..9 (location_profiles.STATES; texts PP_LPROF_ST_<n>)
+MARK_STATES = 10  # a mark's states are the profile rule states 1..10 (location_profiles.STATES; texts PP_LPROF_ST_<n>)
 
 
 def _state_is(item: Item, n: int) -> str:
@@ -380,6 +380,23 @@ BUTTON = f"""
 					title = "PP_LPLAN_LOCATION_BUTTON"
 					on_action = "[GetScriptedGui('pp_lplan_select').Execute(GuiScope.SetRoot(LocationView.GetLocation.MakeScope).End)]"
 					on_action = "[GetVariableSystem.Set('pp_lplan_open', 'yes')]"
+				}}
+			}}
+		}}
+		widget = {{ # PP: the Construction Plan window (its opener on the map lies under this window; in game 2026-11-10)
+			parentanchor = right|vcenter
+			size = {{ 40 40 }}
+			position = {{ -90 0 }}
+			visible = "[Not(IsObserving)]"
+
+			button_automation_shortcut = {{
+				parentanchor = right|vcenter
+				size = {{ 25 25 }}
+
+				action_tooltip = {{
+					title = "PP_CPLAN_OPEN"
+					on_action = "[GetVariableSystem.Set('pp_cplan_open', 'yes')]"
+					on_action = "[GetScriptedGui('pp_cplan_country_layout').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 				}}
 			}}
 		}}

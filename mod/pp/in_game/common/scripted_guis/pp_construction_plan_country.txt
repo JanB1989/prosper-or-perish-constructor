@@ -135,6 +135,15 @@ pp_cplan_country_toggle = {
 			flag:right_scholai_literacy_rights = { pp_cplan_flip = { var = pp_cplan_right_scholai_literacy_rights } }
 			flag:right_municipia_privilegia = { pp_cplan_flip = { var = pp_cplan_right_municipia_privilegia } }
 		}
+		pp_cplan_country_layout_do = yes # a ticked tile keeps its place, an unticked one may leave the grid
+	}
+}
+
+# Country scope: the tab opens: place the tiles of its two grids (the tab button, the window's openers).
+pp_cplan_country_layout = {
+	scope = country
+	effect = {
+		pp_cplan_country_layout_do = yes
 	}
 }
 

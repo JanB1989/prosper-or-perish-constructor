@@ -378,8 +378,14 @@ def test_location_window_has_the_profile_row() -> None:
     assert "pp_lprof_gold" not in row and "button_regular = {" not in row and "#yellow_titles" not in row
     # the header buttons: vanilla's shortcut types, 30 px apart (rename sits at 30, go to at -30)
     assert "button_minimize" not in window[window.index(lp.BUTTON_MARK) - 200:window.index(lp.BUTTON_MARK) + 2000]
-    assert "position = { -60 0 }" in window and "position = { -90 0 }" not in window
-    assert "button_round_shortcut = {" in window and "button_automation_shortcut = {" not in window
+    assert "position = { -60 0 }" in window and "position = { -90 0 }" in window
+    # the Location Plan's button and, 30 px on, the Construction Plan's (vanilla's cog): the plan's opener on the map
+    # lies under an open location window (in game 2026-11-10)
+    assert "button_round_shortcut = {" in window and window.count("button_automation_shortcut = {") == 1
+    cog = window[window.index("button_automation_shortcut = {"):]
+    cog = cog[:cog.index("\n\t\t}\n")]
+    assert 'title = "PP_CPLAN_OPEN"' in cog and "GetVariableSystem.Set('pp_cplan_open', 'yes')" in cog
+    assert "GetScriptedGui('pp_cplan_country_layout')" in cog
 
 
 def _with_slots(config: m.Config, slots: int) -> m.Config:

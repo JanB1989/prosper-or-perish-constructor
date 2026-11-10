@@ -3,32 +3,20 @@
 # the farm and business profit estimates and the build cost price factors are generated from [construction_plan] into
 # pp_construction_plan_generated.txt. Variables carry + 100.
 
-# ---- The month's gold (country scope) ----
+# ---- The gold (country scope) ----
 
-# Gold above the reserve.
+# Gold above the reserve. The rule groups' budgets that save (their purses, pp_cplan_purse_n_<why>, and the sharing
+# of the gold in no purse) are generated: pp_construction_plan_generated.txt, "Budgets that save".
 pp_cplan_free_gold = {
 	value = gold
 	subtract = pp_cplan_reserve_gold
 }
 
-# The gold above the reserve at the pass's start (0 outside a pass); each rule group's part of it is generated
-# (pp_cplan_share_<group>: its weight over the sum of the weights, pp_construction_plan_generated.txt).
-pp_cplan_pot_n = {
+# Province scope: the food group's order, the hungriest province first: the store a year from now in a normal year,
+# lowest first (ordered_province takes the highest value first).
+pp_cplan_food_order = {
 	value = 0
-	if = {
-		limit = { has_variable = pp_cplan_pot }
-		value = var:pp_cplan_pot
-		subtract = 100
-	}
-}
-# Gold the pass may have spent by the end of the current rule group (0 outside a pass).
-pp_cplan_cap_n = {
-	value = 0
-	if = {
-		limit = { has_variable = pp_cplan_cap }
-		value = var:pp_cplan_cap
-		subtract = 100
-	}
+	subtract = pp_cplan_food_in_a_year
 }
 
 # Location scope: the owner's logistics line as a market access fraction.
@@ -262,13 +250,60 @@ pp_cplan_free_peasants_here = {
 	min = 0
 }
 
-# Location scope: the business picked here this pass, its yearly return in % (the business group's order).
+# Location scope: the business picked here this pass, its yearly return in %.
 pp_cplan_bz_roi_n = {
 	value = 0
 	if = {
 		limit = { has_variable = pp_cplan_bz_roi }
 		value = var:pp_cplan_bz_roi
 	}
+}
+
+# ---- The business group's order (location scope, a site with a pick; Jan 2026-11-10): payback INCLUDING the time to
+# save. The pick's payback in years (100 / its yearly return in %) plus the years the group needs to save what its
+# purse lacks for the pick's cost, at the gold it received for this pass a month. The soonest first. ----
+
+# The pick's payback in years.
+pp_cplan_bz_years = {
+	value = 999
+	if = {
+		limit = { pp_cplan_bz_roi_n > 0.01 }
+		value = 100
+		divide = pp_cplan_bz_roi_n
+	}
+}
+# The gold the business group's purse lacks for the pick's cost.
+pp_cplan_bz_short = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_bz_cost }
+		value = var:pp_cplan_bz_cost
+		subtract = scope:pp_cplan_country.pp_cplan_purse_n_103
+		min = 0
+	}
+}
+# The years to save that: nothing when the purse pays for it; with no gold coming in, so long that the pick ranks
+# behind every pick the purse can pay or save for.
+pp_cplan_bz_save_years = {
+	value = 0
+	if = {
+		limit = { pp_cplan_bz_short > 0 }
+		value = 10000
+		if = {
+			limit = { scope:pp_cplan_country.pp_cplan_in_n_103 > 0.01 }
+			value = pp_cplan_bz_short
+			divide = {
+				value = scope:pp_cplan_country.pp_cplan_in_n_103
+				multiply = 12
+			}
+		}
+	}
+}
+# The order: the soonest payback counting the time to save first (ordered_owned_location takes the highest value).
+pp_cplan_bz_order = {
+	value = 0
+	subtract = pp_cplan_bz_years
+	subtract = pp_cplan_bz_save_years
 }
 
 # ---- Window readouts ----

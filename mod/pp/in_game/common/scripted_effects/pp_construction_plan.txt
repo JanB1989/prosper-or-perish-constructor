@@ -3,8 +3,9 @@
 # Player-only construction rules, run once a month by on_action/pp_construction_plan.txt for each human country that
 # switched the plan on. Global settings: a gold reserve and six rule groups (Locations = the location profiles and the
 # Location Plan's marks, Food per province, Logistics per location, Improvements per location, Businesses, Towns and
-# Buildings), each with a weight (its part of the gold above the reserve = its weight over the sum of the weights that
-# count; 0 = off; Locations and Towns and Buildings count only while they have something to do); Logistics,
+# Buildings), each with a weight (its part of the new gold above the reserve = its weight over the sum of the weights
+# that count; 0 = off; Locations and Towns and Buildings count only while they have something to do) and a budget
+# that saves (its purse, since 2026-11-10; "Budgets that save" below); Logistics,
 # Improvements and Businesses with a line, Towns and Buildings with a tab of its own (construction_plan_country.py:
 # pp_cplan_group_country, pp_cplan_country_rights). The per-location layer (pp_location_profiles.txt): a location's
 # profile takes from the rule groups only what it sets (its rules' targets and the groups it switches off;
@@ -19,15 +20,23 @@
 # _country (the rule groups' weights), pp_cplan_reserve / _access / _imp / _biz (the window's lines; defaults in
 # [construction_plan]),
 # the list pp_cplan_log (locations built in by the last pass), the last pass's pp_cplan_started / _spent, and during a
-# pass only: pp_cplan_pot (gold above the reserve at its start), pp_cplan_cap (gold the rule groups so far may have
-# spent), pp_cplan_hit, pp_cplan_noted, pp_cplan_wait, pp_cplan_bz_<type> (the business types the country can build).
+# pass only: pp_cplan_hit, pp_cplan_noted, pp_cplan_wait, pp_cplan_mlim, pp_cplan_bz_<type> (the business types the
+# country can build), the list pp_cplan_markets (markets whose constructions the market limit counted).
+# Budgets that save (Jan 2026-11-10; the state the rules keep from pass to pass, per rule group <why>, + 100):
+# pp_cplan_purse_<why> (the gold the group has saved), pp_cplan_in_<why> (what it received for this pass),
+# pp_cplan_hand_<why> (what was handed on to it at the end of the last pass), and what it saves for: pp_cplan_save_cost_
+# <why> (set = it saves; the cost), pp_cplan_save_loc_<why> (the location), pp_cplan_save_type_<why> (the building
+# type) or pp_cplan_save_rank_<why> (101 a town, 102 a city upgrade). Generated: pp_cplan_purses_fill /
+# pp_cplan_purses_hand_on and the values pp_cplan_purse_* (construction_plan.py render_purse_values).
 # What the window's detail panes show (Jan 2026-11-09: "how much investment is missing, what was built and why"), kept
 # per rule group by its construction code <why> (101 food, 102 logistics, 103 business, 105 profiles, 106 improvements,
-# 107 towns and buildings) until the next pass: pp_cplan_dran_<why> (the group ran), pp_cplan_dhad_ / _dspent_ / _dn_ (gold it could spend, gold
-# it spent, constructions started), pp_cplan_dwait_ / _dwn_ (the gold and the number of the constructions it wanted
-# that waited for gold), the list pp_cplan_log_<why>, the group's situation pp_cplan_ds_<name>, and the last 12 passes
+# 107 towns and buildings) until the next pass: pp_cplan_dran_<why> (the group ran; the hand-on at the pass's end
+# reads it), pp_cplan_dhad_ / _dspent_ / _dn_ (the purse it started with, gold it spent, constructions started),
+# pp_cplan_dwait_ / _dwn_ (the gold and the number of the constructions it wanted that waited for gold), pp_cplan_dgo_
+# / _dml_ (things held back because the market lacks the construction goods / by the market limit), the list
+# pp_cplan_log_<why>, the group's situation pp_cplan_ds_<name>, and the last 12 passes
 # pp_cplan_hn_<why>_<k> / pp_cplan_hs_<why>_<k> (wanted / spent, k = 1 the last; generated pp_cplan_stats_reset,
-# pp_cplan_history_push). The rules never read any of it: the window only.
+# pp_cplan_history_push). The rules never read any of these numbers: the window only.
 # Location, per rule group <why> that built here in the last pass (a location with two construction slots can get
 # two constructions in one pass, from two groups or from one: in game 2026-11-10 one line per location named both
 # buildings in both groups' lists with the later one's cost and reason): the list pp_cplan_log_types_<why> (its
@@ -60,18 +69,21 @@ pp_cplan_run = {
 	# a construction's reason for the window (pp_cplan_construct_now): each rule group sets them before it builds
 	save_temporary_scope_value_as = { name = pp_cplan_rv value = 0 }
 	save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }
-	# The gold above the reserve is this month's budget (Jan 2026-11-09: no limit on the number of constructions). Each
-	# rule group that runs adds its part of it to pp_cplan_cap (its weight over the sum of the weights,
-	# pp_cplan_share_<group>), so a part one group leaves passes on to the next; a group may go past its part with its
-	# last construction. No construction takes the treasury below the reserve
-	# (pp_cplan_construct_scoped).
-	set_variable = { name = pp_cplan_pot value = { value = pp_cplan_free_gold min = 0 add = 100 } }
-	set_variable = { name = pp_cplan_cap value = 100 }
+	# Budgets that save (Jan 2026-11-10; until then every pass offered all the gold above the reserve anew, nothing
+	# was saved, and a group walked past what it could not pay for and built whatever cheaper thing fitted: cheap
+	# buildings won and expensive ones never came). Every rule group has a purse: the gold in no purse yet is shared
+	# by the weights, a group that does not count gives its purse back, and the purses shrink alike when they hold
+	# more than the gold above the reserve (pp_cplan_purses_fill). A construction is paid from the purse of the group
+	# that starts it and must fit in it (pp_cplan_construct_scoped); the first thing a group wants and cannot pay for
+	# is what it saves for, and from then on it builds nothing more in this pass (pp_cplan_note_wait).
+	pp_cplan_purses_fill = yes
+	pp_cplan_markets_clear = yes # the market limit's counts are the pass's (nothing is left unless a pass broke off)
+	remove_variable = pp_cplan_wait
+	remove_variable = pp_cplan_mlim
 	# The rule groups' order turns with the game's month, so every group goes first twice a year (six groups, twelve
-	# months): with little gold above the reserve the group that went first took it every month (test world
-	# 2026-11-09, AI run). Stateless: the month is the game's. Who may build what in a location does not depend on the
-	# order (a profile takes from the groups what it sets, pp_cplan_*_ok); the order only decides who gets the gold
-	# and a free construction site first.
+	# months). Since the purses the order no longer decides who gets the gold: only who gets a free construction slot
+	# of a location first. Stateless: the month is the game's. Who may build what in a location does not depend on
+	# the order (a profile takes from the groups what it sets, pp_cplan_*_ok).
 	if = {
 		limit = { OR = { current_month = 1 current_month = 7 } }
 		pp_cplan_group_profiles = yes
@@ -130,8 +142,10 @@ pp_cplan_run = {
 	remove_variable = pp_cplan_hit
 	remove_variable = pp_cplan_noted
 	remove_variable = pp_cplan_wait
-	remove_variable = pp_cplan_pot
-	remove_variable = pp_cplan_cap
+	remove_variable = pp_cplan_mlim
+	pp_cplan_markets_clear = yes
+	# a group that ran and saves for nothing hands what is left of its purse to the groups that do save
+	pp_cplan_purses_hand_on = yes
 	pp_cplan_history_push = yes
 	# test runs: one line per monthly pass (ppc plan-report counts the months by it; debug_log_date writes nothing)
 	if = {
@@ -159,23 +173,26 @@ pp_cplan_run = {
 	}
 }
 
-# ---- The rule groups (country scope, inside pp_cplan_run; each with a weight above 0 adds its part of the month's gold
-# when it runs) ----
-# A group goes through everything it wants even after the gold is used up: what it cannot pay for is counted, not
-# built (pp_cplan_construct_scoped, pp_cplan_note_wait), so the window shows the gold that would have started it all
-# (Jan 2026-11-09: "how much investment is needed, correctly calculated from the last iteration"). One exception, for
-# the pass's cost: the business group does not look at all when it starts without gold (pp_cplan_group_business), and
-# its pane says so. A location with a construction under way (pp_cplan_site_free) cannot start one, so the logistics
-# and improvement groups do not look for a building there (it still counts for their situation).
+# ---- The rule groups (country scope, inside pp_cplan_run; each with a weight above 0 pays from its purse) ----
+# Best pick first (Jan 2026-11-10): a group goes through what it wants in its own order of importance (food: the
+# hungriest province first; logistics: the most urgent location; improvements: the fullest; businesses: the soonest
+# payback counting the time to save; towns and buildings and the locations: their own order). The first thing it
+# wants and cannot pay for from its purse is what it saves for (pp_cplan_note_wait keeps the location, the building
+# type and the cost for the window), and from then on it builds nothing more in this pass, even things that would
+# fit: cheap things no longer win because they are cheap. It still goes through the rest: what it cannot pay for is
+# counted, not built, so the window shows the gold that would have started it all (Jan 2026-11-09: "how much
+# investment is needed, correctly calculated from the last iteration"). Things stopped for another reason (cannot be
+# built, no workers, the market lacks the construction goods, the market limit) are skipped and are not what it
+# saves for. One exception, for the pass's cost: the business group does not look at all while it has neither gold
+# saved nor gold coming in (pp_cplan_group_business), and its pane says so. A location with a construction under
+# way (pp_cplan_site_free) cannot start one, so the logistics and improvement groups do not look for a building
+# there (it still counts for their situation).
 # The sixth group, Towns and Buildings (pp_cplan_group_country, code 107), is construction_plan_country.py's.
 
-# Country scope: a rule group starts (its code $why$, its part of the month's gold $add$): the gold it may spend
-# grows by its part; the window keeps that it ran and the gold it could spend (its part and what the groups before it
-# left).
+# Country scope: a rule group starts (its code $why$): the window keeps that it ran and the purse it started with.
 pp_cplan_group_start = {
-	change_variable = { name = pp_cplan_cap add = $add$ }
 	set_variable = { name = pp_cplan_dran_$why$ value = yes }
-	set_variable = { name = pp_cplan_dhad_$why$ value = { value = pp_cplan_cap_n subtract = pp_cplan_spent_n min = 0 add = 100 } }
+	set_variable = { name = pp_cplan_dhad_$why$ value = { value = pp_cplan_purse_n_$why$ add = 100 } }
 }
 
 # The player's "Locations" group (pp_location_profiles.txt): the location profiles, whose rules have priority in their
@@ -185,12 +202,18 @@ pp_cplan_group_profiles = {
 	pp_lprof_run = yes
 }
 
-# Food, per province (pp_cplan_food_province).
+# Food, per province (pp_cplan_food_province), the hungriest first: the store a year from now in a normal year,
+# lowest first (pp_cplan_food_order; ordered_province sorts the country's provinces, highest value first). A province
+# without a food store has no step to run.
 pp_cplan_group_food = {
 	if = {
 		limit = { pp_cplan_food_w > 0 }
-		pp_cplan_group_start = { why = 101 add = pp_cplan_share_food }
-		every_province = {
+		pp_cplan_group_start = { why = 101 }
+		ordered_province = {
+			limit = { has_variable = pp_stored_food_months }
+			order_by = pp_cplan_food_order
+			max = 100000
+			check_range_bounds = no
 			pp_cplan_food_province = yes
 		}
 	}
@@ -200,7 +223,7 @@ pp_cplan_group_food = {
 pp_cplan_group_logistics = {
 	if = {
 		limit = { pp_cplan_logistics_w > 0 }
-		pp_cplan_group_start = { why = 102 add = pp_cplan_share_logistics }
+		pp_cplan_group_start = { why = 102 }
 		ordered_owned_location = {
 			limit = {
 				pp_cplan_logistics_ok = yes
@@ -233,7 +256,7 @@ pp_cplan_group_logistics = {
 pp_cplan_group_improve = {
 	if = {
 		limit = { pp_cplan_improve_w > 0 }
-		pp_cplan_group_start = { why = 106 add = pp_cplan_share_improve }
+		pp_cplan_group_start = { why = 106 }
 		ordered_owned_location = {
 			limit = {
 				pp_cplan_improve_ok = yes
@@ -261,22 +284,31 @@ pp_cplan_group_improve = {
 	}
 }
 
-# Businesses (Jan 2026-11-09): every building that makes goods, wherever a level pays back within the player's line,
-# shortest payback first across the country. First every free site picks its best business (generated
-# pp_cplan_business_pick: one level of a standing one or a first level, the same profit estimate for both), then the
-# picks are built in the order of their yearly return while the gold lasts. The country's part of the can-build check
-# runs once (pp_cplan_business_types), not once per location.
+# Businesses (Jan 2026-11-09): every building that makes goods, wherever a level pays back within the player's line.
+# First every free site picks its best business (generated pp_cplan_business_pick: one level of a standing one or a
+# first level, the same profit estimate for both; within the line, the market's limit and its construction goods),
+# then the picks are built in the order of their payback INCLUDING the time to save (Jan 2026-11-10; pp_cplan_bz_order:
+# payback years + the gold the purse lacks for it / the gold the group receives a year; with nothing coming in a pick
+# the purse cannot pay ranks last), while they fit in the purse; the first that does not fit is what the group saves
+# for (pp_cplan_construct_scoped). So a dear business that pays back much sooner is waited for, and one that would
+# take years to save for is not. The country's part of the can-build check runs once (pp_cplan_business_types), not
+# once per location.
 # The pick is the pass's dear part (every free site against every business type), so the group does not look at all
-# when it starts without gold to spend (pp_cplan_budget_left: no gold above the reserve, or the groups before it
-# spent its part too): nothing could be built, and a month without gold is the usual month of a plan that spends
-# what comes in. The window then says that the group did not look (pp_cplan_ds_business_skipped), instead of
-# "nothing waited for gold": what the businesses would have cost is not counted in such a month.
+# while it has neither gold saved nor gold coming in (its purse and what it received for this pass are both
+# nothing: no gold above the reserve): nothing could be built or sensibly saved for. The window then says that the
+# group did not look (pp_cplan_ds_business_skipped) instead of "nothing waited for gold": what the businesses would
+# have cost is not counted in such a month.
 pp_cplan_group_business = {
 	if = {
 		limit = { pp_cplan_business_w > 0 }
-		pp_cplan_group_start = { why = 103 add = pp_cplan_share_business }
+		pp_cplan_group_start = { why = 103 }
 		if = {
-			limit = { pp_cplan_budget_left = yes }
+			limit = {
+				OR = {
+					pp_cplan_purse_n_103 > 0.01
+					pp_cplan_in_n_103 > 0.01
+				}
+			}
 			pp_cplan_business_types = yes
 			every_owned_location = {
 				limit = { pp_cplan_business_site = yes }
@@ -284,7 +316,7 @@ pp_cplan_group_business = {
 			}
 			ordered_owned_location = {
 				limit = { has_variable = pp_cplan_bz_pick }
-				order_by = pp_cplan_bz_roi_n
+				order_by = pp_cplan_bz_order
 				max = 100000
 				check_range_bounds = no
 				# the window: the pick's payback in years (+ 100); the quickest of the country's sites
@@ -302,6 +334,7 @@ pp_cplan_group_business = {
 				pp_cplan_construct_scoped = { why = 103 }
 				remove_variable = pp_cplan_bz_pick
 				remove_variable = pp_cplan_bz_roi
+				remove_variable = pp_cplan_bz_cost
 			}
 			pp_cplan_business_types_clear = yes
 		}
@@ -329,7 +362,9 @@ pp_cplan_group_business = {
 # Profile locations whose profile switched the food rule off are left out; a profile with a staple food rule keeps the
 # farm step out, one with a victuals rule the Grange and Yard steps. While a farm or Tavern of the province has a level
 # under construction, the hunger steps 2 and 5 wait (the store only moves once it stands).
-# Every province is gone through even after the gold is used up: the first step that waits for gold is counted for the
+# The provinces come hungriest first (pp_cplan_group_food). The first step the group's purse cannot pay for is what
+# the food group saves for; from then on no province builds, but every province is still gone through: the first step
+# that waits for gold is counted for the
 # window (pp_cplan_note_wait, once a province: the rule's one construction a month), and the province's situation
 # (famine, hungry, a Granary or a Grange due) too. The store a year from now is read once (scope:pp_cplan_fy, the
 # hunger and famine triggers read it), the Granary and Grange checks once (scope:pp_cplan_gd / _rd, 1 = due).
@@ -505,9 +540,16 @@ pp_cplan_construct = {
 # (pp_cplan_site_free: nothing is under construction here, whoever started it). Never a
 # level for a building that is closed: whoever closed it (the player or the game's Close and Open Buildings
 # automation) found it does not pay, and the plan does not argue (Jan 2026-11-09: the plan and the game's automation
-# must not undo each other). Never below the gold reserve: the level's cost (the engine's formula) must fit in the gold
-# above it, and only while the month's budget lasts (pp_cplan_budget_left: the gold of the rule groups so far). A level
-# the rule wants that the gold does not reach is counted for the window (pp_cplan_note_wait).
+# must not undo each other).
+# The market limit (Jan 2026-11-10, against 500 horse farms after one good month): for the rule groups it holds for
+# (pp_cplan_limits_market_<why>: Businesses, profile rules and marks) a level of a business type starts only while its
+# market has room for the good (pp_cplan_market_do: scope:pp_cplan_mok); a level stopped by it is counted apart
+# (pp_cplan_note_market) and is not waiting for gold. This is the ONE construct path, so the limit holds for
+# everything those groups build.
+# The gold: the level's cost (the engine's formula) must fit in the purse of the rule group $why$ and in the gold
+# above the reserve (pp_cplan_affordable), and the group must not be saving yet (pp_cplan_saving): the first thing it
+# cannot pay for is what it saves for, and it builds nothing more in the pass. A level the rule wants that it does
+# not start for either reason is counted for the window (pp_cplan_note_wait).
 pp_cplan_construct_scoped = {
 	if = {
 		limit = {
@@ -521,16 +563,27 @@ pp_cplan_construct_scoped = {
 				}
 			}
 		}
-		pp_cplan_btype_data = yes
+		save_temporary_scope_value_as = { name = pp_cplan_mok value = 1 }
 		if = {
-			limit = {
-				pp_cplan_budget_left = yes
-				pp_cplan_affordable = yes
-			}
-			pp_cplan_construct_now = { why = $why$ }
+			limit = { pp_cplan_limits_market_$why$ = yes }
+			pp_cplan_market_do = { do = gate }
+		}
+		if = {
+			limit = { scope:pp_cplan_mok < 0.5 }
+			pp_cplan_note_market = { why = $why$ }
 		}
 		else = {
-			pp_cplan_note_wait = { why = $why$ }
+			pp_cplan_btype_data = yes
+			if = {
+				limit = {
+					NOT = { pp_cplan_saving = { why = $why$ } }
+					pp_cplan_affordable = { why = $why$ }
+				}
+				pp_cplan_construct_now = { why = $why$ }
+			}
+			else = {
+				pp_cplan_note_wait = { why = $why$ }
+			}
 		}
 	}
 }
@@ -538,8 +591,11 @@ pp_cplan_construct_scoped = {
 # Location scope, after pp_cplan_btype_data: the level of scope:pp_cplan_btype the rule group $why$ wants here waits for
 # gold. The window counts it and its cost, once per decision (pp_cplan_noted: a province of the food rule, a location of
 # the profiles, one location of the other groups); pp_cplan_wait tells a location profile's rule why it did not build.
+# The first such level of the pass is what the group saves for from now on (the location, the building type, the
+# cost; pp_cplan_save_cost_<why> set = the group saves and builds nothing more in this pass).
 pp_cplan_note_wait = {
 	save_temporary_scope_value_as = { name = pp_cplan_wc value = pp_cplan_est_cost }
+	save_temporary_scope_as = pp_cplan_wsite
 	scope:pp_cplan_country = {
 		set_variable = { name = pp_cplan_wait value = yes }
 		if = {
@@ -547,6 +603,112 @@ pp_cplan_note_wait = {
 			set_variable = { name = pp_cplan_noted value = yes }
 			change_variable = { name = pp_cplan_dwait_$why$ add = scope:pp_cplan_wc }
 			change_variable = { name = pp_cplan_dwn_$why$ add = 1 }
+		}
+		if = {
+			limit = { NOT = { has_variable = pp_cplan_save_cost_$why$ } }
+			set_variable = { name = pp_cplan_save_cost_$why$ value = { value = scope:pp_cplan_wc add = 100 } }
+			set_variable = { name = pp_cplan_save_loc_$why$ value = scope:pp_cplan_wsite }
+			set_variable = { name = pp_cplan_save_type_$why$ value = scope:pp_cplan_btype }
+		}
+	}
+}
+
+# Location scope: the level of scope:pp_cplan_btype the rule group $why$ wants here was stopped by the market limit:
+# the window counts it apart (not waiting for gold), pp_cplan_mlim tells a location profile's rule or mark why.
+pp_cplan_note_market = {
+	scope:pp_cplan_country = {
+		set_variable = { name = pp_cplan_mlim value = yes }
+		change_variable = { name = pp_cplan_dml_$why$ add = 1 }
+	}
+}
+
+# Any scope: the rule group $why$ wanted something the market lacks the construction goods for: the window counts
+# it (in game 2026-11-10 such things were invisible: a Library needs books, a town glass, the pane said "wanted 0").
+pp_cplan_note_goods = {
+	scope:pp_cplan_country = {
+		change_variable = { name = pp_cplan_dgo_$why$ add = 1 }
+	}
+}
+
+# ---- The market limit (the generated parts: pp_cplan_market_do, pp_cplan_uc_*, pp_cplan_mroom_*; construction_plan.py
+# render_market) ----
+
+# Location scope: the output of the good $g$ under construction in this location's market is counted for the pass
+# (once a market and good: every level under construction there of the buildings whose main good it is, whoever
+# started them) and kept on the market's centre location (market.location) as pp_cplan_uc_$g$ (+ 100); the country's
+# list pp_cplan_markets keeps those centres, for the clearing at the pass's end. Not on the market itself: a market
+# scope holds no variables (in game 2026-11-10: "This scope doesn't support variables. Scope: Market Burgos Market",
+# about 2,000 error lines a pass, and the limit never held: 39 Stud Farms started in the Burgos market in one pass
+# where the market asks for 10.8 horses a month).
+pp_cplan_market_load = {
+	if = {
+		limit = { market.location ?= { NOT = { has_variable = pp_cplan_uc_$g$ } } }
+		market ?= {
+			save_temporary_scope_value_as = { name = pp_cplan_uc_now value = pp_cplan_uc_market_$g$ }
+		}
+		market.location ?= {
+			set_variable = { name = pp_cplan_uc_$g$ value = { value = scope:pp_cplan_uc_now add = 100 } }
+			save_temporary_scope_as = pp_cplan_this_market
+			scope:pp_cplan_country = {
+				if = {
+					limit = { NOT = { is_target_in_variable_list = { name = pp_cplan_markets target = scope:pp_cplan_this_market } } }
+					add_to_variable_list = { name = pp_cplan_markets target = scope:pp_cplan_this_market }
+				}
+			}
+		}
+	}
+}
+
+# Location scope (pp_cplan_market_do = { do = gate }): scope:pp_cplan_mok = 0 where the market has no room for one more
+# level's output $out$ of the good $g$.
+pp_cplan_market_gate_good = {
+	pp_cplan_market_load = { g = $g$ }
+	if = {
+		limit = { NOT = { pp_cplan_market_room = { g = $g$ out = $out$ } } }
+		save_temporary_scope_value_as = { name = pp_cplan_mok value = 0 }
+	}
+}
+
+# Location scope (pp_cplan_market_do = { do = add }): the plan started a level here that makes $out$ of the good $g$:
+# where the pass has counted the market's constructions of it, the count rises (a market not counted yet reads the
+# new construction from the game when it is).
+pp_cplan_market_add_good = {
+	market.location ?= {
+		if = {
+			limit = { has_variable = pp_cplan_uc_$g$ }
+			change_variable = { name = pp_cplan_uc_$g$ add = $out$ }
+		}
+	}
+}
+
+# Country scope: the market limit's counts of the pass are gone.
+pp_cplan_markets_clear = {
+	every_in_list = {
+		variable = pp_cplan_markets
+		pp_cplan_market_clear = yes
+	}
+	clear_variable_list = pp_cplan_markets
+}
+
+# Location scope, in pp_cplan_business_pick: the candidate scope:pp_cplan_btype (its return scope:pp_cplan_r is the
+# best so far here) becomes the site's pick when the market holds its construction goods ($demand$) and has room for
+# one more level's output $out$ of its good $g$ (the market limit); else the site keeps looking and notes why
+# (scope:pp_cplan_bz_go / _ml, counted once a site by the pick).
+pp_cplan_business_take = {
+	if = {
+		limit = { NOT = { pp_cplan_goods_here_$demand$ = yes } }
+		save_temporary_scope_value_as = { name = pp_cplan_bz_go value = 1 }
+	}
+	else = {
+		pp_cplan_market_load = { g = $g$ }
+		if = {
+			limit = { pp_cplan_market_room = { g = $g$ out = $out$ } }
+			set_variable = { name = pp_cplan_bz_roi value = scope:pp_cplan_r }
+			set_variable = { name = pp_cplan_bz_pick value = scope:pp_cplan_btype }
+			set_variable = { name = pp_cplan_bz_cost value = pp_cplan_est_cost }
+		}
+		else = {
+			save_temporary_scope_value_as = { name = pp_cplan_bz_ml value = 1 }
 		}
 	}
 }
@@ -565,12 +727,16 @@ pp_cplan_construct_now = {
 		change_variable = { name = pp_cplan_dn_$why$ add = 1 }
 		set_variable = { name = pp_cplan_hit value = yes }
 		remove_variable = pp_cplan_gold_before
+		# the group's purse pays what was really paid (never below nothing: the estimate is within 1 % of the price)
+		pp_cplan_purse_pay = { why = $why$ }
 		if = {
 			limit = { NOT = { is_target_in_variable_list = { name = pp_cplan_log target = scope:pp_cplan_site } } }
 			add_to_variable_list = { name = pp_cplan_log target = scope:pp_cplan_site }
 		}
 		add_to_variable_list = { name = pp_cplan_log_$why$ target = scope:pp_cplan_site }
 	}
+	# the market limit: one more level of the type's good is under construction in this market now
+	pp_cplan_market_do = { do = add }
 	# the window, per rule group: what it built here, what that cost (a second construction of the group here in
 	# this pass adds up) and why (the group's reason value and step, scope:pp_cplan_rv / _rs)
 	add_to_variable_list = { name = pp_cplan_log_types_$why$ target = scope:pp_cplan_btype }
@@ -592,6 +758,16 @@ pp_cplan_construct_now = {
 		debug_log = PP_CPLAN_TLOG_$why$
 		scope:pp_cplan_btype = { debug_log_scopes = no }
 		debug_log_scopes = no
+	}
+}
+
+# Country scope, scope:pp_cplan_paid saved (the gold a construction of the rule group $why$ really took): its purse
+# falls by it, never below nothing. The Towns and Buildings group's town and city upgrades pay the same way.
+pp_cplan_purse_pay = {
+	change_variable = { name = pp_cplan_purse_$why$ subtract = scope:pp_cplan_paid }
+	if = {
+		limit = { var:pp_cplan_purse_$why$ < 100 }
+		set_variable = { name = pp_cplan_purse_$why$ value = 100 }
 	}
 }
 

@@ -34,11 +34,11 @@ only the colour: the plan keeps expanding a marked item while it pays back.
 ## What a mark builds
 
 Each monthly pass of the Construction Plan (only while it is on), in the rule group **Location profiles** (reason code
-105, that group's part of the month's gold; weight 0 = nothing), per location after the rules of its profile (a
+105, that group's purse; weight 0 = nothing), per location after the rules of its profile (a
 location with marks and no profile gets its turn too): every marked item in the picker's order, **exactly as a profile
 rule with that target** (`docs/location_profiles.md`, Monthly pass): a standing producer of the good gets one more
 level while the next level pays back within the limit (highest tier first), else the cheapest buildable producer
-starts; a building category the same over its buildings. Same guards (workers, construction goods, budget, one
+starts; a building category the same over its buildings. Same guards (workers, construction goods, the market limit, the group's purse, one
 construction at a time in a location). The limit is the player's global **Businesses line** ("payback within N
 years", country script value `pp_cplan_business_years`, variable `pp_cplan_biz`). One construction per location per
 month, whether a rule of the profile or a mark starts it; later ones wait (state 9).
@@ -49,7 +49,7 @@ mark with the Businesses line).
 
 Each mark keeps its state after the last pass, the profile rule states with their texts (`PP_LPROF_ST_<n>`): 1 started,
 2 nothing to build, 3 a construction is under way here, 4 no free workers, 5 payback too long (with the payback found),
-6 cannot be built here, 7 budget, 8 the market lacks the construction goods, 9 waiting for an earlier one this month.
+6 cannot be built here, 7 gold (the Locations group's purse cannot pay it, or the group saves for something before it), 8 the market lacks the construction goods, 9 waiting for an earlier one this month, 10 the market limit (enough of the good is on the way in its market; 2026-11-10).
 Fur has no building that makes it: its mark always shows state 6.
 
 ## Code

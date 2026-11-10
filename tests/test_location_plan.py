@@ -190,7 +190,7 @@ def test_every_mark_state_has_a_text() -> None:
     profile_keys: set[str] = set()
     for path in PROFILE_LOC.glob("pp_location_profiles*_l_english.yml"):
         profile_keys |= set(re.findall(r"^  ([A-Za-z0-9_]+):", _read(path), re.MULTILINE))
-    assert lp.MARK_STATES == 9
+    assert lp.MARK_STATES == 10  # 10: the market limit (2026-11-10)
     for n in range(0, lp.MARK_STATES + 1):
         assert f"PP_LPROF_ST_{n}" in profile_keys, n
     for item in items:

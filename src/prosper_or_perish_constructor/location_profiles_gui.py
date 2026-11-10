@@ -69,7 +69,7 @@ SCRIPTED_GUIS = (
     "pp_lprof_assign", "pp_lprof_new", "pp_lprof_select", "pp_lprof_set", "pp_lprof_color", "pp_lprof_payback",
     "pp_lprof_rule_clear", "pp_lprof_rule_move", "pp_lprof_delete", "pp_lprof_global", "pp_lprof_examples",
 )
-STATES = 9  # rule states 1..9 (+100), texts PP_LPROF_ST_<n> from the script side
+STATES = 10  # rule states 1..10 (+100), texts PP_LPROF_ST_<n> from the script side
 MARKET_ACCESS = "logistics"
 PICK, BRUSH = "pp_lprof_pick", "pp_lprof_brush"
 # The editor is the Construction Plan window's Location Profiles tab: every "Edit profiles" opens the window on it.

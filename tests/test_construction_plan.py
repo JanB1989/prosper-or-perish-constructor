@@ -66,7 +66,8 @@ def test_built_mod_is_in_step() -> None:
 
 
 def test_window_references_exist() -> None:
-    guis = _read(SCRIPTED_GUIS) + "\n"
+    # (the Towns and Buildings tab's scripted GUIs are its generator's: the tab button and the opener place its tiles)
+    guis = _read(SCRIPTED_GUIS) + "\n" + _read(MOD / "in_game/common/scripted_guis/pp_construction_plan_country.txt") + "\n"
     script_values = _defined_keys(MOD / "in_game/common/script_values")
     loc = _read(LOC)
     loc_keys = set(re.findall(r"^  ([A-Z0-9_]+):", loc, re.MULTILINE))
@@ -132,11 +133,10 @@ def test_lines_step_as_jan_asked() -> None:
 
 
 def test_budget_is_the_gold_above_the_reserve() -> None:
-    """No monthly count any more: each pass may spend the gold above the reserve; every rule group gets its weight over
-    the sum of the weights (Jan 2026-11-09: a part per group, every bar full = equal parts, an empty bar = off), a part
-    left unused passes on; no construction takes the treasury below the reserve."""
-    run = _effect(_read(EFFECTS), "pp_cplan_run")
-    assert "set_variable = { name = pp_cplan_pot value = { value = pp_cplan_free_gold min = 0 add = 100 } }" in run
+    """Each rule group's part of the gold above the reserve is its weight over the sum of the weights that count (Jan
+    2026-11-09: a part per group, every bar full = equal parts, an empty bar = off). Since 2026-11-10 the part goes
+    into the group's purse (tests/test_construction_plan_budget.py); the old month's gold (pp_cplan_pot / _cap /
+    _share_<group> / pp_cplan_budget_left) is gone from every plan file."""
     values = _read(VALUES)
     assert "subtract = pp_cplan_reserve_gold" in _effect(values, "pp_cplan_free_gold")
     generated = _read(MOD / cp.VALUES)
@@ -151,10 +151,11 @@ def test_budget_is_the_gold_above_the_reserve() -> None:
     assert re.search(r"^pp_cplan_country_active = \{", country_values, re.MULTILINE)
     assert re.search(r"^pp_lprof_group_n = \{", _read(MOD / "in_game/common/script_values/pp_location_profiles_generated.txt"), re.MULTILINE)
     for group in cp.GROUPS:
-        share = _effect(generated, f"pp_cplan_share_{group}")
+        why = cp.GROUP_WHY[group]
         weight = cp.counted_weight(group)
         assert weight == cp.COUNTED_WEIGHTS.get(group, f"pp_cplan_{group}_w")
-        assert "value = pp_cplan_pot_n" in share and f"multiply = {weight}" in share and "divide = pp_cplan_w_total" in share
+        share = _effect(generated, f"pp_cplan_purse_new_{why}")
+        assert "value = pp_cplan_purse_rest" in share and f"multiply = {weight}" in share and "divide = pp_cplan_w_total" in share
         part = _effect(generated, f"pp_cplan_part_{group}")
         assert f"value = {weight}\n\t\tmultiply = 100\n\t\tdivide = pp_cplan_w_total" in part  # the shown % follows
         assert total.count(f"add = {weight}\n") == 1
@@ -162,21 +163,15 @@ def test_budget_is_the_gold_above_the_reserve() -> None:
             assert f"add = pp_cplan_{group}_w\n" not in total
         if group not in ("profiles", "country"):  # those two start themselves (pp_lprof_run, pp_cplan_group_country)
             body = _effect(_read(EFFECTS), f"pp_cplan_group_{group}")
-            assert (f"limit = {{ pp_cplan_{group}_w > 0 }}\n\t\tpp_cplan_group_start = {{ why = {cp.GROUP_WHY[group]} "
-                    f"add = pp_cplan_share_{group} }}") in body
+            assert (f"limit = {{ pp_cplan_{group}_w > 0 }}\n\t\tpp_cplan_group_start = {{ why = {why} }}") in body
     config = cp.load_config(PROJECT)
     assert dict(config.weights) == {group: 5 for group in cp.GROUPS}
-    triggers = _read(TRIGGERS)
-    budget = _effect(triggers, "pp_cplan_budget_left")
-    assert "pp_cplan_spent_n < pp_cplan_cap_n" in budget and "pp_cplan_free_gold > 0" in budget
-    assert "pp_cplan_est_cost <= scope:pp_cplan_country.pp_cplan_free_gold" in _effect(triggers, "pp_cplan_affordable")
-    start = _effect(_read(EFFECTS), "pp_cplan_group_start")
-    assert "change_variable = { name = pp_cplan_cap add = $add$ }" in start
-    # the gold is checked by the construction itself, so what the gold does not reach is counted (the detail panes)
-    scoped = _effect(_read(EFFECTS), "pp_cplan_construct_scoped")
-    assert (scoped.index("pp_cplan_btype_data = yes") < scoped.index("pp_cplan_budget_left = yes")
-            < scoped.index("pp_cplan_affordable = yes") < scoped.index("pp_cplan_construct_now")
-            < scoped.index("pp_cplan_note_wait"))
+    gone = re.compile(r"pp_cplan_(?:pot|cap|share_\w+|budget_left)\b")
+    mod_files = [*_plan_script_files(), PROFILE_EFFECTS, *sorted((MOD / "in_game/gui").glob("pp_construction_plan*.gui")),
+                 *sorted((MOD / "in_game/common").glob("*/pp_location_p*.txt"))]
+    for path in mod_files:
+        found = gone.search(_read(path))
+        assert not found, f"{path.name}: {found.group(0) if found else ''}"
 
 
 def test_weight_bars() -> None:
@@ -339,20 +334,27 @@ def test_business_pick_checks_every_candidate() -> None:
     assert pick.startswith("\tpp_cplan_business_harvest = yes\n")
     assert "set_variable = { name = pp_cplan_bz_roi value = scope:pp_cplan_country.pp_cplan_business_min_roi }" in pick
     for name, good in result.businesses.items():
-        block = re.search(rf"has_variable = pp_cplan_bz_{name} \}}\n(.*?)set_variable = {{ name = pp_cplan_bz_pick value = building_type:{name} }}",
-                          pick, re.DOTALL)
+        block = re.search(rf"has_variable = pp_cplan_bz_{name} \}}\n(.*?)(pp_cplan_business_take = \{{[^\n]*\}})\n", pick, re.DOTALL)
         assert block, name
-        body = block.group(1)
+        body, take = block.groups()
         assert f"can_build_building = building_type:{name}\n" in body, name
         assert f"NOT = {{ pp_lprof_has_good = {{ g = {good} }} }}" in body, name
-        assert re.search(r"pp_cplan_goods_here_\w+ = yes", body), name
         assert f"building_type = building_type:{name} building_level > 0 is_opened = no" in body, name
         assert f"building_type:{name} = {{ save_scope_as = pp_cplan_btype }}" in body, name
         assert f"value = pp_cplan_bz_roi_{name} }}" in body and "limit = { scope:pp_cplan_r > var:pp_cplan_bz_roi }" in body, name
+        # a candidate that would be the best so far is taken only with its construction goods in the market and room
+        # in the market for its good (the market limit), with the type's own good, output a level and demand
+        demand = result.buildings[name].demand
+        output = cp._num(result.market_outputs[good][name])
+        assert take == f"pp_cplan_business_take = {{ g = {good} out = {output} demand = {demand} }}", name
         assert f"limit = {{ can_build_building = building_type:{name} }} set_variable = {{ name = pp_cplan_bz_{name} value = yes }}" in types
         assert f"remove_variable = pp_cplan_bz_{name}\n" in clear
     # a profile's building category stays the profile's (trade buildings are businesses and a profile category)
     assert "NOT = { pp_lprof_has_category = { c = trade_category } }" in pick
+    take = _effect(_read(EFFECTS), "pp_cplan_business_take")
+    assert take.index("NOT = { pp_cplan_goods_here_$demand$ = yes }") < take.index("pp_cplan_market_load = { g = $g$ }")
+    assert take.index("pp_cplan_market_room = { g = $g$ out = $out$ }") < take.index("name = pp_cplan_bz_pick value = scope:pp_cplan_btype")
+    assert "set_variable = { name = pp_cplan_bz_cost value = pp_cplan_est_cost }" in take
 
 
 def test_business_estimate_takes_this_years_harvest_out() -> None:
@@ -381,10 +383,10 @@ def test_business_estimate_takes_this_years_harvest_out() -> None:
 
 def test_business_group_builds_the_best_returns_first() -> None:
     group = _effect(_read(EFFECTS), "pp_cplan_group_business")
-    assert group.index("pp_cplan_business_types = yes") < group.index("pp_cplan_business_pick = yes") < group.index("order_by = pp_cplan_bz_roi_n")
+    assert group.index("pp_cplan_business_types = yes") < group.index("pp_cplan_business_pick = yes") < group.index("order_by = pp_cplan_bz_order")
     assert "limit = { pp_cplan_business_site = yes }" in group
     assert "pp_cplan_construct_scoped = { why = 103 }" in group
-    assert group.index("order_by = pp_cplan_bz_roi_n") < group.index("pp_cplan_business_types_clear = yes")
+    assert group.index("order_by = pp_cplan_bz_order") < group.index("pp_cplan_business_types_clear = yes")
     site = _effect(_read(TRIGGERS), "pp_cplan_business_site")
     for part in ("pp_cplan_location_ok = yes", "NOT = { has_variable = pp_lprof_xg }", "pp_cplan_site_free = yes",
                  "market ?= { always = yes }"):
@@ -392,18 +394,17 @@ def test_business_group_builds_the_best_returns_first() -> None:
 
 
 def test_business_group_does_not_look_without_gold() -> None:
-    """The pick is the pass's dear part (every free site against every business type). A group that starts without
-    gold to spend can build nothing, so it does not look; it marks that for its pane, which then says so instead of
-    "nothing waited for gold" (what the businesses would have cost is not counted in such a month)."""
+    """The pick is the pass's dear part (every free site against every business type). A group with neither gold
+    saved nor gold coming in can build nothing and save for nothing, so it does not look; it marks that for its pane,
+    which then says so instead of "nothing waited for gold" (what the businesses would have cost is not counted in
+    such a month)."""
     group = _effect(_read(EFFECTS), "pp_cplan_group_business")
-    start = group.index("pp_cplan_group_start = { why = 103 add = pp_cplan_share_business }")
-    gate = group.index("limit = { pp_cplan_budget_left = yes }")
+    start = group.index("pp_cplan_group_start = { why = 103 }")
+    gate = group.index("OR = {\n\t\t\t\t\tpp_cplan_purse_n_103 > 0.01\n\t\t\t\t\tpp_cplan_in_n_103 > 0.01\n\t\t\t\t}")
     skipped = group.index("else = {\n\t\t\tset_variable = { name = pp_cplan_ds_business_skipped value = 101 }")
-    # the part is added first (the gate reads the gold of the groups so far, this one included); everything dear
-    # sits behind the gate
+    # everything dear sits behind the gate
     assert start < gate < group.index("pp_cplan_business_types = yes") < group.index("pp_cplan_business_pick = yes")
     assert group.index("pp_cplan_business_types_clear = yes") < skipped
-    assert group.count("pp_cplan_budget_left") == 1
     assert ("skipped", 100) in cp.SITUATION["business"]
     from prosper_or_perish_constructor import construction_plan_detail as cpd
 
@@ -464,15 +465,19 @@ def test_no_not_with_several_conditions() -> None:
 
 
 def test_constructions_check_market_goods_and_queue() -> None:
-    """Every can-build check of the generated food, logistics and improvement pickers also asks for the construction
-    goods in the market (else the construction stalls) and for no level of the building under construction here."""
+    """Every can-build check of the generated food, logistics and improvement pickers also asks for no level of the
+    building under construction here, and for the construction goods in the market before it builds (else the
+    construction stalls): on the same line (the farm lines' returns) or as the next check, whose other branch counts
+    the thing as held back for construction goods (tests/test_construction_plan_budget.py)."""
     effects = _read(MOD / cp.EFFECTS)
     triggers = _read(MOD / cp.TRIGGERS)
-    checks = re.findall(r"location_and_owner_can_build = \{ building_type = (\w+) \}([^\n]*)", effects)
+    checks = re.findall(r"location_and_owner_can_build = \{ building_type = (\w+) \}([^\n]*)\n((?:[^\n]*\n){0,24})", effects)
     assert checks
-    for name, rest in checks:
-        demand = re.search(r"pp_cplan_goods_here_(\w+) = yes", rest)
+    for name, rest, following in checks:
+        demand = re.search(r"pp_cplan_goods_here_(\w+) = yes", rest) or re.search(
+            r"limit = \{ pp_cplan_goods_here_(\w+) = yes \}", following)
         assert demand, name
+        assert demand.group(1) == _result().buildings[name].demand, name
         assert f"pp_cplan_goods_here_{demand.group(1)} = {{" in triggers, demand.group(1)
         assert f"building_type = building_type:{name} building_levels_under_construction > 0" in rest, name
 
@@ -514,14 +519,18 @@ def test_only_human_countries_run_the_plan() -> None:
 
 
 def test_effects_use_the_vanilla_can_build_check() -> None:
-    """Every construction the generated pickers start is guarded by the location and owner can-build check."""
+    """Every construction the generated pickers start is guarded by the location and owner can-build check: in its own
+    limit, or (where the construction goods are asked apart) in the limit around it."""
     effects = _read(MOD / cp.EFFECTS)
-    blocks = re.findall(r"limit = \{([^\n]*)\}\n\t*pp_cplan_construct(?:_food)? = \{ type = (\w+)", effects)
-    assert blocks
-    for limit, building in blocks:
-        if "pp_cplan_pick" in limit:
+    starts = [match for match in re.finditer(r"pp_cplan_construct(?:_food)? = \{ type = (\w+)", effects)]
+    assert len(starts) > 30
+    for match in starts:
+        building = match.group(1)
+        before = effects[max(0, match.start() - 900):match.start()]
+        limits = re.findall(r"limit = \{([^\n]*)\}\n", before)[-2:]
+        if any("pp_cplan_pick" in limit for limit in limits):
             continue  # the farm and improvement pickers checked the candidate before they picked it
-        assert f"location_and_owner_can_build = {{ building_type = {building} }}" in limit, building
+        assert any(f"location_and_owner_can_build = {{ building_type = {building} }}" in limit for limit in limits), building
 
 
 def test_game_automation_is_respected() -> None:
@@ -539,12 +548,15 @@ def test_game_automation_is_respected() -> None:
 def test_one_place_says_when_a_site_is_free() -> None:
     """The plan starts nothing where a construction is under way. The engine's max_constructions_at_same_time would
     allow more in some locations (not verified in game), so the check sits in ONE trigger, pp_cplan_site_free, and no
-    other plan script reads num_civil_constructions."""
+    other plan script decides by num_civil_constructions (the market limit's count only skips the locations of a
+    market that build nothing: pp_cplan_uc_market_<good>)."""
     assert _effect(_read(TRIGGERS), "pp_cplan_site_free").strip() == "num_civil_constructions < pp_cplan_site_slots"
     for path in _plan_script_files():
         code = re.sub(r"#[^\n]*", "", _read(path))
         if path == TRIGGERS:
             code = code.replace(_effect(code, "pp_cplan_site_free"), "")
+        code = re.sub(r"^pp_cplan_uc_market_\w+ = \{\n\tvalue = 0\n\tevery_location_in_market = \{\n"
+                      r"\t\tlimit = \{ num_civil_constructions > 0 \}\n", "", code, flags=re.MULTILINE)
         assert "num_civil_constructions" not in code, path.name
     effects = _read(EFFECTS)
     # every place that starts or looks for a construction asks it: the construction itself, the business sites, the
@@ -571,14 +583,27 @@ def test_baseline_defaults() -> None:
 
 def test_nothing_is_kept_between_passes() -> None:
     """Jan: no history. The baseline rules read the game as it stands; no counter variables, no watch effects; the
-    pass's own budget and business marks go at its end."""
+    pass's own flags, business marks and market counts go at its end. The one thing the plan keeps from pass to pass
+    is each rule group's budget that saves (its purse and what it received; what it saves for is found afresh every
+    pass): tests/test_construction_plan_budget.py."""
     for path in (EFFECTS, TRIGGERS, VALUES, SCRIPTED_GUIS):
         text = _read(path)
         for gone in ("pp_cplan_gw", "pp_cplan_fw", "pp_cplan_al", "pp_cplan_mm", "pp_cplan_mkt",
                      "pp_cplan_count_up", "pp_cplan_reset_watch", "_watch = yes"):
             assert gone not in text, f"{path.name}: {gone}"
     run = _effect(_read(EFFECTS), "pp_cplan_run")
-    assert "remove_variable = pp_cplan_pot" in run and "remove_variable = pp_cplan_cap" in run
+    end = run[run.index("pp_cplan_country_rights = yes"):]
+    for line in ("remove_variable = pp_cplan_hit", "remove_variable = pp_cplan_noted", "remove_variable = pp_cplan_wait",
+                 "remove_variable = pp_cplan_mlim", "pp_cplan_markets_clear = yes"):
+        assert line in end, line
+    assert "pp_cplan_business_types_clear = yes" in _effect(_read(EFFECTS), "pp_cplan_group_business")
+    # what a group saves for starts afresh at the pass's start
+    fill = _effect(_read(MOD / cp.EFFECTS), "pp_cplan_purses_fill")
+    for why in cp.GROUP_WHY.values():
+        for name in cp.SAVE_VARS:
+            # the rank (a town or city upgrade) is Towns and Buildings' alone: no other group ever sets it
+            wanted = name != "rank" or why == cp.GROUP_WHY["country"]
+            assert (f"remove_variable = pp_cplan_save_{name}_{why}\n" in fill) == wanted, (why, name)
 
 
 def test_food_pass_order() -> None:
@@ -746,14 +771,17 @@ def test_no_name_is_defined_twice() -> None:
 
 def test_groups_count_what_waits_for_gold() -> None:
     """Jan 2026-11-09: the window shows how much gold the rules wanted, calculated from the last pass. Every group goes
-    through all it wants even after the gold is used up; the construction itself checks the gold and counts what the
-    gold does not reach (cost and number) once per decision: a province of the food rule, a location otherwise."""
+    through all it wants even after its purse is used up or it saves for something; the construction itself checks the
+    gold and counts what it does not start for gold (cost and number) once per decision: a province of the food rule,
+    a location otherwise."""
     effects = _read(EFFECTS)
-    # (the business group alone asks once, before it looks at all: test_business_group_does_not_look_without_gold)
+    # no group stops walking for gold (the business group alone does not look at all without gold saved or coming in)
     for group in ("food", "logistics", "improve"):
-        assert "pp_cplan_budget_left" not in _effect(effects, f"pp_cplan_group_{group}"), group
-    assert "pp_cplan_budget_left" not in _effect(effects, "pp_cplan_food_province")
-    assert "pp_cplan_budget_left" not in _effect(_read(TRIGGERS), "pp_cplan_may_try")
+        body = _effect(effects, f"pp_cplan_group_{group}")
+        assert "pp_cplan_purse" not in body and "pp_cplan_saving" not in body and "pp_cplan_affordable" not in body, group
+    food = _effect(effects, "pp_cplan_food_province")
+    assert "pp_cplan_purse" not in food and "pp_cplan_saving" not in food
+    assert "pp_cplan_saving" not in _effect(_read(TRIGGERS), "pp_cplan_may_try")
     note = _effect(effects, "pp_cplan_note_wait")
     assert "save_temporary_scope_value_as = { name = pp_cplan_wc value = pp_cplan_est_cost }" in note
     assert "limit = { NOT = { has_variable = pp_cplan_noted } }" in note
@@ -768,16 +796,15 @@ def test_groups_count_what_waits_for_gold() -> None:
 
 
 def test_detail_numbers_per_group() -> None:
-    """What each rule group did last month, for the window: gold it could spend, gold spent, constructions started,
-    the list of where, what each cost and why, its situation and twelve months of gold wanted and spent. They start
-    afresh every pass, the rules never read them, switching the plan on clears the chart."""
+    """What each rule group did last month, for the window: the purse it started with, gold spent, constructions
+    started, the list of where, what each cost and why, its situation and twelve months of gold wanted and spent. They
+    start afresh every pass, the rules never read them, switching the plan on clears the chart."""
     effects = _read(EFFECTS)
     generated = _read(MOD / cp.EFFECTS)
     values = _read(MOD / cp.VALUES)
     start = _effect(effects, "pp_cplan_group_start")
     assert "set_variable = { name = pp_cplan_dran_$why$ value = yes }" in start
-    assert ("name = pp_cplan_dhad_$why$ value = { value = pp_cplan_cap_n subtract = pp_cplan_spent_n min = 0 add = 100 }"
-            in start)
+    assert "name = pp_cplan_dhad_$why$ value = { value = pp_cplan_purse_n_$why$ add = 100 }" in start
     now = _effect(effects, "pp_cplan_construct_now")
     for line in ("change_variable = { name = pp_cplan_dspent_$why$ add = scope:pp_cplan_paid }",
                  "change_variable = { name = pp_cplan_dn_$why$ add = 1 }",
@@ -808,6 +835,7 @@ def test_detail_numbers_per_group() -> None:
     push = _effect(generated, "pp_cplan_history_push")
     clear = _effect(generated, "pp_cplan_history_clear")
     months = cp.HISTORY_MONTHS
+    assert {"goods": "dgo", "limited": "dml"}.items() <= cp.GROUP_NUMBERS.items()
     for group in cp.GROUPS:
         why = cp.GROUP_WHY[group]
         assert f"clear_variable_list = pp_cplan_log_{why}" in reset and f"remove_variable = pp_cplan_dran_{why}" in reset
@@ -826,6 +854,8 @@ def test_detail_numbers_per_group() -> None:
             assert f"pp_cplan_d_{group}_{number} = {{" in values, (group, number)
         assert _effect(values, f"pp_cplan_h_{group}_max").count("\tmin = pp_cplan_h_") == months
         assert f"divide = pp_cplan_h_{group}_max" in _effect(values, f"pp_cplan_h_{group}_needp_1")
+        # the purse is not one of them: the reset must not empty it
+        assert f"pp_cplan_purse_{why}" not in reset and f"pp_cplan_save_cost_{why}" not in reset
     # every group gives its constructions a reason: food the store a year from now and the step, logistics the
     # access, improvements the fill, businesses the payback, profiles the rule
     food = _effect(effects, "pp_cplan_food_province")
@@ -839,9 +869,19 @@ def test_detail_numbers_per_group() -> None:
         assert value in body and body.index("name = pp_cplan_rv") < body.index(build), group
     assert "save_temporary_scope_value_as = { name = pp_cplan_rs value = $r$ }" in _effect(_read(PROFILE_EFFECTS), "pp_lprof_rule")
     assert "pp_cplan_history_clear = yes" in _effect(_read(SCRIPTED_GUIS), "pp_cplan_toggle_on")
-    # the rules never decide on these numbers (only the window reads them; the running minimums compare in place)
+    # The rules never decide on the display numbers (only the window reads them; the running minimums compare in
+    # place). What the rules DO read from pass to pass is another family: the purses, what a group received and what
+    # it saves for (pp_cplan_purse_* / _in_ / _hand_ / _save_*), and pp_cplan_dran_<why> (the hand-on asks who ran).
+    display = r"pp_cplan_(?:d_\w+|h_\w+|dhad_\d+|dspent_\d+|dwait_\d+|dwn_\d+|dn_\d+|dgo_\d+|dml_\d+|ds_\w+|hn_\w+|hs_\w+)"
     readers = [path for path in _plan_script_files() if "script_values" not in str(path)] + [PROFILE_EFFECTS]
-    window_only = re.compile(r"limit = \{[^{}]*?\b(pp_cplan_(?:d_\w+|h_\w+|dhad_\d+|dspent_\d+|dwait_\d+|dwn_\d+|dn_\d+|hn_\w+|hs_\w+))")
+    window_only = re.compile(r"limit = \{[^{}]*?\b(" + display.replace(r"ds_\w+|", "") + ")")
     for path in readers:
         found = window_only.search(_read(path))
         assert not found, f"{path.name}: a rule reads {found.group(1) if found else ''}"
+    # the budgets' own values (the state the rules keep) never read a display number, and no rule value reads one
+    rule_values = re.findall(r"^(pp_cplan_(?:purse|hand|saves|gives|in_n|save_cost|bz_|mroom|uc_|market)\w*) = \{\n(.*?)^\}",
+                             values + _read(VALUES), re.MULTILINE | re.DOTALL)
+    assert len(rule_values) > 100
+    for name, body in rule_values:
+        found = re.search(display, body)
+        assert not found, f"{name} reads {found.group(0) if found else ''}"

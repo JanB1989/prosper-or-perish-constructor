@@ -67,8 +67,8 @@ ERROR_PATTERNS = ("pp_cplan", "pp_lprof", "pp_construction_plan", "pp_location_p
 # State codes (+ 100 in the game; docs/location_profiles.md and docs/player_construction_manager.md)
 # ---------------------------------------------------------------------------------------------------------------------
 RULE_STATES = {1: "started", 2: "nothing to build", 3: "under construction", 4: "no free workers", 5: "payback too long",
-               6: "cannot be built here", 7: "budget", 8: "market lacks construction goods",
-               9: "waiting for an earlier rule"}
+               6: "cannot be built here", 7: "gold (the group saves)", 8: "market lacks construction goods",
+               9: "waiting for an earlier rule", 10: "market limit"}
 NO_PROFIT = 999.0  # pp_lprof_r<r>_est 1099 - 100: the rule found no profit
 STORE_BANDS = ((0, 3, "under 3"), (3, 6, "3-6"), (6, 12, "6-12"), (12, 24, "12-24"), (24, math.inf, "24+"))
 KINDS = ("food", "logistics", "improve", "business", "other")

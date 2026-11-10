@@ -1,7 +1,7 @@
 ﻿# Prosper or Perish - Location Profiles (branch location-profiles, 2026-11-07, Jan; docs/location_profiles.md).
 # The player defines profiles (an icon, a colour, ordered build rules) and assigns them to locations on the map. In a
 # location with a profile the profile's rules build: a rule group of the plan's monthly pass (pp_cplan_run), with its
-# own share of the month's budget. A profile takes from the global Construction Plan rules only what it sets (Jan
+# own budget that saves (its purse, pp_construction_plan.txt). A profile takes from the global Construction Plan rules only what it sets (Jan
 # 2026-11-09): its rules' targets (a good, a building category, market access) and the global groups it switches off
 # (pp_lprof_xf / _xl / _xi / _xg / _xc: food, logistics, improvements, businesses, towns and buildings); the rest of the
 # global rules build there too (scripted_triggers/pp_construction_plan.txt).
@@ -28,8 +28,9 @@
 # a button: pp_lprof_k (the slot) and the staged copy pp_lprof_s_on / _ig / ... (removed at its end).
 # Location: pp_lprof (slot k), the copy pp_lprof_ig / _ic / _in / _col / _r<r>_g / _c / _pb, pp_lprof_r<r>_st (rule state
 # after the last pass: 1 started, 2 nothing to build, 3 a level under construction, 5 payback too long, 6 cannot be
-# built here, 7 budget, 8 the market lacks the construction goods, 9 waiting for an earlier rule's construction this
-# month) and pp_lprof_r<r>_est (the payback found). Pass temporaries: pp_lprof_st, pp_lprof_fail, pp_lprof_best,
+# built here, 7 gold (the group's purse cannot pay it, or the group saves for something before it), 8 the market
+# lacks the construction goods, 9 waiting for an earlier rule's construction this month, 10 the market limit:
+# enough of the good is on the way in its market) and pp_lprof_r<r>_est (the payback found). Pass temporaries: pp_lprof_st, pp_lprof_fail, pp_lprof_best,
 # pp_lprof_pick (location), the lists pp_lprof_gone, pp_lplan_gone and pp_lprof_turns (country: this pass's locations).
 
 # ---- The monthly pass (country scope, inside pp_cplan_run: scope:pp_cplan_country and scope:actor saved) ----
@@ -42,7 +43,7 @@ pp_lprof_run = {
 			pp_lprof_has_locations = yes
 			pp_cplan_profiles_w > 0
 		}
-		pp_cplan_group_start = { why = 105 add = pp_cplan_share_profiles }
+		pp_cplan_group_start = { why = 105 }
 		save_temporary_scope_value_as = { name = pp_cplan_rv value = 0 }
 		# this pass's locations: with a profile, with marks, or both (each once)
 		pp_lprof_gather = yes
@@ -268,9 +269,9 @@ pp_lprof_open = {
 }
 
 # Location scope: writes the state of a rule or a mark into $st$: what the target set (1 started, 3 a level under
-# construction, 9 waiting), else the best reason among its candidates (pp_lprof_fail: 106 budget -> 7, 105 goods -> 8,
-# 104 no workers -> 4, 103 payback -> 5, 102 cannot be built -> 6, 101 at its highest level -> 2), else no candidate at
-# all (6); and into $est$ the shortest payback it found.
+# construction, 9 waiting), else the best reason among its candidates (pp_lprof_fail: 107 gold -> 7, 106 the market
+# limit -> 10, 105 goods -> 8, 104 no workers -> 4, 103 payback -> 5, 102 cannot be built -> 6, 101 at its highest
+# level -> 2), else no candidate at all (6); and into $est$ the shortest payback it found.
 pp_lprof_finish = {
 	if = {
 		limit = { has_variable = pp_lprof_st }
@@ -281,8 +282,12 @@ pp_lprof_finish = {
 		set_variable = { name = $st$ value = 106 }
 	}
 	else_if = {
-		limit = { var:pp_lprof_fail > 105.5 }
+		limit = { var:pp_lprof_fail > 106.5 }
 		set_variable = { name = $st$ value = 107 }
+	}
+	else_if = {
+		limit = { var:pp_lprof_fail > 105.5 }
+		set_variable = { name = $st$ value = 110 }
 	}
 	else_if = {
 		limit = { var:pp_lprof_fail > 104.5 }
@@ -351,8 +356,12 @@ pp_lprof_count_state = {
 		limit = { var:$st$ < 108.5 }
 		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_st8 add = 1 } }
 	}
-	else = {
+	else_if = {
+		limit = { var:$st$ < 109.5 }
 		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_st9 add = 1 } }
+	}
+	else = {
+		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_st10 add = 1 } }
 	}
 }
 
@@ -369,7 +378,7 @@ pp_lprof_note_payback = {
 	}
 }
 
-# Location scope: records why a candidate failed ($r$ = 101..106), keeping the reason closest to a construction.
+# Location scope: records why a candidate failed ($r$ = 101..107), keeping the reason closest to a construction.
 pp_lprof_fail = {
 	if = {
 		limit = { NOT = { has_variable = pp_lprof_fail } }
@@ -507,12 +516,17 @@ pp_lprof_try = {
 	}
 }
 
-# Location scope: one level of scope:pp_cplan_btype while the month's budget lasts (the plan's construct records it in
-# the ledger as a profile's construction, why 105). A level the gold does not reach: budget (106; the plan counts it for
-# the window, pp_cplan_note_wait); one it refuses for another reason (a level under construction, a closed building):
-# cannot be built (102).
+# Location scope: one level of scope:pp_cplan_btype, paid from the Locations group's purse (the plan's construct
+# records it in the ledger as a profile's construction, why 105). A level the purse cannot pay, or any level once the
+# group saves for something: gold (107; the plan counts it for the window and keeps the first as what the group saves
+# for, pp_cplan_note_wait); one the market limit stops (enough of its good is on the way in the market): 106
+# (pp_cplan_note_market); one it refuses for another reason (a level under construction, a closed building): cannot
+# be built (102).
 pp_lprof_build = {
-	scope:pp_cplan_country = { remove_variable = pp_cplan_wait }
+	scope:pp_cplan_country = {
+		remove_variable = pp_cplan_wait
+		remove_variable = pp_cplan_mlim
+	}
 	pp_cplan_construct_scoped = { why = 105 }
 	if = {
 		limit = { scope:pp_cplan_country = { has_variable = pp_cplan_hit } }
@@ -520,12 +534,19 @@ pp_lprof_build = {
 	}
 	else_if = {
 		limit = { scope:pp_cplan_country = { has_variable = pp_cplan_wait } }
+		pp_lprof_fail = { r = 107 }
+	}
+	else_if = {
+		limit = { scope:pp_cplan_country = { has_variable = pp_cplan_mlim } }
 		pp_lprof_fail = { r = 106 }
 	}
 	else = {
 		pp_lprof_fail = { r = 102 }
 	}
-	scope:pp_cplan_country = { remove_variable = pp_cplan_wait }
+	scope:pp_cplan_country = {
+		remove_variable = pp_cplan_wait
+		remove_variable = pp_cplan_mlim
+	}
 }
 
 # ---- Buttons (the scripted GUIs in scripted_guis/pp_location_profiles.txt). Country-scope buttons run with root = the

@@ -5,7 +5,8 @@ The player sets the rules once in the Construction Plan window (Global Settings,
 ``construct_building`` (a normal, paid construction). The AI never runs it. Global settings: the plan on or off, a gold
 reserve in gold, and six rule groups (``GROUPS``: the location profiles, the four below, and Towns and Buildings, whose
 rules and tab are ``construction_plan_country.py``'s), each with a weight: its part of the gold above the reserve is
-its weight over the sum of the weights (0 = off; Jan 2026-11-09). The four below:
+its weight over the sum of the weights (0 = off; Jan 2026-11-09), and since 2026-11-10 a budget that saves (its
+purse: ``render_purse_values``, "Budgets that save" below in this module). The four below:
 
 * Food, per province, one construction a month, first that applies (baseline rules, Jan 2026-11-08). Nothing is kept
   between passes; the hunger checks read the store a year from now in a normal year (this year's Variable Harvest and
@@ -32,20 +33,24 @@ Payback is the one money number (Jan: cost and profit alone say nothing across b
 its monthly profit. The cost follows the engine's own formula, calibrated in game on 158 constructions (all within
 1 %): base x (1 + increase_per_level_cost x levels) / max(0.5, 1 + build efficiency) x the construction goods' price
 factor (each good's price / default clamped to 1 + MIN/MAX_PRICE_IMPACT, averaged by amount; vanilla
-default_construct_building when a building names none). The same cost keeps the gold reserve: no construction starts
-that would take the treasury below it.
+default_construct_building when a building names none). The same cost keeps the gold reserve and the budgets: a
+construction starts only when it fits in the purse of the rule group that wants it and in the gold above the
+reserve; the first thing a group cannot pay for is what it saves for.
+
+The market limit (``render_market``, 2026-11-10) keeps the plan from flooding a market with one building type.
 
 The engine (monthly pass, window, settings) is hand-written in the mod (``pp_construction_plan*.txt``,
 ``pp_construction_plan.gui``). This module writes the parts that follow the mod's buildings, goods and the
 ``[construction_plan]`` settings, so they stay in step with every rebalance:
 
-* ``scripted_effects/pp_construction_plan_generated.txt``: the farm, logistics, improvement and business pickers and
-  the building cost data lookup;
+* ``scripted_effects/pp_construction_plan_generated.txt``: the farm, logistics, improvement and business pickers,
+  the building cost data lookup, the purses' two effects and the market limit's dispatch;
 * ``script_values/pp_construction_plan_generated.txt``: the defaults, the rule groups' weights and parts, farm and
-  business profit estimates, the construction goods price factors, the baseline rules' blacklists and the idle pops
-  per pop type (the worker check);
-* ``scripted_triggers/pp_construction_plan_generated.txt``: the construction goods and food queue checks;
-* ``gui/pp_construction_plan_weights.gui``: the weight bar of each rule group.
+  business profit estimates, the construction goods price factors, the baseline rules' blacklists, the idle pops
+  per pop type (the worker check), the purses' arithmetic and the market limit's counts;
+* ``scripted_triggers/pp_construction_plan_generated.txt``: the construction goods and food queue checks and which
+  rule groups the market limit holds for;
+* ``gui/pp_construction_plan_weights.gui``: the weight bar of each rule group, with its share and its saved gold.
 
 Variables carry + 100 (a variable at 0 counts as unset; ``var:x = n`` compares scopes).
 """
@@ -74,6 +79,7 @@ GROUP_WHY = {"food": 101, "logistics": 102, "business": 103, "profiles": 105, "i
 HISTORY_MONTHS = 12  # months the window's chart shows
 WEIGHT_STEPS = 10
 SEGMENT = 14  # px of one weight step in the bar
+PURSE_WIDTH = 64  # px of the saved gold beside the bar's %
 BUILDING_TYPES = Path("in_game/common/building_types")
 GOODS_DEMAND = Path("in_game/common/goods_demand")
 DEFINES = Path("loading_screen/common/defines")
@@ -116,6 +122,7 @@ class Config:
     construction_goods_months: int = 12
     access_blacklist: tuple[str, ...] = ()
     business_years: int = 10
+    business_market_share: int = 10  # % of a market's monthly demand a good's levels under construction may add up to
     profile_categories: tuple[str, ...] = ()
     weights: tuple[tuple[str, int], ...] = tuple((group, 5) for group in GROUPS)
 
@@ -134,6 +141,8 @@ class Result:
     businesses: dict[str, str] = field(default_factory=dict)  # building type -> its main good (the business rule)
     staff: dict[str, tuple[str, float]] = field(default_factory=dict)  # building type -> (pop type, workers a level)
     pop_types: list[str] = field(default_factory=list)  # every pop type of the game (pp_cplan_idle_<pop type>)
+    # the market limit: good -> business type -> one level's output of the good
+    market_outputs: dict[str, dict[str, float]] = field(default_factory=dict)
     farm_lines: dict[str, list[str]] = field(default_factory=dict)
     food_lines: dict[str, list[str]] = field(default_factory=dict)
     improvements: list[str] = field(default_factory=list)
@@ -169,6 +178,7 @@ def load_config(project: Path) -> Config:
         construction_goods_months=int(data["construction_goods_months"]),
         access_blacklist=tuple(data["access_blacklist"]),
         business_years=int(data["business_years"]),
+        business_market_share=int(data["business_market_share"]),
         profile_categories=tuple(whole.get(PROFILE_CATEGORIES_KEY, {}).get("categories", ())),
         weights=_weights(data["weights"]),
     )
@@ -606,19 +616,160 @@ def render_weight_values(config: Config) -> str:
     for group in GROUPS:
         weight = counted_weight(group)
         parts.append(
-            f"# Country scope: the {group} group's part of the budget, in % (the window) and in gold (the pass).\n"
+            f"# Country scope: the {group} group's part of the new gold, in % (the window; in gold: pp_cplan_purse_new_"
+            f"{GROUP_WHY[group]}).\n"
             f"pp_cplan_part_{group} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ pp_cplan_w_total > 0 }}\n"
             f"\t\tvalue = {weight}\n\t\tmultiply = 100\n\t\tdivide = pp_cplan_w_total\n\t}}\n}}\n"
-            f"pp_cplan_share_{group} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ pp_cplan_w_total > 0 }}\n"
-            f"\t\tvalue = pp_cplan_pot_n\n\t\tmultiply = {weight}\n\t\tdivide = pp_cplan_w_total\n\t}}\n}}\n"
         )
     return "".join(parts)
 
 
+# ---- Budgets that save (Jan 2026-11-10: "allocate a construction budget for each of the branches, and the budget
+# cannot go below the floor we already set ... all of this needs to happen under the hood") ----
+# Every rule group has a purse on the country: the gold it has saved (pp_cplan_purse_<why>, + 100). The pass never
+# offers the whole gold above the reserve anew: at its start the gold that is in no purse yet is shared among the
+# groups that count by their weights, a group that does not count gives its purse back, and when the purses together
+# are more than the gold above the reserve (the player or a war spent it) they all shrink alike. A construction is paid
+# from the purse of the group that starts it and must fit in it. The first thing a group wants and cannot pay for is
+# what it saves for (pp_cplan_save_*_<why>); from then on it builds nothing more in the pass. At the end a group that
+# ran and saves for nothing hands what is left of its purse to the groups that do save, by their weights.
+# The arithmetic sits in script values of the state as it stands (render_purse_values), so it can be evaluated offline
+# (tests/test_construction_plan_budget.py); the two effects read all of them first and write afterwards.
+PURSE = "pp_cplan_purse"  # country variable pp_cplan_purse_<why>, + 100
+PURSE_IN = "pp_cplan_in"  # country variable pp_cplan_in_<why>, + 100: the gold the group received for this pass
+PURSE_HAND = "pp_cplan_hand"  # country variable pp_cplan_hand_<why>, + 100: handed on to it at the end of the last pass
+SAVE_COST = "pp_cplan_save_cost"  # country variable pp_cplan_save_cost_<why>, + 100: set = the group saves
+SAVE_VARS = ("cost", "loc", "type", "rank")  # pp_cplan_save_<x>_<why>: what it saves for (rank: a town / city upgrade)
+
+
+def purse_value(group: str) -> str:
+    """Country script value: the gold the group has saved."""
+    return f"{PURSE}_n_{GROUP_WHY[group]}"
+
+
+def _readout(name: str, var: str) -> str:
+    return (f"{name} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ has_variable = {var} }}\n"
+            f"\t\tvalue = var:{var}\n\t\tsubtract = 100\n\t}}\n}}\n")
+
+
+def render_purse_values() -> str:
+    """The purses' arithmetic (country scope), each a function of the state as it stands:
+
+    * the pass's start: ``pp_cplan_purse_next_<why>`` = what the purse holds after the start (kept, shrunk when the
+      purses exceed the gold above the reserve, plus its part of the gold in no purse), ``pp_cplan_purse_new_<why>`` =
+      that part;
+    * the pass's end: ``pp_cplan_hand_next_<why>`` = the purse after the hand-on (a group that ran and saves for nothing
+      gives all it has, a group that saves gets its part by weight; nothing moves while no group saves),
+      ``pp_cplan_hand_get_<why>`` = what it gets."""
+    whys = [(group, GROUP_WHY[group], counted_weight(group)) for group in GROUPS]
+    parts = [
+        "\n# ---- Budgets that save (country scope; pp_cplan_purses_fill, pp_cplan_purses_hand_on) ----\n"
+        "# pp_cplan_purse_<why> (+ 100): the gold a rule group has saved. The values below are functions of the state as\n"
+        "# it stands; the two effects read them all before they write.\n\n"
+        "# The gold above the reserve the purses may hold.\n"
+        "pp_cplan_purse_free = {\n\tvalue = pp_cplan_free_gold\n\tmin = 0\n}\n"
+    ]
+    for group, why, weight in whys:
+        parts.append(f"\n# {group} ({why})\n")
+        parts.append(_readout(f"{PURSE}_n_{why}", f"{PURSE}_{why}"))
+        parts.append(_readout(f"{PURSE_IN}_n_{why}", f"{PURSE_IN}_{why}"))
+        parts.append(_readout(f"{PURSE_HAND}_n_{why}", f"{PURSE_HAND}_{why}"))
+        parts.append(_readout(f"{SAVE_COST}_n_{why}", f"{SAVE_COST}_{why}"))
+        # the window: 1 / 2 when it saves for a town / city upgrade, 0 for a building. Only Towns and Buildings sets
+        # the variable (in game 2026-11-10: "pp_cplan_save_rank_103 is used but is never set" for the other five)
+        if group == "country":
+            parts.append(_readout(f"pp_cplan_save_rank_n_{why}", f"pp_cplan_save_rank_{why}"))
+        else:
+            parts.append(f"pp_cplan_save_rank_n_{why} = {{ value = 0 }}\n")
+        parts.append(
+            f"# what it keeps at the pass's start: nothing while it does not count (its weight 0, or nothing to do)\n"
+            f"{PURSE}_kept_{why} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ {weight} > 0 }}\n"
+            f"\t\tvalue = {PURSE}_n_{why}\n\t}}\n}}\n"
+            f"# 1 while it saves for something (the last pass could not pay for what it wanted next)\n"
+            f"pp_cplan_saves_{why} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ has_variable = {SAVE_COST}_{why} }}\n"
+            f"\t\tvalue = 1\n\t}}\n}}\n"
+            f"# 1 when it ran in the pass and saves for nothing: it hands on what it has\n"
+            f"pp_cplan_gives_{why} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{\n\t\t\thas_variable = pp_cplan_dran_{why}\n"
+            f"\t\t\tNOT = {{ has_variable = {SAVE_COST}_{why} }}\n\t\t}}\n\t\tvalue = 1\n\t}}\n}}\n"
+        )
+    parts.append(
+        "\n# The pass's start.\n# What the purses hold together, without the groups that do not count.\n"
+        f"{PURSE}_held = {{\n\tvalue = 0\n" + "".join(f"\tadd = {PURSE}_kept_{why}\n" for _, why, _ in whys) + "}\n"
+        "# The gold above the reserve that is in no purse yet (0 when the purses hold more than there is).\n"
+        f"{PURSE}_rest = {{\n\tvalue = {PURSE}_free\n\tsubtract = {PURSE}_held\n\tmin = 0\n}}\n"
+    )
+    for group, why, weight in whys:
+        parts.append(
+            f"# {group}: its part of the gold in no purse, and its purse after the pass's start (shrunk like every purse\n"
+            f"# when they hold more than the gold above the reserve)\n"
+            f"{PURSE}_new_{why} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ pp_cplan_w_total > 0 }}\n"
+            f"\t\tvalue = {PURSE}_rest\n\t\tmultiply = {weight}\n\t\tdivide = pp_cplan_w_total\n\t}}\n}}\n"
+            f"{PURSE}_next_{why} = {{\n\tvalue = {PURSE}_kept_{why}\n\tif = {{\n"
+            f"\t\tlimit = {{ {PURSE}_held > {PURSE}_free }}\n"
+            f"\t\tmultiply = {PURSE}_free\n\t\tdivide = {PURSE}_held\n\t}}\n\tadd = {PURSE}_new_{why}\n}}\n"
+        )
+    parts.append(
+        "\n# The pass's end.\n# The gold of the groups that hand on, and the weights of the groups that save.\n"
+        "pp_cplan_hand_pool = {\n\tvalue = 0\n"
+        + "".join(f"\tadd = {{ value = {PURSE}_n_{why} multiply = pp_cplan_gives_{why} }}\n" for _, why, _ in whys)
+        + "}\npp_cplan_hand_weights = {\n\tvalue = 0\n"
+        + "".join(f"\tadd = {{ value = {weight} multiply = pp_cplan_saves_{why} }}\n" for _, why, weight in whys)
+        + "}\n"
+    )
+    for group, why, weight in whys:
+        parts.append(
+            f"# {group}: what it gets from the groups that hand on, and its purse after the hand-on\n"
+            f"pp_cplan_hand_get_{why} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{\n\t\t\tpp_cplan_saves_{why} > 0\n"
+            f"\t\t\tpp_cplan_hand_weights > 0\n\t\t}}\n\t\tvalue = pp_cplan_hand_pool\n\t\tmultiply = {weight}\n"
+            f"\t\tdivide = pp_cplan_hand_weights\n\t}}\n}}\n"
+            f"pp_cplan_hand_next_{why} = {{\n\tvalue = {PURSE}_n_{why}\n\tif = {{\n"
+            f"\t\tlimit = {{\n\t\t\tpp_cplan_gives_{why} > 0\n\t\t\tpp_cplan_hand_weights > 0\n\t\t}}\n\t\tvalue = 0\n\t}}\n"
+            f"\tadd = pp_cplan_hand_get_{why}\n}}\n"
+        )
+    return "".join(parts)
+
+
+def render_purse_effects() -> str:
+    """The two effects that move the purses (country scope): every new amount is read first (temporary values), then
+    written, so one group's change never reaches another's sum."""
+    whys = [GROUP_WHY[group] for group in GROUPS]
+    fill = []
+    for why in whys:
+        fill.append(f"\tsave_temporary_scope_value_as = {{ name = pp_cplan_np_{why} value = {PURSE}_next_{why} }}\n"
+                    f"\tsave_temporary_scope_value_as = {{ name = pp_cplan_ni_{why} value = {{ value = {PURSE}_new_{why} "
+                    f"add = {PURSE_HAND}_n_{why} }} }}\n")
+    for why in whys:
+        fill.append(f"\tset_variable = {{ name = {PURSE}_{why} value = {{ value = scope:pp_cplan_np_{why} add = 100 }} }}\n"
+                    f"\tset_variable = {{ name = {PURSE_IN}_{why} value = {{ value = scope:pp_cplan_ni_{why} add = 100 }} }}\n"
+                    f"\tremove_variable = {PURSE_HAND}_{why}\n"
+                    + "".join(f"\tremove_variable = pp_cplan_save_{name}_{why}\n" for name in SAVE_VARS
+                              if name != "rank" or why == GROUP_WHY["country"]))
+    hand = []
+    for why in whys:
+        hand.append(f"\tsave_temporary_scope_value_as = {{ name = pp_cplan_np_{why} value = pp_cplan_hand_next_{why} }}\n"
+                    f"\tsave_temporary_scope_value_as = {{ name = pp_cplan_ni_{why} value = pp_cplan_hand_get_{why} }}\n")
+    for why in whys:
+        hand.append(f"\tset_variable = {{ name = {PURSE}_{why} value = {{ value = scope:pp_cplan_np_{why} add = 100 }} }}\n"
+                    f"\tset_variable = {{ name = {PURSE_HAND}_{why} value = {{ value = scope:pp_cplan_ni_{why} add = 100 }} }}\n")
+    return (
+        "\n# ---- Budgets that save (pp_cplan_run; the amounts are script values, pp_cplan_purse_next_<why> ...) ----\n\n"
+        "# Country scope, at the start of the pass: a group that does not count gives its purse back, the purses shrink\n"
+        "# alike when they hold more than the gold above the reserve, and the gold in no purse yet is shared by the\n"
+        "# weights. pp_cplan_in_<why> keeps what the group received for this pass (its part and what was handed on to it\n"
+        "# at the end of the last pass): the business group counts its time to save by it. What each group saved for\n"
+        "# starts afresh: the pass finds it again.\n"
+        "pp_cplan_purses_fill = {\n" + "".join(fill) + "}\n\n"
+        "# Country scope, at the end of the pass: every group that ran and saves for nothing hands what is left of its\n"
+        "# purse to the groups that do save, by their weights (next month's money). While no group saves, nothing moves.\n"
+        "pp_cplan_purses_hand_on = {\n" + "".join(hand) + "}\n"
+    )
+
+
 def render_weight_gui() -> str:
     """One weight bar per rule group: - and + (vanilla's slider buttons), a gold bar of WEIGHT_STEPS steps whose every
-    step sets the weight when clicked, and the group's part in %. A real slider cannot be used: its value only reaches
-    the engine's own functions, never a script."""
+    step sets the weight when clicked, the group's part in % and the gold it has saved (its purse; the text key is
+    construction_plan_detail's). A real slider cannot be used: its value only reaches the engine's own functions,
+    never a script."""
 
     def call(group: str, extra: str) -> str:
         return (f"[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope)"
@@ -656,6 +807,12 @@ def render_weight_gui() -> str:
             f"\t\t\traw_text = \"[GetPlayer.MakeScope.ScriptValue('pp_cplan_part_{group}')|0]%\"\n"
             "\t\t\ttooltip = \"PP_CPLAN_SHARE_TT\"\n\t\t\tminimumsize = { 44 -1 }\n\t\t\tmaximumsize = { 44 -1 }\n"
             "\t\t\talign = right|nobaseline\n\t\t}\n"
+            "\t\t# what the group has saved (its purse)\n"
+            "\t\ttext_single = {\n"
+            f"\t\t\ttext = \"PP_CPLAN_D_PURSE_{group.upper()}\"\n"
+            f"\t\t\ttooltip = \"PP_CPLAN_PURSE_TT\"\n\t\t\tminimumsize = {{ {PURSE_WIDTH} -1 }}\n"
+            f"\t\t\tmaximumsize = {{ {PURSE_WIDTH} -1 }}\n"
+            "\t\t\talign = right|nobaseline\n\t\t}\n"
             "\t}\n\n"
         )
     out.append("}\n")
@@ -666,16 +823,19 @@ def render_weight_gui() -> str:
 # Per rule group (by its construction code, GROUP_WHY) the pass keeps on the country, until the next pass: that it ran,
 # the gold it could spend, the gold it spent, the constructions it started, the gold and the number of the constructions
 # it wanted that waited for gold, its situation (SITUATION), and the last HISTORY_MONTHS passes' gold wanted and spent.
-# The rules never read any of it.
-GROUP_NUMBERS = {"had": "dhad", "spent": "dspent", "started": "dn", "wait": "dwait", "waitn": "dwn"}
+# The rules never read any of it. (What the rules DO keep from pass to pass, the purses and what a group saves for,
+# is render_purse_values' state.) had = the purse the group started the pass with; goods = things it wanted that the
+# market lacks the construction goods for; limited = things the market limit held back (render_market).
+GROUP_NUMBERS = {"had": "dhad", "spent": "dspent", "started": "dn", "wait": "dwait", "waitn": "dwn",
+                 "goods": "dgo", "limited": "dml"}
 SITUATION: dict[str, tuple[tuple[str, int], ...]] = {
     # name, start value (+ 100; a running minimum starts high)
     "food": (("provinces", 100), ("famine", 100), ("hungry", 100), ("granary", 100), ("grange", 100)),
     "logistics": (("below", 100), ("lowest", 1099)),
     "improve": (("over", 100), ("fullest", 100)),
-    # skipped: 1 when the group started without gold and did not look (pp_cplan_group_business)
+    # skipped: 1 when the group had neither gold saved nor gold coming in and did not look (pp_cplan_group_business)
     "business": (("sites", 100), ("best", 1099), ("skipped", 100)),
-    "profiles": (("locs", 100), *((f"st{n}", 100) for n in range(1, 10))),
+    "profiles": (("locs", 100), *((f"st{n}", 100) for n in range(1, 11))),  # the rule states, location_profiles.STATES
     "country": (),  # gold had, spent and waiting are enough; its own numbers are construction_plan_country.py's
 }
 
@@ -763,6 +923,10 @@ def render_values(config: Config, demands: dict[str, dict[str, float]] | None = 
         "# Country scope: the business line as the yearly return a level must reach, in % of its cost (100 / years).\n"
         "pp_cplan_business_min_roi = {\n\tvalue = 100\n\tdivide = { value = pp_cplan_business_years min = 1 }\n}\n"
     )
+    parts.append(_constant(
+        "pp_cplan_market_share", config.business_market_share / 100,
+        "Any scope: the market limit ([construction_plan] business_market_share): the share of a market's monthly demand "
+        "for a good that the levels under construction of that good's makers may add up to."))
     parts.append("\n# ---- Food rule numbers ([construction_plan]; no window line) ----\n\n")
     for name, value, comment in (
         ("pp_cplan_hungry_months", config.hungry_months,
@@ -796,6 +960,40 @@ def _can_build(name: str, costs: dict[str, BuildingCost]) -> str:
             f"NOT = {{ any_buildings_in_location = {{ building_type = building_type:{name} building_levels_under_construction > 0 }} }}")
 
 
+def _can_site(name: str) -> str:
+    """_can_build without the construction goods: the pickers ask for the goods apart, so a thing the market lacks the
+    goods for is counted for the window (pp_cplan_note_goods) instead of vanishing (in game 2026-11-10: a Library
+    needs books, a town glass, and nothing happened with no reason shown)."""
+    return (f"location_and_owner_can_build = {{ building_type = {name} }} "
+            f"NOT = {{ any_buildings_in_location = {{ building_type = building_type:{name} building_levels_under_construction > 0 }} }}")
+
+
+def _goods_here(name: str, costs: dict[str, BuildingCost]) -> str:
+    demand = costs.get(name, BuildingCost(0.0, DEFAULT_DEMAND, "std")).demand
+    return f"pp_cplan_goods_here_{demand} = yes"
+
+
+def _first_that_can(buildings: tuple[str, ...], costs: dict[str, BuildingCost], build, why: int) -> str:
+    """The body of a "first that can be built" picker (location scope): the first of ``buildings`` that can be built
+    here and whose construction goods the market holds gets ``build(name)``, as before. One that can be built but
+    lacks its goods is passed over as before (the next may still build: a Carrier Inn where the River Boatmen's Yard
+    lacks naval supplies); when none is built, the rule group ``why`` counts one thing held back for construction
+    goods. No more can-build checks than the old chain made."""
+    parts = ["\tsave_temporary_scope_value_as = { name = pp_cplan_done value = 0 }\n"
+             "\tsave_temporary_scope_value_as = { name = pp_cplan_ng value = 0 }\n"]
+    for name in buildings:
+        parts.append(
+            f"\tif = {{\n\t\tlimit = {{ scope:pp_cplan_done < 0.5 {_can_site(name)} }}\n"
+            f"\t\tif = {{\n\t\t\tlimit = {{ {_goods_here(name, costs)} }}\n"
+            "\t\t\tsave_temporary_scope_value_as = { name = pp_cplan_done value = 1 }\n"
+            f"\t\t\t{build(name)}\n\t\t}}\n"
+            "\t\telse = {\n\t\t\tsave_temporary_scope_value_as = { name = pp_cplan_ng value = 1 }\n\t\t}\n\t}\n"
+        )
+    parts.append("\tif = {\n\t\tlimit = { scope:pp_cplan_done < 0.5 scope:pp_cplan_ng > 0.5 }\n"
+                 f"\t\tpp_cplan_note_goods = {{ why = {why} }}\n\t}}\n")
+    return "".join(parts)
+
+
 def _method_value(name: str, recipe: Recipe) -> str:
     """A script value: one level's monthly profit of this method at the location's market prices and output."""
     lines = [f"{name} = {{", "\tvalue = 0"]
@@ -822,10 +1020,13 @@ def render_improvements(improvements: list[tuple[str, float]], costs: dict[str, 
     ]
     effects = [
         "\n# Location scope: one level of the improvement that adds the most capacity per gold here (pp_cplan_imp_<key>),\n"
-        "# among those that can be built; a standing older tier is replaced once its successor is researched.\n"
+        "# among those that can be built; a standing older tier is replaced once its successor is researched. One the\n"
+        "# market lacks the construction goods for is passed over; when nothing else is picked the location counts as\n"
+        "# held back for construction goods (scope:pp_cplan_ng).\n"
         "pp_cplan_try_improve_here = {\n"
         "\tset_variable = { name = pp_cplan_best value = 0.001 }\n"
         "\tset_variable = { name = pp_cplan_pick value = 100 }\n"
+        "\tsave_temporary_scope_value_as = { name = pp_cplan_ng value = 0 }\n"
     ]
     for number, (key, land) in enumerate(improvements, 101):
         ipl = costs.get(key, BuildingCost(0.0, DEFAULT_DEMAND, "std")).ipl
@@ -835,16 +1036,21 @@ def render_improvements(improvements: list[tuple[str, float]], costs: dict[str, 
             f"\t\tmultiply = building_type:{key}.building_base_cost_in_gold\n\t\tmin = 1\n\t}}\n}}\n"
         )
         effects.append(
-            f"\tif = {{\n\t\tlimit = {{ {_can_build(key, costs)} pp_cplan_imp_{key} > var:pp_cplan_best }}\n"
-            f"\t\tset_variable = {{ name = pp_cplan_best value = pp_cplan_imp_{key} }}\n"
-            f"\t\tset_variable = {{ name = pp_cplan_pick value = {number} }}\n\t}}\n"
+            f"\tif = {{\n\t\tlimit = {{ {_can_site(key)} pp_cplan_imp_{key} > var:pp_cplan_best }}\n"
+            f"\t\tif = {{\n\t\t\tlimit = {{ {_goods_here(key, costs)} }}\n"
+            f"\t\t\tset_variable = {{ name = pp_cplan_best value = pp_cplan_imp_{key} }}\n"
+            f"\t\t\tset_variable = {{ name = pp_cplan_pick value = {number} }}\n\t\t}}\n"
+            "\t\telse = {\n\t\t\tsave_temporary_scope_value_as = { name = pp_cplan_ng value = 1 }\n\t\t}\n\t}\n"
         )
     for number, (key, _land) in enumerate(improvements, 101):
         effects.append(
             f"\tif = {{\n\t\tlimit = {{ var:pp_cplan_pick > {number - 0.5:g} var:pp_cplan_pick < {number + 0.5:g} }}\n"
             f"\t\tpp_cplan_construct = {{ type = {key} why = {WHY_IMPROVE} }}\n\t}}\n"
         )
-    effects.append("\tremove_variable = pp_cplan_best\n\tremove_variable = pp_cplan_pick\n}\n")
+    effects.append(
+        "\tif = {\n\t\tlimit = { var:pp_cplan_pick < 100.5 scope:pp_cplan_ng > 0.5 }\n"
+        f"\t\tpp_cplan_note_goods = {{ why = {WHY_IMPROVE} }}\n\t}}\n"
+        "\tremove_variable = pp_cplan_best\n\tremove_variable = pp_cplan_pick\n}\n")
     return "".join(values), "".join(effects)
 
 
@@ -1036,7 +1242,7 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]],
     )
     for position, building in enumerate(config.yards):
         parts.append(
-            f"\t{'if' if position == 0 else 'else_if'} = {{\n\t\tlimit = {{ {can(building)} }}\n"
+            f"\t{'if' if position == 0 else 'else_if'} = {{\n\t\tlimit = {{ {_can_site(building)} }}\n"
             f"\t\tbuilding_type:{building} = {{ save_scope_as = pp_cplan_btype }}\n"
             "\t\tpp_cplan_btype_data = yes\n"
             "\t\tif = {\n\t\t\tlimit = {\n\t\t\t\tOR = {\n"
@@ -1044,7 +1250,9 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]],
             "\t\t\t\t\t\tpp_cplan_est_payback_years <= pp_cplan_yard_payback\n\t\t\t\t\t}\n"
             "\t\t\t\t\tAND = {\n\t\t\t\t\t\tpp_cplan_bt_levels < 0.5\n\t\t\t\t\t\tpp_cplan_victuals_price_ratio >= 1\n\t\t\t\t\t}\n"
             "\t\t\t\t}\n\t\t\t}\n"
-            f"\t\t\tpp_cplan_construct_food = {{ type = {building} }}\n\t\t}}\n\t}}\n"
+            f"\t\t\tif = {{\n\t\t\t\tlimit = {{ {_goods_here(building, costs)} }}\n"
+            f"\t\t\t\tpp_cplan_construct_food = {{ type = {building} }}\n\t\t\t}}\n"
+            f"\t\t\telse = {{\n\t\t\t\tpp_cplan_note_goods = {{ why = {WHY_FOOD} }}\n\t\t\t}}\n\t\t}}\n\t}}\n"
         )
     parts.append("}\n")
 
@@ -1055,24 +1263,19 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]],
         ("pp_cplan_try_granary_here", config.granaries, "a Granary level"),
         ("pp_cplan_try_grange_here", config.granges, "a Grange level"),
     ):
-        parts.append(f"\n# Location scope (the province capital): {comment}, first that can be built.\n{name} = {{\n")
-        for position, building in enumerate(buildings):
-            keyword = "if" if position == 0 else "else_if"
-            parts.append(
-                f"\t{keyword} = {{\n\t\tlimit = {{ {can(building)} }}\n"
-                f"\t\tpp_cplan_construct_food = {{ type = {building} }}\n\t}}\n"
-            )
+        parts.append(f"\n# Location scope (the province capital): {comment}, first that can be built (one the market lacks\n"
+                     f"# the construction goods for is counted for the window, pp_cplan_note_goods).\n{name} = {{\n")
+        parts.append(_first_that_can(tuple(buildings), costs,
+                                     lambda building: f"pp_cplan_construct_food = {{ type = {building} }}", WHY_FOOD))
         parts.append("}\n")
 
     # --- logistics
-    parts.append("\n# Location scope: the first logistics building that can be built here ([construction_plan] logistics_order).\n"
+    parts.append("\n# Location scope: the first logistics building that can be built here ([construction_plan] logistics_order;\n"
+                 "# one the market lacks the construction goods for is counted for the window).\n"
                  "pp_cplan_try_logistics_here = {\n")
-    for position, building in enumerate(config.logistics_order):
-        keyword = "if" if position == 0 else "else_if"
-        parts.append(
-            f"\t{keyword} = {{\n\t\tlimit = {{ {can(building)} }}\n"
-            f"\t\tpp_cplan_construct = {{ type = {building} why = {WHY_LOGISTICS} }}\n\t}}\n"
-        )
+    parts.append(_first_that_can(tuple(config.logistics_order), costs,
+                                 lambda building: f"pp_cplan_construct = {{ type = {building} why = {WHY_LOGISTICS} }}",
+                                 WHY_LOGISTICS))
     parts.append("}\n")
 
     if costs:
@@ -1187,20 +1390,28 @@ def render_business(businesses: dict[str, str], recipes: dict[str, list[list[Rec
     # the pick per location
     effects.append(
         "\n# Location scope (a business site of scope:pp_cplan_country): the business with the best yearly return here that\n"
-        "# reaches the owner's line (pp_cplan_business_min_roi = 100 / years), as pp_cplan_bz_pick (a building type) and\n"
-        "# pp_cplan_bz_roi (its return, %); neither where none does. A candidate: the country can build it, so can this\n"
-        "# location (max level, allow, potential), a level finds its workers here (pp_cplan_staff), the market holds its\n"
-        "# construction goods, no level of it here is closed (the player or the game's Close and Open automation found\n"
-        "# it does not pay), and a profile here leaves its good and building category to the plan.\n"
+        "# reaches the owner's line (pp_cplan_business_min_roi = 100 / years), as pp_cplan_bz_pick (a building type),\n"
+        "# pp_cplan_bz_roi (its return, %) and pp_cplan_bz_cost (the level's cost); none where none does. A candidate: the\n"
+        "# country can build it, so can this location (max level, allow, potential), a level finds its workers here\n"
+        "# (pp_cplan_staff), no level of it here is closed (the player or the game's Close and Open automation found it\n"
+        "# does not pay), and a profile here leaves its good and building category to the plan. A candidate that would be\n"
+        "# the best so far is taken only when the market holds its construction goods and has room for its good\n"
+        "# (pp_cplan_business_take: the market limit, pp_cplan_market_room), so the site moves on to its next best\n"
+        "# business instead of sitting idle; a site that passed one over for either reason is counted for the window\n"
+        "# (scope:pp_cplan_bz_go / _ml).\n"
         "pp_cplan_business_pick = {\n"
         "\tpp_cplan_business_harvest = yes\n"
         "\tsave_temporary_scope_value_as = { name = pp_cplan_free_peasants value = pp_cplan_free_peasants_here }\n"
         "\tremove_variable = pp_cplan_bz_pick\n"
+        "\tremove_variable = pp_cplan_bz_cost\n"
         "\tset_variable = { name = pp_cplan_bz_roi value = scope:pp_cplan_country.pp_cplan_business_min_roi }\n"
+        "\tsave_temporary_scope_value_as = { name = pp_cplan_bz_go value = 0 }\n"
+        "\tsave_temporary_scope_value_as = { name = pp_cplan_bz_ml value = 0 }\n"
     )
     for name in names:
         cost = costs.get(name, BuildingCost(0.0, DEFAULT_DEMAND, "std"))
-        profile = f"\t\t\tNOT = {{ pp_lprof_has_good = {{ g = {businesses[name]} }} }}\n"
+        good = businesses[name]
+        profile = f"\t\t\tNOT = {{ pp_lprof_has_good = {{ g = {good} }} }}\n"
         if categories.get(name) in profile_categories:
             profile += f"\t\t\tNOT = {{ pp_lprof_has_category = {{ c = {categories[name]} }} }}\n"
         workers = staff_check((staff or {}).get(name))
@@ -1210,18 +1421,120 @@ def render_business(businesses: dict[str, str], recipes: dict[str, list[list[Rec
             + (f"\t\t\t{workers}\n" if workers else "")
             + f"\t\t\tcan_build_building = building_type:{name}\n"
             + profile
-            + f"\t\t\tpp_cplan_goods_here_{cost.demand} = yes\n"
-            f"\t\t\tNOT = {{ any_buildings_in_location = {{ building_type = building_type:{name} building_level > 0 is_opened = no }} }}\n"
+            + f"\t\t\tNOT = {{ any_buildings_in_location = {{ building_type = building_type:{name} building_level > 0 is_opened = no }} }}\n"
             "\t\t}\n"
             f"\t\tbuilding_type:{name} = {{ save_scope_as = pp_cplan_btype }}\n"
             f"\t\t{_cost_data(cost)}\n"
             f"\t\tsave_temporary_scope_value_as = {{ name = pp_cplan_r value = pp_cplan_bz_roi_{name} }}\n"
             "\t\tif = {\n\t\t\tlimit = { scope:pp_cplan_r > var:pp_cplan_bz_roi }\n"
-            "\t\t\tset_variable = { name = pp_cplan_bz_roi value = scope:pp_cplan_r }\n"
-            f"\t\t\tset_variable = {{ name = pp_cplan_bz_pick value = building_type:{name} }}\n\t\t}}\n\t}}\n"
+            f"\t\t\tpp_cplan_business_take = {{ g = {good} out = {_num(main_output(recipes[name], good))} "
+            f"demand = {cost.demand} }}\n\t\t}}\n\t}}\n"
         )
-    effects.append("\tif = {\n\t\tlimit = { NOT = { has_variable = pp_cplan_bz_pick } }\n\t\tremove_variable = pp_cplan_bz_roi\n\t}\n}\n")
+    effects.append(
+        "\tif = {\n\t\tlimit = { NOT = { has_variable = pp_cplan_bz_pick } }\n\t\tremove_variable = pp_cplan_bz_roi\n\t}\n"
+        "\tif = {\n\t\tlimit = { scope:pp_cplan_bz_go > 0.5 }\n"
+        f"\t\tpp_cplan_note_goods = {{ why = {WHY_BUSINESS} }}\n\t}}\n"
+        "\tif = {\n\t\tlimit = { scope:pp_cplan_bz_ml > 0.5 }\n"
+        f"\t\tpp_cplan_note_market = {{ why = {WHY_BUSINESS} }}\n\t}}\n}}\n")
     return "".join(values), "".join(effects)
+
+
+# ---- The market limit (Jan 2026-11-10: "if it detects that some building is profitable, like horses, it spams 500
+# buildings of that type, which will likely crash the market") ----
+# A level of a building whose main good is a market good starts only while, in the location's market, the output of
+# that good under construction (every level under construction there of the buildings whose main good it is, whoever
+# started them, at their recipe's output a level) plus this level's stays within [construction_plan]
+# business_market_share % of the market's monthly demand for the good; with nothing of the good under construction one
+# level is always allowed. ONE place asks, for everything that builds a business type: pp_cplan_construct_scoped
+# (through the dispatch pp_cplan_market_do) for the rule groups of MARKET_LIMITED, and the business pick with the same
+# trigger so a site moves on to its next best good. "Under construction" is counted once per market and good per pass,
+# only when a pick needs it (pp_cplan_market_load), kept on the market's centre location (market.location;
+# pp_cplan_uc_<good>, + 100: a market scope holds no variables, in game 2026-11-10), raised when the plan starts a
+# level, and cleared at the pass's end (the country's list pp_cplan_markets of those centres).
+MARKET_LIMITED = ("business", "profiles")  # the Businesses group; profile rules and marks
+
+
+def main_output(slots: list[list[Recipe]], good: str) -> float:
+    """One level's monthly output of ``good``: in every slot the method that makes the most of it (the business
+    estimate's recipes; the location's output modifiers left out)."""
+    return sum(max((m.output for m in slot if m.produced == good), default=0.0) for slot in slots)
+
+
+def market_outputs(businesses: dict[str, str], recipes: dict[str, list[list[Recipe]]]) -> dict[str, dict[str, float]]:
+    """good -> building type -> one level's output of the good, for every business type that makes its main good."""
+    found: dict[str, dict[str, float]] = {}
+    for name, good in sorted(businesses.items()):
+        output = main_output(recipes.get(name, []), good)
+        if output > 0:
+            found.setdefault(good, {})[name] = output
+    return found
+
+
+def render_market(outputs: dict[str, dict[str, float]]) -> tuple[str, str, str]:
+    """The market limit's generated parts: values, effects, triggers."""
+    values = [
+        "\n# ---- The market limit (construction_plan.py render_market) ----\n"
+        "# pp_cplan_uc_here_<good> (location scope): the monthly output of the good the levels under construction here\n"
+        "# will add (the buildings whose main good it is, at their recipe's output a level);\n"
+        "# pp_cplan_uc_market_<good> (market scope): the same over the market's locations with a construction;\n"
+        "# pp_cplan_mroom_<good> (the market's centre location): the output of the good that may still start = the\n"
+        "# market's monthly demand x pp_cplan_market_share minus what is under construction (pp_cplan_uc_<good>, + 100,\n"
+        "# kept on that location for the pass by pp_cplan_market_load; a market scope holds no variables).\n\n"
+    ]
+    for good, types in sorted(outputs.items()):
+        by_output: dict[float, list[str]] = {}
+        for name, output in sorted(types.items()):
+            by_output.setdefault(output, []).append(name)
+        values.append(f"pp_cplan_uc_here_{good} = {{\n\tvalue = 0\n")
+        for output, names in sorted(by_output.items()):
+            tests = " ".join(f"building_type = building_type:{name}" for name in names)
+            which = f"OR = {{ {tests} }}" if len(names) > 1 else tests
+            values.append(
+                "\tevery_buildings_in_location = {\n"
+                f"\t\tlimit = {{ building_levels_under_construction > 0 {which} }}\n"
+                f"\t\tadd = {{ value = building_levels_under_construction multiply = {_num(output)} }}\n\t}}\n"
+            )
+        values.append(
+            "}\n"
+            f"pp_cplan_uc_market_{good} = {{\n\tvalue = 0\n\tevery_location_in_market = {{\n"
+            f"\t\tlimit = {{ num_civil_constructions > 0 }}\n\t\tadd = pp_cplan_uc_here_{good}\n\t}}\n}}\n"
+            f"pp_cplan_mroom_{good} = {{\n\tvalue = \"market.goods_demand_in_market(goods:{good})\"\n"
+            "\tmultiply = pp_cplan_market_share\n"
+            f"\tif = {{\n\t\tlimit = {{ has_variable = pp_cplan_uc_{good} }}\n"
+            f"\t\tsubtract = {{ value = var:pp_cplan_uc_{good} subtract = 100 }}\n\t}}\n}}\n"
+        )
+    groups: dict[tuple[str, float], list[str]] = {}
+    for good, types in sorted(outputs.items()):
+        for name, output in sorted(types.items()):
+            groups.setdefault((good, output), []).append(name)
+    effects = [
+        "\n# ---- The market limit ----\n\n"
+        "# Location scope, scope:pp_cplan_btype set: for a business type, the market limit's step $do$ with the type's main\n"
+        "# good and one level's output of it: gate (pp_cplan_market_gate_good: scope:pp_cplan_mok = 0 where the market has\n"
+        "# no room) or add (pp_cplan_market_add_good: a level was started). Other building types: nothing.\n"
+        "pp_cplan_market_do = {\n"
+    ]
+    for position, ((good, output), names) in enumerate(sorted(groups.items())):
+        tests = " ".join(f"scope:pp_cplan_btype = building_type:{name}" for name in names)
+        effects.append(
+            f"\t{'if' if position == 0 else 'else_if'} = {{\n\t\tlimit = {{ OR = {{ {tests} }} }}\n"
+            f"\t\tpp_cplan_market_$do$_good = {{ g = {good} out = {_num(output)} }}\n\t}}\n"
+        )
+    effects.append(
+        "}\n\n# A market's centre location, at the end of the pass: what the pass counted for its market is gone.\n"
+        "pp_cplan_market_clear = {\n"
+        + "".join(f"\tremove_variable = pp_cplan_uc_{good}\n" for good in sorted(outputs))
+        + "}\n"
+    )
+    triggers = [
+        "\n# Any scope: the market limit holds for the constructions of the rule group with this code (the Businesses\n"
+        "# group, profile rules and marks; the food rule builds for hunger, the others no business types of their own).\n"
+    ]
+    limited = {GROUP_WHY[group] for group in MARKET_LIMITED}
+    for group in GROUPS:
+        why = GROUP_WHY[group]
+        triggers.append(f"pp_cplan_limits_market_{why} = {{\n\talways = {'yes' if why in limited else 'no'}\n}}\n")
+    return "".join(values), "".join(effects), "".join(triggers)
 
 
 def render_triggers(demands: dict[str, dict[str, float]] | None = None,
@@ -1304,9 +1617,13 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
     categories = {name: database[name][0].get("category", "") for name in result.businesses if name in database}
     result.staff = staffing(database, script_value_numbers(mod_root, vanilla_root))
     result.pop_types = sorted(_database(mod_root, vanilla_root, POP_TYPES))
+    recipes = built_recipes(database, list(result.businesses))
     business_values, business_effects = render_business(
-        result.businesses, built_recipes(database, list(result.businesses)), costs, harvest_outputs(mod_root),
+        result.businesses, recipes, costs, harvest_outputs(mod_root),
         categories, config.profile_categories, result.staff)
+    # the market limit (2026-11-10): one level's output of its main good per business type
+    result.market_outputs = market_outputs(result.businesses, recipes)
+    market_values, market_effects, market_triggers = render_market(result.market_outputs)
 
     from prosper_or_perish_constructor import construction_plan_detail  # imports this module
 
@@ -1322,13 +1639,14 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
             harvest_rates(mod_root), peasant_food_consumption(mod_root, vanilla_root),
             access_modifier_amounts(mod_root, vanilla_root, config.access_blacklist), costs,
         )
-        + improve_values + business_values + render_idle_values(result.pop_types) + render_stats_values(),
+        + improve_values + business_values + market_values + render_idle_values(result.pop_types)
+        + render_purse_values() + render_stats_values(),
         mod_root / EFFECTS: render_effects(config, food_lines, costs) + improve_effects + business_effects
-        + render_stats_effects(),
+        + market_effects + render_purse_effects() + render_stats_effects(),
         # the hunger steps wait for what they start (staple food makers, Taverns); kitchens are built anyway and must
         # not hold farms back for the year a Cookshop takes (seen in game 2026-11-08)
         mod_root / TRIGGERS: render_triggers(demands, food_buildings + list(config.taverns),
-                                             config.construction_goods_months),
+                                             config.construction_goods_months) + market_triggers,
         mod_root / WEIGHT_GUI: render_weight_gui(),
         # the window's detail panes (Jan 2026-11-09): a cog per rule group, the numbers render_stats_values gives
         mod_root / construction_plan_detail.DETAIL_GUI: construction_plan_detail.render_gui(),

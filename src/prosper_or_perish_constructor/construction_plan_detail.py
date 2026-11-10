@@ -5,7 +5,8 @@ hood ... and what was actually built. Maybe some graph. A really minimalistic, c
 Each rule group row of the window's Global Settings tab (``pp_construction_plan.gui``) ends in a cog
 (``pp_cplan_detail_button_<group>``, vanilla's ``button_automation_shortcut``). It sets the GUI variable
 ``pp_cplan_detail`` to the group, and the group's pane (``pp_cplan_detail_<group>``) takes the place of the window's
-"Last month" list: what the group could spend, wanted and spent in the last pass, what waited for gold, its situation
+"Last month" list: what the group had saved (its purse), wanted and spent in the last pass, what waited for gold, what
+it saves for and how far it is, what was held back for construction goods or by the market limit, its situation
 (the numbers its rule reads), the last ``HISTORY_MONTHS`` passes as a chart (grey: wanted, gold: spent, both against the
 largest month), and what it built, where, for how much and why. The cog of the open pane (gold) and the pane's close
 button clear the variable.
@@ -55,6 +56,9 @@ LAST_WHY = {"profiles": "PP_CPLAN_WHY_PROFILE", "food": "PP_CPLAN_WHY_FOOD", "lo
 # the Towns and Buildings group's kinds (pp_cplan_log_step, pp_construction_plan_country.txt): 1 a public building,
 # 2 a town or city upgrade, 3 the upgrade of an older building
 COUNTRY_KINDS = (1, 2, 3)
+# what the Towns and Buildings group can save for besides a building (pp_cplan_save_rank_107 - 100, set by
+# construction_plan_country.py's pp_cplan_country_rank_up): the location rank of the upgrade
+SAVE_RANKS = {1: "town", 2: "city"}
 # the location profile rules' states the pass counts (pp_cplan_d_profiles_st<n>), with their texts
 # (pp_location_profiles_l_english.yml PP_LPROF_ST_<n>) as tooltips
 PROFILE_STATES = {
@@ -65,6 +69,7 @@ PROFILE_STATES = {
     6: "could not be built",
     7: "were held back for gold",
     8: "lacked construction goods",
+    10: "had enough on the way",
 }
 # the food rule's steps (pp_cplan_log_step_n, pp_cplan_food_province); steps with the store a year from now in months
 FOOD_STEPS = {
@@ -95,6 +100,11 @@ def history_value(group: str, name: str, month: int | None = None) -> str:
 
 def _country(name: str) -> str:
     return f"GetPlayer.MakeScope.ScriptValue('{name}')"
+
+
+def _var(name: str) -> str:
+    """A variable of the player's country (a scope it holds: .GetLocation, .GetBuildingType; .IsSet)."""
+    return f"GetPlayer.MakeScope.Var('{name}')"
 
 
 def _item(name: str) -> str:
@@ -158,14 +168,36 @@ def texts() -> dict[str, str]:
     }
     for group in cp.GROUPS:
         key = group.upper()
+        why = cp.GROUP_WHY[group]
         out[f"PP_CPLAN_D_COST_{key}"] = f"[{log_value(group, 'cost')}|0]{GOLD_ICON}"
         out[f"PP_CPLAN_D_TITLE_{key}"] = TITLES[group]
+        # the gold the group has saved now (its purse): beside its bar in the window, and in what it saves for
+        purse = _show(cp.purse_value(group))
+        out[f"PP_CPLAN_D_PURSE_{key}"] = f"{purse}{GOLD_ICON}"
         out[f"PP_CPLAN_D_GOLD_{key}"] = (
-            f"It had {_show(d(group, 'had'))}{GOLD_ICON} to spend and wanted {_show(d(group, 'need'))}{GOLD_ICON}: "
+            f"It had {_show(d(group, 'had'))}{GOLD_ICON} saved and wanted {_show(d(group, 'need'))}{GOLD_ICON}: "
             f"it spent {_show(d(group, 'spent'))}{GOLD_ICON} on {_show(d(group, 'started'))} [constructions|e].")
         out[f"PP_CPLAN_D_WAIT_{key}"] = (
             f"{_show(d(group, 'waitn'))} more were held back for gold: {_show(d(group, 'wait'))}{GOLD_ICON} more would "
             "have started them all. A fuller bar or a lower gold reserve gives this group more.")
+        # what it saves for: the first thing of the last pass it wanted and could not pay for (a building in a
+        # location; Towns and Buildings also a town or city upgrade), and how far its purse is
+        cost = _show(f"{cp.SAVE_COST}_n_{why}")
+        place = f"[{_var(f'pp_cplan_save_loc_{why}')}.GetLocation.GetName]"
+        progress = f"it has {purse} of {cost}{GOLD_ICON}. Nothing that comes after it is started until then."
+        out[f"PP_CPLAN_D_SAVE_{key}"] = (
+            f"It is saving for [{_var(f'pp_cplan_save_type_{why}')}.GetBuildingType.GetName] in {place}: {progress}")
+        if group != "profiles":  # the Locations group shows these among its rule states (8)
+            out[f"PP_CPLAN_D_GOODS_{key}"] = (
+                f"{_show(d(group, 'goods'))} were held back because their market lacks the construction goods.")
+        if group == "business":  # the market limit; the Locations group shows it among its rule states (10)
+            out[f"PP_CPLAN_D_LIMITED_{key}"] = (
+                f"{_show(d(group, 'limited'))} were passed over because their market already has enough of that good "
+                "on the way.")
+        if group == "country":
+            for number, rank in SAVE_RANKS.items():
+                out[f"PP_CPLAN_D_SAVE_RANK_{number}"] = (
+                    f"It is saving for the upgrade of {place} to a [ShowLocationRankName('{rank}')]: {progress}")
         need, spent = history_value(group, "sum_need"), history_value(group, "sum_spent")
         out[f"PP_CPLAN_D_SUM_NEED_{key}"] = f"Wanted in {cp.HISTORY_MONTHS} months: {_show(need)}{GOLD_ICON}"
         out[f"PP_CPLAN_D_SUM_SPENT_{key}"] = f"Spent: {_show(spent)}{GOLD_ICON}"
@@ -173,8 +205,8 @@ def texts() -> dict[str, str]:
             f"#T The last {cp.HISTORY_MONTHS} months#!\nOne column a month, last month on the right. Grey: the gold "
             "this group wanted; gold: what it spent. Both against its largest month.\n"
             f"In all it wanted {_show(need)}{GOLD_ICON} and spent {_show(spent)}{GOLD_ICON}."
-            # the business group does not look in a month it starts without gold (pp_cplan_group_business)
-            + ("\nA month it started without gold shows nothing: it did not look for businesses then."
+            # the business group does not look in a month without gold saved or coming in (pp_cplan_group_business)
+            + ("\nA month with no gold saved and none coming in shows nothing: it did not look for businesses then."
                if group == "business" else ""))
 
     # the situation: what each rule read in the last pass
@@ -201,7 +233,8 @@ def texts() -> dict[str, str]:
         f"{_show(d('business', 'best'), 1)} years.")
     out["PP_CPLAN_D_BUSINESS_NONE"] = f"No business pays back within {line} years."
     out["PP_CPLAN_D_BUSINESS_SKIPPED"] = (
-        "It had no gold to spend, so it did not look for businesses: what they would have cost is not counted.")
+        "It had no gold saved and none came in, so it did not look for businesses: what they would have cost is not "
+        "counted.")
     # the group runs a location's profile rules and its marks (the Location Plan's "Also build here"); both count
     out["PP_CPLAN_D_PROFILES_SIT"] = (
         f"[locations|e] with a profile or marks: {_show(d('profiles', 'locs'))}. Their rules and marks last month:")
@@ -461,6 +494,20 @@ def _pane(group: str) -> list[str]:
     off = {"profiles": "PP_CPLAN_D_OFF_PROFILES", "country": "PP_CPLAN_D_OFF_COUNTRY"}.get(group, "PP_CPLAN_D_OFF")
     # "nothing waited for gold" only where the group looked (the business group does not without gold)
     quiet = _both(_not(waited), _not(_skipped())) if group == "business" else _not(waited)
+    # what it saves for (the first thing of the pass it could not pay for): a building, or for Towns and Buildings a
+    # town or city upgrade (pp_cplan_save_rank_107 - 100 = SAVE_RANKS)
+    why = cp.GROUP_WHY[group]
+    saves = _above(_country(f"pp_cplan_saves_{why}"))
+    rank = _country(f"pp_cplan_save_rank_n_{why}")
+    saving = _line(f"PP_CPLAN_D_SAVE_{group.upper()}", _both(saves, _not(_above(rank))) if group == "country" else saves)
+    if group == "country":
+        for number in SAVE_RANKS:
+            saving += _line(f"PP_CPLAN_D_SAVE_RANK_{number}", _both(saves, _equals(rank, number)))
+    # things it wanted that were stopped for another reason than gold, in plain words (shown only when there are any)
+    # (the Locations group shows both among its rule states: 8 and 10)
+    held = [] if group == "profiles" else _line(f"PP_CPLAN_D_GOODS_{group.upper()}", _above(_country(d(group, "goods"))))
+    if group == "business":
+        held += _line("PP_CPLAN_D_LIMITED_BUSINESS", _above(_country(d(group, "limited"))))
     shown = _block("vbox", [
         f'visible = "[{ran}]"',
         "layoutpolicy_horizontal = expanding",
@@ -470,6 +517,8 @@ def _pane(group: str) -> list[str]:
         *_line(f"PP_CPLAN_D_GOLD_{group.upper()}"),
         *_line(f"PP_CPLAN_D_WAIT_{group.upper()}", waited),
         *_line("PP_CPLAN_D_NO_WAIT", quiet),
+        *saving,
+        *held,
         *_situation(group),
         *_chart(group),
         *_block("hbox", ["layoutpolicy_horizontal = expanding",

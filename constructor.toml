@@ -1229,14 +1229,16 @@ not_goods = ["offset", "logistics", "local_food", "manual_labor", "province_food
 # generated parts at finalize, docs/player_construction_manager.md). The AI never runs them: the monthly pass fires only
 # for countries with is_ai = no that switched the plan on. The window has three tabs: Global settings (these defaults,
 # the player changes them there), Location profiles ([location_profiles], Jan 2026-11-09) and Towns and Buildings
-# (the settings of that rule group, construction_plan_country.py, 2026-11-10). Each month the plan may
-# spend the gold above the reserve; every rule group gets its weight over the sum of the weights, and a part one group
-# leaves passes on to the next.
+# (the settings of that rule group, construction_plan_country.py, 2026-11-10). Budgets that save (2026-11-10): every
+# rule group has a purse; each month the gold above the reserve that is in no purse yet is shared by the weights, a
+# construction must fit in its group's purse, the first thing a group cannot pay for is what it saves for (it builds
+# nothing more that month), and a group that saves for nothing hands its purse on to the groups that do.
 reserve_gold = 1000           # gold kept back: no construction starts that would take the treasury below it (Jan 2026-11-09)
 access_threshold = 97         # logistics: build where market access is below this, in % (Jan 2026-11-08)
 improve_fill_pct = 90         # improvements: build where population over capacity reaches this, in % (Jan 2026-11-08; steps of 10)
 weights = { profiles = 5, food = 5, logistics = 5, improve = 5, business = 5, country = 5 }   # each rule group, 0 (off) .. 10: its part of the gold above the reserve = its weight / the sum (Jan 2026-11-09); profiles = the window's "Locations", country = "Towns and Buildings" (2026-11-10)
 business_years = 10           # businesses: a level of any building that makes goods while it pays back within this many years (Jan 2026-11-09)
+business_market_share = 10    # market limit against spam (2026-11-10; a PLACEHOLDER, Jan tunes it): a level of a building that makes a market good starts only while the output of that good under construction in the location's market, this level included, stays within this % of the market's monthly demand for it; one level is always allowed while none is under construction. Applies to the Businesses group, profile rules and marks
 farm_sites_per_province = 4   # food: locations tried for a staple food maker, best payback first
 hungry_months = 6             # food: a farm (or a Tavern where none can be built) where a normal year leaves less than this a year from now
 # Baseline rules (Jan 2026-11-08). Every check reads the game as it stands; nothing is counted from pass to pass, so

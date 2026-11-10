@@ -289,6 +289,10 @@ types PPConstructionPlanDetail
 				text = "PP_CPLAN_D_NO_WAIT"
 			}
 			pp_cplan_d_line = {
+				visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_saves_105'), '(CFixedPoint)0.5')]"
+				text = "PP_CPLAN_D_SAVE_PROFILES"
+			}
+			pp_cplan_d_line = {
 				text = "PP_CPLAN_D_PROFILES_SIT"
 			}
 			hbox = {
@@ -311,6 +315,7 @@ types PPConstructionPlanDetail
 				layoutpolicy_horizontal = expanding
 				spacing = 4
 				pp_cplan_d_cell = { text = "PP_CPLAN_D_PROFILES_ST8" tooltip = "PP_LPROF_ST_8" }
+				pp_cplan_d_cell = { text = "PP_CPLAN_D_PROFILES_ST10" tooltip = "PP_LPROF_ST_10" }
 				expand = {}
 			}
 			hbox = {
@@ -572,6 +577,14 @@ types PPConstructionPlanDetail
 			pp_cplan_d_line = {
 				visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_food_waitn'), '(CFixedPoint)0.5'))]"
 				text = "PP_CPLAN_D_NO_WAIT"
+			}
+			pp_cplan_d_line = {
+				visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_saves_101'), '(CFixedPoint)0.5')]"
+				text = "PP_CPLAN_D_SAVE_FOOD"
+			}
+			pp_cplan_d_line = {
+				visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_food_goods'), '(CFixedPoint)0.5')]"
+				text = "PP_CPLAN_D_GOODS_FOOD"
 			}
 			pp_cplan_d_line = {
 				text = "PP_CPLAN_D_FOOD_SIT"
@@ -860,6 +873,14 @@ types PPConstructionPlanDetail
 				text = "PP_CPLAN_D_NO_WAIT"
 			}
 			pp_cplan_d_line = {
+				visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_saves_102'), '(CFixedPoint)0.5')]"
+				text = "PP_CPLAN_D_SAVE_LOGISTICS"
+			}
+			pp_cplan_d_line = {
+				visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_logistics_goods'), '(CFixedPoint)0.5')]"
+				text = "PP_CPLAN_D_GOODS_LOGISTICS"
+			}
+			pp_cplan_d_line = {
 				visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_logistics_below'), '(CFixedPoint)0.5')]"
 				text = "PP_CPLAN_D_LOGISTICS_SIT"
 			}
@@ -1121,6 +1142,14 @@ types PPConstructionPlanDetail
 				text = "PP_CPLAN_D_NO_WAIT"
 			}
 			pp_cplan_d_line = {
+				visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_saves_106'), '(CFixedPoint)0.5')]"
+				text = "PP_CPLAN_D_SAVE_IMPROVE"
+			}
+			pp_cplan_d_line = {
+				visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_improve_goods'), '(CFixedPoint)0.5')]"
+				text = "PP_CPLAN_D_GOODS_IMPROVE"
+			}
+			pp_cplan_d_line = {
 				visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_improve_over'), '(CFixedPoint)0.5')]"
 				text = "PP_CPLAN_D_IMPROVE_SIT"
 			}
@@ -1380,6 +1409,18 @@ types PPConstructionPlanDetail
 			pp_cplan_d_line = {
 				visible = "[And(Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_business_waitn'), '(CFixedPoint)0.5')), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_business_skipped'), '(CFixedPoint)0.5')))]"
 				text = "PP_CPLAN_D_NO_WAIT"
+			}
+			pp_cplan_d_line = {
+				visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_saves_103'), '(CFixedPoint)0.5')]"
+				text = "PP_CPLAN_D_SAVE_BUSINESS"
+			}
+			pp_cplan_d_line = {
+				visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_business_goods'), '(CFixedPoint)0.5')]"
+				text = "PP_CPLAN_D_GOODS_BUSINESS"
+			}
+			pp_cplan_d_line = {
+				visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_business_limited'), '(CFixedPoint)0.5')]"
+				text = "PP_CPLAN_D_LIMITED_BUSINESS"
 			}
 			pp_cplan_d_line = {
 				visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_business_sites'), '(CFixedPoint)0.5')]"
@@ -1645,6 +1686,22 @@ types PPConstructionPlanDetail
 			pp_cplan_d_line = {
 				visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_country_waitn'), '(CFixedPoint)0.5'))]"
 				text = "PP_CPLAN_D_NO_WAIT"
+			}
+			pp_cplan_d_line = {
+				visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_saves_107'), '(CFixedPoint)0.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_save_rank_n_107'), '(CFixedPoint)0.5')))]"
+				text = "PP_CPLAN_D_SAVE_COUNTRY"
+			}
+			pp_cplan_d_line = {
+				visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_saves_107'), '(CFixedPoint)0.5'), EqualTo_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_save_rank_n_107'), '(CFixedPoint)1'))]"
+				text = "PP_CPLAN_D_SAVE_RANK_1"
+			}
+			pp_cplan_d_line = {
+				visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_saves_107'), '(CFixedPoint)0.5'), EqualTo_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_save_rank_n_107'), '(CFixedPoint)2'))]"
+				text = "PP_CPLAN_D_SAVE_RANK_2"
+			}
+			pp_cplan_d_line = {
+				visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_country_goods'), '(CFixedPoint)0.5')]"
+				text = "PP_CPLAN_D_GOODS_COUNTRY"
 			}
 			hbox = {
 				layoutpolicy_horizontal = expanding

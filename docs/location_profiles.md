@@ -8,7 +8,7 @@ colour) beside the plan icons.
 sets; whatever a profile does not set, the global Construction Plan rules still do in its locations (no need to repeat
 "logistics where needed" in every profile). In detail:
 
-- The profile's rules run as their own rule group of the monthly pass, with its part of the month's budget like every
+- The profile's rules run as their own rule group of the monthly pass, with its own budget that saves (its purse, 2026-11-10) like every
   group: the Location profiles weight bar on the Global Settings tab (its weight over the sum of the weights; 0 = the
   profiles build nothing).
 - A rule's target takes that target from the global rules there: a good takes the Businesses rule's buildings that
@@ -29,7 +29,7 @@ sets; whatever a profile does not set, the global Construction Plan rules still 
 
 Branch `location-profiles` = `location-plan` + `player-construction-manager` (merge 91019fcb). Worktree
 `../ProsperOrPerishConstructor-locplan`. Builds on: `location_plan.py` (plan items, map markers),
-`construction_plan.py` + `pp_construction_plan*.txt` (monthly pass, budget, payback, producers per good).
+`construction_plan.py` + `pp_construction_plan*.txt` (monthly pass, the budgets that save, payback, producers per good).
 
 UI name: **Location Profiles**; the editor is the Construction Plan window's second tab, "Location profiles" (the
 first is "Global settings", 2026-11-09, Jan).
@@ -197,7 +197,7 @@ buttons pass this), `none` (assign) or `next` (new: the first free slot).
 Every button that changes a slot ends in `pp_lprof_commit` = `pp_lprof_write` (staged copy → slot) +
 `pp_lprof_publish` (staged copy → edit buffer and → every location with the slot) + `refresh_map_colors = yes`.
 
-## Monthly pass (in `pp_cplan_run`, a rule group with its weighted part of the month's budget like the others)
+## Monthly pass (in `pp_cplan_run`, a rule group with its own purse like the others)
 
 Only when the Construction Plan is on (`pp_cplan_on`). The global groups ask per group whether they may build in a
 location (`scripted_triggers/pp_construction_plan.txt`: the owner's location, then the profile's side, read from the
@@ -230,7 +230,7 @@ category (generated list per category: player-buildable building types whose `ca
 `location_and_owner_can_build`, the workers one level needs (`pp_cplan_staff`, Jan 2026-11-09: idle peasants left
 after the open jobs of the location's buildings, or idle pops of the building's own class; candidates carry `pt` /
 `sz`, state 4 when none finds them), construction goods in the market (12 months of the draw), one construction at a
-time in the location, never a level for a closed building, budget (checked by `pp_cplan_construct_scoped`; a level the
+time in the location, never a level for a closed building, the market limit (state 10 since 2026-11-10: enough of the good is on the way in its market), the group's purse (state 7: the purse cannot pay it, or the group already saves for something that comes before it; checked by `pp_cplan_construct_scoped`; a level the
 gold does not reach is state 7 and counts once a location as waiting for gold in the Location profiles detail pane,
 which also counts the rules and marks by state, `pp_lprof_count_state`). The monthly cleanup takes the
 profile and its copy from locations that lost it (`pp_lprof_clear_location`), and the marks from own locations the

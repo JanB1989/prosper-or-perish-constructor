@@ -179,9 +179,10 @@ def test_titles_use_the_players_group_names() -> None:
 
 
 def test_every_text_exists_once() -> None:
-    """Every key the detail GUI uses (PP_CPLAN_D_*, the window's rule tooltips, the profile rule states) is defined
-    exactly once across the mod's English files with the detail loc as rendered; no PP_CPLAN_D_ key is left unused."""
-    gui = cpd.render_gui()
+    """Every key the generated GUIs use (PP_CPLAN_D_*, the window's rule tooltips, the profile rule states) is defined
+    exactly once across the mod's English files with the detail loc as rendered; no PP_CPLAN_D_ key is left unused
+    (the weight bars show the saved gold with a PP_CPLAN_D_ key)."""
+    gui = cpd.render_gui() + cp.render_weight_gui()
     counts: Counter[str] = Counter()
     for path in sorted(LOC_FOLDER.glob("*.yml")):
         if path.name != cpd.DETAIL_LOC.name:
@@ -194,6 +195,10 @@ def test_every_text_exists_once() -> None:
         assert counts[key] == 1, f"{key}: defined {counts[key]} times"
     assert {key for key in used if key.startswith("PP_CPLAN_D_")} == set(rendered)
     assert all(key.startswith("PP_CPLAN_D_") for key in rendered)
+    # a text a text names ($KEY$) exists too
+    hand = _read(LOC_FOLDER / "pp_construction_plan_l_english.yml")
+    for key in set(re.findall(r"\$(PP_CPLAN_[A-Z0-9_]+)\$", hand)):
+        assert counts[key] == 1, key
 
 
 def test_texts_follow_the_rules() -> None:
@@ -257,13 +262,16 @@ def test_window_places_cogs_and_panes() -> None:
     assert window.index(f"pp_cplan_detail_button_{cp.GROUPS[-1]} = {{}}") < start < window.index("pp_cplan_detail_profiles = {")
     close = window[window.index("button_close_alt = {"):]
     assert "on_action = \"[GetVariableSystem.Clear('pp_cplan_detail')]\"" in close
-    # the rows still fit the window (690 px): label + line + bar + cog; Towns and Buildings has no line (its settings
+    # the rows still fit the window (758 px since the bars show the saved gold): label + line + bar + cog; Towns and
+    # Buildings has no line (its settings
     # are on its own tab), its longer name takes that room (200 + 130 = 140 + 190)
     assert window.count("minimumsize = { 140 -1 } maximumsize = { 140 -1 }") == 5
     assert window.count("minimumsize = { 190 -1 }") == 3 and window.count("widget = { size = { 190 1 } }") == 2
     assert window.count("minimumsize = { 200 -1 } maximumsize = { 200 -1 }") == 1
     assert window.count("widget = { size = { 130 1 } }") == 1
     assert len(cp.GROUPS) == 5 + 1
+    # the window grew by what the saved gold takes in every weight bar (its width + the bar's spacing)
+    assert "size = { 758 820 }" in window and 758 - 690 == cp.PURSE_WIDTH + 4
 
 
 def test_script_values_exist() -> None:
@@ -274,3 +282,59 @@ def test_script_values_exist() -> None:
     used = set(re.findall(r"ScriptValue\('([a-z0-9_]+)'\)", cpd.render_gui() + cpd.render_loc()))
     missing = sorted(used - names)
     assert not missing, f"script values missing: {missing}"
+
+
+def test_budget_shows_in_the_window() -> None:
+    """Budgets that save (Jan 2026-11-10): each rule group's row shows what the group has saved beside its share, with
+    one tooltip that says how the budget works; its pane says what it saves for and how far it is; the things held
+    back for construction goods and by the market limit show in plain words, only when there are any."""
+    weights = cp.render_weight_gui()
+    loc = cpd.texts()
+    hand = _read(LOC_FOLDER / "pp_construction_plan_l_english.yml")
+    assert re.search(r"^  PP_CPLAN_PURSE_TT: \".*\$PP_CPLAN_BUDGET_NOTE\$\"$", hand, re.MULTILINE)
+    note = re.search(r"^  PP_CPLAN_BUDGET_NOTE: \"(.+)\"$", hand, re.MULTILINE).group(1)
+    assert "saves" in note and "hands on" in note and not re.search(r"\d", note), "plain words, no numbers"
+    gui = cpd.render_gui()
+    for group in cp.GROUPS:
+        why = cp.GROUP_WHY[group]
+        key = group.upper()
+        bar = _type_body(weights, f"pp_cplan_weight_bar_{group}")
+        assert f'text = "PP_CPLAN_D_PURSE_{key}"' in bar and 'tooltip = "PP_CPLAN_PURSE_TT"' in bar
+        assert loc[f"PP_CPLAN_D_PURSE_{key}"] == f"[GetPlayer.MakeScope.ScriptValue('pp_cplan_purse_n_{why}')|0]@gold!"
+        # every rule tooltip ends with the same note on the budget
+        rule = re.search(rf"^  PP_CPLAN_{key}_RULE_TT: \"(.+)\"$", hand, re.MULTILINE).group(1)
+        assert rule.endswith("\\n\\n$PP_CPLAN_BUDGET_NOTE$"), group
+        pane = _type_body(gui, f"pp_cplan_detail_{group}")
+        saves = f"GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_saves_{why}'), '(CFixedPoint)0.5')"
+        save = loc[f"PP_CPLAN_D_SAVE_{key}"]
+        assert f"Var('pp_cplan_save_type_{why}').GetBuildingType.GetName" in save
+        assert f"Var('pp_cplan_save_loc_{why}').GetLocation.GetName" in save
+        assert f"ScriptValue('pp_cplan_purse_n_{why}')|0] of [GetPlayer.MakeScope.ScriptValue('pp_cplan_save_cost_n_{why}')|0]@gold!" in save
+        shown = re.search(rf"visible = \"\[([^\n]*)\]\"\n\t+text = \"PP_CPLAN_D_SAVE_{key}\"", pane)
+        assert shown and saves in shown.group(1), group
+        assert "It had" in loc[f"PP_CPLAN_D_GOLD_{key}"] and "saved" in loc[f"PP_CPLAN_D_GOLD_{key}"]
+        assert "to spend" not in loc[f"PP_CPLAN_D_GOLD_{key}"], "the old month's gold"
+        goods = f"PP_CPLAN_D_GOODS_{key}"
+        if group == "profiles":  # among its rule states instead (8 and 10)
+            assert goods not in loc and "PP_CPLAN_D_PROFILES_ST8" in loc and "PP_CPLAN_D_PROFILES_ST10" in loc
+            assert 'tooltip = "PP_LPROF_ST_10"' in pane
+        else:
+            count = f"GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_{group}_goods'), '(CFixedPoint)0.5')"
+            assert re.search(re.escape(f'visible = "[{count}]"') + rf"\n\t+text = \"{goods}\"", pane), group
+            assert "construction goods" in loc[goods]
+    # Towns and Buildings can save for a town or a city upgrade (no building type)
+    country = _type_body(gui, "pp_cplan_detail_country")
+    rank = "GetPlayer.MakeScope.ScriptValue('pp_cplan_save_rank_n_107')"
+    for number, name in cpd.SAVE_RANKS.items():
+        assert f"ShowLocationRankName('{name}')" in loc[f"PP_CPLAN_D_SAVE_RANK_{number}"]
+        assert re.search(re.escape(f"EqualTo_CFixedPoint({rank}, '(CFixedPoint){number}'))]\"")
+                         + rf"\n\t+text = \"PP_CPLAN_D_SAVE_RANK_{number}\"", country), number
+    from prosper_or_perish_constructor import construction_plan_country as cpc
+
+    assert {name: code - 100 for name, code in cpc.SAVE_RANK.items()} == {name: n for n, name in cpd.SAVE_RANKS.items()}
+    # the market limit, in plain words, in the Businesses pane
+    business = _type_body(gui, "pp_cplan_detail_business")
+    assert 'text = "PP_CPLAN_D_LIMITED_BUSINESS"' in business
+    assert "already has enough of that good on the way" in loc["PP_CPLAN_D_LIMITED_BUSINESS"]
+    for key, text in loc.items():
+        assert "this month's gold" not in text and "may spend" not in text, key

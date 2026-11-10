@@ -2,7 +2,7 @@
 
 Branch location-profiles, 2026-11-07, Jan: the player defines profiles (an icon, a colour, ordered build rules) and
 assigns them to locations on the map. In a location with a profile the profile's rules build, as a rule group of the
-monthly pass (``pp_cplan_run``) with its own share of the month's budget; the global Construction Plan rules still
+monthly pass (``pp_cplan_run``) with its own budget that saves (its purse); the global Construction Plan rules still
 build there what the profile does not set (its rules' targets, the global groups it switches off). Script cannot
 create named data while the game runs, so a profile is a generated slot ``k = 1..slots``.
 
@@ -78,12 +78,13 @@ STATES = {
     4: "no free workers here",
     5: "payback too long",
     6: "cannot be built here",
-    7: "budget",
+    7: "gold: the Locations group's purse cannot pay it, or the group saves for something before it",
     8: "market lacks the construction goods",
     9: "waiting for an earlier rule's or mark's construction this month",
+    10: "the market limit: enough of the good is on the way in its market",
 }
 # why a candidate failed, ranked (+ 100 in pp_lprof_fail; the highest rank of a rule's candidates gives its state)
-FAIL_STATE = {101: 2, 102: 6, 103: 5, 104: 4, 105: 8, 106: 7}
+FAIL_STATE = {101: 2, 102: 6, 103: 5, 104: 4, 105: 8, 106: 10, 107: 7}
 DIRECTIONS = ("up", "down")
 EDITED = "e"  # the pp_slot flag of the editor's buttons: the slot in the edit buffer (pp_lprof_e_k)
 NEXT = "next"  # the pp_slot flag of the new profile button: the first slot not in use
@@ -787,8 +788,8 @@ def render_values(config: Config, categories: list[str], items: list[lp.Item] | 
         HEADER,
         "\n# Any scope: profile slots and rules per profile ([location_profiles]).\n"
         f"pp_lprof_slots = {{ value = {config.slots} }}\npp_lprof_rule_count = {{ value = {config.rules} }}\n",
-        "\n# Country scope: 1 while a location of the country has a profile (the profile rule group runs and takes an equal\n"
-        "# share of the monthly limit, pp_cplan_groups_on).\n"
+        "\n# Country scope: 1 while a location of the country has a profile or a mark (the Locations rule group runs and\n"
+        "# its weight counts: pp_cplan_profiles_cw, pp_construction_plan_generated.txt).\n"
         "pp_lprof_group_n = {\n\tvalue = 0\n\tif = {\n\t\tlimit = { pp_lprof_has_locations = yes }\n\t\tvalue = 1\n\t}\n}\n",
         "\n# Location scope, in the pass (scope:pp_cplan_btype and the cost values set): the payback of its next level + 100,\n"
         "# compared with the rule's limit (+ 100); 1 + the build cost, the start picker's key (never 0, which is unset).\n"
@@ -820,7 +821,7 @@ def render_values(config: Config, categories: list[str], items: list[lp.Item] | 
     ]
     for r in range(1, config.rules + 1):
         parts.append(_var_n(f"pp_lprof_r{r}_st_n", f"pp_lprof_r{r}_st",
-                            f"Location scope: the state of rule {r} after the last pass (0 not run yet; 1-9 PP_LPROF_ST_<n>)."))
+                            f"Location scope: the state of rule {r} after the last pass (0 not run yet; 1-10 PP_LPROF_ST_<n>)."))
     return "".join(parts) + quick
 
 

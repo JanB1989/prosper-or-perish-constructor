@@ -390,3 +390,24 @@ pp_cplan_food_queued = {
 		}
 	}
 }
+
+# Any scope: the market limit holds for the constructions of the rule group with this code (the Businesses
+# group, profile rules and marks; the food rule builds for hunger, the others no business types of their own).
+pp_cplan_limits_market_105 = {
+	always = yes
+}
+pp_cplan_limits_market_101 = {
+	always = no
+}
+pp_cplan_limits_market_102 = {
+	always = no
+}
+pp_cplan_limits_market_106 = {
+	always = no
+}
+pp_cplan_limits_market_103 = {
+	always = yes
+}
+pp_cplan_limits_market_107 = {
+	always = no
+}

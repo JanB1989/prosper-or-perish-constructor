@@ -54,7 +54,8 @@ widget = {
 	position = { 36 236 }
 	size = { 170 32 }
 	# scripted widgets need a function here; "yes" does not work
-	visible = "[And(GetPlayer.Exists, Not(IsObserving))]"
+	# (not on the pause menu: vanilla's own HUD parts ask IsPauseMenuShown; in game 2026-11-10 the button stood on it)
+	visible = "[And3(GetPlayer.Exists, Not(IsObserving), Not(IsPauseMenuShown))]"
 
 	button_regular = {
 		name = "pp_cplan_opener"
@@ -62,15 +63,17 @@ widget = {
 		text = "PP_CPLAN_OPEN"
 		tooltip = "PP_CPLAN_OPEN_TT"
 		onclick = "[GetVariableSystem.Toggle('pp_cplan_open')]"
+		# the Towns and Buildings tab's grids: place the tiles (the window may open on that tab)
+		onclick = "[GetScriptedGui('pp_cplan_country_layout').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 	}
 }
 
 # ---- Window ----
 	window = {
 		name = "pp_construction_plan_window"
-		visible = "[And3(GetVariableSystem.Exists('pp_cplan_open'), GetPlayer.Exists, Not(IsObserving))]"
+		visible = "[And4(GetVariableSystem.Exists('pp_cplan_open'), GetPlayer.Exists, Not(IsObserving), Not(IsPauseMenuShown))]"
 		position = { 90 110 }
-		size = { 690 820 }
+		size = { 758 820 }
 		movable = yes
 		using = bg_window_default_alt
 		filter_mouse = all
@@ -113,6 +116,7 @@ widget = {
 						tooltip = "PP_CPLAN_TAB_COUNTRY_TT"
 						down = "[GetVariableSystem.HasValue('pp_cplan_tab', 'country')]"
 						onclick = "[GetVariableSystem.Set('pp_cplan_tab', 'country')]"
+						onclick = "[GetScriptedGui('pp_cplan_country_layout').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 					}
 				}
 			}
@@ -168,9 +172,10 @@ widget = {
 						}
 					}
 
-					# the rule groups: name, line, weight bar (generated, pp_construction_plan_weights.gui), part in % and the
-					# detail cog (generated, pp_construction_plan_detail.gui); label 140 + line 190 + bar 226 + cog 26 +
-					# spacing fit the tab's ~626 px
+					# the rule groups: name, line, weight bar (generated, pp_construction_plan_weights.gui) with the part
+					# in % and the gold the group has saved (its purse, since 2026-11-10), and the detail cog (generated,
+					# pp_construction_plan_detail.gui); label 140 + line 190 + bar 294 + cog 26 + spacing fit the tab's
+					# ~694 px (the window is 68 px wider for the saved gold)
 					hbox = {
 						layoutpolicy_horizontal = expanding
 						pp_cplan_title = { text = "PP_CPLAN_RULES" }

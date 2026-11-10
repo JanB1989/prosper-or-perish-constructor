@@ -235,3 +235,12 @@ Real is granted (second round).
    (the plan's check uses the price times the goods' price factor; booked is what the game took).
 3. `root` in the Stapelrecht potential; rights other than Market Charter (Fuero Real was ticked and found no
    location).
+
+## Script time (2026-11-10)
+
+The group no longer looks every month: each rule looks in its own months (`[construction_plan] look_months`: upgrades of
+buildings 4 and 10, ticked buildings 6 and 12, towns and cities 2 and 8, urban rights 5 and 11), one rule a look. While
+the group saves for something it does not look at all; once its purse can pay it goes back to that one location
+(`pp_cplan_group_target`, generated `pp_cplan_country_target`: the rule's gates again). Console, to time the group:
+`effect c:TAG = { pp_cplan_test_country = yes }` and `pp_cplan_test_rights`. docs/player_construction_manager.md
+"Script time".

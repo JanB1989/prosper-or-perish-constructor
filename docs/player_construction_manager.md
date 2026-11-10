@@ -6,7 +6,112 @@ next section. The sections below it are the history (v1, v2, the first
 2026-11-09 pass); what they describe and the next section no longer lists is gone. Player-only: the AI keeps its own
 logic and is never touched (a console-only test switch lets it run for an AI country in the test world).
 
+## Script time (2026-11-10, Jan: "The monthly pass takes 0.4 seconds. That is substantially too long")
+
+Jan: "We don't have to have this on a monthly pass, could be yearly as well, but you have to fix the performance
+issues. It needs to be built so that it doesn't use unnecessary script time ... some kind of sampling or clever use of
+saving information." Measured in the plan test world (Castile owns Iberia: about 330 locations, 4 markets) with the
+script profiler: 0.32-0.39 s a pass, 0.20 s of it the business pick. Not profiled since the rework: the numbers below
+are counts of what the script evaluates, taken from the generators (`tests/test_construction_plan_cost.py`).
+
+**Where the time went** (L owned locations, P provinces, T = 224 business types, B ticked public buildings, every
+month):
+
+| part | evaluations a pass, before | at L = 330 |
+| --- | --- | --- |
+| business pick | L sites x T types: the country's mark, then workers and `can_build_building` for every type the country can build; plus one market count (a walk over the market's locations and their buildings) per market and good a pick asked for | 73,920 type checks |
+| business order | L locations ordered by a value | 330 |
+| logistics, improvements | 2 walks over L, each with an order | 660 |
+| Towns and Buildings | B walks over L (one per ticked building), 1 walk over every building of every location (upgrades), 2 over L (towns, cities); the rights on top | up to 42 walks |
+| food | P provinces x the store a year from now TWICE (the order and the rule; each walks the province's locations several times); every farm site's best line twice | |
+| Locations | every location with a profile or marks | |
+
+**Options looked at** (web: Paradox's own modding advice is general: cheap triggers first in a limit, on_actions and
+rare pulses instead of polling, variable lists to keep a target list and `ordered_` to score it; nothing specific to
+caching. The rest is from the structure above.)
+
+- *a. Businesses top-down, per market.* Rank the types at the market's prices, then look for sites only for the best
+  few goods. Cost M x T + a few x L per market. Not chosen: a location's output modifier (World Builder attribute
+  rows) moves a good's profit by tens of percent, so a market-level rank picks the wrong goods for many locations,
+  script has no way to sort 224 named values but K rounds of 224 comparisons, and it needs a second copy of every
+  recipe estimate at market scope. The same saving comes from c + b with the existing exact per-location estimate.
+- *b. Remember what rarely changes.* Chosen in this form: a site's best business (type, return, cost) stays on the
+  location; what a group saves for stays on the country until its next look; the market limit's counts stay on the
+  market centres between two counts; the country's part of the business can-build check is asked twice a year. Not a
+  per-location list of candidate types: `can_build_building` cannot be split into its static part, so the list would
+  be as stale as the pick it feeds.
+- *c. Slices.* Chosen for the one walk that scores (the business pick): a fixed few sites a pass, in a fixed order.
+- *d. Cheap exits.* Chosen: between its looks a group walks nothing; when it saves for something and its purse can pay,
+  it goes back to that one place. The "how much is missing" count is taken at looks only, and for the businesses from
+  the stored picks it tries.
+- *e. Rhythm per group.* Chosen: every group looks in its own months.
+- *f. Order of checks, nothing twice.* Chosen where it was wrong: the store a year from now once a province, the farm
+  lines' returns once a site; the limits already ran cheap checks first.
+- *g. The upgrades rule.* Its walk over every building stays, but twice a year instead of every month; remembering
+  researched successors was not needed for that.
+
+**What was built.** The pass still runs every month, but it is cheap:
+
+- *Every pass:* the purses fill (arithmetic, no walk); the business group works out the best business of the next few
+  sites (`pp_cplan_business_refresh`: every owned location has a number in the order the plan first saw it,
+  `pp_cplan_seq`; a pass takes the numbers after the country's place, `pp_cplan_cursor`, a window's worth,
+  `pp_cplan_bz_window` = `[construction_plan] business_sites` (16), or as many as it takes to see every location
+  within `business_cycle_months` (24); the pick stays on the location). One walk over the owned locations with two
+  comparisons each finds the few.
+- *A group looks only in its months* (`look_months`, trigger `pp_cplan_looks_<name>`): food 1, 4, 7, 10; logistics 2,
+  5, 8, 11; improvements 3, 9; Locations 3, 6, 9, 12; Towns and Buildings one rule a look: upgrades of buildings 4,
+  10, ticked buildings 6, 12, towns and cities 2, 8; urban rights 5, 11. At a look a group does what the monthly pass
+  did: walks what it wants, best first, builds what its purse pays, saves for the first thing it cannot pay
+  (`pp_cplan_look_<group>`).
+- *The business group's look* (`pp_cplan_look_business`): the stored picks ranked by payback including the time to
+  save; the best `business_tries` (6) are tried, each site working its pick out afresh first
+  (`pp_cplan_business_here`), so nothing is built on a stale estimate. While the group does not save it looks every
+  month, while it saves only in its look months (1, 7).
+- *Between looks* (`pp_cplan_group_target`): a group that saves for something does nothing until its purse can pay;
+  then it goes back to that one place and runs its rule there again (the province's food rule, the location's
+  logistics or improvement rule if it still holds, the site's business pick, the location's profile rules and marks,
+  the town or city upgrade or the building for Towns and Buildings), with every guard of a look. Towns and Buildings
+  does not look at all while it saves.
+- *The market limit* counts what is under construction afresh in its months only (1, 4, 7, 10); between them the
+  counts stand on the market centres, raised by what the plan itself starts.
+- *The window:* a group's numbers, its list and what it saves for are its LAST LOOK's and stay until its next look
+  (`pp_cplan_stats_reset_<why>` in `pp_cplan_group_start`; `pp_cplan_now_<why>` marks who looked in this pass, for the
+  hand-on and the chart, whose months without a look show nothing). "Built at the last looks" lists every group's.
+
+**Counts after, at L = 330:**
+
+| part | evaluations a pass, after | change |
+| --- | --- | --- |
+| business pick | 16 sites x T = 3,584 type checks every pass; a look adds at most 6 sites (1,344) | 73,920 -> 3,584 to 4,928: 15 to 20 times fewer |
+| walks over the owned locations | every pass 1 (the business turn: two comparisons a location); a look adds its own: business 2 (has a pick?), logistics 1, improvements 1, a ticked building 1 each, upgrades 1, towns and cities 2 | a year: about 540 -> about 126 with every public building ticked, about 70 -> about 50 with none |
+| food | P provinces x the store a year from now once, 4 times a year | 24 P -> 4 P a year |
+| market counts | a market and good once a quarter | was once a pass |
+| between looks | a group that saves: 3 comparisons; when its purse can pay: one place | was the whole walk |
+
+A pass without a look is the purses, one cheap walk and 16 site picks: by the measured 0.20 s for 330 sites about
+0.01 s. The worst passes are the look months (month 4: food and the upgrades of buildings; month 6 / 12: the Locations
+group and every ticked public building); with every public building ticked that walk alone is 39 x L cheap limits.
+The cost of a pass no longer grows with L x T: the sites scored a pass are max(16, L / 24).
+
+**What changes for the player:** each rule group looks at the country a few times a year instead of every month, and
+the best business of a location is worked out once every L / 16 months (about 21 months in a 330-location country,
+at most 24); what a group saves for is built in the month its purse can pay. The window's numbers are those of each
+group's last look. Said in the plan's tooltip (`PP_CPLAN_MASTER_TT`) and the budget note of every rule tooltip.
+
+**For the profiler** (console; each runs a pass with only that look, whatever the month):
+`effect c:CAS = { pp_cplan_test_empty = yes }` (purses and bookkeeping alone), `pp_cplan_test_business_refresh`,
+`pp_cplan_test_business_look`, `pp_cplan_test_food`, `pp_cplan_test_logistics`, `pp_cplan_test_improve`,
+`pp_cplan_test_profiles`, `pp_cplan_test_country` (its three rules at once), `pp_cplan_test_rights`; the whole pass:
+`effect c:CAS = { pp_cplan_run = yes }`. The test mode (`pp_cplan_ai_test`) is unchanged.
+
+Not tested in game. Open: the business group's first cover of a country takes the cycle (21 months at 330
+locations); a ticked-everything Towns and Buildings look is the dearest single walk left.
+
 ## Budgets that save (2026-11-10, Jan, after he watched the plan run in game)
+
+(Since the script time rework above a group "looks" a few times a year; where this section says "each pass" for a
+group's walk, read "each look". What a group saves for stays until its next look, and a group hands on only in a
+pass in which it looked.)
 
 Jan's three problems: (1) "it is disproportionately favoring cheap buildings: the part of the budget that is left
 sometimes cannot even build expensive buildings, so it just builds cheap ones"; (2) "if it detects that some building
@@ -246,7 +351,7 @@ beside the bars), and the pass's cost now that the business group looks whenever
   level the gold does not reach at the engine's cost (`pp_cplan_note_wait`), once per decision (a province for the food
   rule, its one construction a month; a location otherwise). Locations with a construction under way are not counted
   (they cannot start one). The numbers live on the country until the next pass (`pp_cplan_d*` / `pp_cplan_ds_*`, the
-  history `pp_cplan_hn_` / `_hs_<why>_<k>`, generated `pp_cplan_stats_reset` / `pp_cplan_history_push`); switching the
+  history `pp_cplan_hn_` / `_hs_<why>_<k>`, generated `pp_cplan_stats_reset_<why>` (at the group's look since 2026-11-10) / `pp_cplan_history_push`); switching the
   plan on clears the chart. The rules never read any of it (a test checks), so the plan stays stateless as Jan wants.
   Cost: a pass with no gold left checks everything instead of stopping, except the business group since 2026-11-10
   (its pick over every free site was the dear part: it does not look when it starts without gold, see Maintenance

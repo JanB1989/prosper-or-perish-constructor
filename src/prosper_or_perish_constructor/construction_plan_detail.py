@@ -38,12 +38,12 @@ GOLD_ICON = "@gold!"
 
 # the pane titles and the window's rule tooltips (pp_construction_plan_l_english.yml) by group
 TITLES = {
-    "profiles": "Locations: last month",
-    "food": "Food: last month",
-    "logistics": "Logistics: last month",
-    "improve": "Improvements: last month",
-    "business": "Businesses: last month",
-    "country": "Towns and Buildings: last month",
+    "profiles": "Locations: its last look",
+    "food": "Food: its last look",
+    "logistics": "Logistics: its last look",
+    "improve": "Improvements: its last look",
+    "business": "Businesses: its last look",
+    "country": "Towns and Buildings: its last look",
 }
 # a town or city upgrade in a list of constructions (the window's type, pp_construction_plan.gui): the Towns and
 # Buildings group's upgrades are no buildings, so their list of building types is empty and this names them
@@ -151,17 +151,17 @@ def texts() -> dict[str, str]:
     """Every PP_CPLAN_D_ key with its English text (the GUI file uses these and the window's rule tooltips)."""
     d = detail_value
     out: dict[str, str] = {
-        "PP_CPLAN_D_SHOW": "Show what this rule group checked, spent and built last month",
-        "PP_CPLAN_D_HIDE": "Close the details and show last month's list again",
+        "PP_CPLAN_D_SHOW": "Show what this rule group checked, spent and built when it last looked",
+        "PP_CPLAN_D_HIDE": "Close the details and show the list of what was built again",
         # a group did not run: the plan was off (also before its first month), its bar is empty, or it has nothing to
         # do (no profile or mark anywhere; nothing switched on in the Towns and Buildings tab)
-        "PP_CPLAN_D_OFF": "It did not run last month: the plan was off, or its bar is empty.",
-        "PP_CPLAN_D_OFF_PROFILES": ("It did not run last month: the plan was off, its bar is empty, or no [location|e] "
-                                    "has a profile or a mark."),
-        "PP_CPLAN_D_OFF_COUNTRY": ("It did not run last month: the plan was off, its bar is empty, or nothing is "
-                                   "switched on in its tab."),
+        "PP_CPLAN_D_OFF": "It has not looked yet: the plan is off, its bar is empty, or its month has not come.",
+        "PP_CPLAN_D_OFF_PROFILES": ("It has not looked yet: the plan is off, its bar is empty, no [location|e] has a "
+                                    "profile or a mark, or its month has not come."),
+        "PP_CPLAN_D_OFF_COUNTRY": ("It has not looked yet: the plan is off, its bar is empty, nothing is switched on "
+                                   "in its tab, or its month has not come."),
         "PP_CPLAN_D_NO_WAIT": "Nothing waited for gold.",
-        "PP_CPLAN_D_BUILT": "Built last month",
+        "PP_CPLAN_D_BUILT": "Built since its last look",
         "PP_CPLAN_D_NOTHING": "Nothing was built.",
         "PP_CPLAN_D_YEAR_AGO": _ago(),
         "PP_CPLAN_D_LAST_MONTH": "last month",
@@ -202,12 +202,10 @@ def texts() -> dict[str, str]:
         out[f"PP_CPLAN_D_SUM_NEED_{key}"] = f"Wanted in {cp.HISTORY_MONTHS} months: {_show(need)}{GOLD_ICON}"
         out[f"PP_CPLAN_D_SUM_SPENT_{key}"] = f"Spent: {_show(spent)}{GOLD_ICON}"
         out[f"PP_CPLAN_D_CHART_TT_{key}"] = (
-            f"#T The last {cp.HISTORY_MONTHS} months#!\nOne column a month, last month on the right. Grey: the gold "
+            f"#T The last {cp.HISTORY_MONTHS} months#!\nOne column a month, last month on the right; a month in which it did not look shows nothing. Grey: the gold "
             "this group wanted; gold: what it spent. Both against its largest month.\n"
             f"In all it wanted {_show(need)}{GOLD_ICON} and spent {_show(spent)}{GOLD_ICON}."
-            # the business group does not look in a month without gold saved or coming in (pp_cplan_group_business)
-            + ("\nA month with no gold saved and none coming in shows nothing: it did not look for businesses then."
-               if group == "business" else ""))
+            )
 
     # the situation: what each rule read in the last pass
     out["PP_CPLAN_D_FOOD_SIT"] = (
@@ -233,11 +231,11 @@ def texts() -> dict[str, str]:
         f"{_show(d('business', 'best'), 1)} years.")
     out["PP_CPLAN_D_BUSINESS_NONE"] = f"No business pays back within {line} years."
     out["PP_CPLAN_D_BUSINESS_SKIPPED"] = (
-        "It had no gold saved and none came in, so it did not look for businesses: what they would have cost is not "
+        "It had no gold saved and none came in, so it did not rank its businesses: what they would have cost is not "
         "counted.")
     # the group runs a location's profile rules and its marks (the Location Plan's "Also build here"); both count
     out["PP_CPLAN_D_PROFILES_SIT"] = (
-        f"[locations|e] with a profile or marks: {_show(d('profiles', 'locs'))}. Their rules and marks last month:")
+        f"[locations|e] with a profile or marks: {_show(d('profiles', 'locs'))}. Their rules and marks at its last look:")
     for state, text in PROFILE_STATES.items():
         out[f"PP_CPLAN_D_PROFILES_ST{state}"] = f"{_show(d('profiles', f'st{state}'))} {text}"
 

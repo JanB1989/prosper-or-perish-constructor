@@ -411,3 +411,39 @@ pp_cplan_limits_market_103 = {
 pp_cplan_limits_market_107 = {
 	always = no
 }
+
+# ---- Script time: who looks when ([construction_plan] look_months) ----
+# Any scope: the game's month is one of the months this rule group, rule or chore does its walk.
+pp_cplan_looks_food = {
+	OR = { current_month = 1 current_month = 4 current_month = 7 current_month = 10 }
+}
+pp_cplan_looks_logistics = {
+	OR = { current_month = 2 current_month = 5 current_month = 8 current_month = 11 }
+}
+pp_cplan_looks_improve = {
+	OR = { current_month = 3 current_month = 9 }
+}
+pp_cplan_looks_profiles = {
+	OR = { current_month = 3 current_month = 6 current_month = 9 current_month = 12 }
+}
+pp_cplan_looks_business = {
+	OR = { current_month = 1 current_month = 7 }
+}
+pp_cplan_looks_upgrades = {
+	OR = { current_month = 4 current_month = 10 }
+}
+pp_cplan_looks_public = {
+	OR = { current_month = 6 current_month = 12 }
+}
+pp_cplan_looks_ranks = {
+	OR = { current_month = 2 current_month = 8 }
+}
+pp_cplan_looks_rights = {
+	OR = { current_month = 5 current_month = 11 }
+}
+pp_cplan_looks_market_count = {
+	OR = { current_month = 1 current_month = 4 current_month = 7 current_month = 10 }
+}
+pp_cplan_looks_business_types = {
+	OR = { current_month = 1 current_month = 7 }
+}

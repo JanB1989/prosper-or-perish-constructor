@@ -123,6 +123,11 @@ class Config:
     access_blacklist: tuple[str, ...] = ()
     business_years: int = 10
     business_market_share: int = 10  # % of a market's monthly demand a good's levels under construction may add up to
+    # script time (2026-11-10): the months a rule group or a chore looks (LOOKS), and the business group's numbers
+    look_months: tuple[tuple[str, tuple[int, ...]], ...] = ()
+    business_sites: int = 16  # sites whose business pick is refreshed a pass, at least
+    business_cycle_months: int = 24  # ... and every site within this many months, however large the country
+    business_tries: int = 6  # stored picks a look tries to build, best first
     profile_categories: tuple[str, ...] = ()
     weights: tuple[tuple[str, int], ...] = tuple((group, 5) for group in GROUPS)
 
@@ -179,9 +184,49 @@ def load_config(project: Path) -> Config:
         access_blacklist=tuple(data["access_blacklist"]),
         business_years=int(data["business_years"]),
         business_market_share=int(data["business_market_share"]),
+        look_months=_look_months(data["look_months"]),
+        business_sites=int(data["business_sites"]),
+        business_cycle_months=int(data["business_cycle_months"]),
+        business_tries=int(data["business_tries"]),
         profile_categories=tuple(whole.get(PROFILE_CATEGORIES_KEY, {}).get("categories", ())),
         weights=_weights(data["weights"]),
     )
+
+
+# Script time (Jan 2026-11-10: "the monthly pass takes 0.4 seconds ... it needs to be built so that it doesn't use
+# unnecessary script time"). The pass still runs every month (the purses fill, the business group refreshes a few
+# sites), but a rule group LOOKS (walks what it wants, best first) only in its months; between its looks it does one
+# thing only: build what it saves for once its purse can pay for it. [construction_plan] look_months names the
+# months of every look and chore (trigger pp_cplan_looks_<name>):
+LOOKS = (
+    "food", "logistics", "improve", "profiles",  # the rule groups that walk the whole country at a look
+    "business",  # the months the business group ranks its stored picks again while it saves (else every month)
+    "upgrades", "public", "ranks", "rights",  # Towns and Buildings, one rule a look
+    "market_count",  # the months the market limit counts what is under construction afresh
+    "business_types",  # the months the country's part of the business can-build check is asked again
+)
+
+
+def _look_months(table: dict) -> tuple[tuple[str, tuple[int, ...]], ...]:
+    if set(table) != set(LOOKS):
+        raise ValueError(f"[construction_plan] look_months: give exactly {', '.join(LOOKS)}")
+    found = tuple((name, tuple(sorted(int(month) for month in table[name]))) for name in LOOKS)
+    for name, months in found:
+        if not months or len(set(months)) != len(months) or not all(1 <= month <= 12 for month in months):
+            raise ValueError(f"[construction_plan] look_months.{name}: distinct months 1..12, at least one")
+    return found
+
+
+def render_looks(config: "Config") -> str:
+    """pp_cplan_looks_<name> (any scope): this month is one of the look's months."""
+    parts = [
+        "\n# ---- Script time: who looks when ([construction_plan] look_months) ----\n"
+        "# Any scope: the game's month is one of the months this rule group, rule or chore does its walk.\n"
+    ]
+    for name, months in config.look_months:
+        tests = " ".join(f"current_month = {month}" for month in months)
+        parts.append(f"pp_cplan_looks_{name} = {{\n\tOR = {{ {tests} }}\n}}\n")
+    return "".join(parts)
 
 
 def _weights(table: dict) -> tuple[tuple[str, int], ...]:
@@ -639,7 +684,10 @@ PURSE = "pp_cplan_purse"  # country variable pp_cplan_purse_<why>, + 100
 PURSE_IN = "pp_cplan_in"  # country variable pp_cplan_in_<why>, + 100: the gold the group received for this pass
 PURSE_HAND = "pp_cplan_hand"  # country variable pp_cplan_hand_<why>, + 100: handed on to it at the end of the last pass
 SAVE_COST = "pp_cplan_save_cost"  # country variable pp_cplan_save_cost_<why>, + 100: set = the group saves
-SAVE_VARS = ("cost", "loc", "type", "rank")  # pp_cplan_save_<x>_<why>: what it saves for (rank: a town / city upgrade)
+# pp_cplan_save_<x>_<why>: what it saves for (rank: a town / city upgrade; rv / rs: the reason value and step the
+# construction carries into the ledger when the purse can pay for it between two looks)
+SAVE_VARS = ("cost", "loc", "type", "rank", "rv", "rs")
+NOW = "pp_cplan_now"  # country variable pp_cplan_now_<why>: the group looked in this pass (cleared at each pass's start)
 
 
 def purse_value(group: str) -> str:
@@ -686,10 +734,11 @@ def render_purse_values() -> str:
             f"{PURSE}_kept_{why} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ {weight} > 0 }}\n"
             f"\t\tvalue = {PURSE}_n_{why}\n\t}}\n}}\n"
             f"# 1 while it saves for something (the last pass could not pay for what it wanted next)\n"
-            f"pp_cplan_saves_{why} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ has_variable = {SAVE_COST}_{why} }}\n"
+            f"pp_cplan_saves_{why} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{\n\t\t\thas_variable = {SAVE_COST}_{why}\n"
+            f"\t\t\t{weight} > 0\n\t\t}}\n"
             f"\t\tvalue = 1\n\t}}\n}}\n"
-            f"# 1 when it ran in the pass and saves for nothing: it hands on what it has\n"
-            f"pp_cplan_gives_{why} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{\n\t\t\thas_variable = pp_cplan_dran_{why}\n"
+            f"# 1 when it looked in this pass and saves for nothing: it hands on what it has\n"
+            f"pp_cplan_gives_{why} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{\n\t\t\thas_variable = {NOW}_{why}\n"
             f"\t\t\tNOT = {{ has_variable = {SAVE_COST}_{why} }}\n\t\t}}\n\t\tvalue = 1\n\t}}\n}}\n"
         )
     parts.append(
@@ -741,9 +790,12 @@ def render_purse_effects() -> str:
     for why in whys:
         fill.append(f"\tset_variable = {{ name = {PURSE}_{why} value = {{ value = scope:pp_cplan_np_{why} add = 100 }} }}\n"
                     f"\tset_variable = {{ name = {PURSE_IN}_{why} value = {{ value = scope:pp_cplan_ni_{why} add = 100 }} }}\n"
-                    f"\tremove_variable = {PURSE_HAND}_{why}\n"
-                    + "".join(f"\tremove_variable = pp_cplan_save_{name}_{why}\n" for name in SAVE_VARS
-                              if name != "rank" or why == GROUP_WHY["country"]))
+                    f"\tremove_variable = {PURSE_HAND}_{why}\n")
+    # what a group saves for stays until its next look; a group that no longer counts lets go of it
+    for group in GROUPS:
+        fill.append(f"\tif = {{\n\t\tlimit = {{ NOT = {{ {counted_weight(group)} > 0 }} }}\n"
+                    f"\t\tpp_cplan_save_clear = {{ why = {GROUP_WHY[group]} }}\n"
+                    + ("\t\tremove_variable = pp_cplan_save_rank_107\n" if group == "country" else "") + "\t}\n")
     hand = []
     for why in whys:
         hand.append(f"\tsave_temporary_scope_value_as = {{ name = pp_cplan_np_{why} value = pp_cplan_hand_next_{why} }}\n"
@@ -841,30 +893,49 @@ SITUATION: dict[str, tuple[tuple[str, int], ...]] = {
 
 
 def render_stats_effects() -> str:
-    """The pass's bookkeeping for the detail panes: the numbers start afresh each pass (pp_cplan_stats_reset), the
-    pass's gold wanted and spent go into the history at its end (pp_cplan_history_push: the oldest month drops out),
-    and switching the plan on clears the history (pp_cplan_history_clear)."""
-    reset, push, clear = [], [], []
+    """The bookkeeping for the detail panes. A rule group looks only a few times a year (LOOKS), so its numbers, its
+    list of constructions and its situation stay until its next look (pp_cplan_stats_reset_<why>, called by
+    pp_cplan_group_start); pp_cplan_pass_reset forgets at each pass's start who looked in the last one
+    (pp_cplan_now_<why>); the gold a group wanted and spent in a pass in which it looked goes into the history at the
+    pass's end (pp_cplan_history_push: the oldest month drops out, a month without a look shows nothing), and
+    switching the plan on clears the history (pp_cplan_history_clear)."""
+    resets, now, push, clear = [], [], [], []
     for group in GROUPS:
         why = GROUP_WHY[group]
-        reset.append(f"\t# {group}\n\tremove_variable = pp_cplan_dran_{why}\n\tclear_variable_list = pp_cplan_log_{why}\n")
-        reset += [f"\tset_variable = {{ name = pp_cplan_{var}_{why} value = 100 }}\n" for var in GROUP_NUMBERS.values()]
-        reset += [f"\tset_variable = {{ name = pp_cplan_ds_{group}_{name} value = {start} }}\n"
-                  for name, start in SITUATION[group]]
+        rank = "\t\tremove_variable = pp_cplan_log_rank\n" if group == "country" else ""
+        resets.append(
+            f"\n# Country scope: the {group} group looks: what its last look left for the window is gone (its list of\n"
+            f"# constructions and their entries on the locations, its numbers, its situation).\n"
+            f"pp_cplan_stats_reset_{why} = {{\n"
+            f"\tevery_in_list = {{\n\t\tvariable = pp_cplan_log_{why}\n\t\tpp_cplan_log_clear = {{ why = {why} }}\n{rank}\t}}\n"
+            f"\tclear_variable_list = pp_cplan_log_{why}\n"
+            # only Towns and Buildings can save for a town or city upgrade (no other group ever sets the variable)
+            + ("\tremove_variable = pp_cplan_save_rank_107\n" if group == "country" else "")
+            + "".join(f"\tset_variable = {{ name = pp_cplan_{var}_{why} value = 100 }}\n" for var in GROUP_NUMBERS.values())
+            + "".join(f"\tset_variable = {{ name = pp_cplan_ds_{group}_{name} value = {start} }}\n"
+                      for name, start in SITUATION[group])
+            + "}\n")
+        now.append(f"\tremove_variable = {NOW}_{why}\n")
         push.append(f"\t# {group}\n")
         for kind in ("hn", "hs"):
             push += [f"\tpp_cplan_copy_num = {{ from = pp_cplan_{kind}_{why}_{k - 1} to = pp_cplan_{kind}_{why}_{k} }}\n"
                      for k in range(HISTORY_MONTHS, 1, -1)]
             clear += [f"\tremove_variable = pp_cplan_{kind}_{why}_{k}\n" for k in range(1, HISTORY_MONTHS + 1)]
-        push.append(f"\tset_variable = {{ name = pp_cplan_hn_{why}_1 value = {{ value = var:pp_cplan_dspent_{why} "
-                    f"add = var:pp_cplan_dwait_{why} subtract = 100 }} }}\n")
-        push.append(f"\tset_variable = {{ name = pp_cplan_hs_{why}_1 value = var:pp_cplan_dspent_{why} }}\n")
+        push.append(
+            f"\tif = {{\n\t\tlimit = {{ has_variable = {NOW}_{why} }}\n"
+            f"\t\tset_variable = {{ name = pp_cplan_hn_{why}_1 value = {{ value = var:pp_cplan_dspent_{why} "
+            f"add = var:pp_cplan_dwait_{why} subtract = 100 }} }}\n"
+            f"\t\tset_variable = {{ name = pp_cplan_hs_{why}_1 value = var:pp_cplan_dspent_{why} }}\n\t}}\n"
+            f"\telse = {{\n\t\tset_variable = {{ name = pp_cplan_hn_{why}_1 value = 100 }}\n"
+            f"\t\tset_variable = {{ name = pp_cplan_hs_{why}_1 value = 100 }}\n\t}}\n")
     return (
-        "\n# ---- The window's detail panes (rules never read these) ----\n\n"
-        "# Country scope, at the start of pp_cplan_run: every rule group's numbers start afresh (+ 100; the running\n"
-        "# minimums high).\npp_cplan_stats_reset = {\n" + "".join(reset) + "}\n\n"
-        f"# Country scope, at the end of pp_cplan_run: the pass's gold wanted (spent + waiting for gold) and spent per rule\n"
-        f"# group become month 1 of the history, the older months move up one, month {HISTORY_MONTHS} drops out.\n"
+        "\n# ---- The window's detail panes (rules never read these) ----\n"
+        + "".join(resets)
+        + "\n# Country scope, at the start of pp_cplan_run: nobody has looked in this pass yet.\n"
+        "pp_cplan_pass_reset = {\n" + "".join(now) + "}\n\n"
+        f"# Country scope, at the end of pp_cplan_run: for a rule group that looked in this pass its gold wanted (spent +\n"
+        f"# waiting for gold) and spent become month 1 of the history (nothing for a group that did not look), the older\n"
+        f"# months move up one, month {HISTORY_MONTHS} drops out.\n"
         "pp_cplan_history_push = {\n" + "".join(push) + "}\n\n"
         "# Country scope: the history is gone (the plan was switched on).\npp_cplan_history_clear = {\n" + "".join(clear) + "}\n"
     )
@@ -879,7 +950,7 @@ def render_stats_values() -> str:
         return (f"{name} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ has_variable = {var} }}\n"
                 f"\t\tvalue = var:{var}\n\t\tsubtract = 100\n\t}}\n}}\n")
 
-    parts = ["\n# ---- The window's detail panes (country scope; pp_cplan_stats_reset, pp_cplan_history_push) ----\n"]
+    parts = ["\n# ---- The window's detail panes (country scope; pp_cplan_stats_reset_<why>, pp_cplan_history_push) ----\n"]
     for group in GROUPS:
         why = GROUP_WHY[group]
         prefix = f"pp_cplan_d_{group}"
@@ -922,6 +993,22 @@ def render_values(config: Config, demands: dict[str, dict[str, float]] | None = 
         "pp_cplan_improve_line = {\n\tvalue = pp_cplan_improve_pct\n\tdivide = 100\n}\n"
         "# Country scope: the business line as the yearly return a level must reach, in % of its cost (100 / years).\n"
         "pp_cplan_business_min_roi = {\n\tvalue = 100\n\tdivide = { value = pp_cplan_business_years min = 1 }\n}\n"
+    )
+    parts.append(
+        "\n# ---- Script time: the business group's sites ([construction_plan] business_sites / _cycle_months / _tries) ----\n"
+        "# Country scope: the sites whose business pick the pass refreshes: a fixed few, or as many as it takes to see\n"
+        "# every location the country ever numbered (pp_cplan_seq_n) within the cycle.\n"
+        "pp_cplan_bz_window = {\n\tvalue = 0\n\tif = {\n\t\tlimit = { has_variable = pp_cplan_seq_n }\n"
+        f"\t\tvalue = var:pp_cplan_seq_n\n\t\tsubtract = 100\n\t\tdivide = {config.business_cycle_months}\n\t}}\n"
+        f"\tmin = {config.business_sites}\n}}\n"
+        "# Any scope: the stored picks a look of the business group tries to build, best first.\n"
+        f"pp_cplan_bz_tries = {{ value = {config.business_tries} }}\n"
+        "# Country scope: what the rule groups started and spent at their last looks (the window's summary).\n"
+        "pp_cplan_all_started = {\n\tvalue = 0\n"
+        + "".join(f"\tadd = pp_cplan_d_{group}_started\n" for group in GROUPS)
+        + "}\npp_cplan_all_spent = {\n\tvalue = 0\n"
+        + "".join(f"\tadd = pp_cplan_d_{group}_spent\n" for group in GROUPS)
+        + "}\n"
     )
     parts.append(_constant(
         "pp_cplan_market_share", config.business_market_share / 100,
@@ -1646,7 +1733,7 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
         # the hunger steps wait for what they start (staple food makers, Taverns); kitchens are built anyway and must
         # not hold farms back for the year a Cookshop takes (seen in game 2026-11-08)
         mod_root / TRIGGERS: render_triggers(demands, food_buildings + list(config.taverns),
-                                             config.construction_goods_months) + market_triggers,
+                                             config.construction_goods_months) + market_triggers + render_looks(config),
         mod_root / WEIGHT_GUI: render_weight_gui(),
         # the window's detail panes (Jan 2026-11-09): a cog per rule group, the numbers render_stats_values gives
         mod_root / construction_plan_detail.DETAIL_GUI: construction_plan_detail.render_gui(),

@@ -16,7 +16,10 @@ pp_cplan_free_gold = {
 # lowest first (ordered_province takes the highest value first).
 pp_cplan_food_order = {
 	value = 0
-	subtract = pp_cplan_food_in_a_year
+	if = {
+		limit = { has_variable = pp_cplan_fy }
+		subtract = var:pp_cplan_fy
+	}
 }
 
 # Location scope: the owner's logistics line as a market access fraction.

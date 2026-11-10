@@ -163,7 +163,8 @@ def test_budget_is_the_gold_above_the_reserve() -> None:
             assert f"add = pp_cplan_{group}_w\n" not in total
         if group not in ("profiles", "country"):  # those two start themselves (pp_lprof_run, pp_cplan_group_country)
             body = _effect(_read(EFFECTS), f"pp_cplan_group_{group}")
-            assert (f"limit = {{ pp_cplan_{group}_w > 0 }}\n\t\tpp_cplan_group_start = {{ why = {why} }}") in body
+            assert f"limit = {{ pp_cplan_{group}_w > 0 }}" in body
+            assert f"pp_cplan_group_start = {{ why = {why} }}" in _effect(_read(EFFECTS), f"pp_cplan_look_{group}")
     config = cp.load_config(PROJECT)
     assert dict(config.weights) == {group: 5 for group in cp.GROUPS}
     gone = re.compile(r"pp_cplan_(?:pot|cap|share_\w+|budget_left)\b")
@@ -308,7 +309,9 @@ def test_groups_take_turns_by_month() -> None:
     never = run[run.index("limit = { always = no }"):]
     for declare in ("pp_cplan_declare_flags", "pp_cplan_country_declare", "pp_lprof_declare_flags"):
         assert f"{declare} = yes" in never, declare
-    assert run.rindex("pp_cplan_group_business = yes") < run.index("pp_cplan_country_rights = yes") < run.index("pp_cplan_history_push = yes")
+    assert run.rindex("pp_cplan_group_business = yes") < run.index("pp_cplan_country_rights = yes") < run.index("pp_cplan_pass_end = yes")
+    assert run.index("pp_cplan_pass_begin = yes") < run.index("pp_cplan_group_profiles = yes")
+    assert "pp_cplan_history_push = yes" in _effect(_read(EFFECTS), "pp_cplan_pass_end")
 
 
 # ---- Businesses (Jan 2026-11-09) ----
@@ -382,11 +385,16 @@ def test_business_estimate_takes_this_years_harvest_out() -> None:
 
 
 def test_business_group_builds_the_best_returns_first() -> None:
-    group = _effect(_read(EFFECTS), "pp_cplan_group_business")
-    assert group.index("pp_cplan_business_types = yes") < group.index("pp_cplan_business_pick = yes") < group.index("order_by = pp_cplan_bz_order")
-    assert "limit = { pp_cplan_business_site = yes }" in group
-    assert "pp_cplan_construct_scoped = { why = 103 }" in group
-    assert group.index("order_by = pp_cplan_bz_order") < group.index("pp_cplan_business_types_clear = yes")
+    # the picks of a few sites every pass (the country's part of the can-build check before any site), then at a
+    # look the stored picks ranked and the best few built, each worked out afresh first
+    # (tests/test_construction_plan_cost.py)
+    effects = _read(EFFECTS)
+    refresh = _effect(effects, "pp_cplan_business_refresh")
+    assert refresh.index("pp_cplan_business_types = yes") < refresh.index("pp_cplan_business_pick = yes")
+    assert "limit = { pp_cplan_business_site = yes }" in refresh
+    assert "order_by = pp_cplan_bz_order" in _effect(effects, "pp_cplan_look_business")
+    here = _effect(effects, "pp_cplan_business_here")
+    assert here.index("pp_cplan_business_pick = yes") < here.index("pp_cplan_construct_scoped = { why = 103 }")
     site = _effect(_read(TRIGGERS), "pp_cplan_business_site")
     for part in ("pp_cplan_location_ok = yes", "NOT = { has_variable = pp_lprof_xg }", "pp_cplan_site_free = yes",
                  "market ?= { always = yes }"):
@@ -398,13 +406,12 @@ def test_business_group_does_not_look_without_gold() -> None:
     saved nor gold coming in can build nothing and save for nothing, so it does not look; it marks that for its pane,
     which then says so instead of "nothing waited for gold" (what the businesses would have cost is not counted in
     such a month)."""
-    group = _effect(_read(EFFECTS), "pp_cplan_group_business")
+    group = _effect(_read(EFFECTS), "pp_cplan_look_business")
     start = group.index("pp_cplan_group_start = { why = 103 }")
-    gate = group.index("OR = {\n\t\t\t\t\tpp_cplan_purse_n_103 > 0.01\n\t\t\t\t\tpp_cplan_in_n_103 > 0.01\n\t\t\t\t}")
-    skipped = group.index("else = {\n\t\t\tset_variable = { name = pp_cplan_ds_business_skipped value = 101 }")
-    # everything dear sits behind the gate
-    assert start < gate < group.index("pp_cplan_business_types = yes") < group.index("pp_cplan_business_pick = yes")
-    assert group.index("pp_cplan_business_types_clear = yes") < skipped
+    gate = group.index("OR = {\n\t\t\t\tpp_cplan_purse_n_103 > 0.01\n\t\t\t\tpp_cplan_in_n_103 > 0.01\n\t\t\t}")
+    skipped = group.index("else = {\n\t\tset_variable = { name = pp_cplan_ds_business_skipped value = 101 }")
+    # the ranking and the tries sit behind the gate
+    assert start < gate < group.index("order_by = pp_cplan_bz_order") < group.index("pp_cplan_business_here = yes") < skipped
     assert ("skipped", 100) in cp.SITUATION["business"]
     from prosper_or_perish_constructor import construction_plan_detail as cpd
 
@@ -416,8 +423,8 @@ def test_business_group_does_not_look_without_gold() -> None:
         assert line and line.group(1).endswith(f", {looked})"), key
     assert re.search(r"visible = \"\[GreaterThan_CFixedPoint\(GetPlayer\.MakeScope\.ScriptValue\('pp_cplan_d_business_skipped'\), "
                      r"'\(CFixedPoint\)0\.5'\)\]\"\n\t+text = \"PP_CPLAN_D_BUSINESS_SKIPPED\"", pane)
-    assert "did not look" in cpd.texts()["PP_CPLAN_D_BUSINESS_SKIPPED"]
-    assert "did not look" in cpd.texts()["PP_CPLAN_D_CHART_TT_BUSINESS"]
+    assert "did not rank" in cpd.texts()["PP_CPLAN_D_BUSINESS_SKIPPED"]
+    assert "did not look shows nothing" in cpd.texts()["PP_CPLAN_D_CHART_TT_BUSINESS"]
 
 
 # ---- Shared guards ----
@@ -566,7 +573,7 @@ def test_one_place_says_when_a_site_is_free() -> None:
     sites = food[food.index("ordered_location_in_province"):food.index("order_by = pp_cplan_farm_best_roi")]
     assert "pp_cplan_farm_ok = yes" in sites and "pp_cplan_site_free = yes" in sites
     for group, build in (("logistics", "pp_cplan_try_logistics_here"), ("improve", "pp_cplan_try_improve_here")):
-        assert f"limit = {{ pp_cplan_site_free = yes }}\n\t\t\t\t{build} = yes" in _effect(effects, f"pp_cplan_group_{group}"), group
+        assert f"limit = {{ pp_cplan_site_free = yes }}\n\t\t{build} = yes" in _effect(effects, f"pp_cplan_{group}_here"), group
 
 
 # ---- Baseline rules (Jan 2026-11-08) ----
@@ -591,15 +598,20 @@ def test_nothing_is_kept_between_passes() -> None:
         for gone in ("pp_cplan_gw", "pp_cplan_fw", "pp_cplan_al", "pp_cplan_mm", "pp_cplan_mkt",
                      "pp_cplan_count_up", "pp_cplan_reset_watch", "_watch = yes"):
             assert gone not in text, f"{path.name}: {gone}"
-    run = _effect(_read(EFFECTS), "pp_cplan_run")
-    end = run[run.index("pp_cplan_country_rights = yes"):]
+    end = _effect(_read(EFFECTS), "pp_cplan_pass_end")
     for line in ("remove_variable = pp_cplan_hit", "remove_variable = pp_cplan_noted", "remove_variable = pp_cplan_wait",
-                 "remove_variable = pp_cplan_mlim", "pp_cplan_markets_clear = yes"):
+                 "remove_variable = pp_cplan_mlim"):
         assert line in end, line
-    assert "pp_cplan_business_types_clear = yes" in _effect(_read(EFFECTS), "pp_cplan_group_business")
-    # what a group saves for starts afresh at the pass's start
+    # kept on purpose since the script time rework (2026-11-10; tests/test_construction_plan_cost.py): a site's
+    # business pick, what a group saves for until its next look, the market limit's counts until its next count
+    begin = _effect(_read(EFFECTS), "pp_cplan_pass_begin")
+    assert "limit = { pp_cplan_looks_market_count = yes }\n\t\tpp_cplan_markets_clear = yes" in begin
+    # what a group saved for goes when it looks again (and its purse and target when it stops counting)
+    start = _effect(_read(EFFECTS), "pp_cplan_group_start")
+    assert "pp_cplan_save_clear = { why = $why$ }" in start
+    clear = _effect(_read(EFFECTS), "pp_cplan_save_clear")
     fill = _effect(_read(MOD / cp.EFFECTS), "pp_cplan_purses_fill")
-    for why in cp.GROUP_WHY.values():
+    for why in ():
         for name in cp.SAVE_VARS:
             # the rank (a town or city upgrade) is Towns and Buildings' alone: no other group ever sets it
             wanted = name != "rank" or why == cp.GROUP_WHY["country"]
@@ -725,8 +737,8 @@ def test_improvements_cheap_and_much_first() -> None:
         assert f"location_and_owner_can_build = {{ building_type = {key} }}" in picker, key
         value = _effect(generated, f"pp_cplan_imp_{key}")
         assert f"building_type:{key}.building_base_cost_in_gold" in value
-    run = _effect(_read(EFFECTS), "pp_cplan_group_improve")
-    block = run[run.index("pp_cplan_improve_w > 0"):run.index("pp_cplan_try_improve_here")]
+    run = _effect(_read(EFFECTS), "pp_cplan_look_improve")
+    block = run[run.index("pp_cplan_group_start"):run.index("pp_cplan_improve_here = yes")]
     assert "location_population_percentage >= scope:pp_cplan_country.pp_cplan_improve_line" in block
     assert "order_by = pp_cplan_fill_here" in block
 
@@ -742,7 +754,7 @@ def test_construction_goods_cover_months_of_draw() -> None:
 
 def test_profile_pass_gives_every_location_a_turn() -> None:
     """Test world 2026-11-08: in the list's own order the profile assigned last built nothing in ten years."""
-    run = _effect(_read(PROFILE_EFFECTS), "pp_lprof_run")
+    run = _effect(_read(PROFILE_EFFECTS), "pp_lprof_look")
     assert "ordered_in_list = {" in run and "order_by = pp_lprof_turn" in run
     assert "every_in_list" not in run.split("ordered_in_list")[1]
     assert "subtract = total_building_levels" in _effect(_read(VALUES), "pp_lprof_turn")
@@ -790,8 +802,8 @@ def test_groups_count_what_waits_for_gold() -> None:
     # the decision units clear the mark: each food province, each profile location, each location of the other groups
     assert _effect(effects, "pp_cplan_food_province").count("remove_variable = pp_cplan_noted") == 2
     for group in ("logistics", "improve", "business"):
-        assert "remove_variable = pp_cplan_noted" in _effect(effects, f"pp_cplan_group_{group}"), group
-    profiles = _effect(_read(PROFILE_EFFECTS), "pp_lprof_run")
+        assert "remove_variable = pp_cplan_noted" in _effect(effects, f"pp_cplan_{group}_here"), group
+    profiles = _effect(_read(PROFILE_EFFECTS), "pp_lprof_location_turn")
     assert profiles.index("remove_variable = pp_cplan_noted") < profiles.index("pp_lprof_location_rules = yes")
 
 
@@ -820,25 +832,31 @@ def test_detail_numbers_per_group() -> None:
                  "name = pp_cplan_log_step "):
         assert name not in effects, name
     run = _effect(effects, "pp_cplan_run")
-    assert run.index("pp_cplan_stats_reset = yes") < run.index("pp_cplan_group_profiles = yes")
-    assert run.rindex("pp_cplan_group_improve = yes") < run.index("pp_cplan_history_push = yes")
+    # a group's numbers and list stay until its next look: its look resets them, not the pass
+    assert "pp_cplan_stats_reset_$why$ = yes" in _effect(effects, "pp_cplan_group_start")
+    assert "pp_cplan_pass_reset = yes" in _effect(effects, "pp_cplan_pass_begin")
+    assert run.rindex("pp_cplan_group_improve = yes") < run.index("pp_cplan_pass_end = yes")
     forget = _effect(effects, "pp_cplan_log_clear")
     assert "clear_variable_list = pp_cplan_log_types_$why$" in forget
     for name in ("pp_cplan_log_cost", "pp_cplan_log_val", "pp_cplan_log_step"):
         assert f"remove_variable = {name}_$why$" in forget, name
     for why in cp.GROUP_WHY.values():
-        assert f"pp_cplan_log_clear = {{ why = {why} }}" in run, why
+        # the group's own look forgets what its last look left on the locations
+        own = _effect(generated, f"pp_cplan_stats_reset_{why}")
+        assert f"variable = pp_cplan_log_{why}\n\t\tpp_cplan_log_clear = {{ why = {why} }}" in own, why
         for name in ("cost", "val", "step"):
             assert re.search(rf"^pp_cplan_log_{name}_{why}_n = \{{", _read(VALUES), re.MULTILINE), (name, why)
-    assert "remove_variable = pp_cplan_log_rank" in run
-    reset = _effect(generated, "pp_cplan_stats_reset")
+    assert "remove_variable = pp_cplan_log_rank" in _effect(generated, "pp_cplan_stats_reset_107")
+    now = _effect(generated, "pp_cplan_pass_reset")
     push = _effect(generated, "pp_cplan_history_push")
     clear = _effect(generated, "pp_cplan_history_clear")
     months = cp.HISTORY_MONTHS
     assert {"goods": "dgo", "limited": "dml"}.items() <= cp.GROUP_NUMBERS.items()
     for group in cp.GROUPS:
         why = cp.GROUP_WHY[group]
-        assert f"clear_variable_list = pp_cplan_log_{why}" in reset and f"remove_variable = pp_cplan_dran_{why}" in reset
+        reset = _effect(generated, f"pp_cplan_stats_reset_{why}")
+        assert f"clear_variable_list = pp_cplan_log_{why}" in reset and f"pp_cplan_dran_{why}" not in reset
+        assert f"remove_variable = pp_cplan_now_{why}\n" in now
         for var in cp.GROUP_NUMBERS.values():
             assert f"set_variable = {{ name = pp_cplan_{var}_{why} value = 100 }}" in reset, (group, var)
         for name, start_value in cp.SITUATION[group]:
@@ -847,8 +865,9 @@ def test_detail_numbers_per_group() -> None:
         assert f"from = pp_cplan_hn_{why}_{months - 1} to = pp_cplan_hn_{why}_{months} " in push
         # the oldest month moves first, so nothing is copied twice
         assert push.index(f"to = pp_cplan_hn_{why}_{months} ") < push.index(f"to = pp_cplan_hn_{why}_2 ")
-        assert (f"name = pp_cplan_hn_{why}_1 value = {{ value = var:pp_cplan_dspent_{why} add = var:pp_cplan_dwait_{why} "
-                f"subtract = 100 }}") in push
+        assert (f"limit = {{ has_variable = pp_cplan_now_{why} }}\n\t\tset_variable = {{ name = pp_cplan_hn_{why}_1 value = "
+                f"{{ value = var:pp_cplan_dspent_{why} add = var:pp_cplan_dwait_{why} subtract = 100 }} }}") in push
+        assert f"else = {{\n\t\tset_variable = {{ name = pp_cplan_hn_{why}_1 value = 100 }}" in push  # no look: nothing
         assert f"remove_variable = pp_cplan_hs_{why}_{months}" in clear
         for number in (*cp.GROUP_NUMBERS, "need", "ran"):
             assert f"pp_cplan_d_{group}_{number} = {{" in values, (group, number)
@@ -864,8 +883,8 @@ def test_detail_numbers_per_group() -> None:
         assert f"save_temporary_scope_value_as = {{ name = pp_cplan_rs value = {step} }}" in food, step
     for group, value, build in (("logistics", "pp_cplan_access_normal multiply = 100", "pp_cplan_try_logistics_here"),
                                 ("improve", "location_population_percentage multiply = 100", "pp_cplan_try_improve_here"),
-                                ("business", "value = 100 divide = var:pp_cplan_bz_roi", "pp_cplan_construct_scoped")):
-        body = _effect(effects, f"pp_cplan_group_{group}")
+                                ("business", "value = pp_cplan_bz_years add = 100", "pp_cplan_construct_scoped")):
+        body = _effect(effects, f"pp_cplan_{group}_here")
         assert value in body and body.index("name = pp_cplan_rv") < body.index(build), group
     assert "save_temporary_scope_value_as = { name = pp_cplan_rs value = $r$ }" in _effect(_read(PROFILE_EFFECTS), "pp_lprof_rule")
     assert "pp_cplan_history_clear = yes" in _effect(_read(SCRIPTED_GUIS), "pp_cplan_toggle_on")

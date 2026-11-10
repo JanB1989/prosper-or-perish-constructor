@@ -745,6 +745,49 @@ def render_upgrades(pairs: list[tuple[str, str]], costs: dict[str, cp.BuildingCo
     return "".join(parts)
 
 
+def render_target(ranks: list[Rank]) -> str:
+    """pp_cplan_country_target (location scope): what the group saved for, now that its purse can pay: the town or city
+    upgrade (scope:pp_cplan_trank 1 / 2, with the rule's own gates) or one level of scope:pp_cplan_btype (the country's
+    part of the can-build check, and for a public building, scope:pp_cplan_rs = 1, the location's part too; an
+    upgrade of a building does not ask it), where the group may still build and the market holds the construction
+    goods."""
+    parts = [
+        "\n# Location scope (pp_cplan_group_target: where the group saved for something, its purse can pay now): the town or\n"
+        "# city upgrade it saved for (scope:pp_cplan_trank 1 / 2) with that rule's gates, or one level of the building\n"
+        "# type it saved for (scope:pp_cplan_btype): the country's part of the can-build check, for a public building\n"
+        f"# (scope:pp_cplan_rs = {STEP_BUILDING}) the location's part too (an upgrade of a building does not ask it), and the\n"
+        "# construction goods in the market. Through the plan's one construct path, as at a look.\n"
+        "pp_cplan_country_target = {\n"
+        f"\tscope:pp_cplan_country = {{ remove_variable = pp_cplan_save_rank_{WHY} }}\n"
+        "\tif = {\n\t\tlimit = { pp_cplan_country_site = yes }\n"
+    ]
+    for position, rank in enumerate(ranks):
+        number = SAVE_RANK[rank.key] - 100
+        parts.append(
+            f"\t\t{'if' if position == 0 else 'else_if'} = {{\n"
+            f"\t\t\tlimit = {{ scope:pp_cplan_trank > {number - 0.5:g} scope:pp_cplan_trank < {number + 0.5:g} }}\n"
+            "\t\t\tif = {\n\t\t\t\tlimit = {\n"
+            f"\t\t\t\t\tlocation_rank = location_rank:{rank.source}\n"
+            "\t\t\t\t\tmodifier:cannot_upgrade_location = no\n"
+            f"\t\t\t\t\tpp_cplan_country_goods_{rank.key} = yes\n\t\t\t\t}}\n"
+            f"\t\t\t\tpp_cplan_country_rank_up = {{ rank = {rank.key} n = {SAVE_RANK[rank.key]} }}\n\t\t\t}}\n\t\t}}\n"
+        )
+    parts.append(
+        "\t\telse_if = {\n"
+        "\t\t\tlimit = {\n\t\t\t\tscope:pp_cplan_country = { can_build_building = scope:pp_cplan_btype }\n"
+        "\t\t\t\tOR = {\n"
+        f"\t\t\t\t\tscope:pp_cplan_rs > {STEP_BUILDING + 0.5:g}\n"
+        "\t\t\t\t\tcan_build_building = scope:pp_cplan_btype\n\t\t\t\t}\n\t\t\t}\n"
+        "\t\t\tpp_cplan_btype_data = yes\n"
+        "\t\t\tif = {\n\t\t\t\tlimit = { scope:pp_cplan_gok > 0.5 }\n"
+        "\t\t\t\tscope:pp_cplan_country = { remove_variable = pp_cplan_noted }\n"
+        f"\t\t\t\tpp_cplan_construct_scoped = {{ why = {WHY} }}\n\t\t\t}}\n"
+        f"\t\t\telse = {{\n\t\t\t\tpp_cplan_note_goods = {{ why = {WHY} }}\n\t\t\t}}\n"
+        "\t\t}\n\t}\n}\n"
+    )
+    return "".join(parts)
+
+
 def render_effects(buildings: list[Building], rights: list[Right], costs: dict[str, cp.BuildingCost],
                    ranks: list[Rank], pairs: list[tuple[str, str]]) -> str:
     """The group, its three rules, the rights rule and the declarations. ``rights`` in the rule's order."""
@@ -766,15 +809,37 @@ def render_effects(buildings: list[Building], rights: list[Right], costs: dict[s
         "# It pays from its purse like every rule group (pp_construction_plan.txt, \"Budgets that save\"): the first thing it\n"
         "# wants and cannot pay for, a building or a town or city upgrade, is what it saves for, and it starts nothing more\n"
         "# in the pass.\n"
+        "# Script time (2026-11-10): every rule walks all owned locations (the public buildings once per ticked building,\n"
+        "# the upgrades every building of every location), so each rule looks only in its own months ([construction_plan]\n"
+        "# look_months: pp_cplan_looks_upgrades / _public / _ranks), one rule a look. While the group saves for something\n"
+        "# it does not look at all: once its purse can pay, it goes back to that one location (pp_cplan_group_target,\n"
+        "# pp_cplan_country_target), and looks again from its next month on.\n"
         "pp_cplan_group_country = {\n"
         "\tif = {\n"
         "\t\tlimit = { pp_cplan_country_w > 0 }\n"
-        f"\t\tpp_cplan_group_start = {{ why = {WHY} }}\n"
-        "\t\tpp_cplan_country_upgrades = yes\n"
-        "\t\tpp_cplan_country_buildings = yes\n"
-        "\t\tpp_cplan_country_ranks = yes\n"
+        "\t\tif = {\n"
+        f"\t\t\tlimit = {{ pp_cplan_saving = {{ why = {WHY} }} }}\n"
+        f"\t\t\tpp_cplan_group_target = {{ why = {WHY} do = pp_cplan_country_target }}\n"
+        "\t\t}\n"
+        "\t\telse_if = {\n"
+        "\t\t\tlimit = {\n\t\t\t\tOR = {\n\t\t\t\t\tpp_cplan_looks_upgrades = yes\n\t\t\t\t\tpp_cplan_looks_public = yes\n"
+        "\t\t\t\t\tpp_cplan_looks_ranks = yes\n\t\t\t\t}\n\t\t\t}\n"
+        f"\t\t\tpp_cplan_group_start = {{ why = {WHY} }}\n"
+        "\t\t\tif = {\n\t\t\t\tlimit = { pp_cplan_looks_upgrades = yes }\n\t\t\t\tpp_cplan_country_upgrades = yes\n\t\t\t}\n"
+        "\t\t\tif = {\n\t\t\t\tlimit = { pp_cplan_looks_public = yes }\n\t\t\t\tpp_cplan_country_buildings = yes\n\t\t\t}\n"
+        "\t\t\tif = {\n\t\t\t\tlimit = { pp_cplan_looks_ranks = yes }\n\t\t\t\tpp_cplan_country_ranks = yes\n\t\t\t}\n"
+        "\t\t}\n"
         "\t}\n"
         "}\n"
+        "\n# Country scope, for the console (pp_cplan_test_country, to time the group): its three rules in one look, whatever\n"
+        "# the month.\n"
+        "pp_cplan_look_country_all = {\n"
+        f"\tpp_cplan_group_start = {{ why = {WHY} }}\n"
+        "\tpp_cplan_country_upgrades = yes\n"
+        "\tpp_cplan_country_buildings = yes\n"
+        "\tpp_cplan_country_ranks = yes\n"
+        "}\n"
+        + render_target(ranks)
         + render_upgrades(pairs, costs)
         + "\n# ---- Public buildings ----\n"
         "\n# Country scope: every ticked building in the tab's order. The country's part of the can-build check runs once per\n"

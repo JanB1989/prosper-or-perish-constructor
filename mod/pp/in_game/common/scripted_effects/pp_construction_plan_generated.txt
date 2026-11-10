@@ -6690,40 +6690,46 @@ pp_cplan_purses_fill = {
 	set_variable = { name = pp_cplan_purse_105 value = { value = scope:pp_cplan_np_105 add = 100 } }
 	set_variable = { name = pp_cplan_in_105 value = { value = scope:pp_cplan_ni_105 add = 100 } }
 	remove_variable = pp_cplan_hand_105
-	remove_variable = pp_cplan_save_cost_105
-	remove_variable = pp_cplan_save_loc_105
-	remove_variable = pp_cplan_save_type_105
 	set_variable = { name = pp_cplan_purse_101 value = { value = scope:pp_cplan_np_101 add = 100 } }
 	set_variable = { name = pp_cplan_in_101 value = { value = scope:pp_cplan_ni_101 add = 100 } }
 	remove_variable = pp_cplan_hand_101
-	remove_variable = pp_cplan_save_cost_101
-	remove_variable = pp_cplan_save_loc_101
-	remove_variable = pp_cplan_save_type_101
 	set_variable = { name = pp_cplan_purse_102 value = { value = scope:pp_cplan_np_102 add = 100 } }
 	set_variable = { name = pp_cplan_in_102 value = { value = scope:pp_cplan_ni_102 add = 100 } }
 	remove_variable = pp_cplan_hand_102
-	remove_variable = pp_cplan_save_cost_102
-	remove_variable = pp_cplan_save_loc_102
-	remove_variable = pp_cplan_save_type_102
 	set_variable = { name = pp_cplan_purse_106 value = { value = scope:pp_cplan_np_106 add = 100 } }
 	set_variable = { name = pp_cplan_in_106 value = { value = scope:pp_cplan_ni_106 add = 100 } }
 	remove_variable = pp_cplan_hand_106
-	remove_variable = pp_cplan_save_cost_106
-	remove_variable = pp_cplan_save_loc_106
-	remove_variable = pp_cplan_save_type_106
 	set_variable = { name = pp_cplan_purse_103 value = { value = scope:pp_cplan_np_103 add = 100 } }
 	set_variable = { name = pp_cplan_in_103 value = { value = scope:pp_cplan_ni_103 add = 100 } }
 	remove_variable = pp_cplan_hand_103
-	remove_variable = pp_cplan_save_cost_103
-	remove_variable = pp_cplan_save_loc_103
-	remove_variable = pp_cplan_save_type_103
 	set_variable = { name = pp_cplan_purse_107 value = { value = scope:pp_cplan_np_107 add = 100 } }
 	set_variable = { name = pp_cplan_in_107 value = { value = scope:pp_cplan_ni_107 add = 100 } }
 	remove_variable = pp_cplan_hand_107
-	remove_variable = pp_cplan_save_cost_107
-	remove_variable = pp_cplan_save_loc_107
-	remove_variable = pp_cplan_save_type_107
-	remove_variable = pp_cplan_save_rank_107
+	if = {
+		limit = { NOT = { pp_cplan_profiles_cw > 0 } }
+		pp_cplan_save_clear = { why = 105 }
+	}
+	if = {
+		limit = { NOT = { pp_cplan_food_w > 0 } }
+		pp_cplan_save_clear = { why = 101 }
+	}
+	if = {
+		limit = { NOT = { pp_cplan_logistics_w > 0 } }
+		pp_cplan_save_clear = { why = 102 }
+	}
+	if = {
+		limit = { NOT = { pp_cplan_improve_w > 0 } }
+		pp_cplan_save_clear = { why = 106 }
+	}
+	if = {
+		limit = { NOT = { pp_cplan_business_w > 0 } }
+		pp_cplan_save_clear = { why = 103 }
+	}
+	if = {
+		limit = { NOT = { pp_cplan_country_cw > 0 } }
+		pp_cplan_save_clear = { why = 107 }
+		remove_variable = pp_cplan_save_rank_107
+	}
 }
 
 # Country scope, at the end of the pass: every group that ran and saves for nothing hands what is left of its
@@ -6757,11 +6763,13 @@ pp_cplan_purses_hand_on = {
 
 # ---- The window's detail panes (rules never read these) ----
 
-# Country scope, at the start of pp_cplan_run: every rule group's numbers start afresh (+ 100; the running
-# minimums high).
-pp_cplan_stats_reset = {
-	# profiles
-	remove_variable = pp_cplan_dran_105
+# Country scope: the profiles group looks: what its last look left for the window is gone (its list of
+# constructions and their entries on the locations, its numbers, its situation).
+pp_cplan_stats_reset_105 = {
+	every_in_list = {
+		variable = pp_cplan_log_105
+		pp_cplan_log_clear = { why = 105 }
+	}
 	clear_variable_list = pp_cplan_log_105
 	set_variable = { name = pp_cplan_dhad_105 value = 100 }
 	set_variable = { name = pp_cplan_dspent_105 value = 100 }
@@ -6781,8 +6789,15 @@ pp_cplan_stats_reset = {
 	set_variable = { name = pp_cplan_ds_profiles_st8 value = 100 }
 	set_variable = { name = pp_cplan_ds_profiles_st9 value = 100 }
 	set_variable = { name = pp_cplan_ds_profiles_st10 value = 100 }
-	# food
-	remove_variable = pp_cplan_dran_101
+}
+
+# Country scope: the food group looks: what its last look left for the window is gone (its list of
+# constructions and their entries on the locations, its numbers, its situation).
+pp_cplan_stats_reset_101 = {
+	every_in_list = {
+		variable = pp_cplan_log_101
+		pp_cplan_log_clear = { why = 101 }
+	}
 	clear_variable_list = pp_cplan_log_101
 	set_variable = { name = pp_cplan_dhad_101 value = 100 }
 	set_variable = { name = pp_cplan_dspent_101 value = 100 }
@@ -6796,8 +6811,15 @@ pp_cplan_stats_reset = {
 	set_variable = { name = pp_cplan_ds_food_hungry value = 100 }
 	set_variable = { name = pp_cplan_ds_food_granary value = 100 }
 	set_variable = { name = pp_cplan_ds_food_grange value = 100 }
-	# logistics
-	remove_variable = pp_cplan_dran_102
+}
+
+# Country scope: the logistics group looks: what its last look left for the window is gone (its list of
+# constructions and their entries on the locations, its numbers, its situation).
+pp_cplan_stats_reset_102 = {
+	every_in_list = {
+		variable = pp_cplan_log_102
+		pp_cplan_log_clear = { why = 102 }
+	}
 	clear_variable_list = pp_cplan_log_102
 	set_variable = { name = pp_cplan_dhad_102 value = 100 }
 	set_variable = { name = pp_cplan_dspent_102 value = 100 }
@@ -6808,8 +6830,15 @@ pp_cplan_stats_reset = {
 	set_variable = { name = pp_cplan_dml_102 value = 100 }
 	set_variable = { name = pp_cplan_ds_logistics_below value = 100 }
 	set_variable = { name = pp_cplan_ds_logistics_lowest value = 1099 }
-	# improve
-	remove_variable = pp_cplan_dran_106
+}
+
+# Country scope: the improve group looks: what its last look left for the window is gone (its list of
+# constructions and their entries on the locations, its numbers, its situation).
+pp_cplan_stats_reset_106 = {
+	every_in_list = {
+		variable = pp_cplan_log_106
+		pp_cplan_log_clear = { why = 106 }
+	}
 	clear_variable_list = pp_cplan_log_106
 	set_variable = { name = pp_cplan_dhad_106 value = 100 }
 	set_variable = { name = pp_cplan_dspent_106 value = 100 }
@@ -6820,8 +6849,15 @@ pp_cplan_stats_reset = {
 	set_variable = { name = pp_cplan_dml_106 value = 100 }
 	set_variable = { name = pp_cplan_ds_improve_over value = 100 }
 	set_variable = { name = pp_cplan_ds_improve_fullest value = 100 }
-	# business
-	remove_variable = pp_cplan_dran_103
+}
+
+# Country scope: the business group looks: what its last look left for the window is gone (its list of
+# constructions and their entries on the locations, its numbers, its situation).
+pp_cplan_stats_reset_103 = {
+	every_in_list = {
+		variable = pp_cplan_log_103
+		pp_cplan_log_clear = { why = 103 }
+	}
 	clear_variable_list = pp_cplan_log_103
 	set_variable = { name = pp_cplan_dhad_103 value = 100 }
 	set_variable = { name = pp_cplan_dspent_103 value = 100 }
@@ -6833,9 +6869,18 @@ pp_cplan_stats_reset = {
 	set_variable = { name = pp_cplan_ds_business_sites value = 100 }
 	set_variable = { name = pp_cplan_ds_business_best value = 1099 }
 	set_variable = { name = pp_cplan_ds_business_skipped value = 100 }
-	# country
-	remove_variable = pp_cplan_dran_107
+}
+
+# Country scope: the country group looks: what its last look left for the window is gone (its list of
+# constructions and their entries on the locations, its numbers, its situation).
+pp_cplan_stats_reset_107 = {
+	every_in_list = {
+		variable = pp_cplan_log_107
+		pp_cplan_log_clear = { why = 107 }
+		remove_variable = pp_cplan_log_rank
+	}
 	clear_variable_list = pp_cplan_log_107
+	remove_variable = pp_cplan_save_rank_107
 	set_variable = { name = pp_cplan_dhad_107 value = 100 }
 	set_variable = { name = pp_cplan_dspent_107 value = 100 }
 	set_variable = { name = pp_cplan_dn_107 value = 100 }
@@ -6845,8 +6890,19 @@ pp_cplan_stats_reset = {
 	set_variable = { name = pp_cplan_dml_107 value = 100 }
 }
 
-# Country scope, at the end of pp_cplan_run: the pass's gold wanted (spent + waiting for gold) and spent per rule
-# group become month 1 of the history, the older months move up one, month 12 drops out.
+# Country scope, at the start of pp_cplan_run: nobody has looked in this pass yet.
+pp_cplan_pass_reset = {
+	remove_variable = pp_cplan_now_105
+	remove_variable = pp_cplan_now_101
+	remove_variable = pp_cplan_now_102
+	remove_variable = pp_cplan_now_106
+	remove_variable = pp_cplan_now_103
+	remove_variable = pp_cplan_now_107
+}
+
+# Country scope, at the end of pp_cplan_run: for a rule group that looked in this pass its gold wanted (spent +
+# waiting for gold) and spent become month 1 of the history (nothing for a group that did not look), the older
+# months move up one, month 12 drops out.
 pp_cplan_history_push = {
 	# profiles
 	pp_cplan_copy_num = { from = pp_cplan_hn_105_11 to = pp_cplan_hn_105_12 }
@@ -6871,8 +6927,15 @@ pp_cplan_history_push = {
 	pp_cplan_copy_num = { from = pp_cplan_hs_105_3 to = pp_cplan_hs_105_4 }
 	pp_cplan_copy_num = { from = pp_cplan_hs_105_2 to = pp_cplan_hs_105_3 }
 	pp_cplan_copy_num = { from = pp_cplan_hs_105_1 to = pp_cplan_hs_105_2 }
-	set_variable = { name = pp_cplan_hn_105_1 value = { value = var:pp_cplan_dspent_105 add = var:pp_cplan_dwait_105 subtract = 100 } }
-	set_variable = { name = pp_cplan_hs_105_1 value = var:pp_cplan_dspent_105 }
+	if = {
+		limit = { has_variable = pp_cplan_now_105 }
+		set_variable = { name = pp_cplan_hn_105_1 value = { value = var:pp_cplan_dspent_105 add = var:pp_cplan_dwait_105 subtract = 100 } }
+		set_variable = { name = pp_cplan_hs_105_1 value = var:pp_cplan_dspent_105 }
+	}
+	else = {
+		set_variable = { name = pp_cplan_hn_105_1 value = 100 }
+		set_variable = { name = pp_cplan_hs_105_1 value = 100 }
+	}
 	# food
 	pp_cplan_copy_num = { from = pp_cplan_hn_101_11 to = pp_cplan_hn_101_12 }
 	pp_cplan_copy_num = { from = pp_cplan_hn_101_10 to = pp_cplan_hn_101_11 }
@@ -6896,8 +6959,15 @@ pp_cplan_history_push = {
 	pp_cplan_copy_num = { from = pp_cplan_hs_101_3 to = pp_cplan_hs_101_4 }
 	pp_cplan_copy_num = { from = pp_cplan_hs_101_2 to = pp_cplan_hs_101_3 }
 	pp_cplan_copy_num = { from = pp_cplan_hs_101_1 to = pp_cplan_hs_101_2 }
-	set_variable = { name = pp_cplan_hn_101_1 value = { value = var:pp_cplan_dspent_101 add = var:pp_cplan_dwait_101 subtract = 100 } }
-	set_variable = { name = pp_cplan_hs_101_1 value = var:pp_cplan_dspent_101 }
+	if = {
+		limit = { has_variable = pp_cplan_now_101 }
+		set_variable = { name = pp_cplan_hn_101_1 value = { value = var:pp_cplan_dspent_101 add = var:pp_cplan_dwait_101 subtract = 100 } }
+		set_variable = { name = pp_cplan_hs_101_1 value = var:pp_cplan_dspent_101 }
+	}
+	else = {
+		set_variable = { name = pp_cplan_hn_101_1 value = 100 }
+		set_variable = { name = pp_cplan_hs_101_1 value = 100 }
+	}
 	# logistics
 	pp_cplan_copy_num = { from = pp_cplan_hn_102_11 to = pp_cplan_hn_102_12 }
 	pp_cplan_copy_num = { from = pp_cplan_hn_102_10 to = pp_cplan_hn_102_11 }
@@ -6921,8 +6991,15 @@ pp_cplan_history_push = {
 	pp_cplan_copy_num = { from = pp_cplan_hs_102_3 to = pp_cplan_hs_102_4 }
 	pp_cplan_copy_num = { from = pp_cplan_hs_102_2 to = pp_cplan_hs_102_3 }
 	pp_cplan_copy_num = { from = pp_cplan_hs_102_1 to = pp_cplan_hs_102_2 }
-	set_variable = { name = pp_cplan_hn_102_1 value = { value = var:pp_cplan_dspent_102 add = var:pp_cplan_dwait_102 subtract = 100 } }
-	set_variable = { name = pp_cplan_hs_102_1 value = var:pp_cplan_dspent_102 }
+	if = {
+		limit = { has_variable = pp_cplan_now_102 }
+		set_variable = { name = pp_cplan_hn_102_1 value = { value = var:pp_cplan_dspent_102 add = var:pp_cplan_dwait_102 subtract = 100 } }
+		set_variable = { name = pp_cplan_hs_102_1 value = var:pp_cplan_dspent_102 }
+	}
+	else = {
+		set_variable = { name = pp_cplan_hn_102_1 value = 100 }
+		set_variable = { name = pp_cplan_hs_102_1 value = 100 }
+	}
 	# improve
 	pp_cplan_copy_num = { from = pp_cplan_hn_106_11 to = pp_cplan_hn_106_12 }
 	pp_cplan_copy_num = { from = pp_cplan_hn_106_10 to = pp_cplan_hn_106_11 }
@@ -6946,8 +7023,15 @@ pp_cplan_history_push = {
 	pp_cplan_copy_num = { from = pp_cplan_hs_106_3 to = pp_cplan_hs_106_4 }
 	pp_cplan_copy_num = { from = pp_cplan_hs_106_2 to = pp_cplan_hs_106_3 }
 	pp_cplan_copy_num = { from = pp_cplan_hs_106_1 to = pp_cplan_hs_106_2 }
-	set_variable = { name = pp_cplan_hn_106_1 value = { value = var:pp_cplan_dspent_106 add = var:pp_cplan_dwait_106 subtract = 100 } }
-	set_variable = { name = pp_cplan_hs_106_1 value = var:pp_cplan_dspent_106 }
+	if = {
+		limit = { has_variable = pp_cplan_now_106 }
+		set_variable = { name = pp_cplan_hn_106_1 value = { value = var:pp_cplan_dspent_106 add = var:pp_cplan_dwait_106 subtract = 100 } }
+		set_variable = { name = pp_cplan_hs_106_1 value = var:pp_cplan_dspent_106 }
+	}
+	else = {
+		set_variable = { name = pp_cplan_hn_106_1 value = 100 }
+		set_variable = { name = pp_cplan_hs_106_1 value = 100 }
+	}
 	# business
 	pp_cplan_copy_num = { from = pp_cplan_hn_103_11 to = pp_cplan_hn_103_12 }
 	pp_cplan_copy_num = { from = pp_cplan_hn_103_10 to = pp_cplan_hn_103_11 }
@@ -6971,8 +7055,15 @@ pp_cplan_history_push = {
 	pp_cplan_copy_num = { from = pp_cplan_hs_103_3 to = pp_cplan_hs_103_4 }
 	pp_cplan_copy_num = { from = pp_cplan_hs_103_2 to = pp_cplan_hs_103_3 }
 	pp_cplan_copy_num = { from = pp_cplan_hs_103_1 to = pp_cplan_hs_103_2 }
-	set_variable = { name = pp_cplan_hn_103_1 value = { value = var:pp_cplan_dspent_103 add = var:pp_cplan_dwait_103 subtract = 100 } }
-	set_variable = { name = pp_cplan_hs_103_1 value = var:pp_cplan_dspent_103 }
+	if = {
+		limit = { has_variable = pp_cplan_now_103 }
+		set_variable = { name = pp_cplan_hn_103_1 value = { value = var:pp_cplan_dspent_103 add = var:pp_cplan_dwait_103 subtract = 100 } }
+		set_variable = { name = pp_cplan_hs_103_1 value = var:pp_cplan_dspent_103 }
+	}
+	else = {
+		set_variable = { name = pp_cplan_hn_103_1 value = 100 }
+		set_variable = { name = pp_cplan_hs_103_1 value = 100 }
+	}
 	# country
 	pp_cplan_copy_num = { from = pp_cplan_hn_107_11 to = pp_cplan_hn_107_12 }
 	pp_cplan_copy_num = { from = pp_cplan_hn_107_10 to = pp_cplan_hn_107_11 }
@@ -6996,8 +7087,15 @@ pp_cplan_history_push = {
 	pp_cplan_copy_num = { from = pp_cplan_hs_107_3 to = pp_cplan_hs_107_4 }
 	pp_cplan_copy_num = { from = pp_cplan_hs_107_2 to = pp_cplan_hs_107_3 }
 	pp_cplan_copy_num = { from = pp_cplan_hs_107_1 to = pp_cplan_hs_107_2 }
-	set_variable = { name = pp_cplan_hn_107_1 value = { value = var:pp_cplan_dspent_107 add = var:pp_cplan_dwait_107 subtract = 100 } }
-	set_variable = { name = pp_cplan_hs_107_1 value = var:pp_cplan_dspent_107 }
+	if = {
+		limit = { has_variable = pp_cplan_now_107 }
+		set_variable = { name = pp_cplan_hn_107_1 value = { value = var:pp_cplan_dspent_107 add = var:pp_cplan_dwait_107 subtract = 100 } }
+		set_variable = { name = pp_cplan_hs_107_1 value = var:pp_cplan_dspent_107 }
+	}
+	else = {
+		set_variable = { name = pp_cplan_hn_107_1 value = 100 }
+		set_variable = { name = pp_cplan_hs_107_1 value = 100 }
+	}
 }
 
 # Country scope: the history is gone (the plan was switched on).

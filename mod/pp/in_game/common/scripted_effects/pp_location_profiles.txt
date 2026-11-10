@@ -36,47 +36,69 @@
 # ---- The monthly pass (country scope, inside pp_cplan_run: scope:pp_cplan_country and scope:actor saved) ----
 
 pp_lprof_run = {
-	pp_lprof_cleanup = yes
-	pp_lplan_cleanup = yes
 	if = {
 		limit = {
 			pp_lprof_has_locations = yes
 			pp_cplan_profiles_w > 0
 		}
-		pp_cplan_group_start = { why = 105 }
-		save_temporary_scope_value_as = { name = pp_cplan_rv value = 0 }
-		# this pass's locations: with a profile, with marks, or both (each once)
-		pp_lprof_gather = yes
-		# the locations with the fewest building levels first: in the list's own order the locations assigned first
-		# took the whole monthly share every month and the last profile built nothing in ten years (test world, 2026-11-08)
-		ordered_in_list = {
-			variable = pp_lprof_turns
-			order_by = pp_lprof_turn
-			max = 100000
-			check_range_bounds = no
-			# the workers a new level can find here (pp_cplan_staff)
-			save_temporary_scope_value_as = { name = pp_cplan_free_peasants value = pp_cplan_free_peasants_here }
-			# the window: one level waiting for gold counts once a location (pp_cplan_note_wait); one construction a
-			# month in a location, whether a rule of its profile or a mark starts it (pp_cplan_hit)
-			scope:pp_cplan_country = {
-				remove_variable = pp_cplan_noted
-				remove_variable = pp_cplan_hit
-				change_variable = { name = pp_cplan_ds_profiles_locs add = 1 }
-			}
-			# the profile's rules first, then the location's marks ("also build this here")
-			if = {
-				limit = { has_variable = pp_lprof }
-				pp_lprof_location_rules = yes
-			}
-			if = {
-				limit = { has_variable = pp_lplan_n }
-				pp_lplan_location_marks = yes
-			}
+		# script time (2026-11-10): the group looks at its locations only in its months ([construction_plan]
+		# look_months, pp_cplan_looks_profiles); between its looks it only goes back to the location it saves for,
+		# once its purse can pay (pp_cplan_group_target)
+		if = {
+			limit = { pp_cplan_looks_profiles = yes }
+			pp_lprof_look = yes
 		}
-		clear_variable_list = pp_lprof_turns
+		else = {
+			pp_cplan_group_target = { why = 105 do = pp_lprof_location_turn }
+		}
 	}
 	remove_variable = pp_cplan_hit
 	remove_variable = pp_cplan_noted
+}
+
+# Country scope: the Locations group's look: every location with a profile or marks, the fewest building levels
+# first.
+pp_lprof_look = {
+	pp_lprof_cleanup = yes
+	pp_lplan_cleanup = yes
+	pp_cplan_group_start = { why = 105 }
+	save_temporary_scope_value_as = { name = pp_cplan_rv value = 0 }
+	# this look's locations: with a profile, with marks, or both (each once)
+	pp_lprof_gather = yes
+	# the locations with the fewest building levels first: in the list's own order the locations assigned first
+	# took the whole monthly share every month and the last profile built nothing in ten years (test world, 2026-11-08)
+	ordered_in_list = {
+		variable = pp_lprof_turns
+		order_by = pp_lprof_turn
+		max = 100000
+		check_range_bounds = no
+		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_locs add = 1 } }
+		pp_lprof_location_turn = yes
+	}
+	clear_variable_list = pp_lprof_turns
+	remove_variable = pp_cplan_hit
+	remove_variable = pp_cplan_noted
+}
+
+# Location scope (a location with a profile or marks; also where the group saved for something): its turn: the
+# profile's rules first, then the location's marks ("also build this here").
+pp_lprof_location_turn = {
+	# the workers a new level can find here (pp_cplan_staff)
+	save_temporary_scope_value_as = { name = pp_cplan_free_peasants value = pp_cplan_free_peasants_here }
+	# the window: one level waiting for gold counts once a location (pp_cplan_note_wait); one construction a
+	# turn in a location, whether a rule of its profile or a mark starts it (pp_cplan_hit)
+	scope:pp_cplan_country = {
+		remove_variable = pp_cplan_noted
+		remove_variable = pp_cplan_hit
+	}
+	if = {
+		limit = { has_variable = pp_lprof }
+		pp_lprof_location_rules = yes
+	}
+	if = {
+		limit = { has_variable = pp_lplan_n }
+		pp_lplan_location_marks = yes
+	}
 }
 
 # Country scope: the list pp_lprof_turns = the country's locations with a profile (pp_lprof_locs) and those with marks
@@ -319,7 +341,11 @@ pp_lprof_finish = {
 	remove_variable = pp_lprof_st
 	remove_variable = pp_lprof_fail
 	remove_variable = pp_lprof_best
-	pp_lprof_count_state = { st = $st$ }
+	# the window counts the states at a look only (not when the group goes back to one location between looks)
+	if = {
+		limit = { scope:pp_cplan_country = { has_variable = pp_cplan_now_105 } }
+		pp_lprof_count_state = { st = $st$ }
+	}
 }
 
 # Location scope: the window counts the rules by their state after this pass (pp_cplan_ds_profiles_st<n>).

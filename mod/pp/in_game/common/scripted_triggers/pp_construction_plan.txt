@@ -78,6 +78,14 @@ pp_cplan_staff = {
 	}
 }
 
+# Location scope, in pp_cplan_business_refresh (scope:pp_cplan_from / _to: the country's place in the order of its
+# locations and where this pass ends): it is this location's turn to have its best business worked out. Every
+# numbered location falls in exactly one pass of a cycle.
+pp_cplan_business_turn = {
+	var:pp_cplan_seq > scope:pp_cplan_from
+	var:pp_cplan_seq <= scope:pp_cplan_to
+}
+
 # Any scope: the rule group $why$ saves: this pass it already met something it wants and cannot pay for from its
 # purse (pp_cplan_note_wait), so it builds nothing more in the pass, even things that would fit (Jan 2026-11-10: the
 # plan must not favour cheap buildings because they are cheap).

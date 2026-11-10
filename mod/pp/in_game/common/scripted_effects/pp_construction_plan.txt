@@ -35,7 +35,7 @@
 # pp_cplan_dwait_ / _dwn_ (the gold and the number of the constructions it wanted that waited for gold), pp_cplan_dgo_
 # / _dml_ (things held back because the market lacks the construction goods / by the market limit), the list
 # pp_cplan_log_<why>, the group's situation pp_cplan_ds_<name>, and the last 12 passes
-# pp_cplan_hn_<why>_<k> / pp_cplan_hs_<why>_<k> (wanted / spent, k = 1 the last; generated pp_cplan_stats_reset,
+# pp_cplan_hn_<why>_<k> / pp_cplan_hs_<why>_<k> (wanted / spent, k = 1 the last; generated pp_cplan_stats_reset_<why>, at the group's look,
 # pp_cplan_history_push). The rules never read any of these numbers: the window only.
 # Location, per rule group <why> that built here in the last pass (a location with two construction slots can get
 # two constructions in one pass, from two groups or from one: in game 2026-11-10 one line per location named both
@@ -47,43 +47,24 @@
 # writes the entry itself and sets pp_cplan_log_rank, the window then names the upgrade (type pp_cplan_rank_upgrade);
 # pp_cplan_bz_pick / pp_cplan_bz_roi during the business group only.
 
+# ---- Script time (Jan 2026-11-10: "The monthly pass takes 0.4 seconds. That is substantially too long ... it needs to
+# be built so that it doesn't use unnecessary script time"; measured 0.32-0.39 s a pass in a 330-location country, 0.20 s
+# of it the business pick over every free site against every business type). ----
+# The pass still runs every month, but it is cheap: the purses fill (arithmetic), the business group works out the best
+# business of a FEW sites (the next ones in a fixed order; the pick stays on the location), and every rule group LOOKS
+# (walks what it wants, best first) only in its months ([construction_plan] look_months, pp_cplan_looks_<name>). Between
+# its looks a group does one thing only: when it saves for something and its purse can now pay for it, it goes back to
+# that one place and runs its rule there again (pp_cplan_group_target), with every guard of a look. What a group
+# found at a look (numbers, list, what it saves for) stays for the window until its next look.
+
 # Country scope: the monthly pass.
 pp_cplan_run = {
-	save_scope_as = pp_cplan_country
-	save_scope_as = actor # building conditions read the builder as scope:actor
-	every_in_list = {
-		variable = pp_cplan_log
-		pp_cplan_log_clear = { why = 101 }
-		pp_cplan_log_clear = { why = 102 }
-		pp_cplan_log_clear = { why = 103 }
-		pp_cplan_log_clear = { why = 105 }
-		pp_cplan_log_clear = { why = 106 }
-		pp_cplan_log_clear = { why = 107 }
-		remove_variable = pp_cplan_log_rank
-	}
-	clear_variable_list = pp_cplan_log
-	set_variable = { name = pp_cplan_started value = 100 }
-	set_variable = { name = pp_cplan_spent value = 100 }
-	remove_variable = pp_cplan_hit
-	pp_cplan_stats_reset = yes
-	# a construction's reason for the window (pp_cplan_construct_now): each rule group sets them before it builds
-	save_temporary_scope_value_as = { name = pp_cplan_rv value = 0 }
-	save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }
-	# Budgets that save (Jan 2026-11-10; until then every pass offered all the gold above the reserve anew, nothing
-	# was saved, and a group walked past what it could not pay for and built whatever cheaper thing fitted: cheap
-	# buildings won and expensive ones never came). Every rule group has a purse: the gold in no purse yet is shared
-	# by the weights, a group that does not count gives its purse back, and the purses shrink alike when they hold
-	# more than the gold above the reserve (pp_cplan_purses_fill). A construction is paid from the purse of the group
-	# that starts it and must fit in it (pp_cplan_construct_scoped); the first thing a group wants and cannot pay for
-	# is what it saves for, and from then on it builds nothing more in this pass (pp_cplan_note_wait).
-	pp_cplan_purses_fill = yes
-	pp_cplan_markets_clear = yes # the market limit's counts are the pass's (nothing is left unless a pass broke off)
-	remove_variable = pp_cplan_wait
-	remove_variable = pp_cplan_mlim
+	pp_cplan_pass_begin = yes
 	# The rule groups' order turns with the game's month, so every group goes first twice a year (six groups, twelve
 	# months). Since the purses the order no longer decides who gets the gold: only who gets a free construction slot
-	# of a location first. Stateless: the month is the game's. Who may build what in a location does not depend on
-	# the order (a profile takes from the groups what it sets, pp_cplan_*_ok).
+	# of a location first, among the groups that look in the same month. Stateless: the month is the game's. Who may
+	# build what in a location does not depend on the order (a profile takes from the groups what it sets,
+	# pp_cplan_*_ok).
 	if = {
 		limit = { OR = { current_month = 1 current_month = 7 } }
 		pp_cplan_group_profiles = yes
@@ -137,21 +118,13 @@ pp_cplan_run = {
 		pp_cplan_group_improve = yes
 		pp_cplan_group_business = yes
 	}
-	# urban rights of the Towns and Buildings group: they cost no gold, so they have no part of it and no turn
-	pp_cplan_country_rights = yes
-	remove_variable = pp_cplan_hit
-	remove_variable = pp_cplan_noted
-	remove_variable = pp_cplan_wait
-	remove_variable = pp_cplan_mlim
-	pp_cplan_markets_clear = yes
-	# a group that ran and saves for nothing hands what is left of its purse to the groups that do save
-	pp_cplan_purses_hand_on = yes
-	pp_cplan_history_push = yes
-	# test runs: one line per monthly pass (ppc plan-report counts the months by it; debug_log_date writes nothing)
+	# urban rights of the Towns and Buildings group: they cost no gold, so they have no part of it and no turn; they
+	# are looked at in their own months
 	if = {
-		limit = { has_variable = pp_cplan_ai_test }
-		debug_log = PP_CPLAN_TLOG_PASS
+		limit = { pp_cplan_looks_rights = yes }
+		pp_cplan_country_rights = yes
 	}
+	pp_cplan_pass_end = yes
 	# Never runs: tells the script check that the window's button scopes (set by the GUI with AddScope) exist, so the
 	# log has no "used but never set" lines for them.
 	if = {
@@ -173,26 +146,183 @@ pp_cplan_run = {
 	}
 }
 
+# Country scope: a pass begins: the scopes every rule reads, nobody has looked yet (pp_cplan_pass_reset), and the
+# budgets that save (Jan 2026-11-10; until then every pass offered all the gold above the reserve anew, nothing was
+# saved, and a group walked past what it could not pay for and built whatever cheaper thing fitted: cheap buildings
+# won and expensive ones never came). Every rule group has a purse: the gold in no purse yet is shared by the weights,
+# a group that does not count gives its purse back, and the purses shrink alike when they hold more than the gold above
+# the reserve (pp_cplan_purses_fill). A construction is paid from the purse of the group that starts it and must fit
+# in it (pp_cplan_construct_scoped); the first thing a group wants and cannot pay for is what it saves for, and from
+# then on it builds nothing more (pp_cplan_note_wait).
+pp_cplan_pass_begin = {
+	save_scope_as = pp_cplan_country
+	save_scope_as = actor # building conditions read the builder as scope:actor
+	clear_variable_list = pp_cplan_log
+	set_variable = { name = pp_cplan_started value = 100 }
+	set_variable = { name = pp_cplan_spent value = 100 }
+	remove_variable = pp_cplan_hit
+	remove_variable = pp_cplan_noted
+	remove_variable = pp_cplan_wait
+	remove_variable = pp_cplan_mlim
+	pp_cplan_pass_reset = yes
+	# a construction's reason for the window (pp_cplan_construct_now): each rule group sets them before it builds
+	save_temporary_scope_value_as = { name = pp_cplan_rv value = 0 }
+	save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }
+	pp_cplan_purses_fill = yes
+	# the market limit counts what is under construction afresh only in its months: between them the counts of the
+	# last count stand on the markets' centres, raised by what the plan itself starts (constructions take about a
+	# year; counting a market means walking its locations)
+	if = {
+		limit = { pp_cplan_looks_market_count = yes }
+		pp_cplan_markets_clear = yes
+	}
+}
+
+# Country scope: a pass ends: a group that looked in this pass and saves for nothing hands what is left of its purse
+# to the groups that do save; the history of the window's charts moves on.
+pp_cplan_pass_end = {
+	remove_variable = pp_cplan_hit
+	remove_variable = pp_cplan_noted
+	remove_variable = pp_cplan_wait
+	remove_variable = pp_cplan_mlim
+	pp_cplan_purses_hand_on = yes
+	pp_cplan_history_push = yes
+	# test runs: one line per monthly pass (ppc plan-report counts the months by it; debug_log_date writes nothing)
+	if = {
+		limit = { has_variable = pp_cplan_ai_test }
+		debug_log = PP_CPLAN_TLOG_PASS
+	}
+}
+
+# ---- For the console, to time the rule groups one by one (effect c:TAG = { pp_cplan_test_food = yes }): a pass with
+# only that group's look, whatever the month. ----
+pp_cplan_test_food = {
+	pp_cplan_pass_begin = yes
+	pp_cplan_look_food = yes
+	pp_cplan_pass_end = yes
+}
+pp_cplan_test_logistics = {
+	pp_cplan_pass_begin = yes
+	pp_cplan_look_logistics = yes
+	pp_cplan_pass_end = yes
+}
+pp_cplan_test_improve = {
+	pp_cplan_pass_begin = yes
+	pp_cplan_look_improve = yes
+	pp_cplan_pass_end = yes
+}
+pp_cplan_test_profiles = {
+	pp_cplan_pass_begin = yes
+	pp_lprof_look = yes
+	pp_cplan_pass_end = yes
+}
+# the business group's monthly part alone: the picks of the next few sites
+pp_cplan_test_business_refresh = {
+	pp_cplan_pass_begin = yes
+	pp_cplan_business_refresh = yes
+	pp_cplan_pass_end = yes
+}
+# ... and its look alone: the stored picks ranked, the best few tried
+pp_cplan_test_business_look = {
+	pp_cplan_pass_begin = yes
+	pp_cplan_look_business = yes
+	pp_cplan_pass_end = yes
+}
+# Towns and Buildings: its three rules in one look, and the urban rights
+pp_cplan_test_country = {
+	pp_cplan_pass_begin = yes
+	pp_cplan_look_country_all = yes
+	pp_cplan_pass_end = yes
+}
+pp_cplan_test_rights = {
+	pp_cplan_pass_begin = yes
+	pp_cplan_country_rights = yes
+	pp_cplan_pass_end = yes
+}
+# what every pass does besides the groups: the purses, the bookkeeping
+pp_cplan_test_empty = {
+	pp_cplan_pass_begin = yes
+	pp_cplan_pass_end = yes
+}
+
 # ---- The rule groups (country scope, inside pp_cplan_run; each with a weight above 0 pays from its purse) ----
-# Best pick first (Jan 2026-11-10): a group goes through what it wants in its own order of importance (food: the
-# hungriest province first; logistics: the most urgent location; improvements: the fullest; businesses: the soonest
-# payback counting the time to save; towns and buildings and the locations: their own order). The first thing it
-# wants and cannot pay for from its purse is what it saves for (pp_cplan_note_wait keeps the location, the building
-# type and the cost for the window), and from then on it builds nothing more in this pass, even things that would
-# fit: cheap things no longer win because they are cheap. It still goes through the rest: what it cannot pay for is
-# counted, not built, so the window shows the gold that would have started it all (Jan 2026-11-09: "how much
-# investment is needed, correctly calculated from the last iteration"). Things stopped for another reason (cannot be
-# built, no workers, the market lacks the construction goods, the market limit) are skipped and are not what it
-# saves for. One exception, for the pass's cost: the business group does not look at all while it has neither gold
-# saved nor gold coming in (pp_cplan_group_business), and its pane says so. A location with a construction under
-# way (pp_cplan_site_free) cannot start one, so the logistics and improvement groups do not look for a building
-# there (it still counts for their situation).
+# Best pick first (Jan 2026-11-10): at a look a group goes through what it wants in its own order of importance (food:
+# the hungriest province first; logistics: the most urgent location; improvements: the fullest; businesses: the soonest
+# payback counting the time to save; towns and buildings and the locations: their own order). The first thing it wants
+# and cannot pay for from its purse is what it saves for (pp_cplan_note_wait keeps the location, the building type,
+# the cost and the reason for the window), and from then on it builds nothing more, even things that would fit: cheap
+# things no longer win because they are cheap. At the look it still goes through the rest: what it cannot pay for is
+# counted, not built, so the window shows the gold that would have started it all (Jan 2026-11-09: "how much investment
+# is needed, correctly calculated from the last iteration"). Things stopped for another reason (cannot be built, no
+# workers, the market lacks the construction goods, the market limit) are skipped and are not what it saves for.
+# A location with a construction under way (pp_cplan_site_free) cannot start one, so the logistics and improvement
+# groups do not look for a building there (it still counts for their situation).
 # The sixth group, Towns and Buildings (pp_cplan_group_country, code 107), is construction_plan_country.py's.
 
-# Country scope: a rule group starts (its code $why$): the window keeps that it ran and the purse it started with.
+# Country scope: a rule group looks (its code $why$): what its last look left for the window goes (generated
+# pp_cplan_stats_reset_<why>: its list, numbers, situation), and so does what it saved for: the look finds it again.
+# The window keeps that it looked and the purse it started with; pp_cplan_now_<why> tells the pass's end that it looked
+# in this pass (the hand-on, the chart).
 pp_cplan_group_start = {
+	pp_cplan_stats_reset_$why$ = yes
+	pp_cplan_save_clear = { why = $why$ }
 	set_variable = { name = pp_cplan_dran_$why$ value = yes }
+	set_variable = { name = pp_cplan_now_$why$ value = yes }
 	set_variable = { name = pp_cplan_dhad_$why$ value = { value = pp_cplan_purse_n_$why$ add = 100 } }
+}
+
+# Country scope: the rule group $why$ saves for nothing any more (its look starts, it stopped counting, or its purse
+# can pay now and it goes for it). Towns and Buildings' town or city mark (pp_cplan_save_rank_107) goes where that
+# group clears (no other group ever sets one).
+pp_cplan_save_clear = {
+	remove_variable = pp_cplan_save_cost_$why$
+	remove_variable = pp_cplan_save_loc_$why$
+	remove_variable = pp_cplan_save_type_$why$
+	remove_variable = pp_cplan_save_rv_$why$
+	remove_variable = pp_cplan_save_rs_$why$
+}
+
+# Country scope, in a pass in which the rule group $why$ does not look: when it saves for something and its purse can
+# pay for it now, it goes back to that one place and runs its rule there again ($do$, location scope: every guard
+# and condition of a look, so a thing that is no longer wanted or possible is simply not built). It lets go of what
+# it saved for first: the construction then pays like any level, and if the gold falls short after all it is saved
+# for again (pp_cplan_note_wait). Nothing else is walked: this is the whole cost of a group between its looks.
+# scope:pp_cplan_btype, scope:pp_cplan_rv / _rs and scope:pp_cplan_trank (1 a town, 2 a city upgrade, else 0) carry
+# what was saved for to $do$.
+pp_cplan_group_target = {
+	if = {
+		limit = {
+			has_variable = pp_cplan_save_cost_$why$
+			has_variable = pp_cplan_save_loc_$why$
+			pp_cplan_purse_n_$why$ >= pp_cplan_save_cost_n_$why$
+		}
+		var:pp_cplan_save_loc_$why$ = { save_scope_as = pp_cplan_target }
+		if = {
+			limit = { has_variable = pp_cplan_save_type_$why$ }
+			var:pp_cplan_save_type_$why$ = { save_scope_as = pp_cplan_btype }
+		}
+		if = {
+			limit = { has_variable = pp_cplan_save_rv_$why$ }
+			save_temporary_scope_value_as = { name = pp_cplan_rv value = var:pp_cplan_save_rv_$why$ }
+		}
+		save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }
+		if = {
+			limit = { has_variable = pp_cplan_save_rs_$why$ }
+			save_temporary_scope_value_as = { name = pp_cplan_rs value = var:pp_cplan_save_rs_$why$ }
+		}
+		save_temporary_scope_value_as = { name = pp_cplan_trank value = pp_cplan_save_rank_n_$why$ }
+		pp_cplan_save_clear = { why = $why$ }
+		remove_variable = pp_cplan_hit
+		remove_variable = pp_cplan_noted
+		scope:pp_cplan_target = {
+			if = {
+				limit = { owner ?= scope:pp_cplan_country }
+				$do$ = yes
+			}
+		}
+		remove_variable = pp_cplan_hit
+		remove_variable = pp_cplan_noted
+	}
 }
 
 # The player's "Locations" group (pp_location_profiles.txt): the location profiles, whose rules have priority in their
@@ -202,146 +332,333 @@ pp_cplan_group_profiles = {
 	pp_lprof_run = yes
 }
 
-# Food, per province (pp_cplan_food_province), the hungriest first: the store a year from now in a normal year,
-# lowest first (pp_cplan_food_order; ordered_province sorts the country's provinces, highest value first). A province
-# without a food store has no step to run.
+# Food: looks in its months, else only goes for what it saves for.
 pp_cplan_group_food = {
 	if = {
 		limit = { pp_cplan_food_w > 0 }
-		pp_cplan_group_start = { why = 101 }
-		ordered_province = {
-			limit = { has_variable = pp_stored_food_months }
-			order_by = pp_cplan_food_order
-			max = 100000
-			check_range_bounds = no
-			pp_cplan_food_province = yes
+		if = {
+			limit = { pp_cplan_looks_food = yes }
+			pp_cplan_look_food = yes
+		}
+		else = {
+			pp_cplan_group_target = { why = 101 do = pp_cplan_food_target }
 		}
 	}
 }
 
-# Logistics, per location: where market access without event modifiers is below the line, the most urgent first.
+# Country scope: the food group's look: per province (pp_cplan_food_province), the hungriest first: the store a year
+# from now in a normal year, lowest first. That store is worked out ONCE a province (it walks the province's locations
+# several times) and kept on the province for the order and the rule (pp_cplan_fy, + 1000; the rule removes it). A
+# province without a food store has no step to run.
+pp_cplan_look_food = {
+	pp_cplan_group_start = { why = 101 }
+	every_province = {
+		limit = { has_variable = pp_stored_food_months }
+		set_variable = { name = pp_cplan_fy value = { value = pp_cplan_food_in_a_year add = 1000 } }
+	}
+	ordered_province = {
+		limit = { has_variable = pp_cplan_fy }
+		order_by = pp_cplan_food_order
+		max = 100000
+		check_range_bounds = no
+		pp_cplan_food_province = yes
+	}
+}
+
+# Location scope (where the food group saved for something): the food rule of its province again.
+pp_cplan_food_target = {
+	province ?= { pp_cplan_food_province = yes }
+}
+
+# Logistics: looks in its months, else only goes for what it saves for.
 pp_cplan_group_logistics = {
 	if = {
 		limit = { pp_cplan_logistics_w > 0 }
-		pp_cplan_group_start = { why = 102 }
-		ordered_owned_location = {
-			limit = {
-				pp_cplan_logistics_ok = yes
-				pp_cplan_logistics_wanted = yes
-			}
-			order_by = pp_logistics_urgency_weight
-			max = 200
-			check_range_bounds = no
-			# the window: market access without event effects, in % (+ 100); the lowest of the locations below the line
-			save_temporary_scope_value_as = { name = pp_cplan_rv value = { value = pp_cplan_access_normal multiply = 100 add = 100 } }
-			save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }
-			scope:pp_cplan_country = {
-				remove_variable = pp_cplan_noted
-				change_variable = { name = pp_cplan_ds_logistics_below add = 1 }
-				if = {
-					limit = { var:pp_cplan_ds_logistics_lowest > scope:pp_cplan_rv }
-					set_variable = { name = pp_cplan_ds_logistics_lowest value = scope:pp_cplan_rv }
-				}
-			}
+		if = {
+			limit = { pp_cplan_looks_logistics = yes }
+			pp_cplan_look_logistics = yes
+		}
+		else = {
+			pp_cplan_group_target = { why = 102 do = pp_cplan_logistics_target }
+		}
+	}
+}
+
+# Country scope: the logistics group's look, per location: where market access without event modifiers is below the
+# line, the most urgent first. The cheap checks come first in the limit (whose location, the profile's switches),
+# then the access.
+pp_cplan_look_logistics = {
+	pp_cplan_group_start = { why = 102 }
+	ordered_owned_location = {
+		limit = {
+			pp_cplan_logistics_ok = yes
+			pp_cplan_logistics_wanted = yes
+		}
+		order_by = pp_logistics_urgency_weight
+		max = 200
+		check_range_bounds = no
+		pp_cplan_logistics_here = yes
+		# the window: the lowest of the locations below the line (scope:pp_cplan_rv: the access here, % + 100)
+		scope:pp_cplan_country = {
+			change_variable = { name = pp_cplan_ds_logistics_below add = 1 }
 			if = {
-				limit = { pp_cplan_site_free = yes }
-				pp_cplan_try_logistics_here = yes
+				limit = { var:pp_cplan_ds_logistics_lowest > scope:pp_cplan_rv }
+				set_variable = { name = pp_cplan_ds_logistics_lowest value = scope:pp_cplan_rv }
 			}
 		}
 	}
 }
 
-# Improvements (Jan 2026-11-08): where population over capacity reaches the player's line, the improvement that adds
-# the most capacity per gold; the fullest locations first.
+# Location scope (below the line): the logistics building this location can have, where a construction can start.
+pp_cplan_logistics_here = {
+	# the window: market access without event effects, in % (+ 100)
+	save_temporary_scope_value_as = { name = pp_cplan_rv value = { value = pp_cplan_access_normal multiply = 100 add = 100 } }
+	save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }
+	scope:pp_cplan_country = { remove_variable = pp_cplan_noted }
+	if = {
+		limit = { pp_cplan_site_free = yes }
+		pp_cplan_try_logistics_here = yes
+	}
+}
+
+# Location scope (where the logistics group saved for something): its rule here again, if it still holds.
+pp_cplan_logistics_target = {
+	if = {
+		limit = {
+			pp_cplan_logistics_ok = yes
+			pp_cplan_logistics_wanted = yes
+		}
+		pp_cplan_logistics_here = yes
+	}
+}
+
+# Improvements: looks in its months, else only goes for what it saves for.
 pp_cplan_group_improve = {
 	if = {
 		limit = { pp_cplan_improve_w > 0 }
-		pp_cplan_group_start = { why = 106 }
-		ordered_owned_location = {
-			limit = {
-				pp_cplan_improve_ok = yes
-				location_population_percentage >= scope:pp_cplan_country.pp_cplan_improve_line
-			}
-			order_by = pp_cplan_fill_here
-			max = 200
-			check_range_bounds = no
-			# the window: population in % of capacity (+ 100); the fullest location over the line
-			save_temporary_scope_value_as = { name = pp_cplan_rv value = { value = location_population_percentage multiply = 100 add = 100 } }
-			save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }
-			scope:pp_cplan_country = {
-				remove_variable = pp_cplan_noted
-				change_variable = { name = pp_cplan_ds_improve_over add = 1 }
-				if = {
-					limit = { var:pp_cplan_ds_improve_fullest < scope:pp_cplan_rv }
-					set_variable = { name = pp_cplan_ds_improve_fullest value = scope:pp_cplan_rv }
-				}
-			}
+		if = {
+			limit = { pp_cplan_looks_improve = yes }
+			pp_cplan_look_improve = yes
+		}
+		else = {
+			pp_cplan_group_target = { why = 106 do = pp_cplan_improve_target }
+		}
+	}
+}
+
+# Country scope: the improvement group's look (Jan 2026-11-08): where population over capacity reaches the player's
+# line, the improvement that adds the most capacity per gold; the fullest locations first.
+pp_cplan_look_improve = {
+	pp_cplan_group_start = { why = 106 }
+	ordered_owned_location = {
+		limit = {
+			pp_cplan_improve_ok = yes
+			location_population_percentage >= scope:pp_cplan_country.pp_cplan_improve_line
+		}
+		order_by = pp_cplan_fill_here
+		max = 200
+		check_range_bounds = no
+		pp_cplan_improve_here = yes
+		# the window: the fullest location over the line (scope:pp_cplan_rv: population in % of capacity, + 100)
+		scope:pp_cplan_country = {
+			change_variable = { name = pp_cplan_ds_improve_over add = 1 }
 			if = {
-				limit = { pp_cplan_site_free = yes }
-				pp_cplan_try_improve_here = yes
+				limit = { var:pp_cplan_ds_improve_fullest < scope:pp_cplan_rv }
+				set_variable = { name = pp_cplan_ds_improve_fullest value = scope:pp_cplan_rv }
 			}
 		}
+	}
+}
+
+# Location scope (over the line): the improvement that adds the most capacity per gold here, where a construction can
+# start.
+pp_cplan_improve_here = {
+	# the window: population in % of capacity (+ 100)
+	save_temporary_scope_value_as = { name = pp_cplan_rv value = { value = location_population_percentage multiply = 100 add = 100 } }
+	save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }
+	scope:pp_cplan_country = { remove_variable = pp_cplan_noted }
+	if = {
+		limit = { pp_cplan_site_free = yes }
+		pp_cplan_try_improve_here = yes
+	}
+}
+
+# Location scope (where the improvement group saved for something): its rule here again, if it still holds.
+pp_cplan_improve_target = {
+	if = {
+		limit = {
+			pp_cplan_improve_ok = yes
+			location_population_percentage >= scope:pp_cplan_country.pp_cplan_improve_line
+		}
+		pp_cplan_improve_here = yes
 	}
 }
 
 # Businesses (Jan 2026-11-09): every building that makes goods, wherever a level pays back within the player's line.
-# First every free site picks its best business (generated pp_cplan_business_pick: one level of a standing one or a
-# first level, the same profit estimate for both; within the line, the market's limit and its construction goods),
-# then the picks are built in the order of their payback INCLUDING the time to save (Jan 2026-11-10; pp_cplan_bz_order:
-# payback years + the gold the purse lacks for it / the gold the group receives a year; with nothing coming in a pick
-# the purse cannot pay ranks last), while they fit in the purse; the first that does not fit is what the group saves
-# for (pp_cplan_construct_scoped). So a dear business that pays back much sooner is waited for, and one that would
-# take years to save for is not. The country's part of the can-build check runs once (pp_cplan_business_types), not
-# once per location.
-# The pick is the pass's dear part (every free site against every business type), so the group does not look at all
-# while it has neither gold saved nor gold coming in (its purse and what it received for this pass are both
-# nothing: no gold above the reserve): nothing could be built or sensibly saved for. The window then says that the
-# group did not look (pp_cplan_ds_business_skipped) instead of "nothing waited for gold": what the businesses would
-# have cost is not counted in such a month.
+# Script time (2026-11-10): scoring every free site against every business type was two thirds of the pass (0.20 s for
+# 330 sites x 224 types), and the market limit lets only a level or so of a good start in a market at a time, so
+# nearly all of it was thrown away. Now:
+#  1. every pass (pp_cplan_business_refresh) the best business of a FEW sites is worked out, the next ones in a fixed
+#     order (pp_cplan_bz_window: [construction_plan] business_sites, or as many as it takes to see every location
+#     within business_cycle_months), and kept on the location (pp_cplan_bz_pick, _roi, _cost: the generated
+#     pp_cplan_business_pick, unchanged: within the line, the workers, the market limit, the construction goods);
+#  2. at a look (pp_cplan_look_business: every month while the group does not save, else in its look months) the
+#     stored picks are ranked by payback INCLUDING the time to save (pp_cplan_bz_order: payback years + the gold the
+#     purse lacks for it / the gold the group receives a year), and the best few (pp_cplan_bz_tries) are built: each
+#     site works its pick out afresh first (pp_cplan_business_here), so nothing is built on a stale estimate; the
+#     first that does not fit in the purse is what the group saves for;
+#  3. while it saves and its purse cannot pay yet, it only keeps refreshing; once the purse can pay it goes for that
+#     site (pp_cplan_group_target).
+# The cost of a pass no longer grows with locations x business types: only the refresh scores sites, a fixed few.
 pp_cplan_group_business = {
 	if = {
 		limit = { pp_cplan_business_w > 0 }
-		pp_cplan_group_start = { why = 103 }
+		pp_cplan_business_refresh = yes
 		if = {
 			limit = {
 				OR = {
-					pp_cplan_purse_n_103 > 0.01
-					pp_cplan_in_n_103 > 0.01
+					NOT = { pp_cplan_saving = { why = 103 } }
+					pp_cplan_looks_business = yes
 				}
 			}
-			pp_cplan_business_types = yes
-			every_owned_location = {
+			pp_cplan_look_business = yes
+		}
+		else = {
+			pp_cplan_group_target = { why = 103 do = pp_cplan_business_here }
+		}
+	}
+}
+
+# Country scope, every pass: the business picks of the next few sites. Every owned location has a number in the
+# order the plan first saw it (pp_cplan_seq, counted on the country as pp_cplan_seq_n, both + 100); the pass takes the
+# numbers after the country's place in that order (pp_cplan_cursor) up to pp_cplan_bz_window more, then moves the
+# place on, back to the start after the last number. So every location's turn comes round, each exactly once a cycle,
+# and one walk over the owned locations with two cheap comparisons finds this pass's few. The country's part of the
+# can-build check (pp_cplan_bz_<type>) is asked again only in its months.
+pp_cplan_business_refresh = {
+	if = {
+		limit = {
+			OR = {
+				NOT = { has_variable = pp_cplan_bz_known }
+				pp_cplan_looks_business_types = yes
+			}
+		}
+		pp_cplan_business_types_clear = yes
+		pp_cplan_business_types = yes
+		set_variable = { name = pp_cplan_bz_known value = yes }
+	}
+	if = {
+		limit = { NOT = { has_variable = pp_cplan_seq_n } }
+		set_variable = { name = pp_cplan_seq_n value = 100 }
+	}
+	if = {
+		limit = { NOT = { has_variable = pp_cplan_cursor } }
+		set_variable = { name = pp_cplan_cursor value = 100 }
+	}
+	save_temporary_scope_value_as = { name = pp_cplan_from value = var:pp_cplan_cursor }
+	save_temporary_scope_value_as = { name = pp_cplan_to value = { value = var:pp_cplan_cursor add = pp_cplan_bz_window } }
+	every_owned_location = {
+		if = {
+			limit = { NOT = { has_variable = pp_cplan_seq } }
+			scope:pp_cplan_country = { change_variable = { name = pp_cplan_seq_n add = 1 } }
+			set_variable = { name = pp_cplan_seq value = scope:pp_cplan_country.var:pp_cplan_seq_n }
+		}
+		if = {
+			limit = { pp_cplan_business_turn = yes }
+			# a site that cannot take a business now (a construction under way, a profile that keeps them out, no
+			# market) keeps the pick it had: the look works it out afresh before it builds
+			if = {
 				limit = { pp_cplan_business_site = yes }
 				pp_cplan_business_pick = yes
 			}
-			ordered_owned_location = {
-				limit = { has_variable = pp_cplan_bz_pick }
-				order_by = pp_cplan_bz_order
-				max = 100000
-				check_range_bounds = no
-				# the window: the pick's payback in years (+ 100); the quickest of the country's sites
-				save_temporary_scope_value_as = { name = pp_cplan_rv value = { value = 100 divide = var:pp_cplan_bz_roi add = 100 } }
-				save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }
-				scope:pp_cplan_country = {
-					remove_variable = pp_cplan_noted
-					change_variable = { name = pp_cplan_ds_business_sites add = 1 }
-					if = {
-						limit = { var:pp_cplan_ds_business_best > scope:pp_cplan_rv }
-						set_variable = { name = pp_cplan_ds_business_best value = scope:pp_cplan_rv }
-					}
+		}
+	}
+	set_variable = { name = pp_cplan_cursor value = scope:pp_cplan_to }
+	if = {
+		limit = { var:pp_cplan_cursor >= var:pp_cplan_seq_n }
+		set_variable = { name = pp_cplan_cursor value = 100 }
+	}
+}
+
+# Country scope: the business group's look: the stored picks, the soonest payback counting the time to save first;
+# the best few are tried. Not while it has neither gold saved nor gold coming in: nothing could be built or sensibly
+# saved for, and the window says that it did not look (pp_cplan_ds_business_skipped).
+pp_cplan_look_business = {
+	pp_cplan_group_start = { why = 103 }
+	if = {
+		limit = {
+			OR = {
+				pp_cplan_purse_n_103 > 0.01
+				pp_cplan_in_n_103 > 0.01
+			}
+		}
+		# the window: the sites with a stored pick and the quickest payback among them (no site is scored here)
+		every_owned_location = {
+			limit = { has_variable = pp_cplan_bz_pick }
+			save_temporary_scope_value_as = { name = pp_cplan_rv value = { value = pp_cplan_bz_years add = 100 } }
+			scope:pp_cplan_country = {
+				change_variable = { name = pp_cplan_ds_business_sites add = 1 }
+				if = {
+					limit = { var:pp_cplan_ds_business_best > scope:pp_cplan_rv }
+					set_variable = { name = pp_cplan_ds_business_best value = scope:pp_cplan_rv }
 				}
-				var:pp_cplan_bz_pick = { save_scope_as = pp_cplan_btype }
-				pp_cplan_construct_scoped = { why = 103 }
+			}
+		}
+		ordered_owned_location = {
+			limit = {
+				has_variable = pp_cplan_bz_pick
+				pp_cplan_site_free = yes
+			}
+			order_by = pp_cplan_bz_order
+			max = pp_cplan_bz_tries
+			check_range_bounds = no
+			pp_cplan_business_here = yes
+		}
+	}
+	else = {
+		set_variable = { name = pp_cplan_ds_business_skipped value = 101 }
+	}
+}
+
+# Location scope (a site with a stored pick, or where the group saved for a business): while the group does not save,
+# the site works its best business out afresh (every guard: pp_cplan_business_site, pp_cplan_business_pick) and one
+# level of it is built through the plan's construct path; a pick that was built or is gone leaves the location. Once
+# the group saves, the remaining picks of the look are only counted as waiting for gold, at their stored cost.
+pp_cplan_business_here = {
+	scope:pp_cplan_country = {
+		remove_variable = pp_cplan_noted
+		remove_variable = pp_cplan_hit
+	}
+	if = {
+		limit = { pp_cplan_saving = { why = 103 } }
+		if = {
+			limit = { has_variable = pp_cplan_bz_cost }
+			save_temporary_scope_value_as = { name = pp_cplan_wc value = var:pp_cplan_bz_cost }
+			scope:pp_cplan_country = {
+				change_variable = { name = pp_cplan_dwait_103 add = scope:pp_cplan_wc }
+				change_variable = { name = pp_cplan_dwn_103 add = 1 }
+			}
+		}
+	}
+	else_if = {
+		limit = { pp_cplan_business_site = yes }
+		pp_cplan_business_pick = yes
+		if = {
+			limit = { has_variable = pp_cplan_bz_pick }
+			# the window: the pick's payback in years (+ 100)
+			save_temporary_scope_value_as = { name = pp_cplan_rv value = { value = pp_cplan_bz_years add = 100 } }
+			save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }
+			var:pp_cplan_bz_pick = { save_scope_as = pp_cplan_btype }
+			pp_cplan_construct_scoped = { why = 103 }
+			if = {
+				limit = { scope:pp_cplan_country = { has_variable = pp_cplan_hit } }
 				remove_variable = pp_cplan_bz_pick
 				remove_variable = pp_cplan_bz_roi
 				remove_variable = pp_cplan_bz_cost
 			}
-			pp_cplan_business_types_clear = yes
-		}
-		else = {
-			set_variable = { name = pp_cplan_ds_business_skipped value = 101 }
 		}
 	}
+	scope:pp_cplan_country = { remove_variable = pp_cplan_hit }
 }
 
 # Province scope: the food rule, one construction a month, the first of these that builds (baseline rules, Jan
@@ -376,7 +693,15 @@ pp_cplan_food_province = {
 	}
 	if = {
 		limit = { has_variable = pp_stored_food_months }
-		save_temporary_scope_value_as = { name = pp_cplan_fy value = pp_cplan_food_in_a_year }
+		# the store a year from now: the look worked it out once for the order and left it here (pp_cplan_fy, + 1000);
+		# a single province outside a look (what the group saved for) works it out now
+		if = {
+			limit = { has_variable = pp_cplan_fy }
+			save_temporary_scope_value_as = { name = pp_cplan_fy value = { value = var:pp_cplan_fy subtract = 1000 } }
+		}
+		else = {
+			save_temporary_scope_value_as = { name = pp_cplan_fy value = pp_cplan_food_in_a_year }
+		}
 		save_temporary_scope_value_as = { name = pp_cplan_rv value = { value = scope:pp_cplan_fy add = 100 } }
 		save_temporary_scope_value_as = { name = pp_cplan_gd value = 0 }
 		save_temporary_scope_value_as = { name = pp_cplan_rd value = 0 }
@@ -388,23 +713,26 @@ pp_cplan_food_province = {
 			limit = { pp_cplan_grange_due = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_rd value = 1 }
 		}
-		# the window: the province's situation
+		# the window: the province's situation (counted at a look only)
 		scope:pp_cplan_country = {
-			change_variable = { name = pp_cplan_ds_food_provinces add = 1 }
 			if = {
-				limit = { scope:pp_cplan_fy < pp_cplan_famine_months }
+				limit = { has_variable = pp_cplan_now_101 }
+				change_variable = { name = pp_cplan_ds_food_provinces add = 1 }
+			}
+			if = {
+				limit = { has_variable = pp_cplan_now_101 scope:pp_cplan_fy < pp_cplan_famine_months }
 				change_variable = { name = pp_cplan_ds_food_famine add = 1 }
 			}
 			else_if = {
-				limit = { scope:pp_cplan_fy < pp_cplan_hungry_months }
+				limit = { has_variable = pp_cplan_now_101 scope:pp_cplan_fy < pp_cplan_hungry_months }
 				change_variable = { name = pp_cplan_ds_food_hungry add = 1 }
 			}
 			if = {
-				limit = { scope:pp_cplan_gd > 0.5 }
+				limit = { has_variable = pp_cplan_now_101 scope:pp_cplan_gd > 0.5 }
 				change_variable = { name = pp_cplan_ds_food_granary add = 1 }
 			}
 			if = {
-				limit = { scope:pp_cplan_rd > 0.5 }
+				limit = { has_variable = pp_cplan_now_101 scope:pp_cplan_rd > 0.5 }
 				change_variable = { name = pp_cplan_ds_food_grange add = 1 }
 			}
 		}
@@ -432,11 +760,12 @@ pp_cplan_food_province = {
 			}
 			ordered_location_in_province = {
 				# only sites that can start a construction: a busy one among the best sites took a try and built
-				# nothing, and the province then went on to a Tavern although it can farm
+				# nothing, and the province then went on to a Tavern although it can farm. The best line's return is
+				# worked out once a location, for the order (it asks every farm line's can-build check): a site without
+				# a line that pays ends up last and its try builds nothing (pp_cplan_try_farm_here)
 				limit = {
 					pp_cplan_farm_ok = yes
 					pp_cplan_site_free = yes
-					pp_cplan_farm_best_roi > 0
 				}
 				order_by = pp_cplan_farm_best_roi
 				max = pp_cplan_farm_sites
@@ -523,6 +852,7 @@ pp_cplan_food_province = {
 			}
 		}
 	}
+	remove_variable = pp_cplan_fy
 	scope:pp_cplan_country = {
 		remove_variable = pp_cplan_hit
 		remove_variable = pp_cplan_noted
@@ -609,6 +939,8 @@ pp_cplan_note_wait = {
 			set_variable = { name = pp_cplan_save_cost_$why$ value = { value = scope:pp_cplan_wc add = 100 } }
 			set_variable = { name = pp_cplan_save_loc_$why$ value = scope:pp_cplan_wsite }
 			set_variable = { name = pp_cplan_save_type_$why$ value = scope:pp_cplan_btype }
+			set_variable = { name = pp_cplan_save_rv_$why$ value = scope:pp_cplan_rv }
+			set_variable = { name = pp_cplan_save_rs_$why$ value = scope:pp_cplan_rs }
 		}
 	}
 }

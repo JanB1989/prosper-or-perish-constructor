@@ -212,15 +212,17 @@ def test_global_rules_read_the_profile() -> None:
     assert "goods:wheat" in _block(generated, "pp_lprof_food_target")
     hand = _code(MOD / lpf.HAND_EFFECTS)
     group = _block(hand, "pp_lprof_run")
-    assert "pp_cplan_group_start = { why = 105 }" in group
+    assert "pp_cplan_group_start = { why = 105 }" in _block(hand, "pp_lprof_look")
+    assert "pp_cplan_group_target = { why = 105 do = pp_lprof_location_turn }" in group
     assert "pp_cplan_profiles_w > 0" in group  # the profiles' weight bar at 0 switches them off
-    assert "save_temporary_scope_value_as = { name = pp_cplan_free_peasants value = pp_cplan_free_peasants_here }" in group
-    assert "pp_lprof_location_rules = yes" in group
+    turn = _block(hand, "pp_lprof_location_turn")
+    assert "save_temporary_scope_value_as = { name = pp_cplan_free_peasants value = pp_cplan_free_peasants_here }" in turn
+    assert "pp_lprof_location_rules = yes" in turn
     assert "owner ?= scope:pp_cplan_country" in _block(hand, "pp_lprof_gather")  # only the country's own locations
     # the first rule or mark that starts a construction ends the location for the month: the mark is cleared once a
     # location (by the run, not between the profile's rules and the location's marks), every later one waits (109)
-    walk = group[group.index("ordered_in_list"):]
-    assert walk.index("remove_variable = pp_cplan_hit") < walk.index("pp_lprof_location_rules = yes")
+    assert "pp_lprof_location_turn = yes" in _block(hand, "pp_lprof_look").split("ordered_in_list")[1]
+    assert turn.index("remove_variable = pp_cplan_hit") < turn.index("pp_lprof_location_rules = yes")
     opened = _block(hand, "pp_lprof_open")
     assert "has_variable = pp_cplan_hit" in opened and "value = 109" in opened
     assert "pp_lprof_open = yes" in _block(hand, "pp_lprof_rule")
@@ -614,7 +616,7 @@ def test_marks_run_the_targets_of_the_profile_rules() -> None:
     for name in ("pp_lprof_expand", "pp_lprof_start", "pp_lprof_try", "pp_lprof_build", "pp_cplan_construct_scoped"):
         assert f"{name} = " not in mark + none + marks, name
     # the profile's rules first, then the marks, one construction a month between them
-    run = _block(hand, "pp_lprof_run")
+    run = _block(hand, "pp_lprof_location_turn")
     assert run.index("pp_lprof_location_rules = yes") < run.index("pp_lplan_location_marks = yes")
     assert "limit = { has_variable = pp_lplan_n }" in run and "limit = { has_variable = pp_lprof }" in run
     # the item variables of the two modules agree
@@ -647,7 +649,7 @@ def test_marked_locations_get_their_turn() -> None:
     profile locations for the pass, each location once; a location with marks and no profile is processed too. The
     list is cleaned like the profile list, and an own location keeps no marks the country did not set."""
     hand = _code(MOD / lpf.HAND_EFFECTS)
-    run = _block(hand, "pp_lprof_run")
+    run = _block(hand, "pp_lprof_look")
     gather = _block(hand, "pp_lprof_gather")
     assert run.index("pp_lplan_cleanup = yes") < run.index("pp_lprof_gather = yes") < run.index("ordered_in_list")
     assert "variable = pp_lprof_turns" in run and "clear_variable_list = pp_lprof_turns" in run

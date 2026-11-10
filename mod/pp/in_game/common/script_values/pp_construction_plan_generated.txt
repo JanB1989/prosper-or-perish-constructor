@@ -190,6 +190,41 @@ pp_cplan_business_min_roi = {
 	value = 100
 	divide = { value = pp_cplan_business_years min = 1 }
 }
+
+# ---- Script time: the business group's sites ([construction_plan] business_sites / _cycle_months / _tries) ----
+# Country scope: the sites whose business pick the pass refreshes: a fixed few, or as many as it takes to see
+# every location the country ever numbered (pp_cplan_seq_n) within the cycle.
+pp_cplan_bz_window = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_seq_n }
+		value = var:pp_cplan_seq_n
+		subtract = 100
+		divide = 24
+	}
+	min = 16
+}
+# Any scope: the stored picks a look of the business group tries to build, best first.
+pp_cplan_bz_tries = { value = 6 }
+# Country scope: what the rule groups started and spent at their last looks (the window's summary).
+pp_cplan_all_started = {
+	value = 0
+	add = pp_cplan_d_profiles_started
+	add = pp_cplan_d_food_started
+	add = pp_cplan_d_logistics_started
+	add = pp_cplan_d_improve_started
+	add = pp_cplan_d_business_started
+	add = pp_cplan_d_country_started
+}
+pp_cplan_all_spent = {
+	value = 0
+	add = pp_cplan_d_profiles_spent
+	add = pp_cplan_d_food_spent
+	add = pp_cplan_d_logistics_spent
+	add = pp_cplan_d_improve_spent
+	add = pp_cplan_d_business_spent
+	add = pp_cplan_d_country_spent
+}
 # Any scope: the market limit ([construction_plan] business_market_share): the share of a market's monthly demand for a good that the levels under construction of that good's makers may add up to.
 pp_cplan_market_share = { value = 0.1 }
 
@@ -18382,16 +18417,19 @@ pp_cplan_purse_kept_105 = {
 pp_cplan_saves_105 = {
 	value = 0
 	if = {
-		limit = { has_variable = pp_cplan_save_cost_105 }
+		limit = {
+			has_variable = pp_cplan_save_cost_105
+			pp_cplan_profiles_cw > 0
+		}
 		value = 1
 	}
 }
-# 1 when it ran in the pass and saves for nothing: it hands on what it has
+# 1 when it looked in this pass and saves for nothing: it hands on what it has
 pp_cplan_gives_105 = {
 	value = 0
 	if = {
 		limit = {
-			has_variable = pp_cplan_dran_105
+			has_variable = pp_cplan_now_105
 			NOT = { has_variable = pp_cplan_save_cost_105 }
 		}
 		value = 1
@@ -18444,16 +18482,19 @@ pp_cplan_purse_kept_101 = {
 pp_cplan_saves_101 = {
 	value = 0
 	if = {
-		limit = { has_variable = pp_cplan_save_cost_101 }
+		limit = {
+			has_variable = pp_cplan_save_cost_101
+			pp_cplan_food_w > 0
+		}
 		value = 1
 	}
 }
-# 1 when it ran in the pass and saves for nothing: it hands on what it has
+# 1 when it looked in this pass and saves for nothing: it hands on what it has
 pp_cplan_gives_101 = {
 	value = 0
 	if = {
 		limit = {
-			has_variable = pp_cplan_dran_101
+			has_variable = pp_cplan_now_101
 			NOT = { has_variable = pp_cplan_save_cost_101 }
 		}
 		value = 1
@@ -18506,16 +18547,19 @@ pp_cplan_purse_kept_102 = {
 pp_cplan_saves_102 = {
 	value = 0
 	if = {
-		limit = { has_variable = pp_cplan_save_cost_102 }
+		limit = {
+			has_variable = pp_cplan_save_cost_102
+			pp_cplan_logistics_w > 0
+		}
 		value = 1
 	}
 }
-# 1 when it ran in the pass and saves for nothing: it hands on what it has
+# 1 when it looked in this pass and saves for nothing: it hands on what it has
 pp_cplan_gives_102 = {
 	value = 0
 	if = {
 		limit = {
-			has_variable = pp_cplan_dran_102
+			has_variable = pp_cplan_now_102
 			NOT = { has_variable = pp_cplan_save_cost_102 }
 		}
 		value = 1
@@ -18568,16 +18612,19 @@ pp_cplan_purse_kept_106 = {
 pp_cplan_saves_106 = {
 	value = 0
 	if = {
-		limit = { has_variable = pp_cplan_save_cost_106 }
+		limit = {
+			has_variable = pp_cplan_save_cost_106
+			pp_cplan_improve_w > 0
+		}
 		value = 1
 	}
 }
-# 1 when it ran in the pass and saves for nothing: it hands on what it has
+# 1 when it looked in this pass and saves for nothing: it hands on what it has
 pp_cplan_gives_106 = {
 	value = 0
 	if = {
 		limit = {
-			has_variable = pp_cplan_dran_106
+			has_variable = pp_cplan_now_106
 			NOT = { has_variable = pp_cplan_save_cost_106 }
 		}
 		value = 1
@@ -18630,16 +18677,19 @@ pp_cplan_purse_kept_103 = {
 pp_cplan_saves_103 = {
 	value = 0
 	if = {
-		limit = { has_variable = pp_cplan_save_cost_103 }
+		limit = {
+			has_variable = pp_cplan_save_cost_103
+			pp_cplan_business_w > 0
+		}
 		value = 1
 	}
 }
-# 1 when it ran in the pass and saves for nothing: it hands on what it has
+# 1 when it looked in this pass and saves for nothing: it hands on what it has
 pp_cplan_gives_103 = {
 	value = 0
 	if = {
 		limit = {
-			has_variable = pp_cplan_dran_103
+			has_variable = pp_cplan_now_103
 			NOT = { has_variable = pp_cplan_save_cost_103 }
 		}
 		value = 1
@@ -18699,16 +18749,19 @@ pp_cplan_purse_kept_107 = {
 pp_cplan_saves_107 = {
 	value = 0
 	if = {
-		limit = { has_variable = pp_cplan_save_cost_107 }
+		limit = {
+			has_variable = pp_cplan_save_cost_107
+			pp_cplan_country_cw > 0
+		}
 		value = 1
 	}
 }
-# 1 when it ran in the pass and saves for nothing: it hands on what it has
+# 1 when it looked in this pass and saves for nothing: it hands on what it has
 pp_cplan_gives_107 = {
 	value = 0
 	if = {
 		limit = {
-			has_variable = pp_cplan_dran_107
+			has_variable = pp_cplan_now_107
 			NOT = { has_variable = pp_cplan_save_cost_107 }
 		}
 		value = 1
@@ -19018,7 +19071,7 @@ pp_cplan_hand_next_107 = {
 	add = pp_cplan_hand_get_107
 }
 
-# ---- The window's detail panes (country scope; pp_cplan_stats_reset, pp_cplan_history_push) ----
+# ---- The window's detail panes (country scope; pp_cplan_stats_reset_<why>, pp_cplan_history_push) ----
 
 # profiles (construction code 105)
 pp_cplan_d_profiles_ran = {

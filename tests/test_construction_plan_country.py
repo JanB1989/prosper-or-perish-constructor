@@ -192,9 +192,19 @@ def test_lines_from_a_small_database() -> None:
 def test_public_building_rule() -> None:
     effects = _code(MOD / cc.EFFECTS)
     group = _block(effects, "pp_cplan_group_country")
+    # script time (2026-11-10): one rule a look, each in its own months; while the group saves it does not look,
+    # it only goes for what it saves for once its purse can pay
     assert _tokens(group) == _tokens(
-        "if = { limit = { pp_cplan_country_w > 0 } pp_cplan_group_start = { why = 107 } "
-        "pp_cplan_country_upgrades = yes pp_cplan_country_buildings = yes pp_cplan_country_ranks = yes }")
+        "if = { limit = { pp_cplan_country_w > 0 } "
+        "if = { limit = { pp_cplan_saving = { why = 107 } } pp_cplan_group_target = { why = 107 do = pp_cplan_country_target } } "
+        "else_if = { limit = { OR = { pp_cplan_looks_upgrades = yes pp_cplan_looks_public = yes pp_cplan_looks_ranks = yes } } "
+        "pp_cplan_group_start = { why = 107 } "
+        "if = { limit = { pp_cplan_looks_upgrades = yes } pp_cplan_country_upgrades = yes } "
+        "if = { limit = { pp_cplan_looks_public = yes } pp_cplan_country_buildings = yes } "
+        "if = { limit = { pp_cplan_looks_ranks = yes } pp_cplan_country_ranks = yes } } }")
+    assert _tokens(_block(effects, "pp_cplan_look_country_all")) == _tokens(
+        "pp_cplan_group_start = { why = 107 } pp_cplan_country_upgrades = yes pp_cplan_country_buildings = yes "
+        "pp_cplan_country_ranks = yes")
     public = _block(effects, "pp_cplan_country_public")
     limit = public[public.index("limit = {"):public.index("order_by")]
     for check in ("pp_cplan_country_site = yes", "max_control >= scope:pp_cplan_country.pp_cplan_country_control_line",

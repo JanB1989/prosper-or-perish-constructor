@@ -17,13 +17,101 @@
 # It pays from its purse like every rule group (pp_construction_plan.txt, "Budgets that save"): the first thing it
 # wants and cannot pay for, a building or a town or city upgrade, is what it saves for, and it starts nothing more
 # in the pass.
+# Script time (2026-11-10): every rule walks all owned locations (the public buildings once per ticked building,
+# the upgrades every building of every location), so each rule looks only in its own months ([construction_plan]
+# look_months: pp_cplan_looks_upgrades / _public / _ranks), one rule a look. While the group saves for something
+# it does not look at all: once its purse can pay, it goes back to that one location (pp_cplan_group_target,
+# pp_cplan_country_target), and looks again from its next month on.
 pp_cplan_group_country = {
 	if = {
 		limit = { pp_cplan_country_w > 0 }
-		pp_cplan_group_start = { why = 107 }
-		pp_cplan_country_upgrades = yes
-		pp_cplan_country_buildings = yes
-		pp_cplan_country_ranks = yes
+		if = {
+			limit = { pp_cplan_saving = { why = 107 } }
+			pp_cplan_group_target = { why = 107 do = pp_cplan_country_target }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					pp_cplan_looks_upgrades = yes
+					pp_cplan_looks_public = yes
+					pp_cplan_looks_ranks = yes
+				}
+			}
+			pp_cplan_group_start = { why = 107 }
+			if = {
+				limit = { pp_cplan_looks_upgrades = yes }
+				pp_cplan_country_upgrades = yes
+			}
+			if = {
+				limit = { pp_cplan_looks_public = yes }
+				pp_cplan_country_buildings = yes
+			}
+			if = {
+				limit = { pp_cplan_looks_ranks = yes }
+				pp_cplan_country_ranks = yes
+			}
+		}
+	}
+}
+
+# Country scope, for the console (pp_cplan_test_country, to time the group): its three rules in one look, whatever
+# the month.
+pp_cplan_look_country_all = {
+	pp_cplan_group_start = { why = 107 }
+	pp_cplan_country_upgrades = yes
+	pp_cplan_country_buildings = yes
+	pp_cplan_country_ranks = yes
+}
+
+# Location scope (pp_cplan_group_target: where the group saved for something, its purse can pay now): the town or
+# city upgrade it saved for (scope:pp_cplan_trank 1 / 2) with that rule's gates, or one level of the building
+# type it saved for (scope:pp_cplan_btype): the country's part of the can-build check, for a public building
+# (scope:pp_cplan_rs = 1) the location's part too (an upgrade of a building does not ask it), and the
+# construction goods in the market. Through the plan's one construct path, as at a look.
+pp_cplan_country_target = {
+	scope:pp_cplan_country = { remove_variable = pp_cplan_save_rank_107 }
+	if = {
+		limit = { pp_cplan_country_site = yes }
+		if = {
+			limit = { scope:pp_cplan_trank > 0.5 scope:pp_cplan_trank < 1.5 }
+			if = {
+				limit = {
+					location_rank = location_rank:rural_settlement
+					modifier:cannot_upgrade_location = no
+					pp_cplan_country_goods_town = yes
+				}
+				pp_cplan_country_rank_up = { rank = town n = 101 }
+			}
+		}
+		else_if = {
+			limit = { scope:pp_cplan_trank > 1.5 scope:pp_cplan_trank < 2.5 }
+			if = {
+				limit = {
+					location_rank = location_rank:town
+					modifier:cannot_upgrade_location = no
+					pp_cplan_country_goods_city = yes
+				}
+				pp_cplan_country_rank_up = { rank = city n = 102 }
+			}
+		}
+		else_if = {
+			limit = {
+				scope:pp_cplan_country = { can_build_building = scope:pp_cplan_btype }
+				OR = {
+					scope:pp_cplan_rs > 1.5
+					can_build_building = scope:pp_cplan_btype
+				}
+			}
+			pp_cplan_btype_data = yes
+			if = {
+				limit = { scope:pp_cplan_gok > 0.5 }
+				scope:pp_cplan_country = { remove_variable = pp_cplan_noted }
+				pp_cplan_construct_scoped = { why = 107 }
+			}
+			else = {
+				pp_cplan_note_goods = { why = 107 }
+			}
+		}
 	}
 }
 

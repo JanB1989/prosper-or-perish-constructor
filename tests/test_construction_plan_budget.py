@@ -106,7 +106,7 @@ def _fill(ctx: dict) -> dict[str, float]:
 def _hand_on(ctx: dict, ran: tuple[str, ...], saves: tuple[str, ...]) -> None:
     """What pp_cplan_purses_hand_on does after a pass in which ``ran`` ran and ``saves`` save for something."""
     for group in ran:
-        ctx["game"][f"var:pp_cplan_dran_{WHYS[group]}"] = 1
+        ctx["game"][f"var:{cp.NOW}_{WHYS[group]}"] = 1
     for group in saves:
         ctx["game"][f"var:{cp.SAVE_COST}_{WHYS[group]}"] = 500 + 100
     new = {why: _eval().value(f"pp_cplan_hand_next_{why}", ctx) for why in WHYS.values()}
@@ -195,8 +195,10 @@ def test_a_every_group_has_a_purse_and_the_effects_read_before_they_write() -> N
     run = _effect(_read(EFFECTS), "pp_cplan_run")
     first_group = min(run.index(f"pp_cplan_group_{group} = yes") for group in cp.GROUPS)
     last_group = max(run.rindex(f"pp_cplan_group_{group} = yes") for group in cp.GROUPS)
-    assert run.index("pp_cplan_purses_fill = yes") < first_group
-    assert last_group < run.index("pp_cplan_purses_hand_on = yes") < run.index("pp_cplan_history_push = yes")
+    assert run.index("pp_cplan_pass_begin = yes") < first_group and last_group < run.index("pp_cplan_pass_end = yes")
+    assert "pp_cplan_purses_fill = yes" in _effect(_read(EFFECTS), "pp_cplan_pass_begin")
+    end = _effect(_read(EFFECTS), "pp_cplan_pass_end")
+    assert end.index("pp_cplan_purses_hand_on = yes") < end.index("pp_cplan_history_push = yes")
     # a group "had" its purse
     start = _effect(_read(EFFECTS), "pp_cplan_group_start")
     assert "pp_cplan_dhad_$why$ value = { value = pp_cplan_purse_n_$why$ add = 100 }" in start and "$add$" not in start
@@ -245,24 +247,33 @@ def test_b_the_first_unpaid_thing_is_saved_for_and_nothing_more_is_built() -> No
     assert scoped.index("pp_cplan_market_do = { do = gate }") < scoped.index("pp_cplan_btype_data = yes")
     for name in ("pp_cplan_note_market", "pp_cplan_note_goods"):
         assert "pp_cplan_save_" not in _effect(effects, name), name
-    # what a group saves for is found afresh every pass; the saved gold is not
+    # what a group saves for is found afresh at each of its looks (script time, 2026-11-10: a group looks a few times
+    # a year and keeps what it saves for in between); the saved gold is kept; a group that stops counting lets go
+    start = _effect(effects, "pp_cplan_group_start")
+    assert "pp_cplan_save_clear = { why = $why$ }" in start
+    assert f"remove_variable = {cp.SAVE_COST}_$why$" in _effect(effects, "pp_cplan_save_clear")
     fill = _effect(_read(MOD / cp.EFFECTS), "pp_cplan_purses_fill")
-    assert all(f"remove_variable = {cp.SAVE_COST}_{why}\n" in fill for why in WHYS.values())
+    for group, why in WHYS.items():
+        assert f"limit = {{ NOT = {{ {cp.counted_weight(group)} > 0 }} }}\n\t\tpp_cplan_save_clear = {{ why = {why} }}" in fill
+        assert f"remove_variable = {cp.SAVE_COST}_{why}\n" not in fill
 
 
 def test_b_every_group_goes_in_its_order_of_importance() -> None:
     effects = _read(EFFECTS)
     # food: the hungriest province first (the store a year from now, lowest first)
-    food = _effect(effects, "pp_cplan_group_food")
-    assert "ordered_province = {" in food and "order_by = pp_cplan_food_order" in food and "every_province" not in food
-    assert "limit = { has_variable = pp_stored_food_months }" in food
+    food = _effect(effects, "pp_cplan_look_food")
+    assert "ordered_province = {" in food and "order_by = pp_cplan_food_order" in food
+    # the store a year from now is worked out once a province and kept on it for the order (pp_cplan_fy, + 1000)
+    assert ("limit = { has_variable = pp_stored_food_months }\n\t\tset_variable = { name = pp_cplan_fy value = "
+            "{ value = pp_cplan_food_in_a_year add = 1000 } }") in food
+    assert food.index("every_province = {") < food.index("ordered_province = {")
     order = _eval()
-    hungry = order.value("pp_cplan_food_order", {"game": {"pp_cplan_food_in_a_year": 2}})
-    fed = order.value("pp_cplan_food_order", {"game": {"pp_cplan_food_in_a_year": 20}})
+    hungry = order.value("pp_cplan_food_order", {"game": {"var:pp_cplan_fy": 1000 + 2}})
+    fed = order.value("pp_cplan_food_order", {"game": {"var:pp_cplan_fy": 1000 + 20}})
     assert hungry > fed, "ordered lists take the highest value first"
-    assert "order_by = pp_logistics_urgency_weight" in _effect(effects, "pp_cplan_group_logistics")
-    assert "order_by = pp_cplan_fill_here" in _effect(effects, "pp_cplan_group_improve")
-    assert "order_by = pp_cplan_bz_order" in _effect(effects, "pp_cplan_group_business")
+    assert "order_by = pp_logistics_urgency_weight" in _effect(effects, "pp_cplan_look_logistics")
+    assert "order_by = pp_cplan_fill_here" in _effect(effects, "pp_cplan_look_improve")
+    assert "order_by = pp_cplan_bz_order" in _effect(effects, "pp_cplan_look_business")
     # Towns and Buildings: upgrades of buildings, the ticked buildings in the tab's order, towns, then cities
     country = _read(MOD / cpc.EFFECTS)
     group = _effect(country, "pp_cplan_group_country")
@@ -271,9 +282,9 @@ def test_b_every_group_goes_in_its_order_of_importance() -> None:
     ranks = _effect(country, "pp_cplan_country_ranks")
     assert ranks.index("pp_cplan_rank_town") < ranks.index("pp_cplan_rank_city")
     # the Locations group: its location order, each location's rules then its marks
-    run = _effect(_read(PROFILE_EFFECTS), "pp_lprof_run")
-    assert "order_by = pp_lprof_turn" in run
-    assert run.index("pp_lprof_location_rules = yes") < run.index("pp_lplan_location_marks = yes")
+    assert "order_by = pp_lprof_turn" in _effect(_read(PROFILE_EFFECTS), "pp_lprof_look")
+    turn = _effect(_read(PROFILE_EFFECTS), "pp_lprof_location_turn")
+    assert turn.index("pp_lprof_location_rules = yes") < turn.index("pp_lplan_location_marks = yes")
     # the rotation of the groups is still there: it only decides who gets a free construction slot first
     assert len(re.findall(r"current_month = \d+", _effect(effects, "pp_cplan_run"))) == 10
 
@@ -304,8 +315,8 @@ def test_c_businesses_rank_by_payback_including_the_time_to_save() -> None:
 
 
 def test_c_the_group_builds_in_that_order_and_the_line_reads_the_plain_payback() -> None:
-    group = _effect(_read(EFFECTS), "pp_cplan_group_business")
-    assert "order_by = pp_cplan_bz_order" in group and "pp_cplan_construct_scoped = { why = 103 }" in group
+    assert "order_by = pp_cplan_bz_order" in _effect(_read(EFFECTS), "pp_cplan_look_business")
+    assert "pp_cplan_construct_scoped = { why = 103 }" in _effect(_read(EFFECTS), "pp_cplan_business_here")
     # the pick keeps the level's cost for the order; the player's line still reads the plain return
     take = _effect(_read(EFFECTS), "pp_cplan_business_take")
     assert "set_variable = { name = pp_cplan_bz_cost value = pp_cplan_est_cost }" in take
@@ -413,9 +424,11 @@ def test_d_under_construction_is_counted_once_a_market_and_kept_for_the_pass() -
     clear = _effect(effects, "pp_cplan_markets_clear")
     assert "variable = pp_cplan_markets\n\t\tpp_cplan_market_clear = yes" in clear
     assert "clear_variable_list = pp_cplan_markets" in clear
-    run = _effect(effects, "pp_cplan_run")
-    last_group = max(run.rindex(f"pp_cplan_group_{group} = yes") for group in cp.GROUPS)
-    assert run.rindex("pp_cplan_markets_clear = yes") > last_group
+    # ... in the months of the count only (script time, 2026-11-10): between two counts the counts stand, raised by
+    # what the plan itself starts
+    begin = _effect(effects, "pp_cplan_pass_begin")
+    assert "limit = { pp_cplan_looks_market_count = yes }\n\t\tpp_cplan_markets_clear = yes" in begin
+    assert "pp_cplan_markets_clear" not in _effect(effects, "pp_cplan_pass_end")
     # everything under construction counts, whoever started it: the count reads the game, not the plan's ledger
     values = _read(MOD / cp.VALUES)
     here = _effect(values, "pp_cplan_uc_here_horses")
@@ -482,7 +495,8 @@ def test_e_only_saving_groups_receive() -> None:
         assert f"pp_cplan_saves_{why} > 0" in get and "pp_cplan_hand_weights > 0" in get
         assert f"has_variable = {cp.SAVE_COST}_{why}" in _effect(values, f"pp_cplan_saves_{why}")
         gives = _effect(values, f"pp_cplan_gives_{why}")
-        assert f"has_variable = pp_cplan_dran_{why}" in gives and f"NOT = {{ has_variable = {cp.SAVE_COST}_{why} }}" in gives
+        # a group hands on only in a pass in which it looked (it then knows that it wants nothing)
+        assert f"has_variable = {cp.NOW}_{why}" in gives and f"NOT = {{ has_variable = {cp.SAVE_COST}_{why} }}" in gives
         assert f"add = {{ value = {cp.PURSE}_n_{why} multiply = pp_cplan_gives_{why} }}" in _effect(values, "pp_cplan_hand_pool")
         assert (f"add = {{ value = {cp.counted_weight(group)} multiply = pp_cplan_saves_{why} }}"
                 in _effect(values, "pp_cplan_hand_weights"))

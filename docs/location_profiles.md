@@ -327,3 +327,10 @@ the palette and the map badge; a category rule (Trade Buildings) started a Marke
 pass. Found and fixed: `Concatenate` cannot feed a texture and `GetFlagName` returns the localized name, so flag icons
 use the numbered strip; clearing a location copy no longer removes the rule frame numbers (never set on a location,
 the engine logged "used but never set"). Error log clean of profile lines.
+
+## Script time (2026-11-10)
+
+The Locations group looks at its locations in its months only (`[construction_plan] look_months` profiles: 3, 6, 9,
+12; `pp_lprof_look`); between two looks it only goes back to the location it saves for once its purse can pay
+(`pp_cplan_group_target` runs `pp_lprof_location_turn` there: the profile's rules, then the marks). Rule and mark
+states are those of the last look. docs/player_construction_manager.md "Script time".

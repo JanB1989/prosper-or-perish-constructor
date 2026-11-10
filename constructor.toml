@@ -441,7 +441,7 @@ replace = [
 file = "in_game/events/DHE/flavor_CAS.txt"
 replace = [
   { find = "is_coastal = yes", with = "pp_is_sea_coast = yes", count = 14 },
-  { find = "is_port = yes", with = "is_port = yes pp_is_sea_coast = yes", count = 1 },
+  { find = "is_port = yes", with = "is_port = yes pp_is_sea_coast = yes", count = 2 },   # 1.4.8: trigger + effect of flavor_cas.35/36
 ]
 
 [[worldbuilder.navigation_scripts.patches]]
@@ -1238,6 +1238,17 @@ access_threshold = 97         # logistics: build where market access is below th
 improve_fill_pct = 90         # improvements: build where population over capacity reaches this, in % (Jan 2026-11-08; steps of 10)
 weights = { profiles = 5, food = 5, logistics = 5, improve = 5, business = 5, country = 5 }   # each rule group, 0 (off) .. 10: its part of the gold above the reserve = its weight / the sum (Jan 2026-11-09); profiles = the window's "Locations", country = "Towns and Buildings" (2026-11-10)
 business_years = 10           # businesses: a level of any building that makes goods while it pays back within this many years (Jan 2026-11-09)
+# Script time (Jan 2026-11-10: the monthly pass took 0.3-0.4 s in a 330-location country; docs/player_construction_manager.md
+# "Script time"). The pass still runs every month, but a rule group LOOKS (walks what it wants, best first) only in its
+# months; between looks it only builds what it saves for once its purse can pay. The game's months (1..12) of every look:
+# food / logistics / improve / profiles = the whole group; business = the months it ranks its stored picks again while it
+# saves (when it does not save it ranks them every month); upgrades / public / ranks / rights = the rules of Towns and
+# Buildings, one a look; market_count = when the market limit counts afresh what is under construction; business_types =
+# when the country's part of the business can-build check is asked again. Placeholders (Jan tunes them).
+look_months = { food = [1, 4, 7, 10], logistics = [2, 5, 8, 11], improve = [3, 9], profiles = [3, 6, 9, 12], business = [1, 7], upgrades = [4, 10], public = [6, 12], ranks = [2, 8], rights = [5, 11], market_count = [1, 4, 7, 10], business_types = [1, 7] }
+business_sites = 16           # businesses: the sites whose pick (their best business) is worked out anew each month; the picks are kept on the locations
+business_cycle_months = 24    # ... but at least so many that every location is seen within this many months, however large the country
+business_tries = 6            # businesses: the stored picks a look tries to build, best first
 business_market_share = 10    # market limit against spam (2026-11-10; a PLACEHOLDER, Jan tunes it): a level of a building that makes a market good starts only while the output of that good under construction in the location's market, this level included, stays within this % of the market's monthly demand for it; one level is always allowed while none is under construction. Applies to the Businesses group, profile rules and marks
 farm_sites_per_province = 4   # food: locations tried for a staple food maker, best payback first
 hungry_months = 6             # food: a farm (or a Tavern where none can be built) where a normal year leaves less than this a year from now

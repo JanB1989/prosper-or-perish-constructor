@@ -1,11 +1,11 @@
 """Construction Plan (branch player-construction-manager, 2026-11-06, Jan): player-only construction rules.
 
-The player sets the rules once in the Construction Plan window (two tabs since 2026-11-09, Jan: Global settings and
-Location profiles); a monthly pass for countries with ``is_ai = no`` starts the constructions with
+The player sets the rules once in the Construction Plan window (Global Settings, Location Profiles and, since
+2026-11-10, Towns and Buildings); a monthly pass for countries with ``is_ai = no`` starts the constructions with
 ``construct_building`` (a normal, paid construction). The AI never runs it. Global settings: the plan on or off, a gold
-reserve in gold, and five rule groups (the location profiles and the four below), each with a weight: its part of the
-gold above the reserve is its weight over the sum of the weights (0 = off; Jan 2026-11-09), and the four below with
-one line each:
+reserve in gold, and six rule groups (``GROUPS``: the location profiles, the four below, and Towns and Buildings, whose
+rules and tab are ``construction_plan_country.py``'s), each with a weight: its part of the gold above the reserve is
+its weight over the sum of the weights (0 = off; Jan 2026-11-09). The four below:
 
 * Food, per province, one construction a month, first that applies (baseline rules, Jan 2026-11-08). Nothing is kept
   between passes; the hunger checks read the store a year from now in a normal year (this year's Variable Harvest and
@@ -24,8 +24,9 @@ one line each:
   level, so both compare. A level is only built where it finds its workers: idle peasants left after the open jobs of
   the buildings there (peasants are promoted into the other classes), or idle pops of its own class.
 
-Location Profiles (``location_profiles.py``) are the only per-location layer: a profile takes from these groups only
-what it sets.
+The per-location layer is the "profiles" group (the player's "Locations"; ``location_profiles.py``): a location's
+profile, which takes from these groups only what it sets, and since 2026-11-10 the Location Plan's marks ("Also build
+here", ``location_plan.py``), which add to them and switch nothing off.
 
 Payback is the one money number (Jan: cost and profit alone say nothing across buildings): a level's build cost over
 its monthly profit. The cost follows the engine's own formula, calibrated in game on 158 constructions (all within
@@ -41,7 +42,8 @@ The engine (monthly pass, window, settings) is hand-written in the mod (``pp_con
 * ``scripted_effects/pp_construction_plan_generated.txt``: the farm, logistics, improvement and business pickers and
   the building cost data lookup;
 * ``script_values/pp_construction_plan_generated.txt``: the defaults, the rule groups' weights and parts, farm and
-  business profit estimates, the construction goods price factors and the baseline rules' blacklists;
+  business profit estimates, the construction goods price factors, the baseline rules' blacklists and the idle pops
+  per pop type (the worker check);
 * ``scripted_triggers/pp_construction_plan_generated.txt``: the construction goods and food queue checks;
 * ``gui/pp_construction_plan_weights.gui``: the weight bar of each rule group.
 
@@ -63,10 +65,12 @@ VALUES = Path("in_game/common/script_values/pp_construction_plan_generated.txt")
 TRIGGERS = Path("in_game/common/scripted_triggers/pp_construction_plan_generated.txt")
 WEIGHT_GUI = Path("in_game/gui/pp_construction_plan_weights.gui")
 SCRIPT_VALUES = (Path("main_menu/common/script_values"), Path("in_game/common/script_values"))
-# the rule groups with a weight (their order in the window); a weight runs 0 (off) .. WEIGHT_STEPS
-GROUPS = ("profiles", "food", "logistics", "improve", "business")
+# the rule groups with a weight (their order in the window and in the pass's turn); a weight runs 0 (off) ..
+# WEIGHT_STEPS. "profiles" is the player's "Locations" group (the location profiles), "country" the "Towns and
+# Buildings" group (construction_plan_country.py: pp_cplan_group_country, its own tab).
+GROUPS = ("profiles", "food", "logistics", "improve", "business", "country")
 # the rule groups' construction codes (pp_cplan_construct_scoped's why; the pass keeps its numbers per code)
-GROUP_WHY = {"food": 101, "logistics": 102, "business": 103, "profiles": 105, "improve": 106}
+GROUP_WHY = {"food": 101, "logistics": 102, "business": 103, "profiles": 105, "improve": 106, "country": 107}
 HISTORY_MONTHS = 12  # months the window's chart shows
 WEIGHT_STEPS = 10
 SEGMENT = 14  # px of one weight step in the bar
@@ -129,6 +133,7 @@ class BuildingCost:
 class Result:
     businesses: dict[str, str] = field(default_factory=dict)  # building type -> its main good (the business rule)
     staff: dict[str, tuple[str, float]] = field(default_factory=dict)  # building type -> (pop type, workers a level)
+    pop_types: list[str] = field(default_factory=list)  # every pop type of the game (pp_cplan_idle_<pop type>)
     farm_lines: dict[str, list[str]] = field(default_factory=dict)
     food_lines: dict[str, list[str]] = field(default_factory=dict)
     improvements: list[str] = field(default_factory=list)
@@ -291,6 +296,24 @@ def staff_check(staff: tuple[str, float] | None) -> str:
     if not staff:
         return ""
     return f"pp_cplan_staff = {{ type = {staff[0]} size = {_num(staff[1])} }}"
+
+
+def render_idle_values(pop_types: list[str]) -> str:
+    """``pp_cplan_idle_<pop type>`` (location scope) for every pop type of the game: the idle pops of a building's own
+    class, which pp_cplan_staff reads as ``pp_cplan_idle_$type$``. One value per type with the type written out, as
+    vanilla writes the call: with the argument inside the quoted call the trigger logged a script error on every
+    check (in game 2026-11-10). Peasants give 0: their idle count less the open jobs is the check's other line
+    (scope:pp_cplan_free_peasants)."""
+    parts = [
+        "\n# ---- Workers (location scope): idle pops of a building's own class, in thousands (pp_cplan_staff) ----\n"
+        "# Peasants 0: the idle peasants left after the open jobs here are scope:pp_cplan_free_peasants.\n\n"
+    ]
+    for pop in sorted(pop_types):
+        if pop == "peasants":
+            parts.append(f"pp_cplan_idle_{pop} = {{ value = 0 }}\n")
+        else:
+            parts.append(f"pp_cplan_idle_{pop} = {{ value = \"unemployed_pops_of_pop_type_in_location(pop_type:{pop})\" }}\n")
+    return "".join(parts)
 
 
 def defined_buildings(mod_root: Path, vanilla_root: Path) -> set[str]:
@@ -550,22 +573,38 @@ def render_price_factors(demands: dict[str, dict[str, float]], bounds: tuple[flo
     return "".join(parts)
 
 
+# groups whose weight counts only while they have something to do (render_weight_values writes these values)
+COUNTED_WEIGHTS = {"profiles": "pp_cplan_profiles_cw", "country": "pp_cplan_country_cw"}
+
+
+def counted_weight(group: str) -> str:
+    """The script value of a group's weight as it counts in the sum (its own weight, or 0 while it has nothing to do)."""
+    return COUNTED_WEIGHTS.get(group, f"pp_cplan_{group}_w")
+
+
 def render_weight_values(config: Config) -> str:
     """The rule groups' weights (Jan 2026-11-09): a group's part of the gold above the reserve = its weight over the sum
-    of the weights that count (0 = the group is off; the location profiles count only while a location has one)."""
+    of the weights that count (0 = the group is off). Two groups count only while they have something to do
+    (COUNTED_WEIGHTS): the location profiles while a location has a profile or a mark, Towns and Buildings while
+    something is ticked on its tab; otherwise their part would be held back from the other groups."""
     parts = ["\n# ---- Rule group weights (country scope; 0 = off) ----\n\n"]
     for group, default in config.weights:
         parts.append(_default_value(f"pp_cplan_{group}_w", f"pp_cplan_w_{group}", default,
                                     f"Country scope: the {group} group's weight, 0..{WEIGHT_STEPS}."))
     parts.append(
-        "# Country scope: the location profiles' weight counts only while a location of the country has a profile.\n"
+        "# Country scope: the location profiles' weight counts only while a location of the country has a profile or a\n"
+        "# mark (pp_lprof_group_n, pp_location_profiles_generated.txt).\n"
         "pp_cplan_profiles_cw = {\n\tvalue = pp_cplan_profiles_w\n\tmultiply = pp_lprof_group_n\n}\n"
-        "# Country scope: the sum of the weights that count.\npp_cplan_w_total = {\n\tvalue = pp_cplan_profiles_cw\n"
-        + "".join(f"\tadd = pp_cplan_{group}_w\n" for group in GROUPS if group != "profiles")
+        "# Country scope: the Towns and Buildings weight counts only while that group has something to do: a public\n"
+        "# building is ticked or an upgrade is switched on (pp_cplan_country_active, pp_construction_plan_country.txt).\n"
+        "pp_cplan_country_cw = {\n\tvalue = 0\n\tif = {\n\t\tlimit = { pp_cplan_country_active > 0 }\n"
+        "\t\tvalue = pp_cplan_country_w\n\t}\n}\n"
+        "# Country scope: the sum of the weights that count.\npp_cplan_w_total = {\n\tvalue = 0\n"
+        + "".join(f"\tadd = {counted_weight(group)}\n" for group in GROUPS)
         + "}\n"
     )
     for group in GROUPS:
-        weight = "pp_cplan_profiles_cw" if group == "profiles" else f"pp_cplan_{group}_w"
+        weight = counted_weight(group)
         parts.append(
             f"# Country scope: the {group} group's part of the budget, in % (the window) and in gold (the pass).\n"
             f"pp_cplan_part_{group} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ pp_cplan_w_total > 0 }}\n"
@@ -634,8 +673,10 @@ SITUATION: dict[str, tuple[tuple[str, int], ...]] = {
     "food": (("provinces", 100), ("famine", 100), ("hungry", 100), ("granary", 100), ("grange", 100)),
     "logistics": (("below", 100), ("lowest", 1099)),
     "improve": (("over", 100), ("fullest", 100)),
-    "business": (("sites", 100), ("best", 1099)),
+    # skipped: 1 when the group started without gold and did not look (pp_cplan_group_business)
+    "business": (("sites", 100), ("best", 1099), ("skipped", 100)),
     "profiles": (("locs", 100), *((f"st{n}", 100) for n in range(1, 10))),
+    "country": (),  # gold had, spent and waiting are enough; its own numbers are construction_plan_country.py's
 }
 
 
@@ -1262,6 +1303,7 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
                          if good not in config.hidden_goods and building not in own}
     categories = {name: database[name][0].get("category", "") for name in result.businesses if name in database}
     result.staff = staffing(database, script_value_numbers(mod_root, vanilla_root))
+    result.pop_types = sorted(_database(mod_root, vanilla_root, POP_TYPES))
     business_values, business_effects = render_business(
         result.businesses, built_recipes(database, list(result.businesses)), costs, harvest_outputs(mod_root),
         categories, config.profile_categories, result.staff)
@@ -1280,7 +1322,7 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
             harvest_rates(mod_root), peasant_food_consumption(mod_root, vanilla_root),
             access_modifier_amounts(mod_root, vanilla_root, config.access_blacklist), costs,
         )
-        + improve_values + business_values + render_stats_values(),
+        + improve_values + business_values + render_idle_values(result.pop_types) + render_stats_values(),
         mod_root / EFFECTS: render_effects(config, food_lines, costs) + improve_effects + business_effects
         + render_stats_effects(),
         # the hunger steps wait for what they start (staple food makers, Taverns); kitchens are built anyway and must

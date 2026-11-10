@@ -103,6 +103,73 @@ def test_lists_read_each_groups_constructions() -> None:
     for step in cpd.FOOD_STEPS:
         assert ("pp_cplan_log_val_n" in loc[f"PP_CPLAN_D_FOOD_WHY_{step}"]) == (step in (1, 2, 5)), step
     assert "pp_cplan_log_cost_n" in loc["PP_CPLAN_D_COST"]
+    # Towns and Buildings: a town or city upgrade is no building (an empty list of types), so its list names the
+    # upgrade itself; every other group gives its reason
+    for group in cp.GROUPS:
+        pane = _type_body(gui, f"pp_cplan_detail_{group}")
+        assert ("pp_cplan_rank_upgrade = {" in pane) == (group == "country"), group
+        assert re.search(r"PP_CPLAN_D_\w+_WHY", pane), group  # every group gives its reason
+    country = _type_body(gui, "pp_cplan_detail_country")
+    assert (country.index("GetList('pp_cplan_log_types')") < country.index("pp_cplan_rank_upgrade = {")
+            < country.index('text = "PP_CPLAN_IN_LOCATION"'))
+    assert "type pp_cplan_rank_upgrade = text_single" in _read(WINDOW)
+    # its reasons by kind, from what the group leaves in pp_cplan_log_val: a building the location's maximum
+    # control, an upgrade its people
+    why, step = "Scope.ScriptValue('pp_cplan_why_n')", "Scope.ScriptValue('pp_cplan_log_step_n')"
+    own = f"EqualTo_CFixedPoint({why}, '(CFixedPoint)7')"
+    for kind in cpd.COUNTRY_KINDS:
+        shown = f"visible = \"[And({own}, EqualTo_CFixedPoint({step}, '(CFixedPoint){kind}'))]\""
+        assert re.search(re.escape(shown) + rf"\n\t+text = \"PP_CPLAN_D_COUNTRY_WHY_{kind}\"", country), kind
+        assert "pp_cplan_log_val_n" in loc[f"PP_CPLAN_D_COUNTRY_WHY_{kind}"]
+    assert "[max_control|e]" in loc["PP_CPLAN_D_COUNTRY_WHY_1"] and "people" in loc["PP_CPLAN_D_COUNTRY_WHY_2"]
+    effects = _read(MOD / "in_game/common/scripted_effects/pp_construction_plan_country.txt")
+    assert "name = pp_cplan_rv value = { value = max_control multiply = 100 add = 100 }" in effects
+    assert "name = pp_cplan_rv value = { value = population add = 100 }" in effects
+    # an upgrade leaves the location's line to another group that built there in the same pass: such a location of
+    # this list shows as the upgrade, without the other group's buildings and cost
+    assert re.search(re.escape(f'visible = "[{own}]"') + r"\n\t+direction = horizontal\n\t+datamodel = \"\[Scope\.GetList\('pp_cplan_log_types'\)\]\"", country)
+    assert f"pp_cplan_rank_upgrade = {{\n" in country
+    upgrade = f"visible = \"[Or(Not({own}), EqualTo_CFixedPoint({step}, '(CFixedPoint)2'))]\""
+    assert upgrade in country
+    assert re.search(re.escape(f'visible = "[{own}]"') + r"\n\t+text = \"PP_CPLAN_D_COST\"", country)
+    assert "limit = { NOT = { has_variable = pp_cplan_log_why } }" in effects
+
+
+def test_locations_list_tells_a_rule_from_a_mark() -> None:
+    """The Locations group builds a location's profile rules (step = the rule's number) and its marks, the Location
+    Plan's "Also build here" (step 0): the list never says "rule 0 of its profile"."""
+    pane = _type_body(cpd.render_gui(), "pp_cplan_detail_profiles")
+    step = "GreaterThan_CFixedPoint(Scope.ScriptValue('pp_cplan_log_step_n'), '(CFixedPoint)0.5')"
+    assert re.search(re.escape(f'visible = "[{step}]"') + r"\n\t+text = \"PP_CPLAN_D_PROFILES_WHY\"", pane)
+    assert re.search(re.escape(f'visible = "[Not({step})]"') + r"\n\t+text = \"PP_CPLAN_D_PROFILES_WHY_MARK\"", pane)
+    loc = cpd.texts()
+    assert "of its profile" in loc["PP_CPLAN_D_PROFILES_WHY"]
+    marks = _read(LOC_FOLDER / "pp_location_plan_l_english.yml")
+    title = re.search(r"^  PP_LPLAN_ALSO_TITLE: \"(.+)\"$", marks, re.MULTILINE).group(1)
+    assert title in loc["PP_CPLAN_D_PROFILES_WHY_MARK"] and "marked" in loc["PP_CPLAN_D_PROFILES_WHY_MARK"]
+    assert "profile or a mark" in loc["PP_CPLAN_D_OFF_PROFILES"]
+    assert "a profile or marks" in loc["PP_CPLAN_D_PROFILES_SIT"]
+    # the marks' pass writes step 0, a profile rule its number
+    profiles = _read(MOD / "in_game/common/scripted_effects/pp_location_profiles_generated.txt")
+    marks_pass = profiles[profiles.index("pp_lplan_location_marks = {"):]
+    assert "save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }" in marks_pass[:600]
+
+
+def test_titles_use_the_players_group_names() -> None:
+    """The group key and the player's name differ for two groups: profiles = "Locations" (it builds what the player
+    set for single locations), country = "Towns and Buildings"."""
+    loc = cpd.texts()
+    assert set(cpd.TITLES) == set(cp.GROUPS)
+    assert loc["PP_CPLAN_D_TITLE_PROFILES"].startswith("Locations:")
+    assert loc["PP_CPLAN_D_TITLE_COUNTRY"].startswith("Towns and Buildings:")
+    window_loc = _read(LOC_FOLDER / "pp_construction_plan_l_english.yml")
+    for group in cp.GROUPS:
+        name = re.search(rf"^  PP_CPLAN_{group.upper()}_RULE: \"(.+)\"$", window_loc, re.MULTILINE)
+        assert name, group
+        # the pane's title and the rule's tooltip open with the name on the group's row
+        assert loc[f"PP_CPLAN_D_TITLE_{group.upper()}"].startswith(name.group(1) + ":"), group
+        tooltip = re.search(rf"^  PP_CPLAN_{group.upper()}_RULE_TT: \"#T (.+?)#!", window_loc, re.MULTILINE)
+        assert tooltip and tooltip.group(1).split(",")[0] == name.group(1), group
 
 
 def test_every_text_exists_once() -> None:
@@ -137,7 +204,7 @@ def test_texts_follow_the_rules() -> None:
         assert after == "@gold!", name
     for match in re.finditer(r"(\w+(?:\.\w+)*)\.ScriptValue\('([a-z0-9_]+)'\)", gui + loc):
         scope, name = match.groups()
-        if name.startswith("pp_cplan_log_"):
+        if name.startswith("pp_cplan_log_") or name == "pp_cplan_why_n":  # a list item = a location
             assert scope == "Scope", name
         else:
             assert scope == "GetPlayer.MakeScope", name
@@ -181,12 +248,16 @@ def test_window_places_cogs_and_panes() -> None:
         index += 1
     last = window[start:index]
     assert 'text = "PP_CPLAN_LAST"' in last and "GetList('pp_cplan_log')" in last and "PP_CPLAN_LAST_SUMMARY" in last
-    assert window.index("pp_cplan_detail_button_business = {}") < start < window.index("pp_cplan_detail_profiles = {")
+    assert window.index(f"pp_cplan_detail_button_{cp.GROUPS[-1]} = {{}}") < start < window.index("pp_cplan_detail_profiles = {")
     close = window[window.index("button_close_alt = {"):]
     assert "on_action = \"[GetVariableSystem.Clear('pp_cplan_detail')]\"" in close
-    # the rows still fit the window (690 px): label + line + bar + cog
+    # the rows still fit the window (690 px): label + line + bar + cog; Towns and Buildings has no line (its settings
+    # are on its own tab), its longer name takes that room (200 + 130 = 140 + 190)
     assert window.count("minimumsize = { 140 -1 } maximumsize = { 140 -1 }") == 5
     assert window.count("minimumsize = { 190 -1 }") == 3 and window.count("widget = { size = { 190 1 } }") == 2
+    assert window.count("minimumsize = { 200 -1 } maximumsize = { 200 -1 }") == 1
+    assert window.count("widget = { size = { 130 1 } }") == 1
+    assert len(cp.GROUPS) == 5 + 1
 
 
 def test_script_values_exist() -> None:

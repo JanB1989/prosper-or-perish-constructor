@@ -86,18 +86,39 @@ pp_cplan_business_w = {
 		subtract = 100
 	}
 }
-# Country scope: the location profiles' weight counts only while a location of the country has a profile.
+# Country scope: the country group's weight, 0..10.
+pp_cplan_country_w = {
+	value = 5
+	if = {
+		limit = { has_variable = pp_cplan_w_country }
+		value = var:pp_cplan_w_country
+		subtract = 100
+	}
+}
+# Country scope: the location profiles' weight counts only while a location of the country has a profile or a
+# mark (pp_lprof_group_n, pp_location_profiles_generated.txt).
 pp_cplan_profiles_cw = {
 	value = pp_cplan_profiles_w
 	multiply = pp_lprof_group_n
 }
+# Country scope: the Towns and Buildings weight counts only while that group has something to do: a public
+# building is ticked or an upgrade is switched on (pp_cplan_country_active, pp_construction_plan_country.txt).
+pp_cplan_country_cw = {
+	value = 0
+	if = {
+		limit = { pp_cplan_country_active > 0 }
+		value = pp_cplan_country_w
+	}
+}
 # Country scope: the sum of the weights that count.
 pp_cplan_w_total = {
-	value = pp_cplan_profiles_cw
+	value = 0
+	add = pp_cplan_profiles_cw
 	add = pp_cplan_food_w
 	add = pp_cplan_logistics_w
 	add = pp_cplan_improve_w
 	add = pp_cplan_business_w
+	add = pp_cplan_country_cw
 }
 # Country scope: the profiles group's part of the budget, in % (the window) and in gold (the pass).
 pp_cplan_part_profiles = {
@@ -191,6 +212,25 @@ pp_cplan_share_business = {
 		limit = { pp_cplan_w_total > 0 }
 		value = pp_cplan_pot_n
 		multiply = pp_cplan_business_w
+		divide = pp_cplan_w_total
+	}
+}
+# Country scope: the country group's part of the budget, in % (the window) and in gold (the pass).
+pp_cplan_part_country = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_country_cw
+		multiply = 100
+		divide = pp_cplan_w_total
+	}
+}
+pp_cplan_share_country = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_pot_n
+		multiply = pp_cplan_country_cw
 		divide = pp_cplan_w_total
 	}
 }
@@ -16089,6 +16129,18 @@ pp_cplan_bz_roi_winery_manufactory = {
 }
 
 
+# ---- Workers (location scope): idle pops of a building's own class, in thousands (pp_cplan_staff) ----
+# Peasants 0: the idle peasants left after the open jobs here are scope:pp_cplan_free_peasants.
+
+pp_cplan_idle_burghers = { value = "unemployed_pops_of_pop_type_in_location(pop_type:burghers)" }
+pp_cplan_idle_clergy = { value = "unemployed_pops_of_pop_type_in_location(pop_type:clergy)" }
+pp_cplan_idle_laborers = { value = "unemployed_pops_of_pop_type_in_location(pop_type:laborers)" }
+pp_cplan_idle_nobles = { value = "unemployed_pops_of_pop_type_in_location(pop_type:nobles)" }
+pp_cplan_idle_peasants = { value = 0 }
+pp_cplan_idle_slaves = { value = "unemployed_pops_of_pop_type_in_location(pop_type:slaves)" }
+pp_cplan_idle_soldiers = { value = "unemployed_pops_of_pop_type_in_location(pop_type:soldiers)" }
+pp_cplan_idle_tribesmen = { value = "unemployed_pops_of_pop_type_in_location(pop_type:tribesmen)" }
+
 # ---- The window's detail panes (country scope; pp_cplan_stats_reset, pp_cplan_history_push) ----
 
 # profiles (construction code 105)
@@ -17951,6 +18003,14 @@ pp_cplan_d_business_best = {
 		subtract = 100
 	}
 }
+pp_cplan_d_business_skipped = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_business_skipped }
+		value = var:pp_cplan_ds_business_skipped
+		subtract = 100
+	}
+}
 pp_cplan_h_business_need_1 = {
 	value = 0
 	if = {
@@ -18307,4 +18367,414 @@ pp_cplan_h_business_sum_spent = {
 	add = pp_cplan_h_business_spent_10
 	add = pp_cplan_h_business_spent_11
 	add = pp_cplan_h_business_spent_12
+}
+
+# country (construction code 107)
+pp_cplan_d_country_ran = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dran_107 }
+		value = 1
+	}
+}
+pp_cplan_d_country_had = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dhad_107 }
+		value = var:pp_cplan_dhad_107
+		subtract = 100
+	}
+}
+pp_cplan_d_country_spent = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dspent_107 }
+		value = var:pp_cplan_dspent_107
+		subtract = 100
+	}
+}
+pp_cplan_d_country_started = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dn_107 }
+		value = var:pp_cplan_dn_107
+		subtract = 100
+	}
+}
+pp_cplan_d_country_wait = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dwait_107 }
+		value = var:pp_cplan_dwait_107
+		subtract = 100
+	}
+}
+pp_cplan_d_country_waitn = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_dwn_107 }
+		value = var:pp_cplan_dwn_107
+		subtract = 100
+	}
+}
+pp_cplan_d_country_need = {
+	value = pp_cplan_d_country_spent
+	add = pp_cplan_d_country_wait
+}
+pp_cplan_h_country_need_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_107_1 }
+		value = var:pp_cplan_hn_107_1
+		subtract = 100
+	}
+}
+pp_cplan_h_country_spent_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_107_1 }
+		value = var:pp_cplan_hs_107_1
+		subtract = 100
+	}
+}
+pp_cplan_h_country_need_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_107_2 }
+		value = var:pp_cplan_hn_107_2
+		subtract = 100
+	}
+}
+pp_cplan_h_country_spent_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_107_2 }
+		value = var:pp_cplan_hs_107_2
+		subtract = 100
+	}
+}
+pp_cplan_h_country_need_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_107_3 }
+		value = var:pp_cplan_hn_107_3
+		subtract = 100
+	}
+}
+pp_cplan_h_country_spent_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_107_3 }
+		value = var:pp_cplan_hs_107_3
+		subtract = 100
+	}
+}
+pp_cplan_h_country_need_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_107_4 }
+		value = var:pp_cplan_hn_107_4
+		subtract = 100
+	}
+}
+pp_cplan_h_country_spent_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_107_4 }
+		value = var:pp_cplan_hs_107_4
+		subtract = 100
+	}
+}
+pp_cplan_h_country_need_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_107_5 }
+		value = var:pp_cplan_hn_107_5
+		subtract = 100
+	}
+}
+pp_cplan_h_country_spent_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_107_5 }
+		value = var:pp_cplan_hs_107_5
+		subtract = 100
+	}
+}
+pp_cplan_h_country_need_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_107_6 }
+		value = var:pp_cplan_hn_107_6
+		subtract = 100
+	}
+}
+pp_cplan_h_country_spent_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_107_6 }
+		value = var:pp_cplan_hs_107_6
+		subtract = 100
+	}
+}
+pp_cplan_h_country_need_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_107_7 }
+		value = var:pp_cplan_hn_107_7
+		subtract = 100
+	}
+}
+pp_cplan_h_country_spent_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_107_7 }
+		value = var:pp_cplan_hs_107_7
+		subtract = 100
+	}
+}
+pp_cplan_h_country_need_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_107_8 }
+		value = var:pp_cplan_hn_107_8
+		subtract = 100
+	}
+}
+pp_cplan_h_country_spent_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_107_8 }
+		value = var:pp_cplan_hs_107_8
+		subtract = 100
+	}
+}
+pp_cplan_h_country_need_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_107_9 }
+		value = var:pp_cplan_hn_107_9
+		subtract = 100
+	}
+}
+pp_cplan_h_country_spent_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_107_9 }
+		value = var:pp_cplan_hs_107_9
+		subtract = 100
+	}
+}
+pp_cplan_h_country_need_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_107_10 }
+		value = var:pp_cplan_hn_107_10
+		subtract = 100
+	}
+}
+pp_cplan_h_country_spent_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_107_10 }
+		value = var:pp_cplan_hs_107_10
+		subtract = 100
+	}
+}
+pp_cplan_h_country_need_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_107_11 }
+		value = var:pp_cplan_hn_107_11
+		subtract = 100
+	}
+}
+pp_cplan_h_country_spent_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_107_11 }
+		value = var:pp_cplan_hs_107_11
+		subtract = 100
+	}
+}
+pp_cplan_h_country_need_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hn_107_12 }
+		value = var:pp_cplan_hn_107_12
+		subtract = 100
+	}
+}
+pp_cplan_h_country_spent_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hs_107_12 }
+		value = var:pp_cplan_hs_107_12
+		subtract = 100
+	}
+}
+pp_cplan_h_country_max = {
+	value = 1
+	min = pp_cplan_h_country_need_1
+	min = pp_cplan_h_country_need_2
+	min = pp_cplan_h_country_need_3
+	min = pp_cplan_h_country_need_4
+	min = pp_cplan_h_country_need_5
+	min = pp_cplan_h_country_need_6
+	min = pp_cplan_h_country_need_7
+	min = pp_cplan_h_country_need_8
+	min = pp_cplan_h_country_need_9
+	min = pp_cplan_h_country_need_10
+	min = pp_cplan_h_country_need_11
+	min = pp_cplan_h_country_need_12
+}
+pp_cplan_h_country_needp_1 = {
+	value = pp_cplan_h_country_need_1
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_spentp_1 = {
+	value = pp_cplan_h_country_spent_1
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_needp_2 = {
+	value = pp_cplan_h_country_need_2
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_spentp_2 = {
+	value = pp_cplan_h_country_spent_2
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_needp_3 = {
+	value = pp_cplan_h_country_need_3
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_spentp_3 = {
+	value = pp_cplan_h_country_spent_3
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_needp_4 = {
+	value = pp_cplan_h_country_need_4
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_spentp_4 = {
+	value = pp_cplan_h_country_spent_4
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_needp_5 = {
+	value = pp_cplan_h_country_need_5
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_spentp_5 = {
+	value = pp_cplan_h_country_spent_5
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_needp_6 = {
+	value = pp_cplan_h_country_need_6
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_spentp_6 = {
+	value = pp_cplan_h_country_spent_6
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_needp_7 = {
+	value = pp_cplan_h_country_need_7
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_spentp_7 = {
+	value = pp_cplan_h_country_spent_7
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_needp_8 = {
+	value = pp_cplan_h_country_need_8
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_spentp_8 = {
+	value = pp_cplan_h_country_spent_8
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_needp_9 = {
+	value = pp_cplan_h_country_need_9
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_spentp_9 = {
+	value = pp_cplan_h_country_spent_9
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_needp_10 = {
+	value = pp_cplan_h_country_need_10
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_spentp_10 = {
+	value = pp_cplan_h_country_spent_10
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_needp_11 = {
+	value = pp_cplan_h_country_need_11
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_spentp_11 = {
+	value = pp_cplan_h_country_spent_11
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_needp_12 = {
+	value = pp_cplan_h_country_need_12
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_spentp_12 = {
+	value = pp_cplan_h_country_spent_12
+	multiply = 100
+	divide = pp_cplan_h_country_max
+}
+pp_cplan_h_country_sum_need = {
+	value = 0
+	add = pp_cplan_h_country_need_1
+	add = pp_cplan_h_country_need_2
+	add = pp_cplan_h_country_need_3
+	add = pp_cplan_h_country_need_4
+	add = pp_cplan_h_country_need_5
+	add = pp_cplan_h_country_need_6
+	add = pp_cplan_h_country_need_7
+	add = pp_cplan_h_country_need_8
+	add = pp_cplan_h_country_need_9
+	add = pp_cplan_h_country_need_10
+	add = pp_cplan_h_country_need_11
+	add = pp_cplan_h_country_need_12
+}
+pp_cplan_h_country_sum_spent = {
+	value = 0
+	add = pp_cplan_h_country_spent_1
+	add = pp_cplan_h_country_spent_2
+	add = pp_cplan_h_country_spent_3
+	add = pp_cplan_h_country_spent_4
+	add = pp_cplan_h_country_spent_5
+	add = pp_cplan_h_country_spent_6
+	add = pp_cplan_h_country_spent_7
+	add = pp_cplan_h_country_spent_8
+	add = pp_cplan_h_country_spent_9
+	add = pp_cplan_h_country_spent_10
+	add = pp_cplan_h_country_spent_11
+	add = pp_cplan_h_country_spent_12
 }

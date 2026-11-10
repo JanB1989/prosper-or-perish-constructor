@@ -8,7 +8,9 @@ symbols) and the items (the Location Plan's items plus Market access = the good 
   tab ``pp_lprof_editor_tab``, which the Construction Plan window shows as its Location Profiles tab, and the paint
   palette) and ``gui/pp_location_plan.gui`` (the Profile row) use: each slot's face (its icon on its colour), the
   location's badge, the slot strip, the editor (one body: the edit buffer), the item picker, the Profile row, the
-  palette tiles;
+  palette tiles; and the location window's second row "Also build here" (``pp_lplan_location_row``, Jan 2026-11-10):
+  the location's marks (the Location Plan's items, which the Construction Plan builds there) as toggle tiles, the
+  marked ones first, then the goods that buildings standing there make, and the button to the Location Plan window;
 * ``gui/context_menu.gui``: vanilla's, with a "Location Profile" section in ``LocationContextMenu`` (player locations);
 * ``localization/english/pp_location_profiles_gui_l_english.yml``: every text of the windows, menu and map;
 * ``main_menu/gfx/interface/component_tiles/pp_profile_symbols.dds``: every flag a profile can hold (the building
@@ -73,6 +75,11 @@ PICK, BRUSH = "pp_lprof_pick", "pp_lprof_brush"
 # The editor is the Construction Plan window's Location Profiles tab: every "Edit profiles" opens the window on it.
 OPEN_EDITOR = ("[GetVariableSystem.Set('pp_cplan_open', 'yes')]", "[GetVariableSystem.Set('pp_cplan_tab', 'profiles')]")
 EDITED, NEXT = lpf.EDITED, lpf.NEXT
+# The Location Plan window opened on the location (datacontext Location): the row "Also build here"'s round button.
+OPEN_PLAN = ("[GetScriptedGui('pp_lplan_select').Execute(GuiScope.SetRoot(Location.MakeScope).End)]",
+             "[GetVariableSystem.Set('pp_lplan_open', 'yes')]")
+PLAN_ICON = "gfx/interface/icons/map_modes/pp_location_plan.dds"
+MARK_TILE = 37  # px a tile of the row "Also build here" takes: the 34 px tile and its gap
 TILE = lp.TILE
 GOLD = "0.9 0.7 0.25 0.95"
 DARK = "0.12 0.12 0.12 0.8"
@@ -596,33 +603,114 @@ def _toggle_tile(k: int, tab: str) -> str:
     )
 
 
+# The card of the location window's rows (the Profile row and the row "Also build here"): the corner decoration of its
+# content box, and a round icon button of its right end.
+_CARD_FLAVOR = (
+    "\t\t\tusing = bg_corner_flavor\n"
+    "\t\t\tblockoverride \"corner_flavor_texture\" {\n"
+    "\t\t\t\ttexture = \"gfx/interface/component_decoration/bg_corner_flavor_06.dds\"\n"
+    "\t\t\t\ttexture_density = 2\n\t\t\t\tspriteType = Corneredstretched\n"
+    "\t\t\t\tspriteborder = { 35 35 }\n\t\t\t\talpha = 0.4\n\t\t\t}\n"
+    "\t\t\tblockoverride \"corner_flavor_color\" {\n"
+    "\t\t\t\tmodify_texture = { using = color_bg_blue_texture blend_mode = multiply }\n\t\t\t}\n"
+)
+
+
+def _card_button(tooltip: str, onclicks: tuple[str, ...], icon: str, visible: str = "") -> str:
+    return (
+        "\t\t\t\theader_button_left = {\n"
+        + (f"\t\t\t\t\tvisible = \"[{visible}]\"\n" if visible else "")
+        + "\t\t\t\t\tblockoverride \"header_button_full_content\" {}\n"
+        "\t\t\t\t\tsize = { 30 30 }\n"
+        f"\t\t\t\t\ttooltip = \"{tooltip}\"\n"
+        + "".join(f"\t\t\t\t\tonclick = \"{onclick}\"\n" for onclick in onclicks)
+        + f"\t\t\t\t\ticon = {{ size = {{ 20 20 }} parentanchor = center texture = \"{FLAT.format(icon)}\" using = button_regular_icon_color }}\n"
+        "\t\t\t\t}\n"
+    )
+
+
+def _mark_tile(item: lp.Item, tab: str, marked: bool) -> str:
+    """A tile of the row "Also build here" (datacontext Location): one click marks or unmarks the item for this
+    location (pp_lplan_toggle). The look of the Profile row's tiles (_toggle_tile): pressed with the gold glow = marked.
+    ``marked``: the tile among the marks (shown while the item is marked); else the quick candidate (shown while a
+    building that makes the good stands here and the good is not marked, pp_lplan_quick_<good>). 37 px wide with its
+    gap, so rows of them need no spacing (an empty chunk then takes no room)."""
+    is_marked = f"{lvar(item.var)}.IsSet"
+    visible = is_marked if marked else value_is("Location.MakeScope", f"pp_lplan_quick_{item.key}", 1)
+    pressed = (
+        f"{tab}\t\tdown = \"[{is_marked}]\"\n"
+        f"{tab}\t\tglow = {{ visible = \"[{is_marked}]\" glow_radius = 5 color = {{ 1.0 0.85 0.55 1.0 }} alpha = 0.8 }}\n"
+    ) if marked else ""
+    return (
+        f"{tab}widget = {{\n{tab}\tvisible = \"[{visible}]\"\n{tab}\tsize = {{ {MARK_TILE} 34 }}\n"
+        f"{tab}\tbutton = {{\n"
+        f"{tab}\t\tusing = header_button_template\n"
+        f"{tab}\t\tblockoverride \"header_button_template_push_properties\" {{ using = button_tab_toggle_properties_template }}\n"
+        f"{tab}\t\tblockoverride \"header_button_template_texture\" {{ using = pressed_button_texture }}\n"
+        f"{tab}\t\tblockoverride \"header_button_full_content\" {{}}\n"
+        f"{tab}\t\tsize = {{ 34 34 }}\n"
+        + pressed
+        + f"{tab}\t\ttooltip = \"PP_LPLAN_PICK_{item.key.upper()}\"\n"
+        f"{tab}\t\tonclick = \"{execute('pp_lplan_toggle', 'Location.MakeScope', pp_key=item.key)}\"\n"
+        f"{tab}\t\ticon = {{ size = {{ 26 26 }} parentanchor = center texture = \"{item.icon}\" }}\n"
+        f"{tab}\t}}\n{tab}}}\n"
+    )
+
+
+def _also_row(items: list[lp.Item], chunks: list[list[lp.Item]]) -> str:
+    """The row "Also build here" of the location window's Infrastructure tab, under the Profile row and the same card
+    (Jan 2026-11-10: "a second row next to the profile ... I also want to expand this here"; datacontext Location): the
+    location's marks (the Location Plan's items, which the Construction Plan builds here) as toggle tiles in one line:
+    the marked items first, then, unmarked, the goods that buildings standing here make (the quick candidates, like
+    vanilla's auto expand on a standing building), and at the right end one round button that opens the Location Plan
+    window for everything else. ``items``: the markable items in the picker's order; ``chunks``: the quick candidate
+    goods in chunks (lpf.quick_chunks); chunk n shows while the row has room for it (pp_lplan_quick_room_<n>), so the
+    line never grows past lpf.QUICK_ROW tiles by its candidates."""
+    tab = "\t\t\t\t\t"
+    none = value_is("Location.MakeScope", "pp_lplan_planned_n", 0)
+    out = [
+        "\n\t# The row \"Also build here\" of the location window's Infrastructure tab (datacontext Location), the Profile\n"
+        "\t# row's card: the location's marks as toggle tiles (marked first, then the goods standing buildings make), and\n"
+        "\t# the button that opens the Location Plan window.\n"
+        f"\ttype {ALSO_ROW} = hbox {{\n"
+        "\t\tlayoutpolicy_horizontal = expanding\n\t\tminimumsize = { -1 45 }\n\t\tmargin = { 5 5 }\n"
+        "\t\tusing = bg_paper_card\n\t\tusing = bg_cabinet_card_frame\n"
+        "\t\twidget = {\n\t\t\tsize = { 40 -1 }\n\t\t\tlayoutpolicy_vertical = expanding\n"
+        "\t\t\tusing = bg_card_header_01\n\t\t\tusing = bg_card_header_01\n"
+        f"\t\t\ticon = {{ size = {{ 28 28 }} parentanchor = center texture = \"{PLAN_ICON}\" }}\n\t\t}}\n"
+        "\t\thbox = {\n\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\tlayoutpolicy_vertical = expanding\n"
+        "\t\t\tmargin = { 5 0 }\n\t\t\tmargin_right = 2\n\t\t\tspacing = 4\n"
+        + _CARD_FLAVOR
+        + "\t\t\tvbox = {\n\t\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\t\tmargin_top = 3\n\t\t\t\tmargin_bottom = 3\n"
+        "\t\t\t\tspacing = 3\n"
+        "\t\t\t\thbox = {\n\t\t\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\t\t\tspacing = 5\n"
+        "\t\t\t\t\ttext_single = { text = \"PP_LPLAN_ALSO_TITLE\" align = left|nobaseline }\n"
+        f"\t\t\t\t\ttext_single = {{ visible = \"[{none}]\" text = \"PP_LPLAN_ALSO_NONE\" "
+        "align = left|nobaseline default_format = \"#medium\" }\n"
+        "\t\t\t\t\texpand = {}\n\t\t\t\t}\n"
+        "\t\t\t\tflowcontainer = {\n\t\t\t\t\tdirection = horizontal\n\t\t\t\t\tignoreinvisible = yes\n",
+    ]
+    out += [_mark_tile(item, tab, True) for item in items]
+    for number, chunk in enumerate(chunks, 1):
+        room = f"GreaterThan_CFixedPoint(Location.MakeScope.ScriptValue('pp_lplan_quick_room_{number}'), {fixed(0)})"
+        out.append(f"{tab}flowcontainer = {{\n{tab}\tvisible = \"[{room}]\"\n{tab}\tdirection = horizontal\n{tab}\tignoreinvisible = yes\n")
+        out += [_mark_tile(item, tab + "\t", False) for item in chunk]
+        out.append(f"{tab}}}\n")
+    out.append(
+        "\t\t\t\t}\n\t\t\t}\n"
+        "\t\t\tvbox = {\n\t\t\t\tlayoutpolicy_vertical = expanding\n\t\t\t\tmargin = { 0 5 }\n\t\t\t\tspacing = 3\n"
+        + _card_button("PP_LPLAN_ALSO_MORE_TT", OPEN_PLAN, "plus")
+        + "\t\t\t\texpand = {}\n\t\t\t}\n\t\t}\n\t}\n"
+    )
+    return "".join(out)
+
+
 def _location_row(config: Config) -> str:
     """The Profile row of the location window's Infrastructure tab (datacontext Location), in vanilla's style (Jan
     2026-11-09: "it needs to be the same style as the other buttons"): a paper card with a wooden frame like the tab's
     other rows (location_conditions_item), the badge in a dark header strip, plain white text, the profiles as toggle
     tiles (pressed = this location's), and two icon buttons at the right end (Edit profiles, No profile)."""
-    flavor = (
-        "\t\t\tusing = bg_corner_flavor\n"
-        "\t\t\tblockoverride \"corner_flavor_texture\" {\n"
-        "\t\t\t\ttexture = \"gfx/interface/component_decoration/bg_corner_flavor_06.dds\"\n"
-        "\t\t\t\ttexture_density = 2\n\t\t\t\tspriteType = Corneredstretched\n"
-        "\t\t\t\tspriteborder = { 35 35 }\n\t\t\t\talpha = 0.4\n\t\t\t}\n"
-        "\t\t\tblockoverride \"corner_flavor_color\" {\n"
-        "\t\t\t\tmodify_texture = { using = color_bg_blue_texture blend_mode = multiply }\n\t\t\t}\n"
-    )
-
-    def icon_button(tooltip: str, onclicks: tuple[str, ...], icon: str, visible: str = "") -> str:
-        return (
-            "\t\t\t\theader_button_left = {\n"
-            + (f"\t\t\t\t\tvisible = \"[{visible}]\"\n" if visible else "")
-            + "\t\t\t\t\tblockoverride \"header_button_full_content\" {}\n"
-            "\t\t\t\t\tsize = { 30 30 }\n"
-            f"\t\t\t\t\ttooltip = \"{tooltip}\"\n"
-            + "".join(f"\t\t\t\t\tonclick = \"{onclick}\"\n" for onclick in onclicks)
-            + f"\t\t\t\t\ticon = {{ size = {{ 20 20 }} parentanchor = center texture = \"{FLAT.format(icon)}\" using = button_regular_icon_color }}\n"
-            "\t\t\t\t}\n"
-        )
-
+    flavor, icon_button = _CARD_FLAVOR, _card_button
     out = [
         "\n\t# The Profile row of the location window's Infrastructure tab (datacontext Location), styled like the tab's\n"
         "\t# other rows: a paper card in a wooden frame, the badge in the header strip, the profiles as toggle tiles.\n"
@@ -695,13 +783,15 @@ def _palette(config: Config) -> str:
 # the location window (patched by location_view.build_window): the Profile row on top of the Infrastructure tab
 
 LOCATION_ROW = "pp_lprof_location_row"
+ALSO_ROW = "pp_lplan_location_row"  # the row "Also build here": the location's marks, under the Profile row
 ROW_MARK = "# PP: Location Profile row (location_profiles_gui.py)"
 _INFRA_ANCHOR = "# INFRASTRUCTURE HUB\n"
 
 
 def add_location_row(text: str) -> str:
     """The location window's Infrastructure tab starts with the Profile row (Jan 2026-11-07: pick the profile where the
-    buildings are, without opening the Location Plan window); player-owned locations, not observers."""
+    buildings are, without opening the Location Plan window) and, right under it as one block, the row "Also build
+    here" (Jan 2026-11-10: the location's marks); player-owned locations, not observers."""
     if ROW_MARK in text:
         return text
     if text.count(_INFRA_ANCHOR) != 1:
@@ -714,13 +804,17 @@ def add_location_row(text: str) -> str:
         f"{tab}\tvisible = \"[And(LocationView.GetLocation.GetOwner.IsPlayer, Not(IsObserving))]\"\n"
         f"{tab}\tlayoutpolicy_horizontal = expanding\n"
         f"{tab}\tdatacontext = \"[LocationView.GetLocation]\"\n"
+        f"{tab}\tspacing = 2\n"
         f"{tab}\t{LOCATION_ROW} = {{}}\n"
+        f"{tab}\t{ALSO_ROW} = {{}}\n"
         f"{tab}}}\n"
     )
     return text[:line_start] + row + text[line_start:]
 
 
-def render_gui(items: list[lp.Item], config: Config) -> str:
+def render_gui(items: list[lp.Item], config: Config, quick: list[list[lp.Item]] | None = None) -> str:
+    """``quick``: the quick candidate goods of the row "Also build here" in chunks (lpf.quick_chunks); none without."""
+    marks = [item for item in items if item.key != MARKET_ACCESS]
     return (
         HEADER
         + "\ntypes PPLocationProfilesGenerated\n{\n"
@@ -731,6 +825,7 @@ def render_gui(items: list[lp.Item], config: Config) -> str:
         + _picker(items, config)
         + _plan_row(config)
         + _location_row(config)
+        + _also_row(marks, quick or [])
         + _palette(config)
         + "}\n"
     )
@@ -857,7 +952,8 @@ TEXTS = {
     "PP_LPROF_UI_GLOBAL": "Global rules here",
     "PP_LPROF_UI_GLOBAL_NOTE": "The global rule groups still build in this profile's locations, except what the "
                                "profile's rules name (a good, a building category, market access). Untick a group to "
-                               "keep it out of these locations.",
+                               "keep it out of these locations. What you mark in a location itself is built there "
+                               "either way.",
     "PP_LPROF_UI_GLOBAL_FOOD": "Food",
     "PP_LPROF_UI_GLOBAL_FOOD_TT": "#T Food rule here#!\nTicked: the food rule builds here too (farms, kitchens, Taverns, "
                                   "Granaries, Granges, Victualling Yards), except staple food makers when a rule here "
@@ -872,6 +968,9 @@ TEXTS = {
     "PP_LPROF_UI_GLOBAL_BUSINESS_TT": "#T Businesses rule here#!\nTicked: the businesses rule builds here too (buildings "
                                       "that make goods and pay back in time), except buildings of the goods and "
                                       "building categories a rule here names. Click to switch.",
+    "PP_LPROF_UI_GLOBAL_COUNTRY": "Towns and Buildings",
+    "PP_LPROF_UI_GLOBAL_COUNTRY_TT": "#T Towns and Buildings rule here#!\nTicked: the towns and buildings rule works "
+                                     "here too. Click to switch.",
     "PP_LPROF_UI_GOFF": "#weak off#!",
     "PP_LPROF_UI_GON": "on",
     "PP_LPROF_UI_TARGET_TT": "Click to choose what this rule builds from the list below",
@@ -1129,8 +1228,9 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
     """Writes the generated files; returns how many changed (a stale flag picture removed counts)."""
     config = load_config(project)
     items = profile_items(repo, project)
+    found, _ = lpf.targets(repo, project, mod_root, vanilla_root)
     texts = {
-        mod_root / GUI: "﻿" + render_gui(items, config),
+        mod_root / GUI: "﻿" + render_gui(items, config, lpf.quick_chunks(items, found)),
         mod_root / LOC: render_loc(items, config),
     }
     vanilla_menu = vanilla_root / "game" / CONTEXT_MENU

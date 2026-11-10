@@ -82,13 +82,24 @@ def test_window_references_exist() -> None:
     assert re.search(r"type pp_lprof_editor_tab = vbox", _read(PROFILES_GUI))
 
 
-def test_two_tabs_and_nothing_else() -> None:
-    """Jan 2026-11-09: Global settings and Location profiles. The Food, Goods, Logistics, Locations and Here tabs, the
-    monthly construction limit, the presets, the goods modes, the per-location own rules and modes, the logistics
-    overrides and the province focus are gone from the window, the scripts and the texts."""
+def test_three_tabs_and_nothing_else() -> None:
+    """Jan 2026-11-09: Global settings and Location profiles; 2026-11-10: Towns and Buildings, the settings of the
+    rule group of that name (type pp_cplan_country_tab, construction_plan_country.py), hosted like the profile editor.
+    The Food, Goods, Logistics, Locations and Here tabs, the monthly construction limit, the presets, the goods modes,
+    the per-location own rules and modes, the logistics overrides and the province focus are gone from the window, the
+    scripts and the texts."""
     window = _read(WINDOW)
     tabs = re.findall(r"button_main_tab_alt = \{.*?text = \"(PP_CPLAN_TAB_\w+)\"", window, re.DOTALL)
-    assert tabs == ["PP_CPLAN_TAB_PLAN", "PP_CPLAN_TAB_PROFILES"]
+    assert tabs == ["PP_CPLAN_TAB_PLAN", "PP_CPLAN_TAB_PROFILES", "PP_CPLAN_TAB_COUNTRY"]
+    # every tab's page shows for exactly its own value of pp_cplan_tab; the first for anything else
+    profiles, country = (f"GetVariableSystem.HasValue('pp_cplan_tab', '{tab}')" for tab in ("profiles", "country"))
+    first = f"[Not(Or({profiles}, {country}))]"
+    assert window.count(f'down = "{first}"') == 1 and window.count(f'visible = "{first}"') == 1
+    for shown, page in ((profiles, "pp_lprof_editor_tab = {}"), (country, "pp_cplan_country_tab = {}")):
+        assert window.count(f'down = "[{shown}]"') == 1
+        body = window[window.index(f'visible = "[{shown}]"'):]
+        assert page in body[:body.index("\n\t\t\t\t}")], page
+    assert window.count("pp_cplan_country_tab = {}") == 1
     files = [WINDOW, LOC, *_plan_script_files(), PROFILE_EFFECTS, LOCATION_WINDOW]
     gone = re.compile(
         r"pp_cplan_(?:max|preset|g_|mode|own|rule|r\d_|logi(?!stics)|focus|status|sel\b|select|cands|goods_run|keep|"
@@ -130,14 +141,26 @@ def test_budget_is_the_gold_above_the_reserve() -> None:
     assert "subtract = pp_cplan_reserve_gold" in _effect(values, "pp_cplan_free_gold")
     generated = _read(MOD / cp.VALUES)
     total = _effect(generated, "pp_cplan_w_total")
-    assert "value = pp_cplan_profiles_cw" in total and "multiply = pp_lprof_group_n" in _effect(generated, "pp_cplan_profiles_cw")
+    # two groups count only while they have something to do, so an idle group holds no gold back: the locations'
+    # while a location has a profile or a mark, Towns and Buildings while something is ticked on its tab
+    assert cp.COUNTED_WEIGHTS == {"profiles": "pp_cplan_profiles_cw", "country": "pp_cplan_country_cw"}
+    assert "multiply = pp_lprof_group_n" in _effect(generated, "pp_cplan_profiles_cw")
+    assert ("limit = { pp_cplan_country_active > 0 }\n\t\tvalue = pp_cplan_country_w"
+            in _effect(generated, "pp_cplan_country_cw"))
+    country_values = _read(MOD / "in_game/common/script_values/pp_construction_plan_country.txt")
+    assert re.search(r"^pp_cplan_country_active = \{", country_values, re.MULTILINE)
+    assert re.search(r"^pp_lprof_group_n = \{", _read(MOD / "in_game/common/script_values/pp_location_profiles_generated.txt"), re.MULTILINE)
     for group in cp.GROUPS:
         share = _effect(generated, f"pp_cplan_share_{group}")
-        weight = "pp_cplan_profiles_cw" if group == "profiles" else f"pp_cplan_{group}_w"
+        weight = cp.counted_weight(group)
+        assert weight == cp.COUNTED_WEIGHTS.get(group, f"pp_cplan_{group}_w")
         assert "value = pp_cplan_pot_n" in share and f"multiply = {weight}" in share and "divide = pp_cplan_w_total" in share
-        assert f"multiply = 100\n\t\tdivide = pp_cplan_w_total" in _effect(generated, f"pp_cplan_part_{group}")
-        if group != "profiles":
-            assert f"add = pp_cplan_{group}_w" in total
+        part = _effect(generated, f"pp_cplan_part_{group}")
+        assert f"value = {weight}\n\t\tmultiply = 100\n\t\tdivide = pp_cplan_w_total" in part  # the shown % follows
+        assert total.count(f"add = {weight}\n") == 1
+        if group in cp.COUNTED_WEIGHTS:
+            assert f"add = pp_cplan_{group}_w\n" not in total
+        if group not in ("profiles", "country"):  # those two start themselves (pp_lprof_run, pp_cplan_group_country)
             body = _effect(_read(EFFECTS), f"pp_cplan_group_{group}")
             assert (f"limit = {{ pp_cplan_{group}_w > 0 }}\n\t\tpp_cplan_group_start = {{ why = {cp.GROUP_WHY[group]} "
                     f"add = pp_cplan_share_{group} }}") in body
@@ -176,6 +199,32 @@ def test_weight_bars() -> None:
     assert "toggle_module" not in window + _read(SCRIPTED_GUIS)
 
 
+def test_last_month_list_names_every_entry() -> None:
+    """Nothing shows blank: an entry is its building types, or, for a town or city upgrade of the Towns and Buildings
+    group (no building: code 7 with kind 2, an empty list of types), the upgrade's own name; then the location and the
+    rule group in brackets, one label per group, the ones that do not apply taking no room."""
+    window = _read(WINDOW)
+    last = window[window.index('text = "PP_CPLAN_LAST"'):window.index("# the rule groups' detail panes")]
+    assert "ignoreinvisible = yes" in last
+    assert (last.index("GetList('pp_cplan_log_types')") < last.index("pp_cplan_rank_upgrade = {}")
+            < last.index('text = "PP_CPLAN_IN_LOCATION"'))
+    for group, why in cp.GROUP_WHY.items():
+        shown = f"visible = \"[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint){why - 100}')]\""
+        assert last.count(shown) == 1, group
+    upgrade = window[window.index("type pp_cplan_rank_upgrade = text_single"):window.index("# ---- Opener")]
+    assert ("And(EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)7'), "
+            "EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_log_step_n'), '(CFixedPoint)2'))") in upgrade
+    assert 'text = "PP_CPLAN_RANK_UPGRADE"' in upgrade
+    loc = _read(LOC)
+    assert re.search(r"^  PP_CPLAN_RANK_UPGRADE: \".*\[location_rank\|e\].*\"$", loc, re.MULTILINE)
+    # the player's names of the two groups whose key differs from their name
+    assert '  PP_CPLAN_PROFILES_RULE: "Locations"\n' in loc and '  PP_CPLAN_COUNTRY_RULE: "Towns and Buildings"\n' in loc
+    assert '  PP_CPLAN_TAB_PROFILES: "Location Profiles"\n' in loc and '  PP_CPLAN_TAB_COUNTRY: "Towns and Buildings"\n' in loc
+    # test runs: a marker line per construction code
+    for why in cp.GROUP_WHY.values():
+        assert re.search(rf"^  PP_CPLAN_TLOG_{why}: \"PPCPLAN;B;\w+\"$", loc, re.MULTILINE), why
+
+
 def test_businesses_and_profiles_need_workers() -> None:
     """Jan 2026-11-09: no business where nobody can work in it. A level finds its workers in the idle peasants the
     buildings there do not already need (they are promoted into any class) or in idle pops of its own class."""
@@ -193,31 +242,63 @@ def test_businesses_and_profiles_need_workers() -> None:
             assert f"pp_cplan_staff = {{ type = {pop} size = {cp._num(size)} }}" in pick, name
     staff = _effect(_read(TRIGGERS), "pp_cplan_staff")
     assert "scope:pp_cplan_free_peasants >= $size$" in staff
-    assert "NOT = { pop_type:$type$ = pop_type:peasants }" in staff
+    assert "pp_cplan_idle_$type$ >= $size$" in staff
     free = _effect(_read(VALUES), "pp_cplan_free_peasants_here")
     assert '"unemployed_pops_of_pop_type_in_location(pop_type:peasants)"' in free
     assert "value = building_employment_size_amount" in free and "subtract = building_employed_amount" in free
 
 
+def test_worker_check_names_every_pop_type_outside_quotes() -> None:
+    """In game 2026-11-10: with the pop type passed into the quoted call ("unemployed_pops_of_pop_type_in_location(
+    pop_type:$type$)") the trigger logged a script error on every check, about 2,000 lines a session. The idle pops are
+    read through one value per pop type with the type written out (as vanilla writes the call); no plan script puts
+    an argument inside quotes."""
+    result = _result()
+    assert {"peasants", "laborers", "burghers"} <= set(result.pop_types)
+    assert {pop for pop, _ in result.staff.values()} <= set(result.pop_types)
+    values = _read(MOD / cp.VALUES)
+    for pop in result.pop_types:
+        body = re.search(rf"^pp_cplan_idle_{pop} = \{{ value = (.*?) \}}$", values, re.MULTILINE)
+        assert body, pop
+        # the peasants' own count is the check's first line (the idle peasants less the open jobs)
+        expected = "0" if pop == "peasants" else f'"unemployed_pops_of_pop_type_in_location(pop_type:{pop})"'
+        assert body.group(1) == expected, pop
+    for path in _plan_script_files():
+        code = re.sub(r"#[^\n]*", "", _read(path))
+        found = re.search(r"\"[^\"\n]*\$\w+\$[^\"\n]*\"", code)
+        assert not found, f"{path.name}: an argument inside quotes: {found.group(0) if found else ''}"
+
+
 def test_groups_take_turns_by_month() -> None:
     """With little gold the group that went first took it every month (AI run 2026-11-09): the order turns with the
-    game's month, every month has an order and every group goes first at least twice a year."""
+    game's month, every month has an order, every order is the window's order turned, and every group goes first
+    equally often over the year."""
     run = _effect(_read(EFFECTS), "pp_cplan_run")
     blocks = re.findall(r"(?:if|else_if|else) = \{\n(?:\t\tlimit = \{ OR = \{ ([^}]*) \} \}\n)?((?:\t\tpp_cplan_group_\w+ = yes\n)+)", run)
-    assert len(blocks) == 5
+    assert len(blocks) == len(cp.GROUPS) == 6
     months: dict[int, str] = {}
     for limit, body in blocks:
         order = re.findall(r"pp_cplan_group_(\w+) = yes", body)
-        assert sorted(order) == ["business", "food", "improve", "logistics", "profiles"], order
-        for month in (re.findall(r"current_month = (\d+)", limit) if limit else ["else"]):
-            months[month if month == "else" else int(month)] = order[0]
-    covered = {m for m in months if m != "else"}
-    assert covered | ({5, 10} if "else" in months else set()) == set(range(1, 13))
-    firsts = {}
-    for month in range(1, 13):
-        first = months.get(month, months.get("else"))
-        firsts[first] = firsts.get(first, 0) + 1
-    assert all(count >= 2 for count in firsts.values()) and len(firsts) == 5, firsts
+        turn = cp.GROUPS.index(order[0])
+        assert tuple(order) == cp.GROUPS[turn:] + cp.GROUPS[:turn], order
+        named = [int(month) for month in re.findall(r"current_month = (\d+)", limit)]
+        assert bool(named) == bool(limit)
+        for month in named or sorted(set(range(1, 13)) - set(months)):  # the else block: the months left
+            assert month not in months, month
+            months[month] = order[0]
+    assert blocks[-1][0] == "", "the last block is the else"
+    assert set(months) == set(range(1, 13))
+    firsts = {group: sum(1 for first in months.values() if first == group) for group in cp.GROUPS}
+    assert set(firsts.values()) == {12 // len(cp.GROUPS)}, firsts
+    # every group runs exactly once a pass, and the rights of Towns and Buildings (no gold) after all of them
+    for group in cp.GROUPS:
+        assert run.count(f"pp_cplan_group_{group} = yes") == len(blocks), group
+    assert run.count("pp_cplan_country_rights = yes") == 1
+    # the never-run branch declares the flags of every tab's buttons
+    never = run[run.index("limit = { always = no }"):]
+    for declare in ("pp_cplan_declare_flags", "pp_cplan_country_declare", "pp_lprof_declare_flags"):
+        assert f"{declare} = yes" in never, declare
+    assert run.rindex("pp_cplan_group_business = yes") < run.index("pp_cplan_country_rights = yes") < run.index("pp_cplan_history_push = yes")
 
 
 # ---- Businesses (Jan 2026-11-09) ----
@@ -288,11 +369,39 @@ def test_business_group_builds_the_best_returns_first() -> None:
     assert group.index("pp_cplan_business_types = yes") < group.index("pp_cplan_business_pick = yes") < group.index("order_by = pp_cplan_bz_roi_n")
     assert "limit = { pp_cplan_business_site = yes }" in group
     assert "pp_cplan_construct_scoped = { why = 103 }" in group
-    assert group.rstrip().endswith("pp_cplan_business_types_clear = yes\n\t}")
+    assert group.index("order_by = pp_cplan_bz_roi_n") < group.index("pp_cplan_business_types_clear = yes")
     site = _effect(_read(TRIGGERS), "pp_cplan_business_site")
-    for part in ("pp_cplan_location_ok = yes", "NOT = { has_variable = pp_lprof_xg }", "num_civil_constructions < 1",
+    for part in ("pp_cplan_location_ok = yes", "NOT = { has_variable = pp_lprof_xg }", "pp_cplan_site_free = yes",
                  "market ?= { always = yes }"):
         assert part in site, part
+
+
+def test_business_group_does_not_look_without_gold() -> None:
+    """The pick is the pass's dear part (every free site against every business type). A group that starts without
+    gold to spend can build nothing, so it does not look; it marks that for its pane, which then says so instead of
+    "nothing waited for gold" (what the businesses would have cost is not counted in such a month)."""
+    group = _effect(_read(EFFECTS), "pp_cplan_group_business")
+    start = group.index("pp_cplan_group_start = { why = 103 add = pp_cplan_share_business }")
+    gate = group.index("limit = { pp_cplan_budget_left = yes }")
+    skipped = group.index("else = {\n\t\t\tset_variable = { name = pp_cplan_ds_business_skipped value = 101 }")
+    # the part is added first (the gate reads the gold of the groups so far, this one included); everything dear
+    # sits behind the gate
+    assert start < gate < group.index("pp_cplan_business_types = yes") < group.index("pp_cplan_business_pick = yes")
+    assert group.index("pp_cplan_business_types_clear = yes") < skipped
+    assert group.count("pp_cplan_budget_left") == 1
+    assert ("skipped", 100) in cp.SITUATION["business"]
+    from prosper_or_perish_constructor import construction_plan_detail as cpd
+
+    gui = cpd.render_gui()
+    pane = gui[gui.index("type pp_cplan_detail_business = vbox"):]
+    looked = "Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_business_skipped'), '(CFixedPoint)0.5'))"
+    for key in ("PP_CPLAN_D_NO_WAIT", "PP_CPLAN_D_BUSINESS_NONE"):
+        line = re.search(rf"visible = \"\[([^\n]*)\]\"\n\t+text = \"{key}\"", pane)
+        assert line and line.group(1).endswith(f", {looked})"), key
+    assert re.search(r"visible = \"\[GreaterThan_CFixedPoint\(GetPlayer\.MakeScope\.ScriptValue\('pp_cplan_d_business_skipped'\), "
+                     r"'\(CFixedPoint\)0\.5'\)\]\"\n\t+text = \"PP_CPLAN_D_BUSINESS_SKIPPED\"", pane)
+    assert "did not look" in cpd.texts()["PP_CPLAN_D_BUSINESS_SKIPPED"]
+    assert "did not look" in cpd.texts()["PP_CPLAN_D_CHART_TT_BUSINESS"]
 
 
 # ---- Shared guards ----
@@ -406,8 +515,31 @@ def test_game_automation_is_respected() -> None:
     scoped = _effect(_read(EFFECTS), "pp_cplan_construct_scoped")
     assert "pp_cplan_bt_queued < 0.5" in scoped and "is_opened = no" in scoped
     # one construction at a time per location: the engine builds them one after another (test world 2026-11-09)
-    assert "num_civil_constructions < 1" in scoped
-    assert "limit = { num_civil_constructions > 0 }" in _effect(_read(PROFILE_EFFECTS), "pp_lprof_rule")
+    assert "pp_cplan_site_free = yes" in scoped
+    # the location profiles ask the same before a rule tries (their state 3), by the plan's trigger or the engine's count
+    profiles = re.sub(r"#[^\n]*", "", _read(PROFILE_EFFECTS))
+    assert "pp_cplan_site_free" in profiles or "num_civil_constructions > 0" in profiles
+
+
+def test_one_place_says_when_a_site_is_free() -> None:
+    """The plan starts nothing where a construction is under way. The engine's max_constructions_at_same_time would
+    allow more in some locations (not verified in game), so the check sits in ONE trigger, pp_cplan_site_free, and no
+    other plan script reads num_civil_constructions."""
+    assert _effect(_read(TRIGGERS), "pp_cplan_site_free").strip() == "num_civil_constructions < pp_cplan_site_slots"
+    for path in _plan_script_files():
+        code = re.sub(r"#[^\n]*", "", _read(path))
+        if path == TRIGGERS:
+            code = code.replace(_effect(code, "pp_cplan_site_free"), "")
+        assert "num_civil_constructions" not in code, path.name
+    effects = _read(EFFECTS)
+    # every place that starts or looks for a construction asks it: the construction itself, the business sites, the
+    # farm sites (a busy one must not use up a try), and the logistics and improvement groups before they look
+    assert "pp_cplan_site_free = yes" in _effect(_read(TRIGGERS), "pp_cplan_business_site")
+    food = _effect(effects, "pp_cplan_food_province")
+    sites = food[food.index("ordered_location_in_province"):food.index("order_by = pp_cplan_farm_best_roi")]
+    assert "pp_cplan_farm_ok = yes" in sites and "pp_cplan_site_free = yes" in sites
+    for group, build in (("logistics", "pp_cplan_try_logistics_here"), ("improve", "pp_cplan_try_improve_here")):
+        assert f"limit = {{ pp_cplan_site_free = yes }}\n\t\t\t\t{build} = yes" in _effect(effects, f"pp_cplan_group_{group}"), group
 
 
 # ---- Baseline rules (Jan 2026-11-08) ----
@@ -602,9 +734,9 @@ def test_groups_count_what_waits_for_gold() -> None:
     through all it wants even after the gold is used up; the construction itself checks the gold and counts what the
     gold does not reach (cost and number) once per decision: a province of the food rule, a location otherwise."""
     effects = _read(EFFECTS)
-    for group in cp.GROUPS:
-        if group != "profiles":
-            assert "pp_cplan_budget_left" not in _effect(effects, f"pp_cplan_group_{group}"), group
+    # (the business group alone asks once, before it looks at all: test_business_group_does_not_look_without_gold)
+    for group in ("food", "logistics", "improve"):
+        assert "pp_cplan_budget_left" not in _effect(effects, f"pp_cplan_group_{group}"), group
     assert "pp_cplan_budget_left" not in _effect(effects, "pp_cplan_food_province")
     assert "pp_cplan_budget_left" not in _effect(_read(TRIGGERS), "pp_cplan_may_try")
     note = _effect(effects, "pp_cplan_note_wait")

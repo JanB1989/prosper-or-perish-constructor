@@ -4,184 +4,352 @@
 pp_lplan_toggle_switch = {
 	switch = {
 		trigger = scope:pp_key
-		flag:camels = { pp_lplan_flip = { var = pp_lplan_g_camels } }
-		flag:elephants = { pp_lplan_flip = { var = pp_lplan_g_elephants } }
-		flag:horses = { pp_lplan_flip = { var = pp_lplan_g_horses } }
-		flag:livestock = { pp_lplan_flip = { var = pp_lplan_g_livestock } }
-		flag:wool = { pp_lplan_flip = { var = pp_lplan_g_wool } }
-		flag:beeswax = { pp_lplan_flip = { var = pp_lplan_g_beeswax } }
-		flag:dyes = { pp_lplan_flip = { var = pp_lplan_g_dyes } }
-		flag:incense = { pp_lplan_flip = { var = pp_lplan_g_incense } }
-		flag:tobacco = { pp_lplan_flip = { var = pp_lplan_g_tobacco } }
-		flag:cotton = { pp_lplan_flip = { var = pp_lplan_g_cotton } }
-		flag:fiber_crops = { pp_lplan_flip = { var = pp_lplan_g_fiber_crops } }
-		flag:silk = { pp_lplan_flip = { var = pp_lplan_g_silk } }
-		flag:chili = { pp_lplan_flip = { var = pp_lplan_g_chili } }
-		flag:cloves = { pp_lplan_flip = { var = pp_lplan_g_cloves } }
-		flag:pepper = { pp_lplan_flip = { var = pp_lplan_g_pepper } }
-		flag:saffron = { pp_lplan_flip = { var = pp_lplan_g_saffron } }
-		flag:legumes = { pp_lplan_flip = { var = pp_lplan_g_legumes } }
-		flag:maize = { pp_lplan_flip = { var = pp_lplan_g_maize } }
-		flag:millet = { pp_lplan_flip = { var = pp_lplan_g_millet } }
-		flag:potato = { pp_lplan_flip = { var = pp_lplan_g_potato } }
-		flag:rice = { pp_lplan_flip = { var = pp_lplan_g_rice } }
-		flag:wheat = { pp_lplan_flip = { var = pp_lplan_g_wheat } }
-		flag:cocoa = { pp_lplan_flip = { var = pp_lplan_g_cocoa } }
-		flag:coffee = { pp_lplan_flip = { var = pp_lplan_g_coffee } }
-		flag:tea = { pp_lplan_flip = { var = pp_lplan_g_tea } }
-		flag:sugar = { pp_lplan_flip = { var = pp_lplan_g_sugar } }
-		flag:fruit = { pp_lplan_flip = { var = pp_lplan_g_fruit } }
-		flag:olives = { pp_lplan_flip = { var = pp_lplan_g_olives } }
-		flag:wine = { pp_lplan_flip = { var = pp_lplan_g_wine } }
-		flag:lumber = { pp_lplan_flip = { var = pp_lplan_g_lumber } }
-		flag:fish = { pp_lplan_flip = { var = pp_lplan_g_fish } }
-		flag:pearls = { pp_lplan_flip = { var = pp_lplan_g_pearls } }
-		flag:clay = { pp_lplan_flip = { var = pp_lplan_g_clay } }
-		flag:sand = { pp_lplan_flip = { var = pp_lplan_g_sand } }
-		flag:medicaments = { pp_lplan_flip = { var = pp_lplan_g_medicaments } }
-		flag:salt = { pp_lplan_flip = { var = pp_lplan_g_salt } }
-		flag:amber = { pp_lplan_flip = { var = pp_lplan_g_amber } }
-		flag:fur = { pp_lplan_flip = { var = pp_lplan_g_fur } }
-		flag:ivory = { pp_lplan_flip = { var = pp_lplan_g_ivory } }
-		flag:wild_game = { pp_lplan_flip = { var = pp_lplan_g_wild_game } }
-		flag:beer = { pp_lplan_flip = { var = pp_lplan_g_beer } }
-		flag:liquor = { pp_lplan_flip = { var = pp_lplan_g_liquor } }
-		flag:books = { pp_lplan_flip = { var = pp_lplan_g_books } }
-		flag:paper = { pp_lplan_flip = { var = pp_lplan_g_paper } }
-		flag:slaves_goods = { pp_lplan_flip = { var = pp_lplan_g_slaves_goods } }
-		flag:glass = { pp_lplan_flip = { var = pp_lplan_g_glass } }
-		flag:masonry = { pp_lplan_flip = { var = pp_lplan_g_masonry } }
-		flag:pottery = { pp_lplan_flip = { var = pp_lplan_g_pottery } }
-		flag:tar = { pp_lplan_flip = { var = pp_lplan_g_tar } }
-		flag:furniture = { pp_lplan_flip = { var = pp_lplan_g_furniture } }
-		flag:jewelry = { pp_lplan_flip = { var = pp_lplan_g_jewelry } }
-		flag:lacquerware = { pp_lplan_flip = { var = pp_lplan_g_lacquerware } }
-		flag:porcelain = { pp_lplan_flip = { var = pp_lplan_g_porcelain } }
-		flag:steel = { pp_lplan_flip = { var = pp_lplan_g_steel } }
-		flag:tools = { pp_lplan_flip = { var = pp_lplan_g_tools } }
-		flag:cannons = { pp_lplan_flip = { var = pp_lplan_g_cannons } }
-		flag:firearms = { pp_lplan_flip = { var = pp_lplan_g_firearms } }
-		flag:weaponry = { pp_lplan_flip = { var = pp_lplan_g_weaponry } }
-		flag:naval_supplies = { pp_lplan_flip = { var = pp_lplan_g_naval_supplies } }
-		flag:victuals = { pp_lplan_flip = { var = pp_lplan_g_victuals } }
-		flag:cloth = { pp_lplan_flip = { var = pp_lplan_g_cloth } }
-		flag:fine_cloth = { pp_lplan_flip = { var = pp_lplan_g_fine_cloth } }
-		flag:leather = { pp_lplan_flip = { var = pp_lplan_g_leather } }
-		flag:marble = { pp_lplan_flip = { var = pp_lplan_g_marble } }
-		flag:stone = { pp_lplan_flip = { var = pp_lplan_g_stone } }
-		flag:coal = { pp_lplan_flip = { var = pp_lplan_g_coal } }
-		flag:alum = { pp_lplan_flip = { var = pp_lplan_g_alum } }
-		flag:mercury = { pp_lplan_flip = { var = pp_lplan_g_mercury } }
-		flag:saltpeter = { pp_lplan_flip = { var = pp_lplan_g_saltpeter } }
-		flag:copper = { pp_lplan_flip = { var = pp_lplan_g_copper } }
-		flag:iron = { pp_lplan_flip = { var = pp_lplan_g_iron } }
-		flag:lead = { pp_lplan_flip = { var = pp_lplan_g_lead } }
-		flag:tin = { pp_lplan_flip = { var = pp_lplan_g_tin } }
-		flag:gems = { pp_lplan_flip = { var = pp_lplan_g_gems } }
-		flag:goods_gold = { pp_lplan_flip = { var = pp_lplan_g_goods_gold } }
-		flag:silver = { pp_lplan_flip = { var = pp_lplan_g_silver } }
-		flag:trade_category = { pp_lplan_flip = { var = pp_lplan_c_trade_category } }
-		flag:government_category = { pp_lplan_flip = { var = pp_lplan_c_government_category } }
-		flag:military_category = { pp_lplan_flip = { var = pp_lplan_c_military_category } }
-		flag:defense_category = { pp_lplan_flip = { var = pp_lplan_c_defense_category } }
-		flag:religious_category = { pp_lplan_flip = { var = pp_lplan_c_religious_category } }
-		flag:cultural_category = { pp_lplan_flip = { var = pp_lplan_c_cultural_category } }
-		flag:naval_category = { pp_lplan_flip = { var = pp_lplan_c_naval_category } }
-		flag:infrastructure_category = { pp_lplan_flip = { var = pp_lplan_c_infrastructure_category } }
+		flag:camels = { pp_lplan_flip = { v = g_camels } }
+		flag:elephants = { pp_lplan_flip = { v = g_elephants } }
+		flag:horses = { pp_lplan_flip = { v = g_horses } }
+		flag:livestock = { pp_lplan_flip = { v = g_livestock } }
+		flag:wool = { pp_lplan_flip = { v = g_wool } }
+		flag:beeswax = { pp_lplan_flip = { v = g_beeswax } }
+		flag:dyes = { pp_lplan_flip = { v = g_dyes } }
+		flag:incense = { pp_lplan_flip = { v = g_incense } }
+		flag:tobacco = { pp_lplan_flip = { v = g_tobacco } }
+		flag:cotton = { pp_lplan_flip = { v = g_cotton } }
+		flag:fiber_crops = { pp_lplan_flip = { v = g_fiber_crops } }
+		flag:silk = { pp_lplan_flip = { v = g_silk } }
+		flag:chili = { pp_lplan_flip = { v = g_chili } }
+		flag:cloves = { pp_lplan_flip = { v = g_cloves } }
+		flag:pepper = { pp_lplan_flip = { v = g_pepper } }
+		flag:saffron = { pp_lplan_flip = { v = g_saffron } }
+		flag:legumes = { pp_lplan_flip = { v = g_legumes } }
+		flag:maize = { pp_lplan_flip = { v = g_maize } }
+		flag:millet = { pp_lplan_flip = { v = g_millet } }
+		flag:potato = { pp_lplan_flip = { v = g_potato } }
+		flag:rice = { pp_lplan_flip = { v = g_rice } }
+		flag:wheat = { pp_lplan_flip = { v = g_wheat } }
+		flag:cocoa = { pp_lplan_flip = { v = g_cocoa } }
+		flag:coffee = { pp_lplan_flip = { v = g_coffee } }
+		flag:tea = { pp_lplan_flip = { v = g_tea } }
+		flag:sugar = { pp_lplan_flip = { v = g_sugar } }
+		flag:fruit = { pp_lplan_flip = { v = g_fruit } }
+		flag:olives = { pp_lplan_flip = { v = g_olives } }
+		flag:wine = { pp_lplan_flip = { v = g_wine } }
+		flag:lumber = { pp_lplan_flip = { v = g_lumber } }
+		flag:fish = { pp_lplan_flip = { v = g_fish } }
+		flag:pearls = { pp_lplan_flip = { v = g_pearls } }
+		flag:clay = { pp_lplan_flip = { v = g_clay } }
+		flag:sand = { pp_lplan_flip = { v = g_sand } }
+		flag:medicaments = { pp_lplan_flip = { v = g_medicaments } }
+		flag:salt = { pp_lplan_flip = { v = g_salt } }
+		flag:amber = { pp_lplan_flip = { v = g_amber } }
+		flag:fur = { pp_lplan_flip = { v = g_fur } }
+		flag:ivory = { pp_lplan_flip = { v = g_ivory } }
+		flag:wild_game = { pp_lplan_flip = { v = g_wild_game } }
+		flag:beer = { pp_lplan_flip = { v = g_beer } }
+		flag:liquor = { pp_lplan_flip = { v = g_liquor } }
+		flag:books = { pp_lplan_flip = { v = g_books } }
+		flag:paper = { pp_lplan_flip = { v = g_paper } }
+		flag:slaves_goods = { pp_lplan_flip = { v = g_slaves_goods } }
+		flag:glass = { pp_lplan_flip = { v = g_glass } }
+		flag:masonry = { pp_lplan_flip = { v = g_masonry } }
+		flag:pottery = { pp_lplan_flip = { v = g_pottery } }
+		flag:tar = { pp_lplan_flip = { v = g_tar } }
+		flag:furniture = { pp_lplan_flip = { v = g_furniture } }
+		flag:jewelry = { pp_lplan_flip = { v = g_jewelry } }
+		flag:lacquerware = { pp_lplan_flip = { v = g_lacquerware } }
+		flag:porcelain = { pp_lplan_flip = { v = g_porcelain } }
+		flag:steel = { pp_lplan_flip = { v = g_steel } }
+		flag:tools = { pp_lplan_flip = { v = g_tools } }
+		flag:cannons = { pp_lplan_flip = { v = g_cannons } }
+		flag:firearms = { pp_lplan_flip = { v = g_firearms } }
+		flag:weaponry = { pp_lplan_flip = { v = g_weaponry } }
+		flag:naval_supplies = { pp_lplan_flip = { v = g_naval_supplies } }
+		flag:victuals = { pp_lplan_flip = { v = g_victuals } }
+		flag:cloth = { pp_lplan_flip = { v = g_cloth } }
+		flag:fine_cloth = { pp_lplan_flip = { v = g_fine_cloth } }
+		flag:leather = { pp_lplan_flip = { v = g_leather } }
+		flag:marble = { pp_lplan_flip = { v = g_marble } }
+		flag:stone = { pp_lplan_flip = { v = g_stone } }
+		flag:coal = { pp_lplan_flip = { v = g_coal } }
+		flag:alum = { pp_lplan_flip = { v = g_alum } }
+		flag:mercury = { pp_lplan_flip = { v = g_mercury } }
+		flag:saltpeter = { pp_lplan_flip = { v = g_saltpeter } }
+		flag:copper = { pp_lplan_flip = { v = g_copper } }
+		flag:iron = { pp_lplan_flip = { v = g_iron } }
+		flag:lead = { pp_lplan_flip = { v = g_lead } }
+		flag:tin = { pp_lplan_flip = { v = g_tin } }
+		flag:gems = { pp_lplan_flip = { v = g_gems } }
+		flag:goods_gold = { pp_lplan_flip = { v = g_goods_gold } }
+		flag:silver = { pp_lplan_flip = { v = g_silver } }
+		flag:trade_category = { pp_lplan_flip = { v = c_trade_category } }
+		flag:government_category = { pp_lplan_flip = { v = c_government_category } }
+		flag:military_category = { pp_lplan_flip = { v = c_military_category } }
+		flag:defense_category = { pp_lplan_flip = { v = c_defense_category } }
+		flag:religious_category = { pp_lplan_flip = { v = c_religious_category } }
+		flag:cultural_category = { pp_lplan_flip = { v = c_cultural_category } }
+		flag:naval_category = { pp_lplan_flip = { v = c_naval_category } }
+		flag:infrastructure_category = { pp_lplan_flip = { v = c_infrastructure_category } }
 	}
 }
 
-# Location scope: the plan emptied.
+# Location scope: the plan emptied (every mark, its state and the payback it found).
 pp_lplan_clear_all = {
 	remove_variable = pp_lplan_g_camels
+	remove_variable = pp_lplan_st_g_camels
+	remove_variable = pp_lplan_est_g_camels
 	remove_variable = pp_lplan_g_elephants
+	remove_variable = pp_lplan_st_g_elephants
+	remove_variable = pp_lplan_est_g_elephants
 	remove_variable = pp_lplan_g_horses
+	remove_variable = pp_lplan_st_g_horses
+	remove_variable = pp_lplan_est_g_horses
 	remove_variable = pp_lplan_g_livestock
+	remove_variable = pp_lplan_st_g_livestock
+	remove_variable = pp_lplan_est_g_livestock
 	remove_variable = pp_lplan_g_wool
+	remove_variable = pp_lplan_st_g_wool
+	remove_variable = pp_lplan_est_g_wool
 	remove_variable = pp_lplan_g_beeswax
+	remove_variable = pp_lplan_st_g_beeswax
+	remove_variable = pp_lplan_est_g_beeswax
 	remove_variable = pp_lplan_g_dyes
+	remove_variable = pp_lplan_st_g_dyes
+	remove_variable = pp_lplan_est_g_dyes
 	remove_variable = pp_lplan_g_incense
+	remove_variable = pp_lplan_st_g_incense
+	remove_variable = pp_lplan_est_g_incense
 	remove_variable = pp_lplan_g_tobacco
+	remove_variable = pp_lplan_st_g_tobacco
+	remove_variable = pp_lplan_est_g_tobacco
 	remove_variable = pp_lplan_g_cotton
+	remove_variable = pp_lplan_st_g_cotton
+	remove_variable = pp_lplan_est_g_cotton
 	remove_variable = pp_lplan_g_fiber_crops
+	remove_variable = pp_lplan_st_g_fiber_crops
+	remove_variable = pp_lplan_est_g_fiber_crops
 	remove_variable = pp_lplan_g_silk
+	remove_variable = pp_lplan_st_g_silk
+	remove_variable = pp_lplan_est_g_silk
 	remove_variable = pp_lplan_g_chili
+	remove_variable = pp_lplan_st_g_chili
+	remove_variable = pp_lplan_est_g_chili
 	remove_variable = pp_lplan_g_cloves
+	remove_variable = pp_lplan_st_g_cloves
+	remove_variable = pp_lplan_est_g_cloves
 	remove_variable = pp_lplan_g_pepper
+	remove_variable = pp_lplan_st_g_pepper
+	remove_variable = pp_lplan_est_g_pepper
 	remove_variable = pp_lplan_g_saffron
+	remove_variable = pp_lplan_st_g_saffron
+	remove_variable = pp_lplan_est_g_saffron
 	remove_variable = pp_lplan_g_legumes
+	remove_variable = pp_lplan_st_g_legumes
+	remove_variable = pp_lplan_est_g_legumes
 	remove_variable = pp_lplan_g_maize
+	remove_variable = pp_lplan_st_g_maize
+	remove_variable = pp_lplan_est_g_maize
 	remove_variable = pp_lplan_g_millet
+	remove_variable = pp_lplan_st_g_millet
+	remove_variable = pp_lplan_est_g_millet
 	remove_variable = pp_lplan_g_potato
+	remove_variable = pp_lplan_st_g_potato
+	remove_variable = pp_lplan_est_g_potato
 	remove_variable = pp_lplan_g_rice
+	remove_variable = pp_lplan_st_g_rice
+	remove_variable = pp_lplan_est_g_rice
 	remove_variable = pp_lplan_g_wheat
+	remove_variable = pp_lplan_st_g_wheat
+	remove_variable = pp_lplan_est_g_wheat
 	remove_variable = pp_lplan_g_cocoa
+	remove_variable = pp_lplan_st_g_cocoa
+	remove_variable = pp_lplan_est_g_cocoa
 	remove_variable = pp_lplan_g_coffee
+	remove_variable = pp_lplan_st_g_coffee
+	remove_variable = pp_lplan_est_g_coffee
 	remove_variable = pp_lplan_g_tea
+	remove_variable = pp_lplan_st_g_tea
+	remove_variable = pp_lplan_est_g_tea
 	remove_variable = pp_lplan_g_sugar
+	remove_variable = pp_lplan_st_g_sugar
+	remove_variable = pp_lplan_est_g_sugar
 	remove_variable = pp_lplan_g_fruit
+	remove_variable = pp_lplan_st_g_fruit
+	remove_variable = pp_lplan_est_g_fruit
 	remove_variable = pp_lplan_g_olives
+	remove_variable = pp_lplan_st_g_olives
+	remove_variable = pp_lplan_est_g_olives
 	remove_variable = pp_lplan_g_wine
+	remove_variable = pp_lplan_st_g_wine
+	remove_variable = pp_lplan_est_g_wine
 	remove_variable = pp_lplan_g_lumber
+	remove_variable = pp_lplan_st_g_lumber
+	remove_variable = pp_lplan_est_g_lumber
 	remove_variable = pp_lplan_g_fish
+	remove_variable = pp_lplan_st_g_fish
+	remove_variable = pp_lplan_est_g_fish
 	remove_variable = pp_lplan_g_pearls
+	remove_variable = pp_lplan_st_g_pearls
+	remove_variable = pp_lplan_est_g_pearls
 	remove_variable = pp_lplan_g_clay
+	remove_variable = pp_lplan_st_g_clay
+	remove_variable = pp_lplan_est_g_clay
 	remove_variable = pp_lplan_g_sand
+	remove_variable = pp_lplan_st_g_sand
+	remove_variable = pp_lplan_est_g_sand
 	remove_variable = pp_lplan_g_medicaments
+	remove_variable = pp_lplan_st_g_medicaments
+	remove_variable = pp_lplan_est_g_medicaments
 	remove_variable = pp_lplan_g_salt
+	remove_variable = pp_lplan_st_g_salt
+	remove_variable = pp_lplan_est_g_salt
 	remove_variable = pp_lplan_g_amber
+	remove_variable = pp_lplan_st_g_amber
+	remove_variable = pp_lplan_est_g_amber
 	remove_variable = pp_lplan_g_fur
+	remove_variable = pp_lplan_st_g_fur
+	remove_variable = pp_lplan_est_g_fur
 	remove_variable = pp_lplan_g_ivory
+	remove_variable = pp_lplan_st_g_ivory
+	remove_variable = pp_lplan_est_g_ivory
 	remove_variable = pp_lplan_g_wild_game
+	remove_variable = pp_lplan_st_g_wild_game
+	remove_variable = pp_lplan_est_g_wild_game
 	remove_variable = pp_lplan_g_beer
+	remove_variable = pp_lplan_st_g_beer
+	remove_variable = pp_lplan_est_g_beer
 	remove_variable = pp_lplan_g_liquor
+	remove_variable = pp_lplan_st_g_liquor
+	remove_variable = pp_lplan_est_g_liquor
 	remove_variable = pp_lplan_g_books
+	remove_variable = pp_lplan_st_g_books
+	remove_variable = pp_lplan_est_g_books
 	remove_variable = pp_lplan_g_paper
+	remove_variable = pp_lplan_st_g_paper
+	remove_variable = pp_lplan_est_g_paper
 	remove_variable = pp_lplan_g_slaves_goods
+	remove_variable = pp_lplan_st_g_slaves_goods
+	remove_variable = pp_lplan_est_g_slaves_goods
 	remove_variable = pp_lplan_g_glass
+	remove_variable = pp_lplan_st_g_glass
+	remove_variable = pp_lplan_est_g_glass
 	remove_variable = pp_lplan_g_masonry
+	remove_variable = pp_lplan_st_g_masonry
+	remove_variable = pp_lplan_est_g_masonry
 	remove_variable = pp_lplan_g_pottery
+	remove_variable = pp_lplan_st_g_pottery
+	remove_variable = pp_lplan_est_g_pottery
 	remove_variable = pp_lplan_g_tar
+	remove_variable = pp_lplan_st_g_tar
+	remove_variable = pp_lplan_est_g_tar
 	remove_variable = pp_lplan_g_furniture
+	remove_variable = pp_lplan_st_g_furniture
+	remove_variable = pp_lplan_est_g_furniture
 	remove_variable = pp_lplan_g_jewelry
+	remove_variable = pp_lplan_st_g_jewelry
+	remove_variable = pp_lplan_est_g_jewelry
 	remove_variable = pp_lplan_g_lacquerware
+	remove_variable = pp_lplan_st_g_lacquerware
+	remove_variable = pp_lplan_est_g_lacquerware
 	remove_variable = pp_lplan_g_porcelain
+	remove_variable = pp_lplan_st_g_porcelain
+	remove_variable = pp_lplan_est_g_porcelain
 	remove_variable = pp_lplan_g_steel
+	remove_variable = pp_lplan_st_g_steel
+	remove_variable = pp_lplan_est_g_steel
 	remove_variable = pp_lplan_g_tools
+	remove_variable = pp_lplan_st_g_tools
+	remove_variable = pp_lplan_est_g_tools
 	remove_variable = pp_lplan_g_cannons
+	remove_variable = pp_lplan_st_g_cannons
+	remove_variable = pp_lplan_est_g_cannons
 	remove_variable = pp_lplan_g_firearms
+	remove_variable = pp_lplan_st_g_firearms
+	remove_variable = pp_lplan_est_g_firearms
 	remove_variable = pp_lplan_g_weaponry
+	remove_variable = pp_lplan_st_g_weaponry
+	remove_variable = pp_lplan_est_g_weaponry
 	remove_variable = pp_lplan_g_naval_supplies
+	remove_variable = pp_lplan_st_g_naval_supplies
+	remove_variable = pp_lplan_est_g_naval_supplies
 	remove_variable = pp_lplan_g_victuals
+	remove_variable = pp_lplan_st_g_victuals
+	remove_variable = pp_lplan_est_g_victuals
 	remove_variable = pp_lplan_g_cloth
+	remove_variable = pp_lplan_st_g_cloth
+	remove_variable = pp_lplan_est_g_cloth
 	remove_variable = pp_lplan_g_fine_cloth
+	remove_variable = pp_lplan_st_g_fine_cloth
+	remove_variable = pp_lplan_est_g_fine_cloth
 	remove_variable = pp_lplan_g_leather
+	remove_variable = pp_lplan_st_g_leather
+	remove_variable = pp_lplan_est_g_leather
 	remove_variable = pp_lplan_g_marble
+	remove_variable = pp_lplan_st_g_marble
+	remove_variable = pp_lplan_est_g_marble
 	remove_variable = pp_lplan_g_stone
+	remove_variable = pp_lplan_st_g_stone
+	remove_variable = pp_lplan_est_g_stone
 	remove_variable = pp_lplan_g_coal
+	remove_variable = pp_lplan_st_g_coal
+	remove_variable = pp_lplan_est_g_coal
 	remove_variable = pp_lplan_g_alum
+	remove_variable = pp_lplan_st_g_alum
+	remove_variable = pp_lplan_est_g_alum
 	remove_variable = pp_lplan_g_mercury
+	remove_variable = pp_lplan_st_g_mercury
+	remove_variable = pp_lplan_est_g_mercury
 	remove_variable = pp_lplan_g_saltpeter
+	remove_variable = pp_lplan_st_g_saltpeter
+	remove_variable = pp_lplan_est_g_saltpeter
 	remove_variable = pp_lplan_g_copper
+	remove_variable = pp_lplan_st_g_copper
+	remove_variable = pp_lplan_est_g_copper
 	remove_variable = pp_lplan_g_iron
+	remove_variable = pp_lplan_st_g_iron
+	remove_variable = pp_lplan_est_g_iron
 	remove_variable = pp_lplan_g_lead
+	remove_variable = pp_lplan_st_g_lead
+	remove_variable = pp_lplan_est_g_lead
 	remove_variable = pp_lplan_g_tin
+	remove_variable = pp_lplan_st_g_tin
+	remove_variable = pp_lplan_est_g_tin
 	remove_variable = pp_lplan_g_gems
+	remove_variable = pp_lplan_st_g_gems
+	remove_variable = pp_lplan_est_g_gems
 	remove_variable = pp_lplan_g_goods_gold
+	remove_variable = pp_lplan_st_g_goods_gold
+	remove_variable = pp_lplan_est_g_goods_gold
 	remove_variable = pp_lplan_g_silver
+	remove_variable = pp_lplan_st_g_silver
+	remove_variable = pp_lplan_est_g_silver
 	remove_variable = pp_lplan_c_trade_category
+	remove_variable = pp_lplan_st_c_trade_category
+	remove_variable = pp_lplan_est_c_trade_category
 	remove_variable = pp_lplan_c_government_category
+	remove_variable = pp_lplan_st_c_government_category
+	remove_variable = pp_lplan_est_c_government_category
 	remove_variable = pp_lplan_c_military_category
+	remove_variable = pp_lplan_st_c_military_category
+	remove_variable = pp_lplan_est_c_military_category
 	remove_variable = pp_lplan_c_defense_category
+	remove_variable = pp_lplan_st_c_defense_category
+	remove_variable = pp_lplan_est_c_defense_category
 	remove_variable = pp_lplan_c_religious_category
+	remove_variable = pp_lplan_st_c_religious_category
+	remove_variable = pp_lplan_est_c_religious_category
 	remove_variable = pp_lplan_c_cultural_category
+	remove_variable = pp_lplan_st_c_cultural_category
+	remove_variable = pp_lplan_est_c_cultural_category
 	remove_variable = pp_lplan_c_naval_category
+	remove_variable = pp_lplan_st_c_naval_category
+	remove_variable = pp_lplan_est_c_naval_category
 	remove_variable = pp_lplan_c_infrastructure_category
+	remove_variable = pp_lplan_st_c_infrastructure_category
+	remove_variable = pp_lplan_est_c_infrastructure_category
 	remove_variable = pp_lplan_n
 }
 
-# Any scope, never run (pp_lplan_select calls it under always = no): declares the flags the window passes, so
-# the script check logs no 'used but never set' line for them.
+# Any scope, never run (pp_lplan_select calls it under always = no): declares the flags the window passes and
+# reads the mark states only the GUI reads, so the script check logs no 'used but never set' line for them.
 pp_lplan_declare_flags = {
 	set_variable = { name = pp_lplan_flag value = flag:camels }
 	set_variable = { name = pp_lplan_flag value = flag:elephants }
@@ -267,4 +435,179 @@ pp_lplan_declare_flags = {
 	set_variable = { name = pp_lplan_flag value = flag:cultural_category }
 	set_variable = { name = pp_lplan_flag value = flag:naval_category }
 	set_variable = { name = pp_lplan_flag value = flag:infrastructure_category }
+	if = {
+		limit = {
+			OR = {
+				has_variable = pp_lplan_st_g_camels
+				has_variable = pp_lplan_est_g_camels
+				has_variable = pp_lplan_st_g_elephants
+				has_variable = pp_lplan_est_g_elephants
+				has_variable = pp_lplan_st_g_horses
+				has_variable = pp_lplan_est_g_horses
+				has_variable = pp_lplan_st_g_livestock
+				has_variable = pp_lplan_est_g_livestock
+				has_variable = pp_lplan_st_g_wool
+				has_variable = pp_lplan_est_g_wool
+				has_variable = pp_lplan_st_g_beeswax
+				has_variable = pp_lplan_est_g_beeswax
+				has_variable = pp_lplan_st_g_dyes
+				has_variable = pp_lplan_est_g_dyes
+				has_variable = pp_lplan_st_g_incense
+				has_variable = pp_lplan_est_g_incense
+				has_variable = pp_lplan_st_g_tobacco
+				has_variable = pp_lplan_est_g_tobacco
+				has_variable = pp_lplan_st_g_cotton
+				has_variable = pp_lplan_est_g_cotton
+				has_variable = pp_lplan_st_g_fiber_crops
+				has_variable = pp_lplan_est_g_fiber_crops
+				has_variable = pp_lplan_st_g_silk
+				has_variable = pp_lplan_est_g_silk
+				has_variable = pp_lplan_st_g_chili
+				has_variable = pp_lplan_est_g_chili
+				has_variable = pp_lplan_st_g_cloves
+				has_variable = pp_lplan_est_g_cloves
+				has_variable = pp_lplan_st_g_pepper
+				has_variable = pp_lplan_est_g_pepper
+				has_variable = pp_lplan_st_g_saffron
+				has_variable = pp_lplan_est_g_saffron
+				has_variable = pp_lplan_st_g_legumes
+				has_variable = pp_lplan_est_g_legumes
+				has_variable = pp_lplan_st_g_maize
+				has_variable = pp_lplan_est_g_maize
+				has_variable = pp_lplan_st_g_millet
+				has_variable = pp_lplan_est_g_millet
+				has_variable = pp_lplan_st_g_potato
+				has_variable = pp_lplan_est_g_potato
+				has_variable = pp_lplan_st_g_rice
+				has_variable = pp_lplan_est_g_rice
+				has_variable = pp_lplan_st_g_wheat
+				has_variable = pp_lplan_est_g_wheat
+				has_variable = pp_lplan_st_g_cocoa
+				has_variable = pp_lplan_est_g_cocoa
+				has_variable = pp_lplan_st_g_coffee
+				has_variable = pp_lplan_est_g_coffee
+				has_variable = pp_lplan_st_g_tea
+				has_variable = pp_lplan_est_g_tea
+				has_variable = pp_lplan_st_g_sugar
+				has_variable = pp_lplan_est_g_sugar
+				has_variable = pp_lplan_st_g_fruit
+				has_variable = pp_lplan_est_g_fruit
+				has_variable = pp_lplan_st_g_olives
+				has_variable = pp_lplan_est_g_olives
+				has_variable = pp_lplan_st_g_wine
+				has_variable = pp_lplan_est_g_wine
+				has_variable = pp_lplan_st_g_lumber
+				has_variable = pp_lplan_est_g_lumber
+				has_variable = pp_lplan_st_g_fish
+				has_variable = pp_lplan_est_g_fish
+				has_variable = pp_lplan_st_g_pearls
+				has_variable = pp_lplan_est_g_pearls
+				has_variable = pp_lplan_st_g_clay
+				has_variable = pp_lplan_est_g_clay
+				has_variable = pp_lplan_st_g_sand
+				has_variable = pp_lplan_est_g_sand
+				has_variable = pp_lplan_st_g_medicaments
+				has_variable = pp_lplan_est_g_medicaments
+				has_variable = pp_lplan_st_g_salt
+				has_variable = pp_lplan_est_g_salt
+				has_variable = pp_lplan_st_g_amber
+				has_variable = pp_lplan_est_g_amber
+				has_variable = pp_lplan_st_g_fur
+				has_variable = pp_lplan_est_g_fur
+				has_variable = pp_lplan_st_g_ivory
+				has_variable = pp_lplan_est_g_ivory
+				has_variable = pp_lplan_st_g_wild_game
+				has_variable = pp_lplan_est_g_wild_game
+				has_variable = pp_lplan_st_g_beer
+				has_variable = pp_lplan_est_g_beer
+				has_variable = pp_lplan_st_g_liquor
+				has_variable = pp_lplan_est_g_liquor
+				has_variable = pp_lplan_st_g_books
+				has_variable = pp_lplan_est_g_books
+				has_variable = pp_lplan_st_g_paper
+				has_variable = pp_lplan_est_g_paper
+				has_variable = pp_lplan_st_g_slaves_goods
+				has_variable = pp_lplan_est_g_slaves_goods
+				has_variable = pp_lplan_st_g_glass
+				has_variable = pp_lplan_est_g_glass
+				has_variable = pp_lplan_st_g_masonry
+				has_variable = pp_lplan_est_g_masonry
+				has_variable = pp_lplan_st_g_pottery
+				has_variable = pp_lplan_est_g_pottery
+				has_variable = pp_lplan_st_g_tar
+				has_variable = pp_lplan_est_g_tar
+				has_variable = pp_lplan_st_g_furniture
+				has_variable = pp_lplan_est_g_furniture
+				has_variable = pp_lplan_st_g_jewelry
+				has_variable = pp_lplan_est_g_jewelry
+				has_variable = pp_lplan_st_g_lacquerware
+				has_variable = pp_lplan_est_g_lacquerware
+				has_variable = pp_lplan_st_g_porcelain
+				has_variable = pp_lplan_est_g_porcelain
+				has_variable = pp_lplan_st_g_steel
+				has_variable = pp_lplan_est_g_steel
+				has_variable = pp_lplan_st_g_tools
+				has_variable = pp_lplan_est_g_tools
+				has_variable = pp_lplan_st_g_cannons
+				has_variable = pp_lplan_est_g_cannons
+				has_variable = pp_lplan_st_g_firearms
+				has_variable = pp_lplan_est_g_firearms
+				has_variable = pp_lplan_st_g_weaponry
+				has_variable = pp_lplan_est_g_weaponry
+				has_variable = pp_lplan_st_g_naval_supplies
+				has_variable = pp_lplan_est_g_naval_supplies
+				has_variable = pp_lplan_st_g_victuals
+				has_variable = pp_lplan_est_g_victuals
+				has_variable = pp_lplan_st_g_cloth
+				has_variable = pp_lplan_est_g_cloth
+				has_variable = pp_lplan_st_g_fine_cloth
+				has_variable = pp_lplan_est_g_fine_cloth
+				has_variable = pp_lplan_st_g_leather
+				has_variable = pp_lplan_est_g_leather
+				has_variable = pp_lplan_st_g_marble
+				has_variable = pp_lplan_est_g_marble
+				has_variable = pp_lplan_st_g_stone
+				has_variable = pp_lplan_est_g_stone
+				has_variable = pp_lplan_st_g_coal
+				has_variable = pp_lplan_est_g_coal
+				has_variable = pp_lplan_st_g_alum
+				has_variable = pp_lplan_est_g_alum
+				has_variable = pp_lplan_st_g_mercury
+				has_variable = pp_lplan_est_g_mercury
+				has_variable = pp_lplan_st_g_saltpeter
+				has_variable = pp_lplan_est_g_saltpeter
+				has_variable = pp_lplan_st_g_copper
+				has_variable = pp_lplan_est_g_copper
+				has_variable = pp_lplan_st_g_iron
+				has_variable = pp_lplan_est_g_iron
+				has_variable = pp_lplan_st_g_lead
+				has_variable = pp_lplan_est_g_lead
+				has_variable = pp_lplan_st_g_tin
+				has_variable = pp_lplan_est_g_tin
+				has_variable = pp_lplan_st_g_gems
+				has_variable = pp_lplan_est_g_gems
+				has_variable = pp_lplan_st_g_goods_gold
+				has_variable = pp_lplan_est_g_goods_gold
+				has_variable = pp_lplan_st_g_silver
+				has_variable = pp_lplan_est_g_silver
+				has_variable = pp_lplan_st_c_trade_category
+				has_variable = pp_lplan_est_c_trade_category
+				has_variable = pp_lplan_st_c_government_category
+				has_variable = pp_lplan_est_c_government_category
+				has_variable = pp_lplan_st_c_military_category
+				has_variable = pp_lplan_est_c_military_category
+				has_variable = pp_lplan_st_c_defense_category
+				has_variable = pp_lplan_est_c_defense_category
+				has_variable = pp_lplan_st_c_religious_category
+				has_variable = pp_lplan_est_c_religious_category
+				has_variable = pp_lplan_st_c_cultural_category
+				has_variable = pp_lplan_est_c_cultural_category
+				has_variable = pp_lplan_st_c_naval_category
+				has_variable = pp_lplan_est_c_naval_category
+				has_variable = pp_lplan_st_c_infrastructure_category
+				has_variable = pp_lplan_est_c_infrastructure_category
+			}
+		}
+		remove_variable = pp_lplan_flag
+	}
 }

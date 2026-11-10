@@ -1,4 +1,5 @@
-﻿# Prosper or Perish - Construction Plan window buttons (gui/pp_construction_plan.gui, Global settings tab).
+﻿# Prosper or Perish - Construction Plan window buttons (gui/pp_construction_plan.gui, Global Settings tab; the Towns and
+# Buildings tab's buttons are construction_plan_country.py's).
 # Flags passed from the GUI: scope:pp_key (which setting or rule group), scope:pp_dir (up / down), scope:pp_n (w1..w10).
 
 # Country scope: the plan on / off. Switched on, the detail panes' chart starts afresh (pp_cplan_history_clear), so its
@@ -14,8 +15,8 @@ pp_cplan_toggle_on = {
 	}
 }
 
-# Country scope: a rule group's weight (scope:pp_key = profiles / food / logistics / improve / business; scope:pp_n = the
-# step of its bar clicked, w1..w10, or scope:pp_dir = up / down from its - and + buttons).
+# Country scope: a rule group's weight (scope:pp_key = profiles / food / logistics / improve / business / country;
+# scope:pp_n = the step of its bar clicked, w1..w10, or scope:pp_dir = up / down from its - and + buttons).
 pp_cplan_weight = {
 	scope = country
 	effect = {
@@ -26,6 +27,7 @@ pp_cplan_weight = {
 			flag:logistics = { pp_cplan_set_weight = { var = pp_cplan_w_logistics current = pp_cplan_logistics_w } }
 			flag:improve = { pp_cplan_set_weight = { var = pp_cplan_w_improve current = pp_cplan_improve_w } }
 			flag:business = { pp_cplan_set_weight = { var = pp_cplan_w_business current = pp_cplan_business_w } }
+			flag:country = { pp_cplan_set_weight = { var = pp_cplan_w_country current = pp_cplan_country_w } }
 		}
 	}
 }

@@ -49,6 +49,28 @@ def test_parse_debug_log_reads_builds_passes_and_dates() -> None:
     assert log.unparsed == ["PPCPLAN;X;something new"]
 
 
+def test_reason_codes_follow_the_plan() -> None:
+    """Every construction code of the plan's rule groups has a name here (a new group, e.g. 107 Towns and Buildings,
+    must not land in the report as a bare number), and the game's marker lines carry the same names."""
+    import re
+    from pathlib import Path
+
+    from prosper_or_perish_constructor import construction_plan as cp
+
+    assert {int(code) for code in ptr.WHY_CODES} == set(cp.GROUP_WHY.values())
+    assert set(ptr.WHY_CODES.values()) == set(ptr.GROUPS)
+    assert len(ptr.GROUPS) <= len(ptr.LIGHT_SERIES)  # a chart colour per group
+    names = {str(why): ("profile" if group == "profiles" else group) for group, why in cp.GROUP_WHY.items()}
+    assert ptr.WHY_CODES == names
+    loc = (Path(__file__).resolve().parents[1]
+           / "mod/pp/main_menu/localization/english/pp_construction_plan_l_english.yml").read_text(encoding="utf-8-sig")
+    for code, name in ptr.WHY_CODES.items():
+        assert re.search(rf"^  PP_CPLAN_TLOG_{code}: \"PPCPLAN;B;{name}\"$", loc, re.MULTILINE), code
+    log = ptr.parse_debug_log(["[10:00:00]: 1337.5.1", "[10:00:01]: PPCPLAN;B;107;toledo;marketplace",
+                               "[10:00:02]: PPCPLAN;B;country;toledo;marketplace"])
+    assert log.builds["group"].to_list() == ["country", "country"]
+
+
 def test_date_words_and_year_range() -> None:
     log = ptr.parse_debug_log(["[10:00:00]: 1 April 1337", "[10:00:01]: PPCPLAN;B;rule;x;y",
                                "[10:00:02]: version 3.10.2026", "[10:00:03]: PPCPLAN;P;1;2"])

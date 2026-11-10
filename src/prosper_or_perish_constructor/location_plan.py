@@ -1,11 +1,17 @@
 """Location plan (branch location-plan, 2026-11-07, Jan): the player marks what a location should produce or have.
 
-Only visual and only for the player: in the location window a button opens the Location Plan window, where the player
-clicks goods icons ("produce lumber here") and building categories ("a trade building here"). The map mode Location
-Plan draws the planned icons over the player's locations, on a green tile once done, red while still to do. Nothing is
-built by it.
+Only for the player: in the location window a button opens the Location Plan window, where the player clicks goods
+icons ("produce lumber here") and building categories ("a trade building here"). The map mode Location Plan draws the
+marked icons over the player's locations, on a green tile once done, red while still to do.
 
-A planned good counts as done once the location produces it: its raw material is that good, or a standing building
+The marks are the location's build picks (Jan, 2026-11-10: "in this location, also expand wheat", like vanilla's auto
+expand but with the plan's own thresholds): the Construction Plan builds a marked item there, in the rule group of the
+location profiles, after the location's profile rules, exactly as a profile rule with that target would, with the
+player's Businesses line as the payback limit (``location_profiles.py`` writes the pass: ``pp_lplan_location_marks``).
+A mark adds to the profile and the global rules; it switches nothing off. Each mark keeps its state after the last pass
+(``pp_lplan_st_<item>``, the profile rule states) and the payback found (``pp_lplan_est_<item>``).
+
+A marked good counts as done once the location produces it: its raw material is that good, or a standing building
 there produces it (``building_produced_goods``). A building category counts as done once a building of it stands there.
 
 The window, the map mode and the scripted GUIs are hand-written in the mod (``pp_location_plan*``). This module writes
@@ -17,8 +23,13 @@ the parts that follow the goods list and ``[location_plan]``:
 * ``localization/english/pp_location_plan_generated_l_english.yml``: the item names and states;
 * ``gui/map_markers.gui``: vanilla's, with the raw goods marker drawing the plan's icons in the plan map mode.
 
-Location variables: ``pp_lplan_g_<good>`` / ``pp_lplan_c_<category>`` (present = planned), ``pp_lplan_n`` (items
-planned + 100). Country: ``pp_lplan_sel`` (the location the window shows).
+The location window's row "Also build here" (the marks as toggle tiles under the Profile row) is written by
+``location_profiles_gui.py``.
+
+Location variables: ``pp_lplan_g_<good>`` / ``pp_lplan_c_<category>`` (present = marked), ``pp_lplan_n`` (items
+marked + 100), ``pp_lplan_st_g_<good>`` / ``pp_lplan_st_c_<category>`` (the mark's state after the last pass + 100,
+``location_profiles.STATES``) and ``pp_lplan_est_...`` (the shortest payback found, years + 100). Country:
+``pp_lplan_sel`` (the location the window shows), the list ``pp_lplan_locs`` (the locations the country marked).
 """
 
 from __future__ import annotations
@@ -47,8 +58,24 @@ class Item:
     group: str  # the picker group: the good's category, or "buildings"
 
     @property
+    def suffix(self) -> str:
+        """The item in a variable name: g_<good> / c_<category> (the parameter of pp_lplan_flip and pp_lplan_mark)."""
+        return f"{'g' if self.kind == 'good' else 'c'}_{self.key}"
+
+    @property
     def var(self) -> str:
-        return f"pp_lplan_{'g' if self.kind == 'good' else 'c'}_{self.key}"
+        """Location variable: present = marked."""
+        return f"pp_lplan_{self.suffix}"
+
+    @property
+    def state(self) -> str:
+        """Location variable: the mark's state after the last monthly pass (+ 100; location_profiles.STATES)."""
+        return f"pp_lplan_st_{self.suffix}"
+
+    @property
+    def est(self) -> str:
+        """Location variable: the shortest payback the mark found (years + 100; 1099 = no profit)."""
+        return f"pp_lplan_est_{self.suffix}"
 
     @property
     def done(self) -> str:
@@ -147,15 +174,19 @@ def render_effects(items: list[Item]) -> str:
         "pp_lplan_toggle_switch = {\n\tswitch = {\n\t\ttrigger = scope:pp_key\n",
     ]
     for item in items:
-        parts.append(f"\t\tflag:{item.key} = {{ pp_lplan_flip = {{ var = {item.var} }} }}\n")
-    parts.append("\t}\n}\n\n# Location scope: the plan emptied.\npp_lplan_clear_all = {\n")
+        parts.append(f"\t\tflag:{item.key} = {{ pp_lplan_flip = {{ v = {item.suffix} }} }}\n")
+    parts.append("\t}\n}\n\n# Location scope: the plan emptied (every mark, its state and the payback it found).\npp_lplan_clear_all = {\n")
     for item in items:
-        parts.append(f"\tremove_variable = {item.var}\n")
+        parts.append(f"\tremove_variable = {item.var}\n\tremove_variable = {item.state}\n\tremove_variable = {item.est}\n")
     parts.append("\tremove_variable = pp_lplan_n\n}\n")
     parts.append(
-        "\n# Any scope, never run (pp_lplan_select calls it under always = no): declares the flags the window passes, so\n"
-        "# the script check logs no 'used but never set' line for them.\npp_lplan_declare_flags = {\n"
+        "\n# Any scope, never run (pp_lplan_select calls it under always = no): declares the flags the window passes and\n"
+        "# reads the mark states only the GUI reads, so the script check logs no 'used but never set' line for them.\n"
+        "pp_lplan_declare_flags = {\n"
         + "".join(f"\tset_variable = {{ name = pp_lplan_flag value = flag:{item.key} }}\n" for item in items)
+        + "\tif = {\n\t\tlimit = {\n\t\t\tOR = {\n"
+        + "".join(f"\t\t\t\thas_variable = {item.state}\n\t\t\t\thas_variable = {item.est}\n" for item in items)
+        + "\t\t\t}\n\t\t}\n\t\tremove_variable = pp_lplan_flag\n\t}\n"
         + "}\n"
     )
     return "".join(parts)
@@ -212,13 +243,34 @@ def _name(item: Item) -> str:
     return f"[ShowGoodsName('{item.key}')]" if item.kind == "good" else f"${item.key}$"
 
 
+MARK_STATES = 9  # a mark's states are the profile rule states 1..9 (location_profiles.STATES; texts PP_LPROF_ST_<n>)
+
+
+def _state_is(item: Item, n: int) -> str:
+    return f"EqualTo_CFixedPoint(Location.MakeScope.Var('{item.state}').GetValue, '(CFixedPoint){100 + n}')"
+
+
 def render_loc(items: list[Item]) -> str:
     # no map tooltip texts: the map mode needs the raw_material color mode for its icons, which ignores a tooltip_key
     lines = ["﻿l_english:", "  # " + HEADER.strip().lstrip("# ")]
+    # Per item: the tile tooltip of the picker and of the location window's row (PICK: name, what a click does, the
+    # mark's state while marked), the tooltip of the strip and of the map icon (STATE: name, done or not, the mark's
+    # state) and the state line they share (MST: the profile rule state texts PP_LPROF_ST_<n> for pp_lplan_st_<item>,
+    # beside "pays back too slowly" the payback found, pp_lplan_est_<item>).
     for item in items:
         upper = item.key.upper()
-        lines.append(f'  PP_LPLAN_PICK_{upper}: "#T {_name(item)}#!\\n[SelectLocalization({_planned(item)}, \'PP_LPLAN_PICK_ON\', \'PP_LPLAN_PICK_OFF\')]"')
-        lines.append(f'  PP_LPLAN_STATE_{upper}: "#T {_name(item)}#!\\n[SelectLocalization({_done(item)}, \'PP_LPLAN_STATE_DONE\', \'PP_LPLAN_STATE_OPEN\')]"')
+        state, est = f"Location.MakeScope.Var('{item.state}')", f"Location.MakeScope.Var('{item.est}')"
+        lines.append(f'  PP_LPLAN_PICK_{upper}: "#T {_name(item)}#!\\n[SelectLocalization({_planned(item)}, \'PP_LPLAN_PICK_ON\', \'PP_LPLAN_PICK_OFF\')]'
+                     f'[SelectLocalization({_planned(item)}, \'PP_LPLAN_MST_{upper}\', \'PP_LPROF_UI_EMPTY\')]"')
+        lines.append(f'  PP_LPLAN_STATE_{upper}: "#T {_name(item)}#!\\n[SelectLocalization({_done(item)}, \'PP_LPLAN_STATE_DONE\', \'PP_LPLAN_STATE_OPEN\')]'
+                     f'$PP_LPLAN_MST_{upper}$"')
+        lines.append(f'  PP_LPLAN_MST_{upper}: "\\n[SelectLocalization({state}.IsSet, \'PP_LPLAN_MSTS_{upper}\', \'PP_LPROF_ST_0\')]'
+                     f'[SelectLocalization(And({_state_is(item, 5)}, {est}.IsSet), \'PP_LPLAN_MEST_{upper}\', \'PP_LPROF_UI_EMPTY\')]"')
+        lines.append(f'  PP_LPLAN_MSTS_{upper}: "' + "".join(
+            f"[AddTextIf({_state_is(item, n)}, Localize('PP_LPROF_ST_{n}'))]" for n in range(1, MARK_STATES + 1)) + '"')
+        lines.append(f'  PP_LPLAN_MEST_{upper}: " #weak ([SelectLocalization(GreaterThan_CFixedPoint({est}.GetValue, \'(CFixedPoint)1098\'), '
+                     f'\'PP_LPROF_UI_EST_NO_PROFIT\', \'PP_LPLAN_MESTY_{upper}\')])#!"')
+        lines.append(f'  PP_LPLAN_MESTY_{upper}: "next level pays back in [Subtract_CFixedPoint({est}.GetValue, \'(CFixedPoint)100\')|0] years"')
     return "\n".join(lines) + "\n"
 
 

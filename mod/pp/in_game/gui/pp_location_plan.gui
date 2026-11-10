@@ -1,8 +1,10 @@
 ﻿# Prosper or Perish - Location Plan window (branch location-plan, 2026-11-07, Jan). A scripted widget
 # (gui/scripted_widgets/pp_location_plan.txt), so no vanilla window is overridden; opened by the plan button in the
-# location window's header (location_plan.py patches it in). The player marks what the location should produce or have;
-# only visual. The picker grid and the strip of planned icons are generated (pp_location_plan_generated.gui); the map
-# mode pp_location_plan colors the locations by their plan. Shown only to a player who plays a country.
+# location window's header (location_plan.py patches it in) and by the round button of the location window's row "Also
+# build here". The player marks what the location should produce or have; the Construction Plan builds the marked
+# items there (pp_location_profiles.txt, pp_lplan_mark). The picker grid and the strip of marked icons are generated
+# (pp_location_plan_generated.gui; their tooltips carry each mark's state after the last monthly pass); the map mode
+# pp_location_plan shows the marks as icons. Shown only to a player who plays a country.
 
 types PPLocationPlan
 {

@@ -1126,8 +1126,11 @@ not_goods = ["offset", "logistics", "local_food", "manual_labor", "province_food
 [location_plan]
 # Location plan (branch location-plan, 2026-11-07, Jan): the player marks what a location should produce or have (goods
 # icons, building categories); the Location Plan map mode draws them as icons over the locations (green done, red still
-# to do; location_plan.py copies vanilla's map_markers.gui and changes only the raw goods marker). Only visual,
-# player-only; no rule builds anything. location_plan.py writes the generated parts at finalize.
+# to do; location_plan.py copies vanilla's map_markers.gui and changes only the raw goods marker). Player-only. The
+# marks are the location's build picks (Jan 2026-11-10): the Construction Plan builds a marked item there, after the
+# location's profile rules and like a profile rule with that target, within the player's Businesses line; the location
+# window shows them as the row "Also build here". location_plan.py writes the generated parts at finalize, the pass and
+# the row come from location_profiles.py / location_profiles_gui.py.
 # Building categories the player can mark (a category counts as done once a building of it stands in the location).
 categories = ["trade_category", "government_category", "military_category", "defense_category", "religious_category", "cultural_category", "naval_category", "infrastructure_category"]
 # Goods never offered (dummy goods nobody plans for).
@@ -1151,7 +1154,8 @@ colors = [[0.80, 0.25, 0.20], [0.90, 0.55, 0.15], [0.85, 0.80, 0.25], [0.30, 0.6
 # examples" (shown while the country has no profile) makes each in the next free slot; the test world's setup uses
 # them too. icon: a good, a building category or a symbol; color: 1..8 (the colors above); rules in order: target (a
 # good, "logistics" = market access, or a building category) and payback (years, one of payback_steps; left out = any
-# payback); off: the global rule groups kept out of its locations (food, logistics, improvements, businesses).
+# payback); off: the global rule groups kept out of its locations (food, logistics, improvements, businesses, country =
+# Towns and Buildings).
 [[location_profiles.examples]]   # breadbasket: its staple foods decide the food made here
 icon = "pp_sym_farming"
 color = 4
@@ -1180,7 +1184,7 @@ rules = [{ target = "fish", payback = 30 }, { target = "naval_category", payback
 [[location_profiles.examples]]   # hands off: no rules, and the global rules stay out: the plan builds nothing here
 icon = "pp_sym_stronghold"
 color = 7
-off = ["food", "logistics", "improvements", "businesses"]
+off = ["food", "logistics", "improvements", "businesses", "country"]
 
 [location_profiles.symbols]
 # Generic pictures a profile can carry as its icon (Jan 2026-11-07: "a city, rural, food, ... so you are not forced to
@@ -1223,14 +1227,15 @@ not_goods = ["offset", "logistics", "local_food", "manual_labor", "province_food
 [construction_plan]
 # Player-only construction rules (branch player-construction-manager, 2026-11-06, Jan; construction_plan.py writes the
 # generated parts at finalize, docs/player_construction_manager.md). The AI never runs them: the monthly pass fires only
-# for countries with is_ai = no that switched the plan on. The window has two tabs (Jan 2026-11-09): Global settings
-# (these defaults, the player changes them there) and Location profiles ([location_profiles]). Each month the plan may
+# for countries with is_ai = no that switched the plan on. The window has three tabs: Global settings (these defaults,
+# the player changes them there), Location profiles ([location_profiles], Jan 2026-11-09) and Towns and Buildings
+# (the settings of that rule group, construction_plan_country.py, 2026-11-10). Each month the plan may
 # spend the gold above the reserve; every rule group gets its weight over the sum of the weights, and a part one group
 # leaves passes on to the next.
 reserve_gold = 1000           # gold kept back: no construction starts that would take the treasury below it (Jan 2026-11-09)
 access_threshold = 97         # logistics: build where market access is below this, in % (Jan 2026-11-08)
 improve_fill_pct = 90         # improvements: build where population over capacity reaches this, in % (Jan 2026-11-08; steps of 10)
-weights = { profiles = 5, food = 5, logistics = 5, improve = 5, business = 5 }   # each rule group, 0 (off) .. 10: its part of the gold above the reserve = its weight / the sum (Jan 2026-11-09)
+weights = { profiles = 5, food = 5, logistics = 5, improve = 5, business = 5, country = 5 }   # each rule group, 0 (off) .. 10: its part of the gold above the reserve = its weight / the sum (Jan 2026-11-09); profiles = the window's "Locations", country = "Towns and Buildings" (2026-11-10)
 business_years = 10           # businesses: a level of any building that makes goods while it pays back within this many years (Jan 2026-11-09)
 farm_sites_per_province = 4   # food: locations tried for a staple food maker, best payback first
 hungry_months = 6             # food: a farm (or a Tavern where none can be built) where a normal year leaves less than this a year from now
@@ -1263,6 +1268,42 @@ hidden_goods = ["offset", "logistics", "local_food", "manual_labor", "province_f
 # engine's own formula, calibrated in game: base x (1 + increase_per_level_cost x levels) / max(0.5, 1 + build
 # efficiency) x the construction goods' clamped price factor) over its monthly profit x 12. A business's profit: each
 # slot's best recipe at the market's prices and the location's output, this year's Variable Harvest taken out.
+
+[construction_plan_country]
+# The Construction Plan's "Towns and Buildings" tab (Jan 2026-11-10; construction_plan_country.py writes its script, tab
+# and texts at finalize, docs/construction_plan_country.md): public buildings, town and city upgrades and urban rights
+# for the whole country. Everything is off until the player ticks it. The numbers below are the lines' starting values
+# and steps (placeholders, Jan tunes them); the player moves the lines in the tab.
+#
+# Public buildings the player may tick, in the tab's order: administration, learning, health, trade and harbour,
+# infrastructure, then the capital's buildings. One level each, in every location that can have it. A building with
+# later tiers (obsolete = <older tier>: dock -> dry dock -> ...) is one tile under its first tier's key; the plan
+# builds the highest tier the country can build. Not here: multi-level producers (market_village) and what the other
+# rule groups build (granary, tavern, grange, victualling_yard, kitchens, logistics, improvements).
+public_buildings = [
+    "early_council_hall", "minting_office",
+    "library", "university",
+    "hospital",
+    "counting_house", "wharf", "protected_harbor", "dock",
+    "bridge_infrastructure", "pound_lock_canal_infrastructure", "fortress_granary", "sawmill", "windmill",
+    "local_smelters", "terraces", "lazaretto", "funduq", "caravan_stop", "maghreb_palm_irrigation",
+    "confucian_academy", "confucian_school", "zhixian", "tambo",
+    "royal_court", "house_of_parliament", "republican_assembly", "chancery", "supreme_court", "tax_assessor",
+    "war_college", "admiralty", "order_headquarters", "royal_garden", "chieftain_hall", "khan_ordu", "patrician_hall",
+    "sacred_council", "gymnasium_building",
+]
+control_pct = 50             # public buildings only where a location's maximum control reaches this, in %
+control_step = 10            # one click of - / + (the line runs 0..100)
+town_population = 30         # rural settlements become towns from this many thousand people
+town_population_step = 5
+town_population_min = 5
+town_population_max = 100
+keep_influence = 50          # urban rights only while this much political influence is left after the grant
+keep_influence_step = 5
+keep_influence_max = 100
+# Urban rights the rule tries first, in this order; then the specialization rights, then the rest in the game's order.
+rights_order = []
+tiles_per_row = 11           # like the Location Plan picker
 
 [rural_town_goods]
 # The AI does not build a rural-capable producer (rural_settlement = yes) at a rural location whose province has a town of

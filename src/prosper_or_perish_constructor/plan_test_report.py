@@ -10,7 +10,8 @@ copy), <out>/summary.md (plain tables for a terminal) and the CSVs behind every 
 The plan's test log (written by `debug_log` in test mode; the text may still change, so ALL of its parsing sits in
 `parse_debug_log` and the regex constants below). Every line of interest contains `PPCPLAN;`:
 - a construction: `PPCPLAN;B;<group>;<location key>;<building name>`, group a word of GROUPS or its why code
-  (101 food, 102 logistics, 103 business, 105 profile, 106 improve);
+  (101 food, 102 logistics, 103 business, 105 profile, 106 improve, 107 country = Towns and Buildings; its town and
+  city upgrades are no buildings and write no line unless construction_plan_country.py logs them);
 - a monthly pass: `PPCPLAN;P;<constructions started>;<gold spent>` (numbers may carry decimals);
 - the game date: the engine's `debug_log_date` writes its own line before each pass; the last date seen (DATE_RE or
   DATE_WORDS_RE) on a line without the tag, or before the tag on a tagged line, is the current game date.
@@ -56,8 +57,9 @@ MONTHS = ("january", "february", "march", "april", "may", "june", "july", "augus
 # 1 April 1337
 DATE_WORDS_RE = re.compile(r"\b(\d{1,2})\s+(" + "|".join(MONTHS) + r")\s*,?\s+(\d{3,4})\b", re.IGNORECASE)
 GAME_YEARS = (1000, 1999)  # a date outside these years is not the game date (keeps out real-world dates)
-GROUPS = ("food", "logistics", "business", "profile", "improve")
-WHY_CODES = {"101": "food", "102": "logistics", "103": "business", "105": "profile", "106": "improve"}  # the plan's why codes
+GROUPS = ("food", "logistics", "business", "profile", "improve", "country")
+# the plan's why codes (construction_plan.GROUP_WHY; "profile" is its "profiles" group)
+WHY_CODES = {"101": "food", "102": "logistics", "103": "business", "105": "profile", "106": "improve", "107": "country"}
 # error.log lines that belong to the plan
 ERROR_PATTERNS = ("pp_cplan", "pp_lprof", "pp_construction_plan", "pp_location_profiles", "construction_plan")
 

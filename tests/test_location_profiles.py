@@ -187,6 +187,9 @@ def test_global_rules_read_the_profile() -> None:
     a construction ends the location's month."""
     config = lpf.load_config(PROJECT)
     plan = _code(PLAN_TRIGGERS) + _code(PLAN_EFFECTS) + _code(MOD / cp.EFFECTS)
+    # the Towns and Buildings group has its own files (construction_plan_country.py)
+    for folder in ("scripted_triggers", "scripted_effects"):
+        plan += "".join(_code(path) for path in sorted((COMMON / folder).glob("pp_construction_plan_country*.txt")))
     fields = lpf.profile_fields(config)
     for name, _, _ in lpf.GLOBAL_GROUPS:
         assert name in fields, name  # the location copy carries the switch
@@ -209,13 +212,18 @@ def test_global_rules_read_the_profile() -> None:
     assert "pp_cplan_group_start = { why = 105 add = pp_cplan_share_profiles }" in group
     assert "pp_cplan_profiles_w > 0" in group  # the profiles' weight bar at 0 switches them off
     assert "save_temporary_scope_value_as = { name = pp_cplan_free_peasants value = pp_cplan_free_peasants_here }" in group
-    assert "owner ?= scope:pp_cplan_country" in group and "pp_lprof_location_rules = yes" in group
-    # the first rule that starts a construction ends the location for the month
-    rule = _block(hand, "pp_lprof_rule")
-    assert "has_variable = pp_cplan_hit" in rule and "value = 109" in rule
-    rules = _block(_code(MOD / lpf.EFFECTS), "pp_lprof_location_rules")
-    assert rules.count("remove_variable = pp_cplan_hit") == 2
-    # a profile is all a location carries: the profile side knows no other per-location plan setting
+    assert "pp_lprof_location_rules = yes" in group
+    assert "owner ?= scope:pp_cplan_country" in _block(hand, "pp_lprof_gather")  # only the country's own locations
+    # the first rule or mark that starts a construction ends the location for the month: the mark is cleared once a
+    # location (by the run, not between the profile's rules and the location's marks), every later one waits (109)
+    walk = group[group.index("ordered_in_list"):]
+    assert walk.index("remove_variable = pp_cplan_hit") < walk.index("pp_lprof_location_rules = yes")
+    opened = _block(hand, "pp_lprof_open")
+    assert "has_variable = pp_cplan_hit" in opened and "value = 109" in opened
+    assert "pp_lprof_open = yes" in _block(hand, "pp_lprof_rule")
+    assert "pp_cplan_hit" not in _block(_code(MOD / lpf.EFFECTS), "pp_lprof_location_rules")
+    assert "pp_cplan_hit" not in _block(_code(MOD / lpf.EFFECTS), "pp_lplan_location_marks")
+    # a profile and the Location Plan's marks are all a location carries: no other per-location plan setting
     for path in OWN_FILES:
         text = _code(path)
         assert "pp_cplan_mode" not in text and "pp_cplan_own" not in text, path.name
@@ -459,11 +467,11 @@ def test_states_and_texts() -> None:
     finish = _block(_code(MOD / lpf.HAND_EFFECTS), "pp_lprof_finish")
     for rank, state in lpf.FAIL_STATE.items():
         if rank == 101:
-            assert re.search(rf"else = \{{\s*set_variable = \{{ name = pp_lprof_r\$r\$_st value = {100 + state} \}}", finish), rank
+            assert re.search(rf"else = \{{\s*set_variable = \{{ name = \$st\$ value = {100 + state} \}}", finish), rank
         else:
-            assert re.search(rf"var:pp_lprof_fail > {rank - 0.5:g} \}}\n\t\tset_variable = \{{ name = pp_lprof_r\$r\$_st value = {100 + state} \}}", finish), rank
-    states = {int(n) - 100 for n in re.findall(r"name = pp_lprof_(?:st|r\$r\$_st) value = (1\d\d)", _code(MOD / lpf.HAND_EFFECTS) + _code(MOD / lpf.EFFECTS))}
-    assert states <= set(lpf.STATES)
+            assert re.search(rf"var:pp_lprof_fail > {rank - 0.5:g} \}}\n\t\tset_variable = \{{ name = \$st\$ value = {100 + state} \}}", finish), rank
+    states = {int(n) - 100 for n in re.findall(r"name = (?:pp_lprof_st|\$st\$) value = (1\d\d)", _code(MOD / lpf.HAND_EFFECTS) + _code(MOD / lpf.EFFECTS))}
+    assert states == set(lpf.STATES), "every state is written somewhere, and no other"
 
 
 def test_no_not_with_several_conditions() -> None:
@@ -526,8 +534,9 @@ def test_rules_keep_the_payback_they_found() -> None:
     expand = _block(code, "pp_lprof_expand")
     assert expand.index("pp_lprof_note_payback = yes") < expand.index("pp_lprof_payback100 > scope:pp_lprof_pb")
     finish = _block(code, "pp_lprof_finish")
-    assert "set_variable = { name = pp_lprof_r$r$_est value = var:pp_lprof_best }" in finish
-    assert "remove_variable = pp_lprof_best" in _block(code, "pp_lprof_rule")
+    assert "set_variable = { name = $est$ value = var:pp_lprof_best }" in finish
+    assert "pp_lprof_finish = { st = pp_lprof_r$r$_st est = pp_lprof_r$r$_est }" in _block(code, "pp_lprof_rule")
+    assert "remove_variable = pp_lprof_best" in _block(code, "pp_lprof_open")  # a rule starts without an old payback
     loc = (MOD / "main_menu/localization/english/pp_location_profiles_gui_l_english.yml").read_text(encoding="utf-8-sig")
     for r in range(1, lpf.load_config(PROJECT).rules + 1):
         assert f"'PP_LPROF_UI_EST_{r}'" in loc and f"pp_lprof_r{r}_est" in loc
@@ -556,3 +565,206 @@ def test_example_profiles_use_the_buttons_effects() -> None:
     editor = _code(MOD / "in_game/gui/pp_location_profiles.gui")
     editor = editor[editor.index("type pp_lprof_editor_tab = vbox"):editor.index('name = "pp_location_profiles_palette"')]
     assert "GetScriptedGui(\x27pp_lprof_examples\x27)" in editor
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# the location's marks (Jan 2026-11-10: "in this location, also expand wheat"): the Location Plan's items as build picks
+
+PLAN_HAND_EFFECTS = COMMON / "scripted_effects/pp_location_plan.txt"
+PLAN_GENERATED_EFFECTS = MOD / lp.EFFECTS
+PLAN_SCRIPTED_GUIS = COMMON / "scripted_guis/pp_location_plan.txt"
+
+
+def test_marks_run_the_targets_of_the_profile_rules() -> None:
+    """A marked item builds exactly what a profile rule with that target builds: its mark calls the same generated
+    pp_lprof_t_<target> the rule dispatch calls, through the same start (pp_lprof_open) and end (pp_lprof_finish); no
+    second copy of the target machinery. The marks run in the picker's order, after the profile's rules."""
+    result, _ = _build()
+    effects = _code(MOD / lpf.EFFECTS)
+    hand = _code(MOD / lpf.HAND_EFFECTS)
+    marks = _block(effects, "pp_lplan_location_marks")
+    goods_dispatch = _block(effects, "pp_lprof_goods_target")
+    category_dispatch = _block(effects, "pp_lprof_category_target")
+    plan_items = lp.plan_items(ROOT, lp.load_config(PROJECT))
+    assert [item.key for item in lpf.mark_items(result.items)] == [item.key for item in plan_items], "the picker's items"
+    lines = re.findall(r"^\t(pp_lplan_mark(?:_none)? = \{ [^\n]* \})$", marks, re.MULTILINE)
+    expected = []
+    for item in plan_items:
+        if result.targets.get(item.key):
+            expected.append(f"pp_lplan_mark = {{ v = {item.suffix} do = pp_lprof_t_{item.key} }}")
+            dispatch, scope = (goods_dispatch, "goods") if item.kind == "good" else (category_dispatch, "flag")
+            assert f"{scope}:{item.key} = {{ pp_lprof_t_{item.key} = yes }}" in dispatch, item.key  # the rule's target
+            assert re.search(rf"^pp_lprof_t_{item.key} = \{{", effects, re.MULTILINE), item.key
+        else:
+            expected.append(f"pp_lplan_mark_none = {{ v = {item.suffix} }}")
+    assert lines == expected, "one line per item, in the picker's order"
+    assert sum(1 for line in expected if "_none" in line) <= 2, "nearly every item has buildings"
+    # the mark: only when set; start, the target, end; its own state variables
+    mark = _block(hand, "pp_lplan_mark")
+    assert "limit = { has_variable = pp_lplan_$v$ }" in mark
+    assert mark.index("pp_lprof_open = yes") < mark.index("$do$ = yes") < mark.index("pp_lprof_finish = {")
+    assert "limit = { NOT = { has_variable = pp_lprof_st } }" in mark  # nothing is tried while it waits
+    assert "pp_lprof_finish = { st = pp_lplan_st_$v$ est = pp_lplan_est_$v$ }" in mark
+    none = _block(hand, "pp_lplan_mark_none")
+    assert "pp_lprof_finish = { st = pp_lplan_st_$v$ est = pp_lplan_est_$v$ }" in none and "$do$" not in none
+    # no second copy of what a target does: the candidates' effects are called by the generated targets only
+    for name in ("pp_lprof_expand", "pp_lprof_start", "pp_lprof_try", "pp_lprof_build", "pp_cplan_construct_scoped"):
+        assert f"{name} = " not in mark + none + marks, name
+    # the profile's rules first, then the marks, one construction a month between them
+    run = _block(hand, "pp_lprof_run")
+    assert run.index("pp_lprof_location_rules = yes") < run.index("pp_lplan_location_marks = yes")
+    assert "limit = { has_variable = pp_lplan_n }" in run and "limit = { has_variable = pp_lprof }" in run
+    # the item variables of the two modules agree
+    wheat = next(item for item in plan_items if item.key == "wheat")
+    assert (wheat.var, wheat.state, wheat.est) == ("pp_lplan_g_wheat", "pp_lplan_st_g_wheat", "pp_lplan_est_g_wheat")
+    trade = next(item for item in plan_items if item.key == "trade_category")
+    assert trade.var == "pp_lplan_c_trade_category" and trade.state == "pp_lplan_st_c_trade_category"
+
+
+def test_marks_use_the_business_line() -> None:
+    """A mark's payback limit is the player's global Businesses line ("payback within N years"), read in the pass."""
+    marks = _block(_code(MOD / lpf.EFFECTS), "pp_lplan_location_marks")
+    assert lpf.MARK_LIMIT == "pp_cplan_business_years"
+    saved = re.search(r"scope:pp_cplan_country = \{\s*save_temporary_scope_value_as = \{ name = pp_lprof_pb value = \{ value = (\w+) add = 100 \} \}\s*\}", marks)
+    assert saved and saved.group(1) == lpf.MARK_LIMIT, "the limit is read on the country, + 100 like a rule's"
+    assert marks.index("name = pp_lprof_pb") < marks.index("pp_lplan_mark = {")
+    line = _block(_code(MOD / cp.VALUES), lpf.MARK_LIMIT)
+    assert "has_variable = pp_cplan_biz" in line and "value = var:pp_cplan_biz" in line, "the Businesses line's setting"
+    # the targets compare the payback with that limit, and a mark has no limit of its own
+    assert "pp_lprof_payback100 > scope:pp_lprof_pb" in _block(_code(MOD / lpf.HAND_EFFECTS), "pp_lprof_expand")
+    for path in (MOD / lpf.EFFECTS, MOD / lpf.HAND_EFFECTS, PLAN_HAND_EFFECTS, PLAN_GENERATED_EFFECTS):
+        assert not re.search(r"pp_lplan_\w*_pb\b", _code(path)), path.name
+    # the ledger: a mark's construction is the profile group's (why 105), step 0
+    assert f"save_temporary_scope_value_as = {{ name = pp_cplan_rs value = {lpf.WHY_MARK_STEP} }}" in marks
+    assert "pp_cplan_construct_scoped = { why = 105 }" in _block(_code(MOD / lpf.HAND_EFFECTS), "pp_lprof_build")
+
+
+def test_marked_locations_get_their_turn() -> None:
+    """The pass finds the locations with marks: the country's list pp_lplan_locs (kept by every toggle) joins the
+    profile locations for the pass, each location once; a location with marks and no profile is processed too. The
+    list is cleaned like the profile list, and an own location keeps no marks the country did not set."""
+    hand = _code(MOD / lpf.HAND_EFFECTS)
+    run = _block(hand, "pp_lprof_run")
+    gather = _block(hand, "pp_lprof_gather")
+    assert run.index("pp_lplan_cleanup = yes") < run.index("pp_lprof_gather = yes") < run.index("ordered_in_list")
+    assert "variable = pp_lprof_turns" in run and "clear_variable_list = pp_lprof_turns" in run
+    assert gather.index("variable = pp_lprof_locs") < gather.index("variable = pp_lplan_locs")
+    second = gather[gather.index("variable = pp_lplan_locs"):]
+    for part in ("owner ?= scope:pp_cplan_country", "has_variable = pp_lplan_n", "NOT = { has_variable = pp_lprof }"):
+        assert part in second, part  # a location with a profile and marks is taken once, from the profile list
+    assert "add_to_variable_list = { name = pp_lprof_turns target = scope:pp_lprof_this }" in _block(hand, "pp_lprof_take_turn")
+    # the group runs (and takes its part of the gold) while a location has a profile or a mark
+    has = _block(_code(MOD / lpf.TRIGGERS), "pp_lprof_has_locations")
+    assert "variable = pp_lprof_locs" in has and "variable = pp_lplan_locs" in has and "has_variable = pp_lplan_n" in has
+    # the list follows the marks: every toggle and Clear keep it
+    plan = _code(PLAN_HAND_EFFECTS)
+    assert "pp_lplan_keep_list = yes" in _block(plan, "pp_lplan_flip")
+    assert "pp_lplan_keep_list = yes" in _block(plan, "pp_lplan_clear_do")
+    keep = _block(plan, "pp_lplan_keep_list")
+    assert "add_to_variable_list = { name = pp_lplan_locs target = scope:pp_lplan_this }" in keep
+    assert "remove_list_variable = { name = pp_lplan_locs target = scope:pp_lplan_this }" in keep
+    assert "pp_lplan_clear_do = yes" in _code(PLAN_SCRIPTED_GUIS)
+    # cleanup: entries without marks leave the list; an own location that is not on it loses its marks (and states)
+    cleanup = _block(hand, "pp_lplan_cleanup")
+    assert "limit = { NOT = { has_variable = pp_lplan_n } }" in cleanup
+    assert "remove_list_variable = { name = pp_lplan_locs target = scope:pp_lprof_this }" in cleanup
+    assert "every_owned_location" in cleanup and "pp_lplan_clear_all = yes" in cleanup
+    clear = _block(_code(PLAN_GENERATED_EFFECTS), "pp_lplan_clear_all")
+    flip = _block(plan, "pp_lplan_flip")
+    for item in lp.plan_items(ROOT, lp.load_config(PROJECT)):
+        for name in (item.var, item.state, item.est):
+            assert f"remove_variable = {name}\n" in clear, name
+    for name in ("pp_lplan_$v$", "pp_lplan_st_$v$", "pp_lplan_est_$v$"):
+        assert f"remove_variable = {name}\n" in flip, name  # a mark removed takes its state along
+    # every state variable that is removed is also set (the engine logs a variable that is only ever removed): each
+    # item's mark line expands pp_lprof_finish with its own names
+    finish = _block(hand, "pp_lprof_finish")
+    assert "set_variable = { name = $st$ value" in finish and "set_variable = { name = $est$ value" in finish
+
+
+def test_one_check_for_a_free_construction_site() -> None:
+    """A rule or a mark waits while a construction is under way in the location; the check is the plan's own trigger,
+    never a copy of it."""
+    opened = _block(_code(MOD / lpf.HAND_EFFECTS), "pp_lprof_open")
+    assert "limit = { NOT = { pp_cplan_site_free = yes } }" in opened and "value = 103" in opened
+    assert re.search(r"^pp_cplan_site_free = \{", _read(PLAN_TRIGGERS), re.MULTILINE)
+    for path in OWN_FILES + (PLAN_HAND_EFFECTS, PLAN_GENERATED_EFFECTS):
+        assert "num_civil_constructions" not in _code(path), path.name
+    # the workers check is the plan's too
+    for name in ("pp_lprof_expand", "pp_lprof_start", "pp_lprof_try"):
+        assert "pp_cplan_staff = { type = $pt$ size = $sz$ }" in _block(_code(MOD / lpf.HAND_EFFECTS), name), name
+
+
+def test_towns_and_buildings_switch() -> None:
+    """The fifth "Global rules here" switch: the Towns and Buildings group (pp_lprof_xc on the location, read by that
+    group's own triggers); the example "hands off" switches it off too."""
+    config = lpf.load_config(PROJECT)
+    assert ("xc", "global_country", "country") in lpf.GLOBAL_GROUPS and len(lpf.GLOBAL_GROUPS) == 5
+    effects = _code(MOD / lpf.EFFECTS)
+    staged = _block(effects, "pp_lprof_global_staged")
+    assert "flag:global_country = {" in staged and "set_variable = { name = pp_lprof_s_xc value = 101 }" in staged
+    assert "pp_lprof_pull_n = { from = $from$_xc to = $to$_xc }" in _block(effects, "pp_lprof_copy_profile")
+    assert "remove_variable = $p$_xc" in _block(effects, "pp_lprof_clear_copies")
+    assert "xc" in lpf.profile_fields(config) and "global_country" in lpf.declared_flags(lpf.profile_items(ROOT, PROJECT), config)
+    assert "pp_lprof_xc" in lpf.gui_only_variables(config)
+    hands_off = [example for example in config.examples if not example.rules]
+    assert hands_off and "country" in hands_off[0].off
+
+
+def test_quick_candidates_follow_the_targets() -> None:
+    """The location window's row offers, unmarked, the goods a standing building makes: per good a value that is 1
+    while one of the buildings its mark would expand stands here and the good is not marked."""
+    result, _ = _build()
+    values = _code(MOD / lpf.VALUES)
+    quick = lpf.quick_goods(result.items, result.targets)
+    assert {"wheat", "lumber", "tools"} <= {item.key for item in quick}
+    assert all(item.kind == "good" and item.key != lpf.LOGISTICS for item in quick)
+    for item in quick:
+        body = _block(values, f"pp_lplan_quick_{item.key}")
+        assert f"NOT = {{ has_variable = {item.var} }}" in body, item.key
+        assert re.findall(r"has_building = building_type:(\w+)", body) == [c.name for c in result.targets[item.key]], item.key
+    assert len(re.findall(r"^pp_lplan_quick_(?!room_)\w+ = \{", values, re.MULTILINE)) == len(quick)
+
+
+def _quick_row(values: str, chunks: list[list[lp.Item]], marked: int, standing: set[str]) -> int:
+    """Tiles the row shows for a location with ``marked`` marks whose buildings make the unmarked goods ``standing``,
+    by the generated room values."""
+    shown, room = marked, None
+    for number, chunk in enumerate(chunks, 1):
+        body = _block(values, f"pp_lplan_quick_room_{number}")
+        if number == 1:
+            match = re.fullmatch(r"\s*value = (\d+)\s+subtract = pp_lplan_planned_n\s*", body)
+            assert match, body
+            room = int(match.group(1)) - marked
+        else:
+            assert f"value = pp_lplan_quick_room_{number - 1}\n" in body
+            before = re.findall(r"subtract = pp_lplan_quick_(\w+)", body)
+            assert before == [item.key for item in chunks[number - 2]], number
+            room -= sum(1 for key in before if key in standing)
+        if room > 0:
+            shown += sum(1 for item in chunk if item.key in standing)
+    return shown
+
+
+def test_quick_candidates_never_overflow_the_row() -> None:
+    """The row holds QUICK_ROW tiles: the marks, then the candidates chunk by chunk while a whole chunk still fits."""
+    import random
+
+    result, _ = _build()
+    values = _code(MOD / lpf.VALUES)
+    chunks = lpf.quick_chunks(result.items, result.targets)
+    assert all(len(chunk) <= lpf.QUICK_CHUNK for chunk in chunks) and lpf.QUICK_CHUNK < lpf.QUICK_ROW
+    keys = [item.key for chunk in chunks for item in chunk]
+    assert _quick_row(values, chunks, 0, set()) == 0
+    assert _quick_row(values, chunks, 0, set(keys[-3:])) == 3, "a few candidates show wherever they sit in the list"
+    assert _quick_row(values, chunks, 2, {keys[0], keys[40]}) == 4
+    rng = random.Random(7)
+    for _ in range(300):
+        marked = rng.randint(0, lpf.QUICK_ROW)
+        standing = set(rng.sample(keys, rng.randint(0, len(keys))))
+        shown = _quick_row(values, chunks, marked, standing)
+        assert shown <= max(marked, lpf.QUICK_ROW), (marked, len(standing))
+        if marked + len(standing) <= lpf.QUICK_ROW - lpf.QUICK_CHUNK + 1:
+            assert shown == marked + len(standing), "nothing is hidden while the row has room"
+        elif marked <= lpf.QUICK_ROW - lpf.QUICK_CHUNK:
+            assert shown > lpf.QUICK_ROW - 2 * lpf.QUICK_CHUNK, "a cut row is still well filled"

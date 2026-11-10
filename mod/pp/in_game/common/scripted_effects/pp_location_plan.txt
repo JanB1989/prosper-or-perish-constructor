@@ -1,21 +1,30 @@
 ﻿# Prosper or Perish - Location plan (branch location-plan, 2026-11-07, Jan): the player marks what a location should
-# produce or have; only visual (gui/pp_location_plan.gui, map mode pp_location_plan). The toggle switch, clearing and
-# the flag declarations are generated into pp_location_plan_generated.txt (location_plan.py).
-# Location variables: pp_lplan_g_<good> / pp_lplan_c_<category> (present = planned), pp_lplan_n (items planned + 100;
-# a variable at 0 counts as unset). Country: pp_lplan_sel (the location the window shows).
+# produce or have (gui/pp_location_plan.gui, the location window's row "Also build here", map mode pp_location_plan).
+# The marks are the location's build picks (Jan 2026-11-10): the Construction Plan builds a marked item there, in the
+# rule group of the location profiles, after the location's profile rules, as a profile rule with that target would,
+# within the player's Businesses line (the pass: pp_location_profiles.txt, pp_lplan_mark). The toggle switch, clearing
+# and the flag declarations are generated into pp_location_plan_generated.txt (location_plan.py).
+# Location variables: pp_lplan_g_<good> / pp_lplan_c_<category> (present = marked), pp_lplan_n (items marked + 100;
+# a variable at 0 counts as unset), pp_lplan_st_g_<good> / pp_lplan_st_c_<category> (the mark's state after the last
+# pass + 100, the profile rule states) and pp_lplan_est_... (the shortest payback found, years + 100).
+# Country: pp_lplan_sel (the location the window shows), the list pp_lplan_locs (the locations the country marked: the
+# monthly cleanup takes marks from own locations that are not on it, an earlier owner's; pp_lplan_cleanup).
 
-# Location scope: plans or unplans the item $var$ and keeps the count.
+# Location scope: marks or unmarks the item $v$ (g_<good> / c_<category>) and keeps the count and the owner's list. A
+# mark removed takes its state along.
 pp_lplan_flip = {
 	if = {
-		limit = { has_variable = $var$ }
-		remove_variable = $var$
+		limit = { has_variable = pp_lplan_$v$ }
+		remove_variable = pp_lplan_$v$
+		remove_variable = pp_lplan_st_$v$
+		remove_variable = pp_lplan_est_$v$
 		if = {
 			limit = { has_variable = pp_lplan_n }
 			change_variable = { name = pp_lplan_n subtract = 1 }
 		}
 	}
 	else = {
-		set_variable = { name = $var$ value = yes }
+		set_variable = { name = pp_lplan_$v$ value = yes }
 		if = {
 			limit = { NOT = { has_variable = pp_lplan_n } }
 			set_variable = { name = pp_lplan_n value = 100 }
@@ -29,6 +38,32 @@ pp_lplan_flip = {
 		}
 		remove_variable = pp_lplan_n
 	}
+	pp_lplan_keep_list = yes
+	refresh_map_colors = yes
+}
+
+# Location scope: the owner's list pp_lplan_locs holds the location while it has a mark.
+pp_lplan_keep_list = {
+	save_temporary_scope_as = pp_lplan_this
+	owner ?= {
+		if = {
+			limit = { scope:pp_lplan_this = { has_variable = pp_lplan_n } }
+			if = {
+				limit = { NOT = { is_target_in_variable_list = { name = pp_lplan_locs target = scope:pp_lplan_this } } }
+				add_to_variable_list = { name = pp_lplan_locs target = scope:pp_lplan_this }
+			}
+		}
+		else_if = {
+			limit = { is_target_in_variable_list = { name = pp_lplan_locs target = scope:pp_lplan_this } }
+			remove_list_variable = { name = pp_lplan_locs target = scope:pp_lplan_this }
+		}
+	}
+}
+
+# Location scope (root, from the scripted GUI): every mark removed.
+pp_lplan_clear_do = {
+	pp_lplan_clear_all = yes
+	pp_lplan_keep_list = yes
 	refresh_map_colors = yes
 }
 

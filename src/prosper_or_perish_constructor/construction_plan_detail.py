@@ -37,12 +37,19 @@ GOLD_ICON = "@gold!"
 
 # the pane titles and the window's rule tooltips (pp_construction_plan_l_english.yml) by group
 TITLES = {
-    "profiles": "Location profiles: last month",
+    "profiles": "Locations: last month",
     "food": "Food: last month",
     "logistics": "Logistics: last month",
     "improve": "Improvements: last month",
     "business": "Businesses: last month",
+    "country": "Towns and Buildings: last month",
 }
+# a town or city upgrade in a list of constructions (the window's type, pp_construction_plan.gui): the Towns and
+# Buildings group's upgrades are no buildings, so their list of building types is empty and this names them
+RANK_UPGRADE = "pp_cplan_rank_upgrade"
+# the Towns and Buildings group's kinds (pp_cplan_log_step, pp_construction_plan_country.txt): 1 a public building,
+# 2 a town or city upgrade, 3 the upgrade of an older building
+COUNTRY_KINDS = (1, 2, 3)
 # the location profile rules' states the pass counts (pp_cplan_d_profiles_st<n>), with their texts
 # (pp_location_profiles_l_english.yml PP_LPROF_ST_<n>) as tooltips
 PROFILE_STATES = {
@@ -101,8 +108,21 @@ def _equals(value: str, number: int) -> str:
     return f"EqualTo_CFixedPoint({value}, '(CFixedPoint){number}')"
 
 
+def _both(first: str, second: str) -> str:
+    return f"And({first}, {second})"
+
+
+def _either(first: str, second: str) -> str:
+    return f"Or({first}, {second})"
+
+
 def _show(name: str, digits: int = 0) -> str:
     return f"[{_country(name)}|{digits}]"
+
+
+def _skipped() -> str:
+    """The business group started without gold last month and did not look for businesses."""
+    return _above(_country(detail_value("business", "skipped")))
 
 
 def _ago() -> str:
@@ -119,8 +139,8 @@ def texts() -> dict[str, str]:
         "PP_CPLAN_D_SHOW": "Show what this rule group checked, spent and built last month",
         "PP_CPLAN_D_HIDE": "Close the details and show last month's list again",
         "PP_CPLAN_D_OFF": "Off last month: its bar is empty, so it checked nothing.",
-        "PP_CPLAN_D_OFF_PROFILES": ("Off last month: its bar is empty or no [location|e] has a profile, so it "
-                                    "checked nothing."),
+        "PP_CPLAN_D_OFF_PROFILES": ("Off last month: its bar is empty, or no [location|e] has a profile or a mark, so "
+                                    "it checked nothing."),
         "PP_CPLAN_D_NO_WAIT": "Nothing waited for gold.",
         "PP_CPLAN_D_BUILT": "Built last month",
         "PP_CPLAN_D_NOTHING": "Nothing was built.",
@@ -143,7 +163,10 @@ def texts() -> dict[str, str]:
         out[f"PP_CPLAN_D_CHART_TT_{key}"] = (
             f"#T The last {cp.HISTORY_MONTHS} months#!\nOne column a month, last month on the right. Grey: the gold "
             "this group wanted; gold: what it spent. Both against its largest month.\n"
-            f"In all it wanted {_show(need)}{GOLD_ICON} and spent {_show(spent)}{GOLD_ICON}.")
+            f"In all it wanted {_show(need)}{GOLD_ICON} and spent {_show(spent)}{GOLD_ICON}."
+            # the business group does not look in a month it starts without gold (pp_cplan_group_business)
+            + ("\nA month it started without gold shows nothing: it did not look for businesses then."
+               if group == "business" else ""))
 
     # the situation: what each rule read in the last pass
     out["PP_CPLAN_D_FOOD_SIT"] = (
@@ -168,8 +191,11 @@ def texts() -> dict[str, str]:
         f"In {_show(d('business', 'sites'))} [locations|e] a business pays back within {line} years; the quickest in "
         f"{_show(d('business', 'best'), 1)} years.")
     out["PP_CPLAN_D_BUSINESS_NONE"] = f"No business pays back within {line} years."
+    out["PP_CPLAN_D_BUSINESS_SKIPPED"] = (
+        "It had no gold to spend, so it did not look for businesses: what they would have cost is not counted.")
+    # the group runs a location's profile rules and its marks (the Location Plan's "Also build here"); both count
     out["PP_CPLAN_D_PROFILES_SIT"] = (
-        f"{_show(d('profiles', 'locs'))} [locations|e] have a profile. Their rules last month:")
+        f"{_show(d('profiles', 'locs'))} [locations|e] have a profile or marks. Their rules and marks last month:")
     for state, text in PROFILE_STATES.items():
         out[f"PP_CPLAN_D_PROFILES_ST{state}"] = f"{_show(d('profiles', f'st{state}'))} {text}"
 
@@ -181,7 +207,15 @@ def texts() -> dict[str, str]:
     out["PP_CPLAN_D_LOGISTICS_WHY"] = f"#weak ([market_access|e] [{value}|0]% without event effects)#!"
     out["PP_CPLAN_D_IMPROVE_WHY"] = f"#weak (population at [{value}|0]% of its [population_capacity|e])#!"
     out["PP_CPLAN_D_BUSINESS_WHY"] = f"#weak (pays back in [{value}|1] years)#!"
+    # the Locations group: a rule of the location's profile (its number), or one of its marks (step 0; the Location
+    # Plan's words: marked, "Also build here")
     out["PP_CPLAN_D_PROFILES_WHY"] = f"#weak (rule [{_item('pp_cplan_log_step_n')}|0] of its profile)#!"
+    out["PP_CPLAN_D_PROFILES_WHY_MARK"] = "#weak (marked there: Also build here)#!"
+    # Towns and Buildings (COUNTRY_KINDS): a building where the location's maximum control reaches the line, an
+    # upgrade by the location's people in thousands (what its group leaves in pp_cplan_log_val)
+    out["PP_CPLAN_D_COUNTRY_WHY_1"] = f"#weak ([max_control|e] [{value}|0]%)#!"
+    out["PP_CPLAN_D_COUNTRY_WHY_2"] = f"#weak ([{value}|1] thousand people)#!"
+    out["PP_CPLAN_D_COUNTRY_WHY_3"] = f"#weak (upgrade of the older building, [max_control|e] [{value}|0]%)#!"
     return out
 
 
@@ -271,9 +305,13 @@ def _situation(group: str) -> list[str]:
                 + _line(f"PP_CPLAN_D_{key}_NONE", _not(_above(count))))
     if group == "business":
         sites = _country(d(group, "sites"))
-        # the quickest payback is kept only over the sites within the line (a running minimum)
+        # the quickest payback is kept only over the sites within the line (a running minimum); a month the group
+        # started without gold it did not look, and says so instead of "no business pays back"
         return (_line("PP_CPLAN_D_BUSINESS_SIT", _above(sites))
-                + _line("PP_CPLAN_D_BUSINESS_NONE", _not(_above(sites))))
+                + _line("PP_CPLAN_D_BUSINESS_NONE", _both(_not(_above(sites)), _not(_skipped())))
+                + _line("PP_CPLAN_D_BUSINESS_SKIPPED", _skipped()))
+    if group != "profiles":
+        return []  # towns and buildings: the gold lines are enough
     # profiles: the rules by state, three to a row
     out = _line("PP_CPLAN_D_PROFILES_SIT")
     states = list(PROFILE_STATES)
@@ -319,26 +357,44 @@ def _list(group: str) -> list[str]:
     why = cp.GROUP_WHY[group]
     reasons: list[str] = []
     step = _item("pp_cplan_log_step_n")
+    # Towns and Buildings: an upgrade leaves the location's line to another rule group that built there in the same
+    # pass (pp_cplan_country_rank_up), so the line is this group's only while the location's code is 7. A location
+    # of its list with another group's line can only be such an upgrade: it shows as the upgrade, without the other
+    # group's buildings, cost and reason.
+    own = _equals(_item("pp_cplan_why_n"), why - 100) if group == "country" else None
+
+    def label(key: str, visible: str | None = None) -> list[str]:
+        return _block("pp_cplan_label", ([f'visible = "[{visible}]"'] if visible else []) + [f'text = "{key}"'])
+
     if group == "food":
         for n in FOOD_STEPS:
-            reasons += _block("pp_cplan_label", [f'visible = "[{_equals(step, n)}]"',
-                                                 f'text = "PP_CPLAN_D_FOOD_WHY_{n}"'])
+            reasons += label(f"PP_CPLAN_D_FOOD_WHY_{n}", _equals(step, n))
+    elif group == "profiles":
+        # a rule of the location's profile (step = its number) or one of the location's marks (step 0)
+        reasons += label("PP_CPLAN_D_PROFILES_WHY", _above(step))
+        reasons += label("PP_CPLAN_D_PROFILES_WHY_MARK", _not(_above(step)))
+    elif group == "country":
+        for n in COUNTRY_KINDS:
+            reasons += label(f"PP_CPLAN_D_COUNTRY_WHY_{n}", _both(own, _equals(step, n)))
     else:
         reasons.append(f'pp_cplan_label = {{ text = "PP_CPLAN_D_{group.upper()}_WHY" }}')
     names = _block("flowcontainer", [
+        *([f'visible = "[{own}]"'] if own else []),
         "direction = horizontal",
         "datamodel = \"[Scope.GetList('pp_cplan_log_types')]\"",
         "spacing = 4",
         *_block("item", ['pp_cplan_label = { raw_text = "[Scope.GetBuildingType.GetName]" }']),
     ])
+    upgrade = _block(RANK_UPGRADE, [f'visible = "[{_either(_not(own), _equals(step, 2))}]"']) if own else []
     row = _block("flowcontainer", [
         "direction = horizontal",
         "ignoreinvisible = yes",
         "spacing = 4",
         "margin = { 2 1 }",
         *names,
+        *upgrade,
         'pp_cplan_label = { text = "PP_CPLAN_IN_LOCATION" }',
-        'pp_cplan_label = { text = "PP_CPLAN_D_COST" }',
+        *(label("PP_CPLAN_D_COST", own) if own else ['pp_cplan_label = { text = "PP_CPLAN_D_COST" }']),
         *reasons,
     ])
     return _block("scrollarea", [
@@ -360,6 +416,8 @@ def _pane(group: str) -> list[str]:
     waited = _above(_country(d(group, "waitn")))
     started = _above(_country(d(group, "started")))
     off = "PP_CPLAN_D_OFF_PROFILES" if group == "profiles" else "PP_CPLAN_D_OFF"
+    # "nothing waited for gold" only where the group looked (the business group does not without gold)
+    quiet = _both(_not(waited), _not(_skipped())) if group == "business" else _not(waited)
     shown = _block("vbox", [
         f'visible = "[{ran}]"',
         "layoutpolicy_horizontal = expanding",
@@ -368,7 +426,7 @@ def _pane(group: str) -> list[str]:
         "spacing = 6",
         *_line(f"PP_CPLAN_D_GOLD_{group.upper()}"),
         *_line(f"PP_CPLAN_D_WAIT_{group.upper()}", waited),
-        *_line("PP_CPLAN_D_NO_WAIT", _not(waited)),
+        *_line("PP_CPLAN_D_NO_WAIT", quiet),
         *_situation(group),
         *_chart(group),
         *_block("hbox", ["layoutpolicy_horizontal = expanding",

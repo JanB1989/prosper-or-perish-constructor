@@ -1,5 +1,6 @@
 """Location plan: the player's marks of what a location should produce or have (location_plan.py, mod/pp/.../
-pp_location_plan*). Only visual."""
+pp_location_plan*). The marks are the location's build picks: the Construction Plan builds them (the pass is tested in
+test_location_profiles.py); here the marks themselves, their states' texts and the map."""
 
 from __future__ import annotations
 
@@ -150,3 +151,91 @@ def test_marker_changes_only_the_raw_goods_marker() -> None:
 def test_only_for_the_player() -> None:
     assert "Not(IsObserving)" in _read(WINDOW)
     assert "LocationView.GetLocation.GetOwner.IsPlayer" in lp.BUTTON
+
+
+PROFILE_LOC = MOD / "main_menu/localization/english"
+EFFECTS = MOD / "in_game/common/scripted_effects/pp_location_plan.txt"
+
+
+def _texts() -> dict[str, str]:
+    texts: dict[str, str] = {}
+    for path in LOC_FILES:
+        texts.update(re.findall(r'^  ([A-Za-z0-9_]+): "(.*)"$', _read(path), re.MULTILINE))
+    return texts
+
+
+def test_toggle_marks_an_item_with_its_state_names() -> None:
+    """One click marks or unmarks an item: the toggle passes the item's name part (g_<good> / c_<category>), from which
+    the mark, its state and its payback note are named; unmarking takes the state along."""
+    items = lp.plan_items(ROOT, lp.load_config(PROJECT))
+    switch = _read(MOD / lp.EFFECTS)
+    for item in items:
+        assert f"flag:{item.key} = {{ pp_lplan_flip = {{ v = {item.suffix} }} }}" in switch, item.key
+        assert item.var == f"pp_lplan_{item.suffix}" and item.state == f"pp_lplan_st_{item.suffix}"
+        assert item.est == f"pp_lplan_est_{item.suffix}"
+        # the states are read by the GUI only: the declaration reads them
+        assert f"has_variable = {item.state}\n" in switch and f"has_variable = {item.est}\n" in switch, item.key
+    flip = re.search(r"^pp_lplan_flip = \{(.*?)^\}", _read(EFFECTS), re.MULTILINE | re.DOTALL).group(1)
+    assert "$var$" not in flip and "set_variable = { name = pp_lplan_$v$ value = yes }" in flip
+    for name in ("pp_lplan_$v$", "pp_lplan_st_$v$", "pp_lplan_est_$v$"):
+        assert f"remove_variable = {name}\n" in flip, name
+    assert "refresh_map_colors = yes" in flip
+
+
+def test_every_mark_state_has_a_text() -> None:
+    """A mark shows its state after the last monthly pass like a profile rule does, with the profile's state texts: in
+    the tile tooltip (picker, location window row) while marked, in the strip's and the map icon's tooltip always."""
+    items = lp.plan_items(ROOT, lp.load_config(PROJECT))
+    texts = _texts()
+    profile_keys: set[str] = set()
+    for path in PROFILE_LOC.glob("pp_location_profiles*_l_english.yml"):
+        profile_keys |= set(re.findall(r"^  ([A-Za-z0-9_]+):", _read(path), re.MULTILINE))
+    assert lp.MARK_STATES == 9
+    for n in range(0, lp.MARK_STATES + 1):
+        assert f"PP_LPROF_ST_{n}" in profile_keys, n
+    for item in items:
+        upper = item.key.upper()
+        pick, state, line = texts[f"PP_LPLAN_PICK_{upper}"], texts[f"PP_LPLAN_STATE_{upper}"], texts[f"PP_LPLAN_MST_{upper}"]
+        assert f"'PP_LPLAN_MST_{upper}', 'PP_LPROF_UI_EMPTY'" in pick and f"Var('{item.var}').IsSet" in pick, item.key
+        assert state.endswith(f"$PP_LPLAN_MST_{upper}$"), item.key
+        # not checked yet = the profile's state 0; else one of its states 1..9, by the mark's own state variable
+        assert f"Var('{item.state}').IsSet, 'PP_LPLAN_MSTS_{upper}', 'PP_LPROF_ST_0'" in line, item.key
+        states = texts[f"PP_LPLAN_MSTS_{upper}"]
+        for n in range(1, lp.MARK_STATES + 1):
+            assert (f"[AddTextIf(EqualTo_CFixedPoint(Location.MakeScope.Var('{item.state}').GetValue, '(CFixedPoint){100 + n}'), "
+                    f"Localize('PP_LPROF_ST_{n}'))]") in states, (item.key, n)
+        # beside "pays back too slowly" (state 5): the payback found
+        assert f"'(CFixedPoint)105'), Location.MakeScope.Var('{item.est}').IsSet), 'PP_LPLAN_MEST_{upper}'" in line, item.key
+        assert f"Var('{item.est}').GetValue" in texts[f"PP_LPLAN_MESTY_{upper}"], item.key
+    # every profile text the plan's texts use exists
+    used = set(re.findall(r"'(PP_LPROF_[A-Z0-9_]+)'", "".join(texts.values())))
+    assert {"PP_LPROF_UI_EMPTY", "PP_LPROF_UI_EST_NO_PROFIT", "PP_LPROF_ST_0"} <= used
+    assert used <= profile_keys, sorted(used - profile_keys)
+    # state texts: no numbers, and they fit a rule and a mark alike
+    hand = dict(re.findall(r'^  ([A-Z0-9_]+): "(.*)"$', _read(PROFILE_LOC / "pp_location_profiles_l_english.yml"), re.MULTILINE))
+    for n in range(0, lp.MARK_STATES + 1):
+        assert "this rule" not in hand[f"PP_LPROF_ST_{n}"] and "earlier rule" not in hand[f"PP_LPROF_ST_{n}"], n
+
+
+def test_no_text_says_the_marks_are_only_visual() -> None:
+    """Jan 2026-11-10: a mark is a build pick. No player text, config comment or file header still says the Location
+    Plan only shows something or builds nothing."""
+    import tomllib
+
+    stale = re.compile(r"only visual|only for you|nothing is built|no rule builds|builds nothing by it", re.IGNORECASE)
+    files = [*LOC_FILES, *GUI_FILES, SCRIPTED_GUIS, EFFECTS, MAP_MODE, ROOT / "src/prosper_or_perish_constructor/location_plan.py"]
+    for path in files:
+        assert not stale.search(_read(path)), path.name
+    config = _read(PROJECT)
+    section = config[config.index("[location_plan]"):config.index("[location_profiles]")]
+    assert not stale.search(section) and "Construction Plan builds" in section
+    assert tomllib.loads(config)["location_plan"]["per_row"] > 0
+    texts = _texts()
+    for key in ("PP_LPLAN_NOTE", "PP_LPLAN_LOCATION_BUTTON", "PP_LPLAN_PICK_ON", "PP_LPLAN_PICK_OFF",
+                "game_concept_pp_location_plan_desc", "MAPMODE_PP_LOCATION_PLAN"):
+        assert "Construction Plan" in texts[key], key
+    # player text carries no numbers
+    for key, text in texts.items():
+        if key.startswith(("PP_LPLAN_GROUP", "PP_LPLAN_ALSO", "PP_LPLAN_NOTE", "PP_LPLAN_PICK_O", "PP_LPLAN_STATE_", "MAPMODE", "game_concept")):
+            plain = re.sub(r"\[[^\]]*\]|\$[A-Z0-9_]+\$", "", text)
+            assert not re.search(r"\d", plain), key

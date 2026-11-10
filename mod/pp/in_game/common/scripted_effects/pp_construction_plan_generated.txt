@@ -1021,6 +1021,7 @@ pp_cplan_declare_flags = {
 	set_variable = { name = pp_cplan_flag value = flag:access_line }
 	set_variable = { name = pp_cplan_flag value = flag:business }
 	set_variable = { name = pp_cplan_flag value = flag:business_line }
+	set_variable = { name = pp_cplan_flag value = flag:country }
 	set_variable = { name = pp_cplan_flag value = flag:down }
 	set_variable = { name = pp_cplan_flag value = flag:food }
 	set_variable = { name = pp_cplan_flag value = flag:improve }
@@ -5947,6 +5948,15 @@ pp_cplan_stats_reset = {
 	set_variable = { name = pp_cplan_dwn_103 value = 100 }
 	set_variable = { name = pp_cplan_ds_business_sites value = 100 }
 	set_variable = { name = pp_cplan_ds_business_best value = 1099 }
+	set_variable = { name = pp_cplan_ds_business_skipped value = 100 }
+	# country
+	remove_variable = pp_cplan_dran_107
+	clear_variable_list = pp_cplan_log_107
+	set_variable = { name = pp_cplan_dhad_107 value = 100 }
+	set_variable = { name = pp_cplan_dspent_107 value = 100 }
+	set_variable = { name = pp_cplan_dn_107 value = 100 }
+	set_variable = { name = pp_cplan_dwait_107 value = 100 }
+	set_variable = { name = pp_cplan_dwn_107 value = 100 }
 }
 
 # Country scope, at the end of pp_cplan_run: the pass's gold wanted (spent + waiting for gold) and spent per rule
@@ -6077,6 +6087,31 @@ pp_cplan_history_push = {
 	pp_cplan_copy_num = { from = pp_cplan_hs_103_1 to = pp_cplan_hs_103_2 }
 	set_variable = { name = pp_cplan_hn_103_1 value = { value = var:pp_cplan_dspent_103 add = var:pp_cplan_dwait_103 subtract = 100 } }
 	set_variable = { name = pp_cplan_hs_103_1 value = var:pp_cplan_dspent_103 }
+	# country
+	pp_cplan_copy_num = { from = pp_cplan_hn_107_11 to = pp_cplan_hn_107_12 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_107_10 to = pp_cplan_hn_107_11 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_107_9 to = pp_cplan_hn_107_10 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_107_8 to = pp_cplan_hn_107_9 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_107_7 to = pp_cplan_hn_107_8 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_107_6 to = pp_cplan_hn_107_7 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_107_5 to = pp_cplan_hn_107_6 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_107_4 to = pp_cplan_hn_107_5 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_107_3 to = pp_cplan_hn_107_4 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_107_2 to = pp_cplan_hn_107_3 }
+	pp_cplan_copy_num = { from = pp_cplan_hn_107_1 to = pp_cplan_hn_107_2 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_107_11 to = pp_cplan_hs_107_12 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_107_10 to = pp_cplan_hs_107_11 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_107_9 to = pp_cplan_hs_107_10 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_107_8 to = pp_cplan_hs_107_9 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_107_7 to = pp_cplan_hs_107_8 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_107_6 to = pp_cplan_hs_107_7 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_107_5 to = pp_cplan_hs_107_6 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_107_4 to = pp_cplan_hs_107_5 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_107_3 to = pp_cplan_hs_107_4 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_107_2 to = pp_cplan_hs_107_3 }
+	pp_cplan_copy_num = { from = pp_cplan_hs_107_1 to = pp_cplan_hs_107_2 }
+	set_variable = { name = pp_cplan_hn_107_1 value = { value = var:pp_cplan_dspent_107 add = var:pp_cplan_dwait_107 subtract = 100 } }
+	set_variable = { name = pp_cplan_hs_107_1 value = var:pp_cplan_dspent_107 }
 }
 
 # Country scope: the history is gone (the plan was switched on).
@@ -6201,4 +6236,28 @@ pp_cplan_history_clear = {
 	remove_variable = pp_cplan_hs_103_10
 	remove_variable = pp_cplan_hs_103_11
 	remove_variable = pp_cplan_hs_103_12
+	remove_variable = pp_cplan_hn_107_1
+	remove_variable = pp_cplan_hn_107_2
+	remove_variable = pp_cplan_hn_107_3
+	remove_variable = pp_cplan_hn_107_4
+	remove_variable = pp_cplan_hn_107_5
+	remove_variable = pp_cplan_hn_107_6
+	remove_variable = pp_cplan_hn_107_7
+	remove_variable = pp_cplan_hn_107_8
+	remove_variable = pp_cplan_hn_107_9
+	remove_variable = pp_cplan_hn_107_10
+	remove_variable = pp_cplan_hn_107_11
+	remove_variable = pp_cplan_hn_107_12
+	remove_variable = pp_cplan_hs_107_1
+	remove_variable = pp_cplan_hs_107_2
+	remove_variable = pp_cplan_hs_107_3
+	remove_variable = pp_cplan_hs_107_4
+	remove_variable = pp_cplan_hs_107_5
+	remove_variable = pp_cplan_hs_107_6
+	remove_variable = pp_cplan_hs_107_7
+	remove_variable = pp_cplan_hs_107_8
+	remove_variable = pp_cplan_hs_107_9
+	remove_variable = pp_cplan_hs_107_10
+	remove_variable = pp_cplan_hs_107_11
+	remove_variable = pp_cplan_hs_107_12
 }

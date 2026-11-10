@@ -1,5 +1,6 @@
 ﻿# Prosper or Perish - Location Plan map mode (branch location-plan, 2026-11-07, Jan): the planned icons over the player's
-# locations (marked in the Location Plan window, gui/pp_location_plan.gui). Only visual.
+# locations (marked in the Location Plan window, gui/pp_location_plan.gui, or the location window's row "Also build
+# here"): what the Construction Plan also builds there. The map mode itself only shows them.
 #
 # The icons are vanilla's raw goods marker (map_markers.gui, patched by location_plan.py: in this map mode it draws the
 # plan's icons on a green tile once done, red while still to do). The engine creates raw goods markers only with the

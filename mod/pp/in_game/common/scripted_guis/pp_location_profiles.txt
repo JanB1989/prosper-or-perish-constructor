@@ -49,7 +49,7 @@ pp_lprof_color = {
 }
 
 # Country scope: a global rule group (scope:pp_field: global_food / global_logistics / global_improve /
-# global_business) of slot scope:pp_slot off in its locations, or on again.
+# global_business / global_country) of slot scope:pp_slot off in its locations, or on again.
 pp_lprof_global = {
 	scope = country
 	effect = {

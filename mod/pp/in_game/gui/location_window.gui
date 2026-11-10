@@ -7280,7 +7280,9 @@ pp_land_potential_chip = {}
 								visible = "[And(LocationView.GetLocation.GetOwner.IsPlayer, Not(IsObserving))]"
 								layoutpolicy_horizontal = expanding
 								datacontext = "[LocationView.GetLocation]"
+								spacing = 2
 								pp_lprof_location_row = {}
+								pp_lplan_location_row = {}
 							}
 							# INFRASTRUCTURE HUB
 							hbox = {

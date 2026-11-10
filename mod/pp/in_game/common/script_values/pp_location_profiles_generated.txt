@@ -352,3 +352,892 @@ pp_lprof_r5_st_n = {
 		subtract = 100
 	}
 }
+
+# ---- The location window's row "Also build here" (location scope; location_profiles_gui.py) ----
+
+# Quick candidates: 1 while a building that makes the good stands here (what a mark would expand) and the good is
+# not marked (a marked good has its tile among the marks).
+pp_lplan_quick_camels = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_camels }
+			OR = { has_building = building_type:camel_stud has_building = building_type:camel_herders }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_elephants = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_elephants }
+			OR = { has_building = building_type:elephant_kraal }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_horses = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_horses }
+			OR = { has_building = building_type:stud_farm has_building = building_type:horse_breeders }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_livestock = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_livestock }
+			OR = { has_building = building_type:cattle_model_farm has_building = building_type:cattle_rotations has_building = building_type:cattle_farmstead has_building = building_type:cattle_farm }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_wool = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_wool }
+			OR = { has_building = building_type:enclosed_sheep_walks has_building = building_type:hurdled_sheepcotes has_building = building_type:sheep_farms }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_beeswax = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_beeswax }
+			OR = { has_building = building_type:forest_village }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_dyes = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_dyes }
+			OR = { has_building = building_type:dyes_mill has_building = building_type:dyesworks has_building = building_type:dyes_workshop has_building = building_type:dye_plantation has_building = building_type:dyes_guild }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_incense = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_incense }
+			OR = { has_building = building_type:incense_grove has_building = building_type:perfumery }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_tobacco = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_tobacco }
+			OR = { has_building = building_type:market_tobacco_farm has_building = building_type:tobacco_farm has_building = building_type:tobacco_plantation }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_cotton = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_cotton }
+			OR = { has_building = building_type:market_cotton_farm has_building = building_type:cotton_farm has_building = building_type:cotton_plantation }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_fiber_crops = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_fiber_crops }
+			OR = { has_building = building_type:fiber_dressing_yard has_building = building_type:fiber_crops_farm }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_silk = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_silk }
+			OR = { has_building = building_type:regulated_sericulture_farm has_building = building_type:ablaq_palace has_building = building_type:sericulture_farm has_building = building_type:silk_production_guild }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_chili = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_chili }
+			OR = { has_building = building_type:chili_plantation }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_cloves = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_cloves }
+			OR = { has_building = building_type:clove_grove }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_pepper = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_pepper }
+			OR = { has_building = building_type:managed_pepper_garden has_building = building_type:pepper_garden }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_saffron = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_saffron }
+			OR = { has_building = building_type:saffron_kiln_croft has_building = building_type:saffron_croft }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_legumes = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_legumes }
+			OR = { has_building = building_type:legume_model_farm has_building = building_type:legume_rotations has_building = building_type:legume_farmstead has_building = building_type:legume_farm }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_maize = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_maize }
+			OR = { has_building = building_type:maize_model_farm has_building = building_type:maize_rotations has_building = building_type:maize_farmstead has_building = building_type:maize_farm }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_millet = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_millet }
+			OR = { has_building = building_type:millet_model_farm has_building = building_type:millet_rotations has_building = building_type:millet_farmstead has_building = building_type:millet_farm }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_potato = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_potato }
+			OR = { has_building = building_type:potato_model_farm has_building = building_type:potato_rotations has_building = building_type:potato_farmstead has_building = building_type:potato_farm }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_rice = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_rice }
+			OR = { has_building = building_type:rice_model_farm has_building = building_type:rice_rotations has_building = building_type:rice_farmstead has_building = building_type:rice_farm }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_wheat = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_wheat }
+			OR = { has_building = building_type:wheat_model_farm has_building = building_type:wheat_rotations has_building = building_type:wheat_farmstead has_building = building_type:wheat_farm }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_cocoa = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_cocoa }
+			OR = { has_building = building_type:managed_cocoa_grove has_building = building_type:cocoa_grove }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_coffee = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_coffee }
+			OR = { has_building = building_type:terraced_coffee_grove has_building = building_type:coffee_grove }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_tea = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_tea }
+			OR = { has_building = building_type:tea_sorting_garden has_building = building_type:tea_garden }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_sugar = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_sugar }
+			OR = { has_building = building_type:trapiche_sugarcane_farm has_building = building_type:sugar_plantation has_building = building_type:sugarcane_farm }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_fruit = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_fruit }
+			OR = { has_building = building_type:pomological_orchard has_building = building_type:nursery_orchard has_building = building_type:fruit_orchard has_building = building_type:maghreb_palm_irrigation }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_olives = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_olives }
+			OR = { has_building = building_type:olive_model_farm has_building = building_type:olive_rotations has_building = building_type:olive_farmstead has_building = building_type:olive_farm }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_wine = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_wine }
+			OR = { has_building = building_type:winery_manufactory has_building = building_type:vineyard_estate has_building = building_type:winery }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_lumber = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_lumber }
+			OR = { has_building = building_type:lumber_mill_improved has_building = building_type:water_sawmill has_building = building_type:lumber_mill has_building = building_type:shoen }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_fish = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_fish }
+			OR = { has_building = building_type:offshore_fishery has_building = building_type:drift_net_fishery has_building = building_type:net_curing_yard has_building = building_type:fishing_village has_building = building_type:ocean_fishery }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_pearls = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_pearls }
+			OR = { has_building = building_type:pearl_fishery }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_clay = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_clay }
+			OR = { has_building = building_type:clay_washmill has_building = building_type:clay_pit }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_sand = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_sand }
+			OR = { has_building = building_type:sand_washery has_building = building_type:sand_pit }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_medicaments = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_medicaments }
+			OR = { has_building = building_type:apothecary has_building = building_type:simplers_grove }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_salt = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_salt }
+			OR = { has_building = building_type:engineered_brine_saltworks has_building = building_type:salt_mine_improved has_building = building_type:inland_saltworks has_building = building_type:salt_collector has_building = building_type:salt_mine }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_amber = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_amber }
+			OR = { has_building = building_type:amber_diggings has_building = building_type:amber_collector }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_ivory = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_ivory }
+			OR = { has_building = building_type:elephant_hunting_grounds has_building = building_type:ivory_hunting_camp }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_wild_game = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_wild_game }
+			OR = { has_building = building_type:eng_royal_forest }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_beer = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_beer }
+			OR = { has_building = building_type:brewery_mill has_building = building_type:brewery_manufactory has_building = building_type:beer_workshop has_building = building_type:brewery }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_liquor = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_liquor }
+			OR = { has_building = building_type:distiller_mill has_building = building_type:distiller_manufactory has_building = building_type:distillers_workshop has_building = building_type:distillers_guild }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_books = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_books }
+			OR = { has_building = building_type:printing_mill has_building = building_type:printing_manufactory has_building = building_type:printing_press_shop has_building = building_type:scriptorium }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_paper = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_paper }
+			OR = { has_building = building_type:paper_mill has_building = building_type:paper_manufactory has_building = building_type:paper_workshop has_building = building_type:paper_guild }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_slaves_goods = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_slaves_goods }
+			OR = { has_building = building_type:slave_center has_building = building_type:slave_market }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_glass = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_glass }
+			OR = { has_building = building_type:glass_mill has_building = building_type:glassworks has_building = building_type:glass_workshop has_building = building_type:glass_guild has_building = building_type:rural_glassmaker }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_masonry = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_masonry }
+			OR = { has_building = building_type:mason }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_pottery = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_pottery }
+			OR = { has_building = building_type:pottery_mill has_building = building_type:pottery_manufactory has_building = building_type:pottery_workshop has_building = building_type:pottery_guild }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_tar = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_tar }
+			OR = { has_building = building_type:tar_kiln }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_furniture = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_furniture }
+			OR = { has_building = building_type:furniture_mill has_building = building_type:furniture_manufactory has_building = building_type:furniture_workshop has_building = building_type:furniture_guild }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_jewelry = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_jewelry }
+			OR = { has_building = building_type:jewelry_guild has_building = building_type:pounamou_carver }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_lacquerware = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_lacquerware }
+			OR = { has_building = building_type:lacquerware_manufactory has_building = building_type:lacquerware_guild }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_porcelain = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_porcelain }
+			OR = { has_building = building_type:porcelain_manufactory has_building = building_type:porcelain_guild }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_steel = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_steel }
+			OR = { has_building = building_type:steel_mill }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_tools = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_tools }
+			OR = { has_building = building_type:iron_mill has_building = building_type:iron_foundry has_building = building_type:tools_workshop has_building = building_type:market_village has_building = building_type:tatara has_building = building_type:tools_guild }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_cannons = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_cannons }
+			OR = { has_building = building_type:cannons_factory has_building = building_type:cannon_foundry has_building = building_type:cannon_workshop has_building = building_type:cannon_maker }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_firearms = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_firearms }
+			OR = { has_building = building_type:firearms_factory has_building = building_type:firearms_manufactory has_building = building_type:guns_workshop has_building = building_type:gun_smith has_building = building_type:hand_cannon_guild }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_weaponry = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_weaponry }
+			OR = { has_building = building_type:weapon_factory has_building = building_type:weapon_manufactory has_building = building_type:weapon_workshop has_building = building_type:weapon_guild }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_naval_supplies = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_naval_supplies }
+			OR = { has_building = building_type:naval_supplies_mill has_building = building_type:naval_supplies_manufactory has_building = building_type:naval_supplies_workshop has_building = building_type:naval_supplies_guild }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_victuals = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_victuals }
+			OR = { has_building = building_type:grange has_building = building_type:victualling_yard }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_cloth = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_cloth }
+			OR = { has_building = building_type:textile_mill has_building = building_type:cloth_manufactory has_building = building_type:cloth_workshop has_building = building_type:cloth_guild has_building = building_type:rural_clothmaker }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_fine_cloth = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_fine_cloth }
+			OR = { has_building = building_type:fine_cloth_mill has_building = building_type:fine_cloth_manufactory has_building = building_type:fine_cloth_workshop has_building = building_type:fine_cloth_guild }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_leather = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_leather }
+			OR = { has_building = building_type:tannery_mill has_building = building_type:tannery_manufactory has_building = building_type:managed_forest_village has_building = building_type:tanning_workshop has_building = building_type:tannery }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_marble = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_marble }
+			OR = { has_building = building_type:marble_saw_yard has_building = building_type:marble_quarry }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_stone = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_stone }
+			OR = { has_building = building_type:stone_quarry_improved has_building = building_type:stone_quarry }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_coal = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_coal }
+			OR = { has_building = building_type:coal_mine_revolutions has_building = building_type:coal_mine_improved has_building = building_type:improved_charcoal_maker has_building = building_type:charcoal_maker has_building = building_type:coal_mine }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_alum = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_alum }
+			OR = { has_building = building_type:alum_works has_building = building_type:alum_quarry }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_mercury = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_mercury }
+			OR = { has_building = building_type:quicksilver_retort has_building = building_type:cinnabar_pit }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_saltpeter = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_saltpeter }
+			OR = { has_building = building_type:putrefaction_mill has_building = building_type:putrefaction_works has_building = building_type:saltpeter_workshop has_building = building_type:saltpeter_beds has_building = building_type:saltpeter_guild }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_copper = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_copper }
+			OR = { has_building = building_type:copper_mine_deep has_building = building_type:copper_mine_adit has_building = building_type:copper_mine }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_iron = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_iron }
+			OR = { has_building = building_type:bog_iron_smelter_coke_blast_furnace has_building = building_type:iron_mine_deep has_building = building_type:bog_iron_smelter_blast_furnace has_building = building_type:iron_mine_improved has_building = building_type:bog_iron_smelter has_building = building_type:iron_mine }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_lead = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_lead }
+			OR = { has_building = building_type:lead_mine_cupola_smelting has_building = building_type:lead_mine_bole_smelting has_building = building_type:lead_mine }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_tin = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_tin }
+			OR = { has_building = building_type:tin_stamping_mill has_building = building_type:tin_streamworks }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_gems = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_gems }
+			OR = { has_building = building_type:gem_sluice has_building = building_type:gem_gravel_pit }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_goods_gold = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_goods_gold }
+			OR = { has_building = building_type:gold_stamp_mill has_building = building_type:gold_diggings }
+		}
+		value = 1
+	}
+}
+pp_lplan_quick_silver = {
+	value = 0
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lplan_g_silver }
+			OR = { has_building = building_type:silver_mine_improved has_building = building_type:schwaz_mine has_building = building_type:silver_mine }
+		}
+		value = 1
+	}
+}
+
+# The row holds 11 tiles: the marked items, then the quick candidates in chunks of 4 goods. Chunk n
+# shows while this is above 0: the tiles the row has left after the marks and the candidates of the chunks
+# before it, minus a whole chunk, plus 1.
+pp_lplan_quick_room_1 = {
+	value = 8
+	subtract = pp_lplan_planned_n
+}
+pp_lplan_quick_room_2 = {
+	value = pp_lplan_quick_room_1
+	subtract = pp_lplan_quick_camels
+	subtract = pp_lplan_quick_elephants
+	subtract = pp_lplan_quick_horses
+	subtract = pp_lplan_quick_livestock
+}
+pp_lplan_quick_room_3 = {
+	value = pp_lplan_quick_room_2
+	subtract = pp_lplan_quick_wool
+	subtract = pp_lplan_quick_beeswax
+	subtract = pp_lplan_quick_dyes
+	subtract = pp_lplan_quick_incense
+}
+pp_lplan_quick_room_4 = {
+	value = pp_lplan_quick_room_3
+	subtract = pp_lplan_quick_tobacco
+	subtract = pp_lplan_quick_cotton
+	subtract = pp_lplan_quick_fiber_crops
+	subtract = pp_lplan_quick_silk
+}
+pp_lplan_quick_room_5 = {
+	value = pp_lplan_quick_room_4
+	subtract = pp_lplan_quick_chili
+	subtract = pp_lplan_quick_cloves
+	subtract = pp_lplan_quick_pepper
+	subtract = pp_lplan_quick_saffron
+}
+pp_lplan_quick_room_6 = {
+	value = pp_lplan_quick_room_5
+	subtract = pp_lplan_quick_legumes
+	subtract = pp_lplan_quick_maize
+	subtract = pp_lplan_quick_millet
+	subtract = pp_lplan_quick_potato
+}
+pp_lplan_quick_room_7 = {
+	value = pp_lplan_quick_room_6
+	subtract = pp_lplan_quick_rice
+	subtract = pp_lplan_quick_wheat
+	subtract = pp_lplan_quick_cocoa
+	subtract = pp_lplan_quick_coffee
+}
+pp_lplan_quick_room_8 = {
+	value = pp_lplan_quick_room_7
+	subtract = pp_lplan_quick_tea
+	subtract = pp_lplan_quick_sugar
+	subtract = pp_lplan_quick_fruit
+	subtract = pp_lplan_quick_olives
+}
+pp_lplan_quick_room_9 = {
+	value = pp_lplan_quick_room_8
+	subtract = pp_lplan_quick_wine
+	subtract = pp_lplan_quick_lumber
+	subtract = pp_lplan_quick_fish
+	subtract = pp_lplan_quick_pearls
+}
+pp_lplan_quick_room_10 = {
+	value = pp_lplan_quick_room_9
+	subtract = pp_lplan_quick_clay
+	subtract = pp_lplan_quick_sand
+	subtract = pp_lplan_quick_medicaments
+	subtract = pp_lplan_quick_salt
+}
+pp_lplan_quick_room_11 = {
+	value = pp_lplan_quick_room_10
+	subtract = pp_lplan_quick_amber
+	subtract = pp_lplan_quick_ivory
+	subtract = pp_lplan_quick_wild_game
+	subtract = pp_lplan_quick_beer
+}
+pp_lplan_quick_room_12 = {
+	value = pp_lplan_quick_room_11
+	subtract = pp_lplan_quick_liquor
+	subtract = pp_lplan_quick_books
+	subtract = pp_lplan_quick_paper
+	subtract = pp_lplan_quick_slaves_goods
+}
+pp_lplan_quick_room_13 = {
+	value = pp_lplan_quick_room_12
+	subtract = pp_lplan_quick_glass
+	subtract = pp_lplan_quick_masonry
+	subtract = pp_lplan_quick_pottery
+	subtract = pp_lplan_quick_tar
+}
+pp_lplan_quick_room_14 = {
+	value = pp_lplan_quick_room_13
+	subtract = pp_lplan_quick_furniture
+	subtract = pp_lplan_quick_jewelry
+	subtract = pp_lplan_quick_lacquerware
+	subtract = pp_lplan_quick_porcelain
+}
+pp_lplan_quick_room_15 = {
+	value = pp_lplan_quick_room_14
+	subtract = pp_lplan_quick_steel
+	subtract = pp_lplan_quick_tools
+	subtract = pp_lplan_quick_cannons
+	subtract = pp_lplan_quick_firearms
+}
+pp_lplan_quick_room_16 = {
+	value = pp_lplan_quick_room_15
+	subtract = pp_lplan_quick_weaponry
+	subtract = pp_lplan_quick_naval_supplies
+	subtract = pp_lplan_quick_victuals
+	subtract = pp_lplan_quick_cloth
+}
+pp_lplan_quick_room_17 = {
+	value = pp_lplan_quick_room_16
+	subtract = pp_lplan_quick_fine_cloth
+	subtract = pp_lplan_quick_leather
+	subtract = pp_lplan_quick_marble
+	subtract = pp_lplan_quick_stone
+}
+pp_lplan_quick_room_18 = {
+	value = pp_lplan_quick_room_17
+	subtract = pp_lplan_quick_coal
+	subtract = pp_lplan_quick_alum
+	subtract = pp_lplan_quick_mercury
+	subtract = pp_lplan_quick_saltpeter
+}
+pp_lplan_quick_room_19 = {
+	value = pp_lplan_quick_room_18
+	subtract = pp_lplan_quick_copper
+	subtract = pp_lplan_quick_iron
+	subtract = pp_lplan_quick_lead
+	subtract = pp_lplan_quick_tin
+}

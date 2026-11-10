@@ -1945,6 +1945,10 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         + (f"; UNKNOWN buildings: {', '.join(plan.missing)}." if plan.missing else "."),
         flush=True,
     )
+    from prosper_or_perish_constructor import construction_plan_country
+
+    print(construction_plan_country.summary(
+        construction_plan_country.apply(repo, project, mod_root, vanilla_root(repo, project))), flush=True)
     from prosper_or_perish_constructor import location_profiles, location_profiles_gui
 
     changed = location_profiles.apply(repo, project, mod_root, vanilla_root(repo, project))

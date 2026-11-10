@@ -1,15 +1,56 @@
 # Player Construction Manager: design brainstorm
 
 Status 2026-11-09: **two tabs** (Jan: "global settings that are very easy to set, and then our profiles, and that's
-it"), branch `location-profiles`; see the next section. The sections below it are the history (v1, v2, the first
+it"), branch `location-profiles`; since 2026-11-10 a third tab and a sixth rule group, **Towns and Buildings**; see the
+next section. The sections below it are the history (v1, v2, the first
 2026-11-09 pass); what they describe and the next section no longer lists is gone. Player-only: the AI keeps its own
 logic and is never touched (a console-only test switch lets it run for an AI country in the test world).
 
-## Two tabs (Jan 2026-11-09, evening)
+## Two tabs (Jan 2026-11-09, evening), three since 2026-11-10
 
-- **The window** (`in_game/gui/pp_construction_plan.gui`, vanilla main tabs): **Global Settings** and **Location
+- **The window** (`in_game/gui/pp_construction_plan.gui`, vanilla main tabs): **Global Settings**, **Location
   Profiles** (the profile editor, type `pp_lprof_editor_tab` in `pp_location_profiles.gui`; every opener of the old
-  editor window opens this tab: `docs/location_profiles.md`). Nothing else.
+  editor window opens this tab: `docs/location_profiles.md`) and **Towns and Buildings** (GUI variable `pp_cplan_tab` =
+  `country`; the settings of the rule group of that name, type `pp_cplan_country_tab`, hosted the same way; the type,
+  the group's effect `pp_cplan_group_country` and `pp_cplan_country_rights` are `construction_plan_country.py`'s).
+  Nothing else.
+- **Maintenance 2026-11-10** (not tested in game):
+  - *Six rule groups.* `GROUPS` = profiles, food, logistics, improve, business, country (code 107). The player's names
+    of two differ from their keys: profiles = **Locations** (what the player set for single locations: their
+    profiles' rules, then their marks, the Location Plan's "Also build here", `docs/location_plan.md`; the tab keeps
+    its name Location Profiles), country = **Towns and Buildings** (its row has no line: its settings are on its
+    tab). Both count in the sum of the weights only while they have something to do (`pp_cplan_profiles_cw`: a
+    location has a profile or a mark; `pp_cplan_country_cw`: `pp_cplan_country_active`, a public building ticked or an
+    upgrade switched on), so an idle group holds no gold back; the % beside the bar follows. In the lists a mark's
+    construction reads "marked there: Also build here" (code 105, step 0; a profile rule's step is its number), a
+    public building shows the location's maximum control, an upgrade its people (what that group leaves in
+    `pp_cplan_log_val`). The order turns with the month as before, now every group first exactly twice a
+    year; the group's urban rights cost no gold, so `pp_cplan_country_rights` runs once after all groups, without a
+    part of the gold. A town or city upgrade is no building: that group writes the ledger entry itself (the lists
+    `pp_cplan_log` / `pp_cplan_log_107`, location `pp_cplan_log_why` 107, `_cost`, `_step` 2, no building type) and
+    the lists name it (type `pp_cplan_rank_upgrade`, "Upgrade to a higher Location Rank"); nothing shows blank. Where
+    another group built in the same location in that pass the upgrade leaves the location's line to it; the group's
+    own pane then still shows the upgrade (without the other group's building, cost and reason).
+  - *One place says when a site is free:* the scripted trigger `pp_cplan_site_free` (`num_civil_constructions < 1`).
+    The construction itself, the business sites, the food rule's farm sites and the logistics and improvement groups
+    ask it; no other plan script reads the count (a test checks). The engine's `max_constructions_at_same_time`
+    (vanilla: 1, a megalopolis 2, one town building + 1) would allow more in some locations; not verified in game, so
+    the rule is unchanged. The farm step now takes its sites only among free locations: a busy one among the four
+    best used up a try and built nothing, and the province went on to a Tavern although it could farm.
+  - *Worker check* (`pp_cplan_staff`): the idle pops of a building's own class are read through one generated value
+    per pop type (`pp_cplan_idle_<pop type>`, the type written out as vanilla writes the call). With the pop type
+    passed into the quoted call (`"unemployed_pops_of_pop_type_in_location(pop_type:$type$)"`) the trigger logged
+    "Script system error! ... trigger [ pop_type ]" about 2,000 times a session (Jan's game, 2026-11-10); no vanilla
+    file puts an argument inside quotes.
+  - *A pass without gold is cheap for the business group:* its pick (every free site against every business type)
+    is the pass's dear part, so the group does not look at all when it starts without gold to spend
+    (`pp_cplan_budget_left` right after it got its part). Its pane then says "It had no gold to spend, so it did not
+    look for businesses" instead of "Nothing waited for gold", and the chart's tooltip says that such a month shows
+    nothing: what the businesses would have cost is not counted then. The other groups still go through all they
+    want (they are cheap); the logistics and improvement groups no longer look for a building in a location with a
+    construction under way (it could not start one; it still counts for their situation).
+  - *"Last month" list:* its reasons that do not apply take no room any more (`ignoreinvisible`: an improvement's
+    reason stood behind the gaps of the four hidden ones).
 - **Global Settings:** run the plan every month (on/off); the gold reserve in gold (default 1,000; - and + move it 100,
   a right-click 1,000; a script cannot read typed text, the game's typed fields such as the loan amount are wired into
   the engine); the rule groups, each with a weight bar (see below) and the last three with one line: Food per province (no line; its numbers stay at the
@@ -22,7 +63,7 @@ logic and is never touched (a console-only test switch lets it run for an AI cou
   on; a group may go past its part with its last construction. No construction takes the treasury below the reserve:
   `pp_cplan_construct_scoped` prices the level with the engine's formula (`pp_cplan_btype_data`, `pp_cplan_est_cost`)
   and starts it only when it fits in the gold above the reserve (`pp_cplan_affordable`). The groups' order still turns
-  with the month (five groups now: every group goes first two or three times a year).
+  with the month (six groups since 2026-11-10: every group goes first twice a year).
 - **Businesses (new rule group):** every building whose main good is a market good (the producers of
   `market_short_weight.main_good`, 224 types; not the food rule's Taverns, kitchens, Granaries, Granges and Yards, not
   logistics or improvements, not the hidden goods) wherever a level pays back within the line, the best yearly return
@@ -40,10 +81,11 @@ logic and is never touched (a console-only test switch lets it run for an AI cou
   market access, method unlocks (a method not researched yet still counts). Farms are businesses too: the food rule
   builds them where a province is short, the business rule where they pay.
 - **Weights instead of on/off** (Jan 2026-11-09, later the same day: "allocate percentages, maybe slider-based; every
-  slider on full divides it"): each of the five rule groups (Location profiles, Food, Logistics, Improvements,
-  Businesses) has a weight 0..10 (default 5; `[construction_plan] weights`); its part of the gold above the reserve =
+  slider on full divides it"): each of the rule groups (Locations = the location profiles, Food, Logistics,
+  Improvements, Businesses, and since 2026-11-10 Towns and Buildings) has a weight 0..10 (default 5;
+  `[construction_plan] weights`); its part of the gold above the reserve =
   its weight over the sum of the weights that count (`pp_cplan_share_<group>`; the profiles count only while a location
-  has a profile), shown in % beside the bar (`pp_cplan_part_<group>`). 0 = the group is off. A part one group leaves
+  has a profile or, since 2026-11-10, a mark; Towns and Buildings only while something is ticked on its tab), shown in % beside the bar (`pp_cplan_part_<group>`). 0 = the group is off. A part one group leaves
   passes on, as before. The bar (generated, `gui/pp_construction_plan_weights.gui`): vanilla's slider - and + buttons
   and a gold progress bar whose ten steps set the weight when clicked. A real slider is not possible: vanilla's
   sliders report their value only to engine functions (`onvaluechanged = "[AutomatedSystemsItem.OnChangedGoldSlider]"`),
@@ -53,7 +95,8 @@ logic and is never touched (a console-only test switch lets it run for an AI cou
   (`employment_size` of the building, a number or a script value such as `manpower_employment`, in thousands like the
   pops): the idle peasants left after the open jobs of the buildings there (`pp_cplan_free_peasants_here`: idle
   peasants minus each building's `building_employment_size_amount - building_employed_amount`; peasants are promoted
-  into the other classes), or idle pops of the building's own class (`pp_cplan_staff`). A profile rule that finds no
+  into the other classes), or idle pops of the building's own class (`pp_cplan_staff`, which reads them as the
+  generated `pp_cplan_idle_<pop type>`). A profile rule that finds no
   workers shows "No free workers here" (state 4). The food, logistics and improvement rules do not check workers.
 - **Detail panes** (Jan 2026-11-09, night: "we can see that a building is being built, but not how much investment
   is missing given the current settings, or why it was built; a little cog per setting where you can see what's
@@ -74,8 +117,9 @@ logic and is never touched (a console-only test switch lets it run for an AI cou
   (they cannot start one). The numbers live on the country until the next pass (`pp_cplan_d*` / `pp_cplan_ds_*`, the
   history `pp_cplan_hn_` / `_hs_<why>_<k>`, generated `pp_cplan_stats_reset` / `pp_cplan_history_push`); switching the
   plan on clears the chart. The rules never read any of it (a test checks), so the plan stays stateless as Jan wants.
-  Cost: a pass with no gold left now checks everything instead of stopping (the business pick over every free site,
-  the food steps of every province); not profiled yet. Not tested in game.
+  Cost: a pass with no gold left checks everything instead of stopping, except the business group since 2026-11-10
+  (its pick over every free site was the dear part: it does not look when it starts without gold, see Maintenance
+  above); the food steps of every province still run; not profiled yet. Not tested in game.
 - **Gone** (Jan: "the rest for now can go"): the Food, Goods, Logistics, Locations and Here tabs; the monthly
   construction limit; the presets; the line about the game's own automation (the guards stay: no level for a closed
   building, nothing where a construction is under way); the goods modes (Off / Keep / Expand / Never); the per-location

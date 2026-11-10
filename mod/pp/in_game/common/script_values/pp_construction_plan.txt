@@ -248,7 +248,8 @@ pp_cplan_est_payback_years = {
 
 # Location scope: idle peasants left for a new building here, in thousands like the pops: the idle peasants minus the
 # open jobs of the buildings here (workers they could still take). Peasants are promoted into the other classes, so
-# they staff any building (Jan 2026-11-09); pp_cplan_staff reads it as scope:pp_cplan_free_peasants.
+# they staff any building (Jan 2026-11-09); pp_cplan_staff reads it as scope:pp_cplan_free_peasants. The idle pops
+# of the other classes are generated (pp_cplan_idle_<pop type>, pp_construction_plan_generated.txt).
 pp_cplan_free_peasants_here = {
 	value = "unemployed_pops_of_pop_type_in_location(pop_type:peasants)"
 	every_buildings_in_location = {
@@ -312,7 +313,7 @@ pp_cplan_spent_n = {
 }
 
 # Location scope: why the plan built here last month (1 food, 2 logistics, 3 business, 5 a location profile,
-# 6 improvements).
+# 6 improvements, 7 towns and buildings).
 pp_cplan_why_n = {
 	value = 0
 	if = {
@@ -323,8 +324,9 @@ pp_cplan_why_n = {
 }
 
 # Location scope, the window's detail panes: what last month's construction here cost, its reason value (the food
-# store a year from now in months, market access %, population % of capacity, payback years) and the food rule's step
-# or the profile rule it came from (pp_cplan_construct_now).
+# store a year from now in months, market access %, population % of capacity, payback years) and the food rule's step,
+# the profile rule it came from, or the kind of the Towns and Buildings group (1 a building, 2 a town or city upgrade)
+# (pp_cplan_construct_now).
 pp_cplan_log_cost_n = {
 	value = 0
 	if = {
@@ -346,4 +348,10 @@ pp_cplan_log_step_n = {
 		limit = { has_variable = pp_cplan_log_step }
 		value = var:pp_cplan_log_step
 	}
+}
+
+# Location scope: the constructions this location builds at the same time (pp_cplan_site_free).
+pp_cplan_site_slots = {
+	value = modifier:max_constructions_at_same_time
+	min = 1
 }

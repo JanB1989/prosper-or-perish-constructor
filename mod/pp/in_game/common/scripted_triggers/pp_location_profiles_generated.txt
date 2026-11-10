@@ -42,12 +42,20 @@ pp_lprof_symbol_key = {
 	}
 }
 
-# Country scope (root = this country, in the pass and in the panel): a location the country owns has a profile.
+# Country scope (root = this country, in the pass and in the panel): a location the country owns has a profile or
+# a mark of the Location Plan (the profile rule group has something to run).
 pp_lprof_has_locations = {
-	any_in_list = {
-		variable = pp_lprof_locs
-		owner ?= root
-		has_variable = pp_lprof
+	OR = {
+		any_in_list = {
+			variable = pp_lprof_locs
+			owner ?= root
+			has_variable = pp_lprof
+		}
+		any_in_list = {
+			variable = pp_lplan_locs
+			owner ?= root
+			has_variable = pp_lplan_n
+		}
 	}
 }
 

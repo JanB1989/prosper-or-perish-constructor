@@ -1,30 +1,38 @@
-﻿# Prosper or Perish - Construction Plan (branch player-construction-manager, 2026-11-06, Jan; two tabs since 2026-11-09).
+﻿# Prosper or Perish - Construction Plan (branch player-construction-manager, 2026-11-06, Jan; two tabs since 2026-11-09,
+# a third and a sixth rule group since 2026-11-10).
 # Player-only construction rules, run once a month by on_action/pp_construction_plan.txt for each human country that
-# switched the plan on. Global settings: a gold reserve and five rule groups (Location profiles, Food per province,
-# Logistics per location, Improvements per location, Businesses), each with a weight (its part of the gold above the
-# reserve = its weight over the sum of the weights; 0 = off) and the last three with a line. Location profiles
-# (pp_location_profiles.txt) are the only per-location layer: a profile takes from the rule groups only what it sets (its rules' targets and the
-# groups it switches off; pp_cplan_*_ok in scripted_triggers), the rest still build in its locations. The pickers per
+# switched the plan on. Global settings: a gold reserve and six rule groups (Locations = the location profiles and the
+# Location Plan's marks, Food per province, Logistics per location, Improvements per location, Businesses, Towns and
+# Buildings), each with a weight (its part of the gold above the reserve = its weight over the sum of the weights that
+# count; 0 = off; Locations and Towns and Buildings count only while they have something to do); Logistics,
+# Improvements and Businesses with a line, Towns and Buildings with a tab of its own (construction_plan_country.py:
+# pp_cplan_group_country, pp_cplan_country_rights). The per-location layer (pp_location_profiles.txt): a location's
+# profile takes from the rule groups only what it sets (its rules' targets and the groups it switches off;
+# pp_cplan_*_ok in scripted_triggers), the rest still build in its locations; a location's marks ("Also build here")
+# add to them and switch nothing off. The pickers per
 # building, the profit estimates and the build cost data are generated from [construction_plan] into
 # pp_construction_plan_generated.txt (construction_plan.py). Constructions are normal, paid constructions
 # (construct_building), so they show in the construction queue like the player's own.
 # Variables carry + 100 (a variable at 0 counts as unset; var:x = n compares scopes, so only < / > ranges are used).
 #
-# Country variables: pp_cplan_on (the plan runs), pp_cplan_w_profiles / _food / _logistics / _improve / _business (the
-# rule groups' weights), pp_cplan_reserve / _access / _imp / _biz (the window's lines; defaults in [construction_plan]),
+# Country variables: pp_cplan_on (the plan runs), pp_cplan_w_profiles / _food / _logistics / _improve / _business /
+# _country (the rule groups' weights), pp_cplan_reserve / _access / _imp / _biz (the window's lines; defaults in
+# [construction_plan]),
 # the list pp_cplan_log (locations built in by the last pass), the last pass's pp_cplan_started / _spent, and during a
 # pass only: pp_cplan_pot (gold above the reserve at its start), pp_cplan_cap (gold the rule groups so far may have
 # spent), pp_cplan_hit, pp_cplan_noted, pp_cplan_wait, pp_cplan_bz_<type> (the business types the country can build).
 # What the window's detail panes show (Jan 2026-11-09: "how much investment is missing, what was built and why"), kept
-# per rule group by its construction code <why> (101 food, 102 logistics, 103 business, 105 profiles, 106 improvements)
-# until the next pass: pp_cplan_dran_<why> (the group ran), pp_cplan_dhad_ / _dspent_ / _dn_ (gold it could spend, gold
+# per rule group by its construction code <why> (101 food, 102 logistics, 103 business, 105 profiles, 106 improvements,
+# 107 towns and buildings) until the next pass: pp_cplan_dran_<why> (the group ran), pp_cplan_dhad_ / _dspent_ / _dn_ (gold it could spend, gold
 # it spent, constructions started), pp_cplan_dwait_ / _dwn_ (the gold and the number of the constructions it wanted
 # that waited for gold), the list pp_cplan_log_<why>, the group's situation pp_cplan_ds_<name>, and the last 12 passes
 # pp_cplan_hn_<why>_<k> / pp_cplan_hs_<why>_<k> (wanted / spent, k = 1 the last; generated pp_cplan_stats_reset,
 # pp_cplan_history_push). The rules never read any of it: the window only.
 # Location: pp_cplan_log_why + list pp_cplan_log_types (the last pass's constructions here) and the construction's
 # pp_cplan_log_cost (gold), pp_cplan_log_val (its reason value + 100: the food store a year from now in months, market
-# access %, population % of capacity, payback years) and pp_cplan_log_step (the food rule's step, a profile's rule);
+# access %, population % of capacity, payback years) and pp_cplan_log_step (the food rule's step, a profile's rule;
+# towns and buildings: 1 a building, 2 a town or city upgrade, which is no building: that group writes the entry
+# itself and leaves pp_cplan_log_types empty, the window then names the upgrade, type pp_cplan_rank_upgrade);
 # pp_cplan_bz_pick / pp_cplan_bz_roi during the business group only.
 
 # Country scope: the monthly pass.
@@ -54,50 +62,66 @@ pp_cplan_run = {
 	# (pp_cplan_construct_scoped).
 	set_variable = { name = pp_cplan_pot value = { value = pp_cplan_free_gold min = 0 add = 100 } }
 	set_variable = { name = pp_cplan_cap value = 100 }
-	# The rule groups' order turns with the game's month, so every group goes first two or three times a year: with
-	# little gold above the reserve the group that went first took it every month (test world 2026-11-09, AI run).
-	# Stateless: the month is the game's. Who may build what in a location does not depend on the order (a profile
-	# takes from the groups what it sets, pp_cplan_*_ok); the order only decides who gets the gold and a free
-	# construction site first.
+	# The rule groups' order turns with the game's month, so every group goes first twice a year (six groups, twelve
+	# months): with little gold above the reserve the group that went first took it every month (test world
+	# 2026-11-09, AI run). Stateless: the month is the game's. Who may build what in a location does not depend on the
+	# order (a profile takes from the groups what it sets, pp_cplan_*_ok); the order only decides who gets the gold
+	# and a free construction site first.
 	if = {
-		limit = { OR = { current_month = 1 current_month = 6 current_month = 11 } }
+		limit = { OR = { current_month = 1 current_month = 7 } }
 		pp_cplan_group_profiles = yes
 		pp_cplan_group_food = yes
 		pp_cplan_group_logistics = yes
 		pp_cplan_group_improve = yes
 		pp_cplan_group_business = yes
+		pp_cplan_group_country = yes
 	}
 	else_if = {
-		limit = { OR = { current_month = 2 current_month = 7 current_month = 12 } }
+		limit = { OR = { current_month = 2 current_month = 8 } }
 		pp_cplan_group_food = yes
 		pp_cplan_group_logistics = yes
 		pp_cplan_group_improve = yes
 		pp_cplan_group_business = yes
+		pp_cplan_group_country = yes
 		pp_cplan_group_profiles = yes
 	}
 	else_if = {
-		limit = { OR = { current_month = 3 current_month = 8 } }
+		limit = { OR = { current_month = 3 current_month = 9 } }
 		pp_cplan_group_logistics = yes
 		pp_cplan_group_improve = yes
 		pp_cplan_group_business = yes
+		pp_cplan_group_country = yes
 		pp_cplan_group_profiles = yes
 		pp_cplan_group_food = yes
 	}
 	else_if = {
-		limit = { OR = { current_month = 4 current_month = 9 } }
+		limit = { OR = { current_month = 4 current_month = 10 } }
 		pp_cplan_group_improve = yes
 		pp_cplan_group_business = yes
+		pp_cplan_group_country = yes
 		pp_cplan_group_profiles = yes
 		pp_cplan_group_food = yes
 		pp_cplan_group_logistics = yes
+	}
+	else_if = {
+		limit = { OR = { current_month = 5 current_month = 11 } }
+		pp_cplan_group_business = yes
+		pp_cplan_group_country = yes
+		pp_cplan_group_profiles = yes
+		pp_cplan_group_food = yes
+		pp_cplan_group_logistics = yes
+		pp_cplan_group_improve = yes
 	}
 	else = {
-		pp_cplan_group_business = yes
+		pp_cplan_group_country = yes
 		pp_cplan_group_profiles = yes
 		pp_cplan_group_food = yes
 		pp_cplan_group_logistics = yes
 		pp_cplan_group_improve = yes
+		pp_cplan_group_business = yes
 	}
+	# urban rights of the Towns and Buildings group: they cost no gold, so they have no part of it and no turn
+	pp_cplan_country_rights = yes
 	remove_variable = pp_cplan_hit
 	remove_variable = pp_cplan_noted
 	remove_variable = pp_cplan_wait
@@ -120,6 +144,7 @@ pp_cplan_run = {
 		save_scope_as = pp_field # Location Profiles
 		save_scope_as = pp_col # Location Profiles
 		pp_cplan_declare_flags = yes
+		pp_cplan_country_declare = yes # Towns and Buildings
 		pp_lprof_declare_flags = yes
 		set_variable = { name = pp_cplan_ai_test value = yes } # set only by the console (test runs)
 		if = {
@@ -133,7 +158,11 @@ pp_cplan_run = {
 # when it runs) ----
 # A group goes through everything it wants even after the gold is used up: what it cannot pay for is counted, not
 # built (pp_cplan_construct_scoped, pp_cplan_note_wait), so the window shows the gold that would have started it all
-# (Jan 2026-11-09: "how much investment is needed, correctly calculated from the last iteration").
+# (Jan 2026-11-09: "how much investment is needed, correctly calculated from the last iteration"). One exception, for
+# the pass's cost: the business group does not look at all when it starts without gold (pp_cplan_group_business), and
+# its pane says so. A location with a construction under way (pp_cplan_site_free) cannot start one, so the logistics
+# and improvement groups do not look for a building there (it still counts for their situation).
+# The sixth group, Towns and Buildings (pp_cplan_group_country, code 107), is construction_plan_country.py's.
 
 # Country scope: a rule group starts (its code $why$, its part of the month's gold $add$): the gold it may spend
 # grows by its part; the window keeps that it ran and the gold it could spend (its part and what the groups before it
@@ -144,8 +173,9 @@ pp_cplan_group_start = {
 	set_variable = { name = pp_cplan_dhad_$why$ value = { value = pp_cplan_cap_n subtract = pp_cplan_spent_n min = 0 add = 100 } }
 }
 
-# Location profiles (pp_location_profiles.txt): their rules have priority in their locations; the global groups still
-# build there what a profile does not set (pp_cplan_*_ok).
+# The player's "Locations" group (pp_location_profiles.txt): the location profiles, whose rules have priority in their
+# locations (the global groups still build there what a profile does not set, pp_cplan_*_ok), and the Location Plan's
+# marks ("Also build here"), which add to them and switch nothing off.
 pp_cplan_group_profiles = {
 	pp_lprof_run = yes
 }
@@ -185,7 +215,10 @@ pp_cplan_group_logistics = {
 					set_variable = { name = pp_cplan_ds_logistics_lowest value = scope:pp_cplan_rv }
 				}
 			}
-			pp_cplan_try_logistics_here = yes
+			if = {
+				limit = { pp_cplan_site_free = yes }
+				pp_cplan_try_logistics_here = yes
+			}
 		}
 	}
 }
@@ -215,7 +248,10 @@ pp_cplan_group_improve = {
 					set_variable = { name = pp_cplan_ds_improve_fullest value = scope:pp_cplan_rv }
 				}
 			}
-			pp_cplan_try_improve_here = yes
+			if = {
+				limit = { pp_cplan_site_free = yes }
+				pp_cplan_try_improve_here = yes
+			}
 		}
 	}
 }
@@ -225,37 +261,48 @@ pp_cplan_group_improve = {
 # pp_cplan_business_pick: one level of a standing one or a first level, the same profit estimate for both), then the
 # picks are built in the order of their yearly return while the gold lasts. The country's part of the can-build check
 # runs once (pp_cplan_business_types), not once per location.
+# The pick is the pass's dear part (every free site against every business type), so the group does not look at all
+# when it starts without gold to spend (pp_cplan_budget_left: no gold above the reserve, or the groups before it
+# spent its part too): nothing could be built, and a month without gold is the usual month of a plan that spends
+# what comes in. The window then says that the group did not look (pp_cplan_ds_business_skipped), instead of
+# "nothing waited for gold": what the businesses would have cost is not counted in such a month.
 pp_cplan_group_business = {
 	if = {
 		limit = { pp_cplan_business_w > 0 }
 		pp_cplan_group_start = { why = 103 add = pp_cplan_share_business }
-		pp_cplan_business_types = yes
-		every_owned_location = {
-			limit = { pp_cplan_business_site = yes }
-			pp_cplan_business_pick = yes
-		}
-		ordered_owned_location = {
-			limit = { has_variable = pp_cplan_bz_pick }
-			order_by = pp_cplan_bz_roi_n
-			max = 100000
-			check_range_bounds = no
-			# the window: the pick's payback in years (+ 100); the quickest of the country's sites
-			save_temporary_scope_value_as = { name = pp_cplan_rv value = { value = 100 divide = var:pp_cplan_bz_roi add = 100 } }
-			save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }
-			scope:pp_cplan_country = {
-				remove_variable = pp_cplan_noted
-				change_variable = { name = pp_cplan_ds_business_sites add = 1 }
-				if = {
-					limit = { var:pp_cplan_ds_business_best > scope:pp_cplan_rv }
-					set_variable = { name = pp_cplan_ds_business_best value = scope:pp_cplan_rv }
-				}
+		if = {
+			limit = { pp_cplan_budget_left = yes }
+			pp_cplan_business_types = yes
+			every_owned_location = {
+				limit = { pp_cplan_business_site = yes }
+				pp_cplan_business_pick = yes
 			}
-			var:pp_cplan_bz_pick = { save_scope_as = pp_cplan_btype }
-			pp_cplan_construct_scoped = { why = 103 }
-			remove_variable = pp_cplan_bz_pick
-			remove_variable = pp_cplan_bz_roi
+			ordered_owned_location = {
+				limit = { has_variable = pp_cplan_bz_pick }
+				order_by = pp_cplan_bz_roi_n
+				max = 100000
+				check_range_bounds = no
+				# the window: the pick's payback in years (+ 100); the quickest of the country's sites
+				save_temporary_scope_value_as = { name = pp_cplan_rv value = { value = 100 divide = var:pp_cplan_bz_roi add = 100 } }
+				save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }
+				scope:pp_cplan_country = {
+					remove_variable = pp_cplan_noted
+					change_variable = { name = pp_cplan_ds_business_sites add = 1 }
+					if = {
+						limit = { var:pp_cplan_ds_business_best > scope:pp_cplan_rv }
+						set_variable = { name = pp_cplan_ds_business_best value = scope:pp_cplan_rv }
+					}
+				}
+				var:pp_cplan_bz_pick = { save_scope_as = pp_cplan_btype }
+				pp_cplan_construct_scoped = { why = 103 }
+				remove_variable = pp_cplan_bz_pick
+				remove_variable = pp_cplan_bz_roi
+			}
+			pp_cplan_business_types_clear = yes
 		}
-		pp_cplan_business_types_clear = yes
+		else = {
+			set_variable = { name = pp_cplan_ds_business_skipped value = 101 }
+		}
 	}
 }
 
@@ -344,8 +391,11 @@ pp_cplan_food_province = {
 				NOT = { any_location_in_province = { pp_cplan_food_queued = yes } }
 			}
 			ordered_location_in_province = {
+				# only sites that can start a construction: a busy one among the best sites took a try and built
+				# nothing, and the province then went on to a Tavern although it can farm
 				limit = {
 					pp_cplan_farm_ok = yes
+					pp_cplan_site_free = yes
 					pp_cplan_farm_best_roi > 0
 				}
 				order_by = pp_cplan_farm_best_roi
@@ -440,16 +490,14 @@ pp_cplan_food_province = {
 }
 
 # Location scope: start one level of $type$ here and record it ($why$: 101 food, 102 logistics, 103 business, 105 a
-# location profile, 106 improvements).
+# location profile, 106 improvements, 107 towns and buildings).
 pp_cplan_construct = {
 	building_type:$type$ = { save_scope_as = pp_cplan_btype }
 	pp_cplan_construct_scoped = { why = $why$ }
 }
 
-# Location scope: the same for the building type scope:pp_cplan_btype. Only where nothing is under construction here
-# (whoever started it: a rule, the game's own building automation, the player): the engine builds a location's
-# constructions one after another, so a second one paid now only waits (test world 2026-11-09: in Ocana a Cookshop
-# moved 344 days in a year while the Granary, Grange and Carrier Inn the plan had started beside it moved 0). Never a
+# Location scope: the same for the building type scope:pp_cplan_btype. Only where a construction can start
+# (pp_cplan_site_free: nothing is under construction here, whoever started it). Never a
 # level for a building that is closed: whoever closed it (the player or the game's Close and Open Buildings
 # automation) found it does not pay, and the plan does not argue (Jan 2026-11-09: the plan and the game's automation
 # must not undo each other). Never below the gold reserve: the level's cost (the engine's formula) must fit in the gold
@@ -458,7 +506,7 @@ pp_cplan_construct = {
 pp_cplan_construct_scoped = {
 	if = {
 		limit = {
-			num_civil_constructions < 1
+			pp_cplan_site_free = yes
 			pp_cplan_bt_queued < 0.5
 			NOT = {
 				any_buildings_in_location = {

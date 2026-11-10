@@ -1883,15 +1883,111 @@ pp_lprof_category_target = {
 
 # Location scope (in scope:pp_cplan_country's list pp_lprof_locs, owned by it): the rules of its profile in order,
 # from the location's copy (pp_lprof_r<r>_*); the first rule that starts a construction ends the location for the
-# month. No slot is looked at.
+# month (pp_cplan_hit, cleared per location by pp_lprof_run; the location's marks follow and wait too). No slot is
+# looked at.
 pp_lprof_location_rules = {
-	scope:pp_cplan_country = { remove_variable = pp_cplan_hit }
 	pp_lprof_rule = { r = 1 }
 	pp_lprof_rule = { r = 2 }
 	pp_lprof_rule = { r = 3 }
 	pp_lprof_rule = { r = 4 }
 	pp_lprof_rule = { r = 5 }
-	scope:pp_cplan_country = { remove_variable = pp_cplan_hit }
+}
+
+# ---- The location's marks (the Location Plan's items; Jan 2026-11-10: "also build this here") ----
+# Location scope (in pp_lprof_run, after the rules of the location's profile): each marked item in the picker's
+# order, as a profile rule with that target runs (pp_lplan_mark: the same pp_lprof_t_<target>), within the
+# player's Businesses line (the country's pp_cplan_business_years, as scope:pp_lprof_pb + 100 like a rule's limit).
+# The first construction of the month in the location, by a rule or a mark, makes the rest wait. The window's
+# ledger shows a mark's construction as the profile group's, step 0 (a profile rule's step is its number).
+pp_lplan_location_marks = {
+	scope:pp_cplan_country = {
+		save_temporary_scope_value_as = { name = pp_lprof_pb value = { value = pp_cplan_business_years add = 100 } }
+	}
+	save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }
+	pp_lplan_mark = { v = g_camels do = pp_lprof_t_camels }
+	pp_lplan_mark = { v = g_elephants do = pp_lprof_t_elephants }
+	pp_lplan_mark = { v = g_horses do = pp_lprof_t_horses }
+	pp_lplan_mark = { v = g_livestock do = pp_lprof_t_livestock }
+	pp_lplan_mark = { v = g_wool do = pp_lprof_t_wool }
+	pp_lplan_mark = { v = g_beeswax do = pp_lprof_t_beeswax }
+	pp_lplan_mark = { v = g_dyes do = pp_lprof_t_dyes }
+	pp_lplan_mark = { v = g_incense do = pp_lprof_t_incense }
+	pp_lplan_mark = { v = g_tobacco do = pp_lprof_t_tobacco }
+	pp_lplan_mark = { v = g_cotton do = pp_lprof_t_cotton }
+	pp_lplan_mark = { v = g_fiber_crops do = pp_lprof_t_fiber_crops }
+	pp_lplan_mark = { v = g_silk do = pp_lprof_t_silk }
+	pp_lplan_mark = { v = g_chili do = pp_lprof_t_chili }
+	pp_lplan_mark = { v = g_cloves do = pp_lprof_t_cloves }
+	pp_lplan_mark = { v = g_pepper do = pp_lprof_t_pepper }
+	pp_lplan_mark = { v = g_saffron do = pp_lprof_t_saffron }
+	pp_lplan_mark = { v = g_legumes do = pp_lprof_t_legumes }
+	pp_lplan_mark = { v = g_maize do = pp_lprof_t_maize }
+	pp_lplan_mark = { v = g_millet do = pp_lprof_t_millet }
+	pp_lplan_mark = { v = g_potato do = pp_lprof_t_potato }
+	pp_lplan_mark = { v = g_rice do = pp_lprof_t_rice }
+	pp_lplan_mark = { v = g_wheat do = pp_lprof_t_wheat }
+	pp_lplan_mark = { v = g_cocoa do = pp_lprof_t_cocoa }
+	pp_lplan_mark = { v = g_coffee do = pp_lprof_t_coffee }
+	pp_lplan_mark = { v = g_tea do = pp_lprof_t_tea }
+	pp_lplan_mark = { v = g_sugar do = pp_lprof_t_sugar }
+	pp_lplan_mark = { v = g_fruit do = pp_lprof_t_fruit }
+	pp_lplan_mark = { v = g_olives do = pp_lprof_t_olives }
+	pp_lplan_mark = { v = g_wine do = pp_lprof_t_wine }
+	pp_lplan_mark = { v = g_lumber do = pp_lprof_t_lumber }
+	pp_lplan_mark = { v = g_fish do = pp_lprof_t_fish }
+	pp_lplan_mark = { v = g_pearls do = pp_lprof_t_pearls }
+	pp_lplan_mark = { v = g_clay do = pp_lprof_t_clay }
+	pp_lplan_mark = { v = g_sand do = pp_lprof_t_sand }
+	pp_lplan_mark = { v = g_medicaments do = pp_lprof_t_medicaments }
+	pp_lplan_mark = { v = g_salt do = pp_lprof_t_salt }
+	pp_lplan_mark = { v = g_amber do = pp_lprof_t_amber }
+	pp_lplan_mark_none = { v = g_fur }
+	pp_lplan_mark = { v = g_ivory do = pp_lprof_t_ivory }
+	pp_lplan_mark = { v = g_wild_game do = pp_lprof_t_wild_game }
+	pp_lplan_mark = { v = g_beer do = pp_lprof_t_beer }
+	pp_lplan_mark = { v = g_liquor do = pp_lprof_t_liquor }
+	pp_lplan_mark = { v = g_books do = pp_lprof_t_books }
+	pp_lplan_mark = { v = g_paper do = pp_lprof_t_paper }
+	pp_lplan_mark = { v = g_slaves_goods do = pp_lprof_t_slaves_goods }
+	pp_lplan_mark = { v = g_glass do = pp_lprof_t_glass }
+	pp_lplan_mark = { v = g_masonry do = pp_lprof_t_masonry }
+	pp_lplan_mark = { v = g_pottery do = pp_lprof_t_pottery }
+	pp_lplan_mark = { v = g_tar do = pp_lprof_t_tar }
+	pp_lplan_mark = { v = g_furniture do = pp_lprof_t_furniture }
+	pp_lplan_mark = { v = g_jewelry do = pp_lprof_t_jewelry }
+	pp_lplan_mark = { v = g_lacquerware do = pp_lprof_t_lacquerware }
+	pp_lplan_mark = { v = g_porcelain do = pp_lprof_t_porcelain }
+	pp_lplan_mark = { v = g_steel do = pp_lprof_t_steel }
+	pp_lplan_mark = { v = g_tools do = pp_lprof_t_tools }
+	pp_lplan_mark = { v = g_cannons do = pp_lprof_t_cannons }
+	pp_lplan_mark = { v = g_firearms do = pp_lprof_t_firearms }
+	pp_lplan_mark = { v = g_weaponry do = pp_lprof_t_weaponry }
+	pp_lplan_mark = { v = g_naval_supplies do = pp_lprof_t_naval_supplies }
+	pp_lplan_mark = { v = g_victuals do = pp_lprof_t_victuals }
+	pp_lplan_mark = { v = g_cloth do = pp_lprof_t_cloth }
+	pp_lplan_mark = { v = g_fine_cloth do = pp_lprof_t_fine_cloth }
+	pp_lplan_mark = { v = g_leather do = pp_lprof_t_leather }
+	pp_lplan_mark = { v = g_marble do = pp_lprof_t_marble }
+	pp_lplan_mark = { v = g_stone do = pp_lprof_t_stone }
+	pp_lplan_mark = { v = g_coal do = pp_lprof_t_coal }
+	pp_lplan_mark = { v = g_alum do = pp_lprof_t_alum }
+	pp_lplan_mark = { v = g_mercury do = pp_lprof_t_mercury }
+	pp_lplan_mark = { v = g_saltpeter do = pp_lprof_t_saltpeter }
+	pp_lplan_mark = { v = g_copper do = pp_lprof_t_copper }
+	pp_lplan_mark = { v = g_iron do = pp_lprof_t_iron }
+	pp_lplan_mark = { v = g_lead do = pp_lprof_t_lead }
+	pp_lplan_mark = { v = g_tin do = pp_lprof_t_tin }
+	pp_lplan_mark = { v = g_gems do = pp_lprof_t_gems }
+	pp_lplan_mark = { v = g_goods_gold do = pp_lprof_t_goods_gold }
+	pp_lplan_mark = { v = g_silver do = pp_lprof_t_silver }
+	pp_lplan_mark = { v = c_trade_category do = pp_lprof_t_trade_category }
+	pp_lplan_mark = { v = c_government_category do = pp_lprof_t_government_category }
+	pp_lplan_mark = { v = c_military_category do = pp_lprof_t_military_category }
+	pp_lplan_mark = { v = c_defense_category do = pp_lprof_t_defense_category }
+	pp_lplan_mark = { v = c_religious_category do = pp_lprof_t_religious_category }
+	pp_lplan_mark = { v = c_cultural_category do = pp_lprof_t_cultural_category }
+	pp_lplan_mark = { v = c_naval_category do = pp_lprof_t_naval_category }
+	pp_lplan_mark = { v = c_infrastructure_category do = pp_lprof_t_infrastructure_category }
 }
 
 # ---- Slots: the only per-slot script ----
@@ -2470,6 +2566,15 @@ pp_lprof_global_staged = {
 				set_variable = { name = pp_lprof_s_xg value = 101 }
 			}
 		}
+		flag:global_country = {
+			if = {
+				limit = { has_variable = pp_lprof_s_xc }
+				remove_variable = pp_lprof_s_xc
+			}
+			else = {
+				set_variable = { name = pp_lprof_s_xc value = 101 }
+			}
+		}
 	}
 }
 
@@ -2690,6 +2795,7 @@ pp_lprof_copy_profile = {
 	pp_lprof_pull_n = { from = $from$_xl to = $to$_xl }
 	pp_lprof_pull_n = { from = $from$_xi to = $to$_xi }
 	pp_lprof_pull_n = { from = $from$_xg to = $to$_xg }
+	pp_lprof_pull_n = { from = $from$_xc to = $to$_xc }
 }
 
 # Any scope: the frame numbers of the rules' category targets, scope:pp_lprof_country's $from$_* -> this scope's
@@ -2729,6 +2835,7 @@ pp_lprof_clear_copies = {
 	remove_variable = $p$_xl
 	remove_variable = $p$_xi
 	remove_variable = $p$_xg
+	remove_variable = $p$_xc
 }
 
 # Any scope but a location: the rules' frame numbers of a copy ($p$_*) removed.
@@ -2994,6 +3101,8 @@ pp_lprof_examples_do = {
 		pp_lprof_global_do = yes
 		save_scope_value_as = { name = pp_field value = flag:global_business }
 		pp_lprof_global_do = yes
+		save_scope_value_as = { name = pp_field value = flag:global_country }
+		pp_lprof_global_do = yes
 	}
 }
 
@@ -3040,6 +3149,7 @@ pp_lprof_declare_flags = {
 	set_variable = { name = pp_lprof_flag value = flag:gems }
 	set_variable = { name = pp_lprof_flag value = flag:glass }
 	set_variable = { name = pp_lprof_flag value = flag:global_business }
+	set_variable = { name = pp_lprof_flag value = flag:global_country }
 	set_variable = { name = pp_lprof_flag value = flag:global_food }
 	set_variable = { name = pp_lprof_flag value = flag:global_improve }
 	set_variable = { name = pp_lprof_flag value = flag:global_logistics }
@@ -3237,6 +3347,7 @@ pp_lprof_declare_flags = {
 				has_variable = pp_lprof_ic
 				has_variable = pp_lprof_in
 				has_variable = pp_lprof_col
+				has_variable = pp_lprof_xc
 				has_variable = pp_lprof_e_ig
 				has_variable = pp_lprof_e_ic
 				has_variable = pp_lprof_e_in
@@ -3260,6 +3371,7 @@ pp_lprof_declare_flags = {
 				has_variable = pp_lprof_e_xl
 				has_variable = pp_lprof_e_xi
 				has_variable = pp_lprof_e_xg
+				has_variable = pp_lprof_e_xc
 				has_variable = pp_lprof_e_r1_cn
 				has_variable = pp_lprof_e_r2_cn
 				has_variable = pp_lprof_e_r3_cn

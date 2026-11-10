@@ -3,8 +3,13 @@
 # location with a profile the profile's rules build: a rule group of the plan's monthly pass (pp_cplan_run), with its
 # own share of the month's budget. A profile takes from the global Construction Plan rules only what it sets (Jan
 # 2026-11-09): its rules' targets (a good, a building category, market access) and the global groups it switches off
-# (pp_lprof_xf / _xl / _xi / _xg: food, logistics, improvements, businesses); the rest of the global rules build there
-# too (scripted_triggers/pp_construction_plan.txt). A profile is all a location carries; nothing else per location.
+# (pp_lprof_xf / _xl / _xi / _xg / _xc: food, logistics, improvements, businesses, towns and buildings); the rest of the
+# global rules build there too (scripted_triggers/pp_construction_plan.txt).
+# Beside its profile a location carries its marks (Jan 2026-11-10, the Location Plan's items, pp_lplan_g_<good> /
+# pp_lplan_c_<category>; pp_location_plan.txt): "also build this here". The same pass runs them after the location's
+# profile rules, each as a profile rule with that target would run (the same generated pp_lprof_t_<target>), within the
+# player's Businesses line (pp_lplan_pb100); a location with marks and no profile gets its turn too. Marks add: they
+# switch nothing off in the global groups. Each keeps its state like a rule (pp_lplan_st_<item>, pp_lplan_est_<item>).
 # Player-only like the plan: the pass runs for human countries that switched the plan on, the edits are scripted GUIs.
 # Up to 100 profiles cost little: every location with a profile carries a COPY of it (written on assign and whenever its
 # slot is edited), and the monthly pass and the map badge read only the copy; the editor shows one edit buffer (a copy
@@ -25,12 +30,13 @@
 # after the last pass: 1 started, 2 nothing to build, 3 a level under construction, 5 payback too long, 6 cannot be
 # built here, 7 budget, 8 the market lacks the construction goods, 9 waiting for an earlier rule's construction this
 # month) and pp_lprof_r<r>_est (the payback found). Pass temporaries: pp_lprof_st, pp_lprof_fail, pp_lprof_best,
-# pp_lprof_pick (location), the list pp_lprof_gone (country).
+# pp_lprof_pick (location), the lists pp_lprof_gone, pp_lplan_gone and pp_lprof_turns (country: this pass's locations).
 
 # ---- The monthly pass (country scope, inside pp_cplan_run: scope:pp_cplan_country and scope:actor saved) ----
 
 pp_lprof_run = {
 	pp_lprof_cleanup = yes
+	pp_lplan_cleanup = yes
 	if = {
 		limit = {
 			pp_lprof_has_locations = yes
@@ -38,29 +44,97 @@ pp_lprof_run = {
 		}
 		pp_cplan_group_start = { why = 105 add = pp_cplan_share_profiles }
 		save_temporary_scope_value_as = { name = pp_cplan_rv value = 0 }
+		# this pass's locations: with a profile, with marks, or both (each once)
+		pp_lprof_gather = yes
 		# the locations with the fewest building levels first: in the list's own order the locations assigned first
 		# took the whole monthly share every month and the last profile built nothing in ten years (test world, 2026-11-08)
 		ordered_in_list = {
-			variable = pp_lprof_locs
-			limit = {
-				owner ?= scope:pp_cplan_country
-				has_variable = pp_lprof
-			}
+			variable = pp_lprof_turns
 			order_by = pp_lprof_turn
 			max = 100000
 			check_range_bounds = no
 			# the workers a new level can find here (pp_cplan_staff)
 			save_temporary_scope_value_as = { name = pp_cplan_free_peasants value = pp_cplan_free_peasants_here }
-			# the window: one level waiting for gold counts once a location (pp_cplan_note_wait)
+			# the window: one level waiting for gold counts once a location (pp_cplan_note_wait); one construction a
+			# month in a location, whether a rule of its profile or a mark starts it (pp_cplan_hit)
 			scope:pp_cplan_country = {
 				remove_variable = pp_cplan_noted
+				remove_variable = pp_cplan_hit
 				change_variable = { name = pp_cplan_ds_profiles_locs add = 1 }
 			}
-			pp_lprof_location_rules = yes
+			# the profile's rules first, then the location's marks ("also build this here")
+			if = {
+				limit = { has_variable = pp_lprof }
+				pp_lprof_location_rules = yes
+			}
+			if = {
+				limit = { has_variable = pp_lplan_n }
+				pp_lplan_location_marks = yes
+			}
 		}
+		clear_variable_list = pp_lprof_turns
 	}
 	remove_variable = pp_cplan_hit
 	remove_variable = pp_cplan_noted
+}
+
+# Country scope: the list pp_lprof_turns = the country's locations with a profile (pp_lprof_locs) and those with marks
+# and no profile (pp_lplan_locs), each once.
+pp_lprof_gather = {
+	clear_variable_list = pp_lprof_turns
+	every_in_list = {
+		variable = pp_lprof_locs
+		limit = {
+			owner ?= scope:pp_cplan_country
+			has_variable = pp_lprof
+		}
+		pp_lprof_take_turn = yes
+	}
+	every_in_list = {
+		variable = pp_lplan_locs
+		limit = {
+			owner ?= scope:pp_cplan_country
+			has_variable = pp_lplan_n
+			NOT = { has_variable = pp_lprof }
+		}
+		pp_lprof_take_turn = yes
+	}
+}
+
+# Location scope: joins this pass's locations.
+pp_lprof_take_turn = {
+	save_temporary_scope_as = pp_lprof_this
+	scope:pp_cplan_country = { add_to_variable_list = { name = pp_lprof_turns target = scope:pp_lprof_this } }
+}
+
+# Country scope: the list of marked locations loses entries without a mark, and an own location keeps no marks the
+# country did not set (an earlier owner's). A location lost and won back keeps its own marks.
+pp_lplan_cleanup = {
+	every_in_list = {
+		variable = pp_lplan_locs
+		limit = { NOT = { has_variable = pp_lplan_n } }
+		save_temporary_scope_as = pp_lprof_this
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_lplan_gone target = scope:pp_lprof_this } }
+	}
+	every_in_list = {
+		variable = pp_lplan_gone
+		save_temporary_scope_as = pp_lprof_this
+		scope:pp_cplan_country = { remove_list_variable = { name = pp_lplan_locs target = scope:pp_lprof_this } }
+	}
+	clear_variable_list = pp_lplan_gone
+	every_owned_location = {
+		limit = { has_variable = pp_lplan_n }
+		save_temporary_scope_as = pp_lprof_this
+		if = {
+			limit = {
+				scope:pp_cplan_country = {
+					NOT = { is_target_in_variable_list = { name = pp_lplan_locs target = scope:pp_lprof_this } }
+				}
+			}
+			pp_lplan_clear_all = yes
+			refresh_map_colors = yes
+		}
+	}
 }
 
 # Country scope: the list loses entries whose profile is gone (cleared by another owner), and an own location keeps no
@@ -112,9 +186,6 @@ pp_lprof_drop_gone = {
 # this month by an earlier rule: 9. Else its target decides (generated pp_lprof_t_<target>), within its payback limit
 # (scope:pp_lprof_pb, years + 100; no limit = any).
 pp_lprof_rule = {
-	remove_variable = pp_lprof_st
-	remove_variable = pp_lprof_fail
-	remove_variable = pp_lprof_best
 	save_temporary_scope_value_as = { name = pp_cplan_rs value = $r$ } # the window: the rule a construction came from
 	if = {
 		limit = {
@@ -123,16 +194,9 @@ pp_lprof_rule = {
 				has_variable = pp_lprof_r$r$_c
 			}
 		}
+		pp_lprof_open = yes
 		if = {
-			limit = { scope:pp_cplan_country = { has_variable = pp_cplan_hit } }
-			set_variable = { name = pp_lprof_st value = 109 }
-		}
-		else_if = {
-			# one construction at a time in a location (pp_cplan_construct_scoped): wait for the one under way here
-			limit = { num_civil_constructions > 0 }
-			set_variable = { name = pp_lprof_st value = 103 }
-		}
-		else = {
+			limit = { NOT = { has_variable = pp_lprof_st } }
 			save_temporary_scope_value_as = { name = pp_lprof_pb value = 1000000 }
 			if = {
 				limit = { has_variable = pp_lprof_r$r$_pb }
@@ -146,61 +210,111 @@ pp_lprof_rule = {
 				pp_lprof_category_target = { v = pp_lprof_r$r$_c }
 			}
 		}
-		pp_lprof_finish = { r = $r$ }
+		pp_lprof_finish = { st = pp_lprof_r$r$_st est = pp_lprof_r$r$_est }
 	}
 	else = {
+		remove_variable = pp_lprof_st
+		remove_variable = pp_lprof_fail
+		remove_variable = pp_lprof_best
 		remove_variable = pp_lprof_r$r$_st
 		remove_variable = pp_lprof_r$r$_est
 	}
 }
 
-# Location scope: writes rule $r$'s state: what the target set (1 started, 3 a level under construction, 9 waiting),
-# else the best reason among its candidates (pp_lprof_fail: 106 budget -> 7, 105 goods -> 8, 104 no workers -> 4,
-# 103 payback -> 5, 102 cannot be built -> 6, 101 at its highest level -> 2), else no candidate at all (6).
+# Location scope: the mark $v$ (g_<good> / c_<category>) of the Location Plan, when it is set: "also build this here"
+# (Jan 2026-11-10). It runs as a profile rule with that target runs: $do$ is the target's generated effect
+# (pp_lprof_t_<good or category>), the payback limit scope:pp_lprof_pb is the player's Businesses line (saved by the
+# generated pp_lplan_location_marks, which runs the marks in the picker's order). Its state goes into pp_lplan_st_$v$,
+# the payback found into pp_lplan_est_$v$.
+pp_lplan_mark = {
+	if = {
+		limit = { has_variable = pp_lplan_$v$ }
+		pp_lprof_open = yes
+		if = {
+			limit = { NOT = { has_variable = pp_lprof_st } }
+			$do$ = yes
+		}
+		pp_lprof_finish = { st = pp_lplan_st_$v$ est = pp_lplan_est_$v$ }
+	}
+}
+
+# Location scope: the mark $v$ of an item no building builds (a good that is only a raw material): no candidate, so it
+# cannot be built here (state 6).
+pp_lplan_mark_none = {
+	if = {
+		limit = { has_variable = pp_lplan_$v$ }
+		remove_variable = pp_lprof_st
+		remove_variable = pp_lprof_fail
+		remove_variable = pp_lprof_best
+		pp_lprof_finish = { st = pp_lplan_st_$v$ est = pp_lplan_est_$v$ }
+	}
+}
+
+# Location scope: a rule or a mark starts afresh. Nothing can start here now: after a construction started here this
+# month by an earlier rule or mark it waits (pp_lprof_st 109), and while a construction is under way here too (103:
+# one at a time in a location, the plan's own check pp_cplan_site_free). pp_lprof_st stays unset when it may try.
+pp_lprof_open = {
+	remove_variable = pp_lprof_st
+	remove_variable = pp_lprof_fail
+	remove_variable = pp_lprof_best
+	if = {
+		limit = { scope:pp_cplan_country = { has_variable = pp_cplan_hit } }
+		set_variable = { name = pp_lprof_st value = 109 }
+	}
+	else_if = {
+		limit = { NOT = { pp_cplan_site_free = yes } }
+		set_variable = { name = pp_lprof_st value = 103 }
+	}
+}
+
+# Location scope: writes the state of a rule or a mark into $st$: what the target set (1 started, 3 a level under
+# construction, 9 waiting), else the best reason among its candidates (pp_lprof_fail: 106 budget -> 7, 105 goods -> 8,
+# 104 no workers -> 4, 103 payback -> 5, 102 cannot be built -> 6, 101 at its highest level -> 2), else no candidate at
+# all (6); and into $est$ the shortest payback it found.
 pp_lprof_finish = {
 	if = {
 		limit = { has_variable = pp_lprof_st }
-		set_variable = { name = pp_lprof_r$r$_st value = var:pp_lprof_st }
+		set_variable = { name = $st$ value = var:pp_lprof_st }
 	}
 	else_if = {
 		limit = { NOT = { has_variable = pp_lprof_fail } }
-		set_variable = { name = pp_lprof_r$r$_st value = 106 }
+		set_variable = { name = $st$ value = 106 }
 	}
 	else_if = {
 		limit = { var:pp_lprof_fail > 105.5 }
-		set_variable = { name = pp_lprof_r$r$_st value = 107 }
+		set_variable = { name = $st$ value = 107 }
 	}
 	else_if = {
 		limit = { var:pp_lprof_fail > 104.5 }
-		set_variable = { name = pp_lprof_r$r$_st value = 108 }
+		set_variable = { name = $st$ value = 108 }
 	}
 	else_if = {
 		limit = { var:pp_lprof_fail > 103.5 }
-		set_variable = { name = pp_lprof_r$r$_st value = 104 }
+		set_variable = { name = $st$ value = 104 }
 	}
 	else_if = {
 		limit = { var:pp_lprof_fail > 102.5 }
-		set_variable = { name = pp_lprof_r$r$_st value = 105 }
+		set_variable = { name = $st$ value = 105 }
 	}
 	else_if = {
 		limit = { var:pp_lprof_fail > 101.5 }
-		set_variable = { name = pp_lprof_r$r$_st value = 106 }
+		set_variable = { name = $st$ value = 106 }
 	}
 	else = {
-		set_variable = { name = pp_lprof_r$r$_st value = 102 }
+		set_variable = { name = $st$ value = 102 }
 	}
 	# the shortest payback of a standing candidate's next level (years + 100; 1099 = no profit), shown beside the state
 	if = {
 		limit = { has_variable = pp_lprof_best }
-		set_variable = { name = pp_lprof_r$r$_est value = var:pp_lprof_best }
+		set_variable = { name = $est$ value = var:pp_lprof_best }
 	}
 	else = {
-		remove_variable = pp_lprof_r$r$_est
+		remove_variable = $est$
 	}
 	remove_variable = pp_lprof_st
 	remove_variable = pp_lprof_fail
 	remove_variable = pp_lprof_best
-	pp_lprof_count_state = { st = pp_lprof_r$r$_st }
+	pp_lprof_count_state = { st = $st$ }
 }
 
 # Location scope: the window counts the rules by their state after this pass (pp_cplan_ds_profiles_st<n>).
@@ -493,7 +607,7 @@ pp_lprof_color_do = {
 }
 
 # Country scope: the global rule group scope:pp_field (global_food / global_logistics / global_improve /
-# global_business) of slot scope:pp_slot off in its locations, or on again.
+# global_business / global_country) of slot scope:pp_slot off in its locations, or on again.
 pp_lprof_global_do = {
 	pp_lprof_edit = { do = pp_lprof_global_staged }
 }

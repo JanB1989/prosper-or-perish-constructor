@@ -338,7 +338,14 @@ types PPConstructionPlanDetail
 								}
 								pp_cplan_label = { text = "PP_CPLAN_IN_LOCATION" }
 								pp_cplan_label = { text = "PP_CPLAN_D_COST" }
-								pp_cplan_label = { text = "PP_CPLAN_D_PROFILES_WHY" }
+								pp_cplan_label = {
+									visible = "[GreaterThan_CFixedPoint(Scope.ScriptValue('pp_cplan_log_step_n'), '(CFixedPoint)0.5')]"
+									text = "PP_CPLAN_D_PROFILES_WHY"
+								}
+								pp_cplan_label = {
+									visible = "[Not(GreaterThan_CFixedPoint(Scope.ScriptValue('pp_cplan_log_step_n'), '(CFixedPoint)0.5'))]"
+									text = "PP_CPLAN_D_PROFILES_WHY_MARK"
+								}
 							}
 						}
 					}
@@ -1224,7 +1231,7 @@ types PPConstructionPlanDetail
 				text = "PP_CPLAN_D_WAIT_BUSINESS"
 			}
 			pp_cplan_d_line = {
-				visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_business_waitn'), '(CFixedPoint)0.5'))]"
+				visible = "[And(Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_business_waitn'), '(CFixedPoint)0.5')), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_business_skipped'), '(CFixedPoint)0.5')))]"
 				text = "PP_CPLAN_D_NO_WAIT"
 			}
 			pp_cplan_d_line = {
@@ -1232,8 +1239,12 @@ types PPConstructionPlanDetail
 				text = "PP_CPLAN_D_BUSINESS_SIT"
 			}
 			pp_cplan_d_line = {
-				visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_business_sites'), '(CFixedPoint)0.5'))]"
+				visible = "[And(Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_business_sites'), '(CFixedPoint)0.5')), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_business_skipped'), '(CFixedPoint)0.5')))]"
 				text = "PP_CPLAN_D_BUSINESS_NONE"
+			}
+			pp_cplan_d_line = {
+				visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_business_skipped'), '(CFixedPoint)0.5')]"
+				text = "PP_CPLAN_D_BUSINESS_SKIPPED"
 			}
 			hbox = {
 				layoutpolicy_horizontal = expanding
@@ -1415,5 +1426,276 @@ types PPConstructionPlanDetail
 			}
 		}
 		expand = { visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_business_ran'), '(CFixedPoint)0.5'))]" }
+	}
+
+	# the country group's cog: opens its pane, or closes it while open
+	type pp_cplan_detail_button_country = widget {
+		size = { 26 26 }
+		button_automation_shortcut = {
+			visible = "[Not(GetVariableSystem.HasValue('pp_cplan_detail', 'country'))]"
+			parentanchor = center
+			size = { 24 24 }
+			action_tooltip = {
+				title = "PP_CPLAN_D_SHOW"
+				on_action = "[GetVariableSystem.Set('pp_cplan_detail', 'country')]"
+			}
+		}
+		button_automation_shortcut = {
+			visible = "[GetVariableSystem.HasValue('pp_cplan_detail', 'country')]"
+			parentanchor = center
+			size = { 24 24 }
+			# open: vanilla's selected colour (its sort buttons)
+			blockoverride "bg_button_color" {
+				using = color_sortby_on
+			}
+			action_tooltip = {
+				title = "PP_CPLAN_D_HIDE"
+				on_action = "[GetVariableSystem.Clear('pp_cplan_detail')]"
+			}
+		}
+	}
+
+	# the country group's pane (its construction code 107)
+	type pp_cplan_detail_country = vbox {
+		layoutpolicy_horizontal = expanding
+		layoutpolicy_vertical = expanding
+		ignoreinvisible = yes
+		spacing = 6
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 6
+			pp_cplan_title = { text = "PP_CPLAN_D_TITLE_COUNTRY" tooltip = "PP_CPLAN_COUNTRY_RULE_TT" }
+			expand = {}
+			button_close_alt = {
+				size = { 22 22 }
+				blockoverride "close_properties" {}
+				blockoverride "close_inputaction" {}
+				blockoverride "close_title" {
+					title = "PP_CPLAN_D_HIDE"
+				}
+				blockoverride "close_on_action" {
+					on_action = "[GetVariableSystem.Clear('pp_cplan_detail')]"
+				}
+			}
+		}
+		pp_cplan_d_line = {
+			visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_country_ran'), '(CFixedPoint)0.5'))]"
+			text = "PP_CPLAN_D_OFF"
+		}
+		vbox = {
+			visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_country_ran'), '(CFixedPoint)0.5')]"
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			ignoreinvisible = yes
+			spacing = 6
+			pp_cplan_d_line = {
+				text = "PP_CPLAN_D_GOLD_COUNTRY"
+			}
+			pp_cplan_d_line = {
+				visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_country_waitn'), '(CFixedPoint)0.5')]"
+				text = "PP_CPLAN_D_WAIT_COUNTRY"
+			}
+			pp_cplan_d_line = {
+				visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_country_waitn'), '(CFixedPoint)0.5'))]"
+				text = "PP_CPLAN_D_NO_WAIT"
+			}
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 16
+				vbox = {
+					spacing = 2
+					hbox = {
+						spacing = 5
+						pp_cplan_d_column = {
+							tooltip = "PP_CPLAN_D_CHART_TT_COUNTRY"
+							blockoverride "pp_cplan_d_need" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_needp_12'))]"
+							}
+							blockoverride "pp_cplan_d_spent" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_spentp_12'))]"
+							}
+						}
+						pp_cplan_d_column = {
+							tooltip = "PP_CPLAN_D_CHART_TT_COUNTRY"
+							blockoverride "pp_cplan_d_need" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_needp_11'))]"
+							}
+							blockoverride "pp_cplan_d_spent" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_spentp_11'))]"
+							}
+						}
+						pp_cplan_d_column = {
+							tooltip = "PP_CPLAN_D_CHART_TT_COUNTRY"
+							blockoverride "pp_cplan_d_need" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_needp_10'))]"
+							}
+							blockoverride "pp_cplan_d_spent" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_spentp_10'))]"
+							}
+						}
+						pp_cplan_d_column = {
+							tooltip = "PP_CPLAN_D_CHART_TT_COUNTRY"
+							blockoverride "pp_cplan_d_need" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_needp_9'))]"
+							}
+							blockoverride "pp_cplan_d_spent" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_spentp_9'))]"
+							}
+						}
+						pp_cplan_d_column = {
+							tooltip = "PP_CPLAN_D_CHART_TT_COUNTRY"
+							blockoverride "pp_cplan_d_need" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_needp_8'))]"
+							}
+							blockoverride "pp_cplan_d_spent" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_spentp_8'))]"
+							}
+						}
+						pp_cplan_d_column = {
+							tooltip = "PP_CPLAN_D_CHART_TT_COUNTRY"
+							blockoverride "pp_cplan_d_need" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_needp_7'))]"
+							}
+							blockoverride "pp_cplan_d_spent" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_spentp_7'))]"
+							}
+						}
+						pp_cplan_d_column = {
+							tooltip = "PP_CPLAN_D_CHART_TT_COUNTRY"
+							blockoverride "pp_cplan_d_need" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_needp_6'))]"
+							}
+							blockoverride "pp_cplan_d_spent" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_spentp_6'))]"
+							}
+						}
+						pp_cplan_d_column = {
+							tooltip = "PP_CPLAN_D_CHART_TT_COUNTRY"
+							blockoverride "pp_cplan_d_need" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_needp_5'))]"
+							}
+							blockoverride "pp_cplan_d_spent" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_spentp_5'))]"
+							}
+						}
+						pp_cplan_d_column = {
+							tooltip = "PP_CPLAN_D_CHART_TT_COUNTRY"
+							blockoverride "pp_cplan_d_need" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_needp_4'))]"
+							}
+							blockoverride "pp_cplan_d_spent" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_spentp_4'))]"
+							}
+						}
+						pp_cplan_d_column = {
+							tooltip = "PP_CPLAN_D_CHART_TT_COUNTRY"
+							blockoverride "pp_cplan_d_need" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_needp_3'))]"
+							}
+							blockoverride "pp_cplan_d_spent" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_spentp_3'))]"
+							}
+						}
+						pp_cplan_d_column = {
+							tooltip = "PP_CPLAN_D_CHART_TT_COUNTRY"
+							blockoverride "pp_cplan_d_need" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_needp_2'))]"
+							}
+							blockoverride "pp_cplan_d_spent" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_spentp_2'))]"
+							}
+						}
+						pp_cplan_d_column = {
+							tooltip = "PP_CPLAN_D_CHART_TT_COUNTRY"
+							blockoverride "pp_cplan_d_need" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_needp_1'))]"
+							}
+							blockoverride "pp_cplan_d_spent" {
+								value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_h_country_spentp_1'))]"
+							}
+						}
+					}
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						pp_cplan_label = { text = "PP_CPLAN_D_YEAR_AGO" default_format = "#weak" }
+						expand = {}
+						pp_cplan_label = { text = "PP_CPLAN_D_LAST_MONTH" default_format = "#weak" }
+					}
+				}
+				vbox = {
+					spacing = 4
+					hbox = {
+						spacing = 6
+						pp_cplan_d_swatch_need = {}
+						pp_cplan_label = { text = "PP_CPLAN_D_SUM_NEED_COUNTRY" tooltip = "PP_CPLAN_D_CHART_TT_COUNTRY" }
+					}
+					hbox = {
+						spacing = 6
+						pp_cplan_d_swatch_spent = {}
+						pp_cplan_label = { text = "PP_CPLAN_D_SUM_SPENT_COUNTRY" tooltip = "PP_CPLAN_D_CHART_TT_COUNTRY" }
+					}
+				}
+				expand = {}
+			}
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				pp_cplan_title = { text = "PP_CPLAN_D_BUILT" }
+				expand = {}
+			}
+			pp_cplan_d_line = {
+				visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_country_started'), '(CFixedPoint)0.5'))]"
+				text = "PP_CPLAN_D_NOTHING"
+			}
+			scrollarea = {
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+				scrollbarpolicy_horizontal = always_off
+				scrollbar_vertical = { using = Scrollbar_Vertical }
+				scrollwidget = {
+					flowcontainer = {
+						direction = vertical
+						datamodel = "[GetPlayer.MakeScope.GetList('pp_cplan_log_107')]"
+						item = {
+							flowcontainer = {
+								direction = horizontal
+								ignoreinvisible = yes
+								spacing = 4
+								margin = { 2 1 }
+								flowcontainer = {
+									visible = "[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)7')]"
+									direction = horizontal
+									datamodel = "[Scope.GetList('pp_cplan_log_types')]"
+									spacing = 4
+									item = {
+										pp_cplan_label = { raw_text = "[Scope.GetBuildingType.GetName]" }
+									}
+								}
+								pp_cplan_rank_upgrade = {
+									visible = "[Or(Not(EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)7')), EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_log_step_n'), '(CFixedPoint)2'))]"
+								}
+								pp_cplan_label = { text = "PP_CPLAN_IN_LOCATION" }
+								pp_cplan_label = {
+									visible = "[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)7')]"
+									text = "PP_CPLAN_D_COST"
+								}
+								pp_cplan_label = {
+									visible = "[And(EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)7'), EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_log_step_n'), '(CFixedPoint)1'))]"
+									text = "PP_CPLAN_D_COUNTRY_WHY_1"
+								}
+								pp_cplan_label = {
+									visible = "[And(EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)7'), EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_log_step_n'), '(CFixedPoint)2'))]"
+									text = "PP_CPLAN_D_COUNTRY_WHY_2"
+								}
+								pp_cplan_label = {
+									visible = "[And(EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_why_n'), '(CFixedPoint)7'), EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_log_step_n'), '(CFixedPoint)3'))]"
+									text = "PP_CPLAN_D_COUNTRY_WHY_3"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		expand = { visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_country_ran'), '(CFixedPoint)0.5'))]" }
 	}
 }

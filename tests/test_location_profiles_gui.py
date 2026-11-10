@@ -469,3 +469,119 @@ def test_symbols_and_flag_pictures() -> None:
     picker = generated[generated.index("type pp_lprof_picker"):generated.index("type pp_lprof_plan_row")]
     group = picker[picker.index("PP_LPROF_UI_GROUP_SYMBOLS") - 200:picker.index("PP_LPROF_UI_GROUP_SYMBOLS")]
     assert "GetVariableSystem.HasValue('pp_lprof_pick', 'icon')" in group
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# the location window's second row, "Also build here" (Jan 2026-11-10): the location's marks as toggle tiles
+
+
+def _also_row() -> str:
+    generated = _read(GENERATED)
+    row = generated[generated.index(f"type {m.ALSO_ROW} = hbox"):]
+    return row[:row.index("\n\t}\n") + 3]
+
+
+def test_also_build_row_sits_under_the_profile_row() -> None:
+    """The row "Also build here" follows the Profile row in the same block of the Infrastructure tab (one wrapper:
+    player locations only, the location as datacontext), in the built window and from the generator."""
+    sample = "\t\tvbox = {\n\t\t\t# INFRASTRUCTURE HUB\n\t\t\thbox = {}\n\t\t}\n"
+    patched = m.add_location_row(sample)
+    block = patched[patched.index(m.ROW_MARK):patched.index("# INFRASTRUCTURE HUB")]
+    assert block.count(" = {}") == 2
+    assert block.index(f"{m.LOCATION_ROW} = {{}}") < block.index(f"{m.ALSO_ROW} = {{}}")
+    assert "LocationView.GetLocation.GetOwner.IsPlayer" in block and "Not(IsObserving)" in block
+    assert 'datacontext = "[LocationView.GetLocation]"' in block
+    assert m.add_location_row(patched) == patched  # once
+    window = (MOD / "in_game/gui/location_window.gui").read_text(encoding="utf-8-sig")
+    built = window[window.index(m.ROW_MARK):window.index("# INFRASTRUCTURE HUB")]
+    assert [line.strip() for line in built.splitlines()[1:]] == [line.strip() for line in block.splitlines()[1:]], "run ppc build"
+
+
+def test_also_build_row_is_the_profile_rows_card() -> None:
+    """Not a new kind of widget: the Profile row's card (paper card, wooden frame, header strip, corner decoration),
+    its text style, its toggle tiles (pressed + gold glow = marked) and its round button at the right end."""
+    generated = _read(GENERATED)
+    profile = generated[generated.index(f"type {m.LOCATION_ROW} = hbox"):]
+    profile = profile[:profile.index("\n\t}\n") + 3]
+    row = _also_row()
+    for needle in ("using = bg_paper_card", "using = bg_cabinet_card_frame", "using = bg_card_header_01", "using = bg_corner_flavor",
+                   "minimumsize = { -1 45 }", "margin = { 5 5 }", "using = header_button_template",
+                   "using = button_tab_toggle_properties_template", "using = pressed_button_texture",
+                   "glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8", "header_button_left = {", "size = { 34 34 }",
+                   "align = left|nobaseline", 'default_format = "#medium"'):
+        assert needle in row and needle in profile, needle
+    assert "pp_lprof_gold" not in row and "button_regular = {" not in row and "#yellow_titles" not in row
+    assert 'text = "PP_LPLAN_ALSO_TITLE"' in row and 'text = "PP_LPLAN_ALSO_NONE"' in row
+    assert f'texture = "{m.PLAN_ICON}"' in row
+    assert (MOD / "main_menu" / m.PLAN_ICON).is_file()
+    # one round button opens the Location Plan window on this location, for everything else
+    button = row[row.index("header_button_left = {"):]
+    assert 'tooltip = "PP_LPLAN_ALSO_MORE_TT"' in button and row.count("header_button_left = {") == 1
+    for action in m.OPEN_PLAN:
+        assert f'onclick = "{action}"' in button
+    assert "GetScriptedGui('pp_lplan_select')" in m.OPEN_PLAN[0] and "'pp_lplan_open', 'yes'" in m.OPEN_PLAN[1]
+    loc = _read(MOD / "main_menu/localization/english/pp_location_plan_l_english.yml")
+    assert '  PP_LPLAN_ALSO_TITLE: "Also build here"\n' in loc
+
+
+def test_also_build_row_tiles() -> None:
+    """First every marked item (shown while marked, pressed), then, unmarked, the goods standing buildings make (the
+    quick candidates, in chunks that show while the row has room). One click on a tile toggles the mark; the tooltip is
+    the picker's (name, what the mark does, its state while marked)."""
+    from prosper_or_perish_constructor import location_profiles as lpf
+
+    row = _also_row()
+    items = lp.plan_items(ROOT, lp.load_config(PROJECT))
+    found, _ = lpf.targets(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT))
+    chunks = lpf.quick_chunks(m.profile_items(ROOT, PROJECT), found)
+    first_chunk = row.rindex("flowcontainer = {", 0, row.index("pp_lplan_quick_room_1'"))
+    marked, quick = row[:first_chunk], row[first_chunk:]
+    position = 0
+    for item in items:
+        toggle = m.execute("pp_lplan_toggle", "Location.MakeScope", pp_key=item.key)
+        tile = (f"visible = \"[Location.MakeScope.Var('{item.var}').IsSet]\"\n\t\t\t\t\t\tsize = {{ {m.MARK_TILE} 34 }}")
+        at = marked.index(tile, position)  # the picker's order
+        position = at + 1
+        block = marked[at:marked.index("\n\t\t\t\t\t}\n", at)]
+        assert f"down = \"[Location.MakeScope.Var('{item.var}').IsSet]\"" in block, item.key
+        assert f'tooltip = "PP_LPLAN_PICK_{item.key.upper()}"' in block and f'onclick = "{toggle}"' in block, item.key
+        assert f'texture = "{item.icon}"' in block, item.key
+    assert marked.count("pp_lplan_toggle") == len(items)
+    # the quick candidates: goods only, each once, in their chunks; not pressed; the same toggle and tooltip
+    values = _read(MOD / lpf.VALUES)
+    shown = re.findall(r"ScriptValue\('pp_lplan_quick_(?!room_)(\w+)'\), '\(CFixedPoint\)1'\)", quick)
+    assert shown == [item.key for chunk in chunks for item in chunk] and len(shown) == len(set(shown))
+    assert "down = " not in quick and "glow = " not in quick
+    rooms = re.findall(r"visible = \"\[GreaterThan_CFixedPoint\(Location\.MakeScope\.ScriptValue\('pp_lplan_quick_room_(\d+)'\), '\(CFixedPoint\)0'\)\]\"", quick)
+    assert rooms == [str(number) for number in range(1, len(chunks) + 1)]
+    for name in [f"pp_lplan_quick_{key}" for key in shown] + [f"pp_lplan_quick_room_{number}" for number in rooms]:
+        assert re.search(rf"^{name} = \{{", values, re.MULTILINE), f"script value {name} missing"
+    assert re.search(r"^pp_lplan_planned_n = \{", _read(MOD / lp.VALUES), re.MULTILINE)
+    for key in shown:
+        assert f'tooltip = "PP_LPLAN_PICK_{key.upper()}"' in quick
+        assert m.execute("pp_lplan_toggle", "Location.MakeScope", pp_key=key) in quick
+    # tiles carry their own gap, so chunks that show nothing take no room: no spacing in the tile line
+    line = row[row.index("flowcontainer = {"):]
+    assert "spacing" not in line[:line.index("\n\t\t\tvbox = {")]
+    assert lpf.QUICK_ROW * m.MARK_TILE <= m.LOCATION_TILES * 37  # as wide as the Profile row's line of tiles
+    # the scripted GUI the tiles call exists and toggles a mark
+    assert re.search(r"^pp_lplan_toggle = \{", _read(PLAN_SCRIPTED_GUIS), re.MULTILINE)
+
+
+def test_global_rules_checkboxes() -> None:
+    """Five "Global rules here" checkboxes in the editor, the fifth for the Towns and Buildings group; the badge
+    tooltip lists them all."""
+    from prosper_or_perish_constructor import location_profiles as lpf
+
+    generated = _read(GENERATED)
+    editor = generated[generated.index("type pp_lprof_editor = vbox"):generated.index("type pp_lprof_picker")]
+    assert [flag for _, flag, _ in lpf.GLOBAL_GROUPS][-1] == "global_country"
+    for name, flag, _ in lpf.GLOBAL_GROUPS:
+        assert m.player_call("pp_lprof_global", pp_slot=m.EDITED, pp_field=flag) in editor, flag
+        assert f"down = \"[Not(GetPlayer.MakeScope.Var('pp_lprof_e_{name}').IsSet)]\"" in editor, flag
+        assert f'text = "PP_LPROF_UI_{flag.upper()}"' in editor and f'tooltip = "PP_LPROF_UI_{flag.upper()}_TT"' in editor
+    assert editor.count("button_checkbox = {") == len(lpf.GLOBAL_GROUPS) == 5
+    loc = _read(LOC)
+    assert '  PP_LPROF_UI_GLOBAL_COUNTRY: "Towns and Buildings"\n' in loc
+    badge = re.search(r"^  PP_LPROF_UI_BADGE: .*$", loc, re.MULTILINE).group(0)
+    assert "$PP_LPROF_UI_GLOBAL_COUNTRY$" in badge and "Var('pp_lprof_xc').IsSet" in badge

@@ -3,9 +3,17 @@
 Branch location-profiles, 2026-11-07, Jan: the player defines profiles (an icon, a colour, ordered build rules) and
 assigns them to locations on the map. In a location with a profile the profile's rules build, as a rule group of the
 monthly pass (``pp_cplan_run``) with its own share of the month's budget; the global Construction Plan rules still
-build there what the profile does not set (its rules' targets, the global groups it switches off). A profile is all a
-location carries; nothing else per location exists. Script cannot create named data while the game runs, so a profile
-is a generated slot ``k = 1..slots``.
+build there what the profile does not set (its rules' targets, the global groups it switches off). Script cannot
+create named data while the game runs, so a profile is a generated slot ``k = 1..slots``.
+
+Beside its profile a location carries its marks (Jan, 2026-11-10: "in this location, also expand wheat"): the Location
+Plan's items (``location_plan.py``, ``pp_lplan_g_<good>`` / ``pp_lplan_c_<category>``). The same pass runs them after
+the location's profile rules (a location with marks and no profile gets its turn too), each exactly as a profile rule
+with that target (the same generated ``pp_lprof_t_<target>``), with the player's Businesses line as the payback limit
+(``pp_lplan_pb100``). Marks add: they switch nothing off. This module writes ``pp_lplan_location_marks`` (the marks in
+the picker's order) and, for the location window's row "Also build here", the quick candidates: per good 1 while a
+building that makes it stands in the location and the good is not marked (``pp_lplan_quick_<good>``), and the room the
+row has left for the next chunk of them (``pp_lplan_quick_room_<n>``).
 
 Cost independent of the slot count (2026-11-07, Jan: up to 100 profiles): every location with a profile carries a copy
 of it (icon, colour, each rule's target and payback limit), written on assign and whenever its slot is edited; the
@@ -72,7 +80,7 @@ STATES = {
     6: "cannot be built here",
     7: "budget",
     8: "market lacks the construction goods",
-    9: "waiting for an earlier rule's construction this month",
+    9: "waiting for an earlier rule's or mark's construction this month",
 }
 # why a candidate failed, ranked (+ 100 in pp_lprof_fail; the highest rank of a rule's candidates gives its state)
 FAIL_STATE = {101: 2, 102: 6, 103: 5, 104: 4, 105: 8, 106: 7}
@@ -82,9 +90,19 @@ NEXT = "next"  # the pp_slot flag of the new profile button: the first slot not 
 SYMBOL_PREFIX = "pp_sym_"  # a symbol's flag, loc key and texture name: pp_sym_<name>
 # The global Construction Plan rule groups a profile can switch off in its locations: (copy field, pp_field flag, the
 # plan's group). Unset = the group builds there too (Jan 2026-11-09: what a profile does not set, the global rules do;
-# a rule of the profile for a target takes that target from them). Businesses = any building that makes goods.
+# a rule of the profile for a target takes that target from them). Businesses = any building that makes goods; country
+# = the plan's Towns and Buildings group (construction_plan_country.py reads pp_lprof_xc on the location).
 GLOBAL_GROUPS = (("xf", "global_food", "food"), ("xl", "global_logistics", "logistics"),
-                 ("xi", "global_improve", "improvements"), ("xg", "global_business", "businesses"))
+                 ("xi", "global_improve", "improvements"), ("xg", "global_business", "businesses"),
+                 ("xc", "global_country", "country"))
+# The location window's row "Also build here" (location_profiles_gui.py): one line of QUICK_ROW tiles, the marked items
+# first, then the quick candidates (goods a standing building makes) in chunks of QUICK_CHUNK goods in the picker's
+# order. A chunk shows while the marks and the candidates before it leave room for a whole chunk; an exact cut would
+# count the candidates before every single tile each frame.
+QUICK_ROW = 11
+QUICK_CHUNK = 4
+MARK_LIMIT = "pp_cplan_business_years"  # country script value: the payback limit of a location's marks, in years
+WHY_MARK_STEP = 0  # the ledger's step (pp_cplan_rs) of a construction a mark started; a profile rule's is its number
 BUFFER = "pp_lprof_e"  # the edit buffer's variable prefix (country)
 COPY = "pp_lprof"  # a location's copy of its profile (variable prefix)
 # A flag is drawn as a frame of one picture strip (location_profiles_gui.render_textures), never through its name: the
@@ -262,9 +280,30 @@ def category_buildings(database: dict[str, tuple[dict[str, str], str]], categori
     return found
 
 
+_TARGETS: dict[tuple, tuple[dict[str, list[Candidate]], dict[str, list[str]]]] = {}
+
+
 def targets(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -> tuple[dict[str, list[Candidate]], dict[str, list[str]]]:
     """Item key -> the buildings it builds (highest tier first; market access in the plan's logistics order), and the
-    category lists."""
+    category lists. Read once per process and state of the building files: the script side and the GUI side (the quick
+    candidates of the location window's row) ask one after the other."""
+    stamp = _targets_stamp(repo, project, mod_root, vanilla_root)
+    if stamp not in _TARGETS:
+        _TARGETS.clear()
+        _TARGETS[stamp] = _read_targets(repo, project, mod_root, vanilla_root)
+    return _TARGETS[stamp]
+
+
+def _targets_stamp(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -> tuple:
+    """What targets() reads, by modification time: the config, the goods table and the mod's building, price and
+    script value files."""
+    files = [project, repo / lp.GOODS_CATEGORIES]
+    for folder in ("building_types", "prices", "script_values", "goods"):
+        files += sorted((mod_root / "in_game/common" / folder).glob("*.txt"))
+    return (repo, project, mod_root, vanilla_root) + tuple((str(path), path.stat().st_mtime_ns) for path in files if path.is_file())
+
+
+def _read_targets(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -> tuple[dict[str, list[Candidate]], dict[str, list[str]]]:
     plan = cp.load_config(project)
     database = cp._database(mod_root, vanilla_root, cp.BUILDING_TYPES)
     costs, _ = cp.building_costs(mod_root, vanilla_root, database)
@@ -353,11 +392,83 @@ def render_dispatch(items: list[lp.Item], found: dict[str, list[Candidate]], con
         + "\t}\n}\n"
         "\n# Location scope (in scope:pp_cplan_country's list pp_lprof_locs, owned by it): the rules of its profile in order,\n"
         "# from the location's copy (pp_lprof_r<r>_*); the first rule that starts a construction ends the location for the\n"
-        "# month. No slot is looked at.\n"
-        "pp_lprof_location_rules = {\n\tscope:pp_cplan_country = { remove_variable = pp_cplan_hit }\n"
+        "# month (pp_cplan_hit, cleared per location by pp_lprof_run; the location's marks follow and wait too). No slot is\n"
+        "# looked at.\n"
+        "pp_lprof_location_rules = {\n"
         + "".join(f"\tpp_lprof_rule = {{ r = {r} }}\n" for r in range(1, config.rules + 1))
-        + "\tscope:pp_cplan_country = { remove_variable = pp_cplan_hit }\n}\n"
+        + "}\n"
     )
+
+
+def mark_items(items: list[lp.Item]) -> list[lp.Item]:
+    """The items a location can be marked with: the Location Plan's (the profile items without market access, which
+    the plan's picker does not offer)."""
+    return [item for item in items if item.key != LOGISTICS]
+
+
+def render_marks(items: list[lp.Item], found: dict[str, list[Candidate]]) -> str:
+    """The marks of a location ("also build this here"): each marked item runs its target, the effect a profile rule
+    with that target runs, in the picker's order."""
+    lines = [
+        "\n# ---- The location's marks (the Location Plan's items; Jan 2026-11-10: \"also build this here\") ----\n"
+        "# Location scope (in pp_lprof_run, after the rules of the location's profile): each marked item in the picker's\n"
+        "# order, as a profile rule with that target runs (pp_lplan_mark: the same pp_lprof_t_<target>), within the\n"
+        "# player's Businesses line (the country's pp_cplan_business_years, as scope:pp_lprof_pb + 100 like a rule's limit).\n"
+        "# The first construction of the month in the location, by a rule or a mark, makes the rest wait. The window's\n"
+        f"# ledger shows a mark's construction as the profile group's, step {WHY_MARK_STEP} (a profile rule's step is its number).\n"
+        "pp_lplan_location_marks = {\n"
+        "\tscope:pp_cplan_country = {\n"
+        f"\t\tsave_temporary_scope_value_as = {{ name = pp_lprof_pb value = {{ value = {MARK_LIMIT} add = 100 }} }}\n"
+        "\t}\n"
+        f"\tsave_temporary_scope_value_as = {{ name = pp_cplan_rs value = {WHY_MARK_STEP} }}\n"
+    ]
+    for item in mark_items(items):
+        if found.get(item.key):
+            lines.append(f"\tpp_lplan_mark = {{ v = {item.suffix} do = pp_lprof_t_{item.key} }}\n")
+        else:
+            lines.append(f"\tpp_lplan_mark_none = {{ v = {item.suffix} }}\n")
+    lines.append("}\n")
+    return "".join(lines)
+
+
+def quick_goods(items: list[lp.Item], found: dict[str, list[Candidate]]) -> list[lp.Item]:
+    """The goods the location window's row offers as quick candidates while a building that makes them stands: every
+    markable good a building builds, in the picker's order."""
+    return [item for item in mark_items(items) if item.kind == "good" and found.get(item.key)]
+
+
+def quick_chunks(items: list[lp.Item], found: dict[str, list[Candidate]]) -> list[list[lp.Item]]:
+    goods = quick_goods(items, found)
+    return [goods[start:start + QUICK_CHUNK] for start in range(0, len(goods), QUICK_CHUNK)]
+
+
+def render_quick(items: list[lp.Item], found: dict[str, list[Candidate]]) -> str:
+    """Script values of the location window's row "Also build here"."""
+    parts = [
+        "\n# ---- The location window's row \"Also build here\" (location scope; location_profiles_gui.py) ----\n"
+        "\n# Quick candidates: 1 while a building that makes the good stands here (what a mark would expand) and the good is\n"
+        "# not marked (a marked good has its tile among the marks).\n"
+    ]
+    for item in quick_goods(items, found):
+        types = " ".join(f"has_building = building_type:{c.name}" for c in found[item.key])
+        parts.append(
+            f"pp_lplan_quick_{item.key} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{\n"
+            f"\t\t\tNOT = {{ has_variable = {item.var} }}\n\t\t\tOR = {{ {types} }}\n\t\t}}\n\t\tvalue = 1\n\t}}\n}}\n"
+        )
+    parts.append(
+        f"\n# The row holds {QUICK_ROW} tiles: the marked items, then the quick candidates in chunks of {QUICK_CHUNK} goods. Chunk n\n"
+        "# shows while this is above 0: the tiles the row has left after the marks and the candidates of the chunks\n"
+        "# before it, minus a whole chunk, plus 1.\n"
+    )
+    chunks = quick_chunks(items, found)
+    for number, _ in enumerate(chunks, 1):
+        if number == 1:
+            body = f"\tvalue = {QUICK_ROW - QUICK_CHUNK + 1}\n\tsubtract = pp_lplan_planned_n\n"
+        else:
+            body = f"\tvalue = pp_lplan_quick_room_{number - 1}\n" + "".join(
+                f"\tsubtract = pp_lplan_quick_{item.key}\n" for item in chunks[number - 2])
+        parts.append(f"pp_lplan_quick_room_{number} = {{\n{body}}}\n")
+    return "".join(parts)
 
 
 def render_slots(config: Config) -> str:
@@ -581,8 +692,9 @@ def copy_names(prefix: str, config: Config, frames: bool = False) -> list[str]:
 
 def gui_only_variables(config: Config) -> list[str]:
     """Variables the script sets and only the GUI reads: a location's icon (and its frame) and colour, the whole edit
-    buffer."""
-    location = [f"{COPY}_{name}" for name in ("ig", "ic", "in", "col")]
+    buffer; and the location's Towns and Buildings switch (the badge shows it; the rule group that reads it is
+    generated elsewhere, construction_plan_country.py)."""
+    location = [f"{COPY}_{name}" for name in ("ig", "ic", "in", "col", "xc")]
     return location + copy_names(BUFFER, config, frames=True)
 
 
@@ -650,6 +762,7 @@ def render_effects(items: list[lp.Item], found: dict[str, list[Candidate]], conf
         HEADER
         + render_targets(found)
         + render_dispatch(items, found, config)
+        + render_marks(items, found)
         + render_slots(config)
         + render_edits(items, config, categories)
         + render_examples(items, config)
@@ -666,8 +779,10 @@ def _var_n(name: str, var: str, comment: str) -> str:
             f"\t\tvalue = var:{var}\n\t\tsubtract = 100\n\t}}\n}}\n")
 
 
-def render_values(config: Config, categories: list[str]) -> str:
+def render_values(config: Config, categories: list[str], items: list[lp.Item] | None = None,
+                  found: dict[str, list[Candidate]] | None = None) -> str:
     slots = range(1, config.slots + 1)
+    quick = render_quick(items, found) if items is not None and found is not None else ""
     parts = [
         HEADER,
         "\n# Any scope: profile slots and rules per profile ([location_profiles]).\n"
@@ -706,7 +821,7 @@ def render_values(config: Config, categories: list[str]) -> str:
     for r in range(1, config.rules + 1):
         parts.append(_var_n(f"pp_lprof_r{r}_st_n", f"pp_lprof_r{r}_st",
                             f"Location scope: the state of rule {r} after the last pass (0 not run yet; 1-9 PP_LPROF_ST_<n>)."))
-    return "".join(parts)
+    return "".join(parts) + quick
 
 
 def render_triggers(categories: list[str], config: Config) -> str:
@@ -719,9 +834,11 @@ def render_triggers(categories: list[str], config: Config) -> str:
         "pp_lprof_symbol_key = {\n\tOR = {\n"
         + "".join(f"\t\tscope:pp_key = flag:{symbol.key}\n" for symbol in config.symbols)
         + "\t\talways = no\n\t}\n}\n"
-        "\n# Country scope (root = this country, in the pass and in the panel): a location the country owns has a profile.\n"
-        "pp_lprof_has_locations = {\n\tany_in_list = {\n\t\tvariable = pp_lprof_locs\n\t\towner ?= root\n"
-        "\t\thas_variable = pp_lprof\n\t}\n}\n"
+        "\n# Country scope (root = this country, in the pass and in the panel): a location the country owns has a profile or\n"
+        "# a mark of the Location Plan (the profile rule group has something to run).\n"
+        "pp_lprof_has_locations = {\n\tOR = {\n\t\tany_in_list = {\n\t\t\tvariable = pp_lprof_locs\n\t\t\towner ?= root\n"
+        "\t\t\thas_variable = pp_lprof\n\t\t}\n\t\tany_in_list = {\n\t\t\tvariable = pp_lplan_locs\n\t\t\towner ?= root\n"
+        "\t\t\thas_variable = pp_lplan_n\n\t\t}\n\t}\n}\n"
         "\n# Location scope: a rule of the location's profile has the good $g$ as its target (that good is the profile's here:\n"
         "# the global rules for it stand back; pp_construction_plan.txt's triggers).\n"
         "pp_lprof_has_good = {\n\thas_variable = pp_lprof\n\tOR = {\n"
@@ -769,7 +886,7 @@ def build(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -> tupl
     category_keys = [item.key for item in items if item.kind == "category"]
     texts = {
         mod_root / EFFECTS: render_effects(items, found, config, category_keys),
-        mod_root / VALUES: render_values(config, category_keys),
+        mod_root / VALUES: render_values(config, category_keys, items, found),
         mod_root / TRIGGERS: render_triggers(category_keys, config),
     }
     return result, texts

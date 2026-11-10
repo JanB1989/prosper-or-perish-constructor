@@ -40,27 +40,41 @@ pp_cplan_improve_ok = {
 	NOT = { has_variable = pp_lprof_xi }
 }
 
+# Location scope: a construction can start here: none is under way, whoever started it (a rule, the game's own
+# building automation, the player). The engine builds a location's constructions one after another, so a second one
+# paid now only waits (test world 2026-11-09: in Ocana a Cookshop moved 344 days in a year while the Granary, Grange
+# and Carrier Inn the plan had started beside it moved 0). The ONE place for this check: every rule group asks here.
+# A location has as many construction slots as its modifier max_constructions_at_same_time (in game 2026-11-10:
+# rural 1, town 1, London 2; London's two guild levels moved together while a third waited, Cambridge built the
+# same pair one after the other). num_civil_constructions counts everything started there, queued and the
+# estates' constructions too, so it can be above the slots.
+pp_cplan_site_free = {
+	num_civil_constructions < pp_cplan_site_slots
+}
+
 # Location scope: the business rule looks for a business here: the player's location, held by the player, with a
-# market, no construction under way (a location builds one at a time), and no profile here that keeps the businesses
-# out. A profile's own goods and categories are left out per building (generated pp_cplan_business_pick).
+# market, no construction under way (pp_cplan_site_free), and no profile here that keeps the businesses out. A
+# profile's own goods and categories are left out per building (generated pp_cplan_business_pick).
 pp_cplan_business_site = {
 	pp_cplan_location_ok = yes
 	NOT = { has_variable = pp_lprof_xg }
 	controller ?= scope:pp_cplan_country
-	num_civil_constructions < 1
+	pp_cplan_site_free = yes
 	market ?= { always = yes }
 }
 
 # Location scope, scope:pp_cplan_free_peasants saved (pp_cplan_free_peasants_here): a level of a building that employs
 # $type$ finds its $size$ workers here (thousands; Jan 2026-11-09: no business where nobody can work in it). Idle
-# peasants left after the open jobs here staff any building (they are promoted), idle pops of its own class too.
+# peasants left after the open jobs here staff any building (they are promoted), idle pops of its own class too
+# (generated pp_cplan_idle_<pop type>, 0 for peasants: their count is the first line).
+# The class is read through a value per pop type with the type written out, the form vanilla and the mod's other
+# files use. With the argument inside the quoted call ("unemployed_pops_of_pop_type_in_location(pop_type:$type$)")
+# the trigger logged "Script system error! ... trigger [ pop_type ]" on every check (about 2,000 lines a session, in
+# game 2026-11-10); no vanilla file puts an argument inside quotes, so most likely the game does not fill it in there.
 pp_cplan_staff = {
 	OR = {
 		scope:pp_cplan_free_peasants >= $size$
-		AND = {
-			NOT = { pop_type:$type$ = pop_type:peasants }
-			"unemployed_pops_of_pop_type_in_location(pop_type:$type$)" >= $size$
-		}
+		pp_cplan_idle_$type$ >= $size$
 	}
 }
 

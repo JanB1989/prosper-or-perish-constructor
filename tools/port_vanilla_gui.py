@@ -310,7 +310,8 @@ def port_build_location(vanilla: str) -> str:
     wrap their inputs onto more lines and grow with them, and each location row shows its slot circles and production
     efficiencies two per column, so they stay inside the row, then one value per column: build cost, payback time,
     profit and tax income per level (``_value_columns``). The header's payback button lists the rows in payback order
-    (``_payback_order``). Everything else is vanilla."""
+    (``_payback_order``). A row of an own location without an own building of the type carries the Construction
+    Plan's mark as a checkbox (``_construction_plan_mark``). Everything else is vanilla."""
     what = "vanilla build panel"
     t = vanilla
     # the panel: wider than the 570 of the left lateral views; the market picker opens beside it
@@ -383,11 +384,28 @@ def port_build_location(vanilla: str) -> str:
                    lambda m: f"{m.group(1)}{m.group(2)}{m.group(3)}{m.group(4)}{m.group(3)}{clear}\n", t)
     if n != BUILD_SORT_BUTTONS:
         raise ValueError(f"{what}: expected {BUILD_SORT_BUTTONS} sort buttons, found {n}")
+    t = _construction_plan_mark(t, what)
     t = _constructions_text(t, what)
     t = _value_columns(t, what)
     t = _payback_order(t, what)
     t = _market_picker_beside(t, "build_location_select_market", BUILD_PANEL_WIDTH, "build panel", what)
     return _mark_width(t, "BuildInLocationLateralView", BUILD_PANEL_WIDTH, what)
+
+
+def _construction_plan_mark(t: str, what: str) -> str:
+    """The Construction Plan's mark on a location row (Jan 2026-11-10: mark a building itself, the way vanilla's auto
+    expand toggles a building): after vanilla's column of own-building checkboxes (subsidize, open, auto expand; shown
+    only where the player owns the building) a column of the same width with one checkbox, shown only on the rows of
+    the player's locations where that column is hidden, so no row gets wider. The widget is location_plan.py's
+    (``build_panel_mark``); nothing of vanilla's is changed."""
+    sys.path.insert(0, str(REPO / "src"))
+    from prosper_or_perish_constructor import location_plan
+
+    own = re.escape(f'visible = "[{location_plan.BUILD_PANEL_OWN}]"')
+    start, end, ind = _cut(t, rf"^([ \t]*)vbox = \{{\n[ \t]*margin = \{{ 5 0 \}}\n[ \t]*{own}", what)
+    if "ToggleAutoExpandBuilding(Building.Self)" not in t[start:end]:
+        raise ValueError(f"{what}: the own-building checkboxes no longer hold the auto-expand checkbox")
+    return t[:end] + "\n\n" + location_plan.build_panel_mark(ind).rstrip("\n") + t[end:]
 
 
 def _market_picker_beside(t: str, name: str, x: int, panel: str, what: str) -> str:

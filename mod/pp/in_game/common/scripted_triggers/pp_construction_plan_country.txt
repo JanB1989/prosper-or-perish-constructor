@@ -335,7 +335,10 @@ pp_cplan_right_potential_pp_cloth_rights = {
 }
 pp_cplan_right_allow_pp_cloth_rights = {
 	scope:target = {
-		modifier:local_pp_cloth_line_levels >= 8
+		custom_tooltip = {
+			text = pp_cloth_rights_line_tt
+			pp_location_cloth_line_levels >= pp_cloth_rights_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -392,7 +395,10 @@ pp_cplan_right_potential_pp_cloth_charter = {
 }
 pp_cplan_right_allow_pp_cloth_charter = {
 	scope:target = {
-		modifier:local_pp_cloth_line_levels >= 3
+		custom_tooltip = {
+			text = pp_cloth_charter_line_tt
+			pp_location_cloth_line_levels >= pp_cloth_charter_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -451,7 +457,10 @@ pp_cplan_right_potential_pp_fine_cloth_rights = {
 }
 pp_cplan_right_allow_pp_fine_cloth_rights = {
 	scope:target = {
-		modifier:local_pp_fine_cloth_line_levels >= 5
+		custom_tooltip = {
+			text = pp_fine_cloth_rights_line_tt
+			pp_location_fine_cloth_line_levels >= pp_fine_cloth_rights_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -508,7 +517,10 @@ pp_cplan_right_potential_pp_fine_cloth_charter = {
 }
 pp_cplan_right_allow_pp_fine_cloth_charter = {
 	scope:target = {
-		modifier:local_pp_fine_cloth_line_levels >= 3
+		custom_tooltip = {
+			text = pp_fine_cloth_charter_line_tt
+			pp_location_fine_cloth_line_levels >= pp_fine_cloth_charter_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -567,7 +579,10 @@ pp_cplan_right_potential_pp_leather_rights = {
 }
 pp_cplan_right_allow_pp_leather_rights = {
 	scope:target = {
-		modifier:local_pp_leather_line_levels >= 8
+		custom_tooltip = {
+			text = pp_leather_rights_line_tt
+			pp_location_leather_line_levels >= pp_leather_rights_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -624,7 +639,10 @@ pp_cplan_right_potential_pp_leather_charter = {
 }
 pp_cplan_right_allow_pp_leather_charter = {
 	scope:target = {
-		modifier:local_pp_leather_line_levels >= 3
+		custom_tooltip = {
+			text = pp_leather_charter_line_tt
+			pp_location_leather_line_levels >= pp_leather_charter_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -683,7 +701,10 @@ pp_cplan_right_potential_pp_pottery_rights = {
 }
 pp_cplan_right_allow_pp_pottery_rights = {
 	scope:target = {
-		modifier:local_pp_pottery_line_levels >= 8
+		custom_tooltip = {
+			text = pp_pottery_rights_line_tt
+			pp_location_pottery_line_levels >= pp_pottery_rights_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -740,7 +761,10 @@ pp_cplan_right_potential_pp_pottery_charter = {
 }
 pp_cplan_right_allow_pp_pottery_charter = {
 	scope:target = {
-		modifier:local_pp_pottery_line_levels >= 3
+		custom_tooltip = {
+			text = pp_pottery_charter_line_tt
+			pp_location_pottery_line_levels >= pp_pottery_charter_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -799,7 +823,10 @@ pp_cplan_right_potential_pp_furniture_rights = {
 }
 pp_cplan_right_allow_pp_furniture_rights = {
 	scope:target = {
-		modifier:local_pp_furniture_line_levels >= 5
+		custom_tooltip = {
+			text = pp_furniture_rights_line_tt
+			pp_location_furniture_line_levels >= pp_furniture_rights_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -856,7 +883,10 @@ pp_cplan_right_potential_pp_furniture_charter = {
 }
 pp_cplan_right_allow_pp_furniture_charter = {
 	scope:target = {
-		modifier:local_pp_furniture_line_levels >= 3
+		custom_tooltip = {
+			text = pp_furniture_charter_line_tt
+			pp_location_furniture_line_levels >= pp_furniture_charter_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -915,7 +945,10 @@ pp_cplan_right_potential_pp_glass_rights = {
 }
 pp_cplan_right_allow_pp_glass_rights = {
 	scope:target = {
-		modifier:local_pp_glass_line_levels >= 8
+		custom_tooltip = {
+			text = pp_glass_rights_line_tt
+			pp_location_glass_line_levels >= pp_glass_rights_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -972,7 +1005,10 @@ pp_cplan_right_potential_pp_glass_charter = {
 }
 pp_cplan_right_allow_pp_glass_charter = {
 	scope:target = {
-		modifier:local_pp_glass_line_levels >= 3
+		custom_tooltip = {
+			text = pp_glass_charter_line_tt
+			pp_location_glass_line_levels >= pp_glass_charter_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -1031,7 +1067,10 @@ pp_cplan_right_potential_pp_jewelry_rights = {
 }
 pp_cplan_right_allow_pp_jewelry_rights = {
 	scope:target = {
-		modifier:local_pp_jewelry_line_levels >= 8
+		custom_tooltip = {
+			text = pp_jewelry_rights_line_tt
+			pp_location_jewelry_line_levels >= pp_jewelry_rights_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -1088,7 +1127,10 @@ pp_cplan_right_potential_pp_jewelry_charter = {
 }
 pp_cplan_right_allow_pp_jewelry_charter = {
 	scope:target = {
-		modifier:local_pp_jewelry_line_levels >= 3
+		custom_tooltip = {
+			text = pp_jewelry_charter_line_tt
+			pp_location_jewelry_line_levels >= pp_jewelry_charter_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -1147,7 +1189,10 @@ pp_cplan_right_potential_pp_porcelain_rights = {
 }
 pp_cplan_right_allow_pp_porcelain_rights = {
 	scope:target = {
-		modifier:local_pp_porcelain_line_levels >= 5
+		custom_tooltip = {
+			text = pp_porcelain_rights_line_tt
+			pp_location_porcelain_line_levels >= pp_porcelain_rights_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -1204,7 +1249,10 @@ pp_cplan_right_potential_pp_porcelain_charter = {
 }
 pp_cplan_right_allow_pp_porcelain_charter = {
 	scope:target = {
-		modifier:local_pp_porcelain_line_levels >= 3
+		custom_tooltip = {
+			text = pp_porcelain_charter_line_tt
+			pp_location_porcelain_line_levels >= pp_porcelain_charter_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -1263,7 +1311,10 @@ pp_cplan_right_potential_pp_lacquerware_rights = {
 }
 pp_cplan_right_allow_pp_lacquerware_rights = {
 	scope:target = {
-		modifier:local_pp_lacquerware_line_levels >= 5
+		custom_tooltip = {
+			text = pp_lacquerware_rights_line_tt
+			pp_location_lacquerware_line_levels >= pp_lacquerware_rights_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -1320,7 +1371,10 @@ pp_cplan_right_potential_pp_lacquerware_charter = {
 }
 pp_cplan_right_allow_pp_lacquerware_charter = {
 	scope:target = {
-		modifier:local_pp_lacquerware_line_levels >= 3
+		custom_tooltip = {
+			text = pp_lacquerware_charter_line_tt
+			pp_location_lacquerware_line_levels >= pp_lacquerware_charter_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -1379,7 +1433,10 @@ pp_cplan_right_potential_pp_beer_rights = {
 }
 pp_cplan_right_allow_pp_beer_rights = {
 	scope:target = {
-		modifier:local_pp_beer_line_levels >= 5
+		custom_tooltip = {
+			text = pp_beer_rights_line_tt
+			pp_location_beer_line_levels >= pp_beer_rights_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -1436,7 +1493,10 @@ pp_cplan_right_potential_pp_beer_charter = {
 }
 pp_cplan_right_allow_pp_beer_charter = {
 	scope:target = {
-		modifier:local_pp_beer_line_levels >= 3
+		custom_tooltip = {
+			text = pp_beer_charter_line_tt
+			pp_location_beer_line_levels >= pp_beer_charter_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -1495,7 +1555,10 @@ pp_cplan_right_potential_pp_liquor_rights = {
 }
 pp_cplan_right_allow_pp_liquor_rights = {
 	scope:target = {
-		modifier:local_pp_liquor_line_levels >= 5
+		custom_tooltip = {
+			text = pp_liquor_rights_line_tt
+			pp_location_liquor_line_levels >= pp_liquor_rights_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -1552,7 +1615,10 @@ pp_cplan_right_potential_pp_liquor_charter = {
 }
 pp_cplan_right_allow_pp_liquor_charter = {
 	scope:target = {
-		modifier:local_pp_liquor_line_levels >= 3
+		custom_tooltip = {
+			text = pp_liquor_charter_line_tt
+			pp_location_liquor_line_levels >= pp_liquor_charter_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -1611,7 +1677,10 @@ pp_cplan_right_potential_pp_books_rights = {
 }
 pp_cplan_right_allow_pp_books_rights = {
 	scope:target = {
-		modifier:local_pp_books_line_levels >= 8
+		custom_tooltip = {
+			text = pp_books_rights_line_tt
+			pp_location_books_line_levels >= pp_books_rights_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -1668,7 +1737,10 @@ pp_cplan_right_potential_pp_books_charter = {
 }
 pp_cplan_right_allow_pp_books_charter = {
 	scope:target = {
-		modifier:local_pp_books_line_levels >= 3
+		custom_tooltip = {
+			text = pp_books_charter_line_tt
+			pp_location_books_line_levels >= pp_books_charter_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -1727,7 +1799,10 @@ pp_cplan_right_potential_pp_tools_rights = {
 }
 pp_cplan_right_allow_pp_tools_rights = {
 	scope:target = {
-		modifier:local_pp_tools_line_levels >= 5
+		custom_tooltip = {
+			text = pp_tools_rights_line_tt
+			pp_location_tools_line_levels >= pp_tools_rights_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -1784,7 +1859,10 @@ pp_cplan_right_potential_pp_tools_charter = {
 }
 pp_cplan_right_allow_pp_tools_charter = {
 	scope:target = {
-		modifier:local_pp_tools_line_levels >= 3
+		custom_tooltip = {
+			text = pp_tools_charter_line_tt
+			pp_location_tools_line_levels >= pp_tools_charter_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -1843,7 +1921,10 @@ pp_cplan_right_potential_pp_weaponry_rights = {
 }
 pp_cplan_right_allow_pp_weaponry_rights = {
 	scope:target = {
-		modifier:local_pp_weaponry_line_levels >= 5
+		custom_tooltip = {
+			text = pp_weaponry_rights_line_tt
+			pp_location_weaponry_line_levels >= pp_weaponry_rights_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -1900,7 +1981,10 @@ pp_cplan_right_potential_pp_weaponry_charter = {
 }
 pp_cplan_right_allow_pp_weaponry_charter = {
 	scope:target = {
-		modifier:local_pp_weaponry_line_levels >= 3
+		custom_tooltip = {
+			text = pp_weaponry_charter_line_tt
+			pp_location_weaponry_line_levels >= pp_weaponry_charter_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -1959,7 +2043,10 @@ pp_cplan_right_potential_pp_firearms_rights = {
 }
 pp_cplan_right_allow_pp_firearms_rights = {
 	scope:target = {
-		modifier:local_pp_firearms_line_levels >= 5
+		custom_tooltip = {
+			text = pp_firearms_rights_line_tt
+			pp_location_firearms_line_levels >= pp_firearms_rights_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -2016,7 +2103,10 @@ pp_cplan_right_potential_pp_firearms_charter = {
 }
 pp_cplan_right_allow_pp_firearms_charter = {
 	scope:target = {
-		modifier:local_pp_firearms_line_levels >= 3
+		custom_tooltip = {
+			text = pp_firearms_charter_line_tt
+			pp_location_firearms_line_levels >= pp_firearms_charter_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -2075,7 +2165,10 @@ pp_cplan_right_potential_pp_cannons_rights = {
 }
 pp_cplan_right_allow_pp_cannons_rights = {
 	scope:target = {
-		modifier:local_pp_cannons_line_levels >= 5
+		custom_tooltip = {
+			text = pp_cannons_rights_line_tt
+			pp_location_cannons_line_levels >= pp_cannons_rights_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -2132,7 +2225,10 @@ pp_cplan_right_potential_pp_cannons_charter = {
 }
 pp_cplan_right_allow_pp_cannons_charter = {
 	scope:target = {
-		modifier:local_pp_cannons_line_levels >= 3
+		custom_tooltip = {
+			text = pp_cannons_charter_line_tt
+			pp_location_cannons_line_levels >= pp_cannons_charter_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -2191,7 +2287,10 @@ pp_cplan_right_potential_pp_naval_supplies_rights = {
 }
 pp_cplan_right_allow_pp_naval_supplies_rights = {
 	scope:target = {
-		modifier:local_pp_naval_supplies_line_levels >= 5
+		custom_tooltip = {
+			text = pp_naval_supplies_rights_line_tt
+			pp_location_naval_supplies_line_levels >= pp_naval_supplies_rights_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {
@@ -2248,7 +2347,10 @@ pp_cplan_right_potential_pp_naval_supplies_charter = {
 }
 pp_cplan_right_allow_pp_naval_supplies_charter = {
 	scope:target = {
-		modifier:local_pp_naval_supplies_line_levels >= 3
+		custom_tooltip = {
+			text = pp_naval_supplies_charter_line_tt
+			pp_location_naval_supplies_line_levels >= pp_naval_supplies_charter_line_levels
+		}
 		custom_tooltip = {
 			text = pp_one_specialization_tt
 			NOR = {

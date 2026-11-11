@@ -1948,6 +1948,14 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         + (" (rewritten)." if counts.changed else " (unchanged)."),
         flush=True,
     )
+    from prosper_or_perish_constructor import line_level_counts
+
+    lines = line_level_counts.write(mod_root)
+    print(
+        f"Specialization rights count whole line levels: {len(lines.lines)} lines, "
+        f"{sum(lines.lines.values())} building types" + (" (rewritten)." if lines.changed else " (unchanged)."),
+        flush=True,
+    )
     from prosper_or_perish_constructor import market_short_weight
     from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 

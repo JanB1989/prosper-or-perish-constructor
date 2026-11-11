@@ -121,7 +121,13 @@
   production, so it takes a right where that line dominates. The 18 vanilla bundled royal rights and charters are
   `REPLACE`d with `potential = { always = no }`. Each rights block stands before its charter: `upgrades_to` reads only
   a right that is already loaded (a forward reference fails at load and the charter never upgrades; fixed 2026-10-15,
-  `tests/test_town_rights_order.py`).
+  `tests/test_town_rights_order.py`). Both tiers count WHOLE standing line levels (2026-11-11): `allow` compares the
+  generated `pp_location_<good>_line_levels` (finalize pass `line_level_counts.py`, `location_building_level` of every
+  building carrying the line's `local_pp_<good>_line_levels` counter) with the named thresholds in
+  `script_values/pp_specialization_town_rights_values.txt` (tooltip `<right>_line_tt` shows them). The raw_modifier
+  counter itself is scaled by input fulfilment (0 without inputs): gated on it, a quarter of the towns with 3+ line
+  levels could take neither tier. `tests/test_town_rights_reachable.py` checks every town right: upgrade targets exist
+  and have an unlocking advance, unlock keys resolve, conditions name only existing keys and never read a scaled counter.
 - Iron right "Hammer Privileges" (`pp_iron_rights`, 2026-10-15, Jan; not tested in game): one right, no charter, no
   potential, no unlocking advance (nothing upgrades into it; an empty unlock list = unlocked from the start). Iron output
   +0.5, production efficiency -0.075. Only where the town works iron itself (`allow`: iron RGO, or a bog iron smelter of

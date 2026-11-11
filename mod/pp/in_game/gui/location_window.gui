@@ -6850,18 +6850,18 @@ pp_land_potential_chip = {}
 								expand = {}
 							}
 						}
+				# PP: the construction queue buttons in one row at the top right (location_view.py, QUEUE_ROW)
 				widget = {
+					name = "pp_location_queue_row"
 					parentanchor = top|right
 					widgetanchor = top|right
-					size = { 62 220 }
+					position = { -8 46 }
+					size = { 332 34 }
 					datacontext = "[LocationView.GetLocation]"
 					visible = "[Location.GetOwner.IsPlayer]"
 
-					vbox = {
-						bottomtotop = yes
-						parentanchor = top|right
-						widgetanchor = top|right
-						margin = { 8 8 }
+					hbox = {
+						righttoleft = yes
 						spacing = 4
 
 						location_queue_button = {   # Buildings (incl. RGO/roads/market/capital/canal/rank)

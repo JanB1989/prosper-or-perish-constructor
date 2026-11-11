@@ -40,3 +40,55 @@ def test_the_bars_row_fits_the_view():
     row = (2 * arable_land_bar.ROW_MARGIN + bars + 2 * arable_land_bar.ROW_SPACING
            + max(chips) + 4 + location_status.STATE_TEXT_WIDTH)
     assert row <= location_view.WINDOW_WIDTH - location_view.CONTENT_MARGINS
+
+
+def _first_int(pattern: str, text: str) -> int:
+    found = re.search(pattern, text)
+    assert found, f"not found in the location window: {pattern}"
+    return int(found.group(1))
+
+
+def test_the_queue_buttons_sit_in_one_row_clear_of_the_status_card_and_the_bars():
+    # 2026-11-11 (Jan, Krakow): vanilla stacks the construction queue buttons up from the scene's bottom-right corner;
+    # two of them covered the status card (Stored Food, harvest) right of the IO row and sat on the population bars
+    text = WINDOW.read_text(encoding="utf-8-sig")
+    assert "size = { 62 220 }" not in text and "bottomtotop" not in text[text.index("# SCENE"):text.index("# TABS")]
+    assert text.count(f'name = "{location_view.QUEUE_ROW}"') == 1
+    start = text.index(f'name = "{location_view.QUEUE_ROW}"')
+    block = text[start:text.index("# PP: population and capacity bars", start)]
+    assert re.search(r"\bhbox = \{\s*\n\s*righttoleft = yes\b", block) and "vbox = {" not in block
+    assert block.count("location_queue_button = {") == location_view.QUEUE_BUTTONS
+
+    found = re.search(r"position = \{ -(\d+) (\d+) \}\s*\n\s*size = \{ (\d+) (\d+) \}", block)
+    assert found, "the queue row has no fixed position and size"
+    margin, top, width, height = map(int, found.groups())
+    spacing = _first_int(r"righttoleft = yes\s*\n\s*spacing = (\d+)", block)
+    button = re.search(r"type location_queue_button = header_button_left \{\s*\n\s*size = \{ (\d+) (\d+) \}", text)
+    assert button, "vanilla's queue button type not found"
+    button_w, button_h = map(int, button.groups())
+    buttons = location_view.QUEUE_BUTTONS
+    # one row holds every queue's button side by side, and the row fits the scene
+    assert height == button_h and width >= buttons * button_w + (buttons - 1) * spacing
+    assert margin + width <= location_view.WINDOW_WIDTH - location_view.CONTENT_MARGINS
+
+    # vertically: under the condition icons' band (top left, full width), above the occupation banner (centred), the
+    # status card (top of the IO row, which sits on the geography band at the bottom) and so the population bars
+    scene = _first_int(r"# SCENE\s*\n\s*widget = \{\s*\n\s*layoutpolicy_horizontal = expanding\s*\n\s*size = \{ -1 (\d+) \}", text)
+    band = _first_int(rf'name = "{location_view.MODIFIER_ROW}"\s*\n\s*parentanchor = top\|left\s*\n\s*size = \{{ 100% (\d+) \}}', text)
+    banner = _first_int(r"parentanchor = center\s*\n\s*size = \{ 100% (\d+) \}\s*\n\s*datacontext = \"\[LocationView\.GetLocation\]\"\s*\n"
+                        r"\s*visible = \"\[Location\.IsOccupied\]\"", text)
+    io_row = _first_int(r"# IOs & PERIPHORA\s*\n\s*widget = \{\s*\n\s*layoutpolicy_horizontal = expanding\s*\n\s*size = \{-1 (\d+)\}", text)
+    geography = _first_int(r'name = "ha1300_native_geography_row"\s*\n\s*layoutpolicy_horizontal = expanding\s*\n'
+                           r"\s*maximumsize = \{ -1 (\d+) \}", text)
+    card = text.index('name = "pp_location_status_row"')
+    assert text.index("# IOs & PERIPHORA") < card < text.index("# BOTTOM CONDITIONS")
+    status_top = scene - geography - io_row
+    assert band <= top and top + height <= (scene - banner) // 2 and top + height <= status_top
+
+
+def test_the_queue_row_patch_needs_vanillas_column_once():
+    import pytest
+
+    text = WINDOW.read_text(encoding="utf-8-sig")
+    with pytest.raises(ValueError, match="construction queue column"):
+        location_view.queue_buttons_in_a_row(text)   # the shipped window has the row already

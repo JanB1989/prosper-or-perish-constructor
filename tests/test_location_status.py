@@ -237,7 +237,7 @@ def test_condition_icons_sit_at_the_top_left_of_the_scene():
     with pytest.raises(ValueError, match="modifier row"):
         geography.move_modifier_row(scene + scene)
 
-    # the shipped window: the icons left the bottom row and the queue buttons keep the top-right corner
+    # the shipped window: the icons left the bottom row; the queue buttons sit in a row under its right end
     window = (MOD_ROOT / "in_game/gui/location_window.gui").read_text(encoding="utf-8-sig")
     assert window.count(f'name = "{geography.MODIFIER_ROW}"') == 1
 
@@ -269,7 +269,7 @@ def test_every_location_and_province_modifier_gets_its_own_icon():
 
     row_at = window.index(f'name = "{geography.MODIFIER_ROW}"')
     assert window.index("# BOTTOM CONDITIONS") < row_at < window.index("# SOUND TOLL") < window.index("# Province timed modifiers")
-    assert window.index("# Province timed modifiers") < window.index("size = { 62 220 }")
+    assert window.index("# Province timed modifiers") < window.index(f'name = "{geography.QUEUE_ROW}"')
 
     # 2026-10-05 (Jan): a modifier a chip of the bottom row already shows gets no icon of its own in the top row
     out = geography.show_every_timed_modifier(row, {"location_modifier": "TEST_LOC"})

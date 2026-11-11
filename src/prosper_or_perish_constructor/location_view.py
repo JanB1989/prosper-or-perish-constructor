@@ -185,8 +185,8 @@ def move_modifier_row(text: str) -> str:
 
     Vanilla draws them in the bottom row after the geography card, which the native chips fill: in a location with every
     chip the last icons (the province modifiers, Stored Food among them) ran past the window's edge. The row keeps its
-    vanilla icons and tooltips and becomes a widget pinned to the scene's top-left corner (the top-right corner holds the
-    owner's construction queue buttons).
+    vanilla icons and tooltips and becomes a widget pinned to the scene's top-left corner (the owner's construction
+    queue buttons sit in a row under its right end, ``queue_buttons_in_a_row``).
     """
     found = text.count(_CONDITIONS)
     if found != 1:
@@ -213,6 +213,48 @@ def move_modifier_row(text: str) -> str:
     row = row.replace("using = layoutpolicy_expanding", _MODIFIER_ROW_FRAME.replace("\n\t", "\n" + inner), 1)
     comment = f"\n{indent}# PP: the condition icons at the top left (the bottom row is full with the geography chips)\n{indent}"
     return text[:scene_end] + comment + row + text[scene_end:]
+
+
+# The owner's construction queue buttons (vanilla `location_queue_button`, 52 x 34, one per queue type: buildings,
+# foreign buildings, estates, regiments, ships, explorers). Vanilla stacks them up from the scene's bottom-right corner
+# (a 62 x 220 column, bottomtotop): in the mod that column covers the status card (Stored Food, harvest) at the right
+# of the IO row and the right end of the geography band, just above the population bars (Jan, 2026-11-11: Krakow with
+# a building and an estate construction). They go into one row at the top right instead, right to left from the
+# corner like vanilla's column from the bottom, under the condition icons' band and above the occupation banner.
+QUEUE_ROW = "pp_location_queue_row"
+SCENE_HEIGHT = 220
+QUEUE_BUTTON = (52, 34)
+QUEUE_BUTTONS = 6
+QUEUE_SPACING = 4
+QUEUE_MARGIN = 8
+MODIFIER_ROW_HEIGHT = 40
+QUEUE_ROW_TOP = MODIFIER_ROW_HEIGHT + 6
+QUEUE_ROW_WIDTH = QUEUE_BUTTONS * QUEUE_BUTTON[0] + (QUEUE_BUTTONS - 1) * QUEUE_SPACING
+_QUEUE_COLUMN = re.compile(
+    r"(?P<i>[ \t]*)widget = \{\n"
+    r"[ \t]*parentanchor = top\|right\n[ \t]*widgetanchor = top\|right\n[ \t]*size = \{ 62 220 \}\n"
+    r"(?P<ctx>[ \t]*datacontext = \"\[LocationView\.GetLocation\]\"\n[ \t]*visible = \"\[Location\.GetOwner\.IsPlayer\]\"\n)"
+    r"\n?(?P<j>[ \t]*)vbox = \{\n[ \t]*bottomtotop = yes\n[ \t]*parentanchor = top\|right\n[ \t]*widgetanchor = top\|right\n"
+    r"[ \t]*margin = \{ 8 8 \}\n[ \t]*spacing = 4\n"
+)
+
+
+def queue_buttons_in_a_row(text: str) -> str:
+    """Lay the construction queue buttons out in one row at the scene's top right (see ``QUEUE_ROW``)."""
+    found = _QUEUE_COLUMN.findall(text)
+    if len(found) != 1:
+        raise ValueError(f"location_window.gui: expected 1 vanilla construction queue column, found {len(found)}")
+    match = _QUEUE_COLUMN.search(text)
+    rest = text[match.end():text.index("expand = {}", match.end())]
+    if rest.count("location_queue_button = {") != QUEUE_BUTTONS:
+        raise ValueError(f"location_window.gui: expected {QUEUE_BUTTONS} construction queue buttons in the column")
+    i, j = match["i"], match["j"]
+    row = (f"{i}# PP: the construction queue buttons in one row at the top right (location_view.py, QUEUE_ROW)\n"
+           f"{i}widget = {{\n{j}name = \"{QUEUE_ROW}\"\n{j}parentanchor = top|right\n{j}widgetanchor = top|right\n"
+           f"{j}position = {{ -{QUEUE_MARGIN} {QUEUE_ROW_TOP} }}\n"
+           f"{j}size = {{ {QUEUE_ROW_WIDTH} {QUEUE_BUTTON[1]} }}\n{match['ctx']}\n"
+           f"{j}hbox = {{\n{j}\trighttoleft = yes\n{j}\tspacing = {QUEUE_SPACING}\n")
+    return text[:match.start()] + row + text[match.end():]
 
 
 _TIMED_MODIFIERS = (("# Location timed modifiers\n", "location_modifier"), ("# Province timed modifiers\n", "province_modifier"))
@@ -614,6 +656,8 @@ def build_window(export_text: str, mod_root: Path, vanilla: Path | None, stored_
                                             location_status.load_stored_food_rows(mod_root, vanilla, stored_food))
     location_status.write_harvest_files(mod_root, harvests)
     merged = show_every_timed_modifier(move_modifier_row(merged), shown_by_chips(mod_root, vanilla, goods, bool(harvests.keys)))
+    # the construction queue buttons in one row at the top right, clear of the status card and the population bars
+    merged = queue_buttons_in_a_row(merged)
     # the land state (abundant / available / overused, with its strength) sits beside the population bars only
     merged = arable_land_bar.add_to_window(merged, location_status.land_state(land_rows, "pp_land_bar_state"))
     # the Location Plan's button in the header (location_plan.py)

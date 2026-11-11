@@ -129,22 +129,56 @@ def test_mod_town_right_conditions_name_only_keys_that_exist(vanilla: Path, all_
     assert not problems, problems
 
 
-def test_mod_town_rights_never_read_input_scaled_level_counters():
-    """A building's raw_modifier is scaled by its input fulfilment: a "1 per level" counter there reads under the
-    levels while an input is short and 0 without inputs, so a right gated on it may never open. Count whole levels
-    (location_building_level, e.g. line_level_counts.py) instead."""
-    from prosper_or_perish_constructor import food_level_counts
+def _raw_modifier_keys() -> dict[str, str]:
+    """Every modifier key any compiled building carries in raw_modifier (key -> one building that carries it)."""
+    keys: dict[str, str] = {}
+    for path in sorted((MOD_ROOT / "in_game/common/building_types").glob("*.txt")):
+        text = re.sub(r"#[^\n]*", "", path.read_text(encoding="utf-8-sig"))
+        for building, body in cpc.cp._blocks(text):
+            for block in cpc.inner_blocks(body, "raw_modifier"):
+                for name in re.findall(r"(\w+)\s*=", block):
+                    keys.setdefault(name, building.rpartition(":")[2])
+    return keys
 
-    scaled = {f"local_pp_{good}_line_levels" for good in line_level_counts.counters(MOD_ROOT)}
-    scaled |= {name for per in food_level_counts.counters(MOD_ROOT).values() for name in per}
-    assert len(scaled) >= 17
+
+def _mod_building_gates() -> dict[str, str]:
+    """The mod's building gates (allow + location_potential + potential), comments stripped."""
+    gates: dict[str, str] = {}
+    for path in sorted((MOD_ROOT / "in_game/common/building_types").glob("*.txt")):
+        text = re.sub(r"#[^\n]*", "", path.read_text(encoding="utf-8-sig"))
+        for key, body in cpc.cp._blocks(text):
+            blocks = [b for name in ("allow", "location_potential", "potential") for b in cpc.inner_blocks(body, name)]
+            if blocks:
+                gates[f"{path.stem}:{key.rpartition(':')[2]}"] = "\n".join(blocks)
+    return gates
+
+
+def test_gates_never_read_input_scaled_modifiers():
+    """The engine applies a building's raw_modifier x level x input fulfilment (the average over its method slots):
+    a "1 per level" counter there reads under the levels while an input is short and 0 at no market access, so a
+    town right or building gated on it may never open (the specialization rights, 2026-11-11). Every key any building
+    carries in raw_modifier counts, not a list of known counters. Count whole levels (location_building_level, e.g.
+    line_level_counts.py / food_level_counts.py) instead. Max-level caps may read them on purpose (farm caps pair
+    the counter with the land it takes, both scaled alike); gates may not."""
+    scaled = _raw_modifier_keys()
+    assert {"local_pp_books_line_levels", "pp_levels_wheat_farm", "local_population_capacity"} <= set(scaled)
+    gates = {f"town right {key}": conditions for key, conditions in _mod_right_blocks().items()}
+    gates |= {f"building {key}": conditions for key, conditions in _mod_building_gates().items()}
+    assert len(gates) > 100
     problems = [
-        f"{key} reads modifier:{name}"
-        for key, conditions in _mod_right_blocks().items()
-        for name in re.findall(r"\bmodifier:(\w+)", conditions)
+        f"{where} reads modifier:{name} (in raw_modifier of {scaled[name]})"
+        for where, conditions in gates.items()
+        for name in sorted(set(re.findall(r"\bmodifier:(\w+)", conditions)))
         if name in scaled
     ]
     assert not problems, problems
+
+
+def test_gate_guard_catches_the_old_rights():
+    """The guard above fails on the specialization rights as they stood before 2026-11-11."""
+    old = "pp_books_rights = { allow = { scope:target = { modifier:local_pp_books_line_levels >= 8 } } }"
+    conditions = "\n".join(cpc.inner_blocks(next(iter(cpc.cp._blocks(old)))[1], "allow"))
+    assert set(re.findall(r"\bmodifier:(\w+)", conditions)) & set(_raw_modifier_keys())
 
 
 def test_line_level_values_are_current_and_cover_every_threshold():

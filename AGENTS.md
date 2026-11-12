@@ -7,7 +7,7 @@
 - Use parser/evaluator commands for game-data and blueprint questions instead of text-searching generated mod files.
 - Treat `uv run ppc sync --yes` as a live deploy action. Do not run it unless the user explicitly asks to mirror into the live Paradox mod folder.
 - The constructor output mod root is `mod/pp` under this repo, shown from Windows as `\\wsl$\Ubuntu\home\jan\development\ProsperOrPerishConstructor\mod\pp`.
-- The repo folders `mod/pp` and `mod/harvests` are short on purpose: every tracked path stays inside the Windows path budget and plain ASCII (`tools/check_path_lengths.py`, `tools/check_repo_files.py`, pre-commit, and `.github/workflows/windows-paths.yml` on real Windows; no exceptions). The live Paradox folder keeps its full name through `[deploy] target`.
+- The repo folder `mod/pp` is short on purpose: every tracked path stays inside the Windows path budget and plain ASCII (`tools/check_path_lengths.py`, `tools/check_repo_files.py`, pre-commit, and `.github/workflows/windows-paths.yml` on real Windows; no exceptions). The live Paradox folder keeps its full name through `[deploy] target`.
 - `uv run ppc sync --yes` first makes sure that repo-local output mod root is built/current, then copies that output to the configured live Paradox mod folder. Work either edits files directly in this repo-local output root, or edits source/config/blueprints that compile into that output root before sync copies it onward.
 - Do not look for or use a nested `Constructor/mod/...` path in this checkout; the repo-local compiled mod path is `mod/...`.
 - The sync reruns the World Builder start setup (70-100 s) only when one of its inputs changed. Its mod inputs are the

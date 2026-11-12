@@ -6,8 +6,8 @@ adds text, and vanilla's own French wherever the mod changes a vanilla text (Ste
 writes the English text for each other language the game has, per localization folder (``localization/<language>/``,
 ``localization/replace/<language>/``): every English file's entries in one file ``pp_mod_text_l_<language>.yml`` (one
 file per folder keeps the paths inside the repo's Windows path budget), the header switched, the text unchanged.
-Files that ``separate`` names keep their own copy (``<name>_l_<language>.yml``): the Seasonal Harvests standalone ships
-those files too, and a same-name file replaces the other mod's copy instead of defining its keys twice. It runs in
+Files that ``separate`` names keep their own copy (``<name>_l_<language>.yml``; the main mod names none since the
+Seasonal Harvests standalone copy was dropped, 2026-11-12). It runs in
 ``ppc finalize`` after every pass that writes English text; files in those folders it does not write are removed (the
 mod has no translations of its own).
 """

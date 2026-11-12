@@ -41,7 +41,7 @@ HARVEST_LOCALIZATION = (
 )
 EUROPEDIA_LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_europedia_l_english.yml"
 SITUATION_LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_situations_l_english.yml"
-# harvest texts the Seasonal Harvests standalone mod shares live in one file of the same name in both mods
+# the harvest situation, concept, rule and legend texts live in one file
 SHARED_HARVEST_LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_seasonal_harvests_l_english.yml"
 MODIFIER_LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_modifiers_l_english.yml"
 ENCYCLOPEDIA_LATERALVIEW = MOD_ROOT / "in_game" / "gui" / "encyclopedia_lateralview.gui"

@@ -2003,22 +2003,9 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         f"({overrides.kept} kept, {len(overrides.dropped_equal)} dropped as word-for-word vanilla).",
         flush=True,
     )
-    from prosper_or_perish_constructor import seasonal_harvests
-
-    harvests = seasonal_harvests.apply(mod_root)
-    moved = sum(len(keys) for keys in harvests.moved.values())
-    print(
-        f"Seasonal Harvests: standalone mod holds the main mod's {harvests.copied} harvest files "
-        f"({len(harvests.changed)} changed, {len(harvests.removed)} stale removed); {harvests.keys} shared texts in "
-        f"{Path(seasonal_harvests.SHARED_LOCALIZATION).name} ({moved} moved from other English files).",
-        flush=True,
-    )
     from prosper_or_perish_constructor import loc_languages   # last text pass: copies every English file
 
-    standalone = mod_root.parent / seasonal_harvests.STANDALONE_FOLDER
-    shipped = [p for p in (*seasonal_harvests.COPIED, seasonal_harvests.SHARED_LOCALIZATION) if p.endswith("_l_english.yml")]
-    print(loc_languages.summary({"main mod": loc_languages.apply(mod_root, separate=shipped),
-                                 **({"Seasonal Harvests": loc_languages.apply(standalone, separate=shipped)} if standalone.is_dir() else {})}), flush=True)
+    print(loc_languages.summary({"main mod": loc_languages.apply(mod_root)}), flush=True)
     _normalize_interface_dds(mod_root)
     _ensure_constructor_text_boms(mod_root)
 

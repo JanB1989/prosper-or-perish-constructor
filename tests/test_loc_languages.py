@@ -6,11 +6,10 @@ from pathlib import Path
 
 import pytest
 
-from prosper_or_perish_constructor import loc_languages, loc_replace, seasonal_harvests
+from prosper_or_perish_constructor import loc_languages, loc_replace
 
 ROOT = Path(__file__).resolve().parents[1]
-MODS = (ROOT / "mod" / "pp", ROOT / "mod" / "harvests")
-SHIPPED = [p for p in (*seasonal_harvests.COPIED, seasonal_harvests.SHARED_LOCALIZATION) if p.endswith("_l_english.yml")]
+MODS = (ROOT / "mod" / "pp",)
 
 
 def test_copies_merge_per_folder_keep_separate_files_and_drop_stale_ones(tmp_path: Path) -> None:
@@ -41,7 +40,7 @@ def test_every_language_holds_every_english_key_with_the_english_text(mod: Path)
         pytest.skip("mod not built")
     problems = []
     for language in loc_languages.LANGUAGES:
-        wanted = loc_languages.plan(mod, language, SHIPPED)
+        wanted = loc_languages.plan(mod, language)
         on_disk = {p for f in loc_languages.FOLDERS for p in (mod / f / language).rglob("*.yml")}
         problems += [f"extra {p.relative_to(mod)}" for p in on_disk - set(wanted)]
         problems += [f"missing or stale {p.relative_to(mod)}" for p, text in wanted.items()

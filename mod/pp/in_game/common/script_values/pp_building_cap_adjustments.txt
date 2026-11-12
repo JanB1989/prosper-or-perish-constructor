@@ -268,6 +268,7 @@ rural_building_cap_building_level_development = {
 
 rural_building_cap_building_level_rgo_max = {
 	value = max_rgo_workers
+	add = modifier:local_pp_rgo_building_size   # Mining Charter (2026-11-12, Jan)
 	multiply = 0.65
 }
 

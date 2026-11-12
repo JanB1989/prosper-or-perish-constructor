@@ -32,3 +32,12 @@ local_victualling_yard_building_levels = {
 		category = location
 	}
 }
+
+# Counts as RGO levels in the RGO row of rural_building_cap (and the tier caps that read it). PP RGOs never expand, so
+# the max RGO size modifiers raise no building cap; this one does (2026-11-12, Jan: Mining Charter).
+local_pp_rgo_building_size = {
+	decimals = 0
+	game_data = {
+		category = location
+	}
+}

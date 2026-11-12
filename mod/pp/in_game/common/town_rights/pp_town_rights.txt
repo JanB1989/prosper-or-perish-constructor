@@ -23,6 +23,15 @@ TRY_INJECT:royal_staple_rights = {
 	}
 }
 
+# Mining Charter (2026-11-12, Jan): vanilla's max RGO size raises nothing in PP (RGOs never expand, the extraction
+# building caps read the RGO's levels), so the charter counts as 4 more RGO levels in those caps (x0.65 each). Vanilla's
+# lines stay.
+TRY_INJECT:mining_charter = {
+	location_modifier = {
+		local_pp_rgo_building_size = 4
+	}
+}
+
 # Ville Franche (2026-10-27, Jan): flat housing instead of vanilla's +20 % capacity, which grew with every development
 # point and building. 20 = 20,000 people, about 20 % of a French town's or city's flat capacity in an 1832 save (median 110).
 TRY_INJECT:ville_franche_town_rights = {

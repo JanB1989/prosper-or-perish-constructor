@@ -11,6 +11,11 @@ TRY_INJECT:country_base_values = {
 	# the same way in static_modifiers/pp_experience_decay.txt, advances/pp_experience_decay.txt and
 	# religious_aspects/pp_experience_decay.txt
 	experience_decay = -0.04
+	# Integration: location ranks no longer slow integration (vanilla town -25 %, city -50 %, megalopolis -100 %, cancelled in
+	# location_ranks/pp_location_rank_adjustments.txt; a megalopolis could never integrate). This takes about the same back from
+	# every province (2026-11-13, Jan): in his 1455 save 45 % of provinces hold a town or city, and with the highest rank setting
+	# when a province finishes, the ranks cost 12 % (provinces being integrated) to 18 % (all provinces) of province speed.
+	global_integration_speed_modifier = -0.15
 	# No base values for the province store: the store lever (Low Stores / Full Stores, static_modifiers/pp_stored_food.txt)
 	# is zero at 12 stored months, so the old constants (-100 % Surplus Sales, +1900 % offset)
 	# are gone since 2026-10-02.

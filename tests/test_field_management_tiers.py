@@ -18,10 +18,14 @@ def test_tier_caps_leave_the_levels_they_convert_out():
     caps = (ROOT / "mod/pp" / b.CAPS_PATH).read_text(encoding="utf-8-sig")
     blocks = {block.split(" = {", 1)[0]: block for block in caps.split("\n\n") if block.startswith("pp_wb_cap_field_management")}
     base = blocks["pp_wb_cap_field_management"]
-    assert "pp_wb_levels_field_management_convertible" in base and "pp_wb_levels_field_management_improved" in base
+    # the caps read whole standing levels (pp_wb_standing_<key>), never the input-scaled counters
+    assert "pp_wb_standing_field_management_convertible > 0" in base and "pp_wb_standing_field_management_improved > 0" in base
     convertible = blocks["pp_wb_cap_field_management_convertible"]
-    assert "modifier:pp_wb_levels_field_management\n" not in convertible
-    assert "pp_wb_levels_field_management_improved" in convertible
+    assert "pp_wb_standing_field_management > 0" not in convertible
+    assert "pp_wb_standing_field_management_improved > 0" in convertible
     improved = blocks["pp_wb_cap_field_management_improved"]
-    assert "pp_wb_levels_field_management\n" not in improved and "field_management_convertible" not in improved
-    assert "pp_wb_levels_jiangnan_hill_terraces" in improved
+    assert "pp_wb_standing_field_management > 0" not in improved and "field_management_convertible" not in improved
+    assert "pp_wb_standing_jiangnan_hill_terraces > 0" in improved
+    # the levels under construction of the lower tiers are left out too: each converts one of them
+    queued = caps.split("pp_wb_queued_pp_wb_cap_field_management_improved = {")[1].split("\n}")[0]
+    assert "building_type:field_management " not in queued and "field_management_convertible" not in queued

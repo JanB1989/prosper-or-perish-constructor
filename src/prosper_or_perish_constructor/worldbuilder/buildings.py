@@ -265,23 +265,55 @@ def lower_tiers(cfg: WorldBuilderConfig, key: str) -> list[str]:
     return chain
 
 
+STANDING_VALUE = "pp_wb_standing_{key}"
+QUEUED_VALUE = "pp_wb_queued_{cap}"
+# Levels under construction counted per sharing building (building_levels_under_construction is a trigger, so the
+# count is stepped, as the farm caps do it)
+QUEUE_STEPS = 5
+
+
+def standing_value(key: str) -> str:
+    """Whole standing levels of ``key`` in the location. The caps never read the ``pp_wb_levels_<key>`` counters: a
+    raw_modifier is scaled by the building's input fulfilment, so a counter reads under a whole level while an upkeep
+    good is short and the other members' caps open a level that is not there (2026-11-13, Treviso: Bund counter
+    below 0.68, Drainage Ditches 0.68 -> 1.x, built, then over the cap again)."""
+    return f'{STANDING_VALUE.format(key=key)} = {{\n\tvalue = "location_building_level(building_type:{key})"\n}}'
+
+
+def queued_value(name: str, siblings: list[str]) -> str:
+    """Levels the other members have under construction here: the engine counts only a building's own levels under
+    construction against its max level, so two members could start levels on the same free room."""
+    types = " ".join(f"building_type = building_type:{s}" for s in siblings)
+    steps = " ".join(f"if = {{ limit = {{ building_levels_under_construction >= {n} }} add = 1 }}" for n in range(2, QUEUE_STEPS + 1))
+    return "\n".join([f"{QUEUED_VALUE.format(cap=name)} = {{", "\tvalue = 0", "\tevery_buildings_in_location = {",
+                      f"\t\tlimit = {{ building_levels_under_construction >= 1 OR = {{ {types} }} }}", f"\t\tadd = 1 {steps}",
+                      "\t}", "}"])
+
+
 def shared_cap_value(name: str, source: str, siblings: list[str], clamps: list[str], top: int, maximum: int | None = None) -> str:
     """``name`` = the family's cap equation (``source``, its rows flattened into the tooltip, ``clamps`` its clamp rows)
-    minus the levels already used by the other family members. A member's row and the minimum show only where they
-    change the value; ``<name>_open`` (the same sum before this cap's own clamps, no rows) is what the clamps test."""
-    counters = [f"modifier:{LEVELS_MODIFIER.format(key=sibling)}" for sibling in siblings]
+    minus the levels the other family members stand at (whole levels, ``standing_value``) and have under construction
+    (``queued_value``). A member's row and the minimum show only where they change the value; ``<name>_open`` (the same
+    sum before this cap's own clamps, no rows) is what the clamps test."""
+    used = [STANDING_VALUE.format(key=sibling) for sibling in siblings]
+    queued = QUEUED_VALUE.format(cap=name) if siblings else None
     lines = [f"{name} = {{", f"\tadd = {source}", *clamps]
-    for sibling, counter in zip(siblings, counters):
-        lines.append(f'\tif = {{ limit = {{ {counter} > 0 }} subtract = {{ desc = "BUILDING_LEVEL_WB_SHARED_{sibling.upper()}" value = {counter} }} }}')
-    if counters:
-        used = " ".join(f"{counter} > 0" for counter in counters)
-        lines.append(f"\tif = {{ limit = {{ OR = {{ {used} }} {name}_open < 0 }} {_clamp_op('min', 'MINIMUM', 0)} }}")
+    for sibling, level in zip(siblings, used):
+        lines.append(f'\tif = {{ limit = {{ {level} > 0 }} subtract = {{ desc = "BUILDING_LEVEL_WB_SHARED_{sibling.upper()}" value = {level} }} }}')
+    if queued:
+        lines.append(f'\tif = {{ limit = {{ {queued} > 0 }} subtract = {{ desc = "BUILDING_LEVEL_WB_QUEUED" value = {queued} }} }}')
+        tests = " ".join(f"{v} > 0" for v in [*used, queued])
+        lines.append(f"\tif = {{ limit = {{ OR = {{ {tests} }} {name}_open < 0 }} {_clamp_op('min', 'MINIMUM', 0)} }}")
     if maximum is not None:
         lines.append(f"\tif = {{ limit = {{ {name}_open > {maximum} }} {_clamp_op('max', 'MAXIMUM', maximum)} }}")
     lines.append("}")
     # the family's minimum is left out: a sum below 0 stays below 0 after the members' levels come off
-    open_lines = [f"{name}_open = {{", f"\tvalue = {source}", f"\tmax = {top}", *(f"\tsubtract = {c}" for c in counters), "}"]
-    return "\n".join(lines) + "\n\n" + "\n".join(open_lines)
+    taken = [*used, queued] if queued else []
+    open_lines = [f"{name}_open = {{", f"\tvalue = {source}", f"\tmax = {top}", *(f"\tsubtract = {c}" for c in taken), "}"]
+    blocks = ["\n".join(lines), "\n".join(open_lines)]
+    if queued:
+        blocks.append(queued_value(name, siblings))
+    return "\n\n".join(blocks)
 
 
 def building_link(key: str) -> str:
@@ -413,6 +445,7 @@ def write_caps(contract: Contract, cfg: WorldBuilderConfig, mod_root: Path) -> d
     missing = [n for n, spec in cfg.niche.items() if spec["family"] not in info]
     if missing:
         raise ValueError(f"[worldbuilder.buildings.niche] family is not a mapped general building: {', '.join(missing)}")
+    blocks.extend(standing_value(k) for k in sorted(counters))
     write_level_types(counters, capacities, mod_root)
     text = "\n\n".join([GENERATED, "# Improvement building level caps: base + attribute class terms + levels per development point x development.",
                           "# The equation (<key>_terms, or <group or key>_shared for buildings sharing a cap) is named unlabelled, so the",
@@ -425,9 +458,10 @@ def write_caps(contract: Contract, cfg: WorldBuilderConfig, mod_root: Path) -> d
     keys = sorted(set(re.findall(r'desc = "(BUILDING_LEVEL_WB_[A-Z0-9_]+)"', text)))
     loc = ["l_english:", '  BUILDING_LEVEL_WB_BASE: "Base levels"', '  BUILDING_LEVEL_WB_DEVELOPMENT: "From [development|e]"',
            '  BUILDING_LEVEL_WB_FREE_FARMLAND: "Free Arable Land"', '  BUILDING_LEVEL_WB_MINIMUM: "Minimum"',
-           '  BUILDING_LEVEL_WB_MAXIMUM: "Upper limit"']
+           '  BUILDING_LEVEL_WB_MAXIMUM: "Upper limit"',
+           '  BUILDING_LEVEL_WB_QUEUED: "Related [buildings|e] under construction"']
     fixed = ("BUILDING_LEVEL_WB_BASE", "BUILDING_LEVEL_WB_DEVELOPMENT", "BUILDING_LEVEL_WB_FREE_FARMLAND",
-             "BUILDING_LEVEL_WB_MINIMUM", "BUILDING_LEVEL_WB_MAXIMUM")
+             "BUILDING_LEVEL_WB_MINIMUM", "BUILDING_LEVEL_WB_MAXIMUM", "BUILDING_LEVEL_WB_QUEUED")
     for key in keys:
         if key in fixed:
             continue

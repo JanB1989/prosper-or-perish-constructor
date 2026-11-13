@@ -111,7 +111,9 @@ def test_shared_caps_keep_their_numbers_with_conditional_rows(tmp_path):
     def cap(key: str, development: float, arid: bool = False, high: bool = False, **levels: int) -> float:
         ctx = {"development": development, "climate": "arid" if arid else "continental",
                "static_modifiers": {"pp_wb_fertility_high"} if high else set(),
-               "modifiers": {f"pp_wb_levels_{k}": float(v) for k, v in levels.items()}}
+               "buildings": {k: v for k, v in levels.items()},
+               # a short upkeep good scales the raw_modifier counter: the cap must not see it
+               "modifiers": {f"pp_wb_levels_{k}": 0.5 * v for k, v in levels.items()}}
         return rules.value("pp_wb_cap_" + key, ctx)
 
     # base 2 + arid 1 + high fertility 2 + 0.03 per development point, clamped to 20, minus the other member's levels, >= 0
@@ -178,13 +180,22 @@ def test_niche_buildings_share_the_family_cap_and_are_stronger(tmp_path):
     # as the cap's own; another member's levels and the minimum show only where they change the value
     general = text.split("pp_wb_cap_land_clearance = {")[1].split("\n}")[0]
     assert general.startswith("\n\tadd = pp_wb_cap_land_clearance_shared\n")
-    assert ('\tif = { limit = { modifier:pp_wb_levels_terraces_x > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_TERRACES_X" '
-            "value = modifier:pp_wb_levels_terraces_x } }") in general
-    assert ("\tif = { limit = { OR = { modifier:pp_wb_levels_terraces_x > 0 } pp_wb_cap_land_clearance_open < 0 } "
-            'min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 } }') in general
-    assert "pp_wb_cap_land_clearance_open = {\n\tvalue = pp_wb_cap_land_clearance_shared\n\tmax = 20\n\tsubtract = modifier:pp_wb_levels_terraces_x\n}" in text
+    # whole standing levels and the levels under construction, never the input-scaled raw_modifier counter
+    # (2026-11-13, Treviso: a Bund short of its upkeep good opened a Drainage Ditches level that was not there)
+    assert "modifier:pp_wb_levels_" not in text
+    assert ('\tif = { limit = { pp_wb_standing_terraces_x > 0 } subtract = { desc = "BUILDING_LEVEL_WB_SHARED_TERRACES_X" '
+            "value = pp_wb_standing_terraces_x } }") in general
+    assert ('\tif = { limit = { pp_wb_queued_pp_wb_cap_land_clearance > 0 } subtract = { desc = "BUILDING_LEVEL_WB_QUEUED" '
+            "value = pp_wb_queued_pp_wb_cap_land_clearance } }") in general
+    assert ("\tif = { limit = { OR = { pp_wb_standing_terraces_x > 0 pp_wb_queued_pp_wb_cap_land_clearance > 0 } "
+            'pp_wb_cap_land_clearance_open < 0 } min = { desc = "BUILDING_LEVEL_WB_MINIMUM" value = 0 } }') in general
+    assert ("pp_wb_cap_land_clearance_open = {\n\tvalue = pp_wb_cap_land_clearance_shared\n\tmax = 20\n"
+            "\tsubtract = pp_wb_standing_terraces_x\n\tsubtract = pp_wb_queued_pp_wb_cap_land_clearance\n}") in text
+    assert 'pp_wb_standing_terraces_x = {\n\tvalue = "location_building_level(building_type:terraces_x)"\n}' in text
+    queued = text.split("pp_wb_queued_pp_wb_cap_land_clearance = {")[1].split("\n}")[0]
+    assert "OR = { building_type = building_type:terraces_x }" in queued and "land_clearance" not in queued
     niche = text.split("pp_wb_cap_terraces_x = {")[1].split("\n}")[0]
-    assert niche.startswith("\n\tadd = pp_wb_cap_land_clearance_shared\n") and "modifier:pp_wb_levels_land_clearance > 0" in niche
+    assert niche.startswith("\n\tadd = pp_wb_cap_land_clearance_shared\n") and "pp_wb_standing_land_clearance > 0" in niche
     # the family's upper limit (base 2 + 3 class levels + 0.03 per development point) can only bind past development 500
     assert '\tif = { limit = { development > 500 pp_wb_cap_land_clearance_shared > 20 } max = { desc = "BUILDING_LEVEL_WB_MAXIMUM" value = 20 } }' in general
     assert caps["terraces_x"]["unit_units"] == round(5.2 * 1.5, 2) and caps["terraces_x"]["niche"] and caps["terraces_x"]["family"] == "land_clearance"
@@ -223,7 +234,7 @@ def test_cap_group_members_share_one_cap_and_keep_their_1337_works(tmp_path):
     # each member: the group's equation minus every other member's levels, the niche of a member included
     for key, others in (("bund", ("field_drainage", "baray_x")), ("field_drainage", ("bund", "baray_x")), ("baray_x", ("bund", "field_drainage"))):
         block = text.split(f"pp_wb_cap_{key} = {{")[1].split("\n}")[0]
-        assert "add = pp_wb_cap_water_shared" in block and all(f"modifier:pp_wb_levels_{o}" in block for o in others)
+        assert "add = pp_wb_cap_water_shared" in block and all(f"pp_wb_standing_{o}" in block for o in others)
     assert caps["bund"]["group"] == "water" and caps["baray_x"]["group"] == "water" and caps["baray_x"]["shared"]
     # 1337 works above the cap stop at the cap: no building stands above its cap (2026-10-24, Jan)
     out = wb_buildings.write_setup(c, cfg, caps, {"a": "SWE"}, tmp_path)

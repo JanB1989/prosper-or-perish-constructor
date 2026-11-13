@@ -253,3 +253,23 @@ def test_window_draws_the_room_after_the_farms_with_its_legend_entry():
            f"FixedPointToFloat(LocationView.GetLocation.MakeScope.{held}))" in panel
     # the legend entry and the tooltip row (the tooltip is laid over both rows of the panel)
     assert panel.count('text = "PP_LAND_BAR_ROOM"') == alb.gui_block().count('text = "PP_LAND_BAR_ROOM"') >= 3
+
+
+def test_shared_caps_count_whole_and_queued_levels_not_the_counters():
+    """Treviso, 2026-11-13 (Jan, Venice, Construction Plan): the water family cap was 1.68 levels with one Bund
+    standing. The Bund counter (raw_modifier, scaled by input fulfilment) read under 0.68 while its upkeep good was
+    short, so Drainage Ditches saw a level of room that was not there; the plan built it again and again. The caps
+    count whole standing levels and the other members levels under construction."""
+    ctx = sanlorenzo(bund={"level": 1})
+    ctx["game"]["development"] = 300.0                      # room for three levels in the family
+    ctx["modifiers"]["pp_wb_levels_bund"] = 0.3              # the Bund short of its upkeep good
+    shared = min(15.0, EVAL.value("pp_wb_cap_water_control_shared", ctx))
+    assert shared >= 3
+    assert EVAL.value("pp_wb_cap_field_drainage", ctx) == pytest.approx(shared - 1)
+    # another member under construction takes its room now, not when it is finished
+    ctx["buildings"]["polders"] = {"level": 0, "queued": 1}
+    assert EVAL.value("pp_wb_cap_field_drainage", ctx) == pytest.approx(shared - 2)
+    assert EVAL.value("pp_wb_cap_bund", ctx) == pytest.approx(shared - 1)   # its own level is not subtracted
+    # its own levels under construction stay the engine s business (it counts them against the max itself)
+    ctx["buildings"]["field_drainage"] = {"level": 0, "queued": 1}
+    assert EVAL.value("pp_wb_cap_field_drainage", ctx) == pytest.approx(shared - 2)

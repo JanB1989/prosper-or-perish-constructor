@@ -1046,11 +1046,26 @@ def render_values(config: Config, demands: dict[str, dict[str, float]] | None = 
 # scripted effects
 
 
+ROOM = "pp_cplan_room_{key}"
+NO_ROOM_LIMIT = 1000     # a type without max_levels: no level limit the plan knows of
+
+
+def _room(name: str) -> str:
+    """A level of ``name`` fits under its max level here. ``can_build_building`` in a location checks the potential,
+    allow and the country, NOT the max level (2026-11-13, Jan's Venice game: the plan started Drainage Ditches in
+    Treviso at a cap of 0.68 and a Cookshop in Karpathos at 0.7, both 0 levels; the engine checks the max level again
+    when a construction finishes and cancelled each one, the gold spent lost). The engine's building_type_max_level
+    trigger reads 0 for every type (the Construction Manager framework's in-game tests), so the plan reads each type's
+    own max_levels (pp_cplan_room_<type>, render_room)."""
+    return f"{ROOM.format(key=name)} >= 1"
+
+
 def _can_build(name: str, costs: dict[str, BuildingCost]) -> str:
-    """The vanilla can-build check, the construction goods in this market, and no level of it under construction
-    here (the engine stalls a construction whose goods the market lacks; tested 2026-11-06, Edinburgh masonry)."""
+    """The vanilla can-build check, room under the max level, the construction goods in this market, and no level of
+    it under construction here (the engine stalls a construction whose goods the market lacks; tested 2026-11-06,
+    Edinburgh masonry)."""
     demand = costs.get(name, BuildingCost(0.0, DEFAULT_DEMAND, "std")).demand
-    return (f"location_and_owner_can_build = {{ building_type = {name} }} pp_cplan_goods_here_{demand} = yes "
+    return (f"location_and_owner_can_build = {{ building_type = {name} }} {_room(name)} pp_cplan_goods_here_{demand} = yes "
             f"NOT = {{ any_buildings_in_location = {{ building_type = building_type:{name} building_levels_under_construction > 0 }} }}")
 
 
@@ -1058,8 +1073,74 @@ def _can_site(name: str) -> str:
     """_can_build without the construction goods: the pickers ask for the goods apart, so a thing the market lacks the
     goods for is counted for the window (pp_cplan_note_goods) instead of vanishing (in game 2026-11-10: a Library
     needs books, a town glass, and nothing happened with no reason shown)."""
-    return (f"location_and_owner_can_build = {{ building_type = {name} }} "
+    return (f"location_and_owner_can_build = {{ building_type = {name} }} {_room(name)} "
             f"NOT = {{ any_buildings_in_location = {{ building_type = building_type:{name} building_levels_under_construction > 0 }} }}")
+
+
+def max_level_bodies(database: dict[str, tuple[dict[str, str], str]]) -> dict[str, str]:
+    """Building type -> the body of a script value that gives its max level here: ``value = <number or named value>``,
+    or the lines of its ``max_levels = { ... }`` block (the last top-level max_levels after the load order wins);
+    a type without max_levels gets NO_ROOM_LIMIT."""
+    pattern = re.compile(r"\bmax_levels\s*=\s*(\{|[A-Za-z0-9_.\-]+)|\{|\}")
+    bodies: dict[str, str] = {}
+    for name, (_keys, body) in database.items():
+        last, depth = None, 0
+        for match in pattern.finditer(body):
+            if match.group(1) is not None:
+                if depth == 0:
+                    last = match
+                if match.group(1) == "{":
+                    depth += 1
+            elif match.group(0) == "{":
+                depth += 1
+            else:
+                depth -= 1
+        if last is None:
+            bodies[name] = f"\tvalue = {NO_ROOM_LIMIT}"
+        elif last.group(1) != "{":
+            bodies[name] = f"\tvalue = {last.group(1)}"
+        else:
+            start, depth = last.end(), 1
+            for index in range(start, len(body)):
+                depth += {"{": 1, "}": -1}.get(body[index], 0)
+                if depth == 0:
+                    break
+            else:
+                raise ValueError(f"max_levels of {name}: unbalanced block")
+            lines = [line.strip() for line in body[start:index].splitlines() if line.strip()]
+            bodies[name] = "\n".join("\t" + line for line in lines)
+    return bodies
+
+
+def render_room(database: dict[str, tuple[dict[str, str], str]]) -> tuple[str, str]:
+    """Values and the trigger of the max-level check (``_room``): per building type the levels still free under its
+    max level here (its own max_levels minus its standing levels; the engine floors the max level, so a value of 1 or
+    more is one whole level), and ``pp_cplan_no_room`` for the one construct path, which gets its type as
+    scope:pp_cplan_btype (businesses, Towns and Buildings, location profiles)."""
+    bodies = max_level_bodies(database)
+    values = ["\n# ---- Room under the max level (location scope): the type's own max_levels minus its standing levels ----\n"
+              "# (can_build_building does not check the max level; the engine cancels a construction over it when it\n"
+              "# finishes, 2026-11-13). A max_levels block is its own value (pp_cplan_lvcap_<type>), so its tooltip rows\n"
+              "# stay its own; a type without max_levels (only DLC buildings) is never named (no DLC, no type to link).\n"]
+    unlimited = f"\tvalue = {NO_ROOM_LIMIT}"
+    for name in sorted(bodies):
+        body = bodies[name]
+        if body == unlimited:
+            values.append(f"{ROOM.format(key=name)} = {{\n{body}\n}}\n")
+            continue
+        if "\n" in body:
+            values.append(f"pp_cplan_lvcap_{name} = {{\n{body}\n}}\n")
+            body = f"\tvalue = pp_cplan_lvcap_{name}"
+        values.append(f"{ROOM.format(key=name)} = {{\n{body}\n"
+                      f"\tsubtract = \"location_building_level(building_type:{name})\"\n}}\n")
+    limited = [name for name in sorted(bodies) if bodies[name] != unlimited]
+    trigger = ("\n# Location scope, scope:pp_cplan_btype set: no further level of that building type fits under its max level\n"
+               "# here (pp_cplan_construct_scoped never starts one: the engine would cancel it when it finishes).\n"
+               "pp_cplan_no_room = {\n\tOR = {\n"
+               + "".join(f"\t\tAND = {{ scope:pp_cplan_btype = building_type:{name} {ROOM.format(key=name)} < 1 }}\n"
+                         for name in limited)
+               + "\t}\n}\n")
+    return "".join(values), trigger
 
 
 def _goods_here(name: str, costs: dict[str, BuildingCost]) -> str:
@@ -1486,7 +1567,8 @@ def render_business(businesses: dict[str, str], recipes: dict[str, list[list[Rec
         "\n# Location scope (a business site of scope:pp_cplan_country): the business with the best yearly return here that\n"
         "# reaches the owner's line (pp_cplan_business_min_roi = 100 / years), as pp_cplan_bz_pick (a building type),\n"
         "# pp_cplan_bz_roi (its return, %) and pp_cplan_bz_cost (the level's cost); none where none does. A candidate: the\n"
-        "# country can build it, so can this location (max level, allow, potential), a level finds its workers here\n"
+        "# country can build it, so can this location (allow, potential), a level fits under its max level here\n"
+        "# (pp_cplan_room_<type>: can_build_building does not check it), a level finds its workers here\n"
         "# (pp_cplan_staff), no level of it here is closed (the player or the game's Close and Open automation found it\n"
         "# does not pay), and a profile here leaves its good and building category to the plan. A candidate that would be\n"
         "# the best so far is taken only when the market holds its construction goods and has room for its good\n"
@@ -1514,6 +1596,7 @@ def render_business(businesses: dict[str, str], recipes: dict[str, list[list[Rec
             f"\t\t\tscope:pp_cplan_country = {{ has_variable = pp_cplan_bz_{name} }}\n"
             + (f"\t\t\t{workers}\n" if workers else "")
             + f"\t\t\tcan_build_building = building_type:{name}\n"
+            + f"\t\t\t{_room(name)}\n"
             + profile
             + f"\t\t\tNOT = {{ any_buildings_in_location = {{ building_type = building_type:{name} building_level > 0 is_opened = no }} }}\n"
             "\t\t}\n"
@@ -1757,6 +1840,7 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
     improvements = [(b.key, b.land) for b in arable_land_bar.model(mod_root, vanilla_root / "game").improvements]
     result.improvements = [key for key, _ in improvements]
     improve_values, improve_effects = render_improvements(improvements, costs)
+    room_values, room_triggers = render_room(database)
 
     # businesses (Jan 2026-11-09): every producer of a market good, without the other rules' own buildings
     own = set(config.kitchens) | set(config.taverns) | set(config.granaries) | set(config.granges) | set(config.yards)
@@ -1790,13 +1874,14 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
             access_modifier_amounts(mod_root, vanilla_root, config.access_blacklist), costs,
         )
         + improve_values + business_values + market_values + render_idle_values(result.pop_types)
-        + render_purse_values() + render_stats_values(),
+        + render_purse_values() + render_stats_values() + room_values,
         mod_root / EFFECTS: render_effects(config, food_lines, costs) + improve_effects + business_effects
         + market_effects + render_purse_effects() + render_stats_effects(),
         # the hunger steps wait for what they start (staple food makers, Taverns); kitchens are built anyway and must
         # not hold farms back for the year a Cookshop takes (seen in game 2026-11-08)
         mod_root / TRIGGERS: render_triggers(demands, food_buildings + list(config.taverns),
-                                             config.construction_goods_months) + market_triggers + render_looks(config),
+                                             config.construction_goods_months) + market_triggers + render_looks(config)
+        + room_triggers,
         mod_root / WEIGHT_GUI: render_weight_gui(),
         # the window's detail panes (Jan 2026-11-09): a cog per rule group, the numbers render_stats_values gives
         mod_root / construction_plan_detail.DETAIL_GUI: construction_plan_detail.render_gui(),

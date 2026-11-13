@@ -7,6 +7,8 @@ import re
 from functools import lru_cache
 from pathlib import Path
 
+import pytest
+
 from prosper_or_perish_constructor import construction_plan as cp
 from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
@@ -907,3 +909,54 @@ def test_detail_numbers_per_group() -> None:
     for name, body in rule_values:
         found = re.search(display, body)
         assert not found, f"{name} reads {found.group(0) if found else ''}"
+
+
+def test_the_plan_checks_the_max_level_itself() -> None:
+    """can_build_building does not check the max level (2026-11-13, Jan's Venice game: Drainage Ditches started in
+    Treviso at a cap of 0.68, a Cookshop in Karpathos at 0.7; the engine cancelled each when it finished and the gold
+    was lost). Every picker with a literal type asks pp_cplan_room_<type> after the can-build check, and the one
+    construct path refuses a type without room whatever path hands it over."""
+    common = MOD / "in_game/common"
+    generated = _read(MOD / cp.EFFECTS)
+    values = _read(MOD / cp.VALUES)
+    triggers = _read(MOD / cp.TRIGGERS)
+    # every literal can-build check of the plan pickers carries the room check of the same type
+    checks = re.findall(r"location_and_owner_can_build = \{ building_type = (\w+) \}( pp_cplan_room_(\w+) >= 1)?", generated)
+    assert len(checks) > 30
+    assert all(room and own == name for name, room, own in checks), [n for n, room, own in checks if not room or own != n]
+    business = re.findall(r"can_build_building = building_type:(\w+)\n\t+(?:(pp_cplan_room_(\w+) >= 1)\n)?", generated)
+    assert len(business) > 150
+    assert all(room and own == name for name, room, own in business), [n for n, room, own in business if not room or own != n]
+    # the one construct path
+    assert "NOT = { pp_cplan_no_room = yes }" in _effect(_read(EFFECTS), "pp_cplan_construct_scoped")
+    no_room = _effect(triggers, "pp_cplan_no_room")
+    guarded = set(re.findall(r"scope:pp_cplan_btype = building_type:(\w+) pp_cplan_room_\1 < 1", no_room))
+    # every type a plan file can hand to the construct path has a room value, and every one with a max level is guarded
+    plan_text = "".join(_read(path) for path in [*_plan_script_files(), *sorted(common.glob("*/pp_location_profiles*.txt"))])
+    handed = set(re.findall(r"pp_cplan_construct = \{ type = (\w+)", plan_text))
+    handed |= set(re.findall(r"building_type:(\w+) = \{ save_scope_as = pp_cplan_btype \}", plan_text))
+    rooms = set(re.findall(r"^pp_cplan_room_(\w+) = \{", values, re.MULTILINE))
+    assert len(handed) > 200 and handed <= rooms, sorted(handed - rooms)
+    unlimited = {k for k in rooms if f"pp_cplan_room_{k} = {{\n\tvalue = {cp.NO_ROOM_LIMIT}\n" in values}
+    assert handed - unlimited <= guarded, sorted(handed - unlimited - guarded)
+
+
+def test_room_reads_the_types_own_max_level() -> None:
+    """Treviso 1442 (Jan's Venice save): water family 1.68 levels, one Bund standing, so Drainage Ditches 0.68 = no
+    level; without the Bund the same location has room for one."""
+    from prosper_or_perish_constructor.script_eval import ScriptEval
+
+    evaluate = ScriptEval(MOD)
+    bodies = cp.max_level_bodies(cp._database(MOD, vanilla_root(ROOT, PROJECT), cp.BUILDING_TYPES))
+    assert bodies["field_drainage"] == "\tvalue = pp_wb_cap_field_drainage"
+    assert bodies["temple"] == "\tvalue = 1"
+    assert bodies["eng_royal_forest"].endswith("\tmax = 1")          # a max_levels block is copied whole
+    treviso = {"game": {"development": 22.67, "climate": "subtropical", "vegetation": "farmland", "topography": "flatland"},
+               "modifiers": {}, "location_modifiers": set(),
+               "buildings": {"bund": {"level": 1, "queued": 0}, "field_drainage": {"level": 0, "queued": 0}},
+               "can_build": set(), "owner": None}
+    cap = evaluate.value("pp_wb_cap_field_drainage", treviso)
+    assert 0 < cap < 1
+    assert evaluate.value("pp_cplan_room_field_drainage", treviso) == pytest.approx(cap)
+    treviso["buildings"]["bund"]["level"] = 0
+    assert evaluate.value("pp_cplan_room_field_drainage", treviso) >= 1

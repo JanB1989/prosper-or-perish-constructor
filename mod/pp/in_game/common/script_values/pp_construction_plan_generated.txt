@@ -1828,19 +1828,19 @@ pp_cplan_farm_roi_wheat_model_farm = {
 pp_cplan_farm_line_roi_wheat = {
 	value = 0
 	if = {
-		limit = { location_and_owner_can_build = { building_type = wheat_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_model_farm building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = wheat_model_farm } pp_cplan_room_wheat_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_model_farm building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_wheat_model_farm
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = wheat_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_rotations building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = wheat_rotations } pp_cplan_room_wheat_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_rotations building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_wheat_rotations
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = wheat_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_farmstead building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = wheat_farmstead } pp_cplan_room_wheat_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_farmstead building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_wheat_farmstead
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = wheat_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_farm building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = wheat_farm } pp_cplan_room_wheat_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_farm building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_wheat_farm
 	}
 }
@@ -2040,19 +2040,19 @@ pp_cplan_farm_roi_rice_model_farm = {
 pp_cplan_farm_line_roi_rice = {
 	value = 0
 	if = {
-		limit = { location_and_owner_can_build = { building_type = rice_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_model_farm building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = rice_model_farm } pp_cplan_room_rice_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_model_farm building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_rice_model_farm
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = rice_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_rotations building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = rice_rotations } pp_cplan_room_rice_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_rotations building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_rice_rotations
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = rice_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_farmstead building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = rice_farmstead } pp_cplan_room_rice_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_farmstead building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_rice_farmstead
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = rice_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_farm building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = rice_farm } pp_cplan_room_rice_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_farm building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_rice_farm
 	}
 }
@@ -2254,19 +2254,19 @@ pp_cplan_farm_roi_millet_model_farm = {
 pp_cplan_farm_line_roi_millet = {
 	value = 0
 	if = {
-		limit = { location_and_owner_can_build = { building_type = millet_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_model_farm building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = millet_model_farm } pp_cplan_room_millet_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_model_farm building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_millet_model_farm
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = millet_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_rotations building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = millet_rotations } pp_cplan_room_millet_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_rotations building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_millet_rotations
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = millet_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_farmstead building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = millet_farmstead } pp_cplan_room_millet_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_farmstead building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_millet_farmstead
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = millet_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_farm building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = millet_farm } pp_cplan_room_millet_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_farm building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_millet_farm
 	}
 }
@@ -2466,19 +2466,19 @@ pp_cplan_farm_roi_maize_model_farm = {
 pp_cplan_farm_line_roi_maize = {
 	value = 0
 	if = {
-		limit = { location_and_owner_can_build = { building_type = maize_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_model_farm building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = maize_model_farm } pp_cplan_room_maize_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_model_farm building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_maize_model_farm
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = maize_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_rotations building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = maize_rotations } pp_cplan_room_maize_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_rotations building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_maize_rotations
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = maize_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_farmstead building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = maize_farmstead } pp_cplan_room_maize_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_farmstead building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_maize_farmstead
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = maize_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_farm building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = maize_farm } pp_cplan_room_maize_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_farm building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_maize_farm
 	}
 }
@@ -2718,19 +2718,19 @@ pp_cplan_farm_roi_legume_model_farm = {
 pp_cplan_farm_line_roi_legume = {
 	value = 0
 	if = {
-		limit = { location_and_owner_can_build = { building_type = legume_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_model_farm building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = legume_model_farm } pp_cplan_room_legume_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_model_farm building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_legume_model_farm
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = legume_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_rotations building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = legume_rotations } pp_cplan_room_legume_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_rotations building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_legume_rotations
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = legume_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_farmstead building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = legume_farmstead } pp_cplan_room_legume_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_farmstead building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_legume_farmstead
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = legume_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_farm building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = legume_farm } pp_cplan_room_legume_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_farm building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_legume_farm
 	}
 }
@@ -2930,19 +2930,19 @@ pp_cplan_farm_roi_potato_model_farm = {
 pp_cplan_farm_line_roi_potato = {
 	value = 0
 	if = {
-		limit = { location_and_owner_can_build = { building_type = potato_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_model_farm building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = potato_model_farm } pp_cplan_room_potato_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_model_farm building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_potato_model_farm
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = potato_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_rotations building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = potato_rotations } pp_cplan_room_potato_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_rotations building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_potato_rotations
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = potato_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_farmstead building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = potato_farmstead } pp_cplan_room_potato_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_farmstead building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_potato_farmstead
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = potato_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_farm building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = potato_farm } pp_cplan_room_potato_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_farm building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_potato_farm
 	}
 }
@@ -3142,19 +3142,19 @@ pp_cplan_farm_roi_olive_model_farm = {
 pp_cplan_farm_line_roi_olive = {
 	value = 0
 	if = {
-		limit = { location_and_owner_can_build = { building_type = olive_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_model_farm building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = olive_model_farm } pp_cplan_room_olive_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_model_farm building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_olive_model_farm
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = olive_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_rotations building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = olive_rotations } pp_cplan_room_olive_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_rotations building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_olive_rotations
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = olive_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_farmstead building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = olive_farmstead } pp_cplan_room_olive_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_farmstead building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_olive_farmstead
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = olive_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_farm building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = olive_farm } pp_cplan_room_olive_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_farm building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_olive_farm
 	}
 }
@@ -3355,19 +3355,19 @@ pp_cplan_farm_roi_cattle_model_farm = {
 pp_cplan_farm_line_roi_cattle = {
 	value = 0
 	if = {
-		limit = { location_and_owner_can_build = { building_type = cattle_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_model_farm building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = cattle_model_farm } pp_cplan_room_cattle_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_model_farm building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_cattle_model_farm
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = cattle_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_rotations building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = cattle_rotations } pp_cplan_room_cattle_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_rotations building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_cattle_rotations
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = cattle_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_farmstead building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = cattle_farmstead } pp_cplan_room_cattle_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_farmstead building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_cattle_farmstead
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = cattle_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_farm building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = cattle_farm } pp_cplan_room_cattle_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_farm building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_cattle_farm
 	}
 }
@@ -3506,11 +3506,11 @@ pp_cplan_farm_roi_camel_stud = {
 pp_cplan_farm_line_roi_camel_herders = {
 	value = 0
 	if = {
-		limit = { location_and_owner_can_build = { building_type = camel_stud } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:camel_stud building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = camel_stud } pp_cplan_room_camel_stud >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:camel_stud building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_camel_stud
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = camel_herders } pp_cplan_goods_here_basic_construction_needs = yes NOT = { any_buildings_in_location = { building_type = building_type:camel_herders building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = camel_herders } pp_cplan_room_camel_herders >= 1 pp_cplan_goods_here_basic_construction_needs = yes NOT = { any_buildings_in_location = { building_type = building_type:camel_herders building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_camel_herders
 	}
 }
@@ -3560,7 +3560,7 @@ pp_cplan_farm_roi_eng_royal_forest = {
 pp_cplan_farm_line_roi_eng_royal_forest = {
 	value = 0
 	if = {
-		limit = { location_and_owner_can_build = { building_type = eng_royal_forest } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:eng_royal_forest building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = eng_royal_forest } pp_cplan_room_eng_royal_forest >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:eng_royal_forest building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_eng_royal_forest
 	}
 }
@@ -3755,11 +3755,11 @@ pp_cplan_farm_roi_net_curing_yard = {
 pp_cplan_farm_line_roi_fishing_village = {
 	value = 0
 	if = {
-		limit = { location_and_owner_can_build = { building_type = net_curing_yard } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:net_curing_yard building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = net_curing_yard } pp_cplan_room_net_curing_yard >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:net_curing_yard building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_net_curing_yard
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = fishing_village } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:fishing_village building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = fishing_village } pp_cplan_room_fishing_village >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:fishing_village building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_fishing_village
 	}
 }
@@ -3961,11 +3961,11 @@ pp_cplan_farm_roi_managed_forest_village = {
 pp_cplan_farm_line_roi_forest_village = {
 	value = 0
 	if = {
-		limit = { location_and_owner_can_build = { building_type = managed_forest_village } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:managed_forest_village building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = managed_forest_village } pp_cplan_room_managed_forest_village >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:managed_forest_village building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_managed_forest_village
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = forest_village } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:forest_village building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = forest_village } pp_cplan_room_forest_village >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:forest_village building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_forest_village
 	}
 }
@@ -4167,15 +4167,15 @@ pp_cplan_farm_roi_pomological_orchard = {
 pp_cplan_farm_line_roi_fruit_orchard = {
 	value = 0
 	if = {
-		limit = { location_and_owner_can_build = { building_type = pomological_orchard } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:pomological_orchard building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = pomological_orchard } pp_cplan_room_pomological_orchard >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:pomological_orchard building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_pomological_orchard
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = nursery_orchard } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:nursery_orchard building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = nursery_orchard } pp_cplan_room_nursery_orchard >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:nursery_orchard building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_nursery_orchard
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = fruit_orchard } pp_cplan_goods_here_farm_constructions = yes NOT = { any_buildings_in_location = { building_type = building_type:fruit_orchard building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = fruit_orchard } pp_cplan_room_fruit_orchard >= 1 pp_cplan_goods_here_farm_constructions = yes NOT = { any_buildings_in_location = { building_type = building_type:fruit_orchard building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_fruit_orchard
 	}
 }
@@ -4226,7 +4226,7 @@ pp_cplan_farm_roi_maghreb_palm_irrigation = {
 pp_cplan_farm_line_roi_maghreb_palm_irrigation = {
 	value = 0
 	if = {
-		limit = { location_and_owner_can_build = { building_type = maghreb_palm_irrigation } pp_cplan_goods_here_maghreb_palm_irrigation_building_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maghreb_palm_irrigation building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = maghreb_palm_irrigation } pp_cplan_room_maghreb_palm_irrigation >= 1 pp_cplan_goods_here_maghreb_palm_irrigation_building_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maghreb_palm_irrigation building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_maghreb_palm_irrigation
 	}
 }
@@ -4408,15 +4408,15 @@ pp_cplan_farm_roi_offshore_fishery = {
 pp_cplan_farm_line_roi_ocean_fishery = {
 	value = 0
 	if = {
-		limit = { location_and_owner_can_build = { building_type = offshore_fishery } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:offshore_fishery building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = offshore_fishery } pp_cplan_room_offshore_fishery >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:offshore_fishery building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_offshore_fishery
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = drift_net_fishery } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:drift_net_fishery building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = drift_net_fishery } pp_cplan_room_drift_net_fishery >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:drift_net_fishery building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_drift_net_fishery
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = ocean_fishery } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:ocean_fishery building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = ocean_fishery } pp_cplan_room_ocean_fishery >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:ocean_fishery building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_ocean_fishery
 	}
 }
@@ -4580,15 +4580,15 @@ pp_cplan_farm_roi_hurdled_sheepcotes = {
 pp_cplan_farm_line_roi_sheep_farms = {
 	value = 0
 	if = {
-		limit = { location_and_owner_can_build = { building_type = hurdled_sheepcotes } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:hurdled_sheepcotes building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = hurdled_sheepcotes } pp_cplan_room_hurdled_sheepcotes >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:hurdled_sheepcotes building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_hurdled_sheepcotes
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = enclosed_sheep_walks } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:enclosed_sheep_walks building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = enclosed_sheep_walks } pp_cplan_room_enclosed_sheep_walks >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:enclosed_sheep_walks building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_enclosed_sheep_walks
 	}
 	else_if = {
-		limit = { location_and_owner_can_build = { building_type = sheep_farms } pp_cplan_goods_here_farm_constructions = yes NOT = { any_buildings_in_location = { building_type = building_type:sheep_farms building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = sheep_farms } pp_cplan_room_sheep_farms >= 1 pp_cplan_goods_here_farm_constructions = yes NOT = { any_buildings_in_location = { building_type = building_type:sheep_farms building_levels_under_construction > 0 } } }
 		value = pp_cplan_farm_roi_sheep_farms
 	}
 }
@@ -21811,4 +21811,2574 @@ pp_cplan_h_country_sum_spent = {
 	add = pp_cplan_h_country_spent_10
 	add = pp_cplan_h_country_spent_11
 	add = pp_cplan_h_country_spent_12
+}
+
+# ---- Room under the max level (location scope): the type's own max_levels minus its standing levels ----
+# (can_build_building does not check the max level; the engine cancels a construction over it when it
+# finishes, 2026-11-13). A max_levels block is its own value (pp_cplan_lvcap_<type>), so its tooltip rows
+# stay its own; a type without max_levels (only DLC buildings) is never named (no DLC, no type to link).
+pp_cplan_room_ablaq_palace = {
+	value = 5
+	subtract = "location_building_level(building_type:ablaq_palace)"
+}
+pp_cplan_room_academy_of_sciences = {
+	value = 1
+	subtract = "location_building_level(building_type:academy_of_sciences)"
+}
+pp_cplan_room_adm_vatican_library = {
+	value = 1
+	subtract = "location_building_level(building_type:adm_vatican_library)"
+}
+pp_cplan_room_admiralty = {
+	value = 1
+	subtract = "location_building_level(building_type:admiralty)"
+}
+pp_cplan_room_adu_jewish_community = {
+	value = 1
+	subtract = "location_building_level(building_type:adu_jewish_community)"
+}
+pp_cplan_room_al_azhar_madrasa = {
+	value = 1
+	subtract = "location_building_level(building_type:al_azhar_madrasa)"
+}
+pp_cplan_room_al_qaysariyya_market = {
+	value = 1
+	subtract = "location_building_level(building_type:al_qaysariyya_market)"
+}
+pp_cplan_room_alhambra = {
+	value = alhambra_max_level
+	subtract = "location_building_level(building_type:alhambra)"
+}
+pp_cplan_room_alum_quarry = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:alum_quarry)"
+}
+pp_cplan_room_alum_works = {
+	value = pp_rural_building_cap_tier_1
+	subtract = "location_building_level(building_type:alum_works)"
+}
+pp_cplan_room_amber_collector = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:amber_collector)"
+}
+pp_cplan_room_amber_diggings = {
+	value = pp_rural_building_cap_tier_1
+	subtract = "location_building_level(building_type:amber_diggings)"
+}
+pp_cplan_room_ambras_castle = {
+	value = 1
+	subtract = "location_building_level(building_type:ambras_castle)"
+}
+pp_cplan_room_amsterdam_admiralty = {
+	value = 1
+	subtract = "location_building_level(building_type:amsterdam_admiralty)"
+}
+pp_cplan_room_apothecary = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:apothecary)"
+}
+pp_cplan_room_aqueduct_system = {
+	value = aqueduct_system_max_level
+	subtract = "location_building_level(building_type:aqueduct_system)"
+}
+pp_cplan_room_archive_of_the_indies = {
+	value = 1
+	subtract = "location_building_level(building_type:archive_of_the_indies)"
+}
+pp_cplan_room_armory = {
+	value = manpower_max_level
+	subtract = "location_building_level(building_type:armory)"
+}
+pp_cplan_room_art_school = {
+	value = 1
+	subtract = "location_building_level(building_type:art_school)"
+}
+pp_cplan_room_artisan_guilds = {
+	value = estate_building_stackable_level
+	subtract = "location_building_level(building_type:artisan_guilds)"
+}
+pp_cplan_room_arts_academy = {
+	value = 1
+	subtract = "location_building_level(building_type:arts_academy)"
+}
+pp_cplan_room_bailiff = {
+	value = 1
+	subtract = "location_building_level(building_type:bailiff)"
+}
+pp_cplan_room_bajang_ratu = {
+	value = 1
+	subtract = "location_building_level(building_type:bajang_ratu)"
+}
+pp_cplan_room_banking_office = {
+	value = 1
+	subtract = "location_building_level(building_type:banking_office)"
+}
+pp_cplan_room_barcelona_royal_shipyard = {
+	value = 1
+	subtract = "location_building_level(building_type:barcelona_royal_shipyard)"
+}
+pp_cplan_room_bardic_school = {
+	value = 1
+	subtract = "location_building_level(building_type:bardic_school)"
+}
+pp_cplan_room_barracks = {
+	value = manpower_max_level
+	subtract = "location_building_level(building_type:barracks)"
+}
+pp_cplan_room_bastion = {
+	value = 1
+	subtract = "location_building_level(building_type:bastion)"
+}
+pp_cplan_room_bavarian_academy_of_sciences = {
+	value = 1
+	subtract = "location_building_level(building_type:bavarian_academy_of_sciences)"
+}
+pp_cplan_room_beer_workshop = {
+	value = workshop_max_level
+	subtract = "location_building_level(building_type:beer_workshop)"
+}
+pp_cplan_room_belvedere_palace = {
+	value = 1
+	subtract = "location_building_level(building_type:belvedere_palace)"
+}
+pp_cplan_room_berlin_palace = {
+	value = 1
+	subtract = "location_building_level(building_type:berlin_palace)"
+}
+pp_cplan_room_bey_fortress = {
+	value = 1
+	subtract = "location_building_level(building_type:bey_fortress)"
+}
+pp_cplan_room_bibliotheca_corviniana = {
+	value = 1
+	subtract = "location_building_level(building_type:bibliotheca_corviniana)"
+}
+pp_cplan_room_black_market = {
+	value = 10
+	subtract = "location_building_level(building_type:black_market)"
+}
+pp_cplan_room_bodrum_castle = {
+	value = 1
+	subtract = "location_building_level(building_type:bodrum_castle)"
+}
+pp_cplan_room_bog_iron_smelter = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:bog_iron_smelter)"
+}
+pp_cplan_room_bog_iron_smelter_blast_furnace = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:bog_iron_smelter_blast_furnace)"
+}
+pp_cplan_room_bog_iron_smelter_coke_blast_furnace = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:bog_iron_smelter_coke_blast_furnace)"
+}
+pp_cplan_room_bolshoi_theater = {
+	value = 1
+	subtract = "location_building_level(building_type:bolshoi_theater)"
+}
+pp_cplan_room_brethren_marsh = {
+	value = 1
+	subtract = "location_building_level(building_type:brethren_marsh)"
+}
+pp_cplan_room_brewery = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:brewery)"
+}
+pp_cplan_room_brewery_manufactory = {
+	value = manufactory_max_level
+	subtract = "location_building_level(building_type:brewery_manufactory)"
+}
+pp_cplan_room_brewery_mill = {
+	value = mills_max_level
+	subtract = "location_building_level(building_type:brewery_mill)"
+}
+pp_cplan_room_bridge_infrastructure = {
+	value = 1
+	subtract = "location_building_level(building_type:bridge_infrastructure)"
+}
+pp_cplan_room_brothel = {
+	value = 2
+	subtract = "location_building_level(building_type:brothel)"
+}
+pp_cplan_room_bubu_building = {
+	value = 2
+	subtract = "location_building_level(building_type:bubu_building)"
+}
+pp_cplan_room_bulgarian_administration_center = {
+	value = 1
+	subtract = "location_building_level(building_type:bulgarian_administration_center)"
+}
+pp_cplan_room_bund = {
+	value = pp_wb_cap_bund
+	subtract = "location_building_level(building_type:bund)"
+}
+pp_cplan_room_burgher_mansion = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:burgher_mansion)"
+}
+pp_cplan_room_calmecac = {
+	value = 1
+	subtract = "location_building_level(building_type:calmecac)"
+}
+pp_cplan_room_calvinist_preachers = {
+	value = reformation_preachers_max_level
+	subtract = "location_building_level(building_type:calvinist_preachers)"
+}
+pp_cplan_room_camara_comptos = {
+	value = 1
+	subtract = "location_building_level(building_type:camara_comptos)"
+}
+pp_cplan_room_camel_herders = {
+	value = farm_capacity_max_camel_herders
+	subtract = "location_building_level(building_type:camel_herders)"
+}
+pp_cplan_room_camel_stud = {
+	value = farm_capacity_max_camel_stud
+	subtract = "location_building_level(building_type:camel_stud)"
+}
+pp_cplan_room_cannon_foundry = {
+	value = manufactory_max_level
+	subtract = "location_building_level(building_type:cannon_foundry)"
+}
+pp_cplan_room_cannon_maker = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:cannon_maker)"
+}
+pp_cplan_room_cannon_workshop = {
+	value = workshop_max_level
+	subtract = "location_building_level(building_type:cannon_workshop)"
+}
+pp_cplan_room_cannons_factory = {
+	value = mills_max_level
+	subtract = "location_building_level(building_type:cannons_factory)"
+}
+pp_cplan_room_cantonments = {
+	value = 1
+	subtract = "location_building_level(building_type:cantonments)"
+}
+pp_cplan_room_caravan_stop = {
+	value = 1
+	subtract = "location_building_level(building_type:caravan_stop)"
+}
+pp_cplan_room_caravanserai = {
+	value = 1
+	subtract = "location_building_level(building_type:caravanserai)"
+}
+pp_cplan_room_carrier_inn = {
+	value = pp_carrier_inn_logistics_max_level
+	subtract = "location_building_level(building_type:carrier_inn)"
+}
+pp_cplan_room_cas_royal_mint_of_segovia = {
+	value = 1
+	subtract = "location_building_level(building_type:cas_royal_mint_of_segovia)"
+}
+pp_cplan_room_castel_sant_angelo = {
+	value = 1
+	subtract = "location_building_level(building_type:castel_sant_angelo)"
+}
+pp_cplan_room_castle = {
+	value = 1
+	subtract = "location_building_level(building_type:castle)"
+}
+pp_cplan_room_cathedral = {
+	value = 1
+	subtract = "location_building_level(building_type:cathedral)"
+}
+pp_cplan_room_cattle_farm = {
+	value = farm_capacity_max_cattle_farm
+	subtract = "location_building_level(building_type:cattle_farm)"
+}
+pp_cplan_room_cattle_farmstead = {
+	value = farm_capacity_max_cattle_farmstead
+	subtract = "location_building_level(building_type:cattle_farmstead)"
+}
+pp_cplan_room_cattle_model_farm = {
+	value = farm_capacity_max_cattle_model_farm
+	subtract = "location_building_level(building_type:cattle_model_farm)"
+}
+pp_cplan_room_cattle_rotations = {
+	value = farm_capacity_max_cattle_rotations
+	subtract = "location_building_level(building_type:cattle_rotations)"
+}
+pp_cplan_room_cawa_barracks = {
+	value = janissary_barracks_size
+	subtract = "location_building_level(building_type:cawa_barracks)"
+}
+pp_cplan_room_central_bank = {
+	value = 1
+	subtract = "location_building_level(building_type:central_bank)"
+}
+pp_cplan_room_chancery = {
+	value = chancery_max_level
+	subtract = "location_building_level(building_type:chancery)"
+}
+pp_cplan_room_charcoal_maker = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:charcoal_maker)"
+}
+pp_cplan_room_charite_of_berlin = {
+	value = 1
+	subtract = "location_building_level(building_type:charite_of_berlin)"
+}
+pp_cplan_room_chi_macau_port = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:chi_macau_port)"
+}
+pp_cplan_room_chi_missionary_building = {
+	value = 1
+	subtract = "location_building_level(building_type:chi_missionary_building)"
+}
+pp_cplan_room_chieftain_hall = {
+	value = 1
+	subtract = "location_building_level(building_type:chieftain_hall)"
+}
+pp_cplan_room_chili_plantation = {
+	value = farm_capacity_max_chili_plantation
+	subtract = "location_building_level(building_type:chili_plantation)"
+}
+pp_cplan_room_cinnabar_pit = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:cinnabar_pit)"
+}
+pp_cplan_room_cinque_port = {
+	value = 1
+	subtract = "location_building_level(building_type:cinque_port)"
+}
+pp_cplan_room_city_guard = {
+	value = 1
+	subtract = "location_building_level(building_type:city_guard)"
+}
+pp_cplan_room_city_of_victory = {
+	value = 1
+	subtract = "location_building_level(building_type:city_of_victory)"
+}
+pp_cplan_room_city_walls = {
+	value = 1
+	subtract = "location_building_level(building_type:city_walls)"
+}
+pp_cplan_room_clan_family_shrine = {
+	value = 1
+	subtract = "location_building_level(building_type:clan_family_shrine)"
+}
+pp_cplan_room_clan_shipyards = {
+	value = japanese_clan_building_cap
+	subtract = "location_building_level(building_type:clan_shipyards)"
+}
+pp_cplan_room_clay_pit = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:clay_pit)"
+}
+pp_cplan_room_clay_washmill = {
+	value = pp_rural_building_cap_tier_1
+	subtract = "location_building_level(building_type:clay_washmill)"
+}
+pp_cplan_room_clearing_house = {
+	value = 1
+	subtract = "location_building_level(building_type:clearing_house)"
+}
+pp_cplan_room_clerical_archives = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:clerical_archives)"
+}
+pp_cplan_room_cloth_guild = {
+	value = cloth_guild_max_level
+	subtract = "location_building_level(building_type:cloth_guild)"
+}
+pp_cplan_room_cloth_manufactory = {
+	value = manufactory_max_level
+	subtract = "location_building_level(building_type:cloth_manufactory)"
+}
+pp_cplan_room_cloth_workshop = {
+	value = workshop_max_level
+	subtract = "location_building_level(building_type:cloth_workshop)"
+}
+pp_cplan_room_clove_grove = {
+	value = farm_capacity_max_clove_grove
+	subtract = "location_building_level(building_type:clove_grove)"
+}
+pp_cplan_room_coal_mine = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:coal_mine)"
+}
+pp_cplan_room_coal_mine_improved = {
+	value = pp_rural_building_cap_tier_1
+	subtract = "location_building_level(building_type:coal_mine_improved)"
+}
+pp_cplan_room_coal_mine_revolutions = {
+	value = pp_rural_building_cap_tier_2
+	subtract = "location_building_level(building_type:coal_mine_revolutions)"
+}
+pp_cplan_room_coastal_fort = {
+	value = 1
+	subtract = "location_building_level(building_type:coastal_fort)"
+}
+pp_cplan_room_coastal_settlements = {
+	value = 1
+	subtract = "location_building_level(building_type:coastal_settlements)"
+}
+pp_cplan_room_coastal_shipping_office = {
+	value = pp_coastal_shipping_office_logistics_max_level
+	subtract = "location_building_level(building_type:coastal_shipping_office)"
+}
+pp_cplan_room_cocoa_grove = {
+	value = farm_capacity_max_cocoa_grove
+	subtract = "location_building_level(building_type:cocoa_grove)"
+}
+pp_cplan_room_coffee_grove = {
+	value = farm_capacity_max_coffee_grove
+	subtract = "location_building_level(building_type:coffee_grove)"
+}
+pp_cplan_room_college_of_poets = {
+	value = 1
+	subtract = "location_building_level(building_type:college_of_poets)"
+}
+pp_cplan_room_colonial_administration = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:colonial_administration)"
+}
+pp_cplan_room_commerce_center = {
+	value = market_max_level
+	subtract = "location_building_level(building_type:commerce_center)"
+}
+pp_cplan_room_confucian_academy = {
+	value = 1
+	subtract = "location_building_level(building_type:confucian_academy)"
+}
+pp_cplan_room_confucian_school = {
+	value = 1
+	subtract = "location_building_level(building_type:confucian_school)"
+}
+pp_cplan_room_conscription_center = {
+	value = manpower_max_level
+	subtract = "location_building_level(building_type:conscription_center)"
+}
+pp_cplan_room_constantinople_observatory = {
+	value = 1
+	subtract = "location_building_level(building_type:constantinople_observatory)"
+}
+pp_cplan_room_construction_center = {
+	value = construction_center_max_level
+	subtract = "location_building_level(building_type:construction_center)"
+}
+pp_cplan_room_cookshop = {
+	value = cookshop_max_level
+	subtract = "location_building_level(building_type:cookshop)"
+}
+pp_cplan_room_copenhagen_dockyard = {
+	value = 1
+	subtract = "location_building_level(building_type:copenhagen_dockyard)"
+}
+pp_cplan_room_copper_mine = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:copper_mine)"
+}
+pp_cplan_room_copper_mine_adit = {
+	value = pp_rural_building_cap_tier_1
+	subtract = "location_building_level(building_type:copper_mine_adit)"
+}
+pp_cplan_room_copper_mine_deep = {
+	value = pp_rural_building_cap_tier_2
+	subtract = "location_building_level(building_type:copper_mine_deep)"
+}
+pp_cplan_room_corporation_of_london = {
+	value = 1
+	subtract = "location_building_level(building_type:corporation_of_london)"
+}
+pp_cplan_room_cotton_farm = {
+	value = farm_capacity_max_cotton_farm
+	subtract = "location_building_level(building_type:cotton_farm)"
+}
+pp_cplan_room_cotton_plantation = {
+	value = farm_capacity_max_cotton_plantation
+	subtract = "location_building_level(building_type:cotton_plantation)"
+}
+pp_cplan_room_council_hall = {
+	value = 1
+	subtract = "location_building_level(building_type:council_hall)"
+}
+pp_cplan_room_counting_house = {
+	value = 1
+	subtract = "location_building_level(building_type:counting_house)"
+}
+pp_cplan_room_customs_house = {
+	value = 1
+	subtract = "location_building_level(building_type:customs_house)"
+}
+pp_cplan_room_darussifa = {
+	value = 1
+	subtract = "location_building_level(building_type:darussifa)"
+}
+pp_cplan_room_debere_meshwae = {
+	value = 1
+	subtract = "location_building_level(building_type:debere_meshwae)"
+}
+pp_cplan_room_delhi_tomb = {
+	value = 1
+	subtract = "location_building_level(building_type:delhi_tomb)"
+}
+pp_cplan_room_dip_vatican_library = {
+	value = 1
+	subtract = "location_building_level(building_type:dip_vatican_library)"
+}
+pp_cplan_room_distiller_manufactory = {
+	value = manufactory_max_level
+	subtract = "location_building_level(building_type:distiller_manufactory)"
+}
+pp_cplan_room_distiller_mill = {
+	value = mills_max_level
+	subtract = "location_building_level(building_type:distiller_mill)"
+}
+pp_cplan_room_distillers_guild = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:distillers_guild)"
+}
+pp_cplan_room_distillers_workshop = {
+	value = workshop_max_level
+	subtract = "location_building_level(building_type:distillers_workshop)"
+}
+pp_cplan_room_dock = {
+	value = 1
+	subtract = "location_building_level(building_type:dock)"
+}
+pp_cplan_room_doges_palace = {
+	value = 1
+	subtract = "location_building_level(building_type:doges_palace)"
+}
+pp_cplan_room_drift_net_fishery = {
+	value = fish_capacity_max_drift_net_fishery
+	subtract = "location_building_level(building_type:drift_net_fishery)"
+}
+pp_cplan_room_dry_dock = {
+	value = 1
+	subtract = "location_building_level(building_type:dry_dock)"
+}
+pp_cplan_room_dun_fort = {
+	value = 1
+	subtract = "location_building_level(building_type:dun_fort)"
+}
+pp_cplan_room_dutch_trade_outpost = {
+	value = 1
+	subtract = "location_building_level(building_type:dutch_trade_outpost)"
+}
+pp_cplan_room_dye_plantation = {
+	value = farm_capacity_max_dye_plantation
+	subtract = "location_building_level(building_type:dye_plantation)"
+}
+pp_cplan_room_dyes_guild = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:dyes_guild)"
+}
+pp_cplan_room_dyes_mill = {
+	value = mills_max_level
+	subtract = "location_building_level(building_type:dyes_mill)"
+}
+pp_cplan_room_dyes_workshop = {
+	value = workshop_max_level
+	subtract = "location_building_level(building_type:dyes_workshop)"
+}
+pp_cplan_room_dyesworks = {
+	value = manufactory_max_level
+	subtract = "location_building_level(building_type:dyesworks)"
+}
+pp_cplan_room_early_council_hall = {
+	value = 1
+	subtract = "location_building_level(building_type:early_council_hall)"
+}
+pp_cplan_room_eghabho_nore_mansion = {
+	value = eghabho_nore_mansion_max_level
+	subtract = "location_building_level(building_type:eghabho_nore_mansion)"
+}
+pp_cplan_room_el_escorial_palace = {
+	value = 1
+	subtract = "location_building_level(building_type:el_escorial_palace)"
+}
+pp_cplan_lvcap_elephant_hunting_grounds = {
+	value = farm_capacity_max_elephant_hunting_grounds
+	if = {
+	limit = {
+	owner ?= {
+	has_variable = ori_double_elephant_hunting_ground_level_flag
+	}
+	}
+	add = {
+	desc = INCREASED_MAX_LEVEL_ELEPHANT_HUNTING_GROUND
+	value = 2
+	}
+	}
+}
+pp_cplan_room_elephant_hunting_grounds = {
+	value = pp_cplan_lvcap_elephant_hunting_grounds
+	subtract = "location_building_level(building_type:elephant_hunting_grounds)"
+}
+pp_cplan_room_elephant_kraal = {
+	value = farm_capacity_max_elephant_kraal
+	subtract = "location_building_level(building_type:elephant_kraal)"
+}
+pp_cplan_room_embassy = {
+	value = 1
+	subtract = "location_building_level(building_type:embassy)"
+}
+pp_cplan_room_enclosed_sheep_walks = {
+	value = farm_capacity_max_enclosed_sheep_walks
+	subtract = "location_building_level(building_type:enclosed_sheep_walks)"
+}
+pp_cplan_room_enderun_academy = {
+	value = 1
+	subtract = "location_building_level(building_type:enderun_academy)"
+}
+pp_cplan_lvcap_eng_royal_forest = {
+	value = farm_capacity_max_eng_royal_forest
+	max = 1
+}
+pp_cplan_room_eng_royal_forest = {
+	value = pp_cplan_lvcap_eng_royal_forest
+	subtract = "location_building_level(building_type:eng_royal_forest)"
+}
+pp_cplan_room_engineered_brine_saltworks = {
+	value = pp_rural_building_cap_tier_1
+	subtract = "location_building_level(building_type:engineered_brine_saltworks)"
+}
+pp_cplan_room_entrepot = {
+	value = 1
+	subtract = "location_building_level(building_type:entrepot)"
+}
+pp_cplan_room_festival_grounds = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:festival_grounds)"
+}
+pp_cplan_room_fiber_crops_farm = {
+	value = farm_capacity_max_fiber_crops_farm
+	subtract = "location_building_level(building_type:fiber_crops_farm)"
+}
+pp_cplan_room_fiber_dressing_yard = {
+	value = farm_capacity_max_fiber_dressing_yard
+	subtract = "location_building_level(building_type:fiber_dressing_yard)"
+}
+pp_cplan_room_field_drainage = {
+	value = pp_wb_cap_field_drainage
+	subtract = "location_building_level(building_type:field_drainage)"
+}
+pp_cplan_room_field_management = {
+	value = pp_wb_cap_field_management
+	subtract = "location_building_level(building_type:field_management)"
+}
+pp_cplan_room_field_management_convertible = {
+	value = pp_wb_cap_field_management_convertible
+	subtract = "location_building_level(building_type:field_management_convertible)"
+}
+pp_cplan_room_field_management_improved = {
+	value = pp_wb_cap_field_management_improved
+	subtract = "location_building_level(building_type:field_management_improved)"
+}
+pp_cplan_room_fine_cloth_guild = {
+	value = fine_cloth_guild_max_level
+	subtract = "location_building_level(building_type:fine_cloth_guild)"
+}
+pp_cplan_room_fine_cloth_manufactory = {
+	value = manufactory_max_level
+	subtract = "location_building_level(building_type:fine_cloth_manufactory)"
+}
+pp_cplan_room_fine_cloth_mill = {
+	value = mills_max_level
+	subtract = "location_building_level(building_type:fine_cloth_mill)"
+}
+pp_cplan_room_fine_cloth_workshop = {
+	value = workshop_max_level
+	subtract = "location_building_level(building_type:fine_cloth_workshop)"
+}
+pp_cplan_room_firearms_factory = {
+	value = mills_max_level
+	subtract = "location_building_level(building_type:firearms_factory)"
+}
+pp_cplan_room_firearms_manufactory = {
+	value = manufactory_max_level
+	subtract = "location_building_level(building_type:firearms_manufactory)"
+}
+pp_cplan_room_fishing_village = {
+	value = fish_capacity_max_fishing_village
+	subtract = "location_building_level(building_type:fishing_village)"
+}
+pp_cplan_room_fondaco = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:fondaco)"
+}
+pp_cplan_room_forbidden_city = {
+	value = 1
+	subtract = "location_building_level(building_type:forbidden_city)"
+}
+pp_cplan_room_forest_village = {
+	value = forest_capacity_max_forest_village
+	subtract = "location_building_level(building_type:forest_village)"
+}
+pp_cplan_room_fortezza_di_sant_andrea = {
+	value = 1
+	subtract = "location_building_level(building_type:fortezza_di_sant_andrea)"
+}
+pp_cplan_room_fortress = {
+	value = 1
+	subtract = "location_building_level(building_type:fortress)"
+}
+pp_cplan_room_fortress_church = {
+	value = 1
+	subtract = "location_building_level(building_type:fortress_church)"
+}
+pp_cplan_room_fortress_granary = {
+	value = 1
+	subtract = "location_building_level(building_type:fortress_granary)"
+}
+pp_cplan_room_fra_louvre_museum = {
+	value = 1
+	subtract = "location_building_level(building_type:fra_louvre_museum)"
+}
+pp_cplan_room_free_economic_society = {
+	value = 1
+	subtract = "location_building_level(building_type:free_economic_society)"
+}
+pp_cplan_room_free_village = {
+	value = estate_building_stackable_level
+	subtract = "location_building_level(building_type:free_village)"
+}
+pp_cplan_room_friesland_admiralty = {
+	value = 1
+	subtract = "location_building_level(building_type:friesland_admiralty)"
+}
+pp_cplan_room_fruit_orchard = {
+	value = farm_capacity_max_fruit_orchard
+	subtract = "location_building_level(building_type:fruit_orchard)"
+}
+pp_cplan_room_fulani_cattle_rearing_pen = {
+	value = fulani_cattle_rearing_pen_max_level
+	subtract = "location_building_level(building_type:fulani_cattle_rearing_pen)"
+}
+pp_cplan_room_funduq = {
+	value = 1
+	subtract = "location_building_level(building_type:funduq)"
+}
+pp_cplan_room_furniture_guild = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:furniture_guild)"
+}
+pp_cplan_room_furniture_manufactory = {
+	value = manufactory_max_level
+	subtract = "location_building_level(building_type:furniture_manufactory)"
+}
+pp_cplan_room_furniture_mill = {
+	value = mills_max_level
+	subtract = "location_building_level(building_type:furniture_mill)"
+}
+pp_cplan_room_furniture_workshop = {
+	value = workshop_max_level
+	subtract = "location_building_level(building_type:furniture_workshop)"
+}
+pp_cplan_room_galata = {
+	value = italian_merchant_quarters_max_level
+	subtract = "location_building_level(building_type:galata)"
+}
+pp_cplan_room_galley_barracks = {
+	value = 5
+	subtract = "location_building_level(building_type:galley_barracks)"
+}
+pp_cplan_room_gallowglass_sept = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:gallowglass_sept)"
+}
+pp_cplan_room_gem_gravel_pit = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:gem_gravel_pit)"
+}
+pp_cplan_room_gem_sluice = {
+	value = pp_rural_building_cap_tier_1
+	subtract = "location_building_level(building_type:gem_sluice)"
+}
+pp_cplan_room_general_archive_of_simancas = {
+	value = 1
+	subtract = "location_building_level(building_type:general_archive_of_simancas)"
+}
+pp_cplan_room_german_mountain_toll_castle = {
+	value = 1
+	subtract = "location_building_level(building_type:german_mountain_toll_castle)"
+}
+pp_cplan_room_german_river_toll_castle = {
+	value = 1
+	subtract = "location_building_level(building_type:german_river_toll_castle)"
+}
+pp_cplan_room_ghilman_barracks = {
+	value = 1
+	subtract = "location_building_level(building_type:ghilman_barracks)"
+}
+pp_cplan_room_glass_guild = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:glass_guild)"
+}
+pp_cplan_room_glass_mill = {
+	value = mills_max_level
+	subtract = "location_building_level(building_type:glass_mill)"
+}
+pp_cplan_room_glass_workshop = {
+	value = workshop_max_level
+	subtract = "location_building_level(building_type:glass_workshop)"
+}
+pp_cplan_room_glassworks = {
+	value = manufactory_max_level
+	subtract = "location_building_level(building_type:glassworks)"
+}
+pp_cplan_room_globe_theatre = {
+	value = 1
+	subtract = "location_building_level(building_type:globe_theatre)"
+}
+pp_cplan_room_gold_diggings = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:gold_diggings)"
+}
+pp_cplan_room_gold_stamp_mill = {
+	value = pp_rural_building_cap_tier_1
+	subtract = "location_building_level(building_type:gold_stamp_mill)"
+}
+pp_cplan_room_gosho = {
+	value = 1
+	subtract = "location_building_level(building_type:gosho)"
+}
+pp_cplan_room_grain_house = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:grain_house)"
+}
+pp_cplan_room_granary = {
+	value = pp_granary_cap
+	subtract = "location_building_level(building_type:granary)"
+}
+pp_cplan_room_grand_apartment = {
+	value = 1
+	subtract = "location_building_level(building_type:grand_apartment)"
+}
+pp_cplan_room_grand_marketplace = {
+	value = market_max_level
+	subtract = "location_building_level(building_type:grand_marketplace)"
+}
+pp_cplan_room_grand_palace = {
+	value = 1
+	subtract = "location_building_level(building_type:grand_palace)"
+}
+pp_cplan_room_grand_shipyard = {
+	value = 1
+	subtract = "location_building_level(building_type:grand_shipyard)"
+}
+pp_cplan_room_grange = {
+	value = grange_max_level
+	subtract = "location_building_level(building_type:grange)"
+}
+pp_cplan_room_great_enclosure = {
+	value = 1
+	subtract = "location_building_level(building_type:great_enclosure)"
+}
+pp_cplan_room_great_hill_complex = {
+	value = 1
+	subtract = "location_building_level(building_type:great_hill_complex)"
+}
+pp_cplan_room_great_madrasa = {
+	value = 1
+	subtract = "location_building_level(building_type:great_madrasa)"
+}
+pp_cplan_room_great_temple_of_tenochtitlan = {
+	value = 7
+	subtract = "location_building_level(building_type:great_temple_of_tenochtitlan)"
+}
+pp_cplan_room_great_valley_complex = {
+	value = 1
+	subtract = "location_building_level(building_type:great_valley_complex)"
+}
+pp_cplan_room_greek_latin_academy = {
+	value = 1
+	subtract = "location_building_level(building_type:greek_latin_academy)"
+}
+pp_cplan_room_guich_garrison = {
+	value = 1
+	subtract = "location_building_level(building_type:guich_garrison)"
+}
+pp_cplan_room_guild_hall = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:guild_hall)"
+}
+pp_cplan_room_gun_smith = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:gun_smith)"
+}
+pp_cplan_room_guns_workshop = {
+	value = workshop_max_level
+	subtract = "location_building_level(building_type:guns_workshop)"
+}
+pp_cplan_room_gurgaddi = {
+	value = 1
+	subtract = "location_building_level(building_type:gurgaddi)"
+}
+pp_cplan_room_gymnasium_building = {
+	value = 1
+	subtract = "location_building_level(building_type:gymnasium_building)"
+}
+pp_cplan_room_hand_cannon_guild = {
+	value = 1
+	subtract = "location_building_level(building_type:hand_cannon_guild)"
+}
+pp_cplan_room_hanseatic_kontor = {
+	value = hanseatic_kontor_max_level
+	subtract = "location_building_level(building_type:hanseatic_kontor)"
+}
+pp_cplan_room_hanseatic_shipwright_guild = {
+	value = hanseatic_shipwright_guild_max_level
+	subtract = "location_building_level(building_type:hanseatic_shipwright_guild)"
+}
+pp_cplan_room_hanseatic_town_hall = {
+	value = 2
+	subtract = "location_building_level(building_type:hanseatic_town_hall)"
+}
+pp_cplan_room_herrenchiemsee_abbey = {
+	value = 1
+	subtract = "location_building_level(building_type:herrenchiemsee_abbey)"
+}
+pp_cplan_room_hexamilion_wall = {
+	value = 1
+	subtract = "location_building_level(building_type:hexamilion_wall)"
+}
+pp_cplan_room_hippodrome = {
+	value = 1
+	subtract = "location_building_level(building_type:hippodrome)"
+}
+pp_cplan_room_hired_labor_yard = {
+	value = 6
+	subtract = "location_building_level(building_type:hired_labor_yard)"
+}
+pp_cplan_room_horse_breeders = {
+	value = farm_capacity_max_horse_breeders
+	subtract = "location_building_level(building_type:horse_breeders)"
+}
+pp_cplan_room_hospital = {
+	value = 1
+	subtract = "location_building_level(building_type:hospital)"
+}
+pp_cplan_room_house_of_parliament = {
+	value = 1
+	subtract = "location_building_level(building_type:house_of_parliament)"
+}
+pp_cplan_room_hre_imperial_armory_foreign = {
+	value = hre_imperial_armory_max_level
+	subtract = "location_building_level(building_type:hre_imperial_armory_foreign)"
+}
+pp_cplan_room_hre_imperial_armory_own = {
+	value = hre_imperial_armory_max_level
+	subtract = "location_building_level(building_type:hre_imperial_armory_own)"
+}
+pp_cplan_room_hsa_burgtor = {
+	value = 2
+	subtract = "location_building_level(building_type:hsa_burgtor)"
+}
+pp_cplan_room_hurdled_sheepcotes = {
+	value = farm_capacity_max_hurdled_sheepcotes
+	subtract = "location_building_level(building_type:hurdled_sheepcotes)"
+}
+pp_cplan_room_husuni_kubwa = {
+	value = 1
+	subtract = "location_building_level(building_type:husuni_kubwa)"
+}
+pp_cplan_room_ibadat_khana = {
+	value = 1
+	subtract = "location_building_level(building_type:ibadat_khana)"
+}
+pp_cplan_room_imperial_academy_of_arts = {
+	value = 1
+	subtract = "location_building_level(building_type:imperial_academy_of_arts)"
+}
+pp_cplan_room_imperial_city_of_hue = {
+	value = 1
+	subtract = "location_building_level(building_type:imperial_city_of_hue)"
+}
+pp_cplan_room_imperial_halic_shipyards = {
+	value = 1
+	subtract = "location_building_level(building_type:imperial_halic_shipyards)"
+}
+pp_cplan_room_improved_charcoal_maker = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:improved_charcoal_maker)"
+}
+pp_cplan_room_incamisana = {
+	value = pp_wb_cap_incamisana
+	subtract = "location_building_level(building_type:incamisana)"
+}
+pp_cplan_room_incense_grove = {
+	value = farm_capacity_max_incense_grove
+	subtract = "location_building_level(building_type:incense_grove)"
+}
+pp_cplan_room_inland_saltworks = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:inland_saltworks)"
+}
+pp_cplan_room_institute_of_noble_maidens = {
+	value = 1
+	subtract = "location_building_level(building_type:institute_of_noble_maidens)"
+}
+pp_cplan_room_iron_foundry = {
+	value = manufactory_max_level
+	subtract = "location_building_level(building_type:iron_foundry)"
+}
+pp_cplan_room_iron_mill = {
+	value = mills_max_level
+	subtract = "location_building_level(building_type:iron_mill)"
+}
+pp_cplan_room_iron_mine = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:iron_mine)"
+}
+pp_cplan_room_iron_mine_deep = {
+	value = pp_rural_building_cap_tier_2
+	subtract = "location_building_level(building_type:iron_mine_deep)"
+}
+pp_cplan_room_iron_mine_improved = {
+	value = pp_rural_building_cap_tier_1
+	subtract = "location_building_level(building_type:iron_mine_improved)"
+}
+pp_cplan_room_irrigated_fields = {
+	value = pp_wb_cap_irrigated_fields
+	subtract = "location_building_level(building_type:irrigated_fields)"
+}
+pp_cplan_room_irrigation_systems = {
+	value = pp_wb_cap_irrigation_systems
+	subtract = "location_building_level(building_type:irrigation_systems)"
+}
+pp_cplan_room_italian_administration_center = {
+	value = 1
+	subtract = "location_building_level(building_type:italian_administration_center)"
+}
+pp_cplan_room_italian_court_building = {
+	value = 1000
+}
+pp_cplan_room_itinerant_court_seat = {
+	value = 1
+	subtract = "location_building_level(building_type:itinerant_court_seat)"
+}
+pp_cplan_room_ivory_hunting_camp = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:ivory_hunting_camp)"
+}
+pp_cplan_room_janissary_barracks = {
+	value = janissary_barracks_size
+	subtract = "location_building_level(building_type:janissary_barracks)"
+}
+pp_cplan_room_jesuit_college = {
+	value = 1
+	subtract = "location_building_level(building_type:jesuit_college)"
+}
+pp_cplan_room_jewelry_guild = {
+	value = jewelry_guild_max_level
+	subtract = "location_building_level(building_type:jewelry_guild)"
+}
+pp_cplan_room_jewish_district = {
+	value = 1
+	subtract = "location_building_level(building_type:jewish_district)"
+}
+pp_cplan_room_jiangnan_canal_network = {
+	value = pp_wb_cap_jiangnan_canal_network
+	subtract = "location_building_level(building_type:jiangnan_canal_network)"
+}
+pp_cplan_room_jiangnan_hill_terraces = {
+	value = pp_wb_cap_jiangnan_hill_terraces
+	subtract = "location_building_level(building_type:jiangnan_hill_terraces)"
+}
+pp_cplan_room_jurchen_barracks = {
+	value = 1
+	subtract = "location_building_level(building_type:jurchen_barracks)"
+}
+pp_cplan_room_kalari = {
+	value = 1
+	subtract = "location_building_level(building_type:kalari)"
+}
+pp_cplan_room_kastellet = {
+	value = 1
+	subtract = "location_building_level(building_type:kastellet)"
+}
+pp_cplan_room_khan_ordu = {
+	value = 1
+	subtract = "location_building_level(building_type:khan_ordu)"
+}
+pp_cplan_room_khmer_baray = {
+	value = pp_wb_cap_khmer_baray
+	subtract = "location_building_level(building_type:khmer_baray)"
+}
+pp_cplan_room_kilwan_shipwrights = {
+	value = 1
+	subtract = "location_building_level(building_type:kilwan_shipwrights)"
+}
+pp_cplan_room_kings_manor = {
+	value = 1
+	subtract = "location_building_level(building_type:kings_manor)"
+}
+pp_cplan_room_kokufu = {
+	value = 1
+	subtract = "location_building_level(building_type:kokufu)"
+}
+pp_cplan_room_korean_barracks = {
+	value = 1
+	subtract = "location_building_level(building_type:korean_barracks)"
+}
+pp_cplan_room_korean_gunnery_coastal_defense = {
+	value = 1
+	subtract = "location_building_level(building_type:korean_gunnery_coastal_defense)"
+}
+pp_cplan_room_korean_gunnery_land_defense = {
+	value = 1
+	subtract = "location_building_level(building_type:korean_gunnery_land_defense)"
+}
+pp_cplan_room_kremlin = {
+	value = kremlin_max_level
+	subtract = "location_building_level(building_type:kremlin)"
+}
+pp_cplan_room_kronborg = {
+	value = 1
+	subtract = "location_building_level(building_type:kronborg)"
+}
+pp_cplan_room_kurmina_headquarter = {
+	value = kurmina_headquarter_max_level
+	subtract = "location_building_level(building_type:kurmina_headquarter)"
+}
+pp_cplan_room_kurultai = {
+	value = kurultai_max_level
+	subtract = "location_building_level(building_type:kurultai)"
+}
+pp_cplan_room_lacquerware_guild = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:lacquerware_guild)"
+}
+pp_cplan_room_lacquerware_manufactory = {
+	value = manufactory_max_level
+	subtract = "location_building_level(building_type:lacquerware_manufactory)"
+}
+pp_cplan_room_land_clearance = {
+	value = pp_wb_cap_land_clearance
+	subtract = "location_building_level(building_type:land_clearance)"
+}
+pp_cplan_room_lazaretto = {
+	value = 1
+	subtract = "location_building_level(building_type:lazaretto)"
+}
+pp_cplan_room_lead_mine = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:lead_mine)"
+}
+pp_cplan_room_lead_mine_bole_smelting = {
+	value = pp_rural_building_cap_tier_1
+	subtract = "location_building_level(building_type:lead_mine_bole_smelting)"
+}
+pp_cplan_room_lead_mine_cupola_smelting = {
+	value = pp_rural_building_cap_tier_2
+	subtract = "location_building_level(building_type:lead_mine_cupola_smelting)"
+}
+pp_cplan_room_legume_farm = {
+	value = farm_capacity_max_legume_farm
+	subtract = "location_building_level(building_type:legume_farm)"
+}
+pp_cplan_room_legume_farmstead = {
+	value = farm_capacity_max_legume_farmstead
+	subtract = "location_building_level(building_type:legume_farmstead)"
+}
+pp_cplan_room_legume_model_farm = {
+	value = farm_capacity_max_legume_model_farm
+	subtract = "location_building_level(building_type:legume_model_farm)"
+}
+pp_cplan_room_legume_rotations = {
+	value = farm_capacity_max_legume_rotations
+	subtract = "location_building_level(building_type:legume_rotations)"
+}
+pp_cplan_room_library = {
+	value = 1
+	subtract = "location_building_level(building_type:library)"
+}
+pp_cplan_room_library_cordoba = {
+	value = 1000
+}
+pp_cplan_room_library_of_vijayanagar = {
+	value = 1
+	subtract = "location_building_level(building_type:library_of_vijayanagar)"
+}
+pp_cplan_room_lieutenancy = {
+	value = 1
+	subtract = "location_building_level(building_type:lieutenancy)"
+}
+pp_cplan_room_lighthouse_of_alexandria = {
+	value = 1
+	subtract = "location_building_level(building_type:lighthouse_of_alexandria)"
+}
+pp_cplan_room_llotja_seda = {
+	value = 1
+	subtract = "location_building_level(building_type:llotja_seda)"
+}
+pp_cplan_room_local_assembly = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:local_assembly)"
+}
+pp_cplan_room_local_estates = {
+	value = estate_building_stackable_level
+	subtract = "location_building_level(building_type:local_estates)"
+}
+pp_cplan_room_local_governor = {
+	value = 1
+	subtract = "location_building_level(building_type:local_governor)"
+}
+pp_cplan_room_local_markets = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:local_markets)"
+}
+pp_cplan_room_local_newspaper = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:local_newspaper)"
+}
+pp_cplan_room_local_noble_delegation = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:local_noble_delegation)"
+}
+pp_cplan_room_local_schools = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:local_schools)"
+}
+pp_cplan_room_local_shrine = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:local_shrine)"
+}
+pp_cplan_room_local_smelters = {
+	value = 1
+	subtract = "location_building_level(building_type:local_smelters)"
+}
+pp_cplan_room_lumber_mill = {
+	value = forest_capacity_max_lumber_mill
+	subtract = "location_building_level(building_type:lumber_mill)"
+}
+pp_cplan_room_lumber_mill_improved = {
+	value = forest_capacity_max_lumber_mill_improved
+	subtract = "location_building_level(building_type:lumber_mill_improved)"
+}
+pp_cplan_room_lutheran_preachers = {
+	value = reformation_preachers_max_level
+	subtract = "location_building_level(building_type:lutheran_preachers)"
+}
+pp_cplan_room_madinat_al_zahra = {
+	value = 1000
+}
+pp_cplan_room_madrasa = {
+	value = 1
+	subtract = "location_building_level(building_type:madrasa)"
+}
+pp_cplan_room_maghreb_palm_irrigation = {
+	value = 1
+	subtract = "location_building_level(building_type:maghreb_palm_irrigation)"
+}
+pp_cplan_room_magistrato_alla_sanita = {
+	value = 1
+	subtract = "location_building_level(building_type:magistrato_alla_sanita)"
+}
+pp_cplan_room_mahmud_gawan_madrasa = {
+	value = 1
+	subtract = "location_building_level(building_type:mahmud_gawan_madrasa)"
+}
+pp_cplan_room_maize_farm = {
+	value = farm_capacity_max_maize_farm
+	subtract = "location_building_level(building_type:maize_farm)"
+}
+pp_cplan_room_maize_farmstead = {
+	value = farm_capacity_max_maize_farmstead
+	subtract = "location_building_level(building_type:maize_farmstead)"
+}
+pp_cplan_room_maize_model_farm = {
+	value = farm_capacity_max_maize_model_farm
+	subtract = "location_building_level(building_type:maize_model_farm)"
+}
+pp_cplan_room_maize_rotations = {
+	value = farm_capacity_max_maize_rotations
+	subtract = "location_building_level(building_type:maize_rotations)"
+}
+pp_cplan_room_mamluk_barracks = {
+	value = 3
+	subtract = "location_building_level(building_type:mamluk_barracks)"
+}
+pp_cplan_room_managed_cocoa_grove = {
+	value = farm_capacity_max_managed_cocoa_grove
+	subtract = "location_building_level(building_type:managed_cocoa_grove)"
+}
+pp_cplan_room_managed_forest_village = {
+	value = forest_capacity_max_managed_forest_village
+	subtract = "location_building_level(building_type:managed_forest_village)"
+}
+pp_cplan_room_managed_pepper_garden = {
+	value = farm_capacity_max_managed_pepper_garden
+	subtract = "location_building_level(building_type:managed_pepper_garden)"
+}
+pp_cplan_room_maniot_toll_guards = {
+	value = 1
+	subtract = "location_building_level(building_type:maniot_toll_guards)"
+}
+pp_cplan_room_marble_quarry = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:marble_quarry)"
+}
+pp_cplan_room_marble_saw_yard = {
+	value = pp_rural_building_cap_tier_1
+	subtract = "location_building_level(building_type:marble_saw_yard)"
+}
+pp_cplan_room_market_cotton_farm = {
+	value = farm_capacity_max_market_cotton_farm
+	subtract = "location_building_level(building_type:market_cotton_farm)"
+}
+pp_cplan_room_market_tobacco_farm = {
+	value = farm_capacity_max_market_tobacco_farm
+	subtract = "location_building_level(building_type:market_tobacco_farm)"
+}
+pp_cplan_room_market_village = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:market_village)"
+}
+pp_cplan_room_market_warehouse = {
+	value = market_warehouse_max_level
+	subtract = "location_building_level(building_type:market_warehouse)"
+}
+pp_cplan_room_marketplace = {
+	value = marketplace_max_level
+	subtract = "location_building_level(building_type:marketplace)"
+}
+pp_cplan_room_mason = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:mason)"
+}
+pp_cplan_room_medical_school = {
+	value = 1
+	subtract = "location_building_level(building_type:medical_school)"
+}
+pp_cplan_room_merchant_guild_chapel = {
+	value = 1
+	subtract = "location_building_level(building_type:merchant_guild_chapel)"
+}
+pp_cplan_room_merchants_guild = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:merchants_guild)"
+}
+pp_cplan_room_merchants_quarters = {
+	value = market_max_level
+	subtract = "location_building_level(building_type:merchants_quarters)"
+}
+pp_cplan_room_mercury_patio = {
+	value = mercury_patio_max_level
+	subtract = "location_building_level(building_type:mercury_patio)"
+}
+pp_cplan_room_miaphysite_monastery = {
+	value = 1
+	subtract = "location_building_level(building_type:miaphysite_monastery)"
+}
+pp_cplan_room_mil_vatican_library = {
+	value = 1
+	subtract = "location_building_level(building_type:mil_vatican_library)"
+}
+pp_cplan_room_millet_farm = {
+	value = farm_capacity_max_millet_farm
+	subtract = "location_building_level(building_type:millet_farm)"
+}
+pp_cplan_room_millet_farmstead = {
+	value = farm_capacity_max_millet_farmstead
+	subtract = "location_building_level(building_type:millet_farmstead)"
+}
+pp_cplan_room_millet_model_farm = {
+	value = farm_capacity_max_millet_model_farm
+	subtract = "location_building_level(building_type:millet_model_farm)"
+}
+pp_cplan_room_millet_rotations = {
+	value = farm_capacity_max_millet_rotations
+	subtract = "location_building_level(building_type:millet_rotations)"
+}
+pp_cplan_room_minting_office = {
+	value = 1
+	subtract = "location_building_level(building_type:minting_office)"
+}
+pp_cplan_room_missionary_building = {
+	value = 1
+	subtract = "location_building_level(building_type:missionary_building)"
+}
+pp_cplan_room_modern_council_hall = {
+	value = 1
+	subtract = "location_building_level(building_type:modern_council_hall)"
+}
+pp_cplan_room_monastery = {
+	value = 1
+	subtract = "location_building_level(building_type:monastery)"
+}
+pp_cplan_room_monument_bou_inania_madrasa = {
+	value = 1
+	subtract = "location_building_level(building_type:monument_bou_inania_madrasa)"
+}
+pp_cplan_room_monument_chellah = {
+	value = 1
+	subtract = "location_building_level(building_type:monument_chellah)"
+}
+pp_cplan_room_monument_consulado_de_bilbao = {
+	value = 1
+	subtract = "location_building_level(building_type:monument_consulado_de_bilbao)"
+}
+pp_cplan_room_monument_dar_al_makhzen = {
+	value = 1
+	subtract = "location_building_level(building_type:monument_dar_al_makhzen)"
+}
+pp_cplan_room_monument_great_mosque_algiers = {
+	value = 1
+	subtract = "location_building_level(building_type:monument_great_mosque_algiers)"
+}
+pp_cplan_room_monument_hassan_tower = {
+	value = 1
+	subtract = "location_building_level(building_type:monument_hassan_tower)"
+}
+pp_cplan_room_monument_kairouan_mosque = {
+	value = 1
+	subtract = "location_building_level(building_type:monument_kairouan_mosque)"
+}
+pp_cplan_room_monument_kasbah_udayas = {
+	value = 1
+	subtract = "location_building_level(building_type:monument_kasbah_udayas)"
+}
+pp_cplan_room_monument_ksar_ait_benhaddou = {
+	value = 1
+	subtract = "location_building_level(building_type:monument_ksar_ait_benhaddou)"
+}
+pp_cplan_room_monument_llotja_de_mar_barcelona = {
+	value = 1
+	subtract = "location_building_level(building_type:monument_llotja_de_mar_barcelona)"
+}
+pp_cplan_room_monument_mansourah_tlemcen = {
+	value = 1
+	subtract = "location_building_level(building_type:monument_mansourah_tlemcen)"
+}
+pp_cplan_room_monument_palau_generalitat = {
+	value = 1
+	subtract = "location_building_level(building_type:monument_palau_generalitat)"
+}
+pp_cplan_room_monument_qarawiyyin = {
+	value = 1
+	subtract = "location_building_level(building_type:monument_qarawiyyin)"
+}
+pp_cplan_room_monument_sa_llotja_de_palma = {
+	value = 1
+	subtract = "location_building_level(building_type:monument_sa_llotja_de_palma)"
+}
+pp_cplan_room_monument_torre_de_hercules = {
+	value = 1
+	subtract = "location_building_level(building_type:monument_torre_de_hercules)"
+}
+pp_cplan_room_moscow_artillery_yard = {
+	value = 1
+	subtract = "location_building_level(building_type:moscow_artillery_yard)"
+}
+pp_cplan_room_moscow_orphanage = {
+	value = 1
+	subtract = "location_building_level(building_type:moscow_orphanage)"
+}
+pp_cplan_room_munich_residenz_baroque_expansion = {
+	value = 1
+	subtract = "location_building_level(building_type:munich_residenz_baroque_expansion)"
+}
+pp_cplan_room_munich_residenz_founding = {
+	value = 1
+	subtract = "location_building_level(building_type:munich_residenz_founding)"
+}
+pp_cplan_room_munich_residenz_renaissance_expansion = {
+	value = 1
+	subtract = "location_building_level(building_type:munich_residenz_renaissance_expansion)"
+}
+pp_cplan_room_naval_base = {
+	value = 1
+	subtract = "location_building_level(building_type:naval_base)"
+}
+pp_cplan_room_naval_battery = {
+	value = 1
+	subtract = "location_building_level(building_type:naval_battery)"
+}
+pp_cplan_room_naval_governor = {
+	value = 1
+	subtract = "location_building_level(building_type:naval_governor)"
+}
+pp_cplan_room_naval_supplies_guild = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:naval_supplies_guild)"
+}
+pp_cplan_room_naval_supplies_manufactory = {
+	value = manufactory_max_level
+	subtract = "location_building_level(building_type:naval_supplies_manufactory)"
+}
+pp_cplan_room_naval_supplies_mill = {
+	value = mills_max_level
+	subtract = "location_building_level(building_type:naval_supplies_mill)"
+}
+pp_cplan_room_naval_supplies_workshop = {
+	value = workshop_max_level
+	subtract = "location_building_level(building_type:naval_supplies_workshop)"
+}
+pp_cplan_room_net_curing_yard = {
+	value = fish_capacity_max_net_curing_yard
+	subtract = "location_building_level(building_type:net_curing_yard)"
+}
+pp_cplan_room_nobility_fortifications = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:nobility_fortifications)"
+}
+pp_cplan_room_noble_courts = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:noble_courts)"
+}
+pp_cplan_room_noble_villa = {
+	value = estate_building_stackable_level
+	subtract = "location_building_level(building_type:noble_villa)"
+}
+pp_cplan_room_nobled_sponsored_temple = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:nobled_sponsored_temple)"
+}
+pp_cplan_room_nobles_mansion = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:nobles_mansion)"
+}
+pp_cplan_room_nobles_recruitment_center = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:nobles_recruitment_center)"
+}
+pp_cplan_room_north_sea_shipyards = {
+	value = 1
+	subtract = "location_building_level(building_type:north_sea_shipyards)"
+}
+pp_cplan_room_novodevichy_convent = {
+	value = 1
+	subtract = "location_building_level(building_type:novodevichy_convent)"
+}
+pp_cplan_room_nursery_orchard = {
+	value = farm_capacity_max_nursery_orchard
+	subtract = "location_building_level(building_type:nursery_orchard)"
+}
+pp_cplan_room_ocean_fishery = {
+	value = fish_capacity_max_ocean_fishery
+	subtract = "location_building_level(building_type:ocean_fishery)"
+}
+pp_cplan_room_offshore_fishery = {
+	value = fish_capacity_max_offshore_fishery
+	subtract = "location_building_level(building_type:offshore_fishery)"
+}
+pp_cplan_room_olive_farm = {
+	value = farm_capacity_max_olive_farm
+	subtract = "location_building_level(building_type:olive_farm)"
+}
+pp_cplan_room_olive_farmstead = {
+	value = farm_capacity_max_olive_farmstead
+	subtract = "location_building_level(building_type:olive_farmstead)"
+}
+pp_cplan_room_olive_model_farm = {
+	value = farm_capacity_max_olive_model_farm
+	subtract = "location_building_level(building_type:olive_model_farm)"
+}
+pp_cplan_room_olive_rotations = {
+	value = farm_capacity_max_olive_rotations
+	subtract = "location_building_level(building_type:olive_rotations)"
+}
+pp_cplan_room_oma_falaj = {
+	value = 2
+	subtract = "location_building_level(building_type:oma_falaj)"
+}
+pp_cplan_room_oma_nizwa_fort = {
+	value = 1
+	subtract = "location_building_level(building_type:oma_nizwa_fort)"
+}
+pp_cplan_room_opera_house = {
+	value = 1
+	subtract = "location_building_level(building_type:opera_house)"
+}
+pp_cplan_room_order_commandery = {
+	value = 1
+	subtract = "location_building_level(building_type:order_commandery)"
+}
+pp_cplan_room_order_headquarters = {
+	value = 1
+	subtract = "location_building_level(building_type:order_headquarters)"
+}
+pp_cplan_room_order_stronghold = {
+	value = 1
+	subtract = "location_building_level(building_type:order_stronghold)"
+}
+pp_cplan_room_ori_portuguese_quarters = {
+	value = 1
+	subtract = "location_building_level(building_type:ori_portuguese_quarters)"
+}
+pp_cplan_room_orthodox_monastery = {
+	value = 1
+	subtract = "location_building_level(building_type:orthodox_monastery)"
+}
+pp_cplan_room_ostrog = {
+	value = 1
+	subtract = "location_building_level(building_type:ostrog)"
+}
+pp_cplan_room_overseas_trading_post = {
+	value = 1
+	subtract = "location_building_level(building_type:overseas_trading_post)"
+}
+pp_cplan_room_paddy_water_control = {
+	value = pp_wb_cap_paddy_water_control
+	subtract = "location_building_level(building_type:paddy_water_control)"
+}
+pp_cplan_room_palazzo_ajutamicristo = {
+	value = 1000
+}
+pp_cplan_room_panaqa_building = {
+	value = 1
+	subtract = "location_building_level(building_type:panaqa_building)"
+}
+pp_cplan_room_papal_archives = {
+	value = 1
+	subtract = "location_building_level(building_type:papal_archives)"
+}
+pp_cplan_room_paper_guild = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:paper_guild)"
+}
+pp_cplan_room_paper_manufactory = {
+	value = manufactory_max_level
+	subtract = "location_building_level(building_type:paper_manufactory)"
+}
+pp_cplan_room_paper_mill = {
+	value = mills_max_level
+	subtract = "location_building_level(building_type:paper_mill)"
+}
+pp_cplan_room_paper_workshop = {
+	value = workshop_max_level
+	subtract = "location_building_level(building_type:paper_workshop)"
+}
+pp_cplan_room_parish_church = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:parish_church)"
+}
+pp_cplan_room_patrician_hall = {
+	value = 1
+	subtract = "location_building_level(building_type:patrician_hall)"
+}
+pp_cplan_room_pearl_fishery = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:pearl_fishery)"
+}
+pp_cplan_room_peasants_hunting_grounds = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:peasants_hunting_grounds)"
+}
+pp_cplan_room_peasants_training_grounds = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:peasants_training_grounds)"
+}
+pp_cplan_room_peel_towers = {
+	value = 1
+	subtract = "location_building_level(building_type:peel_towers)"
+}
+pp_cplan_room_pepper_garden = {
+	value = farm_capacity_max_pepper_garden
+	subtract = "location_building_level(building_type:pepper_garden)"
+}
+pp_cplan_room_perfumery = {
+	value = manufactory_max_level
+	subtract = "location_building_level(building_type:perfumery)"
+}
+pp_cplan_room_pest_house = {
+	value = 1
+	subtract = "location_building_level(building_type:pest_house)"
+}
+pp_cplan_room_phanariot_district = {
+	value = 1
+	subtract = "location_building_level(building_type:phanariot_district)"
+}
+pp_cplan_room_piazza_san_marco = {
+	value = 1
+	subtract = "location_building_level(building_type:piazza_san_marco)"
+}
+pp_cplan_room_pirate_haven = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:pirate_haven)"
+}
+pp_cplan_room_pirate_stronghold = {
+	value = 1
+	subtract = "location_building_level(building_type:pirate_stronghold)"
+}
+pp_cplan_room_pirate_tavern = {
+	value = 2
+	subtract = "location_building_level(building_type:pirate_tavern)"
+}
+pp_cplan_room_polders = {
+	value = pp_wb_cap_polders
+	subtract = "location_building_level(building_type:polders)"
+}
+pp_cplan_room_pomological_orchard = {
+	value = farm_capacity_max_pomological_orchard
+	subtract = "location_building_level(building_type:pomological_orchard)"
+}
+pp_cplan_room_pomor_outpost = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:pomor_outpost)"
+}
+pp_cplan_room_por_feitoria = {
+	value = 1
+	subtract = "location_building_level(building_type:por_feitoria)"
+}
+pp_cplan_room_por_trading_post = {
+	value = 1
+	subtract = "location_building_level(building_type:por_trading_post)"
+}
+pp_cplan_room_porcelain_guild = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:porcelain_guild)"
+}
+pp_cplan_room_porcelain_manufactory = {
+	value = manufactory_max_level
+	subtract = "location_building_level(building_type:porcelain_manufactory)"
+}
+pp_cplan_room_port_authority = {
+	value = market_max_level
+	subtract = "location_building_level(building_type:port_authority)"
+}
+pp_cplan_room_porto_pisano = {
+	value = porto_pisano_max_level
+	subtract = "location_building_level(building_type:porto_pisano)"
+}
+pp_cplan_room_potato_farm = {
+	value = farm_capacity_max_potato_farm
+	subtract = "location_building_level(building_type:potato_farm)"
+}
+pp_cplan_room_potato_farmstead = {
+	value = farm_capacity_max_potato_farmstead
+	subtract = "location_building_level(building_type:potato_farmstead)"
+}
+pp_cplan_room_potato_model_farm = {
+	value = farm_capacity_max_potato_model_farm
+	subtract = "location_building_level(building_type:potato_model_farm)"
+}
+pp_cplan_room_potato_rotations = {
+	value = farm_capacity_max_potato_rotations
+	subtract = "location_building_level(building_type:potato_rotations)"
+}
+pp_cplan_room_pottery_guild = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:pottery_guild)"
+}
+pp_cplan_room_pottery_manufactory = {
+	value = manufactory_max_level
+	subtract = "location_building_level(building_type:pottery_manufactory)"
+}
+pp_cplan_room_pottery_mill = {
+	value = mills_max_level
+	subtract = "location_building_level(building_type:pottery_mill)"
+}
+pp_cplan_room_pottery_workshop = {
+	value = workshop_max_level
+	subtract = "location_building_level(building_type:pottery_workshop)"
+}
+pp_cplan_room_pounamou_carver = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:pounamou_carver)"
+}
+pp_cplan_room_pound_lock_canal_infrastructure = {
+	value = 1
+	subtract = "location_building_level(building_type:pound_lock_canal_infrastructure)"
+}
+pp_cplan_room_pp_banjara_tanda = {
+	value = pp_banjara_tanda_logistics_max_level
+	subtract = "location_building_level(building_type:pp_banjara_tanda)"
+}
+pp_cplan_room_pp_caravanserai = {
+	value = pp_caravanserai_logistics_max_level
+	subtract = "location_building_level(building_type:pp_caravanserai)"
+}
+pp_cplan_room_pp_llama_caravan_post = {
+	value = pp_llama_caravan_post_logistics_max_level
+	subtract = "location_building_level(building_type:pp_llama_caravan_post)"
+}
+pp_cplan_room_pp_oasis_caravan_station = {
+	value = pp_oasis_caravan_station_logistics_max_level
+	subtract = "location_building_level(building_type:pp_oasis_caravan_station)"
+}
+pp_cplan_room_pp_yam_station = {
+	value = pp_yam_station_logistics_max_level
+	subtract = "location_building_level(building_type:pp_yam_station)"
+}
+pp_cplan_room_printing_manufactory = {
+	value = manufactory_max_level
+	subtract = "location_building_level(building_type:printing_manufactory)"
+}
+pp_cplan_room_printing_mill = {
+	value = mills_max_level
+	subtract = "location_building_level(building_type:printing_mill)"
+}
+pp_cplan_room_printing_press_shop = {
+	value = workshop_max_level
+	subtract = "location_building_level(building_type:printing_press_shop)"
+}
+pp_cplan_room_protected_harbor = {
+	value = 1
+	subtract = "location_building_level(building_type:protected_harbor)"
+}
+pp_cplan_room_provincial_chancery = {
+	value = chancery_max_level
+	subtract = "location_building_level(building_type:provincial_chancery)"
+}
+pp_cplan_room_provincial_garrison = {
+	value = 1
+	subtract = "location_building_level(building_type:provincial_garrison)"
+}
+pp_cplan_room_public_kitchen = {
+	value = cookshop_max_level
+	subtract = "location_building_level(building_type:public_kitchen)"
+}
+pp_cplan_room_pukara_building = {
+	value = 1
+	subtract = "location_building_level(building_type:pukara_building)"
+}
+pp_cplan_room_putrefaction_mill = {
+	value = manufactory_max_level
+	subtract = "location_building_level(building_type:putrefaction_mill)"
+}
+pp_cplan_room_putrefaction_works = {
+	value = manufactory_max_level
+	subtract = "location_building_level(building_type:putrefaction_works)"
+}
+pp_cplan_room_qadi_office = {
+	value = 1000
+}
+pp_cplan_room_qalat_al_mashwar = {
+	value = 2
+	subtract = "location_building_level(building_type:qalat_al_mashwar)"
+}
+pp_cplan_room_qanats = {
+	value = pp_wb_cap_qanats
+	subtract = "location_building_level(building_type:qanats)"
+}
+pp_cplan_room_quicksilver_retort = {
+	value = pp_rural_building_cap_tier_1
+	subtract = "location_building_level(building_type:quicksilver_retort)"
+}
+pp_cplan_room_quirinal_palace = {
+	value = 1
+	subtract = "location_building_level(building_type:quirinal_palace)"
+}
+pp_cplan_room_rahdar = {
+	value = 1
+	subtract = "location_building_level(building_type:rahdar)"
+}
+pp_cplan_room_ranganathaswamy_temple_building = {
+	value = 1
+	subtract = "location_building_level(building_type:ranganathaswamy_temple_building)"
+}
+pp_cplan_room_red_fort = {
+	value = 1
+	subtract = "location_building_level(building_type:red_fort)"
+}
+pp_cplan_room_regimental_camp = {
+	value = manpower_max_level
+	subtract = "location_building_level(building_type:regimental_camp)"
+}
+pp_cplan_room_regulated_sericulture_farm = {
+	value = farm_capacity_max_regulated_sericulture_farm
+	subtract = "location_building_level(building_type:regulated_sericulture_farm)"
+}
+pp_cplan_room_repaired_great_wall_of_china = {
+	value = 1
+	subtract = "location_building_level(building_type:repaired_great_wall_of_china)"
+}
+pp_cplan_room_republican_assembly = {
+	value = 1
+	subtract = "location_building_level(building_type:republican_assembly)"
+}
+pp_cplan_room_ribat = {
+	value = 1
+	subtract = "location_building_level(building_type:ribat)"
+}
+pp_cplan_room_ribeira_das_naus = {
+	value = 1
+	subtract = "location_building_level(building_type:ribeira_das_naus)"
+}
+pp_cplan_room_rice_farm = {
+	value = farm_capacity_max_rice_farm
+	subtract = "location_building_level(building_type:rice_farm)"
+}
+pp_cplan_room_rice_farmstead = {
+	value = farm_capacity_max_rice_farmstead
+	subtract = "location_building_level(building_type:rice_farmstead)"
+}
+pp_cplan_room_rice_model_farm = {
+	value = farm_capacity_max_rice_model_farm
+	subtract = "location_building_level(building_type:rice_model_farm)"
+}
+pp_cplan_room_rice_rotations = {
+	value = farm_capacity_max_rice_rotations
+	subtract = "location_building_level(building_type:rice_rotations)"
+}
+pp_cplan_room_riksbank = {
+	value = 1
+	subtract = "location_building_level(building_type:riksbank)"
+}
+pp_cplan_room_river_boatmen_yard = {
+	value = pp_river_boatmen_yard_logistics_max_level
+	subtract = "location_building_level(building_type:river_boatmen_yard)"
+}
+pp_cplan_room_rock_of_monaco = {
+	value = 1
+	subtract = "location_building_level(building_type:rock_of_monaco)"
+}
+pp_cplan_room_rotten_borough = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:rotten_borough)"
+}
+pp_cplan_room_rotterdam_admiralty = {
+	value = 1
+	subtract = "location_building_level(building_type:rotterdam_admiralty)"
+}
+pp_cplan_room_royal_academy_of_arts = {
+	value = 1
+	subtract = "location_building_level(building_type:royal_academy_of_arts)"
+}
+pp_cplan_room_royal_atarazanas_seville = {
+	value = 1
+	subtract = "location_building_level(building_type:royal_atarazanas_seville)"
+}
+pp_cplan_room_royal_audience_and_chancery = {
+	value = 1
+	subtract = "location_building_level(building_type:royal_audience_and_chancery)"
+}
+pp_cplan_room_royal_court = {
+	value = 1
+	subtract = "location_building_level(building_type:royal_court)"
+}
+pp_cplan_room_royal_garden = {
+	value = 1
+	subtract = "location_building_level(building_type:royal_garden)"
+}
+pp_cplan_room_royal_society = {
+	value = 1
+	subtract = "location_building_level(building_type:royal_society)"
+}
+pp_cplan_room_ruined_great_wall_of_china = {
+	value = 1
+	subtract = "location_building_level(building_type:ruined_great_wall_of_china)"
+}
+pp_cplan_room_rural_clothmaker = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:rural_clothmaker)"
+}
+pp_cplan_room_rural_daywork_yard = {
+	value = 6
+	subtract = "location_building_level(building_type:rural_daywork_yard)"
+}
+pp_cplan_room_rural_glassmaker = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:rural_glassmaker)"
+}
+pp_cplan_room_sacred_council = {
+	value = 1
+	subtract = "location_building_level(building_type:sacred_council)"
+}
+pp_cplan_room_safaviyya_order_hall = {
+	value = 2
+	subtract = "location_building_level(building_type:safaviyya_order_hall)"
+}
+pp_cplan_room_saffron_croft = {
+	value = farm_capacity_max_saffron_croft
+	subtract = "location_building_level(building_type:saffron_croft)"
+}
+pp_cplan_room_saffron_kiln_croft = {
+	value = farm_capacity_max_saffron_kiln_croft
+	subtract = "location_building_level(building_type:saffron_kiln_croft)"
+}
+pp_cplan_room_saharan_trade_house = {
+	value = 1000
+}
+pp_cplan_room_salt_collector = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:salt_collector)"
+}
+pp_cplan_room_salt_mine = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:salt_mine)"
+}
+pp_cplan_room_salt_mine_improved = {
+	value = pp_rural_building_cap_tier_1
+	subtract = "location_building_level(building_type:salt_mine_improved)"
+}
+pp_cplan_room_saltpeter_beds = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:saltpeter_beds)"
+}
+pp_cplan_room_saltpeter_guild = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:saltpeter_guild)"
+}
+pp_cplan_room_saltpeter_workshop = {
+	value = workshop_max_level
+	subtract = "location_building_level(building_type:saltpeter_workshop)"
+}
+pp_cplan_room_sand_pit = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:sand_pit)"
+}
+pp_cplan_room_sand_washery = {
+	value = pp_rural_building_cap_tier_1
+	subtract = "location_building_level(building_type:sand_washery)"
+}
+pp_cplan_room_sanssouci = {
+	value = 1
+	subtract = "location_building_level(building_type:sanssouci)"
+}
+pp_cplan_room_saqaliba_barracks = {
+	value = 1000
+}
+pp_cplan_room_sawmill = {
+	value = 1
+	subtract = "location_building_level(building_type:sawmill)"
+}
+pp_cplan_room_schonbrunn_palace = {
+	value = 1
+	subtract = "location_building_level(building_type:schonbrunn_palace)"
+}
+pp_cplan_room_school_of_salamanca = {
+	value = 1
+	subtract = "location_building_level(building_type:school_of_salamanca)"
+}
+pp_cplan_room_schwaz_mine = {
+	value = 1
+	subtract = "location_building_level(building_type:schwaz_mine)"
+}
+pp_cplan_room_sco_palace_of_holyroodhouse = {
+	value = 1
+	subtract = "location_building_level(building_type:sco_palace_of_holyroodhouse)"
+}
+pp_cplan_room_scriptorium = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:scriptorium)"
+}
+pp_cplan_room_seat_of_cardinal = {
+	value = 1
+	subtract = "location_building_level(building_type:seat_of_cardinal)"
+}
+pp_cplan_room_segovia_artillery_academy = {
+	value = 1
+	subtract = "location_building_level(building_type:segovia_artillery_academy)"
+}
+pp_cplan_room_seljuk_mint = {
+	value = 4
+	subtract = "location_building_level(building_type:seljuk_mint)"
+}
+pp_cplan_room_sergeantry = {
+	value = 1
+	subtract = "location_building_level(building_type:sergeantry)"
+}
+pp_cplan_room_sericulture_farm = {
+	value = farm_capacity_max_sericulture_farm
+	subtract = "location_building_level(building_type:sericulture_farm)"
+}
+pp_cplan_room_settlement_building = {
+	value = 1
+	subtract = "location_building_level(building_type:settlement_building)"
+}
+pp_cplan_room_sevilla_bullfighting_school = {
+	value = 1
+	subtract = "location_building_level(building_type:sevilla_bullfighting_school)"
+}
+pp_cplan_room_sheep_farms = {
+	value = farm_capacity_max_sheep_farms
+	subtract = "location_building_level(building_type:sheep_farms)"
+}
+pp_cplan_room_shipyard = {
+	value = 1
+	subtract = "location_building_level(building_type:shipyard)"
+}
+pp_cplan_room_shoen = {
+	value = japanese_clan_building_cap
+	subtract = "location_building_level(building_type:shoen)"
+}
+pp_cplan_room_sie_sienese_port = {
+	value = 1
+	subtract = "location_building_level(building_type:sie_sienese_port)"
+}
+pp_cplan_room_silk_production_guild = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:silk_production_guild)"
+}
+pp_cplan_room_silver_mine = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:silver_mine)"
+}
+pp_cplan_room_silver_mine_improved = {
+	value = pp_rural_building_cap_tier_1
+	subtract = "location_building_level(building_type:silver_mine_improved)"
+}
+pp_cplan_room_simplers_grove = {
+	value = farm_capacity_max_simplers_grove
+	subtract = "location_building_level(building_type:simplers_grove)"
+}
+pp_cplan_room_slave_center = {
+	value = 1
+	subtract = "location_building_level(building_type:slave_center)"
+}
+pp_cplan_room_slave_labor_yard = {
+	value = 4
+	subtract = "location_building_level(building_type:slave_labor_yard)"
+}
+pp_cplan_room_slave_market = {
+	value = slave_market_max_level
+	subtract = "location_building_level(building_type:slave_market)"
+}
+pp_cplan_room_smuggler_cove = {
+	value = 5
+	subtract = "location_building_level(building_type:smuggler_cove)"
+}
+pp_cplan_room_sofa_barracks = {
+	value = 1
+	subtract = "location_building_level(building_type:sofa_barracks)"
+}
+pp_cplan_room_sofa_stockade = {
+	value = 1
+	subtract = "location_building_level(building_type:sofa_stockade)"
+}
+pp_cplan_room_spiritual_retreat = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:spiritual_retreat)"
+}
+pp_cplan_room_stannary_court = {
+	value = 1
+	subtract = "location_building_level(building_type:stannary_court)"
+}
+pp_cplan_room_star_fort = {
+	value = 1
+	subtract = "location_building_level(building_type:star_fort)"
+}
+pp_cplan_room_steel_mill = {
+	value = mills_max_level
+	subtract = "location_building_level(building_type:steel_mill)"
+}
+pp_cplan_room_stock_exchange = {
+	value = 1
+	subtract = "location_building_level(building_type:stock_exchange)"
+}
+pp_cplan_room_stockade = {
+	value = 1
+	subtract = "location_building_level(building_type:stockade)"
+}
+pp_cplan_room_stone_quarry = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:stone_quarry)"
+}
+pp_cplan_room_stone_quarry_improved = {
+	value = pp_rural_building_cap_tier_1
+	subtract = "location_building_level(building_type:stone_quarry_improved)"
+}
+pp_cplan_room_stroganov_school_of_iconic_art = {
+	value = 1
+	subtract = "location_building_level(building_type:stroganov_school_of_iconic_art)"
+}
+pp_cplan_room_stud_farm = {
+	value = farm_capacity_max_stud_farm
+	subtract = "location_building_level(building_type:stud_farm)"
+}
+pp_cplan_room_sufi_lodge = {
+	value = 1
+	subtract = "location_building_level(building_type:sufi_lodge)"
+}
+pp_cplan_room_sufi_mosque = {
+	value = 1
+	subtract = "location_building_level(building_type:sufi_mosque)"
+}
+pp_cplan_room_sugar_plantation = {
+	value = farm_capacity_max_sugar_plantation
+	subtract = "location_building_level(building_type:sugar_plantation)"
+}
+pp_cplan_room_sugarcane_farm = {
+	value = farm_capacity_max_sugarcane_farm
+	subtract = "location_building_level(building_type:sugarcane_farm)"
+}
+pp_cplan_room_sukharev_tower = {
+	value = 1
+	subtract = "location_building_level(building_type:sukharev_tower)"
+}
+pp_cplan_room_supreme_court = {
+	value = 1
+	subtract = "location_building_level(building_type:supreme_court)"
+}
+pp_cplan_room_swi_collegium_helveticum = {
+	value = 1
+	subtract = "location_building_level(building_type:swi_collegium_helveticum)"
+}
+pp_cplan_room_tali_a_watchtower = {
+	value = 1000
+}
+pp_cplan_room_tambo = {
+	value = 1
+	subtract = "location_building_level(building_type:tambo)"
+}
+pp_cplan_room_tannery = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:tannery)"
+}
+pp_cplan_room_tannery_manufactory = {
+	value = manufactory_max_level
+	subtract = "location_building_level(building_type:tannery_manufactory)"
+}
+pp_cplan_room_tannery_mill = {
+	value = mills_max_level
+	subtract = "location_building_level(building_type:tannery_mill)"
+}
+pp_cplan_room_tanning_workshop = {
+	value = workshop_max_level
+	subtract = "location_building_level(building_type:tanning_workshop)"
+}
+pp_cplan_room_tar_kiln = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:tar_kiln)"
+}
+pp_cplan_room_tatara = {
+	value = japanese_clan_building_cap
+	subtract = "location_building_level(building_type:tatara)"
+}
+pp_cplan_room_tavern = {
+	value = tavern_max_level
+	subtract = "location_building_level(building_type:tavern)"
+}
+pp_cplan_room_tax_assessor = {
+	value = 1
+	subtract = "location_building_level(building_type:tax_assessor)"
+}
+pp_cplan_room_tea_garden = {
+	value = farm_capacity_max_tea_garden
+	subtract = "location_building_level(building_type:tea_garden)"
+}
+pp_cplan_room_tea_sorting_garden = {
+	value = farm_capacity_max_tea_sorting_garden
+	subtract = "location_building_level(building_type:tea_sorting_garden)"
+}
+pp_cplan_room_teatro_san_cassiano = {
+	value = 1
+	subtract = "location_building_level(building_type:teatro_san_cassiano)"
+}
+pp_cplan_room_telpochcalli = {
+	value = 1
+	subtract = "location_building_level(building_type:telpochcalli)"
+}
+pp_cplan_room_temple = {
+	value = 1
+	subtract = "location_building_level(building_type:temple)"
+}
+pp_cplan_room_temple_militia = {
+	value = 1
+	subtract = "location_building_level(building_type:temple_militia)"
+}
+pp_cplan_room_terraced_coffee_grove = {
+	value = farm_capacity_max_terraced_coffee_grove
+	subtract = "location_building_level(building_type:terraced_coffee_grove)"
+}
+pp_cplan_room_terraces = {
+	value = 1
+	subtract = "location_building_level(building_type:terraces)"
+}
+pp_cplan_room_textile_mill = {
+	value = mills_max_level
+	subtract = "location_building_level(building_type:textile_mill)"
+}
+pp_cplan_room_thagr_fort = {
+	value = 1000
+}
+pp_cplan_room_the_bock_fortifications = {
+	value = bock_max_level
+	subtract = "location_building_level(building_type:the_bock_fortifications)"
+}
+pp_cplan_room_the_cipher_secretary = {
+	value = 1
+	subtract = "location_building_level(building_type:the_cipher_secretary)"
+}
+pp_cplan_room_theater = {
+	value = 1
+	subtract = "location_building_level(building_type:theater)"
+}
+pp_cplan_room_thema_headquarters = {
+	value = 1
+	subtract = "location_building_level(building_type:thema_headquarters)"
+}
+pp_cplan_room_theodosian_walls = {
+	value = theodosian_walls_max_level
+	subtract = "location_building_level(building_type:theodosian_walls)"
+}
+pp_cplan_room_tibetan_great_monastery = {
+	value = 1
+	subtract = "location_building_level(building_type:tibetan_great_monastery)"
+}
+pp_cplan_room_tin_stamping_mill = {
+	value = pp_rural_building_cap_tier_1
+	subtract = "location_building_level(building_type:tin_stamping_mill)"
+}
+pp_cplan_room_tin_streamworks = {
+	value = rural_building_cap
+	subtract = "location_building_level(building_type:tin_streamworks)"
+}
+pp_cplan_room_tobacco_farm = {
+	value = farm_capacity_max_tobacco_farm
+	subtract = "location_building_level(building_type:tobacco_farm)"
+}
+pp_cplan_room_tobacco_plantation = {
+	value = farm_capacity_max_tobacco_plantation
+	subtract = "location_building_level(building_type:tobacco_plantation)"
+}
+pp_cplan_room_toll_castle = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:toll_castle)"
+}
+pp_cplan_room_tools_guild = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:tools_guild)"
+}
+pp_cplan_room_tools_workshop = {
+	value = workshop_max_level
+	subtract = "location_building_level(building_type:tools_workshop)"
+}
+pp_cplan_room_tower_of_belem = {
+	value = 1
+	subtract = "location_building_level(building_type:tower_of_belem)"
+}
+pp_cplan_room_trade_company_foreign_influence = {
+	value = trade_company_building_max_level
+	subtract = "location_building_level(building_type:trade_company_foreign_influence)"
+}
+pp_cplan_room_trade_company_garrison = {
+	value = trade_company_building_max_level
+	subtract = "location_building_level(building_type:trade_company_garrison)"
+}
+pp_cplan_room_trade_company_governance = {
+	value = trade_company_building_max_level
+	subtract = "location_building_level(building_type:trade_company_governance)"
+}
+pp_cplan_room_trade_company_harbor = {
+	value = trade_company_building_max_level
+	subtract = "location_building_level(building_type:trade_company_harbor)"
+}
+pp_cplan_room_trade_company_headquarters = {
+	value = trade_company_headquarters_max_level
+	subtract = "location_building_level(building_type:trade_company_headquarters)"
+}
+pp_cplan_room_trade_company_local_venture = {
+	value = trade_company_building_max_level
+	subtract = "location_building_level(building_type:trade_company_local_venture)"
+}
+pp_cplan_room_trade_office = {
+	value = trade_office_max_level
+	subtract = "location_building_level(building_type:trade_office)"
+}
+pp_cplan_room_trading_hub = {
+	value = 1
+	subtract = "location_building_level(building_type:trading_hub)"
+}
+pp_cplan_room_training_fields = {
+	value = manpower_max_level
+	subtract = "location_building_level(building_type:training_fields)"
+}
+pp_cplan_room_trans_saharan_trade_outposts = {
+	value = 1
+	subtract = "location_building_level(building_type:trans_saharan_trade_outposts)"
+}
+pp_cplan_room_transport_office = {
+	value = pp_transport_office_logistics_max_level
+	subtract = "location_building_level(building_type:transport_office)"
+}
+pp_cplan_room_trapiche_sugarcane_farm = {
+	value = farm_capacity_max_trapiche_sugarcane_farm
+	subtract = "location_building_level(building_type:trapiche_sugarcane_farm)"
+}
+pp_cplan_room_tribes_of_galway = {
+	value = 1
+	subtract = "location_building_level(building_type:tribes_of_galway)"
+}
+pp_cplan_room_tur_kodjabashi_office = {
+	value = 1
+	subtract = "location_building_level(building_type:tur_kodjabashi_office)"
+}
+pp_cplan_room_uffizi = {
+	value = 1
+	subtract = "location_building_level(building_type:uffizi)"
+}
+pp_cplan_room_university = {
+	value = 1
+	subtract = "location_building_level(building_type:university)"
+}
+pp_cplan_room_urban_parliament_seat = {
+	value = 1
+	subtract = "location_building_level(building_type:urban_parliament_seat)"
+}
+pp_cplan_room_usa_academy_of_arts_and_sciences = {
+	value = 1
+	subtract = "location_building_level(building_type:usa_academy_of_arts_and_sciences)"
+}
+pp_cplan_room_usa_national_bank = {
+	value = 1
+	subtract = "location_building_level(building_type:usa_national_bank)"
+}
+pp_cplan_room_usa_national_mint = {
+	value = 1
+	subtract = "location_building_level(building_type:usa_national_mint)"
+}
+pp_cplan_room_usa_philosophical_society = {
+	value = 1
+	subtract = "location_building_level(building_type:usa_philosophical_society)"
+}
+pp_cplan_room_venetian_arsenal = {
+	value = 1
+	subtract = "location_building_level(building_type:venetian_arsenal)"
+}
+pp_cplan_room_venetian_palaces = {
+	value = venetian_palaces_max_level
+	subtract = "location_building_level(building_type:venetian_palaces)"
+}
+pp_cplan_room_venetian_quarter = {
+	value = italian_merchant_quarters_max_level
+	subtract = "location_building_level(building_type:venetian_quarter)"
+}
+pp_cplan_room_venkateswara_temple = {
+	value = 7
+	subtract = "location_building_level(building_type:venkateswara_temple)"
+}
+pp_cplan_room_versailles = {
+	value = 1
+	subtract = "location_building_level(building_type:versailles)"
+}
+pp_cplan_room_viceroyalty = {
+	value = 1
+	subtract = "location_building_level(building_type:viceroyalty)"
+}
+pp_cplan_room_victualling_yard = {
+	value = victualling_yard_max_level
+	subtract = "location_building_level(building_type:victualling_yard)"
+}
+pp_cplan_room_village_granary = {
+	value = 1
+	subtract = "location_building_level(building_type:village_granary)"
+}
+pp_cplan_room_vineyard_estate = {
+	value = farm_capacity_max_vineyard_estate
+	subtract = "location_building_level(building_type:vineyard_estate)"
+}
+pp_cplan_room_wali_songo_shrine = {
+	value = 1
+	subtract = "location_building_level(building_type:wali_songo_shrine)"
+}
+pp_cplan_room_walls_of_benin = {
+	value = 1
+	subtract = "location_building_level(building_type:walls_of_benin)"
+}
+pp_cplan_room_walls_of_lucca = {
+	value = 1
+	subtract = "location_building_level(building_type:walls_of_lucca)"
+}
+pp_cplan_room_walls_of_ston = {
+	value = 1
+	subtract = "location_building_level(building_type:walls_of_ston)"
+}
+pp_cplan_room_war_college = {
+	value = 1
+	subtract = "location_building_level(building_type:war_college)"
+}
+pp_cplan_room_warrior_lodge = {
+	value = 1
+	subtract = "location_building_level(building_type:warrior_lodge)"
+}
+pp_cplan_room_warrior_monks_training_grounds = {
+	value = estate_building_single_level
+	subtract = "location_building_level(building_type:warrior_monks_training_grounds)"
+}
+pp_cplan_room_warrior_temple = {
+	value = 1
+	subtract = "location_building_level(building_type:warrior_temple)"
+}
+pp_cplan_room_wat_chaiwatthanaram_temple_building = {
+	value = 1
+	subtract = "location_building_level(building_type:wat_chaiwatthanaram_temple_building)"
+}
+pp_cplan_room_water_sawmill = {
+	value = forest_capacity_max_water_sawmill
+	subtract = "location_building_level(building_type:water_sawmill)"
+}
+pp_cplan_room_weapon_factory = {
+	value = mills_max_level
+	subtract = "location_building_level(building_type:weapon_factory)"
+}
+pp_cplan_room_weapon_guild = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:weapon_guild)"
+}
+pp_cplan_room_weapon_manufactory = {
+	value = manufactory_max_level
+	subtract = "location_building_level(building_type:weapon_manufactory)"
+}
+pp_cplan_room_weapon_workshop = {
+	value = workshop_max_level
+	subtract = "location_building_level(building_type:weapon_workshop)"
+}
+pp_cplan_room_west_friesland_admiralty = {
+	value = 1
+	subtract = "location_building_level(building_type:west_friesland_admiralty)"
+}
+pp_cplan_room_wharf = {
+	value = 1
+	subtract = "location_building_level(building_type:wharf)"
+}
+pp_cplan_room_wheat_farm = {
+	value = farm_capacity_max_wheat_farm
+	subtract = "location_building_level(building_type:wheat_farm)"
+}
+pp_cplan_room_wheat_farmstead = {
+	value = farm_capacity_max_wheat_farmstead
+	subtract = "location_building_level(building_type:wheat_farmstead)"
+}
+pp_cplan_room_wheat_model_farm = {
+	value = farm_capacity_max_wheat_model_farm
+	subtract = "location_building_level(building_type:wheat_model_farm)"
+}
+pp_cplan_room_wheat_rotations = {
+	value = farm_capacity_max_wheat_rotations
+	subtract = "location_building_level(building_type:wheat_rotations)"
+}
+pp_cplan_room_windmill = {
+	value = 1
+	subtract = "location_building_level(building_type:windmill)"
+}
+pp_cplan_room_winery = {
+	value = guild_max_level
+	subtract = "location_building_level(building_type:winery)"
+}
+pp_cplan_room_winery_manufactory = {
+	value = manufactory_max_level
+	subtract = "location_building_level(building_type:winery_manufactory)"
+}
+pp_cplan_room_wisselbank = {
+	value = 1
+	subtract = "location_building_level(building_type:wisselbank)"
+}
+pp_cplan_room_woodhenge_of_cahokia = {
+	value = 1
+	subtract = "location_building_level(building_type:woodhenge_of_cahokia)"
+}
+pp_cplan_room_yakata = {
+	value = 1
+	subtract = "location_building_level(building_type:yakata)"
+}
+pp_cplan_room_yamashiro = {
+	value = 1
+	subtract = "location_building_level(building_type:yamashiro)"
+}
+pp_cplan_room_zazzau_walls = {
+	value = 1
+	subtract = "location_building_level(building_type:zazzau_walls)"
+}
+pp_cplan_room_zeeland_admiralty = {
+	value = 1
+	subtract = "location_building_level(building_type:zeeland_admiralty)"
+}
+pp_cplan_room_zhixian = {
+	value = 1
+	subtract = "location_building_level(building_type:zhixian)"
+}
+pp_cplan_room_zwinger = {
+	value = 1
+	subtract = "location_building_level(building_type:zwinger)"
 }

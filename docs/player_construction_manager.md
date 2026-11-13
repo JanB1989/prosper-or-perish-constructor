@@ -486,8 +486,13 @@ on 2026-11-09 (two tabs). Payback and the guards stay.
   never a second level of the same building in a location while one is under construction (a Granary had +5 queued in
   Plymouth); the food rule waits in a province while one of its food buildings is under construction there.
 - Engine facts (memory `player-construction-manager`): `NOT = { a b }` means neither a nor b; `construct_building` checks no
-  `allow` (it queued Cookshops outside province capitals until the guard was fixed); `can_build_building` does check
-  `allow` and max levels; building conditions of foreign and jewelry buildings read `scope:actor` (the plan sets it);
+  `allow` (it queued Cookshops outside province capitals until the guard was fixed); `can_build_building` checks
+  `allow` and the potential but NOT the max level (corrected 2026-11-13 from Jan's Venice saves: the plan started
+  Drainage Ditches in Treviso at a cap of 0.68 and a Cookshop in Karpathos at a budget of 0.7; the engine checks the
+  max level again when a construction finishes and cancelled each one, leaving a level-0 building and the gold spent
+  lost. The engine's `building_type_max_level` trigger reads 0 for every type, per the Construction Manager framework's
+  tests. Since then every picker asks `pp_cplan_room_<type>` (the type's own max_levels minus its standing levels,
+  `render_room`) and `pp_cplan_construct_scoped` refuses a type for which `pp_cplan_no_room` holds); building conditions of foreign and jewelry buildings read `scope:actor` (the plan sets it);
   `num_pop_type:peasants` (colon form); a GUI reads a scope variable with `Scope.Var('x')`, `.IsSet`.
 - Not built yet: Upgrades rule group; filter by the game's own search filters inside our lists (the conditions mirror their
   numbers instead); "Expand" and "Never" for farms bought by the food rule are untested at scale; a

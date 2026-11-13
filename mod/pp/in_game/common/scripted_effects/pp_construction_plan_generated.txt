@@ -90,244 +90,244 @@ pp_cplan_try_farm_here = {
 	if = {
 		limit = { var:pp_cplan_pick > 100.5 var:pp_cplan_pick < 101.5 }
 		if = {
-			limit = { location_and_owner_can_build = { building_type = wheat_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_model_farm building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = wheat_model_farm } pp_cplan_room_wheat_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_model_farm building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = wheat_model_farm }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = wheat_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_rotations building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = wheat_rotations } pp_cplan_room_wheat_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_rotations building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = wheat_rotations }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = wheat_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_farmstead building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = wheat_farmstead } pp_cplan_room_wheat_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_farmstead building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = wheat_farmstead }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = wheat_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_farm building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = wheat_farm } pp_cplan_room_wheat_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_farm building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = wheat_farm }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 101.5 var:pp_cplan_pick < 102.5 }
 		if = {
-			limit = { location_and_owner_can_build = { building_type = rice_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_model_farm building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = rice_model_farm } pp_cplan_room_rice_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_model_farm building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = rice_model_farm }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = rice_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_rotations building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = rice_rotations } pp_cplan_room_rice_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_rotations building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = rice_rotations }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = rice_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_farmstead building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = rice_farmstead } pp_cplan_room_rice_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_farmstead building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = rice_farmstead }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = rice_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_farm building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = rice_farm } pp_cplan_room_rice_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_farm building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = rice_farm }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 102.5 var:pp_cplan_pick < 103.5 }
 		if = {
-			limit = { location_and_owner_can_build = { building_type = millet_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_model_farm building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = millet_model_farm } pp_cplan_room_millet_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_model_farm building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = millet_model_farm }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = millet_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_rotations building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = millet_rotations } pp_cplan_room_millet_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_rotations building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = millet_rotations }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = millet_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_farmstead building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = millet_farmstead } pp_cplan_room_millet_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_farmstead building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = millet_farmstead }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = millet_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_farm building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = millet_farm } pp_cplan_room_millet_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_farm building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = millet_farm }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 103.5 var:pp_cplan_pick < 104.5 }
 		if = {
-			limit = { location_and_owner_can_build = { building_type = maize_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_model_farm building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = maize_model_farm } pp_cplan_room_maize_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_model_farm building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = maize_model_farm }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = maize_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_rotations building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = maize_rotations } pp_cplan_room_maize_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_rotations building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = maize_rotations }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = maize_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_farmstead building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = maize_farmstead } pp_cplan_room_maize_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_farmstead building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = maize_farmstead }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = maize_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_farm building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = maize_farm } pp_cplan_room_maize_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_farm building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = maize_farm }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 104.5 var:pp_cplan_pick < 105.5 }
 		if = {
-			limit = { location_and_owner_can_build = { building_type = legume_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_model_farm building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = legume_model_farm } pp_cplan_room_legume_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_model_farm building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = legume_model_farm }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = legume_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_rotations building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = legume_rotations } pp_cplan_room_legume_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_rotations building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = legume_rotations }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = legume_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_farmstead building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = legume_farmstead } pp_cplan_room_legume_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_farmstead building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = legume_farmstead }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = legume_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_farm building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = legume_farm } pp_cplan_room_legume_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_farm building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = legume_farm }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 105.5 var:pp_cplan_pick < 106.5 }
 		if = {
-			limit = { location_and_owner_can_build = { building_type = potato_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_model_farm building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = potato_model_farm } pp_cplan_room_potato_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_model_farm building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = potato_model_farm }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = potato_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_rotations building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = potato_rotations } pp_cplan_room_potato_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_rotations building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = potato_rotations }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = potato_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_farmstead building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = potato_farmstead } pp_cplan_room_potato_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_farmstead building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = potato_farmstead }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = potato_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_farm building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = potato_farm } pp_cplan_room_potato_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_farm building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = potato_farm }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 106.5 var:pp_cplan_pick < 107.5 }
 		if = {
-			limit = { location_and_owner_can_build = { building_type = olive_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_model_farm building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = olive_model_farm } pp_cplan_room_olive_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_model_farm building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = olive_model_farm }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = olive_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_rotations building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = olive_rotations } pp_cplan_room_olive_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_rotations building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = olive_rotations }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = olive_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_farmstead building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = olive_farmstead } pp_cplan_room_olive_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_farmstead building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = olive_farmstead }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = olive_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_farm building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = olive_farm } pp_cplan_room_olive_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_farm building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = olive_farm }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 107.5 var:pp_cplan_pick < 108.5 }
 		if = {
-			limit = { location_and_owner_can_build = { building_type = cattle_model_farm } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_model_farm building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = cattle_model_farm } pp_cplan_room_cattle_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_model_farm building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = cattle_model_farm }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = cattle_rotations } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_rotations building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = cattle_rotations } pp_cplan_room_cattle_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_rotations building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = cattle_rotations }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = cattle_farmstead } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_farmstead building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = cattle_farmstead } pp_cplan_room_cattle_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_farmstead building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = cattle_farmstead }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = cattle_farm } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_farm building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = cattle_farm } pp_cplan_room_cattle_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_farm building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = cattle_farm }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 108.5 var:pp_cplan_pick < 109.5 }
 		if = {
-			limit = { location_and_owner_can_build = { building_type = camel_stud } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:camel_stud building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = camel_stud } pp_cplan_room_camel_stud >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:camel_stud building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = camel_stud }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = camel_herders } pp_cplan_goods_here_basic_construction_needs = yes NOT = { any_buildings_in_location = { building_type = building_type:camel_herders building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = camel_herders } pp_cplan_room_camel_herders >= 1 pp_cplan_goods_here_basic_construction_needs = yes NOT = { any_buildings_in_location = { building_type = building_type:camel_herders building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = camel_herders }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 109.5 var:pp_cplan_pick < 110.5 }
 		if = {
-			limit = { location_and_owner_can_build = { building_type = eng_royal_forest } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:eng_royal_forest building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = eng_royal_forest } pp_cplan_room_eng_royal_forest >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:eng_royal_forest building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = eng_royal_forest }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 110.5 var:pp_cplan_pick < 111.5 }
 		if = {
-			limit = { location_and_owner_can_build = { building_type = net_curing_yard } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:net_curing_yard building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = net_curing_yard } pp_cplan_room_net_curing_yard >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:net_curing_yard building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = net_curing_yard }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = fishing_village } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:fishing_village building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = fishing_village } pp_cplan_room_fishing_village >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:fishing_village building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = fishing_village }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 111.5 var:pp_cplan_pick < 112.5 }
 		if = {
-			limit = { location_and_owner_can_build = { building_type = managed_forest_village } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:managed_forest_village building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = managed_forest_village } pp_cplan_room_managed_forest_village >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:managed_forest_village building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = managed_forest_village }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = forest_village } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:forest_village building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = forest_village } pp_cplan_room_forest_village >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:forest_village building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = forest_village }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 112.5 var:pp_cplan_pick < 113.5 }
 		if = {
-			limit = { location_and_owner_can_build = { building_type = pomological_orchard } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:pomological_orchard building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = pomological_orchard } pp_cplan_room_pomological_orchard >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:pomological_orchard building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = pomological_orchard }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = nursery_orchard } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:nursery_orchard building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = nursery_orchard } pp_cplan_room_nursery_orchard >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:nursery_orchard building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = nursery_orchard }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = fruit_orchard } pp_cplan_goods_here_farm_constructions = yes NOT = { any_buildings_in_location = { building_type = building_type:fruit_orchard building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = fruit_orchard } pp_cplan_room_fruit_orchard >= 1 pp_cplan_goods_here_farm_constructions = yes NOT = { any_buildings_in_location = { building_type = building_type:fruit_orchard building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = fruit_orchard }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 113.5 var:pp_cplan_pick < 114.5 }
 		if = {
-			limit = { location_and_owner_can_build = { building_type = maghreb_palm_irrigation } pp_cplan_goods_here_maghreb_palm_irrigation_building_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maghreb_palm_irrigation building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = maghreb_palm_irrigation } pp_cplan_room_maghreb_palm_irrigation >= 1 pp_cplan_goods_here_maghreb_palm_irrigation_building_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maghreb_palm_irrigation building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = maghreb_palm_irrigation }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 114.5 var:pp_cplan_pick < 115.5 }
 		if = {
-			limit = { location_and_owner_can_build = { building_type = offshore_fishery } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:offshore_fishery building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = offshore_fishery } pp_cplan_room_offshore_fishery >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:offshore_fishery building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = offshore_fishery }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = drift_net_fishery } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:drift_net_fishery building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = drift_net_fishery } pp_cplan_room_drift_net_fishery >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:drift_net_fishery building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = drift_net_fishery }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = ocean_fishery } pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:ocean_fishery building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = ocean_fishery } pp_cplan_room_ocean_fishery >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:ocean_fishery building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = ocean_fishery }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 115.5 var:pp_cplan_pick < 116.5 }
 		if = {
-			limit = { location_and_owner_can_build = { building_type = hurdled_sheepcotes } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:hurdled_sheepcotes building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = hurdled_sheepcotes } pp_cplan_room_hurdled_sheepcotes >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:hurdled_sheepcotes building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = hurdled_sheepcotes }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = enclosed_sheep_walks } pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:enclosed_sheep_walks building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = enclosed_sheep_walks } pp_cplan_room_enclosed_sheep_walks >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:enclosed_sheep_walks building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = enclosed_sheep_walks }
 		}
 		else_if = {
-			limit = { location_and_owner_can_build = { building_type = sheep_farms } pp_cplan_goods_here_farm_constructions = yes NOT = { any_buildings_in_location = { building_type = building_type:sheep_farms building_levels_under_construction > 0 } } }
+			limit = { location_and_owner_can_build = { building_type = sheep_farms } pp_cplan_room_sheep_farms >= 1 pp_cplan_goods_here_farm_constructions = yes NOT = { any_buildings_in_location = { building_type = building_type:sheep_farms building_levels_under_construction > 0 } } }
 			pp_cplan_construct_food = { type = sheep_farms }
 		}
 	}
@@ -339,7 +339,7 @@ pp_cplan_try_farm_here = {
 # food rule's line (pp_cplan_yard_payback), a first level where victuals cost at least their default price here.
 pp_cplan_try_yard_here = {
 	if = {
-		limit = { location_and_owner_can_build = { building_type = victualling_yard } NOT = { any_buildings_in_location = { building_type = building_type:victualling_yard building_levels_under_construction > 0 } } }
+		limit = { location_and_owner_can_build = { building_type = victualling_yard } pp_cplan_room_victualling_yard >= 1 NOT = { any_buildings_in_location = { building_type = building_type:victualling_yard building_levels_under_construction > 0 } } }
 		building_type:victualling_yard = { save_scope_as = pp_cplan_btype }
 		pp_cplan_btype_data = yes
 		if = {
@@ -372,7 +372,7 @@ pp_cplan_try_kitchen_here = {
 	save_temporary_scope_value_as = { name = pp_cplan_done value = 0 }
 	save_temporary_scope_value_as = { name = pp_cplan_ng value = 0 }
 	if = {
-		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = public_kitchen } NOT = { any_buildings_in_location = { building_type = building_type:public_kitchen building_levels_under_construction > 0 } } }
+		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = public_kitchen } pp_cplan_room_public_kitchen >= 1 NOT = { any_buildings_in_location = { building_type = building_type:public_kitchen building_levels_under_construction > 0 } } }
 		if = {
 			limit = { pp_cplan_goods_here_workshop_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
@@ -383,7 +383,7 @@ pp_cplan_try_kitchen_here = {
 		}
 	}
 	if = {
-		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = cookshop } NOT = { any_buildings_in_location = { building_type = building_type:cookshop building_levels_under_construction > 0 } } }
+		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = cookshop } pp_cplan_room_cookshop >= 1 NOT = { any_buildings_in_location = { building_type = building_type:cookshop building_levels_under_construction > 0 } } }
 		if = {
 			limit = { pp_cplan_goods_here_workshop_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
@@ -405,7 +405,7 @@ pp_cplan_try_tavern_here = {
 	save_temporary_scope_value_as = { name = pp_cplan_done value = 0 }
 	save_temporary_scope_value_as = { name = pp_cplan_ng value = 0 }
 	if = {
-		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = tavern } NOT = { any_buildings_in_location = { building_type = building_type:tavern building_levels_under_construction > 0 } } }
+		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = tavern } pp_cplan_room_tavern >= 1 NOT = { any_buildings_in_location = { building_type = building_type:tavern building_levels_under_construction > 0 } } }
 		if = {
 			limit = { pp_cplan_goods_here_victuals_trade_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
@@ -427,7 +427,7 @@ pp_cplan_try_granary_here = {
 	save_temporary_scope_value_as = { name = pp_cplan_done value = 0 }
 	save_temporary_scope_value_as = { name = pp_cplan_ng value = 0 }
 	if = {
-		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = granary } NOT = { any_buildings_in_location = { building_type = building_type:granary building_levels_under_construction > 0 } } }
+		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = granary } pp_cplan_room_granary >= 1 NOT = { any_buildings_in_location = { building_type = building_type:granary building_levels_under_construction > 0 } } }
 		if = {
 			limit = { pp_cplan_goods_here_granary_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
@@ -449,7 +449,7 @@ pp_cplan_try_grange_here = {
 	save_temporary_scope_value_as = { name = pp_cplan_done value = 0 }
 	save_temporary_scope_value_as = { name = pp_cplan_ng value = 0 }
 	if = {
-		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = grange } NOT = { any_buildings_in_location = { building_type = building_type:grange building_levels_under_construction > 0 } } }
+		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = grange } pp_cplan_room_grange >= 1 NOT = { any_buildings_in_location = { building_type = building_type:grange building_levels_under_construction > 0 } } }
 		if = {
 			limit = { pp_cplan_goods_here_victuals_trade_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
@@ -471,7 +471,7 @@ pp_cplan_try_logistics_here = {
 	save_temporary_scope_value_as = { name = pp_cplan_done value = 0 }
 	save_temporary_scope_value_as = { name = pp_cplan_ng value = 0 }
 	if = {
-		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = river_boatmen_yard } NOT = { any_buildings_in_location = { building_type = building_type:river_boatmen_yard building_levels_under_construction > 0 } } }
+		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = river_boatmen_yard } pp_cplan_room_river_boatmen_yard >= 1 NOT = { any_buildings_in_location = { building_type = building_type:river_boatmen_yard building_levels_under_construction > 0 } } }
 		if = {
 			limit = { pp_cplan_goods_here_pp_river_boatmen_yard_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
@@ -482,7 +482,7 @@ pp_cplan_try_logistics_here = {
 		}
 	}
 	if = {
-		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = coastal_shipping_office } NOT = { any_buildings_in_location = { building_type = building_type:coastal_shipping_office building_levels_under_construction > 0 } } }
+		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = coastal_shipping_office } pp_cplan_room_coastal_shipping_office >= 1 NOT = { any_buildings_in_location = { building_type = building_type:coastal_shipping_office building_levels_under_construction > 0 } } }
 		if = {
 			limit = { pp_cplan_goods_here_pp_coastal_shipping_office_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
@@ -493,7 +493,7 @@ pp_cplan_try_logistics_here = {
 		}
 	}
 	if = {
-		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = transport_office } NOT = { any_buildings_in_location = { building_type = building_type:transport_office building_levels_under_construction > 0 } } }
+		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = transport_office } pp_cplan_room_transport_office >= 1 NOT = { any_buildings_in_location = { building_type = building_type:transport_office building_levels_under_construction > 0 } } }
 		if = {
 			limit = { pp_cplan_goods_here_pp_transport_office_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
@@ -504,7 +504,7 @@ pp_cplan_try_logistics_here = {
 		}
 	}
 	if = {
-		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = carrier_inn } NOT = { any_buildings_in_location = { building_type = building_type:carrier_inn building_levels_under_construction > 0 } } }
+		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = carrier_inn } pp_cplan_room_carrier_inn >= 1 NOT = { any_buildings_in_location = { building_type = building_type:carrier_inn building_levels_under_construction > 0 } } }
 		if = {
 			limit = { pp_cplan_goods_here_pp_carrier_inn_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
@@ -515,7 +515,7 @@ pp_cplan_try_logistics_here = {
 		}
 	}
 	if = {
-		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = pp_caravanserai } NOT = { any_buildings_in_location = { building_type = building_type:pp_caravanserai building_levels_under_construction > 0 } } }
+		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = pp_caravanserai } pp_cplan_room_pp_caravanserai >= 1 NOT = { any_buildings_in_location = { building_type = building_type:pp_caravanserai building_levels_under_construction > 0 } } }
 		if = {
 			limit = { pp_cplan_goods_here_pp_caravanserai_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
@@ -526,7 +526,7 @@ pp_cplan_try_logistics_here = {
 		}
 	}
 	if = {
-		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = pp_oasis_caravan_station } NOT = { any_buildings_in_location = { building_type = building_type:pp_oasis_caravan_station building_levels_under_construction > 0 } } }
+		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = pp_oasis_caravan_station } pp_cplan_room_pp_oasis_caravan_station >= 1 NOT = { any_buildings_in_location = { building_type = building_type:pp_oasis_caravan_station building_levels_under_construction > 0 } } }
 		if = {
 			limit = { pp_cplan_goods_here_pp_oasis_caravan_station_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
@@ -537,7 +537,7 @@ pp_cplan_try_logistics_here = {
 		}
 	}
 	if = {
-		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = pp_yam_station } NOT = { any_buildings_in_location = { building_type = building_type:pp_yam_station building_levels_under_construction > 0 } } }
+		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = pp_yam_station } pp_cplan_room_pp_yam_station >= 1 NOT = { any_buildings_in_location = { building_type = building_type:pp_yam_station building_levels_under_construction > 0 } } }
 		if = {
 			limit = { pp_cplan_goods_here_pp_yam_station_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
@@ -548,7 +548,7 @@ pp_cplan_try_logistics_here = {
 		}
 	}
 	if = {
-		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = pp_banjara_tanda } NOT = { any_buildings_in_location = { building_type = building_type:pp_banjara_tanda building_levels_under_construction > 0 } } }
+		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = pp_banjara_tanda } pp_cplan_room_pp_banjara_tanda >= 1 NOT = { any_buildings_in_location = { building_type = building_type:pp_banjara_tanda building_levels_under_construction > 0 } } }
 		if = {
 			limit = { pp_cplan_goods_here_pp_banjara_tanda_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
@@ -559,7 +559,7 @@ pp_cplan_try_logistics_here = {
 		}
 	}
 	if = {
-		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = pp_llama_caravan_post } NOT = { any_buildings_in_location = { building_type = building_type:pp_llama_caravan_post building_levels_under_construction > 0 } } }
+		limit = { scope:pp_cplan_done < 0.5 location_and_owner_can_build = { building_type = pp_llama_caravan_post } pp_cplan_room_pp_llama_caravan_post >= 1 NOT = { any_buildings_in_location = { building_type = building_type:pp_llama_caravan_post building_levels_under_construction > 0 } } }
 		if = {
 			limit = { pp_cplan_goods_here_pp_llama_caravan_post_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
@@ -1191,7 +1191,7 @@ pp_cplan_try_improve_here = {
 	set_variable = { name = pp_cplan_pick value = 100 }
 	save_temporary_scope_value_as = { name = pp_cplan_ng value = 0 }
 	if = {
-		limit = { location_and_owner_can_build = { building_type = bund } NOT = { any_buildings_in_location = { building_type = building_type:bund building_levels_under_construction > 0 } } pp_cplan_imp_bund > var:pp_cplan_best }
+		limit = { location_and_owner_can_build = { building_type = bund } pp_cplan_room_bund >= 1 NOT = { any_buildings_in_location = { building_type = building_type:bund building_levels_under_construction > 0 } } pp_cplan_imp_bund > var:pp_cplan_best }
 		if = {
 			limit = { pp_cplan_goods_here_village_construction = yes }
 			set_variable = { name = pp_cplan_best value = pp_cplan_imp_bund }
@@ -1202,7 +1202,7 @@ pp_cplan_try_improve_here = {
 		}
 	}
 	if = {
-		limit = { location_and_owner_can_build = { building_type = field_drainage } NOT = { any_buildings_in_location = { building_type = building_type:field_drainage building_levels_under_construction > 0 } } pp_cplan_imp_field_drainage > var:pp_cplan_best }
+		limit = { location_and_owner_can_build = { building_type = field_drainage } pp_cplan_room_field_drainage >= 1 NOT = { any_buildings_in_location = { building_type = building_type:field_drainage building_levels_under_construction > 0 } } pp_cplan_imp_field_drainage > var:pp_cplan_best }
 		if = {
 			limit = { pp_cplan_goods_here_village_construction = yes }
 			set_variable = { name = pp_cplan_best value = pp_cplan_imp_field_drainage }
@@ -1213,7 +1213,7 @@ pp_cplan_try_improve_here = {
 		}
 	}
 	if = {
-		limit = { location_and_owner_can_build = { building_type = field_management } NOT = { any_buildings_in_location = { building_type = building_type:field_management building_levels_under_construction > 0 } } pp_cplan_imp_field_management > var:pp_cplan_best }
+		limit = { location_and_owner_can_build = { building_type = field_management } pp_cplan_room_field_management >= 1 NOT = { any_buildings_in_location = { building_type = building_type:field_management building_levels_under_construction > 0 } } pp_cplan_imp_field_management > var:pp_cplan_best }
 		if = {
 			limit = { pp_cplan_goods_here_village_construction = yes }
 			set_variable = { name = pp_cplan_best value = pp_cplan_imp_field_management }
@@ -1224,7 +1224,7 @@ pp_cplan_try_improve_here = {
 		}
 	}
 	if = {
-		limit = { location_and_owner_can_build = { building_type = field_management_convertible } NOT = { any_buildings_in_location = { building_type = building_type:field_management_convertible building_levels_under_construction > 0 } } pp_cplan_imp_field_management_convertible > var:pp_cplan_best }
+		limit = { location_and_owner_can_build = { building_type = field_management_convertible } pp_cplan_room_field_management_convertible >= 1 NOT = { any_buildings_in_location = { building_type = building_type:field_management_convertible building_levels_under_construction > 0 } } pp_cplan_imp_field_management_convertible > var:pp_cplan_best }
 		if = {
 			limit = { pp_cplan_goods_here_village_construction = yes }
 			set_variable = { name = pp_cplan_best value = pp_cplan_imp_field_management_convertible }
@@ -1235,7 +1235,7 @@ pp_cplan_try_improve_here = {
 		}
 	}
 	if = {
-		limit = { location_and_owner_can_build = { building_type = field_management_improved } NOT = { any_buildings_in_location = { building_type = building_type:field_management_improved building_levels_under_construction > 0 } } pp_cplan_imp_field_management_improved > var:pp_cplan_best }
+		limit = { location_and_owner_can_build = { building_type = field_management_improved } pp_cplan_room_field_management_improved >= 1 NOT = { any_buildings_in_location = { building_type = building_type:field_management_improved building_levels_under_construction > 0 } } pp_cplan_imp_field_management_improved > var:pp_cplan_best }
 		if = {
 			limit = { pp_cplan_goods_here_village_construction = yes }
 			set_variable = { name = pp_cplan_best value = pp_cplan_imp_field_management_improved }
@@ -1246,7 +1246,7 @@ pp_cplan_try_improve_here = {
 		}
 	}
 	if = {
-		limit = { location_and_owner_can_build = { building_type = incamisana } NOT = { any_buildings_in_location = { building_type = building_type:incamisana building_levels_under_construction > 0 } } pp_cplan_imp_incamisana > var:pp_cplan_best }
+		limit = { location_and_owner_can_build = { building_type = incamisana } pp_cplan_room_incamisana >= 1 NOT = { any_buildings_in_location = { building_type = building_type:incamisana building_levels_under_construction > 0 } } pp_cplan_imp_incamisana > var:pp_cplan_best }
 		if = {
 			limit = { pp_cplan_goods_here_incamisana_construction = yes }
 			set_variable = { name = pp_cplan_best value = pp_cplan_imp_incamisana }
@@ -1257,7 +1257,7 @@ pp_cplan_try_improve_here = {
 		}
 	}
 	if = {
-		limit = { location_and_owner_can_build = { building_type = irrigated_fields } NOT = { any_buildings_in_location = { building_type = building_type:irrigated_fields building_levels_under_construction > 0 } } pp_cplan_imp_irrigated_fields > var:pp_cplan_best }
+		limit = { location_and_owner_can_build = { building_type = irrigated_fields } pp_cplan_room_irrigated_fields >= 1 NOT = { any_buildings_in_location = { building_type = building_type:irrigated_fields building_levels_under_construction > 0 } } pp_cplan_imp_irrigated_fields > var:pp_cplan_best }
 		if = {
 			limit = { pp_cplan_goods_here_village_construction = yes }
 			set_variable = { name = pp_cplan_best value = pp_cplan_imp_irrigated_fields }
@@ -1268,7 +1268,7 @@ pp_cplan_try_improve_here = {
 		}
 	}
 	if = {
-		limit = { location_and_owner_can_build = { building_type = irrigation_systems } NOT = { any_buildings_in_location = { building_type = building_type:irrigation_systems building_levels_under_construction > 0 } } pp_cplan_imp_irrigation_systems > var:pp_cplan_best }
+		limit = { location_and_owner_can_build = { building_type = irrigation_systems } pp_cplan_room_irrigation_systems >= 1 NOT = { any_buildings_in_location = { building_type = building_type:irrigation_systems building_levels_under_construction > 0 } } pp_cplan_imp_irrigation_systems > var:pp_cplan_best }
 		if = {
 			limit = { pp_cplan_goods_here_village_construction = yes }
 			set_variable = { name = pp_cplan_best value = pp_cplan_imp_irrigation_systems }
@@ -1279,7 +1279,7 @@ pp_cplan_try_improve_here = {
 		}
 	}
 	if = {
-		limit = { location_and_owner_can_build = { building_type = jiangnan_canal_network } NOT = { any_buildings_in_location = { building_type = building_type:jiangnan_canal_network building_levels_under_construction > 0 } } pp_cplan_imp_jiangnan_canal_network > var:pp_cplan_best }
+		limit = { location_and_owner_can_build = { building_type = jiangnan_canal_network } pp_cplan_room_jiangnan_canal_network >= 1 NOT = { any_buildings_in_location = { building_type = building_type:jiangnan_canal_network building_levels_under_construction > 0 } } pp_cplan_imp_jiangnan_canal_network > var:pp_cplan_best }
 		if = {
 			limit = { pp_cplan_goods_here_village_construction = yes }
 			set_variable = { name = pp_cplan_best value = pp_cplan_imp_jiangnan_canal_network }
@@ -1290,7 +1290,7 @@ pp_cplan_try_improve_here = {
 		}
 	}
 	if = {
-		limit = { location_and_owner_can_build = { building_type = jiangnan_hill_terraces } NOT = { any_buildings_in_location = { building_type = building_type:jiangnan_hill_terraces building_levels_under_construction > 0 } } pp_cplan_imp_jiangnan_hill_terraces > var:pp_cplan_best }
+		limit = { location_and_owner_can_build = { building_type = jiangnan_hill_terraces } pp_cplan_room_jiangnan_hill_terraces >= 1 NOT = { any_buildings_in_location = { building_type = building_type:jiangnan_hill_terraces building_levels_under_construction > 0 } } pp_cplan_imp_jiangnan_hill_terraces > var:pp_cplan_best }
 		if = {
 			limit = { pp_cplan_goods_here_village_construction = yes }
 			set_variable = { name = pp_cplan_best value = pp_cplan_imp_jiangnan_hill_terraces }
@@ -1301,7 +1301,7 @@ pp_cplan_try_improve_here = {
 		}
 	}
 	if = {
-		limit = { location_and_owner_can_build = { building_type = khmer_baray } NOT = { any_buildings_in_location = { building_type = building_type:khmer_baray building_levels_under_construction > 0 } } pp_cplan_imp_khmer_baray > var:pp_cplan_best }
+		limit = { location_and_owner_can_build = { building_type = khmer_baray } pp_cplan_room_khmer_baray >= 1 NOT = { any_buildings_in_location = { building_type = building_type:khmer_baray building_levels_under_construction > 0 } } pp_cplan_imp_khmer_baray > var:pp_cplan_best }
 		if = {
 			limit = { pp_cplan_goods_here_khmer_baray_construction = yes }
 			set_variable = { name = pp_cplan_best value = pp_cplan_imp_khmer_baray }
@@ -1312,7 +1312,7 @@ pp_cplan_try_improve_here = {
 		}
 	}
 	if = {
-		limit = { location_and_owner_can_build = { building_type = land_clearance } NOT = { any_buildings_in_location = { building_type = building_type:land_clearance building_levels_under_construction > 0 } } pp_cplan_imp_land_clearance > var:pp_cplan_best }
+		limit = { location_and_owner_can_build = { building_type = land_clearance } pp_cplan_room_land_clearance >= 1 NOT = { any_buildings_in_location = { building_type = building_type:land_clearance building_levels_under_construction > 0 } } pp_cplan_imp_land_clearance > var:pp_cplan_best }
 		if = {
 			limit = { pp_cplan_goods_here_village_construction = yes }
 			set_variable = { name = pp_cplan_best value = pp_cplan_imp_land_clearance }
@@ -1323,7 +1323,7 @@ pp_cplan_try_improve_here = {
 		}
 	}
 	if = {
-		limit = { location_and_owner_can_build = { building_type = paddy_water_control } NOT = { any_buildings_in_location = { building_type = building_type:paddy_water_control building_levels_under_construction > 0 } } pp_cplan_imp_paddy_water_control > var:pp_cplan_best }
+		limit = { location_and_owner_can_build = { building_type = paddy_water_control } pp_cplan_room_paddy_water_control >= 1 NOT = { any_buildings_in_location = { building_type = building_type:paddy_water_control building_levels_under_construction > 0 } } pp_cplan_imp_paddy_water_control > var:pp_cplan_best }
 		if = {
 			limit = { pp_cplan_goods_here_village_construction = yes }
 			set_variable = { name = pp_cplan_best value = pp_cplan_imp_paddy_water_control }
@@ -1334,7 +1334,7 @@ pp_cplan_try_improve_here = {
 		}
 	}
 	if = {
-		limit = { location_and_owner_can_build = { building_type = polders } NOT = { any_buildings_in_location = { building_type = building_type:polders building_levels_under_construction > 0 } } pp_cplan_imp_polders > var:pp_cplan_best }
+		limit = { location_and_owner_can_build = { building_type = polders } pp_cplan_room_polders >= 1 NOT = { any_buildings_in_location = { building_type = building_type:polders building_levels_under_construction > 0 } } pp_cplan_imp_polders > var:pp_cplan_best }
 		if = {
 			limit = { pp_cplan_goods_here_polders_construction = yes }
 			set_variable = { name = pp_cplan_best value = pp_cplan_imp_polders }
@@ -1345,7 +1345,7 @@ pp_cplan_try_improve_here = {
 		}
 	}
 	if = {
-		limit = { location_and_owner_can_build = { building_type = qanats } NOT = { any_buildings_in_location = { building_type = building_type:qanats building_levels_under_construction > 0 } } pp_cplan_imp_qanats > var:pp_cplan_best }
+		limit = { location_and_owner_can_build = { building_type = qanats } pp_cplan_room_qanats >= 1 NOT = { any_buildings_in_location = { building_type = building_type:qanats building_levels_under_construction > 0 } } pp_cplan_imp_qanats > var:pp_cplan_best }
 		if = {
 			limit = { pp_cplan_goods_here_village_construction = yes }
 			set_variable = { name = pp_cplan_best value = pp_cplan_imp_qanats }
@@ -2068,7 +2068,8 @@ pp_cplan_business_types_clear = {
 # Location scope (a business site of scope:pp_cplan_country): the business with the best yearly return here that
 # reaches the owner's line (pp_cplan_business_min_roi = 100 / years), as pp_cplan_bz_pick (a building type),
 # pp_cplan_bz_roi (its return, %) and pp_cplan_bz_cost (the level's cost); none where none does. A candidate: the
-# country can build it, so can this location (max level, allow, potential), a level finds its workers here
+# country can build it, so can this location (allow, potential), a level fits under its max level here
+# (pp_cplan_room_<type>: can_build_building does not check it), a level finds its workers here
 # (pp_cplan_staff), no level of it here is closed (the player or the game's Close and Open automation found it
 # does not pay), and a profile here leaves its good and building category to the plan. A candidate that would be
 # the best so far is taken only when the market holds its construction goods and has room for its good
@@ -2088,6 +2089,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_ablaq_palace }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:ablaq_palace
+			pp_cplan_room_ablaq_palace >= 1
 			NOT = { pp_lprof_has_good = { g = silk } }
 			NOT = { pp_lprof_has_category = { c = government_category } }
 			NOT = { any_buildings_in_location = { building_type = building_type:ablaq_palace building_level > 0 is_opened = no } }
@@ -2105,6 +2107,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_alum_quarry }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:alum_quarry
+			pp_cplan_room_alum_quarry >= 1
 			NOT = { pp_lprof_has_good = { g = alum } }
 			NOT = { any_buildings_in_location = { building_type = building_type:alum_quarry building_level > 0 is_opened = no } }
 		}
@@ -2121,6 +2124,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_alum_works }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:alum_works
+			pp_cplan_room_alum_works >= 1
 			NOT = { pp_lprof_has_good = { g = alum } }
 			NOT = { any_buildings_in_location = { building_type = building_type:alum_works building_level > 0 is_opened = no } }
 		}
@@ -2137,6 +2141,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_amber_collector }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:amber_collector
+			pp_cplan_room_amber_collector >= 1
 			NOT = { pp_lprof_has_good = { g = amber } }
 			NOT = { any_buildings_in_location = { building_type = building_type:amber_collector building_level > 0 is_opened = no } }
 		}
@@ -2153,6 +2158,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_amber_diggings }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:amber_diggings
+			pp_cplan_room_amber_diggings >= 1
 			NOT = { pp_lprof_has_good = { g = amber } }
 			NOT = { any_buildings_in_location = { building_type = building_type:amber_diggings building_level > 0 is_opened = no } }
 		}
@@ -2169,6 +2175,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_apothecary }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:apothecary
+			pp_cplan_room_apothecary >= 1
 			NOT = { pp_lprof_has_good = { g = medicaments } }
 			NOT = { any_buildings_in_location = { building_type = building_type:apothecary building_level > 0 is_opened = no } }
 		}
@@ -2185,6 +2192,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_beer_workshop }
 			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:beer_workshop
+			pp_cplan_room_beer_workshop >= 1
 			NOT = { pp_lprof_has_good = { g = beer } }
 			NOT = { any_buildings_in_location = { building_type = building_type:beer_workshop building_level > 0 is_opened = no } }
 		}
@@ -2201,6 +2209,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_bog_iron_smelter }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:bog_iron_smelter
+			pp_cplan_room_bog_iron_smelter >= 1
 			NOT = { pp_lprof_has_good = { g = iron } }
 			NOT = { any_buildings_in_location = { building_type = building_type:bog_iron_smelter building_level > 0 is_opened = no } }
 		}
@@ -2217,6 +2226,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_bog_iron_smelter_blast_furnace }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:bog_iron_smelter_blast_furnace
+			pp_cplan_room_bog_iron_smelter_blast_furnace >= 1
 			NOT = { pp_lprof_has_good = { g = iron } }
 			NOT = { any_buildings_in_location = { building_type = building_type:bog_iron_smelter_blast_furnace building_level > 0 is_opened = no } }
 		}
@@ -2233,6 +2243,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_bog_iron_smelter_coke_blast_furnace }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:bog_iron_smelter_coke_blast_furnace
+			pp_cplan_room_bog_iron_smelter_coke_blast_furnace >= 1
 			NOT = { pp_lprof_has_good = { g = iron } }
 			NOT = { any_buildings_in_location = { building_type = building_type:bog_iron_smelter_coke_blast_furnace building_level > 0 is_opened = no } }
 		}
@@ -2249,6 +2260,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_brewery }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:brewery
+			pp_cplan_room_brewery >= 1
 			NOT = { pp_lprof_has_good = { g = beer } }
 			NOT = { any_buildings_in_location = { building_type = building_type:brewery building_level > 0 is_opened = no } }
 		}
@@ -2265,6 +2277,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_brewery_manufactory }
 			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:brewery_manufactory
+			pp_cplan_room_brewery_manufactory >= 1
 			NOT = { pp_lprof_has_good = { g = beer } }
 			NOT = { any_buildings_in_location = { building_type = building_type:brewery_manufactory building_level > 0 is_opened = no } }
 		}
@@ -2281,6 +2294,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_brewery_mill }
 			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:brewery_mill
+			pp_cplan_room_brewery_mill >= 1
 			NOT = { pp_lprof_has_good = { g = beer } }
 			NOT = { any_buildings_in_location = { building_type = building_type:brewery_mill building_level > 0 is_opened = no } }
 		}
@@ -2297,6 +2311,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_camel_herders }
 			pp_cplan_staff = { type = laborers size = 1.25 }
 			can_build_building = building_type:camel_herders
+			pp_cplan_room_camel_herders >= 1
 			NOT = { pp_lprof_has_good = { g = camels } }
 			NOT = { any_buildings_in_location = { building_type = building_type:camel_herders building_level > 0 is_opened = no } }
 		}
@@ -2313,6 +2328,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_camel_stud }
 			pp_cplan_staff = { type = laborers size = 1.25 }
 			can_build_building = building_type:camel_stud
+			pp_cplan_room_camel_stud >= 1
 			NOT = { pp_lprof_has_good = { g = camels } }
 			NOT = { any_buildings_in_location = { building_type = building_type:camel_stud building_level > 0 is_opened = no } }
 		}
@@ -2329,6 +2345,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cannon_foundry }
 			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:cannon_foundry
+			pp_cplan_room_cannon_foundry >= 1
 			NOT = { pp_lprof_has_good = { g = cannons } }
 			NOT = { any_buildings_in_location = { building_type = building_type:cannon_foundry building_level > 0 is_opened = no } }
 		}
@@ -2345,6 +2362,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cannon_maker }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:cannon_maker
+			pp_cplan_room_cannon_maker >= 1
 			NOT = { pp_lprof_has_good = { g = cannons } }
 			NOT = { any_buildings_in_location = { building_type = building_type:cannon_maker building_level > 0 is_opened = no } }
 		}
@@ -2361,6 +2379,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cannon_workshop }
 			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:cannon_workshop
+			pp_cplan_room_cannon_workshop >= 1
 			NOT = { pp_lprof_has_good = { g = cannons } }
 			NOT = { any_buildings_in_location = { building_type = building_type:cannon_workshop building_level > 0 is_opened = no } }
 		}
@@ -2377,6 +2396,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cannons_factory }
 			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:cannons_factory
+			pp_cplan_room_cannons_factory >= 1
 			NOT = { pp_lprof_has_good = { g = cannons } }
 			NOT = { any_buildings_in_location = { building_type = building_type:cannons_factory building_level > 0 is_opened = no } }
 		}
@@ -2393,6 +2413,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cattle_farm }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:cattle_farm
+			pp_cplan_room_cattle_farm >= 1
 			NOT = { pp_lprof_has_good = { g = livestock } }
 			NOT = { any_buildings_in_location = { building_type = building_type:cattle_farm building_level > 0 is_opened = no } }
 		}
@@ -2409,6 +2430,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cattle_farmstead }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:cattle_farmstead
+			pp_cplan_room_cattle_farmstead >= 1
 			NOT = { pp_lprof_has_good = { g = livestock } }
 			NOT = { any_buildings_in_location = { building_type = building_type:cattle_farmstead building_level > 0 is_opened = no } }
 		}
@@ -2425,6 +2447,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cattle_model_farm }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:cattle_model_farm
+			pp_cplan_room_cattle_model_farm >= 1
 			NOT = { pp_lprof_has_good = { g = livestock } }
 			NOT = { any_buildings_in_location = { building_type = building_type:cattle_model_farm building_level > 0 is_opened = no } }
 		}
@@ -2441,6 +2464,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cattle_rotations }
 			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:cattle_rotations
+			pp_cplan_room_cattle_rotations >= 1
 			NOT = { pp_lprof_has_good = { g = livestock } }
 			NOT = { any_buildings_in_location = { building_type = building_type:cattle_rotations building_level > 0 is_opened = no } }
 		}
@@ -2457,6 +2481,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_charcoal_maker }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:charcoal_maker
+			pp_cplan_room_charcoal_maker >= 1
 			NOT = { pp_lprof_has_good = { g = coal } }
 			NOT = { any_buildings_in_location = { building_type = building_type:charcoal_maker building_level > 0 is_opened = no } }
 		}
@@ -2473,6 +2498,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_chili_plantation }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:chili_plantation
+			pp_cplan_room_chili_plantation >= 1
 			NOT = { pp_lprof_has_good = { g = chili } }
 			NOT = { any_buildings_in_location = { building_type = building_type:chili_plantation building_level > 0 is_opened = no } }
 		}
@@ -2489,6 +2515,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cinnabar_pit }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:cinnabar_pit
+			pp_cplan_room_cinnabar_pit >= 1
 			NOT = { pp_lprof_has_good = { g = mercury } }
 			NOT = { any_buildings_in_location = { building_type = building_type:cinnabar_pit building_level > 0 is_opened = no } }
 		}
@@ -2505,6 +2532,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_clay_pit }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:clay_pit
+			pp_cplan_room_clay_pit >= 1
 			NOT = { pp_lprof_has_good = { g = clay } }
 			NOT = { any_buildings_in_location = { building_type = building_type:clay_pit building_level > 0 is_opened = no } }
 		}
@@ -2521,6 +2549,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_clay_washmill }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:clay_washmill
+			pp_cplan_room_clay_washmill >= 1
 			NOT = { pp_lprof_has_good = { g = clay } }
 			NOT = { any_buildings_in_location = { building_type = building_type:clay_washmill building_level > 0 is_opened = no } }
 		}
@@ -2537,6 +2566,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cloth_guild }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:cloth_guild
+			pp_cplan_room_cloth_guild >= 1
 			NOT = { pp_lprof_has_good = { g = cloth } }
 			NOT = { any_buildings_in_location = { building_type = building_type:cloth_guild building_level > 0 is_opened = no } }
 		}
@@ -2553,6 +2583,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cloth_manufactory }
 			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:cloth_manufactory
+			pp_cplan_room_cloth_manufactory >= 1
 			NOT = { pp_lprof_has_good = { g = cloth } }
 			NOT = { any_buildings_in_location = { building_type = building_type:cloth_manufactory building_level > 0 is_opened = no } }
 		}
@@ -2569,6 +2600,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cloth_workshop }
 			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:cloth_workshop
+			pp_cplan_room_cloth_workshop >= 1
 			NOT = { pp_lprof_has_good = { g = cloth } }
 			NOT = { any_buildings_in_location = { building_type = building_type:cloth_workshop building_level > 0 is_opened = no } }
 		}
@@ -2585,6 +2617,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_clove_grove }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:clove_grove
+			pp_cplan_room_clove_grove >= 1
 			NOT = { pp_lprof_has_good = { g = cloves } }
 			NOT = { any_buildings_in_location = { building_type = building_type:clove_grove building_level > 0 is_opened = no } }
 		}
@@ -2601,6 +2634,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_coal_mine }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:coal_mine
+			pp_cplan_room_coal_mine >= 1
 			NOT = { pp_lprof_has_good = { g = coal } }
 			NOT = { any_buildings_in_location = { building_type = building_type:coal_mine building_level > 0 is_opened = no } }
 		}
@@ -2617,6 +2651,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_coal_mine_improved }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:coal_mine_improved
+			pp_cplan_room_coal_mine_improved >= 1
 			NOT = { pp_lprof_has_good = { g = coal } }
 			NOT = { any_buildings_in_location = { building_type = building_type:coal_mine_improved building_level > 0 is_opened = no } }
 		}
@@ -2633,6 +2668,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_coal_mine_revolutions }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:coal_mine_revolutions
+			pp_cplan_room_coal_mine_revolutions >= 1
 			NOT = { pp_lprof_has_good = { g = coal } }
 			NOT = { any_buildings_in_location = { building_type = building_type:coal_mine_revolutions building_level > 0 is_opened = no } }
 		}
@@ -2649,6 +2685,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cocoa_grove }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:cocoa_grove
+			pp_cplan_room_cocoa_grove >= 1
 			NOT = { pp_lprof_has_good = { g = cocoa } }
 			NOT = { any_buildings_in_location = { building_type = building_type:cocoa_grove building_level > 0 is_opened = no } }
 		}
@@ -2665,6 +2702,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_coffee_grove }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:coffee_grove
+			pp_cplan_room_coffee_grove >= 1
 			NOT = { pp_lprof_has_good = { g = coffee } }
 			NOT = { any_buildings_in_location = { building_type = building_type:coffee_grove building_level > 0 is_opened = no } }
 		}
@@ -2681,6 +2719,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_copper_mine }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:copper_mine
+			pp_cplan_room_copper_mine >= 1
 			NOT = { pp_lprof_has_good = { g = copper } }
 			NOT = { any_buildings_in_location = { building_type = building_type:copper_mine building_level > 0 is_opened = no } }
 		}
@@ -2697,6 +2736,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_copper_mine_adit }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:copper_mine_adit
+			pp_cplan_room_copper_mine_adit >= 1
 			NOT = { pp_lprof_has_good = { g = copper } }
 			NOT = { any_buildings_in_location = { building_type = building_type:copper_mine_adit building_level > 0 is_opened = no } }
 		}
@@ -2713,6 +2753,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_copper_mine_deep }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:copper_mine_deep
+			pp_cplan_room_copper_mine_deep >= 1
 			NOT = { pp_lprof_has_good = { g = copper } }
 			NOT = { any_buildings_in_location = { building_type = building_type:copper_mine_deep building_level > 0 is_opened = no } }
 		}
@@ -2729,6 +2770,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cotton_farm }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:cotton_farm
+			pp_cplan_room_cotton_farm >= 1
 			NOT = { pp_lprof_has_good = { g = cotton } }
 			NOT = { any_buildings_in_location = { building_type = building_type:cotton_farm building_level > 0 is_opened = no } }
 		}
@@ -2745,6 +2787,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_cotton_plantation }
 			pp_cplan_staff = { type = slaves size = 1 }
 			can_build_building = building_type:cotton_plantation
+			pp_cplan_room_cotton_plantation >= 1
 			NOT = { pp_lprof_has_good = { g = cotton } }
 			NOT = { any_buildings_in_location = { building_type = building_type:cotton_plantation building_level > 0 is_opened = no } }
 		}
@@ -2761,6 +2804,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_distiller_manufactory }
 			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:distiller_manufactory
+			pp_cplan_room_distiller_manufactory >= 1
 			NOT = { pp_lprof_has_good = { g = liquor } }
 			NOT = { any_buildings_in_location = { building_type = building_type:distiller_manufactory building_level > 0 is_opened = no } }
 		}
@@ -2777,6 +2821,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_distiller_mill }
 			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:distiller_mill
+			pp_cplan_room_distiller_mill >= 1
 			NOT = { pp_lprof_has_good = { g = liquor } }
 			NOT = { any_buildings_in_location = { building_type = building_type:distiller_mill building_level > 0 is_opened = no } }
 		}
@@ -2793,6 +2838,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_distillers_guild }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:distillers_guild
+			pp_cplan_room_distillers_guild >= 1
 			NOT = { pp_lprof_has_good = { g = liquor } }
 			NOT = { any_buildings_in_location = { building_type = building_type:distillers_guild building_level > 0 is_opened = no } }
 		}
@@ -2809,6 +2855,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_distillers_workshop }
 			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:distillers_workshop
+			pp_cplan_room_distillers_workshop >= 1
 			NOT = { pp_lprof_has_good = { g = liquor } }
 			NOT = { any_buildings_in_location = { building_type = building_type:distillers_workshop building_level > 0 is_opened = no } }
 		}
@@ -2825,6 +2872,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_drift_net_fishery }
 			pp_cplan_staff = { type = laborers size = 1.25 }
 			can_build_building = building_type:drift_net_fishery
+			pp_cplan_room_drift_net_fishery >= 1
 			NOT = { pp_lprof_has_good = { g = fish } }
 			NOT = { any_buildings_in_location = { building_type = building_type:drift_net_fishery building_level > 0 is_opened = no } }
 		}
@@ -2841,6 +2889,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_dye_plantation }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:dye_plantation
+			pp_cplan_room_dye_plantation >= 1
 			NOT = { pp_lprof_has_good = { g = dyes } }
 			NOT = { any_buildings_in_location = { building_type = building_type:dye_plantation building_level > 0 is_opened = no } }
 		}
@@ -2857,6 +2906,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_dyes_guild }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:dyes_guild
+			pp_cplan_room_dyes_guild >= 1
 			NOT = { pp_lprof_has_good = { g = dyes } }
 			NOT = { any_buildings_in_location = { building_type = building_type:dyes_guild building_level > 0 is_opened = no } }
 		}
@@ -2873,6 +2923,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_dyes_mill }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:dyes_mill
+			pp_cplan_room_dyes_mill >= 1
 			NOT = { pp_lprof_has_good = { g = dyes } }
 			NOT = { any_buildings_in_location = { building_type = building_type:dyes_mill building_level > 0 is_opened = no } }
 		}
@@ -2889,6 +2940,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_dyes_workshop }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:dyes_workshop
+			pp_cplan_room_dyes_workshop >= 1
 			NOT = { pp_lprof_has_good = { g = dyes } }
 			NOT = { any_buildings_in_location = { building_type = building_type:dyes_workshop building_level > 0 is_opened = no } }
 		}
@@ -2905,6 +2957,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_dyesworks }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:dyesworks
+			pp_cplan_room_dyesworks >= 1
 			NOT = { pp_lprof_has_good = { g = dyes } }
 			NOT = { any_buildings_in_location = { building_type = building_type:dyesworks building_level > 0 is_opened = no } }
 		}
@@ -2921,6 +2974,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_elephant_hunting_grounds }
 			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:elephant_hunting_grounds
+			pp_cplan_room_elephant_hunting_grounds >= 1
 			NOT = { pp_lprof_has_good = { g = ivory } }
 			NOT = { any_buildings_in_location = { building_type = building_type:elephant_hunting_grounds building_level > 0 is_opened = no } }
 		}
@@ -2937,6 +2991,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_elephant_kraal }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:elephant_kraal
+			pp_cplan_room_elephant_kraal >= 1
 			NOT = { pp_lprof_has_good = { g = elephants } }
 			NOT = { any_buildings_in_location = { building_type = building_type:elephant_kraal building_level > 0 is_opened = no } }
 		}
@@ -2953,6 +3008,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_enclosed_sheep_walks }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:enclosed_sheep_walks
+			pp_cplan_room_enclosed_sheep_walks >= 1
 			NOT = { pp_lprof_has_good = { g = wool } }
 			NOT = { any_buildings_in_location = { building_type = building_type:enclosed_sheep_walks building_level > 0 is_opened = no } }
 		}
@@ -2969,6 +3025,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_eng_royal_forest }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:eng_royal_forest
+			pp_cplan_room_eng_royal_forest >= 1
 			NOT = { pp_lprof_has_good = { g = wild_game } }
 			NOT = { pp_lprof_has_category = { c = government_category } }
 			NOT = { any_buildings_in_location = { building_type = building_type:eng_royal_forest building_level > 0 is_opened = no } }
@@ -2986,6 +3043,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_engineered_brine_saltworks }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:engineered_brine_saltworks
+			pp_cplan_room_engineered_brine_saltworks >= 1
 			NOT = { pp_lprof_has_good = { g = salt } }
 			NOT = { any_buildings_in_location = { building_type = building_type:engineered_brine_saltworks building_level > 0 is_opened = no } }
 		}
@@ -3002,6 +3060,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_fiber_crops_farm }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:fiber_crops_farm
+			pp_cplan_room_fiber_crops_farm >= 1
 			NOT = { pp_lprof_has_good = { g = fiber_crops } }
 			NOT = { any_buildings_in_location = { building_type = building_type:fiber_crops_farm building_level > 0 is_opened = no } }
 		}
@@ -3018,6 +3077,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_fiber_dressing_yard }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:fiber_dressing_yard
+			pp_cplan_room_fiber_dressing_yard >= 1
 			NOT = { pp_lprof_has_good = { g = fiber_crops } }
 			NOT = { any_buildings_in_location = { building_type = building_type:fiber_dressing_yard building_level > 0 is_opened = no } }
 		}
@@ -3034,6 +3094,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_fine_cloth_guild }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:fine_cloth_guild
+			pp_cplan_room_fine_cloth_guild >= 1
 			NOT = { pp_lprof_has_good = { g = fine_cloth } }
 			NOT = { any_buildings_in_location = { building_type = building_type:fine_cloth_guild building_level > 0 is_opened = no } }
 		}
@@ -3050,6 +3111,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_fine_cloth_manufactory }
 			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:fine_cloth_manufactory
+			pp_cplan_room_fine_cloth_manufactory >= 1
 			NOT = { pp_lprof_has_good = { g = fine_cloth } }
 			NOT = { any_buildings_in_location = { building_type = building_type:fine_cloth_manufactory building_level > 0 is_opened = no } }
 		}
@@ -3066,6 +3128,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_fine_cloth_mill }
 			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:fine_cloth_mill
+			pp_cplan_room_fine_cloth_mill >= 1
 			NOT = { pp_lprof_has_good = { g = fine_cloth } }
 			NOT = { any_buildings_in_location = { building_type = building_type:fine_cloth_mill building_level > 0 is_opened = no } }
 		}
@@ -3082,6 +3145,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_fine_cloth_workshop }
 			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:fine_cloth_workshop
+			pp_cplan_room_fine_cloth_workshop >= 1
 			NOT = { pp_lprof_has_good = { g = fine_cloth } }
 			NOT = { any_buildings_in_location = { building_type = building_type:fine_cloth_workshop building_level > 0 is_opened = no } }
 		}
@@ -3098,6 +3162,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_firearms_factory }
 			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:firearms_factory
+			pp_cplan_room_firearms_factory >= 1
 			NOT = { pp_lprof_has_good = { g = firearms } }
 			NOT = { any_buildings_in_location = { building_type = building_type:firearms_factory building_level > 0 is_opened = no } }
 		}
@@ -3114,6 +3179,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_firearms_manufactory }
 			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:firearms_manufactory
+			pp_cplan_room_firearms_manufactory >= 1
 			NOT = { pp_lprof_has_good = { g = firearms } }
 			NOT = { any_buildings_in_location = { building_type = building_type:firearms_manufactory building_level > 0 is_opened = no } }
 		}
@@ -3130,6 +3196,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_fishing_village }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:fishing_village
+			pp_cplan_room_fishing_village >= 1
 			NOT = { pp_lprof_has_good = { g = fish } }
 			NOT = { any_buildings_in_location = { building_type = building_type:fishing_village building_level > 0 is_opened = no } }
 		}
@@ -3146,6 +3213,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_forest_village }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:forest_village
+			pp_cplan_room_forest_village >= 1
 			NOT = { pp_lprof_has_good = { g = beeswax } }
 			NOT = { any_buildings_in_location = { building_type = building_type:forest_village building_level > 0 is_opened = no } }
 		}
@@ -3162,6 +3230,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_fruit_orchard }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:fruit_orchard
+			pp_cplan_room_fruit_orchard >= 1
 			NOT = { pp_lprof_has_good = { g = fruit } }
 			NOT = { any_buildings_in_location = { building_type = building_type:fruit_orchard building_level > 0 is_opened = no } }
 		}
@@ -3178,6 +3247,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_furniture_guild }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:furniture_guild
+			pp_cplan_room_furniture_guild >= 1
 			NOT = { pp_lprof_has_good = { g = furniture } }
 			NOT = { any_buildings_in_location = { building_type = building_type:furniture_guild building_level > 0 is_opened = no } }
 		}
@@ -3194,6 +3264,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_furniture_manufactory }
 			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:furniture_manufactory
+			pp_cplan_room_furniture_manufactory >= 1
 			NOT = { pp_lprof_has_good = { g = furniture } }
 			NOT = { any_buildings_in_location = { building_type = building_type:furniture_manufactory building_level > 0 is_opened = no } }
 		}
@@ -3210,6 +3281,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_furniture_mill }
 			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:furniture_mill
+			pp_cplan_room_furniture_mill >= 1
 			NOT = { pp_lprof_has_good = { g = furniture } }
 			NOT = { any_buildings_in_location = { building_type = building_type:furniture_mill building_level > 0 is_opened = no } }
 		}
@@ -3226,6 +3298,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_furniture_workshop }
 			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:furniture_workshop
+			pp_cplan_room_furniture_workshop >= 1
 			NOT = { pp_lprof_has_good = { g = furniture } }
 			NOT = { any_buildings_in_location = { building_type = building_type:furniture_workshop building_level > 0 is_opened = no } }
 		}
@@ -3242,6 +3315,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_gem_gravel_pit }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:gem_gravel_pit
+			pp_cplan_room_gem_gravel_pit >= 1
 			NOT = { pp_lprof_has_good = { g = gems } }
 			NOT = { any_buildings_in_location = { building_type = building_type:gem_gravel_pit building_level > 0 is_opened = no } }
 		}
@@ -3258,6 +3332,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_gem_sluice }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:gem_sluice
+			pp_cplan_room_gem_sluice >= 1
 			NOT = { pp_lprof_has_good = { g = gems } }
 			NOT = { any_buildings_in_location = { building_type = building_type:gem_sluice building_level > 0 is_opened = no } }
 		}
@@ -3274,6 +3349,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_glass_guild }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:glass_guild
+			pp_cplan_room_glass_guild >= 1
 			NOT = { pp_lprof_has_good = { g = glass } }
 			NOT = { any_buildings_in_location = { building_type = building_type:glass_guild building_level > 0 is_opened = no } }
 		}
@@ -3290,6 +3366,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_glass_mill }
 			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:glass_mill
+			pp_cplan_room_glass_mill >= 1
 			NOT = { pp_lprof_has_good = { g = glass } }
 			NOT = { any_buildings_in_location = { building_type = building_type:glass_mill building_level > 0 is_opened = no } }
 		}
@@ -3306,6 +3383,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_glass_workshop }
 			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:glass_workshop
+			pp_cplan_room_glass_workshop >= 1
 			NOT = { pp_lprof_has_good = { g = glass } }
 			NOT = { any_buildings_in_location = { building_type = building_type:glass_workshop building_level > 0 is_opened = no } }
 		}
@@ -3322,6 +3400,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_glassworks }
 			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:glassworks
+			pp_cplan_room_glassworks >= 1
 			NOT = { pp_lprof_has_good = { g = glass } }
 			NOT = { any_buildings_in_location = { building_type = building_type:glassworks building_level > 0 is_opened = no } }
 		}
@@ -3338,6 +3417,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_gold_diggings }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:gold_diggings
+			pp_cplan_room_gold_diggings >= 1
 			NOT = { pp_lprof_has_good = { g = goods_gold } }
 			NOT = { any_buildings_in_location = { building_type = building_type:gold_diggings building_level > 0 is_opened = no } }
 		}
@@ -3354,6 +3434,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_gold_stamp_mill }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:gold_stamp_mill
+			pp_cplan_room_gold_stamp_mill >= 1
 			NOT = { pp_lprof_has_good = { g = goods_gold } }
 			NOT = { any_buildings_in_location = { building_type = building_type:gold_stamp_mill building_level > 0 is_opened = no } }
 		}
@@ -3370,6 +3451,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_gun_smith }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:gun_smith
+			pp_cplan_room_gun_smith >= 1
 			NOT = { pp_lprof_has_good = { g = firearms } }
 			NOT = { any_buildings_in_location = { building_type = building_type:gun_smith building_level > 0 is_opened = no } }
 		}
@@ -3386,6 +3468,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_guns_workshop }
 			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:guns_workshop
+			pp_cplan_room_guns_workshop >= 1
 			NOT = { pp_lprof_has_good = { g = firearms } }
 			NOT = { any_buildings_in_location = { building_type = building_type:guns_workshop building_level > 0 is_opened = no } }
 		}
@@ -3402,6 +3485,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_hand_cannon_guild }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:hand_cannon_guild
+			pp_cplan_room_hand_cannon_guild >= 1
 			NOT = { pp_lprof_has_good = { g = firearms } }
 			NOT = { any_buildings_in_location = { building_type = building_type:hand_cannon_guild building_level > 0 is_opened = no } }
 		}
@@ -3418,6 +3502,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_horse_breeders }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:horse_breeders
+			pp_cplan_room_horse_breeders >= 1
 			NOT = { pp_lprof_has_good = { g = horses } }
 			NOT = { any_buildings_in_location = { building_type = building_type:horse_breeders building_level > 0 is_opened = no } }
 		}
@@ -3434,6 +3519,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_hurdled_sheepcotes }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:hurdled_sheepcotes
+			pp_cplan_room_hurdled_sheepcotes >= 1
 			NOT = { pp_lprof_has_good = { g = wool } }
 			NOT = { any_buildings_in_location = { building_type = building_type:hurdled_sheepcotes building_level > 0 is_opened = no } }
 		}
@@ -3450,6 +3536,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_improved_charcoal_maker }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:improved_charcoal_maker
+			pp_cplan_room_improved_charcoal_maker >= 1
 			NOT = { pp_lprof_has_good = { g = coal } }
 			NOT = { any_buildings_in_location = { building_type = building_type:improved_charcoal_maker building_level > 0 is_opened = no } }
 		}
@@ -3466,6 +3553,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_incense_grove }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:incense_grove
+			pp_cplan_room_incense_grove >= 1
 			NOT = { pp_lprof_has_good = { g = incense } }
 			NOT = { any_buildings_in_location = { building_type = building_type:incense_grove building_level > 0 is_opened = no } }
 		}
@@ -3482,6 +3570,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_inland_saltworks }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:inland_saltworks
+			pp_cplan_room_inland_saltworks >= 1
 			NOT = { pp_lprof_has_good = { g = salt } }
 			NOT = { any_buildings_in_location = { building_type = building_type:inland_saltworks building_level > 0 is_opened = no } }
 		}
@@ -3498,6 +3587,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_iron_foundry }
 			pp_cplan_staff = { type = laborers size = 1.04 }
 			can_build_building = building_type:iron_foundry
+			pp_cplan_room_iron_foundry >= 1
 			NOT = { pp_lprof_has_good = { g = tools } }
 			NOT = { any_buildings_in_location = { building_type = building_type:iron_foundry building_level > 0 is_opened = no } }
 		}
@@ -3514,6 +3604,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_iron_mill }
 			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:iron_mill
+			pp_cplan_room_iron_mill >= 1
 			NOT = { pp_lprof_has_good = { g = tools } }
 			NOT = { any_buildings_in_location = { building_type = building_type:iron_mill building_level > 0 is_opened = no } }
 		}
@@ -3530,6 +3621,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_iron_mine }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:iron_mine
+			pp_cplan_room_iron_mine >= 1
 			NOT = { pp_lprof_has_good = { g = iron } }
 			NOT = { any_buildings_in_location = { building_type = building_type:iron_mine building_level > 0 is_opened = no } }
 		}
@@ -3546,6 +3638,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_iron_mine_deep }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:iron_mine_deep
+			pp_cplan_room_iron_mine_deep >= 1
 			NOT = { pp_lprof_has_good = { g = iron } }
 			NOT = { any_buildings_in_location = { building_type = building_type:iron_mine_deep building_level > 0 is_opened = no } }
 		}
@@ -3562,6 +3655,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_iron_mine_improved }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:iron_mine_improved
+			pp_cplan_room_iron_mine_improved >= 1
 			NOT = { pp_lprof_has_good = { g = iron } }
 			NOT = { any_buildings_in_location = { building_type = building_type:iron_mine_improved building_level > 0 is_opened = no } }
 		}
@@ -3578,6 +3672,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_ivory_hunting_camp }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:ivory_hunting_camp
+			pp_cplan_room_ivory_hunting_camp >= 1
 			NOT = { pp_lprof_has_good = { g = ivory } }
 			NOT = { any_buildings_in_location = { building_type = building_type:ivory_hunting_camp building_level > 0 is_opened = no } }
 		}
@@ -3594,6 +3689,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_jewelry_guild }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:jewelry_guild
+			pp_cplan_room_jewelry_guild >= 1
 			NOT = { pp_lprof_has_good = { g = jewelry } }
 			NOT = { any_buildings_in_location = { building_type = building_type:jewelry_guild building_level > 0 is_opened = no } }
 		}
@@ -3610,6 +3706,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_lacquerware_guild }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:lacquerware_guild
+			pp_cplan_room_lacquerware_guild >= 1
 			NOT = { pp_lprof_has_good = { g = lacquerware } }
 			NOT = { any_buildings_in_location = { building_type = building_type:lacquerware_guild building_level > 0 is_opened = no } }
 		}
@@ -3626,6 +3723,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_lacquerware_manufactory }
 			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:lacquerware_manufactory
+			pp_cplan_room_lacquerware_manufactory >= 1
 			NOT = { pp_lprof_has_good = { g = lacquerware } }
 			NOT = { any_buildings_in_location = { building_type = building_type:lacquerware_manufactory building_level > 0 is_opened = no } }
 		}
@@ -3642,6 +3740,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_lead_mine }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:lead_mine
+			pp_cplan_room_lead_mine >= 1
 			NOT = { pp_lprof_has_good = { g = lead } }
 			NOT = { any_buildings_in_location = { building_type = building_type:lead_mine building_level > 0 is_opened = no } }
 		}
@@ -3658,6 +3757,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_lead_mine_bole_smelting }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:lead_mine_bole_smelting
+			pp_cplan_room_lead_mine_bole_smelting >= 1
 			NOT = { pp_lprof_has_good = { g = lead } }
 			NOT = { any_buildings_in_location = { building_type = building_type:lead_mine_bole_smelting building_level > 0 is_opened = no } }
 		}
@@ -3674,6 +3774,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_lead_mine_cupola_smelting }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:lead_mine_cupola_smelting
+			pp_cplan_room_lead_mine_cupola_smelting >= 1
 			NOT = { pp_lprof_has_good = { g = lead } }
 			NOT = { any_buildings_in_location = { building_type = building_type:lead_mine_cupola_smelting building_level > 0 is_opened = no } }
 		}
@@ -3690,6 +3791,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_legume_farm }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:legume_farm
+			pp_cplan_room_legume_farm >= 1
 			NOT = { pp_lprof_has_good = { g = legumes } }
 			NOT = { any_buildings_in_location = { building_type = building_type:legume_farm building_level > 0 is_opened = no } }
 		}
@@ -3706,6 +3808,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_legume_farmstead }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:legume_farmstead
+			pp_cplan_room_legume_farmstead >= 1
 			NOT = { pp_lprof_has_good = { g = legumes } }
 			NOT = { any_buildings_in_location = { building_type = building_type:legume_farmstead building_level > 0 is_opened = no } }
 		}
@@ -3722,6 +3825,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_legume_model_farm }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:legume_model_farm
+			pp_cplan_room_legume_model_farm >= 1
 			NOT = { pp_lprof_has_good = { g = legumes } }
 			NOT = { any_buildings_in_location = { building_type = building_type:legume_model_farm building_level > 0 is_opened = no } }
 		}
@@ -3738,6 +3842,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_legume_rotations }
 			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:legume_rotations
+			pp_cplan_room_legume_rotations >= 1
 			NOT = { pp_lprof_has_good = { g = legumes } }
 			NOT = { any_buildings_in_location = { building_type = building_type:legume_rotations building_level > 0 is_opened = no } }
 		}
@@ -3754,6 +3859,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_lumber_mill }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:lumber_mill
+			pp_cplan_room_lumber_mill >= 1
 			NOT = { pp_lprof_has_good = { g = lumber } }
 			NOT = { any_buildings_in_location = { building_type = building_type:lumber_mill building_level > 0 is_opened = no } }
 		}
@@ -3770,6 +3876,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_lumber_mill_improved }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:lumber_mill_improved
+			pp_cplan_room_lumber_mill_improved >= 1
 			NOT = { pp_lprof_has_good = { g = lumber } }
 			NOT = { any_buildings_in_location = { building_type = building_type:lumber_mill_improved building_level > 0 is_opened = no } }
 		}
@@ -3786,6 +3893,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_maghreb_palm_irrigation }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:maghreb_palm_irrigation
+			pp_cplan_room_maghreb_palm_irrigation >= 1
 			NOT = { pp_lprof_has_good = { g = fruit } }
 			NOT = { pp_lprof_has_category = { c = trade_category } }
 			NOT = { any_buildings_in_location = { building_type = building_type:maghreb_palm_irrigation building_level > 0 is_opened = no } }
@@ -3803,6 +3911,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_maize_farm }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:maize_farm
+			pp_cplan_room_maize_farm >= 1
 			NOT = { pp_lprof_has_good = { g = maize } }
 			NOT = { any_buildings_in_location = { building_type = building_type:maize_farm building_level > 0 is_opened = no } }
 		}
@@ -3819,6 +3928,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_maize_farmstead }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:maize_farmstead
+			pp_cplan_room_maize_farmstead >= 1
 			NOT = { pp_lprof_has_good = { g = maize } }
 			NOT = { any_buildings_in_location = { building_type = building_type:maize_farmstead building_level > 0 is_opened = no } }
 		}
@@ -3835,6 +3945,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_maize_model_farm }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:maize_model_farm
+			pp_cplan_room_maize_model_farm >= 1
 			NOT = { pp_lprof_has_good = { g = maize } }
 			NOT = { any_buildings_in_location = { building_type = building_type:maize_model_farm building_level > 0 is_opened = no } }
 		}
@@ -3851,6 +3962,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_maize_rotations }
 			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:maize_rotations
+			pp_cplan_room_maize_rotations >= 1
 			NOT = { pp_lprof_has_good = { g = maize } }
 			NOT = { any_buildings_in_location = { building_type = building_type:maize_rotations building_level > 0 is_opened = no } }
 		}
@@ -3867,6 +3979,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_managed_cocoa_grove }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:managed_cocoa_grove
+			pp_cplan_room_managed_cocoa_grove >= 1
 			NOT = { pp_lprof_has_good = { g = cocoa } }
 			NOT = { any_buildings_in_location = { building_type = building_type:managed_cocoa_grove building_level > 0 is_opened = no } }
 		}
@@ -3883,6 +3996,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_managed_forest_village }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:managed_forest_village
+			pp_cplan_room_managed_forest_village >= 1
 			NOT = { pp_lprof_has_good = { g = leather } }
 			NOT = { any_buildings_in_location = { building_type = building_type:managed_forest_village building_level > 0 is_opened = no } }
 		}
@@ -3899,6 +4013,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_managed_pepper_garden }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:managed_pepper_garden
+			pp_cplan_room_managed_pepper_garden >= 1
 			NOT = { pp_lprof_has_good = { g = pepper } }
 			NOT = { any_buildings_in_location = { building_type = building_type:managed_pepper_garden building_level > 0 is_opened = no } }
 		}
@@ -3915,6 +4030,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_marble_quarry }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:marble_quarry
+			pp_cplan_room_marble_quarry >= 1
 			NOT = { pp_lprof_has_good = { g = marble } }
 			NOT = { any_buildings_in_location = { building_type = building_type:marble_quarry building_level > 0 is_opened = no } }
 		}
@@ -3931,6 +4047,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_marble_saw_yard }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:marble_saw_yard
+			pp_cplan_room_marble_saw_yard >= 1
 			NOT = { pp_lprof_has_good = { g = marble } }
 			NOT = { any_buildings_in_location = { building_type = building_type:marble_saw_yard building_level > 0 is_opened = no } }
 		}
@@ -3947,6 +4064,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_market_cotton_farm }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:market_cotton_farm
+			pp_cplan_room_market_cotton_farm >= 1
 			NOT = { pp_lprof_has_good = { g = cotton } }
 			NOT = { any_buildings_in_location = { building_type = building_type:market_cotton_farm building_level > 0 is_opened = no } }
 		}
@@ -3963,6 +4081,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_market_tobacco_farm }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:market_tobacco_farm
+			pp_cplan_room_market_tobacco_farm >= 1
 			NOT = { pp_lprof_has_good = { g = tobacco } }
 			NOT = { any_buildings_in_location = { building_type = building_type:market_tobacco_farm building_level > 0 is_opened = no } }
 		}
@@ -3979,6 +4098,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_market_village }
 			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:market_village
+			pp_cplan_room_market_village >= 1
 			NOT = { pp_lprof_has_good = { g = tools } }
 			NOT = { any_buildings_in_location = { building_type = building_type:market_village building_level > 0 is_opened = no } }
 		}
@@ -3995,6 +4115,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_mason }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:mason
+			pp_cplan_room_mason >= 1
 			NOT = { pp_lprof_has_good = { g = masonry } }
 			NOT = { any_buildings_in_location = { building_type = building_type:mason building_level > 0 is_opened = no } }
 		}
@@ -4011,6 +4132,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_millet_farm }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:millet_farm
+			pp_cplan_room_millet_farm >= 1
 			NOT = { pp_lprof_has_good = { g = millet } }
 			NOT = { any_buildings_in_location = { building_type = building_type:millet_farm building_level > 0 is_opened = no } }
 		}
@@ -4027,6 +4149,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_millet_farmstead }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:millet_farmstead
+			pp_cplan_room_millet_farmstead >= 1
 			NOT = { pp_lprof_has_good = { g = millet } }
 			NOT = { any_buildings_in_location = { building_type = building_type:millet_farmstead building_level > 0 is_opened = no } }
 		}
@@ -4043,6 +4166,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_millet_model_farm }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:millet_model_farm
+			pp_cplan_room_millet_model_farm >= 1
 			NOT = { pp_lprof_has_good = { g = millet } }
 			NOT = { any_buildings_in_location = { building_type = building_type:millet_model_farm building_level > 0 is_opened = no } }
 		}
@@ -4059,6 +4183,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_millet_rotations }
 			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:millet_rotations
+			pp_cplan_room_millet_rotations >= 1
 			NOT = { pp_lprof_has_good = { g = millet } }
 			NOT = { any_buildings_in_location = { building_type = building_type:millet_rotations building_level > 0 is_opened = no } }
 		}
@@ -4075,6 +4200,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_naval_supplies_guild }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:naval_supplies_guild
+			pp_cplan_room_naval_supplies_guild >= 1
 			NOT = { pp_lprof_has_good = { g = naval_supplies } }
 			NOT = { any_buildings_in_location = { building_type = building_type:naval_supplies_guild building_level > 0 is_opened = no } }
 		}
@@ -4091,6 +4217,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_naval_supplies_manufactory }
 			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:naval_supplies_manufactory
+			pp_cplan_room_naval_supplies_manufactory >= 1
 			NOT = { pp_lprof_has_good = { g = naval_supplies } }
 			NOT = { any_buildings_in_location = { building_type = building_type:naval_supplies_manufactory building_level > 0 is_opened = no } }
 		}
@@ -4107,6 +4234,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_naval_supplies_mill }
 			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:naval_supplies_mill
+			pp_cplan_room_naval_supplies_mill >= 1
 			NOT = { pp_lprof_has_good = { g = naval_supplies } }
 			NOT = { any_buildings_in_location = { building_type = building_type:naval_supplies_mill building_level > 0 is_opened = no } }
 		}
@@ -4123,6 +4251,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_naval_supplies_workshop }
 			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:naval_supplies_workshop
+			pp_cplan_room_naval_supplies_workshop >= 1
 			NOT = { pp_lprof_has_good = { g = naval_supplies } }
 			NOT = { any_buildings_in_location = { building_type = building_type:naval_supplies_workshop building_level > 0 is_opened = no } }
 		}
@@ -4139,6 +4268,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_net_curing_yard }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:net_curing_yard
+			pp_cplan_room_net_curing_yard >= 1
 			NOT = { pp_lprof_has_good = { g = fish } }
 			NOT = { any_buildings_in_location = { building_type = building_type:net_curing_yard building_level > 0 is_opened = no } }
 		}
@@ -4155,6 +4285,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_nursery_orchard }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:nursery_orchard
+			pp_cplan_room_nursery_orchard >= 1
 			NOT = { pp_lprof_has_good = { g = fruit } }
 			NOT = { any_buildings_in_location = { building_type = building_type:nursery_orchard building_level > 0 is_opened = no } }
 		}
@@ -4171,6 +4302,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_ocean_fishery }
 			pp_cplan_staff = { type = laborers size = 1.25 }
 			can_build_building = building_type:ocean_fishery
+			pp_cplan_room_ocean_fishery >= 1
 			NOT = { pp_lprof_has_good = { g = fish } }
 			NOT = { any_buildings_in_location = { building_type = building_type:ocean_fishery building_level > 0 is_opened = no } }
 		}
@@ -4187,6 +4319,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_offshore_fishery }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:offshore_fishery
+			pp_cplan_room_offshore_fishery >= 1
 			NOT = { pp_lprof_has_good = { g = fish } }
 			NOT = { any_buildings_in_location = { building_type = building_type:offshore_fishery building_level > 0 is_opened = no } }
 		}
@@ -4203,6 +4336,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_olive_farm }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:olive_farm
+			pp_cplan_room_olive_farm >= 1
 			NOT = { pp_lprof_has_good = { g = olives } }
 			NOT = { any_buildings_in_location = { building_type = building_type:olive_farm building_level > 0 is_opened = no } }
 		}
@@ -4219,6 +4353,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_olive_farmstead }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:olive_farmstead
+			pp_cplan_room_olive_farmstead >= 1
 			NOT = { pp_lprof_has_good = { g = olives } }
 			NOT = { any_buildings_in_location = { building_type = building_type:olive_farmstead building_level > 0 is_opened = no } }
 		}
@@ -4235,6 +4370,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_olive_model_farm }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:olive_model_farm
+			pp_cplan_room_olive_model_farm >= 1
 			NOT = { pp_lprof_has_good = { g = olives } }
 			NOT = { any_buildings_in_location = { building_type = building_type:olive_model_farm building_level > 0 is_opened = no } }
 		}
@@ -4251,6 +4387,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_olive_rotations }
 			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:olive_rotations
+			pp_cplan_room_olive_rotations >= 1
 			NOT = { pp_lprof_has_good = { g = olives } }
 			NOT = { any_buildings_in_location = { building_type = building_type:olive_rotations building_level > 0 is_opened = no } }
 		}
@@ -4267,6 +4404,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_paper_guild }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:paper_guild
+			pp_cplan_room_paper_guild >= 1
 			NOT = { pp_lprof_has_good = { g = paper } }
 			NOT = { any_buildings_in_location = { building_type = building_type:paper_guild building_level > 0 is_opened = no } }
 		}
@@ -4283,6 +4421,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_paper_manufactory }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:paper_manufactory
+			pp_cplan_room_paper_manufactory >= 1
 			NOT = { pp_lprof_has_good = { g = paper } }
 			NOT = { any_buildings_in_location = { building_type = building_type:paper_manufactory building_level > 0 is_opened = no } }
 		}
@@ -4299,6 +4438,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_paper_mill }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:paper_mill
+			pp_cplan_room_paper_mill >= 1
 			NOT = { pp_lprof_has_good = { g = paper } }
 			NOT = { any_buildings_in_location = { building_type = building_type:paper_mill building_level > 0 is_opened = no } }
 		}
@@ -4315,6 +4455,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_paper_workshop }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:paper_workshop
+			pp_cplan_room_paper_workshop >= 1
 			NOT = { pp_lprof_has_good = { g = paper } }
 			NOT = { any_buildings_in_location = { building_type = building_type:paper_workshop building_level > 0 is_opened = no } }
 		}
@@ -4331,6 +4472,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_pearl_fishery }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:pearl_fishery
+			pp_cplan_room_pearl_fishery >= 1
 			NOT = { pp_lprof_has_good = { g = pearls } }
 			NOT = { any_buildings_in_location = { building_type = building_type:pearl_fishery building_level > 0 is_opened = no } }
 		}
@@ -4347,6 +4489,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_pepper_garden }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:pepper_garden
+			pp_cplan_room_pepper_garden >= 1
 			NOT = { pp_lprof_has_good = { g = pepper } }
 			NOT = { any_buildings_in_location = { building_type = building_type:pepper_garden building_level > 0 is_opened = no } }
 		}
@@ -4363,6 +4506,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_perfumery }
 			pp_cplan_staff = { type = burghers size = 0.2 }
 			can_build_building = building_type:perfumery
+			pp_cplan_room_perfumery >= 1
 			NOT = { pp_lprof_has_good = { g = incense } }
 			NOT = { any_buildings_in_location = { building_type = building_type:perfumery building_level > 0 is_opened = no } }
 		}
@@ -4379,6 +4523,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_pomological_orchard }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:pomological_orchard
+			pp_cplan_room_pomological_orchard >= 1
 			NOT = { pp_lprof_has_good = { g = fruit } }
 			NOT = { any_buildings_in_location = { building_type = building_type:pomological_orchard building_level > 0 is_opened = no } }
 		}
@@ -4395,6 +4540,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_porcelain_guild }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:porcelain_guild
+			pp_cplan_room_porcelain_guild >= 1
 			NOT = { pp_lprof_has_good = { g = porcelain } }
 			NOT = { any_buildings_in_location = { building_type = building_type:porcelain_guild building_level > 0 is_opened = no } }
 		}
@@ -4411,6 +4557,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_porcelain_manufactory }
 			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:porcelain_manufactory
+			pp_cplan_room_porcelain_manufactory >= 1
 			NOT = { pp_lprof_has_good = { g = porcelain } }
 			NOT = { any_buildings_in_location = { building_type = building_type:porcelain_manufactory building_level > 0 is_opened = no } }
 		}
@@ -4427,6 +4574,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_potato_farm }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:potato_farm
+			pp_cplan_room_potato_farm >= 1
 			NOT = { pp_lprof_has_good = { g = potato } }
 			NOT = { any_buildings_in_location = { building_type = building_type:potato_farm building_level > 0 is_opened = no } }
 		}
@@ -4443,6 +4591,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_potato_farmstead }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:potato_farmstead
+			pp_cplan_room_potato_farmstead >= 1
 			NOT = { pp_lprof_has_good = { g = potato } }
 			NOT = { any_buildings_in_location = { building_type = building_type:potato_farmstead building_level > 0 is_opened = no } }
 		}
@@ -4459,6 +4608,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_potato_model_farm }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:potato_model_farm
+			pp_cplan_room_potato_model_farm >= 1
 			NOT = { pp_lprof_has_good = { g = potato } }
 			NOT = { any_buildings_in_location = { building_type = building_type:potato_model_farm building_level > 0 is_opened = no } }
 		}
@@ -4475,6 +4625,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_potato_rotations }
 			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:potato_rotations
+			pp_cplan_room_potato_rotations >= 1
 			NOT = { pp_lprof_has_good = { g = potato } }
 			NOT = { any_buildings_in_location = { building_type = building_type:potato_rotations building_level > 0 is_opened = no } }
 		}
@@ -4491,6 +4642,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_pottery_guild }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:pottery_guild
+			pp_cplan_room_pottery_guild >= 1
 			NOT = { pp_lprof_has_good = { g = pottery } }
 			NOT = { any_buildings_in_location = { building_type = building_type:pottery_guild building_level > 0 is_opened = no } }
 		}
@@ -4507,6 +4659,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_pottery_manufactory }
 			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:pottery_manufactory
+			pp_cplan_room_pottery_manufactory >= 1
 			NOT = { pp_lprof_has_good = { g = pottery } }
 			NOT = { any_buildings_in_location = { building_type = building_type:pottery_manufactory building_level > 0 is_opened = no } }
 		}
@@ -4523,6 +4676,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_pottery_mill }
 			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:pottery_mill
+			pp_cplan_room_pottery_mill >= 1
 			NOT = { pp_lprof_has_good = { g = pottery } }
 			NOT = { any_buildings_in_location = { building_type = building_type:pottery_mill building_level > 0 is_opened = no } }
 		}
@@ -4539,6 +4693,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_pottery_workshop }
 			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:pottery_workshop
+			pp_cplan_room_pottery_workshop >= 1
 			NOT = { pp_lprof_has_good = { g = pottery } }
 			NOT = { any_buildings_in_location = { building_type = building_type:pottery_workshop building_level > 0 is_opened = no } }
 		}
@@ -4555,6 +4710,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_pounamou_carver }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:pounamou_carver
+			pp_cplan_room_pounamou_carver >= 1
 			NOT = { pp_lprof_has_good = { g = jewelry } }
 			NOT = { any_buildings_in_location = { building_type = building_type:pounamou_carver building_level > 0 is_opened = no } }
 		}
@@ -4571,6 +4727,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_printing_manufactory }
 			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:printing_manufactory
+			pp_cplan_room_printing_manufactory >= 1
 			NOT = { pp_lprof_has_good = { g = books } }
 			NOT = { any_buildings_in_location = { building_type = building_type:printing_manufactory building_level > 0 is_opened = no } }
 		}
@@ -4587,6 +4744,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_printing_mill }
 			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:printing_mill
+			pp_cplan_room_printing_mill >= 1
 			NOT = { pp_lprof_has_good = { g = books } }
 			NOT = { any_buildings_in_location = { building_type = building_type:printing_mill building_level > 0 is_opened = no } }
 		}
@@ -4603,6 +4761,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_printing_press_shop }
 			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:printing_press_shop
+			pp_cplan_room_printing_press_shop >= 1
 			NOT = { pp_lprof_has_good = { g = books } }
 			NOT = { any_buildings_in_location = { building_type = building_type:printing_press_shop building_level > 0 is_opened = no } }
 		}
@@ -4619,6 +4778,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_putrefaction_mill }
 			pp_cplan_staff = { type = laborers size = 0.5 }
 			can_build_building = building_type:putrefaction_mill
+			pp_cplan_room_putrefaction_mill >= 1
 			NOT = { pp_lprof_has_good = { g = saltpeter } }
 			NOT = { any_buildings_in_location = { building_type = building_type:putrefaction_mill building_level > 0 is_opened = no } }
 		}
@@ -4635,6 +4795,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_putrefaction_works }
 			pp_cplan_staff = { type = burghers size = 0.2 }
 			can_build_building = building_type:putrefaction_works
+			pp_cplan_room_putrefaction_works >= 1
 			NOT = { pp_lprof_has_good = { g = saltpeter } }
 			NOT = { any_buildings_in_location = { building_type = building_type:putrefaction_works building_level > 0 is_opened = no } }
 		}
@@ -4651,6 +4812,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_quicksilver_retort }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:quicksilver_retort
+			pp_cplan_room_quicksilver_retort >= 1
 			NOT = { pp_lprof_has_good = { g = mercury } }
 			NOT = { any_buildings_in_location = { building_type = building_type:quicksilver_retort building_level > 0 is_opened = no } }
 		}
@@ -4667,6 +4829,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_regulated_sericulture_farm }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:regulated_sericulture_farm
+			pp_cplan_room_regulated_sericulture_farm >= 1
 			NOT = { pp_lprof_has_good = { g = silk } }
 			NOT = { any_buildings_in_location = { building_type = building_type:regulated_sericulture_farm building_level > 0 is_opened = no } }
 		}
@@ -4683,6 +4846,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_rice_farm }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:rice_farm
+			pp_cplan_room_rice_farm >= 1
 			NOT = { pp_lprof_has_good = { g = rice } }
 			NOT = { any_buildings_in_location = { building_type = building_type:rice_farm building_level > 0 is_opened = no } }
 		}
@@ -4699,6 +4863,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_rice_farmstead }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:rice_farmstead
+			pp_cplan_room_rice_farmstead >= 1
 			NOT = { pp_lprof_has_good = { g = rice } }
 			NOT = { any_buildings_in_location = { building_type = building_type:rice_farmstead building_level > 0 is_opened = no } }
 		}
@@ -4715,6 +4880,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_rice_model_farm }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:rice_model_farm
+			pp_cplan_room_rice_model_farm >= 1
 			NOT = { pp_lprof_has_good = { g = rice } }
 			NOT = { any_buildings_in_location = { building_type = building_type:rice_model_farm building_level > 0 is_opened = no } }
 		}
@@ -4731,6 +4897,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_rice_rotations }
 			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:rice_rotations
+			pp_cplan_room_rice_rotations >= 1
 			NOT = { pp_lprof_has_good = { g = rice } }
 			NOT = { any_buildings_in_location = { building_type = building_type:rice_rotations building_level > 0 is_opened = no } }
 		}
@@ -4747,6 +4914,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_rural_clothmaker }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:rural_clothmaker
+			pp_cplan_room_rural_clothmaker >= 1
 			NOT = { pp_lprof_has_good = { g = cloth } }
 			NOT = { any_buildings_in_location = { building_type = building_type:rural_clothmaker building_level > 0 is_opened = no } }
 		}
@@ -4763,6 +4931,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_rural_glassmaker }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:rural_glassmaker
+			pp_cplan_room_rural_glassmaker >= 1
 			NOT = { pp_lprof_has_good = { g = glass } }
 			NOT = { any_buildings_in_location = { building_type = building_type:rural_glassmaker building_level > 0 is_opened = no } }
 		}
@@ -4779,6 +4948,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_saffron_croft }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:saffron_croft
+			pp_cplan_room_saffron_croft >= 1
 			NOT = { pp_lprof_has_good = { g = saffron } }
 			NOT = { any_buildings_in_location = { building_type = building_type:saffron_croft building_level > 0 is_opened = no } }
 		}
@@ -4795,6 +4965,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_saffron_kiln_croft }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:saffron_kiln_croft
+			pp_cplan_room_saffron_kiln_croft >= 1
 			NOT = { pp_lprof_has_good = { g = saffron } }
 			NOT = { any_buildings_in_location = { building_type = building_type:saffron_kiln_croft building_level > 0 is_opened = no } }
 		}
@@ -4811,6 +4982,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_salt_collector }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:salt_collector
+			pp_cplan_room_salt_collector >= 1
 			NOT = { pp_lprof_has_good = { g = salt } }
 			NOT = { any_buildings_in_location = { building_type = building_type:salt_collector building_level > 0 is_opened = no } }
 		}
@@ -4827,6 +4999,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_salt_mine }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:salt_mine
+			pp_cplan_room_salt_mine >= 1
 			NOT = { pp_lprof_has_good = { g = salt } }
 			NOT = { any_buildings_in_location = { building_type = building_type:salt_mine building_level > 0 is_opened = no } }
 		}
@@ -4843,6 +5016,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_salt_mine_improved }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:salt_mine_improved
+			pp_cplan_room_salt_mine_improved >= 1
 			NOT = { pp_lprof_has_good = { g = salt } }
 			NOT = { any_buildings_in_location = { building_type = building_type:salt_mine_improved building_level > 0 is_opened = no } }
 		}
@@ -4859,6 +5033,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_saltpeter_beds }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:saltpeter_beds
+			pp_cplan_room_saltpeter_beds >= 1
 			NOT = { pp_lprof_has_good = { g = saltpeter } }
 			NOT = { any_buildings_in_location = { building_type = building_type:saltpeter_beds building_level > 0 is_opened = no } }
 		}
@@ -4875,6 +5050,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_saltpeter_guild }
 			pp_cplan_staff = { type = burghers size = 0.1 }
 			can_build_building = building_type:saltpeter_guild
+			pp_cplan_room_saltpeter_guild >= 1
 			NOT = { pp_lprof_has_good = { g = saltpeter } }
 			NOT = { any_buildings_in_location = { building_type = building_type:saltpeter_guild building_level > 0 is_opened = no } }
 		}
@@ -4891,6 +5067,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_saltpeter_workshop }
 			pp_cplan_staff = { type = burghers size = 0.1 }
 			can_build_building = building_type:saltpeter_workshop
+			pp_cplan_room_saltpeter_workshop >= 1
 			NOT = { pp_lprof_has_good = { g = saltpeter } }
 			NOT = { any_buildings_in_location = { building_type = building_type:saltpeter_workshop building_level > 0 is_opened = no } }
 		}
@@ -4907,6 +5084,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_sand_pit }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:sand_pit
+			pp_cplan_room_sand_pit >= 1
 			NOT = { pp_lprof_has_good = { g = sand } }
 			NOT = { any_buildings_in_location = { building_type = building_type:sand_pit building_level > 0 is_opened = no } }
 		}
@@ -4923,6 +5101,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_sand_washery }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:sand_washery
+			pp_cplan_room_sand_washery >= 1
 			NOT = { pp_lprof_has_good = { g = sand } }
 			NOT = { any_buildings_in_location = { building_type = building_type:sand_washery building_level > 0 is_opened = no } }
 		}
@@ -4939,6 +5118,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_schwaz_mine }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:schwaz_mine
+			pp_cplan_room_schwaz_mine >= 1
 			NOT = { pp_lprof_has_good = { g = silver } }
 			NOT = { any_buildings_in_location = { building_type = building_type:schwaz_mine building_level > 0 is_opened = no } }
 		}
@@ -4955,6 +5135,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_scriptorium }
 			pp_cplan_staff = { type = clergy size = 0.3 }
 			can_build_building = building_type:scriptorium
+			pp_cplan_room_scriptorium >= 1
 			NOT = { pp_lprof_has_good = { g = books } }
 			NOT = { any_buildings_in_location = { building_type = building_type:scriptorium building_level > 0 is_opened = no } }
 		}
@@ -4971,6 +5152,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_sericulture_farm }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:sericulture_farm
+			pp_cplan_room_sericulture_farm >= 1
 			NOT = { pp_lprof_has_good = { g = silk } }
 			NOT = { any_buildings_in_location = { building_type = building_type:sericulture_farm building_level > 0 is_opened = no } }
 		}
@@ -4987,6 +5169,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_sheep_farms }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:sheep_farms
+			pp_cplan_room_sheep_farms >= 1
 			NOT = { pp_lprof_has_good = { g = wool } }
 			NOT = { any_buildings_in_location = { building_type = building_type:sheep_farms building_level > 0 is_opened = no } }
 		}
@@ -5003,6 +5186,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_shoen }
 			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:shoen
+			pp_cplan_room_shoen >= 1
 			NOT = { pp_lprof_has_good = { g = lumber } }
 			NOT = { any_buildings_in_location = { building_type = building_type:shoen building_level > 0 is_opened = no } }
 		}
@@ -5019,6 +5203,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_silk_production_guild }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:silk_production_guild
+			pp_cplan_room_silk_production_guild >= 1
 			NOT = { pp_lprof_has_good = { g = silk } }
 			NOT = { any_buildings_in_location = { building_type = building_type:silk_production_guild building_level > 0 is_opened = no } }
 		}
@@ -5035,6 +5220,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_silver_mine }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:silver_mine
+			pp_cplan_room_silver_mine >= 1
 			NOT = { pp_lprof_has_good = { g = silver } }
 			NOT = { any_buildings_in_location = { building_type = building_type:silver_mine building_level > 0 is_opened = no } }
 		}
@@ -5051,6 +5237,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_silver_mine_improved }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:silver_mine_improved
+			pp_cplan_room_silver_mine_improved >= 1
 			NOT = { pp_lprof_has_good = { g = silver } }
 			NOT = { any_buildings_in_location = { building_type = building_type:silver_mine_improved building_level > 0 is_opened = no } }
 		}
@@ -5067,6 +5254,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_simplers_grove }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:simplers_grove
+			pp_cplan_room_simplers_grove >= 1
 			NOT = { pp_lprof_has_good = { g = medicaments } }
 			NOT = { any_buildings_in_location = { building_type = building_type:simplers_grove building_level > 0 is_opened = no } }
 		}
@@ -5083,6 +5271,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_slave_center }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:slave_center
+			pp_cplan_room_slave_center >= 1
 			NOT = { pp_lprof_has_good = { g = slaves_goods } }
 			NOT = { any_buildings_in_location = { building_type = building_type:slave_center building_level > 0 is_opened = no } }
 		}
@@ -5099,6 +5288,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_slave_market }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:slave_market
+			pp_cplan_room_slave_market >= 1
 			NOT = { pp_lprof_has_good = { g = slaves_goods } }
 			NOT = { pp_lprof_has_category = { c = government_category } }
 			NOT = { any_buildings_in_location = { building_type = building_type:slave_market building_level > 0 is_opened = no } }
@@ -5116,6 +5306,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_steel_mill }
 			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:steel_mill
+			pp_cplan_room_steel_mill >= 1
 			NOT = { pp_lprof_has_good = { g = steel } }
 			NOT = { any_buildings_in_location = { building_type = building_type:steel_mill building_level > 0 is_opened = no } }
 		}
@@ -5132,6 +5323,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_stone_quarry }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:stone_quarry
+			pp_cplan_room_stone_quarry >= 1
 			NOT = { pp_lprof_has_good = { g = stone } }
 			NOT = { any_buildings_in_location = { building_type = building_type:stone_quarry building_level > 0 is_opened = no } }
 		}
@@ -5148,6 +5340,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_stone_quarry_improved }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:stone_quarry_improved
+			pp_cplan_room_stone_quarry_improved >= 1
 			NOT = { pp_lprof_has_good = { g = stone } }
 			NOT = { any_buildings_in_location = { building_type = building_type:stone_quarry_improved building_level > 0 is_opened = no } }
 		}
@@ -5164,6 +5357,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_stud_farm }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:stud_farm
+			pp_cplan_room_stud_farm >= 1
 			NOT = { pp_lprof_has_good = { g = horses } }
 			NOT = { any_buildings_in_location = { building_type = building_type:stud_farm building_level > 0 is_opened = no } }
 		}
@@ -5180,6 +5374,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_sugar_plantation }
 			pp_cplan_staff = { type = slaves size = 1 }
 			can_build_building = building_type:sugar_plantation
+			pp_cplan_room_sugar_plantation >= 1
 			NOT = { pp_lprof_has_good = { g = sugar } }
 			NOT = { any_buildings_in_location = { building_type = building_type:sugar_plantation building_level > 0 is_opened = no } }
 		}
@@ -5196,6 +5391,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_sugarcane_farm }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:sugarcane_farm
+			pp_cplan_room_sugarcane_farm >= 1
 			NOT = { pp_lprof_has_good = { g = sugar } }
 			NOT = { any_buildings_in_location = { building_type = building_type:sugarcane_farm building_level > 0 is_opened = no } }
 		}
@@ -5212,6 +5408,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tannery }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:tannery
+			pp_cplan_room_tannery >= 1
 			NOT = { pp_lprof_has_good = { g = leather } }
 			NOT = { any_buildings_in_location = { building_type = building_type:tannery building_level > 0 is_opened = no } }
 		}
@@ -5228,6 +5425,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tannery_manufactory }
 			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:tannery_manufactory
+			pp_cplan_room_tannery_manufactory >= 1
 			NOT = { pp_lprof_has_good = { g = leather } }
 			NOT = { any_buildings_in_location = { building_type = building_type:tannery_manufactory building_level > 0 is_opened = no } }
 		}
@@ -5244,6 +5442,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tannery_mill }
 			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:tannery_mill
+			pp_cplan_room_tannery_mill >= 1
 			NOT = { pp_lprof_has_good = { g = leather } }
 			NOT = { any_buildings_in_location = { building_type = building_type:tannery_mill building_level > 0 is_opened = no } }
 		}
@@ -5260,6 +5459,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tanning_workshop }
 			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:tanning_workshop
+			pp_cplan_room_tanning_workshop >= 1
 			NOT = { pp_lprof_has_good = { g = leather } }
 			NOT = { any_buildings_in_location = { building_type = building_type:tanning_workshop building_level > 0 is_opened = no } }
 		}
@@ -5276,6 +5476,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tar_kiln }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:tar_kiln
+			pp_cplan_room_tar_kiln >= 1
 			NOT = { pp_lprof_has_good = { g = tar } }
 			NOT = { any_buildings_in_location = { building_type = building_type:tar_kiln building_level > 0 is_opened = no } }
 		}
@@ -5292,6 +5493,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tatara }
 			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:tatara
+			pp_cplan_room_tatara >= 1
 			NOT = { pp_lprof_has_good = { g = tools } }
 			NOT = { any_buildings_in_location = { building_type = building_type:tatara building_level > 0 is_opened = no } }
 		}
@@ -5308,6 +5510,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tea_garden }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:tea_garden
+			pp_cplan_room_tea_garden >= 1
 			NOT = { pp_lprof_has_good = { g = tea } }
 			NOT = { any_buildings_in_location = { building_type = building_type:tea_garden building_level > 0 is_opened = no } }
 		}
@@ -5324,6 +5527,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tea_sorting_garden }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:tea_sorting_garden
+			pp_cplan_room_tea_sorting_garden >= 1
 			NOT = { pp_lprof_has_good = { g = tea } }
 			NOT = { any_buildings_in_location = { building_type = building_type:tea_sorting_garden building_level > 0 is_opened = no } }
 		}
@@ -5340,6 +5544,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_terraced_coffee_grove }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:terraced_coffee_grove
+			pp_cplan_room_terraced_coffee_grove >= 1
 			NOT = { pp_lprof_has_good = { g = coffee } }
 			NOT = { any_buildings_in_location = { building_type = building_type:terraced_coffee_grove building_level > 0 is_opened = no } }
 		}
@@ -5356,6 +5561,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_textile_mill }
 			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:textile_mill
+			pp_cplan_room_textile_mill >= 1
 			NOT = { pp_lprof_has_good = { g = cloth } }
 			NOT = { any_buildings_in_location = { building_type = building_type:textile_mill building_level > 0 is_opened = no } }
 		}
@@ -5372,6 +5578,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tin_stamping_mill }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:tin_stamping_mill
+			pp_cplan_room_tin_stamping_mill >= 1
 			NOT = { pp_lprof_has_good = { g = tin } }
 			NOT = { any_buildings_in_location = { building_type = building_type:tin_stamping_mill building_level > 0 is_opened = no } }
 		}
@@ -5388,6 +5595,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tin_streamworks }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:tin_streamworks
+			pp_cplan_room_tin_streamworks >= 1
 			NOT = { pp_lprof_has_good = { g = tin } }
 			NOT = { any_buildings_in_location = { building_type = building_type:tin_streamworks building_level > 0 is_opened = no } }
 		}
@@ -5404,6 +5612,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tobacco_farm }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:tobacco_farm
+			pp_cplan_room_tobacco_farm >= 1
 			NOT = { pp_lprof_has_good = { g = tobacco } }
 			NOT = { any_buildings_in_location = { building_type = building_type:tobacco_farm building_level > 0 is_opened = no } }
 		}
@@ -5420,6 +5629,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tobacco_plantation }
 			pp_cplan_staff = { type = slaves size = 1 }
 			can_build_building = building_type:tobacco_plantation
+			pp_cplan_room_tobacco_plantation >= 1
 			NOT = { pp_lprof_has_good = { g = tobacco } }
 			NOT = { any_buildings_in_location = { building_type = building_type:tobacco_plantation building_level > 0 is_opened = no } }
 		}
@@ -5436,6 +5646,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tools_guild }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:tools_guild
+			pp_cplan_room_tools_guild >= 1
 			NOT = { pp_lprof_has_good = { g = tools } }
 			NOT = { any_buildings_in_location = { building_type = building_type:tools_guild building_level > 0 is_opened = no } }
 		}
@@ -5452,6 +5663,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_tools_workshop }
 			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:tools_workshop
+			pp_cplan_room_tools_workshop >= 1
 			NOT = { pp_lprof_has_good = { g = tools } }
 			NOT = { any_buildings_in_location = { building_type = building_type:tools_workshop building_level > 0 is_opened = no } }
 		}
@@ -5468,6 +5680,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_trapiche_sugarcane_farm }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:trapiche_sugarcane_farm
+			pp_cplan_room_trapiche_sugarcane_farm >= 1
 			NOT = { pp_lprof_has_good = { g = sugar } }
 			NOT = { any_buildings_in_location = { building_type = building_type:trapiche_sugarcane_farm building_level > 0 is_opened = no } }
 		}
@@ -5484,6 +5697,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_vineyard_estate }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:vineyard_estate
+			pp_cplan_room_vineyard_estate >= 1
 			NOT = { pp_lprof_has_good = { g = wine } }
 			NOT = { any_buildings_in_location = { building_type = building_type:vineyard_estate building_level > 0 is_opened = no } }
 		}
@@ -5500,6 +5714,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_water_sawmill }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:water_sawmill
+			pp_cplan_room_water_sawmill >= 1
 			NOT = { pp_lprof_has_good = { g = lumber } }
 			NOT = { any_buildings_in_location = { building_type = building_type:water_sawmill building_level > 0 is_opened = no } }
 		}
@@ -5516,6 +5731,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_weapon_factory }
 			pp_cplan_staff = { type = laborers size = 1.16 }
 			can_build_building = building_type:weapon_factory
+			pp_cplan_room_weapon_factory >= 1
 			NOT = { pp_lprof_has_good = { g = weaponry } }
 			NOT = { any_buildings_in_location = { building_type = building_type:weapon_factory building_level > 0 is_opened = no } }
 		}
@@ -5532,6 +5748,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_weapon_guild }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:weapon_guild
+			pp_cplan_room_weapon_guild >= 1
 			NOT = { pp_lprof_has_good = { g = weaponry } }
 			NOT = { any_buildings_in_location = { building_type = building_type:weapon_guild building_level > 0 is_opened = no } }
 		}
@@ -5548,6 +5765,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_weapon_manufactory }
 			pp_cplan_staff = { type = burghers size = 0.325 }
 			can_build_building = building_type:weapon_manufactory
+			pp_cplan_room_weapon_manufactory >= 1
 			NOT = { pp_lprof_has_good = { g = weaponry } }
 			NOT = { any_buildings_in_location = { building_type = building_type:weapon_manufactory building_level > 0 is_opened = no } }
 		}
@@ -5564,6 +5782,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_weapon_workshop }
 			pp_cplan_staff = { type = burghers size = 0.287 }
 			can_build_building = building_type:weapon_workshop
+			pp_cplan_room_weapon_workshop >= 1
 			NOT = { pp_lprof_has_good = { g = weaponry } }
 			NOT = { any_buildings_in_location = { building_type = building_type:weapon_workshop building_level > 0 is_opened = no } }
 		}
@@ -5580,6 +5799,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_wheat_farm }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:wheat_farm
+			pp_cplan_room_wheat_farm >= 1
 			NOT = { pp_lprof_has_good = { g = wheat } }
 			NOT = { any_buildings_in_location = { building_type = building_type:wheat_farm building_level > 0 is_opened = no } }
 		}
@@ -5596,6 +5816,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_wheat_farmstead }
 			pp_cplan_staff = { type = peasants size = 1.25 }
 			can_build_building = building_type:wheat_farmstead
+			pp_cplan_room_wheat_farmstead >= 1
 			NOT = { pp_lprof_has_good = { g = wheat } }
 			NOT = { any_buildings_in_location = { building_type = building_type:wheat_farmstead building_level > 0 is_opened = no } }
 		}
@@ -5612,6 +5833,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_wheat_model_farm }
 			pp_cplan_staff = { type = laborers size = 0.8 }
 			can_build_building = building_type:wheat_model_farm
+			pp_cplan_room_wheat_model_farm >= 1
 			NOT = { pp_lprof_has_good = { g = wheat } }
 			NOT = { any_buildings_in_location = { building_type = building_type:wheat_model_farm building_level > 0 is_opened = no } }
 		}
@@ -5628,6 +5850,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_wheat_rotations }
 			pp_cplan_staff = { type = peasants size = 1 }
 			can_build_building = building_type:wheat_rotations
+			pp_cplan_room_wheat_rotations >= 1
 			NOT = { pp_lprof_has_good = { g = wheat } }
 			NOT = { any_buildings_in_location = { building_type = building_type:wheat_rotations building_level > 0 is_opened = no } }
 		}
@@ -5644,6 +5867,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_winery }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:winery
+			pp_cplan_room_winery >= 1
 			NOT = { pp_lprof_has_good = { g = wine } }
 			NOT = { any_buildings_in_location = { building_type = building_type:winery building_level > 0 is_opened = no } }
 		}
@@ -5660,6 +5884,7 @@ pp_cplan_business_pick = {
 			scope:pp_cplan_country = { has_variable = pp_cplan_bz_winery_manufactory }
 			pp_cplan_staff = { type = burghers size = 0.25 }
 			can_build_building = building_type:winery_manufactory
+			pp_cplan_room_winery_manufactory >= 1
 			NOT = { pp_lprof_has_good = { g = wine } }
 			NOT = { any_buildings_in_location = { building_type = building_type:winery_manufactory building_level > 0 is_opened = no } }
 		}

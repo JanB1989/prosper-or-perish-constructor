@@ -913,6 +913,9 @@ pp_cplan_construct_scoped = {
 		limit = {
 			pp_cplan_site_free = yes
 			pp_cplan_bt_queued < 0.5
+			# room for one more level under the type's max level (2026-11-13: can_build_building does not check it; the
+			# engine cancels a construction over it when it finishes, and the gold is lost)
+			NOT = { pp_cplan_no_room = yes }
 			NOT = {
 				any_buildings_in_location = {
 					building_type = scope:pp_cplan_btype

@@ -2,6 +2,7 @@
 pp_potato_farm_advance_general = {
 age = age_5_absolutism
 requires = newspapers_advance
+global_potato_output_modifier = 0.05
 pure_tooltip_entry = pp_potato_farm_advance_general_tt
 ai_weight = { add = 50 }
 potential = {

@@ -71,10 +71,13 @@ TRY_INJECT:ser_the_sumadija_agrarian_revolution = {
 	global_maize_output_modifier = 0.1
 }
 
-# Vanilla writes no line at all: these only gate the canal decisions (has_advance).
+# Vanilla writes no line at all: these only gate the canal decisions (has_advance). The tooltip entry shows in the
+# tooltip's header only, so the card gets vanilla's most common trade range step (a canal shortens the sea routes).
 TRY_INJECT:suez_canal_advance = {
+	trade_range_modifier = 0.1
 	pure_tooltip_entry = pp_suez_canal_advance_tt
 }
 TRY_INJECT:panama_canal_advance = {
+	trade_range_modifier = 0.1
 	pure_tooltip_entry = pp_panama_canal_advance_tt
 }

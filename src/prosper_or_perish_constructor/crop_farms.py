@@ -902,6 +902,8 @@ def _general_advance_body(table: CropTable, crop: Crop, gate: RgoUnlockGate | No
         f"requires = {spec['requires']}",
         # other buildings' methods that come with the crop (the Victualling Yard's maize shipment)
         *(f"unlock_production_method = {method}" for method in spec.get("unlock_production_methods", ())),
+        # a card line where nothing else shows (the tooltip entry below shows in the tooltip's header only)
+        *([f"global_{crop.good}_output_modifier = {_num(float(spec['output']))}"] if spec.get("output") else []),
         # the farm line asks has_advance in country_potential: an unlock_building would lock out the native lands
         f"pure_tooltip_entry = {table.general_advance(crop)}_tt",
         f"ai_weight = {{ add = {int(table.unlocks.get('ai_weight', 50))} }}",

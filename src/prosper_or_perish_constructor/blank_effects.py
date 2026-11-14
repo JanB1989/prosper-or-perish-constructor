@@ -5,8 +5,9 @@ up and a line that comes to 0 is not listed, so a vanilla object whose only line
 (``vanilla_food_productivity.py``), or one an inject cancels, comes out empty while no file looks wrong. There is no
 exception list. ``ppc build`` and ``ppc sync`` stop on either check, the tests too (tests/test_blank_effects.py).
 
-- ``empty_advances``: an advance with nothing on its card. One that only gates something (a decision, a building through
-  ``country_potential``) says so with a ``pure_tooltip_entry``.
+- ``empty_advances``: an advance with nothing on its card. A ``pure_tooltip_entry`` is no card line: the game prints it
+  in the tooltip's header only, the card stays blank and the tooltip lists "None." (Potato Cultivation, 2026-11-14). One
+  that only gates something (a decision, a building through ``country_potential``) needs a live line besides it.
 - ``dead_modifier_blocks``: a modifier block in every other database folder where something is written and all of it
   comes to nothing. A block left empty on purpose (a REPLACE without lines) is not dead.
 """
@@ -39,7 +40,7 @@ ZEUS_OMEN_LINES = (
     b"\t\t\t\tglobal_wheat_output_modifier = 0.1\n"
     b"\t\t\t\tglobal_olives_output_modifier = 0.1\n"
 )
-# Keys of an advance that are not modifiers. Of these only `pure_tooltip_entry` is an effect line; what
+# Keys of an advance that put nothing on its card. `pure_tooltip_entry` shows in the tooltip's header only; what
 # `modifier_while_progressing` gives ends with the research.
 STRUCTURAL_KEYS = {
     "age", "icon", "requires", "for", "research_cost", "depth", "potential", "allow", "ai_weight",
@@ -68,9 +69,7 @@ def card_lines(advance: CList, values: Mapping[str, float], exists: Callable[[st
     totals: dict[str, float] = defaultdict(float)
     rest: list[tuple[str, Value]] = []
     for item in advance.entries:
-        if item.key == "pure_tooltip_entry":
-            rest.append((item.key, item.value))
-        elif item.key not in STRUCTURAL_KEYS:
+        if item.key not in STRUCTURAL_KEYS:
             value = item.value
             if isinstance(value, str) and value in values and values[value] == values[value]:
                 value = values[value]
@@ -82,8 +81,6 @@ def card_lines(advance: CList, values: Mapping[str, float], exists: Callable[[st
     for key, value in rest:
         if isinstance(value, CList):
             shown = bool(value.entries or value.items)
-        elif key == "pure_tooltip_entry":
-            shown = True
         elif key.startswith("unlock_"):
             shown = exists(key, str(value))
         elif isinstance(value, bool) or str(value) in ("yes", "no"):

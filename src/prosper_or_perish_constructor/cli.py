@@ -1774,8 +1774,8 @@ def _check_blank_effects(repo: Path) -> int:
     for line in dead:
         print(f"Dead modifier block: {line}", flush=True)
     if empty or dead:
-        print(f"{len(empty) + len(dead)} show nothing in game: give each an effect (advances: or a pure_tooltip_entry).",
-              flush=True)
+        print(f"{len(empty) + len(dead)} show nothing in game: give each a live effect line "
+              "(a pure_tooltip_entry does not show on an advance's card).", flush=True)
         return 1
     print("Blank effects: none.", flush=True)
     return 0

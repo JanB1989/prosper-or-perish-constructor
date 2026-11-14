@@ -56,7 +56,9 @@ def test_card_lines_list_what_the_game_lists() -> None:
     assert lines("unlock_building = real_building") == ["unlock_building"]
     assert lines("unlock_policy = not_a_checked_collection") == ["unlock_policy"]
     assert lines("can_colonize = yes") == ["can_colonize"]
-    assert lines("pure_tooltip_entry = some_text_tt") == ["pure_tooltip_entry"]
+    # the tooltip's header only: Potato Cultivation showed a blank card and "None." with nothing else (2026-11-14)
+    assert lines("pure_tooltip_entry = some_text_tt") == []
+    assert lines("pure_tooltip_entry = some_text_tt discipline = 0.05") == ["discipline"]
 
 
 def test_dead_blocks_are_the_ones_where_all_that_is_written_comes_to_nothing() -> None:

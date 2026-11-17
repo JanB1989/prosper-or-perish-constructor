@@ -288,9 +288,14 @@ good's value, transport cost or the distance (the save's `merchant.used` equals 
 economy. Burghers trade on their own besides (burgher trading: the burghers of a town buy what their market lacks; its rules
 are in section 8d); in 1387 they moved more raw goods than the countries (1,934 against 1,366 units a month).
 
-**Profit per unit** = destination price x (1 + the trader's selling efficiency) - source price (divided by the market
-owner's modifier when the trader is not the owner, never below half) - a distance cost - `NCountry.MERCHANT_MAINTENANCE_COST`
-per unit (flat, 0.25). Trades below `AI_PERFORMANCE_TRADE_PROFIT_PER_WEIGHT_CUTOFF` profit per transport weight are skipped,
+**Profit of a trade** (engine-checked on 1.4.3) = S - B - C + max(0, S - B) x the trader's `selling_efficiency` - sound
+toll + tariff term (section 8c). S = the goods at the destination market's price. B = the goods at the source market's
+price, divided by max(0.5, 1 + the source market owner's `foreign_export_from_market_efficiency`) when the trader is not
+that owner, then x (1 - the trader's `export_efficiency`, or `import_efficiency` when the trade's capacity sits in the
+destination). C = Trade Route Maintenance = capacity used x `NCountry.MERCHANT_MAINTENANCE_COST` (0.25) / max(0.05, 1 + the
+trader's `merchant_maintenance_efficiency`); there is no separate distance cost. Selling efficiency is a share of the
+gross margin S - B, taken before maintenance, and adds nothing to a trade without a margin (tooltip "adds ... from the
+trade margin"); it never scales the sell price. Trades below `AI_PERFORMANCE_TRADE_PROFIT_PER_WEIGHT_CUTOFF` profit per transport weight are skipped,
 except imports that cover a pop shortage or a building input: they score a bonus per unit (`AI_IMPORT_POP_NEED_SCORE_BONUS`,
 `AI_IMPORT_INPUT_GOODS_SCORE_BONUS`) and may run at a loss of up to `AI_WELFARE_IMPORT_PROFIT_CUTOFF` (-1 gold) per unit.
 Exporting what local pops lack is penalised (`AI_EXPORT_POP_SHORTAGE_PENALTY`).

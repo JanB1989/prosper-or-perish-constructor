@@ -106,6 +106,14 @@ pp_location_naval_supplies_line_levels = {
 	if = { limit = { has_building = building_type:naval_supplies_workshop } add = "location_building_level(building_type:naval_supplies_workshop)" }
 }
 
+pp_location_paper_line_levels = {
+	value = 0
+	if = { limit = { has_building = building_type:paper_guild } add = "location_building_level(building_type:paper_guild)" }
+	if = { limit = { has_building = building_type:paper_manufactory } add = "location_building_level(building_type:paper_manufactory)" }
+	if = { limit = { has_building = building_type:paper_mill } add = "location_building_level(building_type:paper_mill)" }
+	if = { limit = { has_building = building_type:paper_workshop } add = "location_building_level(building_type:paper_workshop)" }
+}
+
 pp_location_porcelain_line_levels = {
 	value = 0
 	if = { limit = { has_building = building_type:porcelain_guild } add = "location_building_level(building_type:porcelain_guild)" }

@@ -82,7 +82,7 @@ def test_every_upgrade_target_exists_and_is_unlocked_by_an_advance(rights: dict[
             # unlocked: the base right could never be granted
             problems.append(f"{right.key} upgrades to {target}, which no advance unlocks")
     assert not problems, problems
-    assert sum(right.upgrades_to is not None and right.key.startswith("pp_") for right in rights.values()) == 17
+    assert sum(right.upgrades_to is not None and right.key.startswith("pp_") for right in rights.values()) == 18
 
 
 def test_every_unlocked_right_exists_and_its_advance_is_on(vanilla: Path, all_right_keys: set[str]):
@@ -185,7 +185,7 @@ def test_line_level_values_are_current_and_cover_every_threshold():
     found = line_level_counts.counters(MOD_ROOT)
     text, counted = line_level_counts.render(found)
     assert (MOD_ROOT / line_level_counts.OUTPUT).read_text(encoding="utf-8") == text
-    assert len(counted) == 17 and all(counted.values())
+    assert len(counted) == 18 and all(counted.values())
     assert set(found["books"]) == {"scriptorium", "printing_press_shop", "printing_manufactory", "printing_mill"}
     thresholds = (MOD_ROOT / "in_game/common/script_values/pp_specialization_town_rights_values.txt").read_text(
         encoding="utf-8-sig")
@@ -193,7 +193,7 @@ def test_line_level_values_are_current_and_cover_every_threshold():
     blocks = _mod_right_blocks()
     for good in found:
         for tier, design in (("charter", 3), ("rights", 8 if good in {
-                "cloth", "leather", "pottery", "glass", "jewelry", "books"} else 5)):
+                "cloth", "leather", "pottery", "glass", "jewelry", "books", "paper"} else 5)):
             key = f"pp_{good}_{tier}"
             assert f"{line_level_counts.value_name(good)} >= {key}_line_levels" in blocks[key], key
             assert int(levels[key]) == design, key

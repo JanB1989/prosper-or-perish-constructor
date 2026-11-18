@@ -1465,6 +1465,19 @@ types PPConstructionPlanCountry
 							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/pp_books_charter.dds" } }
 						}
 						button = {
+							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_paper_charter').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_paper_charter').GetValue, '(CFixedPoint)100.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_paper_charter').GetValue, '(CFixedPoint)111.5'))]"
+							using = header_button_template
+							blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+							blockoverride "header_button_template_texture" { using = pressed_button_texture }
+							blockoverride "header_button_full_content" {}
+							size = { 34 34 }
+							down = "[GetPlayer.MakeScope.Var('pp_cplan_right_pp_paper_charter').IsSet]"
+							glow = { visible = "[GetPlayer.MakeScope.Var('pp_cplan_right_pp_paper_charter').IsSet]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+							tooltip = "PP_CPLANC_RIGHT_PP_PAPER_CHARTER"
+							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_pp_paper_charter')).End)]"
+							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/pp_paper_charter.dds" } }
+						}
+						button = {
 							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_tools_charter').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_tools_charter').GetValue, '(CFixedPoint)100.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_tools_charter').GetValue, '(CFixedPoint)111.5'))]"
 							using = header_button_template
 							blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
@@ -1853,6 +1866,19 @@ types PPConstructionPlanCountry
 							tooltip = "PP_CPLANC_RIGHT_PP_BOOKS_RIGHTS"
 							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_pp_books_rights')).End)]"
 							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/pp_books_rights.dds" } }
+						}
+						button = {
+							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_paper_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_paper_rights').GetValue, '(CFixedPoint)100.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_paper_rights').GetValue, '(CFixedPoint)111.5'))]"
+							using = header_button_template
+							blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+							blockoverride "header_button_template_texture" { using = pressed_button_texture }
+							blockoverride "header_button_full_content" {}
+							size = { 34 34 }
+							down = "[GetPlayer.MakeScope.Var('pp_cplan_right_pp_paper_rights').IsSet]"
+							glow = { visible = "[GetPlayer.MakeScope.Var('pp_cplan_right_pp_paper_rights').IsSet]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+							tooltip = "PP_CPLANC_RIGHT_PP_PAPER_RIGHTS"
+							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_pp_paper_rights')).End)]"
+							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/pp_paper_rights.dds" } }
 						}
 						button = {
 							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_tools_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_tools_rights').GetValue, '(CFixedPoint)100.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_tools_rights').GetValue, '(CFixedPoint)111.5'))]"
@@ -2381,6 +2407,19 @@ types PPConstructionPlanCountry
 							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/pp_books_charter.dds" } }
 						}
 						button = {
+							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_paper_charter').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_paper_charter').GetValue, '(CFixedPoint)111.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_paper_charter').GetValue, '(CFixedPoint)122.5'))]"
+							using = header_button_template
+							blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+							blockoverride "header_button_template_texture" { using = pressed_button_texture }
+							blockoverride "header_button_full_content" {}
+							size = { 34 34 }
+							down = "[GetPlayer.MakeScope.Var('pp_cplan_right_pp_paper_charter').IsSet]"
+							glow = { visible = "[GetPlayer.MakeScope.Var('pp_cplan_right_pp_paper_charter').IsSet]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+							tooltip = "PP_CPLANC_RIGHT_PP_PAPER_CHARTER"
+							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_pp_paper_charter')).End)]"
+							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/pp_paper_charter.dds" } }
+						}
+						button = {
 							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_tools_charter').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_tools_charter').GetValue, '(CFixedPoint)111.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_tools_charter').GetValue, '(CFixedPoint)122.5'))]"
 							using = header_button_template
 							blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
@@ -2769,6 +2808,19 @@ types PPConstructionPlanCountry
 							tooltip = "PP_CPLANC_RIGHT_PP_BOOKS_RIGHTS"
 							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_pp_books_rights')).End)]"
 							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/pp_books_rights.dds" } }
+						}
+						button = {
+							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_paper_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_paper_rights').GetValue, '(CFixedPoint)111.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_paper_rights').GetValue, '(CFixedPoint)122.5'))]"
+							using = header_button_template
+							blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+							blockoverride "header_button_template_texture" { using = pressed_button_texture }
+							blockoverride "header_button_full_content" {}
+							size = { 34 34 }
+							down = "[GetPlayer.MakeScope.Var('pp_cplan_right_pp_paper_rights').IsSet]"
+							glow = { visible = "[GetPlayer.MakeScope.Var('pp_cplan_right_pp_paper_rights').IsSet]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+							tooltip = "PP_CPLANC_RIGHT_PP_PAPER_RIGHTS"
+							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_pp_paper_rights')).End)]"
+							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/pp_paper_rights.dds" } }
 						}
 						button = {
 							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_tools_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_tools_rights').GetValue, '(CFixedPoint)111.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_tools_rights').GetValue, '(CFixedPoint)122.5'))]"
@@ -3284,6 +3336,19 @@ types PPConstructionPlanCountry
 						ignoreinvisible = yes
 						spacing = 3
 						button = {
+							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_free_town_charter').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_free_town_charter').GetValue, '(CFixedPoint)122.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_free_town_charter').GetValue, '(CFixedPoint)133.5'))]"
+							using = header_button_template
+							blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+							blockoverride "header_button_template_texture" { using = pressed_button_texture }
+							blockoverride "header_button_full_content" {}
+							size = { 34 34 }
+							down = "[GetPlayer.MakeScope.Var('pp_cplan_right_free_town_charter').IsSet]"
+							glow = { visible = "[GetPlayer.MakeScope.Var('pp_cplan_right_free_town_charter').IsSet]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+							tooltip = "PP_CPLANC_RIGHT_FREE_TOWN_CHARTER"
+							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_free_town_charter')).End)]"
+							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/free_town_charter.dds" } }
+						}
+						button = {
 							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_fortress_town').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_fortress_town').GetValue, '(CFixedPoint)122.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_fortress_town').GetValue, '(CFixedPoint)133.5'))]"
 							using = header_button_template
 							blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
@@ -3542,6 +3607,19 @@ types PPConstructionPlanCountry
 							tooltip = "PP_CPLANC_RIGHT_PP_BOOKS_RIGHTS"
 							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_pp_books_rights')).End)]"
 							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/pp_books_rights.dds" } }
+						}
+						button = {
+							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_paper_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_paper_rights').GetValue, '(CFixedPoint)122.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_paper_rights').GetValue, '(CFixedPoint)133.5'))]"
+							using = header_button_template
+							blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+							blockoverride "header_button_template_texture" { using = pressed_button_texture }
+							blockoverride "header_button_full_content" {}
+							size = { 34 34 }
+							down = "[GetPlayer.MakeScope.Var('pp_cplan_right_pp_paper_rights').IsSet]"
+							glow = { visible = "[GetPlayer.MakeScope.Var('pp_cplan_right_pp_paper_rights').IsSet]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+							tooltip = "PP_CPLANC_RIGHT_PP_PAPER_RIGHTS"
+							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_pp_paper_rights')).End)]"
+							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/pp_paper_rights.dds" } }
 						}
 						button = {
 							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_tools_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_tools_rights').GetValue, '(CFixedPoint)122.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_tools_rights').GetValue, '(CFixedPoint)133.5'))]"
@@ -4057,6 +4135,19 @@ types PPConstructionPlanCountry
 						ignoreinvisible = yes
 						spacing = 3
 						button = {
+							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_leather_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_leather_rights').GetValue, '(CFixedPoint)133.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_leather_rights').GetValue, '(CFixedPoint)144.5'))]"
+							using = header_button_template
+							blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+							blockoverride "header_button_template_texture" { using = pressed_button_texture }
+							blockoverride "header_button_full_content" {}
+							size = { 34 34 }
+							down = "[GetPlayer.MakeScope.Var('pp_cplan_right_pp_leather_rights').IsSet]"
+							glow = { visible = "[GetPlayer.MakeScope.Var('pp_cplan_right_pp_leather_rights').IsSet]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+							tooltip = "PP_CPLANC_RIGHT_PP_LEATHER_RIGHTS"
+							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_pp_leather_rights')).End)]"
+							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/pp_leather_rights.dds" } }
+						}
+						button = {
 							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_pottery_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_pottery_rights').GetValue, '(CFixedPoint)133.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_pottery_rights').GetValue, '(CFixedPoint)144.5'))]"
 							using = header_button_template
 							blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
@@ -4172,6 +4263,19 @@ types PPConstructionPlanCountry
 							tooltip = "PP_CPLANC_RIGHT_PP_BOOKS_RIGHTS"
 							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_pp_books_rights')).End)]"
 							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/pp_books_rights.dds" } }
+						}
+						button = {
+							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_paper_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_paper_rights').GetValue, '(CFixedPoint)133.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_paper_rights').GetValue, '(CFixedPoint)144.5'))]"
+							using = header_button_template
+							blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+							blockoverride "header_button_template_texture" { using = pressed_button_texture }
+							blockoverride "header_button_full_content" {}
+							size = { 34 34 }
+							down = "[GetPlayer.MakeScope.Var('pp_cplan_right_pp_paper_rights').IsSet]"
+							glow = { visible = "[GetPlayer.MakeScope.Var('pp_cplan_right_pp_paper_rights').IsSet]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+							tooltip = "PP_CPLANC_RIGHT_PP_PAPER_RIGHTS"
+							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_pp_paper_rights')).End)]"
+							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/pp_paper_rights.dds" } }
 						}
 						button = {
 							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_tools_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_tools_rights').GetValue, '(CFixedPoint)133.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_tools_rights').GetValue, '(CFixedPoint)144.5'))]"
@@ -4687,6 +4791,32 @@ types PPConstructionPlanCountry
 						ignoreinvisible = yes
 						spacing = 3
 						button = {
+							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_tools_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_tools_rights').GetValue, '(CFixedPoint)144.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_tools_rights').GetValue, '(CFixedPoint)155.5'))]"
+							using = header_button_template
+							blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+							blockoverride "header_button_template_texture" { using = pressed_button_texture }
+							blockoverride "header_button_full_content" {}
+							size = { 34 34 }
+							down = "[GetPlayer.MakeScope.Var('pp_cplan_right_pp_tools_rights').IsSet]"
+							glow = { visible = "[GetPlayer.MakeScope.Var('pp_cplan_right_pp_tools_rights').IsSet]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+							tooltip = "PP_CPLANC_RIGHT_PP_TOOLS_RIGHTS"
+							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_pp_tools_rights')).End)]"
+							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/pp_tools_rights.dds" } }
+						}
+						button = {
+							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_weaponry_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_weaponry_rights').GetValue, '(CFixedPoint)144.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_weaponry_rights').GetValue, '(CFixedPoint)155.5'))]"
+							using = header_button_template
+							blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+							blockoverride "header_button_template_texture" { using = pressed_button_texture }
+							blockoverride "header_button_full_content" {}
+							size = { 34 34 }
+							down = "[GetPlayer.MakeScope.Var('pp_cplan_right_pp_weaponry_rights').IsSet]"
+							glow = { visible = "[GetPlayer.MakeScope.Var('pp_cplan_right_pp_weaponry_rights').IsSet]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+							tooltip = "PP_CPLANC_RIGHT_PP_WEAPONRY_RIGHTS"
+							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_pp_weaponry_rights')).End)]"
+							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/pp_weaponry_rights.dds" } }
+						}
+						button = {
 							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_firearms_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_firearms_rights').GetValue, '(CFixedPoint)144.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_pp_firearms_rights').GetValue, '(CFixedPoint)155.5'))]"
 							using = header_button_template
 							blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
@@ -5174,6 +5304,32 @@ types PPConstructionPlanCountry
 						ignoreinvisible = yes
 						spacing = 3
 						button = {
+							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_ville_franche_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_ville_franche_town_rights').GetValue, '(CFixedPoint)155.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_ville_franche_town_rights').GetValue, '(CFixedPoint)166.5'))]"
+							using = header_button_template
+							blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+							blockoverride "header_button_template_texture" { using = pressed_button_texture }
+							blockoverride "header_button_full_content" {}
+							size = { 34 34 }
+							down = "[GetPlayer.MakeScope.Var('pp_cplan_right_ville_franche_town_rights').IsSet]"
+							glow = { visible = "[GetPlayer.MakeScope.Var('pp_cplan_right_ville_franche_town_rights').IsSet]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+							tooltip = "PP_CPLANC_RIGHT_VILLE_FRANCHE_TOWN_RIGHTS"
+							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_ville_franche_town_rights')).End)]"
+							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/ville_franche_town_rights.dds" } }
+						}
+						button = {
+							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_borgo_franco_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_borgo_franco_town_rights').GetValue, '(CFixedPoint)155.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_borgo_franco_town_rights').GetValue, '(CFixedPoint)166.5'))]"
+							using = header_button_template
+							blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+							blockoverride "header_button_template_texture" { using = pressed_button_texture }
+							blockoverride "header_button_full_content" {}
+							size = { 34 34 }
+							down = "[GetPlayer.MakeScope.Var('pp_cplan_right_borgo_franco_town_rights').IsSet]"
+							glow = { visible = "[GetPlayer.MakeScope.Var('pp_cplan_right_borgo_franco_town_rights').IsSet]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+							tooltip = "PP_CPLANC_RIGHT_BORGO_FRANCO_TOWN_RIGHTS"
+							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_borgo_franco_town_rights')).End)]"
+							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/borgo_franco_town_rights.dds" } }
+						}
+						button = {
 							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_agrarian_community_town_right').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_agrarian_community_town_right').GetValue, '(CFixedPoint)155.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_agrarian_community_town_right').GetValue, '(CFixedPoint)166.5'))]"
 							using = header_button_template
 							blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
@@ -5518,6 +5674,32 @@ types PPConstructionPlanCountry
 						ignoreinvisible = yes
 						spacing = 3
 						button = {
+							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_stapelrecht_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_stapelrecht_town_rights').GetValue, '(CFixedPoint)166.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_stapelrecht_town_rights').GetValue, '(CFixedPoint)177.5'))]"
+							using = header_button_template
+							blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+							blockoverride "header_button_template_texture" { using = pressed_button_texture }
+							blockoverride "header_button_full_content" {}
+							size = { 34 34 }
+							down = "[GetPlayer.MakeScope.Var('pp_cplan_right_stapelrecht_town_rights').IsSet]"
+							glow = { visible = "[GetPlayer.MakeScope.Var('pp_cplan_right_stapelrecht_town_rights').IsSet]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+							tooltip = "PP_CPLANC_RIGHT_STAPELRECHT_TOWN_RIGHTS"
+							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_stapelrecht_town_rights')).End)]"
+							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/stapelrecht_town_rights.dds" } }
+						}
+						button = {
+							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_kulm_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_kulm_town_rights').GetValue, '(CFixedPoint)166.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_kulm_town_rights').GetValue, '(CFixedPoint)177.5'))]"
+							using = header_button_template
+							blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+							blockoverride "header_button_template_texture" { using = pressed_button_texture }
+							blockoverride "header_button_full_content" {}
+							size = { 34 34 }
+							down = "[GetPlayer.MakeScope.Var('pp_cplan_right_kulm_town_rights').IsSet]"
+							glow = { visible = "[GetPlayer.MakeScope.Var('pp_cplan_right_kulm_town_rights').IsSet]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+							tooltip = "PP_CPLANC_RIGHT_KULM_TOWN_RIGHTS"
+							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_kulm_town_rights')).End)]"
+							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/kulm_town_rights.dds" } }
+						}
+						button = {
 							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_novi_fori_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_novi_fori_town_rights').GetValue, '(CFixedPoint)166.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_novi_fori_town_rights').GetValue, '(CFixedPoint)177.5'))]"
 							using = header_button_template
 							blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
@@ -5718,6 +5900,32 @@ types PPConstructionPlanCountry
 						direction = horizontal
 						ignoreinvisible = yes
 						spacing = 3
+						button = {
+							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_usatges_de_barcelona_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_usatges_de_barcelona_town_rights').GetValue, '(CFixedPoint)177.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_usatges_de_barcelona_town_rights').GetValue, '(CFixedPoint)188.5'))]"
+							using = header_button_template
+							blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+							blockoverride "header_button_template_texture" { using = pressed_button_texture }
+							blockoverride "header_button_full_content" {}
+							size = { 34 34 }
+							down = "[GetPlayer.MakeScope.Var('pp_cplan_right_usatges_de_barcelona_town_rights').IsSet]"
+							glow = { visible = "[GetPlayer.MakeScope.Var('pp_cplan_right_usatges_de_barcelona_town_rights').IsSet]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+							tooltip = "PP_CPLANC_RIGHT_USATGES_DE_BARCELONA_TOWN_RIGHTS"
+							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_usatges_de_barcelona_town_rights')).End)]"
+							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/usatges_de_barcelona_town_rights.dds" } }
+						}
+						button = {
+							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_furs_de_valencia_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_furs_de_valencia_town_rights').GetValue, '(CFixedPoint)177.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_furs_de_valencia_town_rights').GetValue, '(CFixedPoint)188.5'))]"
+							using = header_button_template
+							blockoverride "header_button_template_push_properties" { using = button_tab_toggle_properties_template }
+							blockoverride "header_button_template_texture" { using = pressed_button_texture }
+							blockoverride "header_button_full_content" {}
+							size = { 34 34 }
+							down = "[GetPlayer.MakeScope.Var('pp_cplan_right_furs_de_valencia_town_rights').IsSet]"
+							glow = { visible = "[GetPlayer.MakeScope.Var('pp_cplan_right_furs_de_valencia_town_rights').IsSet]" glow_radius = 5 color = { 1.0 0.85 0.55 1.0 } alpha = 0.8 }
+							tooltip = "PP_CPLANC_RIGHT_FURS_DE_VALENCIA_TOWN_RIGHTS"
+							onclick = "[GetScriptedGui('pp_cplan_country_toggle').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('right_furs_de_valencia_town_rights')).End)]"
+							widget = { size = { 26 26 } parentanchor = center icon = { size = { 100% 100% } texture = "gfx/interface/icons/town_rights/furs_de_valencia_town_rights.dds" } }
+						}
 						button = {
 							visible = "[And3(GetPlayer.MakeScope.Var('pp_cplan_tp_right_ara_consulate_sea_town_rights').IsSet, GreaterThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_ara_consulate_sea_town_rights').GetValue, '(CFixedPoint)177.5'), LessThan_CFixedPoint(GetPlayer.MakeScope.Var('pp_cplan_tp_right_ara_consulate_sea_town_rights').GetValue, '(CFixedPoint)188.5'))]"
 							using = header_button_template

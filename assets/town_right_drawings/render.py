@@ -1,4 +1,4 @@
-"""Render the 35 specialization town right icons (17 lines x charter/rights, plus the rights-only iron line)
+"""Render the 37 specialization town right icons (18 lines x charter/rights, plus the rights-only iron line)
 and write their DDS files.
 
 Run from the constructor repo:
@@ -30,9 +30,9 @@ sys.path.insert(0, str(HERE))
 import frame  # noqa: E402
 
 GOODS = ("cloth", "fine_cloth", "leather", "pottery", "furniture", "glass", "jewelry", "porcelain", "lacquerware",
-         "beer", "liquor", "books", "tools", "weaponry", "firearms", "cannons", "naval_supplies")
+         "beer", "liquor", "books", "paper", "tools", "weaponry", "firearms", "cannons", "naval_supplies")
 TIERS = {"charter": "pp_{good}_charter", "rights": "pp_{good}_rights"}
-# tiers each line has: the 17 manufacturing lines a charter and its rights; iron (Hammer Privileges) one right only
+# tiers each line has: the 18 manufacturing lines a charter and its rights; iron (Hammer Privileges) one right only
 LINES = {good: tuple(TIERS) for good in GOODS} | {"iron": ("rights",)}
 PNG_DIR = REPO / "artifacts" / "icons" / "town_rights"
 DDS_DIR = REPO / "mod" / "pp" / "main_menu" / "gfx" / "interface" / \
@@ -60,10 +60,10 @@ def render_one(job: tuple[str, str, bool]) -> tuple[str, str]:
     images[128].save(png)
     images[1024].save(PNG_DIR / f"{key}_1024.png")
     if dds:
-        from prosper_or_perish_constructor.good_icons import write_dxt5
+        from prosper_or_perish_constructor.good_icons import write_dds
 
         dds_path = DDS_DIR / f"{key}.dds"
-        write_dxt5(png, dds_path, (128, 128))
+        write_dds(png, dds_path, (128, 128))
         # vanilla headers carry the top level's byte size as linear size (16 bytes per 4x4 block); Pillow writes a pitch
         data = bytearray(dds_path.read_bytes())
         struct.pack_into("<I", data, 20, 128 * 128)

@@ -87,6 +87,7 @@ custom_tags = {
 construction_demand = mill_construction
 raw_modifier = {
     local_burghers_desired_pop = 0.05
+    local_pp_paper_line_levels = 1  # paper rights 2026-11-18: line levels for the town rights
 }
 increase_per_level_cost = 0.16
 ai_construct_weight = {

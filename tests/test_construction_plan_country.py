@@ -20,7 +20,7 @@ MOD = ROOT / "mod" / "pp"
 COMMON = MOD / "in_game/common"
 SCRIPT_FILES = (cc.EFFECTS, cc.TRIGGERS, cc.VALUES, cc.SCRIPTED_GUIS)
 SCRIPT_FOLDERS = ("scripted_effects", "scripted_triggers", "script_values", "scripted_guis")
-PP_RIGHTS = 35  # 17 goods with a charter and its rights, and the iron right
+PP_RIGHTS = 37  # 18 goods with a charter and its rights, and the iron right
 SWITCHED_OFF = 18  # vanilla's bundled specialization rights and charters, switched off by the mod
 
 
@@ -560,7 +560,7 @@ def test_every_right_of_the_database_is_there_once() -> None:
     assert set(keys) == set(definitions) - off
     pp = [key for key in keys if re.fullmatch(r"pp_\w+_(?:charter|rights)", key)]
     assert len(pp) == PP_RIGHTS and "pp_iron_rights" in pp
-    assert sum(key.endswith("_charter") for key in pp) == 17 and sum(key.endswith("_rights") for key in pp) == 18
+    assert sum(key.endswith("_charter") for key in pp) == 18 and sum(key.endswith("_rights") for key in pp) == 19
     # every right has its three triggers, its tile, its toggle and its place in the rule, once each
     triggers, effects = _code(MOD / cc.TRIGGERS), _code(MOD / cc.EFFECTS)
     gui, guis = _read(MOD / cc.GUI), _code(MOD / cc.SCRIPTED_GUIS)
@@ -928,7 +928,7 @@ def test_tiles_are_toggles_in_rows() -> None:
     # show is never past its own number), each shown while its place, a country variable the layout effect keeps,
     # falls in that row
     copies = lambda count: sum(count - start for start in range(0, count, per_row))
-    assert len(result.buildings) + len(result.rights) == 120
+    assert len(result.buildings) + len(result.rights) == 122
     assert len(tiles) == copies(len(result.buildings)) + copies(len(result.rights))
     layout = _block(_code(MOD / cc.EFFECTS), cc.LAYOUT_EFFECT)
     for tile in tiles:
@@ -1048,7 +1048,7 @@ def test_every_tile_has_a_name() -> None:
         assert loc[f"PP_CPLANC_RIGHT_{right.key.upper()}"].startswith(f"[ShowTownRightsName('{right.key}')]\\n"), right.key
     # the names are the game's own: every building and right has its English name
     names = cc.name_keys(result.buildings, result.rights)
-    assert len(names) == 120
+    assert len(names) == 122
     assert cc.missing_names(names, MOD, _vanilla()) == []
     assert cc.missing_names(["no_such_right_anywhere"], MOD, _vanilla()) == ["no_such_right_anywhere"]
 

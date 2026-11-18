@@ -41,7 +41,7 @@ def test_upgrades_to_names_a_right_loaded_before():
 def test_every_specialization_charter_upgrades_to_its_rights():
     text = (TOWN_RIGHTS / "pp_specialization_town_rights.txt").read_text(encoding="utf-8-sig")
     charters = re.findall(r"^(pp_\w+)_charter = \{", text, re.MULTILINE)
-    assert len(charters) == 17
+    assert len(charters) == 18
     for good in charters:
         assert re.search(rf"^{good}_charter = \{{\s*is_specialization = yes\s*upgrades_to = {good}_rights\b", text, re.MULTILINE)
 
@@ -56,7 +56,7 @@ def test_one_specialization_rule_names_every_other_pp_specialization_right():
     other one, except the charter it upgrades from (the upgrade checks the right's allow while the charter is held).
     Guards new rights such as the rights-only iron line (Hammer Privileges, 2026-10-15)."""
     blocks = _pp_specialization_blocks()
-    assert "pp_iron_rights" in blocks and len(blocks) == 35
+    assert "pp_iron_rights" in blocks and len(blocks) == 37
     upgrades_from = {m[1]: key for key, body in blocks.items() if (m := re.search(r"upgrades_to = (\w+)", body))}
     missing = []
     for key, body in blocks.items():

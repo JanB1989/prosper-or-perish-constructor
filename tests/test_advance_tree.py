@@ -66,7 +66,7 @@ DELIBERATE_REPLACE_DIFFERENCES: dict[str, tuple[set[str], set[str]]] = {
         # specialization rights (2026-10-07): unlocked here, so their charters can be granted before
         | {f"unlock_town_rights = pp_{good}_rights" for good in (
             "cloth", "fine_cloth", "leather", "pottery", "furniture", "glass", "jewelry", "porcelain", "lacquerware",
-            "beer", "liquor", "books", "tools", "weaponry", "firearms", "cannons", "naval_supplies")},
+            "beer", "liquor", "books", "paper", "tools", "weaponry", "firearms", "cannons", "naval_supplies")},
     ),
     # trade (2026-10-07, Jan): Global Trade countries' long sea hauls use a bit less merchant capacity
     "global_trade_advance": (set(), {"trade_sea_efficiency = 0.15"}),

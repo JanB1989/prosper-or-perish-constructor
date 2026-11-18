@@ -112,11 +112,12 @@
   Its Market leg runs at margin 1.06 (`[production_gate.leg] margin_by_good`): nothing demands steel until some exists, so
   the price sat at base and the 1.0 leg never opened (no steel mill in the 9 full runs since 2026-10-10).
 - Every line building counts its standing levels in `raw_modifier local_pp_<good>_line_levels` (modifier types
-  `pp_manufacturing_line_modifier_types.txt`). Tiers 2+ have `ai_construct_weight` 200 / (owner income + 10) where the
+  `pp_manufacturing_line_modifier_types.txt`). The paper line stays outside the tiers but has the counter for its
+  right (2026-11-18). Tiers 2+ have `ai_construct_weight` 200 / (owner income + 10) where the
   predecessor stands (the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001).
 - Specialization town rights (`town_rights/pp_specialization_town_rights.txt`): per good a charter (3 line levels, output
   +0.15, efficiency -0.05) that upgrades to the rights (unlocked by the Printing Press advance, 8 levels for
-  cloth / leather / pottery / glass / jewelry / books, 5 for the other lines; output +0.35, efficiency -0.05; a rights type needs an unlocking advance, else the engine never grants its charter); one
+  cloth / leather / pottery / glass / jewelry / books / paper, 5 for the other lines; output +0.35, efficiency -0.05; a rights type needs an unlocking advance, else the engine never grants its charter); one
   specialization right per town (`pp_one_specialization_tt`). The AI values only the output line against the town's own
   production, so it takes a right where that line dominates. The 18 vanilla bundled royal rights and charters are
   `REPLACE`d with `potential = { always = no }`. Each rights block stands before its charter: `upgrades_to` reads only

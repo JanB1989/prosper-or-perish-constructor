@@ -64,6 +64,9 @@ custom_tags = {
 }
 construction_demand = workshop_construction
 increase_per_level_cost = 0.16
+raw_modifier = {
+    local_pp_paper_line_levels = 1  # paper rights 2026-11-18: line levels for the town rights
+}
 ai_construct_weight = {
     value = 0
     add = pp_market_short_paper

@@ -537,6 +537,13 @@ pp_cplan_right_show_pp_books_rights = {
 		value = 1
 	}
 }
+pp_cplan_right_show_pp_paper_rights = {
+	value = 0
+	if = {
+		limit = { pp_cplan_right_potential_pp_paper_rights = yes }
+		value = 1
+	}
+}
 pp_cplan_right_show_pp_tools_rights = {
 	value = 0
 	if = {

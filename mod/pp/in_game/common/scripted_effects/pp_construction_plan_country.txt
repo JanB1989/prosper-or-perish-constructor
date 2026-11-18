@@ -1499,6 +1499,20 @@ pp_cplan_country_rights = {
 		}
 		if = {
 			limit = {
+				has_variable = pp_cplan_right_pp_paper_rights
+				pp_cplan_right_potential_pp_paper_rights = yes
+			}
+			pp_cplan_country_grant = { right = pp_paper_rights }
+		}
+		if = {
+			limit = {
+				has_variable = pp_cplan_right_pp_paper_charter
+				pp_cplan_right_potential_pp_paper_charter = yes
+			}
+			pp_cplan_country_grant = { right = pp_paper_charter }
+		}
+		if = {
+			limit = {
 				has_variable = pp_cplan_right_pp_tools_rights
 				pp_cplan_right_potential_pp_tools_rights = yes
 			}
@@ -1987,6 +2001,8 @@ pp_cplan_country_declare = {
 	set_variable = { name = pp_cplan_flag value = flag:right_pp_liquor_charter }
 	set_variable = { name = pp_cplan_flag value = flag:right_pp_books_rights }
 	set_variable = { name = pp_cplan_flag value = flag:right_pp_books_charter }
+	set_variable = { name = pp_cplan_flag value = flag:right_pp_paper_rights }
+	set_variable = { name = pp_cplan_flag value = flag:right_pp_paper_charter }
 	set_variable = { name = pp_cplan_flag value = flag:right_pp_tools_rights }
 	set_variable = { name = pp_cplan_flag value = flag:right_pp_tools_charter }
 	set_variable = { name = pp_cplan_flag value = flag:right_pp_weaponry_rights }
@@ -2397,6 +2413,9 @@ pp_cplan_country_layout_do = {
 	remove_variable = pp_cplan_tp_right_pp_books_charter
 	change_variable = { name = pp_cplan_tc_right add = 1 }
 	set_variable = { name = pp_cplan_tp_right_pp_books_charter value = var:pp_cplan_tc_right }
+	remove_variable = pp_cplan_tp_right_pp_paper_charter
+	change_variable = { name = pp_cplan_tc_right add = 1 }
+	set_variable = { name = pp_cplan_tp_right_pp_paper_charter value = var:pp_cplan_tc_right }
 	remove_variable = pp_cplan_tp_right_pp_tools_charter
 	change_variable = { name = pp_cplan_tc_right add = 1 }
 	set_variable = { name = pp_cplan_tp_right_pp_tools_charter value = var:pp_cplan_tc_right }
@@ -2566,6 +2585,14 @@ pp_cplan_country_layout_do = {
 	}
 	else = {
 		remove_variable = pp_cplan_tp_right_pp_books_rights
+	}
+	if = {
+		limit = { OR = { has_variable = pp_cplan_right_pp_paper_rights pp_cplan_right_show_pp_paper_rights > 0 } }
+		change_variable = { name = pp_cplan_tc_right add = 1 }
+		set_variable = { name = pp_cplan_tp_right_pp_paper_rights value = var:pp_cplan_tc_right }
+	}
+	else = {
+		remove_variable = pp_cplan_tp_right_pp_paper_rights
 	}
 	if = {
 		limit = { OR = { has_variable = pp_cplan_right_pp_tools_rights pp_cplan_right_show_pp_tools_rights > 0 } }

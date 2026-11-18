@@ -94,6 +94,9 @@ building:
     }
     construction_demand = manufactory_construction
     increase_per_level_cost = 0.21
+    raw_modifier = {
+        local_pp_paper_line_levels = 1  # paper rights 2026-11-18: line levels for the town rights
+    }
 localization:
   entries:
     paper_manufactory_slot_0: "[ShowBuildingTypeName('paper_manufactory')|e] Work"

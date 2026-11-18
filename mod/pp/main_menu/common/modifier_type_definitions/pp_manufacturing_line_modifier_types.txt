@@ -87,6 +87,13 @@ local_pp_books_line_levels = {
 	}
 }
 
+local_pp_paper_line_levels = {
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}
+
 local_pp_tools_line_levels = {
 	decimals = 1
 	game_data = {

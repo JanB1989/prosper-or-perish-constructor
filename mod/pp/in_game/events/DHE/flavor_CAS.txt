@@ -9944,6 +9944,7 @@ flavor_cas.1002 = { #Conversion of the Moriscos
 				every_pop = {
 					limit = {
 						owner = root
+						culture = culture:andalusi
 						religion = religion:sunni
 					}
 					split_pop = {
@@ -9955,7 +9956,14 @@ flavor_cas.1002 = { #Conversion of the Moriscos
 				if = {
 					limit = {
 						has_dlc = "d009_across_the_pillars"
-						"religion_population(religion:sunni)" > 0
+						culture_population = {
+							culture = culture:andalusi
+							value > 0
+						}
+						religion_population = {
+							religion = religion:sunni
+							value > 0
+						}
 					}
 					add_location_modifier = {
 						modifier = crypto_muslim_community
@@ -9983,6 +9991,7 @@ flavor_cas.1002 = { #Conversion of the Moriscos
 					owner = prev
 					from = this.province_definition
 					to = scope:escape_target1.province_definition
+					culture = culture:andalusi
 					religion = religion:sunni
 					amount = 0.200
 					months = 60
@@ -9991,6 +10000,7 @@ flavor_cas.1002 = { #Conversion of the Moriscos
 					owner = prev
 					from = this.province_definition
 					to = scope:escape_target2.province_definition
+					culture = culture:andalusi
 					religion = religion:sunni
 					amount = 0.200
 					months = 60
@@ -9999,6 +10009,7 @@ flavor_cas.1002 = { #Conversion of the Moriscos
 					owner = prev
 					from = this.province_definition
 					to = scope:escape_target3.province_definition
+					culture = culture:andalusi
 					religion = religion:sunni
 					amount = 0.200
 					months = 60
@@ -10007,6 +10018,7 @@ flavor_cas.1002 = { #Conversion of the Moriscos
 					owner = prev
 					from = this.province_definition
 					to = scope:escape_target4.province_definition
+					culture = culture:andalusi
 					religion = religion:sunni
 					amount = 0.200
 					months = 60

@@ -6941,8 +6941,8 @@ flavor_byz.1402 = { #Response for Byz - Positive
 
 			add_migration = {
 				owner = this
-				from = root.capital.province_definition
-				to = scope:target_location.province_definition
+				from = scope:target_location2.province_definition
+				to = root.capital.province_definition
 				culture = root.culture
 				amount = 0.05
 				months = 80

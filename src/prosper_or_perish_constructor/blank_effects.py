@@ -46,6 +46,7 @@ STRUCTURAL_KEYS = {
     "age", "icon", "requires", "for", "research_cost", "depth", "potential", "allow", "ai_weight",
     "starting_technology_level", "in_tree_of", "government", "country_type", "content_priority",
     "ai_preference_tags", "allow_children", "modifier_while_progressing", "pure_tooltip_entry",
+    "is_content_highlighted",
 }
 # unlock_* key -> collection holding its targets. Other unlock_* keys count as effect lines unchecked.
 UNLOCK_COLLECTIONS = {

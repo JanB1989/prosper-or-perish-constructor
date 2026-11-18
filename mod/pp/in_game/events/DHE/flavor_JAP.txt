@@ -723,6 +723,7 @@ flavor_jap.103 = { # Attempted Assination of Moronao by Tadayoshi
 		historical_option = yes
 		add_stability = stability_severe_penalty
 		set_variable = { name = tadayoshi_to_south_court years = 12 }
+		remove_from_cabinet = scope:ask_tadayoshi
 		scope:ask_tadayoshi = {
 			add_character_modifier = {
 				modifier = jap_tadayoshi_remove_from_court

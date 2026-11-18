@@ -844,6 +844,11 @@ template market_value_piechart_tooltip {
 			icon_pie = {
 				blockoverride "PieSize" { size = { 120 120 } }
 
+				blockoverride "scrollarea_pie_size" {
+					using = layoutpolicy_expanding
+					size = { 460 -1 }
+				}
+
 				blockoverride "pie_datamodel" {
 					datamodel = "[MarketValuePieChartWidget.GetContributions]"
 				}
@@ -2896,7 +2901,6 @@ template market_hub_trade_tooltip {
 						}
 					}
 					TooltipManualTableField = {
-						visible = "[GreaterThan_CFixedPoint(Merchant.GetUsedCapacity,'(CFixedPoint)0')]"
 						blockoverride "field_content" {
 							text_single = {
 								layoutpolicy_horizontal = expanding
@@ -2905,8 +2909,32 @@ template market_hub_trade_tooltip {
 							}
 							text_single = {
 								autoresize = yes
+								raw_text = "[Merchant.GetAverageIncomePerTradeCapacity|2G]@income!"
+							}
+						}
+					}
+					TooltipManualTableField = {
+						visible = "[GreaterThan_CFixedPoint(Merchant.GetAverageUpkeepPerTradeCapacity,'(CFixedPoint)0')]"
+						blockoverride "field_content" {
+							text_single = {
+								layoutpolicy_horizontal = expanding
+								autoresize = no
+								text = "MARKET_HUB_TC_BUTTON_UPKEEP_PER_TC"
+							}
+							text_single = {
+								autoresize = yes
 								tagtooltip_enabled = yes
-								raw_text = "[Merchant.GetAverageTradeCapacityProfitInfo]"
+								raw_text = "[Merchant.GetAverageUpkeepPerTradeCapacityInfo]"
+							}
+						}
+					}
+					TooltipManualTableField = {
+						visible = "[GreaterThan_CFixedPoint(Merchant.GetAverageUpkeepPerTradeCapacity,Merchant.GetAverageIncomePerTradeCapacity)]"
+						blockoverride "field_content" {
+							text_single = {
+								layoutpolicy_horizontal = expanding
+								autoresize = no
+								text = "MARKET_HUB_TC_BUTTON_UPKEEP_WARNING"
 							}
 						}
 					}

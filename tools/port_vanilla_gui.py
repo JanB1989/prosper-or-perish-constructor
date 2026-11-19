@@ -43,7 +43,9 @@ FOOD_GAUGE_FILES: dict[str, str] = {
     "town_rights.gui": "Province",   # 1.4 moved the province list here from the expansion view
 }
 # overrides the mod no longer needs (pure vanilla after the port)
-RETIRED = ("expansion_lateralview.gui",)
+# retired overrides: zz_pp_building_type_header.gui re-declared the Production window's rows only for the Construction
+# Plan's building marks (gone 2026-11-19, a plan is a town right now)
+RETIRED = ("expansion_lateralview.gui", "shared/zz_pp_building_type_header.gui")
 EUROPEDIA = "encyclopedia_lateralview.gui"
 # the build panel ("Building <type>"): width (vanilla left panel 570; a six-slot row with the value columns needs
 # ~920), row width (fixed: the rows sit in flowcontainers; panel minus list margins and scrollbar, 45 in vanilla, and
@@ -82,10 +84,6 @@ BUILD_PAYBACK_BANDS = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 LOCATION_PRODUCTION = "location_production_lateralview.gui"
 PRODUCTION = "production_lateralview.gui"
 LOCATION_ROWS_GUI = "shared/pp_location_building_rows.gui"
-PRODUCTION_HEADER = "building_type_header"   # the Production window's row of a building type (production_lateralview.gui)
-PRODUCTION_HEADER_GUI = "shared/zz_pp_building_type_header.gui"
-PRODUCTION_ALL_AUTO_EXPAND = "ToggleAutoExpandBuildings(BuildingItem.GetBuildingsFunc)"
-BUILD_ALL_AUTO_EXPAND = "BuildInLocationLateralView.ToggleAutoExpandAllBuildings"
 LOCATION_ROW_TYPES = ("location_filtered_header_with_candidate", "location_filtered_header_no_candidate")
 LOCATION_VALUES_UNBUILT = "pp_location_values_unbuilt"
 LOCATION_SORT_BUTTONS = 5
@@ -314,8 +312,7 @@ def port_build_location(vanilla: str) -> str:
     wrap their inputs onto more lines and grow with them, and each location row shows its slot circles and production
     efficiencies two per column, so they stay inside the row, then one value per column: build cost, payback time,
     profit and tax income per level (``_value_columns``). The header's payback button lists the rows in payback order
-    (``_payback_order``). A row of an own location without an own building of the type carries the Construction
-    Plan's mark as a checkbox (``_construction_plan_mark``). Everything else is vanilla."""
+    (``_payback_order``). Everything else is vanilla."""
     what = "vanilla build panel"
     t = vanilla
     # the panel: wider than the 570 of the left lateral views; the market picker opens beside it
@@ -388,39 +385,11 @@ def port_build_location(vanilla: str) -> str:
                    lambda m: f"{m.group(1)}{m.group(2)}{m.group(3)}{m.group(4)}{m.group(3)}{clear}\n", t)
     if n != BUILD_SORT_BUTTONS:
         raise ValueError(f"{what}: expected {BUILD_SORT_BUTTONS} sort buttons, found {n}")
-    # Ctrl + click on vanilla's auto-expand checkbox marks the building, Ctrl + right click all of its type
-    t = _location_plan().add_auto_expand_marks(t, what, mass_type="BuildInLocationLateralView.GetBuildingType.MakeScope",
-                                               mass_anchor=f'on_action = "[{BUILD_ALL_AUTO_EXPAND}]"', mass_click="right")
-    t = _construction_plan_mark(t, what)
     t = _constructions_text(t, what)
     t = _value_columns(t, what)
     t = _payback_order(t, what)
     t = _market_picker_beside(t, "build_location_select_market", BUILD_PANEL_WIDTH, "build panel", what)
     return _mark_width(t, "BuildInLocationLateralView", BUILD_PANEL_WIDTH, what)
-
-
-def _location_plan():
-    """location_plan.py: the Construction Plan's mark widgets (Ctrl + click beside vanilla's auto expand)."""
-    sys.path.insert(0, str(REPO / "src"))
-    from prosper_or_perish_constructor import location_plan
-
-    return location_plan
-
-
-def _construction_plan_mark(t: str, what: str) -> str:
-    """The Construction Plan's mark on a location row (Jan 2026-11-10: mark a building itself, the way vanilla's auto
-    expand toggles a building): after vanilla's column of own-building checkboxes (subsidize, open, auto expand; shown
-    only where the player owns the building) a column of the same width with one checkbox, shown only on the rows of
-    the player's locations where that column is hidden, so no row gets wider. The widget is location_plan.py's
-    (``build_panel_mark``); nothing of vanilla's is changed."""
-    sys.path.insert(0, str(REPO / "src"))
-    from prosper_or_perish_constructor import location_plan
-
-    own = re.escape(f'visible = "[{location_plan.BUILD_PANEL_OWN}]"')
-    start, end, ind = _cut(t, rf"^([ \t]*)vbox = \{{\n[ \t]*margin = \{{ 5 0 \}}\n[ \t]*{own}", what)
-    if "ToggleAutoExpandBuilding(Building.Self)" not in t[start:end]:
-        raise ValueError(f"{what}: the own-building checkboxes no longer hold the auto-expand checkbox")
-    return t[:end] + "\n\n" + location_plan.build_panel_mark(ind).rstrip("\n") + t[end:]
 
 
 def _market_picker_beside(t: str, name: str, x: int, panel: str, what: str) -> str:
@@ -792,41 +761,13 @@ def port_location_rows(production: str) -> str:
             raise ValueError(f"{what}: no type {name}")
         block = production[m.start():_block_end(production, production.index("{", m.start()))]
         block = block.replace(f"type {name} = hbox", f"type pp_{name} = hbox", 1)
-        ported_block = port(_dedent(block, 1), f"{what} ({name})")
-        if "ToggleAutoExpandBuilding(Building.Self)" in ported_block:   # Ctrl + click: the Construction Plan's mark
-            ported_block = _location_plan().add_auto_expand_marks(ported_block, f"{what} ({name})")
-        out.append(ported_block)
+        out.append(port(_dedent(block, 1), f"{what} ({name})"))
     return ("# Generated by tools/port_vanilla_gui.py (port_location_rows): the location view's building rows with the\n"
             "# build panel's layout (slots and efficiencies two per column, build cost, payback, profit, tax income) and\n"
             "# the payback band recorder. pp_ copies: CMF re-declares the vanilla types.\n"
             f"types PPLocationBuildingRows {{\n{_indent(''.join(b.rstrip() + chr(10) + chr(10) for b in out).rstrip() + chr(10), 1)}}}\n\n"
             + _values_template(unbuilt_only=True))
 
-
-def port_production_header(production: str) -> str:
-    """The Production window's row of a building type (vanilla type building_type_header), re-declared with one
-    addition: Ctrl + click on its auto expand for all buildings of the type marks the type for the Construction Plan in
-    the player's locations where it stands (location_plan.add_auto_expand_marks). The mod ships no copy of
-    production_lateralview.gui; a later declaration of a type replaces the vanilla one (the zz_ file loads after it)."""
-    what = "vanilla production window rows"
-    blocks = []
-    for name in (PRODUCTION_HEADER, LOCATION_ROW_TYPES[0]):
-        m = re.search(rf"(?m)^\ttype {name} = hbox \{{\n", production)
-        if not m:
-            raise ValueError(f"{what}: no type {name}")
-        block = _dedent(production[m.start():_block_end(production, production.index("{", m.start()))], 1)
-        if name == PRODUCTION_HEADER:   # auto expand for all buildings of the type
-            block = _location_plan().add_auto_expand_marks(block, f"{what} ({name})",
-                                                           mass_type="BuildingItem.GetBuildingType.MakeScope",
-                                                           mass_anchor=f'on_action = "[{PRODUCTION_ALL_AUTO_EXPAND}]"',
-                                                           expected=0)
-        else:                           # a location's row under it: auto expand for that building
-            block = _location_plan().add_auto_expand_marks(block, f"{what} ({name})")
-        blocks.append(block.rstrip() + "\n")
-    return ("# Generated by tools/port_vanilla_gui.py (port_production_header): vanilla's building_type_header and\n"
-            "# location_filtered_header_with_candidate (the Production window's rows) with the Construction Plan's Ctrl + click\n"
-            "# on their auto-expand checkboxes. Everything else is vanilla.\n"
-            f"types PPBuildingTypeHeader {{\n{_indent(chr(10).join(blocks), 1)}}}\n")
 
 
 def _mark_width(t: str, view: str, width: int, what: str) -> str:
@@ -902,7 +843,7 @@ def port_building_view(t: str) -> str:
             f"{ind}\t\tmargin_top = 2\n{ind}\t\tspacing = 6\n{ind}\t\texpand = {{}}\n"
             + _slot_columns(ind + "\t\t", "Building.GetProductionMethods", _item_body(methods), 6)
             + f"{ind}\t}}\n{ind}\texpand = {{}}\n{ind}}}")
-    t = _location_plan().add_auto_expand_marks(t[:start] + grid + t[end:], what)   # Ctrl + click: the plan's mark
+    t = t[:start] + grid + t[end:]
     return _mark_width(t, "BuildingView", BUILDING_VIEW_WIDTH, what)
 
 
@@ -1299,7 +1240,6 @@ def ported(vanilla_game: Path, mod_root: Path) -> dict[str, str | None]:
     out[LOCATION_PRODUCTION] = port_location_production(out[LOCATION_PRODUCTION])
     out[LOCATION_ROWS_GUI] = port_location_rows(_read(vanilla_game / GUI / PRODUCTION))
     out[BUILDING_VIEW] = port_building_view(_read(vanilla_game / GUI / BUILDING_VIEW))
-    out[PRODUCTION_HEADER_GUI] = port_production_header(_read(vanilla_game / GUI / PRODUCTION))
     out[SEARCH_FILTER] = port_select_search_filter(_read(vanilla_game / GUI / SEARCH_FILTER))
     out[EUROPEDIA] = port_europedia(_read(vanilla_game / GUI / EUROPEDIA), _read(mod_root / GUI / EUROPEDIA))
     out[BUILD_LOCATION] = port_build_location(_read(vanilla_game / GUI / BUILD_LOCATION))

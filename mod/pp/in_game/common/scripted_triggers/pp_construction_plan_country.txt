@@ -18,6 +18,16 @@ pp_cplan_country_rights_site = {
 	has_max_town_rights = no
 }
 
+# Location scope: a plan's charter or rights may come here (pp_cplan_country_plan_rights): not only conquered, no
+# profile here that switched the group off, nothing granted here this month, and a town or more (the game grants
+# town rights to towns and cities; a plan's own pass raises a rural settlement first).
+pp_cplan_country_plan_site = {
+	NOT = { integration_level = conquered }
+	NOT = { has_variable = pp_lprof_xc }
+	NOT = { has_variable = pp_cplan_right_mark }
+	NOT = { location_rank = location_rank:rural_settlement }
+}
+
 # Building scope: a standing, open building the country can upgrade (its successor is researched: in game
 # 2026-11-10 building_can_be_upgraded_by is true on every standing older tier from then on). A closed building is
 # left alone: whoever closed it found it does not pay.

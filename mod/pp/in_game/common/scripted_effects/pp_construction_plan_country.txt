@@ -80,7 +80,7 @@ pp_cplan_country_target = {
 					modifier:cannot_upgrade_location = no
 					pp_cplan_country_goods_town = yes
 				}
-				pp_cplan_country_rank_up = { rank = town n = 101 }
+				pp_cplan_country_rank_up = { rank = town n = 101 why = 107 }
 			}
 		}
 		else_if = {
@@ -91,7 +91,7 @@ pp_cplan_country_target = {
 					modifier:cannot_upgrade_location = no
 					pp_cplan_country_goods_city = yes
 				}
-				pp_cplan_country_rank_up = { rank = city n = 102 }
+				pp_cplan_country_rank_up = { rank = city n = 102 why = 107 }
 			}
 		}
 		else_if = {
@@ -1151,7 +1151,7 @@ pp_cplan_country_ranks = {
 			# where the market lacks the upgrade's construction goods nothing starts; the window counts it
 			if = {
 				limit = { pp_cplan_country_goods_town = yes }
-				pp_cplan_country_rank_up = { rank = town n = 101 }
+				pp_cplan_country_rank_up = { rank = town n = 101 why = 107 }
 			}
 			else = {
 				pp_cplan_note_goods = { why = 107 }
@@ -1173,7 +1173,7 @@ pp_cplan_country_ranks = {
 			# where the market lacks the upgrade's construction goods nothing starts; the window counts it
 			if = {
 				limit = { pp_cplan_country_goods_city = yes }
-				pp_cplan_country_rank_up = { rank = city n = 102 }
+				pp_cplan_country_rank_up = { rank = city n = 102 why = 107 }
 			}
 			else = {
 				pp_cplan_note_goods = { why = 107 }
@@ -1186,7 +1186,9 @@ pp_cplan_country_ranks = {
 # (pp_cplan_country_cost_<rank>) fits in the group's purse and in the gold above the reserve (as
 # pp_cplan_affordable does for a building); else it is counted as waiting for gold, and the first such thing of
 # the pass is what the group saves for (as pp_cplan_note_wait does: the location, the cost, and $n$ = 101 a town,
-# 102 a city in pp_cplan_save_rank_107, since an upgrade has no building type). In game 2026-11-10: construct_location_rank
+# 102 a city in pp_cplan_save_rank_<why>, since an upgrade has no building type). $why$ is the rule group's
+# construction code: its purse, its ledger, its test log (107 Towns and Buildings, 105 the plans of the
+# Locations group). In game 2026-11-10: construct_location_rank
 # charges the gold itself, at once, and starts a normal construction that holds the location's construction slot
 # for a year (a city two) and draws construction goods; where the rank's allow fails it starts nothing and charges
 # nothing. So the gold is measured before and after, and the upgrade is booked (started, spent, ledger, test log)
@@ -1199,8 +1201,8 @@ pp_cplan_country_rank_up = {
 	scope:pp_cplan_country = { remove_variable = pp_cplan_noted }
 	if = {
 		limit = {
-			NOT = { pp_cplan_saving = { why = 107 } }
-			pp_cplan_country_cost_$rank$ <= scope:pp_cplan_country.pp_cplan_purse_n_107
+			NOT = { pp_cplan_saving = { why = $why$ } }
+			pp_cplan_country_cost_$rank$ <= scope:pp_cplan_country.pp_cplan_purse_n_$why$
 			pp_cplan_country_cost_$rank$ <= scope:pp_cplan_country.pp_cplan_free_gold
 		}
 		scope:pp_cplan_country = {
@@ -1218,37 +1220,37 @@ pp_cplan_country_rank_up = {
 			scope:pp_cplan_country = {
 				change_variable = { name = pp_cplan_spent add = scope:pp_cplan_paid }
 				change_variable = { name = pp_cplan_started add = 1 }
-				change_variable = { name = pp_cplan_dspent_107 add = scope:pp_cplan_paid }
-				change_variable = { name = pp_cplan_dn_107 add = 1 }
+				change_variable = { name = pp_cplan_dspent_$why$ add = scope:pp_cplan_paid }
+				change_variable = { name = pp_cplan_dn_$why$ add = 1 }
 				set_variable = { name = pp_cplan_hit value = yes }
-				pp_cplan_purse_pay = { why = 107 }
+				pp_cplan_purse_pay = { why = $why$ }
 				if = {
 					limit = { NOT = { is_target_in_variable_list = { name = pp_cplan_log target = scope:pp_cplan_site } } }
 					add_to_variable_list = { name = pp_cplan_log target = scope:pp_cplan_site }
 				}
-				add_to_variable_list = { name = pp_cplan_log_107 target = scope:pp_cplan_site }
+				add_to_variable_list = { name = pp_cplan_log_$why$ target = scope:pp_cplan_site }
 			}
 			# the window's line of this location in the group's lists: the upgrade (no building: pp_cplan_log_rank names
 			# it), what the group paid here, and its reason unless a building of the group left one here in this pass
 			set_variable = { name = pp_cplan_log_rank value = yes }
 			if = {
-				limit = { has_variable = pp_cplan_log_cost_107 }
-				change_variable = { name = pp_cplan_log_cost_107 add = scope:pp_cplan_paid }
+				limit = { has_variable = pp_cplan_log_cost_$why$ }
+				change_variable = { name = pp_cplan_log_cost_$why$ add = scope:pp_cplan_paid }
 			}
 			else = {
-				set_variable = { name = pp_cplan_log_cost_107 value = scope:pp_cplan_paid }
+				set_variable = { name = pp_cplan_log_cost_$why$ value = scope:pp_cplan_paid }
 			}
 			if = {
-				limit = { NOT = { has_variable = pp_cplan_log_step_107 } }
-				set_variable = { name = pp_cplan_log_step_107 value = 2 }
-				set_variable = { name = pp_cplan_log_val_107 value = scope:pp_cplan_rv }
+				limit = { NOT = { has_variable = pp_cplan_log_step_$why$ } }
+				set_variable = { name = pp_cplan_log_step_$why$ value = 2 }
+				set_variable = { name = pp_cplan_log_val_$why$ value = scope:pp_cplan_rv }
 			}
 			# test runs (pp_cplan_ai_test, set by the console): the rule group and the location in debug.log, as
 			# pp_cplan_construct_now writes them for a building (ppc plan-report reads them); an upgrade has no building
 			# type
 			if = {
 				limit = { scope:pp_cplan_country = { has_variable = pp_cplan_ai_test } }
-				debug_log = PP_CPLAN_TLOG_107
+				debug_log = PP_CPLAN_TLOG_$why$
 				debug_log_scopes = no
 			}
 		}
@@ -1260,15 +1262,15 @@ pp_cplan_country_rank_up = {
 			if = {
 				limit = { NOT = { has_variable = pp_cplan_noted } }
 				set_variable = { name = pp_cplan_noted value = yes }
-				change_variable = { name = pp_cplan_dwait_107 add = scope:pp_cplan_wc }
-				change_variable = { name = pp_cplan_dwn_107 add = 1 }
+				change_variable = { name = pp_cplan_dwait_$why$ add = scope:pp_cplan_wc }
+				change_variable = { name = pp_cplan_dwn_$why$ add = 1 }
 			}
 			# the first thing of the pass the group cannot pay for is what it saves for
 			if = {
-				limit = { NOT = { has_variable = pp_cplan_save_cost_107 } }
-				set_variable = { name = pp_cplan_save_cost_107 value = { value = scope:pp_cplan_wc add = 100 } }
-				set_variable = { name = pp_cplan_save_loc_107 value = scope:pp_cplan_site }
-				set_variable = { name = pp_cplan_save_rank_107 value = $n$ }
+				limit = { NOT = { has_variable = pp_cplan_save_cost_$why$ } }
+				set_variable = { name = pp_cplan_save_cost_$why$ value = { value = scope:pp_cplan_wc add = 100 } }
+				set_variable = { name = pp_cplan_save_loc_$why$ value = scope:pp_cplan_site }
+				set_variable = { name = pp_cplan_save_rank_$why$ value = $n$ }
 			}
 		}
 	}
@@ -1292,9 +1294,13 @@ pp_cplan_rank_charge = {
 # rights at all, every ticked right the country may grant (its potential), in the rule's order: the rights of
 # [construction_plan_country] rights_order, the specialization rights, then the rest in the game's order. A right
 # stands before the charter that upgrades into it, so a location that qualifies for both gets the stronger one.
+# The plans' charters and rights come first, whether the rule is on or not (pp_cplan_country_plan_rights). The
+# month's marks (pp_cplan_right_mark) are cleared at the end: a marked location holds the right it was granted, so the
+# locations with town rights are enough to walk.
 pp_cplan_country_rights = {
 	save_scope_as = pp_cplan_country
 	set_variable = { name = pp_cplan_rights_n value = 100 }
+	pp_cplan_country_plan_rights = yes
 	if = {
 		limit = {
 			has_variable = pp_cplan_rights_on
@@ -1882,9 +1888,93 @@ pp_cplan_country_rights = {
 			}
 			pp_cplan_country_grant = { right = municipia_privilegia }
 		}
-		every_owned_location = {
-			limit = { has_variable = pp_cplan_right_mark }
-			remove_variable = pp_cplan_right_mark
+	}
+	every_locations_with_town_rights_in_country = {
+		limit = { has_variable = pp_cplan_right_mark }
+		remove_variable = pp_cplan_right_mark
+	}
+}
+
+# ---- Plans: charters and rights (town_plans.py, 2026-11-19, Jan) ----
+
+# Country scope, once a rights look (pp_cplan_country_rights), whether the urban rights rule is on or not: the plan
+# is the switch. Per good with a plan right and a specialization charter: where a location holds the plan, the
+# charter is granted where its own conditions pass (pp_cplan_country_plan_grant), and where it holds the plan and
+# the charter, the charter is swapped for the rights it upgrades into once their conditions pass
+# (pp_cplan_country_plan_upgrade). A good with rights and no charter (iron) gets its rights directly. The plan
+# right stays: it is the player's intent until the player takes it off. While the country keeps the player's
+# amount of political influence, as the rule does; at most one grant or swap a location a month. Only the
+# locations that hold a town right are walked: a plan is one.
+pp_cplan_country_plan_rights = {
+}
+
+# Country scope: grant $right$ (a charter, or rights no charter upgrades into) in every location that holds the
+# plan $plan$ and may take it: a town or more, a free town rights slot (has_max_town_rights: the plan's own right
+# brings its slot), not holding $right$, the charter or the rights of its line (a grant has no checks: the same
+# right could be held twice), and the right's allow (with the location as scope:target; the one-specialization
+# condition stays, so a location with plans for two charter goods gets one charter). The biggest population first;
+# the country pays the game's grant price, as the rule's grant does.
+pp_cplan_country_plan_grant = {
+	ordered_locations_with_town_rights_in_country = {
+		limit = {
+			has_town_rights = town_rights_type:$plan$
+			pp_cplan_country_plan_site = yes
+			has_max_town_rights = no
+			pp_cplan_right_site_$right$ = yes
+		}
+		order_by = pp_cplan_country_pop_here
+		max = 100000
+		check_range_bounds = no
+		save_scope_as = target
+		if = {
+			limit = {
+				scope:pp_cplan_country = {
+					political_influence >= pp_cplan_country_influence_need
+					can_pay_price = price:grant_town_rights
+					pp_cplan_right_allow_$right$ = yes
+				}
+			}
+			grant_town_rights = town_rights_type:$right$
+			set_variable = { name = pp_cplan_right_mark value = yes }
+			scope:pp_cplan_country = {
+				pay_price = price:grant_town_rights
+				change_variable = { name = pp_cplan_rights_n add = 1 }
+			}
+		}
+	}
+}
+
+# Country scope: in every location that holds the plan $plan$ and the charter $charter$, not yet $rights$, swap the
+# charter for the rights where the rights' allow passes (scope:target = the location). The game has no script
+# effect for an upgrade: the charter is revoked and the rights granted (the number of rights stays, so the slot
+# is not asked), and the country pays the game's upgrade price (upgrade_town_rights). The biggest population first.
+pp_cplan_country_plan_upgrade = {
+	ordered_locations_with_town_rights_in_country = {
+		limit = {
+			has_town_rights = town_rights_type:$plan$
+			has_town_rights = town_rights_type:$charter$
+			NOT = { has_town_rights = town_rights_type:$rights$ }
+			pp_cplan_country_plan_site = yes
+		}
+		order_by = pp_cplan_country_pop_here
+		max = 100000
+		check_range_bounds = no
+		save_scope_as = target
+		if = {
+			limit = {
+				scope:pp_cplan_country = {
+					political_influence >= pp_cplan_country_upgrade_need
+					can_pay_price = price:upgrade_town_rights
+					pp_cplan_right_allow_$rights$ = yes
+				}
+			}
+			revoke_town_rights_of_type = town_rights_type:$charter$
+			grant_town_rights = town_rights_type:$rights$
+			set_variable = { name = pp_cplan_right_mark value = yes }
+			scope:pp_cplan_country = {
+				pay_price = price:upgrade_town_rights
+				change_variable = { name = pp_cplan_rights_n add = 1 }
+			}
 		}
 	}
 }

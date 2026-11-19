@@ -67,6 +67,7 @@ from prosper_or_perish_constructor import construction_plan as cp
 from prosper_or_perish_constructor import location_plan as lp
 from prosper_or_perish_constructor import market_short_weight
 from prosper_or_perish_constructor import staple_foods
+from prosper_or_perish_constructor import town_plans
 
 EFFECTS = Path("in_game/common/scripted_effects/pp_location_profiles_generated.txt")
 VALUES = Path("in_game/common/script_values/pp_location_profiles_generated.txt")
@@ -90,9 +91,10 @@ STATES = {
     8: "market lacks the construction goods",
     9: "waiting for an earlier rule's or mark's construction this month",
     10: "the market limit: enough of the good is on the way in its market (a profile rule; a mark is not held by it)",
+    11: "needs a higher location rank: the plan raises the settlement when it can (town_plans.py)",
 }
 # why a candidate failed, ranked (+ 100 in pp_lprof_fail; the highest rank of a rule's candidates gives its state)
-FAIL_STATE = {101: 2, 102: 6, 103: 5, 104: 4, 105: 8, 106: 10, 107: 7}
+FAIL_STATE = {101: 2, 102: 6, 103: 5, 104: 4, 105: 8, 106: 10, 107: 7, 108: 11}
 DIRECTIONS = ("up", "down")
 EDITED = "e"  # the pp_slot flag of the editor's buttons: the slot in the edit buffer (pp_lprof_e_k)
 NEXT = "next"  # the pp_slot flag of the new profile button: the first slot not in use
@@ -343,6 +345,10 @@ def _read_targets(repo: Path, project: Path, mod_root: Path, vanilla_root: Path)
     categories = category_buildings(database, lp.load_config(project).categories)
     for category, names in categories.items():
         found[category] = ordered(names)
+    # the food plan (town_plans.py, 2026-11-19): the buildings that feed the province, the producers of the staple
+    # foods (staple_foods.py) and the Province Food buildings the plan's food rule builds (kitchens, taverns)
+    food = [name for good in staple_foods.staple_foods() for name in by_good.get(good, [])]
+    found[town_plans.FOOD_TARGET] = ordered(food + list(plan.kitchens) + list(plan.taverns))
     return found, categories
 
 
@@ -350,10 +356,21 @@ def _read_targets(repo: Path, project: Path, mod_root: Path, vanilla_root: Path)
 # scripted effects
 
 
-def render_targets(found: dict[str, list[Candidate]]) -> str:
+def target_upgrades(candidates: list[Candidate], pairs: list[tuple[str, str]]) -> list[tuple[str, Candidate]]:
+    """The tier steps of a target (town plans, 2026-11-19: a plan follows the tiers as they unlock): (older tier,
+    successor) for every upgrade pair whose two buildings are both the target's, the highest successor first."""
+    by_name = {c.name: c for c in candidates}
+    order = [c.name for c in candidates]
+    steps = [(older, by_name[successor]) for older, successor in pairs if older in by_name and successor in by_name]
+    return sorted(steps, key=lambda step: (order.index(step[1].name), order.index(step[0])))
+
+
+def render_targets(found: dict[str, list[Candidate]], pairs: list[tuple[str, str]] = ()) -> str:
     parts = [
         "\n# ---- Rule targets (location scope, in the monthly pass; scope:pp_lprof_pb = the rule's payback limit + 100) ----\n"
         "# A level under construction of any of the target's buildings here: the rule waits (pp_lprof_st 103). Else a\n"
+        "# standing older tier whose successor (one of the target's buildings) the country has researched is upgraded\n"
+        "# first, one level a turn (pp_lprof_upgrade: the game's Upgrade button; the tiers follow as they unlock); then a\n"
         "# standing one grows, highest tier first, while its next level pays back within the limit; where none stands,\n"
         "# the cheapest that can be built here starts. Market access tries the logistics buildings in the plan's order,\n"
         "# standing or not. Each candidate that fails ranks its reason in pp_lprof_fail (pp_lprof_finish turns it into\n"
@@ -377,6 +394,7 @@ def render_targets(found: dict[str, list[Candidate]]) -> str:
                 "\telse_if = {",
                 f"\t\tlimit = {{ any_buildings_in_location = {{ building_level > 0 OR = {{ {types} }} }} }}",
             ]
+            lines += [f"\t\tpp_lprof_upgrade = {{ old = {older} {c.params} }}" for older, c in target_upgrades(candidates, pairs)]
             lines += [f"\t\tpp_lprof_expand = {{ {c.params} }}" for c in candidates]
             lines += ["\t}", "\telse = {"]
             lines += [f"\t\tpp_lprof_start = {{ {c.params} }}" for c in candidates]
@@ -415,28 +433,27 @@ def mark_items(items: list[lp.Item]) -> list[lp.Item]:
     return [item for item in lp.mark_items(items) if item.key != LOGISTICS]
 
 
-def render_marks(items: list[lp.Item], found: dict[str, list[Candidate]]) -> str:
-    """The goods marks of a location ("also build this here"): each marked good runs its target, the effect a profile
-    rule with that target runs, in the picker's order; n = 100 + its place there (the mark that measured the best
-    payback is known by it), lo / hi the bounds around n."""
+def render_marks(plans: list[town_plans.Plan]) -> str:
+    """The plans a location holds (town_plans.py, 2026-11-19: a plan is a town right; the goods marks before it were
+    location variables): each held plan runs its target, the effect a profile rule with that target runs (or, where
+    its producers need a higher rank, the plan's turn that raises it first), in the plans' order; n = 100 + its place
+    there (the plan that measured the best payback is known by it), lo / hi the bounds around n."""
     lines = [
-        "\n# ---- The location's marks (Jan 2026-11-10: \"also build this here\", forced) ----\n"
+        "\n# ---- The location's plans (town rights pp_plan_<plan>, forced; the goods marks until 2026-11-19) ----\n"
         "# Location scope (in pp_lplan_location_turn, pp_location_profiles.txt, after the rules of the location's\n"
-        "# profile): each marked good in the picker's order (pp_lplan_mark: the pp_lprof_t_<good> a profile rule with that\n"
-        "# target runs; no payback limit, no market limit). Run twice a turn: once to measure (scope:pp_lplan_mode 1: the\n"
-        "# mark whose next level pays back soonest is built first), once to build and to write the states. The first\n"
-        "# construction of the turn in the location, by a rule or a mark, makes the rest wait. The window's ledger\n"
-        f"# shows a mark's construction as the profile group's, step {WHY_MARK_STEP} (a profile rule's step is its number).\n"
+        "# profile): each held plan in the plans' order (pp_lplan_mark, has_town_rights: the pp_lprof_t_<target> a\n"
+        "# profile rule with that target runs, or pp_tplan_do_<plan> where it raises the rank first; no payback limit, no\n"
+        "# market limit). Run twice a turn: once to measure (scope:pp_lplan_mode 1: the plan whose next level pays back\n"
+        "# soonest is built first), once to build and to write the states. The first construction of the turn in the\n"
+        "# location, by a rule or a plan, makes the rest wait. The window's ledger shows a plan's construction as the\n"
+        f"# profile group's, step {WHY_MARK_STEP} (a profile rule's step is its number).\n"
         "pp_lplan_location_marks = {\n"
     ]
-    for number, item in enumerate(mark_items(items), 101):
-        if found.get(item.key):
-            lines.append(f"\tpp_lplan_mark = {{ v = {item.suffix} do = pp_lprof_t_{item.key} "
-                         f"n = {number} lo = {number - 0.5:g} hi = {number + 0.5:g} }}\n")
-        else:
-            lines.append(f"\tpp_lplan_mark_none = {{ v = {item.suffix} }}\n")
-    if len(mark_items(items)) + 101 > BUILDING_MARK_NUMBER:
-        raise ValueError("more goods marks than numbers below the building marks' number")
+    for number, plan in enumerate(plans, 101):
+        lines.append(f"\tpp_lplan_mark = {{ v = {plan.suffix} g = {plan.key} do = {plan.do} "
+                     f"n = {number} lo = {number - 0.5:g} hi = {number + 0.5:g} }}\n")
+    if len(plans) + 101 > BUILDING_MARK_NUMBER:
+        raise ValueError("more plans than numbers below the building marks' number")
     lines.append("}\n")
     return "".join(lines)
 
@@ -1050,12 +1067,13 @@ def render_examples(items: list[lp.Item], config: Config) -> str:
 
 
 def render_effects(items: list[lp.Item], found: dict[str, list[Candidate]], config: Config, categories: list[str],
-                   maps: MarkMaps | None = None) -> str:
+                   maps: MarkMaps | None = None, plans: list[town_plans.Plan] | None = None,
+                   pairs: list[tuple[str, str]] = ()) -> str:
     return (
         HEADER
-        + render_targets(found)
+        + render_targets(found, pairs)
         + render_dispatch(items, found, config)
-        + render_marks(items, found)
+        + render_marks(plans or [])
         + render_building_marks(maps or mark_maps([], {}, {}))
         + render_slots(config)
         + render_edits(items, config, categories)
@@ -1129,11 +1147,14 @@ def render_triggers(categories: list[str], config: Config, maps: MarkMaps | None
         "pp_lprof_symbol_key = {\n\tOR = {\n"
         + "".join(f"\t\tscope:pp_key = flag:{symbol.key}\n" for symbol in config.symbols)
         + "\t\talways = no\n\t}\n}\n"
-        "\n# Country scope (root = this country, in the pass and in the panel): a location the country owns has a profile or\n"
-        "# a mark of the Location Plan (the profile rule group has something to run).\n"
+        "\n# Country scope (root = this country, in the pass and in the panel): a location the country owns has a profile,\n"
+        "# a building mark of the Location Plan or a plan right (the profile rule group has something to run). A plan is\n"
+        "# found among the locations that hold town rights (towns with rights and planned locations), not by a list.\n"
         "pp_lprof_has_locations = {\n\tOR = {\n\t\tany_in_list = {\n\t\t\tvariable = pp_lprof_locs\n\t\t\towner ?= root\n"
         "\t\t\thas_variable = pp_lprof\n\t\t}\n\t\tany_in_list = {\n\t\t\tvariable = pp_lplan_locs\n\t\t\towner ?= root\n"
-        "\t\t\thas_variable = pp_lplan_n\n\t\t}\n\t}\n}\n"
+        "\t\t\thas_variable_list = pp_lplan_b\n\t\t}\n"
+        f"\t\tany_locations_with_town_rights_in_country = {{\n\t\t\towner ?= root\n\t\t\t{town_plans.HELD_TRIGGER} = yes\n\t\t}}\n"
+        "\t}\n}\n"
         "\n# Location scope: a rule of the location's profile has the good $g$ as its target (that good is the profile's here:\n"
         "# the global rules for it stand back; pp_construction_plan.txt's triggers).\n"
         "pp_lprof_has_good = {\n\thas_variable = pp_lprof\n\tOR = {\n"
@@ -1180,8 +1201,10 @@ def build(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -> tupl
     result = Result(items=items, targets=found, categories=categories)
     category_keys = [item.key for item in items if item.kind == "category"]
     maps = building_mark_maps(repo, project, mod_root, vanilla_root)
+    plans = town_plans.plans(repo, project, mod_root, vanilla_root)
+    pairs, _ = building_mark_data(repo, project, mod_root, vanilla_root)
     texts = {
-        mod_root / EFFECTS: render_effects(items, found, config, category_keys, maps),
+        mod_root / EFFECTS: render_effects(items, found, config, category_keys, maps, plans, pairs),
         mod_root / VALUES: render_values(config, category_keys, items, found),
         mod_root / TRIGGERS: render_triggers(category_keys, config, maps),
     }

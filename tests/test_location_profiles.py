@@ -12,6 +12,7 @@ import pytest
 from prosper_or_perish_constructor import construction_plan as cp
 from prosper_or_perish_constructor import location_plan as lp
 from prosper_or_perish_constructor import location_profiles as lpf
+from prosper_or_perish_constructor import town_plans
 from prosper_or_perish_constructor.script_eval import ScriptEval
 from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
@@ -595,39 +596,43 @@ def test_marks_run_the_targets_of_the_profile_rules() -> None:
     plan_items = lp.mark_items(lp.plan_items(ROOT, lp.load_config(PROJECT)))
     assert [item.key for item in lpf.mark_items(result.items)] == [item.key for item in plan_items], "the picker's items"
     assert all(item.kind == "good" for item in plan_items)
+    # the marks are the held plan rights (town_plans.py, 2026-11-19): one line per plan, goods in the picker's order,
+    # then food and trade; a good no building makes has no plan
     lines = re.findall(r"^\t(pp_lplan_mark(?:_none)? = \{ [^\n]* \})$", marks, re.MULTILINE)
+    plans = town_plans.plans(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT))
+    goods = [item.key for item in plan_items if result.targets.get(item.key)]
+    assert [plan.key for plan in plans] == goods + list(town_plans.EXTRA_PLANS)
     expected = []
-    for number, item in enumerate(plan_items, 101):
-        if result.targets.get(item.key):
-            expected.append(f"pp_lplan_mark = {{ v = {item.suffix} do = pp_lprof_t_{item.key} "
-                            f"n = {number} lo = {number - 0.5:g} hi = {number + 0.5:g} }}")
-            assert f"goods:{item.key} = {{ pp_lprof_t_{item.key} = yes }}" in goods_dispatch, item.key  # the rule's target
-            assert re.search(rf"^pp_lprof_t_{item.key} = \{{", effects, re.MULTILINE), item.key
-        else:
-            expected.append(f"pp_lplan_mark_none = {{ v = {item.suffix} }}")
-    assert lines == expected, "one line per item, in the picker's order, numbered"
-    assert len(plan_items) + 101 < lpf.BUILDING_MARK_NUMBER
-    assert sum(1 for line in expected if "_none" in line) <= 2, "nearly every item has buildings"
+    for number, plan in enumerate(plans, 101):
+        expected.append(f"pp_lplan_mark = {{ v = g_{plan.key} g = {plan.key} do = {plan.do} "
+                        f"n = {number} lo = {number - 0.5:g} hi = {number + 0.5:g} }}")
+        assert re.search(rf"^pp_lprof_t_{plan.target} = \{{", effects, re.MULTILINE), plan.key
+        if plan.key in goods:
+            assert f"goods:{plan.key} = {{ pp_lprof_t_{plan.key} = yes }}" in goods_dispatch, plan.key  # the rule's target
+    assert lines == expected, "one line per plan, in the plans' order, numbered"
+    assert len(plans) + 101 < lpf.BUILDING_MARK_NUMBER
+    assert len(goods) >= len(plan_items) - 2, "nearly every good has buildings"
     # the categories stay rule targets
     for category in lp.load_config(PROJECT).categories:
         assert f"flag:{category} = {{ pp_lprof_t_{category} = yes }}" in category_dispatch, category
         assert f"pp_lprof_t_{category}" not in marks and f"c_{category}" not in marks, category
     # the mark: only when set; start, the target, end; its own state variables
     mark = _block(hand, "pp_lplan_mark")
-    assert "limit = { has_variable = pp_lplan_$v$ }" in mark
+    assert "limit = { has_town_rights = town_rights_type:pp_plan_$g$ }" in mark  # only while the plan right is held
+    assert "has_variable = pp_lplan_$v$" not in mark  # the old goods marks start nothing
+    assert "pp_lplan_mark_none" not in hand + marks
     build = mark[mark.index("pp_lprof_open = yes"):]
     assert build.index("pp_lprof_open = yes") < build.index("$do$ = yes") < build.index("pp_lprof_finish = {")
     assert "limit = { NOT = { has_variable = pp_lprof_st } }" in build  # nothing is tried while it waits
     assert "pp_lprof_finish = { st = pp_lplan_st_$v$ est = pp_lplan_est_$v$ }" in build
-    none = _block(hand, "pp_lplan_mark_none")
-    assert "pp_lprof_finish = { st = pp_lplan_st_$v$ est = pp_lplan_est_$v$ }" in none and "$do$" not in none
     # no second copy of what a target does: the candidates' effects are called by the generated targets only
     for name in ("pp_lprof_expand", "pp_lprof_start", "pp_lprof_try", "pp_lprof_build", "pp_cplan_construct_scoped"):
-        assert f"{name} = " not in mark + none + marks, name
-    # the profile's rules first, then the marks, one construction a month between them
+        assert f"{name} = " not in mark + marks, name
+    # the profile's rules first, then the plans and building marks, one construction a month between them
     run = _block(hand, "pp_lprof_location_turn")
     assert run.index("pp_lprof_location_rules = yes") < run.index("pp_lplan_location_turn = yes")
-    assert "limit = { has_variable = pp_lplan_n }" in run and "limit = { has_variable = pp_lprof }" in run
+    assert "limit = { has_variable = pp_lprof }" in run
+    assert "OR = {\n\t\t\t\tpp_tplan_held = yes\n\t\t\t\thas_variable_list = pp_lplan_b\n\t\t\t}" in run
     # the item variables of the two modules agree
     wheat = next(item for item in plan_items if item.key == "wheat")
     assert (wheat.var, wheat.state, wheat.est) == ("pp_lplan_g_wheat", "pp_lplan_st_g_wheat", "pp_lplan_est_g_wheat")
@@ -720,7 +725,10 @@ def test_measurable_marks_go_first_by_payback() -> None:
     # ... and a first level (nothing standing, nothing to measure) is not looked at while measuring
     start = _block(hand, "pp_lprof_start")
     assert start.lstrip().startswith("if = {\n\t\tlimit = { pp_lplan_measuring = yes }") and "else_if = {\n\t\tlimit = { location_and_owner_can_build" in start
-    assert "NOT = { pp_lplan_measuring = yes }" in _block(hand, "pp_lplan_mark_none")
+    # (and neither is a tier step nor a plan's rank raise: no profit to measure)
+    assert "NOT = { pp_lplan_measuring = yes }" in _block(hand, "pp_lprof_upgrade")
+    raising = _read(MOD / town_plans.EFFECTS)
+    assert "limit = { NOT = { pp_lplan_measuring = yes } }\n\t\t\tpp_tplan_raise = yes" in raising
     # the mark that measured the best payback is known by its number and takes what came of the construction
     mark = _block(hand, "pp_lplan_mark")
     measuring_part = mark[:mark.index("pp_lprof_open = yes")]
@@ -895,14 +903,24 @@ def test_marked_locations_get_their_turn() -> None:
     gather = _block(hand, "pp_lprof_gather")
     assert run.index("pp_lplan_cleanup = yes") < run.index("pp_lprof_gather = yes") < run.index("ordered_in_list")
     assert "variable = pp_lprof_turns" in run and "clear_variable_list = pp_lprof_turns" in run
-    assert gather.index("variable = pp_lprof_locs") < gather.index("variable = pp_lplan_locs")
-    second = gather[gather.index("variable = pp_lplan_locs"):]
-    for part in ("owner ?= scope:pp_cplan_country", "has_variable = pp_lplan_n", "NOT = { has_variable = pp_lprof }"):
+    assert (gather.index("variable = pp_lprof_locs") < gather.index("variable = pp_lplan_locs")
+            < gather.index("every_locations_with_town_rights_in_country"))
+    second = gather[gather.index("variable = pp_lplan_locs"):gather.index("every_locations_with_town_rights_in_country")]
+    for part in ("owner ?= scope:pp_cplan_country", "has_variable_list = pp_lplan_b", "NOT = { has_variable = pp_lprof }"):
         assert part in second, part  # a location with a profile and marks is taken once, from the profile list
+    # a location that holds a plan right (town_plans.py): found among the country's locations with town rights, once
+    third = gather[gather.index("every_locations_with_town_rights_in_country"):]
+    for part in ("owner ?= scope:pp_cplan_country", "pp_tplan_held = yes", "NOT = { has_variable = pp_lprof }",
+                 "pp_lprof_take_turn_once = yes"):
+        assert part in third, part
+    once = _block(hand, "pp_lprof_take_turn_once")
+    assert "is_target_in_variable_list = { name = pp_lprof_turns target = scope:pp_lprof_this }" in once
     assert "add_to_variable_list = { name = pp_lprof_turns target = scope:pp_lprof_this }" in _block(hand, "pp_lprof_take_turn")
-    # the group runs (and takes its part of the gold) while a location has a profile or a mark
+    # the group runs (and takes its part of the gold) while a location has a profile, a building mark or a plan
     has = _block(_code(MOD / lpf.TRIGGERS), "pp_lprof_has_locations")
-    assert "variable = pp_lprof_locs" in has and "variable = pp_lplan_locs" in has and "has_variable = pp_lplan_n" in has
+    assert "variable = pp_lprof_locs" in has and "variable = pp_lplan_locs" in has and "has_variable_list = pp_lplan_b" in has
+    assert "any_locations_with_town_rights_in_country = {\n\t\t\towner ?= root\n\t\t\tpp_tplan_held = yes" in has
+    assert "has_variable = pp_lplan_n" not in has  # the old goods marks start nothing
     # the list follows the marks: every toggle and Clear keep it
     plan = _code(PLAN_HAND_EFFECTS)
     assert "pp_lplan_keep_list = yes" in _block(plan, "pp_lplan_flip")

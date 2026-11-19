@@ -1,101 +1,55 @@
-﻿# Prosper or Perish - Location plan (branch location-plan, 2026-11-07, Jan): the player marks what a location should
-# produce or have (gui/pp_location_plan.gui, the location window's row "Also build here", map mode pp_location_plan).
-# The marks are the location's build picks (Jan 2026-11-10): the Construction Plan builds a marked item there, in the
-# rule group of the location profiles, after the location's profile rules, forced: whether it pays or not (the pass:
-# pp_location_profiles.txt, pp_lplan_location_turn). A mark is a good (its producers) or a building (that building
-# type; marked on a building's entry in the location window or the build panel). The toggle switch, clearing and the
-# flag declarations are generated into pp_location_plan_generated.txt (location_plan.py).
-# Location variables: pp_lplan_g_<good> (present = marked), the list pp_lplan_b (the marked building types),
-# pp_lplan_n (goods and buildings marked + 100; a variable at 0 counts as unset), pp_lplan_st_g_<good> (the mark's
-# state after the last pass + 100, the profile rule states) and pp_lplan_est_g_<good> (the shortest payback found,
-# years + 100); a building mark's state is an entry of the variable map pp_lplan_bst (key: the building type scope,
-# value: the state + 100; script cannot name a variable per building type, a map is keyed by a scope; removed with
-# the mark, by Clear and when the location is lost). Marks of a building category (pp_lplan_c_<category>, a save from before 2026-11-10 evening) are
-# taken off at the first look (pp_lplan_drop_categories).
-# Country: pp_lplan_sel (the location the window shows), the list pp_lplan_locs (the locations the country marked: the
-# monthly cleanup takes marks from own locations that are not on it, an earlier owner's; pp_lplan_cleanup).
+﻿# Prosper or Perish - Location plan (2026-11-07, Jan; plans as town rights since 2026-11-19, branch town-plans): the
+# player decides what a location is for (gui/pp_location_plan.gui, the location window's Plans row, map mode
+# pp_location_plan). A plan is a town right without conditions and without a bonus (pp_plan_<plan>,
+# common/town_rights), set and removed only by these buttons; the Construction Plan builds toward the held plans. The
+# toggle switch, Clear and the declarations are generated into pp_location_plan_generated.txt (location_plan.py).
+# Location variables: pp_lplan_st_g_<plan> (the plan's state after the last pass + 100) and pp_lplan_est_g_<plan> (the
+# shortest payback found, years + 100). Country: pp_lplan_sel (the location the window shows).
 
-# Location scope: marks or unmarks the item $v$ (g_<good>) and keeps the count and the owner's list. A mark removed
-# takes its state along.
-pp_lplan_flip = {
-	pp_lplan_drop_categories = yes
+# Location scope: sets the plan $g$, or takes it off when the location holds it. Strictly one if / else on the held
+# right: a script grant has no checks (the same right could be held twice) and a revoke takes off one copy. A plan
+# taken off takes its state along. The game sends its own town rights message for both.
+pp_tplan_flip = {
 	if = {
-		limit = { has_variable = pp_lplan_$v$ }
-		remove_variable = pp_lplan_$v$
-		remove_variable = pp_lplan_st_$v$
-		remove_variable = pp_lplan_est_$v$
-		if = {
-			limit = { has_variable = pp_lplan_n }
-			change_variable = { name = pp_lplan_n subtract = 1 }
-		}
+		limit = { has_town_rights = town_rights_type:pp_plan_$g$ }
+		revoke_town_rights_of_type = town_rights_type:pp_plan_$g$
+		remove_variable = pp_lplan_st_g_$g$
+		remove_variable = pp_lplan_est_g_$g$
 	}
 	else = {
-		set_variable = { name = pp_lplan_$v$ value = yes }
-		if = {
-			limit = { NOT = { has_variable = pp_lplan_n } }
-			set_variable = { name = pp_lplan_n value = 100 }
-		}
-		change_variable = { name = pp_lplan_n add = 1 }
+		grant_town_rights = town_rights_type:pp_plan_$g$
 	}
-	if = {
-		limit = {
-			has_variable = pp_lplan_n
-			var:pp_lplan_n < 100.5
-		}
-		remove_variable = pp_lplan_n
-	}
-	pp_lplan_keep_list = yes
 	refresh_map_colors = yes
 }
 
-# Location scope (root, from the scripted GUI pp_lplan_bmark; scope:pp_bt = a building type): marks or unmarks that
-# building for this location (the list pp_lplan_b) and keeps the count and the owner's list.
-pp_lplan_bflip = {
-	pp_lplan_drop_categories = yes
-	# the maps the map icon's done check reads (filled once; pp_location_profiles_generated.txt)
-	pp_lplan_maps_ready = yes
+# Location scope (root, from the scripted GUI): every plan taken off.
+pp_tplan_clear_do = {
+	pp_tplan_clear_all = yes
+	refresh_map_colors = yes
+}
+
+# Location scope (root, from the scripted GUI): the window shows this location.
+pp_lplan_select = {
+	owner ?= { set_variable = { name = pp_lplan_sel value = root } }
+	# Never runs: declares the window's flag scope and the flags it passes, and uses the variable only the window reads.
 	if = {
-		limit = { exists = scope:pp_bt }
+		limit = { always = no }
+		save_scope_as = pp_key
+		pp_tplan_declare_flags = yes
+		pp_lplan_declare_flags = yes
 		if = {
-			limit = { is_target_in_variable_list = { name = pp_lplan_b target = scope:pp_bt } }
-			remove_list_variable = { name = pp_lplan_b target = scope:pp_bt }
-			pp_lplan_b_state_off = { key = scope:pp_bt }
-			if = {
-				limit = { has_variable = pp_lplan_n }
-				change_variable = { name = pp_lplan_n subtract = 1 }
-			}
+			limit = { has_variable = pp_lplan_sel }
+			remove_variable = pp_lplan_sel
 		}
-		else = {
-			add_to_variable_list = { name = pp_lplan_b target = scope:pp_bt }
-			if = {
-				limit = { NOT = { has_variable = pp_lplan_n } }
-				set_variable = { name = pp_lplan_n value = 100 }
-			}
-			change_variable = { name = pp_lplan_n add = 1 }
-			# the tile shows at once the tier the plan builds here (pp_lplan_b_promote)
-			owner ?= { save_scope_as = pp_cplan_country }
-			if = {
-				limit = { exists = scope:pp_cplan_country }
-				pp_lplan_b_promote = yes
-			}
-		}
-		if = {
-			limit = {
-				has_variable = pp_lplan_n
-				var:pp_lplan_n < 100.5
-			}
-			remove_variable = pp_lplan_n
-		}
-		pp_lplan_keep_list = yes
-		refresh_map_colors = yes
 	}
 }
 
+# ---- The old building marks of a save (before plans were town rights), until Location Profiles go ----
+# The profile pass (pp_location_profiles.txt) still calls these two; nothing sets a building mark any more.
+
 # Location scope (scope:pp_cplan_country = its owner, the maps ready: pp_lplan_maps_ready): a marked building type
-# whose line the country has researched further (generated pp_lplan_b_newest, the tier the pass builds) becomes that
-# tier on the list pp_lplan_b, so every tile (icon, name, state, done check) shows what the plan builds here now (Jan
-# 2026-11-11). Where that tier is marked already the older entry just goes (one mark less). Its state stays behind:
-# the new tier's is written by the pass's second go. The list is changed only after the walk over it.
+# whose line the country has researched further (generated pp_lplan_b_newest) becomes that tier on the list
+# pp_lplan_b. The list is changed only after the walk over it.
 pp_lplan_b_promote = {
 	if = {
 		limit = { has_variable_list = pp_lplan_b }
@@ -147,51 +101,5 @@ pp_lplan_b_state_off = {
 			}
 		}
 		remove_from_variable_map = { name = pp_lplan_bst key = $key$ }
-	}
-}
-
-# Location scope: the owner's list pp_lplan_locs holds the location while it has a mark.
-pp_lplan_keep_list = {
-	save_temporary_scope_as = pp_lplan_this
-	owner ?= {
-		if = {
-			limit = { scope:pp_lplan_this = { has_variable = pp_lplan_n } }
-			if = {
-				limit = { NOT = { is_target_in_variable_list = { name = pp_lplan_locs target = scope:pp_lplan_this } } }
-				add_to_variable_list = { name = pp_lplan_locs target = scope:pp_lplan_this }
-			}
-		}
-		else_if = {
-			limit = { is_target_in_variable_list = { name = pp_lplan_locs target = scope:pp_lplan_this } }
-			remove_list_variable = { name = pp_lplan_locs target = scope:pp_lplan_this }
-		}
-	}
-}
-
-# Location scope (root, from the scripted GUI): every mark removed.
-pp_lplan_clear_do = {
-	pp_lplan_clear_all = yes
-	pp_lplan_keep_list = yes
-	refresh_map_colors = yes
-}
-
-# Location scope (root, from the scripted GUI): the window shows this location.
-pp_lplan_select = {
-	pp_lplan_drop_categories = yes
-	pp_lplan_maps_ready = yes
-	owner ?= { set_variable = { name = pp_lplan_sel value = root } }
-	# Never runs: declares the window's flag scope and the flags it passes, and uses the variable only the window reads.
-	if = {
-		limit = { always = no }
-		save_scope_as = pp_key
-		save_scope_as = pp_bt
-		pp_lplan_declare_flags = yes
-		if = {
-			limit = {
-				has_variable = pp_lplan_flag
-				has_variable = pp_lplan_sel
-			}
-			remove_variable = pp_lplan_flag
-		}
 	}
 }

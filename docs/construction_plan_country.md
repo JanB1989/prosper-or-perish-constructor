@@ -106,7 +106,32 @@ check the raw effect skips (B) is asked by the rule.
   qualifies for both gets it directly.
 - **Charter upgrades are not part of this version.** A location that holds a charter is skipped for its stronger right
   (granted on top, both would stand and both bonuses count, B), and a charter is never granted on top of that right.
-  The section's tooltip tells the player to upgrade those by hand.
+  The section's tooltip tells the player to upgrade those by hand. A planned location is the exception (below).
+- The marks (`pp_cplan_right_mark`) are cleared at the end of every rights look, rule on or off, by walking only the
+  locations with town rights (`every_locations_with_town_rights_in_country`; a marked location holds what it got).
+
+**Plans: charters and rights** (2026-11-19, branch `town-plans`; NOT TESTED IN GAME). A plan right `pp_plan_<plan>`
+(`town_plans.py`) is never a tile and never a grant of the rule (`read_rights` skips every key `is_plan_right` names,
+whatever its potential). For every good with a plan right and a specialization charter `pp_<good>_charter` (18) the
+plan is the switch for that charter and the rights it upgrades into (`upgrades_to`, read from the database); `iron` has
+rights and no charter and gets `pp_iron_rights` directly. `pp_cplan_country_plan_rights` runs first in every rights look
+(`pp_cplan_country_rights`), whether the rule's switch is on or not, while the country has `can_grant_town_rights` and
+the influence to keep plus the price. Per good, only the locations with town rights are walked (a plan is one),
+biggest population first:
+
+- swap (`pp_cplan_country_plan_upgrade`): holds the plan and the charter, not the rights, and the rights' potential and
+  allow pass: `revoke_town_rights_of_type` the charter, `grant_town_rights` the rights, `pay_price =
+  price:upgrade_town_rights` (8 influence in 1.4.9; the influence kept + that price, `pp_cplan_country_upgrade_need`).
+  The game has no upgrade effect. The number of rights stays, so the slot is not asked.
+- grant (`pp_cplan_country_plan_grant`): holds the plan, neither the charter nor its rights, a town or more (never a
+  rural settlement: the plan's own pass raises the rank first), a free slot (`has_max_town_rights = no`: the plan right
+  brings its own slot, so a town holding only a plan has one free), and the charter's potential and allow pass: grant
+  and `pay_price = price:grant_town_rights`. The one-specialization condition of the charter's allow stays: a location
+  with plans for two charter goods gets one charter.
+- At most one grant or swap a location a month (`pp_cplan_right_mark`, gate `pp_cplan_country_plan_site`: not only
+  conquered, no `pp_lprof_xc`, no mark, not rural). Every grant and swap counts in `pp_cplan_rights_n`. The plan right
+  stays on the location. Engine (1.4.9, static check): a script grant has no checks (hence every grant asks that the
+  right is not held), and each grant and revoke sends the player the game's town rights message.
 
 ## The rights database
 
@@ -161,11 +186,15 @@ The numbers are placeholders for Jan to tune; none is written into a text.
 Effects: `pp_cplan_group_country` (the gold group), `pp_cplan_country_rights`, `pp_cplan_country_declare` (flags, for
 the never-run branch of `pp_cplan_run`); inside: `pp_cplan_country_upgrades`, `pp_cplan_country_upgrade_building`,
 `pp_cplan_country_upgrade_to`, `pp_cplan_country_buildings`, `pp_cplan_country_public`, `pp_cplan_country_ranks`,
-`pp_cplan_country_rank_up`, `pp_cplan_rank_charge`, `pp_cplan_country_grant`.
-Triggers: `pp_cplan_country_site`, `pp_cplan_country_rights_site`, `pp_cplan_country_upgradable` (building scope),
+`pp_cplan_country_rank_up = { rank n why }` (`why` = the paying rule group's construction code: its purse, ledger,
+save variables and test-log line; 107 here, 105 for a plan's rank raise by the Locations group), `pp_cplan_rank_charge`,
+`pp_cplan_country_grant`, `pp_cplan_country_plan_rights`, `pp_cplan_country_plan_grant = { plan right }`,
+`pp_cplan_country_plan_upgrade = { plan charter rights }`.
+Triggers: `pp_cplan_country_site`, `pp_cplan_country_rights_site`, `pp_cplan_country_plan_site`,
+`pp_cplan_country_upgradable` (building scope),
 `pp_cplan_country_goods_<rank>`, `pp_cplan_pub_line_<building>`, the three per right.
 Script values: `pp_cplan_country_active`, `pp_cplan_country_control_pct` / `_control_line`, `_town_pop`,
-`_keep_influence`, `_influence_need`, `pp_cplan_country_cost_<rank>`, `_rights_n`, `pp_cplan_pub_show_<building>`,
+`_keep_influence`, `_influence_need`, `_upgrade_need`, `pp_cplan_country_cost_<rank>`, `_rights_n`, `pp_cplan_pub_show_<building>`,
 `pp_cplan_right_show_<right>`. Scripted GUIs: `pp_cplan_country_toggle`, `pp_cplan_country_step` (`scope:pp_key`,
 `scope:pp_dir`). GUI type: `pp_cplan_country_tab`. Texts: `PP_CPLANC_*`.
 
@@ -183,7 +212,8 @@ Script values: `pp_cplan_country_active`, `pp_cplan_country_control_pct` / `_con
 Ledger (`pp_cplan_log_step`): 1 a public building, 2 a town or city upgrade, 3 a building's upgrade. Buildings and
 building upgrades go through `pp_cplan_construct_now` (the upgrade's building type in the list is the successor; its
 reason value is the location's maximum control in %). A town or city upgrade writes its own entry (it has no building
-type): lists `pp_cplan_log` and `pp_cplan_log_107`, the country's started / spent / `_107` numbers, and the location's
+type; below for 107, a caller with another `why` writes its code): lists `pp_cplan_log` and `pp_cplan_log_107`, the
+country's started / spent / `_107` numbers, and the location's
 `pp_cplan_log_rank` (the window names the upgrade by it), `pp_cplan_log_cost_107` (added to the cost of a building the
 group started there in the pass) and, unless such a building left its reason, `pp_cplan_log_step_107` 2 and
 `pp_cplan_log_val_107` (population, thousand + 100); in a test run the lines `PP_CPLAN_TLOG_107` and the location.

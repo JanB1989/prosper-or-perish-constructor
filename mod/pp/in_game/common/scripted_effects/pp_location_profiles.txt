@@ -42,7 +42,7 @@
 # after the last pass: 1 started, 2 nothing to build, 3 a level under construction, 5 payback too long, 6 cannot be
 # built here, 7 gold (the group's purse cannot pay it, or the group saves for something before it), 8 the market
 # lacks the construction goods, 9 waiting for an earlier rule's construction this month, 10 the market limit:
-# enough of the good is on the way in its market) and pp_lprof_r<r>_est (the payback found). Pass temporaries: pp_lprof_st, pp_lprof_fail, pp_lprof_best,
+# enough of the good is on the way in its market, 11 a plan needs a higher rank that cannot be raised here now) and pp_lprof_r<r>_est (the payback found). Pass temporaries: pp_lprof_st, pp_lprof_fail, pp_lprof_best,
 # pp_lprof_pick (location), the lists pp_lprof_gone, pp_lplan_gone and pp_lprof_turns (country: this pass's locations).
 
 # ---- The monthly pass (country scope, inside pp_cplan_run: scope:pp_cplan_country and scope:actor saved) ----
@@ -149,8 +149,14 @@ pp_lprof_location_turn = {
 		limit = { has_variable = pp_lprof }
 		pp_lprof_location_rules = yes
 	}
+	# its plans (town rights pp_plan_<plan>, town_plans.py; 2026-11-19) and its building marks
 	if = {
-		limit = { has_variable = pp_lplan_n }
+		limit = {
+			OR = {
+				pp_tplan_held = yes
+				has_variable_list = pp_lplan_b
+			}
+		}
 		pp_lplan_location_turn = yes
 	}
 	save_temporary_scope_value_as = { name = pp_cplan_forced value = 0 }
@@ -424,8 +430,9 @@ pp_lplan_b_finish = {
 	remove_variable = pp_lplan_best_now
 }
 
-# Country scope: the list pp_lprof_turns = the country's locations with a profile (pp_lprof_locs) and those with marks
-# and no profile (pp_lplan_locs), each once.
+# Country scope: the list pp_lprof_turns = the country's locations with a profile (pp_lprof_locs), those with building
+# marks and no profile (pp_lplan_locs), and those that hold a plan right (town_plans.py, 2026-11-19: found among the
+# country's locations with town rights, no list), each once.
 pp_lprof_gather = {
 	clear_variable_list = pp_lprof_turns
 	every_in_list = {
@@ -440,8 +447,29 @@ pp_lprof_gather = {
 		variable = pp_lplan_locs
 		limit = {
 			owner ?= scope:pp_cplan_country
-			has_variable = pp_lplan_n
+			has_variable_list = pp_lplan_b
 			NOT = { has_variable = pp_lprof }
+		}
+		pp_lprof_take_turn = yes
+	}
+	every_locations_with_town_rights_in_country = {
+		limit = {
+			owner ?= scope:pp_cplan_country
+			pp_tplan_held = yes
+			NOT = { has_variable = pp_lprof }
+		}
+		pp_lprof_take_turn_once = yes
+	}
+}
+
+# Location scope: joins this pass's locations unless it is on the list already (a planned location with building marks).
+pp_lprof_take_turn_once = {
+	save_temporary_scope_as = pp_lprof_this
+	if = {
+		limit = {
+			scope:pp_cplan_country = {
+				NOT = { is_target_in_variable_list = { name = pp_lprof_turns target = scope:pp_lprof_this } }
+			}
 		}
 		pp_lprof_take_turn = yes
 	}
@@ -599,17 +627,17 @@ pp_lprof_rule = {
 	}
 }
 
-# Location scope: the goods mark $v$ (g_<good>) of the Location Plan, when it is set: "also build this here" (Jan
-# 2026-11-10), forced. $do$ is the good's generated target effect (pp_lprof_t_<good>, what a profile rule with that
-# target runs), with no payback limit (scope:pp_lprof_pb, pp_lplan_location_turn). $n$ is the mark's number in the
-# picker's order (+ 100), $lo$ / $hi$ the bounds around it. While the marks are measured (scope:pp_lplan_mode 1) the
-# target only offers its best payback (pp_lprof_expand) and the mark notes when it is the location's best
-# (pp_lplan_bn = $n$). In the second go the measured mark takes what came of its construction as its state
-# (pp_lplan_bo), every other mark runs its target. The state goes into pp_lplan_st_$v$, the payback found into
-# pp_lplan_est_$v$.
+# Location scope: the plan $g$ (town_plans.py, 2026-11-19: the town right pp_plan_$g$; until then the goods mark, a
+# location variable), when the location holds it: "build this here", forced. $do$ is the plan's generated target
+# effect (pp_lprof_t_<target>, what a profile rule with that target runs, or pp_tplan_do_$g$ where it raises the rank
+# first), with no payback limit (scope:pp_lprof_pb, pp_lplan_location_turn). $n$ is the plan's number in the plans'
+# order (+ 100), $lo$ / $hi$ the bounds around it. While the marks are measured (scope:pp_lplan_mode 1) the target
+# only offers its best payback (pp_lprof_expand) and the plan notes when it is the location's best (pp_lplan_bn =
+# $n$). In the second go the measured plan takes what came of its construction as its state (pp_lplan_bo), every other
+# plan runs its target. The state goes into pp_lplan_st_$v$ ($v$ = g_$g$), the payback found into pp_lplan_est_$v$.
 pp_lplan_mark = {
 	if = {
-		limit = { has_variable = pp_lplan_$v$ }
+		limit = { has_town_rights = town_rights_type:pp_plan_$g$ }
 		if = {
 			limit = { pp_lplan_measuring = yes }
 			pp_lplan_measure_before = yes
@@ -647,21 +675,6 @@ pp_lplan_mark = {
 	}
 }
 
-# Location scope: the mark $v$ of an item no building builds (a good that is only a raw material): no candidate, so it
-# cannot be built here (state 6). Nothing while the marks are measured.
-pp_lplan_mark_none = {
-	if = {
-		limit = {
-			has_variable = pp_lplan_$v$
-			NOT = { pp_lplan_measuring = yes }
-		}
-		remove_variable = pp_lprof_st
-		remove_variable = pp_lprof_fail
-		remove_variable = pp_lprof_best
-		pp_lprof_finish = { st = pp_lplan_st_$v$ est = pp_lplan_est_$v$ }
-	}
-}
-
 # Location scope: a rule or a mark starts afresh. Nothing can start here now: after a construction started here this
 # month by an earlier rule or mark it waits (pp_lprof_st 109), and while a construction is under way here too (103:
 # one at a time in a location, the plan's own check pp_cplan_site_free). pp_lprof_st stays unset when it may try.
@@ -680,9 +693,10 @@ pp_lprof_open = {
 }
 
 # Location scope: writes the state of a rule or a mark into $st$: what the target set (1 started, 3 a level under
-# construction, 9 waiting), else the best reason among its candidates (pp_lprof_fail: 107 gold -> 7, 106 the market
-# limit -> 10, 105 goods -> 8, 104 no workers -> 4, 103 payback -> 5, 102 cannot be built -> 6, 101 at its highest
-# level -> 2), else no candidate at all (6); and into $est$ the shortest payback it found.
+# construction, 9 waiting), else the best reason among its candidates (pp_lprof_fail: 108 a plan needs a higher rank
+# that cannot be raised here now -> 11, 107 gold -> 7, 106 the market limit -> 10, 105 goods -> 8, 104 no workers ->
+# 4, 103 payback -> 5, 102 cannot be built -> 6, 101 at its highest level -> 2), else no candidate at all (6); and
+# into $est$ the shortest payback it found.
 pp_lprof_finish = {
 	if = {
 		limit = { has_variable = pp_lprof_st }
@@ -691,6 +705,10 @@ pp_lprof_finish = {
 	else_if = {
 		limit = { NOT = { has_variable = pp_lprof_fail } }
 		set_variable = { name = $st$ value = 106 }
+	}
+	else_if = {
+		limit = { var:pp_lprof_fail > 107.5 }
+		set_variable = { name = $st$ value = 111 }
 	}
 	else_if = {
 		limit = { var:pp_lprof_fail > 106.5 }
@@ -737,7 +755,8 @@ pp_lprof_finish = {
 	}
 }
 
-# Location scope: the window counts the rules by their state after this pass (pp_cplan_ds_profiles_st<n>).
+# Location scope: the window counts the rules by their state after this pass (pp_cplan_ds_profiles_st<n>; a plan
+# waiting for a higher rank, 11, counts with 6: not to be built here yet).
 pp_lprof_count_state = {
 	if = {
 		limit = { var:$st$ < 101.5 }
@@ -775,8 +794,12 @@ pp_lprof_count_state = {
 		limit = { var:$st$ < 109.5 }
 		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_st9 add = 1 } }
 	}
-	else = {
+	else_if = {
+		limit = { var:$st$ < 110.5 }
 		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_st10 add = 1 } }
+	}
+	else = {
+		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_st6 add = 1 } }
 	}
 }
 
@@ -849,6 +872,38 @@ pp_lprof_expand = {
 			else = {
 				pp_lprof_build = yes
 			}
+		}
+	}
+}
+
+# Location scope (a target's tier step, town_plans.py 2026-11-19: a plan follows the tiers as they unlock): a standing,
+# open level of the older tier $old$ the country can upgrade (pp_cplan_country_upgradable: its successor is
+# researched) becomes one of $type$ (the successor, one of the same target's buildings), when the country's part of the
+# can-build check passes for it and the market holds its construction goods. A construction of the successor where
+# the older tier stands IS the game's Upgrade button (in game 2026-11-10); it asks no workers and not the location's
+# part of the can-build check (that is what refuses a new level of an obsolete tier). Nothing once a construction
+# started or while a location's marks are measured (an upgrade has no profit to measure).
+pp_lprof_upgrade = {
+	if = {
+		limit = {
+			scope:pp_cplan_country = { NOT = { has_variable = pp_cplan_hit } }
+			NOT = { pp_lplan_measuring = yes }
+			any_buildings_in_location = {
+				building_type = building_type:$old$
+				pp_cplan_country_upgradable = yes
+			}
+			scope:pp_cplan_country = { can_build_building = building_type:$type$ }
+		}
+		if = {
+			limit = { NOT = { pp_cplan_goods_here_$demand$ = yes } }
+			pp_lprof_fail = { r = 105 }
+		}
+		else = {
+			building_type:$type$ = { save_scope_as = pp_cplan_btype }
+			save_temporary_scope_value_as = { name = pp_cplan_ipl value = $ipl$ }
+			save_temporary_scope_value_as = { name = pp_cplan_pf value = pp_cplan_cd_$demand$ }
+			save_temporary_scope_value_as = { name = pp_cplan_ef value = pp_cplan_eff_$cat$ }
+			pp_lprof_build = yes
 		}
 	}
 }

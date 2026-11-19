@@ -1,100 +1,103 @@
-"""Location plan (branch location-plan, 2026-11-07, Jan): the player marks what a location should produce or have.
+"""Location plan (2026-11-07, Jan; plans as town rights since 2026-11-19, branch town-plans): the player decides what a
+location is for.
 
-Only for the player: in the location window a button opens the Location Plan window, where the player clicks goods
-icons ("produce lumber here"). The map mode Location Plan draws the marked icons over the player's locations, on a
-green tile once done, red while still to do.
+Only for the player. A plan is a town right without conditions and without a bonus (``pp_plan_<plan>``,
+``town_plans.py``): "this location is for lumber, iron and later tools". The player sets and removes plans in the
+Location Plan window (opened from the location window's header button or its Plans row), one click per plan; several
+plans per location, rural locations too. The Construction Plan builds toward the held plans (the pass is not in this
+module). A plan shows among the location's town rights, and the Location Plan map mode draws the location's town rights
+over the player's locations.
 
-The marks are the location's build picks (Jan, 2026-11-10: "in this location, also expand wheat", like vanilla's auto
-expand): the Construction Plan builds a marked item there, in the rule group of the location profiles, after the
-location's profile rules. A mark is forced (Jan, the same evening: "this location-specific upgrading should just force
-the upgrades ... sometimes I might want to invest in stuff that's zero profit or buildings that don't even have a
-profit gate, for example a marketplace"): no payback limit, no market limit (``location_profiles.py`` writes the pass:
-``pp_lplan_location_marks``; the hand-written ``pp_lplan_location_turn`` runs it). A mark adds to the profile and the
-global rules; it switches nothing off. A goods mark keeps its state after the last pass (``pp_lplan_st_<item>``, the
-profile rule states).
-
-A mark is a good (the plan builds its producers) or a building (Jan: "I want to force it to become a trading hub, or I
-want to force an iron mine here"): a building is marked on its own entry, where the player sees a location's buildings
-(the location window's building tiles, Ctrl + click; the build panel's rows of locations without that building, a
-checkbox), and is kept as a building type on the location's variable list ``pp_lplan_b`` (script cannot make a
-variable name per building type). The eight building categories are no marks any more (Jan: "the button for trade
-buildings: it's very unclear what even is in that"); a save's category marks are taken off at the first look
-(``pp_lplan_drop_categories``).
-
-A marked good counts as done once the location produces it: its raw material is that good, or a standing building
-there produces it (``building_produced_goods``).
+Plans: one per good with a forced goods target (its producers), then ``food`` and ``trade``
+(``town_plans.EXTRA_PLANS``). A good that no building makes (fur) is shown in the picker, dimmed, and cannot be set.
 
 The window, the map mode and the scripted GUIs are hand-written in the mod (``pp_location_plan*``). This module writes
-the parts that follow the goods list and ``[location_plan]``:
+the parts that follow the plan list:
 
-* ``script_values/pp_location_plan_generated.txt``: done per item, the planned / open / done counts;
-* ``scripted_effects/pp_location_plan_generated.txt``: the toggle switch, clearing a plan, the flag declarations;
-* ``gui/pp_location_plan_generated.gui``: the picker grid and the strip of planned icons;
-* ``localization/english/pp_location_plan_generated_l_english.yml``: the item names and states;
-* ``gui/map_markers.gui``: vanilla's, with the raw goods marker drawing the plan's icons in the plan map mode.
+* ``script_values/pp_location_plan_generated.txt``: ``pp_tplan_n``, the plans a location holds (and the legacy count);
+* ``scripted_effects/pp_location_plan_generated.txt``: the toggle switch (``pp_tplan_toggle_switch``), Clear
+  (``pp_tplan_clear_all``), the never-run declarations; and the old marks' effects the profile pass still calls;
+* ``gui/pp_location_plan_generated.gui``: the picker grid and the location window's Plans row (``town_plan_gui.py``);
+* ``localization/english/pp_location_plan_generated_l_english.yml``: per plan its tile text with the plan's state;
+* ``gui/map_markers.gui``: vanilla's, with the raw goods marker drawing the location's town rights in the plan map mode.
 
-The location window's row "Also build here" (the marks as toggle tiles under the Profile row) is written by
-``location_profiles_gui.py``.
-
-Location variables: ``pp_lplan_g_<good>`` (present = marked), the list ``pp_lplan_b`` (marked building types),
-``pp_lplan_n`` (goods and buildings marked + 100), ``pp_lplan_st_g_<good>`` (the mark's state after the last pass +
-100, ``location_profiles.STATES``) and ``pp_lplan_est_g_<good>`` (the shortest payback found, years + 100); a building
-mark's state is an entry of the variable map ``pp_lplan_bst`` (key: the building type, value: the state + 100). Country:
-``pp_lplan_sel`` (the location the window shows), the list ``pp_lplan_locs`` (the locations the country marked).
+Script names (``town_plans.py``): the right ``pp_plan_<plan>``, the script value ``pp_tplan_on_<plan>`` (1 while held),
+the state ``pp_lplan_st_g_<plan>`` (+ 100, the profile rule states ``PP_LPROF_ST_<n>``) and the payback found
+``pp_lplan_est_g_<plan>``, the effect ``pp_tplan_flip = { g = <plan> }`` and the scripted GUI ``pp_tplan_toggle``.
+Country: ``pp_lplan_sel`` (the location the window shows).
 """
 
 from __future__ import annotations
 
 import csv
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 import tomllib
+
+from prosper_or_perish_constructor import town_plans
 
 VALUES = Path("in_game/common/script_values/pp_location_plan_generated.txt")
 EFFECTS = Path("in_game/common/scripted_effects/pp_location_plan_generated.txt")
 GUI = Path("in_game/gui/pp_location_plan_generated.gui")
 LOC = Path("main_menu/localization/english/pp_location_plan_generated_l_english.yml")
+LOC_DIR = Path("main_menu/localization/english")
 GOODS_CATEGORIES = Path("config/goods_categories.csv")
 GOODS_ICON = "gfx/interface/icons/trade_goods/icon_goods_{good}.dds"
 CATEGORY_ICON = "gfx/interface/icons/building_categories/{category}.dds"
 ICON_ROOTS = (Path("main_menu"), Path("in_game"))
-HEADER = "# Generated by ppc finalize (location_plan.py) from [location_plan]; do not edit by hand.\n"
+HEADER = "# Generated by ppc finalize (location_plan.py) from the plan list (town_plans.py); do not edit by hand.\n"
 TILE = "gfx/interface/component_tiles/square_tile.dds"
+
+# The extra plans' icons (no good of their own): food = vanilla's location food icon, trade = the trade buildings' one.
+EXTRA_ICONS = {
+    "food": "gfx/interface/icons/location_icons/food.dds",
+    "trade": "gfx/interface/icons/building_categories/trade_category.dds",
+}
+EXTRA_GROUP = "plans"  # the picker's group of the extra plans (text PP_LPLAN_GROUP_PLANS)
+
+TOGGLE_SWITCH = "pp_tplan_toggle_switch"
+CLEAR_ALL = "pp_tplan_clear_all"
+DECLARE = "pp_tplan_declare_flags"
+COUNT = "pp_tplan_n"  # location script value: the plans held here
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# the plans
 
 
 @dataclass(frozen=True)
-class Item:
+class Plan:
     key: str
-    kind: str  # good or category
-    group: str  # the picker group: the good's category, or "buildings"
+    group: str  # the picker group: the good's category, or EXTRA_GROUP
+    plannable: bool = True  # False: a good no building makes; shown dimmed, no plan right
+    good: bool = True
 
     @property
-    def suffix(self) -> str:
-        """The item in a variable name: g_<good> / c_<category> (the parameter of pp_lplan_flip and pp_lplan_mark)."""
-        return f"{'g' if self.kind == 'good' else 'c'}_{self.key}"
+    def right(self) -> str:
+        return town_plans.right_key(self.key)
 
     @property
-    def var(self) -> str:
-        """Location variable: present = marked."""
-        return f"pp_lplan_{self.suffix}"
+    def on_value(self) -> str:
+        return f"{town_plans.ON_VALUE_PREFIX}{self.key}"
 
     @property
     def state(self) -> str:
-        """Location variable: the mark's state after the last monthly pass (+ 100; location_profiles.STATES)."""
-        return f"pp_lplan_st_{self.suffix}"
+        """Location variable: the plan's state after the last monthly pass (+ 100)."""
+        return f"pp_lplan_st_g_{self.key}"
 
     @property
     def est(self) -> str:
-        """Location variable: the shortest payback the mark found (years + 100; 1099 = no profit)."""
-        return f"pp_lplan_est_{self.suffix}"
-
-    @property
-    def done(self) -> str:
-        return f"pp_lplan_done_{self.key}"
+        """Location variable: the shortest payback the plan's pass found (years + 100)."""
+        return f"pp_lplan_est_g_{self.key}"
 
     @property
     def icon(self) -> str:
-        return (GOODS_ICON if self.kind == "good" else CATEGORY_ICON).format(good=self.key, category=self.key)
+        return GOODS_ICON.format(good=self.key) if self.good else EXTRA_ICONS[self.key]
+
+    @property
+    def tooltip(self) -> str:
+        return f"PP_TPLAN_PICK_{self.key.upper()}"
 
 
 @dataclass(frozen=True)
@@ -106,7 +109,7 @@ class Config:
 
 @dataclass
 class Result:
-    items: list[Item] = field(default_factory=list)
+    items: list[Plan] = field(default_factory=list)
     missing_icons: list[str] = field(default_factory=list)
     files_changed: int = 0
 
@@ -120,43 +123,37 @@ def load_config(project: Path) -> Config:
     )
 
 
-def plan_items(repo: Path, config: Config) -> list[Item]:
-    """Goods in the goods table's order (grouped by their category), then the building categories."""
-    items: list[Item] = []
+def picker_goods(repo: Path, config: Config) -> list[tuple[str, str]]:
+    """(good, its category) in the goods table's order, without the hidden goods."""
     with (repo / GOODS_CATEGORIES).open(encoding="utf-8") as handle:
-        for row in csv.DictReader(handle):
-            if row["good"] not in config.hidden_goods:
-                items.append(Item(row["good"], "good", row["category"]))
-    items += [Item(category, "category", "buildings") for category in config.categories]
-    return items
+        return [(row["good"], row["category"]) for row in csv.DictReader(handle) if row["good"] not in config.hidden_goods]
 
 
-def mark_items(items: list[Item]) -> list[Item]:
-    """What a location can be marked with in the picker: the goods (a building is marked on its own entry; the building
-    categories are rule targets of the location profiles only)."""
-    return [item for item in items if item.kind == "good"]
+def targeted_goods(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -> set[str]:
+    """The goods with a forced goods target (at least one building makes them): the plan rights' goods. Read from the
+    goods targets of ``location_profiles.py`` until the plan pass owns them."""
+    from prosper_or_perish_constructor import location_profiles as lpf
+
+    found, _ = lpf.targets(repo, project, mod_root, vanilla_root)
+    return {key for key, candidates in found.items() if candidates}
 
 
-def legacy_marks(config: Config) -> list[Item]:
-    """The building category marks of a save from before 2026-11-10 evening (``pp_lplan_c_<category>`` with its state
-    and payback note): taken off at the first look, never set again."""
-    return [Item(category, "category", "buildings") for category in config.categories]
+def build_plans(goods: list[tuple[str, str]], targeted: set[str]) -> list[Plan]:
+    """The picker's entries: every good (by group; a good outside ``targeted`` is shown, not plannable), then the
+    extra plans. The plannable ones are town_plans.plan_keys(targeted goods in picker order)."""
+    keys = town_plans.plan_keys([good for good, _ in goods if good in targeted])
+    plans = [Plan(good, group, good in targeted) for good, group in goods]
+    plans += [Plan(key, EXTRA_GROUP, True, False) for key in town_plans.EXTRA_PLANS]
+    assert [plan.key for plan in plans if plan.plannable] == keys
+    return plans
 
 
-BUILDING_MARKS = "pp_lplan_b"  # location variable list: the marked building types
-BUILDING_MARK_GUI = "pp_lplan_bmark"  # scripted GUI (root = the location, scope:pp_bt = a building type): the toggle
-BUILDING_MARKED_GUI = "pp_lplan_bmarked"  # scripted GUI: is_shown while that building type is marked there
-# location variable map: marked building type -> the mark's state after the last pass (+ 100, the goods marks' states).
-# Script cannot name a variable per building type, but a variable map is keyed by a scope (vanilla's pentarchy map:
-# key a location, value a character; migrations.txt: key a province, value a number); the GUI reads one entry with
-# Scope.GetVariableFromVariableMap(name, key scope) (vanilla religious_doctrine.gui).
-BUILDING_STATES = "pp_lplan_bst"
-BUILDING_DONE_GUI = "pp_lplan_bdone"  # scripted GUI: is_shown while the marked building (or a later tier) stands there
-BUILDING_MAP_ICONS = 6  # the map marker draws at most this many building marks per location (DataModelFirst)
+def plannable(plans: list[Plan]) -> list[Plan]:
+    return [plan for plan in plans if plan.plannable]
 
 
-def groups(items: list[Item]) -> list[tuple[str, list[Item]]]:
-    order: list[tuple[str, list[Item]]] = []
+def groups(items: list) -> list[tuple[str, list]]:
+    order: list[tuple[str, list]] = []
     for item in items:
         if not order or order[-1][0] != item.group:
             order.append((item.group, []))
@@ -164,7 +161,7 @@ def groups(items: list[Item]) -> list[tuple[str, list[Item]]]:
     return order
 
 
-def icon_exists(item: Item, mod_root: Path, vanilla_root: Path) -> bool:
+def icon_exists(item, mod_root: Path, vanilla_root: Path) -> bool:
     for root in (mod_root, vanilla_root / "game"):
         for sub in ICON_ROOTS:
             if (root / sub / item.icon).is_file():
@@ -172,447 +169,248 @@ def icon_exists(item: Item, mod_root: Path, vanilla_root: Path) -> bool:
     return False
 
 
+def state_numbers(mod_root: Path) -> tuple[int, ...]:
+    """The plan states that have a text (``PP_LPROF_ST_<n>``, n > 0; 0 = not checked yet), in any English file, so a
+    state the pass adds shows once its text exists."""
+    found: set[int] = set()
+    for path in sorted((mod_root / LOC_DIR).glob("*.yml")):
+        found |= {int(n) for n in re.findall(r"^  PP_LPROF_ST_(\d+):", path.read_text(encoding="utf-8-sig"), re.MULTILINE)}
+    return tuple(sorted(n for n in found if n > 0))
+
+
 # ---------------------------------------------------------------------------------------------------------------------
+# expressions
 
 
-def _done_condition(item: Item) -> str:
-    if item.kind == "good":
-        return (f"OR = {{ raw_material ?= goods:{item.key} "
-                f"any_buildings_in_location = {{ building_level > 0 building_produced_goods = goods:{item.key} }} }}")
-    return f"any_buildings_in_location = {{ building_level > 0 building_category = {item.key} }}"
+def held(plan: Plan, location: str = "Location.MakeScope") -> str:
+    """True while the location holds the plan right. No GUI function asks for one town right, so a script value does
+    (``pp_tplan_on_<plan>``, 1 while held)."""
+    return f"EqualTo_CFixedPoint({location}.ScriptValue('{plan.on_value}'), '(CFixedPoint)1')"
 
 
-def render_values(items: list[Item]) -> str:
-    parts = [HEADER, "\n# Location scope: 1 once a marked good is done here (the location produces it).\n"]
-    for item in items:
-        parts.append(f"{item.done} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ {_done_condition(item)} }}\n\t\tvalue = 1\n\t}}\n}}\n")
+def toggle_call(plan: Plan, location: str = "Location.MakeScope") -> str:
+    return (f"[GetScriptedGui('{town_plans.TOGGLE_GUI}').Execute(GuiScope.SetRoot({location})"
+            f".AddScope('pp_key', MakeScopeFlag('{plan.key}')).End)]")
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# script
+
+
+def render_values(plans: list[Plan]) -> str:
+    parts = [HEADER, "\n# Location scope: the plans this location holds (the Plans row: none yet / more than the row shows).\n",
+             f"{COUNT} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ has_any_town_rights = yes }}\n"]
+    for plan in plannable(plans):
+        parts.append(f"\t\tif = {{ limit = {{ has_town_rights = town_rights_type:{plan.right} }} add = 1 }}\n")
+    parts.append("\t}\n}\n")
+    # still read by the profile pass and its generated values until Location Profiles go (old marks of a save)
     parts.append(
-        "\n# Location scope: marks here (goods and buildings).\n"
+        "\n# Location scope: the old marks of a save (goods and buildings), read by the profile pass until it goes.\n"
         "pp_lplan_planned_n = {\n\tvalue = 0\n\tif = {\n\t\tlimit = { has_variable = pp_lplan_n }\n"
         "\t\tvalue = var:pp_lplan_n\n\t\tsubtract = 100\n\t}\n}\n"
-        "# Location scope: goods marked here (the Location Plan window's count; the marked buildings are not in it).\n"
-        "pp_lplan_goods_n = {\n\tvalue = 0\n\tif = {\n\t\tlimit = { has_variable = pp_lplan_n }\n"
-    )
-    for item in items:
-        parts.append(f"\t\tif = {{ limit = {{ has_variable = {item.var} }} add = 1 }}\n")
-    parts.append(
-        "\t}\n}\n"
-        "# Location scope: marked goods not done yet.\npp_lplan_open_n = {\n\tvalue = 0\n\tif = {\n"
-        "\t\tlimit = { has_variable = pp_lplan_n }\n"
-    )
-    for item in items:
-        parts.append(f"\t\tif = {{ limit = {{ has_variable = {item.var} {item.done} < 0.5 }} add = 1 }}\n")
-    parts.append(
-        "\t}\n}\n"
-        "# Location scope: marked goods done.\npp_lplan_done_n = {\n\tvalue = pp_lplan_goods_n\n\tsubtract = pp_lplan_open_n\n}\n"
     )
     return "".join(parts)
 
 
-def render_effects(items: list[Item], legacy: list[Item] | None = None) -> str:
-    """``legacy``: marks an older save can hold and nothing sets any more (legacy_marks)."""
-    legacy = legacy or []
+def render_effects(plans: list[Plan], legacy_goods: list[str], legacy_categories: list[str]) -> str:
+    """``legacy_goods`` / ``legacy_categories``: the old marks a save can hold (``pp_lplan_g_<good>``,
+    ``pp_lplan_c_<category>``); the profile pass (pp_location_profiles.txt) still clears them until it goes."""
+    on = plannable(plans)
     parts = [
         HEADER,
-        "\n# Location scope: plan or unplan the item named by the flag scope:pp_key (scripted GUI pp_lplan_toggle).\n"
-        "pp_lplan_toggle_switch = {\n\tswitch = {\n\t\ttrigger = scope:pp_key\n",
+        "\n# Location scope: set or take off the plan named by the flag scope:pp_key (scripted GUI pp_tplan_toggle).\n"
+        f"{TOGGLE_SWITCH} = {{\n\tswitch = {{\n\t\ttrigger = scope:pp_key\n",
     ]
-    for item in items:
-        parts.append(f"\t\tflag:{item.key} = {{ pp_lplan_flip = {{ v = {item.suffix} }} }}\n")
-    parts.append("\t}\n}\n\n# Location scope: the plan emptied (every marked good with its state and the payback it found, the marked\n"
-                 "# buildings, and what an older save marked).\npp_lplan_clear_all = {\n")
-    for item in items + legacy:
-        parts.append(f"\tremove_variable = {item.var}\n\tremove_variable = {item.state}\n\tremove_variable = {item.est}\n")
-    parts.append(f"\tclear_variable_list = {BUILDING_MARKS}\n"
-                 f"\tif = {{\n\t\tlimit = {{ has_variable_map = {BUILDING_STATES} }}\n\t\tclear_variable_map = {BUILDING_STATES}\n\t}}\n"
-                 "\tremove_variable = pp_lplan_n\n}\n")
+    for plan in on:
+        parts.append(f"\t\tflag:{plan.key} = {{ {town_plans.FLIP_EFFECT} = {{ g = {plan.key} }} }}\n")
+    parts.append("\t}\n}\n\n# Location scope: every plan taken off (the Location Plan window's Clear).\n"
+                 f"{CLEAR_ALL} = {{\n")
+    for plan in on:
+        parts.append(f"\tif = {{\n\t\tlimit = {{ has_town_rights = town_rights_type:{plan.right} }}\n"
+                     f"\t\t{town_plans.FLIP_EFFECT} = {{ g = {plan.key} }}\n\t}}\n")
+    parts.append("}\n")
     parts.append(
-        "\n# Location scope (a location with marks, at the Locations group's look): the marks of a building category go\n"
-        "# (a save from before 2026-11-10 evening; a mark is a good or a building now), quietly, each off the count.\n"
+        "\n# Any scope, never run (pp_lplan_select calls it under always = no): declares the flags the window passes and\n"
+        "# sets the plan states only the pass writes and the GUI reads, so the script check logs no 'used but never set'\n"
+        "# line for them (a plan the pass has not looked at yet has no state).\n"
+        f"{DECLARE} = {{\n"
+        + "".join(f"\tset_variable = {{ name = pp_tplan_flag value = flag:{plan.key} }}\n" for plan in on)
+        + "".join(f"\tset_variable = {{ name = {name} value = 100 }}\n" for plan in on for name in (plan.state, plan.est))
+        + "\tif = {\n\t\tlimit = { has_variable = pp_tplan_flag }\n\t\tremove_variable = pp_tplan_flag\n\t}\n"
+        + "}\n"
+    )
+    # ---- the old marks, until Location Profiles go: the profile pass calls these two ----
+    old = [f"pp_lplan_g_{good}" for good in legacy_goods]
+    cats = [f"pp_lplan_c_{category}" for category in legacy_categories]
+
+    def three(var: str) -> tuple[str, str, str]:
+        suffix = var.removeprefix("pp_lplan_")
+        return var, f"pp_lplan_st_{suffix}", f"pp_lplan_est_{suffix}"
+
+    parts.append(
+        "\n# ---- The old marks of a save (before plans were town rights), until Location Profiles go ----\n"
+        "# Location scope: every old mark removed (the profile pass, pp_lplan_cleanup, for a location lost).\n"
+        "pp_lplan_clear_all = {\n"
+        + "".join(f"\tremove_variable = {name}\n" for var in old + cats for name in three(var))
+        + "\tif = {\n\t\tlimit = { has_variable_list = pp_lplan_b }\n\t\tclear_variable_list = pp_lplan_b\n\t}\n"
+        "\tif = {\n\t\tlimit = { has_variable_map = pp_lplan_bst }\n\t\tclear_variable_map = pp_lplan_bst\n\t}\n"
+        "\tremove_variable = pp_lplan_n\n}\n"
+        "\n# Location scope (the profile pass): the old category marks go, each off the count.\n"
         "pp_lplan_drop_categories = {\n"
         + "".join(
-            f"\tif = {{\n\t\tlimit = {{ has_variable = {item.var} }}\n\t\tremove_variable = {item.var}\n"
-            f"\t\tremove_variable = {item.state}\n\t\tremove_variable = {item.est}\n"
-            "\t\tif = {\n\t\t\tlimit = { has_variable = pp_lplan_n }\n"
+            f"\tif = {{\n\t\tlimit = {{ has_variable = {var} }}\n"
+            + "".join(f"\t\tremove_variable = {name}\n" for name in three(var))
+            + "\t\tif = {\n\t\t\tlimit = { has_variable = pp_lplan_n }\n"
             "\t\t\tchange_variable = { name = pp_lplan_n subtract = 1 }\n\t\t}\n\t}\n"
-            for item in legacy)
+            for var in cats)
         + "\tif = {\n\t\tlimit = {\n\t\t\thas_variable = pp_lplan_n\n\t\t\tvar:pp_lplan_n < 100.5\n\t\t}\n"
         "\t\tremove_variable = pp_lplan_n\n\t}\n}\n"
-    )
-    parts.append(
-        "\n# Any scope, never run (pp_lplan_select calls it under always = no): declares the flags the window passes, sets\n"
-        "# the marks only an older save holds (they are only ever removed) and reads the mark states only the GUI reads,\n"
-        "# so the script check logs no 'used but never set' line for them.\n"
+        "\n# Any scope, never run (pp_lplan_select): the old marks nothing sets any more (they are only removed).\n"
         "pp_lplan_declare_flags = {\n"
-        + "".join(f"\tset_variable = {{ name = pp_lplan_flag value = flag:{item.key} }}\n" for item in items)
-        + "".join(f"\tset_variable = {{ name = {name} value = 100 }}\n"
-                  for item in legacy for name in (item.var, item.state, item.est))
-        + "\tif = {\n\t\tlimit = {\n\t\t\tOR = {\n"
-        + "".join(f"\t\t\t\thas_variable = {item.state}\n\t\t\t\thas_variable = {item.est}\n" for item in items)
-        + "\t\t\t}\n\t\t}\n\t\tremove_variable = pp_lplan_flag\n\t}\n"
+        + "".join(f"\tset_variable = {{ name = {name} value = 100 }}\n" for var in old + cats for name in three(var))
+        + "\tset_variable = { name = pp_lplan_n value = 100 }\n"
         + "}\n"
     )
     return "".join(parts)
 
 
-def _planned(item: Item) -> str:
-    return f"Location.MakeScope.Var('{item.var}').IsSet"
+# ---------------------------------------------------------------------------------------------------------------------
+# GUI
 
 
-def _done(item: Item) -> str:
-    return f"EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('{item.done}'), '(CFixedPoint)1')"
+def render_gui(plans: list[Plan], config: Config) -> str:
+    """Types for the Location Plan window (datacontext Location = the location it shows) and the location window's
+    Plans row (town_plan_gui.py)."""
+    from prosper_or_perish_constructor import town_plan_gui
 
-
-def render_gui(items: list[Item], config: Config) -> str:
-    """Types for the Location Plan window (datacontext Location = the location it shows)."""
     out = [HEADER, "\ntypes PPLocationPlanGenerated\n{\n"]
-    # the strip: every planned item, green tile once done, red while still to do
-    out.append("\t# The planned items of the location: green once done, red while still to do.\n"
-               "\ttype pp_lplan_strip = flowcontainer {\n\t\tdirection = horizontal\n\t\tignoreinvisible = yes\n\t\tspacing = 3\n")
-    for item in items:
-        out.append(
-            f"\t\twidget = {{\n\t\t\tvisible = \"[{_planned(item)}]\"\n\t\t\tsize = {{ 36 36 }}\n"
-            f"\t\t\ttooltip = \"PP_LPLAN_STATE_{item.key.upper()}\"\n"
-            f"\t\t\ticon = {{ visible = \"[{_done(item)}]\" size = {{ 36 36 }} texture = \"{TILE}\" color = {{ 0.25 0.7 0.3 0.9 }} }}\n"
-            f"\t\t\ticon = {{ visible = \"[Not({_done(item)})]\" size = {{ 36 36 }} texture = \"{TILE}\" color = {{ 0.75 0.25 0.2 0.9 }} }}\n"
-            f"\t\t\ticon = {{ size = {{ 30 30 }} parentanchor = center texture = \"{item.icon}\" }}\n\t\t}}\n"
-        )
-    out.append("\t}\n\n")
-    out.append("\t# The marked buildings of the location (the list pp_lplan_b): click one to take its mark off.\n"
-               "\ttype pp_lplan_bstrip = flowcontainer {\n\t\tdirection = horizontal\n\t\tspacing = 3\n"
-               f"\t\tdatamodel = \"[{BUILDING_MARKS_MODEL}]\"\n"
-               "\t\titem = {\n\t\t\twidget = {\n\t\t\t\tsize = { 36 36 }\n"
-               f"\t\t\t\ticon = {{ size = {{ 36 36 }} texture = \"{TILE}\" color = {{ 0.9 0.7 0.25 0.95 }} }}\n"
-               "\t\t\t\tbutton = {\n\t\t\t\t\tsize = { 30 30 }\n\t\t\t\t\tparentanchor = center\n"
-               f"\t\t\t\t\ttexture = \"[{BUILDING_MARK_ICON}]\"\n"
-               "\t\t\t\t\ttooltip = \"PP_LPLAN_BMARK_TILE\"\n"
-               f"\t\t\t\t\tonclick = \"[{building_mark_call('Location.MakeScope', 'Scope.GetBuildingType.MakeScope')}]\"\n"
-               "\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n\n")
-    # the picker: one block per group, rows of icon buttons
-    out.append("\t# Every item to plan, by group: click to plan or unplan; planned ones carry a gold frame.\n"
+    out.append("\t# Every plan, by group: a click sets the plan or takes it off; a held plan is pressed with a gold frame.\n"
+               "\t# A good no building makes is dimmed and takes no click.\n"
                "\ttype pp_lplan_picker = vbox {\n\t\tlayoutpolicy_horizontal = expanding\n\t\tspacing = 2\n")
-    for group, members in groups(items):
+    for group, members in groups(plans):
         out.append(f"\t\tpp_lplan_group_title = {{ text = \"PP_LPLAN_GROUP_{group.upper()}\" }}\n")
         for start in range(0, len(members), config.per_row):
             out.append("\t\thbox = {\n\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\tspacing = 3\n")
-            for item in members[start:start + config.per_row]:
-                toggle = ("[GetScriptedGui('pp_lplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope)"
-                          f".AddScope('pp_key', MakeScopeFlag('{item.key}')).End)]")
-                out.append(
-                    f"\t\t\twidget = {{\n\t\t\t\tsize = {{ 40 40 }}\n"
-                    f"\t\t\t\ticon = {{ visible = \"[{_planned(item)}]\" size = {{ 40 40 }} texture = \"{TILE}\" color = {{ 0.9 0.7 0.25 0.95 }} }}\n"
-                    f"\t\t\t\tbutton = {{\n\t\t\t\t\tsize = {{ 34 34 }}\n\t\t\t\t\tparentanchor = center\n"
-                    f"\t\t\t\t\ttexture = \"{item.icon}\"\n"
-                    f"\t\t\t\t\talpha = \"[Select_float({_planned(item)}, '(float)1.0', '(float)0.45')]\"\n"
-                    f"\t\t\t\t\ttooltip = \"PP_LPLAN_PICK_{item.key.upper()}\"\n"
-                    f"\t\t\t\t\tonclick = \"{toggle}\"\n\t\t\t\t}}\n\t\t\t}}\n"
-                )
+            for plan in members[start:start + config.per_row]:
+                out.append(_picker_tile(plan))
             out.append("\t\t\texpand = {}\n\t\t}\n")
-    out.append("\t}\n}\n")
+    out.append("\t}\n")
+    out.append(town_plan_gui.render_row(plannable(plans)))
+    out.append("}\n")
     return "".join(out)
 
 
-def _name(item: Item) -> str:
-    return f"[ShowGoodsName('{item.key}')]" if item.kind == "good" else f"${item.key}$"
+def _picker_tile(plan: Plan) -> str:
+    tab = "\t\t\t"
+    if not plan.plannable:
+        return (
+            f"{tab}widget = {{\n{tab}\tsize = {{ 40 40 }}\n"
+            f"{tab}\ticon = {{\n{tab}\t\tsize = {{ 34 34 }}\n{tab}\t\tparentanchor = center\n"
+            f"{tab}\t\ttexture = \"{plan.icon}\"\n{tab}\t\talpha = 0.3\n"
+            f"{tab}\t\ttooltip = \"PP_TPLAN_NONE_{plan.key.upper()}\"\n{tab}\t}}\n{tab}}}\n"
+        )
+    on = held(plan)
+    return (
+        f"{tab}widget = {{\n{tab}\tsize = {{ 40 40 }}\n"
+        f"{tab}\ticon = {{ visible = \"[{on}]\" size = {{ 40 40 }} texture = \"{TILE}\" color = {{ 0.9 0.7 0.25 0.95 }} }}\n"
+        f"{tab}\tbutton = {{\n{tab}\t\tsize = {{ 34 34 }}\n{tab}\t\tparentanchor = center\n"
+        f"{tab}\t\ttexture = \"{plan.icon}\"\n"
+        f"{tab}\t\talpha = \"[Select_float({on}, '(float)1.0', '(float)0.45')]\"\n"
+        f"{tab}\t\ttooltip = \"{plan.tooltip}\"\n"
+        f"{tab}\t\tonclick = \"{toggle_call(plan)}\"\n{tab}\t}}\n{tab}}}\n"
+    )
 
 
-# A goods mark's states are the profile rule states (location_profiles.STATES; texts PP_LPROF_ST_<n>) without the two a
-# forced mark never gets: 5 (payback too long) and 10 (the market limit).
-MARK_STATES = (1, 2, 3, 4, 6, 7, 8, 9)
+def _name(plan: Plan) -> str:
+    return f"[ShowGoodsName('{plan.key}')]" if plan.good else f"$PP_TPLAN_NAME_{plan.key.upper()}$"
 
 
-def _state_is(item: Item, n: int) -> str:
-    return f"EqualTo_CFixedPoint(Location.MakeScope.Var('{item.state}').GetValue, '(CFixedPoint){100 + n}')"
+def _state_is(plan: Plan, n: int) -> str:
+    return f"EqualTo_CFixedPoint(Location.MakeScope.Var('{plan.state}').GetValue, '(CFixedPoint){100 + n}')"
 
 
-def render_loc(items: list[Item]) -> str:
-    # no map tooltip texts: the map mode needs the raw_material color mode for its icons, which ignores a tooltip_key
+def render_loc(plans: list[Plan], states: tuple[int, ...]) -> str:
+    # no map tooltip per plan: the map marker draws the location's town rights (their own names)
     lines = ["﻿l_english:", "  # " + HEADER.strip().lstrip("# ")]
-    # Per item: the tile tooltip of the picker and of the location window's row (PICK: name, what a click does, the
-    # mark's state while marked), the tooltip of the strip and of the map icon (STATE: name, done or not, the mark's
-    # state) and the state line they share (MST: the profile rule state texts PP_LPROF_ST_<n> for pp_lplan_st_<item>).
-    for item in items:
-        upper = item.key.upper()
-        state = f"Location.MakeScope.Var('{item.state}')"
-        lines.append(f'  PP_LPLAN_PICK_{upper}: "#T {_name(item)}#!\\n[SelectLocalization({_planned(item)}, \'PP_LPLAN_PICK_ON\', \'PP_LPLAN_PICK_OFF\')]'
-                     f'[SelectLocalization({_planned(item)}, \'PP_LPLAN_MST_{upper}\', \'PP_LPROF_UI_EMPTY\')]"')
-        lines.append(f'  PP_LPLAN_STATE_{upper}: "#T {_name(item)}#!\\n[SelectLocalization({_done(item)}, \'PP_LPLAN_STATE_DONE\', \'PP_LPLAN_STATE_OPEN\')]'
-                     f'$PP_LPLAN_MST_{upper}$"')
-        lines.append(f'  PP_LPLAN_MST_{upper}: "\\n[SelectLocalization({state}.IsSet, \'PP_LPLAN_MSTS_{upper}\', \'PP_LPROF_ST_0\')]"')
-        lines.append(f'  PP_LPLAN_MSTS_{upper}: "' + "".join(
-            f"[AddTextIf({_state_is(item, n)}, Localize('PP_LPROF_ST_{n}'))]" for n in MARK_STATES) + '"')
-    # the tile of a marked building (the Location Plan window's strip, the location window's row): its name, what the
-    # mark does and the mark's state after the last pass (the map pp_lplan_bst; datacontext Scope = the building type)
-    state = building_state("Location.MakeScope", BUILDING_ITEM_TYPE)
-    state_line = f"[SelectLocalization({state}.IsSet, 'PP_LPLAN_BMSTS', 'PP_LPROF_ST_0')]"
-    lines.append(f'  PP_LPLAN_BMARK_TILE: "#T [Scope.GetBuildingType.GetName]#!\\n$PP_LPLAN_BMARK_TILE_TEXT$\\n{state_line}"')
-    lines.append('  PP_LPLAN_BMSTS: "' + "".join(
-        f"[AddTextIf(EqualTo_CFixedPoint({state}.GetValue, '(CFixedPoint){100 + n}'), Localize('PP_LPROF_ST_{n}'))]"
-        for n in MARK_STATES) + '"')
-    # the map icon of a marked building: its name, whether it stands here (or a later tier of it), the state
-    done = building_done("Location.MakeScope", BUILDING_ITEM_TYPE)
-    lines.append(f'  PP_LPLAN_BMARK_MAP: "#T [Scope.GetBuildingType.GetName]#!\\n'
-                 f'[SelectLocalization({done}, \'PP_LPLAN_BMARK_DONE\', \'PP_LPLAN_STATE_OPEN\')]\\n{state_line}"')
+    # Per plan: the tile text of the picker and of the location window's Plans row (name, what the plan does, what a
+    # click does, and while held the plan's state after the last pass: PP_LPROF_ST_<n> for pp_lplan_st_g_<plan>).
+    for plan in plans:
+        upper = plan.key.upper()
+        if not plan.plannable:
+            lines.append(f'  PP_TPLAN_NONE_{upper}: "#T {_name(plan)}#!\\n$PP_TPLAN_NONE$"')
+            continue
+        on = held(plan)
+        what = "PP_TPLAN_WHAT_GOOD" if plan.good else f"PP_TPLAN_WHAT_{upper}"
+        lines.append(f'  PP_TPLAN_PICK_{upper}: "#T {_name(plan)}#!\\n${what}$\\n'
+                     f'[SelectLocalization({on}, \'PP_TPLAN_PICK_ON\', \'PP_TPLAN_PICK_OFF\')]'
+                     f'[SelectLocalization({on}, \'PP_TPLAN_ST_{upper}\', \'PP_TPLAN_EMPTY\')]"')
+        state = f"Location.MakeScope.Var('{plan.state}')"
+        lines.append(f'  PP_TPLAN_ST_{upper}: "\\n[SelectLocalization({state}.IsSet, \'PP_TPLAN_STS_{upper}\', \'PP_LPROF_ST_0\')]"')
+        lines.append(f'  PP_TPLAN_STS_{upper}: "' + "".join(
+            f"[AddTextIf({_state_is(plan, n)}, Localize('PP_LPROF_ST_{n}'))]" for n in states) + '"')
     return "\n".join(lines) + "\n"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# a building's mark (Jan 2026-11-10: mark a building itself, the way vanilla's auto expand toggles a building)
+# the old building marks: kept only for location_profiles.py / location_profiles_gui.py (they go with Location
+# Profiles). Nothing of this module's output uses them any more.
 
-BUILDING_MARKS_MODEL = f"Location.MakeScope.GetList('{BUILDING_MARKS}')"  # datamodel: the marked building types (scopes)
-# in an item of that datamodel. Scope.GetBuildingType is only a promote (data_types_script.txt, 1.4.8): as a function
-# argument it passes no object and the icon came out blank (in game 2026-11-11); .Self makes it the object, as vanilla
-# passes GetBuildingIcon(BuildingType.Self). The list entry is the tier the plan builds now (pp_lplan_b_promote).
+BUILDING_MARKS = "pp_lplan_b"
+BUILDING_MARKS_MODEL = f"Location.MakeScope.GetList('{BUILDING_MARKS}')"
 BUILDING_MARK_ICON = "GetBuildingIcon(Scope.GetBuildingType.Self)"
-MARK_TEXTURE = "gfx/interface/icons/map_modes/pp_location_plan.dds"  # the Location Plan's icon
-BUILDING_MARK_COMMENT = "# PP: Construction Plan mark (location_plan.py)"
+BUILDING_MARK_GUI = "pp_lplan_bmark"
+BUILDING_MARK_COMMENT = "# PP: Construction Plan mark (location_plan.py)"  # the removed marks' blocks (tests)
+
+
+@dataclass(frozen=True)
+class Item:
+    """An old goods / category mark (location_profiles.py's items)."""
+    key: str
+    kind: str  # good or category
+    group: str
+
+    @property
+    def suffix(self) -> str:
+        return f"{'g' if self.kind == 'good' else 'c'}_{self.key}"
+
+    @property
+    def var(self) -> str:
+        return f"pp_lplan_{self.suffix}"
+
+    @property
+    def state(self) -> str:
+        return f"pp_lplan_st_{self.suffix}"
+
+    @property
+    def est(self) -> str:
+        return f"pp_lplan_est_{self.suffix}"
+
+    @property
+    def done(self) -> str:
+        return f"pp_lplan_done_{self.key}"
+
+    @property
+    def icon(self) -> str:
+        return (GOODS_ICON if self.kind == "good" else CATEGORY_ICON).format(good=self.key, category=self.key)
+
+
+def plan_items(repo: Path, config: Config) -> list[Item]:
+    """The old items: goods in the goods table's order, then the building categories (location_profiles.py)."""
+    items = [Item(good, "good", group) for good, group in picker_goods(repo, config)]
+    return items + [Item(category, "category", "buildings") for category in config.categories]
+
+
+def mark_items(items: list[Item]) -> list[Item]:
+    return [item for item in items if item.kind == "good"]
 
 
 def building_mark_call(location: str, building_type: str) -> str:
-    """The toggle: marks or unmarks the building type (a GUI scope expression) for the location."""
     return (f"GetScriptedGui('{BUILDING_MARK_GUI}').Execute(GuiScope.SetRoot({location})"
             f".AddScope('pp_bt', {building_type}).End)")
 
 
-def building_marked(location: str, building_type: str) -> str:
-    """True while the building type is marked for the location. The GUI cannot look into a variable list, so it asks
-    a scripted GUI's is_shown trigger."""
-    return (f"GetScriptedGui('{BUILDING_MARKED_GUI}').IsShown(GuiScope.SetRoot({location})"
-            f".AddScope('pp_bt', {building_type}).End)")
-
-
-BUILDING_ITEM_TYPE = "Scope.GetBuildingType.MakeScope"  # in an item of BUILDING_MARKS_MODEL: the marked type as a scope
-
-
-def building_state(location: str, building_type: str) -> str:
-    """The mark's state after the last pass (an entry of the map pp_lplan_bst; .IsSet, .GetValue = state + 100)."""
-    return f"{location}.GetVariableFromVariableMap('{BUILDING_STATES}', {building_type})"
-
-
-def building_done(location: str, building_type: str) -> str:
-    """True while a level of the marked building type, or of a later tier of its line, stands there (the generated
-    trigger pp_lplan_b_done, asked through a scripted GUI's is_shown)."""
-    return (f"GetScriptedGui('{BUILDING_DONE_GUI}').IsShown(GuiScope.SetRoot({location})"
-            f".AddScope('pp_bt', {building_type}).End)")
-
-
-def _mark_title(marked: str) -> str:
-    return f"[SelectLocalization({marked}, 'PP_LPLAN_BMARK_ON', 'PP_LPLAN_BMARK_OFF')]"
-
-
-# The location window's building tile (type location_building_item; datacontexts Building and BuildingType on its two
-# clickable buttons): Ctrl + click marks or unmarks the building, beside vanilla's Alt + click for auto expand.
-_WINDOW_LOCATION = "Building.GetLocation.MakeScope"
-_WINDOW_TYPE = "BuildingType.MakeScope"
-_WINDOW_ACTION_ANCHOR = 'on_action = "[ToggleAutoExpandBuilding(Building.Self)]"'
-_WINDOW_ICON_ANCHOR = 'visible = "[IsAutoExpand(LocationBuildingItem.GetBuilding.Self)]"'
-_ITEM_LOCATION = "LocationBuildingItem.GetBuilding.GetLocation.MakeScope"
-_ITEM_TYPE = "LocationBuildingItem.GetBuilding.GetType.MakeScope"
-
-
-def window_mark_action(tab: str) -> str:
-    marked = building_marked(_WINDOW_LOCATION, _WINDOW_TYPE)
-    return (
-        f"{tab}action_tooltip = {{ {BUILDING_MARK_COMMENT}\n"
-        f"{tab}\tclick_type = left\n{tab}\tclick_mode = single\n{tab}\tclick_modifier = ctrl\n"
-        f"{tab}\ttitle = \"{_mark_title(marked)}\"\n"
-        f"{tab}\tvisible = \"[And(Building.GetLocation.GetOwner.IsPlayer, Not(IsObserving))]\"\n"
-        f"{tab}\ton_action = \"[{building_mark_call(_WINDOW_LOCATION, _WINDOW_TYPE)}]\"\n"
-        f"{tab}}}\n"
-    )
-
-
-def window_mark_icon(tab: str) -> str:
-    return (
-        f"{tab}icon = {{ {BUILDING_MARK_COMMENT}\n"
-        f"{tab}\tparentanchor = bottom|right\n{tab}\tsize = {{ 10 10 }}\n{tab}\tposition = {{ 3 1 }}\n"
-        f"{tab}\tvisible = \"[{building_marked(_ITEM_LOCATION, _ITEM_TYPE)}]\"\n"
-        f"{tab}\ttexture = \"{MARK_TEXTURE}\"\n"
-        f"{tab}\tusing = bg_circle\n"
-        f"{tab}\ttooltip = \"PP_LPLAN_BMARK_ICON\"\n"
-        f"{tab}}}\n"
-    )
-
-
-def _enclosing_block(text: str, at: int, opening: str) -> tuple[int, int]:
-    """(line start, end) of the block ``opening`` (as ``icon = {``) that holds the position ``at``."""
-    start = text.rindex(opening, 0, at)
-    line_start = text.rindex("\n", 0, start) + 1
-    if text[line_start:start].strip():
-        raise ValueError(f"location window: {opening!r} does not start its line")
-    return line_start, _marker_block_end(text, start)
-
-
-def add_building_marks(text: str) -> str:
-    """The location window's building tiles get the Construction Plan mark, additively: beside each of vanilla's two
-    Alt + click auto-expand actions a Ctrl + click action that marks or unmarks the building for its location, and
-    beside vanilla's auto-expand badge a badge on a marked building. Nothing of vanilla's is changed or removed."""
-    if BUILDING_MARK_COMMENT in text:
-        return text
-    if text.count(_WINDOW_ACTION_ANCHOR) != 2 or text.count(_WINDOW_ICON_ANCHOR) != 1:
-        raise ValueError("location window: the building tile's auto-expand actions (2) and badge (1) not found")
-    inserts: list[tuple[int, str]] = []
-    at = 0
-    for _ in range(2):
-        at = text.index(_WINDOW_ACTION_ANCHOR, at) + 1
-        line_start, end = _enclosing_block(text, at, "action_tooltip = {")
-        end = text.index("\n", end) + 1
-        inserts.append((end, window_mark_action(text[line_start:text.index("action_tooltip", line_start)])))
-    at = text.index(_WINDOW_ICON_ANCHOR)
-    line_start, end = _enclosing_block(text, at, "icon = {")
-    end = text.index("\n", end) + 1
-    inserts.append((end, window_mark_icon(text[line_start:text.index("icon", line_start)])))
-    for position, block in sorted(inserts, reverse=True):
-        text = text[:position] + block + text[position:]
-    return text
-
-
-# The build panel's location row (tools/port_vanilla_gui.py inserts it; LocationToBuildItem in context): a checkbox
-# like vanilla's auto-expand checkbox, on the rows of the player's locations without an own building of the type
-# (those rows have no checkboxes of vanilla's; on the others Ctrl + click on vanilla's auto-expand checkbox marks).
-# It takes a click, Ctrl + click and Ctrl + right click (all of the type), so every row answers Ctrl the same way.
-_ROW_LOCATION = "LocationToBuildItem.GetLocation.MakeScope"
-_ROW_TYPE = "LocationToBuildItem.GetBuildingType.MakeScope"
-BUILD_PANEL_OWN = "ObjectsEqual(LocationToBuildItem.GetBuilding.GetOwner, Player.Self)"
-
-
-def build_panel_mark(tab: str) -> str:
-    marked = building_marked(_ROW_LOCATION, _ROW_TYPE)
-    lines = [
-        f"vbox = {{ {BUILDING_MARK_COMMENT}",
-        "\tmargin = { 5 0 }",
-        f"\tvisible = \"[And3(Not({BUILD_PANEL_OWN}), LocationToBuildItem.GetLocation.GetOwner.IsPlayer, Not(IsObserving))]\"",
-        "\tlayoutpolicy_vertical = expanding",
-        "\tbutton_square_checkbox = {",
-        "\t\tsize = { 20 16 }",
-        "\t\tblockoverride \"check_texture\" {",
-        f"\t\t\ttexture = \"{MARK_TEXTURE}\"",
-        "\t\t}",
-        "\t\tblockoverride \"checked_icon_size\" {",
-        "\t\t\tsize = { 14 14 }",
-        "\t\t}",
-        "\t\tblockoverride \"unchecked_icon_size\" {",
-        "\t\t\tsize = { 14 14 }",
-        "\t\t}",
-        "\t\tblockoverride \"checked_visible\" {",
-        f"\t\t\tvisible = \"[{marked}]\"",
-        "\t\t}",
-        "\t\tblockoverride \"unchecked_visible\" {",
-        f"\t\t\tvisible = \"[Not({marked})]\"",
-        "\t\t}",
-        "\t\tbackground = {",
-        "\t\t\ttexture = \"gfx/interface/buttons/checkbox_bg_square.dds\"",
-        "\t\t\ttexture_density = 2",
-        "\t\t\tmodify_texture = {",
-        "\t\t\t\tusing = color_market_grey_texture",
-        "\t\t\t\tblend_mode = add",
-        "\t\t\t\talpha = 0.5",
-        "\t\t\t}",
-        "\t\t}",
-        "\t\taction_tooltip = {",
-        "\t\t\tclick_type = left",
-        f"\t\t\ttitle = \"{_mark_title(marked)}\"",
-        f"\t\t\ton_action = \"[{building_mark_call(_ROW_LOCATION, _ROW_TYPE)}]\"",
-        "\t\t}",
-    ]
-    # Ctrl + click and Ctrl + right click as on the rows with vanilla's auto-expand checkbox (every row the same)
-    lines += [f"\t\t{line}" for line in mark_action("", _ROW_LOCATION, _ROW_TYPE, MARK_VISIBLE_ROW).rstrip("\n").split("\n")]
-    lines += [f"\t\t{line}" for line in mass_mark_action("", "LocationToBuildItem.GetBuildingType.MakeScope",
-                                                     "right").rstrip("\n").split("\n")]
-    lines += ["\t}", "}"]
-    return "".join(f"{tab}{line}\n" for line in lines)
-
-
 # ---------------------------------------------------------------------------------------------------------------------
-# Ctrl + click on vanilla's auto-expand checkboxes (Jan 2026-11-10: everywhere vanilla sets auto expand for a building,
-# Ctrl + click marks it for the Construction Plan). Single checkboxes (a Building in context): the mark for that
-# building's location, plus the badge of the location window's tiles. Mass checkboxes (auto expand for all buildings of
-# a type): pp_lplan_bmark_all on the player's country marks the type in every own location where it stands, or unmarks
-# them all when every one is marked already (script cannot see the GUI's filtered list).
-
-BUILDING_MARK_ALL_GUI = "pp_lplan_bmark_all"  # scripted GUI (root = the country, scope:pp_bt = a building type)
-AUTO_EXPAND_ACTION = 'on_action = "[ToggleAutoExpandBuilding(Building.Self)]"'
-_BUILDING_LOCATION = "Building.GetLocation.MakeScope"
-_BUILDING_TYPE = "Building.GetType.MakeScope"
-MARK_VISIBLE = "And(Building.GetLocation.GetOwner.IsPlayer, Not(IsObserving))"
-MARK_VISIBLE_ROW = "And(LocationToBuildItem.GetLocation.GetOwner.IsPlayer, Not(IsObserving))"
-
-
-def building_mark_all_call(building_type: str) -> str:
-    return (f"GetScriptedGui('{BUILDING_MARK_ALL_GUI}').Execute(GuiScope.SetRoot(GetPlayer.MakeScope)"
-            f".AddScope('pp_bt', {building_type}).End)")
-
-
-def mark_action(tab: str, location: str = _BUILDING_LOCATION, building_type: str = _BUILDING_TYPE,
-                visible: str = MARK_VISIBLE) -> str:
-    """Ctrl + click: mark or unmark the building type for the location."""
-    marked = building_marked(location, building_type)
-    return (
-        f"{tab}action_tooltip = {{ {BUILDING_MARK_COMMENT}\n"
-        f"{tab}\tclick_type = left\n{tab}\tclick_mode = single\n{tab}\tclick_modifier = ctrl\n"
-        f"{tab}\ttitle = \"{_mark_title(marked)}\"\n"
-        f"{tab}\tvisible = \"[{visible}]\"\n"
-        f"{tab}\ton_action = \"[{building_mark_call(location, building_type)}]\"\n"
-        f"{tab}}}\n"
-    )
-
-
-def mass_mark_action(tab: str, building_type: str, click: str = "left") -> str:
-    """Ctrl + click (or Ctrl + right click): mark the type in all own locations where it stands, or unmark them all.
-    The title does not ask the state: that would walk every location each frame."""
-    return (
-        f"{tab}action_tooltip = {{ {BUILDING_MARK_COMMENT}\n"
-        f"{tab}\tclick_type = {click}\n{tab}\tclick_mode = single\n{tab}\tclick_modifier = ctrl\n"
-        f"{tab}\ttitle = \"PP_LPLAN_BMARK_ALL\"\n"
-        f"{tab}\tvisible = \"[Not(IsObserving)]\"\n"
-        f"{tab}\ton_action = \"[{building_mark_all_call(building_type)}]\"\n"
-        f"{tab}}}\n"
-    )
-
-
-def mark_badge(tab: str, location: str = _BUILDING_LOCATION, building_type: str = _BUILDING_TYPE) -> str:
-    """The location window tile's badge, on a checkbox: shown while the building is marked there."""
-    return (
-        f"{tab}icon = {{ {BUILDING_MARK_COMMENT}\n"
-        f"{tab}\tparentanchor = bottom|right\n{tab}\tsize = {{ 10 10 }}\n{tab}\tposition = {{ 3 1 }}\n"
-        f"{tab}\tvisible = \"[{building_marked(location, building_type)}]\"\n"
-        f"{tab}\ttexture = \"{MARK_TEXTURE}\"\n"
-        f"{tab}\tusing = bg_circle\n"
-        f"{tab}\ttooltip = \"PP_LPLAN_BMARK_ICON\"\n"
-        f"{tab}}}\n"
-    )
-
-
-def _after_action(text: str, anchor: str, what: str, expected: int) -> list[tuple[int, str]]:
-    """(end of line after the action_tooltip holding ``anchor``, its indent) for each of the ``expected`` anchors."""
-    if text.count(anchor) != expected:
-        raise ValueError(f"{what}: expected {expected} of {anchor!r}, found {text.count(anchor)}")
-    out = []
-    at = 0
-    for _ in range(expected):
-        at = text.index(anchor, at) + 1
-        line_start, end = _enclosing_block(text, at, "action_tooltip = {")
-        out.append((text.index("\n", end) + 1, text[line_start:text.index("action_tooltip", line_start)]))
-    return out
-
-
-def add_auto_expand_marks(text: str, what: str, *, mass_type: str | None = None, mass_anchor: str = "",
-                          mass_click: str = "left", expected: int = 1) -> str:
-    """Additive: after each of vanilla's single auto-expand actions (``expected`` of them, a Building in context) the
-    Ctrl + click mark and the badge; with ``mass_type`` (a GUI building type scope) after the action holding
-    ``mass_anchor`` (vanilla's auto expand for all buildings of the type) the Ctrl + click mass mark."""
-    if BUILDING_MARK_COMMENT in text:
-        raise ValueError(f"{what}: already marked")
-    inserts = [(pos, mark_action(ind) + mark_badge(ind)) for pos, ind in _after_action(text, AUTO_EXPAND_ACTION, what, expected)]
-    if mass_type:
-        inserts += [(pos, mass_mark_action(ind, mass_type, mass_click)) for pos, ind in _after_action(text, mass_anchor, what, 1)]
-    for position, block in sorted(inserts, reverse=True):
-        text = text[:position] + block + text[position:]
-    return text
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-# the map marker: vanilla's raw goods marker draws the plan's icons in the Location Plan map mode
+# the map marker: vanilla's raw goods marker draws the location's town rights in the Location Plan map mode
 
 MARKERS = Path("in_game/gui/map_markers.gui")
 MAP_MODE_KEY = "pp_location_plan"
@@ -620,6 +418,9 @@ _MARKER_HEAD = "### Raw Goods Marker\nwidget = {\n\tname = \"raw_goods_marker\"\
 _PLAN_MODE = f"GetMapMode('{MAP_MODE_KEY}').IsSet"
 # one icon's size, scaled with the zoom like vanilla's marker (which caps at 85)
 _ICON_SIZE = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+HAS_RIGHTS = "GreaterThan_int32(GetDataModelSize(Location.GetTownRights), '(int32)0')"  # vanilla's own test
+MAP_ICONS = 8  # the marker draws at most this many town rights per location
+MAP_TOOLTIP = "PP_TPLAN_MAP_RIGHT"
 
 
 def _marker_block_end(text: str, start: int) -> int:
@@ -631,38 +432,11 @@ def _marker_block_end(text: str, start: int) -> int:
             return index
 
 
-def render_marker_buildings(tab: str) -> str:
-    """The body of the marker's flowcontainer of the marked buildings: a datamodel over the location's own list
-    pp_lplan_b (the first BUILDING_MAP_ICONS entries), each the building's icon on a green tile while it (or a later tier
-    of it) stands here, red while not. Nothing per building type: the marker is drawn for every location, so it reads
-    only the list (and the whole marker shows only where the location has marks, pp_lplan_n)."""
-    done = building_done("Location.MakeScope", BUILDING_ITEM_TYPE)
-    return (
-        f"{tab}datamodel = \"[DataModelFirst({BUILDING_MARKS_MODEL}, '(int32){BUILDING_MAP_ICONS}')]\"\n"
-        f"{tab}item = {{\n"
-        f"{tab}\twidget = {{\n"
-        f"{tab}\t\tsize = \"{_ICON_SIZE}\"\n"
-        f"{tab}\t\ttooltip = \"PP_LPLAN_BMARK_MAP\"\n"
-        # one tile, its colour picked by the done check (evaluated once per icon; vanilla colours icons by expression)
-        f"{tab}\t\ticon = {{ size = {{ 100% 100% }} texture = \"{TILE}\" "
-        f"color = \"[Select_CVector4f({done}, '(CVector4f)0.25,0.7,0.3,0.85', '(CVector4f)0.75,0.25,0.2,0.85')]\" }}\n"
-        f"{tab}\t\ticon = {{ size = {{ 84% 84% }} parentanchor = center texture = \"[{BUILDING_MARK_ICON}]\" }}\n"
-        f"{tab}\t}}\n"
-        f"{tab}}}\n"
-    )
-
-
-def render_markers(vanilla: str, items: list[Item], profiles=None) -> str:
+def render_markers(vanilla: str) -> str:
     """Vanilla's map_markers.gui with the raw goods marker split in two: its own content outside the Location Plan map
-    mode, and the plan's icons (green tile once done, red while still to do) in it, for the player's locations with a
-    plan (pp_lplan_n is removed when nothing is planned, so other locations never look at the items).
-
-    With ``profiles`` (location_profiles_gui.Config) the plan icons follow a Location Profiles cell: the location's
-    profile badge and, while the paint brush (GUI variable pp_lprof_brush) is set, a frame on every player location that
-    paints the brush's profile onto it. The marker then also shows for player locations with a profile or while
-    painting; the plan icons stay behind pp_lplan_n.
-
-    After the goods the marked buildings (render_marker_buildings), at most BUILDING_MAP_ICONS a location."""
+    mode, and in it the town rights of the player's locations that hold any (a plan is a town right; charters and
+    rights show beside the plans): one datamodel over the location's own rights, nothing per plan, so the marker costs
+    no more than vanilla's town rights card."""
     if vanilla.count(_MARKER_HEAD) != 1:
         raise ValueError("map_markers.gui: raw goods marker not found once")
     start = vanilla.index(_MARKER_HEAD)
@@ -671,53 +445,29 @@ def render_markers(vanilla: str, items: list[Item], profiles=None) -> str:
     first_button = block.index("\n\tbutton = {")
     head, body = block[:first_button], block[first_button:block.rindex("}")]
     body = "\n".join(("\t" + line if line.strip() else line) for line in body.split("\n"))
-    tab = "\t\t\t\t" if profiles else "\t\t\t"
-    icons = []
-    for item in items:
-        icons.append(
-            f"{tab}widget = {{\n"
-            f"{tab}\tvisible = \"[{_planned(item)}]\"\n"
-            f"{tab}\tsize = \"{_ICON_SIZE}\"\n"
-            f"{tab}\ttooltip = \"PP_LPLAN_STATE_{item.key.upper()}\"\n"
-            f"{tab}\ticon = {{ visible = \"[{_done(item)}]\" size = {{ 100% 100% }} texture = \"{TILE}\" color = {{ 0.25 0.7 0.3 0.85 }} }}\n"
-            f"{tab}\ticon = {{ visible = \"[Not({_done(item)})]\" size = {{ 100% 100% }} texture = \"{TILE}\" color = {{ 0.75 0.25 0.2 0.85 }} }}\n"
-            f"{tab}\ticon = {{ size = {{ 84% 84% }} parentanchor = center texture = \"{item.icon}\" }}\n"
-            f"{tab}}}\n"
-        )
-    has_plan = "Location.MakeScope.Var('pp_lplan_n').IsSet"
-    buildings = render_marker_buildings("\t\t\t\t")  # the marked buildings, after the goods (one flowcontainer)
-    if profiles:
-        from prosper_or_perish_constructor import location_profiles_gui
-
-        shown = f"Or3({has_plan}, Location.MakeScope.Var('pp_lprof').IsSet, GetVariableSystem.Exists('pp_lprof_brush'))"
-        content = (
-            location_profiles_gui.marker_cell(profiles, _ICON_SIZE)
-            + "\t\t\t# the plan's icons (only locations with a plan look at the items)\n"
-            + f"\t\t\tflowcontainer = {{\n\t\t\t\tvisible = \"[{has_plan}]\"\n\t\t\t\tdirection = horizontal\n"
-            + "\t\t\t\tignoreinvisible = yes\n\t\t\t\tallow_outside = yes\n\t\t\t\tspacing = 2\n"
-            + "".join(icons)
-            + "\t\t\t}\n"
-            + f"\t\t\tflowcontainer = {{\n\t\t\t\tvisible = \"[{has_plan}]\"\n\t\t\t\tdirection = horizontal\n"
-            + "\t\t\t\tallow_outside = yes\n\t\t\t\tspacing = 2\n"
-            + buildings
-            + "\t\t\t}\n"
-        )
-    else:
-        shown = has_plan
-        content = ("".join(icons) + "\t\t\tflowcontainer = {\n\t\t\t\tdirection = horizontal\n\t\t\t\tallow_outside = yes\n"
-                   "\t\t\t\tspacing = 2\n" + buildings + "\t\t\t}\n")
+    rights = (
+        "\t\t\tdatamodel = \"[DataModelFirst(Location.GetTownRights, '(int32)" + str(MAP_ICONS) + "')]\"\n"
+        "\t\t\titem = {\n"
+        "\t\t\t\twidget = {\n"
+        f"\t\t\t\t\tsize = \"{_ICON_SIZE}\"\n"
+        f"\t\t\t\t\ttooltip = \"{MAP_TOOLTIP}\"\n"
+        f"\t\t\t\t\ticon = {{ size = {{ 100% 100% }} texture = \"{TILE}\" color = {{ 0.12 0.12 0.12 0.8 }} }}\n"
+        "\t\t\t\t\ticon = { size = { 84% 84% } parentanchor = center texture = \"[TownRights.GetIcon]\" }\n"
+        "\t\t\t\t}\n"
+        "\t\t\t}\n"
+    )
     patched = (
         head
         + f"\n\t# PP Location Plan (location_plan.py): vanilla's content outside the {MAP_MODE_KEY} map mode\n"
         + f"\twidget = {{\n\t\tvisible = \"[Not({_PLAN_MODE})]\"\n\t\tsize = {{ 100% 100% }}\n\t\tallow_outside = yes\n"
         + body.rstrip() + "\n\t}\n\n"
-        + f"\t# PP Location Plan: in its map mode, the plan's icons of the player's locations\n"
-        + f"\twidget = {{\n\t\tname = \"pp_lplan_marker\"\n"
-        + f"\t\tvisible = \"[And({_PLAN_MODE}, And(Location.GetOwner.IsPlayer, {shown}))]\"\n"
+        + "\t# PP Location Plan: in its map mode, the town rights (plans among them) of the player's locations\n"
+        + "\twidget = {\n\t\tname = \"pp_lplan_marker\"\n"
+        + f"\t\tvisible = \"[And({_PLAN_MODE}, And(Location.GetOwner.IsPlayer, {HAS_RIGHTS}))]\"\n"
         + "\t\tsize = { 100% 100% }\n\t\tallow_outside = yes\n"
         + "\t\tflowcontainer = {\n\t\t\tparentanchor = center\n\t\t\twidgetanchor = center\n\t\t\tdirection = horizontal\n"
-        + "\t\t\tignoreinvisible = yes\n\t\t\tallow_outside = yes\n\t\t\tspacing = 2\n"
-        + content
+        + "\t\t\tallow_outside = yes\n\t\t\tspacing = 2\n"
+        + rights
         + "\t\t}\n\t}\n}"
     )
     return vanilla[:start] + patched + vanilla[end:]
@@ -726,7 +476,7 @@ def render_markers(vanilla: str, items: list[Item], profiles=None) -> str:
 # ---------------------------------------------------------------------------------------------------------------------
 # the location window's button (patched in by location_view.build_window)
 
-BUTTON_MARK = "# PP: Location Plan, what this location should produce"
+BUTTON_MARK = "# PP: Location Plan, what this location is for"
 BUTTON = f"""
 		widget = {{ {BUTTON_MARK} (gui/pp_location_plan.gui)
 			parentanchor = right|vcenter
@@ -798,26 +548,26 @@ def _write(path: Path, text: str, write: bool) -> bool:
     return True
 
 
+def plans_for(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -> list[Plan]:
+    goods = picker_goods(repo, load_config(project))
+    return build_plans(goods, targeted_goods(repo, project, mod_root, vanilla_root))
+
+
 def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: bool = True) -> Result:
     config = load_config(project)
-    items = mark_items(plan_items(repo, config))
-    result = Result(items=items)
-    result.missing_icons = [item.key for item in items if not icon_exists(item, mod_root, vanilla_root)]
+    goods = picker_goods(repo, config)
+    plans = build_plans(goods, targeted_goods(repo, project, mod_root, vanilla_root))
+    result = Result(items=plans)
+    result.missing_icons = [plan.key for plan in plans if not icon_exists(plan, mod_root, vanilla_root)]
     vanilla_markers = vanilla_root / "game" / MARKERS
     texts = {
-        mod_root / VALUES: "﻿" + render_values(items),
-        mod_root / EFFECTS: "﻿" + render_effects(items, legacy_marks(config)),
-        mod_root / GUI: "﻿" + render_gui(items, config),
-        mod_root / LOC: render_loc(items),
+        mod_root / VALUES: "﻿" + render_values(plans),
+        mod_root / EFFECTS: "﻿" + render_effects(plans, [good for good, _ in goods], list(config.categories)),
+        mod_root / GUI: "﻿" + render_gui(plans, config),
+        mod_root / LOC: render_loc(plans, state_numbers(mod_root)),
     }
     if vanilla_markers.is_file():
-        vanilla = vanilla_markers.read_text(encoding="utf-8-sig")
-        profiles = None
-        if "location_profiles" in tomllib.loads(project.read_text(encoding="utf-8")):
-            from prosper_or_perish_constructor import location_profiles_gui
-
-            profiles = location_profiles_gui.load_config(project)
-        texts[mod_root / MARKERS] = "﻿" + render_markers(vanilla, items, profiles)
+        texts[mod_root / MARKERS] = "﻿" + render_markers(vanilla_markers.read_text(encoding="utf-8-sig"))
     for path, text in texts.items():
         if _write(path, text, write):
             result.files_changed += 1

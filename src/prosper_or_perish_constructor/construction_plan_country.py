@@ -23,7 +23,9 @@ Three sections, all off until the player ticks something; nothing is kept betwee
 * Urban rights: the ticked town rights wherever a location qualifies, biggest population first, while the country keeps
   the player's amount of political influence. The rights are read from the game's and the mod's town rights files in
   load order (rights switched off with ``always = no`` are left out); a right an advance unlocks
-  (``unlock_town_rights``) needs one of those advances.
+  (``unlock_town_rights``) needs one of those advances. The plan rights (``pp_plan_<plan>``, town_plans.py) are no
+  tiles and never the rule's: a plan of a good with a specialization charter is the switch for that charter and, later,
+  the rights it upgrades into (revoke + grant), with or without the rule (``pp_cplan_country_plan_rights``).
 
 The first three are the gold rule group ``pp_cplan_group_country`` (construction code 107, inside ``pp_cplan_run``); the
 rights cost no gold and run once after the groups (``pp_cplan_country_rights``). The monthly pass, the budgets that
@@ -46,6 +48,7 @@ from dataclasses import dataclass, field, replace
 from pathlib import Path
 
 from prosper_or_perish_constructor import construction_plan as cp
+from prosper_or_perish_constructor import town_plans
 
 EFFECTS = Path("in_game/common/scripted_effects/pp_construction_plan_country.txt")
 TRIGGERS = Path("in_game/common/scripted_triggers/pp_construction_plan_country.txt")
@@ -80,6 +83,8 @@ LOCALIZATION = Path("main_menu/localization/english")
 # the upgrades: target rank -> (the toggle's variable, the price key of the game's price database)
 RANKS = {"town": ("pp_cplan_rank_town", "town_upgrade"), "city": ("pp_cplan_rank_city", "city_upgrade")}
 GRANT_PRICE = "grant_town_rights"
+UPGRADE_PRICE = "upgrade_town_rights"  # the game's price of a charter's upgrade to its rights (the grant's where none)
+RURAL = "rural_settlement"  # the rank below town when the rank files name none (read_ranks gives the town's source)
 # player settings (country variables, + 100) and their button flags
 VAR_CONTROL, VAR_TOWN_POP, VAR_KEEP = "pp_cplan_ctl", "pp_cplan_tpop", "pp_cplan_infl"
 VAR_UPGRADE = "pp_cplan_upgrade"  # the "Upgrade buildings" rule is on
@@ -171,6 +176,9 @@ class Result:
     switched_off: list[str] = field(default_factory=list)  # rights whose potential or allow is always = no
     dlc_rights: list[str] = field(default_factory=list)  # rights only a DLC folder defines (left out)
     unknown_order: list[str] = field(default_factory=list)  # rights_order keys that are no right
+    plan_rights: set[str] = field(default_factory=set)  # the plan rights of the database (town_plans.py)
+    plan_grants: list[PlanGrant] = field(default_factory=list)  # the goods whose plan brings their charter and rights
+    upgrade_price: str = UPGRADE_PRICE  # the price key a charter's upgrade to its rights pays
     prices: dict[str, float] = field(default_factory=dict)
     files_changed: int = 0
 
@@ -456,6 +464,8 @@ def read_rights(mod_root: Path, vanilla_root: Path) -> tuple[list[Right], list[s
     off: list[str] = []
     dlc: list[str] = []
     for key, entry in database(mod_root, vanilla_root, TOWN_RIGHTS).items():
+        if town_plans.is_plan_right(key):
+            continue  # a plan (town_plans.py): set by the player's own button, never a tile or a grant of the rule
         potential = tuple(block for body in entry.bodies for block in inner_blocks(body, "potential"))
         allow = tuple(block for body in entry.bodies for block in inner_blocks(body, "allow"))
         if switched_off(potential) or switched_off(allow):
@@ -496,6 +506,52 @@ def upgrade_sources(rights: list[Right]) -> dict[str, list[str]]:
         if right.upgrades_to:
             found.setdefault(right.upgrades_to, []).append(right.key)
     return found
+
+
+@dataclass(frozen=True)
+class PlanGrant:
+    """A good whose plan right brings its specialization rights (town_plans.py, 2026-11-19): where the location holds
+    the plan, the charter is granted (``charter``), and then the charter is swapped for the stronger rights it upgrades
+    into (``rights``). A good with rights but no charter (iron) gets the rights directly (``charter`` None)."""
+
+    good: str
+    plan: str  # the plan right, pp_plan_<good>
+    charter: str | None
+    rights: str | None
+
+
+def plan_right_keys(mod_root: Path, vanilla_root: Path) -> set[str]:
+    """The plan rights of the database (town_plans.py writes them; none while that file is missing)."""
+    return {key for key in database(mod_root, vanilla_root, TOWN_RIGHTS) if town_plans.is_plan_right(key)}
+
+
+def plan_grants(rights: list[Right], plans: set[str]) -> list[PlanGrant]:
+    """Per good with a plan right: its charter (a specialization right ``pp_<good>_charter``) and the rights the charter
+    upgrades into (``upgrades_to``), or a specialization right ``pp_<good>_rights`` no charter upgrades into. From the
+    rights database, in its order; a right the rule cannot grant (switched off, DLC-only, no icon) is not used."""
+    sources = upgrade_sources(rights)
+    found: list[PlanGrant] = []
+    for right in rights:
+        if not right.specialization:
+            continue
+        charter = re.fullmatch(r"pp_(\w+)_charter", right.key)
+        alone = re.fullmatch(r"pp_(\w+)_rights", right.key)
+        if charter:
+            good = charter.group(1)
+            grant = PlanGrant(good, town_plans.right_key(good), right.key, right.upgrades_to)
+        elif alone and not sources.get(right.key):
+            good = alone.group(1)
+            grant = PlanGrant(good, town_plans.right_key(good), None, right.key)
+        else:
+            continue
+        if grant.plan in plans:
+            found.append(grant)
+    return found
+
+
+def rural_rank(ranks: list[Rank]) -> str:
+    """The rank below town (the town's source in the rank files)."""
+    return next((rank.source for rank in ranks if rank.key == "town"), RURAL)
 
 
 def tile_order(rights: list[Right]) -> list[Right]:
@@ -583,6 +639,8 @@ def render_values(config: Config, buildings: list[Building], rights: list[Right]
         "# Country scope: the political influence a grant needs: the amount kept and the grant's price (the game's price\n"
         f"# {GRANT_PRICE}).\n"
         f"pp_cplan_country_influence_need = {{\n\tvalue = pp_cplan_country_keep_influence\n\tadd = {cp._num(prices[GRANT_PRICE])}\n}}\n"
+        "# Country scope: the same for a plan's charter swapped for its rights: the amount kept and the upgrade's price.\n"
+        f"pp_cplan_country_upgrade_need = {{\n\tvalue = pp_cplan_country_keep_influence\n\tadd = {cp._num(prices[UPGRADE_PRICE])}\n}}\n"
     )
     ticked = [VAR_UPGRADE, *(rank.variable for rank in ranks), *(pub_var(building.key) for building in buildings)]
     parts.append(
@@ -666,6 +724,15 @@ def render_triggers(buildings: list[Building], rights: list[Right], ranks: list[
         "\tNOT = { has_variable = pp_lprof_xc }\n"
         f"\tNOT = {{ has_variable = {VAR_MARK} }}\n"
         "\thas_max_town_rights = no\n"
+        "}\n"
+        "\n# Location scope: a plan's charter or rights may come here (pp_cplan_country_plan_rights): not only conquered, no\n"
+        "# profile here that switched the group off, nothing granted here this month, and a town or more (the game grants\n"
+        "# town rights to towns and cities; a plan's own pass raises a rural settlement first).\n"
+        "pp_cplan_country_plan_site = {\n"
+        "\tNOT = { integration_level = conquered }\n"
+        "\tNOT = { has_variable = pp_lprof_xc }\n"
+        f"\tNOT = {{ has_variable = {VAR_MARK} }}\n"
+        f"\tNOT = {{ location_rank = location_rank:{rural_rank(ranks)} }}\n"
         "}\n"
         "\n# Building scope: a standing, open building the country can upgrade (its successor is researched: in game\n"
         "# 2026-11-10 building_can_be_upgraded_by is true on every standing older tier from then on). A closed building is\n"
@@ -819,7 +886,7 @@ def render_target(ranks: list[Rank]) -> str:
             f"\t\t\t\t\tlocation_rank = location_rank:{rank.source}\n"
             "\t\t\t\t\tmodifier:cannot_upgrade_location = no\n"
             f"\t\t\t\t\tpp_cplan_country_goods_{rank.key} = yes\n\t\t\t\t}}\n"
-            f"\t\t\t\tpp_cplan_country_rank_up = {{ rank = {rank.key} n = {SAVE_RANK[rank.key]} }}\n\t\t\t}}\n\t\t}}\n"
+            f"\t\t\t\tpp_cplan_country_rank_up = {{ rank = {rank.key} n = {SAVE_RANK[rank.key]} why = {WHY} }}\n\t\t\t}}\n\t\t}}\n"
         )
     parts.append(
         "\t\telse_if = {\n"
@@ -837,9 +904,120 @@ def render_target(ranks: list[Rank]) -> str:
     return "".join(parts)
 
 
+def render_plan_rights(grants: list[PlanGrant] | tuple[PlanGrant, ...], upgrade_price: str) -> str:
+    """pp_cplan_country_plan_rights (country scope, inside pp_cplan_country_rights): a plan right (town_plans.py) is
+    the player's switch for its good's charter and rights, whatever the urban rights rule says."""
+    parts = [
+        "\n# ---- Plans: charters and rights (town_plans.py, 2026-11-19, Jan) ----\n"
+        "\n# Country scope, once a rights look (pp_cplan_country_rights), whether the urban rights rule is on or not: the plan\n"
+        "# is the switch. Per good with a plan right and a specialization charter: where a location holds the plan, the\n"
+        "# charter is granted where its own conditions pass (pp_cplan_country_plan_grant), and where it holds the plan and\n"
+        "# the charter, the charter is swapped for the rights it upgrades into once their conditions pass\n"
+        "# (pp_cplan_country_plan_upgrade). A good with rights and no charter (iron) gets its rights directly. The plan\n"
+        "# right stays: it is the player's intent until the player takes it off. While the country keeps the player's\n"
+        "# amount of political influence, as the rule does; at most one grant or swap a location a month. Only the\n"
+        "# locations that hold a town right are walked: a plan is one.\n"
+        "pp_cplan_country_plan_rights = {\n"
+    ]
+    if grants:
+        parts.append("\tif = {\n\t\tlimit = {\n\t\t\tmodifier:can_grant_town_rights = yes\n"
+                     "\t\t\tOR = {\n\t\t\t\tpolitical_influence >= pp_cplan_country_influence_need\n"
+                     "\t\t\t\tpolitical_influence >= pp_cplan_country_upgrade_need\n\t\t\t}\n\t\t}\n")
+        for grant in grants:
+            chain = " -> ".join(key for key in (grant.plan, grant.charter, grant.rights) if key)
+            parts.append(f"\t\t# {grant.good}: {chain}\n")
+            if grant.charter and grant.rights:
+                parts.append(
+                    f"\t\tif = {{\n\t\t\tlimit = {{ pp_cplan_right_potential_{grant.rights} = yes }}\n"
+                    f"\t\t\tpp_cplan_country_plan_upgrade = {{ plan = {grant.plan} charter = {grant.charter} "
+                    f"rights = {grant.rights} }}\n\t\t}}\n"
+                )
+            first = grant.charter or grant.rights
+            parts.append(
+                f"\t\tif = {{\n\t\t\tlimit = {{ pp_cplan_right_potential_{first} = yes }}\n"
+                f"\t\t\tpp_cplan_country_plan_grant = {{ plan = {grant.plan} right = {first} }}\n\t\t}}\n"
+            )
+        parts.append("\t}\n")
+    parts.append(
+        "}\n"
+        "\n# Country scope: grant $right$ (a charter, or rights no charter upgrades into) in every location that holds the\n"
+        "# plan $plan$ and may take it: a town or more, a free town rights slot (has_max_town_rights: the plan's own right\n"
+        "# brings its slot), not holding $right$, the charter or the rights of its line (a grant has no checks: the same\n"
+        "# right could be held twice), and the right's allow (with the location as scope:target; the one-specialization\n"
+        "# condition stays, so a location with plans for two charter goods gets one charter). The biggest population first;\n"
+        "# the country pays the game's grant price, as the rule's grant does.\n"
+        "pp_cplan_country_plan_grant = {\n"
+        "\tordered_locations_with_town_rights_in_country = {\n"
+        "\t\tlimit = {\n"
+        "\t\t\thas_town_rights = town_rights_type:$plan$\n"
+        "\t\t\tpp_cplan_country_plan_site = yes\n"
+        "\t\t\thas_max_town_rights = no\n"
+        "\t\t\tpp_cplan_right_site_$right$ = yes\n"
+        "\t\t}\n"
+        "\t\torder_by = pp_cplan_country_pop_here\n"
+        "\t\tmax = 100000\n"
+        "\t\tcheck_range_bounds = no\n"
+        "\t\tsave_scope_as = target\n"
+        "\t\tif = {\n"
+        "\t\t\tlimit = {\n"
+        "\t\t\t\tscope:pp_cplan_country = {\n"
+        "\t\t\t\t\tpolitical_influence >= pp_cplan_country_influence_need\n"
+        f"\t\t\t\t\tcan_pay_price = price:{GRANT_PRICE}\n"
+        "\t\t\t\t\tpp_cplan_right_allow_$right$ = yes\n"
+        "\t\t\t\t}\n"
+        "\t\t\t}\n"
+        "\t\t\tgrant_town_rights = town_rights_type:$right$\n"
+        f"\t\t\tset_variable = {{ name = {VAR_MARK} value = yes }}\n"
+        "\t\t\tscope:pp_cplan_country = {\n"
+        f"\t\t\t\tpay_price = price:{GRANT_PRICE}\n"
+        f"\t\t\t\tchange_variable = {{ name = {VAR_RIGHTS_N} add = 1 }}\n"
+        "\t\t\t}\n"
+        "\t\t}\n"
+        "\t}\n"
+        "}\n"
+        "\n# Country scope: in every location that holds the plan $plan$ and the charter $charter$, not yet $rights$, swap the\n"
+        "# charter for the rights where the rights' allow passes (scope:target = the location). The game has no script\n"
+        "# effect for an upgrade: the charter is revoked and the rights granted (the number of rights stays, so the slot\n"
+        f"# is not asked), and the country pays the game's upgrade price ({upgrade_price}). The biggest population first.\n"
+        "pp_cplan_country_plan_upgrade = {\n"
+        "\tordered_locations_with_town_rights_in_country = {\n"
+        "\t\tlimit = {\n"
+        "\t\t\thas_town_rights = town_rights_type:$plan$\n"
+        "\t\t\thas_town_rights = town_rights_type:$charter$\n"
+        "\t\t\tNOT = { has_town_rights = town_rights_type:$rights$ }\n"
+        "\t\t\tpp_cplan_country_plan_site = yes\n"
+        "\t\t}\n"
+        "\t\torder_by = pp_cplan_country_pop_here\n"
+        "\t\tmax = 100000\n"
+        "\t\tcheck_range_bounds = no\n"
+        "\t\tsave_scope_as = target\n"
+        "\t\tif = {\n"
+        "\t\t\tlimit = {\n"
+        "\t\t\t\tscope:pp_cplan_country = {\n"
+        "\t\t\t\t\tpolitical_influence >= pp_cplan_country_upgrade_need\n"
+        f"\t\t\t\t\tcan_pay_price = price:{upgrade_price}\n"
+        "\t\t\t\t\tpp_cplan_right_allow_$rights$ = yes\n"
+        "\t\t\t\t}\n"
+        "\t\t\t}\n"
+        "\t\t\trevoke_town_rights_of_type = town_rights_type:$charter$\n"
+        "\t\t\tgrant_town_rights = town_rights_type:$rights$\n"
+        f"\t\t\tset_variable = {{ name = {VAR_MARK} value = yes }}\n"
+        "\t\t\tscope:pp_cplan_country = {\n"
+        f"\t\t\t\tpay_price = price:{upgrade_price}\n"
+        f"\t\t\t\tchange_variable = {{ name = {VAR_RIGHTS_N} add = 1 }}\n"
+        "\t\t\t}\n"
+        "\t\t}\n"
+        "\t}\n"
+        "}\n"
+    )
+    return "".join(parts)
+
+
 def render_effects(buildings: list[Building], rights: list[Right], costs: dict[str, cp.BuildingCost],
-                   ranks: list[Rank], pairs: list[tuple[str, str]]) -> str:
-    """The group, its three rules, the rights rule and the declarations. ``rights`` in the rule's order."""
+                   ranks: list[Rank], pairs: list[tuple[str, str]], plan_grants: list[PlanGrant] | tuple[PlanGrant, ...] = (),
+                   upgrade_price: str = UPGRADE_PRICE) -> str:
+    """The group, its three rules, the rights rule, the plans' charters and rights and the declarations. ``rights`` in
+    the rule's order."""
     parts = [
         HEADER,
         "\n# Prosper or Perish - Construction Plan, the Towns and Buildings tab (Jan 2026-11-10): building upgrades, public\n"
@@ -968,7 +1146,7 @@ def render_effects(buildings: list[Building], rights: list[Right], costs: dict[s
             "\t\t\t# where the market lacks the upgrade's construction goods nothing starts; the window counts it\n"
             "\t\t\tif = {\n"
             f"\t\t\t\tlimit = {{ pp_cplan_country_goods_{rank.key} = yes }}\n"
-            f"\t\t\t\tpp_cplan_country_rank_up = {{ rank = {rank.key} n = {SAVE_RANK[rank.key]} }}\n"
+            f"\t\t\t\tpp_cplan_country_rank_up = {{ rank = {rank.key} n = {SAVE_RANK[rank.key]} why = {WHY} }}\n"
             "\t\t\t}\n"
             "\t\t\telse = {\n"
             f"\t\t\t\tpp_cplan_note_goods = {{ why = {WHY} }}\n"
@@ -981,7 +1159,9 @@ def render_effects(buildings: list[Building], rights: list[Right], costs: dict[s
         "# (pp_cplan_country_cost_<rank>) fits in the group's purse and in the gold above the reserve (as\n"
         "# pp_cplan_affordable does for a building); else it is counted as waiting for gold, and the first such thing of\n"
         "# the pass is what the group saves for (as pp_cplan_note_wait does: the location, the cost, and $n$ = 101 a town,\n"
-        "# 102 a city in pp_cplan_save_rank_107, since an upgrade has no building type). In game 2026-11-10: construct_location_rank\n"
+        "# 102 a city in pp_cplan_save_rank_<why>, since an upgrade has no building type). $why$ is the rule group's\n"
+        f"# construction code: its purse, its ledger, its test log ({WHY} Towns and Buildings, 105 the plans of the\n"
+        "# Locations group). In game 2026-11-10: construct_location_rank\n"
         "# charges the gold itself, at once, and starts a normal construction that holds the location's construction slot\n"
         "# for a year (a city two) and draws construction goods; where the rank's allow fails it starts nothing and charges\n"
         "# nothing. So the gold is measured before and after, and the upgrade is booked (started, spent, ledger, test log)\n"
@@ -994,8 +1174,8 @@ def render_effects(buildings: list[Building], rights: list[Right], costs: dict[s
         "\tscope:pp_cplan_country = { remove_variable = pp_cplan_noted }\n"
         "\tif = {\n"
         "\t\tlimit = {\n"
-        f"\t\t\tNOT = {{ pp_cplan_saving = {{ why = {WHY} }} }}\n"
-        f"\t\t\tpp_cplan_country_cost_$rank$ <= scope:pp_cplan_country.{cp.PURSE}_n_{WHY}\n"
+        f"\t\t\tNOT = {{ pp_cplan_saving = {{ why = $why$ }} }}\n"
+        f"\t\t\tpp_cplan_country_cost_$rank$ <= scope:pp_cplan_country.{cp.PURSE}_n_$why$\n"
         "\t\t\tpp_cplan_country_cost_$rank$ <= scope:pp_cplan_country.pp_cplan_free_gold\n"
         "\t\t}\n"
         "\t\tscope:pp_cplan_country = {\n"
@@ -1013,37 +1193,37 @@ def render_effects(buildings: list[Building], rights: list[Right], costs: dict[s
         "\t\t\tscope:pp_cplan_country = {\n"
         "\t\t\t\tchange_variable = { name = pp_cplan_spent add = scope:pp_cplan_paid }\n"
         "\t\t\t\tchange_variable = { name = pp_cplan_started add = 1 }\n"
-        f"\t\t\t\tchange_variable = {{ name = pp_cplan_dspent_{WHY} add = scope:pp_cplan_paid }}\n"
-        f"\t\t\t\tchange_variable = {{ name = pp_cplan_dn_{WHY} add = 1 }}\n"
+        f"\t\t\t\tchange_variable = {{ name = pp_cplan_dspent_$why$ add = scope:pp_cplan_paid }}\n"
+        f"\t\t\t\tchange_variable = {{ name = pp_cplan_dn_$why$ add = 1 }}\n"
         "\t\t\t\tset_variable = { name = pp_cplan_hit value = yes }\n"
-        f"\t\t\t\tpp_cplan_purse_pay = {{ why = {WHY} }}\n"
+        f"\t\t\t\tpp_cplan_purse_pay = {{ why = $why$ }}\n"
         "\t\t\t\tif = {\n"
         "\t\t\t\t\tlimit = { NOT = { is_target_in_variable_list = { name = pp_cplan_log target = scope:pp_cplan_site } } }\n"
         "\t\t\t\t\tadd_to_variable_list = { name = pp_cplan_log target = scope:pp_cplan_site }\n"
         "\t\t\t\t}\n"
-        f"\t\t\t\tadd_to_variable_list = {{ name = pp_cplan_log_{WHY} target = scope:pp_cplan_site }}\n"
+        f"\t\t\t\tadd_to_variable_list = {{ name = pp_cplan_log_$why$ target = scope:pp_cplan_site }}\n"
         "\t\t\t}\n"
         "\t\t\t# the window's line of this location in the group's lists: the upgrade (no building: pp_cplan_log_rank names\n"
         "\t\t\t# it), what the group paid here, and its reason unless a building of the group left one here in this pass\n"
         "\t\t\tset_variable = { name = pp_cplan_log_rank value = yes }\n"
         "\t\t\tif = {\n"
-        f"\t\t\t\tlimit = {{ has_variable = pp_cplan_log_cost_{WHY} }}\n"
-        f"\t\t\t\tchange_variable = {{ name = pp_cplan_log_cost_{WHY} add = scope:pp_cplan_paid }}\n"
+        f"\t\t\t\tlimit = {{ has_variable = pp_cplan_log_cost_$why$ }}\n"
+        f"\t\t\t\tchange_variable = {{ name = pp_cplan_log_cost_$why$ add = scope:pp_cplan_paid }}\n"
         "\t\t\t}\n"
         "\t\t\telse = {\n"
-        f"\t\t\t\tset_variable = {{ name = pp_cplan_log_cost_{WHY} value = scope:pp_cplan_paid }}\n"
+        f"\t\t\t\tset_variable = {{ name = pp_cplan_log_cost_$why$ value = scope:pp_cplan_paid }}\n"
         "\t\t\t}\n"
         "\t\t\tif = {\n"
-        f"\t\t\t\tlimit = {{ NOT = {{ has_variable = pp_cplan_log_step_{WHY} }} }}\n"
-        f"\t\t\t\tset_variable = {{ name = pp_cplan_log_step_{WHY} value = {STEP_RANK} }}\n"
-        f"\t\t\t\tset_variable = {{ name = pp_cplan_log_val_{WHY} value = scope:pp_cplan_rv }}\n"
+        f"\t\t\t\tlimit = {{ NOT = {{ has_variable = pp_cplan_log_step_$why$ }} }}\n"
+        f"\t\t\t\tset_variable = {{ name = pp_cplan_log_step_$why$ value = {STEP_RANK} }}\n"
+        f"\t\t\t\tset_variable = {{ name = pp_cplan_log_val_$why$ value = scope:pp_cplan_rv }}\n"
         "\t\t\t}\n"
         "\t\t\t# test runs (pp_cplan_ai_test, set by the console): the rule group and the location in debug.log, as\n"
         "\t\t\t# pp_cplan_construct_now writes them for a building (ppc plan-report reads them); an upgrade has no building\n"
         "\t\t\t# type\n"
         "\t\t\tif = {\n"
         "\t\t\t\tlimit = { scope:pp_cplan_country = { has_variable = pp_cplan_ai_test } }\n"
-        f"\t\t\t\tdebug_log = PP_CPLAN_TLOG_{WHY}\n"
+        f"\t\t\t\tdebug_log = PP_CPLAN_TLOG_$why$\n"
         "\t\t\t\tdebug_log_scopes = no\n"
         "\t\t\t}\n"
         "\t\t}\n"
@@ -1055,15 +1235,15 @@ def render_effects(buildings: list[Building], rights: list[Right], costs: dict[s
         "\t\t\tif = {\n"
         "\t\t\t\tlimit = { NOT = { has_variable = pp_cplan_noted } }\n"
         "\t\t\t\tset_variable = { name = pp_cplan_noted value = yes }\n"
-        f"\t\t\t\tchange_variable = {{ name = pp_cplan_dwait_{WHY} add = scope:pp_cplan_wc }}\n"
-        f"\t\t\t\tchange_variable = {{ name = pp_cplan_dwn_{WHY} add = 1 }}\n"
+        f"\t\t\t\tchange_variable = {{ name = pp_cplan_dwait_$why$ add = scope:pp_cplan_wc }}\n"
+        f"\t\t\t\tchange_variable = {{ name = pp_cplan_dwn_$why$ add = 1 }}\n"
         "\t\t\t}\n"
         "\t\t\t# the first thing of the pass the group cannot pay for is what it saves for\n"
         "\t\t\tif = {\n"
-        f"\t\t\t\tlimit = {{ NOT = {{ has_variable = {cp.SAVE_COST}_{WHY} }} }}\n"
-        f"\t\t\t\tset_variable = {{ name = {cp.SAVE_COST}_{WHY} value = {{ value = scope:pp_cplan_wc add = 100 }} }}\n"
-        f"\t\t\t\tset_variable = {{ name = pp_cplan_save_loc_{WHY} value = scope:pp_cplan_site }}\n"
-        f"\t\t\t\tset_variable = {{ name = pp_cplan_save_rank_{WHY} value = $n$ }}\n"
+        f"\t\t\t\tlimit = {{ NOT = {{ has_variable = {cp.SAVE_COST}_$why$ }} }}\n"
+        f"\t\t\t\tset_variable = {{ name = {cp.SAVE_COST}_$why$ value = {{ value = scope:pp_cplan_wc add = 100 }} }}\n"
+        f"\t\t\t\tset_variable = {{ name = pp_cplan_save_loc_$why$ value = scope:pp_cplan_site }}\n"
+        f"\t\t\t\tset_variable = {{ name = pp_cplan_save_rank_$why$ value = $n$ }}\n"
         "\t\t\t}\n"
         "\t\t}\n"
         "\t}\n"
@@ -1084,9 +1264,13 @@ def render_effects(buildings: list[Building], rights: list[Right], costs: dict[s
         "# rights at all, every ticked right the country may grant (its potential), in the rule's order: the rights of\n"
         "# [construction_plan_country] rights_order, the specialization rights, then the rest in the game's order. A right\n"
         "# stands before the charter that upgrades into it, so a location that qualifies for both gets the stronger one.\n"
+        "# The plans' charters and rights come first, whether the rule is on or not (pp_cplan_country_plan_rights). The\n"
+        f"# month's marks ({VAR_MARK}) are cleared at the end: a marked location holds the right it was granted, so the\n"
+        "# locations with town rights are enough to walk.\n"
         "pp_cplan_country_rights = {\n"
         "\tsave_scope_as = pp_cplan_country\n"
         f"\tset_variable = {{ name = {VAR_RIGHTS_N} value = 100 }}\n"
+        "\tpp_cplan_country_plan_rights = yes\n"
         "\tif = {\n"
         "\t\tlimit = {\n"
         f"\t\t\thas_variable = {VAR_RIGHTS_ON}\n"
@@ -1101,12 +1285,13 @@ def render_effects(buildings: list[Building], rights: list[Right], costs: dict[s
             f"\t\t\tpp_cplan_country_grant = {{ right = {right.key} }}\n\t\t}}\n"
         )
     parts.append(
-        "\t\tevery_owned_location = {\n"
-        f"\t\t\tlimit = {{ has_variable = {VAR_MARK} }}\n"
-        f"\t\t\tremove_variable = {VAR_MARK}\n"
-        "\t\t}\n"
+        "\t}\n"
+        "\tevery_locations_with_town_rights_in_country = {\n"
+        f"\t\tlimit = {{ has_variable = {VAR_MARK} }}\n"
+        f"\t\tremove_variable = {VAR_MARK}\n"
         "\t}\n"
         "}\n"
+        + render_plan_rights(plan_grants, upgrade_price) +
         "\n# Country scope: grant $right$ wherever a location qualifies (the right's allow, with the location as scope:target),\n"
         "# the biggest population first, while the political influence stays at the amount to keep after paying. In game\n"
         "# 2026-11-10: the raw effect ignores the right's allow and potential and the location's number of rights and\n"
@@ -1565,6 +1750,10 @@ def build(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -> tupl
     prices = database(mod_root, vanilla_root, PRICES)
     result.prices = {price: price_amount(prices, price, "gold") for _, price in RANKS.values()}
     result.prices[GRANT_PRICE] = price_amount(prices, GRANT_PRICE, "political_influence")
+    result.upgrade_price = UPGRADE_PRICE if UPGRADE_PRICE in prices else GRANT_PRICE
+    result.prices[UPGRADE_PRICE] = price_amount(prices, result.upgrade_price, "political_influence")
+    result.plan_rights = plan_right_keys(mod_root, vanilla_root)
+    result.plan_grants = plan_grants(result.rights, result.plan_rights)
     result.ranks = read_ranks(mod_root, vanilla_root)
     costs, _ = cp.building_costs(mod_root, vanilla_root)
     # the successors the plan's cost data knows (the base game's and the mod's building types)
@@ -1575,7 +1764,8 @@ def build(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -> tupl
     files = {
         VALUES: render_values(config, result.buildings, result.rights, result.prices, result.ranks, bounds),
         TRIGGERS: render_triggers(result.buildings, result.rights, result.ranks, goods_months),
-        EFFECTS: render_effects(result.buildings, result.rights, costs, result.ranks, result.upgrades),
+        EFFECTS: render_effects(result.buildings, result.rights, costs, result.ranks, result.upgrades,
+                                result.plan_grants, result.upgrade_price),
         SCRIPTED_GUIS: render_scripted_guis(config, result.buildings, result.rights),
         GUI: render_gui(config, result.buildings, result.rights),
         LOC: render_loc(result.buildings, result.rights),
@@ -1607,5 +1797,6 @@ def summary(result: Result) -> str:
         f"({sum(1 for building in result.buildings if building.boosts)} boosters), {len(result.upgrades)} "
         f"building upgrades, {len(result.rights)} urban "
         f"rights ({len(result.switched_off)} switched off, {len(result.dlc_rights)} DLC-only left out), "
+        f"{len(result.plan_rights)} plan rights ({len(result.plan_grants)} bring a charter or rights), "
         f"{result.files_changed} files changed" + ("; " + "; ".join(problems) if problems else "") + "."
     )

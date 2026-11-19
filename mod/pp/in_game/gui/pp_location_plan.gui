@@ -1,11 +1,10 @@
-﻿# Prosper or Perish - Location Plan window (branch location-plan, 2026-11-07, Jan). A scripted widget
+﻿# Prosper or Perish - Location Plan window (2026-11-07, Jan; plans as town rights since 2026-11-19). A scripted widget
 # (gui/scripted_widgets/pp_location_plan.txt), so no vanilla window is overridden; opened by the plan button in the
-# location window's header (location_plan.py patches it in) and by the round button of the location window's row "Also
-# build here". The player marks what the location should produce or have; the Construction Plan builds the marked
-# items there, forced (pp_location_profiles.txt, pp_lplan_location_turn). The picker grid (goods), the strip of marked
-# goods and the strip of marked buildings are generated (pp_location_plan_generated.gui; a goods tooltip carries the
-# mark's state after the last look); the map mode pp_location_plan shows the marked goods as icons. Shown only to a
-# player who plays a country.
+# location window's header (location_plan.py patches it in) and by the round button of the location window's Plans row.
+# The player sets what the location is for: one click per plan (a town right pp_plan_<plan>), several per location;
+# the Construction Plan builds toward the held plans. The picker grid is generated (pp_location_plan_generated.gui; a
+# plan's tooltip carries its state after the last look); the map mode pp_location_plan shows the location's town
+# rights as icons. Shown only to a player who plays a country.
 
 types PPLocationPlan
 {
@@ -82,35 +81,18 @@ window = {
 						}
 						button_regular = {
 							size = { 70 26 }
+							visible = "[GreaterThan_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_n'), '(CFixedPoint)0')]"
 							text = "PP_LPLAN_CLEAR"
 							tooltip = "PP_LPLAN_CLEAR_TT"
-							onclick = "[GetScriptedGui('pp_lplan_clear').Execute(GuiScope.SetRoot(Location.MakeScope).End)]"
+							onclick = "[GetScriptedGui('pp_tplan_clear').Execute(GuiScope.SetRoot(Location.MakeScope).End)]"
 						}
 					}
 
-					# Location Profiles (pp_location_profiles_generated.gui): the location's profile, the player's profiles to
-					# give it, Edit profiles
-					pp_lprof_plan_row = {}
-
 					pp_lplan_note = { text = "PP_LPLAN_NOTE" }
 
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 6
-						pp_lplan_group_title = { text = "PP_LPLAN_PLANNED" }
-						pp_lplan_label = { text = "PP_LPLAN_COUNTS" }
-						expand = {}
-					}
 					pp_lplan_label = {
-						visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_lplan_planned_n'), '(CFixedPoint)0')]"
+						visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_n'), '(CFixedPoint)0')]"
 						text = "PP_LPLAN_NOTHING_YET"
-					}
-					pp_lplan_strip = {
-						maximumsize = { 500 -1 }
-					}
-					# the marked buildings (marked on a building's own entry: location window, build panel)
-					pp_lplan_bstrip = {
-						maximumsize = { 500 -1 }
 					}
 
 					scrollarea = {

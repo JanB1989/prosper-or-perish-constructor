@@ -1965,6 +1965,9 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         f"{short.files_changed} files changed" + (f"; not in the mod: {', '.join(short.not_in_mod)}." if short.not_in_mod else "."),
         flush=True,
     )
+    from prosper_or_perish_constructor import town_plans  # the plan rights: before construction_plan_country reads them
+
+    print(town_plans.summary(town_plans.apply(repo, project, mod_root, vanilla_root(repo, project))), flush=True)
     from prosper_or_perish_constructor import location_plan
 
     lplan = location_plan.apply(repo, project, mod_root, vanilla_root(repo, project))

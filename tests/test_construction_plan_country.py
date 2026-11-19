@@ -12,6 +12,7 @@ import pytest
 from prosper_or_perish_constructor import building_footprint
 from prosper_or_perish_constructor import construction_plan as cp
 from prosper_or_perish_constructor import construction_plan_country as cc
+from prosper_or_perish_constructor import town_plans
 from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -412,7 +413,8 @@ def test_rank_upgrades() -> None:
         # the construction goods are asked in the body: an upgrade the market lacks them for is counted for the window
         body = _tokens(part[part.index("check_range_bounds = no"):])
         assert (f"if = {{ limit = {{ pp_cplan_country_goods_{rank.key} = yes }} pp_cplan_country_rank_up = {{ rank = "
-                f"{rank.key} n = {cc.SAVE_RANK[rank.key]} }} }} else = {{ pp_cplan_note_goods = {{ why = 107 }} }}") in body, rank.key
+                f"{rank.key} n = {cc.SAVE_RANK[rank.key]} why = 107 }} }} else = {{ pp_cplan_note_goods = {{ why = 107 }} }}") \
+            in body, rank.key
     # the engine's can_become_rank is not the gate (in game 2026-11-10: false everywhere while the upgrade worked)
     for path in SCRIPT_FILES:
         assert "can_become_rank" not in _code(MOD / path), path
@@ -440,8 +442,8 @@ def test_rank_upgrade_checks_the_budget_and_books_only_what_was_paid() -> None:
     limit = up[up.index("limit = {"):up.index("construct_location_rank")]
     # the group's purse pays (budgets that save, 2026-11-10): not while it saves for something, and the cost must fit
     # in the purse and in the gold above the reserve, as pp_cplan_affordable asks for a building
-    assert "NOT = { pp_cplan_saving = { why = 107 } }" in limit
-    assert "pp_cplan_country_cost_$rank$ <= scope:pp_cplan_country.pp_cplan_purse_n_107" in limit
+    assert "NOT = { pp_cplan_saving = { why = $why$ } }" in limit
+    assert "pp_cplan_country_cost_$rank$ <= scope:pp_cplan_country.pp_cplan_purse_n_$why$" in limit
     assert "pp_cplan_country_cost_$rank$ <= scope:pp_cplan_country.pp_cplan_free_gold" in limit
     assert "pp_cplan_affordable" in _defined("scripted_triggers") and "pp_cplan_saving" in _defined("scripted_triggers")
     assert "pp_cplan_purse_n_107" in _defined("script_values")
@@ -454,51 +456,60 @@ def test_rank_upgrade_checks_the_budget_and_books_only_what_was_paid() -> None:
     assert places == sorted(places)
     # the effect refuses silently where the game's own conditions fail: nothing is booked unless gold was paid
     booked = up[up.index("limit = { scope:pp_cplan_paid > 0 }"):up.rindex("else = {")]
-    for name in ("pp_cplan_spent", "pp_cplan_started", "pp_cplan_dspent_107", "pp_cplan_dn_107", "pp_cplan_hit",
-                 "pp_cplan_log ", "pp_cplan_log_107", "pp_cplan_log_rank", "pp_cplan_log_cost_107",
-                 "pp_cplan_log_step_107", "pp_cplan_log_val_107", "PP_CPLAN_TLOG_107"):
+    for name in ("pp_cplan_spent", "pp_cplan_started", "pp_cplan_dspent_$why$", "pp_cplan_dn_$why$", "pp_cplan_hit",
+                 "pp_cplan_log ", "pp_cplan_log_$why$", "pp_cplan_log_rank", "pp_cplan_log_cost_$why$",
+                 "pp_cplan_log_step_$why$", "pp_cplan_log_val_$why$", "PP_CPLAN_TLOG_$why$"):
         assert up.index(name) > up.index("limit = { scope:pp_cplan_paid > 0 }"), name
     assert "construct_location_rank" not in booked
     paid, waiting = booked, up[up.rindex("else = {"):]
     assert "save_temporary_scope_value_as = { name = pp_cplan_wc value = pp_cplan_country_cost_$rank$ }" in waiting
     for line in ("change_variable = { name = pp_cplan_spent add = scope:pp_cplan_paid }",
                  "change_variable = { name = pp_cplan_started add = 1 }",
-                 "change_variable = { name = pp_cplan_dspent_107 add = scope:pp_cplan_paid }",
-                 "change_variable = { name = pp_cplan_dn_107 add = 1 }",
+                 "change_variable = { name = pp_cplan_dspent_$why$ add = scope:pp_cplan_paid }",
+                 "change_variable = { name = pp_cplan_dn_$why$ add = 1 }",
                  "set_variable = { name = pp_cplan_hit value = yes }",
-                 "pp_cplan_purse_pay = { why = 107 }",  # the purse falls by what was really paid
+                 "pp_cplan_purse_pay = { why = $why$ }",  # the purse falls by what was really paid
                  "add_to_variable_list = { name = pp_cplan_log target = scope:pp_cplan_site }",
-                 "add_to_variable_list = { name = pp_cplan_log_107 target = scope:pp_cplan_site }",
+                 "add_to_variable_list = { name = pp_cplan_log_$why$ target = scope:pp_cplan_site }",
                  "set_variable = { name = pp_cplan_log_rank value = yes }",
-                 "set_variable = { name = pp_cplan_log_cost_107 value = scope:pp_cplan_paid }",
-                 "change_variable = { name = pp_cplan_log_cost_107 add = scope:pp_cplan_paid }",
-                 "set_variable = { name = pp_cplan_log_step_107 value = 2 }",
-                 "set_variable = { name = pp_cplan_log_val_107 value = scope:pp_cplan_rv }"):
+                 "set_variable = { name = pp_cplan_log_cost_$why$ value = scope:pp_cplan_paid }",
+                 "change_variable = { name = pp_cplan_log_cost_$why$ add = scope:pp_cplan_paid }",
+                 "set_variable = { name = pp_cplan_log_step_$why$ value = 2 }",
+                 "set_variable = { name = pp_cplan_log_val_$why$ value = scope:pp_cplan_rv }"):
         assert line in paid, line
     # the group's own entry of the location (another rule group's stays untouched: each has its own); the reason of a
     # building the group started here in the same pass (a location with two construction slots) stays
-    guard = paid[paid.index("limit = { NOT = { has_variable = pp_cplan_log_step_107 } }"):]
+    guard = paid[paid.index("limit = { NOT = { has_variable = pp_cplan_log_step_$why$ } }"):]
     written = guard[:guard.index("\n\t\t\t}\n")]
-    assert all(f"name = pp_cplan_log_{name}_107 " in written for name in ("step", "val"))
+    assert all(f"name = pp_cplan_log_{name}_$why$ " in written for name in ("step", "val"))
     assert "pp_cplan_log_why" not in up
     assert "pp_cplan_log_types" not in up  # an upgrade is no building: the window names it by pp_cplan_log_rank
     # test runs: the rule group and the location in debug.log, as pp_cplan_construct_now writes them (ppc plan-report)
     assert _tokens(paid[paid.index("has_variable = pp_cplan_ai_test"):]).startswith(
-        "has_variable = pp_cplan_ai_test } } debug_log = PP_CPLAN_TLOG_107 debug_log_scopes = no }")
+        "has_variable = pp_cplan_ai_test } } debug_log = PP_CPLAN_TLOG_$why$ debug_log_scopes = no }")
     assert "PP_CPLAN_TLOG_107:" in _read(MOD / "main_menu/localization/english/pp_construction_plan_l_english.yml")
     for line in ("set_variable = { name = pp_cplan_wait value = yes }",
                  "limit = { NOT = { has_variable = pp_cplan_noted } }",
                  "set_variable = { name = pp_cplan_noted value = yes }",
-                 "change_variable = { name = pp_cplan_dwait_107 add = scope:pp_cplan_wc }",
-                 "change_variable = { name = pp_cplan_dwn_107 add = 1 }",
+                 "change_variable = { name = pp_cplan_dwait_$why$ add = scope:pp_cplan_wc }",
+                 "change_variable = { name = pp_cplan_dwn_$why$ add = 1 }",
                  # the first thing of the pass the group cannot pay for is what it saves for: the location, the
                  # cost and which upgrade (an upgrade has no building type)
-                 "limit = { NOT = { has_variable = pp_cplan_save_cost_107 } }",
-                 "set_variable = { name = pp_cplan_save_cost_107 value = { value = scope:pp_cplan_wc add = 100 } }",
-                 "set_variable = { name = pp_cplan_save_loc_107 value = scope:pp_cplan_site }",
-                 "set_variable = { name = pp_cplan_save_rank_107 value = $n$ }"):
+                 "limit = { NOT = { has_variable = pp_cplan_save_cost_$why$ } }",
+                 "set_variable = { name = pp_cplan_save_cost_$why$ value = { value = scope:pp_cplan_wc add = 100 } }",
+                 "set_variable = { name = pp_cplan_save_loc_$why$ value = scope:pp_cplan_site }",
+                 "set_variable = { name = pp_cplan_save_rank_$why$ value = $n$ }"):
         assert line in waiting, line
     assert cc.SAVE_RANK == {"town": 101, "city": 102}
+    # everything keyed on the rule group's code follows the parameter (105: the Locations group's plans)
+    assert "107" not in up and "105" not in up
+    effects = _code(MOD / cc.EFFECTS)
+    assert set(re.findall(r"\$(\w+)\$", up)) == {"rank", "n", "why"}
+    calls = re.findall(r"pp_cplan_country_rank_up = \{ ([^}]*)\}", effects)
+    assert len(calls) == 4 and all(re.fullmatch(r"rank = (town|city) n = 10[12] why = 107 ", call) for call in calls)
+    assert "PP_CPLAN_TLOG_105:" in _read(MOD / "main_menu/localization/english/pp_construction_plan_l_english.yml")
+    for name in ("pp_cplan_purse_n_105", "pp_cplan_save_cost_n_105"):
+        assert name in _defined("script_values"), name
 
 
 def test_the_charging_decision_sits_in_one_effect_that_charges_nothing_yet() -> None:
@@ -718,7 +729,14 @@ def test_rights_rule() -> None:
     assert _tokens(site) == ("NOT = { integration_level = conquered } NOT = { has_variable = pp_lprof_xc } "
                              "NOT = { has_variable = pp_cplan_right_mark } has_max_town_rights = no")
     assert "set_variable = { name = pp_cplan_right_mark value = yes }" in grant
-    assert rule.rstrip().endswith("}") and "remove_variable = pp_cplan_right_mark" in rule[rule.rindex("every_owned_location"):]
+    # the marks go at the end, rule on or off: a marked location holds what it was granted, so the locations with town
+    # rights are enough to walk (never every owned location)
+    cleanup = rule[rule.rindex("every_locations_with_town_rights_in_country"):]
+    assert _tokens(cleanup) == ("every_locations_with_town_rights_in_country = { limit = { has_variable = "
+                                "pp_cplan_right_mark } remove_variable = pp_cplan_right_mark }")
+    assert "every_owned_location" not in rule
+    # the plans' charters and rights come first, outside the rule's switch, after the count is reset
+    assert rule.index("value = 100 }") < rule.index("pp_cplan_country_plan_rights = yes") < rule.index("limit = {")
     # the amount kept and the price, from the tab's line and the game's price database
     need = _block(_code(MOD / cc.VALUES), "pp_cplan_country_influence_need")
     price = cc.price_amount(cc.database(MOD, _vanilla(), cc.PRICES), "grant_town_rights", "political_influence")
@@ -748,6 +766,134 @@ def test_rights_order_and_upgrades() -> None:
         site = _block(triggers, f"pp_cplan_right_site_{key}")
         assert site.strip().startswith("NOR = {") and f"town_rights_type:{key}\n" in site, key
     assert by_key["pp_cloth_charter"].upgrades_to == "pp_cloth_rights" and by_key["staple_port"].upgrades_to == "royal_staple_rights"
+
+
+# ---- plans: their charters and rights (town_plans.py) ----------------------------------------------------------------
+
+
+def _all_plans() -> set[str]:
+    """A plan right for every good of the mod's specialization rights (what town_plans.py writes, whether its file is
+    there yet or not)."""
+    goods = {re.sub(r"^pp_|_(?:charter|rights)$", "", right.key) for right in _result().rights
+             if re.fullmatch(r"pp_\w+_(?:charter|rights)", right.key)}
+    return {town_plans.right_key(good) for good in goods}
+
+
+def test_plan_rights_are_no_tiles_and_no_grants_of_the_rule(tmp_path: Path) -> None:
+    game, mod = tmp_path / "vanilla" / "game", tmp_path / "mod"
+    for root, name, text in ((game, "00_base.txt", "strong = {\n\tallow = { is_capital = yes }\n}\n"),
+                             (mod, "pp_plans.txt", "pp_plan_wheat = {\n}\npp_plan_cloth = {\n\tpotential = { always = no }\n}\n"
+                             "pp_plan_food = {\n\tlocation_modifier = { local_possible_town_rights = 1 }\n}\n")):
+        folder = root / cc.TOWN_RIGHTS
+        folder.mkdir(parents=True)
+        (folder / name).write_text(text, encoding="utf-8")
+    rights, off, dlc = cc.read_rights(mod, tmp_path / "vanilla")
+    # whatever their potential says: neither a right nor switched off
+    assert [right.key for right in rights] == ["strong"] and off == [] and dlc == []
+    assert cc.plan_right_keys(mod, tmp_path / "vanilla") == {"pp_plan_wheat", "pp_plan_cloth", "pp_plan_food"}
+    # the mod's own files: no plan right is a tile, a toggle or a grant of the rule
+    result = _result()
+    assert not any(town_plans.is_plan_right(right.key) for right in result.rights)
+    text = "".join(_read(MOD / path) for path in (cc.GUI, cc.SCRIPTED_GUIS))
+    assert "right_pp_plan_" not in text and "pp_cplan_right_pp_plan_" not in text
+    assert "right = pp_plan_" not in _code(MOD / cc.EFFECTS)
+    assert result.plan_rights == cc.plan_right_keys(MOD, _vanilla())
+
+
+def test_plan_grants_come_from_the_rights_database() -> None:
+    rights = _result().rights
+    by_key = {right.key: right for right in rights}
+    assert cc.plan_grants(rights, set()) == []
+    grants = cc.plan_grants(rights, _all_plans())
+    charters = [grant for grant in grants if grant.charter]
+    assert len(charters) == 18 and len(grants) == 19
+    for grant in charters:
+        assert grant.charter == f"pp_{grant.good}_charter" and grant.plan == f"pp_plan_{grant.good}"
+        assert grant.rights == by_key[grant.charter].upgrades_to == f"pp_{grant.good}_rights"
+    assert [(grant.good, grant.charter, grant.rights) for grant in grants if not grant.charter] \
+        == [("iron", None, "pp_iron_rights")]
+    # a good without a plan right gets nothing
+    assert [grant.good for grant in cc.plan_grants(rights, {"pp_plan_cloth", "pp_plan_wheat"})] == ["cloth"]
+    # the build uses the plan rights the database holds (none while town_plans.py's file is missing)
+    result = _result()
+    assert result.plan_grants == cc.plan_grants(rights, result.plan_rights)
+
+
+def _parameters(text: str, name: str) -> set[str]:
+    return set(re.findall(r"\$(\w+)\$", _block(text, name)))
+
+
+def test_plan_rights_effect() -> None:
+    result = _result()
+    grants = cc.plan_grants(result.rights, _all_plans())
+    text = re.sub(r"#[^\n]*", "", cc.render_plan_rights(grants, cc.UPGRADE_PRICE))
+    assert text.count("{") == text.count("}")
+    rule = _block(text, "pp_cplan_country_plan_rights")
+    head = rule[:rule.index("pp_cplan_right_potential_")]
+    for check in ("modifier:can_grant_town_rights = yes", "political_influence >= pp_cplan_country_influence_need",
+                  "political_influence >= pp_cplan_country_upgrade_need"):
+        assert check in head, check
+    # the plan is the switch: neither the rule's switch nor a ticked tile is asked
+    assert "pp_cplan_rights_on" not in text and "pp_cplan_right_pp_" not in text
+    # per good one block: the swap of its charter for its rights, then the charter (iron: its rights)
+    calls = re.findall(r"limit = \{ pp_cplan_right_potential_(\w+) = yes \}\s+(pp_cplan_country_plan_\w+) = \{ ([^}]*)\}",
+                       rule)
+    expected = []
+    for grant in grants:
+        if grant.charter:
+            expected.append((grant.rights, "pp_cplan_country_plan_upgrade",
+                             f"plan = {grant.plan} charter = {grant.charter} rights = {grant.rights} "))
+        expected.append((grant.charter or grant.rights, "pp_cplan_country_plan_grant",
+                         f"plan = {grant.plan} right = {grant.charter or grant.rights} "))
+    assert calls == expected
+    assert _parameters(text, "pp_cplan_country_plan_grant") == {"plan", "right"}
+    assert _parameters(text, "pp_cplan_country_plan_upgrade") == {"plan", "charter", "rights"}
+    # the charter: where the plan is held, in a town or more with a free slot, not held yet (nor its rights), its own
+    # conditions with the location as scope:target, the influence kept, the game's grant price paid
+    grant = _block(text, "pp_cplan_country_plan_grant")
+    assert grant.strip().startswith("ordered_locations_with_town_rights_in_country = {")
+    limit = _tokens(grant[grant.index("limit = {"):grant.index("order_by")])
+    assert limit == ("limit = { has_town_rights = town_rights_type:$plan$ pp_cplan_country_plan_site = yes "
+                     "has_max_town_rights = no pp_cplan_right_site_$right$ = yes }")
+    for line in ("order_by = pp_cplan_country_pop_here", "save_scope_as = target",
+                 "political_influence >= pp_cplan_country_influence_need", "can_pay_price = price:grant_town_rights",
+                 "pp_cplan_right_allow_$right$ = yes", "grant_town_rights = town_rights_type:$right$",
+                 "set_variable = { name = pp_cplan_right_mark value = yes }", "pay_price = price:grant_town_rights",
+                 "change_variable = { name = pp_cplan_rights_n add = 1 }"):
+        assert line in grant, line
+    assert grant.index("save_scope_as = target") < grant.index("pp_cplan_right_allow_$right$") \
+        < grant.index("grant_town_rights =") < grant.index("\tpay_price =")
+    assert "revoke_town_rights" not in grant and "pp_plan" not in grant  # the plan right stays
+    # charter -> rights: no script upgrade effect, so revoke the charter and grant the rights; the upgrade's price
+    up = _block(text, "pp_cplan_country_plan_upgrade")
+    limit = _tokens(up[up.index("limit = {"):up.index("order_by")])
+    assert limit == ("limit = { has_town_rights = town_rights_type:$plan$ has_town_rights = town_rights_type:$charter$ "
+                     "NOT = { has_town_rights = town_rights_type:$rights$ } pp_cplan_country_plan_site = yes }")
+    for line in ("political_influence >= pp_cplan_country_upgrade_need", "can_pay_price = price:upgrade_town_rights",
+                 "pp_cplan_right_allow_$rights$ = yes", "pay_price = price:upgrade_town_rights",
+                 "set_variable = { name = pp_cplan_right_mark value = yes }"):
+        assert line in up, line
+    assert up.index("pp_cplan_right_allow_$rights$") < up.index("revoke_town_rights_of_type = town_rights_type:$charter$") \
+        < up.index("grant_town_rights = town_rights_type:$rights$") < up.index("\tpay_price =")
+    assert "town_rights_type:$plan$" not in up[up.index("revoke"):]
+    assert "upgrade_town_rights" in cc.database(MOD, _vanilla(), cc.PRICES)
+    # no grant in a rural settlement, nothing twice in a month, not where the group is switched off
+    site = _tokens(_block(_code(MOD / cc.TRIGGERS), "pp_cplan_country_plan_site"))
+    rural = cc.rural_rank(result.ranks)
+    assert rural == "rural_settlement" == {rank.key: rank for rank in result.ranks}["town"].source
+    assert site == ("NOT = { integration_level = conquered } NOT = { has_variable = pp_lprof_xc } "
+                    f"NOT = {{ has_variable = pp_cplan_right_mark }} NOT = {{ location_rank = location_rank:{rural} }}")
+    # the reserve of political influence for a swap: the amount kept and the game's upgrade price
+    need = _block(_code(MOD / cc.VALUES), "pp_cplan_country_upgrade_need")
+    price = cc.price_amount(cc.database(MOD, _vanilla(), cc.PRICES), "upgrade_town_rights", "political_influence")
+    assert _tokens(need) == f"value = pp_cplan_country_keep_influence add = {price:g}" and price > 0
+    # the generated file holds the same effect for the plan rights the database has now (none: an empty effect)
+    effects = _code(MOD / cc.EFFECTS)
+    written = _block(effects, "pp_cplan_country_plan_rights")
+    assert written.count("pp_cplan_country_plan_grant = {") == len(result.plan_grants)
+    assert written.count("pp_cplan_country_plan_upgrade = {") == sum(1 for g in result.plan_grants if g.charter and g.rights)
+    for name in ("pp_cplan_country_plan_grant", "pp_cplan_country_plan_upgrade"):
+        assert _tokens(_block(effects, name)) == _tokens(_block(text, name)), name
 
 
 def test_every_right_has_an_icon() -> None:

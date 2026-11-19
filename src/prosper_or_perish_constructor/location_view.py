@@ -17,7 +17,7 @@ import re
 from pathlib import Path
 
 from prosper_or_perish_constructor import (
-    arable_land_bar, attribute_tooltips, construction_plan, location_plan, location_profiles_gui, location_status,
+    arable_land_bar, attribute_tooltips, construction_plan, location_plan, location_status, town_plan_gui,
 )
 from prosper_or_perish_constructor.worldbuilder.geography import EXPORT_BUILD_FILE, LOCATION_WINDOW
 
@@ -662,11 +662,9 @@ def build_window(export_text: str, mod_root: Path, vanilla: Path | None, stored_
     merged = arable_land_bar.add_to_window(merged, location_status.land_state(land_rows, "pp_land_bar_state"))
     # the Location Plan's button in the header (location_plan.py)
     merged = location_plan.add_location_button(merged)
-    # a building's Construction Plan mark on its tile (Ctrl + click, a badge), beside vanilla's auto expand
-    merged = location_plan.add_building_marks(merged)
-    # the Location Profile row on top of the Infrastructure tab and, under it, the row "Also build here": the
-    # location's marks, which the Construction Plan builds (location_profiles_gui.py)
-    merged = location_profiles_gui.add_location_row(merged)
+    # the Plans row on top of the Infrastructure tab: the location's plans (town rights), which the Construction Plan
+    # builds toward (town_plan_gui.py)
+    merged = town_plan_gui.add_plan_row(merged)
     return widen_window(chip_frames(merged))
 
 

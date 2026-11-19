@@ -40,6 +40,11 @@ pp_cplan_country_influence_need = {
 	value = pp_cplan_country_keep_influence
 	add = 20
 }
+# Country scope: the same for a plan's charter swapped for its rights: the amount kept and the upgrade's price.
+pp_cplan_country_upgrade_need = {
+	value = pp_cplan_country_keep_influence
+	add = 8
+}
 
 # Country scope: 1 while the gold rule group has something to do: the building upgrades or a town or city upgrade
 # are switched on, or a public building is ticked (the monthly pass counts the group's weight only then; the urban

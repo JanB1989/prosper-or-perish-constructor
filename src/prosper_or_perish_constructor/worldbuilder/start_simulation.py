@@ -509,6 +509,8 @@ class Simulation:
         self.neighbors = defaultdict(list)
         self.navigation = cfg.raw.get("_navigation", {})
         self.water = cfg.raw.get("_water_access")
+        # engine is_adjacent_to_lake (coast.py, from the map's lakes list); the World Builder flag counts navigable lakes
+        self.lake_shores = cfg.raw.get("_lake_shores")
         self.refresh_navigation()
         # Engine start state the pops file does not show: setup promotion out of the peasants, the RGO's own
         # workers, and the local food modifier of rank and classes (scales subsistence and building food alike).
@@ -613,8 +615,8 @@ class Simulation:
                 "is_province_capital": tag in self.province_capitals if self.province_capitals is not None else False,
                 "num_roads": 0,   # setup roads are not modelled: a lower bound for road-scaled caps
                 "climate": climate_key(a.get("climate") or loc.get("climate")),
-                "is_adjacent_to_lake": str(a.get("is_adjacent_to_lake", "")).lower()
-                == "true",
+                "is_adjacent_to_lake": (tag in self.lake_shores) if self.lake_shores is not None
+                else str(a.get("is_adjacent_to_lake", "")).lower() == "true",
                 "market_access": 0.0,
                 "max_rgo_workers": 0.0,
                 "is_market_center": tag in market_centres,

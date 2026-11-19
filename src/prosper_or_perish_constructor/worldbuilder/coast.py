@@ -110,8 +110,10 @@ def _fingerprint(paths: dict[str, Path]) -> str:
     return h.hexdigest()
 
 
-def compute(mod_root: Path, vanilla_root: Path) -> dict[str, str]:
-    """Land location tag -> 'sea_coast' | 'waterway' for every location that borders a sea zone (inland ones absent)."""
+def _scan(mod_root: Path, vanilla_root: Path) -> tuple[dict[str, str], set[str]]:
+    """The water access state (see ``compute``) and the lake shores: land locations next to a location of the
+    default.map ``lakes`` list, the engine's ``is_adjacent_to_lake`` (map.cpp sets the lake and sea flags from those
+    lists, not from the topography; a navigable lake is a sea zone, so its shores are coastal instead)."""
     paths = _inputs(Path(mod_root), Path(vanilla_root))
     default_map = paths["default_map"].read_text(encoding="utf-8-sig", errors="replace")
     sea_zones = set(_block_tokens(default_map, "sea_zones"))
@@ -122,33 +124,53 @@ def compute(mod_root: Path, vanilla_root: Path) -> dict[str, str]:
     sea = {t for t in passable if not t.startswith(NAVIGATION_PREFIX) and topography.get(t) not in LAKE_TOPOGRAPHIES}
     water = sea_zones | lakes
     state: dict[str, str] = {}
+    lake_shores: set[str] = set()
     for a, b in _adjacent_pairs(paths["png"]):
         ta, tb = colors.get(a), colors.get(b)
         if not ta or not tb:
             continue
         for land, other in ((ta, tb), (tb, ta)):
-            if land in water or other not in passable:
+            if land in water:
+                continue
+            if other in lakes:
+                lake_shores.add(land)
+            if other not in passable:
                 continue
             if other in sea:
                 state[land] = "sea_coast"
             else:
                 state.setdefault(land, "waterway")
-    return state
+    return state, lake_shores
 
 
-def load(repo: Path, mod_root: Path, vanilla_root: Path) -> dict[str, str]:
-    """``compute`` with a cache keyed on the map files (the pixel scan takes about half a minute)."""
+def compute(mod_root: Path, vanilla_root: Path) -> dict[str, str]:
+    """Land location tag -> 'sea_coast' | 'waterway' for every location that borders a sea zone (inland ones absent)."""
+    return _scan(mod_root, vanilla_root)[0]
+
+
+def _load_both(repo: Path, mod_root: Path, vanilla_root: Path) -> tuple[dict[str, str], set[str]]:
     paths = _inputs(Path(mod_root), Path(vanilla_root))
     key = _fingerprint(paths)
     cache = Path(repo) / CACHE_RELATIVE_PATH
     if cache.is_file():
         data = json.loads(cache.read_text(encoding="utf-8"))
-        if data.get("fingerprint") == key:
-            return dict(data["state"])
-    state = compute(mod_root, vanilla_root)
+        if data.get("fingerprint") == key and "lake_shores" in data:
+            return dict(data["state"]), set(data["lake_shores"])
+    state, lake_shores = _scan(mod_root, vanilla_root)
     cache.parent.mkdir(parents=True, exist_ok=True)
-    cache.write_text(json.dumps({"fingerprint": key, "state": dict(sorted(state.items()))}, indent=0) + "\n", encoding="utf-8")
-    return state
+    cache.write_text(json.dumps({"fingerprint": key, "state": dict(sorted(state.items())), "lake_shores": sorted(lake_shores)},
+                                indent=0) + "\n", encoding="utf-8")
+    return state, lake_shores
+
+
+def load(repo: Path, mod_root: Path, vanilla_root: Path) -> dict[str, str]:
+    """``compute`` with a cache keyed on the map files (the pixel scan takes about half a minute)."""
+    return _load_both(repo, mod_root, vanilla_root)[0]
+
+
+def load_lake_shores(repo: Path, mod_root: Path, vanilla_root: Path) -> set[str]:
+    """The engine's lake shores (``is_adjacent_to_lake``) of the mod's map, from the same cached scan as ``load``."""
+    return _load_both(repo, mod_root, vanilla_root)[1]
 
 
 def sea_coast(state: dict[str, str]) -> set[str]:

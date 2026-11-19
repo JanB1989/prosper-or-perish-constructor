@@ -38,6 +38,30 @@ def vanilla():
     return root
 
 
+def test_lake_shores_follow_the_lakes_list_and_a_navigable_lake_is_a_waterway(tmp_path):
+    """The engine sets a location's lake and sea flags from the default.map lists (map.cpp), not from the topography:
+    the shores of a navigable lake (a sea zone with topography lakes, Lake Ladoga since 2026-11-19) are coastal
+    waterways and no longer is_adjacent_to_lake."""
+    import numpy as np
+    from PIL import Image
+
+    vanilla, mod = tmp_path / "vanilla", tmp_path / "mod"
+    names = vanilla / "game/in_game/map_data/named_locations"
+    names.mkdir(parents=True)
+    (names / "00.txt").write_text("a = 0000a0\nb = 0000b0\nc = 0000c0\nd = 0000d0\nmere = 00ff01\nladoga = 00ff02\nocean = 00ff03\n")
+    md = mod / "in_game/map_data"
+    (md / "named_locations").mkdir(parents=True)
+    (md / "default.map").write_text("sea_zones = {\n\tladoga ocean\n}\nlakes = {\n\tmere\n}\n")
+    (md / "location_templates.txt").write_text("ladoga = { topography = lakes }\nocean = { topography = ocean }\nmere = { topography = lakes }\n")
+    a, b, c, d = (0, 0, 0xa0), (0, 0, 0xb0), (0, 0, 0xc0), (0, 0, 0xd0)
+    mere, ladoga, ocean = (0, 0xff, 1), (0, 0xff, 2), (0, 0xff, 3)
+    # row 0: a mere b ocean / row 1: c ladoga d d
+    Image.fromarray(np.array([[a, mere, b, ocean], [c, ladoga, d, d]], np.uint8)).save(md / "locations.png")
+    state, lake_shores = coast._scan(mod, vanilla)
+    assert state == {"b": "sea_coast", "c": "waterway", "d": "sea_coast"}
+    assert lake_shores == {"a", "b"}
+
+
 def test_contract_coastal_flag_follows_the_map_sea_coast():
     import dataclasses
 
@@ -222,7 +246,13 @@ def test_every_country_discovers_the_rivers_along_its_land():
     built = (MOD / "in_game/common/scripted_effects/pp_navigation_discovery.txt").read_text(encoding="utf-8-sig")
     names = (MOD / "main_menu/localization/english/pp_navigation_geography_l_english.yml").read_text(encoding="utf-8-sig")
     tiles_in_mod = len(re.findall(r"(?m)^ pp_nav_\d{5}:", names))
-    assert tiles_in_mod > 700 and built.count("discover_location") == tiles_in_mod
+    # the navigable lakes (Lake Ladoga) sit in the water hierarchy too and are discovered with their main shore
+    raw = tomllib.loads((REPO / "constructor.toml").read_text(encoding="utf-8"))
+    lakes_csv = (REPO / raw["worldbuilder"]["handover"] / "navigation" / "lakes.csv").resolve()
+    lakes = lakes_csv.read_text(encoding="utf-8").strip().splitlines()[1:] if lakes_csv.is_file() else []
+    for row in lakes:
+        assert f"location:{row.split(',')[0]} = {{ discover_location" in built
+    assert tiles_in_mod > 700 and built.count("discover_location") == tiles_in_mod + len(lakes)
     assert "pp_navigation_discovery = yes" in (MOD / "in_game/common/on_action/pp_navigation.txt").read_text(encoding="utf-8-sig")
 
 

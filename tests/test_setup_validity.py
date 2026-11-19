@@ -61,7 +61,9 @@ def test_geography_sync_tests_soil_and_fertility_modifiers_not_variables(tmp_pat
             " text = { localization_key = B fallback = yes } }ha1300_soil_type_evidence = { type = location\n"
             " text = { localization_key = C trigger = { has_variable = ha1300_soil_inferred } }\n}\n",
         "in_game/common/customizable_localization/ha1300_native_geography.txt":
-            "ha1300_native_coast = {\n type = location\n}\nha1300_native_lake = {\n type = location\n}\nha1300_native_max_winter = {\n type = location\n}\n",
+            "ha1300_native_coast = {\n type = location\n}\nha1300_native_lake = {\n type = location\n"
+            " text = { localization_key = HA1300_LAKESIDE trigger = { is_adjacent_to_lake = yes } }\n}\n"
+            "ha1300_native_max_winter = {\n type = location\n}\n",
         "in_game/gfx/map/map_modes/ha1300_fertility.txt":
             "ha1300_fertility = { map_color = { if = { limit = { has_variable = ha1300_fertility var:ha1300_fertility = 5 } value = rgb { 1 2 3 } } } }\n",
     }
@@ -80,7 +82,9 @@ def test_geography_sync_tests_soil_and_fertility_modifiers_not_variables(tmp_pat
     assert "trigger = { has_location_modifier = pp_wb_soil_stony }" in soils
     assert "ha1300_soil_type_evidence" not in soils and soils.endswith("fallback = yes } }\n")
     native = (mod / "in_game/common/customizable_localization/ha1300_native_geography.txt").read_text(encoding="utf-8-sig")
-    assert native == "ha1300_native_lake = {\n type = location\n}\n"
+    # the Lakeside chip follows the setup's Lakeside modifier (a navigable lake is no engine lake: 2026-11-19)
+    assert native == ("ha1300_native_lake = {\n type = location\n"
+                      " text = { localization_key = HA1300_LAKESIDE trigger = { has_location_modifier = pp_wb_lake } }\n}\n")
     fertility = (mod / "in_game/gfx/map/map_modes/ha1300_fertility.txt").read_text(encoding="utf-8-sig")
     assert "limit = { has_location_modifier = pp_wb_fertility_very_high }" in fertility
 

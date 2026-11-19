@@ -64,7 +64,9 @@ def apply(repo: Path, project: Path, mod_root: Path, *, contract_root: Path | No
     contract = wb_development.with_development(contract, development)
     import dataclasses
 
-    cfg = dataclasses.replace(cfg, raw={**cfg.raw, "_water_access": water})
+    # the engine's lake shores (is_adjacent_to_lake) from the same map scan: the start check reads them like is_coastal
+    lake_shores = coast.load_lake_shores(repo, mod_root, vanilla_root(repo, project))
+    cfg = dataclasses.replace(cfg, raw={**cfg.raw, "_water_access": water, "_lake_shores": lake_shores})
     report["water_access"] = {state: sum(1 for v in water.values() if v == state) for state in ("sea_coast", "waterway")}
     coast.write_runtime(mod_root)
     report["class_injects"] = wb_modifiers.write_class_injects(contract, cfg.geography_export, mod_root, repo, vanilla_root(repo, project),

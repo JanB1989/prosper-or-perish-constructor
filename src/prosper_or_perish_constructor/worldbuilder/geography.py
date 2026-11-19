@@ -185,11 +185,28 @@ def drop_keys(text: str, keys: tuple[str, ...]) -> str:
     return pattern.sub("", text)
 
 
+NATIVE_GEOGRAPHY = "in_game/common/customizable_localization/ha1300_native_geography.txt"
+_ENGINE_LAKE = "trigger = { is_adjacent_to_lake = yes }"
+
+
+def lakeside_from_modifier(text: str) -> str:
+    """The Lakeside chip tests the setup's Lakeside modifier ``pp_wb_lake`` (the World Builder's lake shores), not the
+    engine's ``is_adjacent_to_lake``: the engine counts only the default.map lakes, so the shores of a navigable lake
+    (Lake Ladoga, a sea zone since 2026-11-19) keep the modifier but lose the trigger. The chip gates the modifier's
+    rows in the land tooltip (attribute_tooltips.SHORE_GATES), so it must follow the modifier."""
+    text = text.replace(_ENGINE_LAKE, "trigger = { has_location_modifier = pp_wb_lake }")
+    if "is_adjacent_to_lake" in text:
+        raise ValueError(f"{NATIVE_GEOGRAPHY}: a lake test the sync cannot rewrite")
+    return text
+
+
 def transformed(rel: str, text: str) -> str:
     """The main mod's version of an export file listed in MODIFIER_TESTED_FILES, DROPPED_LOCALIZATION_BLOCKS or
     DROPPED_LOCALIZATION_KEYS."""
     if rel in MODIFIER_TESTED_FILES:
         text = modifier_tests(text)
+    if rel == NATIVE_GEOGRAPHY:
+        text = lakeside_from_modifier(text)
     text = drop_blocks(text, DROPPED_LOCALIZATION_BLOCKS.get(rel, ()), rel)
     text = drop_keys(text, DROPPED_LOCALIZATION_KEYS.get(rel, ()))
     return text.rstrip("\n") + "\n"

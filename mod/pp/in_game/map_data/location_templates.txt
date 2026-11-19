@@ -429,8 +429,8 @@ hammerfest = { topography = hills vegetation = ha1300_veg_mixed_forest climate =
 alta = { topography = hills vegetation = ha1300_veg_mixed_forest climate = subpolar religion = catholic culture = norwegian raw_material = wild_game natural_harbor_suitability = 0.00}
 kirkenes = { topography = hills vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = catholic culture = norwegian raw_material = fish natural_harbor_suitability = 0.50}
 lebesby = { topography = hills vegetation = ha1300_veg_marsh climate = subpolar religion = catholic culture = norwegian raw_material = fish natural_harbor_suitability = 0.25}
-olonets = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = novgorodian raw_material = sand}
-kinerma = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = novgorodian raw_material = fish}
+olonets = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = novgorodian raw_material = sand natural_harbor_suitability = 0.00 }
+kinerma = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = novgorodian raw_material = fish natural_harbor_suitability = 0.00 }
 kondpoga = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = karelian raw_material = wild_game}
 ostrechiny = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = novgorodian raw_material = fiber_crops}
 pryazha = { topography = wetlands vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = novgorodian raw_material = lumber}
@@ -486,17 +486,17 @@ lake_yelmozero = { topography = lakes climate = arctic}
 lake_maslozero = { topography = lakes climate = subpolar}
 karelia_taiga1 = { topography = wetlands vegetation = forest climate = subpolar}
 karelia_taiga2 = { topography = wetlands vegetation = forest climate = subpolar}
-korela = { topography = wetlands vegetation = ha1300_veg_swamp climate = continental religion = orthodox culture = karelian raw_material = iron}
-kurkijoki = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = karelian raw_material = marble}
-konevets = { topography = wetlands vegetation = ha1300_veg_coniferous_forest climate = continental religion = orthodox culture = karelian raw_material = medicaments}
+korela = { topography = wetlands vegetation = ha1300_veg_swamp climate = continental religion = orthodox culture = karelian raw_material = iron natural_harbor_suitability = 0.00 }
+kurkijoki = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = karelian raw_material = marble natural_harbor_suitability = 0.00 }
+konevets = { topography = wetlands vegetation = ha1300_veg_coniferous_forest climate = continental religion = orthodox culture = karelian raw_material = medicaments natural_harbor_suitability = 0.00 }
 joensuu = { topography = wetlands vegetation = ha1300_veg_swamp climate = subpolar religion = orthodox culture = karelian raw_material = fur}
-sordavala = { topography = flatland vegetation = woods climate = continental religion = orthodox culture = karelian raw_material = fiber_crops}
+sordavala = { topography = flatland vegetation = woods climate = continental religion = orthodox culture = karelian raw_material = fiber_crops natural_harbor_suitability = 0.00 }
 vartsila = { topography = flatland vegetation = ha1300_veg_swamp climate = subpolar religion = orthodox culture = karelian raw_material = fish}
 ilomantsi = { topography = wetlands vegetation = ha1300_veg_swamp climate = subpolar religion = orthodox culture = karelian raw_material = fur}
 lieksa = { topography = wetlands vegetation = ha1300_veg_swamp climate = subpolar religion = orthodox culture = karelian raw_material = wild_game}
 juuka = { topography = wetlands vegetation = ha1300_veg_swamp climate = subpolar religion = orthodox culture = karelian raw_material = lumber}
-salmi = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = karelian raw_material = tin}
-loimola = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = karelian raw_material = lumber}
+salmi = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = karelian raw_material = tin natural_harbor_suitability = 0.00 }
+loimola = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = karelian raw_material = lumber natural_harbor_suitability = 0.00 }
 mohko = { topography = wetlands vegetation = ha1300_veg_swamp climate = subpolar religion = orthodox culture = karelian raw_material = lumber}
 suojarvi = { topography = wetlands vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = karelian raw_material = wild_game}
 yanis_jarvi = { topography = lakes climate = subpolar}
@@ -5259,8 +5259,8 @@ pashozero = { topography = flatland vegetation = ha1300_veg_coniferous_forest cl
 pikalyovo = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = novgorodian raw_material = lumber}
 tervenichi = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = novgorodian raw_material = legumes}
 megra = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = novgorodian raw_material = fur}
-lodenoye_pole = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = novgorodian raw_material = clay}
-maselga = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = novgorodian raw_material = fur}
+lodenoye_pole = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = novgorodian raw_material = clay natural_harbor_suitability = 0.00 }
+maselga = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = novgorodian raw_material = fur natural_harbor_suitability = 0.00 }
 spirkovo = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = novgorodian raw_material = wild_game}
 vinnitsy = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = novgorodian raw_material = fur}
 voznesenye = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = subpolar religion = orthodox culture = novgorodian raw_material = lumber}
@@ -5295,10 +5295,10 @@ oreshek = { topography = flatland vegetation = ha1300_veg_swamp climate = contin
 chudovo = { topography = flatland vegetation = ha1300_veg_swamp climate = continental religion = orthodox culture = novgorodian raw_material = lumber natural_harbor_suitability = 0.00 }
 lisino = { topography = flatland vegetation = ha1300_veg_swamp climate = subpolar religion = orthodox culture = novgorodian raw_material = wheat natural_harbor_suitability = 0.00 }
 lyuban = { topography = flatland vegetation = ha1300_veg_swamp climate = continental religion = orthodox culture = novgorodian raw_material = millet natural_harbor_suitability = 0.00 }
-markovo = { topography = flatland vegetation = ha1300_veg_swamp climate = subpolar religion = orthodox culture = novgorodian raw_material = stone natural_harbor_suitability = 0.00 }
+markovo = { topography = flatland vegetation = ha1300_veg_swamp climate = subpolar religion = orthodox culture = novgorodian raw_material = stone natural_harbor_suitability = 0.05 }
 martyshkino = { topography = ha1300_topo_valleys vegetation = ha1300_veg_swamp climate = subpolar religion = orthodox culture = novgorodian raw_material = millet natural_harbor_suitability = 0.00}
 neva = { topography = wetlands vegetation = ha1300_veg_marsh climate = continental religion = orthodox culture = novgorodian raw_material = fish natural_harbor_suitability = 0.75}
-toksovo = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = continental religion = orthodox culture = karelian raw_material = fur}
+toksovo = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = continental religion = orthodox culture = karelian raw_material = fur natural_harbor_suitability = 0.00 }
 porkhov = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = continental religion = orthodox culture = novgorodian raw_material = iron}
 dubronjo = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = continental religion = orthodox culture = novgorodian raw_material = fur}
 gorodets_luga = { topography = flatland vegetation = ha1300_veg_coniferous_forest climate = continental religion = orthodox culture = novgorodian raw_material = millet}
@@ -28613,15 +28613,15 @@ pp_nav_00038 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00039 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00040 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00041 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00042 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00042 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00043 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00044 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00044 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00045 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00046 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00046 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00047 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00048 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00049 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00050 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00050 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00051 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00052 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00053 = { topography = pp_river_channel climate = oceanic }
@@ -28635,8 +28635,8 @@ pp_nav_00060 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00061 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00062 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00063 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00064 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00065 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00064 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00065 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00066 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00067 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00068 = { topography = pp_river_channel climate = oceanic }
@@ -28647,14 +28647,14 @@ pp_nav_00072 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00073 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00074 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00075 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00076 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00077 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00076 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00077 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00078 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00079 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00080 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00081 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00082 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00083 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00082 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00083 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00084 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00085 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00086 = { topography = pp_river_channel climate = oceanic }
@@ -28662,10 +28662,10 @@ pp_nav_00087 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00088 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00089 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00090 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00091 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00092 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00093 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00094 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00091 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00092 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00093 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00094 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00095 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00096 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00097 = { topography = pp_river_channel climate = oceanic }
@@ -28715,8 +28715,8 @@ pp_nav_00140 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00141 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00142 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00143 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00144 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00145 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00144 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00145 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00146 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00147 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00148 = { topography = pp_river_channel climate = oceanic }
@@ -28741,8 +28741,8 @@ pp_nav_00166 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00167 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00168 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00169 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00170 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00171 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00170 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00171 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00172 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00173 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00174 = { topography = pp_river_channel climate = oceanic }
@@ -28751,16 +28751,16 @@ pp_nav_00176 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00177 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00178 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00179 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00180 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00181 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00180 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00181 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00182 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00183 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00184 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00185 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00186 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00185 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00186 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00187 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00188 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00189 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00188 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00189 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00190 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00191 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00192 = { topography = pp_river_channel climate = oceanic }
@@ -28779,8 +28779,8 @@ pp_nav_00204 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00205 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00206 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00207 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00208 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00209 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00208 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00209 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00210 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00211 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00212 = { topography = pp_river_channel climate = oceanic }
@@ -28801,8 +28801,8 @@ pp_nav_00226 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00227 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00228 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00229 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00230 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00231 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00230 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00231 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00232 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00233 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00234 = { topography = pp_river_channel climate = oceanic }
@@ -28819,8 +28819,8 @@ pp_nav_00244 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00245 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00246 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00247 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00248 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00249 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00248 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00249 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00250 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00251 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00252 = { topography = pp_river_channel climate = oceanic }
@@ -28829,8 +28829,8 @@ pp_nav_00254 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00255 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00256 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00257 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00258 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00259 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00258 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00259 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00260 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00261 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00262 = { topography = pp_river_channel climate = oceanic }
@@ -28844,24 +28844,24 @@ pp_nav_00269 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00270 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00271 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00272 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00273 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00274 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00273 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00274 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00275 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00276 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00277 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00278 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00279 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00280 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00279 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00280 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00281 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00282 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00283 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00284 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00283 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00284 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00285 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00286 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00287 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00288 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00289 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00290 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00289 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00290 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00291 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00292 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00293 = { topography = pp_river_channel climate = oceanic }
@@ -28870,15 +28870,15 @@ pp_nav_00295 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00296 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00297 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00298 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00299 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00300 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00299 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00300 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00301 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00302 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00303 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00304 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00305 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00306 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00307 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00306 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00307 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00308 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00309 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00310 = { topography = pp_river_channel climate = oceanic }
@@ -28894,8 +28894,8 @@ pp_nav_00319 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00320 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00321 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00322 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00323 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00324 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00323 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00324 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00325 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00326 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00327 = { topography = pp_river_channel climate = oceanic }
@@ -28903,14 +28903,14 @@ pp_nav_00328 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00329 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00330 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00331 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00332 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00333 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00332 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00333 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00334 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00335 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00336 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00337 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00338 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00339 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00338 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00339 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00340 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00341 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00342 = { topography = pp_river_channel climate = oceanic }
@@ -28925,8 +28925,8 @@ pp_nav_00350 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00351 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00352 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00353 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00354 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00355 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00354 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00355 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00356 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00357 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00358 = { topography = pp_river_channel climate = oceanic }
@@ -28936,8 +28936,8 @@ pp_nav_00361 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00362 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00363 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00364 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00365 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00366 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00365 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00366 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00367 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00368 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00369 = { topography = pp_river_channel climate = oceanic }
@@ -28947,29 +28947,29 @@ pp_nav_00372 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00373 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00374 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00375 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00376 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00377 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00378 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00379 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00376 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00377 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00378 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00379 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00380 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00381 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00382 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00383 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00384 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00385 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00386 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00387 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00386 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00387 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00388 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00389 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00390 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00391 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00392 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00393 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00394 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00394 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00395 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00396 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00397 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00398 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00396 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00397 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00398 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00399 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00400 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00401 = { topography = pp_river_channel climate = oceanic }
@@ -28993,27 +28993,27 @@ pp_nav_00418 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00419 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00420 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00421 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00422 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00423 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00422 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00423 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00424 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00425 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00426 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00427 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00428 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00427 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00428 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00429 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00430 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00431 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00432 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00433 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00432 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00433 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00434 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00435 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00436 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00437 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00438 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00437 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00438 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00439 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00440 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00441 = { topography = pp_river_falls climate = oceanic }
-pp_nav_00442 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00440 = { topography = pp_river_falls climate = oceanic }
+pp_nav_00441 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00442 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00443 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00444 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00445 = { topography = pp_river_channel climate = oceanic }
@@ -29043,45 +29043,45 @@ pp_nav_00468 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00469 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00470 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00471 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00472 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00473 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00474 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00475 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00472 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00473 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00474 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00475 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00476 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00477 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00477 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00478 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00479 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00480 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00480 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00481 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00482 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00483 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00484 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00485 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00486 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00487 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00488 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00487 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00488 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00489 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00490 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00491 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00492 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00493 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00492 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00493 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00494 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00495 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00496 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00497 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00496 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00497 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00498 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00499 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00500 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00501 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00502 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00503 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00504 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00505 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00506 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00507 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00503 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00504 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00505 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00506 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00507 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00508 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00509 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00510 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00510 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00511 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00512 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00513 = { topography = pp_river_channel climate = oceanic }
@@ -29092,8 +29092,8 @@ pp_nav_00517 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00518 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00519 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00520 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00521 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00522 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00521 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00522 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00523 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00524 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00525 = { topography = pp_river_channel climate = oceanic }
@@ -29104,11 +29104,11 @@ pp_nav_00529 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00530 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00531 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00532 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00533 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00534 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00533 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00534 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00535 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00536 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00537 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00536 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00537 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00538 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00539 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00540 = { topography = pp_river_channel climate = oceanic }
@@ -29120,51 +29120,51 @@ pp_nav_00545 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00546 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00547 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00548 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00549 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00550 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00549 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00550 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00551 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00552 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00553 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00554 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00553 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00554 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00555 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00556 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00557 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00558 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00559 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00560 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00559 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00560 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00561 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00562 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00563 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00564 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00565 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00566 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00567 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00564 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00565 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00566 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00567 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00568 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00569 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00570 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00570 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00571 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00572 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00573 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00572 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00573 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00574 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00575 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00576 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00576 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00577 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00578 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00579 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00579 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00580 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00581 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00582 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00582 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00583 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00584 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00585 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00585 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00586 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00587 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00588 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00589 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00590 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00591 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00591 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00592 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00593 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00593 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00594 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00595 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00596 = { topography = pp_river_difficult climate = oceanic }
@@ -29174,22 +29174,22 @@ pp_nav_00599 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00600 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00601 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00602 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00603 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00603 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00604 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00605 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00606 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00606 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00607 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00608 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00609 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00608 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00609 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00610 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00611 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00611 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00612 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00613 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00613 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00614 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00615 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00616 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00617 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00618 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00617 = { topography = pp_river_channel climate = oceanic }
+pp_nav_00618 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00619 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00620 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00621 = { topography = pp_river_difficult climate = oceanic }
@@ -29239,8 +29239,8 @@ pp_nav_00664 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00665 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00666 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00667 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00668 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00669 = { topography = pp_river_falls climate = oceanic }
+pp_nav_00668 = { topography = pp_river_falls climate = oceanic }
+pp_nav_00669 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00670 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00671 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00672 = { topography = pp_river_difficult climate = oceanic }
@@ -29311,7 +29311,7 @@ pp_nav_00736 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00737 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00738 = { topography = pp_river_difficult climate = oceanic }
 pp_nav_00739 = { topography = pp_river_difficult climate = oceanic }
-pp_nav_00740 = { topography = pp_river_difficult climate = oceanic }
+pp_nav_00740 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00741 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00742 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00743 = { topography = pp_river_channel climate = oceanic }
@@ -29330,4 +29330,3 @@ pp_nav_00755 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00756 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00757 = { topography = pp_river_channel climate = oceanic }
 pp_nav_00758 = { topography = pp_river_channel climate = oceanic }
-pp_nav_00759 = { topography = pp_river_channel climate = oceanic }

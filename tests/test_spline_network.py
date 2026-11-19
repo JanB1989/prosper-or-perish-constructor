@@ -64,6 +64,29 @@ def test_a_pair_inside_the_vanilla_id_range_is_merged_in_sorted_order():
     assert connections[sn.connection_key(3, 1)] == {1, 3}
 
 
+def test_moving_a_vanilla_location_renumbers_the_vanilla_strips():
+    # vanilla order a, lake, b, c: the lake moves to the end (a navigable lake leaves its land province), so b and c
+    # drop one index; their strip and connection must follow, or every road after the lake ends on the wrong anchors
+    vanilla = _network(
+        points=[(1, 0.0, 0.0), (3, 10.0, 0.0), (4, 20.0, 0.0), (sn.CONTROL | 1, 5.0, 0.0), (sn.CONTROL | 2, 15.0, 0.0)],
+        strips=[(0, [1, sn.CONTROL | 1, 3]), (1 << 8, [3, sn.CONTROL | 2, 4])],
+        connections=[(sn.connection_key(3, 1), [0]), (sn.connection_key(4, 3), [1 << 8])],
+    )
+    remap = sn.index_remap(["a", "lake", "b", "c"], ["a", "b", "c", "lake"])
+    assert remap == {2: 4, 3: 2, 4: 3}
+    data = sn.renumber(vanilla, remap)
+    assert len(data) == len(vanilla)
+    counts, ids = _read(data)
+    assert counts == (5, 2, 2) and ids == [1, 2, 3, sn.CONTROL | 1, sn.CONTROL | 2]
+    assert sn.read_connections(data) == {sn.connection_key(2, 1): {1, 2}, sn.connection_key(3, 2): {2, 3}}
+    # the mod's own order then finds them: no strip is added for a pair vanilla connects
+    _, report = sn.extend(data, ["a", "b", "c", "lake"], {}, [("b", "a"), ("c", "b")])
+    assert report["strips_added"] == 0
+    assert sn.renumber(vanilla, {}) == vanilla
+    with pytest.raises(ValueError, match="missing"):
+        sn.index_remap(["a", "ghost"], ["a"])
+
+
 def test_a_pair_already_in_the_network_needs_no_locator():
     data, report = sn.extend(VANILLA, ["a", "b"], {}, [("b", "a")])
     assert data == VANILLA and report["connections_added"] == 0

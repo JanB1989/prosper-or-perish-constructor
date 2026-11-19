@@ -263,7 +263,13 @@ def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
             bonus.append(f" location:{tag} = {{ if = {{ limit = {{ pp_navigation_river_missing = yes }} add_location_modifier = {{ modifier = river_flowing_through_{level} days = -1 mode = replace }} }} }}")
     bonus+=[f' remove_global_variable = {RIVER_SIZES_LIVE}','}']
     write('in_game/common/scripted_effects/pp_navigation_river_bonuses.txt','\n'.join(bonus)+'\n')
-    write('in_game/common/scripted_effects/pp_navigation_discovery.txt',discovery_effect(state['tiles'],shores))
+    # navigable lakes (World Builder navigation/lakes.csv) left their land province for the water hierarchy too: each is
+    # discovered with its main shore location
+    lakes_csv=contract.root/'navigation/lakes.csv'
+    lakes=list(pl.read_csv(lakes_csv).iter_rows(named=True)) if lakes_csv.is_file() else []
+    write('in_game/common/scripted_effects/pp_navigation_discovery.txt',
+          discovery_effect({**state['tiles'],**{r['location']:r for r in lakes}},
+                           shores+[{'water_location':r['location'],'location_tag':r['near_location'],'shore_pixels':1} for r in lakes]))
     # Starting building levels that need the river are added after the rivers are restored (start_simulation).
     write('in_game/common/on_action/pp_navigation.txt','\n'.join([
         'on_game_start = { on_actions = { pp_navigation_start } }','pp_navigation_start = { effect = {',
@@ -283,7 +289,7 @@ def write_runtime(repo,cfg,contract,mod_root,vanilla_root):
     write('in_game/common/scripted_triggers/pp_navigation_rivers.txt','\n'.join(triggers)+'\n')
     from .navigation_map_modes import write_map_modes
     write_map_modes(mod_root,state)
-    report={'enabled':True,'tiles':len(state['tiles']),'edges':len(state['edges']),
+    report={'enabled':True,'tiles':len(state['tiles']),'edges':len(state['edges']),'navigable_lakes':sorted(r['location'] for r in lakes),
             'kinds':dict(Counter(tile['state'] for tile in state['tiles'].values())),
             'opened_at_start':state['opened_at_start'],
             'river_effects_restored':len(lost), 'native_bank_pixels_preserved':state['manifest'].get('preserved_river_pixels',0), 'ocean_connected_passable_tiles':state['manifest']['ocean_connected_passable_tiles'], 'river_ports_changed':state['manifest']['ports_changed'], 'spline_network':spline_report}

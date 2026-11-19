@@ -1,5 +1,5 @@
 ﻿ha1300_native_lake = {
  type = location
- text = { localization_key = HA1300_LAKESIDE trigger = { is_adjacent_to_lake = yes } }
+ text = { localization_key = HA1300_LAKESIDE trigger = { has_location_modifier = pp_wb_lake } }
  text = { localization_key = HA1300_NO_LAKE fallback = yes }
 }

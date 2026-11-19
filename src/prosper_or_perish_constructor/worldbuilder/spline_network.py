@@ -94,9 +94,97 @@ def _connection(key: int, strips: list[int]) -> bytes:
     return struct.pack("<HHHHQHHH", _OPEN, _KEY_ID, _EQ, _U64, key, _KEY_STRIPS, _EQ, _OPEN) + body + struct.pack("<HH", _CLOSE, _CLOSE)
 
 
-def connection_key(a: int, b: int) -> int:
+def connection_key(a: int, b: int, spline_type: int = ROAD_TYPE) -> int:
     a, b = max(a, b), min(a, b)
-    return (a << 35) | (b << 6) | ROAD_TYPE
+    return (a << 35) | (b << 6) | spline_type
+
+
+def _sections(data: bytes) -> tuple[int, int, int, int, int, int, int]:
+    """Counts and section offsets: n_points, n_strips, n_connections, points_start, strips_start, strips_end,
+    connections_start (the points end 8 bytes before the strips start, the connections 2 bytes before the file end)."""
+    n_points, n_strips, n_connections = struct.unpack_from("<xxixxixxi", data, _COUNTS_OFFSET - 2)
+    points_start = _COUNTS_OFFSET + 18 + 6
+    if data[points_start - 6 : points_start] != struct.pack("<HHH", _KEY_POINTS, _EQ, _OPEN):
+        raise ValueError("unexpected spline network header")
+    points_end = points_start + n_points * _POINT_SIZE
+    strips_start = points_end + 2 + 6
+    if data[points_end : strips_start] != struct.pack("<HHHH", _CLOSE, _KEY_STRIPS, _EQ, _OPEN):
+        raise ValueError("unexpected spline network point section")
+    connections_head = struct.pack("<HHHH", _CLOSE, _KEY_CONNECTIONS, _EQ, _OPEN)
+    strips_end = data.index(connections_head, strips_start)
+    if data[len(data) - 2 :] != struct.pack("<H", _CLOSE):
+        raise ValueError("unexpected spline network end")
+    return n_points, n_strips, n_connections, points_start, strips_start, strips_end, strips_end + len(connections_head)
+
+
+def renumber(data: bytes, remap: dict[int, int]) -> bytes:
+    """The network with its location anchors renumbered (old 1-based location index -> new one).
+
+    Anchors, strip points and connection keys name a location by its index in ``definitions.txt`` order. The World
+    Builder moves a navigable lake (Lake Ladoga, 2026-11-19) from its land province into the water hierarchy at the
+    end of the file, so every later vanilla location's index drops by one; without this every vanilla road strip ends
+    on the wrong anchors. Anchors and connections stay sorted by id; strip ids do not name locations."""
+    if not remap:
+        return data
+    n_points, n_strips, n_connections, points_start, strips_start, strips_end, connections_start = _sections(data)
+    points_end = points_start + n_points * _POINT_SIZE
+
+    def anchor(point_id: int) -> int:
+        return point_id if point_id & CONTROL else remap.get(point_id, point_id)
+
+    anchors, controls = [], []
+    for i in range(n_points):
+        entry = bytearray(data[points_start + i * _POINT_SIZE : points_start + (i + 1) * _POINT_SIZE])
+        point_id = struct.unpack_from("<I", entry, 8)[0]
+        if point_id & CONTROL:
+            controls.append(bytes(entry))
+        else:
+            struct.pack_into("<I", entry, 8, anchor(point_id))
+            anchors.append((anchor(point_id), bytes(entry)))
+    if len({a for a, _ in anchors}) != len(anchors):
+        raise ValueError("renumbering merged two spline anchors")
+    strips = bytearray(data[strips_start:strips_end])
+    head = struct.pack("<HHHH", _OPEN, _KEY_ID, _EQ, _U64)
+    offset, seen = 0, 0
+    while (offset := strips.find(head, offset)) >= 0:
+        cursor = offset + 22
+        while struct.unpack_from("<H", strips, cursor)[0] == _U32:
+            struct.pack_into("<I", strips, cursor + 2, anchor(struct.unpack_from("<I", strips, cursor + 2)[0]))
+            cursor += 6
+        offset, seen = cursor, seen + 1
+    if seen != n_strips:
+        raise ValueError("could not read every spline network strip")
+    connections = []
+    body = data[connections_start : len(data) - 2]
+    starts = []
+    offset = 0
+    while (offset := body.find(head, offset)) >= 0:
+        starts.append(offset)
+        offset += 22
+    if len(starts) != n_connections:
+        raise ValueError("could not read every spline network connection")
+    for i, start in enumerate(starts):
+        entry = bytearray(body[start : starts[i + 1] if i + 1 < len(starts) else len(body)])
+        key = struct.unpack_from("<Q", entry, 8)[0]
+        a, b, spline_type = key >> 35, (key >> 6) & ((1 << 29) - 1), key & 63
+        new_key = connection_key(anchor(a), anchor(b), spline_type)
+        struct.pack_into("<Q", entry, 8, new_key)
+        connections.append((new_key, bytes(entry)))
+    if len({k for k, _ in connections}) != len(connections):
+        raise ValueError("renumbering merged two spline connections")
+    return b"".join([
+        data[:points_start], *(e for _, e in sorted(anchors)), *controls, data[points_end:strips_start], bytes(strips),
+        data[strips_end:connections_start], *(e for _, e in sorted(connections)), data[len(data) - 2 :],
+    ])
+
+
+def index_remap(vanilla_order: list[str], order: list[str]) -> dict[int, int]:
+    """Vanilla location index -> the mod's index, for every vanilla location the mod's definitions moved."""
+    index = {tag: i for i, tag in enumerate(order, 1)}
+    missing = [t for t in vanilla_order if t not in index]
+    if missing:
+        raise ValueError("vanilla locations missing from the mod's definitions.txt: " + ", ".join(missing[:10]))
+    return {i: index[t] for i, t in enumerate(vanilla_order, 1) if index[t] != i}
 
 
 def extend(vanilla: bytes, order: list[str], positions: dict[str, tuple[float, float]], pairs: list[tuple[str, str]],
@@ -273,8 +361,12 @@ def write(mod_root: Path, vanilla_root: Path, pairs: list[tuple[str, str]], land
     positions = locator_positions(mod_root / "in_game/gfx/map/map_objects/generated_map_object_locators_unit_stack.txt")
     land = land_pairs(mod_root, vanilla_root, land_cache)
     added: list[tuple[str, str]] = []
-    data, report = extend((game / RELATIVE_PATH).read_bytes(), order, positions, list(pairs) + land, added)
+    # vanilla's strips name locations by vanilla's index: follow every vanilla location the mod's definitions moved
+    remap = index_remap(location_order(game / "in_game/map_data/definitions.txt"), order)
+    vanilla = renumber((game / RELATIVE_PATH).read_bytes(), remap)
+    data, report = extend(vanilla, order, positions, list(pairs) + land, added)
     navigation = {tuple(sorted(p)) for p in pairs}
+    report["renumbered_locations"] = len(remap)
     report["land_pairs"] = len(land)
     report["land_strips_added"] = sorted(f"{a}-{b}" for a, b in added if tuple(sorted((a, b))) not in navigation)
     target = mod_root / RELATIVE_PATH

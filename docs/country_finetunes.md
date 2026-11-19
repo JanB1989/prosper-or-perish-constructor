@@ -2,6 +2,21 @@
 
 Hand-tuned changes for single countries, one entry each: what and why.
 
+- **Start adjustments: the AI takes them, a player chooses** (2026-11-19, Jan, not tested in game). A country's change to
+  the vanilla treasury is one scripted effect, `pp_start_adjustment_<tag>` in
+  `scripted_effects/pp_country_start_adjustments.txt` (the numbers live only there): Ottomans +1,500, Byzantium -1,000,
+  Muscovy +500 gold. On the first day of a new game, `pp_country_start_adjustments` (`on_action/pp_country_finetunes.txt`,
+  after the `delay = { days = 1 }` of `on_game_start`, so every player holds a country and `is_ai` means who plays) gives
+  an AI country its effect, always, observer games included (every country is AI there); a human player gets the
+  country's event (`events/pp_start_adjustment_events.txt`: `pp_start_adjustments.1` Ottomans, `.2` Byzantium, `.3`
+  Muscovy). "Take this start" calls the same effect (ai_chance 100), "Keep the vanilla start" changes nothing (0). The
+  text says what PP changes and why, with no numbers: the option tooltip shows the effect. Only money goes this way; aims,
+  conquest preferences, opinions, advances, formables and privileges stay as they are, for players too. Replaces
+  `pp_country_finetune_start_gold`, which gave the gold at `on_game_start` to every country, players included. Why:
+  Discord "Byzantium starts with -900 gold (vanilla they start with ~30)" (2026-11-16): vanilla's setup gold plus PP's
+  -1,000; Jan: players of these countries decide, the AI always takes it. A new money adjustment = its effect, its event
+  and text (`main_menu/localization/english/pp_country_finetunes_l_english.yml`) and its branch in the on_action;
+  `tests/test_country_start_adjustments.py` ties them together and fails on any other treasury change in an on_action.
 - **Country advances that showed a bare title get goods output** (2026-11-02, Jan, not tested in game).
   `advances/pp_empty_advance_effects.txt` injects vanilla's food tier number as output of the goods each advance is about,
   on 18 country, culture and religion advances (Tamed Steppes, Chinampas, Holy Rivers, Fertile Rivers ...). Why: the mod
@@ -31,7 +46,8 @@ Hand-tuned changes for single countries, one entry each: what and why.
 - **France** (2026-10-05, `pp_estate_privilege_adjustments.txt`): Great Offices of the Crown +10 points noble max tax.
   Why: its powerful nobles were taxable at only 4-5 %, so the crown went bankrupt and France fell apart in observer runs.
 - **France +500, Ottomans +1,500, Byzantium -1,000 starting gold** (2026-10-05, `on_action/pp_country_finetunes.txt`).
-  Why: France and the Ottomans went bankrupt early in observer runs; Byzantium took the Ottoman land.
+  Why: France and the Ottomans went bankrupt early in observer runs; Byzantium took the Ottoman land. France's gold is
+  gone since 2026-10-22; the other two are start adjustments since 2026-11-19 (top entry).
 - **Castile/Spain aimed at the Reconquista, then the Maghreb; no Castile-Portugal wars meanwhile** (2026-10-07;
   replaces the +200 Iberian Concord opinion of 2026-10-06, which the AI's war-target choice ignores).
   `ai_scripted_expansion_score/pp_reconquista.txt`: CAS/SPA and POR `never_attack` each other while a Muslim country
@@ -102,7 +118,7 @@ Hand-tuned changes for single countries, one entry each: what and why.
   Volga (the Golden Horde and its heirs); all of them war targets even if not neighbours (after 36 months of peace).
   At start the conquest preferences `pp_kiev_go_west` (Carpathians), `pp_hungary_go_east` (Ruthenia) and
   `pp_muscovy_conquer_steppe` (steppe + Volga), x2 each, and Muscovy +500 starting gold
-  (`on_action/pp_country_finetunes.txt`). Why: Kiev grew to 250-1,260 locations in most runs by eating the Golden
+  (`on_action/pp_country_finetunes.txt`; a start adjustment since 2026-11-19, top entry). Why: Kiev grew to 250-1,260 locations in most runs by eating the Golden
   Horde's steppe while Muscovy stayed small; Jan: Kiev and Hungary should fight each other, and Muscovy needs a push.
 - **Ottomans +5 culture capacity** (2026-10-09, Jan, `advances/pp_country_advances_adjustments.txt`): all on
   Seljuk Heritage, researched at game start. Why: in run

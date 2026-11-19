@@ -1,12 +1,12 @@
-﻿# Country finetunes at game start (docs/country_finetunes.md): one-off starting gold, starting opinions, conquest
-# preferences.
+﻿# Country finetunes at game start (docs/country_finetunes.md): starting opinions, conquest preferences, and on the first
+# day the start adjustments (the AI takes them, a human player chooses by event).
 on_game_start = {
 	on_actions = {
-		pp_country_finetune_start_gold
 		pp_country_finetune_opinions
 		pp_country_finetune_area_preferences
 		delay = { days = 1 }
 		pp_colonizer_area_preferences
+		pp_country_start_adjustments
 	}
 }
 
@@ -268,19 +268,39 @@ pp_iberian_return_peace_location = {
 	}
 }
 
-pp_country_finetune_start_gold = {
+# Start adjustments: each country's change to the vanilla treasury is one scripted effect
+# (scripted_effects/pp_country_start_adjustments.txt). An AI country gets it here, always (observer games included: every
+# country is AI there); a human player gets the country's event (events/pp_start_adjustment_events.txt), whose accept
+# option calls the same effect and whose decline option keeps the vanilla start. It runs on the first day, a day after
+# on_game_start: by then every player has taken a country, so is_ai is read when it means who plays.
+pp_country_start_adjustments = {
 	effect = {
-		if = {
-			limit = { exists = c:TUR }
-			c:TUR = { add_gold = 1500 }
+		c:TUR ?= {
+			if = {
+				limit = { is_ai = yes }
+				pp_start_adjustment_tur = yes
+			}
+			else = {
+				trigger_event_silently = pp_start_adjustments.1
+			}
 		}
-		if = {
-			limit = { exists = c:BYZ }
-			c:BYZ = { add_gold = -1000 }
+		c:BYZ ?= {
+			if = {
+				limit = { is_ai = yes }
+				pp_start_adjustment_byz = yes
+			}
+			else = {
+				trigger_event_silently = pp_start_adjustments.2
+			}
 		}
-		if = {
-			limit = { exists = c:MOS }
-			c:MOS = { add_gold = 500 }
+		c:MOS ?= {
+			if = {
+				limit = { is_ai = yes }
+				pp_start_adjustment_mos = yes
+			}
+			else = {
+				trigger_event_silently = pp_start_adjustments.3
+			}
 		}
 	}
 }

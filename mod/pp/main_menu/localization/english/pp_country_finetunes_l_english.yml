@@ -1,2 +1,11 @@
 ﻿l_english:
  pp_opinion_iberian_concord: "Iberian Concord"
+ pp_start_adjustments.accept: "Take this start"
+ pp_start_adjustments.decline: "Keep the vanilla start"
+ pp_start_adjustments.decline.tt: "The [treasury|e] stays as vanilla sets it."
+ pp_start_adjustments.1.title: "A Fuller Ottoman Treasury"
+ pp_start_adjustments.1.desc: "Prosper or Perish gives the [ROOT.GetCountry.GetAdjective] [treasury|e] more [gold|e] at the start than vanilla. In test games the young beylik ran out of money in its first decades, went [bankrupt|e] and broke apart before it could grow.\n\nThe AI always takes this start. You may take it too, or keep the vanilla start."
+ pp_start_adjustments.2.title: "An Empty Imperial Treasury"
+ pp_start_adjustments.2.desc: "Prosper or Perish starts [ROOT.GetCountry.GetName] with far less [gold|e] than vanilla: its [treasury|e] sits deep below zero. The empire of 1337 is worn out by civil war and lost provinces, and within a few years it will pawn its crown jewels to Venice. In test games a well-funded [ROOT.GetCountry.GetName] held together too easily and took the Ottomans' land.\n\nThe AI always takes this start. You may take it too, or keep the vanilla start."
+ pp_start_adjustments.3.title: "Kalita's Moneybag"
+ pp_start_adjustments.3.desc: "Prosper or Perish starts [ROOT.GetCountry.GetName] with more [gold|e] in the [treasury|e] than vanilla. Its prince Ivan, called Kalita, the Moneybag, collects the Golden Horde's tribute from the other Russian princes and buys land and favour with it. In test games [ROOT.GetCountry.GetName] stayed small while its neighbours grew; the extra gold starts it on gathering the Russian lands.\n\nThe AI always takes this start. You may take it too, or keep the vanilla start."

@@ -1,0 +1,20 @@
+﻿# Country start adjustments (docs/country_finetunes.md): one effect per country holds its change to the vanilla
+# treasury, so the numbers live here only. on_action/pp_country_finetunes.txt applies it to an AI country on the first
+# day of a new game; a human player of the country gets its event (events/pp_start_adjustment_events.txt), whose accept
+# option calls the same effect and whose decline option keeps the vanilla start. Aims, conquest preferences, opinions
+# and advances are no start adjustments: they stay where they are.
+
+# Ottomans (2026-10-05): went bankrupt early and broke apart in observer runs.
+pp_start_adjustment_tur = {
+	add_gold = 1500
+}
+
+# Byzantium (2026-10-05): held together too easily and took the Ottomans' land in observer runs.
+pp_start_adjustment_byz = {
+	add_gold = -1000
+}
+
+# Muscovy (2026-10-09): stayed small while Kiev ate the Golden Horde's steppe.
+pp_start_adjustment_mos = {
+	add_gold = 500
+}

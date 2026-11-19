@@ -1,0 +1,90 @@
+﻿namespace = pp_start_adjustments
+
+# Country start adjustments (docs/country_finetunes.md): on the first day of a new game a human player of the country
+# chooses whether to take Prosper or Perish's change to the vanilla start; an AI country takes it without an event
+# (on_action/pp_country_finetunes.txt). The accept option calls the same scripted effect as the AI path
+# (scripted_effects/pp_country_start_adjustments.txt), the decline option changes nothing.
+
+# Ottomans
+pp_start_adjustments.1 = {
+	type = country_event
+	title = pp_start_adjustments.1.title
+	desc = pp_start_adjustments.1.desc
+	outcome = neutral
+
+	illustration_tags = {
+		10 = regular
+		10 = interior
+	}
+
+	immediate = {
+		event_illustration_government_estate_effect = yes
+	}
+
+	option = {
+		name = pp_start_adjustments.accept
+		pp_start_adjustment_tur = yes
+		ai_chance = { factor = 100 }
+	}
+	option = {
+		name = pp_start_adjustments.decline
+		custom_tooltip = pp_start_adjustments.decline.tt
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Byzantium
+pp_start_adjustments.2 = {
+	type = country_event
+	title = pp_start_adjustments.2.title
+	desc = pp_start_adjustments.2.desc
+	outcome = neutral
+
+	illustration_tags = {
+		10 = regular
+		10 = interior
+	}
+
+	immediate = {
+		event_illustration_government_estate_effect = yes
+	}
+
+	option = {
+		name = pp_start_adjustments.accept
+		pp_start_adjustment_byz = yes
+		ai_chance = { factor = 100 }
+	}
+	option = {
+		name = pp_start_adjustments.decline
+		custom_tooltip = pp_start_adjustments.decline.tt
+		ai_chance = { factor = 0 }
+	}
+}
+
+# Muscovy
+pp_start_adjustments.3 = {
+	type = country_event
+	title = pp_start_adjustments.3.title
+	desc = pp_start_adjustments.3.desc
+	outcome = neutral
+
+	illustration_tags = {
+		10 = regular
+		10 = interior
+	}
+
+	immediate = {
+		event_illustration_government_estate_effect = yes
+	}
+
+	option = {
+		name = pp_start_adjustments.accept
+		pp_start_adjustment_mos = yes
+		ai_chance = { factor = 100 }
+	}
+	option = {
+		name = pp_start_adjustments.decline
+		custom_tooltip = pp_start_adjustments.decline.tt
+		ai_chance = { factor = 0 }
+	}
+}

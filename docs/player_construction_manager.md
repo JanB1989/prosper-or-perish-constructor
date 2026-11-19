@@ -1,8 +1,15 @@
 # Player Construction Manager: design brainstorm
 
-Status 2026-11-09: **two tabs** (Jan: "global settings that are very easy to set, and then our profiles, and that's
-it"), branch `location-profiles`; since 2026-11-10 a third tab and a sixth rule group, **Towns and Buildings**; see the
-next section. The sections below it are the history (v1, v2, the first
+Status 2026-11-19 (Jan, branch `town-plans`, not tested in game): **two tabs**, Global Settings and Towns and
+Buildings; six rule groups. The Location Profiles tab, the profiles and the Location Plan marks are gone: the one
+per-location decision is a **town-right plan** (`pp_plan_<plan>`), and the rule group **Locations** (code 105) builds
+for the plans the locations hold, forced, raises a location's rank where a plan's producers need it, and Towns and
+Buildings grants a planned town its specialization charter and rights (`docs/location_plan.md`). Where the sections
+below speak of profiles, profile rules or marks, read plans; their engine is `docs/location_profiles.md`.
+
+Status 2026-11-09: two tabs (Jan: "global settings that are very easy to set, and then our profiles, and that's
+it"), branch `location-profiles`; from 2026-11-10 to 2026-11-19 a third tab and since 2026-11-10 a sixth rule group,
+**Towns and Buildings**; see the next section. The sections below it are the history (v1, v2, the first
 2026-11-09 pass); what they describe and the next section no longer lists is gone. Player-only: the AI keeps its own
 logic and is never touched (a console-only test switch lets it run for an AI country in the test world).
 
@@ -304,14 +311,16 @@ Not tested in game. To check there first: the pane's "saving for" line (`Var(...
 market count, `ordered_province`'s order (hungriest first), the purse arithmetic over a few months (the saved gold
 beside the bars), and the pass's cost now that the business group looks whenever it has gold saved or coming in.
 
-## Two tabs (Jan 2026-11-09, evening), three since 2026-11-10
+## Two tabs (Jan 2026-11-09, evening), three from 2026-11-10, two again since 2026-11-19
 
-- **The window** (`in_game/gui/pp_construction_plan.gui`, vanilla main tabs): **Global Settings**, **Location
-  Profiles** (the profile editor, type `pp_lprof_editor_tab` in `pp_location_profiles.gui`; every opener of the old
-  editor window opens this tab: `docs/location_profiles.md`) and **Towns and Buildings** (GUI variable `pp_cplan_tab` =
-  `country`; the settings of the rule group of that name, type `pp_cplan_country_tab`, hosted the same way; the type,
-  the group's effect `pp_cplan_group_country` and `pp_cplan_country_rights` are `construction_plan_country.py`'s).
-  Nothing else.
+- **The window** (`in_game/gui/pp_construction_plan.gui`, vanilla main tabs): **Global Settings** and **Towns and
+  Buildings** (GUI variable `pp_cplan_tab` = `country`; the settings of the rule group of that name, type
+  `pp_cplan_country_tab`; the type, the group's effect `pp_cplan_group_country` and `pp_cplan_country_rights` are
+  `construction_plan_country.py`'s). Nothing else. The **Location Profiles** tab (the profile editor) went with the
+  profiles on 2026-11-19 (branch `town-plans`): plans are set in the Location Plan window and the location window's
+  Plans row (`docs/location_plan.md`). The Locations row of Global Settings keeps its weight bar and cog; its pane
+  counts the plans by state, says what the group saves for (a building, or a town or city upgrade for a plan) and
+  lists what it built ("for its plan", or a higher rank with the location's people). Not tested in game.
 - **In-game test 2026-11-10** (test world, new game as Castile, seven monthly passes over two sessions; the engine
   facts and what each rule did are in `docs/construction_plan_country.md` and `docs/location_plan.md`): the three tabs,
   the six panes and every rule ran; no plan line in `error.log` from a load or a pass. Fixed from it: the ledger per
@@ -323,9 +332,9 @@ beside the bars), and the pass's cost now that the business group looks whenever
   Frame time 33.4 ms (the 30 frames cap) in every state, paused and running.
 - **Maintenance 2026-11-10**:
   - *Six rule groups.* `GROUPS` = profiles, food, logistics, improve, business, country (code 107). The player's names
-    of two differ from their keys: profiles = **Locations** (what the player set for single locations: their
-    profiles' rules, then their marks, the Location Plan's "Also build here", `docs/location_plan.md`; the tab keeps
-    its name Location Profiles), country = **Towns and Buildings** (its row has no line: its settings are on its
+    of two differ from their keys: profiles = **Locations** (what the player set for single locations: until
+    2026-11-19 their profiles' rules, then their marks; since then the town-right plans they hold,
+    `docs/location_plan.md`), country = **Towns and Buildings** (its row has no line: its settings are on its
     tab). Both count in the sum of the weights only while they have something to do (`pp_cplan_profiles_cw`: a
     location has a profile or a mark; `pp_cplan_country_cw`: `pp_cplan_country_active`, a public building ticked or an
     upgrade switched on), so an idle group holds no gold back; the % beside the bar follows. In the lists a mark's

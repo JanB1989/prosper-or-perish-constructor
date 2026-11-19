@@ -50,7 +50,7 @@ def test_built_mod_is_in_step(vanilla: Path) -> None:
 
 def test_one_plan_per_forced_good_plus_food_and_trade(plans: list[tp.Plan], vanilla: Path) -> None:
     found, _ = lpf.targets(ROOT, PROJECT, MOD, vanilla)
-    goods = [item.key for item in lpf.mark_items(lpf.profile_items(ROOT, PROJECT)) if found.get(item.key)]
+    goods = [good for good in lpf.target_goods(ROOT, PROJECT) if found.get(good)]
     assert [plan.key for plan in plans] == goods + ["food", "trade"]
     assert len(goods) == 75 and "fur" not in goods  # fur: no producer
     for plan in plans:
@@ -131,7 +131,7 @@ def test_the_pass_keys_on_the_held_right_and_forces_it(plans: list[tp.Plan]) -> 
     assert turn.index("name = pp_cplan_forced value = 1") < turn.index("pp_lplan_location_marks = yes")
     assert "save_temporary_scope_value_as = { name = pp_lprof_pb value = 1000000 }" in turn
     # a location holding only plans gets its turn: the gather finds it among the locations with town rights, and
-    # its turn runs the plans without a profile or building marks
+    # its turn runs its plans
     gather = _block(hand, "pp_lprof_gather")
     assert "every_locations_with_town_rights_in_country = {" in gather and "pp_tplan_held = yes" in gather
     location = _block(hand, "pp_lprof_location_turn")
@@ -167,7 +167,7 @@ def test_targets_follow_the_tiers(vanilla: Path) -> None:
     steps = re.findall(r"pp_lprof_upgrade = \{ old = (\w+) type = (\w+) ", standing)
     assert ("wheat_farm", "wheat_farmstead") in steps and ("wheat_rotations", "wheat_model_farm") in steps
     assert standing.index("pp_lprof_upgrade = {") < standing.index("pp_lprof_expand = {")
-    pairs, _ = lpf.building_mark_data(ROOT, PROJECT, MOD, vanilla)
+    pairs = lpf.upgrade_pairs(ROOT, PROJECT, MOD, vanilla)
     found, _ = lpf.targets(ROOT, PROJECT, MOD, vanilla)
     for older, successor in steps:
         assert (older, successor) in pairs

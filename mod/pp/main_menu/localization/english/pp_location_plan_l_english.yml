@@ -40,5 +40,3 @@
   game_concept_pp_location_plan_desc: "What each of your [locations|e] is for: its plans, set in the Location Plan window (the plan button next to a location's name, or the Plans row of the location window). A plan is one of the location's [town_rights|e], with no conditions and no bonus; the Construction Plan builds toward it. The map mode shows the town rights of your locations as icons."
   mapmode_pp_location_plan_name: "Location Plan"
   MAPMODE_PP_LOCATION_PLAN: "#T $mapmode_pp_location_plan_name$#!\nThe [town_rights|e] of each of your [locations|e] as icons, its plans among them: what the Construction Plan builds toward there. Hover an icon to see which it is."
-  MAPMODE_PP_LOCATION_PLAN_DONE: "Planned"
-  MAPMODE_PP_LOCATION_PLAN_OPEN: "Other town rights"

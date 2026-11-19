@@ -223,7 +223,7 @@ def test_public_building_rule() -> None:
     for line in ("name = pp_cplan_rv", "name = pp_cplan_rs value = 1", "remove_variable = pp_cplan_noted"):
         assert 0 < public.index(line) < start, line
     site = _block(_code(MOD / cc.TRIGGERS), "pp_cplan_country_site")
-    assert _tokens(site) == ("NOT = { integration_level = conquered } NOT = { has_variable = pp_lprof_xc } "
+    assert _tokens(site) == ("NOT = { integration_level = conquered } "
                              "pp_cplan_site_free = yes")
     # the ticked types in the config's order, the country's part of the can-build check once per type
     buildings = _block(effects, "pp_cplan_country_buildings")
@@ -328,7 +328,7 @@ def test_upgrade_rule() -> None:
     rule = _block(effects, "pp_cplan_country_upgrades")
     assert rule.count("has_variable = pp_cplan_upgrade") == 1 and rule.strip().startswith("if = {")
     limit = rule[rule.index("ordered_owned_location"):rule.index("order_by")]
-    assert "pp_cplan_country_site = yes" in limit  # not conquered, no pp_lprof_xc, a free construction slot
+    assert "pp_cplan_country_site = yes" in limit  # not conquered, a free construction slot
     assert "any_buildings_in_location = { pp_cplan_country_upgradable = yes }" in limit
     assert "max_control >=" not in rule and "order_by = pp_cplan_country_control_here" in rule  # no line, highest first
     start = rule.index("every_buildings_in_location")
@@ -562,7 +562,8 @@ def _part(body: str, name: str) -> str | None:
 
 def test_every_right_of_the_database_is_there_once() -> None:
     result = _result()
-    definitions = _definitions()
+    # the plan rights (town_plans.py) are neither rights of the rule nor switched off ones
+    definitions = {key: bodies for key, bodies in _definitions().items() if not town_plans.is_plan_right(key)}
     off = {key for key, bodies in definitions.items()
            if any(_tokens(_part(body, name) or "") == "always = no" for body in bodies for name in ("potential", "allow"))}
     assert len(off) == SWITCHED_OFF and off == set(result.switched_off)
@@ -726,7 +727,7 @@ def test_rights_rule() -> None:
         < grant.index("grant_town_rights =") < grant.index("\tpay_price =")
     # at most one grant a location a month
     site = _block(_code(MOD / cc.TRIGGERS), "pp_cplan_country_rights_site")
-    assert _tokens(site) == ("NOT = { integration_level = conquered } NOT = { has_variable = pp_lprof_xc } "
+    assert _tokens(site) == ("NOT = { integration_level = conquered } "
                              "NOT = { has_variable = pp_cplan_right_mark } has_max_town_rights = no")
     assert "set_variable = { name = pp_cplan_right_mark value = yes }" in grant
     # the marks go at the end, rule on or off: a marked location holds what it was granted, so the locations with town
@@ -881,7 +882,7 @@ def test_plan_rights_effect() -> None:
     site = _tokens(_block(_code(MOD / cc.TRIGGERS), "pp_cplan_country_plan_site"))
     rural = cc.rural_rank(result.ranks)
     assert rural == "rural_settlement" == {rank.key: rank for rank in result.ranks}["town"].source
-    assert site == ("NOT = { integration_level = conquered } NOT = { has_variable = pp_lprof_xc } "
+    assert site == ("NOT = { integration_level = conquered } "
                     f"NOT = {{ has_variable = pp_cplan_right_mark }} NOT = {{ location_rank = location_rank:{rural} }}")
     # the reserve of political influence for a swap: the amount kept and the game's upgrade price
     need = _block(_code(MOD / cc.VALUES), "pp_cplan_country_upgrade_need")
@@ -1271,7 +1272,7 @@ def test_a_booster_is_built_only_where_its_goods_are_made() -> None:
         assert len(sentence) == 1 and sentence[0].count(".") == 1, building.key  # one plain sentence
         for good in building.boosts:
             assert f"[ShowGoodsName('{good}')|e]" in sentence[0], (building.key, good)
-        assert "mark the building in that location" in sentence[0] and not re.search(r"\d", re.sub(r"\[[^\]]*\]", "", sentence[0]))
+        assert "mark" not in sentence[0] and not re.search(r"\d", re.sub(r"\[[^\]]*\]", "", sentence[0]))
     # the trigger is asked in the walk's limit, before the game's can-build check
     public = _block(effects, "pp_cplan_country_public")
     assert public.index("$where$ = yes") < public.index("can_build_building = building_type:$type$") < public.index("order_by")

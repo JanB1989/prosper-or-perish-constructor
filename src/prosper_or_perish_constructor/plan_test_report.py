@@ -2,8 +2,8 @@
 
 A test run is a series of saves of one game (the test world "PP Construction Test", or any game with the plan on),
 optionally with a control series from the same start without the plan (the baseline). The report says what the plan
-built (its log lines in debug.log, building levels in the saves, against the baseline), how the location profiles'
-rules ended up, what the global rule groups look at (province food stores, market access), which constructions stood
+built (its log lines in debug.log, building levels in the saves, against the baseline), how the location plans
+ended up, what the global rule groups look at (province food stores, market access), which constructions stood
 still, and the plan's lines in error.log. Output: <out>/index.html (charts as PNG next to it, a light and a dark
 copy), <out>/summary.md (plain tables for a terminal) and the CSVs behind every table.
 
@@ -19,7 +19,7 @@ Lines start with a `[hh:mm:ss]` wall clock and often a `[file:line]:` prefix; th
 When the game date jumps back (a save was loaded), the later play replaces the earlier from that date on.
 
 Save tables come from the Rust engine (`eu5gameparser.savegame.quick`). Not in its tables (2026-11-09): a location's
-population capacity (the improvement rule's fill line), scope-valued variables (a profile rule's target good) and a
+population capacity (the improvement rule's fill line) and a
 construction's missing goods. Their sections say so and use what is there instead.
 """
 
@@ -64,12 +64,12 @@ WHY_CODES = {"101": "food", "102": "logistics", "103": "business", "105": "profi
 ERROR_PATTERNS = ("pp_cplan", "pp_lprof", "pp_construction_plan", "pp_location_profiles", "construction_plan")
 
 # ---------------------------------------------------------------------------------------------------------------------
-# State codes (+ 100 in the game; docs/location_profiles.md and docs/player_construction_manager.md)
+# State codes (+ 100 in the game; location_profiles.STATES and docs/player_construction_manager.md)
 # ---------------------------------------------------------------------------------------------------------------------
 RULE_STATES = {1: "started", 2: "nothing to build", 3: "under construction", 4: "no free workers", 5: "payback too long",
                6: "cannot be built here", 7: "gold (the group saves)", 8: "market lacks construction goods",
-               9: "waiting for an earlier rule", 10: "market limit"}
-NO_PROFIT = 999.0  # pp_lprof_r<r>_est 1099 - 100: the rule found no profit
+               9: "waiting for an earlier plan", 10: "market limit", 11: "needs a higher rank"}
+NO_PROFIT = 999.0  # pp_lplan_est_g_<plan> 1099 - 100: the plan found no profit
 STORE_BANDS = ((0, 3, "under 3"), (3, 6, "3-6"), (6, 12, "6-12"), (12, 24, "12-24"), (24, math.inf, "24+"))
 KINDS = ("food", "logistics", "improve", "business", "other")
 
@@ -363,7 +363,7 @@ def plan_settings(snap: Snapshot, tag: str) -> pl.DataFrame:
     cvars = _country_vars(snap, country_id(snap, tag))
     rows = []
     for name, value in sorted(cvars.items()):
-        if not name.startswith(("pp_cplan_", "pp_lprof_")) or name.startswith("pp_lprof_e_"):
+        if not name.startswith(("pp_cplan_", "pp_lprof_")):
             continue
         rows.append({"variable": name, "value": "set" if abs(value) < 0.01 else f"{value - 100:g}"})
     return pl.DataFrame(rows, schema={"variable": pl.Utf8, "value": pl.Utf8})
@@ -480,92 +480,40 @@ def series_levels(series: Sequence[tuple[str, Snapshot]], tag: str, kinds: dict[
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# Location profiles
+# Location plans (town rights pp_plan_<plan>; the plan engine writes each held plan's state on the location)
 # ---------------------------------------------------------------------------------------------------------------------
-_RULE_VAR = re.compile(r"^pp_lprof_r(\d+)_(st|est)$")
+_PLAN_STATE = r"^pp_lplan_st_g_(\w+)$"
+_PLAN_EST = r"^pp_lplan_est_g_(\w+)$"
 
 
-def profile_assignment(snap: Snapshot) -> pl.DataFrame:
-    """location_id -> profile slot (variable pp_lprof = slot + 100)."""
+def _plan_vars(snap: Snapshot, tag: str, pattern: str) -> pl.DataFrame:
+    """The country's locations' plan variables matching ``pattern``: location_id, plan, value (without the + 100)."""
     lv = _table(snap, "location_variables")
     if lv is None:
-        return pl.DataFrame(schema={"location_id": pl.Int64, "slot": pl.Int64})
-    return lv.filter(pl.col("name") == "pp_lprof").select(
-        "location_id", (pl.col("value") - 100).round(0).cast(pl.Int64).alias("slot"))
-
-
-def _rule_vars(snap: Snapshot, kind: str) -> pl.DataFrame:
-    lv = _table(snap, "location_variables")
-    if lv is None:
-        return pl.DataFrame(schema={"location_id": pl.Int64, "rule": pl.Int64, "value": pl.Float64})
-    part = lv.filter(pl.col("name").str.contains(rf"^pp_lprof_r\d+_{kind}$"))
-    return part.select("location_id", pl.col("name").str.extract(r"_r(\d+)_", 1).cast(pl.Int64).alias("rule"),
+        return pl.DataFrame(schema={"location_id": pl.Int64, "plan": pl.Utf8, "value": pl.Float64})
+    part = lv.filter(pl.col("name").str.contains(pattern) & pl.col("location_id").is_in(list(owned(snap, tag))))
+    return part.select("location_id", pl.col("name").str.extract(pattern, 1).alias("plan"),
                        (pl.col("value") - 100).alias("value"))
 
 
-def rule_states(snap: Snapshot, tag: str) -> pl.DataFrame:
-    """Per profile slot and rule: how many of the country's profile locations ended the last pass in each state."""
-    slots = profile_assignment(snap).filter(pl.col("location_id").is_in(list(owned(snap, tag))))
-    st = _rule_vars(snap, "st").with_columns(pl.col("value").round(0).cast(pl.Int64).alias("state"))
-    st = slots.join(st, on="location_id", how="inner")
-    out = st.group_by("slot", "rule", "state").agg(pl.len().alias("locations")).sort("slot", "rule", "state")
+def plan_states(snap: Snapshot, tag: str) -> pl.DataFrame:
+    """Per plan: how many of the country's locations holding it ended the last pass in each state."""
+    st = _plan_vars(snap, tag, _PLAN_STATE).with_columns(pl.col("value").round(0).cast(pl.Int64).alias("state"))
+    out = st.group_by("plan", "state").agg(pl.len().alias("locations")).sort("plan", "state")
     return out.with_columns(pl.col("state").replace_strict(RULE_STATES, default=None, return_dtype=pl.Utf8)
                             .fill_null(pl.format("code {}", pl.col("state"))).alias("state_name"))
 
 
-def rule_paybacks(snap: Snapshot, tag: str) -> pl.DataFrame:
-    """Per profile slot and rule: the shortest payback the rule found (pp_lprof_r<r>_est, years), over the locations
-    that have one; `no_profit` counts the 1099 (no profit) marks."""
-    slots = profile_assignment(snap).filter(pl.col("location_id").is_in(list(owned(snap, tag))))
-    est = slots.join(_rule_vars(snap, "est"), on="location_id", how="inner")
+def plan_paybacks(snap: Snapshot, tag: str) -> pl.DataFrame:
+    """Per plan: the shortest payback it found (pp_lplan_est_g_<plan>, years), over the locations that have one;
+    `no_profit` counts the 1099 (no profit) marks."""
+    est = _plan_vars(snap, tag, _PLAN_EST)
     paid = pl.col("value") < NO_PROFIT - 0.5
-    return est.group_by("slot", "rule").agg(
+    return est.group_by("plan").agg(
         pl.len().alias("locations"), paid.sum().alias("with_profit"), (~paid).sum().alias("no_profit"),
         pl.col("value").filter(paid).min().alias("shortest_years"),
         pl.col("value").filter(paid).median().alias("median_years"),
-    ).sort("slot", "rule")
-
-
-def first_assignment(series: Sequence[Snapshot]) -> pl.DataFrame:
-    """The profile slots of the first save that has any (later reassignments are not followed)."""
-    for snap in series:
-        slots = profile_assignment(snap)
-        if slots.height:
-            return slots
-    return pl.DataFrame(schema={"location_id": pl.Int64, "slot": pl.Int64})
-
-
-def profile_levels(cmp: Comparison, tag: str, slots: pl.DataFrame, top: int = 4) -> pl.DataFrame:
-    """Per profile slot (0 = no profile): locations, levels added, per location, and with a baseline the baseline's
-    change in the same locations and the plan's extra; the building types that grew most."""
-    run = level_change(cmp.run_first, cmp.run_last, tag, cmp.locations)
-    run = run.join(slots, on="location_id", how="left").with_columns(pl.col("slot").fill_null(0))
-    locs = (pl.DataFrame({"location_id": sorted(cmp.locations)}, schema={"location_id": pl.Int64})
-            .join(slots, on="location_id", how="left").with_columns(pl.col("slot").fill_null(0))
-            .group_by("slot").agg(pl.len().alias("locations")))
-    out = run.group_by("slot").agg(pl.col("before").sum().alias("levels_before"),
-                                   pl.col("added").sum().alias("run_added"))
-    out = locs.join(out, on="slot", how="left").with_columns(pl.col("levels_before", "run_added").fill_null(0.0))
-    per_type = run.group_by("slot", "building_type").agg(pl.col("added").sum())
-    key = "added"
-    if cmp.base_first is not None and cmp.base_last is not None:
-        base = level_change(cmp.base_first, cmp.base_last, tag, cmp.locations).join(
-            slots, on="location_id", how="left").with_columns(pl.col("slot").fill_null(0))
-        out = out.join(base.group_by("slot").agg(pl.col("added").sum().alias("baseline_added")), on="slot",
-                       how="left").with_columns(pl.col("baseline_added").fill_null(0.0)).with_columns(
-            (pl.col("run_added") - pl.col("baseline_added")).alias("plan_extra"))
-        per_type = per_type.join(base.group_by("slot", "building_type").agg(pl.col("added").sum().alias("base")),
-                                 on=["slot", "building_type"], how="full", coalesce=True).with_columns(
-            pl.col("added", "base").fill_null(0.0))
-        per_type = per_type.with_columns((pl.col("added") - pl.col("base")).alias("extra"))
-        key = "extra"
-    out = out.with_columns((pl.col("run_added") / pl.col("locations")).alias("added_per_location"))
-    tops = {}
-    for slot, part in per_type.filter(pl.col(key) != 0).group_by("slot"):
-        part = part.sort([key, "building_type"], descending=[True, False]).head(top)
-        tops[slot[0]] = ", ".join(f"{b} {v:+g}" for b, v in part.select("building_type", key).iter_rows())
-    out = out.with_columns(pl.col("slot").replace_strict(tops, default="", return_dtype=pl.Utf8).alias("most_grown"))
-    return out.sort("slot")
+    ).sort("plan")
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -969,15 +917,14 @@ def chart_grouped_barh(frame: pl.DataFrame, label: str, columns: Sequence[tuple[
 def chart_rule_states(states: pl.DataFrame, out: Path) -> str | None:
     if states.is_empty():
         return None
-    keys = states.select("slot", "rule").unique().sort("slot", "rule").rows()
+    keys = states["plan"].unique().sort().to_list()
     codes = sorted(states["state"].unique().to_list())
 
     def draw(ax: Any, theme: dict[str, Any]) -> None:
-        names = [f"profile {s} rule {r}" for s, r in keys][::-1]
+        names = list(keys)[::-1]
         left = [0.0] * len(keys)
         for code in codes:
-            part = dict(((s, r), n) for s, r, n in states.filter(pl.col("state") == code)
-                        .select("slot", "rule", "locations").iter_rows())
+            part = dict(states.filter(pl.col("state") == code).select("plan", "locations").iter_rows())
             vals = [float(part.get(k, 0)) for k in keys][::-1]
             slot = STATE_COLOUR_SLOT.get(code)
             ax.barh(names, vals, left=left, color=BASELINE_GREY if slot is None else theme["series"][slot],
@@ -1316,47 +1263,29 @@ def build_report(run: Sequence[Snapshot], out: Path, *, baseline: Sequence[Snaps
                  f"{cmp.run_last.name} ({cmp.run_last.date}).")
     sections.append(sec)
 
-    # 3. location profiles
-    sec = Section("profiles", "Location profiles",
-                  "Profile slots from the location variable pp_lprof (slot + 100); each rule's state after the last "
-                  "pass (pp_lprof_r<r>_st) and the shortest payback it found (pp_lprof_r<r>_est, years). A profile "
-                  "rule's target good is a scope variable, which the save tables leave out.")
-    slots = first_assignment(run)
-    if slots.is_empty():
-        sec.note("No location has a profile in any save of the run.")
+    # 3. location plans
+    sec = Section("plans", "Location plans",
+                  "Each plan's state after the last pass (location variable pp_lplan_st_g_<plan>) and the shortest "
+                  "payback it found (pp_lplan_est_g_<plan>, years), over the country's locations that hold it.")
+    last = run[-1]
+    st_last = plan_states(last, tag)
+    if st_last.is_empty():
+        sec.note("No location of the country holds a plan with a state in the last save of the run.")
     else:
-        rows = []
-        for label, snap in series:
-            mine = profile_assignment(snap).filter(pl.col("location_id").is_in(list(owned(snap, tag))))
-            for slot, n in mine.group_by("slot").len().sort("slot").iter_rows():
-                rows.append({"series": label, "save": snap.name, "slot": slot, "locations": n})
-        per_save = pl.DataFrame(rows, schema={"series": pl.Utf8, "save": pl.Utf8, "slot": pl.Int64,
-                                              "locations": pl.Int64})
-        sec.table("Profile locations per save", per_save, _write_csv(per_save, out, "profile_locations.csv"))
-        all_states = pl.concat([rule_states(s, tag).with_columns(pl.lit(s.name).alias("save")) for s in run],
+        all_states = pl.concat([plan_states(s, tag).with_columns(pl.lit(s.name).alias("save")) for s in run],
                                how="vertical_relaxed")
-        all_states.write_csv(out / "profile_rule_states.csv")
-        last = run[-1]
-        st_last = rule_states(last, tag)
-        sec.chart(f"Rule states after the last pass, {last.name}", chart_rule_states(st_last, out))
-        if st_last.height:
-            wide = st_last.pivot(on="state_name", index=["slot", "rule"], values="locations",
-                                 aggregate_function="sum").fill_null(0).sort("slot", "rule")
-            names = st_last.sort("state")["state_name"].unique(maintain_order=True).to_list()
-            wide = wide.select("slot", "rule", *names)
-            sec.table(f"Rule states in {last.name} (locations)", wide, "profile_rule_states.csv",
-                      text="All saves in the CSV.")
-        pb = pl.concat([rule_paybacks(s, tag).with_columns(pl.lit(s.name).alias("save")) for s in run],
+        all_states.write_csv(out / "plan_states.csv")
+        sec.chart(f"Plan states after the last pass, {last.name}", chart_rule_states(st_last, out))
+        wide = st_last.pivot(on="state_name", index="plan", values="locations",
+                             aggregate_function="sum").fill_null(0).sort("plan")
+        names = st_last.sort("state")["state_name"].unique(maintain_order=True).to_list()
+        sec.table(f"Plan states in {last.name} (locations)", wide.select("plan", *names), "plan_states.csv",
+                  text="All saves in the CSV.")
+        pb = pl.concat([plan_paybacks(s, tag).with_columns(pl.lit(s.name).alias("save")) for s in run],
                        how="vertical_relaxed")
-        sec.table(f"Shortest payback found, {last.name}", rule_paybacks(last, tag),
-                  _write_csv(pb, out, "profile_paybacks.csv"),
-                  text="years; no profit = the rule found no level that makes a profit (1099).")
-        pl_levels = profile_levels(cmp, tag, slots)
-        sec.table("Levels added in profile locations and the rest (slot 0 = no profile)", pl_levels,
-                  _write_csv(pl_levels, out, "profile_levels.csv"),
-                  text=f"Slots as first assigned; {cmp.run_first.name} to {cmp.run_last.name}"
-                       + (f", baseline {cmp.base_first.name} to {cmp.base_last.name} in the same locations."
-                          if cmp.base_first is not None else "."))
+        sec.table(f"Shortest payback found, {last.name}", plan_paybacks(last, tag),
+                  _write_csv(pb, out, "plan_paybacks.csv"),
+                  text="years; no profit = the plan found no level that makes a profit (1099).")
     sections.append(sec)
 
     # 4. global rule groups

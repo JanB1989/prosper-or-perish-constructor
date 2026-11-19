@@ -36,70 +36,9 @@ pp_lplan_select = {
 		limit = { always = no }
 		save_scope_as = pp_key
 		pp_tplan_declare_flags = yes
-		pp_lplan_declare_flags = yes
 		if = {
 			limit = { has_variable = pp_lplan_sel }
 			remove_variable = pp_lplan_sel
 		}
-	}
-}
-
-# ---- The old building marks of a save (before plans were town rights), until Location Profiles go ----
-# The profile pass (pp_location_profiles.txt) still calls these two; nothing sets a building mark any more.
-
-# Location scope (scope:pp_cplan_country = its owner, the maps ready: pp_lplan_maps_ready): a marked building type
-# whose line the country has researched further (generated pp_lplan_b_newest) becomes that tier on the list
-# pp_lplan_b. The list is changed only after the walk over it.
-pp_lplan_b_promote = {
-	if = {
-		limit = { has_variable_list = pp_lplan_b }
-		save_temporary_scope_as = pp_lplan_bloc
-		clear_variable_list = pp_lplan_bold
-		every_in_list = {
-			variable = pp_lplan_b
-			save_scope_as = pp_cplan_btype
-			save_scope_as = pp_lplan_bfrom
-			pp_lplan_b_newest = yes
-			if = {
-				limit = { NOT = { scope:pp_cplan_btype = scope:pp_lplan_bfrom } }
-				scope:pp_lplan_bloc = { add_to_variable_list = { name = pp_lplan_bold target = scope:pp_lplan_bfrom } }
-			}
-		}
-		every_in_list = {
-			variable = pp_lplan_bold
-			save_scope_as = pp_cplan_btype
-			save_scope_as = pp_lplan_bfrom
-			pp_lplan_b_newest = yes
-			scope:pp_lplan_bloc = {
-				remove_list_variable = { name = pp_lplan_b target = scope:pp_lplan_bfrom }
-				pp_lplan_b_state_off = { key = scope:pp_lplan_bfrom }
-				if = {
-					limit = { is_target_in_variable_list = { name = pp_lplan_b target = scope:pp_cplan_btype } }
-					if = {
-						limit = { has_variable = pp_lplan_n }
-						change_variable = { name = pp_lplan_n subtract = 1 }
-					}
-				}
-				else = {
-					add_to_variable_list = { name = pp_lplan_b target = scope:pp_cplan_btype }
-				}
-			}
-		}
-		clear_variable_list = pp_lplan_bold
-	}
-}
-
-# Location scope: the state of the building mark $key$ (a building type scope) leaves the map pp_lplan_bst (asked
-# first: an old save, or a mark the pass has not looked at yet, has no entry).
-pp_lplan_b_state_off = {
-	if = {
-		limit = {
-			has_variable_map = pp_lplan_bst
-			any_key_in_variable_map = {
-				variable = pp_lplan_bst
-				this = $key$
-			}
-		}
-		remove_from_variable_map = { name = pp_lplan_bst key = $key$ }
 	}
 }

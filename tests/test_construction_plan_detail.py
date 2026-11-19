@@ -137,29 +137,39 @@ def test_lists_read_each_groups_constructions() -> None:
     hidden = f"visible = \"[Not(EqualTo_CFixedPoint({step}, '(CFixedPoint)2'))]\""
     assert re.search(re.escape(hidden) + r"\n\t+direction = horizontal\n\t+datamodel = \"\[Scope\.GetList\('pp_cplan_log_types_107'\)\]\"", country)
     assert "pp_cplan_rank_upgrade = {}\n" in country
-    assert "limit = { NOT = { has_variable = pp_cplan_log_step_107 } }" in effects
+    assert "limit = { NOT = { has_variable = pp_cplan_log_step_$why$ } }" in effects
     assert "pp_cplan_why_n" not in gui and "pp_cplan_log_why" not in effects
 
 
-def test_locations_list_tells_a_rule_from_a_mark() -> None:
-    """The Locations group builds a location's profile rules (step = the rule's number) and its marks, the Location
-    Plan's "Also build here" (step 0): the list never says "rule 0 of its profile"."""
+def test_locations_list_tells_a_building_from_a_rank_raise() -> None:
+    """The Locations group builds for the town-right plans the locations hold (step 0) and raises a location's rank
+    where a plan's producers need one (step 2, its people in thousands, as Towns and Buildings writes it): the list
+    names which, never a profile or a mark (both retired 2026-11-19)."""
     pane = _type_body(cpd.render_gui(), "pp_cplan_detail_profiles")
-    step = "GreaterThan_CFixedPoint(Scope.ScriptValue('pp_cplan_log_step_105_n'), '(CFixedPoint)0.5')"
-    assert re.search(re.escape(f'visible = "[{step}]"') + r"\n\t+text = \"PP_CPLAN_D_PROFILES_WHY\"", pane)
-    assert re.search(re.escape(f'visible = "[Not({step})]"') + r"\n\t+text = \"PP_CPLAN_D_PROFILES_WHY_MARK\"", pane)
+    rank = "EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_log_step_105_n'), '(CFixedPoint)2')"
+    assert re.search(re.escape(f'visible = "[Not({rank})]"') + r"\n\t+text = \"PP_CPLAN_D_PROFILES_WHY\"", pane)
+    assert re.search(re.escape(f'visible = "[{rank}]"') + r"\n\t+text = \"PP_CPLAN_D_PROFILES_WHY_RANK\"", pane)
     loc = cpd.texts()
-    assert "of its profile" in loc["PP_CPLAN_D_PROFILES_WHY"]
-    marks = _read(LOC_FOLDER / "pp_location_plan_l_english.yml")
-    title = re.search(r"^  PP_LPLAN_ALSO_TITLE: \"(.+)\"$", marks, re.MULTILINE).group(1)
-    assert title in loc["PP_CPLAN_D_PROFILES_WHY_MARK"] and "marked" in loc["PP_CPLAN_D_PROFILES_WHY_MARK"]
-    assert "profile or a mark" in loc["PP_CPLAN_D_OFF_PROFILES"]
-    assert "a profile or marks" in loc["PP_CPLAN_D_PROFILES_SIT"]
-    # the marks' pass writes step 0, a profile rule its number
+    assert "plan" in loc["PP_CPLAN_D_PROFILES_WHY"]
+    assert "[location_rank|e]" in loc["PP_CPLAN_D_PROFILES_WHY_RANK"]
+    assert "pp_cplan_log_val_105_n" in loc["PP_CPLAN_D_PROFILES_WHY_RANK"]
+    from prosper_or_perish_constructor import construction_plan_country as cpc
+
+    assert cpd.PLAN_STEP_RANK == cpc.STEP_RANK
+    for key, text in loc.items():
+        words = re.sub(r"\[[^\]]*\]", "", text).lower()  # the player's words, without data and links
+        assert not re.search(r"\bprofiles?\b|\bmark(?:s|ed)?\b", words), key
+    assert "holds a plan" in loc["PP_CPLAN_D_OFF_PROFILES"]
+    assert "with a plan" in loc["PP_CPLAN_D_PROFILES_SIT"]
+    # the plan pass writes step 0 before the plans' turn; the rank raise sets it back to 0 after itself
     profiles = _read(MOD / "in_game/common/scripted_effects/pp_location_profiles.txt")
     marks_pass = profiles[profiles.index("\npp_lplan_location_turn = {"):]
     assert "save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }" in marks_pass[:400]
     assert marks_pass.index("name = pp_cplan_rs value = 0") < marks_pass.index("pp_lplan_location_marks = yes")
+    from prosper_or_perish_constructor import town_plans as tp
+
+    raise_effect = tp.render_effects([], [])
+    assert raise_effect.rstrip().endswith("save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }\n}")
 
 
 def test_titles_use_the_players_group_names() -> None:
@@ -316,20 +326,36 @@ def test_budget_shows_in_the_window() -> None:
         assert "It had" in loc[f"PP_CPLAN_D_GOLD_{key}"] and "saved" in loc[f"PP_CPLAN_D_GOLD_{key}"]
         assert "to spend" not in loc[f"PP_CPLAN_D_GOLD_{key}"], "the old month's gold"
         goods = f"PP_CPLAN_D_GOODS_{key}"
-        if group == "profiles":  # among its rule states instead (8 and 10)
-            assert goods not in loc and "PP_CPLAN_D_PROFILES_ST8" in loc and "PP_CPLAN_D_PROFILES_ST10" in loc
-            assert 'tooltip = "PP_LPROF_ST_10"' in pane
+        if group == "profiles":  # among its plan states instead (8); the market limit does not hold a plan back
+            assert goods not in loc and "PP_CPLAN_D_PROFILES_ST8" in loc and "PP_CPLAN_D_PROFILES_ST10" not in loc
+            assert 'tooltip = "PP_LPROF_ST_8"' in pane
+            # a plan waiting for a higher rank (11) has its own cell, counted by the pass
+            assert 'text = "PP_CPLAN_D_PROFILES_ST11" tooltip = "PP_LPROF_ST_11"' in pane
+            assert "[location_rank|e]" in loc["PP_CPLAN_D_PROFILES_ST11"]
+            counter = _read(MOD / "in_game/common/scripted_effects/pp_location_profiles.txt")
+            counter = counter[counter.index("\npp_lprof_count_state = {"):]
+            assert "name = pp_cplan_ds_profiles_st11 add = 1" in counter[:counter.index("\n}\n")]
+            assert ("st11", 100) in cp.SITUATION["profiles"], "the pass keeps the count for the pane"
         else:
             count = f"GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_{group}_goods'), '(CFixedPoint)0.5')"
             assert re.search(re.escape(f'visible = "[{count}]"') + rf"\n\t+text = \"{goods}\"", pane), group
             assert "construction goods" in loc[goods]
-    # Towns and Buildings can save for a town or a city upgrade (no building type)
-    country = _type_body(gui, "pp_cplan_detail_country")
-    rank = "GetPlayer.MakeScope.ScriptValue('pp_cplan_save_rank_n_107')"
-    for number, name in cpd.SAVE_RANKS.items():
-        assert f"ShowLocationRankName('{name}')" in loc[f"PP_CPLAN_D_SAVE_RANK_{number}"]
-        assert re.search(re.escape(f"EqualTo_CFixedPoint({rank}, '(CFixedPoint){number}'))]\"")
-                         + rf"\n\t+text = \"PP_CPLAN_D_SAVE_RANK_{number}\"", country), number
+    # Towns and Buildings and Locations (a plan whose producers need a higher rank) can save for a town or a city
+    # upgrade (no building type)
+    assert set(cpd.RANK_KEYS) == {"country", "profiles"}
+    for group, prefix in cpd.RANK_KEYS.items():
+        why = cp.GROUP_WHY[group]
+        pane = _type_body(gui, f"pp_cplan_detail_{group}")
+        rank = f"GetPlayer.MakeScope.ScriptValue('pp_cplan_save_rank_n_{why}')"
+        assert f"Not(GreaterThan_CFixedPoint({rank}, '(CFixedPoint)0.5'))" in pane, group  # a building otherwise
+        for number, name in cpd.SAVE_RANKS.items():
+            text = loc[f"{prefix}{number}"]
+            assert f"ShowLocationRankName('{name}')" in text
+            assert f"Var('pp_cplan_save_loc_{why}')" in text and f"pp_cplan_save_cost_n_{why}" in text
+            assert f"pp_cplan_purse_n_{why}" in text
+            assert re.search(re.escape(f"EqualTo_CFixedPoint({rank}, '(CFixedPoint){number}'))]\"")
+                             + rf"\n\t+text = \"{prefix}{number}\"", pane), (group, number)
+    assert cpd.RANK_KEYS["country"] == "PP_CPLAN_D_SAVE_RANK_"  # the translations' keys
     from prosper_or_perish_constructor import construction_plan_country as cpc
 
     assert {name: code - 100 for name, code in cpc.SAVE_RANK.items()} == {name: n for n, name in cpd.SAVE_RANKS.items()}

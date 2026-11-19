@@ -1972,10 +1972,14 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
 
     lplan = location_plan.apply(repo, project, mod_root, vanilla_root(repo, project))
     print(
-        f"Location plan (player marks): {len(lplan.items)} items, {lplan.files_changed} files changed"
+        f"Location plan (player plans): {len(lplan.items)} items, {lplan.files_changed} files changed"
         + (f"; no icon for: {', '.join(lplan.missing_icons)}." if lplan.missing_icons else "."),
         flush=True,
     )
+    from prosper_or_perish_constructor import location_profiles  # the plan engine (targets, the plans' turn)
+
+    changed = location_profiles.apply(repo, project, mod_root, vanilla_root(repo, project))
+    print(f"Location plan engine: {changed} files changed.", flush=True)
     from prosper_or_perish_constructor import construction_plan
 
     plan = construction_plan.apply(repo, project, mod_root, vanilla_root(repo, project))
@@ -1989,11 +1993,6 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
 
     print(construction_plan_country.summary(
         construction_plan_country.apply(repo, project, mod_root, vanilla_root(repo, project))), flush=True)
-    from prosper_or_perish_constructor import location_profiles, location_profiles_gui
-
-    changed = location_profiles.apply(repo, project, mod_root, vanilla_root(repo, project))
-    changed += location_profiles_gui.apply(repo, project, mod_root, vanilla_root(repo, project))
-    print(f"Location profiles: {changed} files changed.", flush=True)
     from prosper_or_perish_constructor import start_market_stock
 
     print(_start_stock_line(start_market_stock.apply(repo, project, mod_root, vanilla_root(repo, project))), flush=True)

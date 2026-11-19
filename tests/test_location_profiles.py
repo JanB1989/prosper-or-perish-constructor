@@ -1,16 +1,13 @@
-"""Location Profiles, script side (src/prosper_or_perish_constructor/location_profiles.py,
-mod/pp/.../pp_location_profiles*; contract docs/location_profiles.md)."""
+"""The plan engine of the Construction Plan's Locations group (src/prosper_or_perish_constructor/location_profiles.py,
+mod/pp/.../pp_location_profiles*). Location Profiles and the building marks are gone (2026-11-19); a location's plans
+(town rights pp_plan_<plan>, town_plans.py) are the one per-location decision."""
 
 from __future__ import annotations
 
-import dataclasses
 import re
 from pathlib import Path
 
-import pytest
-
 from prosper_or_perish_constructor import construction_plan as cp
-from prosper_or_perish_constructor import location_plan as lp
 from prosper_or_perish_constructor import location_profiles as lpf
 from prosper_or_perish_constructor import town_plans
 from prosper_or_perish_constructor.script_eval import ScriptEval
@@ -20,11 +17,10 @@ ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT / "constructor.toml"
 MOD = ROOT / "mod" / "pp"
 COMMON = MOD / "in_game/common"
-CONTRACT = ROOT / "docs/location_profiles.md"
 PLAN_EFFECTS = COMMON / "scripted_effects/pp_construction_plan.txt"
 PLAN_TRIGGERS = COMMON / "scripted_triggers/pp_construction_plan.txt"
 PLAN_VALUES = COMMON / "script_values/pp_construction_plan.txt"
-OWN_FILES = (MOD / lpf.EFFECTS, MOD / lpf.HAND_EFFECTS, MOD / lpf.VALUES, MOD / lpf.TRIGGERS, MOD / lpf.SCRIPTED_GUIS)
+OWN_FILES = (MOD / lpf.EFFECTS, MOD / lpf.HAND_EFFECTS, MOD / lpf.VALUES, MOD / lpf.TRIGGERS)
 
 
 def _read(path: Path) -> str:
@@ -55,15 +51,15 @@ def _build():
 def test_built_mod_is_in_step() -> None:
     assert lpf.apply(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT), write=False) == 0, "run ppc finalize"
     result, _ = _build()
-    keys = [item.key for item in result.items]
-    assert {"lumber", "furniture", "trade_category", lpf.LOGISTICS} <= set(keys)
+    keys = list(result.targets)
+    assert {"lumber", "furniture", town_plans.TRADE_TARGET, town_plans.FOOD_TARGET} <= set(keys)
     assert len(keys) == len(set(keys))
-    # market access = the plan's logistics buildings in its order
-    assert [c.name for c in result.targets[lpf.LOGISTICS]] == list(cp.load_config(PROJECT).logistics_order)
+    # the targets a plan runs: the goods, the food plan's and the trade plan's; no other category, no market access
+    assert list(result.categories) == [town_plans.TRADE_TARGET] == list(lpf.CATEGORIES)
+    assert "logistics" not in keys and "naval_category" not in keys
     # a standing producer grows highest tier first
     assert [c.name for c in result.targets["furniture"]][:2] == ["furniture_mill", "furniture_manufactory"]
-    for category in lp.load_config(PROJECT).categories:
-        assert result.targets[category], category
+    assert result.targets[town_plans.TRADE_TARGET]
 
 
 def test_category_lists_hold_only_player_buildings() -> None:
@@ -78,18 +74,17 @@ def test_category_lists_hold_only_player_buildings() -> None:
             assert not re.search(r"\ballow\s*=\s*\{\s*always\s*=\s*no\s*\}", body), name
     assert "marketplace" in result.categories["trade_category"]
     assert "trade_office" not in result.categories["trade_category"]  # a foreign building
-    assert "temple" in result.categories["religious_category"]
 
 
 def test_every_candidate_has_cost_data_and_guards() -> None:
-    """Each building a rule can start has the plan's cost data (price factor, efficiency term) and the market check of
-    its construction goods; every start or expand of the hand-written effects runs the game's can-build check."""
+    """Each building a target can start has the plan's cost data (price factor, efficiency term) and the market check
+    of its construction goods; every start or expand of the hand-written effects runs the game's can-build check."""
     effects = _read(MOD / lpf.EFFECTS)
     plan_triggers = _read(MOD / cp.TRIGGERS)
     plan_values = _read(MOD / cp.VALUES) + _read(PLAN_VALUES)
     known = cp.defined_buildings(MOD, vanilla_root(ROOT, PROJECT))
-    calls = re.findall(r"pp_lprof_(?:expand|start|try) = \{ type = (\w+) demand = (\w+) cat = (\w+) ipl = ([0-9.]+) "
-                       r"pt = (\w+) sz = ([0-9.]+) \}", effects)
+    calls = re.findall(r"pp_lprof_(?:expand|start|upgrade) = \{ (?:old = \w+ )?type = (\w+) demand = (\w+) cat = (\w+) "
+                       r"ipl = ([0-9.]+) pt = (\w+) sz = ([0-9.]+) \}", effects)
     assert len(calls) > 300
     staff = cp.staffing(cp._database(MOD, vanilla_root(ROOT, PROJECT), cp.BUILDING_TYPES),
                         cp.script_value_numbers(MOD, vanilla_root(ROOT, PROJECT)))
@@ -101,7 +96,7 @@ def test_every_candidate_has_cost_data_and_guards() -> None:
         assert f"pp_cplan_cd_{demand} = {{" in plan_values, demand
         assert f"pp_cplan_eff_{category} = {{" in plan_values, category
     hand = _code(MOD / lpf.HAND_EFFECTS)
-    for name in ("pp_lprof_expand", "pp_lprof_start", "pp_lprof_try"):
+    for name in ("pp_lprof_expand", "pp_lprof_start"):
         body = _block(hand, name)
         assert "location_and_owner_can_build = { building_type = $type$ }" in body, name
         assert "pp_cplan_goods_here_$demand$ = yes" in body, name
@@ -109,8 +104,6 @@ def test_every_candidate_has_cost_data_and_guards() -> None:
     # every construction goes through the plan's budget check and its construct (ledger, never twice while queued)
     build = _block(hand, "pp_lprof_build")
     assert f"pp_cplan_construct_scoped = {{ why = {lpf.WHY_PROFILE} }}" in build
-    # the plan's construct checks the group's purse; a level it does not start for gold is the gold state (107 -> 7),
-    # one the market limit stops its own (106 -> 10)
     assert "limit = { scope:pp_cplan_country = { has_variable = pp_cplan_wait } }\n\t\tpp_lprof_fail = { r = 107 }" in build
     assert "limit = { scope:pp_cplan_country = { has_variable = pp_cplan_mlim } }\n\t\tpp_lprof_fail = { r = 106 }" in build
     assert build.index("has_variable = pp_cplan_wait") < build.index("has_variable = pp_cplan_mlim")
@@ -119,7 +112,7 @@ def test_every_candidate_has_cost_data_and_guards() -> None:
 
 
 def test_targets_wait_for_their_constructions() -> None:
-    """A rule never starts a second level while any building of its target has one under construction here."""
+    """A plan never starts a second level while any building of its target has one under construction here."""
     effects = _read(MOD / lpf.EFFECTS)
     result, _ = _build()
     for key, candidates in result.targets.items():
@@ -148,92 +141,52 @@ def test_references_exist() -> None:
     own_values = _code(MOD / lpf.VALUES)
     for name in set(re.findall(r"(?<![\w:.$])(pp_[a-z0-9_]+) = yes\b", own_values)):
         assert name in triggers, f"trigger {name} missing"
-    for name in set(re.findall(r"\b(?:value|add|subtract) = (pp_[a-z0-9_]+)(?![\w$])", own_values)):
-        assert name in values, f"script value {name} missing"
 
 
-def test_scripted_guis_of_the_contract() -> None:
-    guis = _read(MOD / lpf.SCRIPTED_GUIS)
-    effects = _defined("scripted_effects")
-    rows = re.findall(r"^\| `(pp_lprof_[a-z_]+)` \| (location|country)", _read(CONTRACT), re.MULTILINE)
-    assert len(rows) == 11  # + pp_lprof_global, pp_lprof_examples (2026-11-09)
-    for name, scope in rows:
-        block = _block(guis, name)
-        assert f"scope = {scope}" in block, name
-        for effect in re.findall(r"(pp_[a-z0-9_]+) = yes", block):
-            assert effect in effects, effect
-
-
-def test_flags_and_scopes_are_declared() -> None:
-    """The GUI adds its parameters with AddScope and passes flags; the script check needs them set somewhere (the never-
-    run block of pp_cplan_run)."""
-    config = lpf.load_config(PROJECT)
-    result, _ = _build()
-    effects = _read(MOD / lpf.EFFECTS)
-    declared = set(re.findall(r"value = flag:(\w+)", _block(effects, "pp_lprof_declare_flags")))
-    expected = {f"s{k}" for k in range(1, config.slots + 1)} | {"none", "icon", "up", "down", lpf.EDITED, lpf.NEXT}
-    expected |= {f"r{r}" for r in range(1, config.rules + 1)} | {f"c{n}" for n in range(1, len(config.colors) + 1)}
-    expected |= {item.key for item in result.items} | {symbol.key for symbol in config.symbols}
-    assert expected <= declared
-    for path in (MOD / lpf.EFFECTS, MOD / lpf.HAND_EFFECTS):
-        for flag in re.findall(r"flag:(\w+)", _code(path)):
-            assert flag in declared, flag
+def test_profiles_and_building_marks_are_gone() -> None:
+    """2026-11-19, Jan: profiles and the old location marks go; the town-right plan is the only per-location
+    decision. No profile slot, rule, edit buffer, global-rule switch or building mark is left in the mod's script."""
+    files = [path for folder in ("scripted_effects", "scripted_triggers", "script_values", "scripted_guis", "on_action")
+             for path in (COMMON / folder).glob("*.txt")]
+    gone = re.compile(r"pp_lprof_(?:x[flicg]\b|rule\b|r\d|e_|s_|locs\b|examples|declare|has_good|has_category|food_target"
+                      r"|try\b|t_logistics\b|editor)|pp_lplan_(?:b\b|bflip|b_|bst\b|locs\b|maps|quick|planned_n|clear_all"
+                      r"|drop_categories|n\b|g_)")
+    for path in files:
+        found = gone.findall(_code(path))
+        assert not found, (path.name, sorted(set(found))[:5])
+    for name in ("in_game/gui/pp_location_profiles.gui", "in_game/gui/context_menu.gui",
+                 "in_game/common/scripted_guis/pp_location_profiles.txt",
+                 "main_menu/gfx/interface/component_tiles/pp_profile_symbols.dds"):
+        assert not (MOD / name).exists(), name
     run = _block(_code(PLAN_EFFECTS), "pp_cplan_run")
-    never = run[run.index("always = no"):]
-    for scope in ("pp_slot", "pp_key", "pp_dir", "pp_field", "pp_col"):
-        assert f"save_scope_as = {scope}" in never, scope
-    assert "pp_lprof_declare_flags = yes" in never
+    for scope in ("pp_slot", "pp_field", "pp_col"):
+        assert f"save_scope_as = {scope}" not in run, scope
 
 
-def test_global_rules_read_the_profile() -> None:
-    """A profile takes from the global rules only what it sets (Jan 2026-11-09): its rules' targets and the groups it
-    switches off; the rest build there too. The plan's group checks read the location's copy: every switch and every
-    target trigger reaches them. The profile group takes its part of the month's budget, and the first rule that starts
-    a construction ends the location's month."""
-    config = lpf.load_config(PROJECT)
+def test_global_rules_keep_building_where_plans_are() -> None:
+    """Plans are additive like the old marks: no global rule group stands back in a location with a plan. The
+    Locations group takes its part of the budget only while a location holds a plan, and the first plan that starts a
+    construction ends the location's month."""
     plan = _code(PLAN_TRIGGERS) + _code(PLAN_EFFECTS) + _code(MOD / cp.EFFECTS)
-    # the Towns and Buildings group has its own files (construction_plan_country.py)
     for folder in ("scripted_triggers", "scripted_effects"):
         plan += "".join(_code(path) for path in sorted((COMMON / folder).glob("pp_construction_plan_country*.txt")))
-    fields = lpf.profile_fields(config)
-    for name, _, _ in lpf.GLOBAL_GROUPS:
-        assert name in fields, name  # the location copy carries the switch
-        assert f"has_variable = pp_lprof_{name}" in plan, f"no global group reads pp_lprof_{name}"
-    for trigger in ("pp_lprof_food_target = yes", "pp_lprof_has_good = { g = ", "pp_lprof_has_category = { c = "):
-        assert trigger in plan, f"no global group reads {trigger}"
-    assert "pp_lprof_group_n" in _code(PLAN_VALUES) + _code(MOD / cp.VALUES), "the profile group counts as a rule group"
-    # the triggers read the rules' targets in the location's copy (a category is a flag, compared as vanilla does)
-    generated = _code(MOD / lpf.TRIGGERS)
-    has_good, has_category = _block(generated, "pp_lprof_has_good"), _block(generated, "pp_lprof_has_category")
-    for r in range(1, config.rules + 1):
-        assert f"AND = {{ has_variable = pp_lprof_r{r}_g var:pp_lprof_r{r}_g = goods:$g$ }}" in has_good, r
-        assert f"AND = {{ has_variable = pp_lprof_r{r}_c var:pp_lprof_r{r}_c = flag:$c$ }}" in has_category, r
-        assert f"r{r}_c" in fields, r
-    for name in ("pp_lprof_has_good", "pp_lprof_has_category", "pp_lprof_food_target"):
-        assert _block(generated, name).startswith("\n\thas_variable = pp_lprof\n"), name
-    assert "goods:wheat" in _block(generated, "pp_lprof_food_target")
+    assert "pp_lprof" not in plan.replace("pp_lprof_run", "").replace("pp_lprof_look", "")
+    assert "pp_lprof_group_n" in _code(PLAN_VALUES) + _code(MOD / cp.VALUES), "the group counts as a rule group"
+    has = _block(_code(MOD / lpf.TRIGGERS), "pp_lprof_has_locations")
+    assert "any_locations_with_town_rights_in_country" in has and "pp_tplan_held = yes" in has and "owner ?= root" in has
+    assert "variable =" not in has
     hand = _code(MOD / lpf.HAND_EFFECTS)
     group = _block(hand, "pp_lprof_run")
     assert "pp_cplan_group_start = { why = 105 }" in _block(hand, "pp_lprof_look")
     assert "pp_cplan_group_target = { why = 105 do = pp_lprof_target_turn }" in group
-    assert "pp_cplan_profiles_w > 0" in group  # the profiles' weight bar at 0 switches them off
+    assert "pp_cplan_profiles_w > 0" in group  # the Locations weight bar at 0 switches the group off
     turn = _block(hand, "pp_lprof_location_turn")
     assert "save_temporary_scope_value_as = { name = pp_cplan_free_peasants value = pp_cplan_free_peasants_here }" in turn
-    assert "pp_lprof_location_rules = yes" in turn
     assert "owner ?= scope:pp_cplan_country" in _block(hand, "pp_lprof_gather")  # only the country's own locations
-    # the first rule or mark that starts a construction ends the location for the month: the mark is cleared once a
-    # location (by the run, not between the profile's rules and the location's marks), every later one waits (109)
-    assert "pp_lprof_location_turn = yes" in _block(hand, "pp_lprof_look").split("ordered_in_list")[1]
-    assert turn.index("remove_variable = pp_cplan_hit") < turn.index("pp_lprof_location_rules = yes")
+    assert turn.index("remove_variable = pp_cplan_hit") < turn.index("pp_lplan_location_turn = yes")
     opened = _block(hand, "pp_lprof_open")
     assert "has_variable = pp_cplan_hit" in opened and "value = 109" in opened
-    assert "pp_lprof_open = yes" in _block(hand, "pp_lprof_rule")
-    assert "pp_cplan_hit" not in _block(_code(MOD / lpf.EFFECTS), "pp_lprof_location_rules")
     assert "pp_cplan_hit" not in _block(_code(MOD / lpf.EFFECTS), "pp_lplan_location_marks")
-    # a profile and the Location Plan's marks are all a location carries: no other per-location plan setting
-    for path in OWN_FILES:
-        text = _code(path)
-        assert "pp_cplan_mode" not in text and "pp_cplan_own" not in text, path.name
 
 
 def test_only_the_player() -> None:
@@ -242,222 +195,6 @@ def test_only_the_player() -> None:
         assert "pp_lprof" not in _read(path), path.name
     callers = [path.name for path in (COMMON / "scripted_effects").glob("*.txt") if "pp_lprof_run = yes" in _code(path)]
     assert callers == ["pp_construction_plan.txt"]
-
-
-PER_SLOT = ("pp_lprof_resolve", "pp_lprof_resolve_free", "pp_lprof_read", "pp_lprof_write", "pp_lprof_declare_flags")
-
-
-def test_slot_and_rule_counts_follow_the_config() -> None:
-    """Only the slot resolve and the slot read / write are written per slot (once each); a rule count shows in the
-    location's rule list and the copies."""
-    config = lpf.load_config(PROJECT)
-    slots = [str(k) for k in range(1, config.slots + 1)]
-    effects = _code(MOD / lpf.EFFECTS)
-    rules = _block(effects, "pp_lprof_location_rules")
-    assert re.findall(r"pp_lprof_rule = \{ r = (\d+) \}", rules) == [str(r) for r in range(1, config.rules + 1)]
-    resolve = _block(effects, "pp_lprof_resolve")
-    assert re.findall(r"flag:s(\d+) = \{ set_variable = \{ name = pp_lprof_k value = (\d+) \} \}", resolve) == [
-        (k, str(100 + int(k))) for k in slots]
-    assert "scope:pp_slot = flag:e" in resolve and "from = pp_lprof_e_k to = pp_lprof_k" in resolve
-    free = _block(effects, "pp_lprof_resolve_free")
-    assert re.findall(r"has_variable = pp_lprof_(\d+)_on \} \} set_variable = \{ name = pp_lprof_k value = (\d+) \}", free) == [
-        (k, str(100 + int(k))) for k in slots]
-    for name, callee in (("pp_lprof_read", "pp_lprof_read_slot"), ("pp_lprof_write", "pp_lprof_write_slot")):
-        chain = re.findall(rf"var:pp_lprof_k < ([0-9.]+) \}} {callee} = \{{ k = (\d+) \}}", _block(effects, name))
-        assert [k for _, k in chain] == slots, name
-        assert all(float(bound) == 100 + int(k) + 0.5 for bound, k in chain), name
-    # no other generated or hand-written effect names a slot
-    hand = _code(MOD / lpf.HAND_EFFECTS)
-    for text in (effects, hand):
-        for match in re.finditer(r"^([a-z_][a-z0-9_]*) = \{", text, re.MULTILINE):
-            body = _block(text, match.group(1))
-            if match.group(1) not in PER_SLOT:
-                assert not re.search(r"pp_lprof_\d+_|flag:s\d", body), f"{match.group(1)} names a slot"
-    colors = re.findall(r"flag:c(\d+) = ", _block(effects, "pp_lprof_color_staged"))
-    assert colors == [str(n) for n in range(1, len(config.colors) + 1)]
-    assert "value = goods:lumber" in _block(hand, "pp_lprof_stage_new")
-    assert lpf.DEFAULT_ICON == "lumber"
-    values = _code(MOD / lpf.VALUES)
-    new_color = _block(values, "pp_lprof_new_color")
-    subtract = int(re.search(r"subtract = (\d+)", new_color).group(1))
-    modulo = int(re.search(r"modulo = (\d+)", new_color).group(1))
-    add = int(re.search(r"add = (\d+)", new_color).group(1))
-    for k in range(1, config.slots + 1):
-        assert (100 + k - subtract) % modulo + add == lpf.color_value(config, k), k
-    free_value = _block(values, "pp_lprof_first_free")
-    assert re.findall(r"has_variable = pp_lprof_(\d+)_on", free_value) == slots
-    assert re.findall(r"has_variable = pp_lprof_(\d+)_on", _block(values, "pp_lprof_used_n")) == slots
-    for r in range(1, config.rules + 1):
-        assert f"pp_lprof_r{r}_st_n = {{" in values
-
-
-def test_flag_frames_follow_one_order() -> None:
-    """A flag's frame number (pp_lprof_key_frame, stored beside icon flags and category rule targets) is its place in
-    lpf.frame_flags, the order of the GUI's flag strip: the building categories, then the symbols."""
-    config = lpf.load_config(PROJECT)
-    chain = re.findall(r"scope:pp_key = flag:(\w+) \} value = (\d+) \}", _block(_code(MOD / lpf.VALUES), "pp_lprof_key_frame"))
-    expected = lpf.frame_flags(lp.load_config(PROJECT).categories, config)
-    assert [flag for flag, _ in chain] == expected
-    assert [int(number) for _, number in chain] == list(range(101, 101 + len(expected)))
-    assert expected[:len(lp.load_config(PROJECT).categories)] == list(lp.load_config(PROJECT).categories)
-
-
-def test_pass_reads_the_location_copies() -> None:
-    """The monthly pass reads only the location's copy of its profile: no slot, no country variable of a profile."""
-    hand = _code(MOD / lpf.HAND_EFFECTS)
-    effects = _code(MOD / lpf.EFFECTS)
-    rule = _block(hand, "pp_lprof_rule")
-    for part in ("has_variable = pp_lprof_r$r$_g", "has_variable = pp_lprof_r$r$_c", "value = var:pp_lprof_r$r$_pb",
-                 "pp_lprof_goods_target = { v = pp_lprof_r$r$_g }", "pp_lprof_category_target = { v = pp_lprof_r$r$_c }"):
-        assert part in rule, part
-    for name in ("pp_lprof_goods_target", "pp_lprof_category_target"):
-        assert "trigger = var:$v$" in _block(effects, name), name
-    for text in (rule, _block(effects, "pp_lprof_location_rules"), _block(hand, "pp_lprof_run")):
-        assert "$k$" not in text and not re.search(r"pp_lprof_\d", text)
-        assert "scope:pp_cplan_country.var:pp_lprof" not in text
-
-
-def test_every_edit_passes_the_profile_on() -> None:
-    """Copy on edit: every button that changes a slot writes it back and gives the edit buffer and every location with
-    the slot the new data; assign gives the location the copy, and every way a profile leaves a location takes the copy
-    away."""
-    config = lpf.load_config(PROJECT)
-    hand = _code(MOD / lpf.HAND_EFFECTS)
-    effects = _code(MOD / lpf.EFFECTS)
-    guis = _read(MOD / lpf.SCRIPTED_GUIS)
-    staged = {"pp_lprof_set_do": "pp_lprof_set_staged", "pp_lprof_color_do": "pp_lprof_color_staged",
-              "pp_lprof_payback_do": "pp_lprof_payback_staged", "pp_lprof_rule_clear_do": "pp_lprof_rule_clear_staged",
-              "pp_lprof_rule_move_do": "pp_lprof_rule_move_staged"}
-    for do, op in staged.items():
-        assert f"pp_lprof_edit = {{ do = {op} }}" in _block(hand, do), do
-        body = _block(effects, op)
-        assert not re.search(r"pp_lprof_(?:\d+|e)_", body), f"{op} edits only the staged copy"
-    edit = _block(hand, "pp_lprof_edit")
-    order = [edit.index(part) for part in ("pp_lprof_resolve = yes", "pp_lprof_read = yes", "$do$ = yes",
-                                           "pp_lprof_commit = yes", "pp_lprof_unstage = yes")]
-    assert order == sorted(order)
-    commit = _block(hand, "pp_lprof_commit")
-    assert commit.index("pp_lprof_write = yes") < commit.index("pp_lprof_publish = yes")
-    publish = _block(hand, "pp_lprof_publish")
-    assert "pp_lprof_copy_profile = { from = pp_lprof_s to = pp_lprof_e }" in publish
-    assert "set_variable = { name = pp_lprof_e_k value = var:pp_lprof_k }" in publish
-    loop = publish[publish.index("every_in_list"):]
-    assert "var:pp_lprof > scope:pp_lprof_lo" in loop and "pp_lprof_copy_profile = { from = pp_lprof_s to = pp_lprof }" in loop
-    assert "pp_lprof_commit = yes" in _block(hand, "pp_lprof_new_do")
-    assert "pp_lprof_publish = yes" in _block(hand, "pp_lprof_select_do")
-    assert "pp_lprof_copy_profile = { from = pp_lprof_s to = pp_lprof }" in _block(hand, "pp_lprof_assign_staged")
-    delete = _block(hand, "pp_lprof_delete_staged")
-    assert "pp_lprof_write = yes" in delete and "pp_lprof_drop_gone = yes" in delete
-    assert "pp_lprof_clear_copies = { p = pp_lprof_e }" in delete
-    clear = _block(hand, "pp_lprof_clear_location")
-    assert "remove_variable = pp_lprof" in clear and "pp_lprof_clear_copies = { p = pp_lprof }" in clear
-    for name in ("pp_lprof_unassign", "pp_lprof_drop_gone", "pp_lprof_cleanup"):
-        assert "pp_lprof_clear_location = yes" in _block(hand, name), name
-    # a copy carries every field of a slot, and clearing one removes the same fields
-    fields = lpf.profile_fields(config)
-    copy = _block(effects, "pp_lprof_copy_profile")
-    pulled = re.findall(r"pp_lprof_pull_(\w+) = \{ from = \$from\$_(\w+) to = \$to\$_(\w+) \}", copy)
-    assert [source for _, source, _ in pulled] == fields and all(source == target for _, source, target in pulled)
-    assert {kind for kind, source, _ in pulled if source.endswith("_c")} == {"cat"}
-    kinds = dict((source, kind) for kind, source, _ in pulled)
-    assert kinds["ic"] == "icon" and kinds["in"] == "n" and kinds["col"] == "n"
-    frames = re.findall(r"pp_lprof_pull_n = \{ from = \$from\$_(\w+) to = \$to\$_\1 \}", _block(effects, "pp_lprof_copy_frames"))
-    assert frames == lpf.frame_fields(config) == [f"r{r}_cn" for r in range(1, config.rules + 1)]
-    assert re.findall(r"remove_variable = \$p\$_(\w+)", _block(effects, "pp_lprof_clear_copies")) == fields
-    assert re.findall(r"remove_variable = \$p\$_(\w+)", _block(effects, "pp_lprof_clear_frames")) == frames
-    assert "pp_lprof_clear_frames = { p = pp_lprof }" not in _code(MOD / lpf.HAND_EFFECTS), "a location copy has no frame numbers"
-    for name in ("pp_lprof_read_slot", "pp_lprof_write_slot"):
-        assert "pp_lprof_copy_profile = { from = " in _block(hand, name), name
-        assert "pp_lprof_copy_frames = { from = " in _block(hand, name), name
-    assert "pp_lprof_copy_frames = { from = pp_lprof_s to = pp_lprof_e }" in publish
-    # the GUI draws a flag only by its frame number: every place that sets a flag sets its number beside it
-    for name, flags in (("pp_lprof_set_icon", "OR = {"), ("pp_lprof_set_target", "pp_lprof_category_key = yes")):
-        body = _block(hand, name)
-        assert flags in body and "set_variable = { name = $n$ value = pp_lprof_key_frame }" in body, name
-        assert "remove_variable = $n$" in body, name
-    staged_set = _block(effects, "pp_lprof_set_staged")
-    assert "n = pp_lprof_s_in }" in staged_set
-    for r in range(1, config.rules + 1):
-        assert f"n = pp_lprof_s_r{r}_cn }}" in staged_set
-        assert f"remove_variable = pp_lprof_s_r{r}_cn" in _block(effects, "pp_lprof_rule_clear_staged")
-    swap = _block(hand, "pp_lprof_swap_rules")
-    assert "from = pp_lprof_s_r$a$_cn" in swap and "to = pp_lprof_s_r$b$_cn" in swap
-    # flags are compared (switch), never copied as a value; every icon flag and category reaches its copy
-    icon = _block(effects, "pp_lprof_pull_icon")
-    for flag in list(lp.load_config(PROJECT).categories) + [symbol.key for symbol in config.symbols]:
-        assert f"flag:{flag} = {{ set_variable = {{ name = $to$ value = flag:{flag} }} }}" in icon, flag
-    for category in lp.load_config(PROJECT).categories:
-        assert f"flag:{category} = {{ set_variable" in _block(effects, "pp_lprof_pull_cat"), category
-    # the edit buffer is what the editor's buttons pass (e) and new profiles use the first free slot (next)
-    assert "pp_lprof_select = {" in guis and "pp_lprof_select_do = yes" in _block(guis, "pp_lprof_select")
-    assert "pp_lprof_resolve_free = yes" in _block(hand, "pp_lprof_new_do")
-
-
-def test_items_reach_their_targets() -> None:
-    result, _ = _build()
-    effects = _code(MOD / lpf.EFFECTS)
-    goods = _block(effects, "pp_lprof_goods_target")
-    categories = _block(effects, "pp_lprof_category_target")
-    keys = _block(effects, "pp_lprof_key_scope")
-    category_key = _block(_code(MOD / lpf.TRIGGERS), "pp_lprof_category_key")
-    for item in result.items:
-        if item.kind == "good":
-            assert f"flag:{item.key} = {{ goods:{item.key} = {{ save_scope_as = pp_lprof_val }} }}" in keys, item.key
-            if result.targets[item.key]:
-                assert f"goods:{item.key} = {{ pp_lprof_t_{item.key} = yes }}" in goods, item.key
-        else:
-            assert f"scope:pp_key = flag:{item.key}" in category_key, item.key
-            assert f"flag:{item.key} = {{ pp_lprof_t_{item.key} = yes }}" in categories, item.key
-    # nearly every good has a producer (the rest show "cannot be built here")
-    assert sum(1 for item in result.items if item.kind == "good" and not result.targets[item.key]) <= 3
-    # a symbol is only an icon: it is a symbol key (pp_lprof_set_icon takes it), never a category or a good
-    symbols = _block(_code(MOD / lpf.TRIGGERS), "pp_lprof_symbol_key")
-    config = lpf.load_config(PROJECT)
-    assert config.symbols
-    for symbol in config.symbols:
-        assert symbol.key == lpf.SYMBOL_PREFIX + symbol.name
-        assert f"scope:pp_key = flag:{symbol.key}" in symbols, symbol.key
-        assert f"flag:{symbol.key}" not in category_key + keys + categories, symbol.key
-    assert {symbol.key for symbol in config.symbols}.isdisjoint(item.key for item in result.items)
-    hand = _code(MOD / lpf.HAND_EFFECTS)
-    assert "pp_lprof_symbol_key = yes" in _block(hand, "pp_lprof_set_icon")
-    assert "pp_lprof_symbol_key" not in _block(hand, "pp_lprof_set_target")
-
-
-def _step(chain: list[tuple[str, float, int]], value: int | None, otherwise: int | None) -> int | None:
-    for op, bound, new in chain:
-        if (op == "<" and value < bound) or (op == ">" and value > bound):
-            return new
-    return otherwise
-
-
-def test_payback_steps_follow_the_config() -> None:
-    """Stepping the limit down from any walks every step down to the first; up walks back to any."""
-    steps = lpf.load_config(PROJECT).payback_steps
-    body = _block(_code(MOD / lpf.EFFECTS), "pp_lprof_pb_step")
-    up_part, down_part = body.split("\telse = {\n\t\tif = {")
-    chain_up = [(op, float(bound), int(new)) for op, bound, new in
-                re.findall(r"var:\$var\$ (<) ([0-9.]+) \} set_variable = \{ name = \$var\$ value = (\d+)", up_part)]
-    chain_down = [(op, float(bound), int(new)) for op, bound, new in
-                  re.findall(r"var:\$var\$ (>) ([0-9.]+) \} set_variable = \{ name = \$var\$ value = (\d+)", down_part)]
-    assert f"value = {steps[-1] + 100}" in down_part.split("else_if")[0]  # down from any = the last step
-    seen = []
-    value = steps[-1] + 100
-    while True:
-        seen.append(value - 100)
-        lower = _step(chain_down, value, value)
-        if lower == value:
-            break
-        value = lower
-    assert seen == list(reversed(steps))
-    seen = []
-    value = steps[0] + 100
-    while value is not None:
-        seen.append(value - 100)
-        value = _step(chain_up, value, None)
-    assert seen == list(steps)
-    # a value between steps snaps to the next step either way
-    assert _step(chain_up, 106, None) == 107 and _step(chain_down, 106, 106) == 105
 
 
 def test_states_and_texts() -> None:
@@ -471,14 +208,20 @@ def test_states_and_texts() -> None:
         assert f"PP_LPROF_ST_{n}" in keys, n
         assert not re.search(r"\d", keys[f"PP_LPROF_ST_{n}"]), "no numbers in player text"
     assert "PP_CPLAN_WHY_PROFILE" in (MOD / "main_menu/localization/english/pp_construction_plan_l_english.yml").read_text(encoding="utf-8-sig")
-    finish = _block(_code(MOD / lpf.HAND_EFFECTS), "pp_lprof_finish")
+    hand = _code(MOD / lpf.HAND_EFFECTS)
+    finish = _block(hand, "pp_lprof_finish")
     for rank, state in lpf.FAIL_STATE.items():
         if rank == 101:
             assert re.search(rf"else = \{{\s*set_variable = \{{ name = \$st\$ value = {100 + state} \}}", finish), rank
         else:
             assert re.search(rf"var:pp_lprof_fail > {rank - 0.5:g} \}}\n\t\tset_variable = \{{ name = \$st\$ value = {100 + state} \}}", finish), rank
-    states = {int(n) - 100 for n in re.findall(r"name = (?:pp_lprof_st|\$st\$) value = (1\d\d)", _code(MOD / lpf.HAND_EFFECTS) + _code(MOD / lpf.EFFECTS))}
+    states = {int(n) - 100 for n in re.findall(r"name = (?:pp_lprof_st|\$st\$) value = (1\d\d)", hand + _code(MOD / lpf.EFFECTS))}
     assert states == set(lpf.STATES), "every state is written somewhere, and no other"
+    # the window counts every state on its own, 11 too
+    count = _block(hand, "pp_lprof_count_state")
+    for n in lpf.STATES:
+        assert count.count(f"name = pp_cplan_ds_profiles_st{n} add = 1") == 1, n
+    assert ("st11", 100) in cp.SITUATION["profiles"] and len(cp.SITUATION["profiles"]) == len(lpf.STATES) + 1
 
 
 def test_no_not_with_several_conditions() -> None:
@@ -513,9 +256,9 @@ def test_effect_calls_pass_their_parameters() -> None:
                 params = set(re.findall(r"\$([a-z]+)\$", text[match.end():end]))
                 if params:
                     definitions[match.group(1)] = params
-    assert {"pp_lprof_rule", "pp_lprof_expand", "pp_lprof_swap_rules"} <= set(definitions)
+    assert {"pp_lplan_mark", "pp_lprof_expand", "pp_lprof_upgrade"} <= set(definitions)
     calls = 0
-    for path in OWN_FILES + (PLAN_EFFECTS,):
+    for path in OWN_FILES + (PLAN_EFFECTS, MOD / town_plans.EFFECTS):
         for name, args in re.findall(r"\b([a-z_][a-z0-9_]*) = \{ ((?:[a-z]+ = [^\s{}]+ )+)\}", _code(path)):
             if name in definitions:
                 calls += 1
@@ -534,217 +277,116 @@ def test_braces_balance() -> None:
             assert depth >= 0, path.name
 
 
-def test_rules_keep_the_payback_they_found() -> None:
-    """A rule held back by its payback limit shows the shortest payback it found (Jan 2026-11-07: the number beside
-    the limit): expand notes it, finish writes it into pp_lprof_r<r>_est, the badge text reads it."""
+def test_plans_keep_the_payback_they_found() -> None:
+    """A plan shows the shortest payback it found beside its state: expand notes it, finish writes it into
+    pp_lplan_est_<plan>."""
     code = _code(MOD / lpf.HAND_EFFECTS)
     expand = _block(code, "pp_lprof_expand")
     assert expand.index("pp_lprof_note_payback = yes") < expand.index("pp_lprof_payback100 > scope:pp_lprof_pb")
-    finish = _block(code, "pp_lprof_finish")
-    assert "set_variable = { name = $est$ value = var:pp_lprof_best }" in finish
-    assert "pp_lprof_finish = { st = pp_lprof_r$r$_st est = pp_lprof_r$r$_est }" in _block(code, "pp_lprof_rule")
-    assert "remove_variable = pp_lprof_best" in _block(code, "pp_lprof_open")  # a rule starts without an old payback
-    loc = (MOD / "main_menu/localization/english/pp_location_profiles_gui_l_english.yml").read_text(encoding="utf-8-sig")
-    for r in range(1, lpf.load_config(PROJECT).rules + 1):
-        assert f"'PP_LPROF_UI_EST_{r}'" in loc and f"pp_lprof_r{r}_est" in loc
+    assert "set_variable = { name = $est$ value = var:pp_lprof_best }" in _block(code, "pp_lprof_finish")
+    assert "remove_variable = pp_lprof_best" in _block(code, "pp_lprof_open")  # a plan starts without an old payback
 
 
-def test_example_profiles_use_the_buttons_effects() -> None:
-    """Jan 2026-11-09: ready profiles to look at. Each example is made in the next free slot with the buttons own
-    effects; the editor offers them while the country has no profile."""
-    config = lpf.load_config(PROJECT)
-    assert len(config.examples) >= 5
-    body = _block(_code(MOD / lpf.EFFECTS), "pp_lprof_examples_do")
-    assert body.count("pp_lprof_new_do = yes") == len(config.examples)
-    assert body.count("limit = { pp_lprof_first_free > 0 }") == len(config.examples)
-    # a payback of 20 years from "any": down to 50, 40, 30, 20
-    steps = config.payback_steps
-    assert len(steps) - steps.index(20) == 4
-    hands_off = [example for example in config.examples if not example.rules]
-    assert hands_off and set(hands_off[0].off) == {group for _, _, group in lpf.GLOBAL_GROUPS}
-    for _, flag, _ in lpf.GLOBAL_GROUPS:
-        assert f"value = flag:{flag} }}" in body
-    # off names a plan group; the old goods group is the businesses group now (2026-11-09)
-    assert "businesses" in {group for _, _, group in lpf.GLOBAL_GROUPS}
-    wrong = dataclasses.replace(config, examples=(lpf.Example(lpf.DEFAULT_ICON, 1, off=("goods",)),))
-    with pytest.raises(ValueError, match="unknown global group goods"):
-        lpf.render_examples(lpf.profile_items(ROOT, PROJECT), wrong)
-    editor = _code(MOD / "in_game/gui/pp_location_profiles.gui")
-    editor = editor[editor.index("type pp_lprof_editor_tab = vbox"):editor.index('name = "pp_location_profiles_palette"')]
-    assert "GetScriptedGui(\x27pp_lprof_examples\x27)" in editor
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-# the location's marks (Jan 2026-11-10: "in this location, also expand wheat"): the Location Plan's items as build picks
-
-PLAN_HAND_EFFECTS = COMMON / "scripted_effects/pp_location_plan.txt"
-PLAN_GENERATED_EFFECTS = MOD / lp.EFFECTS
-PLAN_SCRIPTED_GUIS = COMMON / "scripted_guis/pp_location_plan.txt"
-
-
-def test_marks_run_the_targets_of_the_profile_rules() -> None:
-    """A marked good builds what a profile rule with that target builds: its mark calls the same generated
-    pp_lprof_t_<good> the rule dispatch calls, through the same start (pp_lprof_open) and end (pp_lprof_finish); no
-    second copy of the target machinery. The marks run in the picker's order, after the profile's rules. A mark is a
-    good (or a building, test_a_marked_building_is_built): the building categories are rule targets only."""
-    result, _ = _build()
+def test_plans_run_their_targets() -> None:
+    """Each held plan runs its target (pp_lprof_t_<target>, or the plan's rank-raising turn) through the same start
+    (pp_lprof_open) and end (pp_lprof_finish), in the plans' order, numbered."""
     effects = _code(MOD / lpf.EFFECTS)
     hand = _code(MOD / lpf.HAND_EFFECTS)
     marks = _block(effects, "pp_lplan_location_marks")
-    goods_dispatch = _block(effects, "pp_lprof_goods_target")
-    category_dispatch = _block(effects, "pp_lprof_category_target")
-    plan_items = lp.mark_items(lp.plan_items(ROOT, lp.load_config(PROJECT)))
-    assert [item.key for item in lpf.mark_items(result.items)] == [item.key for item in plan_items], "the picker's items"
-    assert all(item.kind == "good" for item in plan_items)
-    # the marks are the held plan rights (town_plans.py, 2026-11-19): one line per plan, goods in the picker's order,
-    # then food and trade; a good no building makes has no plan
-    lines = re.findall(r"^\t(pp_lplan_mark(?:_none)? = \{ [^\n]* \})$", marks, re.MULTILINE)
+    lines = re.findall(r"^\t(pp_lplan_mark = \{ [^\n]* \})$", marks, re.MULTILINE)
     plans = town_plans.plans(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT))
-    goods = [item.key for item in plan_items if result.targets.get(item.key)]
+    result, _ = _build()
+    goods = [good for good in lpf.target_goods(ROOT, PROJECT) if result.targets.get(good)]
     assert [plan.key for plan in plans] == goods + list(town_plans.EXTRA_PLANS)
     expected = []
     for number, plan in enumerate(plans, 101):
         expected.append(f"pp_lplan_mark = {{ v = g_{plan.key} g = {plan.key} do = {plan.do} "
                         f"n = {number} lo = {number - 0.5:g} hi = {number + 0.5:g} }}")
         assert re.search(rf"^pp_lprof_t_{plan.target} = \{{", effects, re.MULTILINE), plan.key
-        if plan.key in goods:
-            assert f"goods:{plan.key} = {{ pp_lprof_t_{plan.key} = yes }}" in goods_dispatch, plan.key  # the rule's target
     assert lines == expected, "one line per plan, in the plans' order, numbered"
-    assert len(plans) + 101 < lpf.BUILDING_MARK_NUMBER
-    assert len(goods) >= len(plan_items) - 2, "nearly every good has buildings"
-    # the categories stay rule targets
-    for category in lp.load_config(PROJECT).categories:
-        assert f"flag:{category} = {{ pp_lprof_t_{category} = yes }}" in category_dispatch, category
-        assert f"pp_lprof_t_{category}" not in marks and f"c_{category}" not in marks, category
-    # the mark: only when set; start, the target, end; its own state variables
+    assert len(goods) >= len(lpf.target_goods(ROOT, PROJECT)) - 2, "nearly every good has buildings"
     mark = _block(hand, "pp_lplan_mark")
     assert "limit = { has_town_rights = town_rights_type:pp_plan_$g$ }" in mark  # only while the plan right is held
-    assert "has_variable = pp_lplan_$v$" not in mark  # the old goods marks start nothing
-    assert "pp_lplan_mark_none" not in hand + marks
     build = mark[mark.index("pp_lprof_open = yes"):]
     assert build.index("pp_lprof_open = yes") < build.index("$do$ = yes") < build.index("pp_lprof_finish = {")
     assert "limit = { NOT = { has_variable = pp_lprof_st } }" in build  # nothing is tried while it waits
     assert "pp_lprof_finish = { st = pp_lplan_st_$v$ est = pp_lplan_est_$v$ }" in build
-    # no second copy of what a target does: the candidates' effects are called by the generated targets only
-    for name in ("pp_lprof_expand", "pp_lprof_start", "pp_lprof_try", "pp_lprof_build", "pp_cplan_construct_scoped"):
+    for name in ("pp_lprof_expand", "pp_lprof_start", "pp_lprof_build", "pp_cplan_construct_scoped"):
         assert f"{name} = " not in mark + marks, name
-    # the profile's rules first, then the plans and building marks, one construction a month between them
-    run = _block(hand, "pp_lprof_location_turn")
-    assert run.index("pp_lprof_location_rules = yes") < run.index("pp_lplan_location_turn = yes")
-    assert "limit = { has_variable = pp_lprof }" in run
-    assert "OR = {\n\t\t\t\tpp_tplan_held = yes\n\t\t\t\thas_variable_list = pp_lplan_b\n\t\t\t}" in run
-    # the item variables of the two modules agree
-    wheat = next(item for item in plan_items if item.key == "wheat")
-    assert (wheat.var, wheat.state, wheat.est) == ("pp_lplan_g_wheat", "pp_lplan_st_g_wheat", "pp_lplan_est_g_wheat")
+    turn = _block(hand, "pp_lprof_location_turn")
+    assert "limit = { pp_tplan_held = yes }\n\t\tpp_lplan_location_turn = yes" in turn
 
 
-def test_marks_are_forced() -> None:
-    """A. Jan 2026-11-10: "this location-specific upgrading should just force the upgrades ... sometimes I might want
-    to invest in stuff that's zero profit or buildings that don't even have a profit gate, for example a marketplace."
-    A mark has no payback limit and is not held by the market limit; it keeps the can-build check, the workers, the
-    construction goods, a free construction slot and the Locations purse. A profile rule keeps its limit and the
-    market limit."""
+def test_plans_are_forced() -> None:
+    """Jan 2026-11-10: a location's pick is forced: no payback limit, not held by the market limit; it keeps the
+    can-build check, the workers, the construction goods, a free construction slot and the Locations purse."""
     hand = _code(MOD / lpf.HAND_EFFECTS)
     turn = _block(hand, "pp_lprof_location_turn")
     marks = _block(hand, "pp_lplan_location_turn")
     plan = _code(PLAN_EFFECTS)
-    # no payback limit: the marks run with a limit no payback reaches (the payback's own ceiling is 999 years + 100)
     assert "save_temporary_scope_value_as = { name = pp_lprof_pb value = 1000000 }" in marks
     assert "max = 999" in _block(_code(PLAN_VALUES), "pp_cplan_est_payback_years")
-    assert "pp_cplan_business_years" not in hand + _code(MOD / lpf.EFFECTS) and not hasattr(lpf, "MARK_LIMIT")
-    for path in (MOD / lpf.EFFECTS, MOD / lpf.HAND_EFFECTS, PLAN_HAND_EFFECTS, PLAN_GENERATED_EFFECTS):
-        assert not re.search(r"pp_lplan_\w*_pb\b", _code(path)), path.name
-    # a profile rule still compares its payback with its own limit, through the same target effect
-    expand = _block(hand, "pp_lprof_expand")
-    assert "limit = { pp_lprof_payback100 > scope:pp_lprof_pb }\n\t\t\t\tpp_lprof_fail = { r = 103 }" in expand
-    rule = _block(hand, "pp_lprof_rule")
-    assert "save_temporary_scope_value_as = { name = pp_lprof_pb value = var:pp_lprof_r$r$_pb }" in rule
-    # no market limit: the plan's one construct path asks the gate only while nothing is forced, and only the marks
-    # of a location are (the rules before them and the next location's rules are not)
     scoped = _block(plan, "pp_cplan_construct_scoped")
     assert ("limit = {\n\t\t\t\tpp_cplan_limits_market_$why$ = yes\n\t\t\t\tscope:pp_cplan_forced < 0.5\n\t\t\t}\n"
             "\t\t\tpp_cplan_market_do = { do = gate }") in scoped
     forced = "save_temporary_scope_value_as = { name = pp_cplan_forced value = %d }"
     assert forced % 0 in _block(plan, "pp_cplan_pass_begin")
-    assert turn.index(forced % 0) < turn.index("pp_lprof_location_rules = yes") < turn.index("pp_lplan_location_turn = yes")
-    assert turn.rindex(forced % 0) > turn.index("pp_lplan_location_turn = yes"), "off again after the marks"
+    assert turn.index(forced % 0) < turn.index("pp_lplan_location_turn = yes") < turn.rindex(forced % 0)
     assert marks.index(forced % 1) < marks.index("pp_lplan_location_marks = yes")
     assert (hand + plan + _code(MOD / lpf.EFFECTS)).count("name = pp_cplan_forced value = 1") == 1
-    assert _block(_code(MOD / cp.TRIGGERS), "pp_cplan_limits_market_105").strip() == "always = yes"  # the rules' limit
-    # what a mark still needs is the target's own chain: at its highest level, the can-build check, the workers, the
-    # construction goods; then the plan's construct path: a free slot, the purse
+    expand = _block(hand, "pp_lprof_expand")
     for check in ("is_at_max_level = yes", "location_and_owner_can_build = { building_type = $type$ }",
                   "pp_cplan_staff = { type = $pt$ size = $sz$ }", "pp_cplan_goods_here_$demand$ = yes"):
         assert check in expand, check
     assert "pp_cplan_construct_scoped = { why = 105 }" in _block(hand, "pp_lprof_build")
     for check in ("pp_cplan_site_free = yes", "pp_cplan_affordable = { why = $why$ }", "pp_cplan_saving = { why = $why$ }"):
         assert check in scoped, check
-    # the ledger: a mark's construction is the profile group's (why 105), step 0
     assert f"save_temporary_scope_value_as = {{ name = pp_cplan_rs value = {lpf.WHY_MARK_STEP} }}" in marks
-    # the states a forced mark cannot get are not among its texts
-    assert 5 not in lp.MARK_STATES and 10 not in lp.MARK_STATES and set(lp.MARK_STATES) < set(lpf.STATES)
 
 
-def test_measurable_marks_go_first_by_payback() -> None:
-    """A. Inside one location: the marks whose next level has a profit to measure first, the best payback first; the
-    marks without one (a Marketplace: a first level, a level that earns nothing) after them in mark order. Two goes
-    over the marks: one measures, the best is built at once, then the marks run in their order."""
+def test_measurable_plans_go_first_by_payback() -> None:
+    """Inside one location: the plans whose next level has a profit to measure first, the best payback first, built
+    with the cost data it was measured with; then the plans in their order."""
     hand = _code(MOD / lpf.HAND_EFFECTS)
     marks = _block(hand, "pp_lplan_location_turn")
     mode = "save_temporary_scope_value_as = { name = pp_lplan_mode value = %d }"
     first, second = marks.index(mode % 1), marks.index(mode % 2)
-    # measuring only where a construction can start here now
     assert marks.index("pp_cplan_site_free = yes") < first and "NOT = { has_variable = pp_cplan_hit }" in marks[:first]
     measured = marks[first:second]
-    assert measured.index("pp_lplan_location_marks = yes") < measured.index("pp_lplan_building_marks = yes")
-    # ... then the best one is built before any other mark
-    assert measured.index("pp_lplan_building_marks = yes") < measured.index("limit = { has_variable = pp_lplan_bt }")
+    assert measured.index("pp_lplan_location_marks = yes") < measured.index("limit = { has_variable = pp_lplan_bt }")
     assert measured.index("var:pp_lplan_bt = { save_scope_as = pp_cplan_btype }") < measured.index("pp_lprof_build = yes")
+    for name in ("ipl", "pf", "ef"):
+        restore = f"name = pp_cplan_{name} value = {{ value = var:pp_lplan_b{name} subtract = 100 }}"
+        assert measured.index(restore) < measured.index("pp_lprof_build = yes"), name
+        keep = f"set_variable = {{ name = pp_lplan_b{name} value = {{ value = scope:pp_cplan_{name} add = 100 }} }}"
+        assert keep in _block(hand, "pp_lplan_measure"), name
+        assert f"remove_variable = pp_lplan_b{name}\n" in _block(hand, "pp_lplan_measure_clear"), name
     for outcome in (101, 107, 102):
         assert f"set_variable = {{ name = pp_lplan_bo value = {outcome} }}" in measured, outcome
     built = marks[second:]
-    assert built.index("pp_lplan_location_marks = yes") < built.index("pp_lplan_building_marks = yes")
-    assert built.rstrip().endswith("pp_lplan_measure_clear = yes")
-    # the mode is 0 for the profile's rules and after the marks
-    turn = _block(hand, "pp_lprof_location_turn")
-    assert turn.index(mode % 0) < turn.index("pp_lprof_location_rules = yes") and turn.rindex(mode % 0) > turn.index("pp_lplan_location_turn")
+    assert built.index("pp_lplan_location_marks = yes") < built.index("pp_lplan_measure_clear = yes")
+    assert "pp_lplan_b_data" not in marks and "pp_cplan_btype_data" not in marks
     measuring = _block(_code(PLAN_TRIGGERS), "pp_lplan_measuring")
     assert "scope:pp_lplan_mode > 0.5" in measuring and "scope:pp_lplan_mode < 1.5" in measuring
-    # measuring: a standing candidate that passed every check offers its payback instead of being built ...
     expand = _block(hand, "pp_lprof_expand")
     tail = expand[expand.index("pp_cplan_goods_here_$demand$"):]
     assert tail.index("limit = { pp_lplan_measuring = yes }\n\t\t\t\tpp_lplan_measure = yes") < tail.index("pp_lprof_build = yes")
-    # ... only with a profit to measure (no profit = 999 years, + 100), and only when it pays back sooner
     measure = _block(hand, "pp_lplan_measure")
-    # (the payback worked out once: three walks over the location's buildings)
     assert measure.count("pp_lprof_payback100") == 1
-    assert measure.lstrip().startswith("save_temporary_scope_value_as = { name = pp_lplan_pb100 value = pp_lprof_payback100 }")
     assert "scope:pp_lplan_pb100 < 1098" in measure and "var:pp_lplan_bp > scope:pp_lplan_pb100" in measure
-    assert "set_variable = { name = pp_lplan_bt value = scope:pp_cplan_btype }" in measure
-    assert "value = 999" in _block(_code(PLAN_VALUES), "pp_cplan_est_payback_years")
-    # ... and a first level (nothing standing, nothing to measure) is not looked at while measuring
     start = _block(hand, "pp_lprof_start")
-    assert start.lstrip().startswith("if = {\n\t\tlimit = { pp_lplan_measuring = yes }") and "else_if = {\n\t\tlimit = { location_and_owner_can_build" in start
-    # (and neither is a tier step nor a plan's rank raise: no profit to measure)
+    assert start.lstrip().startswith("if = {\n\t\tlimit = { pp_lplan_measuring = yes }")
     assert "NOT = { pp_lplan_measuring = yes }" in _block(hand, "pp_lprof_upgrade")
-    raising = _read(MOD / town_plans.EFFECTS)
-    assert "limit = { NOT = { pp_lplan_measuring = yes } }\n\t\t\tpp_tplan_raise = yes" in raising
-    # the mark that measured the best payback is known by its number and takes what came of the construction
+    assert "limit = { NOT = { pp_lplan_measuring = yes } }\n\t\t\tpp_tplan_raise = yes" in _read(MOD / town_plans.EFFECTS)
     mark = _block(hand, "pp_lplan_mark")
     measuring_part = mark[:mark.index("pp_lprof_open = yes")]
     assert (measuring_part.index("pp_lplan_measure_before = yes") < measuring_part.index("$do$ = yes")
             < measuring_part.index("pp_lplan_measure_after = { n = $n$ }"))
     assert "pp_lprof_finish" not in measuring_part, "measuring writes no state"
-    after = _block(hand, "pp_lplan_measure_after")
-    assert "var:pp_lplan_bq > var:pp_lplan_bp" in after and "set_variable = { name = pp_lplan_bn value = $n$ }" in after
     winner = mark[mark.index("pp_lprof_open = yes"):]
     assert "var:pp_lplan_bn > $lo$" in winner and "var:pp_lplan_bn < $hi$" in winner and "has_variable = pp_lplan_bo" in winner
-    assert winner.index("var:pp_lplan_bn > $lo$") < winner.index("set_variable = { name = pp_lprof_st value = 101 }")
-    assert "pp_lprof_fail = { r = 107 }" in winner and "pp_lprof_fail = { r = 102 }" in winner
-    # every argument of the mark is used, none inside a quoted string
-    for argument in ("v", "do", "n", "lo", "hi"):
+    for argument in ("v", "do", "n", "lo", "hi", "g"):
         assert f"${argument}$" in mark and not re.search(rf"\"[^\"\n]*\${argument}\$", mark), argument
-    # nothing the measuring leaves on the location outlives the turn
     clear = _block(hand, "pp_lplan_measure_clear")
     for name in ("pp_lplan_bp", "pp_lplan_bt", "pp_lplan_bn", "pp_lplan_bo", "pp_lplan_bq"):
         assert f"remove_variable = {name}\n" in clear, name
@@ -759,19 +401,16 @@ class _Values(ScriptEval):
 
 
 def test_locations_take_turns() -> None:
-    """B. The Locations group walked its locations fewest building levels first, so the same places always came
-    first. Now a place on the country says where the last look stopped: the next look starts after it and wraps
-    around. What the group saves for stays one thing; the place moves past it once it is built. No extra walk."""
+    """A place on the country says where the last look stopped: the next look starts after it and wraps around. What
+    the group saves for stays one thing; the place moves past it once it is built. No extra walk."""
     hand = _code(MOD / lpf.HAND_EFFECTS)
     look = _block(hand, "pp_lprof_look")
-    # a location gets its number when it first joins a look: in the gathering the look does anyway
     take = _block(hand, "pp_lprof_take_turn")
     assert "limit = { NOT = { has_variable = pp_lprof_seq } }" in take
     assert "change_variable = { name = pp_lprof_seq_n add = 1 }" in take
     assert "set_variable = { name = pp_lprof_seq value = scope:pp_cplan_country.var:pp_lprof_seq_n }" in take
-    for name in ("pp_lprof_seq_n", "pp_lprof_cursor"):  # a save from before has neither: both start at 100 (= 0)
+    for name in ("pp_lprof_seq_n", "pp_lprof_cursor"):
         assert f"limit = {{ NOT = {{ has_variable = {name} }} }}\n\t\tset_variable = {{ name = {name} value = 100 }}" in look
-    # the order: by number, after the place first, wrapping around (evaluated)
     assert look.index("name = pp_lprof_cur value = var:pp_lprof_cursor") < look.index("ordered_in_list")
     assert "order_by = pp_lprof_turn" in look
     values = _Values(MOD)
@@ -779,350 +418,60 @@ def test_locations_take_turns() -> None:
     def order(numbers: list[int], cursor: int) -> list[int]:
         key = {n: values.value("pp_lprof_turn", {"game": {"var:pp_lprof_seq": 100 + n, "scope:pp_lprof_cur": 100 + cursor}})
                for n in numbers}
-        return sorted(numbers, key=lambda n: -key[n])  # the highest value goes first
+        return sorted(numbers, key=lambda n: -key[n])
 
     assert order([1, 2, 3, 4, 5, 6], 0) == [1, 2, 3, 4, 5, 6]
     assert order([1, 2, 3, 4, 5, 6], 3) == [4, 5, 6, 1, 2, 3]
-    assert order([1, 2, 3, 4, 5, 6], 6) == [1, 2, 3, 4, 5, 6]
     assert order([2, 5, 9], 5) == [9, 2, 5] and order([2, 5, 9], 40) == [2, 5, 9]
-    # the place after a look: just before the location the group saves for (the first thing in turn order the purse
-    # could not pay), so the next look starts with it; a look that paid for everything leaves the place
     after = look[look.index("clear_variable_list = pp_lprof_turns"):]
     assert "limit = { has_variable = pp_cplan_save_loc_105 }" in after
     assert "name = pp_lprof_cur value = { value = var:pp_lprof_seq subtract = 1 }" in after
-    assert "set_variable = { name = pp_lprof_cursor value = scope:pp_lprof_cur }" in after
-    assert look.count("set_variable = { name = pp_lprof_cursor") == 2  # the start value and this
-    # between looks the group goes back to that one location; when it built, the place moves past it
-    run = _block(hand, "pp_lprof_run")
-    assert "pp_cplan_group_target = { why = 105 do = pp_lprof_target_turn }" in run
+    assert look.count("set_variable = { name = pp_lprof_cursor") == 2
     target = _block(hand, "pp_lprof_target_turn")
     assert target.index("pp_lprof_location_turn = yes") < target.index("has_variable = pp_cplan_hit")
-    assert "name = pp_lprof_cur value = var:pp_lprof_seq" in target
     assert "set_variable = { name = pp_lprof_cursor value = scope:pp_lprof_cur }" in target
-    # no extra walk: the look's walks are the gathering and the ordered list, as before; the turn walks nothing
     assert len(re.findall(r"\b(?:every|ordered|random|any)_\w+ = \{", look)) == 1
     for name in ("pp_lprof_target_turn", "pp_lprof_location_turn", "pp_lprof_take_turn"):
         assert not re.search(r"\b(?:every|ordered|random|any)_\w+ = \{", _block(hand, name)), name
-    assert "total_building_levels" not in _code(PLAN_VALUES).split("pp_lprof_turn = {")[1].split("\n}\n")[0]
 
 
-def test_a_marked_building_is_built() -> None:
-    """C. A marked building (a building type on the location's list) is built like any mark, forced: a level of it;
-    where the country has researched a later tier, that tier; where an older tier of it stands here, the upgrade
-    (a construction of the successor is the game's Upgrade button). The successor map is the Towns and Buildings
-    rule's."""
-    from prosper_or_perish_constructor import construction_plan_country as cc
-
+def test_planned_locations_get_their_turn() -> None:
+    """The look finds the locations that hold a plan among the country's locations with town rights, no list of its
+    own; each once."""
     hand = _code(MOD / lpf.HAND_EFFECTS)
-    effects = _code(MOD / lpf.EFFECTS)
-    triggers = _code(MOD / lpf.TRIGGERS)
-    pairs, staff = lpf.building_mark_data(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT))
-    country = cc.apply(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT), write=False)
-    assert pairs and set(country.upgrades) <= set(pairs) and len(pairs) >= 150
-    # the walk over the location's list
-    walk = _block(hand, "pp_lplan_building_marks")
-    assert f"has_variable_list = {lp.BUILDING_MARKS}" in walk and f"variable = {lp.BUILDING_MARKS}" in walk
-    assert "pp_cplan_site_free = yes" in walk and "NOT = { has_variable = pp_cplan_hit }" in walk
-    assert "save_scope_as = pp_cplan_btype" in walk and "scope:pp_lplan_here = { pp_lplan_building_mark = yes }" in walk
-    assert "save_temporary_scope_as = pp_lplan_here" in _block(hand, "pp_lplan_location_turn")
-    mark = _block(hand, "pp_lplan_building_mark")
-    maps = lpf.building_mark_maps(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT))
-    fill = _block(effects, "pp_lplan_maps_fill")
-    # the newest tier of the line the country can build: the highest of the main line's later tiers (global maps
-    # pp_lplan_up<k>, filled once) the country can build; every pair's successor is on its older tier's main line
-    assert maps.depth == lpf.line_depth(pairs) >= 2
-    for older, successor in pairs:
-        assert successor in maps.up[older] or any(successor in maps.up[later] for later in maps.up[older] if later in maps.up), (older, successor)
-    for older, line in maps.up.items():
-        for k in range(1, maps.depth + 1):
-            top = line[min(k, len(line)) - 1]
-            assert (f"add_to_global_variable_map = {{ name = pp_lplan_up{k} key = building_type:{older} "
-                    f"value = building_type:{top} }}") in fill, (older, k)
-    newest = _block(effects, "pp_lplan_b_newest")
-    assert newest.count("can_build_building") == maps.depth and "pp_lplan_b_step" not in effects
-    assert newest.index("is_key_in_global_variable_map = { name = pp_lplan_up1 target = scope:pp_cplan_btype }") < newest.index(
-        f"global_variable_map(pp_lplan_up{maps.depth}|scope:pp_lplan_base)")
-    assert mark.index("pp_lplan_b_newest = yes") < mark.index("can_build_building = scope:pp_cplan_btype")
-    # the upgrade: an older tier of it stands here and the country can upgrade it (the Towns and Buildings rule's check)
-    upgrade = _block(triggers, "pp_lplan_b_upgrade_here")
-    for older, successor in pairs:
-        k = maps.down[successor].index(older) + 1
-        assert (f"add_to_global_variable_map = {{ name = pp_lplan_dn{k} key = building_type:{successor} "
-                f"value = building_type:{older} }}") in fill, (older, successor)
-    for k in range(1, maps.older + 1):
-        assert (f"is_key_in_global_variable_map = {{ name = pp_lplan_dn{k} target = scope:pp_cplan_btype }}\n\t\t\t"
-                f"any_buildings_in_location = {{ building_type = \"global_variable_map(pp_lplan_dn{k}|scope:pp_cplan_btype)\" "
-                "pp_cplan_country_upgradable = yes }") in upgrade, k
-    assert "pp_cplan_country_upgradable" in _defined("scripted_triggers")
-    # what it needs: nothing of it under construction, not at its highest level, the country's and the location's part
-    # of the can-build check (an upgrade does not ask the location's), the workers (not an upgrade), the goods
-    for check in ("pp_cplan_bt_queued < 0.5", "pp_cplan_bt_queued > 0.5", "is_at_max_level = yes",
-                  "scope:pp_cplan_country = { can_build_building = scope:pp_cplan_btype }",
-                  "can_build_building = scope:pp_cplan_btype\n\t\t\t\t\tpp_lplan_b_upgrade_here = yes",
-                  "pp_lplan_b_staff = yes", "pp_lplan_b_data = yes", "scope:pp_cplan_gok > 0.5", "scope:pp_lplan_sok > 0.5"):
-        assert check in mark, check
-    assert mark.rindex("pp_lplan_b_data = yes") < mark.index("pp_lprof_build = yes")
-    assert "pp_cplan_btype_data" not in mark  # the plan's cost lookup tests the type against every building type
-    assert "pp_cplan_note_goods = { why = 105 }" in mark  # the window counts what the construction goods held back
-    # forced like every mark: built through the profiles' one build effect, no payback and no market check of its own
-    assert "pp_lprof_payback100 >" not in mark and "pp_cplan_market" not in mark and "scope:pp_lprof_pb" not in mark
-    # measured like a goods mark when it stands and earns; the measured one is not tried twice
-    assert "limit = { pp_lplan_measuring = yes }" in mark and "\t\t\t\tpp_cplan_bt_levels > 0.5\n" in mark
-    assert f"pp_lplan_measure_after = {{ n = {lpf.BUILDING_MARK_NUMBER} }}" in mark
-    assert "var:pp_lplan_bn > 999.5" in mark and "var:pp_lplan_bt = scope:pp_cplan_btype" in mark
-    # the workers: every building type with workers has its size and pop type in the maps
-    check = _block(effects, "pp_lplan_b_staff")
-    assert check.lstrip().startswith("save_temporary_scope_value_as = { name = pp_lplan_sok value = 1 }")
-    idle = _defined("script_values")
-    for name, (pop_type, workers) in staff.items():
-        if workers > 0:
-            assert f"add_to_global_variable_map = {{ name = pp_lplan_wk key = building_type:{name} value = {cp._num(workers)} }}" in fill, name
-            assert (f"add_to_global_variable_map = {{ name = pp_lplan_wp key = building_type:{name} "
-                    f"value = {101 + maps.pop_types.index(pop_type)} }}") in fill, name
-            assert f"pp_cplan_idle_{pop_type}" in idle, pop_type
-    for pop_type in maps.pop_types:
-        assert check.count(f"pp_cplan_staff = {{ type = {pop_type} size = scope:pp_lplan_wn }}") == 1, pop_type
-    # no DLC-only building type is named
-    types = cc.database(MOD, vanilla_root(ROOT, PROJECT), cc.BUILDING_TYPES)
-    dlc = {name for name, entry in types.items() if entry.dlc_only}
-    named = set(re.findall(r"building_type:(\w+)", fill + newest + upgrade + check)) - set(maps.costs)
-    assert not named & dlc
-    assert set(re.findall(r"building_type:(\w+)", fill)) & set(pairs[0])
-    # a NOT never holds two conditions (NOT = { a b } is NOR in the engine)
-    for body in (mark, walk, _block(hand, "pp_lplan_location_turn"), _block(hand, "pp_lplan_mark")):
-        for inner in re.findall(r"NOT = \{ ([^{}]*(?:\{[^{}]*\}[^{}]*)*) \}", body):
-            assert len(re.findall(r"\w+ (?:=|<|>)", re.sub(r"\{[^{}]*\}", "", inner))) <= 1, inner
-
-
-def test_marked_locations_get_their_turn() -> None:
-    """The pass finds the locations with marks: the country's list pp_lplan_locs (kept by every toggle) joins the
-    profile locations for the pass, each location once; a location with marks and no profile is processed too. The
-    list is cleaned like the profile list, and an own location keeps no marks the country did not set."""
-    hand = _code(MOD / lpf.HAND_EFFECTS)
-    run = _block(hand, "pp_lprof_look")
+    look = _block(hand, "pp_lprof_look")
     gather = _block(hand, "pp_lprof_gather")
-    assert run.index("pp_lplan_cleanup = yes") < run.index("pp_lprof_gather = yes") < run.index("ordered_in_list")
-    assert "variable = pp_lprof_turns" in run and "clear_variable_list = pp_lprof_turns" in run
-    assert (gather.index("variable = pp_lprof_locs") < gather.index("variable = pp_lplan_locs")
-            < gather.index("every_locations_with_town_rights_in_country"))
-    second = gather[gather.index("variable = pp_lplan_locs"):gather.index("every_locations_with_town_rights_in_country")]
-    for part in ("owner ?= scope:pp_cplan_country", "has_variable_list = pp_lplan_b", "NOT = { has_variable = pp_lprof }"):
-        assert part in second, part  # a location with a profile and marks is taken once, from the profile list
-    # a location that holds a plan right (town_plans.py): found among the country's locations with town rights, once
-    third = gather[gather.index("every_locations_with_town_rights_in_country"):]
-    for part in ("owner ?= scope:pp_cplan_country", "pp_tplan_held = yes", "NOT = { has_variable = pp_lprof }",
-                 "pp_lprof_take_turn_once = yes"):
-        assert part in third, part
-    once = _block(hand, "pp_lprof_take_turn_once")
-    assert "is_target_in_variable_list = { name = pp_lprof_turns target = scope:pp_lprof_this }" in once
+    assert look.index("pp_lprof_gather = yes") < look.index("ordered_in_list")
+    assert "variable = pp_lprof_turns" in look and "clear_variable_list = pp_lprof_turns" in look
+    assert "every_locations_with_town_rights_in_country = {" in gather
+    for part in ("owner ?= scope:pp_cplan_country", "pp_tplan_held = yes", "pp_lprof_take_turn = yes"):
+        assert part in gather, part
+    assert "variable = " not in gather.replace("clear_variable_list", "")
     assert "add_to_variable_list = { name = pp_lprof_turns target = scope:pp_lprof_this }" in _block(hand, "pp_lprof_take_turn")
-    # the group runs (and takes its part of the gold) while a location has a profile, a building mark or a plan
-    has = _block(_code(MOD / lpf.TRIGGERS), "pp_lprof_has_locations")
-    assert "variable = pp_lprof_locs" in has and "variable = pp_lplan_locs" in has and "has_variable_list = pp_lplan_b" in has
-    assert "any_locations_with_town_rights_in_country = {\n\t\t\towner ?= root\n\t\t\tpp_tplan_held = yes" in has
-    assert "has_variable = pp_lplan_n" not in has  # the old goods marks start nothing
-    # the list follows the marks: every toggle and Clear keep it
-    plan = _code(PLAN_HAND_EFFECTS)
-    assert "pp_lplan_keep_list = yes" in _block(plan, "pp_lplan_flip")
-    assert "pp_lplan_keep_list = yes" in _block(plan, "pp_lplan_clear_do")
-    keep = _block(plan, "pp_lplan_keep_list")
-    assert "add_to_variable_list = { name = pp_lplan_locs target = scope:pp_lplan_this }" in keep
-    assert "remove_list_variable = { name = pp_lplan_locs target = scope:pp_lplan_this }" in keep
-    assert "pp_lplan_clear_do = yes" in _code(PLAN_SCRIPTED_GUIS)
-    # cleanup: entries without marks leave the list; an own location that is not on it loses its marks (and states)
-    cleanup = _block(hand, "pp_lplan_cleanup")
-    assert "limit = { NOT = { has_variable = pp_lplan_n } }" in cleanup
-    assert "remove_list_variable = { name = pp_lplan_locs target = scope:pp_lprof_this }" in cleanup
-    assert "every_owned_location" in cleanup and "pp_lplan_clear_all = yes" in cleanup
-    clear = _block(_code(PLAN_GENERATED_EFFECTS), "pp_lplan_clear_all")
-    flip = _block(plan, "pp_lplan_flip")
-    for item in lp.plan_items(ROOT, lp.load_config(PROJECT)):
-        for name in (item.var, item.state, item.est):
-            assert f"remove_variable = {name}\n" in clear, name
-    for name in ("pp_lplan_$v$", "pp_lplan_st_$v$", "pp_lplan_est_$v$"):
-        assert f"remove_variable = {name}\n" in flip, name  # a mark removed takes its state along
-    # every state variable that is removed is also set (the engine logs a variable that is only ever removed): each
-    # item's mark line expands pp_lprof_finish with its own names
     finish = _block(hand, "pp_lprof_finish")
     assert "set_variable = { name = $st$ value" in finish and "set_variable = { name = $est$ value" in finish
 
 
+def test_rank_raise_saved_under_105() -> None:
+    """A plan's rank raise saves under the Locations group (pp_cplan_save_rank_105): the window reads it, every place
+    that lets go of what a group saves for removes it, and the group's target turn lets go of it before the plan's turn
+    raises the rank again."""
+    values = _read(MOD / cp.VALUES)
+    effects = _read(MOD / cp.EFFECTS)
+    assert "has_variable = pp_cplan_save_rank_105" in _block(values, "pp_cplan_save_rank_n_105")
+    assert "remove_variable = pp_cplan_save_rank_105" in _block(effects, "pp_cplan_stats_reset_105")
+    assert "remove_variable = pp_cplan_log_rank" in _block(effects, "pp_cplan_stats_reset_105")
+    assert "remove_variable = pp_cplan_save_rank_105" in _block(effects, "pp_cplan_purses_fill")
+    target = _block(_code(MOD / lpf.HAND_EFFECTS), "pp_lprof_target_turn")
+    assert target.index("remove_variable = pp_cplan_save_rank_105") < target.index("pp_lprof_location_turn = yes")
+
+
 def test_one_check_for_a_free_construction_site() -> None:
-    """A rule or a mark waits while a construction is under way in the location; the check is the plan's own trigger,
-    never a copy of it."""
+    """A plan waits while a construction is under way in the location; the check is the plan's own trigger."""
     opened = _block(_code(MOD / lpf.HAND_EFFECTS), "pp_lprof_open")
     assert "limit = { NOT = { pp_cplan_site_free = yes } }" in opened and "value = 103" in opened
     assert re.search(r"^pp_cplan_site_free = \{", _read(PLAN_TRIGGERS), re.MULTILINE)
-    for path in OWN_FILES + (PLAN_HAND_EFFECTS, PLAN_GENERATED_EFFECTS):
+    for path in OWN_FILES:
         assert "num_civil_constructions" not in _code(path), path.name
-    # the workers check is the plan's too
-    for name in ("pp_lprof_expand", "pp_lprof_start", "pp_lprof_try"):
+    for name in ("pp_lprof_expand", "pp_lprof_start"):
         assert "pp_cplan_staff = { type = $pt$ size = $sz$ }" in _block(_code(MOD / lpf.HAND_EFFECTS), name), name
-
-
-def test_towns_and_buildings_switch() -> None:
-    """The fifth "Global rules here" switch: the Towns and Buildings group (pp_lprof_xc on the location, read by that
-    group's own triggers); the example "hands off" switches it off too."""
-    config = lpf.load_config(PROJECT)
-    assert ("xc", "global_country", "country") in lpf.GLOBAL_GROUPS and len(lpf.GLOBAL_GROUPS) == 5
-    effects = _code(MOD / lpf.EFFECTS)
-    staged = _block(effects, "pp_lprof_global_staged")
-    assert "flag:global_country = {" in staged and "set_variable = { name = pp_lprof_s_xc value = 101 }" in staged
-    assert "pp_lprof_pull_n = { from = $from$_xc to = $to$_xc }" in _block(effects, "pp_lprof_copy_profile")
-    assert "remove_variable = $p$_xc" in _block(effects, "pp_lprof_clear_copies")
-    assert "xc" in lpf.profile_fields(config) and "global_country" in lpf.declared_flags(lpf.profile_items(ROOT, PROJECT), config)
-    assert "pp_lprof_xc" in lpf.gui_only_variables(config)
-    hands_off = [example for example in config.examples if not example.rules]
-    assert hands_off and "country" in hands_off[0].off
-
-
-def test_quick_candidates_follow_the_targets() -> None:
-    """The location window's row offers, unmarked, the goods a standing building makes: per good a value that is 1
-    while one of the buildings its mark would expand stands here and the good is not marked."""
-    result, _ = _build()
-    values = _code(MOD / lpf.VALUES)
-    quick = lpf.quick_goods(result.items, result.targets)
-    assert {"wheat", "lumber", "tools"} <= {item.key for item in quick}
-    assert all(item.kind == "good" and item.key != lpf.LOGISTICS for item in quick)
-    for item in quick:
-        body = _block(values, f"pp_lplan_quick_{item.key}")
-        assert f"NOT = {{ has_variable = {item.var} }}" in body, item.key
-        assert re.findall(r"has_building = building_type:(\w+)", body) == [c.name for c in result.targets[item.key]], item.key
-    assert len(re.findall(r"^pp_lplan_quick_(?!room_)\w+ = \{", values, re.MULTILINE)) == len(quick)
-
-
-def _quick_row(values: str, chunks: list[list[lp.Item]], marked: int, standing: set[str]) -> int:
-    """Tiles the row shows for a location with ``marked`` marks whose buildings make the unmarked goods ``standing``,
-    by the generated room values."""
-    shown, room = marked, None
-    for number, chunk in enumerate(chunks, 1):
-        body = _block(values, f"pp_lplan_quick_room_{number}")
-        if number == 1:
-            match = re.fullmatch(r"\s*value = (\d+)\s+subtract = pp_lplan_planned_n\s*", body)
-            assert match, body
-            room = int(match.group(1)) - marked
-        else:
-            assert f"value = pp_lplan_quick_room_{number - 1}\n" in body
-            before = re.findall(r"subtract = pp_lplan_quick_(\w+)", body)
-            assert before == [item.key for item in chunks[number - 2]], number
-            room -= sum(1 for key in before if key in standing)
-        if room > 0:
-            shown += sum(1 for item in chunk if item.key in standing)
-    return shown
-
-
-def test_quick_candidates_never_overflow_the_row() -> None:
-    """The row holds QUICK_ROW tiles: the marks, then the candidates chunk by chunk while a whole chunk still fits."""
-    import random
-
-    result, _ = _build()
-    values = _code(MOD / lpf.VALUES)
-    chunks = lpf.quick_chunks(result.items, result.targets)
-    assert all(len(chunk) <= lpf.QUICK_CHUNK for chunk in chunks) and lpf.QUICK_CHUNK < lpf.QUICK_ROW
-    keys = [item.key for chunk in chunks for item in chunk]
-    assert _quick_row(values, chunks, 0, set()) == 0
-    assert _quick_row(values, chunks, 0, set(keys[-3:])) == 3, "a few candidates show wherever they sit in the list"
-    assert _quick_row(values, chunks, 2, {keys[0], keys[40]}) == 4
-    rng = random.Random(7)
-    for _ in range(300):
-        marked = rng.randint(0, lpf.QUICK_ROW)
-        standing = set(rng.sample(keys, rng.randint(0, len(keys))))
-        shown = _quick_row(values, chunks, marked, standing)
-        assert shown <= max(marked, lpf.QUICK_ROW), (marked, len(standing))
-        if marked + len(standing) <= lpf.QUICK_ROW - lpf.QUICK_CHUNK + 1:
-            assert shown == marked + len(standing), "nothing is hidden while the row has room"
-        elif marked <= lpf.QUICK_ROW - lpf.QUICK_CHUNK:
-            assert shown > lpf.QUICK_ROW - 2 * lpf.QUICK_CHUNK, "a cut row is still well filled"
-
-
-def _all_blocks() -> dict[str, str]:
-    """Every scripted effect, scripted trigger and script value of the mod by name (comments out)."""
-    blocks: dict[str, str] = {}
-    for folder in ("scripted_effects", "scripted_triggers", "script_values"):
-        for path in sorted((COMMON / folder).glob("*.txt")):
-            for name, body in re.findall(r"^([A-Za-z_][A-Za-z0-9_]*) = \{(.*?)^\}", _code(path), re.MULTILINE | re.DOTALL):
-                blocks.setdefault(name, body)
-    return blocks
-
-
-def _reached(start: str, blocks: dict[str, str], stop: set[str]) -> dict[str, str]:
-    """What ``start`` runs or reads, through every effect, trigger and value it names (not past ``stop``)."""
-    seen: dict[str, str] = {}
-    todo = [start]
-    while todo:
-        name = todo.pop()
-        if name in seen or name in stop or name not in blocks:
-            continue
-        seen[name] = blocks[name]
-        todo += re.findall(r"\b(pp_[a-z0-9_]+)\b", blocks[name])
-    return seen
-
-
-def test_a_building_mark_costs_a_few_lookups() -> None:
-    """Script time (2026-11-11): a marked building read what it needs of its type (the newest tier it can build, the
-    older tier that stands, its workers, its cost data) through chains that tested the type against every building
-    type, about 1,400-2,350 comparisons a mark and go. Now global variable maps keyed by the type hold it, filled once
-    per save and game data version; nothing on a mark's path (the measuring and the second go, the map icon's done
-    check) names a building type, and the lookups over a number (pop type, construction demand, efficiency category)
-    halve their range. Only an actual construction runs the plan's own build (pp_lprof_build: the cost lookup of
-    pp_cplan_construct_scoped), once a location at most."""
-    blocks = _all_blocks()
-    stop = {"pp_lprof_build", "pp_lplan_maps_ready", "pp_lplan_maps_fill"}
-    for start in ("pp_lplan_building_mark", "pp_lplan_building_marks", "pp_lplan_b_done", "pp_lplan_b_finish"):
-        path = _reached(start, blocks, stop)
-        assert "pp_lplan_b_newest" in path or start in ("pp_lplan_b_done", "pp_lplan_b_finish"), start
-        for name, body in path.items():
-            assert "building_type:" not in body, (start, name)
-    # the location's turn builds its measured best with the maps' cost data, not the plan's lookup
-    turn = _all_blocks()["pp_lplan_location_turn"]
-    assert "pp_lplan_b_data = yes" in turn and "pp_cplan_btype_data" not in turn
-    # the halving lookups: at most ceil(log2(n)) + 1 comparisons deep
-    maps = lpf.building_mark_maps(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT))
-    assert len(maps.demands) > 50
-    effects = _code(MOD / lpf.EFFECTS)
-    for name, value, count in (("pp_lplan_b_data", "pp_lplan_dmi", len(maps.demands)),
-                               ("pp_lplan_b_data", "pp_lplan_cti", len(maps.categories)),
-                               ("pp_lplan_b_staff", "pp_lplan_wt", len(maps.pop_types))):
-        body = _block(effects, name)
-        depth = max(len(re.match(r"\t*", line).group(0)) for line in body.splitlines() if f"scope:{value} <" in line)
-        assert depth - 2 <= 2 * (count - 1).bit_length(), (name, value, depth)
-        assert body.count(f"scope:{value} <") == count - 1, (name, value)
-    # the lookup chain is gone; its replacement is filled once, and only when the stamp in the save differs
-    assert "pp_lplan_b_step" not in effects
-    ready = _block(effects, "pp_lplan_maps_ready")
-    version = lpf.maps_version(maps)
-    assert f"global_var:pp_lplan_maps_v < {version - 0.5:g}" in ready and "pp_lplan_maps_fill = yes" in ready
-    fill = _block(effects, "pp_lplan_maps_fill")
-    assert f"set_global_variable = {{ name = pp_lplan_maps_v value = {version} }}" in fill
-    for name in lpf.map_names(maps):
-        assert f"clear_global_variable_map = pp_lplan_{name} }}" in fill, name
-    # where the maps are made ready: the pass (every month, any weight), a building toggle, the window
-    hand = _code(MOD / lpf.HAND_EFFECTS)
-    plan = _code(COMMON / "scripted_effects/pp_location_plan.txt")
-    assert "pp_lplan_maps_ready = yes" in _block(hand, "pp_lprof_run")
-    assert "pp_lplan_maps_ready = yes" in _block(plan, "pp_lplan_bflip") and "pp_lplan_maps_ready = yes" in _block(plan, "pp_lplan_select")
-    # the same cost data as the plan's lookup: per type the values pp_cplan_btype_data sets
-    for type_name, cost in maps.costs.items():
-        if cost.ipl:
-            assert f"name = pp_lplan_ipl key = building_type:{type_name} value = {cp._num(cost.ipl)} }}" in fill, type_name
-        if cost.demand != cp.DEFAULT_DEMAND:
-            assert f"name = pp_lplan_dm key = building_type:{type_name} value = {101 + maps.demands.index(cost.demand)} }}" in fill
-    data = _block(effects, "pp_lplan_b_data")
-    for index, demand in enumerate(maps.demands):
-        assert f"pp_cplan_cd_{demand} }}" in data and f"pp_cplan_goods_here_{demand} = yes" in data, demand
-    for category in maps.categories:
-        assert f"pp_cplan_eff_{category} }}" in data, category
-    # the halving search finds every number
-    tree = lpf._chain("v", 5, lambda i: f"hit {i}")
-    for n in range(5):
-        lines, here, depth = tree.splitlines(), 0, 2
-        # walk it: take the if when 101 + n < bound, else the else
-        position = 0
-        while not lines[position].strip().startswith("hit"):
-            bound = float(re.search(r"< ([\d.]+)", lines[position + 1]).group(1))
-            if 101 + n < bound:
-                position += 2
-            else:
-                tab = re.match(r"\t*", lines[position]).group(0)
-                position = lines.index(f"{tab}else = {{", position) + 1
-        assert lines[position].strip() == f"hit {n}", n

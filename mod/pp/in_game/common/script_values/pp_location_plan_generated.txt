@@ -84,13 +84,3 @@ pp_tplan_n = {
 		if = { limit = { has_town_rights = town_rights_type:pp_plan_trade } add = 1 }
 	}
 }
-
-# Location scope: the old marks of a save (goods and buildings), read by the profile pass until it goes.
-pp_lplan_planned_n = {
-	value = 0
-	if = {
-		limit = { has_variable = pp_lplan_n }
-		value = var:pp_lplan_n
-		subtract = 100
-	}
-}

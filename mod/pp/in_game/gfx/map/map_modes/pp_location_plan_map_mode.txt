@@ -1,9 +1,11 @@
-﻿# Prosper or Perish - Location Plan map mode (branch location-plan, 2026-11-07, Jan): the planned icons over the player's
-# locations (marked in the Location Plan window, gui/pp_location_plan.gui, or the location window's row "Also build
-# here"): what the Construction Plan also builds there. The map mode itself only shows them.
+﻿# Prosper or Perish - Location Plan map mode (branch location-plan, 2026-11-07, Jan; town-right plans since 2026-11-19,
+# branch town-plans): over each of the player's locations the icons of its town rights, the plans among them (set in the
+# Location Plan window, gui/pp_location_plan.gui, or the Plans row of the location window): what the Construction Plan
+# builds toward there. The map mode itself only shows them.
 #
 # The icons are vanilla's raw goods marker (map_markers.gui, patched by location_plan.py: in this map mode it draws the
-# plan's icons on a green tile once done, red while still to do). The engine creates raw goods markers only with the
+# location's town rights, each with its own icon and name; no colour means done or to do, so there is no legend). The
+# engine creates raw goods markers only with the
 # raw_material color mode (tested 2026-11-07: map_markers = { raw_goods_marker = yes } alone shows none, also not in
 # vanilla's market_food_balance; raw_material map names do not create them either), so this mode takes that color mode
 # and fades it almost out: a neutral map under the icons. A map_color block would be ignored with a color_mode.
@@ -23,8 +25,7 @@
 pp_location_plan = {
 	color_mode = raw_material
 
-	legend_key = { desc = "MAPMODE_PP_LOCATION_PLAN_DONE" color = rgb { 64 179 77 } }
-	legend_key = { desc = "MAPMODE_PP_LOCATION_PLAN_OPEN" color = rgb { 191 64 51 } }
+	# no legend_key: the faded map's colours mean nothing here
 	# no tooltip_key: ignored with a color_mode (error.log); each icon has its own tooltip
 
 	small_map_names = location

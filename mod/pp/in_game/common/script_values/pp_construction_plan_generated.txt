@@ -95,8 +95,8 @@ pp_cplan_country_w = {
 		subtract = 100
 	}
 }
-# Country scope: the location profiles' weight counts only while a location of the country has a profile or a
-# mark (pp_lprof_group_n, pp_location_profiles_generated.txt).
+# Country scope: the Locations group's weight counts only while a location of the country holds a plan
+# (pp_lprof_group_n, pp_location_profiles_generated.txt).
 pp_cplan_profiles_cw = {
 	value = pp_cplan_profiles_w
 	multiply = pp_lprof_group_n
@@ -18404,7 +18404,14 @@ pp_cplan_save_cost_n_105 = {
 		subtract = 100
 	}
 }
-pp_cplan_save_rank_n_105 = { value = 0 }
+pp_cplan_save_rank_n_105 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_save_rank_105 }
+		value = var:pp_cplan_save_rank_105
+		subtract = 100
+	}
+}
 # what it keeps at the pass's start: nothing while it does not count (its weight 0, or nothing to do)
 pp_cplan_purse_kept_105 = {
 	value = 0
@@ -19226,6 +19233,14 @@ pp_cplan_d_profiles_st10 = {
 	if = {
 		limit = { has_variable = pp_cplan_ds_profiles_st10 }
 		value = var:pp_cplan_ds_profiles_st10
+		subtract = 100
+	}
+}
+pp_cplan_d_profiles_st11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_profiles_st11 }
+		value = var:pp_cplan_ds_profiles_st11
 		subtract = 100
 	}
 }

@@ -138,6 +138,10 @@
   right, but vanilla Bergslag does not check for it (one way, like every PP right); mining charter and the Bergregal
   rights may stack with it in a city with two slots. Icon: `assets/town_right_drawings/goods/iron.py` (blast
   furnace, pick and hammer; rights frame only, `LINES` in `render.py`).
+- Plan rights `pp_plan_<plan>` (2026-11-19, Jan, branch `town-plans`, not tested in game) are town rights too but no
+  specialization: no bonus, own slot, never in the one-specialization lists; a planned town gets its good's charter
+  and rights from the Construction Plan ("Town-Right Plans" below). Their colours are spread hues (`town_plans.plan_color`):
+  EU5 logs every pair of rights that share a colour.
 - Trade buildings: no institution gates. Rule (Jan, 2026-10-19): a building an advance unlocks never needs an
   institution on top; once researched, it can be built (`tests/test_trade_building_gates.py` checks every loaded
   building type, vanilla and mod, scripted triggers included). The Printing Press / Global Trade gates of 2026-10-06 on
@@ -670,6 +674,28 @@
   gate's trigger cost 0.146 s over 82k evaluations in the 2026-11-10 profile. Not tested in game.
 - Watch in the next run: who colonizes overseas by half century, Holland's first colony, native backyard charters
   (Inca, Chimu, Kongo, Kilwa, Mali, Benin), running charters of a country that loses its ports.
+
+## Town-Right Plans (2026-11-19, Jan, branch `town-plans`)
+
+- The Construction Plan's one per-location decision is a plan: a town right `pp_plan_<plan>` (75 goods + `food` +
+  `trade`; `town_plans.py`), set and removed only by the mod's button (Location Plan window, the location window's
+  Plans row), any owned location incl. rural, several per location. The right: `potential = { always = no }` (no AI,
+  not in the game's grant list, never a Towns and Buildings tile), no bonus, `kept_at_conquest = no`, +1
+  `local_possible_town_rights` of its own, its own colour. Location Profiles and the Location Plan marks (goods and
+  building marks) are gone; the Construction Plan window has two tabs.
+- The Locations rule group (key `profiles`, code 105) builds for every held plan, forced (no payback limit, no market
+  limit): the good's producers level after level, the newer tier as it unlocks (upgrade first), food = staple food
+  producers + Province Food buildings, trade = trade buildings; for the 15 plans whose producers need a town or city it
+  raises the rank first (`pp_tplan_raise` -> `pp_cplan_country_rank_up = { rank n why = 105 }`, state 11 where it
+  cannot). Towns and Buildings grants a planned town the good's specialization charter (18 goods; iron its rights) and
+  swaps charter for rights by revoke + grant (`pp_cplan_country_plan_rights`), at the normal influence prices.
+- Engine (static analysis of 1.4.9; behaviour only, internals stay private): a script grant skips every check and can
+  stack duplicates (every grant is guarded); every held right counts against the slots; a false potential never strips
+  a held right; a rank change revokes the newest rights above the slot count; a hostile owner change destroys
+  `kept_at_conquest = no` rights; every script grant / revoke sends the game's town rights message.
+- Limits: one charter per town; a two-steps-old tier upgrades only while the middle tier can still be built; plans are
+  lost on conquest. Not tested in game. `docs/location_plan.md` (the feature), `docs/location_profiles.md` (the
+  engine's internal names), `docs/construction_plan_country.md` "Plans: charters and rights".
 
 ## Release Checklist
 

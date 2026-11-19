@@ -80,29 +80,30 @@ def test_window_references_exist() -> None:
         assert name in script_values, f"script value {name} missing"
     for key in set(re.findall(r"\"(PP_CPLAN_[A-Z0-9_]+)\"", text)):
         assert key in loc_keys, f"text {key} missing"
-    # the second tab is the profile editor, a type of the profiles' GUI file
-    assert "pp_lprof_editor_tab = {}" in _read(WINDOW)
-    assert re.search(r"type pp_lprof_editor_tab = vbox", _read(PROFILES_GUI))
+    # the Location profiles tab is gone (2026-11-19): no profile editor, no profile GUI file
+    assert "pp_lprof" not in _read(WINDOW)
+    assert not PROFILES_GUI.exists()
 
 
-def test_three_tabs_and_nothing_else() -> None:
-    """Jan 2026-11-09: Global settings and Location profiles; 2026-11-10: Towns and Buildings, the settings of the
-    rule group of that name (type pp_cplan_country_tab, construction_plan_country.py), hosted like the profile editor.
-    The Food, Goods, Logistics, Locations and Here tabs, the monthly construction limit, the presets, the goods modes,
-    the per-location own rules and modes, the logistics overrides and the province focus are gone from the window, the
-    scripts and the texts."""
+def test_two_tabs_and_nothing_else() -> None:
+    """Jan 2026-11-09: Global settings; 2026-11-10: Towns and Buildings, the settings of the rule group of that name
+    (type pp_cplan_country_tab, construction_plan_country.py). The Location profiles tab went on 2026-11-19 (the
+    town-right plan is the one per-location decision). The Food, Goods, Logistics, Locations and Here tabs, the monthly
+    construction limit, the presets, the goods modes, the per-location own rules and modes, the logistics overrides
+    and the province focus are gone from the window, the scripts and the texts."""
     window = _read(WINDOW)
     tabs = re.findall(r"button_main_tab_alt = \{.*?text = \"(PP_CPLAN_TAB_\w+)\"", window, re.DOTALL)
-    assert tabs == ["PP_CPLAN_TAB_PLAN", "PP_CPLAN_TAB_PROFILES", "PP_CPLAN_TAB_COUNTRY"]
+    assert tabs == ["PP_CPLAN_TAB_PLAN", "PP_CPLAN_TAB_COUNTRY"]
     # every tab's page shows for exactly its own value of pp_cplan_tab; the first for anything else
-    profiles, country = (f"GetVariableSystem.HasValue('pp_cplan_tab', '{tab}')" for tab in ("profiles", "country"))
-    first = f"[Not(Or({profiles}, {country}))]"
+    country = "GetVariableSystem.HasValue('pp_cplan_tab', 'country')"
+    first = f"[Not({country})]"
     assert window.count(f'down = "{first}"') == 1 and window.count(f'visible = "{first}"') == 1
-    for shown, page in ((profiles, "pp_lprof_editor_tab = {}"), (country, "pp_cplan_country_tab = {}")):
-        assert window.count(f'down = "[{shown}]"') == 1
-        body = window[window.index(f'visible = "[{shown}]"'):]
-        assert page in body[:body.index("\n\t\t\t\t}")], page
+    assert window.count(f'down = "[{country}]"') == 1
+    body = window[window.index(f'visible = "[{country}]"'):]
+    assert "pp_cplan_country_tab = {}" in body[:body.index("\n\t\t\t\t}")]
     assert window.count("pp_cplan_country_tab = {}") == 1
+    assert "'profiles')" not in window.replace("'pp_cplan_detail', 'profiles')", "")
+    assert "PP_CPLAN_TAB_PROFILES" not in _read(LOC)
     files = [WINDOW, LOC, *_plan_script_files(), PROFILE_EFFECTS, LOCATION_WINDOW]
     gone = re.compile(
         r"pp_cplan_(?:max|preset|g_|mode|own|rule|r\d_|logi(?!stics)|focus|status|sel\b|select|cands|goods_run|keep|"
@@ -144,7 +145,7 @@ def test_budget_is_the_gold_above_the_reserve() -> None:
     generated = _read(MOD / cp.VALUES)
     total = _effect(generated, "pp_cplan_w_total")
     # two groups count only while they have something to do, so an idle group holds no gold back: the locations'
-    # while a location has a profile or a mark, Towns and Buildings while something is ticked on its tab
+    # while a location holds a plan, Towns and Buildings while something is ticked on its tab
     assert cp.COUNTED_WEIGHTS == {"profiles": "pp_cplan_profiles_cw", "country": "pp_cplan_country_cw"}
     assert "multiply = pp_lprof_group_n" in _effect(generated, "pp_cplan_profiles_cw")
     assert ("limit = { pp_cplan_country_active > 0 }\n\t\tvalue = pp_cplan_country_w"
@@ -232,7 +233,7 @@ def test_last_month_list_names_every_entry() -> None:
     assert re.search(r"^  PP_CPLAN_RANK_UPGRADE: \".*\[location_rank\|e\].*\"$", loc, re.MULTILINE)
     # the player's names of the two groups whose key differs from their name
     assert '  PP_CPLAN_PROFILES_RULE: "Locations"\n' in loc and '  PP_CPLAN_COUNTRY_RULE: "Towns and Buildings"\n' in loc
-    assert '  PP_CPLAN_TAB_PROFILES: "Location Profiles"\n' in loc and '  PP_CPLAN_TAB_COUNTRY: "Towns and Buildings"\n' in loc
+    assert '  PP_CPLAN_TAB_COUNTRY: "Towns and Buildings"\n' in loc
     # test runs: a marker line per construction code
     for why in cp.GROUP_WHY.values():
         assert re.search(rf"^  PP_CPLAN_TLOG_{why}: \"PPCPLAN;B;\w+\"$", loc, re.MULTILINE), why
@@ -309,8 +310,9 @@ def test_groups_take_turns_by_month() -> None:
     assert run.count("pp_cplan_country_rights = yes") == 1
     # the never-run branch declares the flags of every tab's buttons
     never = run[run.index("limit = { always = no }"):]
-    for declare in ("pp_cplan_declare_flags", "pp_cplan_country_declare", "pp_lprof_declare_flags"):
+    for declare in ("pp_cplan_declare_flags", "pp_cplan_country_declare"):
         assert f"{declare} = yes" in never, declare
+    assert "pp_lprof_declare_flags" not in run  # Location Profiles are gone (2026-11-19)
     assert run.rindex("pp_cplan_group_business = yes") < run.index("pp_cplan_country_rights = yes") < run.index("pp_cplan_pass_end = yes")
     assert run.index("pp_cplan_pass_begin = yes") < run.index("pp_cplan_group_profiles = yes")
     assert "pp_cplan_history_push = yes" in _effect(_read(EFFECTS), "pp_cplan_pass_end")
@@ -343,7 +345,6 @@ def test_business_pick_checks_every_candidate() -> None:
         assert block, name
         body, take = block.groups()
         assert f"can_build_building = building_type:{name}\n" in body, name
-        assert f"NOT = {{ pp_lprof_has_good = {{ g = {good} }} }}" in body, name
         assert f"building_type = building_type:{name} building_level > 0 is_opened = no" in body, name
         assert f"building_type:{name} = {{ save_scope_as = pp_cplan_btype }}" in body, name
         assert f"value = pp_cplan_bz_roi_{name} }}" in body and "limit = { scope:pp_cplan_r > var:pp_cplan_bz_roi }" in body, name
@@ -354,8 +355,8 @@ def test_business_pick_checks_every_candidate() -> None:
         assert take == f"pp_cplan_business_take = {{ g = {good} out = {output} demand = {demand} }}", name
         assert f"limit = {{ can_build_building = building_type:{name} }} set_variable = {{ name = pp_cplan_bz_{name} value = yes }}" in types
         assert f"remove_variable = pp_cplan_bz_{name}\n" in clear
-    # a profile's building category stays the profile's (trade buildings are businesses and a profile category)
-    assert "NOT = { pp_lprof_has_category = { c = trade_category } }" in pick
+    # a location's plans take nothing away from the businesses (2026-11-19: no profile exclusion any more)
+    assert "pp_lprof" not in pick
     take = _effect(_read(EFFECTS), "pp_cplan_business_take")
     assert take.index("NOT = { pp_cplan_goods_here_$demand$ = yes }") < take.index("pp_cplan_market_load = { g = $g$ }")
     assert take.index("pp_cplan_market_room = { g = $g$ out = $out$ }") < take.index("name = pp_cplan_bz_pick value = scope:pp_cplan_btype")
@@ -398,7 +399,8 @@ def test_business_group_builds_the_best_returns_first() -> None:
     here = _effect(effects, "pp_cplan_business_here")
     assert here.index("pp_cplan_business_pick = yes") < here.index("pp_cplan_construct_scoped = { why = 103 }")
     site = _effect(_read(TRIGGERS), "pp_cplan_business_site")
-    for part in ("pp_cplan_location_ok = yes", "NOT = { has_variable = pp_lprof_xg }", "pp_cplan_site_free = yes",
+    assert "pp_lprof" not in site
+    for part in ("pp_cplan_location_ok = yes", "pp_cplan_site_free = yes",
                  "market ?= { always = yes }"):
         assert part in site, part
 
@@ -754,7 +756,7 @@ def test_construction_goods_cover_months_of_draw() -> None:
     assert '"stockpile_in_market(goods:naval_supplies)" >= 2.4' in yard  # 0.2 a month x 12
 
 
-def test_profile_pass_gives_every_location_a_turn() -> None:
+def test_plan_pass_gives_every_location_a_turn() -> None:
     """Test world 2026-11-08: in the list's own order the profile assigned last built nothing in ten years. Since
     2026-11-10 the locations take turns (tests/test_location_profiles.py, test_locations_take_turns); fewest building
     levels first always served the same places."""
@@ -804,12 +806,12 @@ def test_groups_count_what_waits_for_gold() -> None:
     assert "limit = { NOT = { has_variable = pp_cplan_noted } }" in note
     assert "change_variable = { name = pp_cplan_dwait_$why$ add = scope:pp_cplan_wc }" in note
     assert "change_variable = { name = pp_cplan_dwn_$why$ add = 1 }" in note
-    # the decision units clear the mark: each food province, each profile location, each location of the other groups
+    # the decision units clear the mark: each food province, each planned location, each location of the other groups
     assert _effect(effects, "pp_cplan_food_province").count("remove_variable = pp_cplan_noted") == 2
     for group in ("logistics", "improve", "business"):
         assert "remove_variable = pp_cplan_noted" in _effect(effects, f"pp_cplan_{group}_here"), group
     profiles = _effect(_read(PROFILE_EFFECTS), "pp_lprof_location_turn")
-    assert profiles.index("remove_variable = pp_cplan_noted") < profiles.index("pp_lprof_location_rules = yes")
+    assert profiles.index("remove_variable = pp_cplan_noted") < profiles.index("pp_lplan_location_turn = yes")
 
 
 def test_detail_numbers_per_group() -> None:
@@ -851,7 +853,9 @@ def test_detail_numbers_per_group() -> None:
         assert f"variable = pp_cplan_log_{why}\n\t\tpp_cplan_log_clear = {{ why = {why} }}" in own, why
         for name in ("cost", "val", "step"):
             assert re.search(rf"^pp_cplan_log_{name}_{why}_n = \{{", _read(VALUES), re.MULTILINE), (name, why)
-    assert "remove_variable = pp_cplan_log_rank" in _effect(generated, "pp_cplan_stats_reset_107")
+    for why in (105, 107):  # the two groups that can raise a rank (a plan's raise saves under 105)
+        assert "remove_variable = pp_cplan_log_rank" in _effect(generated, f"pp_cplan_stats_reset_{why}"), why
+        assert f"remove_variable = pp_cplan_save_rank_{why}" in _effect(generated, f"pp_cplan_stats_reset_{why}"), why
     now = _effect(generated, "pp_cplan_pass_reset")
     push = _effect(generated, "pp_cplan_history_push")
     clear = _effect(generated, "pp_cplan_history_clear")
@@ -881,7 +885,7 @@ def test_detail_numbers_per_group() -> None:
         # the purse is not one of them: the reset must not empty it
         assert f"pp_cplan_purse_{why}" not in reset and f"pp_cplan_save_cost_{why}" not in reset
     # every group gives its constructions a reason: food the store a year from now and the step, logistics the
-    # access, improvements the fill, businesses the payback, profiles the rule
+    # access, improvements the fill, businesses the payback; a location's plans step 0
     food = _effect(effects, "pp_cplan_food_province")
     assert "save_temporary_scope_value_as = { name = pp_cplan_rv value = { value = scope:pp_cplan_fy add = 100 } }" in food
     for step in range(1, 8):
@@ -891,7 +895,7 @@ def test_detail_numbers_per_group() -> None:
                                 ("business", "value = pp_cplan_bz_years add = 100", "pp_cplan_construct_scoped")):
         body = _effect(effects, f"pp_cplan_{group}_here")
         assert value in body and body.index("name = pp_cplan_rv") < body.index(build), group
-    assert "save_temporary_scope_value_as = { name = pp_cplan_rs value = $r$ }" in _effect(_read(PROFILE_EFFECTS), "pp_lprof_rule")
+    assert "save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }" in _effect(_read(PROFILE_EFFECTS), "pp_lplan_location_turn")
     assert "pp_cplan_history_clear = yes" in _effect(_read(SCRIPTED_GUIS), "pp_cplan_toggle_on")
     # The rules never decide on the display numbers (only the window reads them; the running minimums compare in
     # place). What the rules DO read from pass to pass is another family: the purses, what a group received and what
@@ -932,7 +936,8 @@ def test_the_plan_checks_the_max_level_itself() -> None:
     no_room = _effect(triggers, "pp_cplan_no_room")
     guarded = set(re.findall(r"scope:pp_cplan_btype = building_type:(\w+) pp_cplan_room_\1 < 1", no_room))
     # every type a plan file can hand to the construct path has a room value, and every one with a max level is guarded
-    plan_text = "".join(_read(path) for path in [*_plan_script_files(), *sorted(common.glob("*/pp_location_profiles*.txt"))])
+    plan_text = "".join(_read(path) for path in [*_plan_script_files(), *sorted(common.glob("*/pp_location_profiles*.txt")),
+                                                 *sorted(common.glob("*/pp_town_plans*.txt"))])
     handed = set(re.findall(r"pp_cplan_construct = \{ type = (\w+)", plan_text))
     handed |= set(re.findall(r"building_type:(\w+) = \{ save_scope_as = pp_cplan_btype \}", plan_text))
     rooms = set(re.findall(r"^pp_cplan_room_(\w+) = \{", values, re.MULTILINE))

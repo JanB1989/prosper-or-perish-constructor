@@ -47,7 +47,7 @@ The gold rule group "Towns and Buildings" (`pp_cplan_group_country`, constructio
 order; the monthly pass counts its weight only while `pp_cplan_country_active` is 1 (one of them is switched on).
 
 **1. Upgrade buildings** (one switch, `pp_cplan_upgrade`; ledger step 3). Every owned location that passes
-`pp_cplan_country_site` (not `integration_level = conquered`, no `pp_lprof_xc`, a free construction slot) and holds a
+`pp_cplan_country_site` (not `integration_level = conquered`, a free construction slot) and holds a
 standing, open building with `building_can_be_upgraded_by`, highest maximum control first (no control line). There,
 the first such building whose direct successor passes the country's part of `can_build_building`, where the market
 holds the successor's construction goods: `pp_cplan_construct` with the successor (the group's purse, reserve, ledger as any
@@ -75,8 +75,9 @@ goods: its raw material is the good, or a standing building there produces it (g
 `pp_cplan_pub_where_<key>`: `raw_material ?= goods:<good>` or `any_buildings_in_location` with `building_produced_goods`,
 the Location Plan's "made here"); every other public building asks `pp_cplan_pub_anywhere` (always yes). The trigger is
 passed as `where` to `pp_cplan_country_public` and sits in its location filter before `can_build_building`. The tile's
-tooltip names the goods and says to mark the building in a location to have one anywhere else (a building mark is
-forced, `docs/location_plan.md`). Before, a ticked Windmill went into every location that could have one, whether
+tooltip names the goods and, until 2026-11-19, said to mark the building in a location to have one anywhere else
+(building marks went with the profiles on 2026-11-19; the one per-location decision is a town-right plan,
+`docs/location_plan.md`, which builds a good's producers, not a single building). Before, a ticked Windmill went into every location that could have one, whether
 anything there was milled or not.
 
 **3. Towns and cities** (ledger step 2). Two switches. Every owned location that passes `pp_cplan_country_site`, has
@@ -96,7 +97,7 @@ only when gold was paid** (started, spent, ledger, test-log lines), because the 
 **Urban rights** (no gold; `pp_cplan_country_rights`, once a pass after the groups). One switch and a tile per right.
 While the switch is on, the country has `can_grant_town_rights` and the political influence to keep plus one grant's
 price: for every ticked right whose potential passes, in the rule's order, every owned location that is not only
-conquered, has no `pp_lprof_xc`, has room for a right (`has_max_town_rights = no`), got none this month and holds
+conquered, has room for a right (`has_max_town_rights = no`), got none this month and holds
 neither the right nor its upgrade partner, biggest population first: when the right's allow passes (location as
 `scope:target`) and the influence still reaches, `grant_town_rights` and `pay_price = price:grant_town_rights`. Every
 check the raw effect skips (B) is asked by the rule.
@@ -129,7 +130,7 @@ biggest population first:
   and `pay_price = price:grant_town_rights`. The one-specialization condition of the charter's allow stays: a location
   with plans for two charter goods gets one charter.
 - At most one grant or swap a location a month (`pp_cplan_right_mark`, gate `pp_cplan_country_plan_site`: not only
-  conquered, no `pp_lprof_xc`, no mark, not rural). Every grant and swap counts in `pp_cplan_rights_n`. The plan right
+  conquered, no mark, not rural). Every grant and swap counts in `pp_cplan_rights_n`. The plan right
   stays on the location. Engine (1.4.9, static check): a script grant has no checks (hence every grant asks that the
   right is not held), and each grant and revoke sends the player the game's town rights message.
 

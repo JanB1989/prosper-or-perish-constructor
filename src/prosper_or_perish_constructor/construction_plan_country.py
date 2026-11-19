@@ -15,7 +15,7 @@ Three sections, all off until the player ticks something; nothing is kept betwee
   raise goods' output in its location (Sawmill, Windmill, Local Smelters, Terraces; read from its own
   ``local_<good>_output_modifier`` lines), only where the location makes one of those goods: its raw material, or a
   standing building that produces it (Jan 2026-11-10; no setting, the tile's tooltip says it; a player who wants one
-  elsewhere marks the building there, location_plan.py).
+  elsewhere builds it there by hand).
 * Towns and cities: rural settlements to towns (from the player's population line) and towns to cities, where the
   rank's own conditions pass (the rank below, the game's population minimum, no modifier that forbids it) and the
   market holds the construction goods, biggest population first (``construct_location_rank``, which charges the
@@ -710,27 +710,24 @@ def render_triggers(buildings: list[Building], rights: list[Right], ranks: list[
     parts = [
         HEADER,
         "\n# Location scope (an owned location in pp_cplan_run): the Towns and Buildings group may start a construction\n"
-        "# here: not a location that is only conquered, no profile here that switched the group off (pp_lprof_xc), and\n"
-        "# nothing under construction (pp_cplan_site_free: a location builds one at a time).\n"
+        "# here: not a location that is only conquered, and nothing under construction (pp_cplan_site_free: a location\n"
+        "# builds one at a time).\n"
         "pp_cplan_country_site = {\n"
         "\tNOT = { integration_level = conquered }\n"
-        "\tNOT = { has_variable = pp_lprof_xc }\n"
         "\tpp_cplan_site_free = yes\n"
         "}\n"
-        "\n# Location scope: the urban rights rule may grant a right here: not only conquered, no profile here that switched\n"
-        "# the group off, room for one more right, and none granted here this month.\n"
+        "\n# Location scope: the urban rights rule may grant a right here: not only conquered, room for one more right, and\n"
+        "# none granted here this month.\n"
         "pp_cplan_country_rights_site = {\n"
         "\tNOT = { integration_level = conquered }\n"
-        "\tNOT = { has_variable = pp_lprof_xc }\n"
         f"\tNOT = {{ has_variable = {VAR_MARK} }}\n"
         "\thas_max_town_rights = no\n"
         "}\n"
-        "\n# Location scope: a plan's charter or rights may come here (pp_cplan_country_plan_rights): not only conquered, no\n"
-        "# profile here that switched the group off, nothing granted here this month, and a town or more (the game grants\n"
-        "# town rights to towns and cities; a plan's own pass raises a rural settlement first).\n"
+        "\n# Location scope: a plan's charter or rights may come here (pp_cplan_country_plan_rights): not only conquered,\n"
+        "# nothing granted here this month, and a town or more (the game grants town rights to towns and cities; a plan's\n"
+        "# own pass raises a rural settlement first).\n"
         "pp_cplan_country_plan_site = {\n"
         "\tNOT = { integration_level = conquered }\n"
-        "\tNOT = { has_variable = pp_lprof_xc }\n"
         f"\tNOT = {{ has_variable = {VAR_MARK} }}\n"
         f"\tNOT = {{ location_rank = location_rank:{rural_rank(ranks)} }}\n"
         "}\n"
@@ -1623,8 +1620,7 @@ def texts(buildings: list[Building], rights: list[Right]) -> dict[str, str]:
         "PP_CPLANC_PUB_TT": (
             "#T Public buildings#!\nTick a building and the plan builds it in every [location|e] of yours that can have "
             "it and has none, where your [max_control|e] reaches the line, the highest first. Where a building has "
-            "better versions, the plan builds the best one you can build. [conquered|e] locations are left out, and so "
-            "are locations whose profile switched this rule group off. A tile shows while your country can build the "
+            "better versions, the plan builds the best one you can build. [conquered|e] locations are left out. A tile shows while your country can build the "
             "building."
         ),
         "PP_CPLANC_UPGRADE": "Upgrade",
@@ -1682,8 +1678,7 @@ def texts(buildings: list[Building], rights: list[Right]) -> dict[str, str]:
         if building.boosts:
             names = [f"[ShowGoodsName('{good}')|e]" for good in building.boosts]
             listed = names[0] if len(names) == 1 else ", ".join(names[:-1]) + " or " + names[-1]
-            only = (f"\nIt is built only in [locations|e] that make {listed}; to have one anywhere else, mark the "
-                    "building in that location.")
+            only = f"\nIt is built only in [locations|e] that make {listed}."
         found[f"PP_CPLANC_PUB_{building.key.upper()}"] = (
             f"[ShowBuildingTypeName('{building.key}')|e]\nTicked: the plan builds one wherever it can stand and none "
             f"stands yet.{better}{only}\n#weak Click to tick or untick#!"

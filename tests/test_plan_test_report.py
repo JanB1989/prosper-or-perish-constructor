@@ -189,24 +189,18 @@ def test_levels_by_type_against_the_baseline_over_common_locations() -> None:
     assert dict(plain.select("building_type", "run_added").iter_rows()) == {"granary": 3, "lumber_mill": -2}
 
 
-def test_profile_states_paybacks_and_levels() -> None:
-    lvars = [(1, "pp_lprof", 101), (2, "pp_lprof", 102), (3, "pp_lprof", 102),
-             (1, "pp_lprof_r1_st", 101), (2, "pp_lprof_r1_st", 106), (3, "pp_lprof_r1_st", 106),
-             (2, "pp_lprof_r2_st", 109), (5, "pp_lprof_r1_st", 101),  # 5 is not CAS's
-             (1, "pp_lprof_r1_est", 115.5), (2, "pp_lprof_r1_est", 1099), (3, "pp_lprof_r1_est", 120)]
-    s0 = snap("t1", "1337.4.1", {(1, "lumber_mill"): 1, (4, "granary"): 1}, lvars=lvars)
+def test_plan_states_and_paybacks() -> None:
+    lvars = [(1, "pp_lplan_st_g_wheat", 101), (2, "pp_lplan_st_g_wheat", 106), (3, "pp_lplan_st_g_wheat", 106),
+             (2, "pp_lplan_st_g_iron", 109), (3, "pp_lplan_st_g_tools", 111), (5, "pp_lplan_st_g_wheat", 101),  # 5 is not CAS's
+             (1, "pp_lplan_est_g_wheat", 115.5), (2, "pp_lplan_est_g_wheat", 1099), (3, "pp_lplan_est_g_wheat", 120)]
     s1 = snap("c10", "1347.4.1", {(1, "lumber_mill"): 4, (2, "lumber_mill"): 1, (4, "granary"): 2}, lvars=lvars)
-    states = ptr.rule_states(s1, "CAS")
-    got = {(r["slot"], r["rule"], r["state_name"]): r["locations"] for r in states.iter_rows(named=True)}
-    assert got == {(1, 1, "started"): 1, (2, 1, "cannot be built here"): 2, (2, 2, "waiting for an earlier rule"): 1}
-    pb = {(r["slot"], r["rule"]): r for r in ptr.rule_paybacks(s1, "CAS").iter_rows(named=True)}
-    assert pb[(2, 1)]["no_profit"] == 1 and pb[(2, 1)]["shortest_years"] == pytest.approx(20.0)
-    assert pb[(1, 1)]["shortest_years"] == pytest.approx(15.5)
-    levels = ptr.profile_levels(ptr.comparison([s0, s1], [], "CAS"), "CAS", ptr.first_assignment([s0, s1]))
-    rows = {r["slot"]: r for r in levels.iter_rows(named=True)}
-    assert rows[0]["locations"] == 1 and rows[0]["run_added"] == 1  # location 4, no profile
-    assert rows[1]["run_added"] == 3 and rows[1]["most_grown"] == "lumber_mill +3"
-    assert rows[2]["locations"] == 2 and rows[2]["added_per_location"] == pytest.approx(0.5)
+    states = ptr.plan_states(s1, "CAS")
+    got = {(r["plan"], r["state_name"]): r["locations"] for r in states.iter_rows(named=True)}
+    assert got == {("wheat", "started"): 1, ("wheat", "cannot be built here"): 2,
+                   ("iron", "waiting for an earlier plan"): 1, ("tools", "needs a higher rank"): 1}
+    pb = {r["plan"]: r for r in ptr.plan_paybacks(s1, "CAS").iter_rows(named=True)}
+    assert pb["wheat"]["no_profit"] == 1 and pb["wheat"]["shortest_years"] == pytest.approx(15.5)
+    assert pb["wheat"]["locations"] == 3
 
 
 def test_stalled_constructions() -> None:
@@ -250,7 +244,7 @@ def test_food_stores_and_market_access() -> None:
 
 
 def test_build_report_writes_page_summary_and_csvs(tmp_path) -> None:
-    lvars = [(1, "pp_lprof", 101), (1, "pp_lprof_r1_st", 101), (1, "pp_lprof_r1_est", 112)]
+    lvars = [(1, "pp_lplan_st_g_wheat", 101), (1, "pp_lplan_est_g_wheat", 112)]
     cvars = {"pp_cplan_on": 0.00001, "pp_cplan_max": 110.0, "pp_cplan_started": 102.0, "pp_cplan_spent": 180.0}
     food = [(1, 120.0, 240.0, 10.0, 1.0)]
     run = [snap("t1", "1337.4.1", {(1, "granary"): 1}, lvars=lvars, cvars=cvars, food=food),
@@ -261,14 +255,14 @@ def test_build_report_writes_page_summary_and_csvs(tmp_path) -> None:
                             debug_source="debug.log", error_lines=["[1:00:00]: pp_lprof broke"],
                             error_source="error.log", kinds=KINDS, log=lambda _: None)
     text = page.read_text(encoding="utf-8")
-    for heading in ("Run overview", "What the plan built", "Location profiles", "Global rule groups",
+    for heading in ("Run overview", "What the plan built", "Location plans", "Global rule groups",
                     "Constructions in progress", "Errors"):
         assert heading in text
     assert "prefers-color-scheme: dark" in text and "builds_per_year.png" in text
     summary = (tmp_path / "summary.md").read_text(encoding="utf-8")
     assert "Plan extra levels: +3" in summary
     for name in ("overview.csv", "builds_by_year.csv", "builds_by_building.csv", "passes_by_year.csv",
-                 "levels_by_type.csv", "profile_rule_states.csv", "food_stores.csv", "market_access.csv",
+                 "levels_by_type.csv", "plan_states.csv", "food_stores.csv", "market_access.csv",
                  "constructions.csv", "errors.csv", "speed_log.csv", "builds_per_year.png", "builds_per_year_dark.png"):
         assert (tmp_path / name).is_file(), name
     by_year = pl.read_csv(tmp_path / "builds_by_year.csv")

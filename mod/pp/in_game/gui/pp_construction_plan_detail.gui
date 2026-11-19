@@ -15,7 +15,7 @@ types PPConstructionPlanDetail
 		autoresize = yes
 	}
 
-	# one rule state in the profiles' grid
+	# one plan state in the Locations group's grid
 	type pp_cplan_d_cell = text_single {
 		autoresize = yes
 		align = left|nobaseline
@@ -289,8 +289,16 @@ types PPConstructionPlanDetail
 				text = "PP_CPLAN_D_NO_WAIT"
 			}
 			pp_cplan_d_line = {
-				visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_saves_105'), '(CFixedPoint)0.5')]"
+				visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_saves_105'), '(CFixedPoint)0.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_save_rank_n_105'), '(CFixedPoint)0.5')))]"
 				text = "PP_CPLAN_D_SAVE_PROFILES"
+			}
+			pp_cplan_d_line = {
+				visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_saves_105'), '(CFixedPoint)0.5'), EqualTo_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_save_rank_n_105'), '(CFixedPoint)1'))]"
+				text = "PP_CPLAN_D_SAVE_RANK_PROFILES_1"
+			}
+			pp_cplan_d_line = {
+				visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_saves_105'), '(CFixedPoint)0.5'), EqualTo_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_save_rank_n_105'), '(CFixedPoint)2'))]"
+				text = "PP_CPLAN_D_SAVE_RANK_PROFILES_2"
 			}
 			pp_cplan_d_line = {
 				text = "PP_CPLAN_D_PROFILES_SIT"
@@ -299,14 +307,14 @@ types PPConstructionPlanDetail
 				layoutpolicy_horizontal = expanding
 				spacing = 4
 				pp_cplan_d_cell = { text = "PP_CPLAN_D_PROFILES_ST1" tooltip = "PP_LPROF_ST_1" }
+				pp_cplan_d_cell = { text = "PP_CPLAN_D_PROFILES_ST2" tooltip = "PP_LPROF_ST_2" }
 				pp_cplan_d_cell = { text = "PP_CPLAN_D_PROFILES_ST3" tooltip = "PP_LPROF_ST_3" }
-				pp_cplan_d_cell = { text = "PP_CPLAN_D_PROFILES_ST4" tooltip = "PP_LPROF_ST_4" }
 				expand = {}
 			}
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				spacing = 4
-				pp_cplan_d_cell = { text = "PP_CPLAN_D_PROFILES_ST5" tooltip = "PP_LPROF_ST_5" }
+				pp_cplan_d_cell = { text = "PP_CPLAN_D_PROFILES_ST4" tooltip = "PP_LPROF_ST_4" }
 				pp_cplan_d_cell = { text = "PP_CPLAN_D_PROFILES_ST6" tooltip = "PP_LPROF_ST_6" }
 				pp_cplan_d_cell = { text = "PP_CPLAN_D_PROFILES_ST7" tooltip = "PP_LPROF_ST_7" }
 				expand = {}
@@ -315,7 +323,7 @@ types PPConstructionPlanDetail
 				layoutpolicy_horizontal = expanding
 				spacing = 4
 				pp_cplan_d_cell = { text = "PP_CPLAN_D_PROFILES_ST8" tooltip = "PP_LPROF_ST_8" }
-				pp_cplan_d_cell = { text = "PP_CPLAN_D_PROFILES_ST10" tooltip = "PP_LPROF_ST_10" }
+				pp_cplan_d_cell = { text = "PP_CPLAN_D_PROFILES_ST11" tooltip = "PP_LPROF_ST_11" }
 				expand = {}
 			}
 			hbox = {
@@ -491,12 +499,12 @@ types PPConstructionPlanDetail
 								pp_cplan_label = { text = "PP_CPLAN_IN_LOCATION" }
 								pp_cplan_label = { text = "PP_CPLAN_D_COST_PROFILES" }
 								pp_cplan_label = {
-									visible = "[GreaterThan_CFixedPoint(Scope.ScriptValue('pp_cplan_log_step_105_n'), '(CFixedPoint)0.5')]"
+									visible = "[Not(EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_log_step_105_n'), '(CFixedPoint)2'))]"
 									text = "PP_CPLAN_D_PROFILES_WHY"
 								}
 								pp_cplan_label = {
-									visible = "[Not(GreaterThan_CFixedPoint(Scope.ScriptValue('pp_cplan_log_step_105_n'), '(CFixedPoint)0.5'))]"
-									text = "PP_CPLAN_D_PROFILES_WHY_MARK"
+									visible = "[EqualTo_CFixedPoint(Scope.ScriptValue('pp_cplan_log_step_105_n'), '(CFixedPoint)2')]"
+									text = "PP_CPLAN_D_PROFILES_WHY_RANK"
 								}
 							}
 						}

@@ -215,11 +215,12 @@ def test_a_a_construction_must_fit_in_its_groups_purse_and_the_purse_pays() -> N
     assert "limit = { var:pp_cplan_purse_$why$ < 100 }\n\t\tset_variable = { name = pp_cplan_purse_$why$ value = 100 }" in pay
     now = _effect(effects, "pp_cplan_construct_now")
     assert now.index("name = pp_cplan_paid value") < now.index("pp_cplan_purse_pay = { why = $why$ }")
-    # the town and city upgrades of Towns and Buildings pay from the same purse, by the same rules
+    # the town and city upgrades pay from the purse of the group that starts them (Towns and Buildings 107, a plan's
+    # rank raise 105), by the same rules
     up = _effect(_read(MOD / cpc.EFFECTS), "pp_cplan_country_rank_up")
-    assert "pp_cplan_purse_pay = { why = 107 }" in up
-    assert "NOT = { pp_cplan_saving = { why = 107 } }" in up
-    assert "pp_cplan_country_cost_$rank$ <= scope:pp_cplan_country.pp_cplan_purse_n_107" in up
+    assert "pp_cplan_purse_pay = { why = $why$ }" in up
+    assert "NOT = { pp_cplan_saving = { why = $why$ } }" in up
+    assert "pp_cplan_country_cost_$rank$ <= scope:pp_cplan_country.pp_cplan_purse_n_$why$" in up
 
 
 # ---- B. Best pick first; the first thing a group cannot pay for is what it saves for ----
@@ -281,10 +282,10 @@ def test_b_every_group_goes_in_its_order_of_importance() -> None:
             < group.index("pp_cplan_country_ranks = yes"))
     ranks = _effect(country, "pp_cplan_country_ranks")
     assert ranks.index("pp_cplan_rank_town") < ranks.index("pp_cplan_rank_city")
-    # the Locations group: its location order, each location's rules then its marks
+    # the Locations group: its location order, each location's plans
     assert "order_by = pp_lprof_turn" in _effect(_read(PROFILE_EFFECTS), "pp_lprof_look")
     turn = _effect(_read(PROFILE_EFFECTS), "pp_lprof_location_turn")
-    assert turn.index("pp_lprof_location_rules = yes") < turn.index("pp_lplan_location_turn = yes")
+    assert "pp_lplan_location_turn = yes" in turn and "pp_lprof_location_rules" not in turn
     # the rotation of the groups is still there: it only decides who gets a free construction slot first
     assert len(re.findall(r"current_month = \d+", _effect(effects, "pp_cplan_run"))) == 10
 

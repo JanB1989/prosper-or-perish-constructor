@@ -159,17 +159,18 @@ def test_gui_only_names_are_declared() -> None:
     select = _effect(_read(EFFECTS), "pp_lplan_select")
     assert select.index("limit = { always = no }") < select.index("save_scope_as = pp_key") < select.index(
         f"{lp.DECLARE} = yes")
-    assert effects.count(f"{lp.DECLARE} = yes") == 0 and "pp_lplan_declare_flags = yes" in select
+    assert effects.count(f"{lp.DECLARE} = yes") == 0 and "pp_lplan_declare_flags" not in select
 
 
-def test_old_marks_stay_callable_for_the_profile_pass() -> None:
-    """The profile pass (pp_location_profiles.txt, removed with Location Profiles) still calls the old marks' effects;
-    they stay defined until then, and nothing in this module's GUI uses them."""
+def test_old_marks_are_gone() -> None:
+    """Location Profiles and the building marks went on 2026-11-19: the old marks' effects and their count are gone
+    with the profile pass that called them."""
     effects = _read(MOD / lp.EFFECTS) + _read(EFFECTS)
     for name in ("pp_lplan_clear_all", "pp_lplan_drop_categories", "pp_lplan_declare_flags", "pp_lplan_b_promote",
-                 "pp_lplan_b_state_off"):
-        assert re.search(rf"^{name} = \{{", effects, re.MULTILINE), name
-    assert "pp_lplan_planned_n" in _script_values()
+                 "pp_lplan_b_state_off", "pp_lplan_bflip"):
+        assert not re.search(rf"^{name} = \{{", effects, re.MULTILINE), name
+    assert "pp_lplan_planned_n" not in _script_values()
+    assert not hasattr(lp, "BUILDING_MARKS") and not hasattr(lp, "plan_items")
 
 
 def test_every_plan_state_has_a_text() -> None:

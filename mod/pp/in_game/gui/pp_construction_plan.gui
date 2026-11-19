@@ -2,15 +2,15 @@
 # 2026-11-09, three since 2026-11-10). A scripted widget (gui/scripted_widgets/pp_construction_plan.txt), so no vanilla
 # window is overridden.
 # Tabs (vanilla main tabs): Global Settings (the plan on or off, the gold reserve, the six rule groups with their
-# weight bars and lines, what the last pass built), Location Profiles (the editor, type pp_lprof_editor_tab in
-# pp_location_profiles.gui) and Towns and Buildings (the settings of that rule group, type pp_cplan_country_tab,
-# construction_plan_country.py). Each rule group row ends in a cog (pp_cplan_detail_button_<group>, since 2026-11-09,
+# weight bars and lines, what the last pass built) and Towns and Buildings (the settings of that rule group, type
+# pp_cplan_country_tab, construction_plan_country.py; Location Profiles, the second tab until 2026-11-19, are gone).
+# Each rule group row ends in a cog (pp_cplan_detail_button_<group>, since 2026-11-09,
 # Jan: "what's happening under the hood"); it shows that group's detail pane (pp_cplan_detail_<group>: gold had,
 # wanted, spent and waiting, its situation, the last 12 months, what it built and why) in place of the "Last month"
 # list (pp_cplan_last_list). All three are generated into pp_construction_plan_detail.gui
 # (construction_plan_detail.py).
-# GUI variables: pp_cplan_open (window open), pp_cplan_tab ('profiles' = the second tab, 'country' = the third, anything
-# else the first), pp_cplan_detail (the group whose pane is open; unset = the "Last month" list).
+# GUI variables: pp_cplan_open (window open), pp_cplan_tab ('country' = the second tab, anything else the
+# first), pp_cplan_detail (the group whose pane is open; unset = the "Last month" list).
 # Every button runs a scripted GUI in common/scripted_guis/pp_construction_plan.txt; every number is a script value
 # (common/script_values/pp_construction_plan*.txt).
 # Shown only to a player who plays a country (not to observers: their scripted GUIs do nothing).
@@ -96,17 +96,8 @@ widget = {
 							text = "PP_CPLAN_TAB_PLAN"
 						}
 						tooltip = "PP_CPLAN_TAB_PLAN_TT"
-						down = "[Not(Or(GetVariableSystem.HasValue('pp_cplan_tab', 'profiles'), GetVariableSystem.HasValue('pp_cplan_tab', 'country')))]"
+						down = "[Not(GetVariableSystem.HasValue('pp_cplan_tab', 'country'))]"
 						onclick = "[GetVariableSystem.Set('pp_cplan_tab', 'plan')]"
-					}
-					button_main_tab_alt = {
-						layoutpolicy_horizontal = expanding
-						blockoverride "tab_text" {
-							text = "PP_CPLAN_TAB_PROFILES"
-						}
-						tooltip = "PP_CPLAN_TAB_PROFILES_TT"
-						down = "[GetVariableSystem.HasValue('pp_cplan_tab', 'profiles')]"
-						onclick = "[GetVariableSystem.Set('pp_cplan_tab', 'profiles')]"
 					}
 					button_main_tab_alt = {
 						layoutpolicy_horizontal = expanding
@@ -128,7 +119,7 @@ widget = {
 
 				# ======================== Global settings ========================
 				vbox = {
-					visible = "[Not(Or(GetVariableSystem.HasValue('pp_cplan_tab', 'profiles'), GetVariableSystem.HasValue('pp_cplan_tab', 'country')))]"
+					visible = "[Not(GetVariableSystem.HasValue('pp_cplan_tab', 'country'))]"
 					layoutpolicy_horizontal = expanding
 					layoutpolicy_vertical = expanding
 					ignoreinvisible = yes # the closed detail panes take no spacing
@@ -294,15 +285,6 @@ widget = {
 					pp_cplan_detail_country = { visible = "[GetVariableSystem.HasValue('pp_cplan_detail', 'country')]" }
 				}
 
-				# ======================== Location profiles ========================
-				vbox = {
-					visible = "[GetVariableSystem.HasValue('pp_cplan_tab', 'profiles')]"
-					layoutpolicy_horizontal = expanding
-					layoutpolicy_vertical = expanding
-
-					pp_lprof_editor_tab = {}
-				}
-
 				# ======================== Towns and Buildings ========================
 				# (the settings of the rule group of that name; the type is construction_plan_country.py's)
 				vbox = {
@@ -322,7 +304,6 @@ widget = {
 			button_close_alt = {
 				blockoverride "close_on_action" {
 					on_action = "[GetVariableSystem.Clear('pp_cplan_open')]"
-					on_action = "[GetVariableSystem.Clear('pp_lprof_pick')]"
 					on_action = "[GetVariableSystem.Clear('pp_cplan_detail')]"
 				}
 			}

@@ -22,7 +22,8 @@ This module holds the naming contract every part of the feature shares and the f
   from the Locations group's purse, ``why = 105``).
 
 The monthly pass that runs a held plan is location_profiles.render_marks (``pp_lplan_location_marks``, one
-``pp_lplan_mark`` per plan) and the hand-written ``pp_lplan_mark`` (scripted_effects/pp_location_profiles.txt).
+``pp_lplan_mark`` per plan) and the hand-written ``pp_lplan_mark`` (scripted_effects/pp_location_profiles.txt: the plan
+engine of the Locations group; Location Profiles and the building marks are gone).
 """
 
 from __future__ import annotations
@@ -53,7 +54,7 @@ RAISE_EFFECT = "pp_tplan_raise"
 
 # The goods target (location_profiles: pp_lprof_t_<target>) of the two extra plans.
 FOOD_TARGET = "food"  # producers of the staple foods and the Province Food buildings (location_profiles._read_targets)
-TRADE_TARGET = "trade_category"  # the trade buildings ([location_plan] categories)
+TRADE_TARGET = "trade_category"  # the trade buildings (location_profiles.CATEGORIES)
 EXTRA_TARGETS = {"food": FOOD_TARGET, "trade": TRADE_TARGET}
 
 WHY = 105  # the Locations group's purse (construction_plan GROUP_WHY "profiles")
@@ -174,7 +175,7 @@ def plans(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -> list
     from prosper_or_perish_constructor import location_profiles as lpf
 
     found, _ = lpf.targets(repo, project, mod_root, vanilla_root)
-    goods = [item.key for item in lpf.mark_items(lpf.profile_items(repo, project)) if found.get(item.key)]
+    goods = [good for good in lpf.target_goods(repo, project) if found.get(good)]
     database = cp._database(mod_root, vanilla_root, cp.BUILDING_TYPES)
     out: list[Plan] = []
     for key in plan_keys(goods):

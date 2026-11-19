@@ -1,10 +1,9 @@
 ﻿# Prosper or Perish - Construction Plan triggers (player-only construction rules; see on_action/pp_construction_plan.txt).
 # Every trigger here runs inside pp_cplan_run, where scope:pp_cplan_country is the player country, unless noted.
 
-# Location scope: the global rules may build here (the player's own location).
-# A location profile takes from the global rules only what it sets (Jan 2026-11-09): the targets of its rules and the
-# global groups it switches off (pp_lprof_x*); everything else the global groups still build there, so a profile need
-# not repeat them. The checks per group follow.
+# Location scope: the global rules may build here (the player's own location). A location's plans (town rights
+# pp_plan_<plan>, the Locations group) add to the global rules and switch nothing off (2026-11-19, Jan: Location
+# Profiles, which could, are gone), so every group builds in every own location. The checks per group follow.
 pp_cplan_location_ok = {
 	owner ?= scope:pp_cplan_country
 }
@@ -12,32 +11,26 @@ pp_cplan_location_ok = {
 # Location scope: the food rule may build here (the province capital's Tavern, kitchen, Granary).
 pp_cplan_food_ok = {
 	pp_cplan_location_ok = yes
-	NOT = { has_variable = pp_lprof_xf }
 }
 
-# Location scope: the food rule's farm step may build here (a profile with a staple food rule decides the food here).
+# Location scope: the food rule's farm step may build here.
 pp_cplan_farm_ok = {
 	pp_cplan_food_ok = yes
-	NOT = { pp_lprof_food_target = yes }
 }
 
 # Location scope: the food rule may build a victuals maker here (Grange, Victualling Yard).
 pp_cplan_victuals_ok = {
 	pp_cplan_food_ok = yes
-	NOT = { pp_lprof_has_good = { g = victuals } }
 }
 
-# Location scope: the logistics rule may build here (a profile with a market access rule decides it here).
+# Location scope: the logistics rule may build here.
 pp_cplan_logistics_ok = {
 	pp_cplan_location_ok = yes
-	NOT = { has_variable = pp_lprof_xl }
-	NOT = { pp_lprof_has_good = { g = logistics } }
 }
 
 # Location scope: the improvements rule may build here.
 pp_cplan_improve_ok = {
 	pp_cplan_location_ok = yes
-	NOT = { has_variable = pp_lprof_xi }
 }
 
 # Location scope: a construction can start here: none is under way, whoever started it (a rule, the game's own
@@ -52,20 +45,18 @@ pp_cplan_site_free = {
 	num_civil_constructions < pp_cplan_site_slots
 }
 
-# Any scope, in a location's turn of the Locations group (pp_lprof_location_turn sets scope:pp_lplan_mode: 0 the
-# profile's rules, 1 the marks being measured, 2 the marks built): the location's marks are being measured: a level
-# that could be built only offers its payback, nothing is built (pp_lplan_location_turn).
+# Any scope, in a location's turn of the Locations group (pp_lprof_location_turn sets scope:pp_lplan_mode: 0 outside
+# the plans, 1 the plans being measured, 2 the plans built): the location's plans are being measured: a level that
+# could be built only offers its payback, nothing is built (pp_lplan_location_turn).
 pp_lplan_measuring = {
 	scope:pp_lplan_mode > 0.5
 	scope:pp_lplan_mode < 1.5
 }
 
 # Location scope: the business rule looks for a business here: the player's location, held by the player, with a
-# market, no construction under way (pp_cplan_site_free), and no profile here that keeps the businesses out. A
-# profile's own goods and categories are left out per building (generated pp_cplan_business_pick).
+# market and no construction under way (pp_cplan_site_free).
 pp_cplan_business_site = {
 	pp_cplan_location_ok = yes
-	NOT = { has_variable = pp_lprof_xg }
 	controller ?= scope:pp_cplan_country
 	pp_cplan_site_free = yes
 	market ?= { always = yes }

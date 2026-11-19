@@ -96,7 +96,8 @@ def test_picker_keys_are_the_plan_keys() -> None:
 
 
 def test_references_exist() -> None:
-    guis = _read(SCRIPTED_GUIS)
+    # the window's "Switch on" button (shown while the Construction Plan is off) uses the plan's own switch
+    guis = _read(SCRIPTED_GUIS) + _read(SCRIPTED_GUIS.with_name("pp_construction_plan.txt"))
     values = _script_values()
     loc = _all_english_keys()
     button = re.search(re.escape(lp.BUTTON_MARK) + r".*?action_tooltip = \{.*?\n\t*\}", _read(LOCATION_WINDOW), re.DOTALL)

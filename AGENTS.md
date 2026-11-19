@@ -138,7 +138,7 @@
   right, but vanilla Bergslag does not check for it (one way, like every PP right); mining charter and the Bergregal
   rights may stack with it in a city with two slots. Icon: `assets/town_right_drawings/goods/iron.py` (blast
   furnace, pick and hammer; rights frame only, `LINES` in `render.py`).
-- Plan rights `pp_plan_<plan>` (2026-11-19, Jan, branch `town-plans`, not tested in game) are town rights too but no
+- Plan rights `pp_plan_<plan>` (2026-11-19, Jan, branch `town-plans`, tested in game 2026-11-20) are town rights too but no
   specialization: no bonus, own slot, never in the one-specialization lists; a planned town gets its good's charter
   and rights from the Construction Plan ("Town-Right Plans" below). Their colours are spread hues (`town_plans.plan_color`):
   EU5 logs every pair of rights that share a colour.
@@ -694,8 +694,15 @@
   a held right; a rank change revokes the newest rights above the slot count; a hostile owner change destroys
   `kept_at_conquest = no` rights; every script grant / revoke sends the game's town rights message.
 - Limits: one charter per town; a two-steps-old tier upgrades only while the middle tier can still be built; plans are
-  lost on conquest. Not tested in game. `docs/location_plan.md` (the feature), `docs/location_profiles.md` (the
-  engine's internal names), `docs/construction_plan_country.md` "Plans: charters and rights".
+  lost on conquest; several plans in one location are built best payback first, the others wait (open: take turns).
+  `docs/location_plan.md` (the feature), `docs/location_profiles.md` (the engine's internal names),
+  `docs/construction_plan_country.md` "Plans: charters and rights".
+- Tested in game 2026-11-20 (plan test world, Castile, two years; `docs/location_plan.md` "Tested in game"): grants on
+  rural locations, the button and the Plans row, builds, the rank raise with the plans surviving it, a charter granted
+  to a planned new town. Not tested: charter to rights, conquest, a tier upgrade. The game's town rights messages
+  (`TOWN_RIGHTS_GRANTED` / `_REVOKED`) are redefined without the pop-up in `main_menu/gui/messagetypes/pp_messagetypes.txt`
+  (a mod file may redefine a vanilla message type; verified in game). While the Construction Plan is off, the Location
+  Plan window says so and carries the switch.
 
 ## Release Checklist
 

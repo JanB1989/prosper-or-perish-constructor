@@ -90,6 +90,26 @@ window = {
 
 					pp_lplan_note = { text = "PP_LPLAN_NOTE" }
 
+					# The Construction Plan is off: say so, with the switch right here (plans are kept either way).
+					hbox = {
+						visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_on_n'), '(CFixedPoint)0.5'))]"
+						layoutpolicy_horizontal = expanding
+						spacing = 6
+						text_multi = {
+							autoresize = yes
+							maximumsize = { 380 -1 }
+							minimumsize = { 380 -1 }
+							text = "PP_LPLAN_OFF"
+						}
+						expand = {}
+						button_regular = {
+							size = { 100 26 }
+							text = "PP_LPLAN_SWITCH_ON"
+							tooltip = "PP_LPLAN_SWITCH_ON_TT"
+							onclick = "[GetScriptedGui('pp_cplan_toggle_on').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+					}
+
 					pp_lplan_label = {
 						visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_n'), '(CFixedPoint)0')]"
 						text = "PP_LPLAN_NOTHING_YET"

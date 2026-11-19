@@ -1,8 +1,9 @@
 # Town-right plans
 
 Branch `town-plans`, 2026-11-19, Jan: the one per-location decision of the Construction Plan is a **plan**, and a plan
-is a town right. "This location is for lumber." Player-only; the AI never grants a plan right. **Not tested in game**
-(built and checked offline; the engine behaviour below comes from a static reading of EU5 1.4.9).
+is a town right. "This location is for lumber." Player-only; the AI never grants a plan right. **Tested in game
+2026-11-20** in the Construction Plan test world as Castile, two years (section "Tested in game" below); the engine
+behaviour further down that the test did not touch comes from a static reading of EU5 1.4.9.
 
 It replaces the Location Profiles (slots with ordered rules) and the Location Plan marks (goods marks and building
 marks), which are gone (history: `docs/location_profiles.md`, and this file's history in git before 2026-11-19).
@@ -91,7 +92,8 @@ overrides `map_markers.gui` hides the icons; a map mode's `index` is its row in 
 - A rank change revokes the rights above the slot count, newest first (a plan holds its own slot, so only a real right
   can go that way; inferred).
 - A hostile owner change destroys rights with `kept_at_conquest = no`: the conqueror does not inherit the plan.
-- Every script grant and revoke sends the player the game's town rights message.
+- Every script grant and revoke sends the player the game's town rights message (a pop-up by the game's default; the
+  mod switches the pop-up off, see "Known limits").
 - The AI never grants plan rights (potential `always = no`).
 
 ## Known limits
@@ -101,8 +103,15 @@ overrides `map_markers.gui` hides the icons; a map mode's `index` is its row in 
 - A tier two steps old upgrades only while the middle tier can still be built (the upgrade goes to the direct
   successor).
 - Plans are lost on conquest (a hostile owner change), by design.
-- A message on every grant and revoke, the player's own clicks included.
+- The game's "town rights granted / revoked" messages go to the message log without a pop-up
+  (`main_menu/gui/messagetypes/pp_messagetypes.txt` redefines the two message types; the default opened a pop-up for
+  every plan click and every charter the plan grants). This holds for every town right, the player's own grants too.
 - A plan right shows among the location's town rights in the game's own panels.
+- Several plans in one location: the plan that pays back best is built first, a level a look, until it has nothing left
+  or no workers; the others wait (state 9). In the test Oporto's Tools Guild got every level for six looks while Cloth
+  and Trade waited. Open: take turns instead (Jan decides).
+- While the Construction Plan is switched off, plans are kept and nothing is built; the Location Plan window says so
+  and carries the switch.
 
 ## Code
 
@@ -117,8 +126,22 @@ overrides `map_markers.gui` hides the icons; a map mode's `index` is its row in 
 - Tests: `tests/test_town_plans.py`, `tests/test_town_plan_gui.py`, `tests/test_location_plan.py`, `tests/test_location_profiles.py`,
   `tests/test_construction_plan_country.py`, `tests/test_construction_plan_detail.py`.
 
-## To check in game first
+## Tested in game (2026-11-20)
 
-A grant and a revoke by the button (the message, the slot count, the right in the town rights card); a rural location
-with a plan for a town-only good raising to a town; a charter granted to a planned town and swapped for the rights; a
-plan lost on conquest; the pane's "saving for the upgrade" line for the Locations group.
+Construction Plan test world (playset "PP Plan Test"), new game as Castile, 1 April 1337 to March 1339, run files
+`run\pp_tp_setup.txt` (gold, influence, the plan on, plans through `pp_tplan_flip` on a small rural location, the
+biggest rural location and the biggest town) and `run\pp_tp_dump.txt` (`PPTP;` lines in error.log, numbers + 1000).
+
+- Plans are granted on rural locations and on a town; `every_locations_with_town_rights_in_country` finds a rural
+  location whose only rights are plans. The location's rights counter reads n/n: the plan's own slot cancels its use.
+- The button: a click in the Location Plan window sets the plan (gold frame, a tile in the Plans row, the tooltip's
+  state), the map mode shows the plans as icons. No script error named a plan file in two years.
+- The look builds: a Lumbermill in the rural location, a Tools Guild in the town.
+- Rank raise: the plans for pottery and beer on the rural location first reported the missing construction goods
+  (state 8), then started "Founding a Town" from the Locations purse; **the plans survived the rank change**. Beer
+  producers followed in the new town, and the next rights look granted the **Beer Charter** for the normal price.
+- The pop-up of the game's town rights messages is off (ten grants, none opened).
+
+Not tested: charter to rights (needs the Printing Press), a plan lost on conquest, the Food and Trade plans' builds
+(the small rural location had no free workers, state 4; Trade waited behind the Tools Guild), the pane's "saving for
+the upgrade" line for the Locations group, a tier upgrade.

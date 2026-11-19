@@ -607,6 +607,70 @@
   (20 - road proximity) / 1.15 + 2, the same rule for all four types (railroads had a great-centre exception and bonus until 2026-11-02).
   `tests/test_road_ai_weights.py`. Not tested in game.
 
+## Colonial Range (Maritime Reach, 2026-11-19, Jan)
+
+- Rule (one for every country, AI and player): the base colonial range (`country_base_values`, 1000) stays; the flat
+  colonial range of the researched advances (`pp_advance_colonial_range`: merchants and trade 250, New World 600, open
+  sea exploration 1500, Exploration 500, chartered companies 1000, superior ship design 1000) counts only by the
+  country's maritime reach `pp_maritime_reach` (0..1). The auto modifier `pp_limited_maritime_reach` takes the rest off
+  (`colonial_range = -1` scaled by `pp_maritime_reach_shortfall`); `colonial_range_modifier` percentages still multiply
+  the total. Files: `script_values/pp_maritime_reach_values.txt`, `scripted_triggers/pp_maritime_reach_triggers.txt`,
+  `auto_modifiers/pp_maritime_reach.txt`; `tests/test_maritime_reach.py` keeps the advance list equal to every advance
+  with a `colonial_range` line and pins the points.
+- Maritime reach: points over every owned port that faces the open sea (`pp_open_sea_port`: a water neighbour of
+  ocean, deep ocean, coastal ocean, narrows or inland sea topography outside the Black Sea and Caspian areas; river
+  channels, lakes and the two enclosed seas do not count; ports in colonies count): 1 per port, 3 in a town or city,
+  +2 per shipbuilding slot there (`max_ships_built_at_same_time`: dock 1, dry dock and better 2+; at most 2 slots).
+  Reach = (points - 6) / 18, clamped: none at 6 or less, full from 24.
+- It replaced the AI charter cap cut `pp_colonial_charter_gate` (2026-10-09: -6 parallel charters unless colonial
+  subject, 150+ locations or 8+ open-sea ports at home). That gate blocked about nine in ten native countries next to
+  unowned land (Cahokia, Chimu, Kanem, Songhai, Great Zimbabwe and Kongo in every save, the Tarascans in most; Discord
+  report 2026-11) and let countries with at most 3 open-sea ports through by size: 14 overseas jumps in the 9 runs (Bohemia 7,
+  Hungary 3, Kyiv, Austria, Guelders, Muscovy). No charter cap is cut now.
+- Engine behaviour (checked against the runs, details in the private notes): land next to our own or a subject's land
+  (also across wasteland) can be chartered whatever the range, so frontier colonisation (Siberia, the natives'
+  backyard) never depends on range. Any other target must be a port location within naval distance: the shortest sea
+  path from one of our own ports (port, its sea zone, sea zones, the target's sea zone, the target), each step the
+  distance between the bounding-box centres of the two tiles in map pixels, against colonial range x (1 +
+  colonial_range_modifier). Without ports nothing overseas is in range. In 9 runs 96 % of 6,179 non-adjacent port
+  colonies lay inside the colonizer's range (own and subjects' ports); first entries into a new subcontinent sat at a
+  median 0.65 of it, three quarters below 0.91; the rest are chains or range gained inside one five-year save interval.
+- Fit (2026-11-19): nine full observer runs (stockpile-prices dataset: 77768726, 16fe282a, ebdb631e, cf884236,
+  97f9d39a, 6ee05b7e, 67859be2, 060ad1de, af7dce96); per country and save: ports by class, shipyards, colonial range and
+  the naval distance to the nearest unowned port per target area; every first overseas colony replayed under the new
+  range (blocked jumps wait until a home port reaches a target). First year in range, median over the runs (old range
+  / new range / first colony observed; history):
+
+  | | Atlantic islands | West Africa | Brazil | Caribbean | North America | history |
+  |---|---|---|---|---|---|---|
+  | Portugal | 1342 / 1342 / 1387 | 1432 / 1432 / 1642 | 1447 / 1447 / 1462 | 1442 / 1442 / - | 1442 / 1442 / 1749 | islands 1420-50, Brazil 1500-40 |
+  | Castile | 1342 / 1342 / 1372 | 1417 / 1417 / - | 1447 / 1447 / 1667 | 1447 / 1447 / 1457 | 1417 / 1417 / 1728 | Canaries ~1490, Caribbean 1492 |
+  | England | 1527 / 1527 / 1527 | 1527 / 1527 / 1552 | 1552 / 1552 / 1667 | 1542 / 1542 / 1672 | 1527 / 1527 / 1557 | 1600-40 |
+  | France | 1417 / 1417 / 1526 | 1507 / 1507 / 1654 | 1522 / 1522 / 1597 | 1527 / 1527 / 1559 | 1512 / 1512 / 1537 | 1600-40 |
+  | Holland | 1557 / - / - | 1551 / 1582 / - | 1562 / - / - | 1609 / 1662 / - | 1551 / 1582 / 1657 | 1600-30 |
+  | Denmark | 1619 / 1619 / - | 1572 / 1574 / 1672 | 1602 / 1602 / - | 1622 / 1622 / 1717 | 1572 / 1574 / 1652 | 1620-70 |
+  | Sweden | 1677 / 1677 / - | 1577 / 1577 / - | - | 1657 / 1657 / - | 1577 / 1577 / 1681 | 1638 |
+
+  The big colonizers keep every observed jump (their reach is full from game start); their early dates are the
+  advances', not the gate's. Distinct overseas colonizers per half century, old gate observed / replayed: 1600 9 / 9,
+  1650 12 / 11, 1700 14 / 12, 1750 14 / 13, 1800 14 / 12. Without any gate, 44-55 European countries with at most 3
+  open-sea ports could reach an unowned overseas port in 1552-1702 (the pre-gate flood of Basel, Kleve, Cologne ...);
+  under the rule none. Small coastal countries (at most 40 locations) that could reach one: 8-13 -> 3.5-7; larger
+  coasts 8-12 -> 8-11.
+- Both error sides: Holland (about 8-10 open-sea ports, 4-5 of them towns) is at 0.56-0.72 reach until about 1600 and
+  full from about 1650 with its shipyards; its North America reach comes 31 years later than with the old range, its
+  observed jumps (1652, 1662) are kept. Rump states lose their reach (France cut to 1-6 ports, a 7-location Sweden).
+  Frisia's rural coast (10 ports, 2 towns): 1 of 6 jumps kept, 3 delayed 5 years, 2 never. Still through: coastal
+  states with port towns and yards (Genoa 6 of 6 jumps, Pomerania-Wolgast, Brittany, Normandy, Aquileia once it holds
+  the Venetian coast) and land realms that hold a real coast (Hungary with Dalmatia 3 of 4, Lithuania, Muscovy). Inland
+  countries, the Hanse cities (reach at most 0.06), Black Sea and Caspian powers: no overseas reach.
+- AI: it does not value colonial range when it builds, so its coast does nearly all the work: shipyards lift 2-4 % of
+  the countries with advance range to full reach (mean reach +0.015 to +0.04); Holland is where they count. The auto
+  modifier is evaluated with the country modifiers; one pass over the country's ports (two with partial reach); the old
+  gate's trigger cost 0.146 s over 82k evaluations in the 2026-11-10 profile. Not tested in game.
+- Watch in the next run: who colonizes overseas by half century, Holland's first colony, native backyard charters
+  (Inca, Chimu, Kongo, Kilwa, Mali, Benin), running charters of a country that loses its ports.
+
 ## Release Checklist
 
 - Treat an explicit request to create or publish a release as authorization for the one final guarded live sync required by this checklist. Confirm the exact `constructor.local.toml` deploy target before running it.

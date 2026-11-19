@@ -1,0 +1,14 @@
+﻿# Limited maritime reach (2026-11-19, Jan): replaces the AI charter cap cut of 2026-10-09 (pp_colonial_charter_gate),
+# which also stopped every non-European nation from colonising its own backyard. Every country, AI and player alike,
+# keeps the base colonial range; the range its advances add counts only by its maritime reach
+# (script_values/pp_maritime_reach_values.txt). The engine measures colonial range as naval distance from the country's
+# own ports, so a country without open-sea ports reaches nothing overseas, and inland land next to its own needs no
+# range. Evaluated only for countries whose advances add colonial range and whose reach is not full.
+pp_limited_maritime_reach = {
+	potential_trigger = {
+		pp_advance_colonial_range > 0
+		pp_maritime_reach < 1
+	}
+	scales_with = pp_maritime_reach_shortfall
+	colonial_range = -1
+}

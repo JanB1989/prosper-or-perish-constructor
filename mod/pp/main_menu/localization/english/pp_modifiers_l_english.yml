@@ -6,4 +6,5 @@ STATIC_MODIFIER_NAME_pp_player_building_maintenance_050_modifier: "P&P Player Bu
 STATIC_MODIFIER_NAME_pp_player_building_maintenance_100_modifier: "P&P Player Building Maintenance (+10%)"
 STATIC_MODIFIER_NAME_pp_player_building_maintenance_150_modifier: "P&P Player Building Maintenance (+15%)"
 STATIC_MODIFIER_NAME_pp_player_building_maintenance_200_modifier: "P&P Player Building Maintenance (+20%)"
-AUTO_MODIFIER_NAME_pp_colonial_charter_gate: "No Colonial Ambitions"
+AUTO_MODIFIER_NAME_pp_limited_maritime_reach: "Limited Maritime Reach"
+AUTO_MODIFIER_DESC_pp_limited_maritime_reach: "The [colonial_range|e] our [advances|e] give carries only as far as our seafaring. It grows with every [port|e] we hold on the open sea, more with ports in [towns_and_cities|e], and with the shipbuilding there: a [ShowBuildingTypeName('dock')|e], [ShowBuildingTypeName('dry_dock')|e] or [ShowBuildingTypeName('shipyard')|e]. Ports on rivers, lakes, the Black Sea and the Caspian do not count. Land next to our own needs no [colonial_range|e]."

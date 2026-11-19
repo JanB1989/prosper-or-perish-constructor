@@ -1,0 +1,18 @@
+﻿# Maritime reach (2026-11-19): a port that faces the open sea. One of its water neighbours is ocean, coastal ocean,
+# narrows or inland sea outside the Black Sea and the Caspian. Ports on river channels (pp_river_* topographies), lakes,
+# the Black Sea and the Caspian do not count. Location scope; read by pp_maritime_reach_points.
+pp_open_sea_port = {
+	is_port = yes
+	any_neighbor_location = {
+		is_land = no
+		OR = {
+			topography = ocean
+			topography = deep_ocean
+			topography = coastal_ocean
+			topography = narrows
+			topography = inland_sea
+		}
+		NOT = { area = area:black_sea_area }
+		NOT = { area = area:caspian_sea_area }
+	}
+}

@@ -1,0 +1,77 @@
+﻿# Maritime reach (2026-11-19, Jan: colonial range from ports, naval infrastructure and the right advances, one rule
+# for everyone). The colonial range the advances add reaches only as far as the country's seafaring: the share
+# pp_maritime_reach (0..1) of it applies, the rest is taken off by the auto modifier pp_limited_maritime_reach. The
+# base range (country_base_values) stays, and land next to our own or a subject's land needs no range at all, so
+# frontier colonisation (Siberia, the natives' backyard) does not depend on any of this.
+# Fit against nine observer runs (docs: AGENTS.md "Colonial Range"): full reach at 24 points, none at 6 or less.
+
+# Points of one open-sea port (location scope): 1, 3 in a town or city, +2 per shipbuilding slot (dock 1 slot, dry dock
+# and better 2 or more), at most 2 slots.
+pp_open_sea_port_points = {
+	value = 1
+	if = {
+		limit = { NOT = { location_rank = location_rank:rural_settlement } }
+		add = 2
+	}
+	add = {
+		value = modifier:max_ships_built_at_same_time
+		min = 0
+		max = 2
+		multiply = 2
+	}
+}
+
+# Country scope: every owned open-sea port, colonies included.
+pp_maritime_reach_points = {
+	value = 0
+	every_port_in_country = {
+		limit = { pp_open_sea_port = yes }
+		add = pp_open_sea_port_points
+	}
+}
+
+# 0 at 6 points or less, 1 from 24 points.
+pp_maritime_reach = {
+	value = pp_maritime_reach_points
+	subtract = 6
+	divide = 18
+	min = 0
+	max = 1
+}
+
+# The flat colonial range of the researched advances (tests/test_maritime_reach.py keeps this list equal to every
+# advance with a colonial_range line).
+pp_advance_colonial_range = {
+	value = 0
+	if = {
+		limit = { has_advance = merchants_and_trade }
+		add = 250
+	}
+	if = {
+		limit = { has_advance = new_world_advance }
+		add = 600
+	}
+	if = {
+		limit = { has_advance = open_sea_exploration }
+		add = 1500
+	}
+	if = {
+		limit = { has_advance = exploration }
+		add = 500
+	}
+	if = {
+		limit = { has_advance = chartered_companies }
+		add = 1000
+	}
+	if = {
+		limit = { has_advance = superior_ship_design }
+		add = 1000
+	}
+}
+
+# The part of the advances' colonial range our seafaring does not carry.
+pp_maritime_reach_shortfall = {
+	value = 1
+	subtract = pp_maritime_reach
+	multiply = pp_advance_colonial_range
+}

@@ -677,6 +677,10 @@
 
 ## Town-Right Plans (2026-11-19, Jan, branch `town-plans`)
 
+Branch note (2026-11-20, Jan): `town-plans` became the working branch `0.11` (in development, not released; the mod's
+version field stays 0.10.0 until a release). `town-plans` and `location-profiles` no longer exist; where this file
+names them, read `0.11`.
+
 - The Construction Plan's one per-location decision is a plan: a town right `pp_plan_<plan>` (75 goods + `food` +
   `trade`; `town_plans.py`), set and removed only by the mod's button (Location Plan window, the location window's
   Plans row), any owned location incl. rural, several per location. The right: `potential = { always = no }` (no AI,

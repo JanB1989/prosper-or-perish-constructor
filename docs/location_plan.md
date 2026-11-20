@@ -2,8 +2,8 @@
 
 Branch `town-plans`, 2026-11-19, Jan: the one per-location decision of the Construction Plan is a **plan**, and a plan
 is a town right. "This location is for lumber." Player-only; the AI never grants a plan right. **Tested in game
-2026-11-20** in the Construction Plan test world as Castile, two years (section "Tested in game" below); the engine
-behaviour further down that the test did not touch comes from a static reading of EU5 1.4.9.
+2026-11-20** in the Construction Plan test world as Castile (section "Tested in game" below, three rounds); the
+engine behaviour further down that the tests did not touch comes from a static reading of EU5 1.4.9.
 
 It replaces the Location Profiles (slots with ordered rules) and the Location Plan marks (goods marks and building
 marks), which are gone (history: `docs/location_profiles.md`, and this file's history in git before 2026-11-19).
@@ -136,7 +136,7 @@ plans on 418 locations, first look on 1 June): the whole monthly pass 0.062 s (b
   look 421 constructions and 18 locations with one business closed each (Fishing Villages and Market Villages in
   villages with livestock and lumber plans; 23 plans in state 14); the next look closed nothing more (the wait), the
   one after 3 more. Switching the setting off reopened all of them within two days; taking the plans off eight
-  locations reopened their eight buildings at once. Not tested: the keep list after a reopen by hand.
+  locations reopened their eight buildings at once. The keep list after a reopen by hand: tested in the third round.
 
 ### Plan settings (2026-11-20, Jan; tested in game the same night, see above)
 
@@ -264,10 +264,9 @@ list; the widget closed it at once, also while paused; the handshake took it off
 second list opened it; a closed building reports `building_employed_amount` 0 and keeps its
 `building_employment_size_amount`; `ordered_buildings_in_location` with `order_by`, `max = 1`,
 `check_range_bounds = no` works on buildings; `is_opened`, `building_level`, `building_employed_amount` work in
-building scope. **Not tested**: the rule itself (when it asks, the pick and its order, state 14, the wait), the undo
-paths (plan taken off, Clear, the setting), the keep list after a hand reopen, a building scope in a list across a
-save and load (the lists are emptied monthly, so at most a month's entries), the freed people being hired by the
-plan's next level, multiplayer.
+building scope. The rule itself, the undo paths and the keep list were tested afterwards ("In-game results of the
+night", "Third round"). **Not tested**: a building scope in a list across a save and load (the lists are emptied
+monthly, so at most a month's entries), the freed people being hired by the plan's next level, multiplayer.
 
 Side effect to know: while one building of a type is closed in a market, the game's AI (and the player's Buildings
 automation) adds no new building or level of that type in that market.
@@ -319,14 +318,16 @@ and `tooltip_key` are ignored; marker types load only from the three `map_marker
 overrides `map_markers.gui` hides the icons; a map mode's `index` is its row in the category menu (economy shows rows
 0-3).
 
-## Engine behaviour relied on (static analysis of EU5 1.4.9, not tested in game)
+## Engine behaviour relied on (static analysis of EU5 1.4.9; the owner change and the free script revoke were
+confirmed in game on 2026-11-20, "Third round")
 
 - The script grant skips every check (potential, allow, slots, price) and can stack duplicates: every grant is guarded.
 - Every held right counts against the location's slots; the plan's own +1 slot cancels that.
 - A held right whose potential is false is never stripped.
 - A rank change revokes the rights above the slot count, newest first (a plan holds its own slot, so only a real right
   can go that way; inferred).
-- A hostile owner change destroys rights with `kept_at_conquest = no`: the conqueror does not inherit the plan.
+- An owner change destroys rights with `kept_at_conquest = no`: the new owner does not inherit the plan (in game:
+  both script owner changes and making a country from the location; a real charter is kept).
 - Every script grant and revoke sends the player the game's town rights message (a pop-up by the game's default; the
   mod switches the pop-up off, see "Known limits").
 - The AI never grants plan rights (potential `always = no`).
@@ -399,5 +400,37 @@ biggest rural location and the biggest town) and `run\pp_tp_dump.txt` (`PPTP;` l
   month's start in one go never gives it one, so the monthly check finds the building open and puts it on the keep
   list (3 of 3 later closings in this run). In play there are frames between days. Stop a tick right after a look.
 
-Not tested: a plan lost in a peace deal, the Food and Trade plans' builds before the third round's changes, the
-pane's "saving for the upgrade" line for the Locations group.
+**The third round's changes, tested in game the same morning** (new games, build 8bd92898; no compile failure and
+no plan script error in the load logs or in the runs):
+
+- **Food and Trade plans** (`run\pp_r4_setup.txt`: Food on every province capital and rural location, 419 locations,
+  Trade on the 51 towns and cities, only the Locations group funded, 60,000 gold; four looks; `PPF;` lines), old
+  build against new. No province's store was short in either run. First look, old -> new: constructions started
+  367 -> 381; Taverns started 1 -> 0 (3 -> 0 after four looks); Cookshop and Public Kitchen levels 24 -> 10 (farms
+  come first); plans with "nothing to build" 47 -> 41; "loses money" 9 -> 1. The Food plan's constructions were Legume,
+  Cattle and Millet Farms, Fruit Orchards and Fishing Villages, Cookshops only in capitals.
+- **Trade**: in both runs no trade building started in the first year: the towns were building for their Food plan,
+  and the Marketplace's construction goods (masonry, glass) were missing in all four markets (state 8). With the
+  Food plan taken off the towns, ten constructions finished by console and masonry and glass stocked by console, one
+  look started 33 Marketplace levels (state 1) and no Hired Labor Yard or Smuggler's Cove.
+- **Charters follow plans** (`run\pp_r5_ch_setup.txt`, the rights look run by console, `PPH;` lines): Granada with a
+  tools plan, eight Tools Guild levels and a script-granted Cloth Charter without a cloth plan; Avila the same with a
+  cloth plan. Influence at zero: Granada's wait reason 1 (influence), Avila's 2 (the other specialization stays).
+  Influence at the cap: Granada's Cloth Charter was revoked and the Tools Charter granted in the same look for 20
+  influence (100 -> 80: the revoke is free); Avila kept its Cloth Charter, reason 2. The tooltip of Avila's tools
+  tile shows the line ("Tools Charter: waits, this town holds another specialization ..."). With the setting "Grant
+  a plan's charter and rights" off, the look granted nothing and cleared the wait reasons.
+- **The Plans tab** shows the eight settings above the plan icons.
+- **Plans first for their workers** (second new game, `run\pp_r6_setup.txt`: tools plan on every town, lumber plan on
+  every village, only the Locations and the Businesses group funded; `PPB;` lines): the first look closed one building
+  in each of 14 locations; all 14 carried both marks. The next monthly pass started one Businesses construction, none
+  in a marked location (the Businesses rule was nearly idle in this game, so the run alone proves little). The rule's
+  own gate (`pp_cplan_business_site`, `run\pp_r6_gate.txt`) evaluated on those 14 locations: all 14 pass without a
+  mark, none with `pp_lplan_wk`, none with `pp_pclose_wait`. With the setting "Other businesses in planned locations"
+  off, none of the 155 planned locations that pass otherwise does.
+- **The saving is released**: with the treasury emptied the group saved for a location; taking that location's plans
+  off (the Clear button's effect) dropped the saving at once.
+- **Switching the Construction Plan off** by its switch in the window reopened all 14 closed buildings.
+
+Not tested: a plan lost in a peace deal, the pane's "saving for the upgrade" line for the Locations group, the
+make-way rule against a specialization at rights level.

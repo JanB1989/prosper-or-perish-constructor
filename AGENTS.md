@@ -699,7 +699,7 @@
   `docs/construction_plan_country.md` "Plans: charters and rights".
 - Tested in game 2026-11-20 (plan test world, Castile, two years; `docs/location_plan.md` "Tested in game"): grants on
   rural locations, the button and the Plans row, builds, the rank raise with the plans surviving it, a charter granted
-  to a planned new town. Not tested: charter to rights, conquest, a tier upgrade. The game's town rights messages
+  to a planned new town. Charter to rights, an owner change and a tier upgrade: tested in the third round (below). The game's town rights messages
   (`TOWN_RIGHTS_GRANTED` / `_REVOKED`) are redefined without the pop-up in `main_menu/gui/messagetypes/pp_messagetypes.txt`
   (a mod file may redefine a vanilla message type; verified in game). While the Construction Plan is off, the Location
   Plan window says so and carries the switch.
@@ -714,6 +714,26 @@
   every month. `plan_closer.py` (generated lists), `pp_plan_closer.txt` (hand-written), `docs/location_plan.md` "Plans
   free their workers", `tests/test_plan_closer.py`. Closed buildings no longer count as open jobs in the free-worker
   count (`pp_cplan_free_peasants_here`).
+- Third round (2026-11-20 morning, Jan: test the untested paths, think the cases through; 8bd92898 + results commit,
+  all tested in game, `docs/location_plan.md` "Third round" and "Cases thought through"):
+  - Tested and working: charter to rights (the script revoke in the swap is free), a tier upgrade, an owner change
+    (plans gone, the rule's closings reopened by the game, a real charter kept), a building opened again by hand.
+  - Food plan: farms first (the staple farm with the best return here, `pp_cplan_farm_roi_<type>`), kitchens only
+    where the farms have nothing to do, a Tavern only while the province's store is short (`pp_tplan_do_food`). Trade
+    plan: `[construction_plan] trade_plan` (Marketplace line, Port Authority, market centre buildings), in start order.
+    A plan whose standing buildings are full starts another of its buildings. "Never at a loss" only for buildings
+    that make a good.
+  - A town's specialization follows its plans (another specialization makes way once the planned line is the bigger
+    one and that good has no plan there; revoke and grant in one step; `pp_tplan_cwait` = why a charter waits, shown in
+    the plan's tooltip). Taking a plan off keeps its charter.
+  - Plans come first for their location's workers: the Businesses rule builds nothing where a plan waits for workers
+    (`pp_lplan_wk`) or a closing is under way (`pp_pclose_wait`); both checks sit in `pp_cplan_business_site` and the
+    Businesses look's limit.
+  - Two more plan settings: "Other businesses in planned locations" (`pp_tplan_alone`), "Grant a plan's charter and
+    rights" (`pp_tplan_rights_off`). Taking the last plan off a location drops the group's saving for it; switching
+    the Construction Plan off opens every building the plans closed.
+  - Test pitfall: a console `tick_day` over a look and the next month's start gives the hidden widget no frame, so
+    the closings of that look never happen and their types land on the keep list. Stop a tick right after a look.
 
 ## Release Checklist
 

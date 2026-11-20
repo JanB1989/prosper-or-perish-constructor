@@ -50,41 +50,10 @@ types PPConstructionPlan
 	}
 }
 
-# ---- Opener (its own scripted widget: a widget only takes mouse input inside its parent's rectangle) ----
-# A tab of the game's own kind (button_panel_tab_alt on bg_panel_tabs, the look of the top-left panel's tab row), docked
-# at the left screen edge right under that row, with the game's mass-construction icon (Jan 2026-11-20: the text button
-# floating over the map looked out of place; no vanilla file is overridden for it). The side panels open over it.
-widget = {
-	name = "pp_construction_plan"
-	position = { 0 132 }
-	size = { 62 36 }
-	# scripted widgets need a function here; "yes" does not work
-	# (not on the pause menu: vanilla's own HUD parts ask IsPauseMenuShown; in game 2026-11-10 the button stood on it)
-	visible = "[And3(GetPlayer.Exists, Not(IsObserving), Not(IsPauseMenuShown))]"
-
-	widget = {
-		using = bg_panel_tabs
-		size = { 62 36 }
-
-		button_panel_tab_alt = {
-			name = "pp_cplan_opener"
-			size = { 62 36 }
-			down = "[GetVariableSystem.Exists('pp_cplan_open')]"
-			tooltip = "PP_CPLAN_OPEN_TT"
-			onclick = "[GetVariableSystem.Toggle('pp_cplan_open')]"
-			# the Towns and Buildings tab's grids: place the tiles (the window may open on that tab)
-			onclick = "[GetScriptedGui('pp_cplan_country_layout').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
-
-			button = {
-				alwaystransparent = yes
-				size = { 26 26 }
-				parentanchor = center
-				texture = "gfx/interface/icons/flat_icons/mass_construct.dds"
-				texture_density = 2
-			}
-		}
-	}
-}
+# ---- Opener ----
+# The window opens from its own tab at the end of the top-left panel's tab row (Jan 2026-11-20: the tab docked under
+# the row stuck out): the mod's copy of vanilla panels/left_panel/left_panel.gui, written by tools/port_vanilla_gui.py
+# (port_left_panel). The location window's header has a second way in (location_plan.add_location_button).
 
 # ---- Window ----
 	window = {

@@ -176,7 +176,7 @@ def test_targets_follow_the_tiers(vanilla: Path) -> None:
     for check in ("NOT = { has_variable = pp_cplan_hit }", "NOT = { pp_lplan_measuring = yes }",
                   "building_type = building_type:$old$", "pp_cplan_country_upgradable = yes",
                   "scope:pp_cplan_country = { can_build_building = building_type:$type$ }",
-                  "pp_cplan_goods_here_$demand$ = yes", "pp_lprof_build = yes"):
+                  "pp_cplan_goods_here_$demand$ = yes", "pp_lprof_build_known = yes"):
         assert check in upgrade, check
     assert "location_and_owner_can_build" not in upgrade  # the location's part refuses an obsolete tier, not an upgrade
     # the unit: pairs of other targets are not this target's steps

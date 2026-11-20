@@ -228,10 +228,13 @@ def test_a_a_construction_must_fit_in_its_groups_purse_and_the_purse_pays() -> N
 
 def test_b_the_first_unpaid_thing_is_saved_for_and_nothing_more_is_built() -> None:
     effects = _read(EFFECTS)
-    scoped = _effect(effects, "pp_cplan_construct_scoped")
+    # the shared tail of every construct (generic, or with the type known: pp_cplan_construct_room)
+    scoped = _effect(effects, "pp_cplan_construct_go")
     limit = scoped[scoped.index("pp_cplan_btype_data = yes"):scoped.index("pp_cplan_construct_now")]
     assert "NOT = { pp_cplan_saving = { why = $why$ } }" in limit and "pp_cplan_affordable = { why = $why$ }" in limit
-    assert scoped.index("pp_cplan_construct_now = { why = $why$ }") < scoped.index("else = {\n\t\t\t\tpp_cplan_note_wait = { why = $why$ }")
+    assert scoped.index("pp_cplan_construct_now = { why = $why$ }") < scoped.index("else = {\n\t\t\tpp_cplan_note_wait = { why = $why$ }")
+    assert "pp_cplan_construct_go = { why = $why$ data = yes }" in _effect(effects, "pp_cplan_construct_scoped")
+    assert "pp_cplan_construct_go = { why = $why$ data = $data$ }" in _effect(effects, "pp_cplan_construct_room")
     saving = _effect(_read(TRIGGERS), "pp_cplan_saving")
     assert saving.strip() == "scope:pp_cplan_country = { has_variable = pp_cplan_save_cost_$why$ }"
     note = _effect(effects, "pp_cplan_note_wait")
@@ -391,12 +394,12 @@ def test_d_the_limit_covers_every_business_type_in_one_construct_path_and_in_the
     gates = {path: len(re.findall(r"pp_cplan_market_do = \{ do = gate \}", re.sub(r"#[^\n]*", "", _read(path))))
              for path in plan_files}
     assert {path: count for path, count in gates.items() if count} == {EFFECTS: 1}
-    scoped = _effect(effects, "pp_cplan_construct_scoped")
+    scoped = _effect(effects, "pp_cplan_construct_go")  # the tail every construct runs (pp_cplan_construct_scoped / _room)
     # ... except a location's marks, which are forced (Jan 2026-11-10): the gate is not asked while they run
-    assert ("limit = {\n\t\t\t\tpp_cplan_limits_market_$why$ = yes\n\t\t\t\tscope:pp_cplan_forced < 0.5\n\t\t\t}\n"
-            "\t\t\tpp_cplan_market_do = { do = gate }") in scoped
+    assert ("limit = {\n\t\t\tpp_cplan_limits_market_$why$ = yes\n\t\t\tscope:pp_cplan_forced < 0.5\n\t\t}\n"
+            "\t\tpp_cplan_market_do = { do = gate }") in scoped
     assert "save_temporary_scope_value_as = { name = pp_cplan_forced value = 0 }" in _effect(effects, "pp_cplan_pass_begin")
-    assert "limit = { scope:pp_cplan_mok < 0.5 }\n\t\t\tpp_cplan_note_market = { why = $why$ }" in scoped
+    assert "limit = { scope:pp_cplan_mok < 0.5 }\n\t\tpp_cplan_note_market = { why = $why$ }" in scoped
     triggers = _read(MOD / cp.TRIGGERS)
     limited = {cp.GROUP_WHY[group] for group in cp.MARKET_LIMITED}
     assert limited == {103, 105}
@@ -404,6 +407,7 @@ def test_d_the_limit_covers_every_business_type_in_one_construct_path_and_in_the
         assert _effect(triggers, f"pp_cplan_limits_market_{why}").strip() == f"always = {'yes' if why in limited else 'no'}"
     # every construction of a profile rule or a mark goes through that path
     assert "pp_cplan_construct_scoped = { why = 105 }" in _effect(_read(PROFILE_EFFECTS), "pp_lprof_build")
+    assert "pp_cplan_construct_room = { why = 105 data = no }" in _effect(_read(PROFILE_EFFECTS), "pp_lprof_build_known")
     assert "construct_building" not in _read(PROFILE_EFFECTS)
     # ... and the pick asks the same trigger, so a site moves on to its next best good
     take = _effect(effects, "pp_cplan_business_take")
@@ -462,7 +466,7 @@ def test_d_a_stopped_pick_is_counted_apart_and_a_rule_or_mark_has_its_own_state(
     from prosper_or_perish_constructor import location_profiles as lpf
 
     assert lpf.FAIL_STATE[106] == 10 and lpf.FAIL_STATE[107] == 7 and 10 in lpf.STATES
-    build = _effect(_read(PROFILE_EFFECTS), "pp_lprof_build")
+    build = _effect(_read(PROFILE_EFFECTS), "pp_lprof_build_end")  # after either construct of a plan
     assert "has_variable = pp_cplan_mlim } }\n\t\tpp_lprof_fail = { r = 106 }" in build
     finish = _effect(_read(PROFILE_EFFECTS), "pp_lprof_finish")
     assert "limit = { var:pp_lprof_fail > 105.5 }\n\t\tset_variable = { name = $st$ value = 110 }" in finish

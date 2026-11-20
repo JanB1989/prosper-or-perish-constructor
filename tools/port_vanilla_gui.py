@@ -7,7 +7,8 @@ file), for the build panel a layout that fits PP's many-slot, many-input buildin
 same for the location view's rows (``port_location_rows``, ``port_location_production``) and the building window's
 header (``port_building_view``), and
 for the market, the goods and markets ledgers and the trade-order goods picker the internal goods hidden
-(``port_internal_goods``), and in the market's goods rows a readable stockpile column (``port_market_stockpile``).
+(``port_internal_goods``), and in the market's goods rows a readable stockpile column (``port_market_stockpile``),
+and the Construction Plan's tab at the end of the top-left panel's tab row (``port_left_panel``).
 Everything else is vanilla, so whatever the game adds to these windows stays visible.
 
 ``location_window.gui`` is not handled here: it is generated from the World Builder export by the finalize step of
@@ -166,6 +167,18 @@ INTERNAL_GOODS_TABLES: dict[str, tuple[str, ...]] = {
 # the goods table column the tables use instead of vanilla's TooltipTableColumn (main_menu_cooltip_types.gui)
 GOODS_TABLE_COLUMN = "pp_GoodsMarketTableColumn"
 COOLTIP_TYPES = Path("main_menu/gui/shared/main_menu_cooltip_types.gui")
+# the top-left panel's tab row (government ... decisions) gets the Construction Plan's tab (port_left_panel; Jan
+# 2026-11-20: one tab of the row, the game's mass-construction icon)
+LEFT_PANEL = "panels/left_panel/left_panel.gui"
+PLAN_TAB_MARKER = "### PP: Construction Plan tab (tools/port_vanilla_gui.py, port_left_panel)"
+PLAN_TAB_VISIBLE = "[And(GetPlayer.Exists, Not(IsObserving))]"
+PLAN_TAB_DOWN = "[GetVariableSystem.Exists('pp_cplan_open')]"
+PLAN_TAB_TOOLTIP = "PP_CPLAN_OPEN_TT"
+PLAN_TAB_CLICKS = ("[GetVariableSystem.Toggle('pp_cplan_open')]",
+                   # the Towns and Buildings tab's grids: place the tiles (the window may open on that tab)
+                   "[GetScriptedGui('pp_cplan_country_layout').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]")
+PLAN_TAB_ICON = "gfx/interface/icons/flat_icons/mass_construct.dds"
+PLAN_TAB_COLOR = "0.75 0.50 0.30 1.0"   # brick, beside the neighbours' saturated hues (production 0.85 0.40 0.10)
 TOP_GOODS = 5
 
 
@@ -1227,6 +1240,50 @@ def port_internal_goods(vanilla: str, rel: str) -> str:
     return t
 
 
+def plan_tab(ind: str) -> str:
+    """The Construction Plan's tab in the top-left panel's tab row: a ``button_panel_tab_alt`` like its neighbours that
+    toggles the plan window (GUI variable ``pp_cplan_open``) and places the Towns and Buildings tab's tiles. Only for a
+    player who plays a country: an observer's scripted GUI commands are dropped."""
+    block = _block(f"button_panel_tab_alt = {{ {PLAN_TAB_MARKER}", [
+        f'visible = "{PLAN_TAB_VISIBLE}"',
+        f'down = "{PLAN_TAB_DOWN}"',
+        'onmousehierarchyenter = "[ResetHighlightedTab]"',
+        f'tooltip = "{PLAN_TAB_TOOLTIP}"',
+        *(f'onclick = "{click}"' for click in PLAN_TAB_CLICKS),
+        "",
+        "using = layoutpolicy_expanding",
+        "",
+        "button = {",
+        "\talwaystransparent = yes",
+        "\tsize = { 26 26 }",
+        "\tparentanchor = center",
+        f'\ttexture = "{PLAN_TAB_ICON}"',
+        "\ttexture_density = 2",
+        "",
+        "\tusing = button_panel_tab_icon_effect",
+        f'\tblockoverride "icon_effect_visible" {{ visible = "{PLAN_TAB_DOWN}" }}',
+        f'\tblockoverride "icon_effect_color"{{ color = {{ {PLAN_TAB_COLOR} }} }}',
+        "}",
+    ]).rstrip("\n")
+    return block.replace("\n", "\n" + ind).replace(ind + "\n", "\n")   # blank lines stay empty
+
+
+def port_left_panel(t: str) -> str:
+    """Vanilla's top-left panel with one more tab at the end of its tab row: the Construction Plan (Jan, 2026-11-20:
+    the opener docked under the row stuck out). Last, because an invisible child keeps its room in this hbox (vanilla
+    sets no ignoreinvisible): for an observer the hidden tab leaves its gap at the row's end, not between two tabs."""
+    what = f"vanilla {LEFT_PANEL}"
+    row = t.find('name = "tabs_buttons"')
+    if row < 0:
+        raise ValueError(f"{what}: no tabs_buttons widget")
+    found = list(re.finditer(r"(?m)^([ \t]*)button_panel_tab_alt = \{ ### decisions tab\n", t))
+    if len(found) != 1 or found[0].start() < row:
+        raise ValueError(f"{what}: expected 1 decisions tab in the tab row, found {len(found)}")
+    m = found[0]
+    end = _block_end(t, t.index("{", m.start()))
+    return t[:end] + "\n\n" + m.group(1) + plan_tab(m.group(1)) + t[end:]
+
+
 def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8-sig").replace("\r\n", "\n")
 
@@ -1246,6 +1303,7 @@ def ported(vanilla_game: Path, mod_root: Path) -> dict[str, str | None]:
     for rel in {**INTERNAL_GOODS_LISTS, **INTERNAL_GOODS_ICONS, **INTERNAL_GOODS_TABLES}:
         out[rel] = port_internal_goods(_read(vanilla_game / GUI / rel), rel)
     out[INTERNAL_GOODS_GUI] = internal_goods_gui(_read(vanilla_game / COOLTIP_TYPES))
+    out[LEFT_PANEL] = port_left_panel(_read(vanilla_game / GUI / LEFT_PANEL))
     for rel in RETIRED:
         out[rel] = None
     return out

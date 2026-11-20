@@ -75,6 +75,18 @@ limit) never comes up for a plan. The Locations pane of the Construction Plan
 window counts the plans by state, names what the group saves for (a building or a town / city
 upgrade) and lists what it built: "for its plan", or a higher rank with the location's people.
 
+**A look stops when the purse is spent** (script time, 2026-11-20; measured before: the look of 615 plans on 418
+locations took 0.197 s, 331 plans ended in state 7). Once the group saves for something, nothing else can start in
+that pass, so the locations after that point in the turn order are not walked. The next look starts at the location
+the group saves for, so they come right after it. Until a look reaches them their plans read "held back for gold"
+(state 7) in the Location Plan window and the Plans row, whatever they showed before (script value
+`pp_lprof_unreached`: the country's last look stopped, `pp_lprof_cut`, and the location's `pp_lprof_seen` is below
+the look number `pp_lprof_look_n`). A plan set after such a look on a location it did not reach reads the same until
+the next look. The pane adds one line: how many locations the look did not reach; their plans are not in the state
+counts and their cost is not in what the group wanted. Inside a location the plans' two goes are split as the turn
+begins (`scope:pp_lplan_from`); the second go runs only where a plan started the location's last construction.
+Details: `docs/player_construction_manager.md` "Script time". Measured after: not yet.
+
 ### Plan settings (2026-11-20, Jan; not tested in game)
 
 Baseline settings the player sees and may change (the settings tab of the Construction Plan window, agent G's

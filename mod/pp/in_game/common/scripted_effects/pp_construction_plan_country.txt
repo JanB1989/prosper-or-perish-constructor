@@ -154,623 +154,623 @@ pp_cplan_country_upgrade_building = {
 		limit = { NOT = { scope:pp_cplan_up_site = { has_variable = pp_cplan_up_try } } }
 		if = {
 			limit = { building_type = building_type:coastal_fort scope:pp_cplan_country = { can_build_building = building_type:naval_battery } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = naval_battery demand = fort_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = naval_battery demand = fort_construction ipl = 0 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:early_council_hall scope:pp_cplan_country = { can_build_building = building_type:council_hall } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = council_hall demand = town_building_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = council_hall demand = town_building_construction ipl = 0 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:council_hall scope:pp_cplan_country = { can_build_building = building_type:modern_council_hall } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = modern_council_hall demand = town_building_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = modern_council_hall demand = town_building_construction ipl = 0 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:art_school scope:pp_cplan_country = { can_build_building = building_type:arts_academy } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = arts_academy demand = art_school_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = arts_academy demand = art_school_construction ipl = 0 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:stockade scope:pp_cplan_country = { can_build_building = building_type:castle } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = castle demand = castle_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = castle demand = castle_construction ipl = 0 cat = fort } }
 		}
 		else_if = {
 			limit = { building_type = building_type:castle scope:pp_cplan_country = { can_build_building = building_type:bastion } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = bastion demand = fort_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = bastion demand = fort_construction ipl = 0 cat = fort } }
 		}
 		else_if = {
 			limit = { building_type = building_type:bastion scope:pp_cplan_country = { can_build_building = building_type:star_fort } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = star_fort demand = fort_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = star_fort demand = fort_construction ipl = 0 cat = fort } }
 		}
 		else_if = {
 			limit = { building_type = building_type:star_fort scope:pp_cplan_country = { can_build_building = building_type:fortress } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = fortress demand = fort_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = fortress demand = fort_construction ipl = 0 cat = fort } }
 		}
 		else_if = {
 			limit = { building_type = building_type:provincial_garrison scope:pp_cplan_country = { can_build_building = building_type:armory } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = armory demand = early_soldier_building_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = armory demand = early_soldier_building_construction ipl = 0 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:korean_barracks scope:pp_cplan_country = { can_build_building = building_type:armory } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = armory demand = early_soldier_building_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = armory demand = early_soldier_building_construction ipl = 0 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:armory scope:pp_cplan_country = { can_build_building = building_type:barracks } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = barracks demand = soldier_building_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = barracks demand = soldier_building_construction ipl = 0 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:training_fields scope:pp_cplan_country = { can_build_building = building_type:regimental_camp } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = regimental_camp demand = soldier_building_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = regimental_camp demand = soldier_building_construction ipl = 0 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:regimental_camp scope:pp_cplan_country = { can_build_building = building_type:conscription_center } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = conscription_center demand = soldier_building_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = conscription_center demand = soldier_building_construction ipl = 0 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:barracks scope:pp_cplan_country = { can_build_building = building_type:conscription_center } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = conscription_center demand = soldier_building_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = conscription_center demand = soldier_building_construction ipl = 0 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:dock scope:pp_cplan_country = { can_build_building = building_type:dry_dock } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = dry_dock demand = port_building_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = dry_dock demand = port_building_construction ipl = 0 cat = port } }
 		}
 		else_if = {
 			limit = { building_type = building_type:dry_dock scope:pp_cplan_country = { can_build_building = building_type:shipyard } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = shipyard demand = port_building_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = shipyard demand = port_building_construction ipl = 0 cat = port } }
 		}
 		else_if = {
 			limit = { building_type = building_type:shipyard scope:pp_cplan_country = { can_build_building = building_type:grand_shipyard } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = grand_shipyard demand = port_building_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = grand_shipyard demand = port_building_construction ipl = 0 cat = port } }
 		}
 		else_if = {
 			limit = { building_type = building_type:grand_shipyard scope:pp_cplan_country = { can_build_building = building_type:naval_base } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = naval_base demand = port_building_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = naval_base demand = port_building_construction ipl = 0 cat = port } }
 		}
 		else_if = {
 			limit = { building_type = building_type:brewery scope:pp_cplan_country = { can_build_building = building_type:beer_workshop } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = beer_workshop demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = beer_workshop demand = workshop_construction ipl = 0.11 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:beer_workshop scope:pp_cplan_country = { can_build_building = building_type:brewery_manufactory } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = brewery_manufactory demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = brewery_manufactory demand = manufactory_construction ipl = 0.11 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:brewery_manufactory scope:pp_cplan_country = { can_build_building = building_type:brewery_mill } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = brewery_mill demand = mill_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = brewery_mill demand = mill_construction ipl = 0.11 cat = mill } }
 		}
 		else_if = {
 			limit = { building_type = building_type:scriptorium scope:pp_cplan_country = { can_build_building = building_type:printing_press_shop } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = printing_press_shop demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = printing_press_shop demand = workshop_construction ipl = 0.16 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:printing_press_shop scope:pp_cplan_country = { can_build_building = building_type:printing_manufactory } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = printing_manufactory demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = printing_manufactory demand = manufactory_construction ipl = 0.16 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:printing_manufactory scope:pp_cplan_country = { can_build_building = building_type:printing_mill } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = printing_mill demand = mill_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = printing_mill demand = mill_construction ipl = 0.16 cat = mill } }
 		}
 		else_if = {
 			limit = { building_type = building_type:cannon_maker scope:pp_cplan_country = { can_build_building = building_type:cannon_workshop } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = cannon_workshop demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = cannon_workshop demand = workshop_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:cannon_workshop scope:pp_cplan_country = { can_build_building = building_type:cannon_foundry } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = cannon_foundry demand = mill_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = cannon_foundry demand = mill_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:cannon_foundry scope:pp_cplan_country = { can_build_building = building_type:cannons_factory } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = cannons_factory demand = mill_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = cannons_factory demand = mill_construction ipl = 0.19 cat = mill } }
 		}
 		else_if = {
 			limit = { building_type = building_type:cloth_guild scope:pp_cplan_country = { can_build_building = building_type:cloth_workshop } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = cloth_workshop demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = cloth_workshop demand = workshop_construction ipl = 0.14 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:cloth_workshop scope:pp_cplan_country = { can_build_building = building_type:cloth_manufactory } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = cloth_manufactory demand = guild_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = cloth_manufactory demand = guild_construction ipl = 0.14 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:cloth_manufactory scope:pp_cplan_country = { can_build_building = building_type:textile_mill } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = textile_mill demand = mill_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = textile_mill demand = mill_construction ipl = 0.14 cat = mill } }
 		}
 		else_if = {
 			limit = { building_type = building_type:dyes_guild scope:pp_cplan_country = { can_build_building = building_type:dyes_workshop } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = dyes_workshop demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = dyes_workshop demand = workshop_construction ipl = 0.15 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:dyes_workshop scope:pp_cplan_country = { can_build_building = building_type:dyesworks } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = dyesworks demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = dyesworks demand = manufactory_construction ipl = 0.15 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:dyesworks scope:pp_cplan_country = { can_build_building = building_type:dyes_mill } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = dyes_mill demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = dyes_mill demand = manufactory_construction ipl = 0.15 cat = mill } }
 		}
 		else_if = {
 			limit = { building_type = building_type:fine_cloth_guild scope:pp_cplan_country = { can_build_building = building_type:fine_cloth_workshop } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = fine_cloth_workshop demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = fine_cloth_workshop demand = workshop_construction ipl = 0.14 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:fine_cloth_workshop scope:pp_cplan_country = { can_build_building = building_type:fine_cloth_manufactory } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = fine_cloth_manufactory demand = guild_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = fine_cloth_manufactory demand = guild_construction ipl = 0.14 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:fine_cloth_manufactory scope:pp_cplan_country = { can_build_building = building_type:fine_cloth_mill } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = fine_cloth_mill demand = mill_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = fine_cloth_mill demand = mill_construction ipl = 0.14 cat = mill } }
 		}
 		else_if = {
 			limit = { building_type = building_type:hand_cannon_guild scope:pp_cplan_country = { can_build_building = building_type:gun_smith } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = gun_smith demand = guild_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = gun_smith demand = guild_construction ipl = 0.56 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:gun_smith scope:pp_cplan_country = { can_build_building = building_type:guns_workshop } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = guns_workshop demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = guns_workshop demand = workshop_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:guns_workshop scope:pp_cplan_country = { can_build_building = building_type:firearms_manufactory } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = firearms_manufactory demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = firearms_manufactory demand = manufactory_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:firearms_manufactory scope:pp_cplan_country = { can_build_building = building_type:firearms_factory } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = firearms_factory demand = mill_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = firearms_factory demand = mill_construction ipl = 0.19 cat = mill } }
 		}
 		else_if = {
 			limit = { building_type = building_type:furniture_guild scope:pp_cplan_country = { can_build_building = building_type:furniture_workshop } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = furniture_workshop demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = furniture_workshop demand = workshop_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:furniture_workshop scope:pp_cplan_country = { can_build_building = building_type:furniture_manufactory } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = furniture_manufactory demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = furniture_manufactory demand = manufactory_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:furniture_manufactory scope:pp_cplan_country = { can_build_building = building_type:furniture_mill } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = furniture_mill demand = mill_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = furniture_mill demand = mill_construction ipl = 0.19 cat = mill } }
 		}
 		else_if = {
 			limit = { building_type = building_type:glass_guild scope:pp_cplan_country = { can_build_building = building_type:glass_workshop } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = glass_workshop demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = glass_workshop demand = workshop_construction ipl = 0.11 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:glass_workshop scope:pp_cplan_country = { can_build_building = building_type:glassworks } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = glassworks demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = glassworks demand = manufactory_construction ipl = 0.11 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:glassworks scope:pp_cplan_country = { can_build_building = building_type:glass_mill } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = glass_mill demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = glass_mill demand = manufactory_construction ipl = 0.11 cat = mill } }
 		}
 		else_if = {
 			limit = { building_type = building_type:lacquerware_guild scope:pp_cplan_country = { can_build_building = building_type:lacquerware_manufactory } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = lacquerware_manufactory demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = lacquerware_manufactory demand = manufactory_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:tannery scope:pp_cplan_country = { can_build_building = building_type:tanning_workshop } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = tanning_workshop demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = tanning_workshop demand = workshop_construction ipl = 0.14 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:tanning_workshop scope:pp_cplan_country = { can_build_building = building_type:tannery_manufactory } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = tannery_manufactory demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = tannery_manufactory demand = manufactory_construction ipl = 0.14 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:tannery_manufactory scope:pp_cplan_country = { can_build_building = building_type:tannery_mill } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = tannery_mill demand = mill_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = tannery_mill demand = mill_construction ipl = 0.14 cat = mill } }
 		}
 		else_if = {
 			limit = { building_type = building_type:distillers_guild scope:pp_cplan_country = { can_build_building = building_type:distillers_workshop } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = distillers_workshop demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = distillers_workshop demand = workshop_construction ipl = 0.11 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:distillers_workshop scope:pp_cplan_country = { can_build_building = building_type:distiller_manufactory } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = distiller_manufactory demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = distiller_manufactory demand = manufactory_construction ipl = 0.11 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:distiller_manufactory scope:pp_cplan_country = { can_build_building = building_type:distiller_mill } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = distiller_mill demand = mill_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = distiller_mill demand = mill_construction ipl = 0.11 cat = mill } }
 		}
 		else_if = {
 			limit = { building_type = building_type:naval_supplies_guild scope:pp_cplan_country = { can_build_building = building_type:naval_supplies_workshop } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = naval_supplies_workshop demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = naval_supplies_workshop demand = workshop_construction ipl = 0.2 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:naval_supplies_workshop scope:pp_cplan_country = { can_build_building = building_type:naval_supplies_manufactory } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = naval_supplies_manufactory demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = naval_supplies_manufactory demand = manufactory_construction ipl = 0.2 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:naval_supplies_manufactory scope:pp_cplan_country = { can_build_building = building_type:naval_supplies_mill } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = naval_supplies_mill demand = mill_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = naval_supplies_mill demand = mill_construction ipl = 0.2 cat = mill } }
 		}
 		else_if = {
 			limit = { building_type = building_type:paper_guild scope:pp_cplan_country = { can_build_building = building_type:paper_workshop } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = paper_workshop demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = paper_workshop demand = workshop_construction ipl = 0.16 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:paper_workshop scope:pp_cplan_country = { can_build_building = building_type:paper_manufactory } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = paper_manufactory demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = paper_manufactory demand = manufactory_construction ipl = 0.16 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:paper_manufactory scope:pp_cplan_country = { can_build_building = building_type:paper_mill } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = paper_mill demand = mill_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = paper_mill demand = mill_construction ipl = 0.16 cat = mill } }
 		}
 		else_if = {
 			limit = { building_type = building_type:porcelain_guild scope:pp_cplan_country = { can_build_building = building_type:porcelain_manufactory } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = porcelain_manufactory demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = porcelain_manufactory demand = manufactory_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:pottery_guild scope:pp_cplan_country = { can_build_building = building_type:pottery_workshop } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = pottery_workshop demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = pottery_workshop demand = workshop_construction ipl = 0.11 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:pottery_workshop scope:pp_cplan_country = { can_build_building = building_type:pottery_manufactory } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = pottery_manufactory demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = pottery_manufactory demand = manufactory_construction ipl = 0.11 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:pottery_manufactory scope:pp_cplan_country = { can_build_building = building_type:pottery_mill } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = pottery_mill demand = mill_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = pottery_mill demand = mill_construction ipl = 0.11 cat = mill } }
 		}
 		else_if = {
 			limit = { building_type = building_type:saltpeter_guild scope:pp_cplan_country = { can_build_building = building_type:saltpeter_workshop } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = saltpeter_workshop demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = saltpeter_workshop demand = workshop_construction ipl = 0.14 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:saltpeter_workshop scope:pp_cplan_country = { can_build_building = building_type:putrefaction_works } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = putrefaction_works demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = putrefaction_works demand = manufactory_construction ipl = 0.14 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:putrefaction_works scope:pp_cplan_country = { can_build_building = building_type:putrefaction_mill } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = putrefaction_mill demand = mill_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = putrefaction_mill demand = mill_construction ipl = 0.14 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:tools_guild scope:pp_cplan_country = { can_build_building = building_type:tools_workshop } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = tools_workshop demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = tools_workshop demand = workshop_construction ipl = 0.16 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:tools_workshop scope:pp_cplan_country = { can_build_building = building_type:iron_foundry } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = iron_foundry demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = iron_foundry demand = manufactory_construction ipl = 0.16 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:iron_foundry scope:pp_cplan_country = { can_build_building = building_type:iron_mill } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = iron_mill demand = mill_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = iron_mill demand = mill_construction ipl = 0.16 cat = mill } }
 		}
 		else_if = {
 			limit = { building_type = building_type:weapon_guild scope:pp_cplan_country = { can_build_building = building_type:weapon_workshop } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = weapon_workshop demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = weapon_workshop demand = workshop_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:weapon_workshop scope:pp_cplan_country = { can_build_building = building_type:weapon_manufactory } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = weapon_manufactory demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = weapon_manufactory demand = manufactory_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:weapon_manufactory scope:pp_cplan_country = { can_build_building = building_type:weapon_factory } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = weapon_factory demand = mill_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = weapon_factory demand = mill_construction ipl = 0.19 cat = mill } }
 		}
 		else_if = {
 			limit = { building_type = building_type:winery scope:pp_cplan_country = { can_build_building = building_type:winery_manufactory } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = winery_manufactory demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = winery_manufactory demand = manufactory_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:charcoal_maker scope:pp_cplan_country = { can_build_building = building_type:improved_charcoal_maker } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = improved_charcoal_maker demand = guild_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = improved_charcoal_maker demand = guild_construction ipl = 0.18 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:marketplace scope:pp_cplan_country = { can_build_building = building_type:merchants_quarters } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = merchants_quarters demand = town_building_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = merchants_quarters demand = town_building_construction ipl = 0 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:merchants_quarters scope:pp_cplan_country = { can_build_building = building_type:grand_marketplace } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = grand_marketplace demand = town_building_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = grand_marketplace demand = town_building_construction ipl = 0 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:grand_marketplace scope:pp_cplan_country = { can_build_building = building_type:commerce_center } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = commerce_center demand = town_building_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = commerce_center demand = town_building_construction ipl = 0 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:ruined_great_wall_of_china scope:pp_cplan_country = { can_build_building = building_type:repaired_great_wall_of_china } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = repaired_great_wall_of_china demand = repaired_great_wall_of_china_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = repaired_great_wall_of_china demand = repaired_great_wall_of_china_construction ipl = 0 cat = fort } }
 		}
 		else_if = {
 			limit = { building_type = building_type:alum_quarry scope:pp_cplan_country = { can_build_building = building_type:alum_works } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = alum_works demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = alum_works demand = workshop_construction ipl = 0.14 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:amber_collector scope:pp_cplan_country = { can_build_building = building_type:amber_diggings } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = amber_diggings demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = amber_diggings demand = workshop_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:bog_iron_smelter scope:pp_cplan_country = { can_build_building = building_type:bog_iron_smelter_blast_furnace } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = bog_iron_smelter_blast_furnace demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = bog_iron_smelter_blast_furnace demand = workshop_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:bog_iron_smelter_blast_furnace scope:pp_cplan_country = { can_build_building = building_type:bog_iron_smelter_coke_blast_furnace } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = bog_iron_smelter_coke_blast_furnace demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = bog_iron_smelter_coke_blast_furnace demand = manufactory_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:camel_herders scope:pp_cplan_country = { can_build_building = building_type:camel_stud } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = camel_stud demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = camel_stud demand = workshop_construction ipl = 0.08 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:cattle_farm scope:pp_cplan_country = { can_build_building = building_type:cattle_farmstead } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = cattle_farmstead demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = cattle_farmstead demand = workshop_construction ipl = 0.08 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:cattle_farmstead scope:pp_cplan_country = { can_build_building = building_type:cattle_rotations } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = cattle_rotations demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = cattle_rotations demand = workshop_construction ipl = 0.08 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:cattle_rotations scope:pp_cplan_country = { can_build_building = building_type:cattle_model_farm } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = cattle_model_farm demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = cattle_model_farm demand = workshop_construction ipl = 0.08 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:clay_pit scope:pp_cplan_country = { can_build_building = building_type:clay_washmill } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = clay_washmill demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = clay_washmill demand = workshop_construction ipl = 0.1 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:coal_mine scope:pp_cplan_country = { can_build_building = building_type:coal_mine_improved } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = coal_mine_improved demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = coal_mine_improved demand = workshop_construction ipl = 0.18 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:coal_mine_improved scope:pp_cplan_country = { can_build_building = building_type:coal_mine_revolutions } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = coal_mine_revolutions demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = coal_mine_revolutions demand = manufactory_construction ipl = 0.18 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:coal_mine scope:pp_cplan_country = { can_build_building = building_type:coal_mine_revolutions } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = coal_mine_revolutions demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = coal_mine_revolutions demand = manufactory_construction ipl = 0.18 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:copper_mine scope:pp_cplan_country = { can_build_building = building_type:copper_mine_adit } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = copper_mine_adit demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = copper_mine_adit demand = workshop_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:copper_mine_adit scope:pp_cplan_country = { can_build_building = building_type:copper_mine_deep } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = copper_mine_deep demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = copper_mine_deep demand = manufactory_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:copper_mine scope:pp_cplan_country = { can_build_building = building_type:copper_mine_deep } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = copper_mine_deep demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = copper_mine_deep demand = manufactory_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:fiber_crops_farm scope:pp_cplan_country = { can_build_building = building_type:fiber_dressing_yard } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = fiber_dressing_yard demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = fiber_dressing_yard demand = workshop_construction ipl = 0.08 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:field_management scope:pp_cplan_country = { can_build_building = building_type:field_management_convertible } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = field_management_convertible demand = village_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = field_management_convertible demand = village_construction ipl = 0.05 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:field_management_convertible scope:pp_cplan_country = { can_build_building = building_type:field_management_improved } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = field_management_improved demand = village_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = field_management_improved demand = village_construction ipl = 0.05 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:gem_gravel_pit scope:pp_cplan_country = { can_build_building = building_type:gem_sluice } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = gem_sluice demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = gem_sluice demand = workshop_construction ipl = 0.21 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:gold_diggings scope:pp_cplan_country = { can_build_building = building_type:gold_stamp_mill } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = gold_stamp_mill demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = gold_stamp_mill demand = workshop_construction ipl = 0.21 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:inland_saltworks scope:pp_cplan_country = { can_build_building = building_type:engineered_brine_saltworks } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = engineered_brine_saltworks demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = engineered_brine_saltworks demand = workshop_construction ipl = 0.16 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:iron_mine scope:pp_cplan_country = { can_build_building = building_type:iron_mine_improved } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = iron_mine_improved demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = iron_mine_improved demand = workshop_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:iron_mine_improved scope:pp_cplan_country = { can_build_building = building_type:iron_mine_deep } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = iron_mine_deep demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = iron_mine_deep demand = manufactory_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:iron_mine scope:pp_cplan_country = { can_build_building = building_type:iron_mine_deep } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = iron_mine_deep demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = iron_mine_deep demand = manufactory_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:lead_mine scope:pp_cplan_country = { can_build_building = building_type:lead_mine_bole_smelting } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = lead_mine_bole_smelting demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = lead_mine_bole_smelting demand = manufactory_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:lead_mine_bole_smelting scope:pp_cplan_country = { can_build_building = building_type:lead_mine_cupola_smelting } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = lead_mine_cupola_smelting demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = lead_mine_cupola_smelting demand = manufactory_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:lead_mine scope:pp_cplan_country = { can_build_building = building_type:lead_mine_cupola_smelting } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = lead_mine_cupola_smelting demand = manufactory_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = lead_mine_cupola_smelting demand = manufactory_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:legume_farm scope:pp_cplan_country = { can_build_building = building_type:legume_farmstead } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = legume_farmstead demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = legume_farmstead demand = workshop_construction ipl = 0.07 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:legume_farmstead scope:pp_cplan_country = { can_build_building = building_type:legume_rotations } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = legume_rotations demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = legume_rotations demand = workshop_construction ipl = 0.07 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:legume_rotations scope:pp_cplan_country = { can_build_building = building_type:legume_model_farm } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = legume_model_farm demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = legume_model_farm demand = workshop_construction ipl = 0.07 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:lumber_mill scope:pp_cplan_country = { can_build_building = building_type:water_sawmill } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = water_sawmill demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = water_sawmill demand = workshop_construction ipl = 0.2 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:water_sawmill scope:pp_cplan_country = { can_build_building = building_type:lumber_mill_improved } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = lumber_mill_improved demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = lumber_mill_improved demand = workshop_construction ipl = 0.2 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:lumber_mill scope:pp_cplan_country = { can_build_building = building_type:lumber_mill_improved } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = lumber_mill_improved demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = lumber_mill_improved demand = workshop_construction ipl = 0.2 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:maize_farm scope:pp_cplan_country = { can_build_building = building_type:maize_farmstead } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = maize_farmstead demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = maize_farmstead demand = workshop_construction ipl = 0.07 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:maize_farmstead scope:pp_cplan_country = { can_build_building = building_type:maize_rotations } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = maize_rotations demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = maize_rotations demand = workshop_construction ipl = 0.07 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:maize_rotations scope:pp_cplan_country = { can_build_building = building_type:maize_model_farm } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = maize_model_farm demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = maize_model_farm demand = workshop_construction ipl = 0.07 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:cocoa_grove scope:pp_cplan_country = { can_build_building = building_type:managed_cocoa_grove } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = managed_cocoa_grove demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = managed_cocoa_grove demand = workshop_construction ipl = 0.11 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:forest_village scope:pp_cplan_country = { can_build_building = building_type:managed_forest_village } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = managed_forest_village demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = managed_forest_village demand = workshop_construction ipl = 0.14 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:marble_quarry scope:pp_cplan_country = { can_build_building = building_type:marble_saw_yard } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = marble_saw_yard demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = marble_saw_yard demand = workshop_construction ipl = 0.1 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:cotton_farm scope:pp_cplan_country = { can_build_building = building_type:market_cotton_farm } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = market_cotton_farm demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = market_cotton_farm demand = workshop_construction ipl = 0.08 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:millet_farm scope:pp_cplan_country = { can_build_building = building_type:millet_farmstead } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = millet_farmstead demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = millet_farmstead demand = workshop_construction ipl = 0.07 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:millet_farmstead scope:pp_cplan_country = { can_build_building = building_type:millet_rotations } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = millet_rotations demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = millet_rotations demand = workshop_construction ipl = 0.07 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:millet_rotations scope:pp_cplan_country = { can_build_building = building_type:millet_model_farm } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = millet_model_farm demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = millet_model_farm demand = workshop_construction ipl = 0.07 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:fishing_village scope:pp_cplan_country = { can_build_building = building_type:net_curing_yard } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = net_curing_yard demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = net_curing_yard demand = workshop_construction ipl = 0.18 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:fruit_orchard scope:pp_cplan_country = { can_build_building = building_type:nursery_orchard } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = nursery_orchard demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = nursery_orchard demand = workshop_construction ipl = 0.11 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:ocean_fishery scope:pp_cplan_country = { can_build_building = building_type:drift_net_fishery } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = drift_net_fishery demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = drift_net_fishery demand = workshop_construction ipl = 0.18 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:drift_net_fishery scope:pp_cplan_country = { can_build_building = building_type:offshore_fishery } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = offshore_fishery demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = offshore_fishery demand = workshop_construction ipl = 0.18 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:olive_farm scope:pp_cplan_country = { can_build_building = building_type:olive_farmstead } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = olive_farmstead demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = olive_farmstead demand = workshop_construction ipl = 0.11 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:olive_farmstead scope:pp_cplan_country = { can_build_building = building_type:olive_rotations } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = olive_rotations demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = olive_rotations demand = workshop_construction ipl = 0.11 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:olive_rotations scope:pp_cplan_country = { can_build_building = building_type:olive_model_farm } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = olive_model_farm demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = olive_model_farm demand = workshop_construction ipl = 0.11 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:pepper_garden scope:pp_cplan_country = { can_build_building = building_type:managed_pepper_garden } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = managed_pepper_garden demand = basic_construction_needs } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = managed_pepper_garden demand = basic_construction_needs ipl = 0.13 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:nursery_orchard scope:pp_cplan_country = { can_build_building = building_type:pomological_orchard } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = pomological_orchard demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = pomological_orchard demand = workshop_construction ipl = 0.11 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:potato_farm scope:pp_cplan_country = { can_build_building = building_type:potato_farmstead } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = potato_farmstead demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = potato_farmstead demand = workshop_construction ipl = 0.07 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:potato_farmstead scope:pp_cplan_country = { can_build_building = building_type:potato_rotations } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = potato_rotations demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = potato_rotations demand = workshop_construction ipl = 0.07 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:potato_rotations scope:pp_cplan_country = { can_build_building = building_type:potato_model_farm } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = potato_model_farm demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = potato_model_farm demand = workshop_construction ipl = 0.07 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:cookshop scope:pp_cplan_country = { can_build_building = building_type:public_kitchen } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = public_kitchen demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = public_kitchen demand = workshop_construction ipl = 0.1 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:cinnabar_pit scope:pp_cplan_country = { can_build_building = building_type:quicksilver_retort } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = quicksilver_retort demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = quicksilver_retort demand = workshop_construction ipl = 0.14 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:rice_farm scope:pp_cplan_country = { can_build_building = building_type:rice_farmstead } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = rice_farmstead demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = rice_farmstead demand = workshop_construction ipl = 0.07 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:rice_farmstead scope:pp_cplan_country = { can_build_building = building_type:rice_rotations } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = rice_rotations demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = rice_rotations demand = workshop_construction ipl = 0.07 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:rice_rotations scope:pp_cplan_country = { can_build_building = building_type:rice_model_farm } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = rice_model_farm demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = rice_model_farm demand = workshop_construction ipl = 0.07 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:saffron_croft scope:pp_cplan_country = { can_build_building = building_type:saffron_kiln_croft } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = saffron_kiln_croft demand = basic_construction_needs } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = saffron_kiln_croft demand = basic_construction_needs ipl = 0.11 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:salt_mine scope:pp_cplan_country = { can_build_building = building_type:salt_mine_improved } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = salt_mine_improved demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = salt_mine_improved demand = workshop_construction ipl = 0.16 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:sand_pit scope:pp_cplan_country = { can_build_building = building_type:sand_washery } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = sand_washery demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = sand_washery demand = workshop_construction ipl = 0.1 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:sericulture_farm scope:pp_cplan_country = { can_build_building = building_type:regulated_sericulture_farm } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = regulated_sericulture_farm demand = basic_construction_needs } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = regulated_sericulture_farm demand = basic_construction_needs ipl = 0.08 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:sheep_farms scope:pp_cplan_country = { can_build_building = building_type:hurdled_sheepcotes } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = hurdled_sheepcotes demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = hurdled_sheepcotes demand = workshop_construction ipl = 0.08 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:hurdled_sheepcotes scope:pp_cplan_country = { can_build_building = building_type:enclosed_sheep_walks } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = enclosed_sheep_walks demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = enclosed_sheep_walks demand = workshop_construction ipl = 0.08 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:silver_mine scope:pp_cplan_country = { can_build_building = building_type:silver_mine_improved } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = silver_mine_improved demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = silver_mine_improved demand = workshop_construction ipl = 0.21 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:stone_quarry scope:pp_cplan_country = { can_build_building = building_type:stone_quarry_improved } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = stone_quarry_improved demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = stone_quarry_improved demand = workshop_construction ipl = 0.1 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:horse_breeders scope:pp_cplan_country = { can_build_building = building_type:stud_farm } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = stud_farm demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = stud_farm demand = workshop_construction ipl = 0.08 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:tea_garden scope:pp_cplan_country = { can_build_building = building_type:tea_sorting_garden } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = tea_sorting_garden demand = basic_construction_needs } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = tea_sorting_garden demand = basic_construction_needs ipl = 0.11 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:coffee_grove scope:pp_cplan_country = { can_build_building = building_type:terraced_coffee_grove } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = terraced_coffee_grove demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = terraced_coffee_grove demand = workshop_construction ipl = 0.11 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:tin_streamworks scope:pp_cplan_country = { can_build_building = building_type:tin_stamping_mill } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = tin_stamping_mill demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = tin_stamping_mill demand = workshop_construction ipl = 0.19 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:tobacco_farm scope:pp_cplan_country = { can_build_building = building_type:market_tobacco_farm } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = market_tobacco_farm demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = market_tobacco_farm demand = workshop_construction ipl = 0.09 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:sugarcane_farm scope:pp_cplan_country = { can_build_building = building_type:trapiche_sugarcane_farm } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = trapiche_sugarcane_farm demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = trapiche_sugarcane_farm demand = workshop_construction ipl = 0.11 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:wheat_farm scope:pp_cplan_country = { can_build_building = building_type:wheat_farmstead } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = wheat_farmstead demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = wheat_farmstead demand = workshop_construction ipl = 0.07 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:wheat_farmstead scope:pp_cplan_country = { can_build_building = building_type:wheat_rotations } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = wheat_rotations demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = wheat_rotations demand = workshop_construction ipl = 0.07 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:wheat_rotations scope:pp_cplan_country = { can_build_building = building_type:wheat_model_farm } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = wheat_model_farm demand = workshop_construction } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = wheat_model_farm demand = workshop_construction ipl = 0.07 cat = std } }
 		}
 	}
 }
@@ -778,12 +778,13 @@ pp_cplan_country_upgrade_building = {
 # Location scope: start the upgrade to $type$ where the market holds its construction goods ($demand$); where it
 # does not, the window counts it as held back for them (pp_cplan_note_goods). The construction is the plan's like
 # any building: the group's purse, the reserve, the ledger, a level the gold does not reach counted and saved for
-# (pp_cplan_construct_scoped; its cost estimate is a new building's, the game charges the upgrade price).
+# (pp_cplan_construct_cost, the type's cost data $ipl$ / $demand$ / $cat$ given; its cost estimate is a new
+# building's, the game charges the upgrade price).
 pp_cplan_country_upgrade_to = {
 	if = {
 		limit = { pp_cplan_goods_here_$demand$ = yes }
 		set_variable = { name = pp_cplan_up_try value = yes }
-		pp_cplan_construct = { type = $type$ why = 107 }
+		pp_cplan_construct_cost = { type = $type$ why = 107 ipl = $ipl$ demand = $demand$ cat = $cat$ }
 	}
 	else = {
 		pp_cplan_note_goods = { why = 107 }
@@ -799,297 +800,297 @@ pp_cplan_country_buildings = {
 		limit = { has_variable = pp_cplan_pub_early_council_hall }
 		if = {
 			limit = { can_build_building = building_type:modern_council_hall }
-			pp_cplan_country_public = { type = modern_council_hall line = early_council_hall demand = town_building_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = modern_council_hall line = early_council_hall demand = town_building_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 		else_if = {
 			limit = { can_build_building = building_type:council_hall }
-			pp_cplan_country_public = { type = council_hall line = early_council_hall demand = town_building_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = council_hall line = early_council_hall demand = town_building_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 		else_if = {
 			limit = { can_build_building = building_type:early_council_hall }
-			pp_cplan_country_public = { type = early_council_hall line = early_council_hall demand = town_building_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = early_council_hall line = early_council_hall demand = town_building_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_minting_office }
 		if = {
 			limit = { can_build_building = building_type:minting_office }
-			pp_cplan_country_public = { type = minting_office line = minting_office demand = minting_office_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = minting_office line = minting_office demand = minting_office_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_library }
 		if = {
 			limit = { can_build_building = building_type:library }
-			pp_cplan_country_public = { type = library line = library demand = library_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = library line = library demand = library_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_university }
 		if = {
 			limit = { can_build_building = building_type:university }
-			pp_cplan_country_public = { type = university line = university demand = university_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = university line = university demand = university_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_hospital }
 		if = {
 			limit = { can_build_building = building_type:hospital }
-			pp_cplan_country_public = { type = hospital line = hospital demand = town_building_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = hospital line = hospital demand = town_building_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_counting_house }
 		if = {
 			limit = { can_build_building = building_type:counting_house }
-			pp_cplan_country_public = { type = counting_house line = counting_house demand = town_building_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = counting_house line = counting_house demand = town_building_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_wharf }
 		if = {
 			limit = { can_build_building = building_type:wharf }
-			pp_cplan_country_public = { type = wharf line = wharf demand = town_building_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = wharf line = wharf demand = town_building_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_protected_harbor }
 		if = {
 			limit = { can_build_building = building_type:protected_harbor }
-			pp_cplan_country_public = { type = protected_harbor line = protected_harbor demand = port_building_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = protected_harbor line = protected_harbor demand = port_building_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_dock }
 		if = {
 			limit = { can_build_building = building_type:naval_base }
-			pp_cplan_country_public = { type = naval_base line = dock demand = port_building_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = naval_base line = dock demand = port_building_construction ipl = 0 cat = port where = pp_cplan_pub_anywhere }
 		}
 		else_if = {
 			limit = { can_build_building = building_type:grand_shipyard }
-			pp_cplan_country_public = { type = grand_shipyard line = dock demand = port_building_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = grand_shipyard line = dock demand = port_building_construction ipl = 0 cat = port where = pp_cplan_pub_anywhere }
 		}
 		else_if = {
 			limit = { can_build_building = building_type:shipyard }
-			pp_cplan_country_public = { type = shipyard line = dock demand = port_building_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = shipyard line = dock demand = port_building_construction ipl = 0 cat = port where = pp_cplan_pub_anywhere }
 		}
 		else_if = {
 			limit = { can_build_building = building_type:dry_dock }
-			pp_cplan_country_public = { type = dry_dock line = dock demand = port_building_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = dry_dock line = dock demand = port_building_construction ipl = 0 cat = port where = pp_cplan_pub_anywhere }
 		}
 		else_if = {
 			limit = { can_build_building = building_type:dock }
-			pp_cplan_country_public = { type = dock line = dock demand = port_building_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = dock line = dock demand = port_building_construction ipl = 0 cat = port where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_bridge_infrastructure }
 		if = {
 			limit = { can_build_building = building_type:bridge_infrastructure }
-			pp_cplan_country_public = { type = bridge_infrastructure line = bridge_infrastructure demand = bridge_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = bridge_infrastructure line = bridge_infrastructure demand = bridge_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_pound_lock_canal_infrastructure }
 		if = {
 			limit = { can_build_building = building_type:pound_lock_canal_infrastructure }
-			pp_cplan_country_public = { type = pound_lock_canal_infrastructure line = pound_lock_canal_infrastructure demand = pound_lock_canal_infrastructure_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = pound_lock_canal_infrastructure line = pound_lock_canal_infrastructure demand = pound_lock_canal_infrastructure_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_fortress_granary }
 		if = {
 			limit = { can_build_building = building_type:fortress_granary }
-			pp_cplan_country_public = { type = fortress_granary line = fortress_granary demand = fortress_granary_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = fortress_granary line = fortress_granary demand = fortress_granary_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_sawmill }
 		if = {
 			limit = { can_build_building = building_type:sawmill }
-			pp_cplan_country_public = { type = sawmill line = sawmill demand = farm_constructions where = pp_cplan_pub_where_sawmill }
+			pp_cplan_country_public = { type = sawmill line = sawmill demand = farm_constructions ipl = 0 cat = std where = pp_cplan_pub_where_sawmill }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_windmill }
 		if = {
 			limit = { can_build_building = building_type:windmill }
-			pp_cplan_country_public = { type = windmill line = windmill demand = farm_constructions where = pp_cplan_pub_where_windmill }
+			pp_cplan_country_public = { type = windmill line = windmill demand = farm_constructions ipl = 0 cat = std where = pp_cplan_pub_where_windmill }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_local_smelters }
 		if = {
 			limit = { can_build_building = building_type:local_smelters }
-			pp_cplan_country_public = { type = local_smelters line = local_smelters demand = farm_constructions where = pp_cplan_pub_where_local_smelters }
+			pp_cplan_country_public = { type = local_smelters line = local_smelters demand = farm_constructions ipl = 0 cat = std where = pp_cplan_pub_where_local_smelters }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_terraces }
 		if = {
 			limit = { can_build_building = building_type:terraces }
-			pp_cplan_country_public = { type = terraces line = terraces demand = terraces_construction where = pp_cplan_pub_where_terraces }
+			pp_cplan_country_public = { type = terraces line = terraces demand = terraces_construction ipl = 0.3 cat = std where = pp_cplan_pub_where_terraces }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_lazaretto }
 		if = {
 			limit = { can_build_building = building_type:lazaretto }
-			pp_cplan_country_public = { type = lazaretto line = lazaretto demand = town_building_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = lazaretto line = lazaretto demand = town_building_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_funduq }
 		if = {
 			limit = { can_build_building = building_type:funduq }
-			pp_cplan_country_public = { type = funduq line = funduq demand = pp_funduq_jewelry_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = funduq line = funduq demand = pp_funduq_jewelry_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_caravan_stop }
 		if = {
 			limit = { can_build_building = building_type:caravan_stop }
-			pp_cplan_country_public = { type = caravan_stop line = caravan_stop demand = caravan_stop_building_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = caravan_stop line = caravan_stop demand = caravan_stop_building_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_maghreb_palm_irrigation }
 		if = {
 			limit = { can_build_building = building_type:maghreb_palm_irrigation }
-			pp_cplan_country_public = { type = maghreb_palm_irrigation line = maghreb_palm_irrigation demand = maghreb_palm_irrigation_building_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = maghreb_palm_irrigation line = maghreb_palm_irrigation demand = maghreb_palm_irrigation_building_construction ipl = 0.19 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_confucian_academy }
 		if = {
 			limit = { can_build_building = building_type:confucian_academy }
-			pp_cplan_country_public = { type = confucian_academy line = confucian_academy demand = academy_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = confucian_academy line = confucian_academy demand = academy_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_confucian_school }
 		if = {
 			limit = { can_build_building = building_type:confucian_school }
-			pp_cplan_country_public = { type = confucian_school line = confucian_school demand = school_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = confucian_school line = confucian_school demand = school_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_zhixian }
 		if = {
 			limit = { can_build_building = building_type:zhixian }
-			pp_cplan_country_public = { type = zhixian line = zhixian demand = zhixian_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = zhixian line = zhixian demand = zhixian_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_tambo }
 		if = {
 			limit = { can_build_building = building_type:tambo }
-			pp_cplan_country_public = { type = tambo line = tambo demand = tambo_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = tambo line = tambo demand = tambo_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_royal_court }
 		if = {
 			limit = { can_build_building = building_type:royal_court }
-			pp_cplan_country_public = { type = royal_court line = royal_court demand = pp_early_capital_jewelry_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = royal_court line = royal_court demand = pp_early_capital_jewelry_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_house_of_parliament }
 		if = {
 			limit = { can_build_building = building_type:house_of_parliament }
-			pp_cplan_country_public = { type = house_of_parliament line = house_of_parliament demand = pp_early_capital_jewelry_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = house_of_parliament line = house_of_parliament demand = pp_early_capital_jewelry_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_republican_assembly }
 		if = {
 			limit = { can_build_building = building_type:republican_assembly }
-			pp_cplan_country_public = { type = republican_assembly line = republican_assembly demand = pp_early_capital_jewelry_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = republican_assembly line = republican_assembly demand = pp_early_capital_jewelry_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_chancery }
 		if = {
 			limit = { can_build_building = building_type:chancery }
-			pp_cplan_country_public = { type = chancery line = chancery demand = pp_early_capital_jewelry_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = chancery line = chancery demand = pp_early_capital_jewelry_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_supreme_court }
 		if = {
 			limit = { can_build_building = building_type:supreme_court }
-			pp_cplan_country_public = { type = supreme_court line = supreme_court demand = important_building_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = supreme_court line = supreme_court demand = important_building_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_tax_assessor }
 		if = {
 			limit = { can_build_building = building_type:tax_assessor }
-			pp_cplan_country_public = { type = tax_assessor line = tax_assessor demand = important_building_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = tax_assessor line = tax_assessor demand = important_building_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_war_college }
 		if = {
 			limit = { can_build_building = building_type:war_college }
-			pp_cplan_country_public = { type = war_college line = war_college demand = important_building_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = war_college line = war_college demand = important_building_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_admiralty }
 		if = {
 			limit = { can_build_building = building_type:admiralty }
-			pp_cplan_country_public = { type = admiralty line = admiralty demand = admiralty_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = admiralty line = admiralty demand = admiralty_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_order_headquarters }
 		if = {
 			limit = { can_build_building = building_type:order_headquarters }
-			pp_cplan_country_public = { type = order_headquarters line = order_headquarters demand = early_capital_building_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = order_headquarters line = order_headquarters demand = early_capital_building_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_royal_garden }
 		if = {
 			limit = { can_build_building = building_type:royal_garden }
-			pp_cplan_country_public = { type = royal_garden line = royal_garden demand = pp_prestige_jewelry_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = royal_garden line = royal_garden demand = pp_prestige_jewelry_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_chieftain_hall }
 		if = {
 			limit = { can_build_building = building_type:chieftain_hall }
-			pp_cplan_country_public = { type = chieftain_hall line = chieftain_hall demand = pp_early_capital_jewelry_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = chieftain_hall line = chieftain_hall demand = pp_early_capital_jewelry_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_khan_ordu }
 		if = {
 			limit = { can_build_building = building_type:khan_ordu }
-			pp_cplan_country_public = { type = khan_ordu line = khan_ordu demand = pp_early_capital_jewelry_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = khan_ordu line = khan_ordu demand = pp_early_capital_jewelry_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_patrician_hall }
 		if = {
 			limit = { can_build_building = building_type:patrician_hall }
-			pp_cplan_country_public = { type = patrician_hall line = patrician_hall demand = pp_early_capital_jewelry_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = patrician_hall line = patrician_hall demand = pp_early_capital_jewelry_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_sacred_council }
 		if = {
 			limit = { can_build_building = building_type:sacred_council }
-			pp_cplan_country_public = { type = sacred_council line = sacred_council demand = pp_early_capital_jewelry_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = sacred_council line = sacred_council demand = pp_early_capital_jewelry_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 	if = {
 		limit = { has_variable = pp_cplan_pub_gymnasium_building }
 		if = {
 			limit = { can_build_building = building_type:gymnasium_building }
-			pp_cplan_country_public = { type = gymnasium_building line = gymnasium_building demand = university_construction where = pp_cplan_pub_anywhere }
+			pp_cplan_country_public = { type = gymnasium_building line = gymnasium_building demand = university_construction ipl = 0 cat = std where = pp_cplan_pub_anywhere }
 		}
 	}
 }
@@ -1100,7 +1101,8 @@ pp_cplan_country_buildings = {
 # first. Where the market lacks the construction goods ($demand$) nothing starts and
 # the window counts it (pp_cplan_note_goods; in game 2026-11-10 a ticked Library did nothing where the market had
 # no books, and the pane gave no reason). The construction itself checks the group's purse and counts a level the
-# gold does not reach (pp_cplan_construct_scoped, once a location).
+# gold does not reach (pp_cplan_construct_cost with the type's cost data $ipl$ / $demand$ / $cat$, once a
+# location).
 pp_cplan_country_public = {
 	ordered_owned_location = {
 		limit = {
@@ -1119,7 +1121,7 @@ pp_cplan_country_public = {
 			save_temporary_scope_value_as = { name = pp_cplan_rv value = { value = max_control multiply = 100 add = 100 } }
 			save_temporary_scope_value_as = { name = pp_cplan_rs value = 1 }
 			scope:pp_cplan_country = { remove_variable = pp_cplan_noted }
-			pp_cplan_construct = { type = $type$ why = 107 }
+			pp_cplan_construct_cost = { type = $type$ why = 107 ipl = $ipl$ demand = $demand$ cat = $cat$ }
 		}
 		else = {
 			pp_cplan_note_goods = { why = 107 }

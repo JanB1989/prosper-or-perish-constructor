@@ -1841,8 +1841,9 @@ pp_lplan_location_marks = {
 }
 
 # Location scope: the plans take turns (plan setting, the default; pp_lplan_location_turn): the plans after the
-# one that started the location's last construction (pp_lplan_last, its n) go first, then the rest
-# (pp_lplan_mark_turn first = yes / no); no measuring go.
+# one that started the location's last construction (pp_lplan_last, its n, as the turn began:
+# scope:pp_lplan_from) go first, then the rest (pp_lplan_mark_turn first = yes / no); no measuring go. The second
+# go only where such a plan exists (scope:pp_lplan_from above 100; else every plan ran in the first go).
 pp_lplan_location_marks_turns = {
 	pp_lplan_mark_turn = { v = g_camels g = camels do = pp_lprof_t_camels n = 101 lo = 100.5 hi = 101.5 first = yes }
 	pp_lplan_mark_turn = { v = g_elephants g = elephants do = pp_lprof_t_elephants n = 102 lo = 101.5 hi = 102.5 first = yes }
@@ -1921,81 +1922,84 @@ pp_lplan_location_marks_turns = {
 	pp_lplan_mark_turn = { v = g_silver g = silver do = pp_lprof_t_silver n = 175 lo = 174.5 hi = 175.5 first = yes }
 	pp_lplan_mark_turn = { v = g_food g = food do = pp_lprof_t_food n = 176 lo = 175.5 hi = 176.5 first = yes }
 	pp_lplan_mark_turn = { v = g_trade g = trade do = pp_tplan_do_trade n = 177 lo = 176.5 hi = 177.5 first = yes }
-	pp_lplan_mark_turn = { v = g_camels g = camels do = pp_lprof_t_camels n = 101 lo = 100.5 hi = 101.5 first = no }
-	pp_lplan_mark_turn = { v = g_elephants g = elephants do = pp_lprof_t_elephants n = 102 lo = 101.5 hi = 102.5 first = no }
-	pp_lplan_mark_turn = { v = g_horses g = horses do = pp_lprof_t_horses n = 103 lo = 102.5 hi = 103.5 first = no }
-	pp_lplan_mark_turn = { v = g_livestock g = livestock do = pp_lprof_t_livestock n = 104 lo = 103.5 hi = 104.5 first = no }
-	pp_lplan_mark_turn = { v = g_wool g = wool do = pp_lprof_t_wool n = 105 lo = 104.5 hi = 105.5 first = no }
-	pp_lplan_mark_turn = { v = g_beeswax g = beeswax do = pp_lprof_t_beeswax n = 106 lo = 105.5 hi = 106.5 first = no }
-	pp_lplan_mark_turn = { v = g_dyes g = dyes do = pp_lprof_t_dyes n = 107 lo = 106.5 hi = 107.5 first = no }
-	pp_lplan_mark_turn = { v = g_incense g = incense do = pp_lprof_t_incense n = 108 lo = 107.5 hi = 108.5 first = no }
-	pp_lplan_mark_turn = { v = g_tobacco g = tobacco do = pp_lprof_t_tobacco n = 109 lo = 108.5 hi = 109.5 first = no }
-	pp_lplan_mark_turn = { v = g_cotton g = cotton do = pp_lprof_t_cotton n = 110 lo = 109.5 hi = 110.5 first = no }
-	pp_lplan_mark_turn = { v = g_fiber_crops g = fiber_crops do = pp_lprof_t_fiber_crops n = 111 lo = 110.5 hi = 111.5 first = no }
-	pp_lplan_mark_turn = { v = g_silk g = silk do = pp_lprof_t_silk n = 112 lo = 111.5 hi = 112.5 first = no }
-	pp_lplan_mark_turn = { v = g_chili g = chili do = pp_lprof_t_chili n = 113 lo = 112.5 hi = 113.5 first = no }
-	pp_lplan_mark_turn = { v = g_cloves g = cloves do = pp_lprof_t_cloves n = 114 lo = 113.5 hi = 114.5 first = no }
-	pp_lplan_mark_turn = { v = g_pepper g = pepper do = pp_lprof_t_pepper n = 115 lo = 114.5 hi = 115.5 first = no }
-	pp_lplan_mark_turn = { v = g_saffron g = saffron do = pp_lprof_t_saffron n = 116 lo = 115.5 hi = 116.5 first = no }
-	pp_lplan_mark_turn = { v = g_legumes g = legumes do = pp_lprof_t_legumes n = 117 lo = 116.5 hi = 117.5 first = no }
-	pp_lplan_mark_turn = { v = g_maize g = maize do = pp_lprof_t_maize n = 118 lo = 117.5 hi = 118.5 first = no }
-	pp_lplan_mark_turn = { v = g_millet g = millet do = pp_lprof_t_millet n = 119 lo = 118.5 hi = 119.5 first = no }
-	pp_lplan_mark_turn = { v = g_potato g = potato do = pp_lprof_t_potato n = 120 lo = 119.5 hi = 120.5 first = no }
-	pp_lplan_mark_turn = { v = g_rice g = rice do = pp_lprof_t_rice n = 121 lo = 120.5 hi = 121.5 first = no }
-	pp_lplan_mark_turn = { v = g_wheat g = wheat do = pp_lprof_t_wheat n = 122 lo = 121.5 hi = 122.5 first = no }
-	pp_lplan_mark_turn = { v = g_cocoa g = cocoa do = pp_lprof_t_cocoa n = 123 lo = 122.5 hi = 123.5 first = no }
-	pp_lplan_mark_turn = { v = g_coffee g = coffee do = pp_lprof_t_coffee n = 124 lo = 123.5 hi = 124.5 first = no }
-	pp_lplan_mark_turn = { v = g_tea g = tea do = pp_lprof_t_tea n = 125 lo = 124.5 hi = 125.5 first = no }
-	pp_lplan_mark_turn = { v = g_sugar g = sugar do = pp_lprof_t_sugar n = 126 lo = 125.5 hi = 126.5 first = no }
-	pp_lplan_mark_turn = { v = g_fruit g = fruit do = pp_lprof_t_fruit n = 127 lo = 126.5 hi = 127.5 first = no }
-	pp_lplan_mark_turn = { v = g_olives g = olives do = pp_lprof_t_olives n = 128 lo = 127.5 hi = 128.5 first = no }
-	pp_lplan_mark_turn = { v = g_wine g = wine do = pp_lprof_t_wine n = 129 lo = 128.5 hi = 129.5 first = no }
-	pp_lplan_mark_turn = { v = g_lumber g = lumber do = pp_lprof_t_lumber n = 130 lo = 129.5 hi = 130.5 first = no }
-	pp_lplan_mark_turn = { v = g_fish g = fish do = pp_lprof_t_fish n = 131 lo = 130.5 hi = 131.5 first = no }
-	pp_lplan_mark_turn = { v = g_pearls g = pearls do = pp_lprof_t_pearls n = 132 lo = 131.5 hi = 132.5 first = no }
-	pp_lplan_mark_turn = { v = g_clay g = clay do = pp_lprof_t_clay n = 133 lo = 132.5 hi = 133.5 first = no }
-	pp_lplan_mark_turn = { v = g_sand g = sand do = pp_lprof_t_sand n = 134 lo = 133.5 hi = 134.5 first = no }
-	pp_lplan_mark_turn = { v = g_medicaments g = medicaments do = pp_lprof_t_medicaments n = 135 lo = 134.5 hi = 135.5 first = no }
-	pp_lplan_mark_turn = { v = g_salt g = salt do = pp_lprof_t_salt n = 136 lo = 135.5 hi = 136.5 first = no }
-	pp_lplan_mark_turn = { v = g_amber g = amber do = pp_lprof_t_amber n = 137 lo = 136.5 hi = 137.5 first = no }
-	pp_lplan_mark_turn = { v = g_ivory g = ivory do = pp_lprof_t_ivory n = 138 lo = 137.5 hi = 138.5 first = no }
-	pp_lplan_mark_turn = { v = g_wild_game g = wild_game do = pp_lprof_t_wild_game n = 139 lo = 138.5 hi = 139.5 first = no }
-	pp_lplan_mark_turn = { v = g_beer g = beer do = pp_tplan_do_beer n = 140 lo = 139.5 hi = 140.5 first = no }
-	pp_lplan_mark_turn = { v = g_liquor g = liquor do = pp_tplan_do_liquor n = 141 lo = 140.5 hi = 141.5 first = no }
-	pp_lplan_mark_turn = { v = g_books g = books do = pp_tplan_do_books n = 142 lo = 141.5 hi = 142.5 first = no }
-	pp_lplan_mark_turn = { v = g_paper g = paper do = pp_tplan_do_paper n = 143 lo = 142.5 hi = 143.5 first = no }
-	pp_lplan_mark_turn = { v = g_slaves_goods g = slaves_goods do = pp_lprof_t_slaves_goods n = 144 lo = 143.5 hi = 144.5 first = no }
-	pp_lplan_mark_turn = { v = g_glass g = glass do = pp_lprof_t_glass n = 145 lo = 144.5 hi = 145.5 first = no }
-	pp_lplan_mark_turn = { v = g_masonry g = masonry do = pp_lprof_t_masonry n = 146 lo = 145.5 hi = 146.5 first = no }
-	pp_lplan_mark_turn = { v = g_pottery g = pottery do = pp_tplan_do_pottery n = 147 lo = 146.5 hi = 147.5 first = no }
-	pp_lplan_mark_turn = { v = g_tar g = tar do = pp_lprof_t_tar n = 148 lo = 147.5 hi = 148.5 first = no }
-	pp_lplan_mark_turn = { v = g_furniture g = furniture do = pp_tplan_do_furniture n = 149 lo = 148.5 hi = 149.5 first = no }
-	pp_lplan_mark_turn = { v = g_jewelry g = jewelry do = pp_lprof_t_jewelry n = 150 lo = 149.5 hi = 150.5 first = no }
-	pp_lplan_mark_turn = { v = g_lacquerware g = lacquerware do = pp_tplan_do_lacquerware n = 151 lo = 150.5 hi = 151.5 first = no }
-	pp_lplan_mark_turn = { v = g_porcelain g = porcelain do = pp_tplan_do_porcelain n = 152 lo = 151.5 hi = 152.5 first = no }
-	pp_lplan_mark_turn = { v = g_steel g = steel do = pp_tplan_do_steel n = 153 lo = 152.5 hi = 153.5 first = no }
-	pp_lplan_mark_turn = { v = g_tools g = tools do = pp_lprof_t_tools n = 154 lo = 153.5 hi = 154.5 first = no }
-	pp_lplan_mark_turn = { v = g_cannons g = cannons do = pp_tplan_do_cannons n = 155 lo = 154.5 hi = 155.5 first = no }
-	pp_lplan_mark_turn = { v = g_firearms g = firearms do = pp_tplan_do_firearms n = 156 lo = 155.5 hi = 156.5 first = no }
-	pp_lplan_mark_turn = { v = g_weaponry g = weaponry do = pp_tplan_do_weaponry n = 157 lo = 156.5 hi = 157.5 first = no }
-	pp_lplan_mark_turn = { v = g_naval_supplies g = naval_supplies do = pp_tplan_do_naval_supplies n = 158 lo = 157.5 hi = 158.5 first = no }
-	pp_lplan_mark_turn = { v = g_victuals g = victuals do = pp_lprof_t_victuals n = 159 lo = 158.5 hi = 159.5 first = no }
-	pp_lplan_mark_turn = { v = g_cloth g = cloth do = pp_lprof_t_cloth n = 160 lo = 159.5 hi = 160.5 first = no }
-	pp_lplan_mark_turn = { v = g_fine_cloth g = fine_cloth do = pp_tplan_do_fine_cloth n = 161 lo = 160.5 hi = 161.5 first = no }
-	pp_lplan_mark_turn = { v = g_leather g = leather do = pp_lprof_t_leather n = 162 lo = 161.5 hi = 162.5 first = no }
-	pp_lplan_mark_turn = { v = g_marble g = marble do = pp_lprof_t_marble n = 163 lo = 162.5 hi = 163.5 first = no }
-	pp_lplan_mark_turn = { v = g_stone g = stone do = pp_lprof_t_stone n = 164 lo = 163.5 hi = 164.5 first = no }
-	pp_lplan_mark_turn = { v = g_coal g = coal do = pp_lprof_t_coal n = 165 lo = 164.5 hi = 165.5 first = no }
-	pp_lplan_mark_turn = { v = g_alum g = alum do = pp_lprof_t_alum n = 166 lo = 165.5 hi = 166.5 first = no }
-	pp_lplan_mark_turn = { v = g_mercury g = mercury do = pp_lprof_t_mercury n = 167 lo = 166.5 hi = 167.5 first = no }
-	pp_lplan_mark_turn = { v = g_saltpeter g = saltpeter do = pp_lprof_t_saltpeter n = 168 lo = 167.5 hi = 168.5 first = no }
-	pp_lplan_mark_turn = { v = g_copper g = copper do = pp_lprof_t_copper n = 169 lo = 168.5 hi = 169.5 first = no }
-	pp_lplan_mark_turn = { v = g_iron g = iron do = pp_lprof_t_iron n = 170 lo = 169.5 hi = 170.5 first = no }
-	pp_lplan_mark_turn = { v = g_lead g = lead do = pp_lprof_t_lead n = 171 lo = 170.5 hi = 171.5 first = no }
-	pp_lplan_mark_turn = { v = g_tin g = tin do = pp_lprof_t_tin n = 172 lo = 171.5 hi = 172.5 first = no }
-	pp_lplan_mark_turn = { v = g_gems g = gems do = pp_lprof_t_gems n = 173 lo = 172.5 hi = 173.5 first = no }
-	pp_lplan_mark_turn = { v = g_goods_gold g = goods_gold do = pp_lprof_t_goods_gold n = 174 lo = 173.5 hi = 174.5 first = no }
-	pp_lplan_mark_turn = { v = g_silver g = silver do = pp_lprof_t_silver n = 175 lo = 174.5 hi = 175.5 first = no }
-	pp_lplan_mark_turn = { v = g_food g = food do = pp_lprof_t_food n = 176 lo = 175.5 hi = 176.5 first = no }
-	pp_lplan_mark_turn = { v = g_trade g = trade do = pp_tplan_do_trade n = 177 lo = 176.5 hi = 177.5 first = no }
+	if = {
+		limit = { scope:pp_lplan_from > 100.5 }
+		pp_lplan_mark_turn = { v = g_camels g = camels do = pp_lprof_t_camels n = 101 lo = 100.5 hi = 101.5 first = no }
+		pp_lplan_mark_turn = { v = g_elephants g = elephants do = pp_lprof_t_elephants n = 102 lo = 101.5 hi = 102.5 first = no }
+		pp_lplan_mark_turn = { v = g_horses g = horses do = pp_lprof_t_horses n = 103 lo = 102.5 hi = 103.5 first = no }
+		pp_lplan_mark_turn = { v = g_livestock g = livestock do = pp_lprof_t_livestock n = 104 lo = 103.5 hi = 104.5 first = no }
+		pp_lplan_mark_turn = { v = g_wool g = wool do = pp_lprof_t_wool n = 105 lo = 104.5 hi = 105.5 first = no }
+		pp_lplan_mark_turn = { v = g_beeswax g = beeswax do = pp_lprof_t_beeswax n = 106 lo = 105.5 hi = 106.5 first = no }
+		pp_lplan_mark_turn = { v = g_dyes g = dyes do = pp_lprof_t_dyes n = 107 lo = 106.5 hi = 107.5 first = no }
+		pp_lplan_mark_turn = { v = g_incense g = incense do = pp_lprof_t_incense n = 108 lo = 107.5 hi = 108.5 first = no }
+		pp_lplan_mark_turn = { v = g_tobacco g = tobacco do = pp_lprof_t_tobacco n = 109 lo = 108.5 hi = 109.5 first = no }
+		pp_lplan_mark_turn = { v = g_cotton g = cotton do = pp_lprof_t_cotton n = 110 lo = 109.5 hi = 110.5 first = no }
+		pp_lplan_mark_turn = { v = g_fiber_crops g = fiber_crops do = pp_lprof_t_fiber_crops n = 111 lo = 110.5 hi = 111.5 first = no }
+		pp_lplan_mark_turn = { v = g_silk g = silk do = pp_lprof_t_silk n = 112 lo = 111.5 hi = 112.5 first = no }
+		pp_lplan_mark_turn = { v = g_chili g = chili do = pp_lprof_t_chili n = 113 lo = 112.5 hi = 113.5 first = no }
+		pp_lplan_mark_turn = { v = g_cloves g = cloves do = pp_lprof_t_cloves n = 114 lo = 113.5 hi = 114.5 first = no }
+		pp_lplan_mark_turn = { v = g_pepper g = pepper do = pp_lprof_t_pepper n = 115 lo = 114.5 hi = 115.5 first = no }
+		pp_lplan_mark_turn = { v = g_saffron g = saffron do = pp_lprof_t_saffron n = 116 lo = 115.5 hi = 116.5 first = no }
+		pp_lplan_mark_turn = { v = g_legumes g = legumes do = pp_lprof_t_legumes n = 117 lo = 116.5 hi = 117.5 first = no }
+		pp_lplan_mark_turn = { v = g_maize g = maize do = pp_lprof_t_maize n = 118 lo = 117.5 hi = 118.5 first = no }
+		pp_lplan_mark_turn = { v = g_millet g = millet do = pp_lprof_t_millet n = 119 lo = 118.5 hi = 119.5 first = no }
+		pp_lplan_mark_turn = { v = g_potato g = potato do = pp_lprof_t_potato n = 120 lo = 119.5 hi = 120.5 first = no }
+		pp_lplan_mark_turn = { v = g_rice g = rice do = pp_lprof_t_rice n = 121 lo = 120.5 hi = 121.5 first = no }
+		pp_lplan_mark_turn = { v = g_wheat g = wheat do = pp_lprof_t_wheat n = 122 lo = 121.5 hi = 122.5 first = no }
+		pp_lplan_mark_turn = { v = g_cocoa g = cocoa do = pp_lprof_t_cocoa n = 123 lo = 122.5 hi = 123.5 first = no }
+		pp_lplan_mark_turn = { v = g_coffee g = coffee do = pp_lprof_t_coffee n = 124 lo = 123.5 hi = 124.5 first = no }
+		pp_lplan_mark_turn = { v = g_tea g = tea do = pp_lprof_t_tea n = 125 lo = 124.5 hi = 125.5 first = no }
+		pp_lplan_mark_turn = { v = g_sugar g = sugar do = pp_lprof_t_sugar n = 126 lo = 125.5 hi = 126.5 first = no }
+		pp_lplan_mark_turn = { v = g_fruit g = fruit do = pp_lprof_t_fruit n = 127 lo = 126.5 hi = 127.5 first = no }
+		pp_lplan_mark_turn = { v = g_olives g = olives do = pp_lprof_t_olives n = 128 lo = 127.5 hi = 128.5 first = no }
+		pp_lplan_mark_turn = { v = g_wine g = wine do = pp_lprof_t_wine n = 129 lo = 128.5 hi = 129.5 first = no }
+		pp_lplan_mark_turn = { v = g_lumber g = lumber do = pp_lprof_t_lumber n = 130 lo = 129.5 hi = 130.5 first = no }
+		pp_lplan_mark_turn = { v = g_fish g = fish do = pp_lprof_t_fish n = 131 lo = 130.5 hi = 131.5 first = no }
+		pp_lplan_mark_turn = { v = g_pearls g = pearls do = pp_lprof_t_pearls n = 132 lo = 131.5 hi = 132.5 first = no }
+		pp_lplan_mark_turn = { v = g_clay g = clay do = pp_lprof_t_clay n = 133 lo = 132.5 hi = 133.5 first = no }
+		pp_lplan_mark_turn = { v = g_sand g = sand do = pp_lprof_t_sand n = 134 lo = 133.5 hi = 134.5 first = no }
+		pp_lplan_mark_turn = { v = g_medicaments g = medicaments do = pp_lprof_t_medicaments n = 135 lo = 134.5 hi = 135.5 first = no }
+		pp_lplan_mark_turn = { v = g_salt g = salt do = pp_lprof_t_salt n = 136 lo = 135.5 hi = 136.5 first = no }
+		pp_lplan_mark_turn = { v = g_amber g = amber do = pp_lprof_t_amber n = 137 lo = 136.5 hi = 137.5 first = no }
+		pp_lplan_mark_turn = { v = g_ivory g = ivory do = pp_lprof_t_ivory n = 138 lo = 137.5 hi = 138.5 first = no }
+		pp_lplan_mark_turn = { v = g_wild_game g = wild_game do = pp_lprof_t_wild_game n = 139 lo = 138.5 hi = 139.5 first = no }
+		pp_lplan_mark_turn = { v = g_beer g = beer do = pp_tplan_do_beer n = 140 lo = 139.5 hi = 140.5 first = no }
+		pp_lplan_mark_turn = { v = g_liquor g = liquor do = pp_tplan_do_liquor n = 141 lo = 140.5 hi = 141.5 first = no }
+		pp_lplan_mark_turn = { v = g_books g = books do = pp_tplan_do_books n = 142 lo = 141.5 hi = 142.5 first = no }
+		pp_lplan_mark_turn = { v = g_paper g = paper do = pp_tplan_do_paper n = 143 lo = 142.5 hi = 143.5 first = no }
+		pp_lplan_mark_turn = { v = g_slaves_goods g = slaves_goods do = pp_lprof_t_slaves_goods n = 144 lo = 143.5 hi = 144.5 first = no }
+		pp_lplan_mark_turn = { v = g_glass g = glass do = pp_lprof_t_glass n = 145 lo = 144.5 hi = 145.5 first = no }
+		pp_lplan_mark_turn = { v = g_masonry g = masonry do = pp_lprof_t_masonry n = 146 lo = 145.5 hi = 146.5 first = no }
+		pp_lplan_mark_turn = { v = g_pottery g = pottery do = pp_tplan_do_pottery n = 147 lo = 146.5 hi = 147.5 first = no }
+		pp_lplan_mark_turn = { v = g_tar g = tar do = pp_lprof_t_tar n = 148 lo = 147.5 hi = 148.5 first = no }
+		pp_lplan_mark_turn = { v = g_furniture g = furniture do = pp_tplan_do_furniture n = 149 lo = 148.5 hi = 149.5 first = no }
+		pp_lplan_mark_turn = { v = g_jewelry g = jewelry do = pp_lprof_t_jewelry n = 150 lo = 149.5 hi = 150.5 first = no }
+		pp_lplan_mark_turn = { v = g_lacquerware g = lacquerware do = pp_tplan_do_lacquerware n = 151 lo = 150.5 hi = 151.5 first = no }
+		pp_lplan_mark_turn = { v = g_porcelain g = porcelain do = pp_tplan_do_porcelain n = 152 lo = 151.5 hi = 152.5 first = no }
+		pp_lplan_mark_turn = { v = g_steel g = steel do = pp_tplan_do_steel n = 153 lo = 152.5 hi = 153.5 first = no }
+		pp_lplan_mark_turn = { v = g_tools g = tools do = pp_lprof_t_tools n = 154 lo = 153.5 hi = 154.5 first = no }
+		pp_lplan_mark_turn = { v = g_cannons g = cannons do = pp_tplan_do_cannons n = 155 lo = 154.5 hi = 155.5 first = no }
+		pp_lplan_mark_turn = { v = g_firearms g = firearms do = pp_tplan_do_firearms n = 156 lo = 155.5 hi = 156.5 first = no }
+		pp_lplan_mark_turn = { v = g_weaponry g = weaponry do = pp_tplan_do_weaponry n = 157 lo = 156.5 hi = 157.5 first = no }
+		pp_lplan_mark_turn = { v = g_naval_supplies g = naval_supplies do = pp_tplan_do_naval_supplies n = 158 lo = 157.5 hi = 158.5 first = no }
+		pp_lplan_mark_turn = { v = g_victuals g = victuals do = pp_lprof_t_victuals n = 159 lo = 158.5 hi = 159.5 first = no }
+		pp_lplan_mark_turn = { v = g_cloth g = cloth do = pp_lprof_t_cloth n = 160 lo = 159.5 hi = 160.5 first = no }
+		pp_lplan_mark_turn = { v = g_fine_cloth g = fine_cloth do = pp_tplan_do_fine_cloth n = 161 lo = 160.5 hi = 161.5 first = no }
+		pp_lplan_mark_turn = { v = g_leather g = leather do = pp_lprof_t_leather n = 162 lo = 161.5 hi = 162.5 first = no }
+		pp_lplan_mark_turn = { v = g_marble g = marble do = pp_lprof_t_marble n = 163 lo = 162.5 hi = 163.5 first = no }
+		pp_lplan_mark_turn = { v = g_stone g = stone do = pp_lprof_t_stone n = 164 lo = 163.5 hi = 164.5 first = no }
+		pp_lplan_mark_turn = { v = g_coal g = coal do = pp_lprof_t_coal n = 165 lo = 164.5 hi = 165.5 first = no }
+		pp_lplan_mark_turn = { v = g_alum g = alum do = pp_lprof_t_alum n = 166 lo = 165.5 hi = 166.5 first = no }
+		pp_lplan_mark_turn = { v = g_mercury g = mercury do = pp_lprof_t_mercury n = 167 lo = 166.5 hi = 167.5 first = no }
+		pp_lplan_mark_turn = { v = g_saltpeter g = saltpeter do = pp_lprof_t_saltpeter n = 168 lo = 167.5 hi = 168.5 first = no }
+		pp_lplan_mark_turn = { v = g_copper g = copper do = pp_lprof_t_copper n = 169 lo = 168.5 hi = 169.5 first = no }
+		pp_lplan_mark_turn = { v = g_iron g = iron do = pp_lprof_t_iron n = 170 lo = 169.5 hi = 170.5 first = no }
+		pp_lplan_mark_turn = { v = g_lead g = lead do = pp_lprof_t_lead n = 171 lo = 170.5 hi = 171.5 first = no }
+		pp_lplan_mark_turn = { v = g_tin g = tin do = pp_lprof_t_tin n = 172 lo = 171.5 hi = 172.5 first = no }
+		pp_lplan_mark_turn = { v = g_gems g = gems do = pp_lprof_t_gems n = 173 lo = 172.5 hi = 173.5 first = no }
+		pp_lplan_mark_turn = { v = g_goods_gold g = goods_gold do = pp_lprof_t_goods_gold n = 174 lo = 173.5 hi = 174.5 first = no }
+		pp_lplan_mark_turn = { v = g_silver g = silver do = pp_lprof_t_silver n = 175 lo = 174.5 hi = 175.5 first = no }
+		pp_lplan_mark_turn = { v = g_food g = food do = pp_lprof_t_food n = 176 lo = 175.5 hi = 176.5 first = no }
+		pp_lplan_mark_turn = { v = g_trade g = trade do = pp_tplan_do_trade n = 177 lo = 176.5 hi = 177.5 first = no }
+	}
 }

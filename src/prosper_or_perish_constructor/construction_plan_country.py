@@ -829,12 +829,13 @@ def render_upgrades(pairs: list[tuple[str, str]], costs: dict[str, cp.BuildingCo
         f"\t\tlimit = {{ NOT = {{ scope:pp_cplan_up_site = {{ has_variable = {VAR_UPGRADE_TRY} }} }} }}\n"
     ]
     for position, (older, successor) in enumerate(pairs):
-        demand = costs.get(successor, cp.BuildingCost(0.0, cp.DEFAULT_DEMAND, "std")).demand
+        cost = costs.get(successor, cp.BuildingCost(0.0, cp.DEFAULT_DEMAND, "std"))
         parts.append(
             f"\t\t{'if' if position == 0 else 'else_if'} = {{\n"
             f"\t\t\tlimit = {{ building_type = building_type:{older} "
             f"scope:pp_cplan_country = {{ can_build_building = building_type:{successor} }} }}\n"
-            f"\t\t\tscope:pp_cplan_up_site = {{ pp_cplan_country_upgrade_to = {{ type = {successor} demand = {demand} }} }}\n"
+            f"\t\t\tscope:pp_cplan_up_site = {{ pp_cplan_country_upgrade_to = {{ type = {successor} demand = {cost.demand} "
+            f"ipl = {cp._num(cost.ipl)} cat = {cost.category} }} }}\n"
             "\t\t}\n"
         )
     parts.append(
@@ -843,12 +844,13 @@ def render_upgrades(pairs: list[tuple[str, str]], costs: dict[str, cp.BuildingCo
         "\n# Location scope: start the upgrade to $type$ where the market holds its construction goods ($demand$); where it\n"
         "# does not, the window counts it as held back for them (pp_cplan_note_goods). The construction is the plan's like\n"
         "# any building: the group's purse, the reserve, the ledger, a level the gold does not reach counted and saved for\n"
-        "# (pp_cplan_construct_scoped; its cost estimate is a new building's, the game charges the upgrade price).\n"
+        "# (pp_cplan_construct_cost, the type's cost data $ipl$ / $demand$ / $cat$ given; its cost estimate is a new\n"
+        "# building's, the game charges the upgrade price).\n"
         "pp_cplan_country_upgrade_to = {\n"
         "\tif = {\n"
         "\t\tlimit = { pp_cplan_goods_here_$demand$ = yes }\n"
         f"\t\tset_variable = {{ name = {VAR_UPGRADE_TRY} value = yes }}\n"
-        f"\t\tpp_cplan_construct = {{ type = $type$ why = {WHY} }}\n"
+        f"\t\tpp_cplan_construct_cost = {{ type = $type$ why = {WHY} ipl = $ipl$ demand = $demand$ cat = $cat$ }}\n"
         "\t}\n"
         "\telse = {\n"
         f"\t\tpp_cplan_note_goods = {{ why = {WHY} }}\n"
@@ -1073,12 +1075,12 @@ def render_effects(buildings: list[Building], rights: list[Right], costs: dict[s
     for building in buildings:
         parts.append(f"\tif = {{\n\t\tlimit = {{ has_variable = {pub_var(building.key)} }}\n")
         for position, tier in enumerate(building.tiers):
-            demand = costs.get(tier, cp.BuildingCost(0.0, cp.DEFAULT_DEMAND, "std")).demand
+            cost = costs.get(tier, cp.BuildingCost(0.0, cp.DEFAULT_DEMAND, "std"))
             parts.append(
                 f"\t\t{'if' if position == 0 else 'else_if'} = {{\n"
                 f"\t\t\tlimit = {{ can_build_building = building_type:{tier} }}\n"
-                f"\t\t\tpp_cplan_country_public = {{ type = {tier} line = {building.key} demand = {demand} "
-                f"where = {building.where} }}\n"
+                f"\t\t\tpp_cplan_country_public = {{ type = {tier} line = {building.key} demand = {cost.demand} "
+                f"ipl = {cp._num(cost.ipl)} cat = {cost.category} where = {building.where} }}\n"
                 "\t\t}\n"
             )
         parts.append("\t}\n")
@@ -1090,7 +1092,8 @@ def render_effects(buildings: list[Building], rights: list[Right], costs: dict[s
         "# first. Where the market lacks the construction goods ($demand$) nothing starts and\n"
         "# the window counts it (pp_cplan_note_goods; in game 2026-11-10 a ticked Library did nothing where the market had\n"
         "# no books, and the pane gave no reason). The construction itself checks the group's purse and counts a level the\n"
-        "# gold does not reach (pp_cplan_construct_scoped, once a location).\n"
+        "# gold does not reach (pp_cplan_construct_cost with the type's cost data $ipl$ / $demand$ / $cat$, once a\n"
+        "# location).\n"
         "pp_cplan_country_public = {\n"
         "\tordered_owned_location = {\n"
         "\t\tlimit = {\n"
@@ -1109,7 +1112,7 @@ def render_effects(buildings: list[Building], rights: list[Right], costs: dict[s
         "\t\t\tsave_temporary_scope_value_as = { name = pp_cplan_rv value = { value = max_control multiply = 100 add = 100 } }\n"
         f"\t\t\tsave_temporary_scope_value_as = {{ name = pp_cplan_rs value = {STEP_BUILDING} }}\n"
         "\t\t\tscope:pp_cplan_country = { remove_variable = pp_cplan_noted }\n"
-        f"\t\t\tpp_cplan_construct = {{ type = $type$ why = {WHY} }}\n"
+        f"\t\t\tpp_cplan_construct_cost = {{ type = $type$ why = {WHY} ipl = $ipl$ demand = $demand$ cat = $cat$ }}\n"
         "\t\t}\n"
         "\t\telse = {\n"
         f"\t\t\tpp_cplan_note_goods = {{ why = {WHY} }}\n"

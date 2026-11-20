@@ -19156,6 +19156,14 @@ pp_cplan_d_profiles_locs = {
 		subtract = 100
 	}
 }
+pp_cplan_d_profiles_unr = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_profiles_unr }
+		value = var:pp_cplan_ds_profiles_unr
+		subtract = 100
+	}
+}
 pp_cplan_d_profiles_st1 = {
 	value = 0
 	if = {

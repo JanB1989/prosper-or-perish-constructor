@@ -216,10 +216,10 @@ def test_public_building_rule() -> None:
     assert "pp_cplan_goods_here_$demand$" not in limit
     body = public[public.index("check_range_bounds = no"):]
     assert _tokens(body).startswith("check_range_bounds = no if = { limit = { pp_cplan_goods_here_$demand$ = yes }")
-    assert _tokens(body).endswith("pp_cplan_construct = { type = $type$ why = 107 } } else = { pp_cplan_note_goods = { why = 107 } } }")
+    assert _tokens(body).endswith("pp_cplan_construct_cost = { type = $type$ why = 107 ipl = $ipl$ demand = $demand$ cat = $cat$ } } else = { pp_cplan_note_goods = { why = 107 } } }")
     assert "order_by = pp_cplan_country_control_here" in public
     # the reason for the window and a fresh "waiting for gold" count per location, before the construction
-    start = public.index("pp_cplan_construct = { type = $type$ why = 107 }")
+    start = public.index("pp_cplan_construct_cost = { type = $type$ why = 107 ipl = $ipl$ demand = $demand$ cat = $cat$ }")
     for line in ("name = pp_cplan_rv", "name = pp_cplan_rs value = 1", "remove_variable = pp_cplan_noted"):
         assert 0 < public.index(line) < start, line
     site = _block(_code(MOD / cc.TRIGGERS), "pp_cplan_country_site")
@@ -230,7 +230,7 @@ def test_public_building_rule() -> None:
     assert re.findall(r"^\tif = \{\n\t\tlimit = \{ has_variable = pp_cplan_pub_(\w+) \}", buildings, re.MULTILINE) \
         == list(_config().public_buildings)
     # the construction goods trigger of every tier exists (construction_plan.py writes one per demand)
-    demands = set(re.findall(r"demand = (\w+) where = ", buildings))
+    demands = set(re.findall(r"demand = (\w+) ipl = [0-9.]+ cat = \w+ where = ", buildings))
     assert demands and all(f"pp_cplan_goods_here_{demand}" in _defined("scripted_triggers") for demand in demands)
 
 
@@ -295,7 +295,7 @@ def test_successor_map_holds_every_type_with_an_older_tier() -> None:
     chain = _block(_code(MOD / cc.EFFECTS), "pp_cplan_country_upgrade_building")
     tried = re.findall(r"(if|else_if) = \{\n\t+limit = \{ building_type = building_type:(\w+) scope:pp_cplan_country = "
                        r"\{ can_build_building = building_type:(\w+) \} \}\n\t+scope:pp_cplan_up_site = "
-                       r"\{ pp_cplan_country_upgrade_to = \{ type = (\w+) demand = (\w+) \} \}", chain)
+                       r"\{ pp_cplan_country_upgrade_to = \{ type = (\w+) demand = (\w+) ipl = [0-9.]+ cat = \w+ \} \}", chain)
     assert [(older, successor) for _, older, successor, _, _ in tried] == pairs
     assert [word for word, *_ in tried] == ["if"] + ["else_if"] * (len(pairs) - 1)
     assert all(successor == built for _, _, successor, built, _ in tried)
@@ -344,11 +344,14 @@ def test_upgrade_rule() -> None:
     assert chain.strip().startswith("if = {\n\t\tlimit = { NOT = { scope:pp_cplan_up_site = { has_variable = pp_cplan_up_try } } }")
     to = _block(effects, "pp_cplan_country_upgrade_to")
     assert _tokens(to) == ("if = { limit = { pp_cplan_goods_here_$demand$ = yes } set_variable = { name = pp_cplan_up_try "
-                           "value = yes } pp_cplan_construct = { type = $type$ why = 107 } } "
+                           "value = yes } pp_cplan_construct_cost = { type = $type$ why = 107 ipl = $ipl$ demand = $demand$ cat = $cat$ } } "
                            "else = { pp_cplan_note_goods = { why = 107 } }")
     assert rule.index("remove_variable = pp_cplan_up_try") > start
     # the construction is the plan's like any building's (the purse, reserve, ledger, closed successor, free slot)
-    scoped = _block(_code(COMMON / "scripted_effects/pp_construction_plan.txt"), "pp_cplan_construct_scoped")
+    # (the type is written out: pp_cplan_construct_cost -> pp_cplan_construct_room -> pp_cplan_construct_go, the
+    # generic pp_cplan_construct_scoped's checks without the type dispatches)
+    plan = _code(COMMON / "scripted_effects/pp_construction_plan.txt")
+    scoped = _block(plan, "pp_cplan_construct_room") + _block(plan, "pp_cplan_construct_go")
     for check in ("pp_cplan_site_free = yes", "NOT = { pp_cplan_saving = { why = $why$ } }",
                   "pp_cplan_affordable = { why = $why$ }", "is_opened = no"):
         assert check in scoped, check
@@ -936,7 +939,7 @@ def test_every_argument_is_used_and_passed() -> None:
     assert calls > 150
     for name in ("pp_cplan_country_public", "pp_cplan_country_rank_up", "pp_cplan_rank_charge", "pp_cplan_country_grant"):
         assert parameters[name], name
-    assert parameters["pp_cplan_country_public"] == {"type", "line", "demand", "where"}
+    assert parameters["pp_cplan_country_public"] == {"type", "line", "demand", "ipl", "cat", "where"}
     # an effect called with "= yes" takes no argument
     for path in SCRIPT_FILES:
         for name in re.findall(r"\b(pp_cplan_\w+) = yes", _code(MOD / path)):
@@ -1130,8 +1133,11 @@ def test_tiles_are_toggles_in_rows() -> None:
     guis = _code(MOD / cc.SCRIPTED_GUIS)
     assert f"{cc.LAYOUT_GUI} = {{" in guis and guis.count(f"{cc.LAYOUT_EFFECT} = yes") == 2
     window = _read(MOD / "in_game/gui/pp_construction_plan.gui")
-    assert window.count(f"onclick = \"{cc.LAYOUT_CALL}\"") == 2  # the opener and the tab's button
-    assert "Not(IsPauseMenuShown)" in window[window.index('name = "pp_construction_plan"'):window.index("button_panel_tab_alt = {", window.index('name = "pp_construction_plan"'))]
+    assert window.count(f"onclick = \"{cc.LAYOUT_CALL}\"") == 1  # the tab's button
+    # the opener: the plan's tab in the top-left panel's tab row (tests/test_plan_opener.py)
+    opener = _read(MOD / "in_game/gui/panels/left_panel/left_panel.gui")
+    assert opener.count(f"onclick = \"{cc.LAYOUT_CALL}\"") == 1
+    assert "Not(IsPauseMenuShown)" in window[window.index('name = "pp_construction_plan_window"'):]
     # the rights do not have to fit: they scroll
     assert gui.index("scrollarea = {") < gui.index("MakeScopeFlag('right_")
     assert gui.index("MakeScopeFlag('pub_") < gui.index("scrollarea = {")
@@ -1256,7 +1262,7 @@ def test_a_booster_is_built_only_where_its_goods_are_made() -> None:
     assert _tokens(_block(triggers, cc.ANYWHERE)) == "always = yes"
     texts = cc.texts(result.buildings, result.rights)
     for building in result.buildings:
-        calls = re.findall(rf"pp_cplan_country_public = \{{ type = \w+ line = {building.key} demand = \w+ where = (\w+) \}}", buildings)
+        calls = re.findall(rf"pp_cplan_country_public = \{{ type = \w+ line = {building.key} demand = \w+ ipl = [0-9.]+ cat = \w+ where = (\w+) \}}", buildings)
         assert calls and set(calls) == {building.where}, building.key
         tooltip = texts[f"PP_CPLANC_PUB_{building.key.upper()}"]
         if not building.boosts:

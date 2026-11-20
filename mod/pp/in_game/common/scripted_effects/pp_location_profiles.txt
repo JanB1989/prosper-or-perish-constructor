@@ -28,9 +28,14 @@
 # construction goods, 9 waiting for an earlier plan's construction this month, 11 needs a higher rank that cannot be
 # raised here now, 12 the standing building loses money at full staffing, 13 the standing building is closed; 10 is
 # the market limit, which no plan has), pp_lplan_est_g_<plan> (the payback found), pp_lprof_seq (its number in the turn
-# order), pp_lplan_last (the n of the plan that started the last construction here: the plans take turns). Pass
-# temporaries: pp_lprof_st, pp_lprof_fail, pp_lprof_best, pp_lprof_pick, the measuring's pp_lplan_b* (location), the
-# list pp_lprof_turns (country: this look's locations).
+# order), pp_lplan_last (the n of the plan that started the last construction here: the plans take turns),
+# pp_lprof_seen (the number of the last look that reached it). Country: pp_lprof_look_n (the looks' count + 100),
+# pp_lprof_cut (the last look stopped, its purse spent, before every location had its turn). Pass temporaries:
+# pp_lprof_st, pp_lprof_fail, pp_lprof_best, pp_lprof_pick and what the pick carries (pp_lprof_pick_ipl / _pf / _ef /
+# _room), the measuring's pp_lplan_b* (location), the list pp_lprof_turns (country: this look's locations).
+# Script time (2026-11-20): the candidates know their building type when the script is written, so they check its room
+# under the max level by its own value and build through pp_lprof_build_known (no dispatch over every building type);
+# only the measured best plan (setting "best payback first") goes through the generic pp_lprof_build.
 
 # ---- The monthly pass (country scope, inside pp_cplan_run: scope:pp_cplan_country and scope:actor saved) ----
 
@@ -73,12 +78,28 @@ pp_lprof_look = {
 		limit = { NOT = { has_variable = pp_lprof_cursor } }
 		set_variable = { name = pp_lprof_cursor value = 100 }
 	}
+	# the look's number (+ 100): a location keeps the number of the last look that reached it (pp_lprof_seen)
+	if = {
+		limit = { has_variable = pp_lprof_look_n }
+		change_variable = { name = pp_lprof_look_n add = 1 }
+	}
+	else = {
+		set_variable = { name = pp_lprof_look_n value = 101 }
+	}
+	remove_variable = pp_lprof_cut
 	# this look's locations: those that hold a plan (a new one gets its number)
 	pp_lprof_gather = yes
 	# the locations take turns (Jan 2026-11-10): the look starts after the country's place in the order of the
 	# locations' numbers and wraps around (pp_lprof_turn). In the list's own order the locations assigned first took
 	# the whole monthly share every month (test world, 2026-11-08); fewest building levels first, the order until
 	# 2026-11-10, always served the same places first
+	# The look stops when the purse is spent (script time 2026-11-20): once the group saves for something
+	# (pp_cplan_save_cost_105, set by pp_cplan_note_wait or the rank raise's wait), pp_cplan_construct_go and
+	# pp_cplan_country_rank_up start nothing more for it in this pass, so no later location could build. Those
+	# locations are not walked: they count as not reached (pp_cplan_ds_profiles_unr, the pane), the country notes that
+	# the look stopped (pp_lprof_cut), and their plans show "held back for gold" until a look reaches them
+	# (pp_lprof_unreached: pp_lprof_seen below this look's number). Nothing a walk would have built, spent or saved
+	# for is lost: the first thing saved for, and with it the place in the turn order below, are set before the stop.
 	save_temporary_scope_value_as = { name = pp_lprof_cur value = var:pp_lprof_cursor }
 	ordered_in_list = {
 		variable = pp_lprof_turns
@@ -86,7 +107,17 @@ pp_lprof_look = {
 		max = 100000
 		check_range_bounds = no
 		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_locs add = 1 } }
-		pp_lprof_location_turn = yes
+		if = {
+			limit = { scope:pp_cplan_country = { NOT = { has_variable = pp_cplan_save_cost_105 } } }
+			set_variable = { name = pp_lprof_seen value = scope:pp_cplan_country.var:pp_lprof_look_n }
+			pp_lprof_location_turn = yes
+		}
+		else = {
+			scope:pp_cplan_country = {
+				change_variable = { name = pp_cplan_ds_profiles_unr add = 1 }
+				set_variable = { name = pp_lprof_cut value = yes }
+			}
+		}
 	}
 	clear_variable_list = pp_lprof_turns
 	# the place moves to just before the location the group now saves for (the first thing in turn order its purse
@@ -211,8 +242,13 @@ pp_lplan_location_turn = {
 		pp_lplan_location_marks = yes
 	}
 	else = {
-		# the plans take turns (the default): no measuring go
+		# the plans take turns (the default): no measuring go; the split between the two goes as the turn begins
 		save_temporary_scope_value_as = { name = pp_lplan_mode value = 2 }
+		save_temporary_scope_value_as = { name = pp_lplan_from value = 0 }
+		if = {
+			limit = { has_variable = pp_lplan_last }
+			save_temporary_scope_value_as = { name = pp_lplan_from value = var:pp_lplan_last }
+		}
 		pp_lplan_location_marks_turns = yes
 	}
 	pp_lplan_measure_clear = yes
@@ -234,26 +270,27 @@ pp_tplan_set_pb = {
 }
 
 # Location scope (the plans take turns, pp_lplan_location_marks_turns): the plan $g$ runs in the first go
-# ($first$ = yes) when it comes after the plan that started the location's last construction (pp_lplan_last; all of
-# them when none did), in the second go when it does not; the plan is checked held first.
+# ($first$ = yes) when it comes after the plan that started the location's last construction (scope:pp_lplan_from,
+# pp_lplan_last as it stood when the turn began; 0 when none did: all of them), in the second go when it does not
+# (the generated effect skips the second go when none did); the plan is checked held too.
+# The split is taken at the turn's start (2026-11-20): read live, a plan that started a construction in the first go
+# moved pp_lplan_last, and the plans up to it ran a second time, the starter itself included: no construction (the
+# turn's first construction makes every later plan wait), but their states became "waiting" (9) and they were counted
+# twice in the window.
 pp_lplan_mark_turn = {
 	if = {
 		limit = {
-			has_town_rights = town_rights_type:pp_plan_$g$
 			OR = {
 				AND = {
 					always = $first$
-					OR = {
-						NOT = { has_variable = pp_lplan_last }
-						var:pp_lplan_last < $lo$
-					}
+					scope:pp_lplan_from < $lo$
 				}
 				AND = {
 					NOT = { always = $first$ }
-					has_variable = pp_lplan_last
-					var:pp_lplan_last > $lo$
+					scope:pp_lplan_from > $lo$
 				}
 			}
+			has_town_rights = town_rights_type:pp_plan_$g$
 		}
 		pp_lplan_mark = { v = $v$ g = $g$ do = $do$ n = $n$ lo = $lo$ hi = $hi$ }
 	}
@@ -314,7 +351,7 @@ pp_lplan_measure_after = {
 	remove_variable = pp_lprof_st
 	remove_variable = pp_lprof_fail
 	remove_variable = pp_lprof_best
-	remove_variable = pp_lprof_pick
+	pp_lprof_pick_clear = yes
 }
 
 # Country scope: the list pp_lprof_turns = the country's locations that hold a plan right (town_plans.py, 2026-11-19:
@@ -632,7 +669,8 @@ pp_lprof_expand = {
 				pp_lplan_measure = yes
 			}
 			else = {
-				pp_lprof_build = yes
+				save_temporary_scope_value_as = { name = pp_lprof_room value = pp_cplan_room_$type$ }
+				pp_lprof_build_known = yes
 			}
 		}
 	}
@@ -673,7 +711,8 @@ pp_lprof_upgrade = {
 				pp_lprof_fail = { r = 103 }
 			}
 			else = {
-				pp_lprof_build = yes
+				save_temporary_scope_value_as = { name = pp_lprof_room value = pp_cplan_room_$type$ }
+				pp_lprof_build_known = yes
 			}
 		}
 	}
@@ -687,7 +726,7 @@ pp_lprof_upgrade = {
 pp_lprof_start = {
 	if = {
 		limit = { pp_lplan_measuring = yes }
-		remove_variable = pp_lprof_pick
+		pp_lprof_pick_clear = yes
 	}
 	else_if = {
 		limit = { location_and_owner_can_build = { building_type = $type$ } }
@@ -713,7 +752,7 @@ pp_lprof_start = {
 				pp_lprof_fail = { r = 103 }
 			}
 			else = {
-				pp_lprof_consider = yes
+				pp_lprof_consider = { type = $type$ }
 			}
 		}
 	}
@@ -741,31 +780,62 @@ pp_lprof_new_check = {
 	}
 }
 
-# Location scope: scope:pp_cplan_btype becomes the pick when it costs less than the pick so far.
+# Location scope: scope:pp_cplan_btype ($type$) becomes the pick when it costs less than the pick so far. The pick
+# carries what its build needs (script time 2026-11-20: the build then skips the two dispatches over every building
+# type): its cost data (+ 100, a variable at 0 counts as unset) and whether a level fits under its max level here
+# (pp_lprof_pick_room; nothing is built between the pick and its start, so the room stays what it was).
 pp_lprof_consider = {
 	if = {
 		limit = { NOT = { has_variable = pp_lprof_best } }
-		pp_lprof_keep = yes
+		pp_lprof_keep = { type = $type$ }
 	}
 	else_if = {
 		limit = { pp_lprof_cost1 < var:pp_lprof_best }
-		pp_lprof_keep = yes
+		pp_lprof_keep = { type = $type$ }
 	}
 }
 pp_lprof_keep = {
 	set_variable = { name = pp_lprof_best value = pp_lprof_cost1 }
 	set_variable = { name = pp_lprof_pick value = scope:pp_cplan_btype }
+	set_variable = { name = pp_lprof_pick_ipl value = { value = scope:pp_cplan_ipl add = 100 } }
+	set_variable = { name = pp_lprof_pick_pf value = { value = scope:pp_cplan_pf add = 100 } }
+	set_variable = { name = pp_lprof_pick_ef value = { value = scope:pp_cplan_ef add = 100 } }
+	if = {
+		limit = { pp_cplan_room_$type$ >= 1 }
+		set_variable = { name = pp_lprof_pick_room value = yes }
+	}
+	else = {
+		remove_variable = pp_lprof_pick_room
+	}
 }
 
-# Location scope: starts the picked building, if any.
+# Location scope: starts the picked building, if any, with the cost data and the room it was picked with
+# (pp_lprof_build_known).
 pp_lprof_start_pick = {
 	if = {
 		limit = { has_variable = pp_lprof_pick }
 		var:pp_lprof_pick = { save_scope_as = pp_cplan_btype }
-		pp_lprof_build = yes
+		save_temporary_scope_value_as = { name = pp_cplan_ipl value = { value = var:pp_lprof_pick_ipl subtract = 100 } }
+		save_temporary_scope_value_as = { name = pp_cplan_pf value = { value = var:pp_lprof_pick_pf subtract = 100 } }
+		save_temporary_scope_value_as = { name = pp_cplan_ef value = { value = var:pp_lprof_pick_ef subtract = 100 } }
+		save_temporary_scope_value_as = { name = pp_lprof_room value = 0 }
+		if = {
+			limit = { has_variable = pp_lprof_pick_room }
+			save_temporary_scope_value_as = { name = pp_lprof_room value = 1 }
+		}
+		pp_lprof_build_known = yes
 	}
-	remove_variable = pp_lprof_pick
+	pp_lprof_pick_clear = yes
 	remove_variable = pp_lprof_best
+}
+
+# Location scope: the start pick and what it carries are gone.
+pp_lprof_pick_clear = {
+	remove_variable = pp_lprof_pick
+	remove_variable = pp_lprof_pick_ipl
+	remove_variable = pp_lprof_pick_pf
+	remove_variable = pp_lprof_pick_ef
+	remove_variable = pp_lprof_pick_room
 }
 
 # Location scope: one level of scope:pp_cplan_btype, paid from the Locations group's purse (the plan's construct
@@ -774,12 +844,37 @@ pp_lprof_start_pick = {
 # for, pp_cplan_note_wait); one the market limit stops (enough of its good is on the way in the market): 106
 # (pp_cplan_note_market; a forced plan never is); one it refuses for another reason (a level under construction, a
 # closed building): cannot be built (102).
+# This one is for a type held at run time (the measured best plan, pp_lplan_bt): the generic construct path. The
+# candidates that know their type when the script is written build through pp_lprof_build_known.
 pp_lprof_build = {
 	scope:pp_cplan_country = {
 		remove_variable = pp_cplan_wait
 		remove_variable = pp_cplan_mlim
 	}
 	pp_cplan_construct_scoped = { why = 105 }
+	pp_lprof_build_end = yes
+}
+
+# Location scope: pp_lprof_build for a candidate that knows its type (script time 2026-11-20): scope:pp_cplan_btype,
+# its cost data (scope:pp_cplan_ipl / _pf / _ef, the values pp_cplan_btype_data finds for it: both from
+# construction_plan.py building_costs, a test compares them) and scope:pp_lprof_room (the type's pp_cplan_room_<type>,
+# its room under the max level here) are set. No room: nothing starts, and the plan's state is "cannot be built"
+# (102), as pp_cplan_construct_scoped's pp_cplan_no_room gave it; else the same construct path without the two
+# dispatches over every building type.
+pp_lprof_build_known = {
+	scope:pp_cplan_country = {
+		remove_variable = pp_cplan_wait
+		remove_variable = pp_cplan_mlim
+	}
+	if = {
+		limit = { scope:pp_lprof_room >= 1 }
+		pp_cplan_construct_room = { why = 105 data = no }
+	}
+	pp_lprof_build_end = yes
+}
+
+# Location scope, after a plan's construct: the outcome as the plan's reason (started, gold, market limit, cannot).
+pp_lprof_build_end = {
 	if = {
 		limit = { scope:pp_cplan_country = { has_variable = pp_cplan_hit } }
 		set_variable = { name = pp_lprof_st value = 101 }

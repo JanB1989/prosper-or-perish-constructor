@@ -879,10 +879,31 @@ pp_cplan_food_province = {
 }
 
 # Location scope: start one level of $type$ here and record it ($why$: 101 food, 102 logistics, 103 business, 105 a
-# location's plan, 106 improvements, 107 towns and buildings).
+# location's plan, 106 improvements, 107 towns and buildings). The type is known when the script is written, so the
+# room under its max level is its own value (pp_cplan_room_$type$, the line pp_cplan_no_room tests for it among every
+# type; script time 2026-11-20); the cost data comes from the dispatch pp_cplan_btype_data as in
+# pp_cplan_construct_scoped.
 pp_cplan_construct = {
 	building_type:$type$ = { save_scope_as = pp_cplan_btype }
-	pp_cplan_construct_scoped = { why = $why$ }
+	if = {
+		limit = { pp_cplan_room_$type$ >= 1 }
+		pp_cplan_construct_room = { why = $why$ data = yes }
+	}
+}
+
+# Location scope: the same with the cost data given by the caller's generator ($ipl$, $demand$, $cat$: the values
+# pp_cplan_btype_data finds for $type$, both from construction_plan.py building_costs; a test compares them), so
+# neither dispatch over every building type runs (script time 2026-11-20). The cost values are set before the site
+# checks instead of after them; nothing between reads them (only pp_cplan_est_cost does, in pp_cplan_construct_go).
+pp_cplan_construct_cost = {
+	building_type:$type$ = { save_scope_as = pp_cplan_btype }
+	if = {
+		limit = { pp_cplan_room_$type$ >= 1 }
+		save_temporary_scope_value_as = { name = pp_cplan_ipl value = $ipl$ }
+		save_temporary_scope_value_as = { name = pp_cplan_pf value = pp_cplan_cd_$demand$ }
+		save_temporary_scope_value_as = { name = pp_cplan_ef value = pp_cplan_eff_$cat$ }
+		pp_cplan_construct_room = { why = $why$ data = no }
+	}
 }
 
 # Location scope: the same for the building type scope:pp_cplan_btype. Only where a construction can start
@@ -900,6 +921,10 @@ pp_cplan_construct = {
 # above the reserve (pp_cplan_affordable), and the group must not be saving yet (pp_cplan_saving): the first thing it
 # cannot pay for is what it saves for, and it builds nothing more in the pass. A level the rule wants that it does
 # not start for either reason is counted for the window (pp_cplan_note_wait).
+# The type is held in scope:pp_cplan_btype, so the room under its max level is asked through pp_cplan_no_room (one test
+# per building type) and the cost data through pp_cplan_btype_data. A caller that knows the type when its script is
+# written asks pp_cplan_room_<type> itself and calls pp_cplan_construct_room (pp_cplan_construct,
+# pp_cplan_construct_cost, the plan engine's pp_lprof_build_known): the same checks in the same outcome.
 pp_cplan_construct_scoped = {
 	if = {
 		limit = {
@@ -916,30 +941,59 @@ pp_cplan_construct_scoped = {
 				}
 			}
 		}
-		save_temporary_scope_value_as = { name = pp_cplan_mok value = 1 }
+		pp_cplan_construct_go = { why = $why$ data = yes }
+	}
+}
+
+# Location scope: pp_cplan_construct_scoped for a caller that has checked the room under the max level of
+# scope:pp_cplan_btype itself (pp_cplan_room_<type> >= 1); $data$ = no: the caller has set the cost data too (the
+# values pp_cplan_btype_data would set).
+pp_cplan_construct_room = {
+	if = {
+		limit = {
+			pp_cplan_site_free = yes
+			pp_cplan_bt_queued < 0.5
+			NOT = {
+				any_buildings_in_location = {
+					building_type = scope:pp_cplan_btype
+					building_level > 0
+					is_opened = no
+				}
+			}
+		}
+		pp_cplan_construct_go = { why = $why$ data = $data$ }
+	}
+}
+
+# Location scope, the site checks passed: the market limit, the cost data (pp_cplan_btype_data where $data$ = yes),
+# the gold.
+pp_cplan_construct_go = {
+	save_temporary_scope_value_as = { name = pp_cplan_mok value = 1 }
+	if = {
+		limit = {
+			pp_cplan_limits_market_$why$ = yes
+			scope:pp_cplan_forced < 0.5
+		}
+		pp_cplan_market_do = { do = gate }
+	}
+	if = {
+		limit = { scope:pp_cplan_mok < 0.5 }
+		pp_cplan_note_market = { why = $why$ }
+	}
+	else = {
+		if = {
+			limit = { always = $data$ }
+			pp_cplan_btype_data = yes
+		}
 		if = {
 			limit = {
-				pp_cplan_limits_market_$why$ = yes
-				scope:pp_cplan_forced < 0.5
+				NOT = { pp_cplan_saving = { why = $why$ } }
+				pp_cplan_affordable = { why = $why$ }
 			}
-			pp_cplan_market_do = { do = gate }
-		}
-		if = {
-			limit = { scope:pp_cplan_mok < 0.5 }
-			pp_cplan_note_market = { why = $why$ }
+			pp_cplan_construct_now = { why = $why$ }
 		}
 		else = {
-			pp_cplan_btype_data = yes
-			if = {
-				limit = {
-					NOT = { pp_cplan_saving = { why = $why$ } }
-					pp_cplan_affordable = { why = $why$ }
-				}
-				pp_cplan_construct_now = { why = $why$ }
-			}
-			else = {
-				pp_cplan_note_wait = { why = $why$ }
-			}
+			pp_cplan_note_wait = { why = $why$ }
 		}
 	}
 }
@@ -1165,9 +1219,9 @@ pp_cplan_log_clear = {
 	remove_variable = pp_cplan_log_step_$why$
 }
 
-# Location scope: the same for the food rule.
+# Location scope: the same for the food rule (the type's cost data given: pp_cplan_construct_cost).
 pp_cplan_construct_food = {
-	pp_cplan_construct = { type = $type$ why = 101 }
+	pp_cplan_construct_cost = { type = $type$ why = 101 ipl = $ipl$ demand = $demand$ cat = $cat$ }
 }
 
 # ---- Copies within one scope ----

@@ -894,8 +894,9 @@ SITUATION: dict[str, tuple[tuple[str, int], ...]] = {
     "improve": (("over", 100), ("fullest", 100)),
     # skipped: 1 when the group had neither gold saved nor gold coming in and did not look (pp_cplan_group_business)
     "business": (("sites", 100), ("best", 1099), ("skipped", 100)),
-    # the plans' states (location_profiles.STATES 1..13; pp_lprof_count_state)
-    "profiles": (("locs", 100), *((f"st{n}", 100) for n in range(1, 14))),
+    # the plans' states (location_profiles.STATES 1..13; pp_lprof_count_state); unr: the locations the look did not
+    # reach because the group's purse was spent first (pp_lprof_look, script time 2026-11-20)
+    "profiles": (("locs", 100), ("unr", 100), *((f"st{n}", 100) for n in range(1, 14))),
     "country": (),  # gold had, spent and waiting are enough; its own numbers are construction_plan_country.py's
 }
 
@@ -1151,6 +1152,22 @@ def _goods_here(name: str, costs: dict[str, BuildingCost]) -> str:
     return f"pp_cplan_goods_here_{demand} = yes"
 
 
+def _cost_args(name: str, costs: dict[str, BuildingCost]) -> str:
+    """The cost data of a known building type as the arguments of pp_cplan_construct_cost / _food: the values
+    pp_cplan_btype_data finds for it (the same building_costs; script time 2026-11-20: no dispatch over every type)."""
+    cost = costs.get(name, BuildingCost(0.0, DEFAULT_DEMAND, "std"))
+    return f"ipl = {_num(cost.ipl)} demand = {cost.demand} cat = {cost.category}"
+
+
+def construct_cost(name: str, why: int, costs: dict[str, BuildingCost]) -> str:
+    """One level of the known type ``name`` for the rule group ``why``: room by its own value, cost data given."""
+    return f"pp_cplan_construct_cost = {{ type = {name} why = {why} {_cost_args(name, costs)} }}"
+
+
+def construct_food(name: str, costs: dict[str, BuildingCost]) -> str:
+    return f"pp_cplan_construct_food = {{ type = {name} {_cost_args(name, costs)} }}"
+
+
 def _first_that_can(buildings: tuple[str, ...], costs: dict[str, BuildingCost], build, why: int) -> str:
     """The body of a "first that can be built" picker (location scope): the first of ``buildings`` that can be built
     here and whose construction goods the market holds gets ``build(name)``, as before. One that can be built but
@@ -1223,7 +1240,7 @@ def render_improvements(improvements: list[tuple[str, float]], costs: dict[str, 
     for number, (key, _land) in enumerate(improvements, 101):
         effects.append(
             f"\tif = {{\n\t\tlimit = {{ var:pp_cplan_pick > {number - 0.5:g} var:pp_cplan_pick < {number + 0.5:g} }}\n"
-            f"\t\tpp_cplan_construct = {{ type = {key} why = {WHY_IMPROVE} }}\n\t}}\n"
+            f"\t\t{construct_cost(key, WHY_IMPROVE, costs)}\n\t}}\n"
         )
     effects.append(
         "\tif = {\n\t\tlimit = { var:pp_cplan_pick < 100.5 scope:pp_cplan_ng > 0.5 }\n"
@@ -1407,7 +1424,7 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]],
         for position, tier in enumerate(reversed(tiers)):
             parts.append(
                 f"\t\t{'if' if position == 0 else 'else_if'} = {{\n\t\t\tlimit = {{ {can(tier)} }}\n"
-                f"\t\t\tpp_cplan_construct_food = {{ type = {tier} }}\n\t\t}}\n"
+                f"\t\t\t{construct_food(tier, costs)}\n\t\t}}\n"
             )
         parts.append("\t}\n")
     parts.append("\tremove_variable = pp_cplan_best\n\tremove_variable = pp_cplan_pick\n}\n")
@@ -1429,7 +1446,7 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]],
             "\t\t\t\t\tAND = {\n\t\t\t\t\t\tpp_cplan_bt_levels < 0.5\n\t\t\t\t\t\tpp_cplan_victuals_price_ratio >= 1\n\t\t\t\t\t}\n"
             "\t\t\t\t}\n\t\t\t}\n"
             f"\t\t\tif = {{\n\t\t\t\tlimit = {{ {_goods_here(building, costs)} }}\n"
-            f"\t\t\t\tpp_cplan_construct_food = {{ type = {building} }}\n\t\t\t}}\n"
+            f"\t\t\t\t{construct_food(building, costs)}\n\t\t\t}}\n"
             f"\t\t\telse = {{\n\t\t\t\tpp_cplan_note_goods = {{ why = {WHY_FOOD} }}\n\t\t\t}}\n\t\t}}\n\t}}\n"
         )
     parts.append("}\n")
@@ -1444,7 +1461,7 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]],
         parts.append(f"\n# Location scope (the province capital): {comment}, first that can be built (one the market lacks\n"
                      f"# the construction goods for is counted for the window, pp_cplan_note_goods).\n{name} = {{\n")
         parts.append(_first_that_can(tuple(buildings), costs,
-                                     lambda building: f"pp_cplan_construct_food = {{ type = {building} }}", WHY_FOOD))
+                                     lambda building: construct_food(building, costs), WHY_FOOD))
         parts.append("}\n")
 
     # --- logistics
@@ -1452,7 +1469,7 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]],
                  "# one the market lacks the construction goods for is counted for the window).\n"
                  "pp_cplan_try_logistics_here = {\n")
     parts.append(_first_that_can(tuple(config.logistics_order), costs,
-                                 lambda building: f"pp_cplan_construct = {{ type = {building} why = {WHY_LOGISTICS} }}",
+                                 lambda building: construct_cost(building, WHY_LOGISTICS, costs),
                                  WHY_LOGISTICS))
     parts.append("}\n")
 

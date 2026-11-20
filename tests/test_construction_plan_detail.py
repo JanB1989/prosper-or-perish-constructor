@@ -161,6 +161,17 @@ def test_locations_list_tells_a_building_from_a_rank_raise() -> None:
         assert not re.search(r"\bprofiles?\b|\bmark(?:s|ed)?\b", words), key
     assert "holds a plan" in loc["PP_CPLAN_D_OFF_PROFILES"]
     assert "with a plan" in loc["PP_CPLAN_D_PROFILES_SIT"]
+    # script time 2026-11-20: the look stops once the purse is spent; the pane says how many locations it did not
+    # reach (shown only then, below the state counts they are not in) and that their cost is not in what it wanted
+    unr = "ScriptValue('pp_cplan_d_profiles_unr')"
+    assert unr in loc["PP_CPLAN_D_PROFILES_UNR"] and "not reached" in loc["PP_CPLAN_D_PROFILES_UNR"]
+    shown = f'visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.{unr}, \'(CFixedPoint)0.5\')]"'
+    assert re.search(re.escape(shown) + r"\n\t+text = \"PP_CPLAN_D_PROFILES_UNR\"", pane)
+    assert pane.index('text = "PP_CPLAN_D_PROFILES_ST13"') < pane.index('text = "PP_CPLAN_D_PROFILES_UNR"')
+    assert re.search(r"^pp_cplan_d_profiles_unr = \{", _read(MOD / cp.VALUES), re.MULTILINE)
+    reset = _read(MOD / cp.EFFECTS)
+    reset = reset[reset.index("pp_cplan_stats_reset_105 = {"):]
+    assert "set_variable = { name = pp_cplan_ds_profiles_unr value = 100 }" in reset[:reset.index("\n}\n")]
     # the plan pass writes step 0 before the plans' turn; the rank raise sets it back to 0 after itself
     profiles = _read(MOD / "in_game/common/scripted_effects/pp_location_profiles.txt")
     marks_pass = profiles[profiles.index("\npp_lplan_location_turn = {"):]

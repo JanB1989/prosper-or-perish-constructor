@@ -1,0 +1,1053 @@
+﻿template player_stat_bg {
+	background = {
+		texture = "[GetGraphicalCultureTexture('top_bar_sideflavor')]"
+		texture_density = 2
+		spriteType = Corneredstretched
+		spriteborder = { 17 17 }
+		alpha = 0.3
+
+		modify_texture = {
+			using = color_bg_brown_texture
+			blend_mode = multiply
+			alpha = 0.9
+		}
+	}
+
+	background = {
+		block "decreasing_value_gradient_visible" {
+			visible = no
+		}
+
+		using = bg_mask_fade_horizontal_right_texture
+		spriteType = stretched
+		alpha = 0.5
+
+		margin_top = -3
+		margin_bottom = -3
+		margin_right = -40
+
+		modify_texture = {
+			using = color_red_texture
+			blend_mode = multiply
+		}
+	}
+
+	background = {
+		block "context_value_gradient_visible" {
+			visible = no
+		}
+
+		using = bg_fade_vertical_up_noborder_mask_texture
+		alpha = 0.6
+
+		margin_top = 30
+		margin_bottom = -3
+
+		modify_texture = {
+			using = color_gold_texture
+			blend_mode = normal
+		}
+
+		modify_texture = {
+			using = bg_fade_vertical_up_mask_texture
+			blend_mode = alphamultiply
+		}
+
+		modify_texture = {
+			using = bg_fade_vertical_up_mask_texture
+			blend_mode = alphamultiply
+		}
+	}
+}
+
+template text_single_positive_negative {
+	text_single = {
+		block "visible_positive" { visible = no }
+		block "text_setup" {}
+	}
+
+	text_single = {
+		block "visible_negative" { visible = no }
+		block "text_setup" {}
+	}
+}
+
+template text_single_positive_zero_negative {
+	text_single = {
+		block "visible_positive" { visible = no }
+		block "text_setup" {}
+	}
+
+	text_single = {
+		block "visible_zero" { visible = no }
+		block "text_setup" {}
+		block "text_zero" {}
+	}
+
+	text_single = {
+		block "visible_negative" { visible = no }
+		block "text_setup" {}
+	}
+}
+
+Types LeftPanelTypes
+{
+	type panel_tab_highlight = icon {
+		using = bg_panel_tabs
+		alwaystransparent = yes
+
+		size = { 100% 100% }
+		texture = "gfx/interface/buttons/panel_tabs_alt.dds"
+		spriteType = stretched
+		spriteborder = { 0 0 }
+		frame_grid = { 4 1 }
+		texture_density = 2
+		frame = 2
+	}
+
+	type left_panel_bar = widget {
+		alwaystransparent = no
+		allow_outside = yes
+		using = panel_bar_size
+
+		vbox = {
+			allow_outside = yes
+			using = bg_panel_bar
+
+			widget = {
+				allow_outside = yes
+				using = layoutpolicy_expanding
+
+				### CORNER1
+				# icon = {
+				# 	size = { 64 54 }
+				# 	texture = "[GetGraphicalCultureTexture('panel_bar_corner')]"
+				# 	texture_density = 2
+				# 	mirror = horizontal
+				# 	using = non_clickable_color_gold_texture
+
+				# 	glow = {
+				# 		name = "drop_shadow"
+				# 		glow_radius = 2
+				# 		color = {0.0 0.0 0.0 1.0}
+				# 		alpha = 0.7
+				# 	}
+				# }
+
+				### COUNTRY NAME
+				hbox = {
+					visible = "[Not(IsObservingWithoutSelectedCountry)]"
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = fixed
+
+					alwaystransparent = no
+					filter_mouse = all
+
+					widget = {
+						size = { 65 1 }
+					}
+
+					expand = {}
+
+					hbox = {
+						layoutpolicy_vertical = expanding
+						margin = { 0 0 }
+						spacing = 10
+						allow_outside = yes
+
+						widget = {
+							size = { 40 40 }
+							visible = "[IsPlayerSubject]"
+							datacontext = "[Player]"
+							tooltipwidget = {
+								using = SubjectTypeDetail_tooltip
+							}
+
+							using = bg_circle_hud_frame_mid_blue
+
+							piechart = {
+								size = { 100% 100% }
+								using = piechart_angles
+
+								pieslice_no_highlight = {
+									visible = "[GreaterThan_CFixedPoint(Player.GetDiplomacy.GetSubjectLoyalty, '(CFixedPoint)50' )]"
+									texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
+									value = "[FixedPointToFloat(Player.GetDiplomacy.GetSubjectLoyalty)]"
+									color = { 0.3 0.8 0.3 1 }
+								}
+
+								pieslice_no_highlight = {
+									visible = "[GreaterThan_CFixedPoint('(CFixedPoint)50', Player.GetDiplomacy.GetSubjectLoyalty )]"
+									texture = "gfx/interface/pie_charts/pie_chart_white.dds"
+									value = "[FixedPointToFloat(Player.GetDiplomacy.GetSubjectLoyalty)]"
+									color = { 0.3 0.8 0.3 1 }
+								}
+
+								pieslice_no_highlight = {
+									texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
+									value = "[FixedPointToFloat(Subtract_CFixedPoint('(CFixedPoint)100.0', Player.GetDiplomacy.GetSubjectLoyalty))]"
+									color = { 1 1 1 0 }
+								}
+
+								icon = {
+									parentanchor = center
+									size = { 25 25 }
+									texture = "[GetSubjectTypeIcon(Player.GetDiplomacy.GetSubjectType)]"
+								}
+							}
+						}
+
+						# Country Name
+						hbox = {
+							layoutpolicy_vertical = expanding
+							spacing = 4
+							datamodel = "[DataModelFirst(GetPlayer.GetDiplomacy.GetInternationalOrganizations, GetRelationsUILimit)]"
+							visible = "[DataModelHasItems(GetPlayer.GetDiplomacy.GetInternationalOrganizations)]"
+							item = {
+								using = io_leader_button
+							}
+						}
+
+						text_multi = {
+							visible = "[IsPlayerValid]"
+							name = "country_name"
+							minimumsize = { 50 25 }
+							maximumsize = { 300 50 }
+							autoresize = yes
+							text = "[InGameTopbar.GetPlayer.GetLongNameWithNoTooltip]"
+							using = Font_Type_Headers
+							using = Font_Size_Big
+							# default_format = "#high"
+							default_format = "#yellow_titles"
+							align = center|nobaseline
+							datacontext = "[InGameTopbar.GetPlayer]"
+
+							tooltipwidget = {
+								using = CountryTooltip
+							}
+						}
+
+						button_regular = {
+							visible = "[And(IsObserving, Not(IsObservingWithoutSelectedCountry))]"
+							size = { 42 42 }
+							icon = {
+								parentanchor = center
+								size = { 32 32 }
+								texture = "gfx/interface/icons/messages_settings/map.dds"
+							}
+
+							action_tooltip = {
+								title = "CLICK_STOP_OBSERVING"
+								on_action = "[StopObservingCountry]"
+							}
+
+							tooltipwidget = {
+								BasicFunctionalTooltip = {
+									blockoverride "tooltip_content" {
+										TooltipTextBlock = {
+											textcontext = "OBSERVER_MODE"
+										}
+									}
+								}
+							}
+						}
+						
+					}
+
+					expand = {}
+				}
+
+				### CORNER2
+				icon = {
+					parentanchor = right
+					widgetanchor = left
+					using = panel_decor_size
+					mirror = horizontal
+					texture = "[GetGraphicalCultureTexture('panel_bar_corner_shadow')]"
+					# texture = "gfx/interface/graphical_cultures/european_gfx/panel_bar_corner_shadow.dds"
+					texture_density = 2
+
+					using = color_black_texture
+				}
+				icon = {
+					parentanchor = right
+					widgetanchor = left
+					using = panel_decor_size
+					mirror = horizontal
+					texture = "[GetGraphicalCultureTexture('panel_bar_corner')]"
+					# texture = "gfx/interface/graphical_cultures/european_gfx/panel_bar_corner.dds"
+					texture_density = 2
+
+					using = non_clickable_color_gold_texture
+				}
+			}
+
+			### TABS/Buttons
+			widget = {
+				name = "tabs_buttons"
+				visible = "[Not(TutorialHasVar('intro_hide_ui_4'))]"
+				layoutpolicy_horizontal = expanding
+				size = { -1 35 }
+
+				hbox = {
+					using = bg_panel_tabs
+					using = layoutpolicy_expanding
+
+					visible = "[IsPlayerValid]"
+
+					button_panel_tab_alt = { ### Government tab
+						widget = {
+							visible = "[Not(IsLateralGroupOpened('government_group'))]"
+							size = { 100% 100% }
+							name = government_tab_button
+						}
+						# onrightclick = "[OnToggleOutlinerCategory('Government')]"
+						down = "[IsLateralGroupOpened('government_group')]"
+						onmousehierarchyenter = "[ResetHighlightedTab]"
+
+						tooltipwidget = {
+							using = TabGovermentTooltip
+						}
+
+						action_tooltip = {
+							title = "TAB_TOOLTIP_GOVERNMENT_LEFT_CLICK"
+							on_action = "[ToggleLateralGroup('government_group')]"
+						}
+
+						input_action = "top_left_1"
+
+						using = layoutpolicy_expanding
+
+						panel_tab_highlight = {
+							visible = "[IsLateralGroupHighlighted('government_group')]"
+						}
+
+						button = {
+							alwaystransparent = yes
+							size = { 26 26 }
+							parentanchor = center
+							texture = "gfx/interface/icons/flat_icons/tabicons/government.dds"
+							texture_density = 2
+
+							using = button_panel_tab_icon_effect
+							blockoverride "icon_effect_visible" { visible = "[IsLateralGroupOpened('government_group')]" }
+							blockoverride "icon_effect_color"{ color = { 0.55 0.20 0.90 1.0 } }
+						}
+					}
+
+					button_panel_tab_alt = { ### economy tab
+						widget = {
+							visible = "[Not(IsLateralGroupOpened('economy_group'))]"
+							size = { 100% 100% }
+							name = economy_tab_button
+						}
+						# onrightclick = "[OnToggleOutlinerCategory('Economy')]"
+						down = "[IsLateralGroupOpened('economy_group')]"
+						onmousehierarchyenter = "[ResetHighlightedTab]"
+
+						tooltipwidget = {
+							using = TabEconomyTooltip
+						}
+
+						action_tooltip = {
+							title = "TAB_TOOLTIP_ECONOMY_LEFT_CLICK"
+							on_action = "[ToggleLateralGroup('economy_group')]"
+						}
+
+						input_action = "top_left_2"
+
+						using = layoutpolicy_expanding
+
+						panel_tab_highlight = {
+							visible = "[IsLateralGroupHighlighted('economy_group')]"
+						}
+
+						button = {
+							alwaystransparent = yes
+							size = { 26 26 }
+							parentanchor = center
+							texture = "gfx/interface/icons/flat_icons/tabicons/economy.dds"
+							texture_density = 2
+
+							using = button_panel_tab_icon_effect
+							blockoverride "icon_effect_visible" { visible = "[IsLateralGroupOpened('economy_group')]" }
+							blockoverride "icon_effect_color"{ color = { 0.80 0.65 0.10 1.0 } }
+						}
+					}
+
+					button_panel_tab_alt = { ### production tab
+						# onrightclick = "[OnToggleOutlinerCategory('Production')]"
+						down = "[IsLateralGroupOpened('production_group')]"
+						onmousehierarchyenter = "[ResetHighlightedTab]"
+
+						tooltipwidget = {
+							using = TabProductionTooltip
+						}
+
+						action_tooltip = {
+							title = "TAB_TOOLTIP_PRODUCTION_LEFT_CLICK"
+							on_action = "[ToggleLateralGroup('production_group')]"
+							on_action = "[SetNonForeignUIFocusMarket]"
+						}
+
+						input_action = "top_left_3"
+
+						using = layoutpolicy_expanding
+
+						panel_tab_highlight = {
+							visible = "[IsLateralGroupHighlighted('production_group')]"
+						}
+
+						button = {
+							alwaystransparent = yes
+							size = { 26 26 }
+							parentanchor = center
+							texture = "gfx/interface/icons/flat_icons/tabicons/production.dds"
+							texture_density = 2
+
+							using = button_panel_tab_icon_effect
+							blockoverride "icon_effect_visible" { visible = "[IsLateralGroupOpened('production_group')]" }
+							blockoverride "icon_effect_color"{ color = { 0.85 0.40 0.10 1.0 } }
+						}
+					}
+
+					button_panel_tab_alt = { ### Society tab
+						widget = {
+							visible = "[Not(IsLateralGroupOpened('society_group'))]"
+							size = { 100% 100% }
+							name = society_tab_button
+						}
+						# onrightclick = "[OnToggleOutlinerCategory('Society')]"
+						down = "[IsLateralGroupOpened('society_group')]"
+						onmousehierarchyenter = "[ResetHighlightedTab]"
+
+						tooltipwidget = {
+							using = TabSocietyTooltip
+						}
+
+						action_tooltip = {
+							title = "TAB_TOOLTIP_SOCIETY_LEFT_CLICK"
+							on_action = "[ToggleLateralGroup('society_group')]"
+						}
+
+						input_action = "top_left_4"
+
+						using = layoutpolicy_expanding
+
+						panel_tab_highlight = {
+							visible = "[IsLateralGroupHighlighted('society_group')]"
+						}
+
+						button = {
+							alwaystransparent = yes
+							size = { 26 26 }
+							parentanchor = center
+							texture = "gfx/interface/icons/flat_icons/tabicons/demography.dds"
+							texture_density = 2
+
+							using = button_panel_tab_icon_effect
+							blockoverride "icon_effect_visible" { visible = "[IsLateralGroupOpened('society_group')]" }
+							blockoverride "icon_effect_color"{ color = { 0.10 0.80 0.60 1.0 } }
+						}
+					}
+
+					button_panel_tab_alt = { ### Diplomacy tab
+						widget = {
+							visible = "[Not(IsLateralGroupOpened('diplomacy_group'))]"
+							size = { 100% 100% }
+							name = diplomacy_tab_button
+						}
+
+						# onrightclick = "[OnToggleOutlinerCategory('Diplomacy')]"
+						down = "[IsLateralGroupOpened('diplomacy_group')]"
+						onmousehierarchyenter = "[ResetHighlightedTab]"
+
+						tooltipwidget = {
+							using = TabDiplomacyTooltip
+						}
+
+						action_tooltip = {
+							click_type = left
+							click_mode = single
+							title = "TAB_TOOLTIP_DIPLOMACY_LEFT_CLICK"
+							on_action = "[ToggleLateralGroupWithSpecificView('diplomacy_group', 'diplomacy')]"
+						}
+
+						action_tooltip = {
+							click_type = right
+							click_mode = single
+							title = "AUTOMATED_SYSTEM_DIPLOMACY_CLICK"
+							on_action =  "[OpenLateralView('diplomacy_macrobuilder')]"
+						}
+
+						input_action = "top_left_5"
+
+						using = layoutpolicy_expanding
+
+						panel_tab_highlight = {
+							visible = "[IsLateralGroupHighlighted('diplomacy_group')]"
+						}
+
+						button = {
+							alwaystransparent = yes
+							size = { 26 26 }
+							parentanchor = center
+							texture = "gfx/interface/icons/flat_icons/tabicons/diplomacy.dds"
+							texture_density = 2
+
+							using = button_panel_tab_icon_effect
+							blockoverride "icon_effect_visible" { visible = "[IsLateralGroupOpened('diplomacy_group')]" }
+						}
+					}
+
+					button_panel_tab_alt = { ### military tab
+						widget = {
+							visible = "[Not(IsLateralGroupOpened('military_group'))]"
+							size = { 100% 100% }
+							name = military_tab_button
+						}
+						# onrightclick = "[OnToggleOutlinerCategory('Military')]"
+						down = "[IsLateralGroupOpened('military_group')]"
+						onmousehierarchyenter = "[ResetHighlightedTab]"
+
+						tooltipwidget = {
+							using = TabMilitaryTooltip
+						}
+
+						action_tooltip = {
+							title = "TAB_TOOLTIP_MILITARY_LEFT_CLICK"
+							on_action = "[ToggleLateralGroup('military_group')]"
+						}
+
+						input_action = "top_left_6"
+
+						using = layoutpolicy_expanding
+
+						panel_tab_highlight = {
+							visible = "[IsLateralGroupHighlighted('military_group')]"
+						}
+
+						button = {
+							alwaystransparent = yes
+							size = { 26 26 }
+							parentanchor = center
+							texture = "gfx/interface/icons/flat_icons/tabicons/military.dds"
+							texture_density = 2
+
+							using = button_panel_tab_icon_effect
+							blockoverride "icon_effect_visible" { visible = "[IsLateralGroupOpened('military_group')]" }
+							blockoverride "icon_effect_color"{ color = { 0.70 0.25 0.40 1.0 } }
+						}
+					}
+
+					button_panel_tab_alt = { ### geography tab
+						widget = {
+							visible = "[Not(IsLateralGroupOpened('geography_group'))]"
+							size = { 100% 100% }
+							name = geopolitics_tab_button
+						}
+						# onrightclick = "[OnToggleOutlinerCategory('Geopolitics')]"
+						down = "[IsLateralGroupOpened('geography_group')]"
+						onmousehierarchyenter = "[ResetHighlightedTab]"
+
+						tooltipwidget = {
+							using = TabGeopoliticsTooltip
+						}
+
+						action_tooltip = {
+							title = "TAB_TOOLTIP_GEOPOLTICS_LEFT_CLICK"
+							on_action = "[ToggleLateralGroup('geography_group')]"
+						}
+
+						input_action = "top_left_7"
+
+						using = layoutpolicy_expanding
+
+						panel_tab_highlight = {
+							visible = "[IsLateralGroupHighlighted('geography_group')]"
+						}
+
+						button = {
+							alwaystransparent = yes
+							size = { 26 26 }
+							parentanchor = center
+							texture = "gfx/interface/icons/flat_icons/tabicons/geography_flat_icon.dds"
+							texture_density = 2
+
+							using = button_panel_tab_icon_effect
+							blockoverride "icon_effect_visible" { visible = "[IsLateralGroupOpened('geography_group')]" }
+							blockoverride "icon_effect_color"{ color = { 0.45 0.55 0.90 1.0 } }
+						}
+					}
+
+					button_panel_tab_alt = { ### advances tab
+						down = "[IsLateralGroupOpened('advances_group')]"
+						onmousehierarchyenter = "[ResetHighlightedTab]"
+
+						tooltipwidget = {
+							using = TabAdvancesTooltip
+						}
+
+						action_tooltip = {
+							title = "TAB_TOOLTIP_ADVANCES_LEFT_CLICK"
+							on_action = "[ToggleLateralGroup('advances_group')]"
+						}
+
+						input_action = "top_left_8"
+
+						using = layoutpolicy_expanding
+
+						panel_tab_highlight = {
+							visible = "[IsLateralGroupHighlighted('advances_group')]"
+						}
+
+						button = {
+							alwaystransparent = yes
+							size = { 26 26 }
+							parentanchor = center
+							texture = "gfx/interface/icons/flat_icons/tabicons/advances.dds"
+							texture_density = 2
+
+							using = button_panel_tab_icon_effect
+							blockoverride "icon_effect_visible" { visible = "[IsLateralGroupOpened('advances_group')]" }
+							blockoverride "icon_effect_color"{ color = { 0.10 0.70 0.35 1.0 } }
+						}
+					}
+
+					button_panel_tab_alt = { ### decisions tab
+						widget = {
+							visible = "[Not(IsLateralGroupOpened('content_group'))]"
+							size = { 100% 100% }
+							name = content_tab_button
+						}
+						onclick = "[ToggleLateralGroup('content_group')]"
+						down = "[IsLateralGroupOpened('content_group')]"
+						onmousehierarchyenter = "[ResetHighlightedTab]"
+
+						tooltipwidget = {
+							using = TabContentTooltip
+						}
+
+						input_action = "top_left_9"
+
+						using = layoutpolicy_expanding
+
+						panel_tab_highlight = {
+							visible = "[IsLateralGroupHighlighted('content_group')]"
+						}
+
+						button = {
+							alwaystransparent = yes
+							size = { 26 26 }
+							parentanchor = center
+							texture = "gfx/interface/icons/flat_icons/tabicons/content_icon.dds"
+							texture_density = 2
+
+							using = button_panel_tab_icon_effect
+							blockoverride "icon_effect_visible" { visible = "[IsLateralGroupOpened('content_group')]" }
+							blockoverride "icon_effect_color"{ color = { 0.80 0.55 0.20 1.0 } }
+						}
+					}
+
+					button_panel_tab_alt = { ### PP: Construction Plan tab (tools/port_vanilla_gui.py, port_left_panel)
+						visible = "[And(GetPlayer.Exists, Not(IsObserving))]"
+						down = "[GetVariableSystem.Exists('pp_cplan_open')]"
+						onmousehierarchyenter = "[ResetHighlightedTab]"
+						tooltip = "PP_CPLAN_OPEN_TT"
+						onclick = "[GetVariableSystem.Toggle('pp_cplan_open')]"
+						onclick = "[GetScriptedGui('pp_cplan_country_layout').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+
+						using = layoutpolicy_expanding
+
+						button = {
+							alwaystransparent = yes
+							size = { 26 26 }
+							parentanchor = center
+							texture = "gfx/interface/icons/flat_icons/mass_construct.dds"
+							texture_density = 2
+
+							using = button_panel_tab_icon_effect
+							blockoverride "icon_effect_visible" { visible = "[GetVariableSystem.Exists('pp_cplan_open')]" }
+							blockoverride "icon_effect_color"{ color = { 0.75 0.50 0.30 1.0 } }
+						}
+					}
+				}
+			}
+		}
+	
+		hbox = {
+			visible = "[IsObservingWithoutSelectedCountry]"
+			spacing = 10
+
+			expand = {}
+
+			icon = {
+				size = { 36 36 }
+				texture = "gfx/interface/icons/messages_settings/map.dds"
+			}
+
+			text_single = {
+				text = "OBSERVER_MODE"
+				autoresize = yes
+				using = Font_Size_Medium
+				using = Font_Type_Headers
+				default_format = "#color_white"
+			}
+
+			expand = {}
+		}
+	}
+
+	type left_panel = widget {
+		allow_outside = yes
+		layer = bottom
+
+		# Closed panel
+		widget = {
+			visible = "[Not(TutorialHasVar('intro_hide_ui_2'))]"
+			allow_outside = yes
+			name = "intro_highlight_1"
+
+			vbox = {
+				visible = "[Not(And(LeftView.IsSideAttached, Not(IsLateralViewFullScreen)))]"
+
+				allow_outside = yes
+				using = layoutpolicy_expanding
+				using = left_panel_maxmin_width
+				using = bg_lateralview
+				set_parent_size_to_minimum = yes
+
+				left_panel_bar = {
+					layoutpolicy_horizontal = expanding
+				}
+			}
+		}
+
+		# Opened panel
+		vbox = {
+			visible = "[And(LeftView.IsSideAttached, Not(IsLateralViewFullScreen))]"
+
+			allow_outside = yes
+			alwaystransparent = no
+			using = layoutpolicy_expanding
+			using = left_panel_maxmin_width
+			using = panels_margin_bottom
+			using = snd_UI_lateralview
+
+			vbox = {
+				using = layoutpolicy_expanding
+				using = bg_lateralview
+
+				left_panel_bar = {
+					layoutpolicy_horizontal = expanding
+				}
+
+				widget = {
+					using = layoutpolicy_expanding
+					allow_outside = yes
+				}
+			}
+		}
+
+		widget = {
+			position = { 5 -55 }
+			size = { 60 100 }
+			allow_outside = yes
+
+			flag_3d_animated = {
+				visible = "[And(IsPlayerValid, Not(TutorialHasVar('intro_hide_ui_2')))]"
+				size = { 114 76 }
+				parentanchor = center
+				position = { 78 0 }
+				datacontext = "[InGameTopbar.GetPlayer]"
+
+				blockoverride "click_properties" {
+					on_input_action_shortcut = "[PanToCountry(Country.Self)]"
+					input_action = "go_to_capital"
+				}
+
+				blockoverride "click_action" {
+					title = "OPEN_COUNTRY_PANEL"
+					on_action = "[ShowForeignCountry(Country.Self)]"
+				}
+			}
+		}
+
+		# portrait and all associated surroundings
+		widget = {
+			visible = "[And(IsPlayerValid, Not(TutorialHasVar('intro_hide_ui_2')))]"
+			parentanchor = left
+			widgetanchor = vcenter|left
+			size = { 78 78 }
+			allow_outside = yes
+
+			using = bg_circle_hud_dark_blue
+
+			character_frame_medium = {
+				parentanchor = center
+				position = { 0 7 }
+				blockoverride "character_frame_size" {
+					size = { 80 98 }
+				}
+				blockoverride "portrait_position" {position = { 0 0 }}
+				blockoverride "portrait_size" { size = { 85% 90% } }
+
+				datacontext = "[InGameTopbar.GetPlayer.GetGovernment.GetRulerOrRegent]"
+				blockoverride "character_frame_texture" {
+					texture = "gfx/interface/component_decoration/character_frames/character_non_stretchable_frame_2.dds"
+				}
+				blockoverride "character_portrait_visible" {
+					visible = no
+				}
+
+				blockoverride "character_portrait_ani_visible" {
+					visible = yes
+				}
+				blockoverride "character_portrait_ani_size" {
+					size = { 65 98 }
+				}
+				blockoverride "character_ribbon" {
+					character_ribbon_1 = {
+						visible = "[Character.HasRebel]"
+						blockoverride "stretchable" {}
+						blockoverride "ribbon color" {
+							modify_texture = {
+								using = color_black_texture
+								blend_mode = overlay
+							}
+						}
+					}
+					character_ribbon_3 = {
+						visible = "[And(Character.IsCivilWarRuler, Not(Character.HasRebel))]"
+						blockoverride "stretchable" {}
+						blockoverride "ribbon color" {
+							modify_texture = {
+								using = color_black_texture
+								blend_mode = overlay
+							}
+						}
+					}
+					character_ribbon_3 = {
+						visible = "[And3(Character.IsRuler, Not(Character.HasRebel), Not(Character.IsCivilWarRuler))]"
+						blockoverride "stretchable" {}
+					}
+				}
+
+				widget = {
+					parentanchor = bottom|left
+					visible = "[GetPlayer.GetGovernment.HasActiveRegent]"
+					size = { 26 28}
+					allow_outside = yes
+					datacontext = "[GetPlayer.GetGovernment]"
+
+					header_button_left = {
+						size = { 26 26 }
+						blockoverride "button_icon_stretch_sprite" {}
+						blockoverride "header_button_frame_inner" { visible = no }
+						blockoverride "header_button_icon_size" { size = { 24 24 } }
+						blockoverride "icon_replace" {}
+						blockoverride "header_button_text_layout" {}
+						tooltip_enabled = no
+					}
+
+					piechart = {
+						size = { 26 26 }
+						parentanchor = hcenter
+						using = piechart_angles
+
+						icon = {
+							texture = "gfx/interface/pie_charts/pie_chart_white.dds"
+							size = { 100% 100% }
+							parentanchor = center
+							color = { 0.35 0.35 0.35 1 }
+						}
+
+						pieslice_no_highlight = {
+							texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
+							value = "[GetPlayer.GetGovernment.GetRegencyProgress]"
+							color = { 1 1 1 1 }
+						}
+
+						pieslice_no_highlight = {
+							texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+							value = "[Subtract_float('(float)100.0', GetPlayer.GetGovernment.GetRegencyProgress)]"
+							color = { 1 1 1 0 }
+						}
+					}
+
+					button = {
+						parentanchor = top|hcenter
+						enabled = "[Player.CanExtendRegency]"
+						position = { 0 3 }
+						size = { 18 18 }
+						texture = "gfx/interface/icons/character_roles/regent.dds"
+
+						texture_density = 2
+						mirror = horizontal
+
+						visible = "[GetPlayer.GetGovernment.HasActiveRegent]"
+						tooltipwidget = {
+							using = CurrentRegencyTooltip
+						}
+
+						action_tooltip = {
+							click_type = left
+							click_mode = confirm
+							conditions = "[MakeItFailIf(Not(Player.CanExtendRegency), Player.GetExtendRegencyInfo)]"
+							title = "[Select_CString(Player.CanExtendRegency, Player.GetExtendRegencyInfo, Localize('CANNOT_EXTEND_REGENCY'))]"
+							on_action = "[ExtendRegency(Player.Self)]"
+							enabled = "[Player.CanExtendRegency]"
+						}
+					}
+				}
+			}
+
+			datacontext = "[Player]"
+
+			country_rank_banner = {
+				position = {80 60}
+			}
+		}
+	}
+
+	type stat_player_button = button {
+		texture = "gfx/interface/colors/color_frames.dds"
+		alpha = 0.2
+
+		spriteType = stretched
+		spriteborder = { 0 0 }
+		frame_grid = { 5 1 }
+
+		gfxtype = togglepushbuttongfx
+
+		upframe = 5
+		uphoverframe = 2
+		uppressedframe = 2
+		downframe = 1
+		downhoverframe = 1
+		downpressedframe = 1
+		disableframe = 4
+
+		block "stat_button" { 
+			visible = no
+			tooltip_enabled = no
+		}
+	}
+
+	type stat_player = hbox {
+		layoutpolicy_vertical = expanding
+
+		widget = {
+			ignore_layout = yes
+			size = { 100% 100% }
+			
+			stat_player_button = {
+				parentanchor = center
+				size = { 100% 90% }
+				ignore_layout = yes
+			}
+		}
+
+		widget = {
+			ignore_layout = yes
+			size = { 100% 100% }
+
+			using = player_stat_bg
+
+			# block "stat_player_left_bg" {
+				icon = {
+					parentanchor = left
+
+					size = { 12 100% }
+
+					# block "divider_culture" {
+						texture = "[GetGraphicalCultureTexture('top_bar_left_divider')]"
+						texture_density = 2
+					# }
+
+					modify_texture = {
+						using = color_new_gold_texture
+						blend_mode = overlay
+					}
+
+					modify_texture = {
+						using = color_bg_blue_texture
+						blend_mode = overlay
+						alpha = 0.2
+					}
+
+					modify_texture = {
+						using = color_purple_texture
+						blend_mode = multiply
+						alpha = 0.2
+					}
+				}
+			# }
+
+			# block "stat_player_right_bg" {
+				icon = {
+					parentanchor = right
+					size = { 12 100% }
+
+					# block "divider_culture" {
+						texture = "[GetGraphicalCultureTexture('top_bar_right_divider')]"
+						texture_density = 2
+					# }
+
+					modify_texture = {
+						using = color_new_gold_texture
+						blend_mode = overlay
+					}
+
+					modify_texture = {
+						using = color_bg_blue_texture
+						blend_mode = overlay
+						alpha = 0.2
+					}
+
+					modify_texture = {
+						using = color_purple_texture
+						blend_mode = multiply
+						alpha = 0.2
+					}
+				}
+			# }
+		}
+	}
+}
+
+template io_leader_button {
+	header_button_left = {
+		visible = "[InternationalOrganization.IsIOLeaderCountry(GetPlayer)]"
+		
+		size = { 34 34 }
+		blockoverride "button_icon_stretch_sprite" {}
+		blockoverride "header_button_frame_inner" {visible = no}
+		blockoverride "header_button_icon_size" { size = { 32 32 } }
+		blockoverride "icon_overlay" {}
+		blockoverride "header_button_text_layout" {}
+
+		blockoverride "icon_texture" {
+			texture = "[InternationalOrganization.GetIcon]"
+			texture_density = 2
+			visible = "[Not(InternationalOrganization.MakeScope.GetVariable('iberian_union_active').IsSet)]"
+		}
+
+		blockoverride "header_button_widget_extra" {
+			icon = {
+				visible = "[InternationalOrganization.MakeScope.GetVariable('iberian_union_active').IsSet]"
+				parentanchor = center
+				widgetanchor = center
+				size = { 65% 65% }
+				texture = "[InternationalOrganization.GetIberianUnionCenterArt]"
+				texture_density = 2
+			}
+		}
+
+		action_tooltip = {
+			title = "OPEN_IO"
+			on_action = "[OpenInternationalOrganizationView(InternationalOrganization.Self)]"
+		}
+		tooltipwidget = { BasicFunctionalTooltip = {} }
+	}
+}

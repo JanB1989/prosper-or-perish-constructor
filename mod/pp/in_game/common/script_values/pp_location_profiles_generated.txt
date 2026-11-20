@@ -35,3 +35,20 @@ pp_lprof_new_payback100 = {
 		add = 100
 	}
 }
+
+# Location scope (the Location Plan's tiles and the Plans row): 1 when the owner's last Locations look stopped
+# because the group's purse was spent (pp_lprof_cut) before this location's turn came (pp_lprof_seen, the number
+# of the last look that reached it, below the look's pp_lprof_look_n): its plans were held back for gold.
+pp_lprof_unreached = {
+	value = 0
+	if = {
+		limit = {
+			owner ?= { has_variable = pp_lprof_cut }
+			OR = {
+				NOT = { has_variable = pp_lprof_seen }
+				var:pp_lprof_seen < owner.var:pp_lprof_look_n
+			}
+		}
+		value = 1
+	}
+}

@@ -25,7 +25,9 @@ upgraded first (`pp_lprof_upgrade`, the game's Upgrade, one level a turn; the di
 candidate grows (highest tier first); else the cheapest candidate that can be built here starts (a first level has no
 profit to measure). Guards: `location_and_owner_can_build`, the room under the type's max level, the workers one level
 needs (`pp_cplan_staff`), the construction goods in the market, one construction at a time in a location
-(`pp_cplan_site_free`), never a level of a closed building, the group's purse (`pp_cplan_construct_scoped`). A plan's
+(`pp_cplan_site_free`), never a level of a closed building, the group's purse (`pp_lprof_build_known` ->
+`pp_cplan_construct_room`, the room by the type's own `pp_cplan_room_<type>` and the candidate's cost data; the
+measured best plan, a type held at run time, through `pp_lprof_build` -> `pp_cplan_construct_scoped`). A plan's
 target runs forced (`scope:pp_lprof_pb` = 1,000,000: no payback limit; `scope:pp_cplan_forced` = 1: not held by the
 market limit). Why a candidate failed is ranked in `pp_lprof_fail` (+ 100): 101 at its highest level, 102 cannot be
 built, 103 payback, 104 workers, 105 goods, 106 market limit, 107 gold, 108 a higher rank that cannot be raised now.

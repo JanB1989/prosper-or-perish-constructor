@@ -334,6 +334,10 @@ types PPConstructionPlanDetail
 				pp_cplan_d_cell = { text = "PP_CPLAN_D_PROFILES_ST13" tooltip = "PP_LPROF_ST_13" }
 				expand = {}
 			}
+			pp_cplan_d_line = {
+				visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_profiles_unr'), '(CFixedPoint)0.5')]"
+				text = "PP_CPLAN_D_PROFILES_UNR"
+			}
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				spacing = 16

@@ -249,6 +249,12 @@ def texts() -> dict[str, str]:
         f"[locations|e] with a plan: {_show(d('profiles', 'locs'))}. Their plans at its last look:")
     for state, text in PROFILE_STATES.items():
         out[f"PP_CPLAN_D_PROFILES_ST{state}"] = f"{_show(d('profiles', f'st{state}'))} {text}"
+    # the look stops once the purse is spent (pp_lprof_look): the locations after that point are not checked, so
+    # their plans are in none of the counts above and their cost is not in what the group wanted
+    out["PP_CPLAN_D_PROFILES_UNR"] = (
+        f"{_show(d('profiles', 'unr'))} of these [locations|e] were not reached: its gold was spent before their turn "
+        "came, so their plans were held back for gold and are not counted above; what they would cost is not in what "
+        "it wanted.")
 
     # why a listed construction was started (location scope: the list items)
     months = f"[{log_value('food', 'val')}|1]"
@@ -373,6 +379,8 @@ def _situation(group: str) -> list[str]:
         cells = [f'pp_cplan_d_cell = {{ text = "PP_CPLAN_D_PROFILES_ST{state}" tooltip = "PP_LPROF_ST_{state}" }}'
                  for state in states[start:start + 3]]
         out += _block("hbox", ["layoutpolicy_horizontal = expanding", "spacing = 4", *cells, "expand = {}"])
+    # the locations the look did not reach (its purse spent first), below the counts they are not in
+    out += _line("PP_CPLAN_D_PROFILES_UNR", _above(_country(d(group, "unr"))))
     return out
 
 

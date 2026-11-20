@@ -122,12 +122,21 @@ def test_every_candidate_has_cost_data_and_guards() -> None:
         assert "location_and_owner_can_build = { building_type = $type$ }" in body, name
         assert "pp_cplan_goods_here_$demand$ = yes" in body, name
         assert "pp_cplan_staff = { type = $pt$ size = $sz$ }" in body, name
-    # every construction goes through the plan's budget check and its construct (ledger, never twice while queued)
+    # every construction goes through the plan's budget check and its construct (ledger, never twice while queued):
+    # the generic one for a type held at run time, the one without the type dispatches for a candidate's own type
     build = _block(hand, "pp_lprof_build")
     assert f"pp_cplan_construct_scoped = {{ why = {lpf.WHY_PROFILE} }}" in build
-    assert "limit = { scope:pp_cplan_country = { has_variable = pp_cplan_wait } }\n\t\tpp_lprof_fail = { r = 107 }" in build
-    assert "limit = { scope:pp_cplan_country = { has_variable = pp_cplan_mlim } }\n\t\tpp_lprof_fail = { r = 106 }" in build
-    assert build.index("has_variable = pp_cplan_wait") < build.index("has_variable = pp_cplan_mlim")
+    known = _block(hand, "pp_lprof_build_known")
+    assert (f"limit = {{ scope:pp_lprof_room >= 1 }}\n\t\tpp_cplan_construct_room = {{ why = {lpf.WHY_PROFILE} data = no }}"
+            in known)
+    for body in (build, known):
+        assert body.index("remove_variable = pp_cplan_mlim") < body.index("pp_cplan_construct_") < body.index(
+            "pp_lprof_build_end = yes")
+    end = _block(hand, "pp_lprof_build_end")
+    assert "limit = { scope:pp_cplan_country = { has_variable = pp_cplan_wait } }\n\t\tpp_lprof_fail = { r = 107 }" in end
+    assert "limit = { scope:pp_cplan_country = { has_variable = pp_cplan_mlim } }\n\t\tpp_lprof_fail = { r = 106 }" in end
+    assert end.index("has_variable = pp_cplan_wait") < end.index("has_variable = pp_cplan_mlim")
+    assert "else = {\n\t\tpp_lprof_fail = { r = 102 }" in end  # no room: cannot be built, as before
     assert "construct_building" not in hand
     assert "pp_lprof_payback100 > scope:pp_lprof_pb" in _block(hand, "pp_lprof_expand")
 
@@ -246,7 +255,8 @@ def test_states_and_texts() -> None:
     count = _block(hand, "pp_lprof_count_state")
     for n in lpf.STATES:
         assert count.count(f"name = pp_cplan_ds_profiles_st{n} add = 1") == 1, n
-    assert ("st13", 100) in cp.SITUATION["profiles"] and len(cp.SITUATION["profiles"]) == len(lpf.STATES) + 1
+    assert ("st13", 100) in cp.SITUATION["profiles"] and len(cp.SITUATION["profiles"]) == len(lpf.STATES) + 2
+    assert ("unr", 100) in cp.SITUATION["profiles"]  # the locations a look did not reach (its purse spent)
     # the Locations pane shows the states a plan can reach (all but the market limit), each with its text as tooltip
     from prosper_or_perish_constructor import construction_plan_detail as cpd
     assert set(cpd.PROFILE_STATES) == set(lpf.STATES) - {9, 10}
@@ -371,8 +381,9 @@ def test_plans_are_forced() -> None:
     assert "save_temporary_scope_value_as = { name = pp_lprof_pb value = 1000000 }" in marks
     assert "max = 999" in _block(_code(PLAN_VALUES), "pp_cplan_est_payback_years")
     scoped = _block(plan, "pp_cplan_construct_scoped")
-    assert ("limit = {\n\t\t\t\tpp_cplan_limits_market_$why$ = yes\n\t\t\t\tscope:pp_cplan_forced < 0.5\n\t\t\t}\n"
-            "\t\t\tpp_cplan_market_do = { do = gate }") in scoped
+    go = _block(plan, "pp_cplan_construct_go")  # the shared tail of the generic and the type-known construct
+    assert ("limit = {\n\t\t\tpp_cplan_limits_market_$why$ = yes\n\t\t\tscope:pp_cplan_forced < 0.5\n\t\t}\n"
+            "\t\tpp_cplan_market_do = { do = gate }") in go
     forced = "save_temporary_scope_value_as = { name = pp_cplan_forced value = %d }"
     assert forced % 0 in _block(plan, "pp_cplan_pass_begin")
     assert turn.index(forced % 0) < turn.index("pp_lplan_location_turn = yes") < turn.rindex(forced % 0)
@@ -383,8 +394,9 @@ def test_plans_are_forced() -> None:
                   "pp_cplan_staff = { type = $pt$ size = $sz$ }", "pp_cplan_goods_here_$demand$ = yes"):
         assert check in expand, check
     assert "pp_cplan_construct_scoped = { why = 105 }" in _block(hand, "pp_lprof_build")
-    for check in ("pp_cplan_site_free = yes", "pp_cplan_affordable = { why = $why$ }", "pp_cplan_saving = { why = $why$ }"):
-        assert check in scoped, check
+    assert "pp_cplan_site_free = yes" in scoped and "pp_cplan_site_free = yes" in _block(plan, "pp_cplan_construct_room")
+    for check in ("pp_cplan_affordable = { why = $why$ }", "pp_cplan_saving = { why = $why$ }"):
+        assert check in go, check
     assert f"save_temporary_scope_value_as = {{ name = pp_cplan_rs value = {lpf.WHY_MARK_STEP} }}" in marks
 
 
@@ -399,6 +411,7 @@ def test_measurable_plans_go_first_by_payback() -> None:
     measured = marks[first:second]
     assert measured.index("pp_lplan_location_marks = yes") < measured.index("limit = { has_variable = pp_lplan_bt }")
     assert measured.index("var:pp_lplan_bt = { save_scope_as = pp_cplan_btype }") < measured.index("pp_lprof_build = yes")
+    assert "pp_lprof_build_known" not in measured  # the measured type is held at run time: the generic path
     for name in ("ipl", "pf", "ef"):
         restore = f"name = pp_cplan_{name} value = {{ value = var:pp_lplan_b{name} subtract = 100 }}"
         assert measured.index(restore) < measured.index("pp_lprof_build = yes"), name
@@ -414,7 +427,7 @@ def test_measurable_plans_go_first_by_payback() -> None:
     assert "scope:pp_lplan_mode > 0.5" in measuring and "scope:pp_lplan_mode < 1.5" in measuring
     expand = _block(hand, "pp_lprof_expand")
     tail = expand[expand.index("pp_cplan_goods_here_$demand$"):]
-    assert tail.index("limit = { pp_lplan_measuring = yes }\n\t\t\t\tpp_lplan_measure = yes") < tail.index("pp_lprof_build = yes")
+    assert tail.index("limit = { pp_lplan_measuring = yes }\n\t\t\t\tpp_lplan_measure = yes") < tail.index("pp_lprof_build_known = yes")
     measure = _block(hand, "pp_lplan_measure")
     assert measure.count("pp_lprof_payback100") == 1
     assert "scope:pp_lplan_pb100 < 1098" in measure and "var:pp_lplan_bp > scope:pp_lplan_pb100" in measure
@@ -524,7 +537,8 @@ def test_each_plan_runs_with_its_payback_limit() -> None:
     assert "name = pp_lprof_pb value = 1000000" in setpb  # 0 years = any payback
     expand = _block(hand, "pp_lprof_expand")
     assert "limit = { pp_lprof_payback100 > scope:pp_lprof_pb }\n\t\t\t\tpp_lprof_fail = { r = 103 }" in expand
-    for name, after in (("pp_lprof_start", "pp_lprof_consider = yes"), ("pp_lprof_upgrade", "pp_lprof_build = yes")):
+    for name, after in (("pp_lprof_start", "pp_lprof_consider = { type = $type$ }"),
+                        ("pp_lprof_upgrade", "pp_lprof_build_known = yes")):
         body = _block(hand, name)
         assert body.index("pp_cplan_ef value = pp_cplan_eff_$cat$") < body.index(
             "pp_lprof_new_check = { est = $est$ hasest = $hasest$ }") < body.index(after), name
@@ -591,24 +605,38 @@ def test_plans_take_turns_unless_best_payback_first() -> None:
     rest = turn[other:]
     assert "pp_lplan_location_marks_turns = yes" in rest and "pp_lplan_mode value = 1" not in rest
     assert rest.index("name = pp_lplan_mode value = 2") < rest.index("pp_lplan_location_marks_turns = yes")
-    lines = re.findall(r"^\t(pp_lplan_mark_turn = \{ [^\n]* \})$", _block(effects, "pp_lplan_location_marks_turns"), re.MULTILINE)
+    turns = _block(effects, "pp_lplan_location_marks_turns")
+    lines = re.findall(r"^\t+(pp_lplan_mark_turn = \{ [^\n]* \})$", turns, re.MULTILINE)
     marks = re.findall(r"^\tpp_lplan_mark = \{ ([^\n]*) \}$", _block(effects, "pp_lplan_location_marks"), re.MULTILINE)
     assert lines == ([f"pp_lplan_mark_turn = {{ {m} first = yes }}" for m in marks]
                      + [f"pp_lplan_mark_turn = {{ {m} first = no }}" for m in marks]), "every plan twice, in order"
+    # script time 2026-11-20: the second go only where a plan started the location's last construction (without one
+    # every plan ran in the first go and no plan passes the second go's gate)
+    second = turns.index("first = no")
+    assert turns.index("limit = { scope:pp_lplan_from > 100.5 }") < second
+    assert "first = no" not in turns[:turns.index("limit = { scope:pp_lplan_from > 100.5 }")]
+    # the split is taken as the turn begins (scope:pp_lplan_from): a plan starting in the first go does not make the
+    # plans up to it run again (they used to become "waiting" and count twice)
+    rest_start = turn[turn.index("\n\telse = {"):]
+    assert (rest_start.index("name = pp_lplan_from value = 0") < rest_start.index("name = pp_lplan_from value = var:pp_lplan_last")
+            < rest_start.index("pp_lplan_location_marks_turns = yes"))
     mark_turn = _block(hand, "pp_lplan_mark_turn")
-    assert mark_turn.index("has_town_rights = town_rights_type:pp_plan_$g$") < mark_turn.index("always = $first$")
-    assert "NOT = { has_variable = pp_lplan_last }\n\t\t\t\t\t\tvar:pp_lplan_last < $lo$" in mark_turn
-    assert "NOT = { always = $first$ }\n\t\t\t\t\thas_variable = pp_lplan_last\n\t\t\t\t\tvar:pp_lplan_last > $lo$" in mark_turn
+    assert "pp_lplan_last" not in mark_turn
+    assert "always = $first$\n\t\t\t\t\tscope:pp_lplan_from < $lo$" in mark_turn
+    assert "NOT = { always = $first$ }\n\t\t\t\t\tscope:pp_lplan_from > $lo$" in mark_turn
+    assert "has_town_rights = town_rights_type:pp_plan_$g$" in mark_turn
     assert "pp_lplan_mark = { v = $v$ g = $g$ do = $do$ n = $n$ lo = $lo$ hi = $hi$ }" in mark_turn
     mark = _block(hand, "pp_lplan_mark")
     built = mark[mark.index("limit = { NOT = { has_variable = pp_lprof_st } }"):]
     assert built.index("$do$ = yes") < built.index("var:pp_lprof_st < 101.5") < built.index(
         "set_variable = { name = pp_lplan_last value = $n$ }") < built.index("pp_lprof_finish")
 
-    # the order the two goes give: n > last first, then n <= last (no last: everything in the first go)
+    # the order the two goes give: n > last first, then n <= last (no last: everything in the first go); the gates as
+    # written, with scope:pp_lplan_from = last or 0
     def order(numbers: list[int], last: int | None) -> list[int]:
-        first = [n for n in numbers if last is None or last < n - 0.5]
-        second = [n for n in numbers if last is not None and last > n - 0.5]
+        start = 0 if last is None else last
+        first = [n for n in numbers if start < n - 0.5]
+        second = [n for n in numbers if start > 100.5 and start > n - 0.5]
         return first + second
 
     assert order([101, 102, 103], None) == [101, 102, 103]
@@ -625,3 +653,134 @@ def test_one_check_for_a_free_construction_site() -> None:
         assert "num_civil_constructions" not in _code(path), path.name
     for name in ("pp_lprof_expand", "pp_lprof_start"):
         assert "pp_cplan_staff = { type = $pt$ size = $sz$ }" in _block(_code(MOD / lpf.HAND_EFFECTS), name), name
+
+
+def _btype_data() -> dict[str, tuple[float, str, str]]:
+    """What the generic dispatch pp_cplan_btype_data sets for each building type it names (the first match of each
+    field's chain), with the defaults for every other type."""
+    body = _block(_read(MOD / cp.EFFECTS), "pp_cplan_btype_data")
+    fields: dict[str, dict[str, str]] = {"ipl": {}, "pf": {}, "ef": {}}
+    for names, field, value in re.findall(
+            r"limit = \{ OR = \{ ([^\n]*) \} \}\n\t\tsave_temporary_scope_value_as = \{ name = pp_cplan_(ipl|pf|ef) value = (\S+) \}",
+            body):
+        for name in re.findall(r"building_type:(\w+)", names):
+            fields[field].setdefault(name, value)
+    assert len(fields["ipl"]) > 100 and len(fields["pf"]) > 100 and len(fields["ef"]) > 10
+    names = set(fields["ipl"]) | set(fields["pf"]) | set(fields["ef"])
+    return {name: (float(fields["ipl"].get(name, "0")),
+                   fields["pf"].get(name, f"pp_cplan_cd_{cp.DEFAULT_DEMAND}").removeprefix("pp_cplan_cd_"),
+                   fields["ef"].get(name, "pp_cplan_eff_std").removeprefix("pp_cplan_eff_")) for name in names}
+
+
+def _dispatch(data: dict[str, tuple[float, str, str]], name: str) -> tuple[float, str, str]:
+    return data.get(name, (0.0, cp.DEFAULT_DEMAND, "std"))
+
+
+def test_known_types_skip_the_type_dispatches() -> None:
+    """Script time (2026-11-20): a construction whose building type is known when the script is written checks the
+    room under its max level by the type's own value (pp_cplan_room_<type>, the line pp_cplan_no_room tests for it) and
+    carries its cost data, so neither dispatch over every building type runs. Same outcome: every cost the candidates
+    and the generated callers pass is what pp_cplan_btype_data sets for that type, every type has its room value, and
+    a level without room is still "cannot be built" (102)."""
+    data = _btype_data()
+    rooms = set(re.findall(r"^pp_cplan_room_(\w+) = \{", _read(MOD / cp.VALUES), re.MULTILINE))
+    effects = _read(MOD / lpf.EFFECTS)
+    calls = 0
+    for match in re.finditer(r"pp_lprof_(?:expand|start|upgrade) = \{ (?:old = \w+ )?type = (\w+) demand = (\w+) "
+                             r"cat = (\w+) ipl = ([0-9.]+)", effects):
+        name, demand, cat, ipl = match.groups()
+        assert (float(ipl), demand, cat) == _dispatch(data, name), name
+        assert name in rooms, name
+        calls += 1
+    assert calls > 300
+    # the other rule groups' generated callers with a type written out (food, logistics, improvements, Towns and
+    # Buildings' public buildings and upgrades)
+    generated = "".join(_read(path) for path in (MOD / cp.EFFECTS, COMMON / "scripted_effects/pp_construction_plan_country.txt"))
+    known = re.findall(r"pp_cplan_construct_(?:cost|food) = \{ type = (\w+) (?:why = \d+ )?ipl = ([0-9.]+) demand = (\w+) "
+                       r"cat = (\w+) \}", generated)
+    known += [(name, ipl, demand, cat) for name, demand, ipl, cat in re.findall(
+        r"pp_cplan_country_(?:public|upgrade_to) = \{ type = (\w+) (?:line = \w+ )?demand = (\w+) ipl = ([0-9.]+) "
+        r"cat = (\w+)", generated)]
+    assert len(known) > 150
+    for name, ipl, demand, cat in known:
+        assert (float(ipl), demand, cat) == _dispatch(data, name), name
+        assert name in rooms, name
+    assert not re.search(r"pp_cplan_construct = \{ type = (?!\$type\$)", generated), "a written-out type passes its cost"
+    plan = _code(PLAN_EFFECTS)
+    for name in ("pp_cplan_construct", "pp_cplan_construct_cost"):
+        body = _block(plan, name)
+        assert body.index("building_type:$type$ = { save_scope_as = pp_cplan_btype }") < body.index(
+            "limit = { pp_cplan_room_$type$ >= 1 }") < body.index("pp_cplan_construct_room = {"), name
+    cost = _block(plan, "pp_cplan_construct_cost")
+    for line in ("name = pp_cplan_ipl value = $ipl$", "name = pp_cplan_pf value = pp_cplan_cd_$demand$",
+                 "name = pp_cplan_ef value = pp_cplan_eff_$cat$", "pp_cplan_construct_room = { why = $why$ data = no }"):
+        assert line in cost, line
+    assert "pp_cplan_construct_room = { why = $why$ data = yes }" in _block(plan, "pp_cplan_construct")
+    # the generic path keeps both dispatches; the room path the same site checks without pp_cplan_no_room
+    scoped, room, go = (_block(plan, name) for name in ("pp_cplan_construct_scoped", "pp_cplan_construct_room",
+                                                         "pp_cplan_construct_go"))
+    assert "NOT = { pp_cplan_no_room = yes }" in scoped and "pp_cplan_construct_go = { why = $why$ data = yes }" in scoped
+    assert "pp_cplan_no_room" not in room and "pp_cplan_construct_go = { why = $why$ data = $data$ }" in room
+    for check in ("pp_cplan_site_free = yes", "pp_cplan_bt_queued < 0.5", "is_opened = no"):
+        assert check in scoped and check in room, check
+    assert "limit = { always = $data$ }\n\t\t\tpp_cplan_btype_data = yes" in go
+    assert go.index("pp_cplan_btype_data = yes") < go.index("pp_cplan_affordable = { why = $why$ }")
+    # the plan engine: expand and upgrade read the room of their own type; the start pick carries it with the cost data
+    hand = _code(MOD / lpf.HAND_EFFECTS)
+    for name in ("pp_lprof_expand", "pp_lprof_upgrade"):
+        body = _block(hand, name)
+        assert "name = pp_lprof_room value = pp_cplan_room_$type$ }\n\t\t\t\tpp_lprof_build_known = yes" in body, name
+        assert "pp_lprof_build = yes" not in body, name
+    keep = _block(hand, "pp_lprof_keep")
+    for name in ("ipl", "pf", "ef"):
+        assert f"set_variable = {{ name = pp_lprof_pick_{name} value = {{ value = scope:pp_cplan_{name} add = 100 }} }}" in keep
+        assert f"name = pp_cplan_{name} value = {{ value = var:pp_lprof_pick_{name} subtract = 100 }}" in _block(hand, "pp_lprof_start_pick")
+        assert f"remove_variable = pp_lprof_pick_{name}\n" in _block(hand, "pp_lprof_pick_clear")
+    assert "limit = { pp_cplan_room_$type$ >= 1 }\n\t\tset_variable = { name = pp_lprof_pick_room value = yes }" in keep
+    pick = _block(hand, "pp_lprof_start_pick")
+    assert pick.index("name = pp_lprof_room value = 0") < pick.index("has_variable = pp_lprof_pick_room") < pick.index(
+        "pp_lprof_build_known = yes")
+    assert "pp_lprof_pick_clear = yes" in pick and "pp_lprof_pick_clear = yes" in _block(hand, "pp_lplan_measure_after")
+    assert "remove_variable = pp_lprof_pick\n" not in hand.replace(_block(hand, "pp_lprof_pick_clear"), "")
+    # every reader of scope:pp_lprof_room has it set: the three callers of pp_lprof_build_known
+    callers = re.findall(r"^(\w+) = \{(?:(?!^\}).)*pp_lprof_build_known = yes", hand, re.MULTILINE | re.DOTALL)
+    assert sorted(callers) == ["pp_lprof_expand", "pp_lprof_start_pick", "pp_lprof_upgrade"]
+    assert "pp_cplan_btype_data" not in hand  # the plan engine never dispatches over the types
+
+
+def test_the_look_stops_when_the_purse_is_spent() -> None:
+    """Script time (2026-11-20): once the Locations group saves for something (pp_cplan_save_cost_105) nothing more
+    can start in its pass (pp_cplan_construct_go and the rank raise both ask pp_cplan_saving), so the look walks no
+    further: the rest count as not reached, the country notes that the look stopped, and their plans show "held back
+    for gold". The turn order is untouched: the list, its order and the cursor are as before."""
+    hand = _code(MOD / lpf.HAND_EFFECTS)
+    look = _block(hand, "pp_lprof_look")
+    walk = look[look.index("ordered_in_list = {"):look.index("clear_variable_list = pp_lprof_turns")]
+    assert walk.index("name = pp_cplan_ds_profiles_locs add = 1") < walk.index(
+        "limit = { scope:pp_cplan_country = { NOT = { has_variable = pp_cplan_save_cost_105 } } }") < walk.index(
+        "pp_lprof_location_turn = yes")
+    reached = walk[walk.index("NOT = { has_variable = pp_cplan_save_cost_105 }"):walk.index("else = {")]
+    assert "set_variable = { name = pp_lprof_seen value = scope:pp_cplan_country.var:pp_lprof_look_n }" in reached
+    rest = walk[walk.index("else = {"):]
+    assert "name = pp_cplan_ds_profiles_unr add = 1" in rest and "set_variable = { name = pp_lprof_cut value = yes }" in rest
+    assert "pp_lprof_location_turn" not in rest
+    # the look's number and the stop mark are fresh at every look, before the walk; the group's saving is cleared at
+    # its start (pp_cplan_group_start), so the walk begins
+    assert look.index("pp_cplan_group_start = { why = 105 }") < look.index("change_variable = { name = pp_lprof_look_n add = 1 }")
+    assert look.index("set_variable = { name = pp_lprof_look_n value = 101 }") < look.index("remove_variable = pp_lprof_cut")
+    assert look.index("remove_variable = pp_lprof_cut") < look.index("ordered_in_list = {")
+    assert "remove_variable = pp_cplan_save_cost_$why$" in _block(_code(PLAN_EFFECTS), "pp_cplan_save_clear")
+    assert "pp_cplan_save_clear = { why = $why$ }" in _block(_code(PLAN_EFFECTS), "pp_cplan_group_start")
+    # nothing starts once the group saves: the construct path and the rank raise both ask for it
+    go = _block(_code(PLAN_EFFECTS), "pp_cplan_construct_go")
+    assert "NOT = { pp_cplan_saving = { why = $why$ } }" in go
+    assert "has_variable = pp_cplan_save_cost_$why$" in _block(_code(PLAN_TRIGGERS), "pp_cplan_saving")
+    rank_up = _block(_code(COMMON / "scripted_effects/pp_construction_plan_country.txt"), "pp_cplan_country_rank_up")
+    assert "NOT = { pp_cplan_saving = { why = $why$ } }" in rank_up
+    # the cursor after the walk still comes from what the group saves for
+    after = look[look.index("clear_variable_list = pp_lprof_turns"):]
+    assert "limit = { has_variable = pp_cplan_save_loc_105 }" in after
+    # the tiles' value: a location is unreached while the owner's last look stopped and did not reach it
+    body =_block(_read(MOD / lpf.VALUES), lpf.UNREACHED)
+    assert "owner ?= { has_variable = pp_lprof_cut }" in body and "var:pp_lprof_seen < owner.var:pp_lprof_look_n" in body
+    assert "NOT = { has_variable = pp_lprof_seen }" in body

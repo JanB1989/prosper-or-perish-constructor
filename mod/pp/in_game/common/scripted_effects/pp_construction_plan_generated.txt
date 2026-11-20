@@ -91,244 +91,244 @@ pp_cplan_try_farm_here = {
 		limit = { var:pp_cplan_pick > 100.5 var:pp_cplan_pick < 101.5 }
 		if = {
 			limit = { location_and_owner_can_build = { building_type = wheat_model_farm } pp_cplan_room_wheat_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_model_farm building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = wheat_model_farm }
+			pp_cplan_construct_food = { type = wheat_model_farm ipl = 0.07 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = wheat_rotations } pp_cplan_room_wheat_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_rotations building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = wheat_rotations }
+			pp_cplan_construct_food = { type = wheat_rotations ipl = 0.07 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = wheat_farmstead } pp_cplan_room_wheat_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_farmstead building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = wheat_farmstead }
+			pp_cplan_construct_food = { type = wheat_farmstead ipl = 0.07 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = wheat_farm } pp_cplan_room_wheat_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:wheat_farm building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = wheat_farm }
+			pp_cplan_construct_food = { type = wheat_farm ipl = 0.07 demand = village_construction cat = std }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 101.5 var:pp_cplan_pick < 102.5 }
 		if = {
 			limit = { location_and_owner_can_build = { building_type = rice_model_farm } pp_cplan_room_rice_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_model_farm building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = rice_model_farm }
+			pp_cplan_construct_food = { type = rice_model_farm ipl = 0.07 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = rice_rotations } pp_cplan_room_rice_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_rotations building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = rice_rotations }
+			pp_cplan_construct_food = { type = rice_rotations ipl = 0.07 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = rice_farmstead } pp_cplan_room_rice_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_farmstead building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = rice_farmstead }
+			pp_cplan_construct_food = { type = rice_farmstead ipl = 0.07 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = rice_farm } pp_cplan_room_rice_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:rice_farm building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = rice_farm }
+			pp_cplan_construct_food = { type = rice_farm ipl = 0.07 demand = village_construction cat = std }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 102.5 var:pp_cplan_pick < 103.5 }
 		if = {
 			limit = { location_and_owner_can_build = { building_type = millet_model_farm } pp_cplan_room_millet_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_model_farm building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = millet_model_farm }
+			pp_cplan_construct_food = { type = millet_model_farm ipl = 0.07 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = millet_rotations } pp_cplan_room_millet_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_rotations building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = millet_rotations }
+			pp_cplan_construct_food = { type = millet_rotations ipl = 0.07 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = millet_farmstead } pp_cplan_room_millet_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_farmstead building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = millet_farmstead }
+			pp_cplan_construct_food = { type = millet_farmstead ipl = 0.07 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = millet_farm } pp_cplan_room_millet_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:millet_farm building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = millet_farm }
+			pp_cplan_construct_food = { type = millet_farm ipl = 0.07 demand = village_construction cat = std }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 103.5 var:pp_cplan_pick < 104.5 }
 		if = {
 			limit = { location_and_owner_can_build = { building_type = maize_model_farm } pp_cplan_room_maize_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_model_farm building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = maize_model_farm }
+			pp_cplan_construct_food = { type = maize_model_farm ipl = 0.07 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = maize_rotations } pp_cplan_room_maize_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_rotations building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = maize_rotations }
+			pp_cplan_construct_food = { type = maize_rotations ipl = 0.07 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = maize_farmstead } pp_cplan_room_maize_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_farmstead building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = maize_farmstead }
+			pp_cplan_construct_food = { type = maize_farmstead ipl = 0.07 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = maize_farm } pp_cplan_room_maize_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maize_farm building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = maize_farm }
+			pp_cplan_construct_food = { type = maize_farm ipl = 0.07 demand = village_construction cat = std }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 104.5 var:pp_cplan_pick < 105.5 }
 		if = {
 			limit = { location_and_owner_can_build = { building_type = legume_model_farm } pp_cplan_room_legume_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_model_farm building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = legume_model_farm }
+			pp_cplan_construct_food = { type = legume_model_farm ipl = 0.07 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = legume_rotations } pp_cplan_room_legume_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_rotations building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = legume_rotations }
+			pp_cplan_construct_food = { type = legume_rotations ipl = 0.07 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = legume_farmstead } pp_cplan_room_legume_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_farmstead building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = legume_farmstead }
+			pp_cplan_construct_food = { type = legume_farmstead ipl = 0.07 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = legume_farm } pp_cplan_room_legume_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:legume_farm building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = legume_farm }
+			pp_cplan_construct_food = { type = legume_farm ipl = 0.07 demand = village_construction cat = std }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 105.5 var:pp_cplan_pick < 106.5 }
 		if = {
 			limit = { location_and_owner_can_build = { building_type = potato_model_farm } pp_cplan_room_potato_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_model_farm building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = potato_model_farm }
+			pp_cplan_construct_food = { type = potato_model_farm ipl = 0.07 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = potato_rotations } pp_cplan_room_potato_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_rotations building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = potato_rotations }
+			pp_cplan_construct_food = { type = potato_rotations ipl = 0.07 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = potato_farmstead } pp_cplan_room_potato_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_farmstead building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = potato_farmstead }
+			pp_cplan_construct_food = { type = potato_farmstead ipl = 0.07 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = potato_farm } pp_cplan_room_potato_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:potato_farm building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = potato_farm }
+			pp_cplan_construct_food = { type = potato_farm ipl = 0.07 demand = village_construction cat = std }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 106.5 var:pp_cplan_pick < 107.5 }
 		if = {
 			limit = { location_and_owner_can_build = { building_type = olive_model_farm } pp_cplan_room_olive_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_model_farm building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = olive_model_farm }
+			pp_cplan_construct_food = { type = olive_model_farm ipl = 0.11 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = olive_rotations } pp_cplan_room_olive_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_rotations building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = olive_rotations }
+			pp_cplan_construct_food = { type = olive_rotations ipl = 0.11 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = olive_farmstead } pp_cplan_room_olive_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_farmstead building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = olive_farmstead }
+			pp_cplan_construct_food = { type = olive_farmstead ipl = 0.11 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = olive_farm } pp_cplan_room_olive_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:olive_farm building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = olive_farm }
+			pp_cplan_construct_food = { type = olive_farm ipl = 0.11 demand = village_construction cat = std }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 107.5 var:pp_cplan_pick < 108.5 }
 		if = {
 			limit = { location_and_owner_can_build = { building_type = cattle_model_farm } pp_cplan_room_cattle_model_farm >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_model_farm building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = cattle_model_farm }
+			pp_cplan_construct_food = { type = cattle_model_farm ipl = 0.08 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = cattle_rotations } pp_cplan_room_cattle_rotations >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_rotations building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = cattle_rotations }
+			pp_cplan_construct_food = { type = cattle_rotations ipl = 0.08 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = cattle_farmstead } pp_cplan_room_cattle_farmstead >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_farmstead building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = cattle_farmstead }
+			pp_cplan_construct_food = { type = cattle_farmstead ipl = 0.08 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = cattle_farm } pp_cplan_room_cattle_farm >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:cattle_farm building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = cattle_farm }
+			pp_cplan_construct_food = { type = cattle_farm ipl = 0.08 demand = village_construction cat = std }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 108.5 var:pp_cplan_pick < 109.5 }
 		if = {
 			limit = { location_and_owner_can_build = { building_type = camel_stud } pp_cplan_room_camel_stud >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:camel_stud building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = camel_stud }
+			pp_cplan_construct_food = { type = camel_stud ipl = 0.08 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = camel_herders } pp_cplan_room_camel_herders >= 1 pp_cplan_goods_here_basic_construction_needs = yes NOT = { any_buildings_in_location = { building_type = building_type:camel_herders building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = camel_herders }
+			pp_cplan_construct_food = { type = camel_herders ipl = 0.08 demand = basic_construction_needs cat = std }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 109.5 var:pp_cplan_pick < 110.5 }
 		if = {
 			limit = { location_and_owner_can_build = { building_type = eng_royal_forest } pp_cplan_room_eng_royal_forest >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:eng_royal_forest building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = eng_royal_forest }
+			pp_cplan_construct_food = { type = eng_royal_forest ipl = 0.11 demand = village_construction cat = std }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 110.5 var:pp_cplan_pick < 111.5 }
 		if = {
 			limit = { location_and_owner_can_build = { building_type = net_curing_yard } pp_cplan_room_net_curing_yard >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:net_curing_yard building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = net_curing_yard }
+			pp_cplan_construct_food = { type = net_curing_yard ipl = 0.18 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = fishing_village } pp_cplan_room_fishing_village >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:fishing_village building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = fishing_village }
+			pp_cplan_construct_food = { type = fishing_village ipl = 0.18 demand = village_construction cat = std }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 111.5 var:pp_cplan_pick < 112.5 }
 		if = {
 			limit = { location_and_owner_can_build = { building_type = managed_forest_village } pp_cplan_room_managed_forest_village >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:managed_forest_village building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = managed_forest_village }
+			pp_cplan_construct_food = { type = managed_forest_village ipl = 0.14 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = forest_village } pp_cplan_room_forest_village >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:forest_village building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = forest_village }
+			pp_cplan_construct_food = { type = forest_village ipl = 0.1 demand = village_construction cat = std }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 112.5 var:pp_cplan_pick < 113.5 }
 		if = {
 			limit = { location_and_owner_can_build = { building_type = pomological_orchard } pp_cplan_room_pomological_orchard >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:pomological_orchard building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = pomological_orchard }
+			pp_cplan_construct_food = { type = pomological_orchard ipl = 0.11 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = nursery_orchard } pp_cplan_room_nursery_orchard >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:nursery_orchard building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = nursery_orchard }
+			pp_cplan_construct_food = { type = nursery_orchard ipl = 0.11 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = fruit_orchard } pp_cplan_room_fruit_orchard >= 1 pp_cplan_goods_here_farm_constructions = yes NOT = { any_buildings_in_location = { building_type = building_type:fruit_orchard building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = fruit_orchard }
+			pp_cplan_construct_food = { type = fruit_orchard ipl = 0.11 demand = farm_constructions cat = std }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 113.5 var:pp_cplan_pick < 114.5 }
 		if = {
 			limit = { location_and_owner_can_build = { building_type = maghreb_palm_irrigation } pp_cplan_room_maghreb_palm_irrigation >= 1 pp_cplan_goods_here_maghreb_palm_irrigation_building_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:maghreb_palm_irrigation building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = maghreb_palm_irrigation }
+			pp_cplan_construct_food = { type = maghreb_palm_irrigation ipl = 0.19 demand = maghreb_palm_irrigation_building_construction cat = std }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 114.5 var:pp_cplan_pick < 115.5 }
 		if = {
 			limit = { location_and_owner_can_build = { building_type = offshore_fishery } pp_cplan_room_offshore_fishery >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:offshore_fishery building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = offshore_fishery }
+			pp_cplan_construct_food = { type = offshore_fishery ipl = 0.18 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = drift_net_fishery } pp_cplan_room_drift_net_fishery >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:drift_net_fishery building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = drift_net_fishery }
+			pp_cplan_construct_food = { type = drift_net_fishery ipl = 0.18 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = ocean_fishery } pp_cplan_room_ocean_fishery >= 1 pp_cplan_goods_here_village_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:ocean_fishery building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = ocean_fishery }
+			pp_cplan_construct_food = { type = ocean_fishery ipl = 0.18 demand = village_construction cat = std }
 		}
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 115.5 var:pp_cplan_pick < 116.5 }
 		if = {
 			limit = { location_and_owner_can_build = { building_type = hurdled_sheepcotes } pp_cplan_room_hurdled_sheepcotes >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:hurdled_sheepcotes building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = hurdled_sheepcotes }
+			pp_cplan_construct_food = { type = hurdled_sheepcotes ipl = 0.08 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = enclosed_sheep_walks } pp_cplan_room_enclosed_sheep_walks >= 1 pp_cplan_goods_here_workshop_construction = yes NOT = { any_buildings_in_location = { building_type = building_type:enclosed_sheep_walks building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = enclosed_sheep_walks }
+			pp_cplan_construct_food = { type = enclosed_sheep_walks ipl = 0.08 demand = workshop_construction cat = std }
 		}
 		else_if = {
 			limit = { location_and_owner_can_build = { building_type = sheep_farms } pp_cplan_room_sheep_farms >= 1 pp_cplan_goods_here_farm_constructions = yes NOT = { any_buildings_in_location = { building_type = building_type:sheep_farms building_levels_under_construction > 0 } } }
-			pp_cplan_construct_food = { type = sheep_farms }
+			pp_cplan_construct_food = { type = sheep_farms ipl = 0.08 demand = farm_constructions cat = std }
 		}
 	}
 	remove_variable = pp_cplan_best
@@ -357,7 +357,7 @@ pp_cplan_try_yard_here = {
 			}
 			if = {
 				limit = { pp_cplan_goods_here_victuals_trade_construction = yes }
-				pp_cplan_construct_food = { type = victualling_yard }
+				pp_cplan_construct_food = { type = victualling_yard ipl = 0.75 demand = victuals_trade_construction cat = std }
 			}
 			else = {
 				pp_cplan_note_goods = { why = 101 }
@@ -376,7 +376,7 @@ pp_cplan_try_kitchen_here = {
 		if = {
 			limit = { pp_cplan_goods_here_workshop_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
-			pp_cplan_construct_food = { type = public_kitchen }
+			pp_cplan_construct_food = { type = public_kitchen ipl = 0.1 demand = workshop_construction cat = std }
 		}
 		else = {
 			save_temporary_scope_value_as = { name = pp_cplan_ng value = 1 }
@@ -387,7 +387,7 @@ pp_cplan_try_kitchen_here = {
 		if = {
 			limit = { pp_cplan_goods_here_workshop_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
-			pp_cplan_construct_food = { type = cookshop }
+			pp_cplan_construct_food = { type = cookshop ipl = 0.1 demand = workshop_construction cat = std }
 		}
 		else = {
 			save_temporary_scope_value_as = { name = pp_cplan_ng value = 1 }
@@ -409,7 +409,7 @@ pp_cplan_try_tavern_here = {
 		if = {
 			limit = { pp_cplan_goods_here_victuals_trade_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
-			pp_cplan_construct_food = { type = tavern }
+			pp_cplan_construct_food = { type = tavern ipl = 0 demand = victuals_trade_construction cat = std }
 		}
 		else = {
 			save_temporary_scope_value_as = { name = pp_cplan_ng value = 1 }
@@ -431,7 +431,7 @@ pp_cplan_try_granary_here = {
 		if = {
 			limit = { pp_cplan_goods_here_granary_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
-			pp_cplan_construct_food = { type = granary }
+			pp_cplan_construct_food = { type = granary ipl = 0 demand = granary_construction cat = std }
 		}
 		else = {
 			save_temporary_scope_value_as = { name = pp_cplan_ng value = 1 }
@@ -453,7 +453,7 @@ pp_cplan_try_grange_here = {
 		if = {
 			limit = { pp_cplan_goods_here_victuals_trade_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
-			pp_cplan_construct_food = { type = grange }
+			pp_cplan_construct_food = { type = grange ipl = 0.26 demand = victuals_trade_construction cat = std }
 		}
 		else = {
 			save_temporary_scope_value_as = { name = pp_cplan_ng value = 1 }
@@ -475,7 +475,7 @@ pp_cplan_try_logistics_here = {
 		if = {
 			limit = { pp_cplan_goods_here_pp_river_boatmen_yard_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
-			pp_cplan_construct = { type = river_boatmen_yard why = 102 }
+			pp_cplan_construct_cost = { type = river_boatmen_yard why = 102 ipl = 0.15 demand = pp_river_boatmen_yard_construction cat = std }
 		}
 		else = {
 			save_temporary_scope_value_as = { name = pp_cplan_ng value = 1 }
@@ -486,7 +486,7 @@ pp_cplan_try_logistics_here = {
 		if = {
 			limit = { pp_cplan_goods_here_pp_coastal_shipping_office_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
-			pp_cplan_construct = { type = coastal_shipping_office why = 102 }
+			pp_cplan_construct_cost = { type = coastal_shipping_office why = 102 ipl = 0.15 demand = pp_coastal_shipping_office_construction cat = std }
 		}
 		else = {
 			save_temporary_scope_value_as = { name = pp_cplan_ng value = 1 }
@@ -497,7 +497,7 @@ pp_cplan_try_logistics_here = {
 		if = {
 			limit = { pp_cplan_goods_here_pp_transport_office_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
-			pp_cplan_construct = { type = transport_office why = 102 }
+			pp_cplan_construct_cost = { type = transport_office why = 102 ipl = 0.23 demand = pp_transport_office_construction cat = std }
 		}
 		else = {
 			save_temporary_scope_value_as = { name = pp_cplan_ng value = 1 }
@@ -508,7 +508,7 @@ pp_cplan_try_logistics_here = {
 		if = {
 			limit = { pp_cplan_goods_here_pp_carrier_inn_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
-			pp_cplan_construct = { type = carrier_inn why = 102 }
+			pp_cplan_construct_cost = { type = carrier_inn why = 102 ipl = 0.19 demand = pp_carrier_inn_construction cat = std }
 		}
 		else = {
 			save_temporary_scope_value_as = { name = pp_cplan_ng value = 1 }
@@ -519,7 +519,7 @@ pp_cplan_try_logistics_here = {
 		if = {
 			limit = { pp_cplan_goods_here_pp_caravanserai_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
-			pp_cplan_construct = { type = pp_caravanserai why = 102 }
+			pp_cplan_construct_cost = { type = pp_caravanserai why = 102 ipl = 0.19 demand = pp_caravanserai_construction cat = std }
 		}
 		else = {
 			save_temporary_scope_value_as = { name = pp_cplan_ng value = 1 }
@@ -530,7 +530,7 @@ pp_cplan_try_logistics_here = {
 		if = {
 			limit = { pp_cplan_goods_here_pp_oasis_caravan_station_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
-			pp_cplan_construct = { type = pp_oasis_caravan_station why = 102 }
+			pp_cplan_construct_cost = { type = pp_oasis_caravan_station why = 102 ipl = 0.19 demand = pp_oasis_caravan_station_construction cat = std }
 		}
 		else = {
 			save_temporary_scope_value_as = { name = pp_cplan_ng value = 1 }
@@ -541,7 +541,7 @@ pp_cplan_try_logistics_here = {
 		if = {
 			limit = { pp_cplan_goods_here_pp_yam_station_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
-			pp_cplan_construct = { type = pp_yam_station why = 102 }
+			pp_cplan_construct_cost = { type = pp_yam_station why = 102 ipl = 0.19 demand = pp_yam_station_construction cat = std }
 		}
 		else = {
 			save_temporary_scope_value_as = { name = pp_cplan_ng value = 1 }
@@ -552,7 +552,7 @@ pp_cplan_try_logistics_here = {
 		if = {
 			limit = { pp_cplan_goods_here_pp_banjara_tanda_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
-			pp_cplan_construct = { type = pp_banjara_tanda why = 102 }
+			pp_cplan_construct_cost = { type = pp_banjara_tanda why = 102 ipl = 0.19 demand = pp_banjara_tanda_construction cat = std }
 		}
 		else = {
 			save_temporary_scope_value_as = { name = pp_cplan_ng value = 1 }
@@ -563,7 +563,7 @@ pp_cplan_try_logistics_here = {
 		if = {
 			limit = { pp_cplan_goods_here_pp_llama_caravan_post_construction = yes }
 			save_temporary_scope_value_as = { name = pp_cplan_done value = 1 }
-			pp_cplan_construct = { type = pp_llama_caravan_post why = 102 }
+			pp_cplan_construct_cost = { type = pp_llama_caravan_post why = 102 ipl = 0.19 demand = pp_llama_caravan_post_construction cat = std }
 		}
 		else = {
 			save_temporary_scope_value_as = { name = pp_cplan_ng value = 1 }
@@ -1357,63 +1357,63 @@ pp_cplan_try_improve_here = {
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 100.5 var:pp_cplan_pick < 101.5 }
-		pp_cplan_construct = { type = bund why = 106 }
+		pp_cplan_construct_cost = { type = bund why = 106 ipl = 0.05 demand = village_construction cat = std }
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 101.5 var:pp_cplan_pick < 102.5 }
-		pp_cplan_construct = { type = field_drainage why = 106 }
+		pp_cplan_construct_cost = { type = field_drainage why = 106 ipl = 0.05 demand = village_construction cat = std }
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 102.5 var:pp_cplan_pick < 103.5 }
-		pp_cplan_construct = { type = field_management why = 106 }
+		pp_cplan_construct_cost = { type = field_management why = 106 ipl = 0.05 demand = village_construction cat = std }
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 103.5 var:pp_cplan_pick < 104.5 }
-		pp_cplan_construct = { type = field_management_convertible why = 106 }
+		pp_cplan_construct_cost = { type = field_management_convertible why = 106 ipl = 0.05 demand = village_construction cat = std }
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 104.5 var:pp_cplan_pick < 105.5 }
-		pp_cplan_construct = { type = field_management_improved why = 106 }
+		pp_cplan_construct_cost = { type = field_management_improved why = 106 ipl = 0.05 demand = village_construction cat = std }
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 105.5 var:pp_cplan_pick < 106.5 }
-		pp_cplan_construct = { type = incamisana why = 106 }
+		pp_cplan_construct_cost = { type = incamisana why = 106 ipl = 0.05 demand = incamisana_construction cat = std }
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 106.5 var:pp_cplan_pick < 107.5 }
-		pp_cplan_construct = { type = irrigated_fields why = 106 }
+		pp_cplan_construct_cost = { type = irrigated_fields why = 106 ipl = 0.05 demand = village_construction cat = std }
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 107.5 var:pp_cplan_pick < 108.5 }
-		pp_cplan_construct = { type = irrigation_systems why = 106 }
+		pp_cplan_construct_cost = { type = irrigation_systems why = 106 ipl = 0.05 demand = village_construction cat = std }
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 108.5 var:pp_cplan_pick < 109.5 }
-		pp_cplan_construct = { type = jiangnan_canal_network why = 106 }
+		pp_cplan_construct_cost = { type = jiangnan_canal_network why = 106 ipl = 0.05 demand = village_construction cat = std }
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 109.5 var:pp_cplan_pick < 110.5 }
-		pp_cplan_construct = { type = jiangnan_hill_terraces why = 106 }
+		pp_cplan_construct_cost = { type = jiangnan_hill_terraces why = 106 ipl = 0.05 demand = village_construction cat = std }
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 110.5 var:pp_cplan_pick < 111.5 }
-		pp_cplan_construct = { type = khmer_baray why = 106 }
+		pp_cplan_construct_cost = { type = khmer_baray why = 106 ipl = 0.05 demand = khmer_baray_construction cat = std }
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 111.5 var:pp_cplan_pick < 112.5 }
-		pp_cplan_construct = { type = land_clearance why = 106 }
+		pp_cplan_construct_cost = { type = land_clearance why = 106 ipl = 0.05 demand = village_construction cat = std }
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 112.5 var:pp_cplan_pick < 113.5 }
-		pp_cplan_construct = { type = paddy_water_control why = 106 }
+		pp_cplan_construct_cost = { type = paddy_water_control why = 106 ipl = 0.05 demand = village_construction cat = std }
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 113.5 var:pp_cplan_pick < 114.5 }
-		pp_cplan_construct = { type = polders why = 106 }
+		pp_cplan_construct_cost = { type = polders why = 106 ipl = 0.05 demand = polders_construction cat = std }
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 114.5 var:pp_cplan_pick < 115.5 }
-		pp_cplan_construct = { type = qanats why = 106 }
+		pp_cplan_construct_cost = { type = qanats why = 106 ipl = 0.05 demand = village_construction cat = std }
 	}
 	if = {
 		limit = { var:pp_cplan_pick < 100.5 scope:pp_cplan_ng > 0.5 }
@@ -8462,6 +8462,7 @@ pp_cplan_stats_reset_105 = {
 	set_variable = { name = pp_cplan_dgo_105 value = 100 }
 	set_variable = { name = pp_cplan_dml_105 value = 100 }
 	set_variable = { name = pp_cplan_ds_profiles_locs value = 100 }
+	set_variable = { name = pp_cplan_ds_profiles_unr value = 100 }
 	set_variable = { name = pp_cplan_ds_profiles_st1 value = 100 }
 	set_variable = { name = pp_cplan_ds_profiles_st2 value = 100 }
 	set_variable = { name = pp_cplan_ds_profiles_st3 value = 100 }

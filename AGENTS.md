@@ -767,6 +767,13 @@
   nine, so hidden goods leave no gap and top-five lists keep five); a new internal good goes into that tuple, then
   rerun the tool.
   Tests: `tests/test_internal_goods_gui.py`.
+- Construction Plan tab (2026-11-20, Jan: the opener docked under the top-left tab row stuck out): the mod carries
+  vanilla `panels/left_panel/left_panel.gui` plus one `button_panel_tab_alt` at the end of the `tabs_buttons` row
+  (marker `### PP: Construction Plan tab`, game icon `flat_icons/mass_construct.dds`) that toggles `pp_cplan_open`
+  and places the Towns and Buildings tiles; hidden for observers. Last in the row because vanilla's hbox has no
+  `ignoreinvisible`, so a hidden tab keeps its room at the row's end. `port_left_panel` in `tools/port_vanilla_gui.py`
+  inserts it after the decisions tab; port it again after a game update (`--check` must report none). A broken copy
+  breaks the whole top-left HUD. Tests: `tests/test_plan_opener.py`.
 - Build panel (2026-10-17, Jan; panel 990 wide, rows a fixed 930): the vanilla location row (slot circles and every method's efficiency,
   two per column) plus one value per column: build cost (sorts by the engine's `cost` key, which vanilla never
   shows), payback (build cost / monthly profit per level, in years, Construction Manager's ROI by profit; the tooltip

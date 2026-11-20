@@ -194,6 +194,49 @@ group's last look. Said in the plan's tooltip (`PP_CPLAN_MASTER_TT`) and the bud
 Not tested in game. Open: the business group's first cover of a country takes the cycle (21 months at 330
 locations); a ticked-everything Towns and Buildings look is the dearest single walk left.
 
+**The Locations look with town-right plans (2026-11-20; same outcome, less script).** Measured before, in game with the
+script profiler (615 plans on 418 locations, one look of the Locations group, which looks 4 times a year): the pass
+0.238 s in the look month, the look (`pp_lprof_run` -> `pp_lprof_look`) 0.197 s of it. `pp_lplan_mark_turn` 64,372
+calls (418 locations x 77 plans x 2 goes), about 0.018 s for its gates; 675 of them ran a plan (`pp_lplan_mark`, 0.156
+s inclusive). Inside: the trigger `pp_cplan_no_room` (one OR over every building type) 450 calls, 0.065 s inclusive,
+and `pp_cplan_btype_data` (the cost data by walking type lists) 450 calls, 0.026 s, both from
+`pp_cplan_construct_scoped`. The look started 56 constructions, then the purse was spent: 331 plans ended "held back
+for gold" (7), 180 "waiting behind another plan" (9). Changed:
+
+- *Type known, no dispatch.* The plan engine's candidates (`pp_lprof_expand`, `_upgrade`, `_start`) name their type
+  when the script is written and set its cost data themselves. They read the room under the max level from the
+  type's own value (`pp_cplan_room_<type>`) and build through `pp_lprof_build_known` -> `pp_cplan_construct_room =
+  { why = 105 data = no }`: the site checks of `pp_cplan_construct_scoped` without `pp_cplan_no_room`, then
+  `pp_cplan_construct_go` (market limit, gold) without `pp_cplan_btype_data`. No room still ends as "cannot be built"
+  (102). The start pick carries its cost data and its room (`pp_lprof_pick_ipl` / `_pf` / `_ef` + 100,
+  `pp_lprof_pick_room`, `pp_lprof_pick_clear`). Only the measured best plan of the setting "best payback first"
+  (`pp_lplan_bt`, a type held at run time) keeps the generic `pp_lprof_build`. The other groups' generated callers
+  with a written-out type do the same: `pp_cplan_construct` (room by type, cost by dispatch) and
+  `pp_cplan_construct_cost = { type why ipl demand cat }` (food via `pp_cplan_construct_food`, logistics,
+  improvements, Towns and Buildings' public buildings and upgrades). The cost data comes from the same
+  `building_costs` as the dispatch; `tests/test_location_profiles.py::test_known_types_skip_the_type_dispatches`
+  compares every call with what the dispatch sets. What stays generic (a type held at run time): the business pick
+  (`pp_cplan_bz_pick`), Towns and Buildings' target turn between looks (`pp_cplan_save_type_107`), the measured best
+  plan; the Victualling Yard picker keeps its own `pp_cplan_btype_data` call for its payback. `pp_cplan_btype_data`
+  also sets `pp_cplan_gok`; only Towns and Buildings' target turn reads it, right after its own call.
+- *The look stops when the purse is spent.* Once the group saves for something (`pp_cplan_save_cost_105`, set by
+  `pp_cplan_note_wait` or the rank raise) `pp_cplan_construct_go` and `pp_cplan_country_rank_up` start nothing more in
+  the pass, so the rest of the locations are not walked. Same constructions, gold, saved-for target and cursor: the
+  first thing saved for and its location are fixed before the stop, and the cursor moves to just before it as before,
+  so the next look starts there and the unreached locations come right after it. Shown: a look number on the country
+  (`pp_lprof_look_n`), `pp_lprof_seen` on each location it reached, `pp_lprof_cut` when it stopped; the script value
+  `pp_lprof_unreached` makes every plan of such a location read "held back for gold" (`PP_LPROF_ST_7`) in the Location
+  Plan window and the Plans row; the pane says how many locations were not reached (`pp_cplan_d_profiles_unr`,
+  `PP_CPLAN_D_PROFILES_UNR`) and that their plans are not in the state counts, nor their cost in what it wanted (the
+  "wanted" gold and the chart's grey column count the reached locations only).
+- *Two goes only where needed.* The second go of the plans' turns (`pp_lplan_location_marks_turns`) runs only where a
+  plan started the location's last construction (`scope:pp_lplan_from`, `pp_lplan_last` as the turn began). Taking the
+  split at the turn's start also ends a display fault: read live, a plan that started a construction in the first go
+  moved `pp_lplan_last` and the plans up to it, the starter included, ran again; nothing was built (the turn's
+  construction makes every later plan wait), but they showed "waiting" (9) and were counted twice.
+
+Measured after: not yet (Jan profiles the same look in game).
+
 ## Budgets that save (2026-11-10, Jan, after he watched the plan run in game)
 
 (Since the script time rework above a group "looks" a few times a year; where this section says "each pass" for a
@@ -563,8 +606,12 @@ on 2026-11-09 (two tabs). Payback and the guards stay.
 History: the Food, Goods and Logistics tabs, the monthly limit, the reserve in months of income, the province focus and
 the logistics overrides below were removed on 2026-11-09 (two tabs). The food and logistics rules themselves stay.
 
-- **Construction Plan** panel (scripted widgets `pp_construction_plan` = opener button, `pp_construction_plan_window`;
-  `in_game/gui/pp_construction_plan.gui`), tabs Plan / Food / Goods / Logistics. Off by default per country.
+- **Construction Plan** panel (scripted widget `pp_construction_plan_window`; `in_game/gui/pp_construction_plan.gui`),
+  tabs Plan / Food / Goods / Logistics. Off by default per country. Opener (2026-11-20, Jan: the text button over the
+  map and then the tab docked under the top-left row stuck out): a tenth tab at the end of the game's top-left tab row,
+  icon `flat_icons/mass_construct.dds`, down while the window is open, hidden for observers; the mod's copy of vanilla
+  `panels/left_panel/left_panel.gui` written by `tools/port_vanilla_gui.py` (`port_left_panel`; port it again after a
+  game update). The location window's header button is the second way in.
 - **Plan:** on/off, gold reserve (months of total income), most new constructions a month, rule groups on/off, "Last
   month" list (building, location, which rule). Each running group gets an equal share of the monthly limit; a share left
   unused passes on to the next group (food, logistics, goods). Constructions are `construct_building` = normal, paid,

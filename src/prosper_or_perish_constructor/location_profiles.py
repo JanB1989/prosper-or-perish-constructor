@@ -71,6 +71,9 @@ STATES = {
 # 102.5 (closed) and 103.5 (loses money) sit between the old integer ranks, pp_lprof_finish splits at the midpoints
 FAIL_STATE = {101: 2, 102: 6, 102.5: 13, 103: 5, 103.5: 12, 104: 4, 105: 8, 106: 10, 107: 7, 108: 11}
 WHY_MARK_STEP = 0  # the ledger's step (pp_cplan_rs) of a construction a plan started
+# location script value: 1 when the last look stopped (its purse spent) before this location's turn (script time
+# 2026-11-20; the tiles read it, location_plan.py)
+UNREACHED = lp.UNREACHED
 
 
 @dataclass(frozen=True)
@@ -339,14 +342,17 @@ def render_marks(plans: list[town_plans.Plan]) -> str:
     lines.append("}\n")
     lines.append(
         "\n# Location scope: the plans take turns (plan setting, the default; pp_lplan_location_turn): the plans after the\n"
-        "# one that started the location's last construction (pp_lplan_last, its n) go first, then the rest\n"
-        "# (pp_lplan_mark_turn first = yes / no); no measuring go.\n"
+        "# one that started the location's last construction (pp_lplan_last, its n, as the turn began:\n"
+        "# scope:pp_lplan_from) go first, then the rest (pp_lplan_mark_turn first = yes / no); no measuring go. The second\n"
+        "# go only where such a plan exists (scope:pp_lplan_from above 100; else every plan ran in the first go).\n"
         "pp_lplan_location_marks_turns = {\n"
     )
-    for first in ("yes", "no"):
-        for number, plan in enumerate(plans, 101):
-            lines.append(f"\tpp_lplan_mark_turn = {{ {args(number, plan)} first = {first} }}\n")
-    lines.append("}\n")
+    for number, plan in enumerate(plans, 101):
+        lines.append(f"\tpp_lplan_mark_turn = {{ {args(number, plan)} first = yes }}\n")
+    lines.append("\tif = {\n\t\tlimit = { scope:pp_lplan_from > 100.5 }\n")
+    for number, plan in enumerate(plans, 101):
+        lines.append(f"\t\tpp_lplan_mark_turn = {{ {args(number, plan)} first = no }}\n")
+    lines.append("\t}\n}\n")
     return "".join(lines)
 
 
@@ -374,6 +380,12 @@ def render_values() -> str:
         "# payback in years + 100, as pp_lprof_payback100 (1099 = no profit).\n"
         "pp_lprof_new_payback100 = {\n\tvalue = 1099\n\tif = {\n\t\tlimit = { scope:pp_lprof_newp > 0.001 }\n"
         "\t\tvalue = pp_cplan_est_cost\n\t\tdivide = scope:pp_lprof_newp\n\t\tdivide = 12\n\t\tmax = 999\n\t\tadd = 100\n\t}\n}\n"
+        "\n# Location scope (the Location Plan's tiles and the Plans row): 1 when the owner's last Locations look stopped\n"
+        "# because the group's purse was spent (pp_lprof_cut) before this location's turn came (pp_lprof_seen, the number\n"
+        "# of the last look that reached it, below the look's pp_lprof_look_n): its plans were held back for gold.\n"
+        f"{UNREACHED} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{\n\t\t\towner ?= {{ has_variable = pp_lprof_cut }}\n"
+        "\t\t\tOR = {\n\t\t\t\tNOT = { has_variable = pp_lprof_seen }\n"
+        "\t\t\t\tvar:pp_lprof_seen < owner.var:pp_lprof_look_n\n\t\t\t}\n\t\t}\n\t\tvalue = 1\n\t}\n}\n"
     )
 
 

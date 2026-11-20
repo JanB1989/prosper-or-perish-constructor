@@ -59,6 +59,10 @@ TOGGLE_SWITCH = "pp_tplan_toggle_switch"
 CLEAR_ALL = "pp_tplan_clear_all"
 DECLARE = "pp_tplan_declare_flags"
 COUNT = "pp_tplan_n"  # location script value: the plans held here
+# location script value (location_profiles.py): 1 when the owner's last Locations look stopped, its purse spent, before
+# this location's turn came (script time 2026-11-20): every plan here then reads "held back for gold" (state 7)
+UNREACHED = "pp_lprof_unreached"
+UNREACHED_STATE = 7
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -185,6 +189,11 @@ def held(plan: Plan, location: str = "Location.MakeScope") -> str:
     return f"EqualTo_CFixedPoint({location}.ScriptValue('{plan.on_value}'), '(CFixedPoint)1')"
 
 
+def unreached(location: str = "Location.MakeScope") -> str:
+    """True while the owner's last Locations look stopped before this location's turn (``UNREACHED``)."""
+    return f"EqualTo_CFixedPoint({location}.ScriptValue('{UNREACHED}'), '(CFixedPoint)1')"
+
+
 def toggle_call(plan: Plan, location: str = "Location.MakeScope") -> str:
     return (f"[GetScriptedGui('{town_plans.TOGGLE_GUI}').Execute(GuiScope.SetRoot({location})"
             f".AddScope('pp_key', MakeScopeFlag('{plan.key}')).End)]")
@@ -302,7 +311,10 @@ def render_loc(plans: list[Plan], states: tuple[int, ...]) -> str:
                      f'[SelectLocalization({on}, \'PP_TPLAN_PICK_ON\', \'PP_TPLAN_PICK_OFF\')]'
                      f'[SelectLocalization({on}, \'PP_TPLAN_ST_{upper}\', \'PP_TPLAN_EMPTY\')]"')
         state = f"Location.MakeScope.Var('{plan.state}')"
-        lines.append(f'  PP_TPLAN_ST_{upper}: "\\n[SelectLocalization({state}.IsSet, \'PP_TPLAN_STS_{upper}\', \'PP_LPROF_ST_0\')]"')
+        # a location the last look did not reach (its purse spent first): held back for gold, whatever its last state
+        lines.append(f'  PP_TPLAN_ST_{upper}: "\\n[SelectLocalization({unreached()}, '
+                     f'\'PP_LPROF_ST_{UNREACHED_STATE}\', \'PP_TPLAN_STR_{upper}\')]"')
+        lines.append(f'  PP_TPLAN_STR_{upper}: "[SelectLocalization({state}.IsSet, \'PP_TPLAN_STS_{upper}\', \'PP_LPROF_ST_0\')]"')
         lines.append(f'  PP_TPLAN_STS_{upper}: "' + "".join(
             f"[AddTextIf({_state_is(plan, n)}, Localize('PP_LPROF_ST_{n}'))]" for n in states) + '"')
     return "\n".join(lines) + "\n"

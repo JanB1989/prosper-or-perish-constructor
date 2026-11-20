@@ -20,3 +20,18 @@ pp_lprof_cost1 = {
 	value = pp_cplan_est_cost
 	add = 1
 }
+
+# Location scope, in the pass (a first level or a tier upgrade under a payback limit; scope:pp_cplan_btype, the
+# cost values and scope:pp_lprof_newp = the Businesses rule's monthly profit estimate of one level set): its
+# payback in years + 100, as pp_lprof_payback100 (1099 = no profit).
+pp_lprof_new_payback100 = {
+	value = 1099
+	if = {
+		limit = { scope:pp_lprof_newp > 0.001 }
+		value = pp_cplan_est_cost
+		divide = scope:pp_lprof_newp
+		divide = 12
+		max = 999
+		add = 100
+	}
+}

@@ -93,10 +93,11 @@ def test_two_tabs_and_nothing_else() -> None:
     and the province focus are gone from the window, the scripts and the texts."""
     window = _read(WINDOW)
     tabs = re.findall(r"button_main_tab_alt = \{.*?text = \"(PP_CPLAN_TAB_\w+)\"", window, re.DOTALL)
-    assert tabs == ["PP_CPLAN_TAB_PLAN", "PP_CPLAN_TAB_COUNTRY"]
+    # third tab since 2026-11-20: Plans, the settings of the town-right plans (tests/test_town_plan_settings.py)
+    assert tabs == ["PP_CPLAN_TAB_PLAN", "PP_CPLAN_TAB_COUNTRY", "PP_CPLAN_TAB_PLANS"]
     # every tab's page shows for exactly its own value of pp_cplan_tab; the first for anything else
     country = "GetVariableSystem.HasValue('pp_cplan_tab', 'country')"
-    first = f"[Not({country})]"
+    first = f"[Not(Or({country}, GetVariableSystem.HasValue('pp_cplan_tab', 'plans')))]"
     assert window.count(f'down = "{first}"') == 1 and window.count(f'visible = "{first}"') == 1
     assert window.count(f'down = "[{country}]"') == 1
     body = window[window.index(f'visible = "[{country}]"'):]

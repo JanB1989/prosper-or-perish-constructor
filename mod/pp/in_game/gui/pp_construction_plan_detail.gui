@@ -315,15 +315,23 @@ types PPConstructionPlanDetail
 				layoutpolicy_horizontal = expanding
 				spacing = 4
 				pp_cplan_d_cell = { text = "PP_CPLAN_D_PROFILES_ST4" tooltip = "PP_LPROF_ST_4" }
+				pp_cplan_d_cell = { text = "PP_CPLAN_D_PROFILES_ST5" tooltip = "PP_LPROF_ST_5" }
 				pp_cplan_d_cell = { text = "PP_CPLAN_D_PROFILES_ST6" tooltip = "PP_LPROF_ST_6" }
-				pp_cplan_d_cell = { text = "PP_CPLAN_D_PROFILES_ST7" tooltip = "PP_LPROF_ST_7" }
 				expand = {}
 			}
 			hbox = {
 				layoutpolicy_horizontal = expanding
 				spacing = 4
+				pp_cplan_d_cell = { text = "PP_CPLAN_D_PROFILES_ST7" tooltip = "PP_LPROF_ST_7" }
 				pp_cplan_d_cell = { text = "PP_CPLAN_D_PROFILES_ST8" tooltip = "PP_LPROF_ST_8" }
 				pp_cplan_d_cell = { text = "PP_CPLAN_D_PROFILES_ST11" tooltip = "PP_LPROF_ST_11" }
+				expand = {}
+			}
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				spacing = 4
+				pp_cplan_d_cell = { text = "PP_CPLAN_D_PROFILES_ST12" tooltip = "PP_LPROF_ST_12" }
+				pp_cplan_d_cell = { text = "PP_CPLAN_D_PROFILES_ST13" tooltip = "PP_LPROF_ST_13" }
 				expand = {}
 			}
 			hbox = {

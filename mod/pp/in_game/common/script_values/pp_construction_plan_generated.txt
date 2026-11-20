@@ -19244,6 +19244,22 @@ pp_cplan_d_profiles_st11 = {
 		subtract = 100
 	}
 }
+pp_cplan_d_profiles_st12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_profiles_st12 }
+		value = var:pp_cplan_ds_profiles_st12
+		subtract = 100
+	}
+}
+pp_cplan_d_profiles_st13 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_profiles_st13 }
+		value = var:pp_cplan_ds_profiles_st13
+		subtract = 100
+	}
+}
 pp_cplan_h_profiles_need_1 = {
 	value = 0
 	if = {

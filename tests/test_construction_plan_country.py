@@ -1131,7 +1131,7 @@ def test_tiles_are_toggles_in_rows() -> None:
     assert f"{cc.LAYOUT_GUI} = {{" in guis and guis.count(f"{cc.LAYOUT_EFFECT} = yes") == 2
     window = _read(MOD / "in_game/gui/pp_construction_plan.gui")
     assert window.count(f"onclick = \"{cc.LAYOUT_CALL}\"") == 2  # the opener and the tab's button
-    assert "Not(IsPauseMenuShown)" in window[window.index('name = "pp_construction_plan"'):window.index("button_regular = {", window.index('name = "pp_construction_plan"'))]
+    assert "Not(IsPauseMenuShown)" in window[window.index('name = "pp_construction_plan"'):window.index("button_panel_tab_alt = {", window.index('name = "pp_construction_plan"'))]
     # the rights do not have to fit: they scroll
     assert gui.index("scrollarea = {") < gui.index("MakeScopeFlag('right_")
     assert gui.index("MakeScopeFlag('pub_") < gui.index("scrollarea = {")

@@ -894,8 +894,8 @@ SITUATION: dict[str, tuple[tuple[str, int], ...]] = {
     "improve": (("over", 100), ("fullest", 100)),
     # skipped: 1 when the group had neither gold saved nor gold coming in and did not look (pp_cplan_group_business)
     "business": (("sites", 100), ("best", 1099), ("skipped", 100)),
-    # the plans' states (location_profiles.STATES 1..11; pp_lprof_count_state)
-    "profiles": (("locs", 100), *((f"st{n}", 100) for n in range(1, 12))),
+    # the plans' states (location_profiles.STATES 1..13; pp_lprof_count_state)
+    "profiles": (("locs", 100), *((f"st{n}", 100) for n in range(1, 14))),
     "country": (),  # gold had, spent and waiting are enough; its own numbers are construction_plan_country.py's
 }
 

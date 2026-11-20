@@ -83,15 +83,36 @@ def test_every_candidate_has_cost_data_and_guards() -> None:
     plan_triggers = _read(MOD / cp.TRIGGERS)
     plan_values = _read(MOD / cp.VALUES) + _read(PLAN_VALUES)
     known = cp.defined_buildings(MOD, vanilla_root(ROOT, PROJECT))
-    calls = re.findall(r"pp_lprof_(?:expand|start|upgrade) = \{ (?:old = \w+ )?type = (\w+) demand = (\w+) cat = (\w+) "
-                       r"ipl = ([0-9.]+) pt = (\w+) sz = ([0-9.]+) \}", effects)
+    # each effect gets exactly its own arguments (a call with an argument the body never uses does nothing in game):
+    # expand = cost data, workers, lc; upgrade = old, cost data, estimate; start = cost data, workers, estimate
+    cost = r"type = (?P<name>\w+) demand = (?P<demand>\w+) cat = (?P<cat>\w+) ipl = [0-9.]+"
+    work = r"pt = (?P<pt>\w+) sz = (?P<sz>[0-9.]+)"
+    estimate = r"est = (?P<est>\w+) hasest = (?P<hasest>yes|no)"
+    shapes = {
+        "expand": rf"pp_lprof_expand = \{{ {cost} {work} lc = (?P<lc>yes|no) \}}",
+        "upgrade": rf"pp_lprof_upgrade = \{{ old = \w+ {cost} {estimate} \}}",
+        "start": rf"pp_lprof_start = \{{ {cost} {work} {estimate} \}}",
+    }
+    calls = [(kind, match.groupdict()) for kind, shape in shapes.items() for match in re.finditer(shape, effects)]
     assert len(calls) > 300
-    staff = cp.staffing(cp._database(MOD, vanilla_root(ROOT, PROJECT), cp.BUILDING_TYPES),
-                        cp.script_value_numbers(MOD, vanilla_root(ROOT, PROJECT)))
-    for name, demand, category, _, pop_type, size in calls:
+    assert len(calls) == len(re.findall(r"pp_lprof_(?:expand|start|upgrade) = \{", effects)), "every call matched"
+    database = cp._database(MOD, vanilla_root(ROOT, PROJECT), cp.BUILDING_TYPES)
+    staff = cp.staffing(database, cp.script_value_numbers(MOD, vanilla_root(ROOT, PROJECT)))
+    for kind, call in calls:
+        name, demand, category = call["name"], call["demand"], call["cat"]
         assert name in known, name
-        # the workers one level needs (Jan 2026-11-09: no building where nobody can work in it)
-        assert (pop_type, float(size)) == staff.get(name, ("peasants", 0.0)), name
+        if kind == "expand":
+            # the loss check reads buildings that make goods
+            assert (call["lc"] == "yes") == ("unique_production_methods" in re.sub(r"#[^\n]*", "", database[name][1])), name
+        else:
+            # a level estimate where the Businesses rule has one
+            if call["hasest"] == "yes":
+                assert call["est"] == f"pp_cplan_bz_est_{name}" and f"\n{call['est']} = {{" in plan_values, name
+            else:
+                assert call["est"] == "0", name
+        if kind != "upgrade":
+            # the workers one level needs (Jan 2026-11-09: no building where nobody can work in it)
+            assert (call["pt"], float(call["sz"])) == staff.get(name, ("peasants", 0.0)), name
         assert f"pp_cplan_goods_here_{demand} = {{" in plan_triggers, demand
         assert f"pp_cplan_cd_{demand} = {{" in plan_values, demand
         assert f"pp_cplan_eff_{category} = {{" in plan_values, category
@@ -210,18 +231,36 @@ def test_states_and_texts() -> None:
     assert "PP_CPLAN_WHY_PROFILE" in (MOD / "main_menu/localization/english/pp_construction_plan_l_english.yml").read_text(encoding="utf-8-sig")
     hand = _code(MOD / lpf.HAND_EFFECTS)
     finish = _block(hand, "pp_lprof_finish")
-    for rank, state in lpf.FAIL_STATE.items():
-        if rank == 101:
+    ranks = sorted(lpf.FAIL_STATE)
+    for below, (rank, state) in zip([None] + ranks, sorted(lpf.FAIL_STATE.items())):
+        if below is None:
             assert re.search(rf"else = \{{\s*set_variable = \{{ name = \$st\$ value = {100 + state} \}}", finish), rank
         else:
-            assert re.search(rf"var:pp_lprof_fail > {rank - 0.5:g} \}}\n\t\tset_variable = \{{ name = \$st\$ value = {100 + state} \}}", finish), rank
+            # the split between a rank and the one below sits at their midpoint (102.5 and 103.5 are half ranks)
+            assert re.search(rf"var:pp_lprof_fail > {(rank + below) / 2:g} \}}\n\t\tset_variable = \{{ name = \$st\$ value = {100 + state} \}}", finish), rank
+    splits = [float(x) for x in re.findall(r"var:pp_lprof_fail > ([0-9.]+) \}", finish)]
+    assert splits == sorted(splits, reverse=True) and len(splits) == len(ranks) - 1
     states = {int(n) - 100 for n in re.findall(r"name = (?:pp_lprof_st|\$st\$) value = (1\d\d)", hand + _code(MOD / lpf.EFFECTS))}
     assert states == set(lpf.STATES), "every state is written somewhere, and no other"
-    # the window counts every state on its own, 11 too
+    # the window counts every state on its own, 11 to 13 too
     count = _block(hand, "pp_lprof_count_state")
     for n in lpf.STATES:
         assert count.count(f"name = pp_cplan_ds_profiles_st{n} add = 1") == 1, n
-    assert ("st11", 100) in cp.SITUATION["profiles"] and len(cp.SITUATION["profiles"]) == len(lpf.STATES) + 1
+    assert ("st13", 100) in cp.SITUATION["profiles"] and len(cp.SITUATION["profiles"]) == len(lpf.STATES) + 1
+    # the Locations pane shows the states a plan can reach (all but the market limit), each with its text as tooltip
+    from prosper_or_perish_constructor import construction_plan_detail as cpd
+    assert set(cpd.PROFILE_STATES) == set(lpf.STATES) - {9, 10}
+    gui = _read(MOD / cpd.DETAIL_GUI)
+    detail_loc = _read(MOD / cpd.DETAIL_LOC)
+    for n in cpd.PROFILE_STATES:
+        assert f'text = "PP_CPLAN_D_PROFILES_ST{n}" tooltip = "PP_LPROF_ST_{n}"' in gui, n
+        assert f"PP_CPLAN_D_PROFILES_ST{n}:" in detail_loc, n
+        assert re.search(rf"^pp_cplan_d_profiles_st{n} = \{{", _read(MOD / cp.VALUES), re.MULTILINE), n
+    for n in (12, 13):
+        assert "[building|e]" in keys[f"PP_LPROF_ST_{n}"], n
+    # the Location Plan window's state texts pick the new states up
+    plan_loc = _read(MOD / "main_menu/localization/english/pp_location_plan_generated_l_english.yml")
+    assert "Localize('PP_LPROF_ST_12')" in plan_loc and "Localize('PP_LPROF_ST_13')" in plan_loc
 
 
 def test_no_not_with_several_conditions() -> None:
@@ -246,7 +285,10 @@ def test_no_not_with_several_conditions() -> None:
 
 
 def test_effect_calls_pass_their_parameters() -> None:
-    """Every call of a parametrized scripted effect or trigger passes each $param$ its body uses."""
+    """Every call of a parametrized scripted effect or trigger passes each $param$ its body uses, and nothing else:
+    the engine refuses a call with an argument the body never uses ("Compiling source for <effect> failed for unknown
+    arguments", debug.log) and the call then does nothing, silently. In game 2026-11-20 every plan target was a no-op
+    that way (expand, start and upgrade shared one argument list)."""
     definitions: dict[str, set[str]] = {}
     for folder in ("scripted_effects", "scripted_triggers"):
         for path in (COMMON / folder).glob("pp_*.txt"):
@@ -264,6 +306,7 @@ def test_effect_calls_pass_their_parameters() -> None:
                 calls += 1
                 passed = set(re.findall(r"([a-z]+) = ", args))
                 assert definitions[name] <= passed, f"{path.name}: {name} lacks {definitions[name] - passed}"
+                assert passed <= definitions[name], f"{path.name}: {name} gets unknown {passed - definitions[name]}"
     assert calls > 300
 
 
@@ -318,8 +361,9 @@ def test_plans_run_their_targets() -> None:
 
 
 def test_plans_are_forced() -> None:
-    """Jan 2026-11-10: a location's pick is forced: no payback limit, not held by the market limit; it keeps the
-    can-build check, the workers, the construction goods, a free construction slot and the Locations purse."""
+    """Jan 2026-11-10: a location's pick is forced: no payback limit (unless the player sets one, plan settings
+    2026-11-20), not held by the market limit; it keeps the can-build check, the workers, the construction goods, a
+    free construction slot and the Locations purse."""
     hand = _code(MOD / lpf.HAND_EFFECTS)
     turn = _block(hand, "pp_lprof_location_turn")
     marks = _block(hand, "pp_lplan_location_turn")
@@ -464,6 +508,112 @@ def test_rank_raise_saved_under_105() -> None:
     assert "remove_variable = pp_cplan_save_rank_105" in _block(effects, "pp_cplan_purses_fill")
     target = _block(_code(MOD / lpf.HAND_EFFECTS), "pp_lprof_target_turn")
     assert target.index("remove_variable = pp_cplan_save_rank_105") < target.index("pp_lprof_location_turn = yes")
+
+
+def test_each_plan_runs_with_its_payback_limit() -> None:
+    """Plan settings (2026-11-20): a held plan runs with its own payback limit, else the all-plans one, else none
+    (forced). Further levels compare the standing building's payback; first levels and tier upgrades the Businesses
+    rule's level estimate, where it has one, and only under a limit (the estimate needs this year's harvest)."""
+    hand = _code(MOD / lpf.HAND_EFFECTS)
+    mark = _block(hand, "pp_lplan_mark")
+    assert mark.index("has_town_rights = town_rights_type:pp_plan_$g$") < mark.index("pp_tplan_set_pb = { g = $g$ }")
+    assert mark.index("pp_tplan_set_pb = { g = $g$ }") < mark.index("$do$ = yes"), "measuring and building read it"
+    setpb = _block(hand, "pp_tplan_set_pb")
+    assert "scope:pp_cplan_country = {\n\t\tsave_temporary_scope_value_as = { name = pp_tplan_pby value = pp_tplan_pb_years_$g$ }" in setpb
+    assert "name = pp_lprof_pb value = { value = scope:pp_tplan_pby add = 100 }" in setpb
+    assert "name = pp_lprof_pb value = 1000000" in setpb  # 0 years = any payback
+    expand = _block(hand, "pp_lprof_expand")
+    assert "limit = { pp_lprof_payback100 > scope:pp_lprof_pb }\n\t\t\t\tpp_lprof_fail = { r = 103 }" in expand
+    for name, after in (("pp_lprof_start", "pp_lprof_consider = yes"), ("pp_lprof_upgrade", "pp_lprof_build = yes")):
+        body = _block(hand, name)
+        assert body.index("pp_cplan_ef value = pp_cplan_eff_$cat$") < body.index(
+            "pp_lprof_new_check = { est = $est$ hasest = $hasest$ }") < body.index(after), name
+        assert "limit = { scope:pp_lprof_over > 0.5 }\n\t\t\t\tpp_lprof_fail = { r = 103 }" in body, name
+    check = _block(hand, "pp_lprof_new_check")
+    assert check.index("name = pp_lprof_over value = 0") < check.index("always = $hasest$")
+    assert "scope:pp_lprof_pb < 999999" in check and "name = pp_lprof_newp value = $est$" in check
+    assert "pp_lprof_new_payback100 > scope:pp_lprof_pb" in check
+    turn = _block(hand, "pp_lplan_location_turn")
+    assert ("limit = { scope:pp_cplan_country = { has_variable = pp_tplan_pb_some } }\n\t\tpp_cplan_business_harvest = yes"
+            in turn)
+    assert turn.index("pp_cplan_business_harvest = yes") < turn.index("pp_lplan_location_marks")
+    # the estimate's payback: cost over a year of the level's profit, + 100; no profit = too long
+    class _Cost(ScriptEval):  # the level's price is the plan's cost formula, given here
+        def value(self, expr, ctx):
+            if expr == "pp_cplan_est_cost":
+                return 1200.0
+            return super().value(expr, ctx)
+
+    values = _Cost(MOD)
+    assert values.value("pp_lprof_new_payback100", {"game": {"scope:pp_lprof_newp": 10.0}}) == 110
+    assert values.value("pp_lprof_new_payback100", {"game": {"scope:pp_lprof_newp": 0.0}}) == 1099
+    assert values.value("pp_lprof_new_payback100", {"game": {"scope:pp_lprof_newp": 0.01}}) == 1099  # capped at 999 years
+
+
+def test_never_at_a_loss_unless_switched_off() -> None:
+    """Plan settings (default on): no level for a standing building that would lose money with every job filled (the
+    game lays off its workers each month); a closed one gets its own state. The upgrade replaces the building and
+    keeps going."""
+    hand = _code(MOD / lpf.HAND_EFFECTS)
+    expand = _block(hand, "pp_lprof_expand")
+    loss = expand[expand.index("always = $lc$") - 40:expand.index("pp_lprof_fail = { r = 103.5 }")]
+    for check in ("always = $lc$", "scope:pp_cplan_country = { NOT = { has_variable = pp_tplan_loss_ok } }",
+                  "building_type = building_type:$type$", "building_potential_profit < 0"):
+        assert check in loss, check
+    assert expand.index("pp_lprof_fail = { r = 103.5 }") < expand.index("pp_lprof_payback100 > scope:pp_lprof_pb")
+    assert expand.index("pp_lprof_note_payback = yes") < expand.index("always = $lc$")
+    closed = "limit = { any_buildings_in_location = { building_type = building_type:$type$ is_opened = no } }\n\t\t\tpp_lprof_fail = { r = 102.5 }"
+    assert closed in expand
+    assert expand.index("is_at_max_level = yes") < expand.index(closed) < expand.index("location_and_owner_can_build")
+    assert "building_potential_profit" not in _block(hand, "pp_lprof_upgrade") + _block(hand, "pp_lprof_start")
+    assert lpf.FAIL_STATE[103.5] == 12 and lpf.FAIL_STATE[102.5] == 13
+
+
+def test_worker_switch() -> None:
+    """Plan settings: plans wait for free workers (default); with pp_tplan_staff_off they do not (expand and start)."""
+    hand = _code(MOD / lpf.HAND_EFFECTS)
+    for name in ("pp_lprof_expand", "pp_lprof_start"):
+        body = _block(hand, name)
+        assert re.search(r"limit = \{\n\t+scope:pp_cplan_country = \{ NOT = \{ has_variable = pp_tplan_staff_off \} \}\n"
+                         r"\t+NOT = \{ pp_cplan_staff = \{ type = \$pt\$ size = \$sz\$ \} \}\n\t+\}\n\t+pp_lprof_fail = \{ r = 104 \}",
+                         body), name
+
+
+def test_plans_take_turns_unless_best_payback_first() -> None:
+    """Plan settings: several plans in one location take turns (default): one go, the plans after the one that started
+    the last construction first, then the rest; no measuring go. pp_tplan_order_best keeps the old two goes."""
+    hand = _code(MOD / lpf.HAND_EFFECTS)
+    effects = _code(MOD / lpf.EFFECTS)
+    turn = _block(hand, "pp_lplan_location_turn")
+    best = turn.index("limit = { scope:pp_cplan_country = { has_variable = pp_tplan_order_best } }")
+    other = turn.index("\n\telse = {")  # the location turn's own else (one tab): the plans take turns
+    assert best < turn.index("name = pp_lplan_mode value = 1") < turn.index("pp_lplan_location_marks = yes") < other
+    rest = turn[other:]
+    assert "pp_lplan_location_marks_turns = yes" in rest and "pp_lplan_mode value = 1" not in rest
+    assert rest.index("name = pp_lplan_mode value = 2") < rest.index("pp_lplan_location_marks_turns = yes")
+    lines = re.findall(r"^\t(pp_lplan_mark_turn = \{ [^\n]* \})$", _block(effects, "pp_lplan_location_marks_turns"), re.MULTILINE)
+    marks = re.findall(r"^\tpp_lplan_mark = \{ ([^\n]*) \}$", _block(effects, "pp_lplan_location_marks"), re.MULTILINE)
+    assert lines == ([f"pp_lplan_mark_turn = {{ {m} first = yes }}" for m in marks]
+                     + [f"pp_lplan_mark_turn = {{ {m} first = no }}" for m in marks]), "every plan twice, in order"
+    mark_turn = _block(hand, "pp_lplan_mark_turn")
+    assert mark_turn.index("has_town_rights = town_rights_type:pp_plan_$g$") < mark_turn.index("always = $first$")
+    assert "NOT = { has_variable = pp_lplan_last }\n\t\t\t\t\t\tvar:pp_lplan_last < $lo$" in mark_turn
+    assert "NOT = { always = $first$ }\n\t\t\t\t\thas_variable = pp_lplan_last\n\t\t\t\t\tvar:pp_lplan_last > $lo$" in mark_turn
+    assert "pp_lplan_mark = { v = $v$ g = $g$ do = $do$ n = $n$ lo = $lo$ hi = $hi$ }" in mark_turn
+    mark = _block(hand, "pp_lplan_mark")
+    built = mark[mark.index("limit = { NOT = { has_variable = pp_lprof_st } }"):]
+    assert built.index("$do$ = yes") < built.index("var:pp_lprof_st < 101.5") < built.index(
+        "set_variable = { name = pp_lplan_last value = $n$ }") < built.index("pp_lprof_finish")
+
+    # the order the two goes give: n > last first, then n <= last (no last: everything in the first go)
+    def order(numbers: list[int], last: int | None) -> list[int]:
+        first = [n for n in numbers if last is None or last < n - 0.5]
+        second = [n for n in numbers if last is not None and last > n - 0.5]
+        return first + second
+
+    assert order([101, 102, 103], None) == [101, 102, 103]
+    assert order([101, 102, 103], 101) == [102, 103, 101] and order([101, 102, 103], 103) == [101, 102, 103]
+    assert sorted(order([101, 105, 107], 105)) == [101, 105, 107]
 
 
 def test_one_check_for_a_free_construction_site() -> None:

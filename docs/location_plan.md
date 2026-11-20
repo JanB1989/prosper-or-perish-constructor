@@ -38,12 +38,12 @@ held"). Script reads it with `has_town_rights` (trigger `pp_tplan_held`, value `
 The rule group **Locations** (internal key `profiles`, construction code 105, its own purse and weight on the Global
 Settings tab; it counts for the weights only while a location holds a plan) gives each location with a plan its turn
 at its looks (months 3, 6, 9, 12; between looks only the location it saves for). The locations take turns from a
-cursor (`pp_lprof_look`, `pp_lprof_turn`). In a location's turn every held plan runs its target, **forced**: no
-payback limit, no market limit. Still needed: the can-build check, free workers, the construction goods in the market
-(12 months of the draw), a free construction slot (one construction at a time in a location) and the group's purse.
-Inside one location the plans whose next level has a profit to measure go first, best payback first, then the rest in
-the plans' order; the first construction ends the location's turn (the others wait, state 9). Plans add: they switch
-no global rule group off.
+cursor (`pp_lprof_look`, `pp_lprof_turn`). In a location's turn every held plan runs its target, **forced** by
+default: no payback limit, no market limit. Still needed: the can-build check, free workers, the construction goods in
+the market (12 months of the draw), a free construction slot (one construction at a time in a location) and the
+group's purse; by default also no level for a standing building that loses money (see "Plan settings"). Inside one
+location the plans take turns by default; the first construction ends the location's turn (the others wait, state 9).
+Plans add: they switch no global rule group off.
 
 - **A good**: its producers (the buildings whose main good it is). Order: an older tier standing here whose successor
   (also a producer) the country has researched is upgraded first (the game's Upgrade, one level a turn); else a
@@ -69,9 +69,45 @@ Per plan and location after the last look, `pp_lplan_st_g_<plan>` (+ 100; texts 
 nothing to build (every producer at its highest level), 3 a construction under way here, 4 no free workers, 6 cannot be
 built here, 7 gold (the purse cannot pay it, or the group saves for something before it), 8 the market lacks the
 construction goods, 9 waiting for another plan's construction this turn, 11 needs a higher rank that cannot be raised
-here now. 5 (payback) and 10 (market limit) never come up for a plan. The Locations pane of the Construction Plan
+here now, 5 the next level pays back too slowly for the plan's payback limit, 12 the standing building loses money at
+full staffing (no level), 13 the standing building is closed (no level; until 2026-11-20 this showed as 6). 10 (market
+limit) never comes up for a plan. The Locations pane of the Construction Plan
 window counts the plans by state, names what the group saves for (a building or a town / city
 upgrade) and lists what it built: "for its plan", or a higher rank with the location's people.
+
+### Plan settings (2026-11-20, Jan; not tested in game)
+
+Baseline settings the player sees and may change (the settings tab of the Construction Plan window, agent G's
+`town_plan_settings_gui.py`); the defaults are meant to be left alone. Country variables (0 counts as unset, never
+stored), names and steps in `town_plans.py` ("Plan settings"):
+
+- **Payback limit, all plans** (`pp_tplan_pb_all`: a step 1..12 of `PAYBACK_STEPS` = 1, 2, 3, 4, 5, 7, 10, 15, 20, 30,
+  40, 50 years; unset = any payback, the default) and **per plan** (`pp_tplan_pb_<plan>`: a step, or 13 = any payback;
+  unset = same as all plans). A held plan runs with its own limit, else the all-plans one, else none
+  (`pp_tplan_set_pb` -> `scope:pp_lprof_pb`). A further level compares the standing building's payback (its current
+  profit per level; no profit = too long). A first level and a tier upgrade compare the Businesses rule's estimate of
+  one level of the new building (`pp_cplan_bz_est_<type>`, market prices, this year's harvest taken out) where it has
+  one; buildings without one (Marketplace and the other trade buildings, Cookshop, Tavern, Grange, Victualling Yard)
+  are not checked. Too long: state 5. While any limit is set (`pp_tplan_pb_some`) the location's turn takes the harvest
+  first (`pp_cplan_business_harvest`).
+- **Never at a loss** (default on; `pp_tplan_loss_ok` set = off): no level for a standing building with production
+  methods whose profit at full workers and full goods is below zero (`building_potential_profit < 0`, building scope:
+  the game lays off the workers of such a building every month, subsidised or not). State 12. Tier upgrades are not
+  held back (the upgrade replaces the building).
+- **Wait for free workers** (default on; `pp_tplan_staff_off` set = off): further and first levels need workers here
+  (`pp_cplan_staff`). Tier upgrades never asked for workers.
+- **Several plans in one location** (default: take turns; `pp_tplan_order_best` set = best payback first, the old
+  rule): the plans after the one that started the location's last construction (`pp_lplan_last`, location) go first,
+  then the rest; no measuring go (`pp_lplan_location_marks_turns`).
+- **The game closes losing buildings**: switches the game's own automation `closebuildings` for the country
+  (`set_automated_system`, read by `is_system_automated`; script cannot close a building itself). Default: as the
+  player set it in the game. A plan never adds to a closed building (state 13).
+
+Script values for the window (country scope): `pp_tplan_pb_years_all`, `pp_tplan_pb_years_<plan>` (0 = any),
+`pp_tplan_pb_own_<plan>`, `pp_tplan_loss_n`, `pp_tplan_staff_n`, `pp_tplan_order_n` (1 = the default),
+`pp_tplan_close_n` (1 = automation on). Scripted GUIs (`scripted_guis/pp_town_plan_settings.txt`, player only):
+`pp_tplan_pb_up` / `_down` (`scope:pp_key` = `flag:all` or `flag:<plan>`), `pp_tplan_pb_reset`, `pp_tplan_toggle_loss`
+/ `_staff` / `_order` / `_close`.
 
 ## Map mode
 
@@ -107,9 +143,9 @@ overrides `map_markers.gui` hides the icons; a map mode's `index` is its row in 
   (`main_menu/gui/messagetypes/pp_messagetypes.txt` redefines the two message types; the default opened a pop-up for
   every plan click and every charter the plan grants). This holds for every town right, the player's own grants too.
 - A plan right shows among the location's town rights in the game's own panels.
-- Several plans in one location: the plan that pays back best is built first, a level a look, until it has nothing left
-  or no workers; the others wait (state 9). In the test Oporto's Tools Guild got every level for six looks while Cloth
-  and Trade waited. Open: take turns instead (Jan decides).
+- Several plans in one location: until 2026-11-20 the plan that paid back best was built first, a level a look (in the
+  test Oporto's Tools Guild got every level for six looks while Cloth and Trade waited); now they take turns by default
+  ("Plan settings"), the old rule is the setting "best payback first".
 - While the Construction Plan is switched off, plans are kept and nothing is built; the Location Plan window says so
   and carries the switch.
 

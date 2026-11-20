@@ -19,7 +19,9 @@ This module holds the naming contract every part of the feature shares and the f
 * ``in_game/common/scripted_effects/pp_town_plans_generated.txt``: per plan whose producers all need a higher rank than
   a rural settlement, its turn ``pp_tplan_do_<plan>`` (raise the rank where none of them stands and the rank is too low,
   else the goods target) and the rank raise ``pp_tplan_raise`` (Towns and Buildings' ``pp_cplan_country_rank_up``, paid
-  from the Locations group's purse, ``why = 105``).
+  from the Locations group's purse, ``why = 105``), and the plan settings' effects (``pp_tplan_pb_*``);
+* ``in_game/common/scripted_guis/pp_town_plan_settings.txt``: the plan settings' buttons (see "Plan settings" below);
+  the settings' script values go into the values file above.
 
 The monthly pass that runs a held plan is location_profiles.render_marks (``pp_lplan_location_marks``, one
 ``pp_lplan_mark`` per plan) and the hand-written ``pp_lplan_mark`` (scripted_effects/pp_location_profiles.txt: the plan
@@ -44,7 +46,7 @@ EXTRA_PLANS: tuple[str, ...] = ("food", "trade")
 #   script value  pp_tplan_on_<plan>       1 while the location holds that plan right, else 0
 #   effect        pp_tplan_flip = { g = <plan> }   sets the plan right, or takes it off when held (the button)
 #   scripted GUI  pp_tplan_toggle          scope location, scope:pp_key = flag:<plan>
-#   variables     pp_lplan_st_g_<plan>     the plan's state (1..11, location_profiles.STATES), pp_lplan_est_g_<plan> its payback
+#   variables     pp_lplan_st_g_<plan>     the plan's state (1..13, location_profiles.STATES), pp_lplan_est_g_<plan> its payback
 HELD_TRIGGER = "pp_tplan_held"
 ON_VALUE_PREFIX = "pp_tplan_on_"
 FLIP_EFFECT = "pp_tplan_flip"
@@ -59,6 +61,60 @@ EXTRA_TARGETS = {"food": FOOD_TARGET, "trade": TRADE_TARGET}
 
 WHY = 105  # the Locations group's purse (construction_plan GROUP_WHY "profiles")
 FAIL_RANK = 108  # pp_lprof_fail: the plan needs a higher rank and the raise cannot start here now (state 11)
+
+# ---- Plan settings (2026-11-20, Jan: baseline settings the player sees and may change; defaults = just use it) ----
+# Country variables (a variable at 0 counts as unset, so 0 is never stored):
+#   pp_tplan_pb_all         payback limit of every plan: index 1..N into PAYBACK_STEPS (years); unset = any payback
+#   pp_tplan_pb_<plan>      the plan's own limit: 1..N, or PB_ANY (N + 1) = any payback; unset = same as all plans
+#   pp_tplan_loss_ok        set: a plan may add a level to a building that loses money; unset (default) = never
+#   pp_tplan_staff_off      set: plans do not wait for free workers; unset (default) = they wait
+#   pp_tplan_order_best     set: several plans in a location go best payback first; unset (default) = they take turns
+#   pp_tplan_pb_some        set by the settings' effects while any payback limit is set (the pass then works out
+#                           the business estimates of first levels and tier upgrades)
+# Script values (country scope, the GUI reads them): pp_tplan_pb_years_all / pp_tplan_pb_years_<plan> (limit in years,
+# 0 = any; a plan's includes the all-plans value), pp_tplan_pb_own_<plan> (1 = its own setting), pp_tplan_loss_n
+# (1 = never at a loss), pp_tplan_staff_n (1 = waits for workers), pp_tplan_order_n (1 = take turns), pp_tplan_close_n
+# (1 = the game's close-buildings automation is on).
+# Scripted GUIs (scope country, scripted_guis/pp_town_plan_settings.txt): pp_tplan_pb_up / pp_tplan_pb_down
+# (scope:pp_key = flag:<plan> or flag:all), pp_tplan_pb_reset (flag:<plan>), pp_tplan_toggle_loss / _staff / _order /
+# _close.
+PAYBACK_STEPS: tuple[int, ...] = (1, 2, 3, 4, 5, 7, 10, 15, 20, 30, 40, 50)
+PB_ANY = len(PAYBACK_STEPS) + 1  # a plan's own "any payback"
+PB_ALL = "all"  # the all-plans key (flag:all, pp_tplan_pb_all, pp_tplan_pb_years_all)
+PB_VAR_PREFIX = "pp_tplan_pb_"
+PB_YEARS_PREFIX = "pp_tplan_pb_years_"
+PB_OWN_PREFIX = "pp_tplan_pb_own_"
+PB_SOME_VAR = "pp_tplan_pb_some"
+LOSS_OK_VAR = "pp_tplan_loss_ok"
+STAFF_OFF_VAR = "pp_tplan_staff_off"
+ORDER_BEST_VAR = "pp_tplan_order_best"
+LOSS_VALUE = "pp_tplan_loss_n"
+STAFF_VALUE = "pp_tplan_staff_n"
+ORDER_VALUE = "pp_tplan_order_n"
+CLOSE_VALUE = "pp_tplan_close_n"
+CLOSE_SYSTEM = "closebuildings"  # the game's automated system (set_automated_system / is_system_automated)
+PB_UP_GUI = "pp_tplan_pb_up"
+PB_DOWN_GUI = "pp_tplan_pb_down"
+PB_RESET_GUI = "pp_tplan_pb_reset"
+TOGGLE_LOSS_GUI = "pp_tplan_toggle_loss"
+TOGGLE_STAFF_GUI = "pp_tplan_toggle_staff"
+TOGGLE_ORDER_GUI = "pp_tplan_toggle_order"
+TOGGLE_CLOSE_GUI = "pp_tplan_toggle_close"
+SETTINGS_GUIS = Path("in_game/common/scripted_guis/pp_town_plan_settings.txt")
+
+
+def pb_var(key: str) -> str:
+    """The country variable of a plan's payback limit (key = a plan or PB_ALL)."""
+    return PB_VAR_PREFIX + key
+
+
+def pb_years_value(key: str) -> str:
+    """The script value of a plan's effective payback limit in years (0 = any); key = a plan or PB_ALL."""
+    return PB_YEARS_PREFIX + key
+
+
+def pb_own_value(plan: str) -> str:
+    return PB_OWN_PREFIX + plan
 
 RIGHTS = Path("in_game/common/town_rights/pp_plan_town_rights.txt")
 LOC = Path("main_menu/localization/english/pp_plan_town_rights_l_english.yml")
@@ -385,6 +441,123 @@ def render_effects(items: list[Plan], ranks) -> str:
 
 
 # ---------------------------------------------------------------------------------------------------------------------
+# plan settings (country scope)
+
+
+def _years_chain(var: str, indent: str) -> str:
+    """value = the years of the step index var:<var> (1..N); an index past the steps leaves the value as it was."""
+    lines = []
+    for index, years in enumerate(PAYBACK_STEPS, 1):
+        lines.append(f"{indent}{'if' if index == 1 else 'else_if'} = {{ limit = {{ var:{var} < {index + 0.5:g} }} "
+                     f"value = {years} }}\n")
+    return "".join(lines)
+
+
+def render_settings_values(items: list[Plan]) -> str:
+    all_var = pb_var(PB_ALL)
+    parts = [
+        "\n# ---- Plan settings (country scope; town_plans.py PAYBACK_STEPS, the settings tab reads them) ----\n"
+        "# The payback limit in years, 0 = any payback: every plan's (pp_tplan_pb_all, a step of PAYBACK_STEPS), and each\n"
+        f"# plan's own (pp_tplan_pb_<plan>: a step, {PB_ANY} = any payback; unset = the all-plans value).\n"
+        f"{pb_years_value(PB_ALL)} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ has_variable = {all_var} }}\n"
+        + _years_chain(all_var, "\t\t") + "\t}\n}\n",
+    ]
+    for plan in items:
+        var = pb_var(plan.key)
+        parts.append(
+            f"{pb_years_value(plan.key)} = {{\n\tvalue = {pb_years_value(PB_ALL)}\n\tif = {{\n"
+            f"\t\tlimit = {{ has_variable = {var} }}\n\t\tvalue = 0\n" + _years_chain(var, "\t\t") + "\t}\n}\n"
+            f"{pb_own_value(plan.key)} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ has_variable = {var} }}\n"
+            "\t\tvalue = 1\n\t}\n}\n"
+        )
+    parts.append(
+        "\n# The switches, 1 = the default: never at a loss, wait for free workers, take turns; and the game's own\n"
+        "# automation that closes buildings, 1 = on.\n"
+        f"{LOSS_VALUE} = {{\n\tvalue = 1\n\tif = {{\n\t\tlimit = {{ has_variable = {LOSS_OK_VAR} }}\n\t\tvalue = 0\n\t}}\n}}\n"
+        f"{STAFF_VALUE} = {{\n\tvalue = 1\n\tif = {{\n\t\tlimit = {{ has_variable = {STAFF_OFF_VAR} }}\n\t\tvalue = 0\n\t}}\n}}\n"
+        f"{ORDER_VALUE} = {{\n\tvalue = 1\n\tif = {{\n\t\tlimit = {{ has_variable = {ORDER_BEST_VAR} }}\n\t\tvalue = 0\n\t}}\n}}\n"
+        f"{CLOSE_VALUE} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ is_system_automated = {CLOSE_SYSTEM} }}\n\t\tvalue = 1\n\t}}\n}}\n"
+        "\n# One payback step from scope:pp_tplan_cur (the index it starts from, any = the last step + 1): longer (past the\n"
+        "# last step: any payback) and shorter (from any: the last step; never below the first).\n"
+        f"pp_tplan_pb_next_up = {{\n\tvalue = scope:pp_tplan_cur\n\tadd = 1\n\tmax = {PB_ANY}\n}}\n"
+        "pp_tplan_pb_next_down = {\n\tvalue = scope:pp_tplan_cur\n\tsubtract = 1\n\tmin = 1\n}\n"
+    )
+    return "".join(parts)
+
+
+def render_settings_effects(items: list[Plan]) -> str:
+    all_var = pb_var(PB_ALL)
+    keyed = "".join(f"\t\tflag:{plan.key} = {{ pp_tplan_pb_step = {{ var = {pb_var(plan.key)} dir = $dir$ all = no }} }}\n"
+                    for plan in items)
+    reset = "".join(f"\t\tflag:{plan.key} = {{ remove_variable = {pb_var(plan.key)} }}\n" for plan in items)
+    some = "".join(f"\t\t\t\tAND = {{ has_variable = {pb_var(plan.key)} var:{pb_var(plan.key)} < {PB_ANY - 0.5:g} }}\n"
+                   for plan in items)
+    declare = "".join(f"\tset_variable = {{ name = pp_tplan_sflag value = flag:{key} }}\n"
+                      for key in [PB_ALL] + [plan.key for plan in items])
+    return (
+        "\n# ---- Plan settings (country scope; the settings tab's buttons, scripted_guis/pp_town_plan_settings.txt) ----\n"
+        "# scope:pp_key = flag:all or flag:<plan>: its payback limit one step $dir$ (up = longer, down = shorter).\n"
+        "pp_tplan_pb_key = {\n\tswitch = {\n\t\ttrigger = scope:pp_key\n"
+        f"\t\tflag:{PB_ALL} = {{ pp_tplan_pb_step = {{ var = {all_var} dir = $dir$ all = yes }} }}\n"
+        + keyed + "\t}\n\tpp_tplan_pb_refresh = yes\n}\n"
+        "\n# scope:pp_key = flag:<plan>: the plan's payback limit is the all-plans one again.\n"
+        "pp_tplan_pb_key_reset = {\n\tswitch = {\n\t\ttrigger = scope:pp_key\n" + reset + "\t}\n\tpp_tplan_pb_refresh = yes\n}\n"
+        "\n# The payback limit $var$ one step $dir$. It starts from its own step, else (a plan, $all$ = no) from the\n"
+        f"# all-plans step, else from any payback ({PB_ANY}). The all-plans limit at any payback is unset; a plan keeps its\n"
+        "# own value, any payback too.\n"
+        "pp_tplan_pb_step = {\n"
+        "\tif = {\n\t\tlimit = { has_variable = $var$ }\n"
+        "\t\tsave_temporary_scope_value_as = { name = pp_tplan_cur value = var:$var$ }\n\t}\n"
+        f"\telse_if = {{\n\t\tlimit = {{ always = $all$ }}\n"
+        f"\t\tsave_temporary_scope_value_as = {{ name = pp_tplan_cur value = {PB_ANY} }}\n\t}}\n"
+        f"\telse_if = {{\n\t\tlimit = {{ has_variable = {all_var} }}\n"
+        f"\t\tsave_temporary_scope_value_as = {{ name = pp_tplan_cur value = var:{all_var} }}\n\t}}\n"
+        f"\telse = {{\n\t\tsave_temporary_scope_value_as = {{ name = pp_tplan_cur value = {PB_ANY} }}\n\t}}\n"
+        "\tsave_temporary_scope_value_as = { name = pp_tplan_new value = pp_tplan_pb_next_$dir$ }\n"
+        f"\tif = {{\n\t\tlimit = {{\n\t\t\talways = $all$\n\t\t\tscope:pp_tplan_new > {PB_ANY - 0.5:g}\n\t\t}}\n"
+        "\t\tremove_variable = $var$\n\t}\n"
+        "\telse = {\n\t\tset_variable = { name = $var$ value = scope:pp_tplan_new }\n\t}\n}\n"
+        f"\n# {PB_SOME_VAR} while a payback limit is set anywhere (the pass then works out the estimates of first levels\n"
+        "# and tier upgrades, pp_lplan_location_turn).\n"
+        f"pp_tplan_pb_refresh = {{\n\tif = {{\n\t\tlimit = {{\n\t\t\tOR = {{\n\t\t\t\thas_variable = {all_var}\n" + some
+        + f"\t\t\t}}\n\t\t}}\n\t\tset_variable = {{ name = {PB_SOME_VAR} value = yes }}\n\t}}\n"
+        f"\telse = {{\n\t\tremove_variable = {PB_SOME_VAR}\n\t}}\n}}\n"
+        "\n# Never runs (pp_lprof_run calls it under always = no): the flags the settings' buttons pass exist for the\n"
+        "# script check.\n"
+        "pp_tplan_settings_declare = {\n" + declare + "}\n"
+    )
+
+
+def render_settings_guis() -> str:
+    guard = "\tscope = country\n\tis_valid = {\n\t\tis_ai = no\n\t}\n"
+
+    def gui(name: str, comment: str, effect: str) -> str:
+        return f"\n# {comment}\n{name} = {{\n{guard}\teffect = {{\n{effect}\t}}\n}}\n"
+
+    return "".join([
+        HEADER,
+        "# The Construction Plan's plan settings (town_plans.py): the payback limit of every plan and of each plan, and\n"
+        "# the switches. Player only (observers' commands are dropped; the script checks the country is a player's).\n"
+        "# scope:pp_key = flag:all or flag:<plan>.\n",
+        gui(PB_UP_GUI, "One payback step longer (past the last step: any payback).",
+            "\t\tpp_tplan_pb_key = { dir = up }\n"),
+        gui(PB_DOWN_GUI, "One payback step shorter (from any payback: the last step; never below the first).",
+            "\t\tpp_tplan_pb_key = { dir = down }\n"),
+        gui(PB_RESET_GUI, "The plan's payback limit is the all-plans one again.", "\t\tpp_tplan_pb_key_reset = yes\n"),
+        gui(TOGGLE_LOSS_GUI, "Plans may add levels to buildings that lose money, or never (the default).",
+            f"\t\tpp_cplan_flip = {{ var = {LOSS_OK_VAR} }}\n"),
+        gui(TOGGLE_STAFF_GUI, "Plans wait for free workers (the default), or not.",
+            f"\t\tpp_cplan_flip = {{ var = {STAFF_OFF_VAR} }}\n"),
+        gui(TOGGLE_ORDER_GUI, "Several plans in one location take turns (the default), or go best payback first.",
+            f"\t\tpp_cplan_flip = {{ var = {ORDER_BEST_VAR} }}\n"),
+        gui(TOGGLE_CLOSE_GUI, "The game's own automation that closes buildings losing money: on or off.",
+            f"\t\tif = {{\n\t\t\tlimit = {{ is_system_automated = {CLOSE_SYSTEM} }}\n"
+            f"\t\t\tset_automated_system = {{ system = {CLOSE_SYSTEM} activate = no }}\n\t\t}}\n"
+            f"\t\telse = {{\n\t\t\tset_automated_system = {{ system = {CLOSE_SYSTEM} activate = yes }}\n\t\t}}\n"),
+    ])
+
+
+# ---------------------------------------------------------------------------------------------------------------------
 
 
 def _write_text(path: Path, text: str, write: bool) -> bool:
@@ -417,8 +590,9 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
         mod_root / RIGHTS: render_rights(items),
         mod_root / LOC: render_loc(items, names, charter_goods(mod_root)),
         mod_root / TRIGGERS: render_triggers(items),
-        mod_root / VALUES: render_values(items),
-        mod_root / EFFECTS: render_effects(items, cc.read_ranks(mod_root, vanilla_root)),
+        mod_root / VALUES: render_values(items) + render_settings_values(items),
+        mod_root / EFFECTS: render_effects(items, cc.read_ranks(mod_root, vanilla_root)) + render_settings_effects(items),
+        mod_root / SETTINGS_GUIS: render_settings_guis(),
     }
     icons, result.missing_icons = render_icons(items, mod_root, vanilla_root)
     result.files_changed = sum(_write_text(path, text, write) for path, text in texts.items())

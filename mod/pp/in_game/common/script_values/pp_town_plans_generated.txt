@@ -540,3 +540,2071 @@ pp_tplan_on_trade = {
 		value = 1
 	}
 }
+
+# ---- Plan settings (country scope; town_plans.py PAYBACK_STEPS, the settings tab reads them) ----
+# The payback limit in years, 0 = any payback: every plan's (pp_tplan_pb_all, a step of PAYBACK_STEPS), and each
+# plan's own (pp_tplan_pb_<plan>: a step, 13 = any payback; unset = the all-plans value).
+pp_tplan_pb_years_all = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_all }
+		if = { limit = { var:pp_tplan_pb_all < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_all < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_all < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_all < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_all < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_all < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_all < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_all < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_all < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_all < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_all < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_all < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_years_camels = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_camels }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_camels < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_camels < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_camels < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_camels < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_camels < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_camels < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_camels < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_camels < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_camels < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_camels < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_camels < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_camels < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_camels = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_camels }
+		value = 1
+	}
+}
+pp_tplan_pb_years_elephants = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_elephants }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_elephants < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_elephants < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_elephants < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_elephants < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_elephants < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_elephants < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_elephants < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_elephants < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_elephants < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_elephants < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_elephants < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_elephants < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_elephants = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_elephants }
+		value = 1
+	}
+}
+pp_tplan_pb_years_horses = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_horses }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_horses < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_horses < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_horses < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_horses < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_horses < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_horses < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_horses < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_horses < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_horses < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_horses < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_horses < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_horses < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_horses = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_horses }
+		value = 1
+	}
+}
+pp_tplan_pb_years_livestock = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_livestock }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_livestock < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_livestock < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_livestock < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_livestock < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_livestock < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_livestock < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_livestock < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_livestock < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_livestock < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_livestock < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_livestock < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_livestock < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_livestock = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_livestock }
+		value = 1
+	}
+}
+pp_tplan_pb_years_wool = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_wool }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_wool < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_wool < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_wool < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_wool < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_wool < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_wool < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_wool < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_wool < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_wool < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_wool < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_wool < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_wool < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_wool = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_wool }
+		value = 1
+	}
+}
+pp_tplan_pb_years_beeswax = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_beeswax }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_beeswax < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_beeswax < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_beeswax < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_beeswax < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_beeswax < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_beeswax < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_beeswax < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_beeswax < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_beeswax < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_beeswax < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_beeswax < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_beeswax < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_beeswax = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_beeswax }
+		value = 1
+	}
+}
+pp_tplan_pb_years_dyes = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_dyes }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_dyes < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_dyes < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_dyes < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_dyes < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_dyes < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_dyes < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_dyes < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_dyes < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_dyes < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_dyes < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_dyes < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_dyes < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_dyes = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_dyes }
+		value = 1
+	}
+}
+pp_tplan_pb_years_incense = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_incense }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_incense < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_incense < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_incense < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_incense < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_incense < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_incense < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_incense < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_incense < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_incense < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_incense < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_incense < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_incense < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_incense = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_incense }
+		value = 1
+	}
+}
+pp_tplan_pb_years_tobacco = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_tobacco }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_tobacco < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_tobacco < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_tobacco < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_tobacco < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_tobacco < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_tobacco < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_tobacco < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_tobacco < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_tobacco < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_tobacco < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_tobacco < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_tobacco < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_tobacco = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_tobacco }
+		value = 1
+	}
+}
+pp_tplan_pb_years_cotton = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_cotton }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_cotton < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_cotton < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_cotton < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_cotton < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_cotton < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_cotton < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_cotton < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_cotton < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_cotton < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_cotton < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_cotton < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_cotton < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_cotton = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_cotton }
+		value = 1
+	}
+}
+pp_tplan_pb_years_fiber_crops = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_fiber_crops }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_fiber_crops < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_fiber_crops < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_fiber_crops < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_fiber_crops < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_fiber_crops < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_fiber_crops < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_fiber_crops < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_fiber_crops < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_fiber_crops < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_fiber_crops < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_fiber_crops < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_fiber_crops < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_fiber_crops = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_fiber_crops }
+		value = 1
+	}
+}
+pp_tplan_pb_years_silk = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_silk }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_silk < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_silk < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_silk < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_silk < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_silk < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_silk < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_silk < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_silk < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_silk < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_silk < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_silk < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_silk < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_silk = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_silk }
+		value = 1
+	}
+}
+pp_tplan_pb_years_chili = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_chili }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_chili < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_chili < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_chili < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_chili < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_chili < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_chili < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_chili < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_chili < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_chili < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_chili < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_chili < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_chili < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_chili = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_chili }
+		value = 1
+	}
+}
+pp_tplan_pb_years_cloves = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_cloves }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_cloves < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_cloves < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_cloves < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_cloves < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_cloves < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_cloves < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_cloves < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_cloves < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_cloves < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_cloves < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_cloves < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_cloves < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_cloves = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_cloves }
+		value = 1
+	}
+}
+pp_tplan_pb_years_pepper = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_pepper }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_pepper < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_pepper < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_pepper < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_pepper < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_pepper < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_pepper < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_pepper < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_pepper < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_pepper < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_pepper < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_pepper < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_pepper < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_pepper = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_pepper }
+		value = 1
+	}
+}
+pp_tplan_pb_years_saffron = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_saffron }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_saffron < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_saffron < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_saffron < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_saffron < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_saffron < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_saffron < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_saffron < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_saffron < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_saffron < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_saffron < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_saffron < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_saffron < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_saffron = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_saffron }
+		value = 1
+	}
+}
+pp_tplan_pb_years_legumes = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_legumes }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_legumes < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_legumes < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_legumes < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_legumes < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_legumes < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_legumes < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_legumes < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_legumes < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_legumes < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_legumes < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_legumes < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_legumes < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_legumes = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_legumes }
+		value = 1
+	}
+}
+pp_tplan_pb_years_maize = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_maize }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_maize < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_maize < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_maize < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_maize < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_maize < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_maize < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_maize < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_maize < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_maize < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_maize < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_maize < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_maize < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_maize = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_maize }
+		value = 1
+	}
+}
+pp_tplan_pb_years_millet = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_millet }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_millet < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_millet < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_millet < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_millet < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_millet < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_millet < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_millet < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_millet < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_millet < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_millet < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_millet < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_millet < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_millet = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_millet }
+		value = 1
+	}
+}
+pp_tplan_pb_years_potato = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_potato }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_potato < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_potato < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_potato < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_potato < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_potato < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_potato < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_potato < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_potato < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_potato < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_potato < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_potato < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_potato < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_potato = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_potato }
+		value = 1
+	}
+}
+pp_tplan_pb_years_rice = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_rice }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_rice < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_rice < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_rice < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_rice < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_rice < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_rice < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_rice < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_rice < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_rice < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_rice < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_rice < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_rice < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_rice = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_rice }
+		value = 1
+	}
+}
+pp_tplan_pb_years_wheat = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_wheat }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_wheat < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_wheat < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_wheat < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_wheat < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_wheat < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_wheat < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_wheat < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_wheat < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_wheat < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_wheat < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_wheat < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_wheat < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_wheat = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_wheat }
+		value = 1
+	}
+}
+pp_tplan_pb_years_cocoa = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_cocoa }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_cocoa < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_cocoa < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_cocoa < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_cocoa < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_cocoa < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_cocoa < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_cocoa < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_cocoa < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_cocoa < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_cocoa < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_cocoa < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_cocoa < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_cocoa = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_cocoa }
+		value = 1
+	}
+}
+pp_tplan_pb_years_coffee = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_coffee }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_coffee < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_coffee < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_coffee < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_coffee < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_coffee < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_coffee < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_coffee < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_coffee < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_coffee < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_coffee < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_coffee < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_coffee < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_coffee = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_coffee }
+		value = 1
+	}
+}
+pp_tplan_pb_years_tea = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_tea }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_tea < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_tea < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_tea < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_tea < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_tea < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_tea < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_tea < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_tea < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_tea < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_tea < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_tea < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_tea < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_tea = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_tea }
+		value = 1
+	}
+}
+pp_tplan_pb_years_sugar = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_sugar }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_sugar < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_sugar < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_sugar < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_sugar < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_sugar < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_sugar < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_sugar < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_sugar < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_sugar < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_sugar < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_sugar < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_sugar < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_sugar = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_sugar }
+		value = 1
+	}
+}
+pp_tplan_pb_years_fruit = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_fruit }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_fruit < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_fruit < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_fruit < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_fruit < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_fruit < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_fruit < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_fruit < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_fruit < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_fruit < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_fruit < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_fruit < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_fruit < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_fruit = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_fruit }
+		value = 1
+	}
+}
+pp_tplan_pb_years_olives = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_olives }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_olives < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_olives < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_olives < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_olives < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_olives < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_olives < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_olives < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_olives < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_olives < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_olives < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_olives < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_olives < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_olives = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_olives }
+		value = 1
+	}
+}
+pp_tplan_pb_years_wine = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_wine }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_wine < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_wine < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_wine < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_wine < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_wine < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_wine < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_wine < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_wine < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_wine < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_wine < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_wine < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_wine < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_wine = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_wine }
+		value = 1
+	}
+}
+pp_tplan_pb_years_lumber = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_lumber }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_lumber < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_lumber < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_lumber < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_lumber < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_lumber < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_lumber < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_lumber < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_lumber < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_lumber < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_lumber < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_lumber < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_lumber < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_lumber = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_lumber }
+		value = 1
+	}
+}
+pp_tplan_pb_years_fish = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_fish }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_fish < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_fish < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_fish < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_fish < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_fish < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_fish < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_fish < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_fish < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_fish < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_fish < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_fish < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_fish < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_fish = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_fish }
+		value = 1
+	}
+}
+pp_tplan_pb_years_pearls = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_pearls }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_pearls < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_pearls < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_pearls < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_pearls < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_pearls < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_pearls < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_pearls < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_pearls < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_pearls < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_pearls < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_pearls < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_pearls < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_pearls = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_pearls }
+		value = 1
+	}
+}
+pp_tplan_pb_years_clay = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_clay }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_clay < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_clay < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_clay < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_clay < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_clay < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_clay < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_clay < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_clay < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_clay < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_clay < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_clay < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_clay < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_clay = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_clay }
+		value = 1
+	}
+}
+pp_tplan_pb_years_sand = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_sand }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_sand < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_sand < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_sand < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_sand < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_sand < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_sand < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_sand < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_sand < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_sand < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_sand < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_sand < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_sand < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_sand = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_sand }
+		value = 1
+	}
+}
+pp_tplan_pb_years_medicaments = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_medicaments }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_medicaments < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_medicaments < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_medicaments < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_medicaments < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_medicaments < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_medicaments < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_medicaments < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_medicaments < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_medicaments < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_medicaments < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_medicaments < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_medicaments < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_medicaments = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_medicaments }
+		value = 1
+	}
+}
+pp_tplan_pb_years_salt = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_salt }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_salt < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_salt < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_salt < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_salt < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_salt < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_salt < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_salt < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_salt < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_salt < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_salt < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_salt < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_salt < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_salt = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_salt }
+		value = 1
+	}
+}
+pp_tplan_pb_years_amber = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_amber }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_amber < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_amber < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_amber < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_amber < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_amber < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_amber < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_amber < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_amber < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_amber < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_amber < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_amber < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_amber < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_amber = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_amber }
+		value = 1
+	}
+}
+pp_tplan_pb_years_ivory = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_ivory }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_ivory < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_ivory < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_ivory < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_ivory < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_ivory < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_ivory < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_ivory < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_ivory < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_ivory < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_ivory < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_ivory < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_ivory < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_ivory = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_ivory }
+		value = 1
+	}
+}
+pp_tplan_pb_years_wild_game = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_wild_game }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_wild_game < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_wild_game < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_wild_game < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_wild_game < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_wild_game < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_wild_game < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_wild_game < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_wild_game < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_wild_game < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_wild_game < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_wild_game < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_wild_game < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_wild_game = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_wild_game }
+		value = 1
+	}
+}
+pp_tplan_pb_years_beer = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_beer }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_beer < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_beer < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_beer < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_beer < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_beer < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_beer < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_beer < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_beer < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_beer < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_beer < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_beer < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_beer < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_beer = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_beer }
+		value = 1
+	}
+}
+pp_tplan_pb_years_liquor = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_liquor }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_liquor < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_liquor < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_liquor < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_liquor < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_liquor < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_liquor < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_liquor < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_liquor < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_liquor < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_liquor < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_liquor < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_liquor < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_liquor = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_liquor }
+		value = 1
+	}
+}
+pp_tplan_pb_years_books = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_books }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_books < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_books < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_books < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_books < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_books < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_books < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_books < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_books < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_books < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_books < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_books < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_books < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_books = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_books }
+		value = 1
+	}
+}
+pp_tplan_pb_years_paper = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_paper }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_paper < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_paper < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_paper < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_paper < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_paper < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_paper < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_paper < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_paper < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_paper < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_paper < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_paper < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_paper < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_paper = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_paper }
+		value = 1
+	}
+}
+pp_tplan_pb_years_slaves_goods = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_slaves_goods }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_slaves_goods < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_slaves_goods < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_slaves_goods < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_slaves_goods < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_slaves_goods < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_slaves_goods < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_slaves_goods < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_slaves_goods < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_slaves_goods < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_slaves_goods < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_slaves_goods < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_slaves_goods < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_slaves_goods = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_slaves_goods }
+		value = 1
+	}
+}
+pp_tplan_pb_years_glass = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_glass }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_glass < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_glass < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_glass < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_glass < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_glass < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_glass < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_glass < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_glass < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_glass < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_glass < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_glass < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_glass < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_glass = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_glass }
+		value = 1
+	}
+}
+pp_tplan_pb_years_masonry = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_masonry }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_masonry < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_masonry < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_masonry < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_masonry < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_masonry < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_masonry < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_masonry < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_masonry < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_masonry < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_masonry < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_masonry < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_masonry < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_masonry = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_masonry }
+		value = 1
+	}
+}
+pp_tplan_pb_years_pottery = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_pottery }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_pottery < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_pottery < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_pottery < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_pottery < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_pottery < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_pottery < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_pottery < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_pottery < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_pottery < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_pottery < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_pottery < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_pottery < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_pottery = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_pottery }
+		value = 1
+	}
+}
+pp_tplan_pb_years_tar = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_tar }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_tar < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_tar < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_tar < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_tar < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_tar < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_tar < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_tar < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_tar < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_tar < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_tar < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_tar < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_tar < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_tar = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_tar }
+		value = 1
+	}
+}
+pp_tplan_pb_years_furniture = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_furniture }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_furniture < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_furniture < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_furniture < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_furniture < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_furniture < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_furniture < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_furniture < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_furniture < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_furniture < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_furniture < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_furniture < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_furniture < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_furniture = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_furniture }
+		value = 1
+	}
+}
+pp_tplan_pb_years_jewelry = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_jewelry }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_jewelry < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_jewelry < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_jewelry < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_jewelry < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_jewelry < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_jewelry < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_jewelry < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_jewelry < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_jewelry < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_jewelry < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_jewelry < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_jewelry < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_jewelry = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_jewelry }
+		value = 1
+	}
+}
+pp_tplan_pb_years_lacquerware = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_lacquerware }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_lacquerware < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_lacquerware < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_lacquerware < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_lacquerware < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_lacquerware < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_lacquerware < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_lacquerware < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_lacquerware < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_lacquerware < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_lacquerware < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_lacquerware < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_lacquerware < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_lacquerware = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_lacquerware }
+		value = 1
+	}
+}
+pp_tplan_pb_years_porcelain = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_porcelain }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_porcelain < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_porcelain < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_porcelain < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_porcelain < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_porcelain < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_porcelain < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_porcelain < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_porcelain < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_porcelain < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_porcelain < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_porcelain < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_porcelain < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_porcelain = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_porcelain }
+		value = 1
+	}
+}
+pp_tplan_pb_years_steel = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_steel }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_steel < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_steel < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_steel < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_steel < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_steel < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_steel < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_steel < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_steel < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_steel < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_steel < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_steel < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_steel < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_steel = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_steel }
+		value = 1
+	}
+}
+pp_tplan_pb_years_tools = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_tools }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_tools < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_tools < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_tools < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_tools < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_tools < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_tools < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_tools < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_tools < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_tools < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_tools < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_tools < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_tools < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_tools = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_tools }
+		value = 1
+	}
+}
+pp_tplan_pb_years_cannons = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_cannons }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_cannons < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_cannons < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_cannons < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_cannons < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_cannons < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_cannons < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_cannons < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_cannons < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_cannons < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_cannons < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_cannons < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_cannons < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_cannons = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_cannons }
+		value = 1
+	}
+}
+pp_tplan_pb_years_firearms = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_firearms }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_firearms < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_firearms < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_firearms < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_firearms < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_firearms < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_firearms < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_firearms < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_firearms < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_firearms < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_firearms < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_firearms < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_firearms < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_firearms = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_firearms }
+		value = 1
+	}
+}
+pp_tplan_pb_years_weaponry = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_weaponry }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_weaponry < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_weaponry < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_weaponry < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_weaponry < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_weaponry < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_weaponry < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_weaponry < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_weaponry < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_weaponry < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_weaponry < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_weaponry < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_weaponry < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_weaponry = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_weaponry }
+		value = 1
+	}
+}
+pp_tplan_pb_years_naval_supplies = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_naval_supplies }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_naval_supplies < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_naval_supplies < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_naval_supplies < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_naval_supplies < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_naval_supplies < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_naval_supplies < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_naval_supplies < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_naval_supplies < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_naval_supplies < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_naval_supplies < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_naval_supplies < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_naval_supplies < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_naval_supplies = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_naval_supplies }
+		value = 1
+	}
+}
+pp_tplan_pb_years_victuals = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_victuals }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_victuals < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_victuals < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_victuals < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_victuals < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_victuals < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_victuals < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_victuals < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_victuals < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_victuals < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_victuals < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_victuals < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_victuals < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_victuals = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_victuals }
+		value = 1
+	}
+}
+pp_tplan_pb_years_cloth = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_cloth }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_cloth < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_cloth < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_cloth < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_cloth < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_cloth < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_cloth < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_cloth < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_cloth < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_cloth < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_cloth < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_cloth < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_cloth < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_cloth = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_cloth }
+		value = 1
+	}
+}
+pp_tplan_pb_years_fine_cloth = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_fine_cloth }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_fine_cloth < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_fine_cloth < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_fine_cloth < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_fine_cloth < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_fine_cloth < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_fine_cloth < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_fine_cloth < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_fine_cloth < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_fine_cloth < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_fine_cloth < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_fine_cloth < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_fine_cloth < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_fine_cloth = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_fine_cloth }
+		value = 1
+	}
+}
+pp_tplan_pb_years_leather = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_leather }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_leather < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_leather < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_leather < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_leather < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_leather < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_leather < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_leather < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_leather < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_leather < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_leather < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_leather < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_leather < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_leather = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_leather }
+		value = 1
+	}
+}
+pp_tplan_pb_years_marble = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_marble }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_marble < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_marble < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_marble < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_marble < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_marble < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_marble < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_marble < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_marble < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_marble < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_marble < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_marble < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_marble < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_marble = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_marble }
+		value = 1
+	}
+}
+pp_tplan_pb_years_stone = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_stone }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_stone < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_stone < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_stone < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_stone < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_stone < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_stone < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_stone < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_stone < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_stone < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_stone < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_stone < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_stone < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_stone = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_stone }
+		value = 1
+	}
+}
+pp_tplan_pb_years_coal = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_coal }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_coal < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_coal < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_coal < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_coal < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_coal < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_coal < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_coal < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_coal < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_coal < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_coal < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_coal < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_coal < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_coal = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_coal }
+		value = 1
+	}
+}
+pp_tplan_pb_years_alum = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_alum }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_alum < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_alum < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_alum < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_alum < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_alum < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_alum < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_alum < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_alum < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_alum < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_alum < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_alum < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_alum < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_alum = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_alum }
+		value = 1
+	}
+}
+pp_tplan_pb_years_mercury = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_mercury }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_mercury < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_mercury < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_mercury < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_mercury < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_mercury < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_mercury < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_mercury < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_mercury < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_mercury < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_mercury < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_mercury < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_mercury < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_mercury = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_mercury }
+		value = 1
+	}
+}
+pp_tplan_pb_years_saltpeter = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_saltpeter }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_saltpeter < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_saltpeter < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_saltpeter < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_saltpeter < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_saltpeter < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_saltpeter < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_saltpeter < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_saltpeter < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_saltpeter < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_saltpeter < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_saltpeter < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_saltpeter < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_saltpeter = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_saltpeter }
+		value = 1
+	}
+}
+pp_tplan_pb_years_copper = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_copper }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_copper < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_copper < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_copper < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_copper < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_copper < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_copper < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_copper < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_copper < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_copper < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_copper < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_copper < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_copper < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_copper = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_copper }
+		value = 1
+	}
+}
+pp_tplan_pb_years_iron = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_iron }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_iron < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_iron < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_iron < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_iron < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_iron < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_iron < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_iron < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_iron < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_iron < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_iron < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_iron < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_iron < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_iron = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_iron }
+		value = 1
+	}
+}
+pp_tplan_pb_years_lead = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_lead }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_lead < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_lead < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_lead < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_lead < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_lead < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_lead < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_lead < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_lead < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_lead < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_lead < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_lead < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_lead < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_lead = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_lead }
+		value = 1
+	}
+}
+pp_tplan_pb_years_tin = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_tin }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_tin < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_tin < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_tin < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_tin < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_tin < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_tin < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_tin < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_tin < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_tin < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_tin < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_tin < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_tin < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_tin = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_tin }
+		value = 1
+	}
+}
+pp_tplan_pb_years_gems = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_gems }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_gems < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_gems < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_gems < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_gems < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_gems < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_gems < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_gems < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_gems < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_gems < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_gems < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_gems < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_gems < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_gems = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_gems }
+		value = 1
+	}
+}
+pp_tplan_pb_years_goods_gold = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_goods_gold }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_goods_gold < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_goods_gold < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_goods_gold < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_goods_gold < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_goods_gold < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_goods_gold < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_goods_gold < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_goods_gold < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_goods_gold < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_goods_gold < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_goods_gold < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_goods_gold < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_goods_gold = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_goods_gold }
+		value = 1
+	}
+}
+pp_tplan_pb_years_silver = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_silver }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_silver < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_silver < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_silver < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_silver < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_silver < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_silver < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_silver < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_silver < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_silver < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_silver < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_silver < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_silver < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_silver = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_silver }
+		value = 1
+	}
+}
+pp_tplan_pb_years_food = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_food }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_food < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_food < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_food < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_food < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_food < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_food < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_food < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_food < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_food < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_food < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_food < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_food < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_food = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_food }
+		value = 1
+	}
+}
+pp_tplan_pb_years_trade = {
+	value = pp_tplan_pb_years_all
+	if = {
+		limit = { has_variable = pp_tplan_pb_trade }
+		value = 0
+		if = { limit = { var:pp_tplan_pb_trade < 1.5 } value = 1 }
+		else_if = { limit = { var:pp_tplan_pb_trade < 2.5 } value = 2 }
+		else_if = { limit = { var:pp_tplan_pb_trade < 3.5 } value = 3 }
+		else_if = { limit = { var:pp_tplan_pb_trade < 4.5 } value = 4 }
+		else_if = { limit = { var:pp_tplan_pb_trade < 5.5 } value = 5 }
+		else_if = { limit = { var:pp_tplan_pb_trade < 6.5 } value = 7 }
+		else_if = { limit = { var:pp_tplan_pb_trade < 7.5 } value = 10 }
+		else_if = { limit = { var:pp_tplan_pb_trade < 8.5 } value = 15 }
+		else_if = { limit = { var:pp_tplan_pb_trade < 9.5 } value = 20 }
+		else_if = { limit = { var:pp_tplan_pb_trade < 10.5 } value = 30 }
+		else_if = { limit = { var:pp_tplan_pb_trade < 11.5 } value = 40 }
+		else_if = { limit = { var:pp_tplan_pb_trade < 12.5 } value = 50 }
+	}
+}
+pp_tplan_pb_own_trade = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_tplan_pb_trade }
+		value = 1
+	}
+}
+
+# The switches, 1 = the default: never at a loss, wait for free workers, take turns; and the game's own
+# automation that closes buildings, 1 = on.
+pp_tplan_loss_n = {
+	value = 1
+	if = {
+		limit = { has_variable = pp_tplan_loss_ok }
+		value = 0
+	}
+}
+pp_tplan_staff_n = {
+	value = 1
+	if = {
+		limit = { has_variable = pp_tplan_staff_off }
+		value = 0
+	}
+}
+pp_tplan_order_n = {
+	value = 1
+	if = {
+		limit = { has_variable = pp_tplan_order_best }
+		value = 0
+	}
+}
+pp_tplan_close_n = {
+	value = 0
+	if = {
+		limit = { is_system_automated = closebuildings }
+		value = 1
+	}
+}
+
+# One payback step from scope:pp_tplan_cur (the index it starts from, any = the last step + 1): longer (past the
+# last step: any payback) and shorter (from any: the last step; never below the first).
+pp_tplan_pb_next_up = {
+	value = scope:pp_tplan_cur
+	add = 1
+	max = 13
+}
+pp_tplan_pb_next_down = {
+	value = scope:pp_tplan_cur
+	subtract = 1
+	min = 1
+}

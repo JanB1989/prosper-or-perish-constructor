@@ -1976,6 +1976,10 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
         + (f"; no icon for: {', '.join(lplan.missing_icons)}." if lplan.missing_icons else "."),
         flush=True,
     )
+    from prosper_or_perish_constructor import town_plan_settings_gui  # the Construction Plan window's Plans tab
+
+    print(town_plan_settings_gui.summary(
+        town_plan_settings_gui.apply(repo, project, mod_root, vanilla_root(repo, project))), flush=True)
     from prosper_or_perish_constructor import location_profiles  # the plan engine (targets, the plans' turn)
 
     changed = location_profiles.apply(repo, project, mod_root, vanilla_root(repo, project))

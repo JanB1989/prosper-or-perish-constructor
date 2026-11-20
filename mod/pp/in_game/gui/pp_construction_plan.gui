@@ -3,14 +3,16 @@
 # window is overridden.
 # Tabs (vanilla main tabs): Global Settings (the plan on or off, the gold reserve, the six rule groups with their
 # weight bars and lines, what the last pass built) and Towns and Buildings (the settings of that rule group, type
-# pp_cplan_country_tab, construction_plan_country.py; Location Profiles, the second tab until 2026-11-19, are gone).
+# pp_cplan_country_tab, construction_plan_country.py; Location Profiles, the second tab until 2026-11-19, are gone)
+# and Plans (since 2026-11-20: the settings every town-right plan shares and each plan's card, type pp_tplan_set_tab,
+# town_plan_settings_gui.py).
 # Each rule group row ends in a cog (pp_cplan_detail_button_<group>, since 2026-11-09,
 # Jan: "what's happening under the hood"); it shows that group's detail pane (pp_cplan_detail_<group>: gold had,
 # wanted, spent and waiting, its situation, the last 12 months, what it built and why) in place of the "Last month"
 # list (pp_cplan_last_list). All three are generated into pp_construction_plan_detail.gui
 # (construction_plan_detail.py).
-# GUI variables: pp_cplan_open (window open), pp_cplan_tab ('country' = the second tab, anything else the
-# first), pp_cplan_detail (the group whose pane is open; unset = the "Last month" list).
+# GUI variables: pp_cplan_open (window open), pp_cplan_tab ('country' = the second tab, 'plans' the third,
+# anything else the first), pp_cplan_detail (the group whose pane is open; unset = the "Last month" list).
 # Every button runs a scripted GUI in common/scripted_guis/pp_construction_plan.txt; every number is a script value
 # (common/script_values/pp_construction_plan*.txt).
 # Shown only to a player who plays a country (not to observers: their scripted GUIs do nothing).
@@ -49,22 +51,38 @@ types PPConstructionPlan
 }
 
 # ---- Opener (its own scripted widget: a widget only takes mouse input inside its parent's rectangle) ----
+# A tab of the game's own kind (button_panel_tab_alt on bg_panel_tabs, the look of the top-left panel's tab row), docked
+# at the left screen edge right under that row, with the game's mass-construction icon (Jan 2026-11-20: the text button
+# floating over the map looked out of place; no vanilla file is overridden for it). The side panels open over it.
 widget = {
 	name = "pp_construction_plan"
-	position = { 36 236 }
-	size = { 170 32 }
+	position = { 0 132 }
+	size = { 62 36 }
 	# scripted widgets need a function here; "yes" does not work
 	# (not on the pause menu: vanilla's own HUD parts ask IsPauseMenuShown; in game 2026-11-10 the button stood on it)
 	visible = "[And3(GetPlayer.Exists, Not(IsObserving), Not(IsPauseMenuShown))]"
 
-	button_regular = {
-		name = "pp_cplan_opener"
-		size = { 170 32 }
-		text = "PP_CPLAN_OPEN"
-		tooltip = "PP_CPLAN_OPEN_TT"
-		onclick = "[GetVariableSystem.Toggle('pp_cplan_open')]"
-		# the Towns and Buildings tab's grids: place the tiles (the window may open on that tab)
-		onclick = "[GetScriptedGui('pp_cplan_country_layout').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+	widget = {
+		using = bg_panel_tabs
+		size = { 62 36 }
+
+		button_panel_tab_alt = {
+			name = "pp_cplan_opener"
+			size = { 62 36 }
+			down = "[GetVariableSystem.Exists('pp_cplan_open')]"
+			tooltip = "PP_CPLAN_OPEN_TT"
+			onclick = "[GetVariableSystem.Toggle('pp_cplan_open')]"
+			# the Towns and Buildings tab's grids: place the tiles (the window may open on that tab)
+			onclick = "[GetScriptedGui('pp_cplan_country_layout').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+
+			button = {
+				alwaystransparent = yes
+				size = { 26 26 }
+				parentanchor = center
+				texture = "gfx/interface/icons/flat_icons/mass_construct.dds"
+				texture_density = 2
+			}
+		}
 	}
 }
 
@@ -96,7 +114,7 @@ widget = {
 							text = "PP_CPLAN_TAB_PLAN"
 						}
 						tooltip = "PP_CPLAN_TAB_PLAN_TT"
-						down = "[Not(GetVariableSystem.HasValue('pp_cplan_tab', 'country'))]"
+						down = "[Not(Or(GetVariableSystem.HasValue('pp_cplan_tab', 'country'), GetVariableSystem.HasValue('pp_cplan_tab', 'plans')))]"
 						onclick = "[GetVariableSystem.Set('pp_cplan_tab', 'plan')]"
 					}
 					button_main_tab_alt = {
@@ -109,6 +127,15 @@ widget = {
 						onclick = "[GetVariableSystem.Set('pp_cplan_tab', 'country')]"
 						onclick = "[GetScriptedGui('pp_cplan_country_layout').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 					}
+					button_main_tab_alt = {
+						layoutpolicy_horizontal = expanding
+						blockoverride "tab_text" {
+							text = "PP_CPLAN_TAB_PLANS"
+						}
+						tooltip = "PP_CPLAN_TAB_PLANS_TT"
+						down = "[GetVariableSystem.HasValue('pp_cplan_tab', 'plans')]"
+						onclick = "[GetVariableSystem.Set('pp_cplan_tab', 'plans')]"
+					}
 				}
 			}
 
@@ -119,7 +146,7 @@ widget = {
 
 				# ======================== Global settings ========================
 				vbox = {
-					visible = "[Not(GetVariableSystem.HasValue('pp_cplan_tab', 'country'))]"
+					visible = "[Not(Or(GetVariableSystem.HasValue('pp_cplan_tab', 'country'), GetVariableSystem.HasValue('pp_cplan_tab', 'plans')))]"
 					layoutpolicy_horizontal = expanding
 					layoutpolicy_vertical = expanding
 					ignoreinvisible = yes # the closed detail panes take no spacing
@@ -293,6 +320,17 @@ widget = {
 					layoutpolicy_vertical = expanding
 
 					pp_cplan_country_tab = {}
+				}
+
+				# ======================== Plans ========================
+				# (the settings every town-right plan shares and each plan's card; the type is
+				# town_plan_settings_gui.py's, gui/pp_town_plan_settings_generated.gui)
+				vbox = {
+					visible = "[GetVariableSystem.HasValue('pp_cplan_tab', 'plans')]"
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+
+					pp_tplan_set_tab = {}
 				}
 			}
 		}

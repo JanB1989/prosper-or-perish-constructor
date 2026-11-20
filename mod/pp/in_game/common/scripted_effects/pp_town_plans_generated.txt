@@ -333,3 +333,383 @@ pp_tplan_raise_city = {
 		scope:pp_cplan_country = { remove_variable = pp_cplan_wait }
 	}
 }
+
+# ---- Plan settings (country scope; the settings tab's buttons, scripted_guis/pp_town_plan_settings.txt) ----
+# scope:pp_key = flag:all or flag:<plan>: its payback limit one step $dir$ (up = longer, down = shorter).
+pp_tplan_pb_key = {
+	switch = {
+		trigger = scope:pp_key
+		flag:all = { pp_tplan_pb_step = { var = pp_tplan_pb_all dir = $dir$ all = yes } }
+		flag:camels = { pp_tplan_pb_step = { var = pp_tplan_pb_camels dir = $dir$ all = no } }
+		flag:elephants = { pp_tplan_pb_step = { var = pp_tplan_pb_elephants dir = $dir$ all = no } }
+		flag:horses = { pp_tplan_pb_step = { var = pp_tplan_pb_horses dir = $dir$ all = no } }
+		flag:livestock = { pp_tplan_pb_step = { var = pp_tplan_pb_livestock dir = $dir$ all = no } }
+		flag:wool = { pp_tplan_pb_step = { var = pp_tplan_pb_wool dir = $dir$ all = no } }
+		flag:beeswax = { pp_tplan_pb_step = { var = pp_tplan_pb_beeswax dir = $dir$ all = no } }
+		flag:dyes = { pp_tplan_pb_step = { var = pp_tplan_pb_dyes dir = $dir$ all = no } }
+		flag:incense = { pp_tplan_pb_step = { var = pp_tplan_pb_incense dir = $dir$ all = no } }
+		flag:tobacco = { pp_tplan_pb_step = { var = pp_tplan_pb_tobacco dir = $dir$ all = no } }
+		flag:cotton = { pp_tplan_pb_step = { var = pp_tplan_pb_cotton dir = $dir$ all = no } }
+		flag:fiber_crops = { pp_tplan_pb_step = { var = pp_tplan_pb_fiber_crops dir = $dir$ all = no } }
+		flag:silk = { pp_tplan_pb_step = { var = pp_tplan_pb_silk dir = $dir$ all = no } }
+		flag:chili = { pp_tplan_pb_step = { var = pp_tplan_pb_chili dir = $dir$ all = no } }
+		flag:cloves = { pp_tplan_pb_step = { var = pp_tplan_pb_cloves dir = $dir$ all = no } }
+		flag:pepper = { pp_tplan_pb_step = { var = pp_tplan_pb_pepper dir = $dir$ all = no } }
+		flag:saffron = { pp_tplan_pb_step = { var = pp_tplan_pb_saffron dir = $dir$ all = no } }
+		flag:legumes = { pp_tplan_pb_step = { var = pp_tplan_pb_legumes dir = $dir$ all = no } }
+		flag:maize = { pp_tplan_pb_step = { var = pp_tplan_pb_maize dir = $dir$ all = no } }
+		flag:millet = { pp_tplan_pb_step = { var = pp_tplan_pb_millet dir = $dir$ all = no } }
+		flag:potato = { pp_tplan_pb_step = { var = pp_tplan_pb_potato dir = $dir$ all = no } }
+		flag:rice = { pp_tplan_pb_step = { var = pp_tplan_pb_rice dir = $dir$ all = no } }
+		flag:wheat = { pp_tplan_pb_step = { var = pp_tplan_pb_wheat dir = $dir$ all = no } }
+		flag:cocoa = { pp_tplan_pb_step = { var = pp_tplan_pb_cocoa dir = $dir$ all = no } }
+		flag:coffee = { pp_tplan_pb_step = { var = pp_tplan_pb_coffee dir = $dir$ all = no } }
+		flag:tea = { pp_tplan_pb_step = { var = pp_tplan_pb_tea dir = $dir$ all = no } }
+		flag:sugar = { pp_tplan_pb_step = { var = pp_tplan_pb_sugar dir = $dir$ all = no } }
+		flag:fruit = { pp_tplan_pb_step = { var = pp_tplan_pb_fruit dir = $dir$ all = no } }
+		flag:olives = { pp_tplan_pb_step = { var = pp_tplan_pb_olives dir = $dir$ all = no } }
+		flag:wine = { pp_tplan_pb_step = { var = pp_tplan_pb_wine dir = $dir$ all = no } }
+		flag:lumber = { pp_tplan_pb_step = { var = pp_tplan_pb_lumber dir = $dir$ all = no } }
+		flag:fish = { pp_tplan_pb_step = { var = pp_tplan_pb_fish dir = $dir$ all = no } }
+		flag:pearls = { pp_tplan_pb_step = { var = pp_tplan_pb_pearls dir = $dir$ all = no } }
+		flag:clay = { pp_tplan_pb_step = { var = pp_tplan_pb_clay dir = $dir$ all = no } }
+		flag:sand = { pp_tplan_pb_step = { var = pp_tplan_pb_sand dir = $dir$ all = no } }
+		flag:medicaments = { pp_tplan_pb_step = { var = pp_tplan_pb_medicaments dir = $dir$ all = no } }
+		flag:salt = { pp_tplan_pb_step = { var = pp_tplan_pb_salt dir = $dir$ all = no } }
+		flag:amber = { pp_tplan_pb_step = { var = pp_tplan_pb_amber dir = $dir$ all = no } }
+		flag:ivory = { pp_tplan_pb_step = { var = pp_tplan_pb_ivory dir = $dir$ all = no } }
+		flag:wild_game = { pp_tplan_pb_step = { var = pp_tplan_pb_wild_game dir = $dir$ all = no } }
+		flag:beer = { pp_tplan_pb_step = { var = pp_tplan_pb_beer dir = $dir$ all = no } }
+		flag:liquor = { pp_tplan_pb_step = { var = pp_tplan_pb_liquor dir = $dir$ all = no } }
+		flag:books = { pp_tplan_pb_step = { var = pp_tplan_pb_books dir = $dir$ all = no } }
+		flag:paper = { pp_tplan_pb_step = { var = pp_tplan_pb_paper dir = $dir$ all = no } }
+		flag:slaves_goods = { pp_tplan_pb_step = { var = pp_tplan_pb_slaves_goods dir = $dir$ all = no } }
+		flag:glass = { pp_tplan_pb_step = { var = pp_tplan_pb_glass dir = $dir$ all = no } }
+		flag:masonry = { pp_tplan_pb_step = { var = pp_tplan_pb_masonry dir = $dir$ all = no } }
+		flag:pottery = { pp_tplan_pb_step = { var = pp_tplan_pb_pottery dir = $dir$ all = no } }
+		flag:tar = { pp_tplan_pb_step = { var = pp_tplan_pb_tar dir = $dir$ all = no } }
+		flag:furniture = { pp_tplan_pb_step = { var = pp_tplan_pb_furniture dir = $dir$ all = no } }
+		flag:jewelry = { pp_tplan_pb_step = { var = pp_tplan_pb_jewelry dir = $dir$ all = no } }
+		flag:lacquerware = { pp_tplan_pb_step = { var = pp_tplan_pb_lacquerware dir = $dir$ all = no } }
+		flag:porcelain = { pp_tplan_pb_step = { var = pp_tplan_pb_porcelain dir = $dir$ all = no } }
+		flag:steel = { pp_tplan_pb_step = { var = pp_tplan_pb_steel dir = $dir$ all = no } }
+		flag:tools = { pp_tplan_pb_step = { var = pp_tplan_pb_tools dir = $dir$ all = no } }
+		flag:cannons = { pp_tplan_pb_step = { var = pp_tplan_pb_cannons dir = $dir$ all = no } }
+		flag:firearms = { pp_tplan_pb_step = { var = pp_tplan_pb_firearms dir = $dir$ all = no } }
+		flag:weaponry = { pp_tplan_pb_step = { var = pp_tplan_pb_weaponry dir = $dir$ all = no } }
+		flag:naval_supplies = { pp_tplan_pb_step = { var = pp_tplan_pb_naval_supplies dir = $dir$ all = no } }
+		flag:victuals = { pp_tplan_pb_step = { var = pp_tplan_pb_victuals dir = $dir$ all = no } }
+		flag:cloth = { pp_tplan_pb_step = { var = pp_tplan_pb_cloth dir = $dir$ all = no } }
+		flag:fine_cloth = { pp_tplan_pb_step = { var = pp_tplan_pb_fine_cloth dir = $dir$ all = no } }
+		flag:leather = { pp_tplan_pb_step = { var = pp_tplan_pb_leather dir = $dir$ all = no } }
+		flag:marble = { pp_tplan_pb_step = { var = pp_tplan_pb_marble dir = $dir$ all = no } }
+		flag:stone = { pp_tplan_pb_step = { var = pp_tplan_pb_stone dir = $dir$ all = no } }
+		flag:coal = { pp_tplan_pb_step = { var = pp_tplan_pb_coal dir = $dir$ all = no } }
+		flag:alum = { pp_tplan_pb_step = { var = pp_tplan_pb_alum dir = $dir$ all = no } }
+		flag:mercury = { pp_tplan_pb_step = { var = pp_tplan_pb_mercury dir = $dir$ all = no } }
+		flag:saltpeter = { pp_tplan_pb_step = { var = pp_tplan_pb_saltpeter dir = $dir$ all = no } }
+		flag:copper = { pp_tplan_pb_step = { var = pp_tplan_pb_copper dir = $dir$ all = no } }
+		flag:iron = { pp_tplan_pb_step = { var = pp_tplan_pb_iron dir = $dir$ all = no } }
+		flag:lead = { pp_tplan_pb_step = { var = pp_tplan_pb_lead dir = $dir$ all = no } }
+		flag:tin = { pp_tplan_pb_step = { var = pp_tplan_pb_tin dir = $dir$ all = no } }
+		flag:gems = { pp_tplan_pb_step = { var = pp_tplan_pb_gems dir = $dir$ all = no } }
+		flag:goods_gold = { pp_tplan_pb_step = { var = pp_tplan_pb_goods_gold dir = $dir$ all = no } }
+		flag:silver = { pp_tplan_pb_step = { var = pp_tplan_pb_silver dir = $dir$ all = no } }
+		flag:food = { pp_tplan_pb_step = { var = pp_tplan_pb_food dir = $dir$ all = no } }
+		flag:trade = { pp_tplan_pb_step = { var = pp_tplan_pb_trade dir = $dir$ all = no } }
+	}
+	pp_tplan_pb_refresh = yes
+}
+
+# scope:pp_key = flag:<plan>: the plan's payback limit is the all-plans one again.
+pp_tplan_pb_key_reset = {
+	switch = {
+		trigger = scope:pp_key
+		flag:camels = { remove_variable = pp_tplan_pb_camels }
+		flag:elephants = { remove_variable = pp_tplan_pb_elephants }
+		flag:horses = { remove_variable = pp_tplan_pb_horses }
+		flag:livestock = { remove_variable = pp_tplan_pb_livestock }
+		flag:wool = { remove_variable = pp_tplan_pb_wool }
+		flag:beeswax = { remove_variable = pp_tplan_pb_beeswax }
+		flag:dyes = { remove_variable = pp_tplan_pb_dyes }
+		flag:incense = { remove_variable = pp_tplan_pb_incense }
+		flag:tobacco = { remove_variable = pp_tplan_pb_tobacco }
+		flag:cotton = { remove_variable = pp_tplan_pb_cotton }
+		flag:fiber_crops = { remove_variable = pp_tplan_pb_fiber_crops }
+		flag:silk = { remove_variable = pp_tplan_pb_silk }
+		flag:chili = { remove_variable = pp_tplan_pb_chili }
+		flag:cloves = { remove_variable = pp_tplan_pb_cloves }
+		flag:pepper = { remove_variable = pp_tplan_pb_pepper }
+		flag:saffron = { remove_variable = pp_tplan_pb_saffron }
+		flag:legumes = { remove_variable = pp_tplan_pb_legumes }
+		flag:maize = { remove_variable = pp_tplan_pb_maize }
+		flag:millet = { remove_variable = pp_tplan_pb_millet }
+		flag:potato = { remove_variable = pp_tplan_pb_potato }
+		flag:rice = { remove_variable = pp_tplan_pb_rice }
+		flag:wheat = { remove_variable = pp_tplan_pb_wheat }
+		flag:cocoa = { remove_variable = pp_tplan_pb_cocoa }
+		flag:coffee = { remove_variable = pp_tplan_pb_coffee }
+		flag:tea = { remove_variable = pp_tplan_pb_tea }
+		flag:sugar = { remove_variable = pp_tplan_pb_sugar }
+		flag:fruit = { remove_variable = pp_tplan_pb_fruit }
+		flag:olives = { remove_variable = pp_tplan_pb_olives }
+		flag:wine = { remove_variable = pp_tplan_pb_wine }
+		flag:lumber = { remove_variable = pp_tplan_pb_lumber }
+		flag:fish = { remove_variable = pp_tplan_pb_fish }
+		flag:pearls = { remove_variable = pp_tplan_pb_pearls }
+		flag:clay = { remove_variable = pp_tplan_pb_clay }
+		flag:sand = { remove_variable = pp_tplan_pb_sand }
+		flag:medicaments = { remove_variable = pp_tplan_pb_medicaments }
+		flag:salt = { remove_variable = pp_tplan_pb_salt }
+		flag:amber = { remove_variable = pp_tplan_pb_amber }
+		flag:ivory = { remove_variable = pp_tplan_pb_ivory }
+		flag:wild_game = { remove_variable = pp_tplan_pb_wild_game }
+		flag:beer = { remove_variable = pp_tplan_pb_beer }
+		flag:liquor = { remove_variable = pp_tplan_pb_liquor }
+		flag:books = { remove_variable = pp_tplan_pb_books }
+		flag:paper = { remove_variable = pp_tplan_pb_paper }
+		flag:slaves_goods = { remove_variable = pp_tplan_pb_slaves_goods }
+		flag:glass = { remove_variable = pp_tplan_pb_glass }
+		flag:masonry = { remove_variable = pp_tplan_pb_masonry }
+		flag:pottery = { remove_variable = pp_tplan_pb_pottery }
+		flag:tar = { remove_variable = pp_tplan_pb_tar }
+		flag:furniture = { remove_variable = pp_tplan_pb_furniture }
+		flag:jewelry = { remove_variable = pp_tplan_pb_jewelry }
+		flag:lacquerware = { remove_variable = pp_tplan_pb_lacquerware }
+		flag:porcelain = { remove_variable = pp_tplan_pb_porcelain }
+		flag:steel = { remove_variable = pp_tplan_pb_steel }
+		flag:tools = { remove_variable = pp_tplan_pb_tools }
+		flag:cannons = { remove_variable = pp_tplan_pb_cannons }
+		flag:firearms = { remove_variable = pp_tplan_pb_firearms }
+		flag:weaponry = { remove_variable = pp_tplan_pb_weaponry }
+		flag:naval_supplies = { remove_variable = pp_tplan_pb_naval_supplies }
+		flag:victuals = { remove_variable = pp_tplan_pb_victuals }
+		flag:cloth = { remove_variable = pp_tplan_pb_cloth }
+		flag:fine_cloth = { remove_variable = pp_tplan_pb_fine_cloth }
+		flag:leather = { remove_variable = pp_tplan_pb_leather }
+		flag:marble = { remove_variable = pp_tplan_pb_marble }
+		flag:stone = { remove_variable = pp_tplan_pb_stone }
+		flag:coal = { remove_variable = pp_tplan_pb_coal }
+		flag:alum = { remove_variable = pp_tplan_pb_alum }
+		flag:mercury = { remove_variable = pp_tplan_pb_mercury }
+		flag:saltpeter = { remove_variable = pp_tplan_pb_saltpeter }
+		flag:copper = { remove_variable = pp_tplan_pb_copper }
+		flag:iron = { remove_variable = pp_tplan_pb_iron }
+		flag:lead = { remove_variable = pp_tplan_pb_lead }
+		flag:tin = { remove_variable = pp_tplan_pb_tin }
+		flag:gems = { remove_variable = pp_tplan_pb_gems }
+		flag:goods_gold = { remove_variable = pp_tplan_pb_goods_gold }
+		flag:silver = { remove_variable = pp_tplan_pb_silver }
+		flag:food = { remove_variable = pp_tplan_pb_food }
+		flag:trade = { remove_variable = pp_tplan_pb_trade }
+	}
+	pp_tplan_pb_refresh = yes
+}
+
+# The payback limit $var$ one step $dir$. It starts from its own step, else (a plan, $all$ = no) from the
+# all-plans step, else from any payback (13). The all-plans limit at any payback is unset; a plan keeps its
+# own value, any payback too.
+pp_tplan_pb_step = {
+	if = {
+		limit = { has_variable = $var$ }
+		save_temporary_scope_value_as = { name = pp_tplan_cur value = var:$var$ }
+	}
+	else_if = {
+		limit = { always = $all$ }
+		save_temporary_scope_value_as = { name = pp_tplan_cur value = 13 }
+	}
+	else_if = {
+		limit = { has_variable = pp_tplan_pb_all }
+		save_temporary_scope_value_as = { name = pp_tplan_cur value = var:pp_tplan_pb_all }
+	}
+	else = {
+		save_temporary_scope_value_as = { name = pp_tplan_cur value = 13 }
+	}
+	save_temporary_scope_value_as = { name = pp_tplan_new value = pp_tplan_pb_next_$dir$ }
+	if = {
+		limit = {
+			always = $all$
+			scope:pp_tplan_new > 12.5
+		}
+		remove_variable = $var$
+	}
+	else = {
+		set_variable = { name = $var$ value = scope:pp_tplan_new }
+	}
+}
+
+# pp_tplan_pb_some while a payback limit is set anywhere (the pass then works out the estimates of first levels
+# and tier upgrades, pp_lplan_location_turn).
+pp_tplan_pb_refresh = {
+	if = {
+		limit = {
+			OR = {
+				has_variable = pp_tplan_pb_all
+				AND = { has_variable = pp_tplan_pb_camels var:pp_tplan_pb_camels < 12.5 }
+				AND = { has_variable = pp_tplan_pb_elephants var:pp_tplan_pb_elephants < 12.5 }
+				AND = { has_variable = pp_tplan_pb_horses var:pp_tplan_pb_horses < 12.5 }
+				AND = { has_variable = pp_tplan_pb_livestock var:pp_tplan_pb_livestock < 12.5 }
+				AND = { has_variable = pp_tplan_pb_wool var:pp_tplan_pb_wool < 12.5 }
+				AND = { has_variable = pp_tplan_pb_beeswax var:pp_tplan_pb_beeswax < 12.5 }
+				AND = { has_variable = pp_tplan_pb_dyes var:pp_tplan_pb_dyes < 12.5 }
+				AND = { has_variable = pp_tplan_pb_incense var:pp_tplan_pb_incense < 12.5 }
+				AND = { has_variable = pp_tplan_pb_tobacco var:pp_tplan_pb_tobacco < 12.5 }
+				AND = { has_variable = pp_tplan_pb_cotton var:pp_tplan_pb_cotton < 12.5 }
+				AND = { has_variable = pp_tplan_pb_fiber_crops var:pp_tplan_pb_fiber_crops < 12.5 }
+				AND = { has_variable = pp_tplan_pb_silk var:pp_tplan_pb_silk < 12.5 }
+				AND = { has_variable = pp_tplan_pb_chili var:pp_tplan_pb_chili < 12.5 }
+				AND = { has_variable = pp_tplan_pb_cloves var:pp_tplan_pb_cloves < 12.5 }
+				AND = { has_variable = pp_tplan_pb_pepper var:pp_tplan_pb_pepper < 12.5 }
+				AND = { has_variable = pp_tplan_pb_saffron var:pp_tplan_pb_saffron < 12.5 }
+				AND = { has_variable = pp_tplan_pb_legumes var:pp_tplan_pb_legumes < 12.5 }
+				AND = { has_variable = pp_tplan_pb_maize var:pp_tplan_pb_maize < 12.5 }
+				AND = { has_variable = pp_tplan_pb_millet var:pp_tplan_pb_millet < 12.5 }
+				AND = { has_variable = pp_tplan_pb_potato var:pp_tplan_pb_potato < 12.5 }
+				AND = { has_variable = pp_tplan_pb_rice var:pp_tplan_pb_rice < 12.5 }
+				AND = { has_variable = pp_tplan_pb_wheat var:pp_tplan_pb_wheat < 12.5 }
+				AND = { has_variable = pp_tplan_pb_cocoa var:pp_tplan_pb_cocoa < 12.5 }
+				AND = { has_variable = pp_tplan_pb_coffee var:pp_tplan_pb_coffee < 12.5 }
+				AND = { has_variable = pp_tplan_pb_tea var:pp_tplan_pb_tea < 12.5 }
+				AND = { has_variable = pp_tplan_pb_sugar var:pp_tplan_pb_sugar < 12.5 }
+				AND = { has_variable = pp_tplan_pb_fruit var:pp_tplan_pb_fruit < 12.5 }
+				AND = { has_variable = pp_tplan_pb_olives var:pp_tplan_pb_olives < 12.5 }
+				AND = { has_variable = pp_tplan_pb_wine var:pp_tplan_pb_wine < 12.5 }
+				AND = { has_variable = pp_tplan_pb_lumber var:pp_tplan_pb_lumber < 12.5 }
+				AND = { has_variable = pp_tplan_pb_fish var:pp_tplan_pb_fish < 12.5 }
+				AND = { has_variable = pp_tplan_pb_pearls var:pp_tplan_pb_pearls < 12.5 }
+				AND = { has_variable = pp_tplan_pb_clay var:pp_tplan_pb_clay < 12.5 }
+				AND = { has_variable = pp_tplan_pb_sand var:pp_tplan_pb_sand < 12.5 }
+				AND = { has_variable = pp_tplan_pb_medicaments var:pp_tplan_pb_medicaments < 12.5 }
+				AND = { has_variable = pp_tplan_pb_salt var:pp_tplan_pb_salt < 12.5 }
+				AND = { has_variable = pp_tplan_pb_amber var:pp_tplan_pb_amber < 12.5 }
+				AND = { has_variable = pp_tplan_pb_ivory var:pp_tplan_pb_ivory < 12.5 }
+				AND = { has_variable = pp_tplan_pb_wild_game var:pp_tplan_pb_wild_game < 12.5 }
+				AND = { has_variable = pp_tplan_pb_beer var:pp_tplan_pb_beer < 12.5 }
+				AND = { has_variable = pp_tplan_pb_liquor var:pp_tplan_pb_liquor < 12.5 }
+				AND = { has_variable = pp_tplan_pb_books var:pp_tplan_pb_books < 12.5 }
+				AND = { has_variable = pp_tplan_pb_paper var:pp_tplan_pb_paper < 12.5 }
+				AND = { has_variable = pp_tplan_pb_slaves_goods var:pp_tplan_pb_slaves_goods < 12.5 }
+				AND = { has_variable = pp_tplan_pb_glass var:pp_tplan_pb_glass < 12.5 }
+				AND = { has_variable = pp_tplan_pb_masonry var:pp_tplan_pb_masonry < 12.5 }
+				AND = { has_variable = pp_tplan_pb_pottery var:pp_tplan_pb_pottery < 12.5 }
+				AND = { has_variable = pp_tplan_pb_tar var:pp_tplan_pb_tar < 12.5 }
+				AND = { has_variable = pp_tplan_pb_furniture var:pp_tplan_pb_furniture < 12.5 }
+				AND = { has_variable = pp_tplan_pb_jewelry var:pp_tplan_pb_jewelry < 12.5 }
+				AND = { has_variable = pp_tplan_pb_lacquerware var:pp_tplan_pb_lacquerware < 12.5 }
+				AND = { has_variable = pp_tplan_pb_porcelain var:pp_tplan_pb_porcelain < 12.5 }
+				AND = { has_variable = pp_tplan_pb_steel var:pp_tplan_pb_steel < 12.5 }
+				AND = { has_variable = pp_tplan_pb_tools var:pp_tplan_pb_tools < 12.5 }
+				AND = { has_variable = pp_tplan_pb_cannons var:pp_tplan_pb_cannons < 12.5 }
+				AND = { has_variable = pp_tplan_pb_firearms var:pp_tplan_pb_firearms < 12.5 }
+				AND = { has_variable = pp_tplan_pb_weaponry var:pp_tplan_pb_weaponry < 12.5 }
+				AND = { has_variable = pp_tplan_pb_naval_supplies var:pp_tplan_pb_naval_supplies < 12.5 }
+				AND = { has_variable = pp_tplan_pb_victuals var:pp_tplan_pb_victuals < 12.5 }
+				AND = { has_variable = pp_tplan_pb_cloth var:pp_tplan_pb_cloth < 12.5 }
+				AND = { has_variable = pp_tplan_pb_fine_cloth var:pp_tplan_pb_fine_cloth < 12.5 }
+				AND = { has_variable = pp_tplan_pb_leather var:pp_tplan_pb_leather < 12.5 }
+				AND = { has_variable = pp_tplan_pb_marble var:pp_tplan_pb_marble < 12.5 }
+				AND = { has_variable = pp_tplan_pb_stone var:pp_tplan_pb_stone < 12.5 }
+				AND = { has_variable = pp_tplan_pb_coal var:pp_tplan_pb_coal < 12.5 }
+				AND = { has_variable = pp_tplan_pb_alum var:pp_tplan_pb_alum < 12.5 }
+				AND = { has_variable = pp_tplan_pb_mercury var:pp_tplan_pb_mercury < 12.5 }
+				AND = { has_variable = pp_tplan_pb_saltpeter var:pp_tplan_pb_saltpeter < 12.5 }
+				AND = { has_variable = pp_tplan_pb_copper var:pp_tplan_pb_copper < 12.5 }
+				AND = { has_variable = pp_tplan_pb_iron var:pp_tplan_pb_iron < 12.5 }
+				AND = { has_variable = pp_tplan_pb_lead var:pp_tplan_pb_lead < 12.5 }
+				AND = { has_variable = pp_tplan_pb_tin var:pp_tplan_pb_tin < 12.5 }
+				AND = { has_variable = pp_tplan_pb_gems var:pp_tplan_pb_gems < 12.5 }
+				AND = { has_variable = pp_tplan_pb_goods_gold var:pp_tplan_pb_goods_gold < 12.5 }
+				AND = { has_variable = pp_tplan_pb_silver var:pp_tplan_pb_silver < 12.5 }
+				AND = { has_variable = pp_tplan_pb_food var:pp_tplan_pb_food < 12.5 }
+				AND = { has_variable = pp_tplan_pb_trade var:pp_tplan_pb_trade < 12.5 }
+			}
+		}
+		set_variable = { name = pp_tplan_pb_some value = yes }
+	}
+	else = {
+		remove_variable = pp_tplan_pb_some
+	}
+}
+
+# Never runs (pp_lprof_run calls it under always = no): the flags the settings' buttons pass exist for the
+# script check.
+pp_tplan_settings_declare = {
+	set_variable = { name = pp_tplan_sflag value = flag:all }
+	set_variable = { name = pp_tplan_sflag value = flag:camels }
+	set_variable = { name = pp_tplan_sflag value = flag:elephants }
+	set_variable = { name = pp_tplan_sflag value = flag:horses }
+	set_variable = { name = pp_tplan_sflag value = flag:livestock }
+	set_variable = { name = pp_tplan_sflag value = flag:wool }
+	set_variable = { name = pp_tplan_sflag value = flag:beeswax }
+	set_variable = { name = pp_tplan_sflag value = flag:dyes }
+	set_variable = { name = pp_tplan_sflag value = flag:incense }
+	set_variable = { name = pp_tplan_sflag value = flag:tobacco }
+	set_variable = { name = pp_tplan_sflag value = flag:cotton }
+	set_variable = { name = pp_tplan_sflag value = flag:fiber_crops }
+	set_variable = { name = pp_tplan_sflag value = flag:silk }
+	set_variable = { name = pp_tplan_sflag value = flag:chili }
+	set_variable = { name = pp_tplan_sflag value = flag:cloves }
+	set_variable = { name = pp_tplan_sflag value = flag:pepper }
+	set_variable = { name = pp_tplan_sflag value = flag:saffron }
+	set_variable = { name = pp_tplan_sflag value = flag:legumes }
+	set_variable = { name = pp_tplan_sflag value = flag:maize }
+	set_variable = { name = pp_tplan_sflag value = flag:millet }
+	set_variable = { name = pp_tplan_sflag value = flag:potato }
+	set_variable = { name = pp_tplan_sflag value = flag:rice }
+	set_variable = { name = pp_tplan_sflag value = flag:wheat }
+	set_variable = { name = pp_tplan_sflag value = flag:cocoa }
+	set_variable = { name = pp_tplan_sflag value = flag:coffee }
+	set_variable = { name = pp_tplan_sflag value = flag:tea }
+	set_variable = { name = pp_tplan_sflag value = flag:sugar }
+	set_variable = { name = pp_tplan_sflag value = flag:fruit }
+	set_variable = { name = pp_tplan_sflag value = flag:olives }
+	set_variable = { name = pp_tplan_sflag value = flag:wine }
+	set_variable = { name = pp_tplan_sflag value = flag:lumber }
+	set_variable = { name = pp_tplan_sflag value = flag:fish }
+	set_variable = { name = pp_tplan_sflag value = flag:pearls }
+	set_variable = { name = pp_tplan_sflag value = flag:clay }
+	set_variable = { name = pp_tplan_sflag value = flag:sand }
+	set_variable = { name = pp_tplan_sflag value = flag:medicaments }
+	set_variable = { name = pp_tplan_sflag value = flag:salt }
+	set_variable = { name = pp_tplan_sflag value = flag:amber }
+	set_variable = { name = pp_tplan_sflag value = flag:ivory }
+	set_variable = { name = pp_tplan_sflag value = flag:wild_game }
+	set_variable = { name = pp_tplan_sflag value = flag:beer }
+	set_variable = { name = pp_tplan_sflag value = flag:liquor }
+	set_variable = { name = pp_tplan_sflag value = flag:books }
+	set_variable = { name = pp_tplan_sflag value = flag:paper }
+	set_variable = { name = pp_tplan_sflag value = flag:slaves_goods }
+	set_variable = { name = pp_tplan_sflag value = flag:glass }
+	set_variable = { name = pp_tplan_sflag value = flag:masonry }
+	set_variable = { name = pp_tplan_sflag value = flag:pottery }
+	set_variable = { name = pp_tplan_sflag value = flag:tar }
+	set_variable = { name = pp_tplan_sflag value = flag:furniture }
+	set_variable = { name = pp_tplan_sflag value = flag:jewelry }
+	set_variable = { name = pp_tplan_sflag value = flag:lacquerware }
+	set_variable = { name = pp_tplan_sflag value = flag:porcelain }
+	set_variable = { name = pp_tplan_sflag value = flag:steel }
+	set_variable = { name = pp_tplan_sflag value = flag:tools }
+	set_variable = { name = pp_tplan_sflag value = flag:cannons }
+	set_variable = { name = pp_tplan_sflag value = flag:firearms }
+	set_variable = { name = pp_tplan_sflag value = flag:weaponry }
+	set_variable = { name = pp_tplan_sflag value = flag:naval_supplies }
+	set_variable = { name = pp_tplan_sflag value = flag:victuals }
+	set_variable = { name = pp_tplan_sflag value = flag:cloth }
+	set_variable = { name = pp_tplan_sflag value = flag:fine_cloth }
+	set_variable = { name = pp_tplan_sflag value = flag:leather }
+	set_variable = { name = pp_tplan_sflag value = flag:marble }
+	set_variable = { name = pp_tplan_sflag value = flag:stone }
+	set_variable = { name = pp_tplan_sflag value = flag:coal }
+	set_variable = { name = pp_tplan_sflag value = flag:alum }
+	set_variable = { name = pp_tplan_sflag value = flag:mercury }
+	set_variable = { name = pp_tplan_sflag value = flag:saltpeter }
+	set_variable = { name = pp_tplan_sflag value = flag:copper }
+	set_variable = { name = pp_tplan_sflag value = flag:iron }
+	set_variable = { name = pp_tplan_sflag value = flag:lead }
+	set_variable = { name = pp_tplan_sflag value = flag:tin }
+	set_variable = { name = pp_tplan_sflag value = flag:gems }
+	set_variable = { name = pp_tplan_sflag value = flag:goods_gold }
+	set_variable = { name = pp_tplan_sflag value = flag:silver }
+	set_variable = { name = pp_tplan_sflag value = flag:food }
+	set_variable = { name = pp_tplan_sflag value = flag:trade }
+}

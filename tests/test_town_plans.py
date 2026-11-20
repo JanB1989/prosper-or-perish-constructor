@@ -184,6 +184,100 @@ def test_targets_follow_the_tiers(vanilla: Path) -> None:
     assert lpf.target_upgrades([a, b, c], [("a0", "a1"), ("a1", "a2"), ("x", "a2")]) == [("a1", a), ("a0", b)]
 
 
+def test_settings_values_for_every_plan(plans: list[tp.Plan]) -> None:
+    """Plan settings (2026-11-20): the payback limit in years for all plans and for each plan (0 = any; a plan without
+    its own setting follows the all-plans one), whether it has its own, and the four switches, as the GUI reads them."""
+    from prosper_or_perish_constructor.script_eval import ScriptEval
+
+    class _Vars(ScriptEval):
+        def single(self, key, op, v, safe, ctx):
+            if key == "has_variable":
+                return f"var:{v}" in ctx.get("game", {})
+            if key == "is_system_automated":
+                return v in ctx.get("automated", set())
+            return super().single(key, op, v, safe, ctx)
+
+    values = _Vars(MOD)
+    text = _code(MOD / tp.VALUES)
+    keys = [tp.PB_ALL] + [plan.key for plan in plans]
+    assert len(keys) == 78 and tp.PAYBACK_STEPS == (1, 2, 3, 4, 5, 7, 10, 15, 20, 30, 40, 50) and tp.PB_ANY == 13
+    for key in keys:
+        assert re.search(rf"^{tp.pb_years_value(key)} = \{{", text, re.MULTILINE), key
+    for plan in plans:
+        assert re.search(rf"^{tp.pb_own_value(plan.key)} = \{{", text, re.MULTILINE), plan.key
+
+    def years(key: str, game: dict) -> float:
+        return values.value(tp.pb_years_value(key), {"game": game})
+
+    assert years("all", {}) == 0  # default: any payback
+    for index, step in enumerate(tp.PAYBACK_STEPS, 1):
+        assert years("all", {"var:pp_tplan_pb_all": index}) == step
+        assert years("lumber", {"var:pp_tplan_pb_lumber": index}) == step
+    assert years("lumber", {}) == 0
+    assert years("lumber", {"var:pp_tplan_pb_all": 7}) == 10  # follows all plans
+    assert years("lumber", {"var:pp_tplan_pb_all": 7, "var:pp_tplan_pb_lumber": 2}) == 2  # its own wins
+    assert years("lumber", {"var:pp_tplan_pb_all": 7, "var:pp_tplan_pb_lumber": tp.PB_ANY}) == 0  # its own "any"
+    assert values.value(tp.pb_own_value("lumber"), {"game": {"var:pp_tplan_pb_lumber": 3}}) == 1
+    assert values.value(tp.pb_own_value("lumber"), {"game": {"var:pp_tplan_pb_all": 3}}) == 0
+    for name, var in ((tp.LOSS_VALUE, tp.LOSS_OK_VAR), (tp.STAFF_VALUE, tp.STAFF_OFF_VAR), (tp.ORDER_VALUE, tp.ORDER_BEST_VAR)):
+        assert values.value(name, {"game": {}}) == 1, name  # the default
+        assert values.value(name, {"game": {f"var:{var}": 1}}) == 0, name
+    assert values.value(tp.CLOSE_VALUE, {"game": {}}) == 0
+    assert values.value(tp.CLOSE_VALUE, {"game": {}, "automated": {"closebuildings"}}) == 1
+    # one step from scope:pp_tplan_cur: longer past the last = any, shorter from any = the last, never below the first
+    step = {d: (lambda cur, d=d: values.value(f"pp_tplan_pb_next_{d}", {"game": {"scope:pp_tplan_cur": cur}})) for d in ("up", "down")}
+    assert step["up"](1) == 2 and step["up"](12) == 13 and step["up"](13) == 13
+    assert step["down"](13) == 12 and step["down"](5) == 4 and step["down"](1) == 1
+
+
+def test_settings_buttons_and_effects(plans: list[tp.Plan]) -> None:
+    """The settings' scripted GUIs (country scope, player only) and the effects behind them, for every plan and all."""
+    guis = _code(MOD / tp.SETTINGS_GUIS)
+    names = [tp.PB_UP_GUI, tp.PB_DOWN_GUI, tp.PB_RESET_GUI, tp.TOGGLE_LOSS_GUI, tp.TOGGLE_STAFF_GUI,
+             tp.TOGGLE_ORDER_GUI, tp.TOGGLE_CLOSE_GUI]
+    assert re.findall(r"^(\w+) = \{", guis, re.MULTILINE) == names
+    for name in names:
+        body = _block(guis, name)
+        assert "scope = country" in body and "is_valid = {\n\t\tis_ai = no\n\t}" in body, name
+    assert "pp_tplan_pb_key = { dir = up }" in _block(guis, tp.PB_UP_GUI)
+    assert "pp_tplan_pb_key = { dir = down }" in _block(guis, tp.PB_DOWN_GUI)
+    assert "pp_tplan_pb_key_reset = yes" in _block(guis, tp.PB_RESET_GUI)
+    for gui, var in ((tp.TOGGLE_LOSS_GUI, tp.LOSS_OK_VAR), (tp.TOGGLE_STAFF_GUI, tp.STAFF_OFF_VAR),
+                     (tp.TOGGLE_ORDER_GUI, tp.ORDER_BEST_VAR)):
+        assert f"pp_cplan_flip = {{ var = {var} }}" in _block(guis, gui), gui
+    close = _block(guis, tp.TOGGLE_CLOSE_GUI)
+    assert "limit = { is_system_automated = closebuildings }" in close
+    assert close.index("set_automated_system = { system = closebuildings activate = no }") < close.index(
+        "set_automated_system = { system = closebuildings activate = yes }")
+    effects = _code(MOD / tp.EFFECTS)
+    key = _block(effects, "pp_tplan_pb_key")
+    assert "trigger = scope:pp_key" in key and key.rstrip().endswith("pp_tplan_pb_refresh = yes")
+    assert "flag:all = { pp_tplan_pb_step = { var = pp_tplan_pb_all dir = $dir$ all = yes } }" in key
+    reset = _block(effects, "pp_tplan_pb_key_reset")
+    some = _block(effects, "pp_tplan_pb_refresh")
+    declare = _block(effects, "pp_tplan_settings_declare")
+    assert "set_variable = { name = pp_tplan_sflag value = flag:all }" in declare
+    for plan in plans:
+        assert f"flag:{plan.key} = {{ pp_tplan_pb_step = {{ var = pp_tplan_pb_{plan.key} dir = $dir$ all = no }} }}" in key
+        assert f"flag:{plan.key} = {{ remove_variable = pp_tplan_pb_{plan.key} }}" in reset
+        assert f"AND = {{ has_variable = pp_tplan_pb_{plan.key} var:pp_tplan_pb_{plan.key} < 12.5 }}" in some
+        assert f"set_variable = {{ name = pp_tplan_sflag value = flag:{plan.key} }}" in declare
+    assert "flag:all" not in reset  # the all-plans limit has no "same as" to go back to
+    step = _block(effects, "pp_tplan_pb_step")
+    order = ["limit = { has_variable = $var$ }", "limit = { always = $all$ }", "limit = { has_variable = pp_tplan_pb_all }",
+             "name = pp_tplan_new value = pp_tplan_pb_next_$dir$"]
+    assert [step.index(part) for part in order] == sorted(step.index(part) for part in order)
+    assert "always = $all$\n\t\t\tscope:pp_tplan_new > 12.5\n\t\t}\n\t\tremove_variable = $var$" in step
+    assert "set_variable = { name = $var$ value = scope:pp_tplan_new }" in step
+    assert "set_variable = { name = pp_tplan_pb_some value = yes }" in some and "remove_variable = pp_tplan_pb_some" in some
+    # the flags exist for the script check: the declare runs in a never-run block of the plan pass
+    run = _block(_code(MOD / lpf.HAND_EFFECTS), "pp_lprof_run")
+    assert "limit = { always = no }\n\t\tpp_tplan_settings_declare = yes" in run
+    for path in (MOD / tp.SETTINGS_GUIS, MOD / tp.EFFECTS, MOD / tp.VALUES):
+        text = _code(path)
+        assert text.count("{") == text.count("}"), path.name
+
+
 def test_rank_step(plans: list[tp.Plan], vanilla: Path) -> None:
     assert tp.lowest_rank([{"rural_settlement": "yes"}]) == "rural_settlement"
     assert tp.lowest_rank([{"town": "yes", "city": "yes"}]) == "town"  # no rural flag: town-only

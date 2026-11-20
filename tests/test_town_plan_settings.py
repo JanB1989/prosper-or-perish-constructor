@@ -250,6 +250,19 @@ def test_no_scrolling_and_the_tab_fits() -> None:
     assert tps.CARD_TEXT_W + tps.CARD_COL_GAP < tps.RIGHT_W
 
 
+def test_a_line_divides_the_two_columns() -> None:
+    # Jan 2026-11-21: "it looks like they are connected". One line over the tab's height between "All plans" and
+    # "Each plan", with clear room on both sides.
+    gui = _gui()
+    all_plans, each_plan = gui.index("---- All plans ----"), gui.index("---- Each plan")
+    between = gui[all_plans:each_plan]
+    assert between.count("using = color_new_gold_texture") == 1
+    line = between[between.index("icon = {"):]
+    assert "layoutpolicy_vertical = expanding" in line and f"size = {{ {tps.DIVIDER_W} -1 }}" in line
+    assert tps.DIVIDER_PAD >= 24 and tps.COL_GAP == 2 * tps.DIVIDER_PAD + tps.DIVIDER_W
+    assert f"spacing = {tps.DIVIDER_PAD}\n" in gui[:all_plans]
+
+
 def _cards_removed(gui: str) -> str:
     for item in _items():
         at = gui.index(f"vbox = {{ # {item.key}\n")

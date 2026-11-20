@@ -44,8 +44,9 @@ SELECTED = "pp_tplan_set_sel"  # GUI variable: the plan whose card shows
 MAX_NAMES = 8  # a card names at most this many buildings; a longer list (food, trade) is told in a sentence
 
 # ---- the layout (2026-11-20, Jan: "I do not like that I have to scroll"): no scroll area. The window (1360 x 820)
-# leaves the tab body about 1296 x 690 px; the tab is laid out for TAB_W x TAB_H and `expand = {}` takes any slack.
+# leaves the tab body about 1327 x 690 px; the tab is laid out for TAB_W x TAB_H and `expand = {}` takes any slack.
 #   left column  (LEFT_W): "All plans", the shared settings, one row each;
+#   a gold line with room on both sides (COL_GAP);
 #   right column (RIGHT_W): "Each plan", all plan icons at once (group name in a left gutter, PER_ROW icons a row),
 #                under them the card of the selected plan: title row, then its text (CARD_TEXT_W) beside its rows
 #                (payback limit, the per-plan options, the Food / Trade plan's own options).
@@ -56,11 +57,15 @@ MAX_NAMES = 8  # a card names at most this many buildings; a longer list (food, 
 #   card  = CARD_TITLE_H + CARD_GAP + max(text lines x LINE_H, card rows x ROW_H + (card rows - 1) x CARD_GAP)
 # With 77 plans in 7 groups (29, 1, 7, 2, 23, 13, 2): 9 grid rows -> grid 9 x 34 + 2 x 2 + 6 x 4 = 334;
 # Food's card 5 rows -> 30 + 4 + max(text, 5 x 26 + 4 x 4 = 146); the longest card text sets the card height.
-TAB_W, TAB_H = 1290, 680
+# Between the columns (2026-11-21, Jan: "it looks like they are connected"): a gold line over the tab's height with
+# DIVIDER_PAD px of room on each side. The room comes from the left column (its longest label left 36 px free) and
+# from the body's real width (about 1307 px inside the margins, measured on Jan's screenshot; TAB_W was 1290).
+TAB_W, TAB_H = 1310, 680
 MARGIN_X, MARGIN_Y = 10, 8
-COL_GAP = 16
-LEFT_W = 500
-RIGHT_W = TAB_W - 2 * MARGIN_X - LEFT_W - COL_GAP  # 754
+DIVIDER_W, DIVIDER_PAD = 2, 26
+COL_GAP = 2 * DIVIDER_PAD + DIVIDER_W  # 54: left column, room, line, room, right column
+LEFT_W = 490
+RIGHT_W = TAB_W - 2 * MARGIN_X - LEFT_W - COL_GAP  # 746
 TITLE_H = 24  # a pp_tplan_set_title line
 ROW_H = 26  # a settings row: its tallest widget, the 26 px switch
 ROW_GAP = 2  # between the shared settings rows
@@ -448,7 +453,7 @@ def render_gui(items: list[Item]) -> str:
         "\t\tlayoutpolicy_horizontal = expanding\n\t\tlayoutpolicy_vertical = expanding\n"
         f"\t\tignoreinvisible = yes\n\t\tmargin = {{ {MARGIN_X} {MARGIN_Y} }}\n\n"
         f"\t\thbox = {{\n\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\tlayoutpolicy_vertical = expanding\n"
-        f"\t\t\tspacing = {COL_GAP}\n\n"
+        f"\t\t\tspacing = {DIVIDER_PAD}\n\n"
         "\t\t\t# ---- All plans ----\n"
         f"\t\t\tvbox = {{\n\t\t\t\tminimumsize = {{ {LEFT_W} -1 }}\n\t\t\t\tmaximumsize = {{ {LEFT_W} -1 }}\n"
         f"\t\t\t\tlayoutpolicy_vertical = expanding\n\t\t\t\tspacing = {PART_GAP}\n"
@@ -467,6 +472,11 @@ def render_gui(items: list[Item]) -> str:
                         _switch(name, TOGGLES[key.lower()], *on_off, f"PP_TPLAN_SET_{key}_TT", rows + "\t")))
     out += [_option_row(option, ALL if option.per_plan else None, rows) for option in tpo.options(tpo.ALL)]
     out.append("\t\t\t\t}\n\t\t\t\texpand = {}\n\t\t\t}\n")
+    out.append(
+        "\n\t\t\t# ---- the line between the two columns ----\n"
+        "\t\t\ticon = {\n\t\t\t\tusing = color_new_gold_texture\n\t\t\t\tlayoutpolicy_vertical = expanding\n"
+        f"\t\t\t\tsize = {{ {DIVIDER_W} -1 }}\n\t\t\t\talpha = 0.6\n\t\t\t}}\n"
+    )
     out.append(
         "\n\t\t\t# ---- Each plan: all icons at once (a click selects one), then its card ----\n"
         "\t\t\tvbox = {\n\t\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\t\tlayoutpolicy_vertical = expanding\n"

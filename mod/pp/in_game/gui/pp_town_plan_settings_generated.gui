@@ -3,7 +3,7 @@
 # The Construction Plan window's Plans tab (pp_construction_plan.gui places the type as its third tab; the body
 # shows only while pp_cplan_tab = plans, so it costs nothing while another tab is open). Left the settings
 # every plan shares, right all plan icons at once (the Location Plan picker's groups) and under them the card of
-# the selected plan (GUI variable pp_tplan_set_sel). No scroll area: the tab is laid out for 1290 x 680 px
+# the selected plan (GUI variable pp_tplan_set_sel). No scroll area: the tab is laid out for 1310 x 680 px
 # (town_plan_settings_gui.py, layout_heights). Every button runs a scripted GUI of the country (town plan
 # settings); every value is a country script value.
 
@@ -23,7 +23,7 @@ types PPTownPlanSettings
 	type pp_tplan_set_text = text_multi {
 		layoutpolicy_horizontal = expanding
 		autoresize = yes
-		maximumsize = { 754 -1 }
+		maximumsize = { 746 -1 }
 	}
 
 	type pp_tplan_set_card_text = text_multi {
@@ -60,12 +60,12 @@ types PPTownPlanSettings
 		hbox = {
 			layoutpolicy_horizontal = expanding
 			layoutpolicy_vertical = expanding
-			spacing = 16
+			spacing = 26
 
 			# ---- All plans ----
 			vbox = {
-				minimumsize = { 500 -1 }
-				maximumsize = { 500 -1 }
+				minimumsize = { 490 -1 }
+				maximumsize = { 490 -1 }
 				layoutpolicy_vertical = expanding
 				spacing = 6
 				pp_tplan_set_title = { text = "PP_TPLAN_SET_ALL" tooltip = "PP_TPLAN_SET_ALL_TT" }
@@ -158,6 +158,14 @@ types PPTownPlanSettings
 					}
 				}
 				expand = {}
+			}
+
+			# ---- the line between the two columns ----
+			icon = {
+				using = color_new_gold_texture
+				layoutpolicy_vertical = expanding
+				size = { 2 -1 }
+				alpha = 0.6
 			}
 
 			# ---- Each plan: all icons at once (a click selects one), then its card ----

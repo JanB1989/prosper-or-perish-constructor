@@ -569,7 +569,8 @@ beside the bars), and the pass's cost now that the business group looks whenever
     pane). In a pane everything is fixed and visible; only the list of what was built scrolls (it has no upper
     bound), in the room that is left (about six lines in the Locations pane, the tallest).
   - Towns and Buildings: two columns of 629 px (public buildings and towns left, urban rights right), no scroll area.
-  - Plans: left 500 px "All plans" (ten rows), right 754 px all 77 plan icons at once (34 px tiles, 17 a row, the
+  - Plans: left 490 px "All plans" (ten rows), a gold line with 26 px of room on each side (2026-11-21, Jan: the
+    columns looked connected), right 746 px all 77 plan icons at once (34 px tiles, 17 a row, the
     group name in a gutter) and the selected plan's card (text left, its rows right); no scroll area. Each module
     carries its height arithmetic and a test that holds it to the body.
 - **Monthly budget** (`pp_cplan_budget`, + 100; readout `pp_cplan_budget_gold`; `[construction_plan] budget_step`

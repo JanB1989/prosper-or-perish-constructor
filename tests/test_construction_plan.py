@@ -107,7 +107,7 @@ def test_two_tabs_and_nothing_else() -> None:
     assert "PP_CPLAN_TAB_PROFILES" not in _read(LOC)
     files = [WINDOW, LOC, *_plan_script_files(), PROFILE_EFFECTS, LOCATION_WINDOW]
     gone = re.compile(
-        r"pp_cplan_(?:max|preset|g_|mode|own|rule|r\d_|logi(?!stics)|focus|status|sel\b|select|cands|goods_run|keep|"
+        r"pp_cplan_(?:max|preset|g_|mode|own|rule|r\d_|logi(?!stics)|focus|status(?!_(?:profiles|food|logistics|improve|business|country)\b)|sel\b|select|cands|goods_run|keep|"
         r"auto_|template|band_)|PP_CPLAN_(?:TAB_HERE|TAB_GOODS|TAB_FOOD|TAB_LOGISTICS|TAB_LOCATIONS|PRESET|MAX|"
         r"LOCATION_COG|MODE_|RULE_|FOCUS)")
     for path in files:
@@ -160,7 +160,8 @@ def test_budget_is_the_gold_above_the_reserve() -> None:
         assert weight == cp.COUNTED_WEIGHTS.get(group, f"pp_cplan_{group}_w")
         share = _effect(generated, f"pp_cplan_purse_new_{why}")
         assert "value = pp_cplan_purse_rest" in share and f"multiply = {weight}" in share and "divide = pp_cplan_w_total" in share
-        part = _effect(generated, f"pp_cplan_part_{group}")
+        # the formula (the window reads it kept as pp_cplan_part_<group>, construction_plan_forecast.py)
+        part = _effect(generated, f"{cp.PART_FORMULA}{group}")
         assert f"value = {weight}\n\t\tmultiply = 100\n\t\tdivide = pp_cplan_w_total" in part  # the shown % follows
         assert total.count(f"add = {weight}\n") == 1
         if group in cp.COUNTED_WEIGHTS:
@@ -440,7 +441,8 @@ def test_business_group_does_not_look_without_gold() -> None:
     gui = cpd.render_gui()
     pane = gui[gui.index("type pp_cplan_detail_business = vbox"):]
     looked = "Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_d_business_skipped'), '(CFixedPoint)0.5'))"
-    for key in ("PP_CPLAN_D_NO_WAIT", "PP_CPLAN_D_BUSINESS_NONE"):
+    # ("nothing waited for gold" went with the outlook block, 2026-11-20: the status headline says it)
+    for key in ("PP_CPLAN_D_BUSINESS_NONE",):
         line = re.search(rf"visible = \"\[([^\n]*)\]\"\n\t+text = \"{key}\"", pane)
         assert line and line.group(1).endswith(f", {looked})"), key
     assert re.search(r"visible = \"\[GreaterThan_CFixedPoint\(GetPlayer\.MakeScope\.ScriptValue\('pp_cplan_d_business_skipped'\), "

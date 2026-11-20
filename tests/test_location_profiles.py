@@ -201,7 +201,10 @@ def test_global_rules_keep_building_where_plans_are() -> None:
     plan = _code(PLAN_TRIGGERS) + _code(PLAN_EFFECTS) + _code(MOD / cp.EFFECTS)
     for folder in ("scripted_triggers", "scripted_effects"):
         plan += "".join(_code(path) for path in sorted((COMMON / folder).glob("pp_construction_plan_country*.txt")))
-    assert "pp_lprof" not in plan.replace("pp_lprof_run", "").replace("pp_lprof_look", "")
+    # (the console's whole Locations look sets pp_lprof_whole: its slices at once)
+    # (and the pass's start refreshes the cache of "a location holds a plan", pp_lprof_any_refresh)
+    assert "pp_lprof" not in (plan.replace("pp_lprof_run", "").replace("pp_lprof_look", "").replace("pp_lprof_whole", "")
+                              .replace("pp_lprof_any_refresh", ""))
     assert "pp_lprof_group_n" in _code(PLAN_VALUES) + _code(MOD / cp.VALUES), "the group counts as a rule group"
     has = _block(_code(MOD / lpf.TRIGGERS), "pp_lprof_has_locations")
     assert "any_locations_with_town_rights_in_country" in has and "pp_tplan_held = yes" in has and "owner ?= root" in has
@@ -485,10 +488,12 @@ def test_locations_take_turns() -> None:
     assert order([1, 2, 3, 4, 5, 6], 0) == [1, 2, 3, 4, 5, 6]
     assert order([1, 2, 3, 4, 5, 6], 3) == [4, 5, 6, 1, 2, 3]
     assert order([2, 5, 9], 5) == [9, 2, 5] and order([2, 5, 9], 40) == [2, 5, 9]
-    after = look[look.index("clear_variable_list = pp_lprof_turns"):]
+    # the cursor moves at the end of the look's last daily slice (pp_lprof_look_end), from what the group saves for
+    after = _block(hand, "pp_lprof_look_end")
     assert "limit = { has_variable = pp_cplan_save_loc_105 }" in after
     assert "name = pp_lprof_cur value = { value = var:pp_lprof_seq subtract = 1 }" in after
-    assert look.count("set_variable = { name = pp_lprof_cursor") == 2
+    assert look.count("set_variable = { name = pp_lprof_cursor") == 1 and after.count("set_variable = { name = pp_lprof_cursor") == 1
+    assert "pp_lprof_look_end = yes" in _block(hand, "pp_lprof_slice")
     target = _block(hand, "pp_lprof_target_turn")
     assert target.index("pp_lprof_location_turn = yes") < target.index("has_variable = pp_cplan_hit")
     assert "set_variable = { name = pp_lprof_cursor value = scope:pp_lprof_cur }" in target
@@ -757,42 +762,149 @@ def test_known_types_skip_the_type_dispatches() -> None:
     assert "pp_cplan_btype_data" not in hand  # the plan engine never dispatches over the types
 
 
-def test_the_look_stops_when_the_purse_is_spent() -> None:
-    """Script time (2026-11-20): once the Locations group saves for something (pp_cplan_save_cost_105) nothing more
-    can start in its pass (pp_cplan_construct_go and the rank raise both ask pp_cplan_saving), so the look walks no
-    further: the rest count as not reached, the country notes that the look stopped, and their plans show "held back
-    for gold". The turn order is untouched: the list, its order and the cursor are as before."""
+EVENTS = MOD / "in_game/events/pp_construction_plan_events.txt"
+
+
+def test_the_look_runs_in_daily_slices() -> None:
+    """Daily slices (2026-11-20): the look fixes its turn order once (every location of the look on pp_lprof_todo with
+    its place pp_lprof_pos), runs the first slice in the pass and every further one through a hidden event a day later.
+    K = max(look_slice_min, ceil(locations / look_slice_days)) ([construction_plan], generated pp_lprof_slice_k)."""
     hand = _code(MOD / lpf.HAND_EFFECTS)
     look = _block(hand, "pp_lprof_look")
-    walk = look[look.index("ordered_in_list = {"):look.index("clear_variable_list = pp_lprof_turns")]
-    assert walk.index("name = pp_cplan_ds_profiles_locs add = 1") < walk.index(
-        "limit = { scope:pp_cplan_country = { NOT = { has_variable = pp_cplan_save_cost_105 } } }") < walk.index(
-        "pp_lprof_location_turn = yes")
-    reached = walk[walk.index("NOT = { has_variable = pp_cplan_save_cost_105 }"):walk.index("else = {")]
-    assert "set_variable = { name = pp_lprof_seen value = scope:pp_cplan_country.var:pp_lprof_look_n }" in reached
-    rest = walk[walk.index("else = {"):]
-    assert "name = pp_cplan_ds_profiles_unr add = 1" in rest and "set_variable = { name = pp_lprof_cut value = yes }" in rest
-    assert "pp_lprof_location_turn" not in rest
-    # the look's number and the stop mark are fresh at every look, before the walk; the group's saving is cleared at
-    # its start (pp_cplan_group_start), so the walk begins
-    assert look.index("pp_cplan_group_start = { why = 105 }") < look.index("change_variable = { name = pp_lprof_look_n add = 1 }")
-    assert look.index("set_variable = { name = pp_lprof_look_n value = 101 }") < look.index("remove_variable = pp_lprof_cut")
-    assert look.index("remove_variable = pp_lprof_cut") < look.index("ordered_in_list = {")
-    assert "remove_variable = pp_cplan_save_cost_$why$" in _block(_code(PLAN_EFFECTS), "pp_cplan_save_clear")
-    assert "pp_cplan_save_clear = { why = $why$ }" in _block(_code(PLAN_EFFECTS), "pp_cplan_group_start")
-    # nothing starts once the group saves: the construct path and the rank raise both ask for it
-    go = _block(_code(PLAN_EFFECTS), "pp_cplan_construct_go")
-    assert "NOT = { pp_cplan_saving = { why = $why$ } }" in go
-    assert "has_variable = pp_cplan_save_cost_$why$" in _block(_code(PLAN_TRIGGERS), "pp_cplan_saving")
+    assert look.index("pp_cplan_group_start = { why = 105 }") < look.index("pp_lprof_drop = yes")
+    assert look.index("pp_lprof_drop = yes") < look.index("pp_lprof_gather = yes") < look.index("ordered_in_list = {")
+    fill = look[look.index("ordered_in_list = {"):look.index("clear_variable_list = pp_lprof_turns")]
+    assert "order_by = pp_lprof_turn" in fill and "variable = pp_lprof_turns" in fill
+    assert "add_to_variable_list = { name = pp_lprof_todo target = scope:pp_lprof_this }" in fill
+    assert "change_variable = { name = pp_cplan_ds_profiles_locs add = 1 }" in fill
+    assert "set_variable = { name = pp_lprof_pos value = scope:pp_cplan_country.var:pp_lprof_todo_n }" in fill
+    assert "pp_lprof_location_turn" not in fill  # the walk is the slices'
+    rest = look[look.index("clear_variable_list = pp_lprof_turns"):]
+    assert rest.index("set_variable = { name = pp_lprof_k value = pp_lprof_slice_k }") < rest.index(
+        "set_variable = { name = pp_lprof_pend value = yes }") < rest.index("pp_lprof_slice = yes")
+    assert "has_variable = pp_lprof_whole" in rest
+    # a slice: the next K places in order; each still owned location that still holds a plan gets its turn
+    sl = _block(hand, "pp_lprof_slice")
+    walk = sl[sl.index("ordered_in_list = {"):sl.index("pp_lprof_slice_turn = yes")]
+    assert "variable = pp_lprof_todo" in walk and "order_by = pp_lprof_pos_order" in walk
+    assert "var:pp_lprof_pos > scope:pp_lprof_from" in walk and "var:pp_lprof_pos <= scope:pp_lprof_to" in walk
+    assert "name = pp_lprof_to value = { value = var:pp_lprof_done add = var:pp_lprof_k }" in sl
+    assert "name = pp_cplan_ds_profiles_unr value = { value = var:pp_lprof_todo_n subtract = var:pp_lprof_done add = 100 }" in sl
+    done = sl[sl.index("limit = { var:pp_lprof_done >= var:pp_lprof_todo_n }"):]
+    assert done.index("pp_lprof_look_end = yes") < done.index("else = {") < done.index(
+        "trigger_event_silently = { id = pp_construction_plan.1 days = 1 }")
+    turn = _block(hand, "pp_lprof_slice_turn")
+    assert "owner ?= scope:pp_cplan_country" in turn and "pp_tplan_held = yes" in turn
+    assert "pp_lprof_location_turn = yes" in turn
+    # the load log (2026-11-20): pp_lprof_seen was set but never read; it and the look's number are gone
+    for gone in ("pp_lprof_seen", "pp_lprof_look_n"):
+        assert gone not in _read(MOD / lpf.HAND_EFFECTS), gone
+    order = _block(_code(PLAN_VALUES), "pp_lprof_pos_order")
+    assert "subtract = var:pp_lprof_pos" in order
+    k = _block(_read(MOD / cp.VALUES), "pp_lprof_slice_k")
+    assert "divide = pp_lprof_slice_days" in k and "ceiling = yes" in k and "min = pp_lprof_slice_min" in k
+    config = cp.load_config(PROJECT)
+    assert f"pp_lprof_slice_min = {{ value = {config.look_slice_min} }}" in _read(MOD / cp.VALUES)
+    assert f"pp_lprof_slice_days = {{ value = {config.look_slice_days} }}" in _read(MOD / cp.VALUES)
+    assert (config.look_slice_min, config.look_slice_days) == (60, 24) and config.look_slice_days < 28
+    # the look's end: the cursor from what the group saves for, the list gone, the situation history moves on
+    end = _block(hand, "pp_lprof_look_end")
+    assert "limit = { has_variable = pp_cplan_save_loc_105 }" in end
+    assert end.index("set_variable = { name = pp_lprof_cursor value = scope:pp_lprof_cur }") < end.index("pp_lprof_drop = yes")
+    assert "pp_cplan_hq_push_105 = yes" in end
+    drop = _block(hand, "pp_lprof_drop")
+    for line in ("clear_variable_list = pp_lprof_todo", "remove_variable = pp_lprof_pend", "remove_variable = pp_lprof_pos"):
+        assert line in drop
+    # the console's whole look: all slices at once, no event
+    test = _block(_code(PLAN_EFFECTS), "pp_cplan_test_profiles")
+    assert test.index("set_variable = { name = pp_lprof_whole value = yes }") < test.index("pp_lprof_look = yes") < test.index(
+        "remove_variable = pp_lprof_whole")
+
+
+def test_the_slice_event_is_hidden_and_guarded() -> None:
+    """The next slice comes through a hidden country event without options; its effect does nothing but drop the list
+    when the plan is off, the country no longer runs it (the monthly on_action's test) or the group's weight is 0, and
+    sets up what a turn reads outside a pass without filling a purse or resetting a number."""
+    assert EVENTS.read_bytes().startswith(b"\xef\xbb\xbfnamespace = pp_construction_plan")
+    events = _read(EVENTS)
+    body = _block(re.sub(r"#[^\n]*", "", events), r"pp_construction_plan\.1")
+    assert "type = country_event" in body and "hidden = yes" in body and "option" not in body
+    assert "immediate = {\n\t\tpp_lprof_slice_event = yes\n\t}" in body
+    ev = _block(_code(MOD / lpf.HAND_EFFECTS), "pp_lprof_slice_event")
+    guard = ev[:ev.index("save_scope_as = pp_cplan_country")]
+    for line in ("has_variable = pp_lprof_pend", "has_variable = pp_cplan_on", "is_ai = no",
+                 "has_variable = pp_cplan_ai_test", "pp_cplan_profiles_w > 0"):
+        assert line in guard
+    monthly = _read(COMMON / "on_action/pp_construction_plan.txt")
+    assert "is_ai = no" in monthly and "has_variable = pp_cplan_ai_test" in monthly and "has_variable = pp_cplan_on" in monthly
+    assert ev.rindex("else = {") > ev.index("pp_lprof_slice = yes") and "pp_lprof_drop = yes" in ev[ev.rindex("else = {"):]
+    for line in ("save_scope_as = actor", "name = pp_cplan_rv value = 0", "name = pp_cplan_rs value = 0",
+                 "name = pp_cplan_forced value = 0", "remove_variable = pp_cplan_hit", "remove_variable = pp_cplan_noted"):
+        assert ev.index(line) < ev.index("pp_lprof_slice = yes"), line
+    for never in ("pp_cplan_purses_fill", "pp_cplan_pass_begin", "pp_cplan_pass_reset", "pp_cplan_stats_reset",
+                  "pp_cplan_group_start", "pp_cplan_history_push"):
+        assert never not in ev, never
+    # after the slice: the chart's month 1 from the look's totals; the Locations hand-on once the last slice ran
+    after = ev[ev.index("pp_lprof_slice = yes"):]
+    assert "set_variable = { name = pp_cplan_hn_105_1 value = { value = var:pp_cplan_dspent_105 add = var:pp_cplan_dwait_105 subtract = 100 } }" in after
+    assert "set_variable = { name = pp_cplan_hs_105_1 value = var:pp_cplan_dspent_105 }" in after
+    assert "limit = { NOT = { has_variable = pp_lprof_pend } }\n\t\t\tpp_cplan_purses_hand_on_105 = yes" in after
+    # a pending list from an earlier look never survives into the next pass
+    run = _block(_code(MOD / lpf.HAND_EFFECTS), "pp_lprof_run")
+    assert run.index("pp_pclose_month = yes") < run.index("has_variable = pp_lprof_pend") < run.index(
+        "pp_lprof_drop = yes") < run.index("pp_lprof_look = yes")
+
+
+def test_a_costing_turn_has_no_side_effects() -> None:
+    """A turn that begins while the Locations group already saves for something is a costing turn: its plans run, so
+    their states are set and the gold they want is counted, but nothing else happens there (before the slices such
+    locations were not walked at all): nothing starts, no business closes, the closer's wait does not count down, the
+    mark pp_lplan_wk is neither set nor removed."""
+    hand = _code(MOD / lpf.HAND_EFFECTS)
+    turn = _block(hand, "pp_lprof_location_turn")
+    assert turn.index("name = pp_lprof_costing value = 0") < turn.index(
+        "limit = { scope:pp_cplan_country = { has_variable = pp_cplan_save_cost_105 } }") < turn.index(
+        "name = pp_lprof_costing value = 1") < turn.index("remove_variable = pp_lplan_wk")
+    wk = turn[:turn.index("remove_variable = pp_lplan_wk")]
+    assert wk.rstrip().endswith("limit = { scope:pp_lprof_costing < 0.5 }")
+    assert turn.index("name = pp_lprof_costing value = 1") < turn.index("pp_pclose_turn_start = yes")
+    finish = _block(hand, "pp_lprof_finish")
+    mark = finish[:finish.index("set_variable = { name = pp_lplan_wk value = yes }")]
+    assert mark[mark.rindex("limit = {"):].count("scope:pp_lprof_costing < 0.5") == 1
+    assert hand.count("set_variable = { name = pp_lplan_wk value = yes }") == 1
+    assert hand.count("remove_variable = pp_lplan_wk") == 1
+    closer = _code(COMMON / "scripted_effects/pp_plan_closer.txt")
+    start = _block(closer, "pp_pclose_turn_start")
+    countdown = start[start.index("if = {"):]
+    assert countdown.index("scope:pp_lprof_costing < 0.5") < countdown.index("change_variable = { name = pp_pclose_wait add = -1 }")
+    mark_body = _block(hand, "pp_lplan_mark")
+    call = mark_body[:mark_body.index("pp_pclose_plan = { g = $g$ }")]
+    assert call[call.rindex("limit = {"):].count("scope:pp_lprof_costing < 0.5") == 1
+    assert mark_body.count("pp_pclose_plan = { g = $g$ }") == 1
+    costing = mark_body[mark_body.index("pp_pclose_plan = { g = $g$ }"):mark_body.index("pp_lprof_finish = {")]
+    assert "scope:pp_lprof_costing > 0.5" in costing and "set_variable = { name = pp_lprof_fail value = 104.25 }" in costing
+    for never in ("pp_pclose_pick", "add_to_variable_list", "pp_lplan_last", "construct"):
+        assert never not in costing, never
+    # the closer itself refuses while the group saves, and nothing starts while it saves
+    assert "NOT = { pp_cplan_saving = { why = 105 } }" in _block(_code(COMMON / "scripted_triggers/pp_plan_closer.txt"),
+                                                                 "pp_pclose_may")
+    assert "NOT = { pp_cplan_saving = { why = $why$ } }" in _block(_code(PLAN_EFFECTS), "pp_cplan_construct_go")
     rank_up = _block(_code(COMMON / "scripted_effects/pp_construction_plan_country.txt"), "pp_cplan_country_rank_up")
     assert "NOT = { pp_cplan_saving = { why = $why$ } }" in rank_up
-    # the cursor after the walk still comes from what the group saves for
-    after = look[look.index("clear_variable_list = pp_lprof_turns"):]
-    assert "limit = { has_variable = pp_cplan_save_loc_105 }" in after
-    # the tiles' value: a location is unreached while the owner's last look stopped and did not reach it
-    body =_block(_read(MOD / lpf.VALUES), lpf.UNREACHED)
-    assert "owner ?= { has_variable = pp_lprof_cut }" in body and "var:pp_lprof_seen < owner.var:pp_lprof_look_n" in body
-    assert "NOT = { has_variable = pp_lprof_seen }" in body
+    # pp_lplan_last (the plans' turns) only moves when a construction started, which a costing turn never does
+    last = mark_body[:mark_body.index("set_variable = { name = pp_lplan_last value = $n$ }")]
+    assert "var:pp_lprof_st < 101.5" in last[last.rindex("limit = {"):]
+
+
+def test_the_cut_is_gone() -> None:
+    """Nothing is unreached for gold any more: no stop mark, no "held back until a look reaches it" value; the pane's
+    counter pp_cplan_ds_profiles_unr is the look's locations still to be checked."""
+    for path in (MOD / lpf.HAND_EFFECTS, MOD / lpf.VALUES, MOD / cp.VALUES, MOD / cp.EFFECTS, PLAN_EFFECTS, PLAN_VALUES):
+        text = _read(path)
+        assert "pp_lprof_cut" not in text and "pp_lprof_unreached" not in text, path
+    assert not hasattr(lpf, "UNREACHED")
+    look = _block(_code(MOD / lpf.HAND_EFFECTS), "pp_lprof_look")
+    assert "name = pp_cplan_ds_profiles_unr add = 1" not in look
 
 
 def test_full_standing_line_starts_another() -> None:
@@ -873,3 +985,31 @@ def test_workers_flag_for_the_other_rule_groups() -> None:
     assert "var:$st$ < 104.5" in flag and "var:$st$ > 113.5" in flag and "var:$st$ < 114.5" in flag
     assert finish.rindex("set_variable = { name = $st$ value") < finish.index("pp_lplan_wk")
     assert hand.count("name = pp_lplan_wk value") == 1
+
+
+ITERATOR = re.compile(r"\b(?:every|ordered|random|any)_\w+\s*=\s*\{|\bvariable\s*=")
+
+
+def test_group_n_reads_a_cached_variable() -> None:
+    """Script profile 2026-11-20: pp_lprof_group_n (through pp_cplan_profiles_cw / pp_cplan_w_total in every forecast
+    value the window shows) walked the country's locations with town rights about a hundred times a frame. It reads
+    the cache pp_lprof_any only; the real test runs at every pass's start before the weights are read, when the plan is
+    switched on, and when a location's last plan is taken off (setting a plan sets the cache)."""
+    body = _block(_code(MOD / lpf.VALUES), "pp_lprof_group_n")
+    assert not ITERATOR.search(body) and "pp_lprof_has_locations" not in body
+    assert f"has_variable = {lpf.ANY}" in body
+    hand = _code(MOD / lpf.HAND_EFFECTS)
+    refresh = _block(hand, "pp_lprof_any_refresh")
+    assert "any_locations_with_town_rights_in_country" in refresh and "pp_tplan_held = yes" in refresh
+    assert "owner ?= scope:pp_lprof_c" in refresh and "root" not in refresh  # the flip's root is a location
+    assert f"set_variable = {{ name = {lpf.ANY} value = yes }}" in refresh and f"remove_variable = {lpf.ANY}" in refresh
+    begin = _block(_code(PLAN_EFFECTS), "pp_cplan_pass_begin")
+    assert begin.index("pp_lprof_any_refresh = yes") < begin.index("pp_cplan_forecast_measure = yes") < begin.index(
+        "pp_cplan_purses_fill = yes")
+    flip = _block(_code(COMMON / "scripted_effects/pp_location_plan.txt"), "pp_tplan_flip")
+    off = flip[:flip.index("else = {\n\t\tgrant_town_rights")]
+    assert off.index("revoke_town_rights_of_type") < off.index("pp_lprof_any_refresh = yes")
+    on = flip[flip.index("grant_town_rights"):]
+    assert f"owner ?= {{ set_variable = {{ name = {lpf.ANY} value = yes }} }}" in on
+    toggle = _block(_code(COMMON / "scripted_guis/pp_construction_plan.txt"), "pp_cplan_toggle_on")
+    assert toggle.index("has_variable = pp_cplan_on") < toggle.index("pp_lprof_any_refresh = yes")

@@ -11,7 +11,9 @@
 # pp_tplan_free_off switches it off):
 # - WHEN: a plan's next level waits for workers and nothing else in a look (pp_pclose_may: construction goods, room,
 #   gold, the group not saving, not measuring); the plan engine (pp_lprof_expand / pp_lprof_start) records it as
-#   pp_lprof_fail 104.25 and the pop type the level needs (pp_pclose_pt), pp_lplan_mark calls pp_pclose_plan.
+#   pp_lprof_fail 104.25 and the pop type the level needs (pp_pclose_pt), pp_lplan_mark calls pp_pclose_plan. Never in
+#   a costing turn of the Locations look's daily slices (scope:pp_lprof_costing, pp_location_profiles.txt): no closing,
+#   no countdown of the wait there.
 # - WHAT: ONE building per location per look (pp_pclose_pick, one ordered walk over the location's buildings), then the
 #   location waits: no closing in the next look (pp_pclose_wait, + 100, counted down by its look turns).
 # - WHICH: pp_pclose_candidate (scripted_triggers/pp_plan_closer.txt); ORDER: pp_pclose_rank (least profit per worker
@@ -187,12 +189,15 @@ pp_pclose_plan_off = {
 
 # ---- In a location's turn (pp_lprof_location_turn, location scope, scope:pp_cplan_country saved) ----
 
-# At the turn's start: in a look, the wait after a closing counts down one look; nothing walked yet this turn.
+# At the turn's start: in a look, the wait after a closing counts down one look (not in a costing turn,
+# scope:pp_lprof_costing = 1: a turn that begins while the group saves leaves the closer alone); nothing walked yet
+# this turn.
 pp_pclose_turn_start = {
 	remove_variable = pp_pclose_none
 	remove_variable = pp_pclose_pt
 	if = {
 		limit = {
+			scope:pp_lprof_costing < 0.5
 			has_variable = pp_pclose_wait
 			scope:pp_cplan_country = { has_variable = pp_cplan_now_105 }
 		}

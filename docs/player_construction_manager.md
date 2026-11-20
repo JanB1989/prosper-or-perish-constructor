@@ -219,16 +219,27 @@ for gold" (7), 180 "waiting behind another plan" (9). Changed:
   (`pp_cplan_bz_pick`), Towns and Buildings' target turn between looks (`pp_cplan_save_type_107`), the measured best
   plan; the Victualling Yard picker keeps its own `pp_cplan_btype_data` call for its payback. `pp_cplan_btype_data`
   also sets `pp_cplan_gok`; only Towns and Buildings' target turn reads it, right after its own call.
-- *The look stops when the purse is spent.* Once the group saves for something (`pp_cplan_save_cost_105`, set by
-  `pp_cplan_note_wait` or the rank raise) `pp_cplan_construct_go` and `pp_cplan_country_rank_up` start nothing more in
-  the pass, so the rest of the locations are not walked. Same constructions, gold, saved-for target and cursor: the
-  first thing saved for and its location are fixed before the stop, and the cursor moves to just before it as before,
-  so the next look starts there and the unreached locations come right after it. Shown: a look number on the country
-  (`pp_lprof_look_n`), `pp_lprof_seen` on each location it reached, `pp_lprof_cut` when it stopped; the script value
-  `pp_lprof_unreached` makes every plan of such a location read "held back for gold" (`PP_LPROF_ST_7`) in the Location
-  Plan window and the Plans row; the pane says how many locations were not reached (`pp_cplan_d_profiles_unr`,
-  `PP_CPLAN_D_PROFILES_UNR`) and that their plans are not in the state counts, nor their cost in what it wanted (the
-  "wanted" gold and the chart's grey column count the reached locations only).
+- *The look runs in daily slices* (2026-11-20, evening; tested in game, below; it replaced "the look stops when the purse
+  is spent" of the morning, which left the group without the gold its plans were missing, and a look over thousands
+  of plans in one day still froze the game). The look orders all its locations once (`pp_lprof_todo`, places
+  `pp_lprof_pos`) and walks K a day, K = max(`look_slice_min`, ceil(locations / `look_slice_days`)) = max(60, n / 24):
+  the first slice inside the pass, the rest through the hidden event `pp_construction_plan.1` one day apart
+  (`pp_lprof_slice_event`: no purse filled, no number reset; nothing but dropping the list when the plan is off, the
+  country no longer runs it or the group's weight is 0). Once the group saves for something (`pp_cplan_save_cost_105`,
+  set by `pp_cplan_note_wait` or the rank raise) `pp_cplan_construct_go` and `pp_cplan_country_rank_up` start nothing
+  more, as before; every turn that begins after that is a costing turn (`scope:pp_lprof_costing`): states and the
+  window's counts only, no construction, no closing, no countdown of the closer's wait, `pp_lplan_wk` untouched. So
+  the "wanted" gold and the state counts cover every planned location again. The cursor moves at the end of the last
+  slice (`pp_lprof_look_end`). `pp_cplan_d_profiles_unr` counts the locations of the running look still to be
+  checked; `pp_lprof_cut` and `pp_lprof_unreached` are gone. The Locations group hands its purse on only after its
+  last slice (`pp_cplan_gives_105` waits for `pp_lprof_pend`; `pp_cplan_purses_hand_on_105` in the event), and each
+  event slice writes the chart's month 1 again. `pp_cplan_test_profiles` runs the look in one slice (`pp_lprof_whole`).
+  Slices end within 24 days, so no monthly pass falls between them; `pp_lprof_run` drops a list left from an earlier
+  look all the same. Tested in game (2026-11-20, plan test world, Castile, 615 plans on 418 locations, 1337-1340):
+  first slice 60 locations; the June look walked 60 a day over seven days (still to be checked 358, 298, 238, ...,
+  0), started 88 constructions while the purse lasted, then only counted (208 plans held back for gold); `limit`
+  inside `ordered_in_list` and the hidden event chain work; no mod script error in three years. Not tested: a look
+  that overlaps a save and load, a country with more than 1,440 planned locations (a slice above 60), multiplayer.
 - *Two goes only where needed.* The second go of the plans' turns (`pp_lplan_location_marks_turns`) runs only where a
   plan started the location's last construction (`scope:pp_lplan_from`, `pp_lplan_last` as the turn began). Taking the
   split at the turn's start also ends a display fault: read live, a plan that started a construction in the first go
@@ -493,6 +504,55 @@ beside the bars), and the pass's cost now that the business group looks whenever
   Cost: a pass with no gold left checks everything instead of stopping, except the business group since 2026-11-10
   (its pick over every free site was the dear part: it does not look when it starts without gold, see Maintenance
   above); the food steps of every province still run; not profiled yet. Not tested in game.
+  Forecast (2026-11-20, construction_plan_forecast.py; the rules never read it; tested in game the same day, plan test
+  world, Castile, 615 plans on 418 locations, 1337-1340: the values evaluate as specified, and after three years with
+  little gold coming in the window read Locations "short of gold, 8.3 years" (lacking 27,174 gold at 272 a month),
+  Food 1.2 years, Logistics and Improvements "has the gold for all it asks for", Businesses "keeping up"; no mod
+  script error): the new gold a
+  pass (`pp_cplan_flow_n`, a running mean over up to 12 passes measured at each pass's start before the purses move;
+  the first pass after switching the plan on is not measured, switching on clears the means) and per group the mean
+  gold handed on to it; from those per group the gold it still lacks for all it wanted (`pp_cplan_f_<g>_missing`), its
+  gold a month at the current weights (`_rate`), the years that takes (`_years`, max 99), a status 0..5 (`_status`:
+  off, not looked, has the gold, keeping up, short, short and nothing coming in), the weight at which it would keep up
+  (`_need_w`), one weight step up and down (`_up_part` / `_up_years` / `_down_part` / `_down_years`), its one situation
+  number (`_sit`) and its history by look (`pp_cplan_hq_<g>_<k>`, `_p_<k>`, `_max`); totals `pp_cplan_f_all_missing`
+  / `_all_years`, and `pp_cplan_f_profiles_blocked` (plans waiting for something other than gold).
+- **Feedback for the money sliders** (Jan 2026-11-20: "a kind of feedback for these money sliders ... so that we can
+  see what is the situation when you look at that slider"; construction_plan_status.py, tested in game the same day):
+  - *The bar*: under the gold weight bar a white bar on the same scale = the weight at which the group would pay
+    within a year for everything it wanted at its last look, with the other bars as they are (`_need_w`). White
+    longer than gold: short of gold. White shorter or empty: it gets more than it asks for. The bar's tooltip says
+    so; the - and + tooltips say what one step does (its share before and after, and while it is short of gold its
+    years before and after).
+  - *The status line* under each row (`pp_cplan_status_<group>`): a coloured phrase by `_status` (red: short of gold
+    with its years, or never at this rate, or none is coming in; plain: keeping up; green: has the gold for all it
+    asks for; weak: off, not looked yet), then the group's situation number in words. Its tooltip gives the working
+    with the live numbers and what to do with the bar.
+  - *One line above the rows*: the gold that came into the plan a month lately, what all groups together lack and how
+    long that takes (is gold the limit at all).
+  - *The cog pane*: the status as its headline, then two charts side by side (gold wanted and spent by month, as
+    before; the group's situation number over its last twelve looks, bronze columns; none for Towns and Buildings),
+    the working line and the two step lines, then the last look's lines and what it built. Everything below the
+    pane's header scrolls as one (the list of what was built had no room left). The lines "N more were held back for
+    gold" and "nothing waited for gold" are gone: the headline says it.
+  - *The window reads kept numbers*: every value above, the rows' share (`pp_cplan_part_<g>`) and the look charts'
+    percentages are readouts of country variables (`pp_cplan_fv_<name>`); the formulae (`pp_cplan_fx_*`,
+    `pp_cplan_partx_*`, `pp_cplan_hqx_*`) run once in `pp_cplan_forecast_store`: at the end of every pass, after every
+    slice of the Locations look, on every click of a bar, the reserve or a line, when the plan is switched on, when a
+    plan is set or taken off, and when something is ticked on the Towns and Buildings tab. A plan lost by conquest
+    shows at the next pass. Why: read live, the window evaluated `pp_cplan_w_total` about 185 times a frame (each
+    number re-derives the shares), 4.0 s of script time in a 12 s profile with the window open and the game paused;
+    kept, 0.08 s. "Does a location hold a plan" (`pp_lprof_group_n`) is a country variable too (`pp_lprof_any`,
+    refreshed at every pass's start, on switching on and when a plan is set or taken off).
+  - *In game* (plan test world, Castile, 615 plans, three years, 2,500 gold a quarter the first year, then 600): gold
+    coming in 220 a month, all groups together lack 27,764 (10.5 years); Locations red, 9.1 years, white bar full;
+    Food and Businesses keeping up; Logistics and Improvements green; Towns and Buildings off. Every tooltip, pane and
+    chart shows; no mod script error. The look's day costs 0.093 s for the pass with its first slice and at most
+    0.040 s for a later slice (418 locations, 60 a day).
+  - *Seen on the way*: with plenty of gold a group that saves for nothing keeps its purse (in the first test year
+    Logistics sat on 5,000 gold while 224 plans waited): the hand-on needs another group to be saving in the very
+    pass in which the giver looks, and a group stops saving as soon as its purse pays its one thing. The status line
+    now shows it ("has the gold for all it asks for", empty white bar), the rules are unchanged.
 - **Gone** (Jan: "the rest for now can go"): the Food, Goods, Logistics, Locations and Here tabs; the monthly
   construction limit; the presets; the line about the game's own automation (the guards stay: no level for a closed
   building, nothing where a construction is under way); the goods modes (Off / Keep / Expand / Never); the per-location

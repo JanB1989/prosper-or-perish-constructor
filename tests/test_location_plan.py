@@ -201,12 +201,13 @@ def test_every_plan_state_has_a_text() -> None:
     assert states and states[0] == 1 and "PP_LPROF_ST_0" in keys
     for plan in lp.plannable(_plans()):
         upper = plan.key.upper()
-        pick, line, sts = texts[f"PP_TPLAN_PICK_{upper}"], texts[f"PP_TPLAN_STR_{upper}"], texts[f"PP_TPLAN_STS_{upper}"]
+        pick, line, sts = texts[f"PP_TPLAN_PICK_{upper}"], texts[f"PP_TPLAN_ST_{upper}"], texts[f"PP_TPLAN_STS_{upper}"]
         assert f"'PP_TPLAN_ST_{upper}', 'PP_TPLAN_EMPTY'" in pick and lp.held(plan) in pick
-        assert f"Var('{plan.state}').IsSet, 'PP_TPLAN_STS_{upper}', 'PP_LPROF_ST_0'" in line
-        # a location the last look did not reach (its purse spent first): "held back for gold", whatever it said before
-        assert texts[f"PP_TPLAN_ST_{upper}"] == (
-            f"\\n[SelectLocalization({lp.unreached()}, 'PP_LPROF_ST_{lp.UNREACHED_STATE}', 'PP_TPLAN_STR_{upper}')]")
+        # the state of the location's last turn (the daily slices walk every location of a look, 2026-11-20: no
+        # "not reached" override any more)
+        assert line == (f"\\n[SelectLocalization(Location.MakeScope.Var('{plan.state}').IsSet, "
+                        f"'PP_TPLAN_STS_{upper}', 'PP_LPROF_ST_0')]")
+        assert f"PP_TPLAN_STR_{upper}" not in texts and "pp_lprof_unreached" not in line
         for n in states:
             assert (f"[AddTextIf(EqualTo_CFixedPoint(Location.MakeScope.Var('{plan.state}').GetValue, '(CFixedPoint){100 + n}'), "
                     f"Localize('PP_LPROF_ST_{n}'))]") in sts, (plan.key, n)

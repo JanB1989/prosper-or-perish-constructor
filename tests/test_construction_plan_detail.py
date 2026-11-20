@@ -9,6 +9,7 @@ from pathlib import Path
 
 from prosper_or_perish_constructor import construction_plan as cp
 from prosper_or_perish_constructor import construction_plan_detail as cpd
+from prosper_or_perish_constructor import construction_plan_status as cps
 
 ROOT = Path(__file__).resolve().parents[1]
 MOD = ROOT / "mod" / "pp"
@@ -56,13 +57,26 @@ def test_a_cog_and_a_pane_per_group() -> None:
         pane = _type_body(gui, f"pp_cplan_detail_{group}")
         assert f'tooltip = "PP_CPLAN_{group.upper()}_RULE_TT"' in pane
         assert "on_action = \"[GetVariableSystem.Clear('pp_cplan_detail')]\"" in pane  # its close button
-        for name in ("ran", "waitn", "started"):
+        for name in ("ran", "started"):
             assert f"ScriptValue('pp_cplan_d_{group}_{name}')" in pane, (group, name)
         loc = cpd.texts()
         for name in ("had", "spent", "started", "need"):
             assert f"ScriptValue('pp_cplan_d_{group}_{name}')" in loc[f"PP_CPLAN_D_GOLD_{group.upper()}"], (group, name)
-        for name in ("waitn", "wait"):
-            assert f"ScriptValue('pp_cplan_d_{group}_{name}')" in loc[f"PP_CPLAN_D_WAIT_{group.upper()}"], (group, name)
+        # what waited for gold is the outlook's now (2026-11-20): the old lines are gone
+        assert f"PP_CPLAN_D_WAIT_{group.upper()}" not in loc and "PP_CPLAN_D_NO_WAIT" not in loc
+        # the order (Jan 2026-11-20): status, both charts, its working and steps, the last look's gold, the list
+        order = [pane.index("PP_CPLAN_D_ST_0"), pane.index("pp_cplan_d_column = {"),
+                 pane.index(f"PP_CPLAN_D_STEP_DOWN_{group.upper()}"), pane.index(f"PP_CPLAN_D_GOLD_{group.upper()}\""),
+                 pane.index('"PP_CPLAN_D_BUILT"'), pane.index(f"GetList('pp_cplan_log_{cp.GROUP_WHY[group]}')")]
+        assert order == sorted(order), group
+        # the header stays, everything below it scrolls in ONE scrollarea of fixed-width content, the list inside it
+        # is a plain flowcontainer (in game 2026-11-20 the list got no room at 900 px)
+        assert pane.count("scrollarea = {") == 1 and pane.count("scrollwidget = {") == 1, group
+        scroll = pane[pane.index("scrollarea = {"):]
+        assert pane.index("button_close_alt = {") < pane.index("scrollarea = {") < pane.index("PP_CPLAN_D_ST_0")
+        assert f"maximumsize = {{ {cpd.SCROLL_WIDTH} -1 }}" in scroll and cpd.SCROLL_WIDTH <= 694 - 20
+        assert re.search(r"flowcontainer = \{\n\t+direction = vertical\n\t+datamodel = \"\[GetPlayer\.MakeScope\.GetList"
+                         rf"\('pp_cplan_log_{cp.GROUP_WHY[group]}'\)\]\"", scroll), group
 
 
 def test_chart_has_a_column_per_month_oldest_left() -> None:
@@ -161,10 +175,12 @@ def test_locations_list_tells_a_building_from_a_rank_raise() -> None:
         assert not re.search(r"\bprofiles?\b|\bmark(?:s|ed)?\b", words), key
     assert "holds a plan" in loc["PP_CPLAN_D_OFF_PROFILES"]
     assert "with a plan" in loc["PP_CPLAN_D_PROFILES_SIT"]
-    # script time 2026-11-20: the look stops once the purse is spent; the pane says how many locations it did not
-    # reach (shown only then, below the state counts they are not in) and that their cost is not in what it wanted
+    # script time 2026-11-20: the Locations look runs over the days of its month; the pane says how many locations of
+    # the current look are still to be checked (shown only then, below the state counts) and that their plans keep the
+    # state of their last turn until then
     unr = "ScriptValue('pp_cplan_d_profiles_unr')"
-    assert unr in loc["PP_CPLAN_D_PROFILES_UNR"] and "not reached" in loc["PP_CPLAN_D_PROFILES_UNR"]
+    assert unr in loc["PP_CPLAN_D_PROFILES_UNR"] and "still to be checked" in loc["PP_CPLAN_D_PROFILES_UNR"]
+    assert "not reached" not in loc["PP_CPLAN_D_PROFILES_UNR"] and "last turn" in loc["PP_CPLAN_D_PROFILES_UNR"]
     shown = f'visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.{unr}, \'(CFixedPoint)0.5\')]"'
     assert re.search(re.escape(shown) + r"\n\t+text = \"PP_CPLAN_D_PROFILES_UNR\"", pane)
     assert pane.index('text = "PP_CPLAN_D_PROFILES_ST13"') < pane.index('text = "PP_CPLAN_D_PROFILES_UNR"')
@@ -204,7 +220,7 @@ def test_every_text_exists_once() -> None:
     """Every key the generated GUIs use (PP_CPLAN_D_*, the window's rule tooltips, the profile rule states) is defined
     exactly once across the mod's English files with the detail loc as rendered; no PP_CPLAN_D_ key is left unused
     (the weight bars show the saved gold with a PP_CPLAN_D_ key)."""
-    gui = cpd.render_gui() + cp.render_weight_gui()
+    gui = cpd.render_gui() + cps.render_weight_gui()
     counts: Counter[str] = Counter()
     for path in sorted(LOC_FOLDER.glob("*.yml")):
         if path.name != cpd.DETAIL_LOC.name:
@@ -215,7 +231,11 @@ def test_every_text_exists_once() -> None:
     assert {f"PP_CPLAN_{group.upper()}_RULE_TT" for group in cp.GROUPS} <= used
     for key in used:
         assert counts[key] == 1, f"{key}: defined {counts[key]} times"
-    assert {key for key in used if key.startswith("PP_CPLAN_D_")} == set(rendered)
+    # a text can name another (the outlook's state-dependent parts: [SelectLocalization(..., Localize('KEY'), ...)])
+    named = set(re.findall(r"Localize\('([A-Z][A-Z0-9_]+)'\)", cpd.render_loc()))
+    for key in named:
+        assert counts[key] == 1, f"{key}: defined {counts[key]} times"
+    assert {key for key in used | named if key.startswith("PP_CPLAN_D_")} == set(rendered)
     assert all(key.startswith("PP_CPLAN_D_") for key in rendered)
     # a text a text names ($KEY$) exists too
     hand = _read(LOC_FOLDER / "pp_construction_plan_l_english.yml")
@@ -292,8 +312,9 @@ def test_window_places_cogs_and_panes() -> None:
     assert window.count("minimumsize = { 200 -1 } maximumsize = { 200 -1 }") == 1
     assert window.count("widget = { size = { 130 1 } }") == 1
     assert len(cp.GROUPS) == 5 + 1
-    # the window grew by what the saved gold takes in every weight bar (its width + the bar's spacing)
-    assert "size = { 758 820 }" in window and 758 - 690 == cp.PURSE_WIDTH + 4
+    # the window grew by what the saved gold takes in every weight bar (its width + the bar's spacing), and 80 px in
+    # height for the rule groups' status lines (2026-11-20)
+    assert "size = { 758 900 }" in window and 758 - 690 == cp.PURSE_WIDTH + 4
 
 
 def test_script_values_exist() -> None:
@@ -310,7 +331,7 @@ def test_budget_shows_in_the_window() -> None:
     """Budgets that save (Jan 2026-11-10): each rule group's row shows what the group has saved beside its share, with
     one tooltip that says how the budget works; its pane says what it saves for and how far it is; the things held
     back for construction goods and by the market limit show in plain words, only when there are any."""
-    weights = cp.render_weight_gui()
+    weights = cps.render_weight_gui()
     loc = cpd.texts()
     hand = _read(LOC_FOLDER / "pp_construction_plan_l_english.yml")
     assert re.search(r"^  PP_CPLAN_PURSE_TT: \".*\$PP_CPLAN_BUDGET_NOTE\$\"$", hand, re.MULTILINE)

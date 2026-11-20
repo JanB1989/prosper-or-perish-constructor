@@ -2,87 +2,105 @@
 
 types PPConstructionPlanWeights
 {
+	# a status line's text: smaller than the row
+	type pp_cplan_status_text = text_single {
+		autoresize = yes
+		align = left|nobaseline
+		fontsize = 13
+	}
+
 	# the profiles group
 	type pp_cplan_weight_bar_profiles = hbox {
 		spacing = 4
 		button_square_minus = {
 			size = { 15 15 }
-			tooltip = "PP_CPLAN_WEIGHT_TT"
+			tooltip = "PP_CPLAN_D_DOWN_TT_PROFILES"
 			onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('profiles')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
 		}
 		widget = {
-			size = { 140 14 }
+			size = { 140 20 }
 			progressbar_framed = {
-				size = { 100% 100% }
+				position = { 0 0 }
+				size = { 140 14 }
 				using = progress_bar_goldish
 				min = 0
 				max = 10
 				value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_profiles_w'))]"
 			}
+			# white: the weight at which it would pay for all it wants within a year (pp_cplan_f_<group>_need_w)
+			progressbar = {
+				position = { 0 14 }
+				size = { 140 6 }
+				min = 0
+				max = 10
+				value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_profiles_need_w'))]"
+				progresstexture = "gfx/interface/progressbars/progress_bar_whiteish.dds"
+				noprogresstexture = "gfx/interface/progressbars/progress_black.dds"
+			}
 			button = {
 				position = { 0 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_PROFILES"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('profiles')).AddScope('pp_n', MakeScopeFlag('w1')).End)]"
 			}
 			button = {
 				position = { 14 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_PROFILES"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('profiles')).AddScope('pp_n', MakeScopeFlag('w2')).End)]"
 			}
 			button = {
 				position = { 28 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_PROFILES"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('profiles')).AddScope('pp_n', MakeScopeFlag('w3')).End)]"
 			}
 			button = {
 				position = { 42 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_PROFILES"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('profiles')).AddScope('pp_n', MakeScopeFlag('w4')).End)]"
 			}
 			button = {
 				position = { 56 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_PROFILES"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('profiles')).AddScope('pp_n', MakeScopeFlag('w5')).End)]"
 			}
 			button = {
 				position = { 70 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_PROFILES"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('profiles')).AddScope('pp_n', MakeScopeFlag('w6')).End)]"
 			}
 			button = {
 				position = { 84 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_PROFILES"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('profiles')).AddScope('pp_n', MakeScopeFlag('w7')).End)]"
 			}
 			button = {
 				position = { 98 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_PROFILES"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('profiles')).AddScope('pp_n', MakeScopeFlag('w8')).End)]"
 			}
 			button = {
 				position = { 112 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_PROFILES"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('profiles')).AddScope('pp_n', MakeScopeFlag('w9')).End)]"
 			}
 			button = {
 				position = { 126 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_PROFILES"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('profiles')).AddScope('pp_n', MakeScopeFlag('w10')).End)]"
 			}
 		}
 		button_square_plus = {
 			size = { 15 15 }
-			tooltip = "PP_CPLAN_WEIGHT_TT"
+			tooltip = "PP_CPLAN_D_UP_TT_PROFILES"
 			onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('profiles')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
 		}
 		text_single = {
@@ -102,87 +120,147 @@ types PPConstructionPlanWeights
 		}
 	}
 
+	# the profiles group's status: how it stands for gold, and its situation at its last look
+	type pp_cplan_status_profiles = hbox {
+		layoutpolicy_horizontal = expanding
+		ignoreinvisible = yes
+		margin = { 6 0 }
+		spacing = 10
+		pp_cplan_status_text = {
+			visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_profiles_status'), '(CFixedPoint)0.5'))]"
+			text = "PP_CPLAN_D_ST_0"
+			tooltip = "PP_CPLAN_D_OUTLOOK_0_PROFILES"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_profiles_status'), '(CFixedPoint)0.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_profiles_status'), '(CFixedPoint)1.5')))]"
+			text = "PP_CPLAN_D_ST_1"
+			tooltip = "PP_CPLAN_D_OUTLOOK_1"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_profiles_status'), '(CFixedPoint)1.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_profiles_status'), '(CFixedPoint)2.5')))]"
+			text = "PP_CPLAN_D_ST_2"
+			tooltip = "PP_CPLAN_D_OUTLOOK_2_PROFILES"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_profiles_status'), '(CFixedPoint)2.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_profiles_status'), '(CFixedPoint)3.5')))]"
+			text = "PP_CPLAN_D_ST_3"
+			tooltip = "PP_CPLAN_D_OUTLOOK_3_PROFILES"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_profiles_status'), '(CFixedPoint)3.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_profiles_status'), '(CFixedPoint)4.5'))), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_profiles_years'), '(CFixedPoint)98.5')))]"
+			text = "PP_CPLAN_D_ST_4_PROFILES"
+			tooltip = "PP_CPLAN_D_OUTLOOK_4_PROFILES"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_profiles_status'), '(CFixedPoint)3.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_profiles_status'), '(CFixedPoint)4.5'))), GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_profiles_years'), '(CFixedPoint)98.5'))]"
+			text = "PP_CPLAN_D_ST_4N"
+			tooltip = "PP_CPLAN_D_OUTLOOK_4N_PROFILES"
+		}
+		pp_cplan_status_text = {
+			visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_profiles_status'), '(CFixedPoint)4.5')]"
+			text = "PP_CPLAN_D_ST_5"
+			tooltip = "PP_CPLAN_D_OUTLOOK_5_PROFILES"
+		}
+		pp_cplan_status_text = {
+			visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_profiles_status'), '(CFixedPoint)1.5')]"
+			text = "PP_CPLAN_D_FACT_PROFILES"
+			tooltip = "PP_CPLAN_D_FACT_TT_PROFILES"
+		}
+		expand = {}
+	}
+
 	# the food group
 	type pp_cplan_weight_bar_food = hbox {
 		spacing = 4
 		button_square_minus = {
 			size = { 15 15 }
-			tooltip = "PP_CPLAN_WEIGHT_TT"
+			tooltip = "PP_CPLAN_D_DOWN_TT_FOOD"
 			onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('food')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
 		}
 		widget = {
-			size = { 140 14 }
+			size = { 140 20 }
 			progressbar_framed = {
-				size = { 100% 100% }
+				position = { 0 0 }
+				size = { 140 14 }
 				using = progress_bar_goldish
 				min = 0
 				max = 10
 				value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_food_w'))]"
 			}
+			# white: the weight at which it would pay for all it wants within a year (pp_cplan_f_<group>_need_w)
+			progressbar = {
+				position = { 0 14 }
+				size = { 140 6 }
+				min = 0
+				max = 10
+				value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_food_need_w'))]"
+				progresstexture = "gfx/interface/progressbars/progress_bar_whiteish.dds"
+				noprogresstexture = "gfx/interface/progressbars/progress_black.dds"
+			}
 			button = {
 				position = { 0 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_FOOD"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('food')).AddScope('pp_n', MakeScopeFlag('w1')).End)]"
 			}
 			button = {
 				position = { 14 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_FOOD"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('food')).AddScope('pp_n', MakeScopeFlag('w2')).End)]"
 			}
 			button = {
 				position = { 28 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_FOOD"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('food')).AddScope('pp_n', MakeScopeFlag('w3')).End)]"
 			}
 			button = {
 				position = { 42 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_FOOD"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('food')).AddScope('pp_n', MakeScopeFlag('w4')).End)]"
 			}
 			button = {
 				position = { 56 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_FOOD"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('food')).AddScope('pp_n', MakeScopeFlag('w5')).End)]"
 			}
 			button = {
 				position = { 70 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_FOOD"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('food')).AddScope('pp_n', MakeScopeFlag('w6')).End)]"
 			}
 			button = {
 				position = { 84 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_FOOD"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('food')).AddScope('pp_n', MakeScopeFlag('w7')).End)]"
 			}
 			button = {
 				position = { 98 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_FOOD"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('food')).AddScope('pp_n', MakeScopeFlag('w8')).End)]"
 			}
 			button = {
 				position = { 112 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_FOOD"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('food')).AddScope('pp_n', MakeScopeFlag('w9')).End)]"
 			}
 			button = {
 				position = { 126 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_FOOD"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('food')).AddScope('pp_n', MakeScopeFlag('w10')).End)]"
 			}
 		}
 		button_square_plus = {
 			size = { 15 15 }
-			tooltip = "PP_CPLAN_WEIGHT_TT"
+			tooltip = "PP_CPLAN_D_UP_TT_FOOD"
 			onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('food')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
 		}
 		text_single = {
@@ -202,87 +280,147 @@ types PPConstructionPlanWeights
 		}
 	}
 
+	# the food group's status: how it stands for gold, and its situation at its last look
+	type pp_cplan_status_food = hbox {
+		layoutpolicy_horizontal = expanding
+		ignoreinvisible = yes
+		margin = { 6 0 }
+		spacing = 10
+		pp_cplan_status_text = {
+			visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_food_status'), '(CFixedPoint)0.5'))]"
+			text = "PP_CPLAN_D_ST_0"
+			tooltip = "PP_CPLAN_D_OUTLOOK_0_FOOD"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_food_status'), '(CFixedPoint)0.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_food_status'), '(CFixedPoint)1.5')))]"
+			text = "PP_CPLAN_D_ST_1"
+			tooltip = "PP_CPLAN_D_OUTLOOK_1"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_food_status'), '(CFixedPoint)1.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_food_status'), '(CFixedPoint)2.5')))]"
+			text = "PP_CPLAN_D_ST_2"
+			tooltip = "PP_CPLAN_D_OUTLOOK_2_FOOD"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_food_status'), '(CFixedPoint)2.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_food_status'), '(CFixedPoint)3.5')))]"
+			text = "PP_CPLAN_D_ST_3"
+			tooltip = "PP_CPLAN_D_OUTLOOK_3_FOOD"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_food_status'), '(CFixedPoint)3.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_food_status'), '(CFixedPoint)4.5'))), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_food_years'), '(CFixedPoint)98.5')))]"
+			text = "PP_CPLAN_D_ST_4_FOOD"
+			tooltip = "PP_CPLAN_D_OUTLOOK_4_FOOD"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_food_status'), '(CFixedPoint)3.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_food_status'), '(CFixedPoint)4.5'))), GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_food_years'), '(CFixedPoint)98.5'))]"
+			text = "PP_CPLAN_D_ST_4N"
+			tooltip = "PP_CPLAN_D_OUTLOOK_4N_FOOD"
+		}
+		pp_cplan_status_text = {
+			visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_food_status'), '(CFixedPoint)4.5')]"
+			text = "PP_CPLAN_D_ST_5"
+			tooltip = "PP_CPLAN_D_OUTLOOK_5_FOOD"
+		}
+		pp_cplan_status_text = {
+			visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_food_status'), '(CFixedPoint)1.5')]"
+			text = "PP_CPLAN_D_FACT_FOOD"
+			tooltip = "PP_CPLAN_D_FACT_TT_FOOD"
+		}
+		expand = {}
+	}
+
 	# the logistics group
 	type pp_cplan_weight_bar_logistics = hbox {
 		spacing = 4
 		button_square_minus = {
 			size = { 15 15 }
-			tooltip = "PP_CPLAN_WEIGHT_TT"
+			tooltip = "PP_CPLAN_D_DOWN_TT_LOGISTICS"
 			onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('logistics')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
 		}
 		widget = {
-			size = { 140 14 }
+			size = { 140 20 }
 			progressbar_framed = {
-				size = { 100% 100% }
+				position = { 0 0 }
+				size = { 140 14 }
 				using = progress_bar_goldish
 				min = 0
 				max = 10
 				value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_logistics_w'))]"
 			}
+			# white: the weight at which it would pay for all it wants within a year (pp_cplan_f_<group>_need_w)
+			progressbar = {
+				position = { 0 14 }
+				size = { 140 6 }
+				min = 0
+				max = 10
+				value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_logistics_need_w'))]"
+				progresstexture = "gfx/interface/progressbars/progress_bar_whiteish.dds"
+				noprogresstexture = "gfx/interface/progressbars/progress_black.dds"
+			}
 			button = {
 				position = { 0 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_LOGISTICS"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('logistics')).AddScope('pp_n', MakeScopeFlag('w1')).End)]"
 			}
 			button = {
 				position = { 14 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_LOGISTICS"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('logistics')).AddScope('pp_n', MakeScopeFlag('w2')).End)]"
 			}
 			button = {
 				position = { 28 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_LOGISTICS"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('logistics')).AddScope('pp_n', MakeScopeFlag('w3')).End)]"
 			}
 			button = {
 				position = { 42 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_LOGISTICS"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('logistics')).AddScope('pp_n', MakeScopeFlag('w4')).End)]"
 			}
 			button = {
 				position = { 56 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_LOGISTICS"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('logistics')).AddScope('pp_n', MakeScopeFlag('w5')).End)]"
 			}
 			button = {
 				position = { 70 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_LOGISTICS"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('logistics')).AddScope('pp_n', MakeScopeFlag('w6')).End)]"
 			}
 			button = {
 				position = { 84 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_LOGISTICS"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('logistics')).AddScope('pp_n', MakeScopeFlag('w7')).End)]"
 			}
 			button = {
 				position = { 98 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_LOGISTICS"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('logistics')).AddScope('pp_n', MakeScopeFlag('w8')).End)]"
 			}
 			button = {
 				position = { 112 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_LOGISTICS"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('logistics')).AddScope('pp_n', MakeScopeFlag('w9')).End)]"
 			}
 			button = {
 				position = { 126 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_LOGISTICS"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('logistics')).AddScope('pp_n', MakeScopeFlag('w10')).End)]"
 			}
 		}
 		button_square_plus = {
 			size = { 15 15 }
-			tooltip = "PP_CPLAN_WEIGHT_TT"
+			tooltip = "PP_CPLAN_D_UP_TT_LOGISTICS"
 			onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('logistics')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
 		}
 		text_single = {
@@ -302,87 +440,147 @@ types PPConstructionPlanWeights
 		}
 	}
 
+	# the logistics group's status: how it stands for gold, and its situation at its last look
+	type pp_cplan_status_logistics = hbox {
+		layoutpolicy_horizontal = expanding
+		ignoreinvisible = yes
+		margin = { 6 0 }
+		spacing = 10
+		pp_cplan_status_text = {
+			visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_logistics_status'), '(CFixedPoint)0.5'))]"
+			text = "PP_CPLAN_D_ST_0"
+			tooltip = "PP_CPLAN_D_OUTLOOK_0_LOGISTICS"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_logistics_status'), '(CFixedPoint)0.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_logistics_status'), '(CFixedPoint)1.5')))]"
+			text = "PP_CPLAN_D_ST_1"
+			tooltip = "PP_CPLAN_D_OUTLOOK_1"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_logistics_status'), '(CFixedPoint)1.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_logistics_status'), '(CFixedPoint)2.5')))]"
+			text = "PP_CPLAN_D_ST_2"
+			tooltip = "PP_CPLAN_D_OUTLOOK_2_LOGISTICS"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_logistics_status'), '(CFixedPoint)2.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_logistics_status'), '(CFixedPoint)3.5')))]"
+			text = "PP_CPLAN_D_ST_3"
+			tooltip = "PP_CPLAN_D_OUTLOOK_3_LOGISTICS"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_logistics_status'), '(CFixedPoint)3.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_logistics_status'), '(CFixedPoint)4.5'))), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_logistics_years'), '(CFixedPoint)98.5')))]"
+			text = "PP_CPLAN_D_ST_4_LOGISTICS"
+			tooltip = "PP_CPLAN_D_OUTLOOK_4_LOGISTICS"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_logistics_status'), '(CFixedPoint)3.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_logistics_status'), '(CFixedPoint)4.5'))), GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_logistics_years'), '(CFixedPoint)98.5'))]"
+			text = "PP_CPLAN_D_ST_4N"
+			tooltip = "PP_CPLAN_D_OUTLOOK_4N_LOGISTICS"
+		}
+		pp_cplan_status_text = {
+			visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_logistics_status'), '(CFixedPoint)4.5')]"
+			text = "PP_CPLAN_D_ST_5"
+			tooltip = "PP_CPLAN_D_OUTLOOK_5_LOGISTICS"
+		}
+		pp_cplan_status_text = {
+			visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_logistics_status'), '(CFixedPoint)1.5')]"
+			text = "PP_CPLAN_D_FACT_LOGISTICS"
+			tooltip = "PP_CPLAN_D_FACT_TT_LOGISTICS"
+		}
+		expand = {}
+	}
+
 	# the improve group
 	type pp_cplan_weight_bar_improve = hbox {
 		spacing = 4
 		button_square_minus = {
 			size = { 15 15 }
-			tooltip = "PP_CPLAN_WEIGHT_TT"
+			tooltip = "PP_CPLAN_D_DOWN_TT_IMPROVE"
 			onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
 		}
 		widget = {
-			size = { 140 14 }
+			size = { 140 20 }
 			progressbar_framed = {
-				size = { 100% 100% }
+				position = { 0 0 }
+				size = { 140 14 }
 				using = progress_bar_goldish
 				min = 0
 				max = 10
 				value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_improve_w'))]"
 			}
+			# white: the weight at which it would pay for all it wants within a year (pp_cplan_f_<group>_need_w)
+			progressbar = {
+				position = { 0 14 }
+				size = { 140 6 }
+				min = 0
+				max = 10
+				value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_improve_need_w'))]"
+				progresstexture = "gfx/interface/progressbars/progress_bar_whiteish.dds"
+				noprogresstexture = "gfx/interface/progressbars/progress_black.dds"
+			}
 			button = {
 				position = { 0 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_IMPROVE"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve')).AddScope('pp_n', MakeScopeFlag('w1')).End)]"
 			}
 			button = {
 				position = { 14 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_IMPROVE"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve')).AddScope('pp_n', MakeScopeFlag('w2')).End)]"
 			}
 			button = {
 				position = { 28 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_IMPROVE"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve')).AddScope('pp_n', MakeScopeFlag('w3')).End)]"
 			}
 			button = {
 				position = { 42 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_IMPROVE"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve')).AddScope('pp_n', MakeScopeFlag('w4')).End)]"
 			}
 			button = {
 				position = { 56 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_IMPROVE"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve')).AddScope('pp_n', MakeScopeFlag('w5')).End)]"
 			}
 			button = {
 				position = { 70 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_IMPROVE"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve')).AddScope('pp_n', MakeScopeFlag('w6')).End)]"
 			}
 			button = {
 				position = { 84 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_IMPROVE"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve')).AddScope('pp_n', MakeScopeFlag('w7')).End)]"
 			}
 			button = {
 				position = { 98 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_IMPROVE"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve')).AddScope('pp_n', MakeScopeFlag('w8')).End)]"
 			}
 			button = {
 				position = { 112 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_IMPROVE"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve')).AddScope('pp_n', MakeScopeFlag('w9')).End)]"
 			}
 			button = {
 				position = { 126 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_IMPROVE"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve')).AddScope('pp_n', MakeScopeFlag('w10')).End)]"
 			}
 		}
 		button_square_plus = {
 			size = { 15 15 }
-			tooltip = "PP_CPLAN_WEIGHT_TT"
+			tooltip = "PP_CPLAN_D_UP_TT_IMPROVE"
 			onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
 		}
 		text_single = {
@@ -402,87 +600,147 @@ types PPConstructionPlanWeights
 		}
 	}
 
+	# the improve group's status: how it stands for gold, and its situation at its last look
+	type pp_cplan_status_improve = hbox {
+		layoutpolicy_horizontal = expanding
+		ignoreinvisible = yes
+		margin = { 6 0 }
+		spacing = 10
+		pp_cplan_status_text = {
+			visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_improve_status'), '(CFixedPoint)0.5'))]"
+			text = "PP_CPLAN_D_ST_0"
+			tooltip = "PP_CPLAN_D_OUTLOOK_0_IMPROVE"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_improve_status'), '(CFixedPoint)0.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_improve_status'), '(CFixedPoint)1.5')))]"
+			text = "PP_CPLAN_D_ST_1"
+			tooltip = "PP_CPLAN_D_OUTLOOK_1"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_improve_status'), '(CFixedPoint)1.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_improve_status'), '(CFixedPoint)2.5')))]"
+			text = "PP_CPLAN_D_ST_2"
+			tooltip = "PP_CPLAN_D_OUTLOOK_2_IMPROVE"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_improve_status'), '(CFixedPoint)2.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_improve_status'), '(CFixedPoint)3.5')))]"
+			text = "PP_CPLAN_D_ST_3"
+			tooltip = "PP_CPLAN_D_OUTLOOK_3_IMPROVE"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_improve_status'), '(CFixedPoint)3.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_improve_status'), '(CFixedPoint)4.5'))), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_improve_years'), '(CFixedPoint)98.5')))]"
+			text = "PP_CPLAN_D_ST_4_IMPROVE"
+			tooltip = "PP_CPLAN_D_OUTLOOK_4_IMPROVE"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_improve_status'), '(CFixedPoint)3.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_improve_status'), '(CFixedPoint)4.5'))), GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_improve_years'), '(CFixedPoint)98.5'))]"
+			text = "PP_CPLAN_D_ST_4N"
+			tooltip = "PP_CPLAN_D_OUTLOOK_4N_IMPROVE"
+		}
+		pp_cplan_status_text = {
+			visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_improve_status'), '(CFixedPoint)4.5')]"
+			text = "PP_CPLAN_D_ST_5"
+			tooltip = "PP_CPLAN_D_OUTLOOK_5_IMPROVE"
+		}
+		pp_cplan_status_text = {
+			visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_improve_status'), '(CFixedPoint)1.5')]"
+			text = "PP_CPLAN_D_FACT_IMPROVE"
+			tooltip = "PP_CPLAN_D_FACT_TT_IMPROVE"
+		}
+		expand = {}
+	}
+
 	# the business group
 	type pp_cplan_weight_bar_business = hbox {
 		spacing = 4
 		button_square_minus = {
 			size = { 15 15 }
-			tooltip = "PP_CPLAN_WEIGHT_TT"
+			tooltip = "PP_CPLAN_D_DOWN_TT_BUSINESS"
 			onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
 		}
 		widget = {
-			size = { 140 14 }
+			size = { 140 20 }
 			progressbar_framed = {
-				size = { 100% 100% }
+				position = { 0 0 }
+				size = { 140 14 }
 				using = progress_bar_goldish
 				min = 0
 				max = 10
 				value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_business_w'))]"
 			}
+			# white: the weight at which it would pay for all it wants within a year (pp_cplan_f_<group>_need_w)
+			progressbar = {
+				position = { 0 14 }
+				size = { 140 6 }
+				min = 0
+				max = 10
+				value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_business_need_w'))]"
+				progresstexture = "gfx/interface/progressbars/progress_bar_whiteish.dds"
+				noprogresstexture = "gfx/interface/progressbars/progress_black.dds"
+			}
 			button = {
 				position = { 0 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_BUSINESS"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business')).AddScope('pp_n', MakeScopeFlag('w1')).End)]"
 			}
 			button = {
 				position = { 14 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_BUSINESS"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business')).AddScope('pp_n', MakeScopeFlag('w2')).End)]"
 			}
 			button = {
 				position = { 28 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_BUSINESS"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business')).AddScope('pp_n', MakeScopeFlag('w3')).End)]"
 			}
 			button = {
 				position = { 42 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_BUSINESS"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business')).AddScope('pp_n', MakeScopeFlag('w4')).End)]"
 			}
 			button = {
 				position = { 56 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_BUSINESS"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business')).AddScope('pp_n', MakeScopeFlag('w5')).End)]"
 			}
 			button = {
 				position = { 70 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_BUSINESS"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business')).AddScope('pp_n', MakeScopeFlag('w6')).End)]"
 			}
 			button = {
 				position = { 84 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_BUSINESS"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business')).AddScope('pp_n', MakeScopeFlag('w7')).End)]"
 			}
 			button = {
 				position = { 98 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_BUSINESS"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business')).AddScope('pp_n', MakeScopeFlag('w8')).End)]"
 			}
 			button = {
 				position = { 112 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_BUSINESS"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business')).AddScope('pp_n', MakeScopeFlag('w9')).End)]"
 			}
 			button = {
 				position = { 126 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_BUSINESS"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business')).AddScope('pp_n', MakeScopeFlag('w10')).End)]"
 			}
 		}
 		button_square_plus = {
 			size = { 15 15 }
-			tooltip = "PP_CPLAN_WEIGHT_TT"
+			tooltip = "PP_CPLAN_D_UP_TT_BUSINESS"
 			onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
 		}
 		text_single = {
@@ -502,87 +760,147 @@ types PPConstructionPlanWeights
 		}
 	}
 
+	# the business group's status: how it stands for gold, and its situation at its last look
+	type pp_cplan_status_business = hbox {
+		layoutpolicy_horizontal = expanding
+		ignoreinvisible = yes
+		margin = { 6 0 }
+		spacing = 10
+		pp_cplan_status_text = {
+			visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_business_status'), '(CFixedPoint)0.5'))]"
+			text = "PP_CPLAN_D_ST_0"
+			tooltip = "PP_CPLAN_D_OUTLOOK_0_BUSINESS"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_business_status'), '(CFixedPoint)0.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_business_status'), '(CFixedPoint)1.5')))]"
+			text = "PP_CPLAN_D_ST_1"
+			tooltip = "PP_CPLAN_D_OUTLOOK_1"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_business_status'), '(CFixedPoint)1.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_business_status'), '(CFixedPoint)2.5')))]"
+			text = "PP_CPLAN_D_ST_2"
+			tooltip = "PP_CPLAN_D_OUTLOOK_2_BUSINESS"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_business_status'), '(CFixedPoint)2.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_business_status'), '(CFixedPoint)3.5')))]"
+			text = "PP_CPLAN_D_ST_3"
+			tooltip = "PP_CPLAN_D_OUTLOOK_3_BUSINESS"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_business_status'), '(CFixedPoint)3.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_business_status'), '(CFixedPoint)4.5'))), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_business_years'), '(CFixedPoint)98.5')))]"
+			text = "PP_CPLAN_D_ST_4_BUSINESS"
+			tooltip = "PP_CPLAN_D_OUTLOOK_4_BUSINESS"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_business_status'), '(CFixedPoint)3.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_business_status'), '(CFixedPoint)4.5'))), GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_business_years'), '(CFixedPoint)98.5'))]"
+			text = "PP_CPLAN_D_ST_4N"
+			tooltip = "PP_CPLAN_D_OUTLOOK_4N_BUSINESS"
+		}
+		pp_cplan_status_text = {
+			visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_business_status'), '(CFixedPoint)4.5')]"
+			text = "PP_CPLAN_D_ST_5"
+			tooltip = "PP_CPLAN_D_OUTLOOK_5_BUSINESS"
+		}
+		pp_cplan_status_text = {
+			visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_business_status'), '(CFixedPoint)1.5')]"
+			text = "PP_CPLAN_D_FACT_BUSINESS"
+			tooltip = "PP_CPLAN_D_FACT_TT_BUSINESS"
+		}
+		expand = {}
+	}
+
 	# the country group
 	type pp_cplan_weight_bar_country = hbox {
 		spacing = 4
 		button_square_minus = {
 			size = { 15 15 }
-			tooltip = "PP_CPLAN_WEIGHT_TT"
+			tooltip = "PP_CPLAN_D_DOWN_TT_COUNTRY"
 			onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('country')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
 		}
 		widget = {
-			size = { 140 14 }
+			size = { 140 20 }
 			progressbar_framed = {
-				size = { 100% 100% }
+				position = { 0 0 }
+				size = { 140 14 }
 				using = progress_bar_goldish
 				min = 0
 				max = 10
 				value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_country_w'))]"
 			}
+			# white: the weight at which it would pay for all it wants within a year (pp_cplan_f_<group>_need_w)
+			progressbar = {
+				position = { 0 14 }
+				size = { 140 6 }
+				min = 0
+				max = 10
+				value = "[FixedPointToFloat(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_country_need_w'))]"
+				progresstexture = "gfx/interface/progressbars/progress_bar_whiteish.dds"
+				noprogresstexture = "gfx/interface/progressbars/progress_black.dds"
+			}
 			button = {
 				position = { 0 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_COUNTRY"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('country')).AddScope('pp_n', MakeScopeFlag('w1')).End)]"
 			}
 			button = {
 				position = { 14 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_COUNTRY"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('country')).AddScope('pp_n', MakeScopeFlag('w2')).End)]"
 			}
 			button = {
 				position = { 28 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_COUNTRY"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('country')).AddScope('pp_n', MakeScopeFlag('w3')).End)]"
 			}
 			button = {
 				position = { 42 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_COUNTRY"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('country')).AddScope('pp_n', MakeScopeFlag('w4')).End)]"
 			}
 			button = {
 				position = { 56 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_COUNTRY"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('country')).AddScope('pp_n', MakeScopeFlag('w5')).End)]"
 			}
 			button = {
 				position = { 70 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_COUNTRY"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('country')).AddScope('pp_n', MakeScopeFlag('w6')).End)]"
 			}
 			button = {
 				position = { 84 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_COUNTRY"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('country')).AddScope('pp_n', MakeScopeFlag('w7')).End)]"
 			}
 			button = {
 				position = { 98 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_COUNTRY"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('country')).AddScope('pp_n', MakeScopeFlag('w8')).End)]"
 			}
 			button = {
 				position = { 112 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_COUNTRY"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('country')).AddScope('pp_n', MakeScopeFlag('w9')).End)]"
 			}
 			button = {
 				position = { 126 0 }
-				size = { 14 14 }
-				tooltip = "PP_CPLAN_WEIGHT_TT"
+				size = { 14 20 }
+				tooltip = "PP_CPLAN_D_NEED_TT_COUNTRY"
 				onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('country')).AddScope('pp_n', MakeScopeFlag('w10')).End)]"
 			}
 		}
 		button_square_plus = {
 			size = { 15 15 }
-			tooltip = "PP_CPLAN_WEIGHT_TT"
+			tooltip = "PP_CPLAN_D_UP_TT_COUNTRY"
 			onclick = "[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('country')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
 		}
 		text_single = {
@@ -602,4 +920,47 @@ types PPConstructionPlanWeights
 		}
 	}
 
+	# the country group's status: how it stands for gold, and its situation at its last look
+	type pp_cplan_status_country = hbox {
+		layoutpolicy_horizontal = expanding
+		ignoreinvisible = yes
+		margin = { 6 0 }
+		spacing = 10
+		pp_cplan_status_text = {
+			visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_country_status'), '(CFixedPoint)0.5'))]"
+			text = "PP_CPLAN_D_ST_0"
+			tooltip = "PP_CPLAN_D_OUTLOOK_0_COUNTRY"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_country_status'), '(CFixedPoint)0.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_country_status'), '(CFixedPoint)1.5')))]"
+			text = "PP_CPLAN_D_ST_1"
+			tooltip = "PP_CPLAN_D_OUTLOOK_1"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_country_status'), '(CFixedPoint)1.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_country_status'), '(CFixedPoint)2.5')))]"
+			text = "PP_CPLAN_D_ST_2"
+			tooltip = "PP_CPLAN_D_OUTLOOK_2_COUNTRY"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_country_status'), '(CFixedPoint)2.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_country_status'), '(CFixedPoint)3.5')))]"
+			text = "PP_CPLAN_D_ST_3"
+			tooltip = "PP_CPLAN_D_OUTLOOK_3_COUNTRY"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_country_status'), '(CFixedPoint)3.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_country_status'), '(CFixedPoint)4.5'))), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_country_years'), '(CFixedPoint)98.5')))]"
+			text = "PP_CPLAN_D_ST_4_COUNTRY"
+			tooltip = "PP_CPLAN_D_OUTLOOK_4_COUNTRY"
+		}
+		pp_cplan_status_text = {
+			visible = "[And(And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_country_status'), '(CFixedPoint)3.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_country_status'), '(CFixedPoint)4.5'))), GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_country_years'), '(CFixedPoint)98.5'))]"
+			text = "PP_CPLAN_D_ST_4N"
+			tooltip = "PP_CPLAN_D_OUTLOOK_4N_COUNTRY"
+		}
+		pp_cplan_status_text = {
+			visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_country_status'), '(CFixedPoint)4.5')]"
+			text = "PP_CPLAN_D_ST_5"
+			tooltip = "PP_CPLAN_D_OUTLOOK_5_COUNTRY"
+		}
+		expand = {}
+	}
 }

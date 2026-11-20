@@ -32,12 +32,17 @@ pp_tplan_flip = {
 					pp_cplan_save_clear = { why = 105 }
 					remove_variable = pp_cplan_save_rank_105
 				}
+				# the cache of "a location holds a plan" (pp_lprof_group_n): asked afresh
+				pp_lprof_any_refresh = yes
 			}
 		}
 	}
 	else = {
 		grant_town_rights = town_rights_type:pp_plan_$g$
+		owner ?= { set_variable = { name = pp_lprof_any value = yes } }
 	}
+	# the window's forecast: the Locations weight may start or stop counting (construction_plan_forecast.py)
+	owner ?= { pp_cplan_forecast_store = yes }
 	refresh_map_colors = yes
 }
 

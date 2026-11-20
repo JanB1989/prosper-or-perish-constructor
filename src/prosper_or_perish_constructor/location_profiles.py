@@ -86,9 +86,9 @@ STATES = {
 # plan_closer.py) sit between the old integer ranks, pp_lprof_finish splits at the midpoints
 FAIL_STATE = {101: 2, 102: 6, 102.5: 13, 103: 5, 103.5: 12, 104: 4, 104.25: 14, 105: 8, 106: 10, 107: 7, 108: 11}
 WHY_MARK_STEP = 0  # the ledger's step (pp_cplan_rs) of a construction a plan started
-# location script value: 1 when the last look stopped (its purse spent) before this location's turn (script time
-# 2026-11-20; the tiles read it, location_plan.py)
-UNREACHED = lp.UNREACHED
+# country variable (yes): a location of the country holds a plan, the cache behind pp_lprof_group_n (hand-written
+# pp_lprof_any_refresh keeps it)
+ANY = "pp_lprof_any"
 
 
 @dataclass(frozen=True)
@@ -512,8 +512,11 @@ def render_values() -> str:
     return (
         HEADER
         + "\n# Country scope: 1 while a location of the country holds a plan (the Locations rule group runs and its weight\n"
-        "# counts: pp_cplan_profiles_cw, pp_construction_plan_generated.txt).\n"
-        "pp_lprof_group_n = {\n\tvalue = 0\n\tif = {\n\t\tlimit = { pp_lprof_has_locations = yes }\n\t\tvalue = 1\n\t}\n}\n"
+        "# counts: pp_cplan_profiles_cw, pp_construction_plan_generated.txt). Read from the cached country variable\n"
+        f"# {ANY} (pp_lprof_any_refresh: every pass's start, switching the plan on, a plan set or taken off), never by a\n"
+        "# walk: the window's always-visible rows evaluate it about a hundred times a frame (script profile 2026-11-20:\n"
+        "# 6.1 s of 15 s with the trigger pp_lprof_has_locations here).\n"
+        f"pp_lprof_group_n = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ has_variable = {ANY} }}\n\t\tvalue = 1\n\t}}\n}}\n"
         "\n# Location scope, in the pass (scope:pp_cplan_btype and the cost values set): the payback of its next level + 100,\n"
         "# compared with the limit (+ 100); 1 + the build cost, the start picker's key (never 0, which is unset).\n"
         "pp_lprof_payback100 = {\n\tvalue = pp_cplan_est_payback_years\n\tadd = 100\n}\n"
@@ -523,12 +526,6 @@ def render_values() -> str:
         "# payback in years + 100, as pp_lprof_payback100 (1099 = no profit).\n"
         "pp_lprof_new_payback100 = {\n\tvalue = 1099\n\tif = {\n\t\tlimit = { scope:pp_lprof_newp > 0.001 }\n"
         "\t\tvalue = pp_cplan_est_cost\n\t\tdivide = scope:pp_lprof_newp\n\t\tdivide = 12\n\t\tmax = 999\n\t\tadd = 100\n\t}\n}\n"
-        "\n# Location scope (the Location Plan's tiles and the Plans row): 1 when the owner's last Locations look stopped\n"
-        "# because the group's purse was spent (pp_lprof_cut) before this location's turn came (pp_lprof_seen, the number\n"
-        "# of the last look that reached it, below the look's pp_lprof_look_n): its plans were held back for gold.\n"
-        f"{UNREACHED} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{\n\t\t\towner ?= {{ has_variable = pp_lprof_cut }}\n"
-        "\t\t\tOR = {\n\t\t\t\tNOT = { has_variable = pp_lprof_seen }\n"
-        "\t\t\t\tvar:pp_lprof_seen < owner.var:pp_lprof_look_n\n\t\t\t}\n\t\t}\n\t\tvalue = 1\n\t}\n}\n"
     )
 
 

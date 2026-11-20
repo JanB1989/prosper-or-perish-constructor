@@ -8442,6 +8442,35 @@ pp_cplan_purses_hand_on = {
 	set_variable = { name = pp_cplan_hand_107 value = { value = scope:pp_cplan_ni_107 add = 100 } }
 }
 
+# Country scope, after the last daily slice of a Locations look that ended after its pass (pp_lprof_slice_event):
+# the Locations group hands on now what pp_cplan_purses_hand_on left it (pp_cplan_gives_105 waits for
+# pp_lprof_pend). The groups that save get their parts on top of what the pass's end handed them
+# (pp_cplan_hand_<why> adds up: the next pass reads it).
+pp_cplan_purses_hand_on_105 = {
+	if = {
+		limit = {
+			pp_cplan_gives_105 > 0
+			pp_cplan_hand_weights > 0
+		}
+		save_temporary_scope_value_as = { name = pp_cplan_ni_101 value = pp_cplan_hand_get_101 }
+		save_temporary_scope_value_as = { name = pp_cplan_ni_102 value = pp_cplan_hand_get_102 }
+		save_temporary_scope_value_as = { name = pp_cplan_ni_106 value = pp_cplan_hand_get_106 }
+		save_temporary_scope_value_as = { name = pp_cplan_ni_103 value = pp_cplan_hand_get_103 }
+		save_temporary_scope_value_as = { name = pp_cplan_ni_107 value = pp_cplan_hand_get_107 }
+		set_variable = { name = pp_cplan_purse_105 value = 100 }
+		change_variable = { name = pp_cplan_purse_101 add = scope:pp_cplan_ni_101 }
+		set_variable = { name = pp_cplan_hand_101 value = { value = pp_cplan_hand_n_101 add = scope:pp_cplan_ni_101 add = 100 } }
+		change_variable = { name = pp_cplan_purse_102 add = scope:pp_cplan_ni_102 }
+		set_variable = { name = pp_cplan_hand_102 value = { value = pp_cplan_hand_n_102 add = scope:pp_cplan_ni_102 add = 100 } }
+		change_variable = { name = pp_cplan_purse_106 add = scope:pp_cplan_ni_106 }
+		set_variable = { name = pp_cplan_hand_106 value = { value = pp_cplan_hand_n_106 add = scope:pp_cplan_ni_106 add = 100 } }
+		change_variable = { name = pp_cplan_purse_103 add = scope:pp_cplan_ni_103 }
+		set_variable = { name = pp_cplan_hand_103 value = { value = pp_cplan_hand_n_103 add = scope:pp_cplan_ni_103 add = 100 } }
+		change_variable = { name = pp_cplan_purse_107 add = scope:pp_cplan_ni_107 }
+		set_variable = { name = pp_cplan_hand_107 value = { value = pp_cplan_hand_n_107 add = scope:pp_cplan_ni_107 add = 100 } }
+	}
+}
+
 # ---- The window's detail panes (rules never read these) ----
 
 # Country scope: the profiles group looks: what its last look left for the window is gone (its list of
@@ -8656,6 +8685,12 @@ pp_cplan_history_push = {
 		set_variable = { name = pp_cplan_hn_101_1 value = 100 }
 		set_variable = { name = pp_cplan_hs_101_1 value = 100 }
 	}
+	if = {
+		limit = {
+			has_variable = pp_cplan_now_101
+		}
+		pp_cplan_hq_push_101 = yes
+	}
 	# logistics
 	pp_cplan_copy_num = { from = pp_cplan_hn_102_11 to = pp_cplan_hn_102_12 }
 	pp_cplan_copy_num = { from = pp_cplan_hn_102_10 to = pp_cplan_hn_102_11 }
@@ -8687,6 +8722,12 @@ pp_cplan_history_push = {
 	else = {
 		set_variable = { name = pp_cplan_hn_102_1 value = 100 }
 		set_variable = { name = pp_cplan_hs_102_1 value = 100 }
+	}
+	if = {
+		limit = {
+			has_variable = pp_cplan_now_102
+		}
+		pp_cplan_hq_push_102 = yes
 	}
 	# improve
 	pp_cplan_copy_num = { from = pp_cplan_hn_106_11 to = pp_cplan_hn_106_12 }
@@ -8720,6 +8761,12 @@ pp_cplan_history_push = {
 		set_variable = { name = pp_cplan_hn_106_1 value = 100 }
 		set_variable = { name = pp_cplan_hs_106_1 value = 100 }
 	}
+	if = {
+		limit = {
+			has_variable = pp_cplan_now_106
+		}
+		pp_cplan_hq_push_106 = yes
+	}
 	# business
 	pp_cplan_copy_num = { from = pp_cplan_hn_103_11 to = pp_cplan_hn_103_12 }
 	pp_cplan_copy_num = { from = pp_cplan_hn_103_10 to = pp_cplan_hn_103_11 }
@@ -8751,6 +8798,13 @@ pp_cplan_history_push = {
 	else = {
 		set_variable = { name = pp_cplan_hn_103_1 value = 100 }
 		set_variable = { name = pp_cplan_hs_103_1 value = 100 }
+	}
+	if = {
+		limit = {
+			has_variable = pp_cplan_now_103
+			var:pp_cplan_ds_business_skipped < 100.5
+		}
+		pp_cplan_hq_push_103 = yes
 	}
 	# country
 	pp_cplan_copy_num = { from = pp_cplan_hn_107_11 to = pp_cplan_hn_107_12 }
@@ -8784,9 +8838,16 @@ pp_cplan_history_push = {
 		set_variable = { name = pp_cplan_hn_107_1 value = 100 }
 		set_variable = { name = pp_cplan_hs_107_1 value = 100 }
 	}
+	if = {
+		limit = {
+			has_variable = pp_cplan_now_107
+		}
+		pp_cplan_hq_push_107 = yes
+	}
 }
 
-# Country scope: the history is gone (the plan was switched on).
+# Country scope: the history is gone (the plan was switched on), and so are the forecast's means and the
+# situation history (pp_cplan_forecast_clear, construction_plan_forecast.py).
 pp_cplan_history_clear = {
 	remove_variable = pp_cplan_hn_105_1
 	remove_variable = pp_cplan_hn_105_2
@@ -8932,4 +8993,468 @@ pp_cplan_history_clear = {
 	remove_variable = pp_cplan_hs_107_10
 	remove_variable = pp_cplan_hs_107_11
 	remove_variable = pp_cplan_hs_107_12
+	pp_cplan_forecast_clear = yes
+}
+
+# ---- Forecast for the window (construction_plan_forecast.py; the rules never read these numbers) ----
+
+# Country scope, at a pass's start before pp_cplan_purses_fill writes: the new gold and what each group was handed
+# at the end of the last pass go into their running means (up to 12 passes). Not the first pass after
+# the plan was switched on (pp_cplan_fc_skip): it shares out the whole treasury above the reserve.
+pp_cplan_forecast_measure = {
+	if = {
+		limit = { has_variable = pp_cplan_fc_skip }
+		remove_variable = pp_cplan_fc_skip
+	}
+	else = {
+		save_temporary_scope_value_as = { name = pp_cplan_fcf value = pp_cplan_fc_flow_next }
+		save_temporary_scope_value_as = { name = pp_cplan_fch_105 value = pp_cplan_fc_hand_next_105 }
+		save_temporary_scope_value_as = { name = pp_cplan_fch_101 value = pp_cplan_fc_hand_next_101 }
+		save_temporary_scope_value_as = { name = pp_cplan_fch_102 value = pp_cplan_fc_hand_next_102 }
+		save_temporary_scope_value_as = { name = pp_cplan_fch_106 value = pp_cplan_fc_hand_next_106 }
+		save_temporary_scope_value_as = { name = pp_cplan_fch_103 value = pp_cplan_fc_hand_next_103 }
+		save_temporary_scope_value_as = { name = pp_cplan_fch_107 value = pp_cplan_fc_hand_next_107 }
+		set_variable = { name = pp_cplan_fc_flow value = { value = scope:pp_cplan_fcf add = 100 } }
+		set_variable = { name = pp_cplan_fc_hand_105 value = { value = scope:pp_cplan_fch_105 add = 100 } }
+		set_variable = { name = pp_cplan_fc_hand_101 value = { value = scope:pp_cplan_fch_101 add = 100 } }
+		set_variable = { name = pp_cplan_fc_hand_102 value = { value = scope:pp_cplan_fch_102 add = 100 } }
+		set_variable = { name = pp_cplan_fc_hand_106 value = { value = scope:pp_cplan_fch_106 add = 100 } }
+		set_variable = { name = pp_cplan_fc_hand_103 value = { value = scope:pp_cplan_fch_103 add = 100 } }
+		set_variable = { name = pp_cplan_fc_hand_107 value = { value = scope:pp_cplan_fch_107 add = 100 } }
+		if = {
+			limit = { has_variable = pp_cplan_fc_n }
+			change_variable = { name = pp_cplan_fc_n add = 1 }
+		}
+		else = {
+			set_variable = { name = pp_cplan_fc_n value = 101 }
+		}
+	}
+}
+
+# Country scope (the plan was switched on, pp_cplan_history_clear): the means and the situation history start
+# afresh, and the next pass is not measured.
+pp_cplan_forecast_clear = {
+	set_variable = { name = pp_cplan_fc_skip value = yes }
+	remove_variable = pp_cplan_fc_n
+	remove_variable = pp_cplan_fc_flow
+	remove_variable = pp_cplan_fc_hand_105
+	remove_variable = pp_cplan_fc_hand_101
+	remove_variable = pp_cplan_fc_hand_102
+	remove_variable = pp_cplan_fc_hand_106
+	remove_variable = pp_cplan_fc_hand_103
+	remove_variable = pp_cplan_fc_hand_107
+	remove_variable = pp_cplan_hqv_105_1
+	remove_variable = pp_cplan_hqv_105_2
+	remove_variable = pp_cplan_hqv_105_3
+	remove_variable = pp_cplan_hqv_105_4
+	remove_variable = pp_cplan_hqv_105_5
+	remove_variable = pp_cplan_hqv_105_6
+	remove_variable = pp_cplan_hqv_105_7
+	remove_variable = pp_cplan_hqv_105_8
+	remove_variable = pp_cplan_hqv_105_9
+	remove_variable = pp_cplan_hqv_105_10
+	remove_variable = pp_cplan_hqv_105_11
+	remove_variable = pp_cplan_hqv_105_12
+	remove_variable = pp_cplan_hqv_101_1
+	remove_variable = pp_cplan_hqv_101_2
+	remove_variable = pp_cplan_hqv_101_3
+	remove_variable = pp_cplan_hqv_101_4
+	remove_variable = pp_cplan_hqv_101_5
+	remove_variable = pp_cplan_hqv_101_6
+	remove_variable = pp_cplan_hqv_101_7
+	remove_variable = pp_cplan_hqv_101_8
+	remove_variable = pp_cplan_hqv_101_9
+	remove_variable = pp_cplan_hqv_101_10
+	remove_variable = pp_cplan_hqv_101_11
+	remove_variable = pp_cplan_hqv_101_12
+	remove_variable = pp_cplan_hqv_102_1
+	remove_variable = pp_cplan_hqv_102_2
+	remove_variable = pp_cplan_hqv_102_3
+	remove_variable = pp_cplan_hqv_102_4
+	remove_variable = pp_cplan_hqv_102_5
+	remove_variable = pp_cplan_hqv_102_6
+	remove_variable = pp_cplan_hqv_102_7
+	remove_variable = pp_cplan_hqv_102_8
+	remove_variable = pp_cplan_hqv_102_9
+	remove_variable = pp_cplan_hqv_102_10
+	remove_variable = pp_cplan_hqv_102_11
+	remove_variable = pp_cplan_hqv_102_12
+	remove_variable = pp_cplan_hqv_106_1
+	remove_variable = pp_cplan_hqv_106_2
+	remove_variable = pp_cplan_hqv_106_3
+	remove_variable = pp_cplan_hqv_106_4
+	remove_variable = pp_cplan_hqv_106_5
+	remove_variable = pp_cplan_hqv_106_6
+	remove_variable = pp_cplan_hqv_106_7
+	remove_variable = pp_cplan_hqv_106_8
+	remove_variable = pp_cplan_hqv_106_9
+	remove_variable = pp_cplan_hqv_106_10
+	remove_variable = pp_cplan_hqv_106_11
+	remove_variable = pp_cplan_hqv_106_12
+	remove_variable = pp_cplan_hqv_103_1
+	remove_variable = pp_cplan_hqv_103_2
+	remove_variable = pp_cplan_hqv_103_3
+	remove_variable = pp_cplan_hqv_103_4
+	remove_variable = pp_cplan_hqv_103_5
+	remove_variable = pp_cplan_hqv_103_6
+	remove_variable = pp_cplan_hqv_103_7
+	remove_variable = pp_cplan_hqv_103_8
+	remove_variable = pp_cplan_hqv_103_9
+	remove_variable = pp_cplan_hqv_103_10
+	remove_variable = pp_cplan_hqv_103_11
+	remove_variable = pp_cplan_hqv_103_12
+	remove_variable = pp_cplan_hqv_107_1
+	remove_variable = pp_cplan_hqv_107_2
+	remove_variable = pp_cplan_hqv_107_3
+	remove_variable = pp_cplan_hqv_107_4
+	remove_variable = pp_cplan_hqv_107_5
+	remove_variable = pp_cplan_hqv_107_6
+	remove_variable = pp_cplan_hqv_107_7
+	remove_variable = pp_cplan_hqv_107_8
+	remove_variable = pp_cplan_hqv_107_9
+	remove_variable = pp_cplan_hqv_107_10
+	remove_variable = pp_cplan_hqv_107_11
+	remove_variable = pp_cplan_hqv_107_12
+	remove_variable = pp_cplan_fv_hq_profiles_max
+	remove_variable = pp_cplan_fv_hq_profiles_p_1
+	remove_variable = pp_cplan_fv_hq_profiles_p_2
+	remove_variable = pp_cplan_fv_hq_profiles_p_3
+	remove_variable = pp_cplan_fv_hq_profiles_p_4
+	remove_variable = pp_cplan_fv_hq_profiles_p_5
+	remove_variable = pp_cplan_fv_hq_profiles_p_6
+	remove_variable = pp_cplan_fv_hq_profiles_p_7
+	remove_variable = pp_cplan_fv_hq_profiles_p_8
+	remove_variable = pp_cplan_fv_hq_profiles_p_9
+	remove_variable = pp_cplan_fv_hq_profiles_p_10
+	remove_variable = pp_cplan_fv_hq_profiles_p_11
+	remove_variable = pp_cplan_fv_hq_profiles_p_12
+	remove_variable = pp_cplan_fv_hq_food_max
+	remove_variable = pp_cplan_fv_hq_food_p_1
+	remove_variable = pp_cplan_fv_hq_food_p_2
+	remove_variable = pp_cplan_fv_hq_food_p_3
+	remove_variable = pp_cplan_fv_hq_food_p_4
+	remove_variable = pp_cplan_fv_hq_food_p_5
+	remove_variable = pp_cplan_fv_hq_food_p_6
+	remove_variable = pp_cplan_fv_hq_food_p_7
+	remove_variable = pp_cplan_fv_hq_food_p_8
+	remove_variable = pp_cplan_fv_hq_food_p_9
+	remove_variable = pp_cplan_fv_hq_food_p_10
+	remove_variable = pp_cplan_fv_hq_food_p_11
+	remove_variable = pp_cplan_fv_hq_food_p_12
+	remove_variable = pp_cplan_fv_hq_logistics_max
+	remove_variable = pp_cplan_fv_hq_logistics_p_1
+	remove_variable = pp_cplan_fv_hq_logistics_p_2
+	remove_variable = pp_cplan_fv_hq_logistics_p_3
+	remove_variable = pp_cplan_fv_hq_logistics_p_4
+	remove_variable = pp_cplan_fv_hq_logistics_p_5
+	remove_variable = pp_cplan_fv_hq_logistics_p_6
+	remove_variable = pp_cplan_fv_hq_logistics_p_7
+	remove_variable = pp_cplan_fv_hq_logistics_p_8
+	remove_variable = pp_cplan_fv_hq_logistics_p_9
+	remove_variable = pp_cplan_fv_hq_logistics_p_10
+	remove_variable = pp_cplan_fv_hq_logistics_p_11
+	remove_variable = pp_cplan_fv_hq_logistics_p_12
+	remove_variable = pp_cplan_fv_hq_improve_max
+	remove_variable = pp_cplan_fv_hq_improve_p_1
+	remove_variable = pp_cplan_fv_hq_improve_p_2
+	remove_variable = pp_cplan_fv_hq_improve_p_3
+	remove_variable = pp_cplan_fv_hq_improve_p_4
+	remove_variable = pp_cplan_fv_hq_improve_p_5
+	remove_variable = pp_cplan_fv_hq_improve_p_6
+	remove_variable = pp_cplan_fv_hq_improve_p_7
+	remove_variable = pp_cplan_fv_hq_improve_p_8
+	remove_variable = pp_cplan_fv_hq_improve_p_9
+	remove_variable = pp_cplan_fv_hq_improve_p_10
+	remove_variable = pp_cplan_fv_hq_improve_p_11
+	remove_variable = pp_cplan_fv_hq_improve_p_12
+	remove_variable = pp_cplan_fv_hq_business_max
+	remove_variable = pp_cplan_fv_hq_business_p_1
+	remove_variable = pp_cplan_fv_hq_business_p_2
+	remove_variable = pp_cplan_fv_hq_business_p_3
+	remove_variable = pp_cplan_fv_hq_business_p_4
+	remove_variable = pp_cplan_fv_hq_business_p_5
+	remove_variable = pp_cplan_fv_hq_business_p_6
+	remove_variable = pp_cplan_fv_hq_business_p_7
+	remove_variable = pp_cplan_fv_hq_business_p_8
+	remove_variable = pp_cplan_fv_hq_business_p_9
+	remove_variable = pp_cplan_fv_hq_business_p_10
+	remove_variable = pp_cplan_fv_hq_business_p_11
+	remove_variable = pp_cplan_fv_hq_business_p_12
+	remove_variable = pp_cplan_fv_hq_country_max
+	remove_variable = pp_cplan_fv_hq_country_p_1
+	remove_variable = pp_cplan_fv_hq_country_p_2
+	remove_variable = pp_cplan_fv_hq_country_p_3
+	remove_variable = pp_cplan_fv_hq_country_p_4
+	remove_variable = pp_cplan_fv_hq_country_p_5
+	remove_variable = pp_cplan_fv_hq_country_p_6
+	remove_variable = pp_cplan_fv_hq_country_p_7
+	remove_variable = pp_cplan_fv_hq_country_p_8
+	remove_variable = pp_cplan_fv_hq_country_p_9
+	remove_variable = pp_cplan_fv_hq_country_p_10
+	remove_variable = pp_cplan_fv_hq_country_p_11
+	remove_variable = pp_cplan_fv_hq_country_p_12
+}
+
+# Country scope: the profiles group looked: its situation history moves on (the oldest look drops out).
+pp_cplan_hq_push_105 = {
+	pp_cplan_copy_num = { from = pp_cplan_hqv_105_11 to = pp_cplan_hqv_105_12 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_105_10 to = pp_cplan_hqv_105_11 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_105_9 to = pp_cplan_hqv_105_10 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_105_8 to = pp_cplan_hqv_105_9 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_105_7 to = pp_cplan_hqv_105_8 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_105_6 to = pp_cplan_hqv_105_7 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_105_5 to = pp_cplan_hqv_105_6 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_105_4 to = pp_cplan_hqv_105_5 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_105_3 to = pp_cplan_hqv_105_4 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_105_2 to = pp_cplan_hqv_105_3 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_105_1 to = pp_cplan_hqv_105_2 }
+	set_variable = { name = pp_cplan_hqv_105_1 value = { value = pp_cplan_fx_profiles_sit add = 100 } }
+	# the window's chart reads these kept numbers
+	set_variable = { name = pp_cplan_fv_hq_profiles_max value = { value = pp_cplan_hqx_profiles_max add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_profiles_p_1 value = { value = pp_cplan_hqx_profiles_p_1 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_profiles_p_2 value = { value = pp_cplan_hqx_profiles_p_2 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_profiles_p_3 value = { value = pp_cplan_hqx_profiles_p_3 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_profiles_p_4 value = { value = pp_cplan_hqx_profiles_p_4 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_profiles_p_5 value = { value = pp_cplan_hqx_profiles_p_5 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_profiles_p_6 value = { value = pp_cplan_hqx_profiles_p_6 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_profiles_p_7 value = { value = pp_cplan_hqx_profiles_p_7 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_profiles_p_8 value = { value = pp_cplan_hqx_profiles_p_8 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_profiles_p_9 value = { value = pp_cplan_hqx_profiles_p_9 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_profiles_p_10 value = { value = pp_cplan_hqx_profiles_p_10 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_profiles_p_11 value = { value = pp_cplan_hqx_profiles_p_11 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_profiles_p_12 value = { value = pp_cplan_hqx_profiles_p_12 add = 100 } }
+}
+
+# Country scope: the food group looked: its situation history moves on (the oldest look drops out).
+pp_cplan_hq_push_101 = {
+	pp_cplan_copy_num = { from = pp_cplan_hqv_101_11 to = pp_cplan_hqv_101_12 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_101_10 to = pp_cplan_hqv_101_11 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_101_9 to = pp_cplan_hqv_101_10 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_101_8 to = pp_cplan_hqv_101_9 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_101_7 to = pp_cplan_hqv_101_8 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_101_6 to = pp_cplan_hqv_101_7 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_101_5 to = pp_cplan_hqv_101_6 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_101_4 to = pp_cplan_hqv_101_5 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_101_3 to = pp_cplan_hqv_101_4 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_101_2 to = pp_cplan_hqv_101_3 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_101_1 to = pp_cplan_hqv_101_2 }
+	set_variable = { name = pp_cplan_hqv_101_1 value = { value = pp_cplan_fx_food_sit add = 100 } }
+	# the window's chart reads these kept numbers
+	set_variable = { name = pp_cplan_fv_hq_food_max value = { value = pp_cplan_hqx_food_max add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_food_p_1 value = { value = pp_cplan_hqx_food_p_1 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_food_p_2 value = { value = pp_cplan_hqx_food_p_2 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_food_p_3 value = { value = pp_cplan_hqx_food_p_3 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_food_p_4 value = { value = pp_cplan_hqx_food_p_4 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_food_p_5 value = { value = pp_cplan_hqx_food_p_5 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_food_p_6 value = { value = pp_cplan_hqx_food_p_6 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_food_p_7 value = { value = pp_cplan_hqx_food_p_7 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_food_p_8 value = { value = pp_cplan_hqx_food_p_8 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_food_p_9 value = { value = pp_cplan_hqx_food_p_9 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_food_p_10 value = { value = pp_cplan_hqx_food_p_10 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_food_p_11 value = { value = pp_cplan_hqx_food_p_11 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_food_p_12 value = { value = pp_cplan_hqx_food_p_12 add = 100 } }
+}
+
+# Country scope: the logistics group looked: its situation history moves on (the oldest look drops out).
+pp_cplan_hq_push_102 = {
+	pp_cplan_copy_num = { from = pp_cplan_hqv_102_11 to = pp_cplan_hqv_102_12 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_102_10 to = pp_cplan_hqv_102_11 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_102_9 to = pp_cplan_hqv_102_10 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_102_8 to = pp_cplan_hqv_102_9 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_102_7 to = pp_cplan_hqv_102_8 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_102_6 to = pp_cplan_hqv_102_7 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_102_5 to = pp_cplan_hqv_102_6 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_102_4 to = pp_cplan_hqv_102_5 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_102_3 to = pp_cplan_hqv_102_4 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_102_2 to = pp_cplan_hqv_102_3 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_102_1 to = pp_cplan_hqv_102_2 }
+	set_variable = { name = pp_cplan_hqv_102_1 value = { value = pp_cplan_fx_logistics_sit add = 100 } }
+	# the window's chart reads these kept numbers
+	set_variable = { name = pp_cplan_fv_hq_logistics_max value = { value = pp_cplan_hqx_logistics_max add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_logistics_p_1 value = { value = pp_cplan_hqx_logistics_p_1 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_logistics_p_2 value = { value = pp_cplan_hqx_logistics_p_2 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_logistics_p_3 value = { value = pp_cplan_hqx_logistics_p_3 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_logistics_p_4 value = { value = pp_cplan_hqx_logistics_p_4 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_logistics_p_5 value = { value = pp_cplan_hqx_logistics_p_5 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_logistics_p_6 value = { value = pp_cplan_hqx_logistics_p_6 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_logistics_p_7 value = { value = pp_cplan_hqx_logistics_p_7 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_logistics_p_8 value = { value = pp_cplan_hqx_logistics_p_8 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_logistics_p_9 value = { value = pp_cplan_hqx_logistics_p_9 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_logistics_p_10 value = { value = pp_cplan_hqx_logistics_p_10 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_logistics_p_11 value = { value = pp_cplan_hqx_logistics_p_11 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_logistics_p_12 value = { value = pp_cplan_hqx_logistics_p_12 add = 100 } }
+}
+
+# Country scope: the improve group looked: its situation history moves on (the oldest look drops out).
+pp_cplan_hq_push_106 = {
+	pp_cplan_copy_num = { from = pp_cplan_hqv_106_11 to = pp_cplan_hqv_106_12 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_106_10 to = pp_cplan_hqv_106_11 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_106_9 to = pp_cplan_hqv_106_10 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_106_8 to = pp_cplan_hqv_106_9 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_106_7 to = pp_cplan_hqv_106_8 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_106_6 to = pp_cplan_hqv_106_7 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_106_5 to = pp_cplan_hqv_106_6 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_106_4 to = pp_cplan_hqv_106_5 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_106_3 to = pp_cplan_hqv_106_4 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_106_2 to = pp_cplan_hqv_106_3 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_106_1 to = pp_cplan_hqv_106_2 }
+	set_variable = { name = pp_cplan_hqv_106_1 value = { value = pp_cplan_fx_improve_sit add = 100 } }
+	# the window's chart reads these kept numbers
+	set_variable = { name = pp_cplan_fv_hq_improve_max value = { value = pp_cplan_hqx_improve_max add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_improve_p_1 value = { value = pp_cplan_hqx_improve_p_1 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_improve_p_2 value = { value = pp_cplan_hqx_improve_p_2 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_improve_p_3 value = { value = pp_cplan_hqx_improve_p_3 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_improve_p_4 value = { value = pp_cplan_hqx_improve_p_4 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_improve_p_5 value = { value = pp_cplan_hqx_improve_p_5 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_improve_p_6 value = { value = pp_cplan_hqx_improve_p_6 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_improve_p_7 value = { value = pp_cplan_hqx_improve_p_7 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_improve_p_8 value = { value = pp_cplan_hqx_improve_p_8 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_improve_p_9 value = { value = pp_cplan_hqx_improve_p_9 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_improve_p_10 value = { value = pp_cplan_hqx_improve_p_10 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_improve_p_11 value = { value = pp_cplan_hqx_improve_p_11 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_improve_p_12 value = { value = pp_cplan_hqx_improve_p_12 add = 100 } }
+}
+
+# Country scope: the business group looked: its situation history moves on (the oldest look drops out).
+pp_cplan_hq_push_103 = {
+	pp_cplan_copy_num = { from = pp_cplan_hqv_103_11 to = pp_cplan_hqv_103_12 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_103_10 to = pp_cplan_hqv_103_11 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_103_9 to = pp_cplan_hqv_103_10 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_103_8 to = pp_cplan_hqv_103_9 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_103_7 to = pp_cplan_hqv_103_8 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_103_6 to = pp_cplan_hqv_103_7 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_103_5 to = pp_cplan_hqv_103_6 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_103_4 to = pp_cplan_hqv_103_5 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_103_3 to = pp_cplan_hqv_103_4 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_103_2 to = pp_cplan_hqv_103_3 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_103_1 to = pp_cplan_hqv_103_2 }
+	set_variable = { name = pp_cplan_hqv_103_1 value = { value = pp_cplan_fx_business_sit add = 100 } }
+	# the window's chart reads these kept numbers
+	set_variable = { name = pp_cplan_fv_hq_business_max value = { value = pp_cplan_hqx_business_max add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_business_p_1 value = { value = pp_cplan_hqx_business_p_1 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_business_p_2 value = { value = pp_cplan_hqx_business_p_2 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_business_p_3 value = { value = pp_cplan_hqx_business_p_3 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_business_p_4 value = { value = pp_cplan_hqx_business_p_4 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_business_p_5 value = { value = pp_cplan_hqx_business_p_5 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_business_p_6 value = { value = pp_cplan_hqx_business_p_6 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_business_p_7 value = { value = pp_cplan_hqx_business_p_7 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_business_p_8 value = { value = pp_cplan_hqx_business_p_8 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_business_p_9 value = { value = pp_cplan_hqx_business_p_9 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_business_p_10 value = { value = pp_cplan_hqx_business_p_10 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_business_p_11 value = { value = pp_cplan_hqx_business_p_11 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_business_p_12 value = { value = pp_cplan_hqx_business_p_12 add = 100 } }
+}
+
+# Country scope: the country group looked: its situation history moves on (the oldest look drops out).
+pp_cplan_hq_push_107 = {
+	pp_cplan_copy_num = { from = pp_cplan_hqv_107_11 to = pp_cplan_hqv_107_12 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_107_10 to = pp_cplan_hqv_107_11 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_107_9 to = pp_cplan_hqv_107_10 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_107_8 to = pp_cplan_hqv_107_9 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_107_7 to = pp_cplan_hqv_107_8 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_107_6 to = pp_cplan_hqv_107_7 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_107_5 to = pp_cplan_hqv_107_6 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_107_4 to = pp_cplan_hqv_107_5 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_107_3 to = pp_cplan_hqv_107_4 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_107_2 to = pp_cplan_hqv_107_3 }
+	pp_cplan_copy_num = { from = pp_cplan_hqv_107_1 to = pp_cplan_hqv_107_2 }
+	set_variable = { name = pp_cplan_hqv_107_1 value = { value = pp_cplan_fx_country_sit add = 100 } }
+	# the window's chart reads these kept numbers
+	set_variable = { name = pp_cplan_fv_hq_country_max value = { value = pp_cplan_hqx_country_max add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_country_p_1 value = { value = pp_cplan_hqx_country_p_1 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_country_p_2 value = { value = pp_cplan_hqx_country_p_2 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_country_p_3 value = { value = pp_cplan_hqx_country_p_3 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_country_p_4 value = { value = pp_cplan_hqx_country_p_4 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_country_p_5 value = { value = pp_cplan_hqx_country_p_5 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_country_p_6 value = { value = pp_cplan_hqx_country_p_6 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_country_p_7 value = { value = pp_cplan_hqx_country_p_7 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_country_p_8 value = { value = pp_cplan_hqx_country_p_8 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_country_p_9 value = { value = pp_cplan_hqx_country_p_9 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_country_p_10 value = { value = pp_cplan_hqx_country_p_10 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_country_p_11 value = { value = pp_cplan_hqx_country_p_11 add = 100 } }
+	set_variable = { name = pp_cplan_fv_hq_country_p_12 value = { value = pp_cplan_hqx_country_p_12 add = 100 } }
+}
+
+# Country scope: the window's numbers are worked out once and kept (the public names read them): at the end of
+# every pass, after each daily slice of the Locations look, and when the player changes a weight, the reserve or
+# a line, switches the plan on, sets or takes off a plan, or ticks something on the Towns and Buildings tab.
+# Every formula reads the game's state, never a kept number, so the order of the writes does not matter.
+pp_cplan_forecast_store = {
+	set_variable = { name = pp_cplan_fv_flow_n value = { value = pp_cplan_fx_flow_n add = 100 } }
+	set_variable = { name = pp_cplan_fv_flow_known value = { value = pp_cplan_fx_flow_known add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_profiles_blocked value = { value = pp_cplan_fx_profiles_blocked add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_all_missing value = { value = pp_cplan_fx_all_missing add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_all_years value = { value = pp_cplan_fx_all_years add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_profiles_status value = { value = pp_cplan_fx_profiles_status add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_profiles_missing value = { value = pp_cplan_fx_profiles_missing add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_profiles_rate value = { value = pp_cplan_fx_profiles_rate add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_profiles_years value = { value = pp_cplan_fx_profiles_years add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_profiles_need_w value = { value = pp_cplan_fx_profiles_need_w add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_profiles_need_up value = { value = pp_cplan_fx_profiles_need_up add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_profiles_up_part value = { value = pp_cplan_fx_profiles_up_part add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_profiles_up_years value = { value = pp_cplan_fx_profiles_up_years add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_profiles_down_part value = { value = pp_cplan_fx_profiles_down_part add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_profiles_down_years value = { value = pp_cplan_fx_profiles_down_years add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_profiles_sit value = { value = pp_cplan_fx_profiles_sit add = 100 } }
+	set_variable = { name = pp_cplan_fv_part_profiles value = { value = pp_cplan_partx_profiles add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_food_status value = { value = pp_cplan_fx_food_status add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_food_missing value = { value = pp_cplan_fx_food_missing add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_food_rate value = { value = pp_cplan_fx_food_rate add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_food_years value = { value = pp_cplan_fx_food_years add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_food_need_w value = { value = pp_cplan_fx_food_need_w add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_food_need_up value = { value = pp_cplan_fx_food_need_up add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_food_up_part value = { value = pp_cplan_fx_food_up_part add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_food_up_years value = { value = pp_cplan_fx_food_up_years add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_food_down_part value = { value = pp_cplan_fx_food_down_part add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_food_down_years value = { value = pp_cplan_fx_food_down_years add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_food_sit value = { value = pp_cplan_fx_food_sit add = 100 } }
+	set_variable = { name = pp_cplan_fv_part_food value = { value = pp_cplan_partx_food add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_logistics_status value = { value = pp_cplan_fx_logistics_status add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_logistics_missing value = { value = pp_cplan_fx_logistics_missing add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_logistics_rate value = { value = pp_cplan_fx_logistics_rate add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_logistics_years value = { value = pp_cplan_fx_logistics_years add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_logistics_need_w value = { value = pp_cplan_fx_logistics_need_w add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_logistics_need_up value = { value = pp_cplan_fx_logistics_need_up add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_logistics_up_part value = { value = pp_cplan_fx_logistics_up_part add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_logistics_up_years value = { value = pp_cplan_fx_logistics_up_years add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_logistics_down_part value = { value = pp_cplan_fx_logistics_down_part add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_logistics_down_years value = { value = pp_cplan_fx_logistics_down_years add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_logistics_sit value = { value = pp_cplan_fx_logistics_sit add = 100 } }
+	set_variable = { name = pp_cplan_fv_part_logistics value = { value = pp_cplan_partx_logistics add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_improve_status value = { value = pp_cplan_fx_improve_status add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_improve_missing value = { value = pp_cplan_fx_improve_missing add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_improve_rate value = { value = pp_cplan_fx_improve_rate add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_improve_years value = { value = pp_cplan_fx_improve_years add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_improve_need_w value = { value = pp_cplan_fx_improve_need_w add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_improve_need_up value = { value = pp_cplan_fx_improve_need_up add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_improve_up_part value = { value = pp_cplan_fx_improve_up_part add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_improve_up_years value = { value = pp_cplan_fx_improve_up_years add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_improve_down_part value = { value = pp_cplan_fx_improve_down_part add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_improve_down_years value = { value = pp_cplan_fx_improve_down_years add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_improve_sit value = { value = pp_cplan_fx_improve_sit add = 100 } }
+	set_variable = { name = pp_cplan_fv_part_improve value = { value = pp_cplan_partx_improve add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_business_status value = { value = pp_cplan_fx_business_status add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_business_missing value = { value = pp_cplan_fx_business_missing add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_business_rate value = { value = pp_cplan_fx_business_rate add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_business_years value = { value = pp_cplan_fx_business_years add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_business_need_w value = { value = pp_cplan_fx_business_need_w add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_business_need_up value = { value = pp_cplan_fx_business_need_up add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_business_up_part value = { value = pp_cplan_fx_business_up_part add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_business_up_years value = { value = pp_cplan_fx_business_up_years add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_business_down_part value = { value = pp_cplan_fx_business_down_part add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_business_down_years value = { value = pp_cplan_fx_business_down_years add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_business_sit value = { value = pp_cplan_fx_business_sit add = 100 } }
+	set_variable = { name = pp_cplan_fv_part_business value = { value = pp_cplan_partx_business add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_country_status value = { value = pp_cplan_fx_country_status add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_country_missing value = { value = pp_cplan_fx_country_missing add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_country_rate value = { value = pp_cplan_fx_country_rate add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_country_years value = { value = pp_cplan_fx_country_years add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_country_need_w value = { value = pp_cplan_fx_country_need_w add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_country_need_up value = { value = pp_cplan_fx_country_need_up add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_country_up_part value = { value = pp_cplan_fx_country_up_part add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_country_up_years value = { value = pp_cplan_fx_country_up_years add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_country_down_part value = { value = pp_cplan_fx_country_down_part add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_country_down_years value = { value = pp_cplan_fx_country_down_years add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_country_sit value = { value = pp_cplan_fx_country_sit add = 100 } }
+	set_variable = { name = pp_cplan_fv_part_country value = { value = pp_cplan_partx_country add = 100 } }
 }

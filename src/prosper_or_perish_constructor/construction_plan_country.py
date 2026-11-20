@@ -1543,7 +1543,9 @@ def render_scripted_guis(config: Config, buildings: list[Building], rights: list
         "\n# Country scope: tick or untick a tile or a rule (scope:pp_key).\n"
         "pp_cplan_country_toggle = {\n\tscope = country\n\teffect = {\n\t\tswitch = {\n\t\t\ttrigger = scope:pp_key\n"
         + "".join(f"\t\t\tflag:{flag} = {{ pp_cplan_flip = {{ var = {variable} }} }}\n" for flag, variable in toggles)
-        + f"\t\t}}\n\t\t{LAYOUT_EFFECT} = yes # a ticked tile keeps its place, an unticked one may leave the grid\n\t}}\n}}\n"
+        + f"\t\t}}\n\t\t{LAYOUT_EFFECT} = yes # a ticked tile keeps its place, an unticked one may leave the grid\n"
+        "\t\t# the window's stored forecast (construction_plan_forecast.py): this group's weight may start or stop counting\n"
+        "\t\tpp_cplan_forecast_store = yes\n\t}\n}\n"
         "\n# Country scope: the tab opens: place the tiles of its two grids (the tab button, the window's openers).\n"
         f"{LAYOUT_GUI} = {{\n\tscope = country\n\teffect = {{\n\t\t{LAYOUT_EFFECT} = yes\n\t}}\n}}\n"
         "\n# Country scope: one step of a line (scope:pp_key, scope:pp_dir = up / down).\n"

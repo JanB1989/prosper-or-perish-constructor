@@ -348,7 +348,9 @@ def test_switching_the_plan_off_opens_what_the_plans_closed() -> None:
     """The monthly check runs only while the Construction Plan is on, so its switch undoes the closings itself."""
     guis = _code(MOD / "in_game/common/scripted_guis/pp_construction_plan.txt")
     toggle = _block(guis, "pp_cplan_toggle_on")
-    assert re.search(r"if = \{\s*limit = \{ has_variable = pp_cplan_on \}\s*pp_cplan_history_clear = yes\s*\}\s*"
+    # (switched on, the cache of "a location holds a plan" is refreshed too: pp_lprof_any_refresh)
+    assert re.search(r"if = \{\s*limit = \{ has_variable = pp_cplan_on \}\s*pp_cplan_history_clear = yes\s*"
+                     r"pp_lprof_any_refresh = yes\s*pp_cplan_forecast_store = yes\s*\}\s*"
                      r"else = \{\s*pp_pclose_undo_all = yes\s*\}", toggle)
 
 

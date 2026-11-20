@@ -61,10 +61,6 @@ TOGGLE_SWITCH = "pp_tplan_toggle_switch"
 CLEAR_ALL = "pp_tplan_clear_all"
 DECLARE = "pp_tplan_declare_flags"
 COUNT = "pp_tplan_n"  # location script value: the plans held here
-# location script value (location_profiles.py): 1 when the owner's last Locations look stopped, its purse spent, before
-# this location's turn came (script time 2026-11-20): every plan here then reads "held back for gold" (state 7)
-UNREACHED = "pp_lprof_unreached"
-UNREACHED_STATE = 7
 # A plan of a good with a specialization charter (or iron's rights; construction_plan_country.py) also tells what the
 # location holds of it and why its charter waits (2026-11-20): location script value pp_tplan_spec_<good> (0 none,
 # 1 the charter, 2 the rights) and the location variable the rights look writes (+ 100; construction_plan_country.CWAIT_*)
@@ -204,11 +200,6 @@ def held(plan: Plan, location: str = "Location.MakeScope") -> str:
     """True while the location holds the plan right. No GUI function asks for one town right, so a script value does
     (``pp_tplan_on_<plan>``, 1 while held)."""
     return f"EqualTo_CFixedPoint({location}.ScriptValue('{plan.on_value}'), '(CFixedPoint)1')"
-
-
-def unreached(location: str = "Location.MakeScope") -> str:
-    """True while the owner's last Locations look stopped before this location's turn (``UNREACHED``)."""
-    return f"EqualTo_CFixedPoint({location}.ScriptValue('{UNREACHED}'), '(CFixedPoint)1')"
 
 
 def toggle_call(plan: Plan, location: str = "Location.MakeScope") -> str:
@@ -400,10 +391,10 @@ def render_loc(plans: list[Plan], states: tuple[int, ...], grants: dict | None =
         if grant:
             lines += charter_lines(plan, grant, line_goods is None or plan.key in line_goods)
         state = f"Location.MakeScope.Var('{plan.state}')"
-        # a location the last look did not reach (its purse spent first): held back for gold, whatever its last state
-        lines.append(f'  PP_TPLAN_ST_{upper}: "\\n[SelectLocalization({unreached()}, '
-                     f'\'PP_LPROF_ST_{UNREACHED_STATE}\', \'PP_TPLAN_STR_{upper}\')]"')
-        lines.append(f'  PP_TPLAN_STR_{upper}: "[SelectLocalization({state}.IsSet, \'PP_TPLAN_STS_{upper}\', \'PP_LPROF_ST_0\')]"')
+        # the state of the location's last turn (since the Locations look's daily slices, 2026-11-20, every location of
+        # a look is walked; one not walked yet in the running look keeps the state of its last turn)
+        lines.append(f'  PP_TPLAN_ST_{upper}: "\\n[SelectLocalization({state}.IsSet, \'PP_TPLAN_STS_{upper}\', '
+                     f'\'PP_LPROF_ST_0\')]"')
         lines.append(f'  PP_TPLAN_STS_{upper}: "' + "".join(
             f"[AddTextIf({_state_is(plan, n)}, Localize('PP_LPROF_ST_{n}'))]" for n in states) + '"')
     return "\n".join(lines) + "\n"

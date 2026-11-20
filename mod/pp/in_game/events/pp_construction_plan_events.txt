@@ -1,0 +1,20 @@
+﻿namespace = pp_construction_plan
+
+# Prosper or Perish - Construction Plan: the Locations look in daily slices (2026-11-20, tested in game the same day;
+# scripted_effects/pp_location_profiles.txt, docs/location_plan.md). A look over thousands of plans in one day froze
+# the game, so the look walks K locations a day: the first slice inside the monthly pass, every further one through
+# this hidden event a day later (pp_lprof_slice: trigger_event_silently = { id = pp_construction_plan.1 days = 1 }).
+# Hidden, no option: nothing shows; the immediate block does the slice and checks first that the plan still runs.
+
+# Country scope: the next slice of the Locations look.
+pp_construction_plan.1 = {
+	type = country_event
+	title = empty_text
+	desc = empty_text
+	outcome = neutral
+	hidden = yes
+
+	immediate = {
+		pp_lprof_slice_event = yes
+	}
+}

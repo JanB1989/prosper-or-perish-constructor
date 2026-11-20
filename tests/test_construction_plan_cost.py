@@ -333,7 +333,12 @@ def test_every_group_can_be_run_alone_from_the_console() -> None:
         defined |= set(re.findall(r"^(\w+) = \{", _read(path), re.MULTILINE))
     for name, look in looks.items():
         body = _effect(effects, f"pp_cplan_test_{name}").split()
-        assert body == ["pp_cplan_pass_begin", "=", "yes", look, "=", "yes", "pp_cplan_pass_end", "=", "yes"], name
+        # the Locations look in one go: every daily slice at once, no event (pp_lprof_whole, 2026-11-20)
+        whole = (["set_variable", "=", "{", "name", "=", "pp_lprof_whole", "value", "=", "yes", "}"]
+                 if name == "profiles" else [])
+        after = ["remove_variable", "=", "pp_lprof_whole"] if name == "profiles" else []
+        assert body == ["pp_cplan_pass_begin", "=", "yes", *whole, look, "=", "yes", *after,
+                        "pp_cplan_pass_end", "=", "yes"], name
         assert look in defined, look
     assert _effect(effects, "pp_cplan_test_empty").split() == ["pp_cplan_pass_begin", "=", "yes", "pp_cplan_pass_end", "=", "yes"]
     # the test mode still writes its line per pass

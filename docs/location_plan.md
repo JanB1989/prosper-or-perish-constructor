@@ -102,19 +102,46 @@ limit) never comes up for a plan. The Locations pane of the Construction Plan
 window counts the plans by state, names what the group saves for (a building or a town / city
 upgrade) and lists what it built: "for its plan", or a higher rank with the location's people.
 
-**A look stops when the purse is spent** (script time, 2026-11-20; measured before: the look of 615 plans on 418
-locations took 0.197 s, 331 plans ended in state 7). Once the group saves for something, nothing else can start in
-that pass, so the locations after that point in the turn order are not walked. The next look starts at the location
-the group saves for, so they come right after it. Until a look reaches them their plans read "held back for gold"
-(state 7) in the Location Plan window and the Plans row, whatever they showed before (script value
-`pp_lprof_unreached`: the country's last look stopped, `pp_lprof_cut`, and the location's `pp_lprof_seen` is below
-the look number `pp_lprof_look_n`). A plan set after such a look on a location it did not reach reads the same until
-the next look. The pane adds one line: how many locations the look did not reach; their plans are not in the state
-counts and their cost is not in what the group wanted. Inside a location the plans' two goes are split as the turn
-begins (`scope:pp_lplan_from`); the second go runs only where a plan started the location's last construction.
-Details: `docs/player_construction_manager.md` "Script time". Measured after (in game 2026-11-20, the same setup: 615
-plans on 418 locations, first look on 1 June): the whole monthly pass 0.062 s (before 0.238 s), with the same outcome
-(62 constructions started, 4,769 gold spent, the same purse left) and no script error in ten years.
+**The look runs in daily slices** (2026-11-20, evening; tested in game, see the end of this section). It replaced "a look stops when the purse
+is spent" (same day, morning; measured before that: the look of 615 plans on 418 locations took 0.197 s, 331 plans
+ended in state 7), which kept the pass short but left the group without the gold its plans were missing, and a look
+over thousands of plans in one day still froze the game (about 0.47 ms a location). Now:
+
+- The look fixes its turn order once: every location of the look goes onto the country list `pp_lprof_todo` with its
+  place (`pp_lprof_pos`). It walks K of them a day, K = max(`look_slice_min`, ceil(locations / `look_slice_days`))
+  (`[construction_plan]`, 60 and 24; script value `pp_lprof_slice_k`): the first K on the look's day inside the pass,
+  every further slice through the hidden country event `pp_construction_plan.1` a day later
+  (`events/pp_construction_plan_events.txt` -> `pp_lprof_slice_event`). Up to 60 planned locations the whole look
+  runs on the pass day, as before. The event does nothing but drop the list when the plan is off, the country no
+  longer runs it or the group's weight is 0; it sets up what a turn reads outside a pass and fills no purse.
+- The purse rule is unchanged: turn order, each location builds while the purse pays, the first thing it cannot pay
+  is what the group saves for, after that nothing starts. But the walk goes on: a turn that begins while the group
+  already saves is a *costing turn* (`scope:pp_lprof_costing`). Its plans run, so their states are set and the gold
+  they want is counted (`pp_cplan_note_wait`), and nothing else happens there: nothing starts, no business is closed,
+  the closer's wait does not count down, the location's mark `pp_lplan_wk` is neither set nor removed. A plan whose
+  closing is already under way still reads 14.
+- Nothing is "not reached" any more: every location of a look is walked within `look_slice_days`. A location the
+  running look has not walked yet keeps the state of its last turn. The pane's counter `pp_cplan_ds_profiles_unr` now
+  counts the look's locations still to be checked (0 once the look is done).
+- The place in the turn order moves at the end of the last slice (`pp_lprof_look_end`), to just before the location
+  the group saves for; a look that could pay for everything leaves it where it was.
+- The Locations group hands its purse on (it saved for nothing) only after its last slice: at the pass's end while
+  slices are pending it waits (`pp_cplan_gives_105` reads `pp_lprof_pend`), and the event's last slice hands on
+  (`pp_cplan_purses_hand_on_105`). After every event slice the chart's month 1 takes the look's totals again.
+- The console's `pp_cplan_test_profiles` still runs the whole look in one go (`pp_lprof_whole`: one slice, no event).
+
+Inside a location the plans' two goes are split as the turn begins (`scope:pp_lplan_from`); the second go runs only
+where a plan started the location's last construction. Details: `docs/player_construction_manager.md` "Script time".
+Measured with the stop (in game 2026-11-20, 615 plans on 418 locations, first look on 1 June): the whole monthly pass
+0.062 s (before 0.238 s), 62 constructions started, 4,769 gold spent, no script error in ten years.
+Tested in game (2026-11-20, plan test world, Castile, 615 plans on 418 locations, 1337-1340): the first slice took 60
+locations (418 / 24 is below the minimum); the June look walked 60 locations a day over seven days (still to be
+checked 358, 298, 238, ..., 0), started 88 constructions while the purse lasted, then only counted (208 plans held
+back for gold); `limit` inside `ordered_in_list` and the hidden event chain work; the forecast values evaluate as
+specified: after three years with little gold coming in the window read Locations "short of gold, 8.3 years" (lacking
+27,174 gold at 272 a month), Food 1.2 years, Logistics and Improvements "has the gold for all it asks for",
+Businesses "keeping up"; no mod script error in the three years. Not tested: a look that overlaps a save and load, a
+country with more than 1,440 planned locations (a slice above 60), multiplayer.
 
 ### In-game results of the night (2026-11-20, plan test world, Castile)
 
@@ -289,8 +316,8 @@ automation) adds no new building or level of that type in that market.
   logistics, improvements and public buildings are not held back (a hungry province still gets its farm).
 - **Budget**: plans are paid from the Locations group's purse (its weight on the Global Settings tab; it counts only
   while a plan exists) and nothing else: buildings, tier upgrades, rank raises. The country's gold reserve holds for
-  it like for every group. One thing at a time is saved for; a look stops when the purse is spent. Closing and
-  opening buildings costs nothing.
+  it like for every group. One thing at a time is saved for; once the purse is spent the look only counts what the
+  rest would cost (costing turns, "The look runs in daily slices" above). Closing and opening buildings costs nothing.
 - **Political influence**: only the charter (the game's grant price) and the swap to rights (its upgrade price) cost
   influence, twice a year, plans before the global rights rule, never below the influence kept back on the Towns and
   Buildings tab. The setting "Grant a plan's charter and rights" stops plans spending any. A plan's tile says when its

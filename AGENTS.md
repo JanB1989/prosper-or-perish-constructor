@@ -732,6 +732,19 @@
   - Two more plan settings: "Other businesses in planned locations" (`pp_tplan_alone`), "Grant a plan's charter and
     rights" (`pp_tplan_rights_off`). Taking the last plan off a location drops the group's saving for it; switching
     the Construction Plan off opens every building the plans closed.
+- Fourth round (2026-11-20 afternoon, Jan: how does it scale, feedback for the money sliders; tested in game,
+  `docs/player_construction_manager.md` "Feedback for the money sliders" and "The look runs in daily slices"):
+  - The Locations look runs in daily slices (`[construction_plan] look_slice_min` 60, `look_slice_days` 24; hidden
+    event `pp_construction_plan.1`): every planned location is walked within the look's month, so the group counts
+    again what all its plans are missing. A turn that begins while the group already saves only sets states and counts
+    gold (no start, no closing, no worker mark).
+  - Forecast numbers per rule group (`construction_plan_forecast.py`: gold coming in, what the group lacks, its years,
+    the weight it would need, one step up and down, its situation by look). The window reads them as kept country
+    variables (`pp_cplan_forecast_store`); never put a formula that walks or re-derives the weights behind a value the
+    window shows every frame (it cost 4 s of script time in 12 s, measured).
+  - The window (`construction_plan_status.py`): a white bar under each gold weight bar (what the group asks for), a
+    status line under each row, step tooltips on - and +, one line for the whole plan, and in each cog pane the
+    status, a second chart (the situation over the last twelve looks) and a pane that scrolls as a whole.
   - Test pitfall: a console `tick_day` over a look and the next month's start gives the hidden widget no frame, so
     the closings of that look never happen and their types land on the keep list. Stop a tick right after a look.
 

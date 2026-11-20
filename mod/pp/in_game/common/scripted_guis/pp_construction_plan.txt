@@ -12,6 +12,10 @@ pp_cplan_toggle_on = {
 		if = {
 			limit = { has_variable = pp_cplan_on }
 			pp_cplan_history_clear = yes
+			# the cache of "a location holds a plan" (pp_lprof_group_n), right before the first pass
+			pp_lprof_any_refresh = yes
+			# the window's forecast, worked out afresh after the clear (construction_plan_forecast.py)
+			pp_cplan_forecast_store = yes
 		}
 		else = {
 			pp_pclose_undo_all = yes
@@ -33,6 +37,8 @@ pp_cplan_weight = {
 			flag:business = { pp_cplan_set_weight = { var = pp_cplan_w_business current = pp_cplan_business_w } }
 			flag:country = { pp_cplan_set_weight = { var = pp_cplan_w_country current = pp_cplan_country_w } }
 		}
+		# the window's forecast: every part and step follows the weights (construction_plan_forecast.py)
+		pp_cplan_forecast_store = yes
 	}
 }
 
@@ -49,5 +55,7 @@ pp_cplan_step = {
 			flag:improve_line = { pp_cplan_step_var = { var = pp_cplan_imp current = pp_cplan_improve_pct step = 10 min = 150 max = 400 } }
 			flag:business_line = { pp_cplan_step_var = { var = pp_cplan_biz current = pp_cplan_business_years step = 1 min = 101 max = 150 } }
 		}
+		# the window's forecast (construction_plan_forecast.py)
+		pp_cplan_forecast_store = yes
 	}
 }

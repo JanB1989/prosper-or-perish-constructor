@@ -30,11 +30,23 @@
 # another business here is being closed to free workers for it (pp_plan_closer.txt); 10 is the market limit, which no
 # plan has), pp_lplan_est_g_<plan> (the payback found), pp_lprof_seq (its number in the turn
 # order), pp_lplan_last (the n of the plan that started the last construction here: the plans take turns),
-# pp_lprof_seen (the number of the last look that reached it), pp_lplan_wk (yes: one of its plans ended its last turn
-# waiting for workers, state 4 or 14; the other rule groups read it). Country: pp_lprof_look_n (the looks' count + 100),
-# pp_lprof_cut (the last look stopped, its purse spent, before every location had its turn). Pass temporaries:
+# pp_lplan_wk (yes: one of its plans ended its last turn
+# waiting for workers, state 4 or 14; the other rule groups read it), pp_lprof_pos (its place in the running look,
+# + 100). Country, while a look's daily slices run: the list pp_lprof_todo
+# (the look's locations in turn order), pp_lprof_todo_n / pp_lprof_done (their number / those walked, + 100),
+# pp_lprof_k (locations a slice), pp_lprof_pend (yes: slices are left). Pass temporaries:
 # pp_lprof_st, pp_lprof_fail, pp_lprof_best, pp_lprof_pick and what the pick carries (pp_lprof_pick_ipl / _pf / _ef /
-# _room), the measuring's pp_lplan_b* (location), the list pp_lprof_turns (country: this look's locations).
+# _room), the measuring's pp_lplan_b* (location), the list pp_lprof_turns (country: this look's locations, gathered),
+# scope:pp_lprof_costing (1 in a costing turn).
+# Daily slices (2026-11-20, tested in game the same day, docs/location_plan.md): a look orders all its locations at once (pp_lprof_todo) and walks K of
+# them a day, K = max(look_slice_min, ceil(locations / look_slice_days)) ([construction_plan], 60 and 24): the first K
+# on the look's day inside the pass, the rest one hidden event a day (events/pp_construction_plan_events.txt,
+# pp_lprof_slice_event). A look that walked thousands of plans in one day froze the game (about 0.47 ms a location).
+# The purse rule is unchanged (turn order; the first thing it cannot pay is what the group saves for; after that
+# nothing starts), but the walk goes on: a turn that begins while the group already saves is a costing turn
+# (scope:pp_lprof_costing): the plans run, so their states are set and their wanted gold is counted for the window,
+# and nothing else happens there: nothing starts, no business is closed, the closer's wait does not count down, and
+# the location's mark pp_lplan_wk is neither set nor removed.
 # Script time (2026-11-20): the candidates know their building type when the script is written, so they check its room
 # under the max level by its own value and build through pp_lprof_build_known (no dispatch over every building type);
 # only the measured best plan (setting "best payback first") goes through the generic pp_lprof_build.
@@ -44,6 +56,11 @@
 pp_lprof_run = {
 	# plans free their workers (pp_plan_closer.txt, 2026-11-20): the widget's lists emptied, the closings checked
 	pp_pclose_month = yes
+	# a look's daily slices end within look_slice_days (< 28): anything still pending from an earlier look goes
+	if = {
+		limit = { has_variable = pp_lprof_pend }
+		pp_lprof_drop = yes
+	}
 	if = {
 		limit = {
 			pp_lprof_has_locations = yes
@@ -71,7 +88,28 @@ pp_lprof_run = {
 	}
 }
 
-# Country scope: the Locations group's look: every location that holds a plan, in turns.
+# Country scope: the cache pp_lprof_any (yes: a location of the country holds a plan; pp_lprof_group_n reads it, the
+# window's rows read that about a hundred times a frame) from the real test, once: at every pass's start before the
+# purses move (pp_cplan_pass_begin), when the plan is switched on (pp_cplan_toggle_on) and when a location's last plan
+# is taken off (pp_tplan_flip; setting a plan sets it at once). A plan lost by conquest is caught by the next pass.
+# The test as pp_lprof_has_locations, with this country instead of root (the flip's root is a location).
+pp_lprof_any_refresh = {
+	save_temporary_scope_as = pp_lprof_c
+	if = {
+		limit = {
+			any_locations_with_town_rights_in_country = {
+				owner ?= scope:pp_lprof_c
+				pp_tplan_held = yes
+			}
+		}
+		set_variable = { name = pp_lprof_any value = yes }
+	}
+	else = {
+		remove_variable = pp_lprof_any
+	}
+}
+
+# Country scope: the Locations group's look: every location that holds a plan, in turns, in daily slices.
 pp_lprof_look = {
 	pp_cplan_group_start = { why = 105 }
 	save_temporary_scope_value_as = { name = pp_cplan_rv value = 0 }
@@ -83,51 +121,103 @@ pp_lprof_look = {
 		limit = { NOT = { has_variable = pp_lprof_cursor } }
 		set_variable = { name = pp_lprof_cursor value = 100 }
 	}
-	# the look's number (+ 100): a location keeps the number of the last look that reached it (pp_lprof_seen)
-	if = {
-		limit = { has_variable = pp_lprof_look_n }
-		change_variable = { name = pp_lprof_look_n add = 1 }
-	}
-	else = {
-		set_variable = { name = pp_lprof_look_n value = 101 }
-	}
-	remove_variable = pp_lprof_cut
+	# what an earlier look left (none: its slices end within look_slice_days)
+	pp_lprof_drop = yes
 	# this look's locations: those that hold a plan (a new one gets its number)
 	pp_lprof_gather = yes
 	# the locations take turns (Jan 2026-11-10): the look starts after the country's place in the order of the
 	# locations' numbers and wraps around (pp_lprof_turn). In the list's own order the locations assigned first took
 	# the whole monthly share every month (test world, 2026-11-08); fewest building levels first, the order until
-	# 2026-11-10, always served the same places first
-	# The look stops when the purse is spent (script time 2026-11-20): once the group saves for something
-	# (pp_cplan_save_cost_105, set by pp_cplan_note_wait or the rank raise's wait), pp_cplan_construct_go and
-	# pp_cplan_country_rank_up start nothing more for it in this pass, so no later location could build. Those
-	# locations are not walked: they count as not reached (pp_cplan_ds_profiles_unr, the pane), the country notes that
-	# the look stopped (pp_lprof_cut), and their plans show "held back for gold" until a look reaches them
-	# (pp_lprof_unreached: pp_lprof_seen below this look's number). Nothing a walk would have built, spent or saved
-	# for is lost: the first thing saved for, and with it the place in the turn order below, are set before the stop.
+	# 2026-11-10, always served the same places first.
+	# Daily slices (2026-11-20): the order is fixed once, here: every location of the look goes onto pp_lprof_todo with
+	# its place (pp_lprof_pos, + 100); the slices walk the places in order (pp_lprof_slice). The window counts the
+	# look's locations (pp_cplan_ds_profiles_locs) and those still to be checked (pp_cplan_ds_profiles_unr).
 	save_temporary_scope_value_as = { name = pp_lprof_cur value = var:pp_lprof_cursor }
+	set_variable = { name = pp_lprof_todo_n value = 100 }
+	set_variable = { name = pp_lprof_done value = 100 }
 	ordered_in_list = {
 		variable = pp_lprof_turns
 		order_by = pp_lprof_turn
 		max = 100000
 		check_range_bounds = no
-		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_locs add = 1 } }
-		if = {
-			limit = { scope:pp_cplan_country = { NOT = { has_variable = pp_cplan_save_cost_105 } } }
-			set_variable = { name = pp_lprof_seen value = scope:pp_cplan_country.var:pp_lprof_look_n }
-			pp_lprof_location_turn = yes
+		save_temporary_scope_as = pp_lprof_this
+		scope:pp_cplan_country = {
+			change_variable = { name = pp_lprof_todo_n add = 1 }
+			change_variable = { name = pp_cplan_ds_profiles_locs add = 1 }
+			add_to_variable_list = { name = pp_lprof_todo target = scope:pp_lprof_this }
 		}
-		else = {
-			scope:pp_cplan_country = {
-				change_variable = { name = pp_cplan_ds_profiles_unr add = 1 }
-				set_variable = { name = pp_lprof_cut value = yes }
-			}
-		}
+		set_variable = { name = pp_lprof_pos value = scope:pp_cplan_country.var:pp_lprof_todo_n }
 	}
 	clear_variable_list = pp_lprof_turns
-	# the place moves to just before the location the group now saves for (the first thing in turn order its purse
-	# could not pay): the next look starts there again; once it is built the place moves past it
-	# (pp_lprof_target_turn). A look that could pay for everything leaves the place where it was.
+	set_variable = { name = pp_cplan_ds_profiles_unr value = var:pp_lprof_todo_n }
+	# K locations a slice; the console's whole look (pp_cplan_test_profiles, pp_lprof_whole) takes them all at once
+	set_variable = { name = pp_lprof_k value = pp_lprof_slice_k }
+	if = {
+		limit = { has_variable = pp_lprof_whole }
+		set_variable = { name = pp_lprof_k value = { value = var:pp_lprof_todo_n subtract = 100 min = 1 } }
+	}
+	set_variable = { name = pp_lprof_pend value = yes }
+	# the first slice at once, in the pass
+	pp_lprof_slice = yes
+	remove_variable = pp_cplan_hit
+	remove_variable = pp_cplan_noted
+}
+
+# Country scope (a look's slices pending; scope:pp_cplan_country, scope:actor and the pass temporaries set): the next
+# pp_lprof_k places of pp_lprof_todo, in turn order. Each location still owned that still holds a plan gets its turn
+# (pp_lprof_slice_turn). Then: the look is done (pp_lprof_look_end), or the next slice comes a day later (a hidden
+# event, pp_construction_plan.1 -> pp_lprof_slice_event). The purse rule needs nothing of its own here: the first thing
+# the purse cannot pay sets pp_cplan_save_cost_105 (pp_cplan_note_wait, the rank raise's wait), and every turn that
+# begins after it, in this slice or a later one, is a costing turn (pp_lprof_location_turn).
+pp_lprof_slice = {
+	save_temporary_scope_value_as = { name = pp_lprof_from value = var:pp_lprof_done }
+	save_temporary_scope_value_as = { name = pp_lprof_to value = { value = var:pp_lprof_done add = var:pp_lprof_k } }
+	ordered_in_list = {
+		variable = pp_lprof_todo
+		limit = {
+			has_variable = pp_lprof_pos
+			var:pp_lprof_pos > scope:pp_lprof_from
+			var:pp_lprof_pos <= scope:pp_lprof_to
+		}
+		order_by = pp_lprof_pos_order
+		max = 100000
+		check_range_bounds = no
+		pp_lprof_slice_turn = yes
+	}
+	set_variable = { name = pp_lprof_done value = scope:pp_lprof_to }
+	if = {
+		limit = { var:pp_lprof_done > var:pp_lprof_todo_n }
+		set_variable = { name = pp_lprof_done value = var:pp_lprof_todo_n }
+	}
+	# the window: the locations of this look still to be checked (+ 100)
+	set_variable = { name = pp_cplan_ds_profiles_unr value = { value = var:pp_lprof_todo_n subtract = var:pp_lprof_done add = 100 } }
+	if = {
+		limit = { var:pp_lprof_done >= var:pp_lprof_todo_n }
+		pp_lprof_look_end = yes
+	}
+	else = {
+		trigger_event_silently = { id = pp_construction_plan.1 days = 1 }
+	}
+}
+
+# Location scope, a place of a look's slice: its turn, when the country still owns it and it still holds a plan (an
+# owner change or a plan taken off since the look began drops it).
+pp_lprof_slice_turn = {
+	if = {
+		limit = {
+			owner ?= scope:pp_cplan_country
+			pp_tplan_held = yes
+		}
+		pp_lprof_location_turn = yes
+	}
+}
+
+# Country scope: the look's last slice ran. The place in the turn order moves to just before the location the group
+# now saves for (the first thing in turn order its purse could not pay): the next look starts there again; once it is
+# built the place moves past it (pp_lprof_target_turn). A look that could pay for everything leaves the place where it
+# was. The look's list goes, and its situation goes into the window's history by look (pp_cplan_hq_push_105).
+pp_lprof_look_end = {
+	save_temporary_scope_value_as = { name = pp_lprof_cur value = var:pp_lprof_cursor }
 	if = {
 		limit = { has_variable = pp_cplan_save_loc_105 }
 		var:pp_cplan_save_loc_105 = {
@@ -138,8 +228,70 @@ pp_lprof_look = {
 		}
 		set_variable = { name = pp_lprof_cursor value = scope:pp_lprof_cur }
 	}
-	remove_variable = pp_cplan_hit
-	remove_variable = pp_cplan_noted
+	pp_lprof_drop = yes
+	pp_cplan_hq_push_105 = yes
+}
+
+# Country scope: a look's slices end (done, the plan switched off, the group off, or a new look): the list and its
+# numbers go; nothing is left to check.
+pp_lprof_drop = {
+	every_in_list = {
+		variable = pp_lprof_todo
+		remove_variable = pp_lprof_pos
+	}
+	clear_variable_list = pp_lprof_todo
+	remove_variable = pp_lprof_todo_n
+	remove_variable = pp_lprof_done
+	remove_variable = pp_lprof_k
+	remove_variable = pp_lprof_pend
+	if = {
+		limit = { has_variable = pp_cplan_ds_profiles_unr }
+		set_variable = { name = pp_cplan_ds_profiles_unr value = 100 }
+	}
+}
+
+# Country scope, the hidden event pp_construction_plan.1 a day after a slice: the next slice, outside the monthly pass.
+# Nothing, and the look's list goes, when the plan is off, the country no longer runs it (the same test as the monthly
+# on_action pp_construction_plan_monthly) or the group's weight is 0. Else what a turn reads of a pass is set up as
+# pp_cplan_pass_begin does (the scopes, the reason temporaries, forced 0, no construction this turn), without filling a
+# purse or resetting a number: the look's counts go on. After the slice the window's chart takes the look's totals as
+# its month 1 again (the pass's end wrote it from the first slice; no monthly pass falls between the slices), and once
+# the last slice ran the Locations group hands its purse on (pp_cplan_purses_hand_on_105; at the pass's end it waited).
+pp_lprof_slice_event = {
+	if = {
+		limit = {
+			has_variable = pp_lprof_pend
+			has_variable = pp_cplan_on
+			OR = {
+				is_ai = no
+				has_variable = pp_cplan_ai_test
+			}
+			pp_cplan_profiles_w > 0
+		}
+		save_scope_as = pp_cplan_country
+		save_scope_as = actor
+		save_temporary_scope_value_as = { name = pp_cplan_rv value = 0 }
+		save_temporary_scope_value_as = { name = pp_cplan_rs value = 0 }
+		save_temporary_scope_value_as = { name = pp_cplan_forced value = 0 }
+		remove_variable = pp_cplan_hit
+		remove_variable = pp_cplan_noted
+		pp_lprof_slice = yes
+		remove_variable = pp_cplan_hit
+		remove_variable = pp_cplan_noted
+		remove_variable = pp_cplan_wait
+		remove_variable = pp_cplan_mlim
+		set_variable = { name = pp_cplan_hn_105_1 value = { value = var:pp_cplan_dspent_105 add = var:pp_cplan_dwait_105 subtract = 100 } }
+		set_variable = { name = pp_cplan_hs_105_1 value = var:pp_cplan_dspent_105 }
+		if = {
+			limit = { NOT = { has_variable = pp_lprof_pend } }
+			pp_cplan_purses_hand_on_105 = yes
+		}
+		# the window's forecast: the look's wanted gold grew (construction_plan_forecast.py)
+		pp_cplan_forecast_store = yes
+	}
+	else = {
+		pp_lprof_drop = yes
+	}
 }
 
 # Location scope (pp_cplan_group_target: where the group saved for something, its purse can pay now): the location's
@@ -162,10 +314,23 @@ pp_lprof_target_turn = {
 }
 
 # Location scope (a location that holds a plan; also where the group saved for something): its turn: its plans,
-# forced.
+# forced. A turn that begins while the group already saves for something (pp_cplan_save_cost_105) is a costing turn
+# (scope:pp_lprof_costing = 1, daily slices 2026-11-20): before them such locations were not walked at all, so only the
+# plans' states and the window's counters may change there: nothing can start (pp_cplan_construct_go and
+# pp_cplan_country_rank_up start nothing while the group saves), no business is closed (pp_pclose_may and
+# pp_lplan_mark), the closer's wait does not count down (pp_pclose_turn_start), and the mark pp_lplan_wk stays as it
+# was (here and in pp_lprof_finish).
 pp_lprof_location_turn = {
+	save_temporary_scope_value_as = { name = pp_lprof_costing value = 0 }
+	if = {
+		limit = { scope:pp_cplan_country = { has_variable = pp_cplan_save_cost_105 } }
+		save_temporary_scope_value_as = { name = pp_lprof_costing value = 1 }
+	}
 	# a plan waiting for workers here marks the location anew in this turn (pp_lprof_finish)
-	remove_variable = pp_lplan_wk
+	if = {
+		limit = { scope:pp_lprof_costing < 0.5 }
+		remove_variable = pp_lplan_wk
+	}
 	# the workers a new level can find here (pp_cplan_staff)
 	save_temporary_scope_value_as = { name = pp_cplan_free_peasants value = pp_cplan_free_peasants_here }
 	# the window: one level waiting for gold counts once a location (pp_cplan_note_wait); one construction a
@@ -441,15 +606,39 @@ pp_lplan_mark = {
 					set_variable = { name = pp_lplan_last value = $n$ }
 				}
 				# its level waits for workers and nothing else: another business here closes for them
-				# (pp_plan_closer.txt; state 14 while that is under way, else 4)
+				# (pp_plan_closer.txt; state 14 while that is under way, else 4). Never in a costing turn
+				# (pp_lprof_location_turn): pp_pclose_may already refuses while the group saves; here a plan the
+				# closing under way is for (pp_pclose_for) still reads 14, without touching the closer
 				if = {
 					limit = {
+						scope:pp_lprof_costing < 0.5
 						NOT = { has_variable = pp_lprof_st }
 						has_variable = pp_lprof_fail
 						var:pp_lprof_fail > 104.125
 						var:pp_lprof_fail < 104.625
 					}
 					pp_pclose_plan = { g = $g$ }
+				}
+				else_if = {
+					limit = {
+						scope:pp_lprof_costing > 0.5
+						NOT = { has_variable = pp_lprof_st }
+						has_variable = pp_lprof_fail
+						var:pp_lprof_fail > 103.75
+						var:pp_lprof_fail < 104.625
+						has_variable = pp_pclose_wait
+						is_target_in_variable_list = { name = pp_pclose_for target = town_rights_type:pp_plan_$g$ }
+					}
+					set_variable = { name = pp_lprof_fail value = 104.25 }
+				}
+				else_if = {
+					limit = {
+						scope:pp_lprof_costing > 0.5
+						has_variable = pp_lprof_fail
+						var:pp_lprof_fail > 104.125
+						var:pp_lprof_fail < 104.625
+					}
+					set_variable = { name = pp_lprof_fail value = 104 }
 				}
 			}
 			pp_lprof_finish = { st = pp_lplan_st_$v$ est = pp_lplan_est_$v$ }
@@ -536,9 +725,11 @@ pp_lprof_finish = {
 	}
 	# a plan here waits for workers (4, or 14 while another business closes for it): the location carries pp_lplan_wk
 	# for the other rule groups until its next turn (pp_lprof_location_turn; the Businesses rule leaves such a location
-	# to its plans)
+	# to its plans); not in a costing turn (pp_lprof_location_turn): the mark stays as the location's last real turn
+	# left it
 	if = {
 		limit = {
+			scope:pp_lprof_costing < 0.5
 			OR = {
 				AND = {
 					var:$st$ > 103.5

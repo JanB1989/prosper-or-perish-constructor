@@ -1171,6 +1171,11 @@ look_months = { food = [1, 4, 7, 10], logistics = [2, 5, 8, 11], improve = [3, 9
 business_sites = 16           # businesses: the sites whose pick (their best business) is worked out anew each month; the picks are kept on the locations
 business_cycle_months = 24    # ... but at least so many that every location is seen within this many months, however large the country
 business_tries = 6            # businesses: the stored picks a look tries to build, best first
+# The Locations look in daily slices (2026-11-20; a look over thousands of plans in one day froze the game, about
+# 0.47 ms a location): the look orders all its locations at once and walks K a day, K = max(look_slice_min,
+# ceil(locations / look_slice_days)), the first K on the look's day. Up to look_slice_min locations: all on that day.
+look_slice_min = 60
+look_slice_days = 24          # at most this many days a look (must stay below the shortest month: 28)
 business_market_share = 10    # market limit against spam (2026-11-10; a PLACEHOLDER, Jan tunes it): a level of a building that makes a market good starts only while the output of that good under construction in the location's market, this level included, stays within this % of the market's monthly demand for it; one level is always allowed while none is under construction. Applies to the Businesses group (a location's plans are forced and pass it)
 farm_sites_per_province = 4   # food: locations tried for a staple food maker, best payback first
 hungry_months = 6             # food: a farm (or a Tavern where none can be built) where a normal year leaves less than this a year from now

@@ -164,6 +164,12 @@ pp_cplan_pass_begin = {
 	# a location's plans are forced (pp_location_profiles.txt sets 1 while it runs them): the market limit does not
 	# hold them back (pp_cplan_construct_scoped)
 	save_temporary_scope_value_as = { name = pp_cplan_forced value = 0 }
+	# the Locations group counts while a location holds a plan: its cached test asked once a pass, before any weight
+	# is read (pp_lprof_group_n reads only the variable)
+	pp_lprof_any_refresh = yes
+	# the window's forecast (construction_plan_forecast.py; the rules never read it): the new gold of this pass and
+	# what the groups were handed at the end of the last one, read before the purses move
+	pp_cplan_forecast_measure = yes
 	pp_cplan_purses_fill = yes
 	# the market limit counts what is under construction afresh only in its months: between them the counts of the
 	# last count stand on the markets' centres, raised by what the plan itself starts (constructions take about a
@@ -175,7 +181,10 @@ pp_cplan_pass_begin = {
 }
 
 # Country scope: a pass ends: a group that looked in this pass and saves for nothing hands what is left of its purse
-# to the groups that do save; the history of the window's charts moves on.
+# to the groups that do save; the history of the window's charts moves on. The Locations group hands on only once its
+# look's daily slices are done (pp_cplan_gives_105 waits for pp_lprof_pend): in this pass when the first slice was the
+# whole look, else after the last slice (pp_lprof_slice_event, pp_cplan_purses_hand_on_105), which also writes its
+# chart's month 1 again.
 pp_cplan_pass_end = {
 	remove_variable = pp_cplan_hit
 	remove_variable = pp_cplan_noted
@@ -183,6 +192,8 @@ pp_cplan_pass_end = {
 	remove_variable = pp_cplan_mlim
 	pp_cplan_purses_hand_on = yes
 	pp_cplan_history_push = yes
+	# the window's forecast, worked out once and kept (construction_plan_forecast.py)
+	pp_cplan_forecast_store = yes
 	# test runs: one line per monthly pass (ppc plan-report counts the months by it; debug_log_date writes nothing)
 	if = {
 		limit = { has_variable = pp_cplan_ai_test }
@@ -207,9 +218,12 @@ pp_cplan_test_improve = {
 	pp_cplan_look_improve = yes
 	pp_cplan_pass_end = yes
 }
+# the Locations look in one go: every daily slice at once, no event (pp_lprof_whole), so it can be timed
 pp_cplan_test_profiles = {
 	pp_cplan_pass_begin = yes
+	set_variable = { name = pp_lprof_whole value = yes }
 	pp_lprof_look = yes
+	remove_variable = pp_lprof_whole
 	pp_cplan_pass_end = yes
 }
 # the business group's monthly part alone: the picks of the next few sites

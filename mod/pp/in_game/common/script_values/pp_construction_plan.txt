@@ -338,6 +338,16 @@ pp_lprof_turn = {
 	}
 }
 
+# Location scope: the order of a slice of the Locations look (pp_lprof_slice; the highest value goes first): the
+# location's place in the look (pp_lprof_pos, + 100, fixed when the look began), lowest place first.
+pp_lprof_pos_order = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_lprof_pos }
+		subtract = var:pp_lprof_pos
+	}
+}
+
 # Location scope: how full the location is (population over capacity), the improvement rule's order.
 pp_cplan_fill_here = {
 	value = location_population_percentage

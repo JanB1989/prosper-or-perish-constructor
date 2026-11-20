@@ -138,6 +138,8 @@ pp_cplan_country_toggle = {
 			flag:right_municipia_privilegia = { pp_cplan_flip = { var = pp_cplan_right_municipia_privilegia } }
 		}
 		pp_cplan_country_layout_do = yes # a ticked tile keeps its place, an unticked one may leave the grid
+		# the window's stored forecast (construction_plan_forecast.py): this group's weight may start or stop counting
+		pp_cplan_forecast_store = yes
 	}
 }
 

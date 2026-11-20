@@ -120,8 +120,8 @@ pp_cplan_w_total = {
 	add = pp_cplan_business_w
 	add = pp_cplan_country_cw
 }
-# Country scope: the profiles group's part of the new gold, in % (the window; in gold: pp_cplan_purse_new_105).
-pp_cplan_part_profiles = {
+# Country scope: the profiles group's part of the new gold, in % (in gold: pp_cplan_purse_new_105); the window reads it kept, pp_cplan_part_profiles (construction_plan_forecast.py).
+pp_cplan_partx_profiles = {
 	value = 0
 	if = {
 		limit = { pp_cplan_w_total > 0 }
@@ -130,8 +130,8 @@ pp_cplan_part_profiles = {
 		divide = pp_cplan_w_total
 	}
 }
-# Country scope: the food group's part of the new gold, in % (the window; in gold: pp_cplan_purse_new_101).
-pp_cplan_part_food = {
+# Country scope: the food group's part of the new gold, in % (in gold: pp_cplan_purse_new_101); the window reads it kept, pp_cplan_part_food (construction_plan_forecast.py).
+pp_cplan_partx_food = {
 	value = 0
 	if = {
 		limit = { pp_cplan_w_total > 0 }
@@ -140,8 +140,8 @@ pp_cplan_part_food = {
 		divide = pp_cplan_w_total
 	}
 }
-# Country scope: the logistics group's part of the new gold, in % (the window; in gold: pp_cplan_purse_new_102).
-pp_cplan_part_logistics = {
+# Country scope: the logistics group's part of the new gold, in % (in gold: pp_cplan_purse_new_102); the window reads it kept, pp_cplan_part_logistics (construction_plan_forecast.py).
+pp_cplan_partx_logistics = {
 	value = 0
 	if = {
 		limit = { pp_cplan_w_total > 0 }
@@ -150,8 +150,8 @@ pp_cplan_part_logistics = {
 		divide = pp_cplan_w_total
 	}
 }
-# Country scope: the improve group's part of the new gold, in % (the window; in gold: pp_cplan_purse_new_106).
-pp_cplan_part_improve = {
+# Country scope: the improve group's part of the new gold, in % (in gold: pp_cplan_purse_new_106); the window reads it kept, pp_cplan_part_improve (construction_plan_forecast.py).
+pp_cplan_partx_improve = {
 	value = 0
 	if = {
 		limit = { pp_cplan_w_total > 0 }
@@ -160,8 +160,8 @@ pp_cplan_part_improve = {
 		divide = pp_cplan_w_total
 	}
 }
-# Country scope: the business group's part of the new gold, in % (the window; in gold: pp_cplan_purse_new_103).
-pp_cplan_part_business = {
+# Country scope: the business group's part of the new gold, in % (in gold: pp_cplan_purse_new_103); the window reads it kept, pp_cplan_part_business (construction_plan_forecast.py).
+pp_cplan_partx_business = {
 	value = 0
 	if = {
 		limit = { pp_cplan_w_total > 0 }
@@ -170,8 +170,8 @@ pp_cplan_part_business = {
 		divide = pp_cplan_w_total
 	}
 }
-# Country scope: the country group's part of the new gold, in % (the window; in gold: pp_cplan_purse_new_107).
-pp_cplan_part_country = {
+# Country scope: the country group's part of the new gold, in % (in gold: pp_cplan_purse_new_107); the window reads it kept, pp_cplan_part_country (construction_plan_forecast.py).
+pp_cplan_partx_country = {
 	value = 0
 	if = {
 		limit = { pp_cplan_w_total > 0 }
@@ -206,6 +206,23 @@ pp_cplan_bz_window = {
 }
 # Any scope: the stored picks a look of the business group tries to build, best first.
 pp_cplan_bz_tries = { value = 6 }
+
+# ---- Script time: the Locations look in daily slices ([construction_plan] look_slice_min / _days) ----
+# Any scope: a slice walks at least this many locations; a look takes at most this many days.
+pp_lprof_slice_min = { value = 60 }
+pp_lprof_slice_days = { value = 24 }
+# Country scope, at a look (pp_lprof_todo_n = its locations + 100): the locations a slice walks.
+pp_lprof_slice_k = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_lprof_todo_n }
+		value = var:pp_lprof_todo_n
+		subtract = 100
+	}
+	divide = pp_lprof_slice_days
+	ceiling = yes
+	min = pp_lprof_slice_min
+}
 # Country scope: what the rule groups started and spent at their last looks (the window's summary).
 pp_cplan_all_started = {
 	value = 0
@@ -18431,13 +18448,15 @@ pp_cplan_saves_105 = {
 		value = 1
 	}
 }
-# 1 when it looked in this pass and saves for nothing: it hands on what it has
+# 1 when it looked in this pass and saves for nothing: it hands on what it has (the Locations group
+# only once its look's last daily slice ran: pp_lprof_pend, pp_cplan_purses_hand_on_105)
 pp_cplan_gives_105 = {
 	value = 0
 	if = {
 		limit = {
 			has_variable = pp_cplan_now_105
 			NOT = { has_variable = pp_cplan_save_cost_105 }
+			NOT = { has_variable = pp_lprof_pend }
 		}
 		value = 1
 	}
@@ -21858,6 +21877,3753 @@ pp_cplan_h_country_sum_spent = {
 	add = pp_cplan_h_country_spent_10
 	add = pp_cplan_h_country_spent_11
 	add = pp_cplan_h_country_spent_12
+}
+
+# ---- Forecast for the window (country scope; construction_plan_forecast.py; the rules never read these) ----
+
+# The new gold shared out in this pass, less what the purses had to give back (read before pp_cplan_purses_fill
+# writes: pp_cplan_forecast_measure).
+pp_cplan_flow_new = {
+	value = pp_cplan_purse_held
+	subtract = pp_cplan_purse_free
+	min = 0
+	multiply = -1
+	add = pp_cplan_purse_rest
+	min = 0
+}
+# The running means' divisor for this pass's measure: the passes measured with it, at most 12.
+pp_cplan_fc_div = {
+	value = 1
+	if = {
+		limit = { has_variable = pp_cplan_fc_n }
+		value = var:pp_cplan_fc_n
+		subtract = 99
+	}
+	max = 12
+}
+# Gold a month coming in for the purses (the running mean), and 1 once a pass was measured.
+pp_cplan_fx_flow_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fc_flow }
+		value = var:pp_cplan_fc_flow
+		subtract = 100
+	}
+	min = 0
+}
+pp_cplan_fx_flow_known = {
+	value = 0
+	if = {
+		limit = {
+			has_variable = pp_cplan_fc_n
+			var:pp_cplan_fc_n > 100.5
+		}
+		value = 1
+	}
+}
+pp_cplan_fc_flow_next = {
+	value = pp_cplan_flow_new
+	subtract = pp_cplan_fx_flow_n
+	divide = pp_cplan_fc_div
+	add = pp_cplan_fx_flow_n
+}
+
+# profiles (105)
+# the mean gold handed on to it a pass, and the mean after this pass's measure
+pp_cplan_fx_profiles_hand = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fc_hand_105 }
+		value = var:pp_cplan_fc_hand_105
+		subtract = 100
+	}
+}
+pp_cplan_fc_hand_next_105 = {
+	value = pp_cplan_hand_n_105
+	subtract = pp_cplan_fx_profiles_hand
+	divide = pp_cplan_fc_div
+	add = pp_cplan_fx_profiles_hand
+}
+# the gold it still lacks for everything it wanted at its last look
+pp_cplan_fx_profiles_missing = {
+	value = pp_cplan_d_profiles_wait
+	subtract = pp_cplan_purse_n_105
+	min = 0
+}
+# its part of the new gold (the current weights), and the gold a month it gets
+pp_cplan_fx_profiles_frac = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_profiles_cw
+		divide = pp_cplan_w_total
+	}
+}
+pp_cplan_fx_profiles_rate = {
+	value = pp_cplan_fx_flow_n
+	multiply = pp_cplan_fx_profiles_frac
+	add = pp_cplan_fx_profiles_hand
+}
+# the years until it has all it lacks
+pp_cplan_fx_profiles_years = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_fx_profiles_missing > 0
+			NOT = { pp_cplan_fx_profiles_rate > 0 }
+		}
+		value = 99
+	}
+	else_if = {
+		limit = { pp_cplan_fx_profiles_missing > 0 }
+		value = pp_cplan_fx_profiles_missing
+		divide = pp_cplan_fx_profiles_rate
+		divide = 12
+		max = 99
+	}
+}
+# 0 off, 1 has not looked yet, 2 has the gold for all it asks, 3 keeping up (a year or less), 4 short of gold,
+# 5 short and no gold comes in
+pp_cplan_fx_profiles_status = {
+	value = 4
+	if = {
+		limit = { NOT = { pp_cplan_profiles_cw > 0 } }
+		value = 0
+	}
+	else_if = {
+		limit = { pp_cplan_d_profiles_ran < 0.5 }
+		value = 1
+	}
+	else_if = {
+		limit = { NOT = { pp_cplan_fx_profiles_missing > 0 } }
+		value = 2
+	}
+	else_if = {
+		limit = { NOT = { pp_cplan_fx_profiles_rate > 0 } }
+		value = 5
+	}
+	else_if = {
+		limit = { pp_cplan_fx_profiles_years <= 1 }
+		value = 3
+	}
+}
+# the weight at which it would keep up (a year), the other groups' weights as they are: the share of the new
+# gold it needs (s), and need_w = s x others / (1 - s), at most 10
+pp_cplan_fx_profiles_others = {
+	value = pp_cplan_w_total
+	subtract = pp_cplan_profiles_cw
+	min = 0
+}
+pp_cplan_fx_profiles_lack = {
+	value = pp_cplan_fx_profiles_missing
+	divide = 12
+	subtract = pp_cplan_fx_profiles_hand
+}
+pp_cplan_fx_profiles_need_s = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_flow_n > 0 }
+		value = pp_cplan_fx_profiles_lack
+		divide = pp_cplan_fx_flow_n
+		min = 0
+		max = 1
+	}
+	else_if = {
+		limit = { pp_cplan_fx_profiles_lack > 0 }
+		value = 1
+	}
+}
+pp_cplan_fx_profiles_need_w = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_profiles_status > 1.5 }
+		if = {
+			limit = { NOT = { pp_cplan_fx_profiles_others > 0 } }
+			value = pp_cplan_profiles_cw
+		}
+		else_if = {
+			limit = { pp_cplan_fx_profiles_need_s >= 1 }
+			value = 10
+		}
+		else = {
+			value = pp_cplan_fx_profiles_need_s
+			multiply = pp_cplan_fx_profiles_others
+			divide = { value = 1 subtract = pp_cplan_fx_profiles_need_s }
+			max = 10
+		}
+	}
+}
+# ... rounded up to a whole step of the weight bar (the window prints it; 0 stays 0)
+pp_cplan_fx_profiles_need_up = {
+	value = pp_cplan_fx_profiles_need_w
+	ceiling = yes
+	min = 0
+	max = 10
+}
+# 1 while its weight counts at all
+pp_cplan_fx_profiles_act = {
+	value = pp_lprof_group_n
+}
+# its weight one step up: the weight that would count, its part in %, its gold a month, its years
+pp_cplan_fx_profiles_up_w = {
+	value = pp_cplan_profiles_w
+	add = 1
+	max = 10
+	multiply = pp_cplan_fx_profiles_act
+}
+pp_cplan_fx_profiles_up_part = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_profiles_up_w > 0 }
+		value = pp_cplan_fx_profiles_up_w
+		multiply = 100
+		divide = { value = pp_cplan_fx_profiles_others add = pp_cplan_fx_profiles_up_w }
+	}
+}
+pp_cplan_fx_profiles_up_rate = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_profiles_up_w > 0 }
+		value = pp_cplan_fx_flow_n
+		multiply = pp_cplan_fx_profiles_up_part
+		divide = 100
+		add = pp_cplan_fx_profiles_hand
+	}
+}
+# its years with its weight one step up
+pp_cplan_fx_profiles_up_years = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_fx_profiles_missing > 0
+			NOT = { pp_cplan_fx_profiles_up_rate > 0 }
+		}
+		value = 99
+	}
+	else_if = {
+		limit = { pp_cplan_fx_profiles_missing > 0 }
+		value = pp_cplan_fx_profiles_missing
+		divide = pp_cplan_fx_profiles_up_rate
+		divide = 12
+		max = 99
+	}
+}
+# its weight one step down: the weight that would count, its part in %, its gold a month, its years
+pp_cplan_fx_profiles_down_w = {
+	value = pp_cplan_profiles_w
+	subtract = 1
+	min = 0
+	multiply = pp_cplan_fx_profiles_act
+}
+pp_cplan_fx_profiles_down_part = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_profiles_down_w > 0 }
+		value = pp_cplan_fx_profiles_down_w
+		multiply = 100
+		divide = { value = pp_cplan_fx_profiles_others add = pp_cplan_fx_profiles_down_w }
+	}
+}
+pp_cplan_fx_profiles_down_rate = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_profiles_down_w > 0 }
+		value = pp_cplan_fx_flow_n
+		multiply = pp_cplan_fx_profiles_down_part
+		divide = 100
+		add = pp_cplan_fx_profiles_hand
+	}
+}
+# its years with its weight one step down
+pp_cplan_fx_profiles_down_years = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_fx_profiles_missing > 0
+			NOT = { pp_cplan_fx_profiles_down_rate > 0 }
+		}
+		value = 99
+	}
+	else_if = {
+		limit = { pp_cplan_fx_profiles_missing > 0 }
+		value = pp_cplan_fx_profiles_missing
+		divide = pp_cplan_fx_profiles_down_rate
+		divide = 12
+		max = 99
+	}
+}
+# its one situation number at its last look
+pp_cplan_fx_profiles_sit = {
+	value = 0
+	add = pp_cplan_d_profiles_st7
+}
+# the situation at its last 12 looks (k = 1 the last), in % of the largest, the largest
+pp_cplan_hq_profiles_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_105_1 }
+		value = var:pp_cplan_hqv_105_1
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_105_2 }
+		value = var:pp_cplan_hqv_105_2
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_105_3 }
+		value = var:pp_cplan_hqv_105_3
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_105_4 }
+		value = var:pp_cplan_hqv_105_4
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_105_5 }
+		value = var:pp_cplan_hqv_105_5
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_105_6 }
+		value = var:pp_cplan_hqv_105_6
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_105_7 }
+		value = var:pp_cplan_hqv_105_7
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_105_8 }
+		value = var:pp_cplan_hqv_105_8
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_105_9 }
+		value = var:pp_cplan_hqv_105_9
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_105_10 }
+		value = var:pp_cplan_hqv_105_10
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_105_11 }
+		value = var:pp_cplan_hqv_105_11
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_105_12 }
+		value = var:pp_cplan_hqv_105_12
+		subtract = 100
+	}
+}
+pp_cplan_hqx_profiles_max = {
+	value = 1
+	min = pp_cplan_hq_profiles_1
+	min = pp_cplan_hq_profiles_2
+	min = pp_cplan_hq_profiles_3
+	min = pp_cplan_hq_profiles_4
+	min = pp_cplan_hq_profiles_5
+	min = pp_cplan_hq_profiles_6
+	min = pp_cplan_hq_profiles_7
+	min = pp_cplan_hq_profiles_8
+	min = pp_cplan_hq_profiles_9
+	min = pp_cplan_hq_profiles_10
+	min = pp_cplan_hq_profiles_11
+	min = pp_cplan_hq_profiles_12
+}
+pp_cplan_hqx_profiles_p_1 = {
+	value = pp_cplan_hq_profiles_1
+	multiply = 100
+	divide = pp_cplan_hqx_profiles_max
+}
+pp_cplan_hqx_profiles_p_2 = {
+	value = pp_cplan_hq_profiles_2
+	multiply = 100
+	divide = pp_cplan_hqx_profiles_max
+}
+pp_cplan_hqx_profiles_p_3 = {
+	value = pp_cplan_hq_profiles_3
+	multiply = 100
+	divide = pp_cplan_hqx_profiles_max
+}
+pp_cplan_hqx_profiles_p_4 = {
+	value = pp_cplan_hq_profiles_4
+	multiply = 100
+	divide = pp_cplan_hqx_profiles_max
+}
+pp_cplan_hqx_profiles_p_5 = {
+	value = pp_cplan_hq_profiles_5
+	multiply = 100
+	divide = pp_cplan_hqx_profiles_max
+}
+pp_cplan_hqx_profiles_p_6 = {
+	value = pp_cplan_hq_profiles_6
+	multiply = 100
+	divide = pp_cplan_hqx_profiles_max
+}
+pp_cplan_hqx_profiles_p_7 = {
+	value = pp_cplan_hq_profiles_7
+	multiply = 100
+	divide = pp_cplan_hqx_profiles_max
+}
+pp_cplan_hqx_profiles_p_8 = {
+	value = pp_cplan_hq_profiles_8
+	multiply = 100
+	divide = pp_cplan_hqx_profiles_max
+}
+pp_cplan_hqx_profiles_p_9 = {
+	value = pp_cplan_hq_profiles_9
+	multiply = 100
+	divide = pp_cplan_hqx_profiles_max
+}
+pp_cplan_hqx_profiles_p_10 = {
+	value = pp_cplan_hq_profiles_10
+	multiply = 100
+	divide = pp_cplan_hqx_profiles_max
+}
+pp_cplan_hqx_profiles_p_11 = {
+	value = pp_cplan_hq_profiles_11
+	multiply = 100
+	divide = pp_cplan_hqx_profiles_max
+}
+pp_cplan_hqx_profiles_p_12 = {
+	value = pp_cplan_hq_profiles_12
+	multiply = 100
+	divide = pp_cplan_hqx_profiles_max
+}
+
+# food (101)
+# the mean gold handed on to it a pass, and the mean after this pass's measure
+pp_cplan_fx_food_hand = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fc_hand_101 }
+		value = var:pp_cplan_fc_hand_101
+		subtract = 100
+	}
+}
+pp_cplan_fc_hand_next_101 = {
+	value = pp_cplan_hand_n_101
+	subtract = pp_cplan_fx_food_hand
+	divide = pp_cplan_fc_div
+	add = pp_cplan_fx_food_hand
+}
+# the gold it still lacks for everything it wanted at its last look
+pp_cplan_fx_food_missing = {
+	value = pp_cplan_d_food_wait
+	subtract = pp_cplan_purse_n_101
+	min = 0
+}
+# its part of the new gold (the current weights), and the gold a month it gets
+pp_cplan_fx_food_frac = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_food_w
+		divide = pp_cplan_w_total
+	}
+}
+pp_cplan_fx_food_rate = {
+	value = pp_cplan_fx_flow_n
+	multiply = pp_cplan_fx_food_frac
+	add = pp_cplan_fx_food_hand
+}
+# the years until it has all it lacks
+pp_cplan_fx_food_years = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_fx_food_missing > 0
+			NOT = { pp_cplan_fx_food_rate > 0 }
+		}
+		value = 99
+	}
+	else_if = {
+		limit = { pp_cplan_fx_food_missing > 0 }
+		value = pp_cplan_fx_food_missing
+		divide = pp_cplan_fx_food_rate
+		divide = 12
+		max = 99
+	}
+}
+# 0 off, 1 has not looked yet, 2 has the gold for all it asks, 3 keeping up (a year or less), 4 short of gold,
+# 5 short and no gold comes in
+pp_cplan_fx_food_status = {
+	value = 4
+	if = {
+		limit = { NOT = { pp_cplan_food_w > 0 } }
+		value = 0
+	}
+	else_if = {
+		limit = { pp_cplan_d_food_ran < 0.5 }
+		value = 1
+	}
+	else_if = {
+		limit = { NOT = { pp_cplan_fx_food_missing > 0 } }
+		value = 2
+	}
+	else_if = {
+		limit = { NOT = { pp_cplan_fx_food_rate > 0 } }
+		value = 5
+	}
+	else_if = {
+		limit = { pp_cplan_fx_food_years <= 1 }
+		value = 3
+	}
+}
+# the weight at which it would keep up (a year), the other groups' weights as they are: the share of the new
+# gold it needs (s), and need_w = s x others / (1 - s), at most 10
+pp_cplan_fx_food_others = {
+	value = pp_cplan_w_total
+	subtract = pp_cplan_food_w
+	min = 0
+}
+pp_cplan_fx_food_lack = {
+	value = pp_cplan_fx_food_missing
+	divide = 12
+	subtract = pp_cplan_fx_food_hand
+}
+pp_cplan_fx_food_need_s = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_flow_n > 0 }
+		value = pp_cplan_fx_food_lack
+		divide = pp_cplan_fx_flow_n
+		min = 0
+		max = 1
+	}
+	else_if = {
+		limit = { pp_cplan_fx_food_lack > 0 }
+		value = 1
+	}
+}
+pp_cplan_fx_food_need_w = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_food_status > 1.5 }
+		if = {
+			limit = { NOT = { pp_cplan_fx_food_others > 0 } }
+			value = pp_cplan_food_w
+		}
+		else_if = {
+			limit = { pp_cplan_fx_food_need_s >= 1 }
+			value = 10
+		}
+		else = {
+			value = pp_cplan_fx_food_need_s
+			multiply = pp_cplan_fx_food_others
+			divide = { value = 1 subtract = pp_cplan_fx_food_need_s }
+			max = 10
+		}
+	}
+}
+# ... rounded up to a whole step of the weight bar (the window prints it; 0 stays 0)
+pp_cplan_fx_food_need_up = {
+	value = pp_cplan_fx_food_need_w
+	ceiling = yes
+	min = 0
+	max = 10
+}
+# 1 while its weight counts at all
+pp_cplan_fx_food_act = {
+	value = 1
+}
+# its weight one step up: the weight that would count, its part in %, its gold a month, its years
+pp_cplan_fx_food_up_w = {
+	value = pp_cplan_food_w
+	add = 1
+	max = 10
+	multiply = pp_cplan_fx_food_act
+}
+pp_cplan_fx_food_up_part = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_food_up_w > 0 }
+		value = pp_cplan_fx_food_up_w
+		multiply = 100
+		divide = { value = pp_cplan_fx_food_others add = pp_cplan_fx_food_up_w }
+	}
+}
+pp_cplan_fx_food_up_rate = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_food_up_w > 0 }
+		value = pp_cplan_fx_flow_n
+		multiply = pp_cplan_fx_food_up_part
+		divide = 100
+		add = pp_cplan_fx_food_hand
+	}
+}
+# its years with its weight one step up
+pp_cplan_fx_food_up_years = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_fx_food_missing > 0
+			NOT = { pp_cplan_fx_food_up_rate > 0 }
+		}
+		value = 99
+	}
+	else_if = {
+		limit = { pp_cplan_fx_food_missing > 0 }
+		value = pp_cplan_fx_food_missing
+		divide = pp_cplan_fx_food_up_rate
+		divide = 12
+		max = 99
+	}
+}
+# its weight one step down: the weight that would count, its part in %, its gold a month, its years
+pp_cplan_fx_food_down_w = {
+	value = pp_cplan_food_w
+	subtract = 1
+	min = 0
+	multiply = pp_cplan_fx_food_act
+}
+pp_cplan_fx_food_down_part = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_food_down_w > 0 }
+		value = pp_cplan_fx_food_down_w
+		multiply = 100
+		divide = { value = pp_cplan_fx_food_others add = pp_cplan_fx_food_down_w }
+	}
+}
+pp_cplan_fx_food_down_rate = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_food_down_w > 0 }
+		value = pp_cplan_fx_flow_n
+		multiply = pp_cplan_fx_food_down_part
+		divide = 100
+		add = pp_cplan_fx_food_hand
+	}
+}
+# its years with its weight one step down
+pp_cplan_fx_food_down_years = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_fx_food_missing > 0
+			NOT = { pp_cplan_fx_food_down_rate > 0 }
+		}
+		value = 99
+	}
+	else_if = {
+		limit = { pp_cplan_fx_food_missing > 0 }
+		value = pp_cplan_fx_food_missing
+		divide = pp_cplan_fx_food_down_rate
+		divide = 12
+		max = 99
+	}
+}
+# its one situation number at its last look
+pp_cplan_fx_food_sit = {
+	value = 0
+	add = pp_cplan_d_food_famine
+	add = pp_cplan_d_food_hungry
+}
+# the situation at its last 12 looks (k = 1 the last), in % of the largest, the largest
+pp_cplan_hq_food_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_101_1 }
+		value = var:pp_cplan_hqv_101_1
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_101_2 }
+		value = var:pp_cplan_hqv_101_2
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_101_3 }
+		value = var:pp_cplan_hqv_101_3
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_101_4 }
+		value = var:pp_cplan_hqv_101_4
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_101_5 }
+		value = var:pp_cplan_hqv_101_5
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_101_6 }
+		value = var:pp_cplan_hqv_101_6
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_101_7 }
+		value = var:pp_cplan_hqv_101_7
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_101_8 }
+		value = var:pp_cplan_hqv_101_8
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_101_9 }
+		value = var:pp_cplan_hqv_101_9
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_101_10 }
+		value = var:pp_cplan_hqv_101_10
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_101_11 }
+		value = var:pp_cplan_hqv_101_11
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_101_12 }
+		value = var:pp_cplan_hqv_101_12
+		subtract = 100
+	}
+}
+pp_cplan_hqx_food_max = {
+	value = 1
+	min = pp_cplan_hq_food_1
+	min = pp_cplan_hq_food_2
+	min = pp_cplan_hq_food_3
+	min = pp_cplan_hq_food_4
+	min = pp_cplan_hq_food_5
+	min = pp_cplan_hq_food_6
+	min = pp_cplan_hq_food_7
+	min = pp_cplan_hq_food_8
+	min = pp_cplan_hq_food_9
+	min = pp_cplan_hq_food_10
+	min = pp_cplan_hq_food_11
+	min = pp_cplan_hq_food_12
+}
+pp_cplan_hqx_food_p_1 = {
+	value = pp_cplan_hq_food_1
+	multiply = 100
+	divide = pp_cplan_hqx_food_max
+}
+pp_cplan_hqx_food_p_2 = {
+	value = pp_cplan_hq_food_2
+	multiply = 100
+	divide = pp_cplan_hqx_food_max
+}
+pp_cplan_hqx_food_p_3 = {
+	value = pp_cplan_hq_food_3
+	multiply = 100
+	divide = pp_cplan_hqx_food_max
+}
+pp_cplan_hqx_food_p_4 = {
+	value = pp_cplan_hq_food_4
+	multiply = 100
+	divide = pp_cplan_hqx_food_max
+}
+pp_cplan_hqx_food_p_5 = {
+	value = pp_cplan_hq_food_5
+	multiply = 100
+	divide = pp_cplan_hqx_food_max
+}
+pp_cplan_hqx_food_p_6 = {
+	value = pp_cplan_hq_food_6
+	multiply = 100
+	divide = pp_cplan_hqx_food_max
+}
+pp_cplan_hqx_food_p_7 = {
+	value = pp_cplan_hq_food_7
+	multiply = 100
+	divide = pp_cplan_hqx_food_max
+}
+pp_cplan_hqx_food_p_8 = {
+	value = pp_cplan_hq_food_8
+	multiply = 100
+	divide = pp_cplan_hqx_food_max
+}
+pp_cplan_hqx_food_p_9 = {
+	value = pp_cplan_hq_food_9
+	multiply = 100
+	divide = pp_cplan_hqx_food_max
+}
+pp_cplan_hqx_food_p_10 = {
+	value = pp_cplan_hq_food_10
+	multiply = 100
+	divide = pp_cplan_hqx_food_max
+}
+pp_cplan_hqx_food_p_11 = {
+	value = pp_cplan_hq_food_11
+	multiply = 100
+	divide = pp_cplan_hqx_food_max
+}
+pp_cplan_hqx_food_p_12 = {
+	value = pp_cplan_hq_food_12
+	multiply = 100
+	divide = pp_cplan_hqx_food_max
+}
+
+# logistics (102)
+# the mean gold handed on to it a pass, and the mean after this pass's measure
+pp_cplan_fx_logistics_hand = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fc_hand_102 }
+		value = var:pp_cplan_fc_hand_102
+		subtract = 100
+	}
+}
+pp_cplan_fc_hand_next_102 = {
+	value = pp_cplan_hand_n_102
+	subtract = pp_cplan_fx_logistics_hand
+	divide = pp_cplan_fc_div
+	add = pp_cplan_fx_logistics_hand
+}
+# the gold it still lacks for everything it wanted at its last look
+pp_cplan_fx_logistics_missing = {
+	value = pp_cplan_d_logistics_wait
+	subtract = pp_cplan_purse_n_102
+	min = 0
+}
+# its part of the new gold (the current weights), and the gold a month it gets
+pp_cplan_fx_logistics_frac = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_logistics_w
+		divide = pp_cplan_w_total
+	}
+}
+pp_cplan_fx_logistics_rate = {
+	value = pp_cplan_fx_flow_n
+	multiply = pp_cplan_fx_logistics_frac
+	add = pp_cplan_fx_logistics_hand
+}
+# the years until it has all it lacks
+pp_cplan_fx_logistics_years = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_fx_logistics_missing > 0
+			NOT = { pp_cplan_fx_logistics_rate > 0 }
+		}
+		value = 99
+	}
+	else_if = {
+		limit = { pp_cplan_fx_logistics_missing > 0 }
+		value = pp_cplan_fx_logistics_missing
+		divide = pp_cplan_fx_logistics_rate
+		divide = 12
+		max = 99
+	}
+}
+# 0 off, 1 has not looked yet, 2 has the gold for all it asks, 3 keeping up (a year or less), 4 short of gold,
+# 5 short and no gold comes in
+pp_cplan_fx_logistics_status = {
+	value = 4
+	if = {
+		limit = { NOT = { pp_cplan_logistics_w > 0 } }
+		value = 0
+	}
+	else_if = {
+		limit = { pp_cplan_d_logistics_ran < 0.5 }
+		value = 1
+	}
+	else_if = {
+		limit = { NOT = { pp_cplan_fx_logistics_missing > 0 } }
+		value = 2
+	}
+	else_if = {
+		limit = { NOT = { pp_cplan_fx_logistics_rate > 0 } }
+		value = 5
+	}
+	else_if = {
+		limit = { pp_cplan_fx_logistics_years <= 1 }
+		value = 3
+	}
+}
+# the weight at which it would keep up (a year), the other groups' weights as they are: the share of the new
+# gold it needs (s), and need_w = s x others / (1 - s), at most 10
+pp_cplan_fx_logistics_others = {
+	value = pp_cplan_w_total
+	subtract = pp_cplan_logistics_w
+	min = 0
+}
+pp_cplan_fx_logistics_lack = {
+	value = pp_cplan_fx_logistics_missing
+	divide = 12
+	subtract = pp_cplan_fx_logistics_hand
+}
+pp_cplan_fx_logistics_need_s = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_flow_n > 0 }
+		value = pp_cplan_fx_logistics_lack
+		divide = pp_cplan_fx_flow_n
+		min = 0
+		max = 1
+	}
+	else_if = {
+		limit = { pp_cplan_fx_logistics_lack > 0 }
+		value = 1
+	}
+}
+pp_cplan_fx_logistics_need_w = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_logistics_status > 1.5 }
+		if = {
+			limit = { NOT = { pp_cplan_fx_logistics_others > 0 } }
+			value = pp_cplan_logistics_w
+		}
+		else_if = {
+			limit = { pp_cplan_fx_logistics_need_s >= 1 }
+			value = 10
+		}
+		else = {
+			value = pp_cplan_fx_logistics_need_s
+			multiply = pp_cplan_fx_logistics_others
+			divide = { value = 1 subtract = pp_cplan_fx_logistics_need_s }
+			max = 10
+		}
+	}
+}
+# ... rounded up to a whole step of the weight bar (the window prints it; 0 stays 0)
+pp_cplan_fx_logistics_need_up = {
+	value = pp_cplan_fx_logistics_need_w
+	ceiling = yes
+	min = 0
+	max = 10
+}
+# 1 while its weight counts at all
+pp_cplan_fx_logistics_act = {
+	value = 1
+}
+# its weight one step up: the weight that would count, its part in %, its gold a month, its years
+pp_cplan_fx_logistics_up_w = {
+	value = pp_cplan_logistics_w
+	add = 1
+	max = 10
+	multiply = pp_cplan_fx_logistics_act
+}
+pp_cplan_fx_logistics_up_part = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_logistics_up_w > 0 }
+		value = pp_cplan_fx_logistics_up_w
+		multiply = 100
+		divide = { value = pp_cplan_fx_logistics_others add = pp_cplan_fx_logistics_up_w }
+	}
+}
+pp_cplan_fx_logistics_up_rate = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_logistics_up_w > 0 }
+		value = pp_cplan_fx_flow_n
+		multiply = pp_cplan_fx_logistics_up_part
+		divide = 100
+		add = pp_cplan_fx_logistics_hand
+	}
+}
+# its years with its weight one step up
+pp_cplan_fx_logistics_up_years = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_fx_logistics_missing > 0
+			NOT = { pp_cplan_fx_logistics_up_rate > 0 }
+		}
+		value = 99
+	}
+	else_if = {
+		limit = { pp_cplan_fx_logistics_missing > 0 }
+		value = pp_cplan_fx_logistics_missing
+		divide = pp_cplan_fx_logistics_up_rate
+		divide = 12
+		max = 99
+	}
+}
+# its weight one step down: the weight that would count, its part in %, its gold a month, its years
+pp_cplan_fx_logistics_down_w = {
+	value = pp_cplan_logistics_w
+	subtract = 1
+	min = 0
+	multiply = pp_cplan_fx_logistics_act
+}
+pp_cplan_fx_logistics_down_part = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_logistics_down_w > 0 }
+		value = pp_cplan_fx_logistics_down_w
+		multiply = 100
+		divide = { value = pp_cplan_fx_logistics_others add = pp_cplan_fx_logistics_down_w }
+	}
+}
+pp_cplan_fx_logistics_down_rate = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_logistics_down_w > 0 }
+		value = pp_cplan_fx_flow_n
+		multiply = pp_cplan_fx_logistics_down_part
+		divide = 100
+		add = pp_cplan_fx_logistics_hand
+	}
+}
+# its years with its weight one step down
+pp_cplan_fx_logistics_down_years = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_fx_logistics_missing > 0
+			NOT = { pp_cplan_fx_logistics_down_rate > 0 }
+		}
+		value = 99
+	}
+	else_if = {
+		limit = { pp_cplan_fx_logistics_missing > 0 }
+		value = pp_cplan_fx_logistics_missing
+		divide = pp_cplan_fx_logistics_down_rate
+		divide = 12
+		max = 99
+	}
+}
+# its one situation number at its last look
+pp_cplan_fx_logistics_sit = {
+	value = 0
+	add = pp_cplan_d_logistics_below
+}
+# the situation at its last 12 looks (k = 1 the last), in % of the largest, the largest
+pp_cplan_hq_logistics_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_102_1 }
+		value = var:pp_cplan_hqv_102_1
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_102_2 }
+		value = var:pp_cplan_hqv_102_2
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_102_3 }
+		value = var:pp_cplan_hqv_102_3
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_102_4 }
+		value = var:pp_cplan_hqv_102_4
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_102_5 }
+		value = var:pp_cplan_hqv_102_5
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_102_6 }
+		value = var:pp_cplan_hqv_102_6
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_102_7 }
+		value = var:pp_cplan_hqv_102_7
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_102_8 }
+		value = var:pp_cplan_hqv_102_8
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_102_9 }
+		value = var:pp_cplan_hqv_102_9
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_102_10 }
+		value = var:pp_cplan_hqv_102_10
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_102_11 }
+		value = var:pp_cplan_hqv_102_11
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_102_12 }
+		value = var:pp_cplan_hqv_102_12
+		subtract = 100
+	}
+}
+pp_cplan_hqx_logistics_max = {
+	value = 1
+	min = pp_cplan_hq_logistics_1
+	min = pp_cplan_hq_logistics_2
+	min = pp_cplan_hq_logistics_3
+	min = pp_cplan_hq_logistics_4
+	min = pp_cplan_hq_logistics_5
+	min = pp_cplan_hq_logistics_6
+	min = pp_cplan_hq_logistics_7
+	min = pp_cplan_hq_logistics_8
+	min = pp_cplan_hq_logistics_9
+	min = pp_cplan_hq_logistics_10
+	min = pp_cplan_hq_logistics_11
+	min = pp_cplan_hq_logistics_12
+}
+pp_cplan_hqx_logistics_p_1 = {
+	value = pp_cplan_hq_logistics_1
+	multiply = 100
+	divide = pp_cplan_hqx_logistics_max
+}
+pp_cplan_hqx_logistics_p_2 = {
+	value = pp_cplan_hq_logistics_2
+	multiply = 100
+	divide = pp_cplan_hqx_logistics_max
+}
+pp_cplan_hqx_logistics_p_3 = {
+	value = pp_cplan_hq_logistics_3
+	multiply = 100
+	divide = pp_cplan_hqx_logistics_max
+}
+pp_cplan_hqx_logistics_p_4 = {
+	value = pp_cplan_hq_logistics_4
+	multiply = 100
+	divide = pp_cplan_hqx_logistics_max
+}
+pp_cplan_hqx_logistics_p_5 = {
+	value = pp_cplan_hq_logistics_5
+	multiply = 100
+	divide = pp_cplan_hqx_logistics_max
+}
+pp_cplan_hqx_logistics_p_6 = {
+	value = pp_cplan_hq_logistics_6
+	multiply = 100
+	divide = pp_cplan_hqx_logistics_max
+}
+pp_cplan_hqx_logistics_p_7 = {
+	value = pp_cplan_hq_logistics_7
+	multiply = 100
+	divide = pp_cplan_hqx_logistics_max
+}
+pp_cplan_hqx_logistics_p_8 = {
+	value = pp_cplan_hq_logistics_8
+	multiply = 100
+	divide = pp_cplan_hqx_logistics_max
+}
+pp_cplan_hqx_logistics_p_9 = {
+	value = pp_cplan_hq_logistics_9
+	multiply = 100
+	divide = pp_cplan_hqx_logistics_max
+}
+pp_cplan_hqx_logistics_p_10 = {
+	value = pp_cplan_hq_logistics_10
+	multiply = 100
+	divide = pp_cplan_hqx_logistics_max
+}
+pp_cplan_hqx_logistics_p_11 = {
+	value = pp_cplan_hq_logistics_11
+	multiply = 100
+	divide = pp_cplan_hqx_logistics_max
+}
+pp_cplan_hqx_logistics_p_12 = {
+	value = pp_cplan_hq_logistics_12
+	multiply = 100
+	divide = pp_cplan_hqx_logistics_max
+}
+
+# improve (106)
+# the mean gold handed on to it a pass, and the mean after this pass's measure
+pp_cplan_fx_improve_hand = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fc_hand_106 }
+		value = var:pp_cplan_fc_hand_106
+		subtract = 100
+	}
+}
+pp_cplan_fc_hand_next_106 = {
+	value = pp_cplan_hand_n_106
+	subtract = pp_cplan_fx_improve_hand
+	divide = pp_cplan_fc_div
+	add = pp_cplan_fx_improve_hand
+}
+# the gold it still lacks for everything it wanted at its last look
+pp_cplan_fx_improve_missing = {
+	value = pp_cplan_d_improve_wait
+	subtract = pp_cplan_purse_n_106
+	min = 0
+}
+# its part of the new gold (the current weights), and the gold a month it gets
+pp_cplan_fx_improve_frac = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_improve_w
+		divide = pp_cplan_w_total
+	}
+}
+pp_cplan_fx_improve_rate = {
+	value = pp_cplan_fx_flow_n
+	multiply = pp_cplan_fx_improve_frac
+	add = pp_cplan_fx_improve_hand
+}
+# the years until it has all it lacks
+pp_cplan_fx_improve_years = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_fx_improve_missing > 0
+			NOT = { pp_cplan_fx_improve_rate > 0 }
+		}
+		value = 99
+	}
+	else_if = {
+		limit = { pp_cplan_fx_improve_missing > 0 }
+		value = pp_cplan_fx_improve_missing
+		divide = pp_cplan_fx_improve_rate
+		divide = 12
+		max = 99
+	}
+}
+# 0 off, 1 has not looked yet, 2 has the gold for all it asks, 3 keeping up (a year or less), 4 short of gold,
+# 5 short and no gold comes in
+pp_cplan_fx_improve_status = {
+	value = 4
+	if = {
+		limit = { NOT = { pp_cplan_improve_w > 0 } }
+		value = 0
+	}
+	else_if = {
+		limit = { pp_cplan_d_improve_ran < 0.5 }
+		value = 1
+	}
+	else_if = {
+		limit = { NOT = { pp_cplan_fx_improve_missing > 0 } }
+		value = 2
+	}
+	else_if = {
+		limit = { NOT = { pp_cplan_fx_improve_rate > 0 } }
+		value = 5
+	}
+	else_if = {
+		limit = { pp_cplan_fx_improve_years <= 1 }
+		value = 3
+	}
+}
+# the weight at which it would keep up (a year), the other groups' weights as they are: the share of the new
+# gold it needs (s), and need_w = s x others / (1 - s), at most 10
+pp_cplan_fx_improve_others = {
+	value = pp_cplan_w_total
+	subtract = pp_cplan_improve_w
+	min = 0
+}
+pp_cplan_fx_improve_lack = {
+	value = pp_cplan_fx_improve_missing
+	divide = 12
+	subtract = pp_cplan_fx_improve_hand
+}
+pp_cplan_fx_improve_need_s = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_flow_n > 0 }
+		value = pp_cplan_fx_improve_lack
+		divide = pp_cplan_fx_flow_n
+		min = 0
+		max = 1
+	}
+	else_if = {
+		limit = { pp_cplan_fx_improve_lack > 0 }
+		value = 1
+	}
+}
+pp_cplan_fx_improve_need_w = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_improve_status > 1.5 }
+		if = {
+			limit = { NOT = { pp_cplan_fx_improve_others > 0 } }
+			value = pp_cplan_improve_w
+		}
+		else_if = {
+			limit = { pp_cplan_fx_improve_need_s >= 1 }
+			value = 10
+		}
+		else = {
+			value = pp_cplan_fx_improve_need_s
+			multiply = pp_cplan_fx_improve_others
+			divide = { value = 1 subtract = pp_cplan_fx_improve_need_s }
+			max = 10
+		}
+	}
+}
+# ... rounded up to a whole step of the weight bar (the window prints it; 0 stays 0)
+pp_cplan_fx_improve_need_up = {
+	value = pp_cplan_fx_improve_need_w
+	ceiling = yes
+	min = 0
+	max = 10
+}
+# 1 while its weight counts at all
+pp_cplan_fx_improve_act = {
+	value = 1
+}
+# its weight one step up: the weight that would count, its part in %, its gold a month, its years
+pp_cplan_fx_improve_up_w = {
+	value = pp_cplan_improve_w
+	add = 1
+	max = 10
+	multiply = pp_cplan_fx_improve_act
+}
+pp_cplan_fx_improve_up_part = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_improve_up_w > 0 }
+		value = pp_cplan_fx_improve_up_w
+		multiply = 100
+		divide = { value = pp_cplan_fx_improve_others add = pp_cplan_fx_improve_up_w }
+	}
+}
+pp_cplan_fx_improve_up_rate = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_improve_up_w > 0 }
+		value = pp_cplan_fx_flow_n
+		multiply = pp_cplan_fx_improve_up_part
+		divide = 100
+		add = pp_cplan_fx_improve_hand
+	}
+}
+# its years with its weight one step up
+pp_cplan_fx_improve_up_years = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_fx_improve_missing > 0
+			NOT = { pp_cplan_fx_improve_up_rate > 0 }
+		}
+		value = 99
+	}
+	else_if = {
+		limit = { pp_cplan_fx_improve_missing > 0 }
+		value = pp_cplan_fx_improve_missing
+		divide = pp_cplan_fx_improve_up_rate
+		divide = 12
+		max = 99
+	}
+}
+# its weight one step down: the weight that would count, its part in %, its gold a month, its years
+pp_cplan_fx_improve_down_w = {
+	value = pp_cplan_improve_w
+	subtract = 1
+	min = 0
+	multiply = pp_cplan_fx_improve_act
+}
+pp_cplan_fx_improve_down_part = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_improve_down_w > 0 }
+		value = pp_cplan_fx_improve_down_w
+		multiply = 100
+		divide = { value = pp_cplan_fx_improve_others add = pp_cplan_fx_improve_down_w }
+	}
+}
+pp_cplan_fx_improve_down_rate = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_improve_down_w > 0 }
+		value = pp_cplan_fx_flow_n
+		multiply = pp_cplan_fx_improve_down_part
+		divide = 100
+		add = pp_cplan_fx_improve_hand
+	}
+}
+# its years with its weight one step down
+pp_cplan_fx_improve_down_years = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_fx_improve_missing > 0
+			NOT = { pp_cplan_fx_improve_down_rate > 0 }
+		}
+		value = 99
+	}
+	else_if = {
+		limit = { pp_cplan_fx_improve_missing > 0 }
+		value = pp_cplan_fx_improve_missing
+		divide = pp_cplan_fx_improve_down_rate
+		divide = 12
+		max = 99
+	}
+}
+# its one situation number at its last look
+pp_cplan_fx_improve_sit = {
+	value = 0
+	add = pp_cplan_d_improve_over
+}
+# the situation at its last 12 looks (k = 1 the last), in % of the largest, the largest
+pp_cplan_hq_improve_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_106_1 }
+		value = var:pp_cplan_hqv_106_1
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_106_2 }
+		value = var:pp_cplan_hqv_106_2
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_106_3 }
+		value = var:pp_cplan_hqv_106_3
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_106_4 }
+		value = var:pp_cplan_hqv_106_4
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_106_5 }
+		value = var:pp_cplan_hqv_106_5
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_106_6 }
+		value = var:pp_cplan_hqv_106_6
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_106_7 }
+		value = var:pp_cplan_hqv_106_7
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_106_8 }
+		value = var:pp_cplan_hqv_106_8
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_106_9 }
+		value = var:pp_cplan_hqv_106_9
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_106_10 }
+		value = var:pp_cplan_hqv_106_10
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_106_11 }
+		value = var:pp_cplan_hqv_106_11
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_106_12 }
+		value = var:pp_cplan_hqv_106_12
+		subtract = 100
+	}
+}
+pp_cplan_hqx_improve_max = {
+	value = 1
+	min = pp_cplan_hq_improve_1
+	min = pp_cplan_hq_improve_2
+	min = pp_cplan_hq_improve_3
+	min = pp_cplan_hq_improve_4
+	min = pp_cplan_hq_improve_5
+	min = pp_cplan_hq_improve_6
+	min = pp_cplan_hq_improve_7
+	min = pp_cplan_hq_improve_8
+	min = pp_cplan_hq_improve_9
+	min = pp_cplan_hq_improve_10
+	min = pp_cplan_hq_improve_11
+	min = pp_cplan_hq_improve_12
+}
+pp_cplan_hqx_improve_p_1 = {
+	value = pp_cplan_hq_improve_1
+	multiply = 100
+	divide = pp_cplan_hqx_improve_max
+}
+pp_cplan_hqx_improve_p_2 = {
+	value = pp_cplan_hq_improve_2
+	multiply = 100
+	divide = pp_cplan_hqx_improve_max
+}
+pp_cplan_hqx_improve_p_3 = {
+	value = pp_cplan_hq_improve_3
+	multiply = 100
+	divide = pp_cplan_hqx_improve_max
+}
+pp_cplan_hqx_improve_p_4 = {
+	value = pp_cplan_hq_improve_4
+	multiply = 100
+	divide = pp_cplan_hqx_improve_max
+}
+pp_cplan_hqx_improve_p_5 = {
+	value = pp_cplan_hq_improve_5
+	multiply = 100
+	divide = pp_cplan_hqx_improve_max
+}
+pp_cplan_hqx_improve_p_6 = {
+	value = pp_cplan_hq_improve_6
+	multiply = 100
+	divide = pp_cplan_hqx_improve_max
+}
+pp_cplan_hqx_improve_p_7 = {
+	value = pp_cplan_hq_improve_7
+	multiply = 100
+	divide = pp_cplan_hqx_improve_max
+}
+pp_cplan_hqx_improve_p_8 = {
+	value = pp_cplan_hq_improve_8
+	multiply = 100
+	divide = pp_cplan_hqx_improve_max
+}
+pp_cplan_hqx_improve_p_9 = {
+	value = pp_cplan_hq_improve_9
+	multiply = 100
+	divide = pp_cplan_hqx_improve_max
+}
+pp_cplan_hqx_improve_p_10 = {
+	value = pp_cplan_hq_improve_10
+	multiply = 100
+	divide = pp_cplan_hqx_improve_max
+}
+pp_cplan_hqx_improve_p_11 = {
+	value = pp_cplan_hq_improve_11
+	multiply = 100
+	divide = pp_cplan_hqx_improve_max
+}
+pp_cplan_hqx_improve_p_12 = {
+	value = pp_cplan_hq_improve_12
+	multiply = 100
+	divide = pp_cplan_hqx_improve_max
+}
+
+# business (103)
+# the mean gold handed on to it a pass, and the mean after this pass's measure
+pp_cplan_fx_business_hand = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fc_hand_103 }
+		value = var:pp_cplan_fc_hand_103
+		subtract = 100
+	}
+}
+pp_cplan_fc_hand_next_103 = {
+	value = pp_cplan_hand_n_103
+	subtract = pp_cplan_fx_business_hand
+	divide = pp_cplan_fc_div
+	add = pp_cplan_fx_business_hand
+}
+# the gold it still lacks for everything it wanted at its last look
+pp_cplan_fx_business_missing = {
+	value = pp_cplan_d_business_wait
+	subtract = pp_cplan_purse_n_103
+	min = 0
+}
+# its part of the new gold (the current weights), and the gold a month it gets
+pp_cplan_fx_business_frac = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_business_w
+		divide = pp_cplan_w_total
+	}
+}
+pp_cplan_fx_business_rate = {
+	value = pp_cplan_fx_flow_n
+	multiply = pp_cplan_fx_business_frac
+	add = pp_cplan_fx_business_hand
+}
+# the years until it has all it lacks
+pp_cplan_fx_business_years = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_fx_business_missing > 0
+			NOT = { pp_cplan_fx_business_rate > 0 }
+		}
+		value = 99
+	}
+	else_if = {
+		limit = { pp_cplan_fx_business_missing > 0 }
+		value = pp_cplan_fx_business_missing
+		divide = pp_cplan_fx_business_rate
+		divide = 12
+		max = 99
+	}
+}
+# 0 off, 1 has not looked yet, 2 has the gold for all it asks, 3 keeping up (a year or less), 4 short of gold,
+# 5 short and no gold comes in
+pp_cplan_fx_business_status = {
+	value = 4
+	if = {
+		limit = { NOT = { pp_cplan_business_w > 0 } }
+		value = 0
+	}
+	else_if = {
+		limit = { pp_cplan_d_business_ran < 0.5 }
+		value = 1
+	}
+	else_if = {
+		limit = { NOT = { pp_cplan_fx_business_missing > 0 } }
+		value = 2
+	}
+	else_if = {
+		limit = { NOT = { pp_cplan_fx_business_rate > 0 } }
+		value = 5
+	}
+	else_if = {
+		limit = { pp_cplan_fx_business_years <= 1 }
+		value = 3
+	}
+}
+# the weight at which it would keep up (a year), the other groups' weights as they are: the share of the new
+# gold it needs (s), and need_w = s x others / (1 - s), at most 10
+pp_cplan_fx_business_others = {
+	value = pp_cplan_w_total
+	subtract = pp_cplan_business_w
+	min = 0
+}
+pp_cplan_fx_business_lack = {
+	value = pp_cplan_fx_business_missing
+	divide = 12
+	subtract = pp_cplan_fx_business_hand
+}
+pp_cplan_fx_business_need_s = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_flow_n > 0 }
+		value = pp_cplan_fx_business_lack
+		divide = pp_cplan_fx_flow_n
+		min = 0
+		max = 1
+	}
+	else_if = {
+		limit = { pp_cplan_fx_business_lack > 0 }
+		value = 1
+	}
+}
+pp_cplan_fx_business_need_w = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_business_status > 1.5 }
+		if = {
+			limit = { NOT = { pp_cplan_fx_business_others > 0 } }
+			value = pp_cplan_business_w
+		}
+		else_if = {
+			limit = { pp_cplan_fx_business_need_s >= 1 }
+			value = 10
+		}
+		else = {
+			value = pp_cplan_fx_business_need_s
+			multiply = pp_cplan_fx_business_others
+			divide = { value = 1 subtract = pp_cplan_fx_business_need_s }
+			max = 10
+		}
+	}
+}
+# ... rounded up to a whole step of the weight bar (the window prints it; 0 stays 0)
+pp_cplan_fx_business_need_up = {
+	value = pp_cplan_fx_business_need_w
+	ceiling = yes
+	min = 0
+	max = 10
+}
+# 1 while its weight counts at all
+pp_cplan_fx_business_act = {
+	value = 1
+}
+# its weight one step up: the weight that would count, its part in %, its gold a month, its years
+pp_cplan_fx_business_up_w = {
+	value = pp_cplan_business_w
+	add = 1
+	max = 10
+	multiply = pp_cplan_fx_business_act
+}
+pp_cplan_fx_business_up_part = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_business_up_w > 0 }
+		value = pp_cplan_fx_business_up_w
+		multiply = 100
+		divide = { value = pp_cplan_fx_business_others add = pp_cplan_fx_business_up_w }
+	}
+}
+pp_cplan_fx_business_up_rate = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_business_up_w > 0 }
+		value = pp_cplan_fx_flow_n
+		multiply = pp_cplan_fx_business_up_part
+		divide = 100
+		add = pp_cplan_fx_business_hand
+	}
+}
+# its years with its weight one step up
+pp_cplan_fx_business_up_years = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_fx_business_missing > 0
+			NOT = { pp_cplan_fx_business_up_rate > 0 }
+		}
+		value = 99
+	}
+	else_if = {
+		limit = { pp_cplan_fx_business_missing > 0 }
+		value = pp_cplan_fx_business_missing
+		divide = pp_cplan_fx_business_up_rate
+		divide = 12
+		max = 99
+	}
+}
+# its weight one step down: the weight that would count, its part in %, its gold a month, its years
+pp_cplan_fx_business_down_w = {
+	value = pp_cplan_business_w
+	subtract = 1
+	min = 0
+	multiply = pp_cplan_fx_business_act
+}
+pp_cplan_fx_business_down_part = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_business_down_w > 0 }
+		value = pp_cplan_fx_business_down_w
+		multiply = 100
+		divide = { value = pp_cplan_fx_business_others add = pp_cplan_fx_business_down_w }
+	}
+}
+pp_cplan_fx_business_down_rate = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_business_down_w > 0 }
+		value = pp_cplan_fx_flow_n
+		multiply = pp_cplan_fx_business_down_part
+		divide = 100
+		add = pp_cplan_fx_business_hand
+	}
+}
+# its years with its weight one step down
+pp_cplan_fx_business_down_years = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_fx_business_missing > 0
+			NOT = { pp_cplan_fx_business_down_rate > 0 }
+		}
+		value = 99
+	}
+	else_if = {
+		limit = { pp_cplan_fx_business_missing > 0 }
+		value = pp_cplan_fx_business_missing
+		divide = pp_cplan_fx_business_down_rate
+		divide = 12
+		max = 99
+	}
+}
+# its one situation number at its last look
+pp_cplan_fx_business_sit = {
+	value = 0
+	add = pp_cplan_d_business_sites
+}
+# the situation at its last 12 looks (k = 1 the last), in % of the largest, the largest
+pp_cplan_hq_business_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_103_1 }
+		value = var:pp_cplan_hqv_103_1
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_103_2 }
+		value = var:pp_cplan_hqv_103_2
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_103_3 }
+		value = var:pp_cplan_hqv_103_3
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_103_4 }
+		value = var:pp_cplan_hqv_103_4
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_103_5 }
+		value = var:pp_cplan_hqv_103_5
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_103_6 }
+		value = var:pp_cplan_hqv_103_6
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_103_7 }
+		value = var:pp_cplan_hqv_103_7
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_103_8 }
+		value = var:pp_cplan_hqv_103_8
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_103_9 }
+		value = var:pp_cplan_hqv_103_9
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_103_10 }
+		value = var:pp_cplan_hqv_103_10
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_103_11 }
+		value = var:pp_cplan_hqv_103_11
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_103_12 }
+		value = var:pp_cplan_hqv_103_12
+		subtract = 100
+	}
+}
+pp_cplan_hqx_business_max = {
+	value = 1
+	min = pp_cplan_hq_business_1
+	min = pp_cplan_hq_business_2
+	min = pp_cplan_hq_business_3
+	min = pp_cplan_hq_business_4
+	min = pp_cplan_hq_business_5
+	min = pp_cplan_hq_business_6
+	min = pp_cplan_hq_business_7
+	min = pp_cplan_hq_business_8
+	min = pp_cplan_hq_business_9
+	min = pp_cplan_hq_business_10
+	min = pp_cplan_hq_business_11
+	min = pp_cplan_hq_business_12
+}
+pp_cplan_hqx_business_p_1 = {
+	value = pp_cplan_hq_business_1
+	multiply = 100
+	divide = pp_cplan_hqx_business_max
+}
+pp_cplan_hqx_business_p_2 = {
+	value = pp_cplan_hq_business_2
+	multiply = 100
+	divide = pp_cplan_hqx_business_max
+}
+pp_cplan_hqx_business_p_3 = {
+	value = pp_cplan_hq_business_3
+	multiply = 100
+	divide = pp_cplan_hqx_business_max
+}
+pp_cplan_hqx_business_p_4 = {
+	value = pp_cplan_hq_business_4
+	multiply = 100
+	divide = pp_cplan_hqx_business_max
+}
+pp_cplan_hqx_business_p_5 = {
+	value = pp_cplan_hq_business_5
+	multiply = 100
+	divide = pp_cplan_hqx_business_max
+}
+pp_cplan_hqx_business_p_6 = {
+	value = pp_cplan_hq_business_6
+	multiply = 100
+	divide = pp_cplan_hqx_business_max
+}
+pp_cplan_hqx_business_p_7 = {
+	value = pp_cplan_hq_business_7
+	multiply = 100
+	divide = pp_cplan_hqx_business_max
+}
+pp_cplan_hqx_business_p_8 = {
+	value = pp_cplan_hq_business_8
+	multiply = 100
+	divide = pp_cplan_hqx_business_max
+}
+pp_cplan_hqx_business_p_9 = {
+	value = pp_cplan_hq_business_9
+	multiply = 100
+	divide = pp_cplan_hqx_business_max
+}
+pp_cplan_hqx_business_p_10 = {
+	value = pp_cplan_hq_business_10
+	multiply = 100
+	divide = pp_cplan_hqx_business_max
+}
+pp_cplan_hqx_business_p_11 = {
+	value = pp_cplan_hq_business_11
+	multiply = 100
+	divide = pp_cplan_hqx_business_max
+}
+pp_cplan_hqx_business_p_12 = {
+	value = pp_cplan_hq_business_12
+	multiply = 100
+	divide = pp_cplan_hqx_business_max
+}
+
+# country (107)
+# the mean gold handed on to it a pass, and the mean after this pass's measure
+pp_cplan_fx_country_hand = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fc_hand_107 }
+		value = var:pp_cplan_fc_hand_107
+		subtract = 100
+	}
+}
+pp_cplan_fc_hand_next_107 = {
+	value = pp_cplan_hand_n_107
+	subtract = pp_cplan_fx_country_hand
+	divide = pp_cplan_fc_div
+	add = pp_cplan_fx_country_hand
+}
+# the gold it still lacks for everything it wanted at its last look
+pp_cplan_fx_country_missing = {
+	value = pp_cplan_d_country_wait
+	subtract = pp_cplan_purse_n_107
+	min = 0
+}
+# its part of the new gold (the current weights), and the gold a month it gets
+pp_cplan_fx_country_frac = {
+	value = 0
+	if = {
+		limit = { pp_cplan_w_total > 0 }
+		value = pp_cplan_country_cw
+		divide = pp_cplan_w_total
+	}
+}
+pp_cplan_fx_country_rate = {
+	value = pp_cplan_fx_flow_n
+	multiply = pp_cplan_fx_country_frac
+	add = pp_cplan_fx_country_hand
+}
+# the years until it has all it lacks
+pp_cplan_fx_country_years = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_fx_country_missing > 0
+			NOT = { pp_cplan_fx_country_rate > 0 }
+		}
+		value = 99
+	}
+	else_if = {
+		limit = { pp_cplan_fx_country_missing > 0 }
+		value = pp_cplan_fx_country_missing
+		divide = pp_cplan_fx_country_rate
+		divide = 12
+		max = 99
+	}
+}
+# 0 off, 1 has not looked yet, 2 has the gold for all it asks, 3 keeping up (a year or less), 4 short of gold,
+# 5 short and no gold comes in
+pp_cplan_fx_country_status = {
+	value = 4
+	if = {
+		limit = { NOT = { pp_cplan_country_cw > 0 } }
+		value = 0
+	}
+	else_if = {
+		limit = { pp_cplan_d_country_ran < 0.5 }
+		value = 1
+	}
+	else_if = {
+		limit = { NOT = { pp_cplan_fx_country_missing > 0 } }
+		value = 2
+	}
+	else_if = {
+		limit = { NOT = { pp_cplan_fx_country_rate > 0 } }
+		value = 5
+	}
+	else_if = {
+		limit = { pp_cplan_fx_country_years <= 1 }
+		value = 3
+	}
+}
+# the weight at which it would keep up (a year), the other groups' weights as they are: the share of the new
+# gold it needs (s), and need_w = s x others / (1 - s), at most 10
+pp_cplan_fx_country_others = {
+	value = pp_cplan_w_total
+	subtract = pp_cplan_country_cw
+	min = 0
+}
+pp_cplan_fx_country_lack = {
+	value = pp_cplan_fx_country_missing
+	divide = 12
+	subtract = pp_cplan_fx_country_hand
+}
+pp_cplan_fx_country_need_s = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_flow_n > 0 }
+		value = pp_cplan_fx_country_lack
+		divide = pp_cplan_fx_flow_n
+		min = 0
+		max = 1
+	}
+	else_if = {
+		limit = { pp_cplan_fx_country_lack > 0 }
+		value = 1
+	}
+}
+pp_cplan_fx_country_need_w = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_country_status > 1.5 }
+		if = {
+			limit = { NOT = { pp_cplan_fx_country_others > 0 } }
+			value = pp_cplan_country_cw
+		}
+		else_if = {
+			limit = { pp_cplan_fx_country_need_s >= 1 }
+			value = 10
+		}
+		else = {
+			value = pp_cplan_fx_country_need_s
+			multiply = pp_cplan_fx_country_others
+			divide = { value = 1 subtract = pp_cplan_fx_country_need_s }
+			max = 10
+		}
+	}
+}
+# ... rounded up to a whole step of the weight bar (the window prints it; 0 stays 0)
+pp_cplan_fx_country_need_up = {
+	value = pp_cplan_fx_country_need_w
+	ceiling = yes
+	min = 0
+	max = 10
+}
+# 1 while its weight counts at all
+pp_cplan_fx_country_act = {
+	value = 0
+	if = {
+		limit = { pp_cplan_country_active > 0 }
+		value = 1
+	}
+}
+# its weight one step up: the weight that would count, its part in %, its gold a month, its years
+pp_cplan_fx_country_up_w = {
+	value = pp_cplan_country_w
+	add = 1
+	max = 10
+	multiply = pp_cplan_fx_country_act
+}
+pp_cplan_fx_country_up_part = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_country_up_w > 0 }
+		value = pp_cplan_fx_country_up_w
+		multiply = 100
+		divide = { value = pp_cplan_fx_country_others add = pp_cplan_fx_country_up_w }
+	}
+}
+pp_cplan_fx_country_up_rate = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_country_up_w > 0 }
+		value = pp_cplan_fx_flow_n
+		multiply = pp_cplan_fx_country_up_part
+		divide = 100
+		add = pp_cplan_fx_country_hand
+	}
+}
+# its years with its weight one step up
+pp_cplan_fx_country_up_years = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_fx_country_missing > 0
+			NOT = { pp_cplan_fx_country_up_rate > 0 }
+		}
+		value = 99
+	}
+	else_if = {
+		limit = { pp_cplan_fx_country_missing > 0 }
+		value = pp_cplan_fx_country_missing
+		divide = pp_cplan_fx_country_up_rate
+		divide = 12
+		max = 99
+	}
+}
+# its weight one step down: the weight that would count, its part in %, its gold a month, its years
+pp_cplan_fx_country_down_w = {
+	value = pp_cplan_country_w
+	subtract = 1
+	min = 0
+	multiply = pp_cplan_fx_country_act
+}
+pp_cplan_fx_country_down_part = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_country_down_w > 0 }
+		value = pp_cplan_fx_country_down_w
+		multiply = 100
+		divide = { value = pp_cplan_fx_country_others add = pp_cplan_fx_country_down_w }
+	}
+}
+pp_cplan_fx_country_down_rate = {
+	value = 0
+	if = {
+		limit = { pp_cplan_fx_country_down_w > 0 }
+		value = pp_cplan_fx_flow_n
+		multiply = pp_cplan_fx_country_down_part
+		divide = 100
+		add = pp_cplan_fx_country_hand
+	}
+}
+# its years with its weight one step down
+pp_cplan_fx_country_down_years = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_fx_country_missing > 0
+			NOT = { pp_cplan_fx_country_down_rate > 0 }
+		}
+		value = 99
+	}
+	else_if = {
+		limit = { pp_cplan_fx_country_missing > 0 }
+		value = pp_cplan_fx_country_missing
+		divide = pp_cplan_fx_country_down_rate
+		divide = 12
+		max = 99
+	}
+}
+# its one situation number at its last look
+pp_cplan_fx_country_sit = {
+	value = 0
+}
+# the situation at its last 12 looks (k = 1 the last), in % of the largest, the largest
+pp_cplan_hq_country_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_107_1 }
+		value = var:pp_cplan_hqv_107_1
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_107_2 }
+		value = var:pp_cplan_hqv_107_2
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_107_3 }
+		value = var:pp_cplan_hqv_107_3
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_107_4 }
+		value = var:pp_cplan_hqv_107_4
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_107_5 }
+		value = var:pp_cplan_hqv_107_5
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_107_6 }
+		value = var:pp_cplan_hqv_107_6
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_107_7 }
+		value = var:pp_cplan_hqv_107_7
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_107_8 }
+		value = var:pp_cplan_hqv_107_8
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_107_9 }
+		value = var:pp_cplan_hqv_107_9
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_107_10 }
+		value = var:pp_cplan_hqv_107_10
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_107_11 }
+		value = var:pp_cplan_hqv_107_11
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_hqv_107_12 }
+		value = var:pp_cplan_hqv_107_12
+		subtract = 100
+	}
+}
+pp_cplan_hqx_country_max = {
+	value = 1
+	min = pp_cplan_hq_country_1
+	min = pp_cplan_hq_country_2
+	min = pp_cplan_hq_country_3
+	min = pp_cplan_hq_country_4
+	min = pp_cplan_hq_country_5
+	min = pp_cplan_hq_country_6
+	min = pp_cplan_hq_country_7
+	min = pp_cplan_hq_country_8
+	min = pp_cplan_hq_country_9
+	min = pp_cplan_hq_country_10
+	min = pp_cplan_hq_country_11
+	min = pp_cplan_hq_country_12
+}
+pp_cplan_hqx_country_p_1 = {
+	value = pp_cplan_hq_country_1
+	multiply = 100
+	divide = pp_cplan_hqx_country_max
+}
+pp_cplan_hqx_country_p_2 = {
+	value = pp_cplan_hq_country_2
+	multiply = 100
+	divide = pp_cplan_hqx_country_max
+}
+pp_cplan_hqx_country_p_3 = {
+	value = pp_cplan_hq_country_3
+	multiply = 100
+	divide = pp_cplan_hqx_country_max
+}
+pp_cplan_hqx_country_p_4 = {
+	value = pp_cplan_hq_country_4
+	multiply = 100
+	divide = pp_cplan_hqx_country_max
+}
+pp_cplan_hqx_country_p_5 = {
+	value = pp_cplan_hq_country_5
+	multiply = 100
+	divide = pp_cplan_hqx_country_max
+}
+pp_cplan_hqx_country_p_6 = {
+	value = pp_cplan_hq_country_6
+	multiply = 100
+	divide = pp_cplan_hqx_country_max
+}
+pp_cplan_hqx_country_p_7 = {
+	value = pp_cplan_hq_country_7
+	multiply = 100
+	divide = pp_cplan_hqx_country_max
+}
+pp_cplan_hqx_country_p_8 = {
+	value = pp_cplan_hq_country_8
+	multiply = 100
+	divide = pp_cplan_hqx_country_max
+}
+pp_cplan_hqx_country_p_9 = {
+	value = pp_cplan_hq_country_9
+	multiply = 100
+	divide = pp_cplan_hqx_country_max
+}
+pp_cplan_hqx_country_p_10 = {
+	value = pp_cplan_hq_country_10
+	multiply = 100
+	divide = pp_cplan_hqx_country_max
+}
+pp_cplan_hqx_country_p_11 = {
+	value = pp_cplan_hq_country_11
+	multiply = 100
+	divide = pp_cplan_hqx_country_max
+}
+pp_cplan_hqx_country_p_12 = {
+	value = pp_cplan_hq_country_12
+	multiply = 100
+	divide = pp_cplan_hqx_country_max
+}
+
+# The Locations group: plans waiting for something other than gold (states 4, 8, 11, 13, 14).
+pp_cplan_fx_profiles_blocked = {
+	value = 0
+	add = pp_cplan_d_profiles_st4
+	add = pp_cplan_d_profiles_st8
+	add = pp_cplan_d_profiles_st11
+	add = pp_cplan_d_profiles_st13
+	add = pp_cplan_d_profiles_st14
+}
+# All groups: the gold they lack, and the years the new gold takes to bring it.
+pp_cplan_fx_all_missing = {
+	value = 0
+	add = pp_cplan_fx_profiles_missing
+	add = pp_cplan_fx_food_missing
+	add = pp_cplan_fx_logistics_missing
+	add = pp_cplan_fx_improve_missing
+	add = pp_cplan_fx_business_missing
+	add = pp_cplan_fx_country_missing
+}
+# the years until all groups have what they lack
+pp_cplan_fx_all_years = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_fx_all_missing > 0
+			NOT = { pp_cplan_fx_flow_n > 0 }
+		}
+		value = 99
+	}
+	else_if = {
+		limit = { pp_cplan_fx_all_missing > 0 }
+		value = pp_cplan_fx_all_missing
+		divide = pp_cplan_fx_flow_n
+		divide = 12
+		max = 99
+	}
+}
+
+# ---- The window's forecast as kept numbers (pp_cplan_forecast_store; script profile 2026-11-20: the
+# formulae, evaluated about 185 times a frame with the window open, took 4 s of 12). Plain readouts, 0 while
+# unset. ----
+pp_cplan_flow_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_flow_n }
+		value = var:pp_cplan_fv_flow_n
+		subtract = 100
+	}
+}
+pp_cplan_flow_known = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_flow_known }
+		value = var:pp_cplan_fv_flow_known
+		subtract = 100
+	}
+}
+pp_cplan_f_profiles_blocked = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_profiles_blocked }
+		value = var:pp_cplan_fv_f_profiles_blocked
+		subtract = 100
+	}
+}
+pp_cplan_f_all_missing = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_all_missing }
+		value = var:pp_cplan_fv_f_all_missing
+		subtract = 100
+	}
+}
+pp_cplan_f_all_years = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_all_years }
+		value = var:pp_cplan_fv_f_all_years
+		subtract = 100
+	}
+}
+pp_cplan_f_profiles_status = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_profiles_status }
+		value = var:pp_cplan_fv_f_profiles_status
+		subtract = 100
+	}
+}
+pp_cplan_f_profiles_missing = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_profiles_missing }
+		value = var:pp_cplan_fv_f_profiles_missing
+		subtract = 100
+	}
+}
+pp_cplan_f_profiles_rate = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_profiles_rate }
+		value = var:pp_cplan_fv_f_profiles_rate
+		subtract = 100
+	}
+}
+pp_cplan_f_profiles_years = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_profiles_years }
+		value = var:pp_cplan_fv_f_profiles_years
+		subtract = 100
+	}
+}
+pp_cplan_f_profiles_need_w = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_profiles_need_w }
+		value = var:pp_cplan_fv_f_profiles_need_w
+		subtract = 100
+	}
+}
+pp_cplan_f_profiles_need_up = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_profiles_need_up }
+		value = var:pp_cplan_fv_f_profiles_need_up
+		subtract = 100
+	}
+}
+pp_cplan_f_profiles_up_part = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_profiles_up_part }
+		value = var:pp_cplan_fv_f_profiles_up_part
+		subtract = 100
+	}
+}
+pp_cplan_f_profiles_up_years = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_profiles_up_years }
+		value = var:pp_cplan_fv_f_profiles_up_years
+		subtract = 100
+	}
+}
+pp_cplan_f_profiles_down_part = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_profiles_down_part }
+		value = var:pp_cplan_fv_f_profiles_down_part
+		subtract = 100
+	}
+}
+pp_cplan_f_profiles_down_years = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_profiles_down_years }
+		value = var:pp_cplan_fv_f_profiles_down_years
+		subtract = 100
+	}
+}
+pp_cplan_f_profiles_sit = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_profiles_sit }
+		value = var:pp_cplan_fv_f_profiles_sit
+		subtract = 100
+	}
+}
+pp_cplan_part_profiles = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_part_profiles }
+		value = var:pp_cplan_fv_part_profiles
+		subtract = 100
+	}
+}
+pp_cplan_f_food_status = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_food_status }
+		value = var:pp_cplan_fv_f_food_status
+		subtract = 100
+	}
+}
+pp_cplan_f_food_missing = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_food_missing }
+		value = var:pp_cplan_fv_f_food_missing
+		subtract = 100
+	}
+}
+pp_cplan_f_food_rate = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_food_rate }
+		value = var:pp_cplan_fv_f_food_rate
+		subtract = 100
+	}
+}
+pp_cplan_f_food_years = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_food_years }
+		value = var:pp_cplan_fv_f_food_years
+		subtract = 100
+	}
+}
+pp_cplan_f_food_need_w = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_food_need_w }
+		value = var:pp_cplan_fv_f_food_need_w
+		subtract = 100
+	}
+}
+pp_cplan_f_food_need_up = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_food_need_up }
+		value = var:pp_cplan_fv_f_food_need_up
+		subtract = 100
+	}
+}
+pp_cplan_f_food_up_part = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_food_up_part }
+		value = var:pp_cplan_fv_f_food_up_part
+		subtract = 100
+	}
+}
+pp_cplan_f_food_up_years = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_food_up_years }
+		value = var:pp_cplan_fv_f_food_up_years
+		subtract = 100
+	}
+}
+pp_cplan_f_food_down_part = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_food_down_part }
+		value = var:pp_cplan_fv_f_food_down_part
+		subtract = 100
+	}
+}
+pp_cplan_f_food_down_years = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_food_down_years }
+		value = var:pp_cplan_fv_f_food_down_years
+		subtract = 100
+	}
+}
+pp_cplan_f_food_sit = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_food_sit }
+		value = var:pp_cplan_fv_f_food_sit
+		subtract = 100
+	}
+}
+pp_cplan_part_food = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_part_food }
+		value = var:pp_cplan_fv_part_food
+		subtract = 100
+	}
+}
+pp_cplan_f_logistics_status = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_logistics_status }
+		value = var:pp_cplan_fv_f_logistics_status
+		subtract = 100
+	}
+}
+pp_cplan_f_logistics_missing = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_logistics_missing }
+		value = var:pp_cplan_fv_f_logistics_missing
+		subtract = 100
+	}
+}
+pp_cplan_f_logistics_rate = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_logistics_rate }
+		value = var:pp_cplan_fv_f_logistics_rate
+		subtract = 100
+	}
+}
+pp_cplan_f_logistics_years = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_logistics_years }
+		value = var:pp_cplan_fv_f_logistics_years
+		subtract = 100
+	}
+}
+pp_cplan_f_logistics_need_w = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_logistics_need_w }
+		value = var:pp_cplan_fv_f_logistics_need_w
+		subtract = 100
+	}
+}
+pp_cplan_f_logistics_need_up = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_logistics_need_up }
+		value = var:pp_cplan_fv_f_logistics_need_up
+		subtract = 100
+	}
+}
+pp_cplan_f_logistics_up_part = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_logistics_up_part }
+		value = var:pp_cplan_fv_f_logistics_up_part
+		subtract = 100
+	}
+}
+pp_cplan_f_logistics_up_years = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_logistics_up_years }
+		value = var:pp_cplan_fv_f_logistics_up_years
+		subtract = 100
+	}
+}
+pp_cplan_f_logistics_down_part = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_logistics_down_part }
+		value = var:pp_cplan_fv_f_logistics_down_part
+		subtract = 100
+	}
+}
+pp_cplan_f_logistics_down_years = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_logistics_down_years }
+		value = var:pp_cplan_fv_f_logistics_down_years
+		subtract = 100
+	}
+}
+pp_cplan_f_logistics_sit = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_logistics_sit }
+		value = var:pp_cplan_fv_f_logistics_sit
+		subtract = 100
+	}
+}
+pp_cplan_part_logistics = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_part_logistics }
+		value = var:pp_cplan_fv_part_logistics
+		subtract = 100
+	}
+}
+pp_cplan_f_improve_status = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_improve_status }
+		value = var:pp_cplan_fv_f_improve_status
+		subtract = 100
+	}
+}
+pp_cplan_f_improve_missing = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_improve_missing }
+		value = var:pp_cplan_fv_f_improve_missing
+		subtract = 100
+	}
+}
+pp_cplan_f_improve_rate = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_improve_rate }
+		value = var:pp_cplan_fv_f_improve_rate
+		subtract = 100
+	}
+}
+pp_cplan_f_improve_years = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_improve_years }
+		value = var:pp_cplan_fv_f_improve_years
+		subtract = 100
+	}
+}
+pp_cplan_f_improve_need_w = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_improve_need_w }
+		value = var:pp_cplan_fv_f_improve_need_w
+		subtract = 100
+	}
+}
+pp_cplan_f_improve_need_up = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_improve_need_up }
+		value = var:pp_cplan_fv_f_improve_need_up
+		subtract = 100
+	}
+}
+pp_cplan_f_improve_up_part = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_improve_up_part }
+		value = var:pp_cplan_fv_f_improve_up_part
+		subtract = 100
+	}
+}
+pp_cplan_f_improve_up_years = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_improve_up_years }
+		value = var:pp_cplan_fv_f_improve_up_years
+		subtract = 100
+	}
+}
+pp_cplan_f_improve_down_part = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_improve_down_part }
+		value = var:pp_cplan_fv_f_improve_down_part
+		subtract = 100
+	}
+}
+pp_cplan_f_improve_down_years = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_improve_down_years }
+		value = var:pp_cplan_fv_f_improve_down_years
+		subtract = 100
+	}
+}
+pp_cplan_f_improve_sit = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_improve_sit }
+		value = var:pp_cplan_fv_f_improve_sit
+		subtract = 100
+	}
+}
+pp_cplan_part_improve = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_part_improve }
+		value = var:pp_cplan_fv_part_improve
+		subtract = 100
+	}
+}
+pp_cplan_f_business_status = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_business_status }
+		value = var:pp_cplan_fv_f_business_status
+		subtract = 100
+	}
+}
+pp_cplan_f_business_missing = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_business_missing }
+		value = var:pp_cplan_fv_f_business_missing
+		subtract = 100
+	}
+}
+pp_cplan_f_business_rate = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_business_rate }
+		value = var:pp_cplan_fv_f_business_rate
+		subtract = 100
+	}
+}
+pp_cplan_f_business_years = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_business_years }
+		value = var:pp_cplan_fv_f_business_years
+		subtract = 100
+	}
+}
+pp_cplan_f_business_need_w = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_business_need_w }
+		value = var:pp_cplan_fv_f_business_need_w
+		subtract = 100
+	}
+}
+pp_cplan_f_business_need_up = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_business_need_up }
+		value = var:pp_cplan_fv_f_business_need_up
+		subtract = 100
+	}
+}
+pp_cplan_f_business_up_part = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_business_up_part }
+		value = var:pp_cplan_fv_f_business_up_part
+		subtract = 100
+	}
+}
+pp_cplan_f_business_up_years = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_business_up_years }
+		value = var:pp_cplan_fv_f_business_up_years
+		subtract = 100
+	}
+}
+pp_cplan_f_business_down_part = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_business_down_part }
+		value = var:pp_cplan_fv_f_business_down_part
+		subtract = 100
+	}
+}
+pp_cplan_f_business_down_years = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_business_down_years }
+		value = var:pp_cplan_fv_f_business_down_years
+		subtract = 100
+	}
+}
+pp_cplan_f_business_sit = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_business_sit }
+		value = var:pp_cplan_fv_f_business_sit
+		subtract = 100
+	}
+}
+pp_cplan_part_business = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_part_business }
+		value = var:pp_cplan_fv_part_business
+		subtract = 100
+	}
+}
+pp_cplan_f_country_status = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_country_status }
+		value = var:pp_cplan_fv_f_country_status
+		subtract = 100
+	}
+}
+pp_cplan_f_country_missing = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_country_missing }
+		value = var:pp_cplan_fv_f_country_missing
+		subtract = 100
+	}
+}
+pp_cplan_f_country_rate = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_country_rate }
+		value = var:pp_cplan_fv_f_country_rate
+		subtract = 100
+	}
+}
+pp_cplan_f_country_years = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_country_years }
+		value = var:pp_cplan_fv_f_country_years
+		subtract = 100
+	}
+}
+pp_cplan_f_country_need_w = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_country_need_w }
+		value = var:pp_cplan_fv_f_country_need_w
+		subtract = 100
+	}
+}
+pp_cplan_f_country_need_up = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_country_need_up }
+		value = var:pp_cplan_fv_f_country_need_up
+		subtract = 100
+	}
+}
+pp_cplan_f_country_up_part = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_country_up_part }
+		value = var:pp_cplan_fv_f_country_up_part
+		subtract = 100
+	}
+}
+pp_cplan_f_country_up_years = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_country_up_years }
+		value = var:pp_cplan_fv_f_country_up_years
+		subtract = 100
+	}
+}
+pp_cplan_f_country_down_part = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_country_down_part }
+		value = var:pp_cplan_fv_f_country_down_part
+		subtract = 100
+	}
+}
+pp_cplan_f_country_down_years = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_country_down_years }
+		value = var:pp_cplan_fv_f_country_down_years
+		subtract = 100
+	}
+}
+pp_cplan_f_country_sit = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_country_sit }
+		value = var:pp_cplan_fv_f_country_sit
+		subtract = 100
+	}
+}
+pp_cplan_part_country = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_part_country }
+		value = var:pp_cplan_fv_part_country
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_max = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_profiles_max }
+		value = var:pp_cplan_fv_hq_profiles_max
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_p_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_profiles_p_1 }
+		value = var:pp_cplan_fv_hq_profiles_p_1
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_p_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_profiles_p_2 }
+		value = var:pp_cplan_fv_hq_profiles_p_2
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_p_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_profiles_p_3 }
+		value = var:pp_cplan_fv_hq_profiles_p_3
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_p_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_profiles_p_4 }
+		value = var:pp_cplan_fv_hq_profiles_p_4
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_p_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_profiles_p_5 }
+		value = var:pp_cplan_fv_hq_profiles_p_5
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_p_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_profiles_p_6 }
+		value = var:pp_cplan_fv_hq_profiles_p_6
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_p_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_profiles_p_7 }
+		value = var:pp_cplan_fv_hq_profiles_p_7
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_p_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_profiles_p_8 }
+		value = var:pp_cplan_fv_hq_profiles_p_8
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_p_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_profiles_p_9 }
+		value = var:pp_cplan_fv_hq_profiles_p_9
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_p_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_profiles_p_10 }
+		value = var:pp_cplan_fv_hq_profiles_p_10
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_p_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_profiles_p_11 }
+		value = var:pp_cplan_fv_hq_profiles_p_11
+		subtract = 100
+	}
+}
+pp_cplan_hq_profiles_p_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_profiles_p_12 }
+		value = var:pp_cplan_fv_hq_profiles_p_12
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_max = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_food_max }
+		value = var:pp_cplan_fv_hq_food_max
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_p_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_food_p_1 }
+		value = var:pp_cplan_fv_hq_food_p_1
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_p_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_food_p_2 }
+		value = var:pp_cplan_fv_hq_food_p_2
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_p_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_food_p_3 }
+		value = var:pp_cplan_fv_hq_food_p_3
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_p_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_food_p_4 }
+		value = var:pp_cplan_fv_hq_food_p_4
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_p_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_food_p_5 }
+		value = var:pp_cplan_fv_hq_food_p_5
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_p_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_food_p_6 }
+		value = var:pp_cplan_fv_hq_food_p_6
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_p_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_food_p_7 }
+		value = var:pp_cplan_fv_hq_food_p_7
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_p_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_food_p_8 }
+		value = var:pp_cplan_fv_hq_food_p_8
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_p_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_food_p_9 }
+		value = var:pp_cplan_fv_hq_food_p_9
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_p_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_food_p_10 }
+		value = var:pp_cplan_fv_hq_food_p_10
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_p_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_food_p_11 }
+		value = var:pp_cplan_fv_hq_food_p_11
+		subtract = 100
+	}
+}
+pp_cplan_hq_food_p_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_food_p_12 }
+		value = var:pp_cplan_fv_hq_food_p_12
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_max = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_logistics_max }
+		value = var:pp_cplan_fv_hq_logistics_max
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_p_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_logistics_p_1 }
+		value = var:pp_cplan_fv_hq_logistics_p_1
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_p_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_logistics_p_2 }
+		value = var:pp_cplan_fv_hq_logistics_p_2
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_p_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_logistics_p_3 }
+		value = var:pp_cplan_fv_hq_logistics_p_3
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_p_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_logistics_p_4 }
+		value = var:pp_cplan_fv_hq_logistics_p_4
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_p_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_logistics_p_5 }
+		value = var:pp_cplan_fv_hq_logistics_p_5
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_p_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_logistics_p_6 }
+		value = var:pp_cplan_fv_hq_logistics_p_6
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_p_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_logistics_p_7 }
+		value = var:pp_cplan_fv_hq_logistics_p_7
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_p_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_logistics_p_8 }
+		value = var:pp_cplan_fv_hq_logistics_p_8
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_p_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_logistics_p_9 }
+		value = var:pp_cplan_fv_hq_logistics_p_9
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_p_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_logistics_p_10 }
+		value = var:pp_cplan_fv_hq_logistics_p_10
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_p_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_logistics_p_11 }
+		value = var:pp_cplan_fv_hq_logistics_p_11
+		subtract = 100
+	}
+}
+pp_cplan_hq_logistics_p_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_logistics_p_12 }
+		value = var:pp_cplan_fv_hq_logistics_p_12
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_max = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_improve_max }
+		value = var:pp_cplan_fv_hq_improve_max
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_p_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_improve_p_1 }
+		value = var:pp_cplan_fv_hq_improve_p_1
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_p_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_improve_p_2 }
+		value = var:pp_cplan_fv_hq_improve_p_2
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_p_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_improve_p_3 }
+		value = var:pp_cplan_fv_hq_improve_p_3
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_p_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_improve_p_4 }
+		value = var:pp_cplan_fv_hq_improve_p_4
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_p_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_improve_p_5 }
+		value = var:pp_cplan_fv_hq_improve_p_5
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_p_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_improve_p_6 }
+		value = var:pp_cplan_fv_hq_improve_p_6
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_p_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_improve_p_7 }
+		value = var:pp_cplan_fv_hq_improve_p_7
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_p_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_improve_p_8 }
+		value = var:pp_cplan_fv_hq_improve_p_8
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_p_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_improve_p_9 }
+		value = var:pp_cplan_fv_hq_improve_p_9
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_p_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_improve_p_10 }
+		value = var:pp_cplan_fv_hq_improve_p_10
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_p_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_improve_p_11 }
+		value = var:pp_cplan_fv_hq_improve_p_11
+		subtract = 100
+	}
+}
+pp_cplan_hq_improve_p_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_improve_p_12 }
+		value = var:pp_cplan_fv_hq_improve_p_12
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_max = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_business_max }
+		value = var:pp_cplan_fv_hq_business_max
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_p_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_business_p_1 }
+		value = var:pp_cplan_fv_hq_business_p_1
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_p_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_business_p_2 }
+		value = var:pp_cplan_fv_hq_business_p_2
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_p_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_business_p_3 }
+		value = var:pp_cplan_fv_hq_business_p_3
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_p_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_business_p_4 }
+		value = var:pp_cplan_fv_hq_business_p_4
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_p_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_business_p_5 }
+		value = var:pp_cplan_fv_hq_business_p_5
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_p_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_business_p_6 }
+		value = var:pp_cplan_fv_hq_business_p_6
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_p_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_business_p_7 }
+		value = var:pp_cplan_fv_hq_business_p_7
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_p_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_business_p_8 }
+		value = var:pp_cplan_fv_hq_business_p_8
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_p_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_business_p_9 }
+		value = var:pp_cplan_fv_hq_business_p_9
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_p_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_business_p_10 }
+		value = var:pp_cplan_fv_hq_business_p_10
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_p_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_business_p_11 }
+		value = var:pp_cplan_fv_hq_business_p_11
+		subtract = 100
+	}
+}
+pp_cplan_hq_business_p_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_business_p_12 }
+		value = var:pp_cplan_fv_hq_business_p_12
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_max = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_country_max }
+		value = var:pp_cplan_fv_hq_country_max
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_p_1 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_country_p_1 }
+		value = var:pp_cplan_fv_hq_country_p_1
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_p_2 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_country_p_2 }
+		value = var:pp_cplan_fv_hq_country_p_2
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_p_3 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_country_p_3 }
+		value = var:pp_cplan_fv_hq_country_p_3
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_p_4 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_country_p_4 }
+		value = var:pp_cplan_fv_hq_country_p_4
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_p_5 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_country_p_5 }
+		value = var:pp_cplan_fv_hq_country_p_5
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_p_6 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_country_p_6 }
+		value = var:pp_cplan_fv_hq_country_p_6
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_p_7 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_country_p_7 }
+		value = var:pp_cplan_fv_hq_country_p_7
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_p_8 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_country_p_8 }
+		value = var:pp_cplan_fv_hq_country_p_8
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_p_9 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_country_p_9 }
+		value = var:pp_cplan_fv_hq_country_p_9
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_p_10 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_country_p_10 }
+		value = var:pp_cplan_fv_hq_country_p_10
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_p_11 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_country_p_11 }
+		value = var:pp_cplan_fv_hq_country_p_11
+		subtract = 100
+	}
+}
+pp_cplan_hq_country_p_12 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_hq_country_p_12 }
+		value = var:pp_cplan_fv_hq_country_p_12
+		subtract = 100
+	}
 }
 
 # ---- Room under the max level (location scope): the type's own max_levels minus its standing levels ----

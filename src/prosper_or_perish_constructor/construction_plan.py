@@ -125,6 +125,9 @@ class Config:
     business_sites: int = 16  # sites whose business pick is refreshed a pass, at least
     business_cycle_months: int = 24  # ... and every site within this many months, however large the country
     business_tries: int = 6  # stored picks a look tries to build, best first
+    # the Locations look in daily slices (2026-11-20): K = max(look_slice_min, ceil(locations / look_slice_days)) a day
+    look_slice_min: int = 60
+    look_slice_days: int = 24
     weights: tuple[tuple[str, int], ...] = tuple((group, 5) for group in GROUPS)
     # the Trade plan's buildings in start order (location_profiles.py, town plans 2026-11-20)
     trade_plan: tuple[str, ...] = ()
@@ -186,6 +189,8 @@ def load_config(project: Path) -> Config:
         business_sites=int(data["business_sites"]),
         business_cycle_months=int(data["business_cycle_months"]),
         business_tries=int(data["business_tries"]),
+        look_slice_min=_positive(data, "look_slice_min"),
+        look_slice_days=_slice_days(data),
         weights=_weights(data["weights"]),
         trade_plan=tuple(data["trade_plan"]),
     )
@@ -232,6 +237,21 @@ def render_looks(config: "Config") -> str:
         tests = " ".join(f"current_month = {month}" for month in months)
         parts.append(f"pp_cplan_looks_{name} = {{\n\tOR = {{ {tests} }}\n}}\n")
     return "".join(parts)
+
+
+def _positive(data: dict, key: str) -> int:
+    value = int(data[key])
+    if value < 1:
+        raise ValueError(f"[construction_plan] {key}: at least 1")
+    return value
+
+
+def _slice_days(data: dict) -> int:
+    """The days a Locations look may take: its slices must end before the next monthly pass (shortest month 28)."""
+    days = _positive(data, "look_slice_days")
+    if days > 27:
+        raise ValueError("[construction_plan] look_slice_days: at most 27 (a look ends before the next month's pass)")
+    return days
 
 
 def _weights(table: dict) -> tuple[tuple[str, int], ...]:
@@ -633,6 +653,8 @@ def render_price_factors(demands: dict[str, dict[str, float]], bounds: tuple[flo
     return "".join(parts)
 
 
+# a group's part in % (the formula; the window reads the kept pp_cplan_part_<group>, construction_plan_forecast.py)
+PART_FORMULA = "pp_cplan_partx_"
 # groups whose weight counts only while they have something to do (render_weight_values writes these values)
 COUNTED_WEIGHTS = {"profiles": "pp_cplan_profiles_cw", "country": "pp_cplan_country_cw"}
 
@@ -666,9 +688,9 @@ def render_weight_values(config: Config) -> str:
     for group in GROUPS:
         weight = counted_weight(group)
         parts.append(
-            f"# Country scope: the {group} group's part of the new gold, in % (the window; in gold: pp_cplan_purse_new_"
-            f"{GROUP_WHY[group]}).\n"
-            f"pp_cplan_part_{group} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ pp_cplan_w_total > 0 }}\n"
+            f"# Country scope: the {group} group's part of the new gold, in % (in gold: pp_cplan_purse_new_"
+            f"{GROUP_WHY[group]}); the window reads it kept, pp_cplan_part_{group} (construction_plan_forecast.py).\n"
+            f"{PART_FORMULA}{group} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ pp_cplan_w_total > 0 }}\n"
             f"\t\tvalue = {weight}\n\t\tmultiply = 100\n\t\tdivide = pp_cplan_w_total\n\t}}\n}}\n"
         )
     return "".join(parts)
@@ -746,9 +768,13 @@ def render_purse_values() -> str:
             f"pp_cplan_saves_{why} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{\n\t\t\thas_variable = {SAVE_COST}_{why}\n"
             f"\t\t\t{weight} > 0\n\t\t}}\n"
             f"\t\tvalue = 1\n\t}}\n}}\n"
-            f"# 1 when it looked in this pass and saves for nothing: it hands on what it has\n"
-            f"pp_cplan_gives_{why} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{\n\t\t\thas_variable = {NOW}_{why}\n"
-            f"\t\t\tNOT = {{ has_variable = {SAVE_COST}_{why} }}\n\t\t}}\n\t\tvalue = 1\n\t}}\n}}\n"
+            f"# 1 when it looked in this pass and saves for nothing: it hands on what it has"
+            + (" (the Locations group\n# only once its look's last daily slice ran: pp_lprof_pend, pp_cplan_purses_hand_on_105)\n"
+               if group == "profiles" else "\n")
+            + f"pp_cplan_gives_{why} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{\n\t\t\thas_variable = {NOW}_{why}\n"
+            f"\t\t\tNOT = {{ has_variable = {SAVE_COST}_{why} }}\n"
+            + ("\t\t\tNOT = { has_variable = pp_lprof_pend }\n" if group == "profiles" else "")
+            + "\t\t}\n\t\tvalue = 1\n\t}\n}\n"
         )
     parts.append(
         "\n# The pass's start.\n# What the purses hold together, without the groups that do not count.\n"
@@ -813,6 +839,19 @@ def render_purse_effects() -> str:
     for why in whys:
         hand.append(f"\tset_variable = {{ name = {PURSE}_{why} value = {{ value = scope:pp_cplan_np_{why} add = 100 }} }}\n"
                     f"\tset_variable = {{ name = {PURSE_HAND}_{why} value = {{ value = scope:pp_cplan_ni_{why} add = 100 }} }}\n")
+    late = GROUP_WHY["profiles"]
+    others = [why for why in whys if why != late]
+    hand_late = (
+        "\tif = {\n\t\tlimit = {\n"
+        f"\t\t\tpp_cplan_gives_{late} > 0\n\t\t\tpp_cplan_hand_weights > 0\n\t\t}}\n"
+        + "".join(f"\t\tsave_temporary_scope_value_as = {{ name = pp_cplan_ni_{why} value = pp_cplan_hand_get_{why} }}\n"
+                  for why in others)
+        + f"\t\tset_variable = {{ name = {PURSE}_{late} value = 100 }}\n"
+        + "".join(f"\t\tchange_variable = {{ name = {PURSE}_{why} add = scope:pp_cplan_ni_{why} }}\n"
+                  f"\t\tset_variable = {{ name = {PURSE_HAND}_{why} value = {{ value = {PURSE_HAND}_n_{why} "
+                  f"add = scope:pp_cplan_ni_{why} add = 100 }} }}\n" for why in others)
+        + "\t}\n"
+    )
     return (
         "\n# ---- Budgets that save (pp_cplan_run; the amounts are script values, pp_cplan_purse_next_<why> ...) ----\n\n"
         "# Country scope, at the start of the pass: a group that does not count gives its purse back, the purses shrink\n"
@@ -823,62 +862,18 @@ def render_purse_effects() -> str:
         "pp_cplan_purses_fill = {\n" + "".join(fill) + "}\n\n"
         "# Country scope, at the end of the pass: every group that ran and saves for nothing hands what is left of its\n"
         "# purse to the groups that do save, by their weights (next month's money). While no group saves, nothing moves.\n"
-        "pp_cplan_purses_hand_on = {\n" + "".join(hand) + "}\n"
+        "pp_cplan_purses_hand_on = {\n" + "".join(hand) + "}\n\n"
+        f"# Country scope, after the last daily slice of a Locations look that ended after its pass (pp_lprof_slice_event):\n"
+        f"# the Locations group hands on now what pp_cplan_purses_hand_on left it (pp_cplan_gives_{late} waits for\n"
+        f"# pp_lprof_pend). The groups that save get their parts on top of what the pass's end handed them\n"
+        f"# ({PURSE_HAND}_<why> adds up: the next pass reads it).\n"
+        f"pp_cplan_purses_hand_on_{late} = {{\n" + hand_late + "}\n"
     )
 
 
-def render_weight_gui() -> str:
-    """One weight bar per rule group: - and + (vanilla's slider buttons), a gold bar of WEIGHT_STEPS steps whose every
-    step sets the weight when clicked, the group's part in % and the gold it has saved (its purse; the text key is
-    construction_plan_detail's). A real slider cannot be used: its value only reaches the engine's own functions,
-    never a script."""
-
-    def call(group: str, extra: str) -> str:
-        return (f"[GetScriptedGui('pp_cplan_weight').Execute(GuiScope.SetRoot(GetPlayer.MakeScope)"
-                f".AddScope('pp_key', MakeScopeFlag('{group}')){extra}.End)]")
-
-    out = [HEADER, "\ntypes PPConstructionPlanWeights\n{\n"]
-    for group in GROUPS:
-        value = f"GetPlayer.MakeScope.ScriptValue('pp_cplan_{group}_w')"
-        down = call(group, ".AddScope('pp_dir', MakeScopeFlag('down'))")
-        up = call(group, ".AddScope('pp_dir', MakeScopeFlag('up'))")
-        zones = "".join(
-            "\t\t\tbutton = {\n"
-            f"\t\t\t\tposition = {{ {(n - 1) * SEGMENT} 0 }}\n"
-            f"\t\t\t\tsize = {{ {SEGMENT} 14 }}\n"
-            "\t\t\t\ttooltip = \"PP_CPLAN_WEIGHT_TT\"\n"
-            f"\t\t\t\tonclick = \"{call(group, f".AddScope('pp_n', MakeScopeFlag('w{n}'))")}\"\n"
-            "\t\t\t}\n"
-            for n in range(1, WEIGHT_STEPS + 1)
-        )
-        out.append(
-            f"\t# the {group} group\n"
-            f"\ttype pp_cplan_weight_bar_{group} = hbox {{\n"
-            "\t\tspacing = 4\n"
-            "\t\tbutton_square_minus = {\n\t\t\tsize = { 15 15 }\n\t\t\ttooltip = \"PP_CPLAN_WEIGHT_TT\"\n"
-            f"\t\t\tonclick = \"{down}\"\n\t\t}}\n"
-            "\t\twidget = {\n"
-            f"\t\t\tsize = {{ {SEGMENT * WEIGHT_STEPS} 14 }}\n"
-            "\t\t\tprogressbar_framed = {\n\t\t\t\tsize = { 100% 100% }\n\t\t\t\tusing = progress_bar_goldish\n"
-            f"\t\t\t\tmin = 0\n\t\t\t\tmax = {WEIGHT_STEPS}\n\t\t\t\tvalue = \"[FixedPointToFloat({value})]\"\n\t\t\t}}\n"
-            + zones
-            + "\t\t}\n"
-            "\t\tbutton_square_plus = {\n\t\t\tsize = { 15 15 }\n\t\t\ttooltip = \"PP_CPLAN_WEIGHT_TT\"\n"
-            f"\t\t\tonclick = \"{up}\"\n\t\t}}\n"
-            "\t\ttext_single = {\n"
-            f"\t\t\traw_text = \"[GetPlayer.MakeScope.ScriptValue('pp_cplan_part_{group}')|0]%\"\n"
-            "\t\t\ttooltip = \"PP_CPLAN_SHARE_TT\"\n\t\t\tminimumsize = { 44 -1 }\n\t\t\tmaximumsize = { 44 -1 }\n"
-            "\t\t\talign = right|nobaseline\n\t\t}\n"
-            "\t\t# what the group has saved (its purse)\n"
-            "\t\ttext_single = {\n"
-            f"\t\t\ttext = \"PP_CPLAN_D_PURSE_{group.upper()}\"\n"
-            f"\t\t\ttooltip = \"PP_CPLAN_PURSE_TT\"\n\t\t\tminimumsize = {{ {PURSE_WIDTH} -1 }}\n"
-            f"\t\t\tmaximumsize = {{ {PURSE_WIDTH} -1 }}\n"
-            "\t\t\talign = right|nobaseline\n\t\t}\n"
-            "\t}\n\n"
-        )
-    out.append("}\n")
-    return "".join(out)
+# The weight bars (pp_construction_plan_weights.gui: - and +, the gold bar of WEIGHT_STEPS steps, the grey bar of
+# what the group asks for, the part in %, the purse) and the status line under each row are
+# construction_plan_status.render_weight_gui (2026-11-20, Jan: feedback for the money sliders).
 
 
 # ---- The window's detail panes (Jan 2026-11-09: "how much investment is missing, what was built and why") ----
@@ -897,8 +892,8 @@ SITUATION: dict[str, tuple[tuple[str, int], ...]] = {
     "improve": (("over", 100), ("fullest", 100)),
     # skipped: 1 when the group had neither gold saved nor gold coming in and did not look (pp_cplan_group_business)
     "business": (("sites", 100), ("best", 1099), ("skipped", 100)),
-    # the plans' states (location_profiles.STATES 1..14; pp_lprof_count_state); unr: the locations the look did not
-    # reach because the group's purse was spent first (pp_lprof_look, script time 2026-11-20)
+    # the plans' states (location_profiles.STATES 1..14; pp_lprof_count_state); unr: the locations of this look still
+    # to be checked (its daily slices, pp_lprof_slice: 0 once the look is done)
     "profiles": (("locs", 100), ("unr", 100), *((f"st{n}", 100) for n in range(1, 15))),
     "country": (),  # gold had, spent and waiting are enough; its own numbers are construction_plan_country.py's
 }
@@ -942,6 +937,13 @@ def render_stats_effects() -> str:
             f"\t\tset_variable = {{ name = pp_cplan_hs_{why}_1 value = var:pp_cplan_dspent_{why} }}\n\t}}\n"
             f"\telse = {{\n\t\tset_variable = {{ name = pp_cplan_hn_{why}_1 value = 100 }}\n"
             f"\t\tset_variable = {{ name = pp_cplan_hs_{why}_1 value = 100 }}\n\t}}\n")
+        # the situation history moves on by look (construction_plan_forecast.py); the Locations group's at the end of
+        # its look's last daily slice (pp_lprof_look_end)
+        # (not for a Businesses look skipped for lack of gold, pp_cplan_ds_business_skipped: no 0 column for it)
+        if group != "profiles":
+            skipped = ("\n\t\t\tvar:pp_cplan_ds_business_skipped < 100.5" if group == "business" else "")
+            push.append(f"\tif = {{\n\t\tlimit = {{\n\t\t\thas_variable = {NOW}_{why}{skipped}\n\t\t}}\n"
+                        f"\t\tpp_cplan_hq_push_{why} = yes\n\t}}\n")
     return (
         "\n# ---- The window's detail panes (rules never read these) ----\n"
         + "".join(resets)
@@ -951,7 +953,9 @@ def render_stats_effects() -> str:
         f"# waiting for gold) and spent become month 1 of the history (nothing for a group that did not look), the older\n"
         f"# months move up one, month {HISTORY_MONTHS} drops out.\n"
         "pp_cplan_history_push = {\n" + "".join(push) + "}\n\n"
-        "# Country scope: the history is gone (the plan was switched on).\npp_cplan_history_clear = {\n" + "".join(clear) + "}\n"
+        "# Country scope: the history is gone (the plan was switched on), and so are the forecast's means and the\n"
+        "# situation history (pp_cplan_forecast_clear, construction_plan_forecast.py).\n"
+        "pp_cplan_history_clear = {\n" + "".join(clear) + "\tpp_cplan_forecast_clear = yes\n}\n"
     )
 
 
@@ -1017,6 +1021,14 @@ def render_values(config: Config, demands: dict[str, dict[str, float]] | None = 
         f"\tmin = {config.business_sites}\n}}\n"
         "# Any scope: the stored picks a look of the business group tries to build, best first.\n"
         f"pp_cplan_bz_tries = {{ value = {config.business_tries} }}\n"
+        "\n# ---- Script time: the Locations look in daily slices ([construction_plan] look_slice_min / _days) ----\n"
+        "# Any scope: a slice walks at least this many locations; a look takes at most this many days.\n"
+        f"pp_lprof_slice_min = {{ value = {config.look_slice_min} }}\n"
+        f"pp_lprof_slice_days = {{ value = {config.look_slice_days} }}\n"
+        "# Country scope, at a look (pp_lprof_todo_n = its locations + 100): the locations a slice walks.\n"
+        "pp_lprof_slice_k = {\n\tvalue = 0\n\tif = {\n\t\tlimit = { has_variable = pp_lprof_todo_n }\n"
+        "\t\tvalue = var:pp_lprof_todo_n\n\t\tsubtract = 100\n\t}\n\tdivide = pp_lprof_slice_days\n\tceiling = yes\n"
+        "\tmin = pp_lprof_slice_min\n}\n"
         "# Country scope: what the rule groups started and spent at their last looks (the window's summary).\n"
         "pp_cplan_all_started = {\n\tvalue = 0\n"
         + "".join(f"\tadd = pp_cplan_d_{group}_started\n" for group in GROUPS)
@@ -1876,6 +1888,8 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
     market_effects = render_business_blocks(config.business_sites) + market_effects  # (the business order in blocks)
 
     from prosper_or_perish_constructor import construction_plan_detail  # imports this module
+    from prosper_or_perish_constructor import construction_plan_forecast as forecast  # imports this module too
+    from prosper_or_perish_constructor import construction_plan_status  # imports this module too
 
     wanted = food_buildings + list(config.kitchens) + list(config.taverns) + result.improvements
     wanted += list(config.granaries) + list(config.granges) + list(config.yards) + list(config.logistics_order)
@@ -1890,15 +1904,15 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
             access_modifier_amounts(mod_root, vanilla_root, config.access_blacklist), costs,
         )
         + improve_values + business_values + market_values + render_idle_values(result.pop_types)
-        + render_purse_values() + render_stats_values() + room_values,
+        + render_purse_values() + render_stats_values() + forecast.render_values() + room_values,
         mod_root / EFFECTS: render_effects(config, food_lines, costs) + improve_effects + business_effects
-        + market_effects + render_purse_effects() + render_stats_effects(),
+        + market_effects + render_purse_effects() + render_stats_effects() + forecast.render_effects(),
         # the hunger steps wait for what they start (staple food makers, Taverns); kitchens are built anyway and must
         # not hold farms back for the year a Cookshop takes (seen in game 2026-11-08)
         mod_root / TRIGGERS: render_triggers(demands, food_buildings + list(config.taverns),
                                              config.construction_goods_months) + market_triggers + render_looks(config)
         + room_triggers,
-        mod_root / WEIGHT_GUI: render_weight_gui(),
+        mod_root / WEIGHT_GUI: construction_plan_status.render_weight_gui(),
         # the window's detail panes (Jan 2026-11-09): a cog per rule group, the numbers render_stats_values gives
         mod_root / construction_plan_detail.DETAIL_GUI: construction_plan_detail.render_gui(),
         mod_root / construction_plan_detail.DETAIL_LOC: construction_plan_detail.render_loc(),

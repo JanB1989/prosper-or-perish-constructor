@@ -21,7 +21,7 @@ FLAT = "gfx/interface/buttons/flats/{}.dds"
 VISIBLE = "And(LocationView.GetLocation.GetOwner.IsPlayer, Not(IsObserving))"
 # The Location Plan window opened on the location (datacontext Location).
 OPEN_PLAN = ("[GetScriptedGui('pp_lplan_select').Execute(GuiScope.SetRoot(Location.MakeScope).End)]",
-             "[GetVariableSystem.Set('pp_lplan_open', 'yes')]")
+             "[GetVariableSystem.Toggle('pp_lplan_open')]")
 
 
 # ---------------------------------------------------------------------------------------------------------------------

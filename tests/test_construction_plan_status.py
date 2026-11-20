@@ -21,7 +21,7 @@ HAND_LOC = MOD / "main_menu/localization/english/pp_construction_plan_l_english.
 # the script side's names (2026-11-20), written out by hand so a typo on either side fails
 SITUATION = ("profiles", "food", "logistics", "improve", "business")
 NEW_VALUES = {"pp_cplan_flow_n", "pp_cplan_flow_known", "pp_cplan_f_all_missing", "pp_cplan_f_all_years",
-              "pp_cplan_f_profiles_blocked"}
+              "pp_cplan_f_profiles_blocked", "pp_cplan_f_budget_binds", "pp_cplan_f_budget_held"}
 for _group in ("profiles", "food", "logistics", "improve", "business", "country"):
     NEW_VALUES |= {f"pp_cplan_f_{_group}_{name}" for name in (
         "status", "missing", "rate", "years", "need_w", "need_up", "up_part", "up_years", "down_part", "down_years")}
@@ -281,7 +281,7 @@ def test_window_places_status_lines() -> None:
         assert re.match(r"vbox = \{\n\t+layoutpolicy_horizontal = expanding\n\t+spacing = 1\n\t+hbox = \{\n", box), group
         assert re.search(rf"pp_cplan_detail_button_{group} = \{{\}}\n\t+\}}\n\t+pp_cplan_status_{group} = \{{\}}\n\t+\}}$",
                          box), group
-    assert "size = { 758 900 }" in window
+    assert "size = { 1360 820 }" in window
 
 
 def test_panes_show_the_outlook_and_the_situation_chart() -> None:

@@ -180,9 +180,12 @@ def test_food_turn_farms_then_kitchens(plans: list[tp.Plan]) -> None:
     for check in ("NOT = { has_variable = pp_lprof_st }", "NOT = { pp_lplan_measuring = yes }",
                   "NOT = { has_variable = pp_lprof_fail }", "var:pp_lprof_fail < 102.25"):
         assert check in limit, check
-    # the taverns only while the province's store is short, by the food rule's own line (the plan closer's trigger)
-    assert "limit = { province ?= { NOT = { pp_pclose_store_ok = yes } } }\n\t\t\tpp_lprof_t_food_kitchens_taverns = yes" in turn
-    assert "else = {\n\t\t\tpp_lprof_t_food_kitchens = yes" in turn
+    # the taverns only while the province's store is short, by the food rule's own line (the plan closer's trigger),
+    # unless the plan option for Taverns is set (tests/test_town_plan_options.py)
+    with_taverns = turn[turn.rindex("if = {", 0, taverns):taverns]
+    assert (f"scope:pp_cplan_country = {{ NOT = {{ has_variable = {tp.FOOD_TAVERNS_VAR} }} }}\n"
+            "\t\t\t\t\t\t\tprovince ?= { NOT = { pp_pclose_store_ok = yes } }") in with_taverns
+    assert f"else_if = {{\n\t\t\t\tlimit = {{ scope:pp_cplan_country = {{ NOT = {{ has_variable = {tp.FOOD_KITCHENS_OFF_VAR} }} }} }}\n\t\t\t\tpp_lprof_t_food_kitchens = yes" in turn
     store = _block(_code(MOD / "in_game/common/scripted_triggers/pp_plan_closer.txt"), "pp_pclose_store_ok")
     assert "pp_cplan_food_in_a_year >= pp_cplan_hungry_months" in store
     # the kitchens start clean; nothing to do in either: "nothing to build" (101) when the farms or kitchens are full
@@ -302,7 +305,8 @@ def test_settings_buttons_and_effects(plans: list[tp.Plan]) -> None:
     guis = _code(MOD / tp.SETTINGS_GUIS)
     names = [tp.PB_UP_GUI, tp.PB_DOWN_GUI, tp.PB_RESET_GUI, tp.TOGGLE_LOSS_GUI, tp.TOGGLE_STAFF_GUI,
              tp.TOGGLE_ORDER_GUI, tp.TOGGLE_CLOSE_GUI, tp.TOGGLE_FREE_GUI, tp.TOGGLE_ALONE_GUI, tp.TOGGLE_RIGHTS_GUI]
-    assert re.findall(r"^(\w+) = \{", guis, re.MULTILINE) == names
+    # the plan options' buttons follow (tests/test_town_plan_options.py)
+    assert re.findall(r"^(\w+) = \{", guis, re.MULTILINE)[:len(names)] == names
     for name in names:
         body = _block(guis, name)
         assert "scope = country" in body and "is_valid = {\n\t\tis_ai = no\n\t}" in body, name

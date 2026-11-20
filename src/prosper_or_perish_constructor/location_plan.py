@@ -487,7 +487,7 @@ BUTTON = f"""
 				action_tooltip = {{
 					title = "PP_LPLAN_LOCATION_BUTTON"
 					on_action = "[GetScriptedGui('pp_lplan_select').Execute(GuiScope.SetRoot(LocationView.GetLocation.MakeScope).End)]"
-					on_action = "[GetVariableSystem.Set('pp_lplan_open', 'yes')]"
+					on_action = "[GetVariableSystem.Toggle('pp_lplan_open')]"
 				}}
 			}}
 		}}

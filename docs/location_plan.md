@@ -217,6 +217,39 @@ default), `pp_tplan_close_n` (1 = automation on). Scripted GUIs (`scripted_guis/
 only): `pp_tplan_pb_up` / `_down` (`scope:pp_key` = `flag:all` or `flag:<plan>`), `pp_tplan_pb_reset`,
 `pp_tplan_toggle_loss` / `_staff` / `_order` / `_close` / `_free`.
 
+### Plan options (2026-11-20 evening, Jan: "food and trade need other options ... for the goods some additional options, let us not go overboard"; NOT tested in game)
+
+Ten options beyond the eight settings above. `town_plan_options.py` is the contract (`OPTIONS`: key, where it
+shows, kind switch / cycle / stepper, the script value the window reads, the scripted GUIs, the player texts); the
+script side is `town_plans.py`, the window side renders the list generically (`town_plan_settings_gui.py`). Every
+default (no variable set) is the behaviour before the options existed, and each check sits behind a `has_variable`
+guard, so the look costs nothing more at the defaults.
+
+- **Lowest production efficiency** (all plans + each goods plan's own, like the payback limit; `pp_tplan_effv_all` /
+  `pp_tplan_effv_<plan>` = a step of `EFF_STEPS`, -10 .. 75 %; a plan's own "none" = 14; guard `pp_tplan_effv_some`).
+  A goods plan starts nothing (first level, further level, tier upgrade, rank raise) where the location's lasting
+  efficiency is below the line: `modifier:local_production_efficiency` + the owner's
+  `modifier:global_production_efficiency`, minus the short-lived ones (`EFF_SHORT_LIVED`: every efficiency event
+  modifier the game adds for at most five years, and `raised_levies`; amounts read from the files at finalize). What
+  belongs to one building alone (establishment, raw-material share, bonus per level) is not in it. State 15.
+- **Raise a settlement for its plan** (default on; `pp_tplan_raise_off`): off, a plan whose producers need a higher
+  rank shows state 11 and never starts or saves for the raise.
+- **Food plan** (its card): staple food makers on / off (`pp_tplan_food_farms_off`), kitchens on / off
+  (`pp_tplan_food_kitchens_off`), Taverns never / while the store is short (default, the rule before) / always
+  (`pp_tplan_food_taverns` 1 / unset / 3), and "build only while the store lasts less than" (`pp_tplan_food_store`, a
+  step of `FOOD_STORE_STEPS` 3 .. 24 months against `pp_location_stored_months`; default always).
+- **Trade plan** (its card): Marketplaces, Port Authority and market centre buildings on / off
+  (`pp_tplan_trade_market_off` / `_port_off` / `_centre_off`; with one off the turn runs the groups one after the
+  other, `pp_tplan_trade_split`), and "build only while our trade capacity is used" (`pp_tplan_trade_use`, a step of
+  `TRADE_USE_STEPS` 10 .. 90 %): market scope `used_merchant_capacity(country)` / `merchant_capacity(country)`, the
+  syntax vanilla's market actions use; no capacity in that market counts as fully used. It holds the whole Trade plan,
+  because every building of `trade_plan` adds merchant capacity (a test checks that).
+- **States**: 15 "lasting production efficiency below the line" (fail 103.25), 16 "held back by this plan's options"
+  (fail 102.75: the food store limit, the trade share, or every part switched off).
+- Not verified without the game: that `has_location_modifier = raised_levies` sees the engine's static modifier, that
+  the location's efficiency modifier includes province modifiers, the merchant capacity functions through
+  `market ?=`, the script time with lines set. The five-year cut for "short-lived" is a choice.
+
 ### Plans free their workers (2026-11-20, Jan; tested in game the same night, see "In-game results")
 
 Jan: "You conquer or get a city with a bunch of businesses the AI built, and you want to specialize it ... at some

@@ -11,6 +11,28 @@ pp_cplan_reserve_gold = {
 		subtract = 100
 	}
 }
+# Country scope: the monthly budget in gold, the most new gold a pass shares out among the rule groups; 0 = no limit (2026-11-20).
+pp_cplan_budget_gold = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_budget }
+		value = var:pp_cplan_budget
+		subtract = 100
+	}
+}
+# Any scope: the monthly budget's step a click ([construction_plan] budget_step).
+pp_cplan_budget_step = { value = 10 }
+# Any scope: the monthly budget's step a right-click ([construction_plan] budget_step_big).
+pp_cplan_budget_step_big = { value = 100 }
+# Country scope: the gold the monthly budget left in no purse at the last pass's start.
+pp_cplan_budget_held_n = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_budget_held }
+		value = var:pp_cplan_budget_held
+		subtract = 100
+	}
+}
 # Country scope: the logistics line, market access in %.
 pp_cplan_access_pct = {
 	value = 97
@@ -18811,13 +18833,29 @@ pp_cplan_purse_rest = {
 	subtract = pp_cplan_purse_held
 	min = 0
 }
-# profiles: its part of the gold in no purse, and its purse after the pass's start (shrunk like every purse
-# when they hold more than the gold above the reserve)
+# The gold this pass shares out (2026-11-20, Jan: "spend this much"): the gold in no purse, at most the monthly
+# budget (pp_cplan_budget_gold; 0 = no limit). The rest stays in no purse, the player's, until a later month.
+pp_cplan_purse_share = {
+	value = pp_cplan_purse_rest
+	if = {
+		limit = { pp_cplan_budget_gold > 0 }
+		max = pp_cplan_budget_gold
+	}
+}
+# The gold above the reserve the budget left in no purse (pp_cplan_purses_fill keeps it for the window:
+# pp_cplan_budget_held).
+pp_cplan_purse_left = {
+	value = pp_cplan_purse_rest
+	subtract = pp_cplan_purse_share
+	min = 0
+}
+# profiles: its part of the gold this pass shares out, and its purse after the pass's start (shrunk like
+# every purse when they hold more than the gold above the reserve)
 pp_cplan_purse_new_105 = {
 	value = 0
 	if = {
 		limit = { pp_cplan_w_total > 0 }
-		value = pp_cplan_purse_rest
+		value = pp_cplan_purse_share
 		multiply = pp_cplan_profiles_cw
 		divide = pp_cplan_w_total
 	}
@@ -18831,13 +18869,13 @@ pp_cplan_purse_next_105 = {
 	}
 	add = pp_cplan_purse_new_105
 }
-# food: its part of the gold in no purse, and its purse after the pass's start (shrunk like every purse
-# when they hold more than the gold above the reserve)
+# food: its part of the gold this pass shares out, and its purse after the pass's start (shrunk like
+# every purse when they hold more than the gold above the reserve)
 pp_cplan_purse_new_101 = {
 	value = 0
 	if = {
 		limit = { pp_cplan_w_total > 0 }
-		value = pp_cplan_purse_rest
+		value = pp_cplan_purse_share
 		multiply = pp_cplan_food_w
 		divide = pp_cplan_w_total
 	}
@@ -18851,13 +18889,13 @@ pp_cplan_purse_next_101 = {
 	}
 	add = pp_cplan_purse_new_101
 }
-# logistics: its part of the gold in no purse, and its purse after the pass's start (shrunk like every purse
-# when they hold more than the gold above the reserve)
+# logistics: its part of the gold this pass shares out, and its purse after the pass's start (shrunk like
+# every purse when they hold more than the gold above the reserve)
 pp_cplan_purse_new_102 = {
 	value = 0
 	if = {
 		limit = { pp_cplan_w_total > 0 }
-		value = pp_cplan_purse_rest
+		value = pp_cplan_purse_share
 		multiply = pp_cplan_logistics_w
 		divide = pp_cplan_w_total
 	}
@@ -18871,13 +18909,13 @@ pp_cplan_purse_next_102 = {
 	}
 	add = pp_cplan_purse_new_102
 }
-# improve: its part of the gold in no purse, and its purse after the pass's start (shrunk like every purse
-# when they hold more than the gold above the reserve)
+# improve: its part of the gold this pass shares out, and its purse after the pass's start (shrunk like
+# every purse when they hold more than the gold above the reserve)
 pp_cplan_purse_new_106 = {
 	value = 0
 	if = {
 		limit = { pp_cplan_w_total > 0 }
-		value = pp_cplan_purse_rest
+		value = pp_cplan_purse_share
 		multiply = pp_cplan_improve_w
 		divide = pp_cplan_w_total
 	}
@@ -18891,13 +18929,13 @@ pp_cplan_purse_next_106 = {
 	}
 	add = pp_cplan_purse_new_106
 }
-# business: its part of the gold in no purse, and its purse after the pass's start (shrunk like every purse
-# when they hold more than the gold above the reserve)
+# business: its part of the gold this pass shares out, and its purse after the pass's start (shrunk like
+# every purse when they hold more than the gold above the reserve)
 pp_cplan_purse_new_103 = {
 	value = 0
 	if = {
 		limit = { pp_cplan_w_total > 0 }
-		value = pp_cplan_purse_rest
+		value = pp_cplan_purse_share
 		multiply = pp_cplan_business_w
 		divide = pp_cplan_w_total
 	}
@@ -18911,13 +18949,13 @@ pp_cplan_purse_next_103 = {
 	}
 	add = pp_cplan_purse_new_103
 }
-# country: its part of the gold in no purse, and its purse after the pass's start (shrunk like every purse
-# when they hold more than the gold above the reserve)
+# country: its part of the gold this pass shares out, and its purse after the pass's start (shrunk like
+# every purse when they hold more than the gold above the reserve)
 pp_cplan_purse_new_107 = {
 	value = 0
 	if = {
 		limit = { pp_cplan_w_total > 0 }
-		value = pp_cplan_purse_rest
+		value = pp_cplan_purse_share
 		multiply = pp_cplan_country_cw
 		divide = pp_cplan_w_total
 	}
@@ -19292,6 +19330,22 @@ pp_cplan_d_profiles_st14 = {
 	if = {
 		limit = { has_variable = pp_cplan_ds_profiles_st14 }
 		value = var:pp_cplan_ds_profiles_st14
+		subtract = 100
+	}
+}
+pp_cplan_d_profiles_st15 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_profiles_st15 }
+		value = var:pp_cplan_ds_profiles_st15
+		subtract = 100
+	}
+}
+pp_cplan_d_profiles_st16 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_profiles_st16 }
+		value = var:pp_cplan_ds_profiles_st16
 		subtract = 100
 	}
 }
@@ -21881,15 +21935,32 @@ pp_cplan_h_country_sum_spent = {
 
 # ---- Forecast for the window (country scope; construction_plan_forecast.py; the rules never read these) ----
 
-# The new gold shared out in this pass, less what the purses had to give back (read before pp_cplan_purses_fill
-# writes: pp_cplan_forecast_measure).
+# The new gold shared out in this pass (at most the monthly budget: pp_cplan_purse_share), less what the purses
+# had to give back (read before pp_cplan_purses_fill writes: pp_cplan_forecast_measure).
 pp_cplan_flow_new = {
 	value = pp_cplan_purse_held
 	subtract = pp_cplan_purse_free
 	min = 0
 	multiply = -1
-	add = pp_cplan_purse_rest
+	add = pp_cplan_purse_share
 	min = 0
+}
+# The monthly budget held the plan back at the last pass's start: gold above the reserve stayed in no purse
+# because of it (pp_cplan_budget_held, kept by pp_cplan_purses_fill), a budget is still set and a rule group counts.
+# 1 / 0, and that gold.
+pp_cplan_fx_budget_held = {
+	value = pp_cplan_budget_held_n
+}
+pp_cplan_fx_budget_binds = {
+	value = 0
+	if = {
+		limit = {
+			pp_cplan_budget_gold > 0
+			pp_cplan_w_total > 0
+			pp_cplan_fx_budget_held > 0.5
+		}
+		value = 1
+	}
 }
 # The running means' divisor for this pass's measure: the passes measured with it, at most 12.
 pp_cplan_fc_div = {
@@ -24422,6 +24493,22 @@ pp_cplan_f_all_years = {
 	if = {
 		limit = { has_variable = pp_cplan_fv_f_all_years }
 		value = var:pp_cplan_fv_f_all_years
+		subtract = 100
+	}
+}
+pp_cplan_f_budget_binds = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_budget_binds }
+		value = var:pp_cplan_fv_f_budget_binds
+		subtract = 100
+	}
+}
+pp_cplan_f_budget_held = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_fv_f_budget_held }
+		value = var:pp_cplan_fv_f_budget_held
 		subtract = 100
 	}
 }

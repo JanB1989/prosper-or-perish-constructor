@@ -131,6 +131,9 @@ class Config:
     weights: tuple[tuple[str, int], ...] = tuple((group, 5) for group in GROUPS)
     # the Trade plan's buildings in start order (location_profiles.py, town plans 2026-11-20)
     trade_plan: tuple[str, ...] = ()
+    # the monthly budget's steps in gold (2026-11-20, Jan: "spend this much"; unset = no limit): a click, a right-click
+    budget_step: int = 10
+    budget_step_big: int = 100
 
 
 @dataclass(frozen=True)
@@ -193,6 +196,8 @@ def load_config(project: Path) -> Config:
         look_slice_days=_slice_days(data),
         weights=_weights(data["weights"]),
         trade_plan=tuple(data["trade_plan"]),
+        budget_step=_positive(data, "budget_step"),
+        budget_step_big=_positive(data, "budget_step_big"),
     )
 
 
@@ -717,6 +722,8 @@ SAVE_VARS = ("cost", "loc", "type", "rank", "rv", "rs")
 # the rule groups that can save for a town or city upgrade (pp_cplan_save_rank_<why>): Towns and Buildings, and the
 # Locations group for a plan whose producers need a higher rank (town_plans.py pp_tplan_raise, why 105)
 RANK_GROUPS = ("country", "profiles")
+# country variable, + 100: the gold above the reserve the monthly budget left in no purse at the last pass's start
+BUDGET_HELD = "pp_cplan_budget_held"
 NOW = "pp_cplan_now"  # country variable pp_cplan_now_<why>: the group looked in this pass (cleared at each pass's start)
 
 
@@ -781,13 +788,20 @@ def render_purse_values() -> str:
         f"{PURSE}_held = {{\n\tvalue = 0\n" + "".join(f"\tadd = {PURSE}_kept_{why}\n" for _, why, _ in whys) + "}\n"
         "# The gold above the reserve that is in no purse yet (0 when the purses hold more than there is).\n"
         f"{PURSE}_rest = {{\n\tvalue = {PURSE}_free\n\tsubtract = {PURSE}_held\n\tmin = 0\n}}\n"
+        "# The gold this pass shares out (2026-11-20, Jan: \"spend this much\"): the gold in no purse, at most the monthly\n"
+        "# budget (pp_cplan_budget_gold; 0 = no limit). The rest stays in no purse, the player's, until a later month.\n"
+        f"{PURSE}_share = {{\n\tvalue = {PURSE}_rest\n\tif = {{\n\t\tlimit = {{ pp_cplan_budget_gold > 0 }}\n"
+        f"\t\tmax = pp_cplan_budget_gold\n\t}}\n}}\n"
+        "# The gold above the reserve the budget left in no purse (pp_cplan_purses_fill keeps it for the window:\n"
+        f"# {BUDGET_HELD}).\n"
+        f"{PURSE}_left = {{\n\tvalue = {PURSE}_rest\n\tsubtract = {PURSE}_share\n\tmin = 0\n}}\n"
     )
     for group, why, weight in whys:
         parts.append(
-            f"# {group}: its part of the gold in no purse, and its purse after the pass's start (shrunk like every purse\n"
-            f"# when they hold more than the gold above the reserve)\n"
+            f"# {group}: its part of the gold this pass shares out, and its purse after the pass's start (shrunk like\n"
+            f"# every purse when they hold more than the gold above the reserve)\n"
             f"{PURSE}_new_{why} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ pp_cplan_w_total > 0 }}\n"
-            f"\t\tvalue = {PURSE}_rest\n\t\tmultiply = {weight}\n\t\tdivide = pp_cplan_w_total\n\t}}\n}}\n"
+            f"\t\tvalue = {PURSE}_share\n\t\tmultiply = {weight}\n\t\tdivide = pp_cplan_w_total\n\t}}\n}}\n"
             f"{PURSE}_next_{why} = {{\n\tvalue = {PURSE}_kept_{why}\n\tif = {{\n"
             f"\t\tlimit = {{ {PURSE}_held > {PURSE}_free }}\n"
             f"\t\tmultiply = {PURSE}_free\n\t\tdivide = {PURSE}_held\n\t}}\n\tadd = {PURSE}_new_{why}\n}}\n"
@@ -822,6 +836,9 @@ def render_purse_effects() -> str:
         fill.append(f"\tsave_temporary_scope_value_as = {{ name = pp_cplan_np_{why} value = {PURSE}_next_{why} }}\n"
                     f"\tsave_temporary_scope_value_as = {{ name = pp_cplan_ni_{why} value = {{ value = {PURSE}_new_{why} "
                     f"add = {PURSE_HAND}_n_{why} }} }}\n")
+    # what the monthly budget left in no purse (the window: pp_cplan_f_budget_binds, construction_plan_forecast.py)
+    fill.append(f"\tsave_temporary_scope_value_as = {{ name = pp_cplan_nbl value = {PURSE}_left }}\n")
+    fill.append(f"\tset_variable = {{ name = {BUDGET_HELD} value = {{ value = scope:pp_cplan_nbl add = 100 }} }}\n")
     for why in whys:
         fill.append(f"\tset_variable = {{ name = {PURSE}_{why} value = {{ value = scope:pp_cplan_np_{why} add = 100 }} }}\n"
                     f"\tset_variable = {{ name = {PURSE_IN}_{why} value = {{ value = scope:pp_cplan_ni_{why} add = 100 }} }}\n"
@@ -856,7 +873,8 @@ def render_purse_effects() -> str:
         "\n# ---- Budgets that save (pp_cplan_run; the amounts are script values, pp_cplan_purse_next_<why> ...) ----\n\n"
         "# Country scope, at the start of the pass: a group that does not count gives its purse back, the purses shrink\n"
         "# alike when they hold more than the gold above the reserve, and the gold in no purse yet is shared by the\n"
-        "# weights. pp_cplan_in_<why> keeps what the group received for this pass (its part and what was handed on to it\n"
+        "# weights, at most the monthly budget (pp_cplan_purse_share; pp_cplan_budget_held keeps what it left out, for\n"
+        "# the window). pp_cplan_in_<why> keeps what the group received for this pass (its part and what was handed on to it\n"
         "# at the end of the last pass): the business group counts its time to save by it. What each group saved for\n"
         "# starts afresh: the pass finds it again.\n"
         "pp_cplan_purses_fill = {\n" + "".join(fill) + "}\n\n"
@@ -894,7 +912,7 @@ SITUATION: dict[str, tuple[tuple[str, int], ...]] = {
     "business": (("sites", 100), ("best", 1099), ("skipped", 100)),
     # the plans' states (location_profiles.STATES 1..14; pp_lprof_count_state); unr: the locations of this look still
     # to be checked (its daily slices, pp_lprof_slice: 0 once the look is done)
-    "profiles": (("locs", 100), ("unr", 100), *((f"st{n}", 100) for n in range(1, 15))),
+    "profiles": (("locs", 100), ("unr", 100), *((f"st{n}", 100) for n in range(1, 17))),
     "country": (),  # gold had, spent and waiting are enough; its own numbers are construction_plan_country.py's
 }
 
@@ -999,6 +1017,15 @@ def render_values(config: Config, demands: dict[str, dict[str, float]] | None = 
     parts = [HEADER, "\n# ---- Global settings with their defaults ([construction_plan]; the window's lines) ----\n\n"]
     parts.append(_default_value("pp_cplan_reserve_gold", "pp_cplan_reserve", config.reserve_gold,
                                 "Country scope: the gold reserve in gold; the plan starts nothing that would spend below it."))
+    parts.append(_default_value("pp_cplan_budget_gold", "pp_cplan_budget", 0,
+                                "Country scope: the monthly budget in gold, the most new gold a pass shares out among "
+                                "the rule groups; 0 = no limit (2026-11-20)."))
+    parts.append(_constant("pp_cplan_budget_step", config.budget_step,
+                           "Any scope: the monthly budget's step a click ([construction_plan] budget_step)."))
+    parts.append(_constant("pp_cplan_budget_step_big", config.budget_step_big,
+                           "Any scope: the monthly budget's step a right-click ([construction_plan] budget_step_big)."))
+    parts.append("# Country scope: the gold the monthly budget left in no purse at the last pass's start.\n"
+                 + _readout(f"{BUDGET_HELD}_n", BUDGET_HELD))
     parts.append(_default_value("pp_cplan_access_pct", "pp_cplan_access", config.access_threshold,
                                 "Country scope: the logistics line, market access in %."))
     parts.append(_default_value("pp_cplan_improve_pct", "pp_cplan_imp", config.improve_fill_pct,
@@ -1491,7 +1518,7 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]],
     if costs:
         parts.append(render_btype_data(costs))
 
-    flags = sorted({*GROUPS, "reserve", "reserve_big", "access_line", "improve_line", "business_line", "up", "down"}
+    flags = sorted({*GROUPS, "reserve", "reserve_big", "budget", "budget_big", "access_line", "improve_line", "business_line", "up", "down"}
                    | {f"w{n}" for n in range(1, WEIGHT_STEPS + 1)})
     parts.append(
         "\n# Any scope, never run (pp_cplan_run calls it under always = no): declares the flags the window passes, so the\n"

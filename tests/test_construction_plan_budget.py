@@ -73,11 +73,14 @@ def _effect(text: str, name: str) -> str:
 
 
 def _country(gold: float, purses: dict[str, float] | None = None, weights: dict[str, int] | None = None,
-             reserve: float = 1000, locations: int = 1, ticked: int = 1) -> dict:
+             reserve: float = 1000, locations: int = 1, ticked: int = 1, budget: float | None = None) -> dict:
     """The player's country: its gold, the purses the groups hold, their weights (5 each unless given), whether a
-    location has a profile or a mark and whether something is ticked on the Towns and Buildings tab."""
+    location has a profile or a mark, whether something is ticked on the Towns and Buildings tab, and the monthly
+    budget (None: never set)."""
     game: dict[str, float] = {"gold": gold, "var:pp_cplan_reserve": reserve + 100, "pp_lprof_group_n": locations,
                               "pp_cplan_country_active": ticked}
+    if budget is not None:
+        game["var:pp_cplan_budget"] = budget + 100
     for group, weight in (weights or {}).items():
         game[f"var:pp_cplan_w_{group}"] = weight + 100
     for group, amount in (purses or {}).items():
@@ -94,6 +97,8 @@ def _fill(ctx: dict) -> dict[str, float]:
     new = {why: _eval().value(f"{cp.PURSE}_next_{why}", ctx) for why in WHYS.values()}
     received = {group: _eval().value(f"{cp.PURSE}_new_{why}", ctx) + _eval().value(f"{cp.PURSE_HAND}_n_{why}", ctx)
                 for group, why in WHYS.items()}
+    held = _eval().value(f"{cp.PURSE}_left", ctx)
+    ctx["game"][f"var:{cp.BUDGET_HELD}"] = held + 100
     for group, why in WHYS.items():
         ctx["game"][f"var:{cp.PURSE}_{why}"] = new[why] + 100
         ctx["game"][f"var:{cp.PURSE_IN}_{why}"] = received[group] + 100
@@ -176,9 +181,9 @@ def test_a_every_group_has_a_purse_and_the_effects_read_before_they_write() -> N
     effects = _read(MOD / cp.EFFECTS)
     fill = _effect(effects, "pp_cplan_purses_fill")
     hand = _effect(effects, "pp_cplan_purses_hand_on")
-    for body in (fill, hand):
+    for body, extra in ((fill, 1), (hand, 0)):  # the fill also keeps what the monthly budget left out
         first_write = body.index("set_variable")
-        assert body.count("save_temporary_scope_value_as") == 2 * len(cp.GROUPS)
+        assert body.count("save_temporary_scope_value_as") == 2 * len(cp.GROUPS) + extra
         assert body.rindex("save_temporary_scope_value_as") < first_write, "one group's change must not reach another's sum"
     for group, why in WHYS.items():
         for name in (f"{cp.PURSE}_n_{why}", f"{cp.PURSE}_kept_{why}", f"{cp.PURSE}_new_{why}", f"{cp.PURSE}_next_{why}",
@@ -553,3 +558,106 @@ def test_g_things_the_market_lacks_the_goods_for_are_counted() -> None:
     # the market lacks the goods for
     assert "pp_cplan_note_goods" not in _effect(generated, "pp_cplan_try_farm_here")
     assert "goods" in cp.GROUP_NUMBERS and "limited" in cp.GROUP_NUMBERS
+
+
+# ---- H. The monthly budget (2026-11-20, Jan: "below that: spend this much") ----
+
+
+def _flow(ctx: dict) -> float:
+    """The new gold the forecast measures for the pass (read before the fill writes, as pp_cplan_forecast_measure)."""
+    return _eval().value("pp_cplan_flow_new", ctx)
+
+
+def _binds(ctx: dict) -> float:
+    return _eval().value("pp_cplan_fx_budget_binds", ctx)
+
+
+@pytest.mark.parametrize("budget", [None, 0])
+def test_h_no_budget_shares_all_the_gold_above_the_reserve(budget) -> None:
+    """Never set, or stepped down to 0 ("no limit"): the old numbers."""
+    ctx = _country(gold=1600, budget=budget)
+    assert _eval().value(f"{cp.PURSE}_share", ctx) == _eval().value(f"{cp.PURSE}_rest", ctx) == pytest.approx(600)
+    assert _flow(ctx) == pytest.approx(600)
+    assert _fill(ctx) == {group: pytest.approx(100) for group in cp.GROUPS}
+    assert _eval().value(f"{cp.BUDGET_HELD}_n", ctx) == 0 and _binds(ctx) == 0
+
+
+def test_h_a_budget_shares_at_most_the_budget_a_pass() -> None:
+    ctx = _country(gold=1600, budget=120)
+    assert _flow(ctx) == pytest.approx(120), "the forecast measures what is really shared"
+    assert _fill(ctx) == {group: pytest.approx(20) for group in cp.GROUPS}
+    assert sum(_purses(ctx).values()) == pytest.approx(120)
+    # the rest stayed the player's, in no purse; the window says the budget held the plan back
+    assert _eval().value(f"{cp.BUDGET_HELD}_n", ctx) == pytest.approx(480) and _binds(ctx) == 1
+    # next month, nothing spent and nothing earned: the next 120 of what is left
+    assert _fill(ctx) == {group: pytest.approx(20) for group in cp.GROUPS}
+    assert sum(_purses(ctx).values()) == pytest.approx(240)
+    assert _eval().value(f"{cp.BUDGET_HELD}_n", ctx) == pytest.approx(360)
+    # the player takes the limit off: nothing held back from then on (the store reads the setting as it stands)
+    ctx["game"]["var:pp_cplan_budget"] = 100
+    assert _binds(ctx) == 0
+    assert _fill(ctx) == {group: pytest.approx(60) for group in cp.GROUPS}
+
+
+def test_h_a_budget_above_the_free_gold_changes_nothing() -> None:
+    ctx = _country(gold=1600, budget=5000)
+    assert _flow(ctx) == pytest.approx(600)
+    assert _fill(ctx) == {group: pytest.approx(100) for group in cp.GROUPS}
+    assert _eval().value(f"{cp.BUDGET_HELD}_n", ctx) == 0 and _binds(ctx) == 0
+    # exactly at the budget nothing is held back either
+    ctx = _country(gold=1600, budget=600)
+    assert _fill(ctx) == {group: pytest.approx(100) for group in cp.GROUPS} and _binds(ctx) == 0
+
+
+def test_h_purses_still_shrink_when_the_treasury_falls() -> None:
+    """The reserve rule and the shrink rule stay as they were: a budget never lets the purses hold more than the gold
+    above the reserve."""
+    ctx = _country(gold=1300, budget=50,
+                   purses={"food": 400, "business": 200, "improve": 0, "logistics": 0, "profiles": 0, "country": 0})
+    received = _fill(ctx)
+    after = _purses(ctx)
+    assert after["food"] == pytest.approx(200) and after["business"] == pytest.approx(100)
+    assert sum(after.values()) == pytest.approx(300) and all(amount == 0 for amount in received.values())
+    assert _binds(ctx) == 0, "nothing was held back by the budget"
+    ctx["game"]["gold"] = 900
+    _fill(ctx)
+    assert all(amount == 0 for amount in _purses(ctx).values())
+
+
+def test_h_no_group_counts_no_budget_message() -> None:
+    """With every bar empty nothing is shared at all: that is not the budget's doing."""
+    ctx = _country(gold=1600, budget=50, weights={group: 0 for group in cp.GROUPS})
+    _fill(ctx)
+    assert _binds(ctx) == 0
+
+
+def test_h_the_budget_setting_and_its_bookkeeping() -> None:
+    values = _read(MOD / cp.VALUES)
+    effects = _read(MOD / cp.EFFECTS)
+    assert "limit = { pp_cplan_budget_gold > 0 }\n\t\tmax = pp_cplan_budget_gold" in _effect(values, f"{cp.PURSE}_share")
+    fill = _effect(effects, "pp_cplan_purses_fill")
+    assert f"name = pp_cplan_nbl value = {cp.PURSE}_left }}" in fill
+    assert f"name = {cp.BUDGET_HELD} value = {{ value = scope:pp_cplan_nbl add = 100 }} }}" in fill
+    assert fill.index("pp_cplan_nbl value") < fill.index("set_variable"), "read before any purse is written"
+    # the window reads the kept numbers (pp_cplan_forecast_store), switched on afresh they are gone
+    store = _effect(effects, "pp_cplan_forecast_store")
+    for name in ("binds", "held"):
+        assert (f"set_variable = {{ name = pp_cplan_fv_f_budget_{name} value = {{ value = pp_cplan_fx_budget_{name} "
+                "add = 100 } }") in store
+    assert f"remove_variable = {cp.BUDGET_HELD}\n" in _effect(effects, "pp_cplan_forecast_clear")
+    # the flags the window passes are declared
+    flags = _effect(effects, "pp_cplan_declare_flags")
+    assert "value = flag:budget }" in flags and "value = flag:budget_big }" in flags
+    # the window: the row under the reserve, its texts in plain words, and the line when it holds the plan back
+    window = _read(MOD / "in_game/gui/pp_construction_plan.gui")
+    assert window.index('text = "PP_CPLAN_RESERVE"') < window.index('text = "PP_CPLAN_BUDGET"') < window.index(
+        "PP_CPLAN_FLOW_UNKNOWN") < window.index("PP_CPLAN_BUDGET_BINDS") < window.index('text = "PP_CPLAN_RULES"')
+    loc = _read(MOD / "main_menu/localization/english/pp_construction_plan_l_english.yml")
+    texts = dict(re.findall(r"^  (PP_CPLAN_BUDGET\w*): \"(.*)\"$", loc, re.MULTILINE))
+    assert {"PP_CPLAN_BUDGET", "PP_CPLAN_BUDGET_TT", "PP_CPLAN_BUDGET_VALUE", "PP_CPLAN_BUDGET_GOLD",
+            "PP_CPLAN_BUDGET_NONE", "PP_CPLAN_BUDGET_STEP_TT", "PP_CPLAN_BUDGET_BINDS",
+            "PP_CPLAN_BUDGET_BINDS_TT"} <= set(texts)
+    assert texts["PP_CPLAN_BUDGET_NONE"] == "no limit"
+    assert "pp_cplan_budget_gold" in texts["PP_CPLAN_BUDGET_VALUE"] and "pp_cplan_f_budget_held" in texts["PP_CPLAN_BUDGET_BINDS"]
+    for key in ("PP_CPLAN_BUDGET_TT", "PP_CPLAN_BUDGET_STEP_TT", "PP_CPLAN_BUDGET_BINDS_TT"):
+        assert not re.search(r"\d", texts[key]), "plain words, no numbers"

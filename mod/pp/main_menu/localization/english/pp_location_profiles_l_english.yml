@@ -1,7 +1,8 @@
 ﻿l_english:
   # The state of a location's plan after the Construction Plan's last monthly pass (pp_lplan_st_g_<plan>; the plan
   # engine of the Locations group, location_profiles.py). A plan has no market limit, so 10 does not come up; its text
-  # stays for every state the engine can write. 5, 12 and 14 follow the plan settings (town_plans.py; 14: plan_closer.py).
+  # stays for every state the engine can write. 5, 12 and 14 follow the plan settings (town_plans.py; 14: plan_closer.py),
+  # 15 and 16 the plan options (town_plans.py "Plan options").
   PP_LPROF_ST_0: "Not checked yet: the plan gets to it within the next few months."
   PP_LPROF_ST_1: "Started a construction here."
   PP_LPROF_ST_2: "Nothing to build: every building of this target here is at its highest level."
@@ -13,7 +14,9 @@
   PP_LPROF_ST_8: "The market lacks the construction goods."
   PP_LPROF_ST_9: "Waiting: another plan of this location started a construction here."
   PP_LPROF_ST_10: "Held back: its market already has enough of this good on the way."
-  PP_LPROF_ST_11: "Needs a higher [location_rank|e]: the plan raises the settlement when it can (enough people, nothing that forbids it)."
+  PP_LPROF_ST_11: "Needs a higher [location_rank|e]: the plan raises the settlement when it can (enough people, nothing that forbids it) and its plan options allow it."
   PP_LPROF_ST_12: "The [building|e] here loses money even with every job filled, so the plan adds no level to it."
   PP_LPROF_ST_13: "The [building|e] here is closed, so the plan adds no level to it until it is opened again."
   PP_LPROF_ST_14: "Closing another [building|e] here to free its workers for this plan: the plan builds once they are free."
+  PP_LPROF_ST_15: "The lasting [production_efficiency|e] here is below the line set for this plan in the Construction Plan, so the plan builds nothing here."
+  PP_LPROF_ST_16: "Held back by this plan's options in the Construction Plan: what it would build here is switched off, or the condition set there does not hold here."

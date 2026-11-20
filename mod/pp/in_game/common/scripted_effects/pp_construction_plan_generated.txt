@@ -1158,6 +1158,8 @@ pp_cplan_btype_data = {
 # script check logs no 'used but never set' line for them.
 pp_cplan_declare_flags = {
 	set_variable = { name = pp_cplan_flag value = flag:access_line }
+	set_variable = { name = pp_cplan_flag value = flag:budget }
+	set_variable = { name = pp_cplan_flag value = flag:budget_big }
 	set_variable = { name = pp_cplan_flag value = flag:business }
 	set_variable = { name = pp_cplan_flag value = flag:business_line }
 	set_variable = { name = pp_cplan_flag value = flag:country }
@@ -8351,7 +8353,8 @@ pp_cplan_market_count_building = {
 
 # Country scope, at the start of the pass: a group that does not count gives its purse back, the purses shrink
 # alike when they hold more than the gold above the reserve, and the gold in no purse yet is shared by the
-# weights. pp_cplan_in_<why> keeps what the group received for this pass (its part and what was handed on to it
+# weights, at most the monthly budget (pp_cplan_purse_share; pp_cplan_budget_held keeps what it left out, for
+# the window). pp_cplan_in_<why> keeps what the group received for this pass (its part and what was handed on to it
 # at the end of the last pass): the business group counts its time to save by it. What each group saved for
 # starts afresh: the pass finds it again.
 pp_cplan_purses_fill = {
@@ -8367,6 +8370,8 @@ pp_cplan_purses_fill = {
 	save_temporary_scope_value_as = { name = pp_cplan_ni_103 value = { value = pp_cplan_purse_new_103 add = pp_cplan_hand_n_103 } }
 	save_temporary_scope_value_as = { name = pp_cplan_np_107 value = pp_cplan_purse_next_107 }
 	save_temporary_scope_value_as = { name = pp_cplan_ni_107 value = { value = pp_cplan_purse_new_107 add = pp_cplan_hand_n_107 } }
+	save_temporary_scope_value_as = { name = pp_cplan_nbl value = pp_cplan_purse_left }
+	set_variable = { name = pp_cplan_budget_held value = { value = scope:pp_cplan_nbl add = 100 } }
 	set_variable = { name = pp_cplan_purse_105 value = { value = scope:pp_cplan_np_105 add = 100 } }
 	set_variable = { name = pp_cplan_in_105 value = { value = scope:pp_cplan_ni_105 add = 100 } }
 	remove_variable = pp_cplan_hand_105
@@ -8506,6 +8511,8 @@ pp_cplan_stats_reset_105 = {
 	set_variable = { name = pp_cplan_ds_profiles_st12 value = 100 }
 	set_variable = { name = pp_cplan_ds_profiles_st13 value = 100 }
 	set_variable = { name = pp_cplan_ds_profiles_st14 value = 100 }
+	set_variable = { name = pp_cplan_ds_profiles_st15 value = 100 }
+	set_variable = { name = pp_cplan_ds_profiles_st16 value = 100 }
 }
 
 # Country scope: the food group looks: what its last look left for the window is gone (its list of
@@ -9037,6 +9044,7 @@ pp_cplan_forecast_clear = {
 	set_variable = { name = pp_cplan_fc_skip value = yes }
 	remove_variable = pp_cplan_fc_n
 	remove_variable = pp_cplan_fc_flow
+	remove_variable = pp_cplan_budget_held
 	remove_variable = pp_cplan_fc_hand_105
 	remove_variable = pp_cplan_fc_hand_101
 	remove_variable = pp_cplan_fc_hand_102
@@ -9385,6 +9393,8 @@ pp_cplan_forecast_store = {
 	set_variable = { name = pp_cplan_fv_f_profiles_blocked value = { value = pp_cplan_fx_profiles_blocked add = 100 } }
 	set_variable = { name = pp_cplan_fv_f_all_missing value = { value = pp_cplan_fx_all_missing add = 100 } }
 	set_variable = { name = pp_cplan_fv_f_all_years value = { value = pp_cplan_fx_all_years add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_budget_binds value = { value = pp_cplan_fx_budget_binds add = 100 } }
+	set_variable = { name = pp_cplan_fv_f_budget_held value = { value = pp_cplan_fx_budget_held add = 100 } }
 	set_variable = { name = pp_cplan_fv_f_profiles_status value = { value = pp_cplan_fx_profiles_status add = 100 } }
 	set_variable = { name = pp_cplan_fv_f_profiles_missing value = { value = pp_cplan_fx_profiles_missing add = 100 } }
 	set_variable = { name = pp_cplan_fv_f_profiles_rate value = { value = pp_cplan_fx_profiles_rate add = 100 } }

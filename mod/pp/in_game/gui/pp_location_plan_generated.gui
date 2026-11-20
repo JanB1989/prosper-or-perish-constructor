@@ -2308,7 +2308,7 @@ types PPLocationPlanGenerated
 					size = { 30 30 }
 					tooltip = "PP_TPLAN_ROW_MORE_TT"
 					onclick = "[GetScriptedGui('pp_lplan_select').Execute(GuiScope.SetRoot(Location.MakeScope).End)]"
-					onclick = "[GetVariableSystem.Set('pp_lplan_open', 'yes')]"
+					onclick = "[GetVariableSystem.Toggle('pp_lplan_open')]"
 					icon = { size = { 20 20 } parentanchor = center texture = "gfx/interface/buttons/flats/plus.dds" using = button_regular_icon_color }
 				}
 				expand = {}

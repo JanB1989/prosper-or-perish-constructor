@@ -82,3 +82,14 @@ pp_tplan_held = {
 		has_town_rights = town_rights_type:pp_plan_trade
 	}
 }
+
+# Location scope, in the plan $g$'s turn (pp_lplan_mark): a line of lowest production efficiency holds for it
+# (plan option, pp_tplan_effv_some first: nothing is worked out while no line is set anywhere) and the location's
+# lasting production efficiency (scope:pp_tplan_effh = pp_tplan_eff_here, saved as the turn began) is below it.
+pp_tplan_eff_low = {
+	scope:pp_cplan_country = {
+		has_variable = pp_tplan_effv_some
+		pp_tplan_eff_line_$g$ > 0.5
+		pp_tplan_eff_line_$g$ > scope:pp_tplan_effh
+	}
+}

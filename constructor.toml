@@ -1156,6 +1156,11 @@ not_goods = ["offset", "logistics", "local_food", "manual_labor", "province_food
 # construction must fit in its group's purse, the first thing a group cannot pay for is what it saves for (it builds
 # nothing more that month), and a group that saves for nothing hands its purse on to the groups that do.
 reserve_gold = 1000           # gold kept back: no construction starts that would take the treasury below it (Jan 2026-11-09)
+# Monthly budget (2026-11-20, Jan: "below that: spend this much"): the most new gold a monthly pass shares out among
+# the rule groups' purses; the rest of the gold above the reserve stays the player's until a later month. The window's
+# row under the reserve moves it by these steps (click, right-click); 0 (below the smallest step) = no limit, the default.
+budget_step = 10
+budget_step_big = 100
 access_threshold = 97         # logistics: build where market access is below this, in % (Jan 2026-11-08)
 improve_fill_pct = 90         # improvements: build where population over capacity reaches this, in % (Jan 2026-11-08; steps of 10)
 weights = { profiles = 5, food = 5, logistics = 5, improve = 5, business = 5, country = 5 }   # each rule group, 0 (off) .. 10: its part of the gold above the reserve = its weight / the sum (Jan 2026-11-09); profiles = the window's "Locations", country = "Towns and Buildings" (2026-11-10)

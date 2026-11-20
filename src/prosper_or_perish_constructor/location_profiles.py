@@ -62,7 +62,7 @@ NOT_RUN = (town_plans.FOOD_TARGET,)
 # plan's in its configured order, the first that can start (first; pp_lprof_start how = cost, the later ones skipped
 # once a pick stands).
 START_ROI = (town_plans.FOOD_FARMS_TARGET,)
-START_FIRST = (town_plans.TRADE_TARGET,)
+START_FIRST = (town_plans.TRADE_TARGET, *(target for target, _ in town_plans.TRADE_GROUPS))
 # plan states (+ 100 in pp_lplan_st_g_<plan>; texts PP_LPROF_ST_<n>); 10 is kept from the profile rules: a forced plan
 # has no market limit, but the text stays for every state the engine can write
 STATES = {
@@ -80,11 +80,16 @@ STATES = {
     12: "the standing building loses money at full staffing: no level (plan setting, default on)",
     13: "the standing building is closed: no level",
     14: "another business here is being closed to free workers for it (plan setting, default on; plan_closer.py)",
+    15: "the location's lasting production efficiency is below the plan's line (plan option, town_plans.py)",
+    16: "the plan's options hold it back here (its buildings switched off, the province's store full enough, too little"
+        " merchant capacity in use: town_plans.py)",
 }
 # why a candidate failed, ranked (+ 100 in pp_lprof_fail; the highest rank of a plan's candidates gives its state);
-# 102.5 (closed), 103.5 (loses money) and 104.25 (workers and nothing else, while another business closes for them:
+# 102.5 (closed), 102.75 (the plan's options hold it back), 103.25 (production efficiency below the plan's line),
+# 103.5 (loses money) and 104.25 (workers and nothing else, while another business closes for them:
 # plan_closer.py) sit between the old integer ranks, pp_lprof_finish splits at the midpoints
-FAIL_STATE = {101: 2, 102: 6, 102.5: 13, 103: 5, 103.5: 12, 104: 4, 104.25: 14, 105: 8, 106: 10, 107: 7, 108: 11}
+FAIL_STATE = {101: 2, 102: 6, 102.5: 13, 102.75: 16, 103: 5, 103.25: 15, 103.5: 12, 104: 4, 104.25: 14, 105: 8, 106: 10,
+              107: 7, 108: 11}
 WHY_MARK_STEP = 0  # the ledger's step (pp_cplan_rs) of a construction a plan started
 # country variable (yes): a location of the country holds a plan, the cache behind pp_lprof_group_n (hand-written
 # pp_lprof_any_refresh keeps it)
@@ -301,7 +306,39 @@ def _read_targets(repo: Path, project: Path, mod_root: Path, vanilla_root: Path)
     found[town_plans.FOOD_FARMS_TARGET] = ordered(food)
     found[town_plans.FOOD_KITCHENS_TARGET] = ordered(list(plan.kitchens))
     found[town_plans.FOOD_KITCHENS_TAVERNS_TARGET] = ordered(list(plan.kitchens) + list(plan.taverns))
+    found[town_plans.FOOD_TAVERNS_TARGET] = ordered(list(plan.taverns))
+    # the trade plan's groups (plan options, 2026-11-20: each with its switch), the same buildings and start order
+    for target, names in trade_groups(plan.trade_plan, database).items():
+        found[target] = ordered(names)
     return found, categories
+
+
+def trade_groups(trade_plan: tuple[str, ...], database: dict[str, tuple[dict[str, str], str]]) -> dict[str, list[str]]:
+    """The trade plan's buildings in its option groups (town_plans.TRADE_GROUPS): the Marketplace line (the root and
+    every building whose obsolete chain reaches it), the Port Authority, the rest (the market centre's buildings)."""
+    def line_of(name: str) -> bool:
+        seen: set[str] = set()
+        todo = [name]
+        while todo:
+            current = todo.pop()
+            if current == town_plans.TRADE_MARKET_ROOT:
+                return True
+            if current in seen or current not in database:
+                continue
+            seen.add(current)
+            todo += _top_values(database[current][1], "obsolete")
+        return False
+
+    (market, _), (port, _), (centre, _) = town_plans.TRADE_GROUPS
+    groups: dict[str, list[str]] = {market: [], port: [], centre: []}
+    for name in trade_plan:
+        if line_of(name):
+            groups[market].append(name)
+        elif name in town_plans.TRADE_PORT_BUILDINGS:
+            groups[port].append(name)
+        else:
+            groups[centre].append(name)
+    return groups
 
 
 def business_types(plan, main_good: dict[str, str], mod_root: Path, vanilla_root: Path) -> set[str]:

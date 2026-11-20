@@ -42,8 +42,10 @@ pp_cplan_weight = {
 	}
 }
 
-# Country scope: one step of a line (scope:pp_key = reserve / reserve_big / access_line / improve_line /
-# business_line, scope:pp_dir = up / down). The reserve moves 100 gold a click, 1,000 a right-click (reserve_big).
+# Country scope: one step of a line (scope:pp_key = reserve / reserve_big / budget / budget_big / access_line /
+# improve_line / business_line, scope:pp_dir = up / down). The reserve moves 100 gold a click, 1,000 a right-click
+# (reserve_big). The monthly budget (2026-11-20) moves by pp_cplan_budget_step / _step_big ([construction_plan]
+# budget_step / budget_step_big); 0 = no limit, so a step down from the smallest step takes the limit off.
 pp_cplan_step = {
 	scope = country
 	effect = {
@@ -51,6 +53,8 @@ pp_cplan_step = {
 			trigger = scope:pp_key
 			flag:reserve = { pp_cplan_step_var = { var = pp_cplan_reserve current = pp_cplan_reserve_gold step = 100 min = 100 max = 1000100 } }
 			flag:reserve_big = { pp_cplan_step_var = { var = pp_cplan_reserve current = pp_cplan_reserve_gold step = 1000 min = 100 max = 1000100 } }
+			flag:budget = { pp_cplan_step_var = { var = pp_cplan_budget current = pp_cplan_budget_gold step = pp_cplan_budget_step min = 100 max = 100100 } }
+			flag:budget_big = { pp_cplan_step_var = { var = pp_cplan_budget current = pp_cplan_budget_gold step = pp_cplan_budget_step_big min = 100 max = 100100 } }
 			flag:access_line = { pp_cplan_step_var = { var = pp_cplan_access current = pp_cplan_access_pct step = 1 min = 150 max = 199 } }
 			flag:improve_line = { pp_cplan_step_var = { var = pp_cplan_imp current = pp_cplan_improve_pct step = 10 min = 150 max = 400 } }
 			flag:business_line = { pp_cplan_step_var = { var = pp_cplan_biz current = pp_cplan_business_years step = 1 min = 101 max = 150 } }

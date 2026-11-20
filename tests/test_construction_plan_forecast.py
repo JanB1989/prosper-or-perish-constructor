@@ -276,7 +276,7 @@ def test_the_means_are_kept_at_the_pass_start_and_cleared_when_switched_on() -> 
 def test_every_name_the_window_reads_exists() -> None:
     values = _read(MOD / cp.VALUES)
     names = ["pp_cplan_flow_n", "pp_cplan_flow_known", "pp_cplan_f_profiles_blocked", "pp_cplan_f_all_missing",
-             "pp_cplan_f_all_years"]
+             "pp_cplan_f_all_years", "pp_cplan_f_budget_binds", "pp_cplan_f_budget_held"]
     for group in cp.GROUPS:
         names += [f"pp_cplan_f_{group}_{what}" for what in (
             "missing", "rate", "years", "status", "need_w", "up_part", "up_years", "down_part", "down_years", "sit")]

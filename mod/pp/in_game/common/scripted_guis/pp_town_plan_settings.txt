@@ -124,3 +124,159 @@ pp_tplan_toggle_rights = {
 		pp_cplan_flip = { var = pp_tplan_rights_off }
 	}
 }
+
+# ---- Plan options (2026-11-20, town_plan_options.py) ----
+
+# Lowest production efficiency one step lower (below the first step: none).
+pp_tplan_eff_down = {
+	scope = country
+	is_valid = {
+		is_ai = no
+	}
+	effect = {
+		pp_tplan_eff_key = { dir = down }
+	}
+}
+
+# Lowest production efficiency one step higher (from none: the first step).
+pp_tplan_eff_up = {
+	scope = country
+	is_valid = {
+		is_ai = no
+	}
+	effect = {
+		pp_tplan_eff_key = { dir = up }
+	}
+}
+
+# The goods plan's lowest production efficiency is the all-plans one again.
+pp_tplan_eff_reset = {
+	scope = country
+	is_valid = {
+		is_ai = no
+	}
+	effect = {
+		pp_tplan_eff_key_reset = yes
+	}
+}
+
+# A plan option on (the default) or off (pp_tplan_raise_off set).
+pp_tplan_toggle_raise = {
+	scope = country
+	is_valid = {
+		is_ai = no
+	}
+	effect = {
+		pp_cplan_flip = { var = pp_tplan_raise_off }
+	}
+}
+
+# A plan option on (the default) or off (pp_tplan_food_farms_off set).
+pp_tplan_toggle_food_farms = {
+	scope = country
+	is_valid = {
+		is_ai = no
+	}
+	effect = {
+		pp_cplan_flip = { var = pp_tplan_food_farms_off }
+	}
+}
+
+# A plan option on (the default) or off (pp_tplan_food_kitchens_off set).
+pp_tplan_toggle_food_kitchens = {
+	scope = country
+	is_valid = {
+		is_ai = no
+	}
+	effect = {
+		pp_cplan_flip = { var = pp_tplan_food_kitchens_off }
+	}
+}
+
+# A plan option on (the default) or off (pp_tplan_trade_market_off set).
+pp_tplan_toggle_trade_market = {
+	scope = country
+	is_valid = {
+		is_ai = no
+	}
+	effect = {
+		pp_cplan_flip = { var = pp_tplan_trade_market_off }
+	}
+}
+
+# A plan option on (the default) or off (pp_tplan_trade_port_off set).
+pp_tplan_toggle_trade_port = {
+	scope = country
+	is_valid = {
+		is_ai = no
+	}
+	effect = {
+		pp_cplan_flip = { var = pp_tplan_trade_port_off }
+	}
+}
+
+# A plan option on (the default) or off (pp_tplan_trade_centre_off set).
+pp_tplan_toggle_trade_centre = {
+	scope = country
+	is_valid = {
+		is_ai = no
+	}
+	effect = {
+		pp_cplan_flip = { var = pp_tplan_trade_centre_off }
+	}
+}
+
+# The Food plan's Taverns: while the store is short (the default), always, never.
+pp_tplan_cycle_food_taverns = {
+	scope = country
+	is_valid = {
+		is_ai = no
+	}
+	effect = {
+		pp_tplan_food_taverns_next = yes
+	}
+}
+
+# The Food plan's store limit: fewer months (from always: the longest).
+pp_tplan_food_store_down = {
+	scope = country
+	is_valid = {
+		is_ai = no
+	}
+	effect = {
+		pp_tplan_food_store_step = { dir = down }
+	}
+}
+
+# The Food plan's store limit: more months (past the longest: always).
+pp_tplan_food_store_up = {
+	scope = country
+	is_valid = {
+		is_ai = no
+	}
+	effect = {
+		pp_tplan_food_store_step = { dir = up }
+	}
+}
+
+# The Trade plan's capacity in use: a lower share (below the lowest: always).
+pp_tplan_trade_use_down = {
+	scope = country
+	is_valid = {
+		is_ai = no
+	}
+	effect = {
+		pp_tplan_trade_use_step = { dir = down }
+	}
+}
+
+# The Trade plan's capacity in use: a higher share (from always: the lowest).
+pp_tplan_trade_use_up = {
+	scope = country
+	is_valid = {
+		is_ai = no
+	}
+	effect = {
+		pp_tplan_trade_use_step = { dir = up }
+	}
+}

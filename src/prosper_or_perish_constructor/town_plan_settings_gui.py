@@ -6,9 +6,11 @@ tab is small: on top the settings every plan shares (a payback limit, never a le
 close other businesses for a plan's workers (plan_closer.py), whether the Businesses rule builds in planned locations,
 how several plans in one location share their turn, whether plans grant their charter and rights, and the game's own
 close-buildings automation), each one switch or
-stepper; below it the plan icons (the Location Plan picker's groups and icons), a click selects a plan (a GUI
+stepper; beside them the plan icons (the Location Plan picker's groups and icons), a click selects a plan (a GUI
 variable, no script), and a small card shows what the plan builds and its payback limit, which the player may set for
-that plan alone. A plan with its own limit carries a dot on its icon.
+that plan alone. A plan with its own limit carries a dot on its icon. Since the same evening the options of
+town_plan_options.py too (shared rows, a goods plan's per-plan line, the Food and Trade plans' own rows), and no scroll
+area: all icons show at once (see the layout constants).
 
 The script side (the values the tab reads, the scripted GUIs its buttons run, the defaults) is town_plans.py's and the
 hand-written scripted GUIs'; this module only names them (CONTRACT_VALUES, CONTRACT_GUIS) and writes:
@@ -24,6 +26,10 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 
+import math
+import re
+
+from prosper_or_perish_constructor import town_plan_options as tpo
 from prosper_or_perish_constructor import town_plans
 
 GUI = Path("in_game/gui/pp_town_plan_settings_generated.gui")
@@ -35,9 +41,44 @@ TAB_TYPE = "pp_tplan_set_tab"
 TAB_VARIABLE = "pp_cplan_tab"  # the window's tab (GUI variable); this tab's value:
 TAB_VALUE = "plans"
 SELECTED = "pp_tplan_set_sel"  # GUI variable: the plan whose card shows
-PER_ROW = 14  # plan icons per grid row (40 px tile + 3 px gap)
-GRID_WIDTH = 640  # px, the grid inside the scroll area (the tab is about 700 px wide)
 MAX_NAMES = 8  # a card names at most this many buildings; a longer list (food, trade) is told in a sentence
+
+# ---- the layout (2026-11-20, Jan: "I do not like that I have to scroll"): no scroll area. The window (1360 x 820)
+# leaves the tab body about 1296 x 690 px; the tab is laid out for TAB_W x TAB_H and `expand = {}` takes any slack.
+#   left column  (LEFT_W): "All plans", the shared settings, one row each;
+#   right column (RIGHT_W): "Each plan", all plan icons at once (group name in a left gutter, PER_ROW icons a row),
+#                under them the card of the selected plan: title row, then its text (CARD_TEXT_W) beside its rows
+#                (payback limit, the per-plan options, the Food / Trade plan's own options).
+# Heights (layout_heights() sums them; a test holds the taller column to TAB_H):
+#   left  = 2 x MARGIN_Y + TITLE_H + PART_GAP + rows x ROW_H + (rows - 1) x ROW_GAP
+#   right = 2 x MARGIN_Y + TITLE_H + PART_GAP + grid + PART_GAP + card
+#   grid  = grid rows x TILE_SIZE + (grid rows - groups) x TILE_GAP + (groups - 1) x GROUP_GAP
+#   card  = CARD_TITLE_H + CARD_GAP + max(text lines x LINE_H, card rows x ROW_H + (card rows - 1) x CARD_GAP)
+# With 77 plans in 7 groups (29, 1, 7, 2, 23, 13, 2): 9 grid rows -> grid 9 x 34 + 2 x 2 + 6 x 4 = 334;
+# Food's card 5 rows -> 30 + 4 + max(text, 5 x 26 + 4 x 4 = 146); the longest card text sets the card height.
+TAB_W, TAB_H = 1290, 680
+MARGIN_X, MARGIN_Y = 10, 8
+COL_GAP = 16
+LEFT_W = 500
+RIGHT_W = TAB_W - 2 * MARGIN_X - LEFT_W - COL_GAP  # 754
+TITLE_H = 24  # a pp_tplan_set_title line
+ROW_H = 26  # a settings row: its tallest widget, the 26 px switch
+ROW_GAP = 2  # between the shared settings rows
+PART_GAP = 6  # between the parts of a column
+TILE_SIZE = 34  # a plan icon's frame (the button 30)
+TILE_GAP = 2
+GUTTER = 130  # the group name's column left of the icons
+GUTTER_GAP = 6
+GROUP_GAP = 4
+PER_ROW = (RIGHT_W - GUTTER - GUTTER_GAP + TILE_GAP) // (TILE_SIZE + TILE_GAP)  # 17
+CARD_TITLE_H = 30
+CARD_GAP = 4
+CARD_TEXT_W = 280
+CARD_COL_GAP = 12
+LINE_H = 20  # a text line (estimate)
+CHARS_PER_LINE = 38  # in CARD_TEXT_W (estimate)
+LINK_CHARS = 18  # a linked game name (building, good, right) shown in the text (estimate)
+SWITCH_W, CYCLE_W = 150, 190
 
 # ---- the contract with the script side (town_plans.py and the scripted GUIs, agent S) ----
 # Country script values: 0 = any (no limit); 1 = on / take turns / the plan has its own limit.
@@ -58,8 +99,9 @@ PB_UP, PB_DOWN, PB_RESET = "pp_tplan_pb_up", "pp_tplan_pb_down", "pp_tplan_pb_re
 TOGGLES = {"loss": "pp_tplan_toggle_loss", "staff": "pp_tplan_toggle_staff", "order": "pp_tplan_toggle_order",
            "close": "pp_tplan_toggle_close", "free": "pp_tplan_toggle_free", "alone": "pp_tplan_toggle_alone",
            "rights": "pp_tplan_toggle_rights"}
-CONTRACT_GUIS = (PB_UP, PB_DOWN, PB_RESET, *TOGGLES.values())
+CONTRACT_GUIS = (PB_UP, PB_DOWN, PB_RESET, *TOGGLES.values(), *sorted(tpo.gui_names()))
 ALL = "all"
+assert ALL == tpo.ALL
 
 
 @dataclass(frozen=True)
@@ -115,9 +157,26 @@ def own(item: Item) -> str:
     return is_on(PB_OWN + item.key)
 
 
+def card_options(item: Item) -> tuple[tpo.Option, ...]:
+    """The options on a plan's card: the per-plan ones on a goods plan's, the Food / Trade plan's own on theirs."""
+    found = tpo.per_plan() if item.good else ()
+    return found + tuple(option for option in tpo.OPTIONS if option.where in (tpo.FOOD, tpo.TRADE)
+                         and option.where == item.key)
+
+
+def marked(item: Item) -> str:
+    """The plan has a setting of its own: its payback limit or a per-plan option (the dot on its icon)."""
+    conditions = [own(item)] + [is_on(option.own_value + item.key) for option in card_options(item) if option.per_plan]
+    expression = conditions[-1]
+    for condition in reversed(conditions[:-1]):
+        expression = f"Or({condition}, {expression})"
+    return expression
+
+
 def used_values(items: list[Item]) -> set[str]:
     """Every script value the tab reads."""
-    return set(CONTRACT_VALUES) | {prefix + item.key for item in items for prefix in CONTRACT_VALUE_PREFIXES}
+    return (set(CONTRACT_VALUES) | {prefix + item.key for item in items for prefix in CONTRACT_VALUE_PREFIXES}
+            | tpo.value_names([item.key for item in items if item.good]))
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -162,7 +221,55 @@ def groups(items: list[Item]) -> list[tuple[str, list[Item]]]:
 
 
 # ---------------------------------------------------------------------------------------------------------------------
+# layout arithmetic (see the constants on top)
+
+
+def _plain_chars(text: str) -> int:
+    """The visible length of a card text, a linked game name counted as LINK_CHARS."""
+    return len(re.sub(r"\[[^\]]*\]|\$[A-Za-z0-9_]+\$", "x" * LINK_CHARS, text))
+
+
+def card_text_lines(item: Item) -> int:
+    return sum(max(1, math.ceil(_plain_chars(part) / CHARS_PER_LINE)) for part in card_text(item).split("\n"))
+
+
+def card_rows(item: Item) -> int:
+    return 1 + len(card_options(item))  # the payback limit, then the options
+
+
+def card_height(item: Item) -> int:
+    rows = card_rows(item)
+    return CARD_TITLE_H + CARD_GAP + max(card_text_lines(item) * LINE_H, rows * ROW_H + (rows - 1) * CARD_GAP)
+
+
+def grid_rows(items: list[Item]) -> int:
+    return sum(math.ceil(len(members) / PER_ROW) for _, members in groups(items))
+
+
+def grid_height(items: list[Item]) -> int:
+    rows, count = grid_rows(items), len(groups(items))
+    return rows * TILE_SIZE + (rows - count) * TILE_GAP + (count - 1) * GROUP_GAP
+
+
+def shared_rows() -> int:
+    return 8 + len(tpo.options(tpo.ALL))  # the eight older settings, then the new ones
+
+
+def layout_heights(items: list[Item]) -> dict[str, int]:
+    """The fixed heights of the two columns (px, margins included); the right one with the tallest card."""
+    rows = shared_rows()
+    left = 2 * MARGIN_Y + TITLE_H + PART_GAP + rows * ROW_H + (rows - 1) * ROW_GAP
+    card = max(card_height(item) for item in items)
+    right = 2 * MARGIN_Y + TITLE_H + PART_GAP + grid_height(items) + PART_GAP + card
+    return {"left": left, "right": right, "grid": grid_height(items), "card": card}
+
+
+# ---------------------------------------------------------------------------------------------------------------------
 # GUI
+
+
+def equals(name: str, number: int) -> str:
+    return f"EqualTo_CFixedPoint({value(name)}, '(CFixedPoint){number}')"
 
 
 def _switch(name: str, gui: str, on_text: str, off_text: str, tooltip: str, tab: str) -> str:
@@ -173,124 +280,204 @@ def _switch(name: str, gui: str, on_text: str, off_text: str, tooltip: str, tab:
     )
 
 
-def _stepper(key: str, tooltips: tuple[str, str], tab: str) -> str:
+def _stepper(key: str | None, tooltips: tuple[str, str], tab: str, guis: tuple[str, str] = (PB_DOWN, PB_UP)) -> str:
     return (
-        f"{tab}pp_tplan_set_step = {{ text = \"PP_TPLAN_SET_MINUS\" tooltip = \"{tooltips[0]}\" onclick = \"{call(PB_DOWN, key)}\" }}\n"
-        f"{tab}pp_tplan_set_step = {{ text = \"PP_TPLAN_SET_PLUS\" tooltip = \"{tooltips[1]}\" onclick = \"{call(PB_UP, key)}\" }}\n"
+        f"{tab}pp_tplan_set_step = {{ text = \"PP_TPLAN_SET_MINUS\" tooltip = \"{tooltips[0]}\" onclick = \"{call(guis[0], key)}\" }}\n"
+        f"{tab}pp_tplan_set_step = {{ text = \"PP_TPLAN_SET_PLUS\" tooltip = \"{tooltips[1]}\" onclick = \"{call(guis[1], key)}\" }}\n"
     )
 
 
-def _row(label: str, tooltip: str, right: str) -> str:
+def _row(label: str, tooltip: str, right: str, tab: str = "\t\t\t\t\t") -> str:
     return (
-        "\t\thbox = {\n\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\tspacing = 6\n"
-        f"\t\t\tpp_tplan_set_label = {{ text = \"{label}\" tooltip = \"{tooltip}\" }}\n"
-        "\t\t\texpand = {}\n" + right + "\t\t}\n"
+        f"{tab}hbox = {{\n{tab}\tlayoutpolicy_horizontal = expanding\n{tab}\tspacing = 6\n"
+        f"{tab}\tpp_tplan_set_label = {{ text = \"{label}\" tooltip = \"{tooltip}\" }}\n"
+        f"{tab}\texpand = {{}}\n" + right + f"{tab}}}\n"
     )
+
+
+# ---- the options of town_plan_options.py, rendered by kind
+
+
+def opt_key(option: tpo.Option, suffix: str = "") -> str:
+    return f"PP_TPLAN_OPT_{option.key.upper()}{suffix}"
+
+
+def opt_value_key(option: tpo.Option, key: str | None, part: str = "_V") -> str:
+    """A stepper's shown value (_V: the plain text while nothing is set, else _N: the number), per key for per-plan
+    ones."""
+    return opt_key(option, part + (f"_{key.upper()}" if option.per_plan and key else ""))
+
+
+def opt_names(option: tpo.Option, key: str | None) -> tuple[str, str, str]:
+    """(value, set value, own value) the option's row reads for this key (own only on a plan's card)."""
+    if not option.per_plan:
+        return option.value, option.set_value, ""
+    assert key
+    return option.value + key, option.set_value + key, (option.own_value + key if key != ALL else "")
+
+
+def _option_row(option: tpo.Option, key: str | None, tab: str) -> str:
+    """One option's row: on the All plans block (per-plan ones with key all) or on a plan's card."""
+    tooltip = opt_key(option, "_TT")
+    inner = tab + "\t"
+    head = (f"{tab}hbox = {{\n{inner}layoutpolicy_horizontal = expanding\n{inner}ignoreinvisible = yes\n"
+            f"{inner}spacing = 6\n{inner}pp_tplan_set_label = {{ text = \"{opt_key(option)}\" tooltip = \"{tooltip}\" }}\n")
+    name, _, own_name = opt_names(option, key)
+    if option.kind == "switch":
+        body = f"{inner}expand = {{}}\n" + _switch(name, option.guis[0], opt_key(option, "_S1"), opt_key(option, "_S0"),
+                                                  tooltip, inner)
+    elif option.kind == "cycle":
+        body = f"{inner}expand = {{}}\n" + "".join(
+            f"{inner}pp_tplan_set_cycle = {{ visible = \"[{equals(name, index)}]\" text = \"{opt_key(option, f'_S{index}')}\" "
+            f"tooltip = \"{tooltip}\" onclick = \"{call(option.guis[0])}\" }}\n"
+            for index in range(len(option.states))
+        )
+    elif option.kind == "stepper":
+        shown = f"{inner}pp_tplan_set_label = {{ text = \"{opt_value_key(option, key)}\" tooltip = \"{tooltip}\" }}\n"
+        if own_name:
+            shown += (f"{inner}pp_tplan_set_label = {{ visible = \"[Not({is_on(own_name)})]\" text = \"PP_TPLAN_SET_SAME\" "
+                      f"default_format = \"#weak\" tooltip = \"{tooltip}\" }}\n")
+        # the All plans block: label, room, value, steps (like its payback row); a card: label, value, room, steps
+        body = (f"{inner}expand = {{}}\n" + shown) if key == ALL else (shown + f"{inner}expand = {{}}\n")
+        scope = key if option.per_plan else None
+        body += _stepper(scope, (opt_key(option, "_DOWN_TT"), opt_key(option, "_UP_TT")), inner,
+                         (option.guis[0], option.guis[1]))
+        if own_name:
+            body += (f"{inner}pp_tplan_set_switch = {{ visible = \"[{is_on(own_name)}]\" text = \"PP_TPLAN_SET_RESET\" "
+                     f"tooltip = \"PP_TPLAN_OPT_RESET_TT\" onclick = \"{call(option.guis[2], key)}\" }}\n")
+    else:
+        raise ValueError(f"unknown option kind {option.kind!r} ({option.key})")
+    return head + body + f"{tab}}}\n"
 
 
 def _tile(item: Item, tab: str) -> str:
-    """A plan's icon: a click selects it (its card shows); gold frame while selected, a dot while it has its own
-    payback limit."""
+    """A plan's icon: a click selects it (its card shows); gold frame while selected, a dot while it has a setting of
+    its own (payback limit or a per-plan option)."""
+    size, inner = TILE_SIZE, TILE_SIZE - 4
     return (
-        f"{tab}widget = {{\n{tab}\tsize = {{ 40 40 }}\n"
-        f"{tab}\ticon = {{ visible = \"[{selected(item)}]\" size = {{ 40 40 }} texture = \"{TILE}\" color = {{ 0.9 0.7 0.25 0.95 }} }}\n"
-        f"{tab}\tbutton = {{\n{tab}\t\tsize = {{ 34 34 }}\n{tab}\t\tparentanchor = center\n"
+        f"{tab}widget = {{\n{tab}\tsize = {{ {size} {size} }}\n"
+        f"{tab}\ticon = {{ visible = \"[{selected(item)}]\" size = {{ {size} {size} }} texture = \"{TILE}\" color = {{ 0.9 0.7 0.25 0.95 }} }}\n"
+        f"{tab}\tbutton = {{\n{tab}\t\tsize = {{ {inner} {inner} }}\n{tab}\t\tparentanchor = center\n"
         f"{tab}\t\ttexture = \"{item.icon}\"\n"
         f"{tab}\t\ttooltip = \"PP_TPLAN_SET_PICK_{item.upper}\"\n"
         f"{tab}\t\tonclick = \"[GetVariableSystem.Set('{SELECTED}', '{item.key}')]\"\n{tab}\t}}\n"
-        f"{tab}\ticon = {{ visible = \"[{own(item)}]\" size = {{ 11 11 }} parentanchor = top|right "
+        f"{tab}\ticon = {{ visible = \"[{marked(item)}]\" size = {{ 10 10 }} parentanchor = top|right "
         f"texture = \"{TILE}\" color = {{ 0.45 0.85 0.45 1.0 }} }}\n"
         f"{tab}}}\n"
     )
 
 
-def _card(item: Item) -> str:
-    tab = "\t\t\t"
-    return (
-        f"\t\tvbox = {{ # {item.key}\n"
-        f"{tab}visible = \"[{selected(item)}]\"\n"
-        f"{tab}layoutpolicy_horizontal = expanding\n{tab}ignoreinvisible = yes\n{tab}spacing = 4\n"
-        f"{tab}hbox = {{\n{tab}\tlayoutpolicy_horizontal = expanding\n{tab}\tspacing = 6\n"
-        f"{tab}\ticon = {{ size = {{ 30 30 }} texture = \"{item.icon}\" }}\n"
-        f"{tab}\tpp_tplan_set_title = {{ text = \"PP_TPLAN_SET_NAME_{item.upper}\" }}\n"
-        f"{tab}\texpand = {{}}\n{tab}}}\n"
-        f"{tab}pp_tplan_set_text = {{ text = \"PP_TPLAN_SET_CARD_{item.upper}\" }}\n"
-        f"{tab}hbox = {{\n{tab}\tlayoutpolicy_horizontal = expanding\n{tab}\tignoreinvisible = yes\n{tab}\tspacing = 6\n"
-        f"{tab}\tpp_tplan_set_label = {{ text = \"PP_TPLAN_SET_PB\" tooltip = \"PP_TPLAN_SET_PB_PLAN_TT\" }}\n"
-        f"{tab}\tpp_tplan_set_label = {{ text = \"PP_TPLAN_SET_PB_{item.upper}\" tooltip = \"PP_TPLAN_SET_PB_PLAN_TT\" }}\n"
-        f"{tab}\tpp_tplan_set_label = {{ visible = \"[Not({own(item)})]\" text = \"PP_TPLAN_SET_SAME\" "
+def _grid(items: list[Item], tab: str) -> str:
+    """Every plan icon at once: per group the name in a left gutter, the icons PER_ROW a row beside it."""
+    out = [f"{tab}vbox = {{\n{tab}\tlayoutpolicy_horizontal = expanding\n{tab}\tspacing = {GROUP_GAP}\n"]
+    t1, t2, t3, t4 = tab + "\t", tab + "\t\t", tab + "\t\t\t", tab + "\t\t\t\t"
+    for group, members in groups(items):
+        out.append(f"{t1}hbox = {{ # {group}\n{t2}layoutpolicy_horizontal = expanding\n{t2}spacing = {GUTTER_GAP}\n"
+                   f"{t2}pp_tplan_set_group = {{ text = \"PP_LPLAN_GROUP_{group.upper()}\" }}\n"
+                   f"{t2}vbox = {{\n{t3}layoutpolicy_horizontal = expanding\n{t3}spacing = {TILE_GAP}\n")
+        for start in range(0, len(members), PER_ROW):
+            out.append(f"{t3}hbox = {{\n{t4}layoutpolicy_horizontal = expanding\n{t4}spacing = {TILE_GAP}\n")
+            out += [_tile(item, t4) for item in members[start:start + PER_ROW]]
+            out.append(f"{t4}expand = {{}}\n{t3}}}\n")
+        out.append(f"{t2}}}\n{t1}}}\n")
+    out.append(f"{tab}}}\n")
+    return "".join(out)
+
+
+def _card(item: Item, tab: str = "\t\t\t\t") -> str:
+    """The selected plan's card: title row, then its text beside its rows (payback limit, then its options). Every
+    per-plan read sits inside the card's `visible`, so only the selected plan's values are evaluated."""
+    t1, t2, t3, t4 = tab + "\t", tab + "\t\t", tab + "\t\t\t", tab + "\t\t\t\t"
+    payback = (
+        f"{t3}hbox = {{\n{t4}layoutpolicy_horizontal = expanding\n{t4}ignoreinvisible = yes\n{t4}spacing = 6\n"
+        f"{t4}pp_tplan_set_label = {{ text = \"PP_TPLAN_SET_PB\" tooltip = \"PP_TPLAN_SET_PB_PLAN_TT\" }}\n"
+        f"{t4}pp_tplan_set_label = {{ text = \"PP_TPLAN_SET_PB_{item.upper}\" tooltip = \"PP_TPLAN_SET_PB_PLAN_TT\" }}\n"
+        f"{t4}pp_tplan_set_label = {{ visible = \"[Not({own(item)})]\" text = \"PP_TPLAN_SET_SAME\" "
         "default_format = \"#weak\" tooltip = \"PP_TPLAN_SET_PB_PLAN_TT\" }\n"
-        f"{tab}\texpand = {{}}\n"
-        + _stepper(item.key, ("PP_TPLAN_SET_SHORTER_PLAN_TT", "PP_TPLAN_SET_LONGER_PLAN_TT"), tab + "\t")
-        + f"{tab}\tpp_tplan_set_switch = {{ visible = \"[{own(item)}]\" text = \"PP_TPLAN_SET_RESET\" "
+        f"{t4}expand = {{}}\n"
+        + _stepper(item.key, ("PP_TPLAN_SET_SHORTER_PLAN_TT", "PP_TPLAN_SET_LONGER_PLAN_TT"), t4)
+        + f"{t4}pp_tplan_set_switch = {{ visible = \"[{own(item)}]\" text = \"PP_TPLAN_SET_RESET\" "
         f"tooltip = \"PP_TPLAN_SET_RESET_TT\" onclick = \"{call(PB_RESET, item.key)}\" }}\n"
-        f"{tab}}}\n\t\t}}\n"
+        f"{t3}}}\n"
+    )
+    options = "".join(_option_row(option, item.key if option.per_plan else None, t3) for option in card_options(item))
+    return (
+        f"{tab}vbox = {{ # {item.key}\n"
+        f"{t1}visible = \"[{selected(item)}]\"\n"
+        f"{t1}layoutpolicy_horizontal = expanding\n{t1}ignoreinvisible = yes\n{t1}spacing = {CARD_GAP}\n"
+        f"{t1}hbox = {{\n{t2}layoutpolicy_horizontal = expanding\n{t2}spacing = 6\n"
+        f"{t2}icon = {{ size = {{ {CARD_TITLE_H} {CARD_TITLE_H} }} texture = \"{item.icon}\" }}\n"
+        f"{t2}pp_tplan_set_title = {{ text = \"PP_TPLAN_SET_NAME_{item.upper}\" }}\n"
+        f"{t2}expand = {{}}\n{t1}}}\n"
+        f"{t1}hbox = {{\n{t2}layoutpolicy_horizontal = expanding\n{t2}spacing = {CARD_COL_GAP}\n"
+        f"{t2}vbox = {{\n{t3}layoutpolicy_vertical = expanding\n"
+        f"{t3}pp_tplan_set_card_text = {{ text = \"PP_TPLAN_SET_CARD_{item.upper}\" }}\n"
+        f"{t3}expand = {{}}\n{t2}}}\n"
+        f"{t2}vbox = {{\n{t3}layoutpolicy_horizontal = expanding\n{t3}layoutpolicy_vertical = expanding\n"
+        f"{t3}ignoreinvisible = yes\n{t3}spacing = {CARD_GAP}\n"
+        + payback + options
+        + f"{t3}expand = {{}}\n{t2}}}\n{t1}}}\n{tab}}}\n"
     )
 
 
 def render_gui(items: list[Item]) -> str:
+    rows = "\t\t\t\t\t"  # the shared settings rows' indent
     out = [
         HEADER,
         "\n# The Construction Plan window's Plans tab (pp_construction_plan.gui places the type as its third tab; the body\n"
-        f"# shows only while {TAB_VARIABLE} = {TAB_VALUE}, so it costs nothing while another tab is open). On top the settings\n"
-        "# every plan shares, below the plan icons (the Location Plan picker's groups) and the card of the selected plan\n"
-        f"# (GUI variable {SELECTED}). Every button runs a scripted GUI of the country (town plan settings); every value\n"
-        "# is a country script value.\n",
+        f"# shows only while {TAB_VARIABLE} = {TAB_VALUE}, so it costs nothing while another tab is open). Left the settings\n"
+        "# every plan shares, right all plan icons at once (the Location Plan picker's groups) and under them the card of\n"
+        f"# the selected plan (GUI variable {SELECTED}). No scroll area: the tab is laid out for {TAB_W} x {TAB_H} px\n"
+        "# (town_plan_settings_gui.py, layout_heights). Every button runs a scripted GUI of the country (town plan\n"
+        "# settings); every value is a country script value.\n",
         "\ntypes PPTownPlanSettings\n{\n",
         "\ttype pp_tplan_set_label = text_single {\n\t\tautoresize = yes\n\t\talign = left|nobaseline\n\t}\n\n",
         "\ttype pp_tplan_set_title = text_single {\n\t\tautoresize = yes\n\t\talign = left|nobaseline\n"
         "\t\tdefault_format = \"#yellow_titles\"\n\t}\n\n",
         "\ttype pp_tplan_set_text = text_multi {\n\t\tlayoutpolicy_horizontal = expanding\n\t\tautoresize = yes\n"
-        f"\t\tmaximumsize = {{ {GRID_WIDTH + 40} -1 }}\n\t}}\n\n",
+        f"\t\tmaximumsize = {{ {RIGHT_W} -1 }}\n\t}}\n\n",
+        "\ttype pp_tplan_set_card_text = text_multi {\n\t\tautoresize = yes\n"
+        f"\t\tminimumsize = {{ {CARD_TEXT_W} -1 }}\n\t\tmaximumsize = {{ {CARD_TEXT_W} -1 }}\n\t}}\n\n",
+        "\ttype pp_tplan_set_group = text_multi {\n\t\tautoresize = yes\n"
+        f"\t\tminimumsize = {{ {GUTTER} -1 }}\n\t\tmaximumsize = {{ {GUTTER} -1 }}\n"
+        "\t\tdefault_format = \"#yellow_titles\"\n\t}\n\n",
         "\ttype pp_tplan_set_step = button_regular {\n\t\tsize = { 26 24 }\n\t}\n\n",
-        "\ttype pp_tplan_set_switch = button_regular {\n\t\tsize = { 150 26 }\n\t}\n\n",
+        f"\ttype pp_tplan_set_switch = button_regular {{\n\t\tsize = {{ {SWITCH_W} {ROW_H} }}\n\t}}\n\n",
+        f"\ttype pp_tplan_set_cycle = button_regular {{\n\t\tsize = {{ {CYCLE_W} {ROW_H} }}\n\t}}\n\n",
         f"\ttype {TAB_TYPE} = vbox {{\n"
         "\t\tlayoutpolicy_horizontal = expanding\n\t\tlayoutpolicy_vertical = expanding\n"
-        "\t\tignoreinvisible = yes\n\t\tmargin = { 10 8 }\n\t\tspacing = 6\n\n"
-        "\t\t# ---- All plans ----\n"
-        "\t\tpp_tplan_set_title = { text = \"PP_TPLAN_SET_ALL\" tooltip = \"PP_TPLAN_SET_ALL_TT\" }\n"
-        # the eight rows sit closer together than the tab's parts, so the plan icons below keep their room
-        "\t\tvbox = {\n\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\tspacing = 2\n",
+        f"\t\tignoreinvisible = yes\n\t\tmargin = {{ {MARGIN_X} {MARGIN_Y} }}\n\n"
+        f"\t\thbox = {{\n\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\tlayoutpolicy_vertical = expanding\n"
+        f"\t\t\tspacing = {COL_GAP}\n\n"
+        "\t\t\t# ---- All plans ----\n"
+        f"\t\t\tvbox = {{\n\t\t\t\tminimumsize = {{ {LEFT_W} -1 }}\n\t\t\t\tmaximumsize = {{ {LEFT_W} -1 }}\n"
+        f"\t\t\t\tlayoutpolicy_vertical = expanding\n\t\t\t\tspacing = {PART_GAP}\n"
+        "\t\t\t\tpp_tplan_set_title = { text = \"PP_TPLAN_SET_ALL\" tooltip = \"PP_TPLAN_SET_ALL_TT\" }\n"
+        # the rows sit closer together than the column's parts
+        f"\t\t\t\tvbox = {{\n\t\t\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\t\t\tspacing = {ROW_GAP}\n",
         _row("PP_TPLAN_SET_PB", "PP_TPLAN_SET_PB_TT",
-             "\t\t\tpp_tplan_set_label = { text = \"PP_TPLAN_SET_PB_ALL\" tooltip = \"PP_TPLAN_SET_PB_TT\" }\n"
-             + _stepper(ALL, ("PP_TPLAN_SET_SHORTER_TT", "PP_TPLAN_SET_LONGER_TT"), "\t\t\t")),
-        _row("PP_TPLAN_SET_LOSS", "PP_TPLAN_SET_LOSS_TT",
-             _switch(LOSS, TOGGLES["loss"], "PP_TPLAN_SET_ON", "PP_TPLAN_SET_OFF", "PP_TPLAN_SET_LOSS_TT", "\t\t\t")),
-        _row("PP_TPLAN_SET_STAFF", "PP_TPLAN_SET_STAFF_TT",
-             _switch(STAFF, TOGGLES["staff"], "PP_TPLAN_SET_ON", "PP_TPLAN_SET_OFF", "PP_TPLAN_SET_STAFF_TT", "\t\t\t")),
-        _row("PP_TPLAN_SET_FREE", "PP_TPLAN_SET_FREE_TT",
-             _switch(FREE, TOGGLES["free"], "PP_TPLAN_SET_ON", "PP_TPLAN_SET_OFF", "PP_TPLAN_SET_FREE_TT", "\t\t\t")),
-        _row("PP_TPLAN_SET_ALONE", "PP_TPLAN_SET_ALONE_TT",
-             _switch(ALONE, TOGGLES["alone"], "PP_TPLAN_SET_ON", "PP_TPLAN_SET_OFF", "PP_TPLAN_SET_ALONE_TT", "\t\t\t")),
-        _row("PP_TPLAN_SET_ORDER", "PP_TPLAN_SET_ORDER_TT",
-             _switch(ORDER, TOGGLES["order"], "PP_TPLAN_SET_TURNS", "PP_TPLAN_SET_BEST", "PP_TPLAN_SET_ORDER_TT", "\t\t\t")),
-        _row("PP_TPLAN_SET_RIGHTS", "PP_TPLAN_SET_RIGHTS_TT",
-             _switch(RIGHTS, TOGGLES["rights"], "PP_TPLAN_SET_ON", "PP_TPLAN_SET_OFF", "PP_TPLAN_SET_RIGHTS_TT", "\t\t\t")),
-        _row("PP_TPLAN_SET_CLOSE", "PP_TPLAN_SET_CLOSE_TT",
-             _switch(CLOSE, TOGGLES["close"], "PP_TPLAN_SET_ON", "PP_TPLAN_SET_OFF", "PP_TPLAN_SET_CLOSE_TT", "\t\t\t")),
-        "\t\t}\n",
-        "\n\t\t# ---- Each plan: the icons (a click selects one), then its card ----\n"
-        "\t\twidget = { size = { 1 4 } }\n"
-        "\t\tpp_tplan_set_title = { text = \"PP_TPLAN_SET_EACH\" tooltip = \"PP_TPLAN_SET_EACH_TT\" }\n"
-        "\t\tscrollarea = {\n"
-        "\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\tlayoutpolicy_vertical = expanding\n"
-        "\t\t\tscrollbarpolicy_horizontal = always_off\n"
-        "\t\t\tscrollbar_vertical = { using = Scrollbar_Vertical }\n"
-        "\t\t\tscrollwidget = {\n"
-        f"\t\t\t\tvbox = {{\n\t\t\t\t\tminimumsize = {{ {GRID_WIDTH} -1 }}\n\t\t\t\t\tmaximumsize = {{ {GRID_WIDTH} -1 }}\n"
-        "\t\t\t\t\tspacing = 2\n",
+             f"{rows}\tpp_tplan_set_label = {{ text = \"PP_TPLAN_SET_PB_ALL\" tooltip = \"PP_TPLAN_SET_PB_TT\" }}\n"
+             + _stepper(ALL, ("PP_TPLAN_SET_SHORTER_TT", "PP_TPLAN_SET_LONGER_TT"), rows + "\t")),
     ]
-    for group, members in groups(items):
-        out.append(f"\t\t\t\t\tpp_tplan_set_label = {{ text = \"PP_LPLAN_GROUP_{group.upper()}\" default_format = \"#yellow_titles\" }}\n")
-        for start in range(0, len(members), PER_ROW):
-            out.append("\t\t\t\t\thbox = {\n\t\t\t\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\t\t\t\tspacing = 3\n")
-            out += [_tile(item, "\t\t\t\t\t\t") for item in members[start:start + PER_ROW]]
-            out.append("\t\t\t\t\t\texpand = {}\n\t\t\t\t\t}\n")
-    out.append("\t\t\t\t}\n\t\t\t}\n\t\t}\n\n")
-    out.append(f"\t\tpp_tplan_set_text = {{ visible = \"[Not(GetVariableSystem.Exists('{SELECTED}'))]\" "
+    for key in ("LOSS", "STAFF", "FREE", "ALONE", "ORDER", "RIGHTS", "CLOSE"):
+        name = {"LOSS": LOSS, "STAFF": STAFF, "FREE": FREE, "ALONE": ALONE, "ORDER": ORDER, "RIGHTS": RIGHTS,
+                "CLOSE": CLOSE}[key]
+        on_off = ("PP_TPLAN_SET_TURNS", "PP_TPLAN_SET_BEST") if key == "ORDER" else ("PP_TPLAN_SET_ON", "PP_TPLAN_SET_OFF")
+        out.append(_row(f"PP_TPLAN_SET_{key}", f"PP_TPLAN_SET_{key}_TT",
+                        _switch(name, TOGGLES[key.lower()], *on_off, f"PP_TPLAN_SET_{key}_TT", rows + "\t")))
+    out += [_option_row(option, ALL if option.per_plan else None, rows) for option in tpo.options(tpo.ALL)]
+    out.append("\t\t\t\t}\n\t\t\t\texpand = {}\n\t\t\t}\n")
+    out.append(
+        "\n\t\t\t# ---- Each plan: all icons at once (a click selects one), then its card ----\n"
+        "\t\t\tvbox = {\n\t\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\t\tlayoutpolicy_vertical = expanding\n"
+        f"\t\t\t\tignoreinvisible = yes\n\t\t\t\tspacing = {PART_GAP}\n"
+        "\t\t\t\tpp_tplan_set_title = { text = \"PP_TPLAN_SET_EACH\" tooltip = \"PP_TPLAN_SET_EACH_TT\" }\n"
+    )
+    out.append(_grid(items, "\t\t\t\t"))
+    out.append(f"\t\t\t\tpp_tplan_set_text = {{ visible = \"[Not(GetVariableSystem.Exists('{SELECTED}'))]\" "
                "text = \"PP_TPLAN_SET_HINT\" default_format = \"#weak\" }\n")
     out += [_card(item) for item in items]
-    out.append("\t}\n}\n")
+    out.append("\t\t\t\texpand = {}\n\t\t\t}\n\t\t}\n\t}\n}\n")
     return "".join(out)
 
 
@@ -410,10 +597,10 @@ def texts(items: list[Item]) -> dict[str, str]:
         ),
         "PP_TPLAN_SET_EACH": "Each plan",
         "PP_TPLAN_SET_EACH_TT": (
-            "#T Each plan#!\nClick a plan to see what it builds and to give it a payback limit of its own. A green dot "
-            "marks a plan with its own limit."
+            "#T Each plan#!\nClick a plan to see what it builds and to give it settings of its own. A green dot "
+            "marks a plan with a setting of its own."
         ),
-        "PP_TPLAN_SET_HINT": "Click a plan to see what it builds and to give it a payback limit of its own.",
+        "PP_TPLAN_SET_HINT": "Click a plan to see what it builds and to give it settings of its own.",
         "PP_TPLAN_SET_SAME": "same as all plans",
         "PP_TPLAN_SET_PB_PLAN_TT": (
             "#T Payback limit of this plan#!\nThe longest this plan's next level may take to pay back its cost. Until "
@@ -424,20 +611,51 @@ def texts(items: list[Item]) -> dict[str, str]:
         "PP_TPLAN_SET_RESET": "Same as all plans",
         "PP_TPLAN_SET_RESET_TT": "Drop this plan's own limit: it follows the limit of all plans again",
         "PP_TPLAN_SET_OWN_MARK": " (its own)",
+        "PP_TPLAN_OPT_RESET_TT": "Drop this plan's own setting: it follows the setting of all plans again",
     }
+    goods = [item.key for item in items if item.good]
+    found |= option_texts(goods)
     for item in items:
         years = PB_YEARS + item.key
         found[f"PP_TPLAN_SET_NAME_{item.upper}"] = _name(item)
         found[f"PP_TPLAN_SET_YEARS_{item.upper}"] = _years(years)
         found[f"PP_TPLAN_SET_PB_{item.upper}"] = (
             f"[SelectLocalization({is_any(years)}, 'PP_TPLAN_SET_ANY', 'PP_TPLAN_SET_YEARS_{item.upper}')]")
+        # a goods plan's tooltip also shows its per-plan stepper options (read only while hovered)
+        extra = "".join(
+            f"\n${opt_key(option)}$: ${opt_value_key(option, item.key)}$"
+            f"[SelectLocalization({is_on(option.own_value + item.key)}, 'PP_TPLAN_SET_OWN_MARK', 'PP_TPLAN_SET_EMPTY')]"
+            for option in card_options(item) if option.per_plan and option.kind == "stepper"
+        )
         found[f"PP_TPLAN_SET_PICK_{item.upper}"] = (
             f"#T {_name(item)}#!\nPayback limit: $PP_TPLAN_SET_PB_{item.upper}$"
-            f"[SelectLocalization({own(item)}, 'PP_TPLAN_SET_OWN_MARK', 'PP_TPLAN_SET_EMPTY')]\n"
+            f"[SelectLocalization({own(item)}, 'PP_TPLAN_SET_OWN_MARK', 'PP_TPLAN_SET_EMPTY')]{extra}\n"
             "#weak Click to see what it builds#!"
         )
         found[f"PP_TPLAN_SET_CARD_{item.upper}"] = card_text(item)
     found["PP_TPLAN_SET_EMPTY"] = ""
+    return found
+
+
+def option_texts(goods: list[str]) -> dict[str, str]:
+    """The texts of town_plan_options.OPTIONS: label, tooltip, one per state; a stepper's step tooltips and its shown
+    value (per key for a per-plan one: all and every goods plan), the number read from its script value."""
+    found: dict[str, str] = {}
+    for option in tpo.OPTIONS:
+        found[opt_key(option)] = option.label
+        found[opt_key(option, "_TT")] = option.tooltip
+        if option.kind != "stepper":
+            for index, state in enumerate(option.states):
+                found[opt_key(option, f"_S{index}")] = state
+            continue
+        found[opt_key(option, "_S0")] = option.states[0]
+        found[opt_key(option, "_DOWN_TT")], found[opt_key(option, "_UP_TT")] = option.step_tooltips
+        for key in ([ALL, *goods] if option.per_plan else [None]):
+            name, set_name, _ = opt_names(option, key)
+            shown = opt_value_key(option, key)
+            number = opt_value_key(option, key, "_N")
+            found[number] = option.states[1].replace("{value}", f"[{value(name)}|0]")
+            found[shown] = f"[SelectLocalization({is_on(set_name)}, '{number}', '{opt_key(option, '_S0')}')]"
     return found
 
 

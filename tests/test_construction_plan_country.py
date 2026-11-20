@@ -1173,9 +1173,9 @@ def test_tab_is_one_type_made_of_known_parts() -> None:
             assert name not in {"hbox", "vbox"}, f"{name} directly inside {parent}"
     # only widget kinds the plan window and the profile editor already use; the tab's own three small types
     kinds = {name for name, _ in _widget_tree(gui)} - {"types", "type", "size", "margin", "color", "minimumsize", "maximumsize"}
-    # (flowcontainer: the scroll area's list of the rights, as the detail panes' lists)
-    assert kinds <= {"vbox", "hbox", "flowcontainer", "button", "widget", "icon", "glow", "expand", "scrollarea", "scrollwidget",
-                     "scrollbar_vertical", "blockoverride", "button_checkbox", "pp_cplan_country_label",
+    # (no scroll area: everything fits, test_tab_fits_the_body_without_scrolling)
+    assert kinds <= {"vbox", "hbox", "button", "widget", "icon", "glow", "expand", "blockoverride", "button_checkbox",
+                     "pp_cplan_country_label",
                      "pp_cplan_country_title", "pp_cplan_country_step_button", "text_single", "button_regular"}, kinds
     assert "Concatenate" not in gui and "GetFlagName" not in gui and "datamodel" not in gui
     # the window hosts it (the plan window is construction_plan.py's side)
@@ -1227,18 +1227,16 @@ def test_tiles_are_toggles_in_rows() -> None:
             assert show in _defined("script_values"), show
     always = [right.key for right in result.rights if right.always_shown]
     assert len(always) >= 20 and all(f"pp_cplan_right_show_{key} =" not in _read(MOD / cc.VALUES) for key in always)
-    # rows of at most tiles_per_row, a row hidden while none of its tiles shows
-    # (the buildings' rows are hboxes of the tab; the rights' rows flowcontainers in the scroll area's vertical
-    # flowcontainer: a vbox there was stretched over the scroll area and spread four rows over its height, in game
-    # 2026-11-10)
-    header = (r"(?:hbox = \{\n(?:\t+visible = \"[^\n]*\"\n)?\t+layoutpolicy_horizontal = expanding"
-              r"|flowcontainer = \{\n(?:\t+visible = \"[^\n]*\"\n)?\t+direction = horizontal)\n\t+ignoreinvisible = yes\n\t+spacing = 3\n")
+    # rows of at most tiles_per_row, a row hidden while none of its tiles shows (hboxes in their column's vbox; the
+    # column ends in an expand, so its rows stay together: a vbox stretched over a larger area spreads its rows, in
+    # game 2026-11-10)
+    header = (r"hbox = \{\n(?:\t+visible = \"[^\n]*\"\n)?\t+layoutpolicy_horizontal = expanding"
+              r"\n\t+ignoreinvisible = yes\n\t+spacing = 3\n")
     rows = re.split(header, gui)[1:]
     counts = [row.count("using = header_button_template") for row in rows]
-    listed = gui[gui.index("scrollwidget = {"):]
-    assert listed.startswith("scrollwidget = {\n\t\t\t\tflowcontainer = {\n\t\t\t\t\tdirection = vertical\n")
-    assert "hbox = {" not in listed and "vbox = {" not in listed
-    assert listed.count("using = header_button_template") == copies(len(result.rights))
+    right = gui[gui.index("# ==== Right column ===="):]
+    assert right.count("using = header_button_template") == copies(len(result.rights))
+    assert "MakeScopeFlag('pub_" not in right
     assert sum(counts) == len(tiles) and config.tiles_per_row == 11
     assert counts == ([len(result.buildings) - start for start in range(0, len(result.buildings), per_row)]
                       + [len(result.rights) - start for start in range(0, len(result.rights), per_row)])
@@ -1253,9 +1251,39 @@ def test_tiles_are_toggles_in_rows() -> None:
     opener = _read(MOD / "in_game/gui/panels/left_panel/left_panel.gui")
     assert opener.count(f"onclick = \"{cc.LAYOUT_CALL}\"") == 1
     assert "Not(IsPauseMenuShown)" in window[window.index('name = "pp_construction_plan_window"'):]
-    # the rights do not have to fit: they scroll
-    assert gui.index("scrollarea = {") < gui.index("MakeScopeFlag('right_")
-    assert gui.index("MakeScopeFlag('pub_") < gui.index("scrollarea = {")
+    # the buildings in the left column, the rights in the right one
+    assert gui.index("# ==== Left column ====") < gui.index("MakeScopeFlag('pub_") < gui.index("# ==== Right column ====")
+    assert gui.index("# ==== Right column ====") < gui.index("MakeScopeFlag('right_")
+
+
+def test_tab_fits_the_body_without_scrolling() -> None:
+    """Jan 2026-11-20: nothing in the plan window scrolls. Every grid holds a fixed number of tiles (one per building
+    and right of the database), so the tab is two columns of fixed heights inside the window's tab body."""
+    gui = _read(MOD / cc.GUI)
+    result, config = _result(), _config()
+    per_row = config.tiles_per_row
+    assert "scrollarea" not in gui and "scrollwidget" not in gui and "flowcontainer" not in gui
+    # the sizes the arithmetic counts are the ones the file uses
+    tab = gui[gui.index("type pp_cplan_country_tab = vbox {"):]
+    assert f"margin = {{ {cc.MARGIN[0]} {cc.MARGIN[1]} }}" in tab[:300]
+    assert f"spacing = {cc.COLUMN_GAP}\n" in tab[:500]
+    assert "type pp_cplan_country_step_button = button_regular {\n\t\tsize = { 26 24 }" in gui and cc.HEADER_HEIGHT >= 24
+    assert set(re.findall(r"button_checkbox = \{\n\t+size = \{ (\d+) (\d+) \}", tab)) == {("22", "22")}
+    assert set(re.findall(r"blockoverride \"header_button_full_content\" \{\}\n\t+size = \{ (\d+) \1 \}\n", tab)) == {str(cc.TILE)}
+    assert re.findall(r"\t+spacing = (\d+)\n", tab).count(str(cc.TILE_SPACING)) == (
+        -(-len(result.buildings) // per_row) + -(-len(result.rights) // per_row))
+    assert tab.count("# ==== Left column ====") == 1 and tab.count("# ==== Right column ====") == 1
+    # two columns, each ending in an expand (a larger body only adds empty space under them)
+    assert tab.count("\t\t\t\texpand = {}\n\t\t\t}\n") == 2
+    # widths: a row of tiles fits its column
+    assert cc.grid_width(per_row) == per_row * 34 + (per_row - 1) * 3 <= cc.column_width()
+    assert 2 * cc.column_width() + cc.COLUMN_GAP + 2 * cc.MARGIN[0] <= cc.BODY[0] <= 1296
+    # heights: left = header 24 + 4 + 39 buildings in 4 rows of 34 (3 gaps of 4) + 4 + header 24 + margins 12 = 216;
+    # right = header 24 + 4 + 83 rights in 8 rows of 34 (7 gaps of 4) + margins 12 = 340; the body has 680
+    left, right = cc.column_heights(len(result.buildings), len(result.rights), per_row)
+    assert left == 24 + 4 + (-(-len(result.buildings) // per_row)) * 38 - 4 + 4 + 24 + 12
+    assert right == 24 + 4 + (-(-len(result.rights) // per_row)) * 38 - 4 + 12
+    assert max(left, right) <= cc.BODY[1] <= 690
 
 
 def test_sections_have_one_header_row_each() -> None:

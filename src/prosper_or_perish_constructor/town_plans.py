@@ -21,7 +21,10 @@ This module holds the naming contract every part of the feature shares and the f
   else the goods target) and the rank raise ``pp_tplan_raise`` (Towns and Buildings' ``pp_cplan_country_rank_up``, paid
   from the Locations group's purse, ``why = 105``), and the plan settings' effects (``pp_tplan_pb_*``);
 * ``in_game/common/scripted_guis/pp_town_plan_settings.txt``: the plan settings' buttons (see "Plan settings" below);
-  the settings' script values go into the values file above.
+  the settings' script values go into the values file above;
+* the plan options (2026-11-20, "Plan options" below, contract town_plan_options.py): their values, effects, buttons,
+  the trigger ``pp_tplan_eff_low`` and the turns' option checks (the rank raise, the food plan's parts, the trade
+  plan's groups ``pp_tplan_trade_split``), in the same files.
 
 The monthly pass that runs a held plan is location_profiles.render_marks (``pp_lplan_location_marks``, one
 ``pp_lplan_mark`` per plan) and the hand-written ``pp_lplan_mark`` (scripted_effects/pp_location_profiles.txt: the plan
@@ -126,6 +129,90 @@ TOGGLE_FREE_GUI = "pp_tplan_toggle_free"
 TOGGLE_ALONE_GUI = "pp_tplan_toggle_alone"
 TOGGLE_RIGHTS_GUI = "pp_tplan_toggle_rights"
 SETTINGS_GUIS = Path("in_game/common/scripted_guis/pp_town_plan_settings.txt")
+
+# ---- Plan options (2026-11-20, Jan: "food and trade need other options ... for the goods some additional options,
+# let's not go overboard"; the names, kinds and texts the window renders: town_plan_options.py) ----
+# Country variables (0 counts as unset, never stored; unset = the behaviour before the options existed):
+#   pp_tplan_effv_all       lowest production efficiency of every goods plan: index 1..N into EFF_STEPS (%); unset = none
+#   pp_tplan_effv_<plan>    a goods plan's own line: 1..N, or EFF_NONE (N + 1) = none; unset = same as all plans
+#   pp_tplan_effv_some      set by the options' effects while any line is set (the pass then works out the location's
+#                           lasting production efficiency, pp_tplan_eff_here)
+#   pp_tplan_raise_off      set: a plan whose producers need a higher rank never raises it (state 11); unset = it does
+#   pp_tplan_food_farms_off / pp_tplan_food_kitchens_off   set: the Food plan builds no staple food makers / kitchens
+#   pp_tplan_food_taverns   the Food plan's Taverns, the state + 1 for the two states that are not the default:
+#                           1 = never, 3 = always; unset = while the province's store is short (state 1, the default)
+#   pp_tplan_food_store     index 1..N into FOOD_STORE_STEPS (months): the Food plan builds only while the province's
+#                           store lasts less than that; unset = always
+#   pp_tplan_trade_market_off / pp_tplan_trade_port_off / pp_tplan_trade_centre_off   set: the Trade plan builds none of
+#                           the Marketplace line / the Port Authority / the market centre buildings
+#   pp_tplan_trade_use      index 1..N into TRADE_USE_STEPS (%): the Trade plan builds only where at least that share of
+#                           the country's merchant capacity in the location's market is in use; unset = always
+# Script values (country scope, plain readouts for the window) and scripted GUIs: town_plan_options.OPTIONS.
+# What "lasting production efficiency" is (pp_tplan_eff_here, location scope, in % + 1000): the location's
+# local_production_efficiency plus its owner's global_production_efficiency, the two production efficiency modifiers
+# every building of the location gets (no modifier is per building or per category), minus the short-lived ones of
+# EFF_SHORT_LIVED: the event modifiers the game adds for at most five years, and raised levies. Left out because they
+# belong to one building, not the location: a newly built building's establishment, the province's raw materials share
+# of a method's inputs and the bonus per level.
+EFF_STEPS: tuple[int, ...] = (-10, -5, 0, 5, 10, 15, 20, 25, 30, 40, 50, 60, 75)
+EFF_NONE = len(EFF_STEPS) + 1  # a goods plan's own "none"
+EFF_VAR_PREFIX = "pp_tplan_effv_"
+EFF_SOME_VAR = "pp_tplan_effv_some"
+EFF_PCT_PREFIX = "pp_tplan_eff_pct_"
+EFF_SET_PREFIX = "pp_tplan_eff_set_"
+EFF_OWN_PREFIX = "pp_tplan_eff_own_"
+EFF_LINE_PREFIX = "pp_tplan_eff_line_"  # internal: a plan's line + 1000, 0 = none (food and trade: always 0)
+EFF_HERE = "pp_tplan_eff_here"
+EFF_LOW_TRIGGER = "pp_tplan_eff_low"
+EFF_OFFSET = 1000
+# The short-lived production efficiency modifiers taken out (vanilla 1.4.9, read 2026-11-20: every add_*_modifier of a
+# modifier with local_ / global_production_efficiency, kept where the game adds it for at most five years), per the
+# scope that holds them; their amounts are read from the static modifier files at finalize. raised_levies: the
+# engine's own location modifier while the location's levies are raised.
+EFF_SHORT_LIVED: dict[str, tuple[str, ...]] = {
+    "location": ("raised_levies", "proper_administrative_ledgers_modifier",
+                 "location_innovative_tooling_techniques_modifier", "local_quality_standards_modifier"),
+    "province": ("pious_wealth_modifier", "province_innovative_tooling_techniques_modifier",
+                 "poor_tool_quality_modifier", "local_artisans_retired_modifier", "new_tooling_techniques_modifier"),
+    "country": ("trade_and_production_cutbacks", "calvinist_work_ethic", "free_trade_of_goods",
+                "influential_guild_members", "guilds_cooperating", "uinal_yaxkin_modifier", "quinquatria_modifier"),
+}
+EFF_MODIFIER = {"location": "local_production_efficiency", "province": "local_production_efficiency",
+                "country": "global_production_efficiency"}
+FAIL_EFF = 103.25  # pp_lprof_fail: the location's lasting production efficiency is below the plan's line (state 15)
+FAIL_SETTINGS = 102.75  # pp_lprof_fail: the plan's options hold it back here (state 16)
+RAISE_OFF_VAR = "pp_tplan_raise_off"
+RAISE_VALUE = "pp_tplan_raise_n"
+FOOD_FARMS_OFF_VAR = "pp_tplan_food_farms_off"
+FOOD_KITCHENS_OFF_VAR = "pp_tplan_food_kitchens_off"
+FOOD_TAVERNS_VAR = "pp_tplan_food_taverns"
+FOOD_TAVERNS_NEVER = 1  # FOOD_TAVERNS_VAR = the state + 1
+FOOD_TAVERNS_ALWAYS = 3
+FOOD_STORE_VAR = "pp_tplan_food_store"
+FOOD_STORE_STEPS: tuple[int, ...] = (3, 6, 9, 12, 18, 24)
+TRADE_MARKET_OFF_VAR = "pp_tplan_trade_market_off"
+TRADE_PORT_OFF_VAR = "pp_tplan_trade_port_off"
+TRADE_CENTRE_OFF_VAR = "pp_tplan_trade_centre_off"
+TRADE_USE_VAR = "pp_tplan_trade_use"
+TRADE_USE_STEPS: tuple[int, ...] = (10, 25, 50, 75, 90)
+TRADE_USE_HERE = "pp_tplan_trade_use_here"
+# The Trade plan's buildings in three groups, each with its switch: the Marketplace line (marketplace and the tiers that
+# replace it), the Port Authority, the market centre's buildings (the rest of [construction_plan] trade_plan).
+TRADE_MARKET_ROOT = "marketplace"
+TRADE_PORT_BUILDINGS: tuple[str, ...] = ("port_authority",)
+TRADE_GROUPS: tuple[tuple[str, str], ...] = (
+    ("trade_market", TRADE_MARKET_OFF_VAR), ("trade_port", TRADE_PORT_OFF_VAR), ("trade_centre", TRADE_CENTRE_OFF_VAR))
+FOOD_TAVERNS_TARGET = "food_taverns"  # the Food plan's Taverns alone (kitchens switched off)
+TRADE_SPLIT_EFFECT = "pp_tplan_trade_split"
+# The switches: script value, variable (set = off), scripted GUI.
+OPTION_SWITCHES: tuple[tuple[str, str, str], ...] = (
+    (RAISE_VALUE, RAISE_OFF_VAR, "pp_tplan_toggle_raise"),
+    ("pp_tplan_food_farms_n", FOOD_FARMS_OFF_VAR, "pp_tplan_toggle_food_farms"),
+    ("pp_tplan_food_kitchens_n", FOOD_KITCHENS_OFF_VAR, "pp_tplan_toggle_food_kitchens"),
+    ("pp_tplan_trade_market_n", TRADE_MARKET_OFF_VAR, "pp_tplan_toggle_trade_market"),
+    ("pp_tplan_trade_port_n", TRADE_PORT_OFF_VAR, "pp_tplan_toggle_trade_port"),
+    ("pp_tplan_trade_centre_n", TRADE_CENTRE_OFF_VAR, "pp_tplan_toggle_trade_centre"),
+)
 
 
 def pb_var(key: str) -> str:
@@ -413,6 +500,16 @@ def render_food_turn(plan: Plan) -> str:
     def nothing(tab: str) -> str:
         return NOTHING_TO_DO.format(tab=tab)
 
+    c = "scope:pp_cplan_country"
+    t = "\t"
+    taverns_now = (
+        # the Taverns now: always (option), or by default while the province's store is short (the food rule's line)
+        f"OR = {{\n{t * 6}AND = {{\n{t * 7}{c} = {{ NOT = {{ has_variable = {FOOD_TAVERNS_VAR} }} }}\n"
+        f"{t * 7}province ?= {{ NOT = {{ pp_pclose_store_ok = yes }} }}\n{t * 6}}}\n"
+        f"{t * 6}{c} = {{\n{t * 7}has_variable = {FOOD_TAVERNS_VAR}\n"
+        f"{t * 7}var:{FOOD_TAVERNS_VAR} > {FOOD_TAVERNS_ALWAYS - 0.5:g}\n{t * 6}}}\n{t * 5}}}"
+    )
+    tried = "\t\t\tsave_temporary_scope_value_as = { name = pp_tplan_tried value = 1 }\n"
     return (
         "\n# ---- The food plan's turn (2026-11-20, Jan: farms first, kitchens second, a Tavern only when the store is short) ----\n"
         "# Location scope, in the plan's turn (pp_lplan_mark). First the staple food producers (pp_lprof_t_"
@@ -423,27 +520,86 @@ def render_food_turn(plan: Plan) -> str:
         "# (NOT pp_pclose_store_ok, province scope). Nothing to do there either: \"nothing to build\" (2) where the farms or\n"
         "# the kitchens are at their highest level, else \"cannot be built here\" (6). The plan's buildings (the plan closer,\n"
         "# the settings, the picker) stay its whole list (pp_lprof_t_food is not run).\n"
+        "# The plan's options (town_plans.py \"Plan options\", all unset = the above): the store limit (FOOD_STORE_VAR: nothing\n"
+        f"# while the province's stored months, pp_location_stored_months, reach it: {FAIL_SETTINGS:g}, state 16), the farms\n"
+        "# and the kitchens switched off, the Taverns never / while the store is short / always. Where every part is\n"
+        f"# switched off, nothing is tried: state 16 ({FAIL_SETTINGS:g}).\n"
         f"{plan.do} = {{\n"
-        f"\tpp_lprof_t_{FOOD_FARMS_TARGET} = yes\n"
-        "\tif = {\n\t\tlimit = {\n\t\t\tNOT = { has_variable = pp_lprof_st }\n\t\t\tNOT = { pp_lplan_measuring = yes }\n"
-        f"\t\t\t{nothing(chr(9) * 3)}\n\t\t}}\n"
-        "\t\t# the farms' outcome: 101 = at their highest level, else 102\n"
-        "\t\tsave_temporary_scope_value_as = { name = pp_tplan_ff value = 102 }\n"
-        "\t\tif = {\n\t\t\tlimit = {\n\t\t\t\thas_variable = pp_lprof_fail\n\t\t\t\tvar:pp_lprof_fail < 101.25\n\t\t\t}\n"
-        "\t\t\tsave_temporary_scope_value_as = { name = pp_tplan_ff value = 101 }\n\t\t}\n"
-        "\t\tremove_variable = pp_lprof_fail\n\t\tremove_variable = pp_lprof_best\n"
-        "\t\tif = {\n\t\t\tlimit = { province ?= { NOT = { pp_pclose_store_ok = yes } } }\n"
-        f"\t\t\tpp_lprof_t_{FOOD_KITCHENS_TAVERNS_TARGET} = yes\n\t\t}}\n"
-        f"\t\telse = {{\n\t\t\tpp_lprof_t_{FOOD_KITCHENS_TARGET} = yes\n\t\t}}\n"
-        "\t\tif = {\n\t\t\tlimit = {\n\t\t\t\tNOT = { has_variable = pp_lprof_st }\n"
+        "\tsave_temporary_scope_value_as = { name = pp_tplan_hold value = 0 }\n"
+        f"\tif = {{\n\t\tlimit = {{ {c} = {{ has_variable = {FOOD_STORE_VAR} }} }}\n"
+        f"\t\t{c} = {{ save_temporary_scope_value_as = {{ name = pp_tplan_lim value = pp_tplan_food_store_months }} }}\n"
+        "\t\tif = {\n\t\t\tlimit = { pp_location_stored_months >= scope:pp_tplan_lim }\n"
+        "\t\t\tsave_temporary_scope_value_as = { name = pp_tplan_hold value = 1 }\n"
+        f"\t\t\tpp_lprof_fail = {{ r = {FAIL_SETTINGS:g} }}\n\t\t}}\n\t}}\n"
+        "\tif = {\n\t\tlimit = { scope:pp_tplan_hold < 0.5 }\n"
+        "\t\tsave_temporary_scope_value_as = { name = pp_tplan_tried value = 0 }\n"
+        f"\t\tif = {{\n\t\t\tlimit = {{ {c} = {{ NOT = {{ has_variable = {FOOD_FARMS_OFF_VAR} }} }} }}\n"
+        f"\t\t\tpp_lprof_t_{FOOD_FARMS_TARGET} = yes\n" + tried + "\t\t}\n"
+        "\t\tif = {\n\t\t\tlimit = {\n\t\t\t\tNOT = { has_variable = pp_lprof_st }\n\t\t\t\tNOT = { pp_lplan_measuring = yes }\n"
         f"\t\t\t\t{nothing(chr(9) * 4)}\n\t\t\t}}\n"
-        "\t\t\tif = {\n\t\t\t\tlimit = {\n\t\t\t\t\tOR = {\n\t\t\t\t\t\tscope:pp_tplan_ff < 101.5\n"
-        "\t\t\t\t\t\tAND = {\n\t\t\t\t\t\t\thas_variable = pp_lprof_fail\n\t\t\t\t\t\t\tvar:pp_lprof_fail < 101.25\n"
-        "\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n"
-        "\t\t\t\tremove_variable = pp_lprof_fail\n\t\t\t\tpp_lprof_fail = { r = 101 }\n\t\t\t}\n"
-        "\t\t\telse = {\n\t\t\t\tpp_lprof_fail = { r = 102 }\n\t\t\t}\n"
-        "\t\t}\n\t}\n}\n"
+        "\t\t\t# the farms' outcome: 101 = at their highest level, else 102\n"
+        "\t\t\tsave_temporary_scope_value_as = { name = pp_tplan_ff value = 102 }\n"
+        "\t\t\tif = {\n\t\t\t\tlimit = {\n\t\t\t\t\thas_variable = pp_lprof_fail\n\t\t\t\t\tvar:pp_lprof_fail < 101.25\n\t\t\t\t}\n"
+        "\t\t\t\tsave_temporary_scope_value_as = { name = pp_tplan_ff value = 101 }\n\t\t\t}\n"
+        "\t\t\tremove_variable = pp_lprof_fail\n\t\t\tremove_variable = pp_lprof_best\n"
+        f"\t\t\tif = {{\n\t\t\t\tlimit = {{\n\t\t\t\t\t{c} = {{ NOT = {{ has_variable = {FOOD_KITCHENS_OFF_VAR} }} }}\n"
+        f"\t\t\t\t\t{taverns_now}\n\t\t\t\t}}\n"
+        f"\t\t\t\tpp_lprof_t_{FOOD_KITCHENS_TAVERNS_TARGET} = yes\n" + "\t" + tried + "\t\t\t}\n"
+        f"\t\t\telse_if = {{\n\t\t\t\tlimit = {{ {c} = {{ NOT = {{ has_variable = {FOOD_KITCHENS_OFF_VAR} }} }} }}\n"
+        f"\t\t\t\tpp_lprof_t_{FOOD_KITCHENS_TARGET} = yes\n" + "\t" + tried + "\t\t\t}\n"
+        f"\t\t\telse_if = {{\n\t\t\t\tlimit = {{\n\t\t\t\t\t{taverns_now}\n\t\t\t\t}}\n"
+        f"\t\t\t\tpp_lprof_t_{FOOD_TAVERNS_TARGET} = yes\n" + "\t" + tried + "\t\t\t}\n"
+        "\t\t\tif = {\n\t\t\t\tlimit = {\n\t\t\t\t\tNOT = { has_variable = pp_lprof_st }\n"
+        f"\t\t\t\t\t{nothing(chr(9) * 5)}\n\t\t\t\t}}\n"
+        "\t\t\t\tif = {\n\t\t\t\t\tlimit = {\n\t\t\t\t\t\tOR = {\n\t\t\t\t\t\t\tscope:pp_tplan_ff < 101.5\n"
+        "\t\t\t\t\t\t\tAND = {\n\t\t\t\t\t\t\t\thas_variable = pp_lprof_fail\n\t\t\t\t\t\t\t\tvar:pp_lprof_fail < 101.25\n"
+        "\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n"
+        "\t\t\t\t\tremove_variable = pp_lprof_fail\n\t\t\t\t\tpp_lprof_fail = { r = 101 }\n\t\t\t\t}\n"
+        "\t\t\t\telse_if = {\n\t\t\t\t\tlimit = { scope:pp_tplan_tried > 0.5 }\n\t\t\t\t\tpp_lprof_fail = { r = 102 }\n\t\t\t\t}\n"
+        f"\t\t\t\telse = {{\n\t\t\t\t\tremove_variable = pp_lprof_fail\n\t\t\t\t\tpp_lprof_fail = {{ r = {FAIL_SETTINGS:g} }}\n"
+        "\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}\n"
     )
+
+
+def render_trade_split() -> str:
+    """The trade plan's buildings group by group, once a group is switched off (plan options, 2026-11-20)."""
+    c = "scope:pp_cplan_country"
+    nothing = NOTHING_TO_DO.format(tab="\t\t\t")
+    parts = [
+        "\n# ---- The trade plan with a group of its buildings switched off (plan options, 2026-11-20) ----\n"
+        "# Location scope, in the trade plan's turn (pp_tplan_do_trade, where it does not raise the rank). Its groups in\n"
+        "# start order, each only while its switch is on: the Marketplace line, the Port Authority, the market centre's\n"
+        "# buildings (pp_lprof_t_trade_market / _port / _centre: the same lists and start order as pp_lprof_t_trade_category,\n"
+        "# which runs while every group is on). A group runs where the groups before it have nothing to do (every building\n"
+        "# at its highest level, or none can be built here; no construction) and, after the first group that ran, not while\n"
+        "# the plans are being measured. Nothing to do anywhere: \"nothing to build\" (101) where a group is at its highest\n"
+        f"# level, else \"cannot be built here\" (102); every group switched off: state 16 ({FAIL_SETTINGS:g}).\n"
+        f"{TRADE_SPLIT_EFFECT} = {{\n"
+        "\tsave_temporary_scope_value_as = { name = pp_tplan_ff value = 0 }\n"
+        "\tsave_temporary_scope_value_as = { name = pp_tplan_tried value = 0 }\n"
+    ]
+    for target, var in TRADE_GROUPS:
+        parts.append(
+            f"\tif = {{\n\t\tlimit = {{\n\t\t\t{c} = {{ NOT = {{ has_variable = {var} }} }}\n"
+            "\t\t\tNOT = { has_variable = pp_lprof_st }\n"
+            "\t\t\tOR = {\n\t\t\t\tscope:pp_tplan_tried < 0.5\n\t\t\t\tNOT = { pp_lplan_measuring = yes }\n\t\t\t}\n"
+            f"\t\t\t{nothing}\n\t\t}}\n"
+            "\t\tif = {\n\t\t\tlimit = {\n\t\t\t\thas_variable = pp_lprof_fail\n\t\t\t\tvar:pp_lprof_fail < 101.25\n\t\t\t}\n"
+            "\t\t\tsave_temporary_scope_value_as = { name = pp_tplan_ff value = 1 }\n\t\t}\n"
+            "\t\tremove_variable = pp_lprof_fail\n\t\tremove_variable = pp_lprof_best\n"
+            f"\t\tpp_lprof_t_{target} = yes\n"
+            "\t\tsave_temporary_scope_value_as = { name = pp_tplan_tried value = 1 }\n\t}\n"
+        )
+    parts.append(
+        f"\tif = {{\n\t\tlimit = {{\n\t\t\tNOT = {{ has_variable = pp_lprof_st }}\n\t\t\t{nothing}\n\t\t}}\n"
+        "\t\tif = {\n\t\t\tlimit = {\n\t\t\t\tOR = {\n\t\t\t\t\tscope:pp_tplan_ff > 0.5\n"
+        "\t\t\t\t\tAND = {\n\t\t\t\t\t\thas_variable = pp_lprof_fail\n\t\t\t\t\t\tvar:pp_lprof_fail < 101.25\n\t\t\t\t\t}\n"
+        "\t\t\t\t}\n\t\t\t}\n\t\t\tremove_variable = pp_lprof_fail\n\t\t\tpp_lprof_fail = { r = 101 }\n\t\t}\n"
+        "\t\telse_if = {\n\t\t\tlimit = { scope:pp_tplan_tried > 0.5 }\n\t\t\tpp_lprof_fail = { r = 102 }\n\t\t}\n"
+        f"\t\telse = {{\n\t\t\tremove_variable = pp_lprof_fail\n\t\t\tpp_lprof_fail = {{ r = {FAIL_SETTINGS:g} }}\n\t\t}}\n"
+        "\t}\n}\n"
+    )
+    return "".join(parts)
 
 
 def render_effects(items: list[Plan], ranks) -> str:
@@ -457,20 +613,54 @@ def render_effects(items: list[Plan], ranks) -> str:
         "# Location scope, in the plan's turn (pp_lplan_mark: forced, scope:pp_cplan_country set). Where none of the\n"
         "# producers stands and the rank is below the lowest one they may stand on, the turn raises the rank (one step,\n"
         "# pp_tplan_raise); else it runs the goods target. While the marks are measured the raise does nothing (it has no\n"
-        "# payback to offer).\n",
+        "# payback to offer). With the plan option \"raise a settlement for its plan\" off (pp_tplan_raise_off) the turn\n"
+        f"# raises nothing and the plan waits for a higher rank (pp_lprof_fail {FAIL_RANK}, state 11). The trade plan's\n"
+        "# turn first asks its option \"trade capacity in use\" (pp_tplan_trade_use: below the line nothing happens here,\n"
+        f"# {FAIL_SETTINGS:g}, state 16) and, with a group of its buildings switched off, runs its groups one after the other\n"
+        f"# ({TRADE_SPLIT_EFFECT}).\n",
     ]
+    c = "scope:pp_cplan_country"
     for plan in items:
         if not plan.raises:
             continue
         low = ("location_rank = location_rank:rural_settlement" if plan.rank == "town"
                else "NOT = { location_rank = location_rank:city }")
         types = " ".join(f"building_type = building_type:{name}" for name in plan.candidates)
-        parts.append(
-            f"\n{plan.do} = {{\n\tif = {{\n\t\tlimit = {{\n\t\t\t{low}\n"
+        trade = plan.key == "trade"
+        run = f"\t\tpp_lprof_t_{plan.target} = yes\n"
+        if trade:
+            switched = "".join(f"\t\t\t\t\t\thas_variable = {var}\n" for _, var in TRADE_GROUPS)
+            run = (f"\t\tif = {{\n\t\t\tlimit = {{\n\t\t\t\t{c} = {{\n\t\t\t\t\tNOR = {{\n" + switched
+                   + f"\t\t\t\t\t}}\n\t\t\t\t}}\n\t\t\t}}\n\t\t\tpp_lprof_t_{plan.target} = yes\n\t\t}}\n"
+                   f"\t\telse = {{\n\t\t\t{TRADE_SPLIT_EFFECT} = yes\n\t\t}}\n")
+        body = (
+            f"\tif = {{\n\t\tlimit = {{\n\t\t\t{low}\n"
             f"\t\t\tNOT = {{ any_buildings_in_location = {{ building_level > 0 OR = {{ {types} }} }} }}\n\t\t}}\n"
-            f"\t\tif = {{\n\t\t\tlimit = {{ NOT = {{ pp_lplan_measuring = yes }} }}\n\t\t\t{RAISE_EFFECT} = yes\n\t\t}}\n"
-            f"\t}}\n\telse = {{\n\t\tpp_lprof_t_{plan.target} = yes\n\t}}\n}}\n"
+            f"\t\tif = {{\n\t\t\tlimit = {{ NOT = {{ pp_lplan_measuring = yes }} }}\n"
+            f"\t\t\tif = {{\n\t\t\t\tlimit = {{ {c} = {{ has_variable = {RAISE_OFF_VAR} }} }}\n"
+            f"\t\t\t\tpp_lprof_fail = {{ r = {FAIL_RANK} }}\n\t\t\t}}\n"
+            f"\t\t\telse = {{\n\t\t\t\t{RAISE_EFFECT} = yes\n\t\t\t}}\n\t\t}}\n"
+            f"\t}}\n\telse = {{\n{run}\t}}\n"
         )
+        if trade:
+            # the option "trade capacity in use" first: below its line nothing happens here (no raise either)
+            body = (
+                "\tsave_temporary_scope_value_as = { name = pp_tplan_hold value = 0 }\n"
+                f"\tif = {{\n\t\tlimit = {{ {c} = {{ has_variable = {TRADE_USE_VAR} }} }}\n"
+                f"\t\t{c} = {{ save_temporary_scope_value_as = {{ name = pp_tplan_lim value = pp_tplan_trade_use_pct }} }}\n"
+                f"\t\tif = {{\n\t\t\tlimit = {{ {TRADE_USE_HERE} < scope:pp_tplan_lim }}\n"
+                "\t\t\tsave_temporary_scope_value_as = { name = pp_tplan_hold value = 1 }\n"
+                f"\t\t\tpp_lprof_fail = {{ r = {FAIL_SETTINGS:g} }}\n\t\t}}\n\t}}\n"
+                "\tif = {\n\t\tlimit = { scope:pp_tplan_hold < 0.5 }\n"
+                + "".join(f"\t{line}\n" if line else "\n" for line in body.rstrip("\n").split("\n"))
+                + "\t}\n"
+            )
+        parts.append(f"\n{plan.do} = {{\n{body}}}\n")
+    trade_plans = [plan for plan in items if plan.key == "trade"]
+    if trade_plans:
+        if not trade_plans[0].raises:
+            raise ValueError("the trade plan's turn is written with the rank raise (its producers need a town)")
+        parts.append(render_trade_split())
     for plan in items:
         if plan.key in OWN_TURNS:
             if plan.raises:
@@ -518,13 +708,152 @@ def render_effects(items: list[Plan], ranks) -> str:
 # plan settings (country scope)
 
 
-def _years_chain(var: str, indent: str) -> str:
-    """value = the years of the step index var:<var> (1..N); an index past the steps leaves the value as it was."""
+def _years_chain(var: str, indent: str, steps: tuple[int, ...] = PAYBACK_STEPS) -> str:
+    """value = the step of the index var:<var> (1..N); an index past the steps leaves the value as it was."""
     lines = []
-    for index, years in enumerate(PAYBACK_STEPS, 1):
+    for index, years in enumerate(steps, 1):
         lines.append(f"{indent}{'if' if index == 1 else 'else_if'} = {{ limit = {{ var:{var} < {index + 0.5:g} }} "
                      f"value = {years} }}\n")
     return "".join(lines)
+
+
+def eff_var(key: str) -> str:
+    """The country variable of a goods plan's lowest production efficiency (key = a plan or PB_ALL)."""
+    return EFF_VAR_PREFIX + key
+
+
+def _number(text: str, numbers: dict[str, float]) -> float | None:
+    try:
+        return float(text)
+    except ValueError:
+        return numbers.get(text)
+
+
+def eff_short_lived_amounts(mod_root: Path, vanilla_root: Path) -> dict[str, list[tuple[str, float]]]:
+    """Per scope (EFF_SHORT_LIVED) the short-lived modifiers with the production efficiency they give (the mod's files
+    over the game's, the DLC folders included; a named amount through the plain-number script values)."""
+    from prosper_or_perish_constructor import construction_plan as cp
+
+    numbers = cp.script_value_numbers(mod_root, vanilla_root)
+    data: dict[str, tuple[dict[str, str], str]] = {}
+    for folder in cp.STATIC_MODIFIERS:
+        for dlc in sorted((vanilla_root / "game" / "dlc").glob("*")):
+            directory = dlc / folder
+            for path in sorted(directory.glob("*.txt")) if directory.is_dir() else ():
+                for block, body in cp._blocks(path.read_text(encoding="utf-8-sig", errors="replace")):
+                    data[block.split(":")[-1]] = (cp._top_keys(body), body)
+        data.update(cp._database(mod_root, vanilla_root, folder))
+    found: dict[str, list[tuple[str, float]]] = {}
+    for scope, names in EFF_SHORT_LIVED.items():
+        found[scope] = []
+        for name in names:
+            if name not in data:
+                raise ValueError(f"EFF_SHORT_LIVED: no static modifier {name}")
+            text = data[name][0].get(EFF_MODIFIER[scope])
+            amount = _number(text, numbers) if text is not None else None
+            if amount is None:
+                raise ValueError(f"EFF_SHORT_LIVED: {name} has no {EFF_MODIFIER[scope]} amount ({text})")
+            found[scope].append((name, amount))
+    return found
+
+
+def render_option_values(items: list[Plan], short_lived: dict[str, list[tuple[str, float]]]) -> str:
+    """The plan options' script values (town_plan_options.OPTIONS; country scope, plain readouts) and the two location
+    values the pass reads."""
+    goods = [plan for plan in items if plan.key not in EXTRA_PLANS]
+    all_var = eff_var(PB_ALL)
+    parts = [
+        "\n# ---- Plan options (country scope; town_plans.py \"Plan options\", town_plan_options.py; the window reads them) ----\n"
+        "# Lowest production efficiency in %: every goods plan's (pp_tplan_effv_all, a step of EFF_STEPS) and each goods\n"
+        f"# plan's own (pp_tplan_effv_<plan>: a step, {EFF_NONE} = none; unset = the all-plans line). _pct = the line shown\n"
+        "# (0 while none), _set = 1 while a line holds (a line of 0 % is a line), _own = 1 while the plan has its own.\n"
+        f"{EFF_PCT_PREFIX}{PB_ALL} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ has_variable = {all_var} }}\n"
+        + _years_chain(all_var, "\t\t", EFF_STEPS) + "\t}\n}\n"
+        f"{EFF_SET_PREFIX}{PB_ALL} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ has_variable = {all_var} }}\n\t\tvalue = 1\n\t}}\n}}\n",
+    ]
+    for plan in goods:
+        var = eff_var(plan.key)
+        parts.append(
+            f"{EFF_PCT_PREFIX}{plan.key} = {{\n\tvalue = {EFF_PCT_PREFIX}{PB_ALL}\n\tif = {{\n"
+            f"\t\tlimit = {{ has_variable = {var} }}\n\t\tvalue = 0\n" + _years_chain(var, "\t\t", EFF_STEPS) + "\t}\n}\n"
+            f"{EFF_SET_PREFIX}{plan.key} = {{\n\tvalue = {EFF_SET_PREFIX}{PB_ALL}\n\tif = {{\n"
+            f"\t\tlimit = {{ has_variable = {var} }}\n\t\tvalue = 0\n"
+            f"\t\tif = {{ limit = {{ var:{var} < {EFF_NONE - 0.5:g} }} value = 1 }}\n\t}}\n}}\n"
+            f"{EFF_OWN_PREFIX}{plan.key} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ has_variable = {var} }}\n"
+            "\t\tvalue = 1\n\t}\n}\n"
+        )
+    parts.append(
+        f"\n# The line a plan's turn compares with (pp_tplan_eff_low): its line in % + {EFF_OFFSET}, 0 = none (food and trade\n"
+        "# have none).\n"
+    )
+    for plan in items:
+        if plan.key in EXTRA_PLANS:
+            parts.append(f"{EFF_LINE_PREFIX}{plan.key} = {{\n\tvalue = 0\n}}\n")
+        else:
+            parts.append(
+                f"{EFF_LINE_PREFIX}{plan.key} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ {EFF_SET_PREFIX}{plan.key} > 0.5 }}\n"
+                f"\t\tvalue = {EFF_PCT_PREFIX}{plan.key}\n\t\tadd = {EFF_OFFSET}\n\t}}\n}}\n"
+            )
+    parts.append(
+        "\n# The switches, 1 = on (the default): raise a settlement for its plan, the Food plan's staple food makers and\n"
+        "# kitchens, the Trade plan's Marketplace line, Port Authority and market centre buildings.\n"
+        + "".join(f"{value} = {{\n\tvalue = 1\n\tif = {{\n\t\tlimit = {{ has_variable = {var} }}\n\t\tvalue = 0\n\t}}\n}}\n"
+                  for value, var, _ in OPTION_SWITCHES)
+        + "# The Food plan's Taverns: 0 never, 1 while the province's store is short (the default), 2 always.\n"
+        f"pp_tplan_food_taverns_n = {{\n\tvalue = 1\n\tif = {{\n\t\tlimit = {{ has_variable = {FOOD_TAVERNS_VAR} }}\n"
+        f"\t\tvalue = var:{FOOD_TAVERNS_VAR}\n\t\tsubtract = 1\n\t}}\n}}\n"
+        "# The Food plan builds only while the province's store lasts less than this many months (0 = always).\n"
+        f"pp_tplan_food_store_months = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ has_variable = {FOOD_STORE_VAR} }}\n"
+        + _years_chain(FOOD_STORE_VAR, "\t\t", FOOD_STORE_STEPS) + "\t}\n}\n"
+        f"pp_tplan_food_store_set = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ has_variable = {FOOD_STORE_VAR} }}\n\t\tvalue = 1\n\t}}\n}}\n"
+        "# The Trade plan builds only where at least this share (%) of the country's merchant capacity in the market is in\n"
+        "# use (0 = always).\n"
+        f"pp_tplan_trade_use_pct = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ has_variable = {TRADE_USE_VAR} }}\n"
+        + _years_chain(TRADE_USE_VAR, "\t\t", TRADE_USE_STEPS) + "\t}\n}\n"
+        f"pp_tplan_trade_use_set = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ has_variable = {TRADE_USE_VAR} }}\n\t\tvalue = 1\n\t}}\n}}\n"
+        "\n# One step of the options' steppers from scope:pp_tplan_cur. The lowest production efficiency and the trade\n"
+        "# capacity in use have \"none\" below their first step (0); the store limit has \"always\" past its last step.\n"
+        f"pp_tplan_eff_next_up = {{\n\tvalue = scope:pp_tplan_cur\n\tadd = 1\n\tmax = {len(EFF_STEPS)}\n}}\n"
+        "pp_tplan_eff_next_down = {\n\tvalue = scope:pp_tplan_cur\n\tsubtract = 1\n\tmin = 0\n}\n"
+        f"pp_tplan_trade_use_next_up = {{\n\tvalue = scope:pp_tplan_cur\n\tadd = 1\n\tmax = {len(TRADE_USE_STEPS)}\n}}\n"
+        "pp_tplan_trade_use_next_down = {\n\tvalue = scope:pp_tplan_cur\n\tsubtract = 1\n\tmin = 0\n}\n"
+        f"pp_tplan_food_store_next_up = {{\n\tvalue = scope:pp_tplan_cur\n\tadd = 1\n\tmax = {len(FOOD_STORE_STEPS) + 1}\n}}\n"
+        "pp_tplan_food_store_next_down = {\n\tvalue = scope:pp_tplan_cur\n\tsubtract = 1\n\tmin = 1\n}\n"
+    )
+    # location scope: what the pass compares
+    subtract = []
+    for scope, entries in short_lived.items():
+        if not entries:
+            continue
+        check = {"location": "has_location_modifier", "province": "has_province_modifier",
+                 "country": "has_country_modifier"}[scope]
+        lines = "".join(f"{{tab}}if = {{{{ limit = {{{{ {check} = {name} }}}} "
+                        f"{'subtract' if amount >= 0 else 'add'} = {_num(abs(amount))} }}}}\n"
+                        for name, amount in entries)
+        if scope == "location":
+            subtract.append(lines.format(tab="\t"))
+        else:
+            link = "owner" if scope == "country" else "province"
+            subtract.append(f"\t{link} ?= {{\n" + lines.format(tab="\t\t") + "\t}\n")
+    parts.append(
+        "\n# Location scope (in the pass): the location's lasting production efficiency in % + 1000 (plan option \"lowest\n"
+        "# production efficiency\"): its local_production_efficiency and its owner's global_production_efficiency, the\n"
+        "# production efficiency every building here gets, without the short-lived modifiers (town_plans.EFF_SHORT_LIVED:\n"
+        "# the event modifiers the game adds for at most five years, and raised levies). A building's own terms\n"
+        "# (establishment, the province's raw materials, the bonus per level) are left out.\n"
+        f"{EFF_HERE} = {{\n\tvalue = modifier:local_production_efficiency\n"
+        "\towner ?= { add = modifier:global_production_efficiency }\n"
+        + "".join(subtract)
+        + f"\tmultiply = 100\n\tadd = {EFF_OFFSET}\n}}\n"
+        "\n# Location scope (in the pass: scope:pp_cplan_country): the share (%) of the country's merchant capacity in the\n"
+        "# location's market that is in use (plan option \"trade capacity in use\"); 100 where it has none there yet (the\n"
+        "# plan's buildings give the first).\n"
+        f"{TRADE_USE_HERE} = {{\n\tvalue = 100\n\tmarket ?= {{\n"
+        "\t\tif = {\n\t\t\tlimit = { \"merchant_capacity(scope:pp_cplan_country)\" > 0 }\n"
+        "\t\t\tvalue = \"used_merchant_capacity(scope:pp_cplan_country)\"\n"
+        "\t\t\tdivide = \"merchant_capacity(scope:pp_cplan_country)\"\n\t\t\tmultiply = 100\n\t\t}\n\t}\n}\n"
+    )
+    return "".join(parts)
 
 
 def render_settings_values(items: list[Plan]) -> str:
@@ -606,6 +935,113 @@ def render_settings_effects(items: list[Plan]) -> str:
     )
 
 
+def render_option_effects(items: list[Plan]) -> str:
+    """The plan options' effects behind their buttons (country scope) and the triggers' location parts."""
+    goods = [plan for plan in items if plan.key not in EXTRA_PLANS]
+    all_var = eff_var(PB_ALL)
+    keyed = "".join(f"\t\tflag:{plan.key} = {{ pp_tplan_eff_step = {{ var = {eff_var(plan.key)} dir = $dir$ all = no }} }}\n"
+                    for plan in goods)
+    reset = "".join(f"\t\tflag:{plan.key} = {{ remove_variable = {eff_var(plan.key)} }}\n" for plan in goods)
+    some = "".join(f"\t\t\t\tAND = {{ has_variable = {eff_var(plan.key)} var:{eff_var(plan.key)} < {EFF_NONE - 0.5:g} }}\n"
+                   for plan in goods)
+    n_store = len(FOOD_STORE_STEPS)
+    return (
+        "\n# ---- Plan options (country scope; the Plans tab's buttons, scripted_guis/pp_town_plan_settings.txt) ----\n"
+        "# scope:pp_key = flag:all or flag:<goods plan>: its lowest production efficiency one step $dir$ (up = higher).\n"
+        "pp_tplan_eff_key = {\n\tswitch = {\n\t\ttrigger = scope:pp_key\n"
+        f"\t\tflag:{PB_ALL} = {{ pp_tplan_eff_step = {{ var = {all_var} dir = $dir$ all = yes }} }}\n"
+        + keyed + "\t}\n\tpp_tplan_eff_refresh = yes\n}\n"
+        "\n# scope:pp_key = flag:<goods plan>: its line is the all-plans one again.\n"
+        "pp_tplan_eff_key_reset = {\n\tswitch = {\n\t\ttrigger = scope:pp_key\n" + reset + "\t}\n\tpp_tplan_eff_refresh = yes\n}\n"
+        "\n# The line $var$ one step $dir$, from its own step, else (a plan, $all$ = no) the all-plans step, else none (0).\n"
+        f"# Below the first step: none (the all-plans line unset; a plan's own none is {EFF_NONE}).\n"
+        "pp_tplan_eff_step = {\n"
+        "\tsave_temporary_scope_value_as = { name = pp_tplan_cur value = 0 }\n"
+        f"\tif = {{\n\t\tlimit = {{ has_variable = $var$ }}\n\t\tif = {{\n\t\t\tlimit = {{ var:$var$ < {EFF_NONE - 0.5:g} }}\n"
+        "\t\t\tsave_temporary_scope_value_as = { name = pp_tplan_cur value = var:$var$ }\n\t\t}\n\t}\n"
+        f"\telse_if = {{\n\t\tlimit = {{\n\t\t\tNOT = {{ always = $all$ }}\n\t\t\thas_variable = {all_var}\n\t\t}}\n"
+        f"\t\tsave_temporary_scope_value_as = {{ name = pp_tplan_cur value = var:{all_var} }}\n\t}}\n"
+        "\tsave_temporary_scope_value_as = { name = pp_tplan_new value = pp_tplan_eff_next_$dir$ }\n"
+        "\tif = {\n\t\tlimit = { scope:pp_tplan_new > 0.5 }\n\t\tset_variable = { name = $var$ value = scope:pp_tplan_new }\n\t}\n"
+        "\telse_if = {\n\t\tlimit = { always = $all$ }\n\t\tremove_variable = $var$\n\t}\n"
+        f"\telse = {{\n\t\tset_variable = {{ name = $var$ value = {EFF_NONE} }}\n\t}}\n}}\n"
+        f"\n# {EFF_SOME_VAR} while a line holds anywhere (the pass then works out the location's lasting production\n"
+        "# efficiency, pp_lplan_location_turn).\n"
+        f"pp_tplan_eff_refresh = {{\n\tif = {{\n\t\tlimit = {{\n\t\t\tOR = {{\n\t\t\t\thas_variable = {all_var}\n" + some
+        + f"\t\t\t}}\n\t\t}}\n\t\tset_variable = {{ name = {EFF_SOME_VAR} value = yes }}\n\t}}\n"
+        f"\telse = {{\n\t\tremove_variable = {EFF_SOME_VAR}\n\t}}\n}}\n"
+        "\n# The Food plan's Taverns, the next state: while the store is short (unset) -> always -> never -> while short.\n"
+        "pp_tplan_food_taverns_next = {\n"
+        f"\tif = {{\n\t\tlimit = {{ NOT = {{ has_variable = {FOOD_TAVERNS_VAR} }} }}\n"
+        f"\t\tset_variable = {{ name = {FOOD_TAVERNS_VAR} value = {FOOD_TAVERNS_ALWAYS} }}\n\t}}\n"
+        f"\telse_if = {{\n\t\tlimit = {{ var:{FOOD_TAVERNS_VAR} > {FOOD_TAVERNS_ALWAYS - 0.5:g} }}\n"
+        f"\t\tset_variable = {{ name = {FOOD_TAVERNS_VAR} value = {FOOD_TAVERNS_NEVER} }}\n\t}}\n"
+        f"\telse = {{\n\t\tremove_variable = {FOOD_TAVERNS_VAR}\n\t}}\n}}\n"
+        "\n# The Food plan's store limit one step $dir$ (up = more months; past the last step: always, unset; from always\n"
+        "# down: the last step).\n"
+        "pp_tplan_food_store_step = {\n"
+        f"\tsave_temporary_scope_value_as = {{ name = pp_tplan_cur value = {n_store + 1} }}\n"
+        f"\tif = {{\n\t\tlimit = {{ has_variable = {FOOD_STORE_VAR} }}\n"
+        f"\t\tsave_temporary_scope_value_as = {{ name = pp_tplan_cur value = var:{FOOD_STORE_VAR} }}\n\t}}\n"
+        "\tsave_temporary_scope_value_as = { name = pp_tplan_new value = pp_tplan_food_store_next_$dir$ }\n"
+        f"\tif = {{\n\t\tlimit = {{ scope:pp_tplan_new > {n_store + 0.5:g} }}\n\t\tremove_variable = {FOOD_STORE_VAR}\n\t}}\n"
+        f"\telse = {{\n\t\tset_variable = {{ name = {FOOD_STORE_VAR} value = scope:pp_tplan_new }}\n\t}}\n}}\n"
+        "\n# The Trade plan's line of capacity in use one step $dir$ (up = a higher share; below the first step: always,\n"
+        "# unset; from always up: the first step).\n"
+        "pp_tplan_trade_use_step = {\n"
+        "\tsave_temporary_scope_value_as = { name = pp_tplan_cur value = 0 }\n"
+        f"\tif = {{\n\t\tlimit = {{ has_variable = {TRADE_USE_VAR} }}\n"
+        f"\t\tsave_temporary_scope_value_as = {{ name = pp_tplan_cur value = var:{TRADE_USE_VAR} }}\n\t}}\n"
+        "\tsave_temporary_scope_value_as = { name = pp_tplan_new value = pp_tplan_trade_use_next_$dir$ }\n"
+        f"\tif = {{\n\t\tlimit = {{ scope:pp_tplan_new < 0.5 }}\n\t\tremove_variable = {TRADE_USE_VAR}\n\t}}\n"
+        f"\telse = {{\n\t\tset_variable = {{ name = {TRADE_USE_VAR} value = scope:pp_tplan_new }}\n\t}}\n}}\n"
+    )
+
+
+def render_option_triggers() -> str:
+    """Location scope, in a plan's turn: the goods plan $g$ holds a line of lowest production efficiency and the
+    location's lasting production efficiency (scope:pp_tplan_effh, pp_lplan_location_turn) is below it."""
+    return (
+        "\n# Location scope, in the plan $g$'s turn (pp_lplan_mark): a line of lowest production efficiency holds for it\n"
+        "# (plan option, pp_tplan_effv_some first: nothing is worked out while no line is set anywhere) and the location's\n"
+        "# lasting production efficiency (scope:pp_tplan_effh = pp_tplan_eff_here, saved as the turn began) is below it.\n"
+        f"{EFF_LOW_TRIGGER} = {{\n\tscope:pp_cplan_country = {{\n\t\thas_variable = {EFF_SOME_VAR}\n"
+        f"\t\t{EFF_LINE_PREFIX}$g$ > 0.5\n\t\t{EFF_LINE_PREFIX}$g$ > scope:pp_tplan_effh\n\t}}\n}}\n"
+    )
+
+
+def render_option_guis() -> str:
+    guard = "\tscope = country\n\tis_valid = {\n\t\tis_ai = no\n\t}\n"
+
+    def gui(name: str, comment: str, effect: str) -> str:
+        return f"\n# {comment}\n{name} = {{\n{guard}\teffect = {{\n{effect}\t}}\n}}\n"
+
+    parts = [
+        "\n# ---- Plan options (2026-11-20, town_plan_options.py) ----\n",
+        gui("pp_tplan_eff_down", "Lowest production efficiency one step lower (below the first step: none).",
+            "\t\tpp_tplan_eff_key = { dir = down }\n"),
+        gui("pp_tplan_eff_up", "Lowest production efficiency one step higher (from none: the first step).",
+            "\t\tpp_tplan_eff_key = { dir = up }\n"),
+        gui("pp_tplan_eff_reset", "The goods plan's lowest production efficiency is the all-plans one again.",
+            "\t\tpp_tplan_eff_key_reset = yes\n"),
+    ]
+    for _value, var, name in OPTION_SWITCHES:
+        parts.append(gui(name, f"A plan option on (the default) or off ({var} set).", f"\t\tpp_cplan_flip = {{ var = {var} }}\n"))
+    parts += [
+        gui("pp_tplan_cycle_food_taverns", "The Food plan's Taverns: while the store is short (the default), always, never.",
+            "\t\tpp_tplan_food_taverns_next = yes\n"),
+        gui("pp_tplan_food_store_down", "The Food plan's store limit: fewer months (from always: the longest).",
+            "\t\tpp_tplan_food_store_step = { dir = down }\n"),
+        gui("pp_tplan_food_store_up", "The Food plan's store limit: more months (past the longest: always).",
+            "\t\tpp_tplan_food_store_step = { dir = up }\n"),
+        gui("pp_tplan_trade_use_down", "The Trade plan's capacity in use: a lower share (below the lowest: always).",
+            "\t\tpp_tplan_trade_use_step = { dir = down }\n"),
+        gui("pp_tplan_trade_use_up", "The Trade plan's capacity in use: a higher share (from always: the lowest).",
+            "\t\tpp_tplan_trade_use_step = { dir = up }\n"),
+    ]
+    return "".join(parts)
+
+
 def render_settings_guis() -> str:
     guard = "\tscope = country\n\tis_valid = {\n\t\tis_ai = no\n\t}\n"
 
@@ -676,10 +1112,12 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
     texts = {
         mod_root / RIGHTS: render_rights(items),
         mod_root / LOC: render_loc(items, names, charter_goods(mod_root)),
-        mod_root / TRIGGERS: render_triggers(items),
-        mod_root / VALUES: render_values(items) + render_settings_values(items),
-        mod_root / EFFECTS: render_effects(items, cc.read_ranks(mod_root, vanilla_root)) + render_settings_effects(items),
-        mod_root / SETTINGS_GUIS: render_settings_guis(),
+        mod_root / TRIGGERS: render_triggers(items) + render_option_triggers(),
+        mod_root / VALUES: (render_values(items) + render_settings_values(items)
+                            + render_option_values(items, eff_short_lived_amounts(mod_root, vanilla_root))),
+        mod_root / EFFECTS: (render_effects(items, cc.read_ranks(mod_root, vanilla_root)) + render_settings_effects(items)
+                             + render_option_effects(items)),
+        mod_root / SETTINGS_GUIS: render_settings_guis() + render_option_guis(),
     }
     icons, result.missing_icons = render_icons(items, mod_root, vanilla_root)
     result.files_changed = sum(_write_text(path, text, write) for path, text in texts.items())

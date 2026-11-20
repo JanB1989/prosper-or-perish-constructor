@@ -69,14 +69,22 @@ def test_a_cog_and_a_pane_per_group() -> None:
                  pane.index(f"PP_CPLAN_D_STEP_DOWN_{group.upper()}"), pane.index(f"PP_CPLAN_D_GOLD_{group.upper()}\""),
                  pane.index('"PP_CPLAN_D_BUILT"'), pane.index(f"GetList('pp_cplan_log_{cp.GROUP_WHY[group]}')")]
         assert order == sorted(order), group
-        # the header stays, everything below it scrolls in ONE scrollarea of fixed-width content, the list inside it
-        # is a plain flowcontainer (in game 2026-11-20 the list got no room at 900 px)
+        # (2026-11-20, Jan: no scrolling) everything but the list of what was built stands fixed, in content of a
+        # fixed width that fits the window's right column; ONE scrollarea, after it all, holds only that list
         assert pane.count("scrollarea = {") == 1 and pane.count("scrollwidget = {") == 1, group
-        scroll = pane[pane.index("scrollarea = {"):]
-        assert pane.index("button_close_alt = {") < pane.index("scrollarea = {") < pane.index("PP_CPLAN_D_ST_0")
-        assert f"maximumsize = {{ {cpd.SCROLL_WIDTH} -1 }}" in scroll and cpd.SCROLL_WIDTH <= 694 - 20
-        assert re.search(r"flowcontainer = \{\n\t+direction = vertical\n\t+datamodel = \"\[GetPlayer\.MakeScope\.GetList"
-                         rf"\('pp_cplan_log_{cp.GROUP_WHY[group]}'\)\]\"", scroll), group
+        fixed, scroll = pane[:pane.index("scrollarea = {")], pane[pane.index("scrollarea = {"):]
+        assert pane.index("button_close_alt = {") < pane.index("PP_CPLAN_D_ST_0") < pane.index("scrollarea = {")
+        assert f"maximumsize = {{ {cpd.PANE_WIDTH} -1 }}" in fixed
+        assert '"PP_CPLAN_D_BUILT"' in fixed and "PP_CPLAN_D_NOTHING" in fixed and "pp_cplan_d_column" in fixed
+        assert "layoutpolicy_vertical = expanding" in scroll[:scroll.index("scrollwidget = {")]
+        assert re.fullmatch(
+            r"scrollarea = \{.*?scrollwidget = \{\n\t+flowcontainer = \{\n\t+visible = \"\[GreaterThan_CFixedPoint\("
+            rf"GetPlayer\.MakeScope\.ScriptValue\('pp_cplan_d_{group}_ran'\), '\(CFixedPoint\)0\.5'\)\]\"\n\t+"
+            r"direction = vertical\n\t+datamodel = \"\[GetPlayer\.MakeScope\.GetList"
+            rf"\('pp_cplan_log_{cp.GROUP_WHY[group]}'\)\]\".*", scroll, re.DOTALL), group
+        assert "PP_CPLAN_D_" not in scroll.replace(f"PP_CPLAN_D_COST_{group.upper()}", "").replace(
+            "PP_CPLAN_D_" + group.upper() + "_WHY", "").replace("PP_CPLAN_D_FOOD_WHY", "").replace(
+            "PP_CPLAN_D_COUNTRY_WHY", "").replace("PP_CPLAN_D_PROFILES_WHY", ""), group
 
 
 def test_chart_has_a_column_per_month_oldest_left() -> None:
@@ -304,17 +312,51 @@ def test_window_places_cogs_and_panes() -> None:
     assert window.index(f"pp_cplan_detail_button_{cp.GROUPS[-1]} = {{}}") < start < window.index("pp_cplan_detail_profiles = {")
     close = window[window.index("button_close_alt = {"):]
     assert "on_action = \"[GetVariableSystem.Clear('pp_cplan_detail')]\"" in close
-    # the rows still fit the window (758 px since the bars show the saved gold): label + line + bar + cog; Towns and
-    # Buildings has no line (its settings
-    # are on its own tab), its longer name takes that room (200 + 130 = 140 + 190)
-    assert window.count("minimumsize = { 140 -1 } maximumsize = { 140 -1 }") == 5
+    # the rows fit the left column (2026-11-20, two columns): label + line + bar + cog + three spacings of 4; Towns and
+    # Buildings has no line (its settings are on its own tab), its longer name takes that room (200 + 110 = 120 + 190)
+    assert window.count("minimumsize = { 120 -1 } maximumsize = { 120 -1 }") == 5
     assert window.count("minimumsize = { 190 -1 }") == 3 and window.count("widget = { size = { 190 1 } }") == 2
     assert window.count("minimumsize = { 200 -1 } maximumsize = { 200 -1 }") == 1
-    assert window.count("widget = { size = { 130 1 } }") == 1
+    assert window.count("widget = { size = { 110 1 } }") == 1
     assert len(cp.GROUPS) == 5 + 1
-    # the window grew by what the saved gold takes in every weight bar (its width + the bar's spacing), and 80 px in
-    # height for the rule groups' status lines (2026-11-20)
-    assert "size = { 758 900 }" in window and 758 - 690 == cp.PURSE_WIDTH + 4
+    bar = 15 + 4 + cp.SEGMENT * cp.WEIGHT_STEPS + 4 + 15 + 4 + 44 + 4 + cp.PURSE_WIDTH  # pp_cplan_weight_bar_<group>
+    assert 120 + 190 + bar + 26 + 3 * 4 <= cpd.LEFT_WIDTH and 200 + 110 == 120 + 190
+    assert f"minimumsize = {{ {cpd.LEFT_WIDTH} -1 }}\n\t\t\t\t\t\tmaximumsize = {{ {cpd.LEFT_WIDTH} -1 }}" in window
+
+
+def test_window_frame_and_two_columns() -> None:
+    """Jan 2026-11-20: "I hate having to scroll". The window is 1360 x 820 (the other tabs build against it); the
+    Global Settings tab is two columns: the settings and the rule groups left, the "Last month" list or a group's pane
+    right over the whole height. Nothing on the tab scrolls but the two lists (the "Last month" list and a pane's list
+    of what was built)."""
+    window = _read(WINDOW)
+    assert f"size = {{ {cpd.WINDOW_SIZE[0]} {cpd.WINDOW_SIZE[1]} }}" in window and cpd.WINDOW_SIZE == (1360, 820)
+    assert "movable = yes" in window
+    # the tab body: window margin 7 + tab margin 15 a side, the Global tab's own margin 10 a side
+    assert cpd.TAB_INNER_WIDTH == cpd.WINDOW_SIZE[0] - 2 * 7 - 2 * 15 - 2 * 10
+    right = cpd.TAB_INNER_WIDTH - cpd.LEFT_WIDTH - cpd.COLUMN_GAP
+    assert cpd.PANE_WIDTH <= right
+    # what a pane must hold side by side: the two charts, and the Locations group's grid of three cells
+    from prosper_or_perish_constructor import construction_plan_status as cps
+    assert 2 * cps.chart_width() + 24 <= cpd.PANE_WIDTH and 3 * cpd.CELL_WIDTH + 2 * 4 <= cpd.PANE_WIDTH
+    start = window.index("# ======================== Global settings")
+    tab = window[start:window.index("# ======================== Towns and Buildings")]
+    assert tab.count("scrollarea") == 0, "the Global tab's lists are the generated types"
+    assert re.search(r"hbox = \{\n\t+visible = \"\[Not\(Or\(GetVariableSystem\.HasValue\('pp_cplan_tab', 'country'\)", tab)
+    assert f"spacing = {cpd.COLUMN_GAP}" in tab
+    left, right_col = tab[:tab.index("# ---- right column")], tab[tab.index("# ---- right column"):]
+    for name in ("PP_CPLAN_MASTER", "PP_CPLAN_RESERVE", "PP_CPLAN_BUDGET", "PP_CPLAN_FLOW_SHORT", "PP_CPLAN_RULES",
+                 *(f"pp_cplan_weight_bar_{group}" for group in cp.GROUPS)):
+        assert name in left and name not in right_col, name
+    assert "pp_cplan_last_list = {}" in right_col and all(f"pp_cplan_detail_{g} = {{" in right_col for g in cp.GROUPS)
+    # the scrollareas the tab shows: the "Last month" list and one per pane, each around a list only
+    gui = cpd.render_gui()
+    assert gui.count("scrollarea") == 1 + len(cp.GROUPS)
+    assert _type_body(gui, cpd.LAST_LIST).count("datamodel = \"[GetPlayer.MakeScope.GetList(") == len(cp.GROUPS)
+    # the other two tabs fill the whole body
+    for kind in ("pp_cplan_country_tab", "pp_tplan_set_tab"):
+        body = window[window.rindex("vbox = {", 0, window.index(f"{kind} = {{}}")):window.index(f"{kind} = {{}}")]
+        assert "layoutpolicy_horizontal = expanding" in body and "layoutpolicy_vertical = expanding" in body, kind
 
 
 def test_script_values_exist() -> None:

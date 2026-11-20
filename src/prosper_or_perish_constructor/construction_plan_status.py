@@ -65,12 +65,15 @@ FLOW_KNOWN = "pp_cplan_flow_known"
 ALL_MISSING = "pp_cplan_f_all_missing"
 ALL_YEARS = "pp_cplan_f_all_years"
 PROFILES_BLOCKED = "pp_cplan_f_profiles_blocked"
+# the window's summary: the monthly budget held the plan back at the last pass, and the gold it left out (2026-11-20)
+BUDGET_BINDS = "pp_cplan_f_budget_binds"
+BUDGET_HELD = "pp_cplan_f_budget_held"
 F_NAMES = ("status", "missing", "rate", "years", "need_w", "need_up", "up_part", "up_years", "down_part", "down_years")
 
 
 def forecast_values() -> set[str]:
     """Every new script value this module (and the window's summary line) reads."""
-    names = {FLOW, FLOW_KNOWN, ALL_MISSING, ALL_YEARS, PROFILES_BLOCKED}
+    names = {FLOW, FLOW_KNOWN, ALL_MISSING, ALL_YEARS, PROFILES_BLOCKED, BUDGET_BINDS, BUDGET_HELD}
     for group in cp.GROUPS:
         names |= {f_value(group, name) for name in F_NAMES}
         if group in SITUATION_GROUPS:

@@ -10,6 +10,9 @@ Bookkeeping (country variables, + 100, generated into pp_construction_plan_gener
   in the pass, less what the purses had to give back (``pp_cplan_flow_new``), and what each group was handed at the end
   of the last pass (``pp_cplan_hand_<why>``; a Locations look that ended in a later daily slice adds its hand-on to it),
   each into a running mean over up to MEAN_PASSES passes (mean += (x - mean) / min(passes, MEAN_PASSES));
+* the monthly budget (2026-11-20): ``pp_cplan_purses_fill`` keeps the gold above the reserve the budget left in no
+  purse (``pp_cplan_budget_held``); ``pp_cplan_f_budget_binds`` = 1 while a budget is set and it left gold out, so the
+  window can say that the budget, not the treasury, holds the plan back;
 * switching the plan on (``pp_cplan_history_clear`` -> ``pp_cplan_forecast_clear``) clears the means and the situation
   history, and the first pass after it is not measured (it shares out the whole treasury above the reserve);
 * the situation history moves on by look (``pp_cplan_hq_push_<why>``: at the pass's end for a group that looked, the
@@ -33,6 +36,8 @@ STORE_VAR = "pp_cplan_fv_"  # pp_cplan_fv_<public name without pp_cplan_>: what 
 # the per-group numbers the window reads (pp_cplan_f_<group>_<what>)
 STORED = ("status", "missing", "rate", "years", "need_w", "need_up", "up_part", "up_years", "down_part", "down_years",
           "sit")
+# the monthly budget (2026-11-20): 1 while it held the plan back at the last pass, and the gold it left out then
+BUDGET_VALUES = ("pp_cplan_f_budget_binds", "pp_cplan_f_budget_held")
 HQ_VAR = "pp_cplan_hqv"  # pp_cplan_hqv_<why>_<k>: the group's situation at its k-th last look (+ 100)
 
 # the group's one situation number at its last look (sums of the detail panes' readouts, construction_plan.SITUATION)
@@ -77,10 +82,16 @@ def render_values() -> str:
     whys = [(group, cp.GROUP_WHY[group]) for group in cp.GROUPS]
     p = [
         "\n# ---- Forecast for the window (country scope; construction_plan_forecast.py; the rules never read these) ----\n\n"
-        "# The new gold shared out in this pass, less what the purses had to give back (read before pp_cplan_purses_fill\n"
-        "# writes: pp_cplan_forecast_measure).\n"
+        "# The new gold shared out in this pass (at most the monthly budget: pp_cplan_purse_share), less what the purses\n"
+        "# had to give back (read before pp_cplan_purses_fill writes: pp_cplan_forecast_measure).\n"
         "pp_cplan_flow_new = {\n\tvalue = pp_cplan_purse_held\n\tsubtract = pp_cplan_purse_free\n\tmin = 0\n"
-        "\tmultiply = -1\n\tadd = pp_cplan_purse_rest\n\tmin = 0\n}\n"
+        "\tmultiply = -1\n\tadd = pp_cplan_purse_share\n\tmin = 0\n}\n"
+        "# The monthly budget held the plan back at the last pass's start: gold above the reserve stayed in no purse\n"
+        f"# because of it ({cp.BUDGET_HELD}, kept by pp_cplan_purses_fill), a budget is still set and a rule group counts.\n"
+        f"# 1 / 0, and that gold.\n"
+        f"pp_cplan_f_budget_held = {{\n\tvalue = {cp.BUDGET_HELD}_n\n}}\n"
+        "pp_cplan_f_budget_binds = {\n\tvalue = 0\n\tif = {\n\t\tlimit = {\n\t\t\tpp_cplan_budget_gold > 0\n"
+        "\t\t\tpp_cplan_w_total > 0\n\t\t\tpp_cplan_f_budget_held > 0.5\n\t\t}\n\t\tvalue = 1\n\t}\n}\n"
         f"# The running means' divisor for this pass's measure: the passes measured with it, at most {MEAN_PASSES}.\n"
         f"pp_cplan_fc_div = {{\n\tvalue = 1\n\tif = {{\n\t\tlimit = {{ has_variable = {FC_N} }}\n\t\tvalue = var:{FC_N}\n"
         f"\t\tsubtract = 99\n\t}}\n\tmax = {MEAN_PASSES}\n}}\n"
@@ -182,7 +193,7 @@ def public_values() -> list[str]:
     """The names the window reads that pp_cplan_forecast_store keeps (the situation history's max and percentages are
     kept when the history moves on, pp_cplan_hq_push_<why>)."""
     names = ["pp_cplan_flow_n", "pp_cplan_flow_known", "pp_cplan_f_profiles_blocked", "pp_cplan_f_all_missing",
-             "pp_cplan_f_all_years"]
+             "pp_cplan_f_all_years", *BUDGET_VALUES]
     for group in cp.GROUPS:
         names += [f"pp_cplan_f_{group}_{what}" for what in STORED]
         names.append(f"pp_cplan_part_{group}")
@@ -225,7 +236,7 @@ def render_effects() -> str:
                     for _, why in whys)
     writes = "".join(f"\t\tset_variable = {{ name = {FC_HAND}_{why} value = {{ value = scope:pp_cplan_fch_{why} add = 100 }} }}\n"
                      for _, why in whys)
-    clear = [f"\tremove_variable = {FC_N}\n", f"\tremove_variable = {FC_FLOW}\n"]
+    clear = [f"\tremove_variable = {FC_N}\n", f"\tremove_variable = {FC_FLOW}\n", f"\tremove_variable = {cp.BUDGET_HELD}\n"]
     clear += [f"\tremove_variable = {FC_HAND}_{why}\n" for _, why in whys]
     clear += [f"\tremove_variable = {HQ_VAR}_{why}_{k}\n" for _, why in whys for k in range(1, HISTORY_LOOKS + 1)]
     clear += [f"\tremove_variable = {stored(name)}\n" for name in history_values()]

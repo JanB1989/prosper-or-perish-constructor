@@ -442,7 +442,9 @@ def test_measurable_plans_go_first_by_payback() -> None:
     start = _block(hand, "pp_lprof_start")
     assert start.lstrip().startswith("if = {\n\t\tlimit = { pp_lplan_measuring = yes }")
     assert "NOT = { pp_lplan_measuring = yes }" in _block(hand, "pp_lprof_upgrade")
-    assert "limit = { NOT = { pp_lplan_measuring = yes } }\n\t\t\tpp_tplan_raise = yes" in _read(MOD / town_plans.EFFECTS)
+    # the rank raise waits while the plans are measured (and, plan option off, never raises: town_plans.py)
+    assert ("limit = { NOT = { pp_lplan_measuring = yes } }\n\t\t\tif = {\n\t\t\t\tlimit = { scope:pp_cplan_country = "
+            "{ has_variable = pp_tplan_raise_off } }") in _read(MOD / town_plans.EFFECTS)
     mark = _block(hand, "pp_lplan_mark")
     measuring_part = mark[:mark.index("pp_lprof_open = yes")]
     assert (measuring_part.index("pp_lplan_measure_before = yes") < measuring_part.index("$do$ = yes")

@@ -1,8 +1,11 @@
 ﻿# Prosper or Perish - Construction Plan window (branch player-construction-manager, 2026-11-06, Jan; two tabs since
 # 2026-11-09, three since 2026-11-10). A scripted widget (gui/scripted_widgets/pp_construction_plan.txt), so no vanilla
 # window is overridden.
-# Tabs (vanilla main tabs): Global Settings (the plan on or off, the gold reserve, the six rule groups with their
-# weight bars and lines, what the last pass built) and Towns and Buildings (the settings of that rule group, type
+# Size (2026-11-20, Jan: "I hate having to scroll"): 1360 x 820, the tab body about 1316 x 700 px, the Global Settings
+# tab in two columns (left 650 px: switch, reserve, monthly budget, summary, rule groups; right ~630 px, full height:
+# the "Last month" list or a rule group's pane, whose list of what was built is the only part that scrolls).
+# Tabs (vanilla main tabs): Global Settings (the plan on or off, the gold reserve, the monthly budget, the six rule
+# groups with their weight bars and lines, what the last pass built) and Towns and Buildings (the settings of that rule group, type
 # pp_cplan_country_tab, construction_plan_country.py; Location Profiles, the second tab until 2026-11-19, are gone)
 # and Plans (since 2026-11-20: the settings every town-right plan shares and each plan's card, type pp_tplan_set_tab,
 # town_plan_settings_gui.py).
@@ -60,7 +63,7 @@ types PPConstructionPlan
 		name = "pp_construction_plan_window"
 		visible = "[And4(GetVariableSystem.Exists('pp_cplan_open'), GetPlayer.Exists, Not(IsObserving), Not(IsPauseMenuShown))]"
 		position = { 90 110 }
-		size = { 758 900 }
+		size = { 1360 820 }
 		movable = yes
 		using = bg_window_default_alt
 		filter_mouse = all
@@ -114,227 +117,278 @@ types PPConstructionPlan
 				using = window_main_tabs_margin_alt
 
 				# ======================== Global settings ========================
-				vbox = {
+				# Two columns (2026-11-20, Jan: no scrolling): left the switch, the gold reserve, the monthly budget, the
+				# summary line and the six rule groups with their status lines (LEFT_WIDTH px); right, over the whole
+				# height, the "Last month" list or the open rule group's pane, whose list of what was built is the only
+				# part that scrolls.
+				hbox = {
 					visible = "[Not(Or(GetVariableSystem.HasValue('pp_cplan_tab', 'country'), GetVariableSystem.HasValue('pp_cplan_tab', 'plans')))]"
 					layoutpolicy_horizontal = expanding
 					layoutpolicy_vertical = expanding
-					ignoreinvisible = yes # the closed detail panes take no spacing
 					margin = { 10 8 }
-					spacing = 8
+					spacing = 16
 
-					hbox = {
-						layoutpolicy_horizontal = expanding
+					# ---- left column ----
+					vbox = {
+						minimumsize = { 650 -1 }
+						maximumsize = { 650 -1 }
+						layoutpolicy_vertical = expanding
+						ignoreinvisible = yes
 						spacing = 8
-						pp_cplan_label = { text = "PP_CPLAN_MASTER" tooltip = "PP_CPLAN_MASTER_TT" fontsize = 18 }
-						expand = {}
-						pp_cplan_switch_button = {
-							visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_on_n'), '(CFixedPoint)0.5')]"
-							text = "PP_CPLAN_ON"
-							onclick = "[GetScriptedGui('pp_cplan_toggle_on').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
-						}
-						pp_cplan_switch_button = {
-							visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_on_n'), '(CFixedPoint)0.5'))]"
-							text = "PP_CPLAN_OFF"
-							onclick = "[GetScriptedGui('pp_cplan_toggle_on').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
-						}
-					}
 
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 6
-						pp_cplan_label = { text = "PP_CPLAN_RESERVE" tooltip = "PP_CPLAN_RESERVE_TT" }
-						expand = {}
-						pp_cplan_label = { text = "PP_CPLAN_RESERVE_VALUE" tooltip = "PP_CPLAN_RESERVE_TT" }
-						pp_cplan_step_button = {
-							text = "PP_CPLAN_MINUS"
-							tooltip = "PP_CPLAN_RESERVE_STEP_TT"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('reserve')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
-							onrightclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('reserve_big')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
-						}
-						pp_cplan_step_button = {
-							text = "PP_CPLAN_PLUS"
-							tooltip = "PP_CPLAN_RESERVE_STEP_TT"
-							onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('reserve')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
-							onrightclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('reserve_big')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
-						}
-					}
-
-					# is gold the limit at all (2026-11-20): the gold that came into the plan a month lately, what all
-					# rule groups together lack and how long that takes (pp_cplan_flow_n, pp_cplan_f_all_*;
-					# construction_plan_status.py); before the first month's measure it says it needs a month
-					pp_cplan_d_line = {
-						visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_flow_known'), '(CFixedPoint)0.5'))]"
-						text = "PP_CPLAN_FLOW_UNKNOWN"
-						tooltip = "PP_CPLAN_FLOW_TT"
-					}
-					pp_cplan_d_line = {
-						visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_flow_known'), '(CFixedPoint)0.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_all_missing'), '(CFixedPoint)0.5')))]"
-						text = "PP_CPLAN_FLOW_ENOUGH"
-						tooltip = "PP_CPLAN_FLOW_TT"
-					}
-					pp_cplan_d_line = {
-						visible = "[And3(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_flow_known'), '(CFixedPoint)0.5'), GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_all_missing'), '(CFixedPoint)0.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_all_years'), '(CFixedPoint)98.5')))]"
-						text = "PP_CPLAN_FLOW_SHORT"
-						tooltip = "PP_CPLAN_FLOW_TT"
-					}
-					pp_cplan_d_line = {
-						visible = "[And3(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_flow_known'), '(CFixedPoint)0.5'), GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_all_missing'), '(CFixedPoint)0.5'), GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_all_years'), '(CFixedPoint)98.5'))]"
-						text = "PP_CPLAN_FLOW_NEVER"
-						tooltip = "PP_CPLAN_FLOW_TT"
-					}
-
-					# the rule groups: name, line, weight bar (generated, pp_construction_plan_weights.gui) with the part
-					# in % and the gold the group has saved (its purse, since 2026-11-10), and the detail cog (generated,
-					# pp_construction_plan_detail.gui); label 140 + line 190 + bar 294 + cog 26 + spacing fit the tab's
-					# ~694 px (the window is 68 px wider for the saved gold). Under each row its status line
-					# (pp_cplan_status_profiles and so on, generated beside the bars by construction_plan_status.py; the window is
-					# 80 px taller for them since 2026-11-20): how the group stands for gold and its situation
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						pp_cplan_title = { text = "PP_CPLAN_RULES" }
-						expand = {}
-						pp_cplan_label = { text = "PP_CPLAN_SHARE_HEAD" tooltip = "PP_CPLAN_SHARE_TT" default_format = "#weak" }
-					}
-
-					# profiles
-					vbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 1
 						hbox = {
 							layoutpolicy_horizontal = expanding
-							spacing = 6
-							pp_cplan_label = { text = "PP_CPLAN_PROFILES_RULE" tooltip = "PP_CPLAN_PROFILES_RULE_TT" minimumsize = { 140 -1 } maximumsize = { 140 -1 } }
-							widget = { size = { 190 1 } }
+							spacing = 8
+							pp_cplan_label = { text = "PP_CPLAN_MASTER" tooltip = "PP_CPLAN_MASTER_TT" fontsize = 18 }
 							expand = {}
-							pp_cplan_weight_bar_profiles = {}
-							pp_cplan_detail_button_profiles = {}
-						}
-						pp_cplan_status_profiles = {}
-					}
-
-					# food
-					vbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 1
-						hbox = {
-							layoutpolicy_horizontal = expanding
-							spacing = 6
-							pp_cplan_label = { text = "PP_CPLAN_FOOD_RULE" tooltip = "PP_CPLAN_FOOD_RULE_TT" minimumsize = { 140 -1 } maximumsize = { 140 -1 } }
-							widget = { size = { 190 1 } }
-							expand = {}
-							pp_cplan_weight_bar_food = {}
-							pp_cplan_detail_button_food = {}
-						}
-						pp_cplan_status_food = {}
-					}
-
-					# logistics
-					vbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 1
-						hbox = {
-							layoutpolicy_horizontal = expanding
-							spacing = 6
-							pp_cplan_label = { text = "PP_CPLAN_LOGISTICS_RULE" tooltip = "PP_CPLAN_LOGISTICS_RULE_TT" minimumsize = { 140 -1 } maximumsize = { 140 -1 } }
-							hbox = {
-								minimumsize = { 190 -1 }
-								spacing = 4
-								pp_cplan_label = { text = "PP_CPLAN_ACCESS_VALUE" tooltip = "PP_CPLAN_LOGISTICS_RULE_TT" }
-								expand = {}
-								pp_cplan_step_button = { text = "PP_CPLAN_MINUS" tooltip = "PP_CPLAN_LOGISTICS_RULE_TT" onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('access_line')).AddScope('pp_dir', MakeScopeFlag('down')).End)]" }
-								pp_cplan_step_button = { text = "PP_CPLAN_PLUS" tooltip = "PP_CPLAN_LOGISTICS_RULE_TT" onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('access_line')).AddScope('pp_dir', MakeScopeFlag('up')).End)]" }
+							pp_cplan_switch_button = {
+								visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_on_n'), '(CFixedPoint)0.5')]"
+								text = "PP_CPLAN_ON"
+								onclick = "[GetScriptedGui('pp_cplan_toggle_on').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 							}
-							expand = {}
-							pp_cplan_weight_bar_logistics = {}
-							pp_cplan_detail_button_logistics = {}
-						}
-						pp_cplan_status_logistics = {}
-					}
-
-					# improve
-					vbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 1
-						hbox = {
-							layoutpolicy_horizontal = expanding
-							spacing = 6
-							pp_cplan_label = { text = "PP_CPLAN_IMPROVE_RULE" tooltip = "PP_CPLAN_IMPROVE_RULE_TT" minimumsize = { 140 -1 } maximumsize = { 140 -1 } }
-							hbox = {
-								minimumsize = { 190 -1 }
-								spacing = 4
-								pp_cplan_label = { text = "PP_CPLAN_IMPROVE_LINE_VALUE" tooltip = "PP_CPLAN_IMPROVE_RULE_TT" }
-								expand = {}
-								pp_cplan_step_button = { text = "PP_CPLAN_MINUS" tooltip = "PP_CPLAN_IMPROVE_RULE_TT" onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve_line')).AddScope('pp_dir', MakeScopeFlag('down')).End)]" }
-								pp_cplan_step_button = { text = "PP_CPLAN_PLUS" tooltip = "PP_CPLAN_IMPROVE_RULE_TT" onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve_line')).AddScope('pp_dir', MakeScopeFlag('up')).End)]" }
+							pp_cplan_switch_button = {
+								visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_on_n'), '(CFixedPoint)0.5'))]"
+								text = "PP_CPLAN_OFF"
+								onclick = "[GetScriptedGui('pp_cplan_toggle_on').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 							}
-							expand = {}
-							pp_cplan_weight_bar_improve = {}
-							pp_cplan_detail_button_improve = {}
 						}
-						pp_cplan_status_improve = {}
-					}
 
-					# business
-					vbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 1
 						hbox = {
 							layoutpolicy_horizontal = expanding
 							spacing = 6
-							pp_cplan_label = { text = "PP_CPLAN_BUSINESS_RULE" tooltip = "PP_CPLAN_BUSINESS_RULE_TT" minimumsize = { 140 -1 } maximumsize = { 140 -1 } }
-							hbox = {
-								minimumsize = { 190 -1 }
-								spacing = 4
-								pp_cplan_label = { text = "PP_CPLAN_BUSINESS_LINE_VALUE" tooltip = "PP_CPLAN_BUSINESS_RULE_TT" }
-								expand = {}
-								pp_cplan_step_button = { text = "PP_CPLAN_MINUS" tooltip = "PP_CPLAN_BUSINESS_RULE_TT" onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business_line')).AddScope('pp_dir', MakeScopeFlag('down')).End)]" }
-								pp_cplan_step_button = { text = "PP_CPLAN_PLUS" tooltip = "PP_CPLAN_BUSINESS_RULE_TT" onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business_line')).AddScope('pp_dir', MakeScopeFlag('up')).End)]" }
+							pp_cplan_label = { text = "PP_CPLAN_RESERVE" tooltip = "PP_CPLAN_RESERVE_TT" }
+							expand = {}
+							pp_cplan_label = { text = "PP_CPLAN_RESERVE_VALUE" tooltip = "PP_CPLAN_RESERVE_TT" }
+							pp_cplan_step_button = {
+								text = "PP_CPLAN_MINUS"
+								tooltip = "PP_CPLAN_RESERVE_STEP_TT"
+								onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('reserve')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
+								onrightclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('reserve_big')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
 							}
-							expand = {}
-							pp_cplan_weight_bar_business = {}
-							pp_cplan_detail_button_business = {}
+							pp_cplan_step_button = {
+								text = "PP_CPLAN_PLUS"
+								tooltip = "PP_CPLAN_RESERVE_STEP_TT"
+								onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('reserve')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
+								onrightclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('reserve_big')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
+							}
 						}
-						pp_cplan_status_business = {}
-					}
 
-					# country (Towns and Buildings: its settings are on the third tab, so no line here; the longer
-					# name takes the line's room: label 200 + 130 instead of 140 + 190)
-					vbox = {
-						layoutpolicy_horizontal = expanding
-						spacing = 1
+						# the monthly budget (2026-11-20, Jan: "below that: spend this much"): the most new gold a pass
+						# shares out (pp_cplan_budget_gold, 0 = no limit; pp_cplan_purse_share); steps of
+						# [construction_plan] budget_step / budget_step_big
 						hbox = {
 							layoutpolicy_horizontal = expanding
 							spacing = 6
-							pp_cplan_label = { text = "PP_CPLAN_COUNTRY_RULE" tooltip = "PP_CPLAN_COUNTRY_RULE_TT" minimumsize = { 200 -1 } maximumsize = { 200 -1 } }
-							widget = { size = { 130 1 } }
+							pp_cplan_label = { text = "PP_CPLAN_BUDGET" tooltip = "PP_CPLAN_BUDGET_TT" }
 							expand = {}
-							pp_cplan_weight_bar_country = {}
-							pp_cplan_detail_button_country = {}
+							pp_cplan_label = { text = "PP_CPLAN_BUDGET_VALUE" tooltip = "PP_CPLAN_BUDGET_TT" }
+							pp_cplan_step_button = {
+								text = "PP_CPLAN_MINUS"
+								tooltip = "PP_CPLAN_BUDGET_STEP_TT"
+								onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('budget')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
+								onrightclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('budget_big')).AddScope('pp_dir', MakeScopeFlag('down')).End)]"
+							}
+							pp_cplan_step_button = {
+								text = "PP_CPLAN_PLUS"
+								tooltip = "PP_CPLAN_BUDGET_STEP_TT"
+								onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('budget')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
+								onrightclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('budget_big')).AddScope('pp_dir', MakeScopeFlag('up')).End)]"
+							}
 						}
-						pp_cplan_status_country = {}
+
+						# is gold the limit at all (2026-11-20): the gold that came into the plan a month lately, what all
+						# rule groups together lack and how long that takes (pp_cplan_flow_n, pp_cplan_f_all_*;
+						# construction_plan_status.py); before the first month's measure it says it needs a month
+						pp_cplan_d_line = {
+							visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_flow_known'), '(CFixedPoint)0.5'))]"
+							text = "PP_CPLAN_FLOW_UNKNOWN"
+							tooltip = "PP_CPLAN_FLOW_TT"
+						}
+						pp_cplan_d_line = {
+							visible = "[And(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_flow_known'), '(CFixedPoint)0.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_all_missing'), '(CFixedPoint)0.5')))]"
+							text = "PP_CPLAN_FLOW_ENOUGH"
+							tooltip = "PP_CPLAN_FLOW_TT"
+						}
+						pp_cplan_d_line = {
+							visible = "[And3(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_flow_known'), '(CFixedPoint)0.5'), GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_all_missing'), '(CFixedPoint)0.5'), Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_all_years'), '(CFixedPoint)98.5')))]"
+							text = "PP_CPLAN_FLOW_SHORT"
+							tooltip = "PP_CPLAN_FLOW_TT"
+						}
+						pp_cplan_d_line = {
+							visible = "[And3(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_flow_known'), '(CFixedPoint)0.5'), GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_all_missing'), '(CFixedPoint)0.5'), GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_all_years'), '(CFixedPoint)98.5'))]"
+							text = "PP_CPLAN_FLOW_NEVER"
+							tooltip = "PP_CPLAN_FLOW_TT"
+						}
+						# the monthly budget, not the treasury, held the plan back at the last pass (gold above the
+						# reserve stayed in no purse; pp_cplan_f_budget_binds, kept by pp_cplan_forecast_store)
+						pp_cplan_d_line = {
+							visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_cplan_f_budget_binds'), '(CFixedPoint)0.5')]"
+							text = "PP_CPLAN_BUDGET_BINDS"
+							tooltip = "PP_CPLAN_BUDGET_BINDS_TT"
+						}
+
+						# the rule groups: name, line, weight bar (generated, pp_construction_plan_weights.gui) with the
+						# part in % and the gold the group has saved (its purse), and the detail cog (generated,
+						# pp_construction_plan_detail.gui): label 120 + line 190 + bar 294 + cog 26 + 3 x 4 spacing = 642
+						# of the column's 650 px. Under each row its status line (the status types, generated beside
+						# the bars by construction_plan_status.py): how the group stands for gold and its situation
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							pp_cplan_title = { text = "PP_CPLAN_RULES" }
+							expand = {}
+							pp_cplan_label = { text = "PP_CPLAN_SHARE_HEAD" tooltip = "PP_CPLAN_SHARE_TT" default_format = "#weak" }
+						}
+
+						# profiles
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 1
+							hbox = {
+								layoutpolicy_horizontal = expanding
+								spacing = 4
+								pp_cplan_label = { text = "PP_CPLAN_PROFILES_RULE" tooltip = "PP_CPLAN_PROFILES_RULE_TT" minimumsize = { 120 -1 } maximumsize = { 120 -1 } }
+								widget = { size = { 190 1 } }
+								expand = {}
+								pp_cplan_weight_bar_profiles = {}
+								pp_cplan_detail_button_profiles = {}
+							}
+							pp_cplan_status_profiles = {}
+						}
+
+						# food
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 1
+							hbox = {
+								layoutpolicy_horizontal = expanding
+								spacing = 4
+								pp_cplan_label = { text = "PP_CPLAN_FOOD_RULE" tooltip = "PP_CPLAN_FOOD_RULE_TT" minimumsize = { 120 -1 } maximumsize = { 120 -1 } }
+								widget = { size = { 190 1 } }
+								expand = {}
+								pp_cplan_weight_bar_food = {}
+								pp_cplan_detail_button_food = {}
+							}
+							pp_cplan_status_food = {}
+						}
+
+						# logistics
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 1
+							hbox = {
+								layoutpolicy_horizontal = expanding
+								spacing = 4
+								pp_cplan_label = { text = "PP_CPLAN_LOGISTICS_RULE" tooltip = "PP_CPLAN_LOGISTICS_RULE_TT" minimumsize = { 120 -1 } maximumsize = { 120 -1 } }
+								hbox = {
+									minimumsize = { 190 -1 }
+									spacing = 4
+									pp_cplan_label = { text = "PP_CPLAN_ACCESS_VALUE" tooltip = "PP_CPLAN_LOGISTICS_RULE_TT" }
+									expand = {}
+									pp_cplan_step_button = { text = "PP_CPLAN_MINUS" tooltip = "PP_CPLAN_LOGISTICS_RULE_TT" onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('access_line')).AddScope('pp_dir', MakeScopeFlag('down')).End)]" }
+									pp_cplan_step_button = { text = "PP_CPLAN_PLUS" tooltip = "PP_CPLAN_LOGISTICS_RULE_TT" onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('access_line')).AddScope('pp_dir', MakeScopeFlag('up')).End)]" }
+								}
+								expand = {}
+								pp_cplan_weight_bar_logistics = {}
+								pp_cplan_detail_button_logistics = {}
+							}
+							pp_cplan_status_logistics = {}
+						}
+
+						# improve
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 1
+							hbox = {
+								layoutpolicy_horizontal = expanding
+								spacing = 4
+								pp_cplan_label = { text = "PP_CPLAN_IMPROVE_RULE" tooltip = "PP_CPLAN_IMPROVE_RULE_TT" minimumsize = { 120 -1 } maximumsize = { 120 -1 } }
+								hbox = {
+									minimumsize = { 190 -1 }
+									spacing = 4
+									pp_cplan_label = { text = "PP_CPLAN_IMPROVE_LINE_VALUE" tooltip = "PP_CPLAN_IMPROVE_RULE_TT" }
+									expand = {}
+									pp_cplan_step_button = { text = "PP_CPLAN_MINUS" tooltip = "PP_CPLAN_IMPROVE_RULE_TT" onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve_line')).AddScope('pp_dir', MakeScopeFlag('down')).End)]" }
+									pp_cplan_step_button = { text = "PP_CPLAN_PLUS" tooltip = "PP_CPLAN_IMPROVE_RULE_TT" onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('improve_line')).AddScope('pp_dir', MakeScopeFlag('up')).End)]" }
+								}
+								expand = {}
+								pp_cplan_weight_bar_improve = {}
+								pp_cplan_detail_button_improve = {}
+							}
+							pp_cplan_status_improve = {}
+						}
+
+						# business
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 1
+							hbox = {
+								layoutpolicy_horizontal = expanding
+								spacing = 4
+								pp_cplan_label = { text = "PP_CPLAN_BUSINESS_RULE" tooltip = "PP_CPLAN_BUSINESS_RULE_TT" minimumsize = { 120 -1 } maximumsize = { 120 -1 } }
+								hbox = {
+									minimumsize = { 190 -1 }
+									spacing = 4
+									pp_cplan_label = { text = "PP_CPLAN_BUSINESS_LINE_VALUE" tooltip = "PP_CPLAN_BUSINESS_RULE_TT" }
+									expand = {}
+									pp_cplan_step_button = { text = "PP_CPLAN_MINUS" tooltip = "PP_CPLAN_BUSINESS_RULE_TT" onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business_line')).AddScope('pp_dir', MakeScopeFlag('down')).End)]" }
+									pp_cplan_step_button = { text = "PP_CPLAN_PLUS" tooltip = "PP_CPLAN_BUSINESS_RULE_TT" onclick = "[GetScriptedGui('pp_cplan_step').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('business_line')).AddScope('pp_dir', MakeScopeFlag('up')).End)]" }
+								}
+								expand = {}
+								pp_cplan_weight_bar_business = {}
+								pp_cplan_detail_button_business = {}
+							}
+							pp_cplan_status_business = {}
+						}
+
+						# country (Towns and Buildings: its settings are on its own tab, so no line here; the longer
+						# name takes the line's room: label 200 + 110 instead of 120 + 190)
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 1
+							hbox = {
+								layoutpolicy_horizontal = expanding
+								spacing = 4
+								pp_cplan_label = { text = "PP_CPLAN_COUNTRY_RULE" tooltip = "PP_CPLAN_COUNTRY_RULE_TT" minimumsize = { 200 -1 } maximumsize = { 200 -1 } }
+								widget = { size = { 110 1 } }
+								expand = {}
+								pp_cplan_weight_bar_country = {}
+								pp_cplan_detail_button_country = {}
+							}
+							pp_cplan_status_country = {}
+						}
+
+						expand = {}
 					}
 
-					# last month, everything the plan built; a rule group's cog shows its own pane here instead
+					# ---- right column: the whole height ----
 					vbox = {
-						visible = "[Not(GetVariableSystem.Exists('pp_cplan_detail'))]"
 						layoutpolicy_horizontal = expanding
 						layoutpolicy_vertical = expanding
-						spacing = 8
+						ignoreinvisible = yes # the closed detail panes take no room
 
-						pp_cplan_title = { text = "PP_CPLAN_LAST" }
-						pp_cplan_label = { text = "PP_CPLAN_LAST_SUMMARY" }
+						# last month, everything the plan built; a rule group's cog shows its own pane here instead
+						vbox = {
+							visible = "[Not(GetVariableSystem.Exists('pp_cplan_detail'))]"
+							layoutpolicy_horizontal = expanding
+							layoutpolicy_vertical = expanding
+							spacing = 8
 
-						# a line per rule group and location (generated, pp_construction_plan_detail.gui)
-						pp_cplan_last_list = {}
+							pp_cplan_title = { text = "PP_CPLAN_LAST" }
+							pp_cplan_label = { text = "PP_CPLAN_LAST_SUMMARY" }
+
+							# a line per rule group and location (generated, pp_construction_plan_detail.gui): it
+							# scrolls, as only a pane's list of what was built does besides
+							pp_cplan_last_list = {}
+						}
+
+						# the rule groups' detail panes (generated, pp_construction_plan_detail.gui)
+						pp_cplan_detail_profiles = { visible = "[GetVariableSystem.HasValue('pp_cplan_detail', 'profiles')]" }
+						pp_cplan_detail_food = { visible = "[GetVariableSystem.HasValue('pp_cplan_detail', 'food')]" }
+						pp_cplan_detail_logistics = { visible = "[GetVariableSystem.HasValue('pp_cplan_detail', 'logistics')]" }
+						pp_cplan_detail_improve = { visible = "[GetVariableSystem.HasValue('pp_cplan_detail', 'improve')]" }
+						pp_cplan_detail_business = { visible = "[GetVariableSystem.HasValue('pp_cplan_detail', 'business')]" }
+						pp_cplan_detail_country = { visible = "[GetVariableSystem.HasValue('pp_cplan_detail', 'country')]" }
 					}
-
-					# the rule groups' detail panes (generated, pp_construction_plan_detail.gui)
-					pp_cplan_detail_profiles = { visible = "[GetVariableSystem.HasValue('pp_cplan_detail', 'profiles')]" }
-					pp_cplan_detail_food = { visible = "[GetVariableSystem.HasValue('pp_cplan_detail', 'food')]" }
-					pp_cplan_detail_logistics = { visible = "[GetVariableSystem.HasValue('pp_cplan_detail', 'logistics')]" }
-					pp_cplan_detail_improve = { visible = "[GetVariableSystem.HasValue('pp_cplan_detail', 'improve')]" }
-					pp_cplan_detail_business = { visible = "[GetVariableSystem.HasValue('pp_cplan_detail', 'business')]" }
-					pp_cplan_detail_country = { visible = "[GetVariableSystem.HasValue('pp_cplan_detail', 'country')]" }
 				}
 
 				# ======================== Towns and Buildings ========================

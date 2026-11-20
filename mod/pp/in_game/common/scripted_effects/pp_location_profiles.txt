@@ -14,7 +14,10 @@
 # Plan settings (2026-11-20, Jan; country variables, town_plans.py "Plan settings", the settings tab): a payback limit
 # for every plan and for each plan (pp_tplan_pb_all / pp_tplan_pb_<plan>, default any payback: forced as above), never
 # a level to a building that loses money at full staffing (default; pp_tplan_loss_ok switches it off), wait for free
-# workers (default; pp_tplan_staff_off), take turns (default; pp_tplan_order_best = best payback first).
+# workers (default; pp_tplan_staff_off), take turns (default; pp_tplan_order_best = best payback first). Plan options
+# (2026-11-20, town_plans.py "Plan options"): a goods plan's lowest production efficiency (pp_tplan_eff_low in
+# pp_lplan_mark, state 15); the rank raise, the Food plan's parts and store limit and the Trade plan's groups and
+# capacity in use sit in the generated turns (pp_town_plans_generated.txt, state 16).
 # The locations take turns (Jan 2026-11-10; until then the fewest building levels went first, so the same places always
 # did): every location gets a number when it first joins a look (pp_lprof_seq, counted on the country as
 # pp_lprof_seq_n, both + 100), a look starts after the country's place in that order (pp_lprof_cursor) and wraps
@@ -27,8 +30,9 @@
 # here, 7 gold (the group's purse cannot pay it, or the group saves for something before it), 8 the market lacks the
 # construction goods, 9 waiting for an earlier plan's construction this month, 11 needs a higher rank that cannot be
 # raised here now, 12 the standing building loses money at full staffing, 13 the standing building is closed, 14
-# another business here is being closed to free workers for it (pp_plan_closer.txt); 10 is the market limit, which no
-# plan has), pp_lplan_est_g_<plan> (the payback found), pp_lprof_seq (its number in the turn
+# another business here is being closed to free workers for it (pp_plan_closer.txt), 15 the location's lasting
+# production efficiency is below the plan's line, 16 the plan's options hold it back here (town_plans.py "Plan
+# options"); 10 is the market limit, which no plan has), pp_lplan_est_g_<plan> (the payback found), pp_lprof_seq (its number in the turn
 # order), pp_lplan_last (the n of the plan that started the last construction here: the plans take turns),
 # pp_lplan_wk (yes: one of its plans ended its last turn
 # waiting for workers, state 4 or 14; the other rule groups read it), pp_lprof_pos (its place in the running look,
@@ -377,6 +381,12 @@ pp_lplan_location_turn = {
 		limit = { scope:pp_cplan_country = { has_variable = pp_tplan_pb_some } }
 		pp_cplan_business_harvest = yes
 	}
+	# plan option "lowest production efficiency" (town_plans.py): the location's lasting production efficiency, worked
+	# out once a turn and only while a line is set anywhere (pp_tplan_eff_low reads it)
+	if = {
+		limit = { scope:pp_cplan_country = { has_variable = pp_tplan_effv_some } }
+		save_temporary_scope_value_as = { name = pp_tplan_effh value = pp_tplan_eff_here }
+	}
 	if = {
 		limit = { scope:pp_cplan_country = { has_variable = pp_tplan_order_best } }
 		if = {
@@ -569,7 +579,11 @@ pp_lplan_mark = {
 		if = {
 			limit = { pp_lplan_measuring = yes }
 			pp_lplan_measure_before = yes
-			$do$ = yes
+			# below the plan's line of lowest production efficiency it offers nothing (plan option)
+			if = {
+				limit = { NOT = { pp_tplan_eff_low = { g = $g$ } } }
+				$do$ = yes
+			}
 			pp_lplan_measure_after = { n = $n$ }
 		}
 		else = {
@@ -593,6 +607,15 @@ pp_lplan_mark = {
 				else = {
 					pp_lprof_fail = { r = 102 }
 				}
+			}
+			# plan option "lowest production efficiency" (town_plans.py, a goods plan's line): below it the plan starts
+			# nothing here, no first level, no further level, no tier upgrade, no rank raise (state 15)
+			else_if = {
+				limit = {
+					NOT = { has_variable = pp_lprof_st }
+					pp_tplan_eff_low = { g = $g$ }
+				}
+				pp_lprof_fail = { r = 103.25 }
 			}
 			else_if = {
 				limit = { NOT = { has_variable = pp_lprof_st } }
@@ -668,7 +691,8 @@ pp_lprof_open = {
 # 9 waiting), else the best reason among its candidates (pp_lprof_fail: 108 a plan needs a higher rank that cannot be
 # raised here now -> 11, 107 gold -> 7, 106 the market limit -> 10, 105 goods -> 8, 104.25 workers and nothing else
 # while another business here closes for them (pp_pclose_plan) -> 14, 104 no workers -> 4, 103.5 the
-# standing building loses money -> 12, 103 payback -> 5, 102.5 the standing building is closed -> 13, 102 cannot be
+# standing building loses money -> 12, 103.25 production efficiency below the plan's line -> 15, 103 payback -> 5,
+# 102.75 the plan's options hold it back -> 16, 102.5 the standing building is closed -> 13, 102 cannot be
 # built -> 6, 101 at its highest level -> 2; the half ranks split at the midpoints), else no candidate at all (6); and
 # into $est$ the shortest payback it found.
 pp_lprof_finish = {
@@ -705,12 +729,20 @@ pp_lprof_finish = {
 		set_variable = { name = $st$ value = 104 }
 	}
 	else_if = {
-		limit = { var:pp_lprof_fail > 103.25 }
+		limit = { var:pp_lprof_fail > 103.375 }
 		set_variable = { name = $st$ value = 112 }
 	}
 	else_if = {
-		limit = { var:pp_lprof_fail > 102.75 }
+		limit = { var:pp_lprof_fail > 103.125 }
+		set_variable = { name = $st$ value = 115 }
+	}
+	else_if = {
+		limit = { var:pp_lprof_fail > 102.875 }
 		set_variable = { name = $st$ value = 105 }
+	}
+	else_if = {
+		limit = { var:pp_lprof_fail > 102.625 }
+		set_variable = { name = $st$ value = 116 }
 	}
 	else_if = {
 		limit = { var:pp_lprof_fail > 102.25 }
@@ -761,7 +793,7 @@ pp_lprof_finish = {
 	}
 }
 
-# Location scope: the window counts the plans by their state after this pass (pp_cplan_ds_profiles_st<n>, 1..14).
+# Location scope: the window counts the plans by their state after this pass (pp_cplan_ds_profiles_st<n>, 1..16).
 pp_lprof_count_state = {
 	if = {
 		limit = { var:$st$ < 101.5 }
@@ -815,8 +847,16 @@ pp_lprof_count_state = {
 		limit = { var:$st$ < 113.5 }
 		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_st13 add = 1 } }
 	}
-	else = {
+	else_if = {
+		limit = { var:$st$ < 114.5 }
 		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_st14 add = 1 } }
+	}
+	else_if = {
+		limit = { var:$st$ < 115.5 }
+		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_st15 add = 1 } }
+	}
+	else = {
+		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_st16 add = 1 } }
 	}
 }
 

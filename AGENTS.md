@@ -751,6 +751,16 @@ names them, read `0.11`.
     status, a second chart (the situation over the last twelve looks) and a pane that scrolls as a whole.
   - Test pitfall: a console `tick_day` over a look and the next month's start gives the hidden widget no frame, so
     the closings of that look never happen and their types land on the keep list. Stop a tick right after a look.
+- Fifth round (2026-11-20 evening, Jan: no scrolling, more plan options, a real budget; NOT tested in game;
+  `docs/player_construction_manager.md` "Wide window and monthly budget", `docs/location_plan.md` "Plan options"):
+  - The window is 1360 x 820 and nothing scrolls except the two lists of what was built: Global Settings in two
+    columns (settings left, pane right), Towns and Buildings in two columns, Plans with all icons at once. Each tab
+    module has a test that sums its fixed heights against the body: keep it true when adding rows.
+  - Monthly budget under the gold reserve (`pp_cplan_budget`, `pp_cplan_purse_share`): at most that much new gold is
+    shared out a pass; 0 = no limit.
+  - Plan options are data: add one to `town_plan_options.OPTIONS` (the window renders it by its kind and `where`),
+    implement its value and scripted GUI in `town_plans.py`, default = no variable set = no cost in the look. Plan
+    states 15 (production efficiency below the line) and 16 (held back by the plan's options).
 
 ## Release Checklist
 

@@ -1652,7 +1652,7 @@ def _tile(tile: Tile, tab: str, visible: str) -> str:
         f"{tab}\tblockoverride \"header_button_template_push_properties\" {{ using = button_tab_toggle_properties_template }}\n"
         f"{tab}\tblockoverride \"header_button_template_texture\" {{ using = pressed_button_texture }}\n"
         f"{tab}\tblockoverride \"header_button_full_content\" {{}}\n"
-        f"{tab}\tsize = {{ 34 34 }}\n"
+        f"{tab}\tsize = {{ {TILE} {TILE} }}\n"
         f"{tab}\tdown = \"[{ticked}]\"\n"
         f"{tab}\tglow = {{ visible = \"[{ticked}]\" {GLOW} }}\n"
         f"{tab}\ttooltip = \"{tile.tooltip}\"\n"
@@ -1662,22 +1662,17 @@ def _tile(tile: Tile, tab: str, visible: str) -> str:
     )
 
 
-def _tile_rows(tiles: list[Tile], per_row: int, tab: str, grid: str, flow: bool = False) -> str:
+def _tile_rows(tiles: list[Tile], per_row: int, tab: str, grid: str) -> str:
     """The rows of a grid that wraps: row r shows while the grid has more than r rows of tiles, and holds a copy of
-    every tile from its first place on, each shown while its place falls in the row. ``flow``: rows for a vertical
-    flowcontainer (a scroll area's list, as the detail panes' lists): a flowcontainer may not hold an hbox, and a vbox
-    there is stretched over the scroll area and spreads its rows (in game 2026-11-10)."""
+    every tile from its first place on, each shown while its place falls in the row."""
     out: list[str] = []
     count = LAYOUT_COUNT[grid]
     for row, start in enumerate(range(0, len(tiles), per_row)):
-        out.append(f"{tab}{'flowcontainer' if flow else 'hbox'} = {{\n")
+        out.append(f"{tab}hbox = {{\n")
         out.append(f"{tab}\tvisible = \"[{_row_used(count, row, per_row)}]\"\n")
-        if flow:
-            out.append(f"{tab}\tdirection = horizontal\n{tab}\tignoreinvisible = yes\n{tab}\tspacing = 3\n")
-        else:
-            out.append(f"{tab}\tlayoutpolicy_horizontal = expanding\n{tab}\tignoreinvisible = yes\n{tab}\tspacing = 3\n")
+        out.append(f"{tab}\tlayoutpolicy_horizontal = expanding\n{tab}\tignoreinvisible = yes\n{tab}\tspacing = {TILE_SPACING}\n")
         out += [_tile(tile, tab + "\t", _in_row(tile_place(tile), row, per_row)) for tile in tiles[start:]]
-        out.append(f"{tab}}}\n" if flow else f"{tab}\texpand = {{}}\n{tab}}}\n")
+        out.append(f"{tab}\texpand = {{}}\n{tab}}}\n")
     return "".join(out)
 
 
@@ -1731,15 +1726,60 @@ def _checkbox(flag: str, variable: str, label: str, tooltip: str, tab: str) -> s
     )
 
 
+# The tab's layout (Jan 2026-11-20: no scrolling in the plan window; the window is 1360 x 820, its tab body about
+# 1296 x 690). Two columns side by side: left the public buildings and, under them, towns and cities; right the urban
+# rights. Every row has a fixed height, so the tallest column is summed here (tests/test_construction_plan_country.py
+# checks it against BODY) and no scroll area is needed: the grids hold a fixed number of tiles (one per building and
+# right the database has), each column ends in an expand that takes the slack of a larger body.
+BODY = (1290, 680)  # the most the tab may need (the window's body is a little larger)
+MARGIN = (8, 6)  # the tab's margin: left/right, top/bottom
+COLUMN_GAP = 16  # between the two columns
+SPACING = 4  # between the rows of a column (header rows and tile rows)
+HEADER_HEIGHT = 24  # a header row: its step buttons (26 x 24) are its tallest part, the checkbox is 22
+TILE = 34  # a tile's size (square)
+TILE_SPACING = 3  # between the tiles of a row
+
+
+def column_width() -> int:
+    return (BODY[0] - 2 * MARGIN[0] - COLUMN_GAP) // 2
+
+
+def grid_width(per_row: int) -> int:
+    return per_row * TILE + (per_row - 1) * TILE_SPACING
+
+
+def grid_height(tiles: int, per_row: int) -> int:
+    rows = -(-tiles // per_row)
+    return rows * TILE + max(0, rows - 1) * SPACING
+
+
+def column_heights(buildings: int, rights: int, per_row: int) -> tuple[int, int]:
+    """The fixed height of each column with every tile showing (the most it can need), its margins included.
+    Left: header, the buildings' rows, the towns and cities header; right: header, the rights' rows."""
+    left = HEADER_HEIGHT + SPACING + grid_height(buildings, per_row) + SPACING + HEADER_HEIGHT
+    right = HEADER_HEIGHT + SPACING + grid_height(rights, per_row)
+    return left + 2 * MARGIN[1], right + 2 * MARGIN[1]
+
+
 def render_gui(config: Config, buildings: list[Building], rights: list[Right]) -> str:
     per_row = config.tiles_per_row
-    row = "\t\thbox = {\n\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\tspacing = 6\n"
+    left, right = column_heights(len(buildings), len(rights), per_row)
+    t4, t5 = "\t" * 4, "\t" * 5
+    header = (f"{t4}hbox = {{\n{t5}layoutpolicy_horizontal = expanding\n{t5}spacing = {SPACING}\n")
+    column = ("\t\t\tvbox = {\n\t\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\t\tlayoutpolicy_vertical = expanding\n"
+              f"\t\t\t\tignoreinvisible = yes\n\t\t\t\tspacing = {SPACING}\n")
     return (
         GUI_HEADER
-        + "\n# Prosper or Perish - Construction Plan, the Towns and Buildings tab (Jan 2026-11-10: \"keep the UI tight\"). The\n"
-        "# type pp_cplan_country_tab is the tab's body: pp_construction_plan.gui places it in the window's tab area (about\n"
-        "# 650 x 700 px). Three sections, each one header row with its line and switches, then its tiles: pressed with a gold\n"
-        "# glow = ticked. A tile shows only while the country could use it (script values pp_cplan_pub_show_<building>,\n"
+        + "\n# Prosper or Perish - Construction Plan, the Towns and Buildings tab (Jan 2026-11-10: \"keep the UI tight\";\n"
+        "# 2026-11-20: nothing scrolls). The type pp_cplan_country_tab is the tab's body: pp_construction_plan.gui places it\n"
+        f"# in the window's tab area (designed for at most {BODY[0]} x {BODY[1]} px). Two columns of about {column_width()} px: left the\n"
+        "# public buildings and towns and cities, right the urban rights; each section one header row with its line and\n"
+        f"# switches, then its tiles ({per_row} a row, {grid_width(per_row)} px): pressed with a gold glow = ticked. Heights with every\n"
+        f"# tile showing, margins included: left {HEADER_HEIGHT} + {SPACING} + {len(buildings)} buildings in rows of {TILE} "
+        f"+ {SPACING} + {HEADER_HEIGHT} = {left},\n"
+        f"# right {HEADER_HEIGHT} + {SPACING} + {len(rights)} rights in rows of {TILE} = {right} (rows {SPACING} apart); "
+        "an expand under each column takes the rest.\n"
+        "# A tile shows only while the country could use it (script values pp_cplan_pub_show_<building>,\n"
         "# pp_cplan_right_show_<right>, read only while the tab is open) or while it is ticked. Every button runs a scripted\n"
         "# GUI of common/scripted_guis/pp_construction_plan_country.txt.\n"
         "\ntypes PPConstructionPlanCountry\n{\n"
@@ -1749,46 +1789,49 @@ def render_gui(config: Config, buildings: list[Building], rights: list[Right]) -
         "\ttype pp_cplan_country_step_button = button_regular {\n\t\tsize = { 26 24 }\n\t}\n\n"
         "\ttype pp_cplan_country_tab = vbox {\n"
         "\t\tlayoutpolicy_horizontal = expanding\n\t\tlayoutpolicy_vertical = expanding\n"
-        "\t\tignoreinvisible = yes\n\t\tmargin = { 8 6 }\n\t\tspacing = 4\n\n"
-        "\t\t# ---- Public buildings (and, in the same row, the upgrades of standing buildings) ----\n"
-        + row.replace("spacing = 6", "spacing = 4")
-        + "\t\t\tpp_cplan_country_title = { text = \"PP_CPLANC_PUB\" tooltip = \"PP_CPLANC_PUB_TT\" }\n"
-        "\t\t\twidget = { size = { 6 1 } }\n"
-        + _checkbox("upgrade", VAR_UPGRADE, "PP_CPLANC_UPGRADE", "PP_CPLANC_UPGRADE_TT", "\t\t\t")
-        + "\t\t\texpand = {}\n"
-        "\t\t\tpp_cplan_country_label = { text = \"PP_CPLANC_CONTROL_VALUE\" tooltip = \"PP_CPLANC_CONTROL_TT\" }\n"
-        + _stepper("control_line", "PP_CPLANC_CONTROL_TT", "\t\t\t")
-        + "\t\t}\n"
-        + _tile_rows(building_tiles(buildings), per_row, "\t\t", "pub")
-        + "\n\t\t# ---- Towns and cities ----\n"
-        + row.replace("spacing = 6", "spacing = 4")
-        + "\t\t\tpp_cplan_country_title = { text = \"PP_CPLANC_RANK\" tooltip = \"PP_CPLANC_RANK_TT\" }\n"
-        "\t\t\twidget = { size = { 6 1 } }\n"
-        + _checkbox("rank_town", RANKS["town"][0], "PP_CPLANC_TOWN", "PP_CPLANC_TOWN_TT", "\t\t\t")
-        + "\t\t\tpp_cplan_country_label = { text = \"PP_CPLANC_TOWN_VALUE\" tooltip = \"PP_CPLANC_TOWN_LINE_TT\" default_format = \"#weak\" }\n"
-        + _stepper("town_line", "PP_CPLANC_TOWN_LINE_TT", "\t\t\t")
-        + "\t\t\texpand = {}\n"
-        + _checkbox("rank_city", RANKS["city"][0], "PP_CPLANC_CITY", "PP_CPLANC_CITY_TT", "\t\t\t")
-        + "\t\t}\n"
-        "\n\t\t# ---- Urban rights ----\n"
-        + row.replace("spacing = 6", "spacing = 4")
-        + "\t\t\tpp_cplan_country_title = { text = \"PP_CPLANC_RIGHTS\" tooltip = \"PP_CPLANC_RIGHTS_TT\" }\n"
-        "\t\t\twidget = { size = { 6 1 } }\n"
-        + _checkbox("rights_on", VAR_RIGHTS_ON, "PP_CPLANC_RIGHTS_ON", "PP_CPLANC_RIGHTS_TT", "\t\t\t")
-        + "\t\t\tpp_cplan_country_label = { text = \"PP_CPLANC_RIGHTS_LAST\" tooltip = \"PP_CPLANC_RIGHTS_TT\" default_format = \"#weak\" }\n"
-        "\t\t\texpand = {}\n"
-        "\t\t\tpp_cplan_country_label = { text = \"PP_CPLANC_KEEP_VALUE\" tooltip = \"PP_CPLANC_KEEP_TT\" }\n"
-        + _stepper("keep_line", "PP_CPLANC_KEEP_TT", "\t\t\t")
-        + "\t\t}\n"
-        "\t\tscrollarea = {\n"
-        "\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\tlayoutpolicy_vertical = expanding\n"
-        "\t\t\tscrollbarpolicy_horizontal = always_off\n"
-        "\t\t\tscrollbar_vertical = { using = Scrollbar_Vertical }\n"
-        "\t\t\tscrollwidget = {\n"
-        "\t\t\t\tflowcontainer = {\n\t\t\t\t\tdirection = vertical\n"
-        "\t\t\t\t\tignoreinvisible = yes\n\t\t\t\t\tspacing = 4\n"
-        + _tile_rows(right_tiles(rights), per_row, "\t\t\t\t\t", "right", flow=True)
-        + "\t\t\t\t}\n\t\t\t}\n\t\t}\n"
+        f"\t\tignoreinvisible = yes\n\t\tmargin = {{ {MARGIN[0]} {MARGIN[1]} }}\n\t\tspacing = {SPACING}\n\n"
+        "\t\thbox = {\n\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\tlayoutpolicy_vertical = expanding\n"
+        f"\t\t\tspacing = {COLUMN_GAP}\n\n"
+        "\t\t\t# ==== Left column ====\n"
+        + column
+        + "\t\t\t\t# ---- Public buildings (and, in the same row, the upgrades of standing buildings) ----\n"
+        + header
+        + f"{t5}pp_cplan_country_title = {{ text = \"PP_CPLANC_PUB\" tooltip = \"PP_CPLANC_PUB_TT\" }}\n"
+        f"{t5}widget = {{ size = {{ 6 1 }} }}\n"
+        + _checkbox("upgrade", VAR_UPGRADE, "PP_CPLANC_UPGRADE", "PP_CPLANC_UPGRADE_TT", t5)
+        + f"{t5}expand = {{}}\n"
+        f"{t5}pp_cplan_country_label = {{ text = \"PP_CPLANC_CONTROL_VALUE\" tooltip = \"PP_CPLANC_CONTROL_TT\" }}\n"
+        + _stepper("control_line", "PP_CPLANC_CONTROL_TT", t5)
+        + f"{t4}}}\n"
+        + _tile_rows(building_tiles(buildings), per_row, t4, "pub")
+        + f"\n{t4}# ---- Towns and cities ----\n"
+        + header
+        + f"{t5}pp_cplan_country_title = {{ text = \"PP_CPLANC_RANK\" tooltip = \"PP_CPLANC_RANK_TT\" }}\n"
+        f"{t5}widget = {{ size = {{ 6 1 }} }}\n"
+        + _checkbox("rank_town", RANKS["town"][0], "PP_CPLANC_TOWN", "PP_CPLANC_TOWN_TT", t5)
+        + f"{t5}pp_cplan_country_label = {{ text = \"PP_CPLANC_TOWN_VALUE\" tooltip = \"PP_CPLANC_TOWN_LINE_TT\" default_format = \"#weak\" }}\n"
+        + _stepper("town_line", "PP_CPLANC_TOWN_LINE_TT", t5)
+        + f"{t5}expand = {{}}\n"
+        + _checkbox("rank_city", RANKS["city"][0], "PP_CPLANC_CITY", "PP_CPLANC_CITY_TT", t5)
+        + f"{t4}}}\n"
+        f"{t4}expand = {{}}\n"
+        "\t\t\t}\n\n"
+        "\t\t\t# ==== Right column ====\n"
+        + column
+        + f"{t4}# ---- Urban rights ----\n"
+        + header
+        + f"{t5}pp_cplan_country_title = {{ text = \"PP_CPLANC_RIGHTS\" tooltip = \"PP_CPLANC_RIGHTS_TT\" }}\n"
+        f"{t5}widget = {{ size = {{ 6 1 }} }}\n"
+        + _checkbox("rights_on", VAR_RIGHTS_ON, "PP_CPLANC_RIGHTS_ON", "PP_CPLANC_RIGHTS_TT", t5)
+        + f"{t5}pp_cplan_country_label = {{ text = \"PP_CPLANC_RIGHTS_LAST\" tooltip = \"PP_CPLANC_RIGHTS_TT\" default_format = \"#weak\" }}\n"
+        f"{t5}expand = {{}}\n"
+        f"{t5}pp_cplan_country_label = {{ text = \"PP_CPLANC_KEEP_VALUE\" tooltip = \"PP_CPLANC_KEEP_TT\" }}\n"
+        + _stepper("keep_line", "PP_CPLANC_KEEP_TT", t5)
+        + f"{t4}}}\n"
+        + _tile_rows(right_tiles(rights), per_row, t4, "right")
+        + f"{t4}expand = {{}}\n"
+        "\t\t\t}\n"
+        "\t\t}\n"
         "\t}\n}\n"
     )
 

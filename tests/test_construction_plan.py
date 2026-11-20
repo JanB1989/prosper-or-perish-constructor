@@ -131,9 +131,17 @@ def test_lines_step_as_jan_asked() -> None:
     assert "flag:business_line = { pp_cplan_step_var = { var = pp_cplan_biz current = pp_cplan_business_years step = 1 min = 101 max = 150 }" in guis
     assert "flag:access_line = { pp_cplan_step_var = { var = pp_cplan_access current = pp_cplan_access_pct step = 1" in guis
     window = _read(WINDOW)
-    assert window.count("MakeScopeFlag('reserve_big')") == 2 and window.count("onrightclick") == 2
+    assert window.count("MakeScopeFlag('reserve_big')") == 2 and window.count("MakeScopeFlag('budget_big')") == 2
+    assert window.count("onrightclick") == 4
     values = _read(MOD / cp.VALUES)
     assert "pp_cplan_reserve_gold = {\n\tvalue = 1000\n" in values
+    # the monthly budget (2026-11-20): 0 = no limit by default, steps from [construction_plan]
+    assert config.budget_step == 10 and config.budget_step_big == 100
+    assert "pp_cplan_budget_gold = {\n\tvalue = 0\n" in values
+    assert "pp_cplan_budget_step = { value = 10 }" in values and "pp_cplan_budget_step_big = { value = 100 }" in values
+    for flag, step in (("budget", "pp_cplan_budget_step"), ("budget_big", "pp_cplan_budget_step_big")):
+        assert (f"flag:{flag} = {{ pp_cplan_step_var = {{ var = pp_cplan_budget current = pp_cplan_budget_gold "
+                f"step = {step} min = 100 max = 100100 }} }}") in guis
 
 
 def test_budget_is_the_gold_above_the_reserve() -> None:
@@ -159,7 +167,7 @@ def test_budget_is_the_gold_above_the_reserve() -> None:
         weight = cp.counted_weight(group)
         assert weight == cp.COUNTED_WEIGHTS.get(group, f"pp_cplan_{group}_w")
         share = _effect(generated, f"pp_cplan_purse_new_{why}")
-        assert "value = pp_cplan_purse_rest" in share and f"multiply = {weight}" in share and "divide = pp_cplan_w_total" in share
+        assert "value = pp_cplan_purse_share" in share and f"multiply = {weight}" in share and "divide = pp_cplan_w_total" in share
         # the formula (the window reads it kept as pp_cplan_part_<group>, construction_plan_forecast.py)
         part = _effect(generated, f"{cp.PART_FORMULA}{group}")
         assert f"value = {weight}\n\t\tmultiply = 100\n\t\tdivide = pp_cplan_w_total" in part  # the shown % follows

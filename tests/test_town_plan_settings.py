@@ -10,6 +10,7 @@ from pathlib import Path
 
 import pytest
 
+from prosper_or_perish_constructor import town_plan_options as tpo
 from prosper_or_perish_constructor import town_plan_settings_gui as tps
 from prosper_or_perish_constructor import town_plans
 from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
@@ -97,8 +98,11 @@ def test_every_plan_has_an_icon_and_a_card() -> None:
         for gui_name in (tps.PB_UP, tps.PB_DOWN, tps.PB_RESET):
             assert f"GetScriptedGui('{gui_name}').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_key', MakeScopeFlag('{item.key}')).End)" in card
         assert f'visible = "[{tps.own(item)}]"' in card and f'visible = "[Not({tps.own(item)})]"' in card
-        # its own limit: a dot on its icon
-        assert gui.count(f'visible = "[{tps.own(item)}]" size = {{ 11 11 }}') == 1
+        # its own limit or a per-plan option of its own: a dot on its icon
+        assert gui.count(f'visible = "[{tps.marked(item)}]" size = {{ 10 10 }}') == 1
+        assert tps.own(item) in tps.marked(item)
+        for option in tpo.per_plan():
+            assert (tps.is_on(option.own_value + item.key) in tps.marked(item)) == item.good, item.key
     # the card names every building of the plan as a link, lowest tier first (or tells a long list in a sentence)
     for item in _items():
         text = _loc()[f"PP_TPLAN_SET_CARD_{item.upper}"]
@@ -215,10 +219,118 @@ def test_settings_rows_in_order_and_close_together() -> None:
                       gui[:gui.index("# ---- Each plan")])
     assert rows == ["PP_TPLAN_SET_PB", "PP_TPLAN_SET_LOSS", "PP_TPLAN_SET_STAFF", "PP_TPLAN_SET_FREE",
                     "PP_TPLAN_SET_ALONE", "PP_TPLAN_SET_ORDER", "PP_TPLAN_SET_RIGHTS", "PP_TPLAN_SET_CLOSE"]
-    # the eight rows sit in one tighter vbox
-    at = gui.index("\t\tvbox = {\n\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\tspacing = 2\n")
-    block = _block(gui, at)
+    # the eight rows and the new shared options sit in one tighter vbox
+    match = re.search(r"vbox = \{\n\s*layoutpolicy_horizontal = expanding\n\s*spacing = 2\n", gui)
+    assert match and match.start() < gui.index("# ---- Each plan")
+    block = _block(gui, match.start())
     assert all(f'text = "{row}"' in block for row in rows)
+    assert all(f'text = "{tps.opt_key(option)}"' in block for option in tpo.options(tpo.ALL))
+
+
+# ---- the layout without scrolling and the options of town_plan_options.py (2026-11-20)
+
+
+def test_no_scrolling_and_the_tab_fits() -> None:
+    gui = _gui()
+    assert "scrollarea" not in gui and "scrollbar" not in gui and "scrollwidget" not in gui
+    # every plan icon at once: rows per group from the real plan list
+    groups = tps.groups(_items())
+    assert tps.grid_rows(_items()) == sum(-(-len(members) // tps.PER_ROW) for _, members in groups)
+    assert tps.GUTTER + tps.GUTTER_GAP + tps.PER_ROW * (tps.TILE_SIZE + tps.TILE_GAP) - tps.TILE_GAP <= tps.RIGHT_W
+    assert 2 * tps.MARGIN_X + tps.LEFT_W + tps.COL_GAP + tps.RIGHT_W <= tps.TAB_W
+    # the fixed heights of the taller column (the right one with the tallest card) within the budget
+    heights = tps.layout_heights(_items())
+    assert max(heights["left"], heights["right"]) <= tps.TAB_H, heights
+    for item in _items():
+        rows = tps.card_rows(item)
+        assert rows == 1 + len(tps.card_options(item))
+    food = next(item for item in _items() if item.key == "food")
+    assert tps.card_rows(food) == 1 + len(tpo.options(tpo.FOOD))
+    # the card's text column and its rows fit the right column
+    assert tps.CARD_TEXT_W + tps.CARD_COL_GAP < tps.RIGHT_W
+
+
+def _cards_removed(gui: str) -> str:
+    for item in _items():
+        at = gui.index(f"vbox = {{ # {item.key}\n")
+        gui = gui[:at] + gui[at + len(_block(gui, at)):]
+    return gui
+
+
+def test_options_rendered_where_they_belong() -> None:
+    gui = _gui()
+    goods = [item for item in _items() if item.good]
+    outside = _cards_removed(gui)
+    left = gui[:gui.index("# ---- Each plan")]
+    for option in tpo.OPTIONS:
+        label = f'pp_tplan_set_label = {{ text = "{tps.opt_key(option)}" tooltip = "{tps.opt_key(option, "_TT")}" }}'
+        if option.where == tpo.ALL:
+            assert label in left, option.key
+            key = tps.ALL if option.per_plan else None
+            for gui_name in option.guis[:2] if option.kind == "stepper" else option.guis[:1]:
+                assert tps.call(gui_name, key) in left, (option.key, gui_name)
+        else:
+            assert label not in outside, option.key
+        if option.per_plan:
+            assert option.kind == "stepper" and len(option.guis) == 3
+            # the reset takes a plan, never all
+            assert tps.call(option.guis[2], tps.ALL) not in gui
+            for item in goods:
+                card = _block(gui, gui.index(f"vbox = {{ # {item.key}\n"))
+                assert label in card and f'text = "{tps.opt_value_key(option, item.key)}"' in card, item.key
+                for gui_name in option.guis:
+                    assert tps.call(gui_name, item.key) in card, (item.key, gui_name)
+                own = tps.is_on(option.own_value + item.key)
+                assert f'visible = "[Not({own})]" text = "PP_TPLAN_SET_SAME"' in card
+                assert f'visible = "[{own}]" text = "PP_TPLAN_SET_RESET"' in card
+        if option.where in (tpo.FOOD, tpo.TRADE):
+            for item in _items():
+                card = _block(gui, gui.index(f"vbox = {{ # {item.key}\n"))
+                assert (label in card) == (item.key == option.where), (option.key, item.key)
+    # kinds: a switch two buttons, a cycle one button per state, a stepper its value and two steps
+    for option in tpo.OPTIONS:
+        if option.kind == "switch":
+            assert gui.count(f'text = "{tps.opt_key(option, "_S1")}"') == gui.count(f'text = "{tps.opt_key(option, "_S0")}"') == 1
+        elif option.kind == "cycle":
+            for index in range(len(option.states)):
+                assert gui.count(f'visible = "[{tps.equals(option.value, index)}]" text = "{tps.opt_key(option, f"_S{index}")}"') == 1
+        else:
+            assert f'tooltip = "{tps.opt_key(option, "_DOWN_TT")}"' in gui and f'tooltip = "{tps.opt_key(option, "_UP_TT")}"' in gui
+
+
+def test_per_plan_reads_only_in_the_selected_card() -> None:
+    """A visible widget evaluates its values every frame: outside the cards (only the selected plan's shows) a plan's
+    value is read only by its icon's dot."""
+    outside = _used_values(_cards_removed(_gui()))
+    prefixes = {tps.PB_YEARS, *(o.value for o in tpo.per_plan()), *(o.set_value for o in tpo.per_plan())}
+    dots = {tps.PB_OWN, *(o.own_value for o in tpo.per_plan())}
+    for item in _items():
+        assert not {prefix + item.key for prefix in prefixes} & outside, item.key
+        assert {prefix + item.key for prefix in dots} & outside <= {tps.PB_OWN + item.key} | (
+            {o.own_value + item.key for o in tpo.per_plan()} if item.good else set())
+
+
+def test_option_texts() -> None:
+    loc = _loc()
+    goods = [item.key for item in _items() if item.good]
+    for option in tpo.OPTIONS:
+        assert loc[tps.opt_key(option)] == option.label
+        assert loc[tps.opt_key(option, "_TT")] == option.tooltip.replace('"', '\\"').replace("\n", "\\n")
+        if option.kind == "stepper":
+            for key in ([tps.ALL, *goods] if option.per_plan else [None]):
+                name, set_name, _ = tps.opt_names(option, key)
+                shown = loc[tps.opt_value_key(option, key)]
+                assert tps.is_on(set_name) in shown and tps.opt_key(option, "_S0") in shown
+                assert f"ScriptValue('{name}')|0]" in loc[tps.opt_value_key(option, key, "_N")]
+        else:
+            assert [loc[tps.opt_key(option, f"_S{i}")] for i in range(len(option.states))] == list(option.states)
+
+
+def test_option_values_and_guis_are_in_the_contract() -> None:
+    goods = [item.key for item in _items() if item.good]
+    assert tpo.value_names(goods) <= tps.used_values(_items())
+    assert tpo.gui_names() <= set(tps.CONTRACT_GUIS)
+    assert tpo.value_names(goods) <= _used_values(_gui() + "\n".join(_loc().values()))
 
 
 def test_gui_functions_exist_in_the_data_type_dump() -> None:

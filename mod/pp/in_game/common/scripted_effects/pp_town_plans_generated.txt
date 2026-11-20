@@ -4,7 +4,11 @@
 # Location scope, in the plan's turn (pp_lplan_mark: forced, scope:pp_cplan_country set). Where none of the
 # producers stands and the rank is below the lowest one they may stand on, the turn raises the rank (one step,
 # pp_tplan_raise); else it runs the goods target. While the marks are measured the raise does nothing (it has no
-# payback to offer).
+# payback to offer). With the plan option "raise a settlement for its plan" off (pp_tplan_raise_off) the turn
+# raises nothing and the plan waits for a higher rank (pp_lprof_fail 108, state 11). The trade plan's
+# turn first asks its option "trade capacity in use" (pp_tplan_trade_use: below the line nothing happens here,
+# 102.75, state 16) and, with a group of its buildings switched off, runs its groups one after the other
+# (pp_tplan_trade_split).
 
 pp_tplan_do_beer = {
 	if = {
@@ -14,7 +18,13 @@ pp_tplan_do_beer = {
 		}
 		if = {
 			limit = { NOT = { pp_lplan_measuring = yes } }
-			pp_tplan_raise = yes
+			if = {
+				limit = { scope:pp_cplan_country = { has_variable = pp_tplan_raise_off } }
+				pp_lprof_fail = { r = 108 }
+			}
+			else = {
+				pp_tplan_raise = yes
+			}
 		}
 	}
 	else = {
@@ -30,7 +40,13 @@ pp_tplan_do_liquor = {
 		}
 		if = {
 			limit = { NOT = { pp_lplan_measuring = yes } }
-			pp_tplan_raise = yes
+			if = {
+				limit = { scope:pp_cplan_country = { has_variable = pp_tplan_raise_off } }
+				pp_lprof_fail = { r = 108 }
+			}
+			else = {
+				pp_tplan_raise = yes
+			}
 		}
 	}
 	else = {
@@ -46,7 +62,13 @@ pp_tplan_do_books = {
 		}
 		if = {
 			limit = { NOT = { pp_lplan_measuring = yes } }
-			pp_tplan_raise = yes
+			if = {
+				limit = { scope:pp_cplan_country = { has_variable = pp_tplan_raise_off } }
+				pp_lprof_fail = { r = 108 }
+			}
+			else = {
+				pp_tplan_raise = yes
+			}
 		}
 	}
 	else = {
@@ -62,7 +84,13 @@ pp_tplan_do_paper = {
 		}
 		if = {
 			limit = { NOT = { pp_lplan_measuring = yes } }
-			pp_tplan_raise = yes
+			if = {
+				limit = { scope:pp_cplan_country = { has_variable = pp_tplan_raise_off } }
+				pp_lprof_fail = { r = 108 }
+			}
+			else = {
+				pp_tplan_raise = yes
+			}
 		}
 	}
 	else = {
@@ -78,7 +106,13 @@ pp_tplan_do_pottery = {
 		}
 		if = {
 			limit = { NOT = { pp_lplan_measuring = yes } }
-			pp_tplan_raise = yes
+			if = {
+				limit = { scope:pp_cplan_country = { has_variable = pp_tplan_raise_off } }
+				pp_lprof_fail = { r = 108 }
+			}
+			else = {
+				pp_tplan_raise = yes
+			}
 		}
 	}
 	else = {
@@ -94,7 +128,13 @@ pp_tplan_do_furniture = {
 		}
 		if = {
 			limit = { NOT = { pp_lplan_measuring = yes } }
-			pp_tplan_raise = yes
+			if = {
+				limit = { scope:pp_cplan_country = { has_variable = pp_tplan_raise_off } }
+				pp_lprof_fail = { r = 108 }
+			}
+			else = {
+				pp_tplan_raise = yes
+			}
 		}
 	}
 	else = {
@@ -110,7 +150,13 @@ pp_tplan_do_lacquerware = {
 		}
 		if = {
 			limit = { NOT = { pp_lplan_measuring = yes } }
-			pp_tplan_raise = yes
+			if = {
+				limit = { scope:pp_cplan_country = { has_variable = pp_tplan_raise_off } }
+				pp_lprof_fail = { r = 108 }
+			}
+			else = {
+				pp_tplan_raise = yes
+			}
 		}
 	}
 	else = {
@@ -126,7 +172,13 @@ pp_tplan_do_porcelain = {
 		}
 		if = {
 			limit = { NOT = { pp_lplan_measuring = yes } }
-			pp_tplan_raise = yes
+			if = {
+				limit = { scope:pp_cplan_country = { has_variable = pp_tplan_raise_off } }
+				pp_lprof_fail = { r = 108 }
+			}
+			else = {
+				pp_tplan_raise = yes
+			}
 		}
 	}
 	else = {
@@ -142,7 +194,13 @@ pp_tplan_do_steel = {
 		}
 		if = {
 			limit = { NOT = { pp_lplan_measuring = yes } }
-			pp_tplan_raise = yes
+			if = {
+				limit = { scope:pp_cplan_country = { has_variable = pp_tplan_raise_off } }
+				pp_lprof_fail = { r = 108 }
+			}
+			else = {
+				pp_tplan_raise = yes
+			}
 		}
 	}
 	else = {
@@ -158,7 +216,13 @@ pp_tplan_do_cannons = {
 		}
 		if = {
 			limit = { NOT = { pp_lplan_measuring = yes } }
-			pp_tplan_raise = yes
+			if = {
+				limit = { scope:pp_cplan_country = { has_variable = pp_tplan_raise_off } }
+				pp_lprof_fail = { r = 108 }
+			}
+			else = {
+				pp_tplan_raise = yes
+			}
 		}
 	}
 	else = {
@@ -174,7 +238,13 @@ pp_tplan_do_firearms = {
 		}
 		if = {
 			limit = { NOT = { pp_lplan_measuring = yes } }
-			pp_tplan_raise = yes
+			if = {
+				limit = { scope:pp_cplan_country = { has_variable = pp_tplan_raise_off } }
+				pp_lprof_fail = { r = 108 }
+			}
+			else = {
+				pp_tplan_raise = yes
+			}
 		}
 	}
 	else = {
@@ -190,7 +260,13 @@ pp_tplan_do_weaponry = {
 		}
 		if = {
 			limit = { NOT = { pp_lplan_measuring = yes } }
-			pp_tplan_raise = yes
+			if = {
+				limit = { scope:pp_cplan_country = { has_variable = pp_tplan_raise_off } }
+				pp_lprof_fail = { r = 108 }
+			}
+			else = {
+				pp_tplan_raise = yes
+			}
 		}
 	}
 	else = {
@@ -206,7 +282,13 @@ pp_tplan_do_naval_supplies = {
 		}
 		if = {
 			limit = { NOT = { pp_lplan_measuring = yes } }
-			pp_tplan_raise = yes
+			if = {
+				limit = { scope:pp_cplan_country = { has_variable = pp_tplan_raise_off } }
+				pp_lprof_fail = { r = 108 }
+			}
+			else = {
+				pp_tplan_raise = yes
+			}
 		}
 	}
 	else = {
@@ -222,7 +304,13 @@ pp_tplan_do_fine_cloth = {
 		}
 		if = {
 			limit = { NOT = { pp_lplan_measuring = yes } }
-			pp_tplan_raise = yes
+			if = {
+				limit = { scope:pp_cplan_country = { has_variable = pp_tplan_raise_off } }
+				pp_lprof_fail = { r = 108 }
+			}
+			else = {
+				pp_tplan_raise = yes
+			}
 		}
 	}
 	else = {
@@ -231,18 +319,169 @@ pp_tplan_do_fine_cloth = {
 }
 
 pp_tplan_do_trade = {
+	save_temporary_scope_value_as = { name = pp_tplan_hold value = 0 }
 	if = {
-		limit = {
-			location_rank = location_rank:rural_settlement
-			NOT = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:commerce_center building_type = building_type:grand_marketplace building_type = building_type:merchants_quarters building_type = building_type:clearing_house building_type = building_type:customs_house building_type = building_type:entrepot building_type = building_type:market_warehouse building_type = building_type:marketplace building_type = building_type:port_authority building_type = building_type:stock_exchange building_type = building_type:trading_hub } } }
-		}
+		limit = { scope:pp_cplan_country = { has_variable = pp_tplan_trade_use } }
+		scope:pp_cplan_country = { save_temporary_scope_value_as = { name = pp_tplan_lim value = pp_tplan_trade_use_pct } }
 		if = {
-			limit = { NOT = { pp_lplan_measuring = yes } }
-			pp_tplan_raise = yes
+			limit = { pp_tplan_trade_use_here < scope:pp_tplan_lim }
+			save_temporary_scope_value_as = { name = pp_tplan_hold value = 1 }
+			pp_lprof_fail = { r = 102.75 }
 		}
 	}
-	else = {
-		pp_lprof_t_trade_category = yes
+	if = {
+		limit = { scope:pp_tplan_hold < 0.5 }
+		if = {
+			limit = {
+				location_rank = location_rank:rural_settlement
+				NOT = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:commerce_center building_type = building_type:grand_marketplace building_type = building_type:merchants_quarters building_type = building_type:clearing_house building_type = building_type:customs_house building_type = building_type:entrepot building_type = building_type:market_warehouse building_type = building_type:marketplace building_type = building_type:port_authority building_type = building_type:stock_exchange building_type = building_type:trading_hub } } }
+			}
+			if = {
+				limit = { NOT = { pp_lplan_measuring = yes } }
+				if = {
+					limit = { scope:pp_cplan_country = { has_variable = pp_tplan_raise_off } }
+					pp_lprof_fail = { r = 108 }
+				}
+				else = {
+					pp_tplan_raise = yes
+				}
+			}
+		}
+		else = {
+			if = {
+				limit = {
+					scope:pp_cplan_country = {
+						NOR = {
+							has_variable = pp_tplan_trade_market_off
+							has_variable = pp_tplan_trade_port_off
+							has_variable = pp_tplan_trade_centre_off
+						}
+					}
+				}
+				pp_lprof_t_trade_category = yes
+			}
+			else = {
+				pp_tplan_trade_split = yes
+			}
+		}
+	}
+}
+
+# ---- The trade plan with a group of its buildings switched off (plan options, 2026-11-20) ----
+# Location scope, in the trade plan's turn (pp_tplan_do_trade, where it does not raise the rank). Its groups in
+# start order, each only while its switch is on: the Marketplace line, the Port Authority, the market centre's
+# buildings (pp_lprof_t_trade_market / _port / _centre: the same lists and start order as pp_lprof_t_trade_category,
+# which runs while every group is on). A group runs where the groups before it have nothing to do (every building
+# at its highest level, or none can be built here; no construction) and, after the first group that ran, not while
+# the plans are being measured. Nothing to do anywhere: "nothing to build" (101) where a group is at its highest
+# level, else "cannot be built here" (102); every group switched off: state 16 (102.75).
+pp_tplan_trade_split = {
+	save_temporary_scope_value_as = { name = pp_tplan_ff value = 0 }
+	save_temporary_scope_value_as = { name = pp_tplan_tried value = 0 }
+	if = {
+		limit = {
+			scope:pp_cplan_country = { NOT = { has_variable = pp_tplan_trade_market_off } }
+			NOT = { has_variable = pp_lprof_st }
+			OR = {
+				scope:pp_tplan_tried < 0.5
+				NOT = { pp_lplan_measuring = yes }
+			}
+			OR = {
+				NOT = { has_variable = pp_lprof_fail }
+				var:pp_lprof_fail < 102.25
+			}
+		}
+		if = {
+			limit = {
+				has_variable = pp_lprof_fail
+				var:pp_lprof_fail < 101.25
+			}
+			save_temporary_scope_value_as = { name = pp_tplan_ff value = 1 }
+		}
+		remove_variable = pp_lprof_fail
+		remove_variable = pp_lprof_best
+		pp_lprof_t_trade_market = yes
+		save_temporary_scope_value_as = { name = pp_tplan_tried value = 1 }
+	}
+	if = {
+		limit = {
+			scope:pp_cplan_country = { NOT = { has_variable = pp_tplan_trade_port_off } }
+			NOT = { has_variable = pp_lprof_st }
+			OR = {
+				scope:pp_tplan_tried < 0.5
+				NOT = { pp_lplan_measuring = yes }
+			}
+			OR = {
+				NOT = { has_variable = pp_lprof_fail }
+				var:pp_lprof_fail < 102.25
+			}
+		}
+		if = {
+			limit = {
+				has_variable = pp_lprof_fail
+				var:pp_lprof_fail < 101.25
+			}
+			save_temporary_scope_value_as = { name = pp_tplan_ff value = 1 }
+		}
+		remove_variable = pp_lprof_fail
+		remove_variable = pp_lprof_best
+		pp_lprof_t_trade_port = yes
+		save_temporary_scope_value_as = { name = pp_tplan_tried value = 1 }
+	}
+	if = {
+		limit = {
+			scope:pp_cplan_country = { NOT = { has_variable = pp_tplan_trade_centre_off } }
+			NOT = { has_variable = pp_lprof_st }
+			OR = {
+				scope:pp_tplan_tried < 0.5
+				NOT = { pp_lplan_measuring = yes }
+			}
+			OR = {
+				NOT = { has_variable = pp_lprof_fail }
+				var:pp_lprof_fail < 102.25
+			}
+		}
+		if = {
+			limit = {
+				has_variable = pp_lprof_fail
+				var:pp_lprof_fail < 101.25
+			}
+			save_temporary_scope_value_as = { name = pp_tplan_ff value = 1 }
+		}
+		remove_variable = pp_lprof_fail
+		remove_variable = pp_lprof_best
+		pp_lprof_t_trade_centre = yes
+		save_temporary_scope_value_as = { name = pp_tplan_tried value = 1 }
+	}
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lprof_st }
+			OR = {
+				NOT = { has_variable = pp_lprof_fail }
+				var:pp_lprof_fail < 102.25
+			}
+		}
+		if = {
+			limit = {
+				OR = {
+					scope:pp_tplan_ff > 0.5
+					AND = {
+						has_variable = pp_lprof_fail
+						var:pp_lprof_fail < 101.25
+					}
+				}
+			}
+			remove_variable = pp_lprof_fail
+			pp_lprof_fail = { r = 101 }
+		}
+		else_if = {
+			limit = { scope:pp_tplan_tried > 0.5 }
+			pp_lprof_fail = { r = 102 }
+		}
+		else = {
+			remove_variable = pp_lprof_fail
+			pp_lprof_fail = { r = 102.75 }
+		}
 	}
 }
 
@@ -254,58 +493,116 @@ pp_tplan_do_trade = {
 # (NOT pp_pclose_store_ok, province scope). Nothing to do there either: "nothing to build" (2) where the farms or
 # the kitchens are at their highest level, else "cannot be built here" (6). The plan's buildings (the plan closer,
 # the settings, the picker) stay its whole list (pp_lprof_t_food is not run).
+# The plan's options (town_plans.py "Plan options", all unset = the above): the store limit (FOOD_STORE_VAR: nothing
+# while the province's stored months, pp_location_stored_months, reach it: 102.75, state 16), the farms
+# and the kitchens switched off, the Taverns never / while the store is short / always. Where every part is
+# switched off, nothing is tried: state 16 (102.75).
 pp_tplan_do_food = {
-	pp_lprof_t_food_farms = yes
+	save_temporary_scope_value_as = { name = pp_tplan_hold value = 0 }
 	if = {
-		limit = {
-			NOT = { has_variable = pp_lprof_st }
-			NOT = { pp_lplan_measuring = yes }
-			OR = {
-				NOT = { has_variable = pp_lprof_fail }
-				var:pp_lprof_fail < 102.25
-			}
-		}
-		# the farms' outcome: 101 = at their highest level, else 102
-		save_temporary_scope_value_as = { name = pp_tplan_ff value = 102 }
+		limit = { scope:pp_cplan_country = { has_variable = pp_tplan_food_store } }
+		scope:pp_cplan_country = { save_temporary_scope_value_as = { name = pp_tplan_lim value = pp_tplan_food_store_months } }
 		if = {
-			limit = {
-				has_variable = pp_lprof_fail
-				var:pp_lprof_fail < 101.25
-			}
-			save_temporary_scope_value_as = { name = pp_tplan_ff value = 101 }
+			limit = { pp_location_stored_months >= scope:pp_tplan_lim }
+			save_temporary_scope_value_as = { name = pp_tplan_hold value = 1 }
+			pp_lprof_fail = { r = 102.75 }
 		}
-		remove_variable = pp_lprof_fail
-		remove_variable = pp_lprof_best
+	}
+	if = {
+		limit = { scope:pp_tplan_hold < 0.5 }
+		save_temporary_scope_value_as = { name = pp_tplan_tried value = 0 }
 		if = {
-			limit = { province ?= { NOT = { pp_pclose_store_ok = yes } } }
-			pp_lprof_t_food_kitchens_taverns = yes
-		}
-		else = {
-			pp_lprof_t_food_kitchens = yes
+			limit = { scope:pp_cplan_country = { NOT = { has_variable = pp_tplan_food_farms_off } } }
+			pp_lprof_t_food_farms = yes
+			save_temporary_scope_value_as = { name = pp_tplan_tried value = 1 }
 		}
 		if = {
 			limit = {
 				NOT = { has_variable = pp_lprof_st }
+				NOT = { pp_lplan_measuring = yes }
 				OR = {
 					NOT = { has_variable = pp_lprof_fail }
 					var:pp_lprof_fail < 102.25
 				}
 			}
+			# the farms' outcome: 101 = at their highest level, else 102
+			save_temporary_scope_value_as = { name = pp_tplan_ff value = 102 }
 			if = {
 				limit = {
+					has_variable = pp_lprof_fail
+					var:pp_lprof_fail < 101.25
+				}
+				save_temporary_scope_value_as = { name = pp_tplan_ff value = 101 }
+			}
+			remove_variable = pp_lprof_fail
+			remove_variable = pp_lprof_best
+			if = {
+				limit = {
+					scope:pp_cplan_country = { NOT = { has_variable = pp_tplan_food_kitchens_off } }
 					OR = {
-						scope:pp_tplan_ff < 101.5
 						AND = {
-							has_variable = pp_lprof_fail
-							var:pp_lprof_fail < 101.25
+							scope:pp_cplan_country = { NOT = { has_variable = pp_tplan_food_taverns } }
+							province ?= { NOT = { pp_pclose_store_ok = yes } }
+						}
+						scope:pp_cplan_country = {
+							has_variable = pp_tplan_food_taverns
+							var:pp_tplan_food_taverns > 2.5
 						}
 					}
 				}
-				remove_variable = pp_lprof_fail
-				pp_lprof_fail = { r = 101 }
+				pp_lprof_t_food_kitchens_taverns = yes
+				save_temporary_scope_value_as = { name = pp_tplan_tried value = 1 }
 			}
-			else = {
-				pp_lprof_fail = { r = 102 }
+			else_if = {
+				limit = { scope:pp_cplan_country = { NOT = { has_variable = pp_tplan_food_kitchens_off } } }
+				pp_lprof_t_food_kitchens = yes
+				save_temporary_scope_value_as = { name = pp_tplan_tried value = 1 }
+			}
+			else_if = {
+				limit = {
+					OR = {
+						AND = {
+							scope:pp_cplan_country = { NOT = { has_variable = pp_tplan_food_taverns } }
+							province ?= { NOT = { pp_pclose_store_ok = yes } }
+						}
+						scope:pp_cplan_country = {
+							has_variable = pp_tplan_food_taverns
+							var:pp_tplan_food_taverns > 2.5
+						}
+					}
+				}
+				pp_lprof_t_food_taverns = yes
+				save_temporary_scope_value_as = { name = pp_tplan_tried value = 1 }
+			}
+			if = {
+				limit = {
+					NOT = { has_variable = pp_lprof_st }
+					OR = {
+						NOT = { has_variable = pp_lprof_fail }
+						var:pp_lprof_fail < 102.25
+					}
+				}
+				if = {
+					limit = {
+						OR = {
+							scope:pp_tplan_ff < 101.5
+							AND = {
+								has_variable = pp_lprof_fail
+								var:pp_lprof_fail < 101.25
+							}
+						}
+					}
+					remove_variable = pp_lprof_fail
+					pp_lprof_fail = { r = 101 }
+				}
+				else_if = {
+					limit = { scope:pp_tplan_tried > 0.5 }
+					pp_lprof_fail = { r = 102 }
+				}
+				else = {
+					remove_variable = pp_lprof_fail
+					pp_lprof_fail = { r = 102.75 }
+				}
 			}
 		}
 	}
@@ -777,4 +1074,346 @@ pp_tplan_settings_declare = {
 	set_variable = { name = pp_tplan_sflag value = flag:silver }
 	set_variable = { name = pp_tplan_sflag value = flag:food }
 	set_variable = { name = pp_tplan_sflag value = flag:trade }
+}
+
+# ---- Plan options (country scope; the Plans tab's buttons, scripted_guis/pp_town_plan_settings.txt) ----
+# scope:pp_key = flag:all or flag:<goods plan>: its lowest production efficiency one step $dir$ (up = higher).
+pp_tplan_eff_key = {
+	switch = {
+		trigger = scope:pp_key
+		flag:all = { pp_tplan_eff_step = { var = pp_tplan_effv_all dir = $dir$ all = yes } }
+		flag:camels = { pp_tplan_eff_step = { var = pp_tplan_effv_camels dir = $dir$ all = no } }
+		flag:elephants = { pp_tplan_eff_step = { var = pp_tplan_effv_elephants dir = $dir$ all = no } }
+		flag:horses = { pp_tplan_eff_step = { var = pp_tplan_effv_horses dir = $dir$ all = no } }
+		flag:livestock = { pp_tplan_eff_step = { var = pp_tplan_effv_livestock dir = $dir$ all = no } }
+		flag:wool = { pp_tplan_eff_step = { var = pp_tplan_effv_wool dir = $dir$ all = no } }
+		flag:beeswax = { pp_tplan_eff_step = { var = pp_tplan_effv_beeswax dir = $dir$ all = no } }
+		flag:dyes = { pp_tplan_eff_step = { var = pp_tplan_effv_dyes dir = $dir$ all = no } }
+		flag:incense = { pp_tplan_eff_step = { var = pp_tplan_effv_incense dir = $dir$ all = no } }
+		flag:tobacco = { pp_tplan_eff_step = { var = pp_tplan_effv_tobacco dir = $dir$ all = no } }
+		flag:cotton = { pp_tplan_eff_step = { var = pp_tplan_effv_cotton dir = $dir$ all = no } }
+		flag:fiber_crops = { pp_tplan_eff_step = { var = pp_tplan_effv_fiber_crops dir = $dir$ all = no } }
+		flag:silk = { pp_tplan_eff_step = { var = pp_tplan_effv_silk dir = $dir$ all = no } }
+		flag:chili = { pp_tplan_eff_step = { var = pp_tplan_effv_chili dir = $dir$ all = no } }
+		flag:cloves = { pp_tplan_eff_step = { var = pp_tplan_effv_cloves dir = $dir$ all = no } }
+		flag:pepper = { pp_tplan_eff_step = { var = pp_tplan_effv_pepper dir = $dir$ all = no } }
+		flag:saffron = { pp_tplan_eff_step = { var = pp_tplan_effv_saffron dir = $dir$ all = no } }
+		flag:legumes = { pp_tplan_eff_step = { var = pp_tplan_effv_legumes dir = $dir$ all = no } }
+		flag:maize = { pp_tplan_eff_step = { var = pp_tplan_effv_maize dir = $dir$ all = no } }
+		flag:millet = { pp_tplan_eff_step = { var = pp_tplan_effv_millet dir = $dir$ all = no } }
+		flag:potato = { pp_tplan_eff_step = { var = pp_tplan_effv_potato dir = $dir$ all = no } }
+		flag:rice = { pp_tplan_eff_step = { var = pp_tplan_effv_rice dir = $dir$ all = no } }
+		flag:wheat = { pp_tplan_eff_step = { var = pp_tplan_effv_wheat dir = $dir$ all = no } }
+		flag:cocoa = { pp_tplan_eff_step = { var = pp_tplan_effv_cocoa dir = $dir$ all = no } }
+		flag:coffee = { pp_tplan_eff_step = { var = pp_tplan_effv_coffee dir = $dir$ all = no } }
+		flag:tea = { pp_tplan_eff_step = { var = pp_tplan_effv_tea dir = $dir$ all = no } }
+		flag:sugar = { pp_tplan_eff_step = { var = pp_tplan_effv_sugar dir = $dir$ all = no } }
+		flag:fruit = { pp_tplan_eff_step = { var = pp_tplan_effv_fruit dir = $dir$ all = no } }
+		flag:olives = { pp_tplan_eff_step = { var = pp_tplan_effv_olives dir = $dir$ all = no } }
+		flag:wine = { pp_tplan_eff_step = { var = pp_tplan_effv_wine dir = $dir$ all = no } }
+		flag:lumber = { pp_tplan_eff_step = { var = pp_tplan_effv_lumber dir = $dir$ all = no } }
+		flag:fish = { pp_tplan_eff_step = { var = pp_tplan_effv_fish dir = $dir$ all = no } }
+		flag:pearls = { pp_tplan_eff_step = { var = pp_tplan_effv_pearls dir = $dir$ all = no } }
+		flag:clay = { pp_tplan_eff_step = { var = pp_tplan_effv_clay dir = $dir$ all = no } }
+		flag:sand = { pp_tplan_eff_step = { var = pp_tplan_effv_sand dir = $dir$ all = no } }
+		flag:medicaments = { pp_tplan_eff_step = { var = pp_tplan_effv_medicaments dir = $dir$ all = no } }
+		flag:salt = { pp_tplan_eff_step = { var = pp_tplan_effv_salt dir = $dir$ all = no } }
+		flag:amber = { pp_tplan_eff_step = { var = pp_tplan_effv_amber dir = $dir$ all = no } }
+		flag:ivory = { pp_tplan_eff_step = { var = pp_tplan_effv_ivory dir = $dir$ all = no } }
+		flag:wild_game = { pp_tplan_eff_step = { var = pp_tplan_effv_wild_game dir = $dir$ all = no } }
+		flag:beer = { pp_tplan_eff_step = { var = pp_tplan_effv_beer dir = $dir$ all = no } }
+		flag:liquor = { pp_tplan_eff_step = { var = pp_tplan_effv_liquor dir = $dir$ all = no } }
+		flag:books = { pp_tplan_eff_step = { var = pp_tplan_effv_books dir = $dir$ all = no } }
+		flag:paper = { pp_tplan_eff_step = { var = pp_tplan_effv_paper dir = $dir$ all = no } }
+		flag:slaves_goods = { pp_tplan_eff_step = { var = pp_tplan_effv_slaves_goods dir = $dir$ all = no } }
+		flag:glass = { pp_tplan_eff_step = { var = pp_tplan_effv_glass dir = $dir$ all = no } }
+		flag:masonry = { pp_tplan_eff_step = { var = pp_tplan_effv_masonry dir = $dir$ all = no } }
+		flag:pottery = { pp_tplan_eff_step = { var = pp_tplan_effv_pottery dir = $dir$ all = no } }
+		flag:tar = { pp_tplan_eff_step = { var = pp_tplan_effv_tar dir = $dir$ all = no } }
+		flag:furniture = { pp_tplan_eff_step = { var = pp_tplan_effv_furniture dir = $dir$ all = no } }
+		flag:jewelry = { pp_tplan_eff_step = { var = pp_tplan_effv_jewelry dir = $dir$ all = no } }
+		flag:lacquerware = { pp_tplan_eff_step = { var = pp_tplan_effv_lacquerware dir = $dir$ all = no } }
+		flag:porcelain = { pp_tplan_eff_step = { var = pp_tplan_effv_porcelain dir = $dir$ all = no } }
+		flag:steel = { pp_tplan_eff_step = { var = pp_tplan_effv_steel dir = $dir$ all = no } }
+		flag:tools = { pp_tplan_eff_step = { var = pp_tplan_effv_tools dir = $dir$ all = no } }
+		flag:cannons = { pp_tplan_eff_step = { var = pp_tplan_effv_cannons dir = $dir$ all = no } }
+		flag:firearms = { pp_tplan_eff_step = { var = pp_tplan_effv_firearms dir = $dir$ all = no } }
+		flag:weaponry = { pp_tplan_eff_step = { var = pp_tplan_effv_weaponry dir = $dir$ all = no } }
+		flag:naval_supplies = { pp_tplan_eff_step = { var = pp_tplan_effv_naval_supplies dir = $dir$ all = no } }
+		flag:victuals = { pp_tplan_eff_step = { var = pp_tplan_effv_victuals dir = $dir$ all = no } }
+		flag:cloth = { pp_tplan_eff_step = { var = pp_tplan_effv_cloth dir = $dir$ all = no } }
+		flag:fine_cloth = { pp_tplan_eff_step = { var = pp_tplan_effv_fine_cloth dir = $dir$ all = no } }
+		flag:leather = { pp_tplan_eff_step = { var = pp_tplan_effv_leather dir = $dir$ all = no } }
+		flag:marble = { pp_tplan_eff_step = { var = pp_tplan_effv_marble dir = $dir$ all = no } }
+		flag:stone = { pp_tplan_eff_step = { var = pp_tplan_effv_stone dir = $dir$ all = no } }
+		flag:coal = { pp_tplan_eff_step = { var = pp_tplan_effv_coal dir = $dir$ all = no } }
+		flag:alum = { pp_tplan_eff_step = { var = pp_tplan_effv_alum dir = $dir$ all = no } }
+		flag:mercury = { pp_tplan_eff_step = { var = pp_tplan_effv_mercury dir = $dir$ all = no } }
+		flag:saltpeter = { pp_tplan_eff_step = { var = pp_tplan_effv_saltpeter dir = $dir$ all = no } }
+		flag:copper = { pp_tplan_eff_step = { var = pp_tplan_effv_copper dir = $dir$ all = no } }
+		flag:iron = { pp_tplan_eff_step = { var = pp_tplan_effv_iron dir = $dir$ all = no } }
+		flag:lead = { pp_tplan_eff_step = { var = pp_tplan_effv_lead dir = $dir$ all = no } }
+		flag:tin = { pp_tplan_eff_step = { var = pp_tplan_effv_tin dir = $dir$ all = no } }
+		flag:gems = { pp_tplan_eff_step = { var = pp_tplan_effv_gems dir = $dir$ all = no } }
+		flag:goods_gold = { pp_tplan_eff_step = { var = pp_tplan_effv_goods_gold dir = $dir$ all = no } }
+		flag:silver = { pp_tplan_eff_step = { var = pp_tplan_effv_silver dir = $dir$ all = no } }
+	}
+	pp_tplan_eff_refresh = yes
+}
+
+# scope:pp_key = flag:<goods plan>: its line is the all-plans one again.
+pp_tplan_eff_key_reset = {
+	switch = {
+		trigger = scope:pp_key
+		flag:camels = { remove_variable = pp_tplan_effv_camels }
+		flag:elephants = { remove_variable = pp_tplan_effv_elephants }
+		flag:horses = { remove_variable = pp_tplan_effv_horses }
+		flag:livestock = { remove_variable = pp_tplan_effv_livestock }
+		flag:wool = { remove_variable = pp_tplan_effv_wool }
+		flag:beeswax = { remove_variable = pp_tplan_effv_beeswax }
+		flag:dyes = { remove_variable = pp_tplan_effv_dyes }
+		flag:incense = { remove_variable = pp_tplan_effv_incense }
+		flag:tobacco = { remove_variable = pp_tplan_effv_tobacco }
+		flag:cotton = { remove_variable = pp_tplan_effv_cotton }
+		flag:fiber_crops = { remove_variable = pp_tplan_effv_fiber_crops }
+		flag:silk = { remove_variable = pp_tplan_effv_silk }
+		flag:chili = { remove_variable = pp_tplan_effv_chili }
+		flag:cloves = { remove_variable = pp_tplan_effv_cloves }
+		flag:pepper = { remove_variable = pp_tplan_effv_pepper }
+		flag:saffron = { remove_variable = pp_tplan_effv_saffron }
+		flag:legumes = { remove_variable = pp_tplan_effv_legumes }
+		flag:maize = { remove_variable = pp_tplan_effv_maize }
+		flag:millet = { remove_variable = pp_tplan_effv_millet }
+		flag:potato = { remove_variable = pp_tplan_effv_potato }
+		flag:rice = { remove_variable = pp_tplan_effv_rice }
+		flag:wheat = { remove_variable = pp_tplan_effv_wheat }
+		flag:cocoa = { remove_variable = pp_tplan_effv_cocoa }
+		flag:coffee = { remove_variable = pp_tplan_effv_coffee }
+		flag:tea = { remove_variable = pp_tplan_effv_tea }
+		flag:sugar = { remove_variable = pp_tplan_effv_sugar }
+		flag:fruit = { remove_variable = pp_tplan_effv_fruit }
+		flag:olives = { remove_variable = pp_tplan_effv_olives }
+		flag:wine = { remove_variable = pp_tplan_effv_wine }
+		flag:lumber = { remove_variable = pp_tplan_effv_lumber }
+		flag:fish = { remove_variable = pp_tplan_effv_fish }
+		flag:pearls = { remove_variable = pp_tplan_effv_pearls }
+		flag:clay = { remove_variable = pp_tplan_effv_clay }
+		flag:sand = { remove_variable = pp_tplan_effv_sand }
+		flag:medicaments = { remove_variable = pp_tplan_effv_medicaments }
+		flag:salt = { remove_variable = pp_tplan_effv_salt }
+		flag:amber = { remove_variable = pp_tplan_effv_amber }
+		flag:ivory = { remove_variable = pp_tplan_effv_ivory }
+		flag:wild_game = { remove_variable = pp_tplan_effv_wild_game }
+		flag:beer = { remove_variable = pp_tplan_effv_beer }
+		flag:liquor = { remove_variable = pp_tplan_effv_liquor }
+		flag:books = { remove_variable = pp_tplan_effv_books }
+		flag:paper = { remove_variable = pp_tplan_effv_paper }
+		flag:slaves_goods = { remove_variable = pp_tplan_effv_slaves_goods }
+		flag:glass = { remove_variable = pp_tplan_effv_glass }
+		flag:masonry = { remove_variable = pp_tplan_effv_masonry }
+		flag:pottery = { remove_variable = pp_tplan_effv_pottery }
+		flag:tar = { remove_variable = pp_tplan_effv_tar }
+		flag:furniture = { remove_variable = pp_tplan_effv_furniture }
+		flag:jewelry = { remove_variable = pp_tplan_effv_jewelry }
+		flag:lacquerware = { remove_variable = pp_tplan_effv_lacquerware }
+		flag:porcelain = { remove_variable = pp_tplan_effv_porcelain }
+		flag:steel = { remove_variable = pp_tplan_effv_steel }
+		flag:tools = { remove_variable = pp_tplan_effv_tools }
+		flag:cannons = { remove_variable = pp_tplan_effv_cannons }
+		flag:firearms = { remove_variable = pp_tplan_effv_firearms }
+		flag:weaponry = { remove_variable = pp_tplan_effv_weaponry }
+		flag:naval_supplies = { remove_variable = pp_tplan_effv_naval_supplies }
+		flag:victuals = { remove_variable = pp_tplan_effv_victuals }
+		flag:cloth = { remove_variable = pp_tplan_effv_cloth }
+		flag:fine_cloth = { remove_variable = pp_tplan_effv_fine_cloth }
+		flag:leather = { remove_variable = pp_tplan_effv_leather }
+		flag:marble = { remove_variable = pp_tplan_effv_marble }
+		flag:stone = { remove_variable = pp_tplan_effv_stone }
+		flag:coal = { remove_variable = pp_tplan_effv_coal }
+		flag:alum = { remove_variable = pp_tplan_effv_alum }
+		flag:mercury = { remove_variable = pp_tplan_effv_mercury }
+		flag:saltpeter = { remove_variable = pp_tplan_effv_saltpeter }
+		flag:copper = { remove_variable = pp_tplan_effv_copper }
+		flag:iron = { remove_variable = pp_tplan_effv_iron }
+		flag:lead = { remove_variable = pp_tplan_effv_lead }
+		flag:tin = { remove_variable = pp_tplan_effv_tin }
+		flag:gems = { remove_variable = pp_tplan_effv_gems }
+		flag:goods_gold = { remove_variable = pp_tplan_effv_goods_gold }
+		flag:silver = { remove_variable = pp_tplan_effv_silver }
+	}
+	pp_tplan_eff_refresh = yes
+}
+
+# The line $var$ one step $dir$, from its own step, else (a plan, $all$ = no) the all-plans step, else none (0).
+# Below the first step: none (the all-plans line unset; a plan's own none is 14).
+pp_tplan_eff_step = {
+	save_temporary_scope_value_as = { name = pp_tplan_cur value = 0 }
+	if = {
+		limit = { has_variable = $var$ }
+		if = {
+			limit = { var:$var$ < 13.5 }
+			save_temporary_scope_value_as = { name = pp_tplan_cur value = var:$var$ }
+		}
+	}
+	else_if = {
+		limit = {
+			NOT = { always = $all$ }
+			has_variable = pp_tplan_effv_all
+		}
+		save_temporary_scope_value_as = { name = pp_tplan_cur value = var:pp_tplan_effv_all }
+	}
+	save_temporary_scope_value_as = { name = pp_tplan_new value = pp_tplan_eff_next_$dir$ }
+	if = {
+		limit = { scope:pp_tplan_new > 0.5 }
+		set_variable = { name = $var$ value = scope:pp_tplan_new }
+	}
+	else_if = {
+		limit = { always = $all$ }
+		remove_variable = $var$
+	}
+	else = {
+		set_variable = { name = $var$ value = 14 }
+	}
+}
+
+# pp_tplan_effv_some while a line holds anywhere (the pass then works out the location's lasting production
+# efficiency, pp_lplan_location_turn).
+pp_tplan_eff_refresh = {
+	if = {
+		limit = {
+			OR = {
+				has_variable = pp_tplan_effv_all
+				AND = { has_variable = pp_tplan_effv_camels var:pp_tplan_effv_camels < 13.5 }
+				AND = { has_variable = pp_tplan_effv_elephants var:pp_tplan_effv_elephants < 13.5 }
+				AND = { has_variable = pp_tplan_effv_horses var:pp_tplan_effv_horses < 13.5 }
+				AND = { has_variable = pp_tplan_effv_livestock var:pp_tplan_effv_livestock < 13.5 }
+				AND = { has_variable = pp_tplan_effv_wool var:pp_tplan_effv_wool < 13.5 }
+				AND = { has_variable = pp_tplan_effv_beeswax var:pp_tplan_effv_beeswax < 13.5 }
+				AND = { has_variable = pp_tplan_effv_dyes var:pp_tplan_effv_dyes < 13.5 }
+				AND = { has_variable = pp_tplan_effv_incense var:pp_tplan_effv_incense < 13.5 }
+				AND = { has_variable = pp_tplan_effv_tobacco var:pp_tplan_effv_tobacco < 13.5 }
+				AND = { has_variable = pp_tplan_effv_cotton var:pp_tplan_effv_cotton < 13.5 }
+				AND = { has_variable = pp_tplan_effv_fiber_crops var:pp_tplan_effv_fiber_crops < 13.5 }
+				AND = { has_variable = pp_tplan_effv_silk var:pp_tplan_effv_silk < 13.5 }
+				AND = { has_variable = pp_tplan_effv_chili var:pp_tplan_effv_chili < 13.5 }
+				AND = { has_variable = pp_tplan_effv_cloves var:pp_tplan_effv_cloves < 13.5 }
+				AND = { has_variable = pp_tplan_effv_pepper var:pp_tplan_effv_pepper < 13.5 }
+				AND = { has_variable = pp_tplan_effv_saffron var:pp_tplan_effv_saffron < 13.5 }
+				AND = { has_variable = pp_tplan_effv_legumes var:pp_tplan_effv_legumes < 13.5 }
+				AND = { has_variable = pp_tplan_effv_maize var:pp_tplan_effv_maize < 13.5 }
+				AND = { has_variable = pp_tplan_effv_millet var:pp_tplan_effv_millet < 13.5 }
+				AND = { has_variable = pp_tplan_effv_potato var:pp_tplan_effv_potato < 13.5 }
+				AND = { has_variable = pp_tplan_effv_rice var:pp_tplan_effv_rice < 13.5 }
+				AND = { has_variable = pp_tplan_effv_wheat var:pp_tplan_effv_wheat < 13.5 }
+				AND = { has_variable = pp_tplan_effv_cocoa var:pp_tplan_effv_cocoa < 13.5 }
+				AND = { has_variable = pp_tplan_effv_coffee var:pp_tplan_effv_coffee < 13.5 }
+				AND = { has_variable = pp_tplan_effv_tea var:pp_tplan_effv_tea < 13.5 }
+				AND = { has_variable = pp_tplan_effv_sugar var:pp_tplan_effv_sugar < 13.5 }
+				AND = { has_variable = pp_tplan_effv_fruit var:pp_tplan_effv_fruit < 13.5 }
+				AND = { has_variable = pp_tplan_effv_olives var:pp_tplan_effv_olives < 13.5 }
+				AND = { has_variable = pp_tplan_effv_wine var:pp_tplan_effv_wine < 13.5 }
+				AND = { has_variable = pp_tplan_effv_lumber var:pp_tplan_effv_lumber < 13.5 }
+				AND = { has_variable = pp_tplan_effv_fish var:pp_tplan_effv_fish < 13.5 }
+				AND = { has_variable = pp_tplan_effv_pearls var:pp_tplan_effv_pearls < 13.5 }
+				AND = { has_variable = pp_tplan_effv_clay var:pp_tplan_effv_clay < 13.5 }
+				AND = { has_variable = pp_tplan_effv_sand var:pp_tplan_effv_sand < 13.5 }
+				AND = { has_variable = pp_tplan_effv_medicaments var:pp_tplan_effv_medicaments < 13.5 }
+				AND = { has_variable = pp_tplan_effv_salt var:pp_tplan_effv_salt < 13.5 }
+				AND = { has_variable = pp_tplan_effv_amber var:pp_tplan_effv_amber < 13.5 }
+				AND = { has_variable = pp_tplan_effv_ivory var:pp_tplan_effv_ivory < 13.5 }
+				AND = { has_variable = pp_tplan_effv_wild_game var:pp_tplan_effv_wild_game < 13.5 }
+				AND = { has_variable = pp_tplan_effv_beer var:pp_tplan_effv_beer < 13.5 }
+				AND = { has_variable = pp_tplan_effv_liquor var:pp_tplan_effv_liquor < 13.5 }
+				AND = { has_variable = pp_tplan_effv_books var:pp_tplan_effv_books < 13.5 }
+				AND = { has_variable = pp_tplan_effv_paper var:pp_tplan_effv_paper < 13.5 }
+				AND = { has_variable = pp_tplan_effv_slaves_goods var:pp_tplan_effv_slaves_goods < 13.5 }
+				AND = { has_variable = pp_tplan_effv_glass var:pp_tplan_effv_glass < 13.5 }
+				AND = { has_variable = pp_tplan_effv_masonry var:pp_tplan_effv_masonry < 13.5 }
+				AND = { has_variable = pp_tplan_effv_pottery var:pp_tplan_effv_pottery < 13.5 }
+				AND = { has_variable = pp_tplan_effv_tar var:pp_tplan_effv_tar < 13.5 }
+				AND = { has_variable = pp_tplan_effv_furniture var:pp_tplan_effv_furniture < 13.5 }
+				AND = { has_variable = pp_tplan_effv_jewelry var:pp_tplan_effv_jewelry < 13.5 }
+				AND = { has_variable = pp_tplan_effv_lacquerware var:pp_tplan_effv_lacquerware < 13.5 }
+				AND = { has_variable = pp_tplan_effv_porcelain var:pp_tplan_effv_porcelain < 13.5 }
+				AND = { has_variable = pp_tplan_effv_steel var:pp_tplan_effv_steel < 13.5 }
+				AND = { has_variable = pp_tplan_effv_tools var:pp_tplan_effv_tools < 13.5 }
+				AND = { has_variable = pp_tplan_effv_cannons var:pp_tplan_effv_cannons < 13.5 }
+				AND = { has_variable = pp_tplan_effv_firearms var:pp_tplan_effv_firearms < 13.5 }
+				AND = { has_variable = pp_tplan_effv_weaponry var:pp_tplan_effv_weaponry < 13.5 }
+				AND = { has_variable = pp_tplan_effv_naval_supplies var:pp_tplan_effv_naval_supplies < 13.5 }
+				AND = { has_variable = pp_tplan_effv_victuals var:pp_tplan_effv_victuals < 13.5 }
+				AND = { has_variable = pp_tplan_effv_cloth var:pp_tplan_effv_cloth < 13.5 }
+				AND = { has_variable = pp_tplan_effv_fine_cloth var:pp_tplan_effv_fine_cloth < 13.5 }
+				AND = { has_variable = pp_tplan_effv_leather var:pp_tplan_effv_leather < 13.5 }
+				AND = { has_variable = pp_tplan_effv_marble var:pp_tplan_effv_marble < 13.5 }
+				AND = { has_variable = pp_tplan_effv_stone var:pp_tplan_effv_stone < 13.5 }
+				AND = { has_variable = pp_tplan_effv_coal var:pp_tplan_effv_coal < 13.5 }
+				AND = { has_variable = pp_tplan_effv_alum var:pp_tplan_effv_alum < 13.5 }
+				AND = { has_variable = pp_tplan_effv_mercury var:pp_tplan_effv_mercury < 13.5 }
+				AND = { has_variable = pp_tplan_effv_saltpeter var:pp_tplan_effv_saltpeter < 13.5 }
+				AND = { has_variable = pp_tplan_effv_copper var:pp_tplan_effv_copper < 13.5 }
+				AND = { has_variable = pp_tplan_effv_iron var:pp_tplan_effv_iron < 13.5 }
+				AND = { has_variable = pp_tplan_effv_lead var:pp_tplan_effv_lead < 13.5 }
+				AND = { has_variable = pp_tplan_effv_tin var:pp_tplan_effv_tin < 13.5 }
+				AND = { has_variable = pp_tplan_effv_gems var:pp_tplan_effv_gems < 13.5 }
+				AND = { has_variable = pp_tplan_effv_goods_gold var:pp_tplan_effv_goods_gold < 13.5 }
+				AND = { has_variable = pp_tplan_effv_silver var:pp_tplan_effv_silver < 13.5 }
+			}
+		}
+		set_variable = { name = pp_tplan_effv_some value = yes }
+	}
+	else = {
+		remove_variable = pp_tplan_effv_some
+	}
+}
+
+# The Food plan's Taverns, the next state: while the store is short (unset) -> always -> never -> while short.
+pp_tplan_food_taverns_next = {
+	if = {
+		limit = { NOT = { has_variable = pp_tplan_food_taverns } }
+		set_variable = { name = pp_tplan_food_taverns value = 3 }
+	}
+	else_if = {
+		limit = { var:pp_tplan_food_taverns > 2.5 }
+		set_variable = { name = pp_tplan_food_taverns value = 1 }
+	}
+	else = {
+		remove_variable = pp_tplan_food_taverns
+	}
+}
+
+# The Food plan's store limit one step $dir$ (up = more months; past the last step: always, unset; from always
+# down: the last step).
+pp_tplan_food_store_step = {
+	save_temporary_scope_value_as = { name = pp_tplan_cur value = 7 }
+	if = {
+		limit = { has_variable = pp_tplan_food_store }
+		save_temporary_scope_value_as = { name = pp_tplan_cur value = var:pp_tplan_food_store }
+	}
+	save_temporary_scope_value_as = { name = pp_tplan_new value = pp_tplan_food_store_next_$dir$ }
+	if = {
+		limit = { scope:pp_tplan_new > 6.5 }
+		remove_variable = pp_tplan_food_store
+	}
+	else = {
+		set_variable = { name = pp_tplan_food_store value = scope:pp_tplan_new }
+	}
+}
+
+# The Trade plan's line of capacity in use one step $dir$ (up = a higher share; below the first step: always,
+# unset; from always up: the first step).
+pp_tplan_trade_use_step = {
+	save_temporary_scope_value_as = { name = pp_tplan_cur value = 0 }
+	if = {
+		limit = { has_variable = pp_tplan_trade_use }
+		save_temporary_scope_value_as = { name = pp_tplan_cur value = var:pp_tplan_trade_use }
+	}
+	save_temporary_scope_value_as = { name = pp_tplan_new value = pp_tplan_trade_use_next_$dir$ }
+	if = {
+		limit = { scope:pp_tplan_new < 0.5 }
+		remove_variable = pp_tplan_trade_use
+	}
+	else = {
+		set_variable = { name = pp_tplan_trade_use value = scope:pp_tplan_new }
+	}
 }

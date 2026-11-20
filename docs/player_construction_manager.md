@@ -561,6 +561,27 @@ beside the bars), and the pass's cost now that the business group looks whenever
   `hungry_months`, 6). A hands-off location is a profile with no rules and every global group switched off (the example
   "hands off").
 
+## Wide window and monthly budget (2026-11-20 evening, Jan: "I do not like that I have to scroll ... a global setting where we can set an actual budget"; NOT tested in game)
+
+- **Window** 1360 x 820 (was 758 x 900); the tab body is about 1316 x 700.
+  - Global Settings in two columns: left 650 px (switch, gold reserve, monthly budget, the summary line, the six rule
+    rows with their status lines), right about 630 px over the full height (the "Last month" list or the open group's
+    pane). In a pane everything is fixed and visible; only the list of what was built scrolls (it has no upper
+    bound), in the room that is left (about six lines in the Locations pane, the tallest).
+  - Towns and Buildings: two columns of 629 px (public buildings and towns left, urban rights right), no scroll area.
+  - Plans: left 500 px "All plans" (ten rows), right 754 px all 77 plan icons at once (34 px tiles, 17 a row, the
+    group name in a gutter) and the selected plan's card (text left, its rows right); no scroll area. Each module
+    carries its height arithmetic and a test that holds it to the body.
+- **Monthly budget** (`pp_cplan_budget`, + 100; readout `pp_cplan_budget_gold`; `[construction_plan] budget_step`
+  10, `budget_step_big` 100, through `pp_cplan_step` keys `budget` / `budget_big`; 0 = no limit, the default): at
+  each monthly pass the groups share at most the budget of the gold above the reserve that no purse holds yet
+  (`pp_cplan_purse_share` = min(gold in no purse, budget)); the rest stays the player's and comes up again next
+  month. The reserve and the shrink rule are unchanged. What the budget held back is kept on the country
+  (`pp_cplan_budget_held`); the forecast's "gold coming in" measures the capped amount, and while the budget held
+  gold back at the last pass a red line under the summary says so (`pp_cplan_f_budget_binds` / `_held`, stored by
+  `pp_cplan_forecast_store`). After the player raises the budget the line stays until the next pass.
+- The Location Plan openers in the location window (header button and the Plans row's plus) toggle the window.
+
 ## Built (v2, Jan 2026-11-06: payback instead of cost/profit, a location layer, profiles)
 
 History: the location layer, the Here and Locations tabs, the cog, the presets and the goods modes below were removed

@@ -3772,6 +3772,173 @@ pp_lprof_t_food_kitchens_taverns = {
 	}
 }
 
+pp_lprof_t_food_taverns = {
+	if = {
+		limit = { any_buildings_in_location = { building_levels_under_construction > 0 OR = { building_type = building_type:tavern } } }
+		set_variable = { name = pp_lprof_st value = 103 }
+	}
+	else_if = {
+		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:tavern } } }
+		pp_lprof_expand = { type = tavern demand = victuals_trade_construction cat = std ipl = 0 pt = nobles sz = 0.001 lc = yes }
+	}
+	else = {
+		pp_lprof_start = { type = tavern demand = victuals_trade_construction cat = std ipl = 0 pt = nobles sz = 0.001 est = 0 hasest = no how = cost }
+		pp_lprof_start_pick = yes
+	}
+}
+
+pp_lprof_t_trade_market = {
+	if = {
+		limit = { any_buildings_in_location = { building_levels_under_construction > 0 OR = { building_type = building_type:commerce_center building_type = building_type:grand_marketplace building_type = building_type:merchants_quarters building_type = building_type:marketplace } } }
+		set_variable = { name = pp_lprof_st value = 103 }
+	}
+	else_if = {
+		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:commerce_center building_type = building_type:grand_marketplace building_type = building_type:merchants_quarters building_type = building_type:marketplace } } }
+		pp_lprof_upgrade = { old = grand_marketplace type = commerce_center demand = town_building_construction cat = std ipl = 0 est = 0 hasest = no }
+		pp_lprof_upgrade = { old = merchants_quarters type = grand_marketplace demand = town_building_construction cat = std ipl = 0 est = 0 hasest = no }
+		pp_lprof_upgrade = { old = marketplace type = merchants_quarters demand = town_building_construction cat = std ipl = 0 est = 0 hasest = no }
+		pp_lprof_expand = { type = commerce_center demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 lc = no }
+		pp_lprof_expand = { type = grand_marketplace demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 lc = no }
+		pp_lprof_expand = { type = merchants_quarters demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 lc = no }
+		pp_lprof_expand = { type = marketplace demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 lc = no }
+		# every standing one at its highest level, nothing else stopped them: another one starts
+		if = {
+			limit = {
+				NOT = { has_variable = pp_lprof_st }
+				has_variable = pp_lprof_fail
+				var:pp_lprof_fail < 101.25
+				NOT = { pp_lplan_measuring = yes }
+			}
+			pp_lprof_more = yes
+			if = {
+				limit = { NOT = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:marketplace building_type = building_type:commerce_center building_type = building_type:grand_marketplace building_type = building_type:merchants_quarters } } } }
+				pp_lprof_start = { type = marketplace demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 est = 0 hasest = no how = cost }
+			}
+			if = {
+				limit = { NOT = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:merchants_quarters building_type = building_type:commerce_center building_type = building_type:grand_marketplace } } } NOT = { has_variable = pp_lprof_pick } }
+				pp_lprof_start = { type = merchants_quarters demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 est = 0 hasest = no how = cost }
+			}
+			if = {
+				limit = { NOT = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:grand_marketplace building_type = building_type:commerce_center } } } NOT = { has_variable = pp_lprof_pick } }
+				pp_lprof_start = { type = grand_marketplace demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 est = 0 hasest = no how = cost }
+			}
+			if = {
+				limit = { NOT = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:commerce_center } } } NOT = { has_variable = pp_lprof_pick } }
+				pp_lprof_start = { type = commerce_center demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 est = 0 hasest = no how = cost }
+			}
+			pp_lprof_start_pick = yes
+			pp_lprof_more_end = yes
+		}
+	}
+	else = {
+		pp_lprof_start = { type = marketplace demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 est = 0 hasest = no how = cost }
+		if = {
+			limit = { NOT = { has_variable = pp_lprof_pick } }
+			pp_lprof_start = { type = merchants_quarters demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 est = 0 hasest = no how = cost }
+		}
+		if = {
+			limit = { NOT = { has_variable = pp_lprof_pick } }
+			pp_lprof_start = { type = grand_marketplace demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 est = 0 hasest = no how = cost }
+		}
+		if = {
+			limit = { NOT = { has_variable = pp_lprof_pick } }
+			pp_lprof_start = { type = commerce_center demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 est = 0 hasest = no how = cost }
+		}
+		pp_lprof_start_pick = yes
+	}
+}
+
+pp_lprof_t_trade_port = {
+	if = {
+		limit = { any_buildings_in_location = { building_levels_under_construction > 0 OR = { building_type = building_type:port_authority } } }
+		set_variable = { name = pp_lprof_st value = 103 }
+	}
+	else_if = {
+		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:port_authority } } }
+		pp_lprof_expand = { type = port_authority demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 lc = no }
+	}
+	else = {
+		pp_lprof_start = { type = port_authority demand = town_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 est = 0 hasest = no how = cost }
+		pp_lprof_start_pick = yes
+	}
+}
+
+pp_lprof_t_trade_centre = {
+	if = {
+		limit = { any_buildings_in_location = { building_levels_under_construction > 0 OR = { building_type = building_type:clearing_house building_type = building_type:customs_house building_type = building_type:entrepot building_type = building_type:market_warehouse building_type = building_type:stock_exchange building_type = building_type:trading_hub } } }
+		set_variable = { name = pp_lprof_st value = 103 }
+	}
+	else_if = {
+		limit = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:clearing_house building_type = building_type:customs_house building_type = building_type:entrepot building_type = building_type:market_warehouse building_type = building_type:stock_exchange building_type = building_type:trading_hub } } }
+		pp_lprof_expand = { type = clearing_house demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 lc = no }
+		pp_lprof_expand = { type = customs_house demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 lc = no }
+		pp_lprof_expand = { type = entrepot demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 lc = no }
+		pp_lprof_expand = { type = market_warehouse demand = warehouse_construction cat = std ipl = 0 pt = burghers sz = 0.1 lc = no }
+		pp_lprof_expand = { type = stock_exchange demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 lc = no }
+		pp_lprof_expand = { type = trading_hub demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 lc = no }
+		# every standing one at its highest level, nothing else stopped them: another one starts
+		if = {
+			limit = {
+				NOT = { has_variable = pp_lprof_st }
+				has_variable = pp_lprof_fail
+				var:pp_lprof_fail < 101.25
+				NOT = { pp_lplan_measuring = yes }
+			}
+			pp_lprof_more = yes
+			if = {
+				limit = { NOT = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:clearing_house } } } }
+				pp_lprof_start = { type = clearing_house demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 est = 0 hasest = no how = cost }
+			}
+			if = {
+				limit = { NOT = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:customs_house } } } NOT = { has_variable = pp_lprof_pick } }
+				pp_lprof_start = { type = customs_house demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 est = 0 hasest = no how = cost }
+			}
+			if = {
+				limit = { NOT = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:stock_exchange } } } NOT = { has_variable = pp_lprof_pick } }
+				pp_lprof_start = { type = stock_exchange demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 est = 0 hasest = no how = cost }
+			}
+			if = {
+				limit = { NOT = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:trading_hub } } } NOT = { has_variable = pp_lprof_pick } }
+				pp_lprof_start = { type = trading_hub demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 est = 0 hasest = no how = cost }
+			}
+			if = {
+				limit = { NOT = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:entrepot } } } NOT = { has_variable = pp_lprof_pick } }
+				pp_lprof_start = { type = entrepot demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 est = 0 hasest = no how = cost }
+			}
+			if = {
+				limit = { NOT = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:market_warehouse } } } NOT = { has_variable = pp_lprof_pick } }
+				pp_lprof_start = { type = market_warehouse demand = warehouse_construction cat = std ipl = 0 pt = burghers sz = 0.1 est = 0 hasest = no how = cost }
+			}
+			pp_lprof_start_pick = yes
+			pp_lprof_more_end = yes
+		}
+	}
+	else = {
+		pp_lprof_start = { type = clearing_house demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 est = 0 hasest = no how = cost }
+		if = {
+			limit = { NOT = { has_variable = pp_lprof_pick } }
+			pp_lprof_start = { type = customs_house demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 est = 0 hasest = no how = cost }
+		}
+		if = {
+			limit = { NOT = { has_variable = pp_lprof_pick } }
+			pp_lprof_start = { type = stock_exchange demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 est = 0 hasest = no how = cost }
+		}
+		if = {
+			limit = { NOT = { has_variable = pp_lprof_pick } }
+			pp_lprof_start = { type = trading_hub demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 est = 0 hasest = no how = cost }
+		}
+		if = {
+			limit = { NOT = { has_variable = pp_lprof_pick } }
+			pp_lprof_start = { type = entrepot demand = market_center_building_construction cat = std ipl = 0 pt = burghers sz = 0.1 est = 0 hasest = no how = cost }
+		}
+		if = {
+			limit = { NOT = { has_variable = pp_lprof_pick } }
+			pp_lprof_start = { type = market_warehouse demand = warehouse_construction cat = std ipl = 0 pt = burghers sz = 0.1 est = 0 hasest = no how = cost }
+		}
+		pp_lprof_start_pick = yes
+	}
+}
+
 # ---- The location's plans (town rights pp_plan_<plan>, forced) ----
 # Location scope (in pp_lplan_location_turn, pp_location_profiles.txt): each held plan in the plans' order
 # (pp_lplan_mark, has_town_rights: its target pp_lprof_t_<target>, or pp_tplan_do_<plan> where it raises the rank

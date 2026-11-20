@@ -15,8 +15,9 @@
 # Variables carry + 100 (a variable at 0 counts as unset; var:x = n compares scopes, so only < / > ranges are used).
 #
 # Country variables: pp_cplan_on (the plan runs), pp_cplan_w_profiles / _food / _logistics / _improve / _business /
-# _country (the rule groups' weights), pp_cplan_reserve / _access / _imp / _biz (the window's lines; defaults in
-# [construction_plan]),
+# _country (the rule groups' weights), pp_cplan_reserve / _budget / _access / _imp / _biz (the window's lines; defaults
+# in [construction_plan]; pp_cplan_budget since 2026-11-20: the most new gold a pass shares out, unset or 0 = no
+# limit, pp_cplan_purse_share), pp_cplan_budget_held (what the budget left in no purse at the last pass, the window's),
 # the list pp_cplan_log (locations built in by the last pass), the last pass's pp_cplan_started / _spent, and during a
 # pass only: pp_cplan_hit, pp_cplan_noted, pp_cplan_wait, pp_cplan_mlim, pp_cplan_bz_<type> (the business types the
 # country can build), the list pp_cplan_markets (markets whose constructions the market limit counted).

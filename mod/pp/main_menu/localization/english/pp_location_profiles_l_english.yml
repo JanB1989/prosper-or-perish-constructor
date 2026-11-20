@@ -2,7 +2,7 @@
   # The state of a location's plan after the Construction Plan's last monthly pass (pp_lplan_st_g_<plan>; the plan
   # engine of the Locations group, location_profiles.py). A plan has no market limit, so 10 does not come up; its text
   # stays for every state the engine can write. 5, 12 and 14 follow the plan settings (town_plans.py; 14: plan_closer.py).
-  PP_LPROF_ST_0: "Not checked yet: the plan looks at it in its next monthly pass."
+  PP_LPROF_ST_0: "Not checked yet: the plan gets to it within the next few months."
   PP_LPROF_ST_1: "Started a construction here."
   PP_LPROF_ST_2: "Nothing to build: every building of this target here is at its highest level."
   PP_LPROF_ST_3: "Waiting: a construction is under way here (a location builds one at a time)."

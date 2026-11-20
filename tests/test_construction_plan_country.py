@@ -827,16 +827,28 @@ def _parameters(text: str, name: str) -> set[str]:
     return set(re.findall(r"\$(\w+)\$", _block(text, name)))
 
 
+def _plan_text() -> str:
+    result = _result()
+    grants = cc.plan_grants(result.rights, _all_plans())
+    return re.sub(r"#[^\n]*", "", cc.render_plan_rights(grants, cc.UPGRADE_PRICE, result.rights, result.line_goods))
+
+
 def test_plan_rights_effect() -> None:
     result = _result()
     grants = cc.plan_grants(result.rights, _all_plans())
-    text = re.sub(r"#[^\n]*", "", cc.render_plan_rights(grants, cc.UPGRADE_PRICE))
+    text = _plan_text()
     assert text.count("{") == text.count("}")
     rule = _block(text, "pp_cplan_country_plan_rights")
-    head = rule[:rule.index("pp_cplan_right_potential_")]
-    for check in ("modifier:can_grant_town_rights = yes", "political_influence >= pp_cplan_country_influence_need",
-                  "political_influence >= pp_cplan_country_upgrade_need"):
-        assert check in head, check
+    # the player's switch first (2026-11-20): while it is set, no grant, no swap; only the waits go, once
+    assert rule.startswith("\tif = {\n\t\tlimit = { has_variable = pp_tplan_rights_off }\n")
+    off = rule[:rule.index("\telse = {")]
+    assert "pp_cplan_right_potential_" not in off and "pp_cplan_country_plan_" not in off
+    assert "limit = { has_variable = pp_tplan_cwait_any }" in off and "remove_variable = pp_tplan_cwait\n" in off
+    head = rule[rule.index("\telse = {"):rule.index("pp_cplan_right_potential_")]
+    assert "modifier:can_grant_town_rights = yes" in head
+    # the last look's waits go before any grant writes new ones; no influence skip (a wait for influence is written)
+    assert head.index("remove_variable = pp_tplan_cwait\n") < head.index("modifier:can_grant_town_rights")
+    assert "political_influence" not in head
     # the plan is the switch: neither the rule's switch nor a ticked tile is asked
     assert "pp_cplan_rights_on" not in text and "pp_cplan_right_pp_" not in text
     # per good one block: the swap of its charter for its rights, then the charter (iron: its rights)
@@ -852,22 +864,29 @@ def test_plan_rights_effect() -> None:
     assert calls == expected
     assert _parameters(text, "pp_cplan_country_plan_grant") == {"plan", "right"}
     assert _parameters(text, "pp_cplan_country_plan_upgrade") == {"plan", "charter", "rights"}
-    # the charter: where the plan is held, in a town or more with a free slot, not held yet (nor its rights), its own
-    # conditions with the location as scope:target, the influence kept, the game's grant price paid
+    assert _parameters(text, "pp_cplan_country_plan_wait") == {"n"}
+    assert _parameters(text, "pp_cplan_country_plan_make_way") == set()
+    # the charter: where the plan is held, in a town or more, not held yet (nor its rights); its conditions with the
+    # location as scope:target; a free slot, the influence kept, the game's grant price paid
     grant = _block(text, "pp_cplan_country_plan_grant")
     assert grant.strip().startswith("ordered_locations_with_town_rights_in_country = {")
     limit = _tokens(grant[grant.index("limit = {"):grant.index("order_by")])
     assert limit == ("limit = { has_town_rights = town_rights_type:$plan$ pp_cplan_country_plan_site = yes "
-                     "has_max_town_rights = no pp_cplan_right_site_$right$ = yes }")
+                     "pp_cplan_right_site_$right$ = yes }")
     for line in ("order_by = pp_cplan_country_pop_here", "save_scope_as = target",
                  "political_influence >= pp_cplan_country_influence_need", "can_pay_price = price:grant_town_rights",
                  "pp_cplan_right_allow_$right$ = yes", "grant_town_rights = town_rights_type:$right$",
                  "set_variable = { name = pp_cplan_right_mark value = yes }", "pay_price = price:grant_town_rights",
                  "change_variable = { name = pp_cplan_rights_n add = 1 }"):
         assert line in grant, line
-    assert grant.index("save_scope_as = target") < grant.index("pp_cplan_right_allow_$right$") \
+    plain = grant[:grant.index("pp_cplan_plan_yield_$right$")]
+    assert grant.index("save_scope_as = target") < grant.index("pp_cplan_right_allow_free_$right$") \
+        < grant.index("pp_cplan_right_allow_$right$ = yes") < grant.index("has_max_town_rights = yes") \
         < grant.index("grant_town_rights =") < grant.index("\tpay_price =")
-    assert "revoke_town_rights" not in grant and "pp_plan" not in grant  # the plan right stays
+    assert plain.index("has_max_town_rights = yes") < plain.index(f"pp_cplan_country_plan_wait = {{ n = {100 + cc.CWAIT_SLOT} }}") \
+        < plain.index("political_influence >=") < plain.index("grant_town_rights =") \
+        < plain.index(f"pp_cplan_country_plan_wait = {{ n = {100 + cc.CWAIT_INFLUENCE} }}")
+    assert "revoke_town_rights" not in grant and "pp_plan" not in grant  # the plan right stays; revokes only in make_way
     # charter -> rights: no script upgrade effect, so revoke the charter and grant the rights; the upgrade's price
     up = _block(text, "pp_cplan_country_plan_upgrade")
     limit = _tokens(up[up.index("limit = {"):up.index("order_by")])
@@ -877,11 +896,13 @@ def test_plan_rights_effect() -> None:
                  "pp_cplan_right_allow_$rights$ = yes", "pay_price = price:upgrade_town_rights",
                  "set_variable = { name = pp_cplan_right_mark value = yes }"):
         assert line in up, line
-    assert up.index("pp_cplan_right_allow_$rights$") < up.index("revoke_town_rights_of_type = town_rights_type:$charter$") \
-        < up.index("grant_town_rights = town_rights_type:$rights$") < up.index("\tpay_price =")
+    assert up.index("pp_cplan_right_allow_$rights$") < up.index("political_influence >=") \
+        < up.index("revoke_town_rights_of_type = town_rights_type:$charter$") \
+        < up.index("grant_town_rights = town_rights_type:$rights$") < up.index("\tpay_price =") \
+        < up.index(f"pp_cplan_country_plan_wait = {{ n = {100 + cc.CWAIT_UPGRADE} }}")
     assert "town_rights_type:$plan$" not in up[up.index("revoke"):]
     assert "upgrade_town_rights" in cc.database(MOD, _vanilla(), cc.PRICES)
-    # no grant in a rural settlement, nothing twice in a month, not where the group is switched off
+    # no grant in a rural settlement, nothing twice in a look, not where the group is switched off
     site = _tokens(_block(_code(MOD / cc.TRIGGERS), "pp_cplan_country_plan_site"))
     rural = cc.rural_rank(result.ranks)
     assert rural == "rural_settlement" == {rank.key: rank for rank in result.ranks}["town"].source
@@ -891,13 +912,107 @@ def test_plan_rights_effect() -> None:
     need = _block(_code(MOD / cc.VALUES), "pp_cplan_country_upgrade_need")
     price = cc.price_amount(cc.database(MOD, _vanilla(), cc.PRICES), "upgrade_town_rights", "political_influence")
     assert _tokens(need) == f"value = pp_cplan_country_keep_influence add = {price:g}" and price > 0
-    # the generated file holds the same effect for the plan rights the database has now (none: an empty effect)
+    # the generated file holds the same effects for the plan rights the database has now
     effects = _code(MOD / cc.EFFECTS)
     written = _block(effects, "pp_cplan_country_plan_rights")
     assert written.count("pp_cplan_country_plan_grant = {") == len(result.plan_grants)
     assert written.count("pp_cplan_country_plan_upgrade = {") == sum(1 for g in result.plan_grants if g.charter and g.rights)
-    for name in ("pp_cplan_country_plan_grant", "pp_cplan_country_plan_upgrade"):
+    for name in ("pp_cplan_country_plan_grant", "pp_cplan_country_plan_upgrade", "pp_cplan_country_plan_make_way",
+                 "pp_cplan_country_plan_wait"):
         assert _tokens(_block(effects, name)) == _tokens(_block(text, name)), name
+
+
+def test_plan_wait_codes() -> None:
+    """C3 (2026-11-20): why a planned town's charter waits, one location variable (+ 100), written in the rights look
+    only for planned towns whose line levels are reached (the allow without its one-specialization condition)."""
+    text = _plan_text()
+    wait = _block(text, "pp_cplan_country_plan_wait")
+    assert "set_variable = { name = pp_tplan_cwait value = $n$ }" in wait
+    assert "set_variable = { name = pp_tplan_cwait_any value = yes }" in wait and "scope:pp_cplan_country" in wait
+    assert (cc.CWAIT_INFLUENCE, cc.CWAIT_OTHER, cc.CWAIT_SLOT, cc.CWAIT_UPGRADE) == (1, 2, 3, 4)
+    grant = _block(text, "pp_cplan_country_plan_grant")
+    reached = grant.index("limit = { scope:pp_cplan_country = { pp_cplan_right_allow_free_$right$ = yes } }")
+    codes = re.findall(r"pp_cplan_country_plan_wait = \{ n = (\d+) \}", grant)
+    assert codes == ["103", "101", "101", "102"]
+    assert reached < grant.index("pp_cplan_country_plan_wait")
+    # the other specialization stays: the last branch, after the whole allow and the yield are asked
+    other = grant.rindex("else = {")
+    assert grant.index("pp_cplan_plan_yield_$right$ = yes") < other < grant.index("n = 102")
+    up = _block(text, "pp_cplan_country_plan_upgrade")
+    assert re.findall(r"pp_cplan_country_plan_wait = \{ n = (\d+) \}", up) == ["104"]
+    # the location plan's tooltips read the same variable and codes
+    from prosper_or_perish_constructor import location_plan as lp
+    assert lp.CWAIT == cc.VAR_CWAIT and sorted(lp.CWAIT_TEXTS) == [cc.CWAIT_INFLUENCE, cc.CWAIT_OTHER, cc.CWAIT_SLOT]
+
+
+def test_specialization_makes_way_for_a_plan() -> None:
+    """C2 (2026-11-20): a town's other specialization makes way for its plan's charter when that good has no plan here
+    and fewer line levels here; the game's regional rights and iron's never; revoke and grant in one step, only where
+    the grant's other conditions and its price hold."""
+    result = _result()
+    lines = result.line_goods
+    charters = [grant for grant in result.plan_grants if grant.charter]
+    assert len(lines) == 18 and {grant.good for grant in charters} == set(lines) and "iron" not in lines
+    triggers = _code(MOD / cc.TRIGGERS)
+    by_key = {right.key: right for right in result.rights}
+    for grant in result.plan_grants:
+        key = grant.charter or grant.rights
+        free = _block(triggers, f"pp_cplan_right_allow_free_{key}")
+        whole = _block(triggers, f"pp_cplan_right_allow_{key}")
+        assert cc.SPEC_TOOLTIP in whole and cc.SPEC_TOOLTIP not in free, key
+        assert "custom_tooltip" in free and "has_town_rights" not in free, key
+        yield_ = _block(triggers, f"pp_cplan_plan_yield_{key}")
+        if not grant.charter:
+            assert _tokens(yield_) == "always = no"  # iron: no line levels, its plan replaces nothing
+            continue
+        _, names = cc.split_specialization(by_key[key].allow)
+        fixed = [name for name in names if cc.line_of(name, lines) is None]
+        assert set(fixed) >= {"pp_iron_rights", "flemish_cloth_industries_right"}
+        assert yield_.strip().startswith("NOR = {")
+        for name in fixed:
+            assert f"has_town_rights = town_rights_type:{name}\n" in yield_[:yield_.index("}")], (key, name)
+        own = f"pp_location_{grant.good}_line_levels"
+        for other in lines:
+            if other == grant.good:
+                assert f"pp_location_{other}_line_levels <" not in yield_
+                continue
+            branch = (f"OR = {{ NOR = {{ has_town_rights = town_rights_type:pp_{other}_charter "
+                      f"has_town_rights = town_rights_type:pp_{other}_rights }} AND = {{ NOT = {{ has_town_rights = "
+                      f"town_rights_type:pp_plan_{other} }} pp_location_{other}_line_levels < {own} }} }}")
+            assert branch in _tokens(yield_), (key, other)
+    # make way: revokes the line rights the town holds, never the regional ones nor iron's, nor a plan
+    effects = _code(MOD / cc.EFFECTS)
+    way = _block(effects, "pp_cplan_country_plan_make_way")
+    revoked = re.findall(r"revoke_town_rights_of_type = town_rights_type:(\w+)", way)
+    assert sorted(revoked) == sorted(f"pp_{good}_{tier}" for good in lines for tier in ("charter", "rights"))
+    for key in revoked:
+        assert f"limit = {{ has_town_rights = town_rights_type:{key} }}\n\t\trevoke_town_rights_of_type = town_rights_type:{key}\n" in way
+    # in the grant: yield, then the price, then revoke and grant in the same step, never a revoke without the grant
+    grant = _block(effects, "pp_cplan_country_plan_grant")
+    branch = grant[grant.index("pp_cplan_plan_yield_$right$ = yes"):grant.rindex("else = {")]
+    assert branch.index("pp_cplan_plan_yield_$right$") < branch.index("political_influence >= pp_cplan_country_influence_need") \
+        < branch.index("can_pay_price = price:grant_town_rights") < branch.index("pp_cplan_country_plan_make_way = yes") \
+        < branch.index("grant_town_rights = town_rights_type:$right$") < branch.index("\tpay_price = price:grant_town_rights") \
+        < branch.index("change_variable = { name = pp_cplan_rights_n add = 1 }")
+    assert grant.count("pp_cplan_country_plan_make_way = yes") == 1
+    # only where the allow without the one-specialization condition passes (the line levels) and the whole allow fails
+    assert grant.index("pp_cplan_right_allow_free_$right$") < grant.index("pp_cplan_right_allow_$right$ = yes") \
+        < grant.index("pp_cplan_plan_yield_$right$")
+    # no slot is asked for the swap: the number of rights stays
+    assert "has_max_town_rights" not in branch
+
+
+def test_split_specialization_from_a_small_block() -> None:
+    block = ("\nscope:target = {\n\tcustom_tooltip = {\n\t\ttext = a_line_tt\n\t\tx >= 3\n\t}\n"
+             "\tcustom_tooltip = {\n\t\ttext = pp_one_specialization_tt\n\t\tNOR = {\n"
+             "\t\t\thas_town_rights = town_rights_type:pp_a_charter\n\t\t\thas_town_rights = town_rights_type:b_right\n"
+             "\t\t}\n\t}\n}\n")
+    free, names = cc.split_specialization((block,))
+    assert names == ("pp_a_charter", "b_right")
+    assert _tokens(free[0]) == "scope:target = { custom_tooltip = { text = a_line_tt x >= 3 } }"
+    assert cc.split_specialization(("x = y",)) == (("x = y",), ())
+    assert cc.line_of("pp_fine_cloth_rights", {"fine_cloth"}) == "fine_cloth"
+    assert cc.line_of("pp_iron_rights", {"cloth"}) is None and cc.line_of("b_right", {"b"}) is None
 
 
 def test_every_right_has_an_icon() -> None:
@@ -1183,6 +1298,10 @@ def test_every_text_exists_and_carries_no_number() -> None:
     assert config.tiles_per_row == 11
     # what the plan does not do is said in plain words
     assert "does not upgrade a charter" in loc["PP_CPLANC_RIGHTS_TT"]
+    # the look runs twice a year, and a plan does upgrade its charter (2026-11-20)
+    assert "twice a year" in loc["PP_CPLANC_RIGHTS_TT"] and "once a month" not in loc["PP_CPLANC_RIGHTS_TT"]
+    assert "plan of a good does it for that good's charter" in loc["PP_CPLANC_RIGHTS_TT"]
+    assert "last month" not in loc["PP_CPLANC_RIGHTS_LAST"]
     assert "fewer levels" in loc["PP_CPLANC_TOWN_TT"]
     # what the in-game test showed about founding, in plain words, on both switches
     for key in ("PP_CPLANC_TOWN_TT", "PP_CPLANC_CITY_TT"):

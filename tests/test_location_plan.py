@@ -148,6 +148,24 @@ def test_toggle_flips_one_plan_right() -> None:
         assert not re.search(rf"^{gone} = \{{", guis, re.MULTILINE), gone
 
 
+def test_last_plan_off_releases_the_saving() -> None:
+    """2026-11-20: when the last plan of a location goes (the button or Clear, both through the flip), nothing waits for
+    workers there any more and what the Locations group (105) saved for there is let go of at once."""
+    flip = _effect(_read(EFFECTS), town_plans.FLIP_EFFECT)
+    off = flip[flip.index("revoke_town_rights_of_type"):flip.index("else = {\n\t\tgrant_town_rights")]
+    last = off[off.index("limit = { NOT = { pp_tplan_held = yes } }"):]
+    assert off.index("revoke_town_rights_of_type") < off.index("limit = { NOT = { pp_tplan_held = yes } }")
+    assert "remove_variable = pp_lplan_wk\n" in last
+    owner = last[last.index("owner ?= {"):]
+    assert last.index("save_temporary_scope_as = pp_tplan_off_l") < last.index("owner ?= {")
+    assert "has_variable = pp_cplan_save_loc_105\n" in owner
+    assert "scope:pp_tplan_off_l = var:pp_cplan_save_loc_105\n" in owner
+    assert owner.index("scope:pp_tplan_off_l = var:pp_cplan_save_loc_105") < owner.index("pp_cplan_save_clear = { why = 105 }")
+    assert "remove_variable = pp_cplan_save_rank_105\n" in owner
+    # Clear takes the plans off through the same flip
+    assert f"{town_plans.FLIP_EFFECT} = {{ g = " in _effect(_read(MOD / lp.EFFECTS), lp.CLEAR_ALL)
+
+
 def test_gui_only_names_are_declared() -> None:
     """The flags the GUI passes and the states only the pass writes are declared in a block that never runs, so
     error.log has no 'used but never set' line."""
@@ -194,6 +212,60 @@ def test_every_plan_state_has_a_text() -> None:
                     f"Localize('PP_LPROF_ST_{n}'))]") in sts, (plan.key, n)
         assert (("$PP_TPLAN_WHAT_GOOD$" if plan.good else f"$PP_TPLAN_WHAT_{upper}$") in pick), plan.key
     assert texts["PP_TPLAN_NONE_FUR"].endswith("$PP_TPLAN_NONE$")
+
+
+def test_charter_plans_show_what_is_held_and_why_it_waits() -> None:
+    """2026-11-20: a held plan of a good with a specialization charter (or iron's rights) says under its state what the
+    location holds of it (the rights, the charter, and whether the upgrade waits for political influence), else why
+    its charter waits after the last rights look (pp_tplan_cwait: 101 influence, 102 the other specialization stays,
+    103 no free slot). Other plans show nothing of it."""
+    texts = _texts()
+    grants = lp.charter_grants(MOD, vanilla_root(ROOT, PROJECT))
+    lines = lp.line_level_goods(MOD)
+    assert len(grants) == 19 and grants["iron"].charter is None and "iron" not in lines
+    values = _read(MOD / lp.VALUES)
+    for plan in lp.plannable(_plans()):
+        upper = plan.key.upper()
+        pick = texts[f"PP_TPLAN_PICK_{upper}"]
+        grant = grants.get(plan.key)
+        if grant is None:
+            assert f"PP_TPLAN_CH_{upper}" not in pick and f"PP_TPLAN_CH_{upper}" not in texts, plan.key
+            continue
+        # under the state, only while the plan is held
+        assert pick.endswith(f"[SelectLocalization({lp.held(plan)}, 'PP_TPLAN_CH_{upper}', 'PP_TPLAN_EMPTY')]")
+        assert pick.index(f"'PP_TPLAN_ST_{upper}'") < pick.index(f"'PP_TPLAN_CH_{upper}'")
+        spec = f"Location.MakeScope.ScriptValue('pp_tplan_spec_{plan.key}')"
+        first = grant.charter or grant.rights
+        value = _effect(values, f"pp_tplan_spec_{plan.key}")
+        assert f"limit = {{ has_town_rights = town_rights_type:{grant.rights} }}\n\t\tvalue = 2" in value
+        assert texts[f"PP_TPLAN_HR_{upper}"] == f"\\nHolds the [ShowTownRightsName('{grant.rights}')]."
+        if grant.charter:
+            assert f"limit = {{ has_town_rights = town_rights_type:{grant.charter} }}\n\t\tvalue = 1" in value
+            assert texts[f"PP_TPLAN_CH_{upper}"] == (f"[SelectLocalization(EqualTo_CFixedPoint({spec}, '(CFixedPoint)2'), "
+                                                     f"'PP_TPLAN_HR_{upper}', 'PP_TPLAN_CH1_{upper}')]")
+            assert f"'PP_TPLAN_HC_{upper}', 'PP_TPLAN_CW_{upper}'" in texts[f"PP_TPLAN_CH1_{upper}"]
+            held = texts[f"PP_TPLAN_HC_{upper}"]
+            assert held.startswith(f"\\nHolds the [ShowTownRightsName('{grant.charter}')].")
+            assert "'(CFixedPoint)104'), 'PP_TPLAN_UW_" in held
+            assert "[political_influence|e]" in texts[f"PP_TPLAN_UW_{upper}"]
+        else:
+            assert f"'PP_TPLAN_HR_{upper}', 'PP_TPLAN_CW_{upper}'" in texts[f"PP_TPLAN_CH_{upper}"]
+        # the wait chain: only while the variable is set, one text per code
+        assert texts[f"PP_TPLAN_CW_{upper}"] == (f"[SelectLocalization(Location.MakeScope.Var('{lp.CWAIT}').IsSet, "
+                                                 f"'PP_TPLAN_CW1_{upper}', 'PP_TPLAN_EMPTY')]")
+        for n in (1, 2, 3):
+            assert (f"Var('{lp.CWAIT}').GetValue, '(CFixedPoint){100 + n}'), 'PP_TPLAN_WAIT{n}_{upper}'"
+                    in texts[f"PP_TPLAN_CW{n}_{upper}"]), (plan.key, n)
+            wait = texts[f"PP_TPLAN_WAIT{n}_{upper}"]
+            assert wait.startswith(f"\\n[ShowTownRightsName('{first}')]: waits"), (plan.key, n)
+        assert "[political_influence|e]" in texts[f"PP_TPLAN_WAIT1_{upper}"]
+        assert "[town_rights|e]" in texts[f"PP_TPLAN_WAIT3_{upper}"]
+        other = texts[f"PP_TPLAN_WAIT2_{upper}"]
+        assert ("has no plan here" in other) == (plan.key in lines), plan.key
+    for key, text in texts.items():
+        if re.match(r"PP_TPLAN_(HR|HC|UW|WAIT\d)_", key):
+            plain = re.sub(r"\[[^\]]*\]", "", text).replace("\\n", "")
+            assert not re.search(r"\d", plain), key
 
 
 def test_player_texts() -> None:

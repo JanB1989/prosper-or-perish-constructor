@@ -1905,199 +1905,226 @@ pp_cplan_country_rights = {
 # the charter, the charter is swapped for the rights it upgrades into once their conditions pass
 # (pp_cplan_country_plan_upgrade). A good with rights and no charter (iron) gets its rights directly. The plan
 # right stays: it is the player's intent until the player takes it off. While the country keeps the player's
-# amount of political influence, as the rule does; at most one grant or swap a location a month. Only the
+# amount of political influence, as the rule does; at most one grant or swap a location a look. Only the
 # locations that hold a town right are walked: a plan is one.
+# The player's switch first (2026-11-20): while the country has pp_tplan_rights_off the plans grant nothing
+# and the reasons a charter waits (pp_tplan_cwait) go, once (pp_tplan_cwait_any). Else the last look's reasons go
+# and every planned town that waits gets its reason again (pp_cplan_country_plan_wait).
 pp_cplan_country_plan_rights = {
 	if = {
-		limit = {
-			modifier:can_grant_town_rights = yes
-			OR = {
-				political_influence >= pp_cplan_country_influence_need
-				political_influence >= pp_cplan_country_upgrade_need
+		limit = { has_variable = pp_tplan_rights_off }
+		if = {
+			limit = { has_variable = pp_tplan_cwait_any }
+			every_locations_with_town_rights_in_country = {
+				limit = { has_variable = pp_tplan_cwait }
+				remove_variable = pp_tplan_cwait
 			}
+			remove_variable = pp_tplan_cwait_any
 		}
-		# cloth: pp_plan_cloth -> pp_cloth_charter -> pp_cloth_rights
-		if = {
-			limit = { pp_cplan_right_potential_pp_cloth_rights = yes }
-			pp_cplan_country_plan_upgrade = { plan = pp_plan_cloth charter = pp_cloth_charter rights = pp_cloth_rights }
-		}
-		if = {
-			limit = { pp_cplan_right_potential_pp_cloth_charter = yes }
-			pp_cplan_country_plan_grant = { plan = pp_plan_cloth right = pp_cloth_charter }
-		}
-		# fine_cloth: pp_plan_fine_cloth -> pp_fine_cloth_charter -> pp_fine_cloth_rights
-		if = {
-			limit = { pp_cplan_right_potential_pp_fine_cloth_rights = yes }
-			pp_cplan_country_plan_upgrade = { plan = pp_plan_fine_cloth charter = pp_fine_cloth_charter rights = pp_fine_cloth_rights }
+	}
+	else = {
+		every_locations_with_town_rights_in_country = {
+			limit = { has_variable = pp_tplan_cwait }
+			remove_variable = pp_tplan_cwait
 		}
 		if = {
-			limit = { pp_cplan_right_potential_pp_fine_cloth_charter = yes }
-			pp_cplan_country_plan_grant = { plan = pp_plan_fine_cloth right = pp_fine_cloth_charter }
-		}
-		# leather: pp_plan_leather -> pp_leather_charter -> pp_leather_rights
-		if = {
-			limit = { pp_cplan_right_potential_pp_leather_rights = yes }
-			pp_cplan_country_plan_upgrade = { plan = pp_plan_leather charter = pp_leather_charter rights = pp_leather_rights }
+			limit = { has_variable = pp_tplan_cwait_any }
+			remove_variable = pp_tplan_cwait_any
 		}
 		if = {
-			limit = { pp_cplan_right_potential_pp_leather_charter = yes }
-			pp_cplan_country_plan_grant = { plan = pp_plan_leather right = pp_leather_charter }
-		}
-		# pottery: pp_plan_pottery -> pp_pottery_charter -> pp_pottery_rights
-		if = {
-			limit = { pp_cplan_right_potential_pp_pottery_rights = yes }
-			pp_cplan_country_plan_upgrade = { plan = pp_plan_pottery charter = pp_pottery_charter rights = pp_pottery_rights }
-		}
-		if = {
-			limit = { pp_cplan_right_potential_pp_pottery_charter = yes }
-			pp_cplan_country_plan_grant = { plan = pp_plan_pottery right = pp_pottery_charter }
-		}
-		# furniture: pp_plan_furniture -> pp_furniture_charter -> pp_furniture_rights
-		if = {
-			limit = { pp_cplan_right_potential_pp_furniture_rights = yes }
-			pp_cplan_country_plan_upgrade = { plan = pp_plan_furniture charter = pp_furniture_charter rights = pp_furniture_rights }
-		}
-		if = {
-			limit = { pp_cplan_right_potential_pp_furniture_charter = yes }
-			pp_cplan_country_plan_grant = { plan = pp_plan_furniture right = pp_furniture_charter }
-		}
-		# glass: pp_plan_glass -> pp_glass_charter -> pp_glass_rights
-		if = {
-			limit = { pp_cplan_right_potential_pp_glass_rights = yes }
-			pp_cplan_country_plan_upgrade = { plan = pp_plan_glass charter = pp_glass_charter rights = pp_glass_rights }
-		}
-		if = {
-			limit = { pp_cplan_right_potential_pp_glass_charter = yes }
-			pp_cplan_country_plan_grant = { plan = pp_plan_glass right = pp_glass_charter }
-		}
-		# jewelry: pp_plan_jewelry -> pp_jewelry_charter -> pp_jewelry_rights
-		if = {
-			limit = { pp_cplan_right_potential_pp_jewelry_rights = yes }
-			pp_cplan_country_plan_upgrade = { plan = pp_plan_jewelry charter = pp_jewelry_charter rights = pp_jewelry_rights }
-		}
-		if = {
-			limit = { pp_cplan_right_potential_pp_jewelry_charter = yes }
-			pp_cplan_country_plan_grant = { plan = pp_plan_jewelry right = pp_jewelry_charter }
-		}
-		# porcelain: pp_plan_porcelain -> pp_porcelain_charter -> pp_porcelain_rights
-		if = {
-			limit = { pp_cplan_right_potential_pp_porcelain_rights = yes }
-			pp_cplan_country_plan_upgrade = { plan = pp_plan_porcelain charter = pp_porcelain_charter rights = pp_porcelain_rights }
-		}
-		if = {
-			limit = { pp_cplan_right_potential_pp_porcelain_charter = yes }
-			pp_cplan_country_plan_grant = { plan = pp_plan_porcelain right = pp_porcelain_charter }
-		}
-		# lacquerware: pp_plan_lacquerware -> pp_lacquerware_charter -> pp_lacquerware_rights
-		if = {
-			limit = { pp_cplan_right_potential_pp_lacquerware_rights = yes }
-			pp_cplan_country_plan_upgrade = { plan = pp_plan_lacquerware charter = pp_lacquerware_charter rights = pp_lacquerware_rights }
-		}
-		if = {
-			limit = { pp_cplan_right_potential_pp_lacquerware_charter = yes }
-			pp_cplan_country_plan_grant = { plan = pp_plan_lacquerware right = pp_lacquerware_charter }
-		}
-		# beer: pp_plan_beer -> pp_beer_charter -> pp_beer_rights
-		if = {
-			limit = { pp_cplan_right_potential_pp_beer_rights = yes }
-			pp_cplan_country_plan_upgrade = { plan = pp_plan_beer charter = pp_beer_charter rights = pp_beer_rights }
-		}
-		if = {
-			limit = { pp_cplan_right_potential_pp_beer_charter = yes }
-			pp_cplan_country_plan_grant = { plan = pp_plan_beer right = pp_beer_charter }
-		}
-		# liquor: pp_plan_liquor -> pp_liquor_charter -> pp_liquor_rights
-		if = {
-			limit = { pp_cplan_right_potential_pp_liquor_rights = yes }
-			pp_cplan_country_plan_upgrade = { plan = pp_plan_liquor charter = pp_liquor_charter rights = pp_liquor_rights }
-		}
-		if = {
-			limit = { pp_cplan_right_potential_pp_liquor_charter = yes }
-			pp_cplan_country_plan_grant = { plan = pp_plan_liquor right = pp_liquor_charter }
-		}
-		# books: pp_plan_books -> pp_books_charter -> pp_books_rights
-		if = {
-			limit = { pp_cplan_right_potential_pp_books_rights = yes }
-			pp_cplan_country_plan_upgrade = { plan = pp_plan_books charter = pp_books_charter rights = pp_books_rights }
-		}
-		if = {
-			limit = { pp_cplan_right_potential_pp_books_charter = yes }
-			pp_cplan_country_plan_grant = { plan = pp_plan_books right = pp_books_charter }
-		}
-		# paper: pp_plan_paper -> pp_paper_charter -> pp_paper_rights
-		if = {
-			limit = { pp_cplan_right_potential_pp_paper_rights = yes }
-			pp_cplan_country_plan_upgrade = { plan = pp_plan_paper charter = pp_paper_charter rights = pp_paper_rights }
-		}
-		if = {
-			limit = { pp_cplan_right_potential_pp_paper_charter = yes }
-			pp_cplan_country_plan_grant = { plan = pp_plan_paper right = pp_paper_charter }
-		}
-		# tools: pp_plan_tools -> pp_tools_charter -> pp_tools_rights
-		if = {
-			limit = { pp_cplan_right_potential_pp_tools_rights = yes }
-			pp_cplan_country_plan_upgrade = { plan = pp_plan_tools charter = pp_tools_charter rights = pp_tools_rights }
-		}
-		if = {
-			limit = { pp_cplan_right_potential_pp_tools_charter = yes }
-			pp_cplan_country_plan_grant = { plan = pp_plan_tools right = pp_tools_charter }
-		}
-		# weaponry: pp_plan_weaponry -> pp_weaponry_charter -> pp_weaponry_rights
-		if = {
-			limit = { pp_cplan_right_potential_pp_weaponry_rights = yes }
-			pp_cplan_country_plan_upgrade = { plan = pp_plan_weaponry charter = pp_weaponry_charter rights = pp_weaponry_rights }
-		}
-		if = {
-			limit = { pp_cplan_right_potential_pp_weaponry_charter = yes }
-			pp_cplan_country_plan_grant = { plan = pp_plan_weaponry right = pp_weaponry_charter }
-		}
-		# firearms: pp_plan_firearms -> pp_firearms_charter -> pp_firearms_rights
-		if = {
-			limit = { pp_cplan_right_potential_pp_firearms_rights = yes }
-			pp_cplan_country_plan_upgrade = { plan = pp_plan_firearms charter = pp_firearms_charter rights = pp_firearms_rights }
-		}
-		if = {
-			limit = { pp_cplan_right_potential_pp_firearms_charter = yes }
-			pp_cplan_country_plan_grant = { plan = pp_plan_firearms right = pp_firearms_charter }
-		}
-		# cannons: pp_plan_cannons -> pp_cannons_charter -> pp_cannons_rights
-		if = {
-			limit = { pp_cplan_right_potential_pp_cannons_rights = yes }
-			pp_cplan_country_plan_upgrade = { plan = pp_plan_cannons charter = pp_cannons_charter rights = pp_cannons_rights }
-		}
-		if = {
-			limit = { pp_cplan_right_potential_pp_cannons_charter = yes }
-			pp_cplan_country_plan_grant = { plan = pp_plan_cannons right = pp_cannons_charter }
-		}
-		# naval_supplies: pp_plan_naval_supplies -> pp_naval_supplies_charter -> pp_naval_supplies_rights
-		if = {
-			limit = { pp_cplan_right_potential_pp_naval_supplies_rights = yes }
-			pp_cplan_country_plan_upgrade = { plan = pp_plan_naval_supplies charter = pp_naval_supplies_charter rights = pp_naval_supplies_rights }
-		}
-		if = {
-			limit = { pp_cplan_right_potential_pp_naval_supplies_charter = yes }
-			pp_cplan_country_plan_grant = { plan = pp_plan_naval_supplies right = pp_naval_supplies_charter }
-		}
-		# iron: pp_plan_iron -> pp_iron_rights
-		if = {
-			limit = { pp_cplan_right_potential_pp_iron_rights = yes }
-			pp_cplan_country_plan_grant = { plan = pp_plan_iron right = pp_iron_rights }
+			limit = { modifier:can_grant_town_rights = yes }
+			# cloth: pp_plan_cloth -> pp_cloth_charter -> pp_cloth_rights
+			if = {
+				limit = { pp_cplan_right_potential_pp_cloth_rights = yes }
+				pp_cplan_country_plan_upgrade = { plan = pp_plan_cloth charter = pp_cloth_charter rights = pp_cloth_rights }
+			}
+			if = {
+				limit = { pp_cplan_right_potential_pp_cloth_charter = yes }
+				pp_cplan_country_plan_grant = { plan = pp_plan_cloth right = pp_cloth_charter }
+			}
+			# fine_cloth: pp_plan_fine_cloth -> pp_fine_cloth_charter -> pp_fine_cloth_rights
+			if = {
+				limit = { pp_cplan_right_potential_pp_fine_cloth_rights = yes }
+				pp_cplan_country_plan_upgrade = { plan = pp_plan_fine_cloth charter = pp_fine_cloth_charter rights = pp_fine_cloth_rights }
+			}
+			if = {
+				limit = { pp_cplan_right_potential_pp_fine_cloth_charter = yes }
+				pp_cplan_country_plan_grant = { plan = pp_plan_fine_cloth right = pp_fine_cloth_charter }
+			}
+			# leather: pp_plan_leather -> pp_leather_charter -> pp_leather_rights
+			if = {
+				limit = { pp_cplan_right_potential_pp_leather_rights = yes }
+				pp_cplan_country_plan_upgrade = { plan = pp_plan_leather charter = pp_leather_charter rights = pp_leather_rights }
+			}
+			if = {
+				limit = { pp_cplan_right_potential_pp_leather_charter = yes }
+				pp_cplan_country_plan_grant = { plan = pp_plan_leather right = pp_leather_charter }
+			}
+			# pottery: pp_plan_pottery -> pp_pottery_charter -> pp_pottery_rights
+			if = {
+				limit = { pp_cplan_right_potential_pp_pottery_rights = yes }
+				pp_cplan_country_plan_upgrade = { plan = pp_plan_pottery charter = pp_pottery_charter rights = pp_pottery_rights }
+			}
+			if = {
+				limit = { pp_cplan_right_potential_pp_pottery_charter = yes }
+				pp_cplan_country_plan_grant = { plan = pp_plan_pottery right = pp_pottery_charter }
+			}
+			# furniture: pp_plan_furniture -> pp_furniture_charter -> pp_furniture_rights
+			if = {
+				limit = { pp_cplan_right_potential_pp_furniture_rights = yes }
+				pp_cplan_country_plan_upgrade = { plan = pp_plan_furniture charter = pp_furniture_charter rights = pp_furniture_rights }
+			}
+			if = {
+				limit = { pp_cplan_right_potential_pp_furniture_charter = yes }
+				pp_cplan_country_plan_grant = { plan = pp_plan_furniture right = pp_furniture_charter }
+			}
+			# glass: pp_plan_glass -> pp_glass_charter -> pp_glass_rights
+			if = {
+				limit = { pp_cplan_right_potential_pp_glass_rights = yes }
+				pp_cplan_country_plan_upgrade = { plan = pp_plan_glass charter = pp_glass_charter rights = pp_glass_rights }
+			}
+			if = {
+				limit = { pp_cplan_right_potential_pp_glass_charter = yes }
+				pp_cplan_country_plan_grant = { plan = pp_plan_glass right = pp_glass_charter }
+			}
+			# jewelry: pp_plan_jewelry -> pp_jewelry_charter -> pp_jewelry_rights
+			if = {
+				limit = { pp_cplan_right_potential_pp_jewelry_rights = yes }
+				pp_cplan_country_plan_upgrade = { plan = pp_plan_jewelry charter = pp_jewelry_charter rights = pp_jewelry_rights }
+			}
+			if = {
+				limit = { pp_cplan_right_potential_pp_jewelry_charter = yes }
+				pp_cplan_country_plan_grant = { plan = pp_plan_jewelry right = pp_jewelry_charter }
+			}
+			# porcelain: pp_plan_porcelain -> pp_porcelain_charter -> pp_porcelain_rights
+			if = {
+				limit = { pp_cplan_right_potential_pp_porcelain_rights = yes }
+				pp_cplan_country_plan_upgrade = { plan = pp_plan_porcelain charter = pp_porcelain_charter rights = pp_porcelain_rights }
+			}
+			if = {
+				limit = { pp_cplan_right_potential_pp_porcelain_charter = yes }
+				pp_cplan_country_plan_grant = { plan = pp_plan_porcelain right = pp_porcelain_charter }
+			}
+			# lacquerware: pp_plan_lacquerware -> pp_lacquerware_charter -> pp_lacquerware_rights
+			if = {
+				limit = { pp_cplan_right_potential_pp_lacquerware_rights = yes }
+				pp_cplan_country_plan_upgrade = { plan = pp_plan_lacquerware charter = pp_lacquerware_charter rights = pp_lacquerware_rights }
+			}
+			if = {
+				limit = { pp_cplan_right_potential_pp_lacquerware_charter = yes }
+				pp_cplan_country_plan_grant = { plan = pp_plan_lacquerware right = pp_lacquerware_charter }
+			}
+			# beer: pp_plan_beer -> pp_beer_charter -> pp_beer_rights
+			if = {
+				limit = { pp_cplan_right_potential_pp_beer_rights = yes }
+				pp_cplan_country_plan_upgrade = { plan = pp_plan_beer charter = pp_beer_charter rights = pp_beer_rights }
+			}
+			if = {
+				limit = { pp_cplan_right_potential_pp_beer_charter = yes }
+				pp_cplan_country_plan_grant = { plan = pp_plan_beer right = pp_beer_charter }
+			}
+			# liquor: pp_plan_liquor -> pp_liquor_charter -> pp_liquor_rights
+			if = {
+				limit = { pp_cplan_right_potential_pp_liquor_rights = yes }
+				pp_cplan_country_plan_upgrade = { plan = pp_plan_liquor charter = pp_liquor_charter rights = pp_liquor_rights }
+			}
+			if = {
+				limit = { pp_cplan_right_potential_pp_liquor_charter = yes }
+				pp_cplan_country_plan_grant = { plan = pp_plan_liquor right = pp_liquor_charter }
+			}
+			# books: pp_plan_books -> pp_books_charter -> pp_books_rights
+			if = {
+				limit = { pp_cplan_right_potential_pp_books_rights = yes }
+				pp_cplan_country_plan_upgrade = { plan = pp_plan_books charter = pp_books_charter rights = pp_books_rights }
+			}
+			if = {
+				limit = { pp_cplan_right_potential_pp_books_charter = yes }
+				pp_cplan_country_plan_grant = { plan = pp_plan_books right = pp_books_charter }
+			}
+			# paper: pp_plan_paper -> pp_paper_charter -> pp_paper_rights
+			if = {
+				limit = { pp_cplan_right_potential_pp_paper_rights = yes }
+				pp_cplan_country_plan_upgrade = { plan = pp_plan_paper charter = pp_paper_charter rights = pp_paper_rights }
+			}
+			if = {
+				limit = { pp_cplan_right_potential_pp_paper_charter = yes }
+				pp_cplan_country_plan_grant = { plan = pp_plan_paper right = pp_paper_charter }
+			}
+			# tools: pp_plan_tools -> pp_tools_charter -> pp_tools_rights
+			if = {
+				limit = { pp_cplan_right_potential_pp_tools_rights = yes }
+				pp_cplan_country_plan_upgrade = { plan = pp_plan_tools charter = pp_tools_charter rights = pp_tools_rights }
+			}
+			if = {
+				limit = { pp_cplan_right_potential_pp_tools_charter = yes }
+				pp_cplan_country_plan_grant = { plan = pp_plan_tools right = pp_tools_charter }
+			}
+			# weaponry: pp_plan_weaponry -> pp_weaponry_charter -> pp_weaponry_rights
+			if = {
+				limit = { pp_cplan_right_potential_pp_weaponry_rights = yes }
+				pp_cplan_country_plan_upgrade = { plan = pp_plan_weaponry charter = pp_weaponry_charter rights = pp_weaponry_rights }
+			}
+			if = {
+				limit = { pp_cplan_right_potential_pp_weaponry_charter = yes }
+				pp_cplan_country_plan_grant = { plan = pp_plan_weaponry right = pp_weaponry_charter }
+			}
+			# firearms: pp_plan_firearms -> pp_firearms_charter -> pp_firearms_rights
+			if = {
+				limit = { pp_cplan_right_potential_pp_firearms_rights = yes }
+				pp_cplan_country_plan_upgrade = { plan = pp_plan_firearms charter = pp_firearms_charter rights = pp_firearms_rights }
+			}
+			if = {
+				limit = { pp_cplan_right_potential_pp_firearms_charter = yes }
+				pp_cplan_country_plan_grant = { plan = pp_plan_firearms right = pp_firearms_charter }
+			}
+			# cannons: pp_plan_cannons -> pp_cannons_charter -> pp_cannons_rights
+			if = {
+				limit = { pp_cplan_right_potential_pp_cannons_rights = yes }
+				pp_cplan_country_plan_upgrade = { plan = pp_plan_cannons charter = pp_cannons_charter rights = pp_cannons_rights }
+			}
+			if = {
+				limit = { pp_cplan_right_potential_pp_cannons_charter = yes }
+				pp_cplan_country_plan_grant = { plan = pp_plan_cannons right = pp_cannons_charter }
+			}
+			# naval_supplies: pp_plan_naval_supplies -> pp_naval_supplies_charter -> pp_naval_supplies_rights
+			if = {
+				limit = { pp_cplan_right_potential_pp_naval_supplies_rights = yes }
+				pp_cplan_country_plan_upgrade = { plan = pp_plan_naval_supplies charter = pp_naval_supplies_charter rights = pp_naval_supplies_rights }
+			}
+			if = {
+				limit = { pp_cplan_right_potential_pp_naval_supplies_charter = yes }
+				pp_cplan_country_plan_grant = { plan = pp_plan_naval_supplies right = pp_naval_supplies_charter }
+			}
+			# iron: pp_plan_iron -> pp_iron_rights
+			if = {
+				limit = { pp_cplan_right_potential_pp_iron_rights = yes }
+				pp_cplan_country_plan_grant = { plan = pp_plan_iron right = pp_iron_rights }
+			}
 		}
 	}
 }
 
 # Country scope: grant $right$ (a charter, or rights no charter upgrades into) in every location that holds the
-# plan $plan$ and may take it: a town or more, a free town rights slot (has_max_town_rights: the plan's own right
-# brings its slot), not holding $right$, the charter or the rights of its line (a grant has no checks: the same
-# right could be held twice), and the right's allow (with the location as scope:target; the one-specialization
-# condition stays, so a location with plans for two charter goods gets one charter). The biggest population first;
-# the country pays the game's grant price, as the rule's grant does.
+# plan $plan$ and may take it: a town or more (pp_cplan_country_plan_site), not holding $right$, the charter or
+# the rights of its line (a grant has no checks: the same right could be held twice). Where the right's allow
+# without its one-specialization condition passes (the line levels; pp_cplan_right_allow_free_<right>, with the
+# location as scope:target), in this order:
+#   - its whole allow passes: granted where a town rights slot is free (has_max_town_rights: the plan's own right
+#     brings its slot; else it waits, 103) and the influence kept plus the price is there (else
+#     it waits, 101);
+#   - the town's other specialization makes way (pp_cplan_plan_yield_<right>: the other good has no plan here and
+#     fewer line levels here): with the influence kept plus the price, that right is revoked and $right$ granted
+#     in the same step (pp_cplan_country_plan_make_way; the number of rights stays, so no slot is needed; never a
+#     revoke without the grant); else it waits (101);
+#   - else the other specialization stays: it waits (102).
+# A location with plans for two charter goods gets one charter: the other plan's good has a plan here, so its
+# right never makes way. The biggest population first; the country pays the game's grant price, as the rule's
+# grant does.
 pp_cplan_country_plan_grant = {
 	ordered_locations_with_town_rights_in_country = {
 		limit = {
 			has_town_rights = town_rights_type:$plan$
 			pp_cplan_country_plan_site = yes
-			has_max_town_rights = no
 			pp_cplan_right_site_$right$ = yes
 		}
 		order_by = pp_cplan_country_pop_here
@@ -2105,19 +2132,220 @@ pp_cplan_country_plan_grant = {
 		check_range_bounds = no
 		save_scope_as = target
 		if = {
-			limit = {
-				scope:pp_cplan_country = {
-					political_influence >= pp_cplan_country_influence_need
-					can_pay_price = price:grant_town_rights
-					pp_cplan_right_allow_$right$ = yes
+			limit = { scope:pp_cplan_country = { pp_cplan_right_allow_free_$right$ = yes } }
+			if = {
+				limit = { scope:pp_cplan_country = { pp_cplan_right_allow_$right$ = yes } }
+				if = {
+					limit = { has_max_town_rights = yes }
+					pp_cplan_country_plan_wait = { n = 103 }
+				}
+				else_if = {
+					limit = {
+						scope:pp_cplan_country = {
+							political_influence >= pp_cplan_country_influence_need
+							can_pay_price = price:grant_town_rights
+						}
+					}
+					grant_town_rights = town_rights_type:$right$
+					set_variable = { name = pp_cplan_right_mark value = yes }
+					scope:pp_cplan_country = {
+						pay_price = price:grant_town_rights
+						change_variable = { name = pp_cplan_rights_n add = 1 }
+					}
+				}
+				else = {
+					pp_cplan_country_plan_wait = { n = 101 }
 				}
 			}
-			grant_town_rights = town_rights_type:$right$
-			set_variable = { name = pp_cplan_right_mark value = yes }
-			scope:pp_cplan_country = {
-				pay_price = price:grant_town_rights
-				change_variable = { name = pp_cplan_rights_n add = 1 }
+			else_if = {
+				limit = { pp_cplan_plan_yield_$right$ = yes }
+				if = {
+					limit = {
+						scope:pp_cplan_country = {
+							political_influence >= pp_cplan_country_influence_need
+							can_pay_price = price:grant_town_rights
+						}
+					}
+					pp_cplan_country_plan_make_way = yes
+					grant_town_rights = town_rights_type:$right$
+					set_variable = { name = pp_cplan_right_mark value = yes }
+					scope:pp_cplan_country = {
+						pay_price = price:grant_town_rights
+						change_variable = { name = pp_cplan_rights_n add = 1 }
+					}
+				}
+				else = {
+					pp_cplan_country_plan_wait = { n = 101 }
+				}
 			}
+			else = {
+				pp_cplan_country_plan_wait = { n = 102 }
+			}
+		}
+	}
+}
+
+# Location scope (pp_cplan_country_plan_grant, once pp_cplan_plan_yield_<right> passed): the town's other
+# specialization makes way: every charter and rights of a line with a level count that the town holds is revoked
+# (the yield trigger asked that each of them may go). Never the game's regional rights or iron's (the yield
+# trigger refuses where the town holds one). Run right before the grant.
+pp_cplan_country_plan_make_way = {
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_cloth_rights }
+		revoke_town_rights_of_type = town_rights_type:pp_cloth_rights
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_cloth_charter }
+		revoke_town_rights_of_type = town_rights_type:pp_cloth_charter
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_fine_cloth_rights }
+		revoke_town_rights_of_type = town_rights_type:pp_fine_cloth_rights
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_fine_cloth_charter }
+		revoke_town_rights_of_type = town_rights_type:pp_fine_cloth_charter
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_leather_rights }
+		revoke_town_rights_of_type = town_rights_type:pp_leather_rights
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_leather_charter }
+		revoke_town_rights_of_type = town_rights_type:pp_leather_charter
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_pottery_rights }
+		revoke_town_rights_of_type = town_rights_type:pp_pottery_rights
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_pottery_charter }
+		revoke_town_rights_of_type = town_rights_type:pp_pottery_charter
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_furniture_rights }
+		revoke_town_rights_of_type = town_rights_type:pp_furniture_rights
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_furniture_charter }
+		revoke_town_rights_of_type = town_rights_type:pp_furniture_charter
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_glass_rights }
+		revoke_town_rights_of_type = town_rights_type:pp_glass_rights
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_glass_charter }
+		revoke_town_rights_of_type = town_rights_type:pp_glass_charter
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_jewelry_rights }
+		revoke_town_rights_of_type = town_rights_type:pp_jewelry_rights
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_jewelry_charter }
+		revoke_town_rights_of_type = town_rights_type:pp_jewelry_charter
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_porcelain_rights }
+		revoke_town_rights_of_type = town_rights_type:pp_porcelain_rights
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_porcelain_charter }
+		revoke_town_rights_of_type = town_rights_type:pp_porcelain_charter
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_lacquerware_rights }
+		revoke_town_rights_of_type = town_rights_type:pp_lacquerware_rights
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_lacquerware_charter }
+		revoke_town_rights_of_type = town_rights_type:pp_lacquerware_charter
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_beer_rights }
+		revoke_town_rights_of_type = town_rights_type:pp_beer_rights
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_beer_charter }
+		revoke_town_rights_of_type = town_rights_type:pp_beer_charter
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_liquor_rights }
+		revoke_town_rights_of_type = town_rights_type:pp_liquor_rights
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_liquor_charter }
+		revoke_town_rights_of_type = town_rights_type:pp_liquor_charter
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_books_rights }
+		revoke_town_rights_of_type = town_rights_type:pp_books_rights
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_books_charter }
+		revoke_town_rights_of_type = town_rights_type:pp_books_charter
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_paper_rights }
+		revoke_town_rights_of_type = town_rights_type:pp_paper_rights
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_paper_charter }
+		revoke_town_rights_of_type = town_rights_type:pp_paper_charter
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_tools_rights }
+		revoke_town_rights_of_type = town_rights_type:pp_tools_rights
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_tools_charter }
+		revoke_town_rights_of_type = town_rights_type:pp_tools_charter
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_weaponry_rights }
+		revoke_town_rights_of_type = town_rights_type:pp_weaponry_rights
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_weaponry_charter }
+		revoke_town_rights_of_type = town_rights_type:pp_weaponry_charter
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_firearms_rights }
+		revoke_town_rights_of_type = town_rights_type:pp_firearms_rights
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_firearms_charter }
+		revoke_town_rights_of_type = town_rights_type:pp_firearms_charter
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_cannons_rights }
+		revoke_town_rights_of_type = town_rights_type:pp_cannons_rights
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_cannons_charter }
+		revoke_town_rights_of_type = town_rights_type:pp_cannons_charter
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_naval_supplies_rights }
+		revoke_town_rights_of_type = town_rights_type:pp_naval_supplies_rights
+	}
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_naval_supplies_charter }
+		revoke_town_rights_of_type = town_rights_type:pp_naval_supplies_charter
+	}
+}
+
+# Location scope: why this planned town's charter or rights wait, $n$ = 100 + 1 political influence,
+# 2 its other specialization stays, 3 no free town rights slot, 4 the swap to the
+# rights waits for political influence (location_plan.py shows it in the plan's tooltip). The country notes that
+# some location carries one, so the switch can take them off once.
+pp_cplan_country_plan_wait = {
+	set_variable = { name = pp_tplan_cwait value = $n$ }
+	scope:pp_cplan_country = {
+		if = {
+			limit = { NOT = { has_variable = pp_tplan_cwait_any } }
+			set_variable = { name = pp_tplan_cwait_any value = yes }
 		}
 	}
 }
@@ -2125,7 +2353,8 @@ pp_cplan_country_plan_grant = {
 # Country scope: in every location that holds the plan $plan$ and the charter $charter$, not yet $rights$, swap the
 # charter for the rights where the rights' allow passes (scope:target = the location). The game has no script
 # effect for an upgrade: the charter is revoked and the rights granted (the number of rights stays, so the slot
-# is not asked), and the country pays the game's upgrade price (upgrade_town_rights). The biggest population first.
+# is not asked), and the country pays the game's upgrade price (upgrade_town_rights). Where the influence kept plus
+# that price is not there, it waits (104). The biggest population first.
 pp_cplan_country_plan_upgrade = {
 	ordered_locations_with_town_rights_in_country = {
 		limit = {
@@ -2139,19 +2368,24 @@ pp_cplan_country_plan_upgrade = {
 		check_range_bounds = no
 		save_scope_as = target
 		if = {
-			limit = {
+			limit = { scope:pp_cplan_country = { pp_cplan_right_allow_$rights$ = yes } }
+			if = {
+				limit = {
+					scope:pp_cplan_country = {
+						political_influence >= pp_cplan_country_upgrade_need
+						can_pay_price = price:upgrade_town_rights
+					}
+				}
+				revoke_town_rights_of_type = town_rights_type:$charter$
+				grant_town_rights = town_rights_type:$rights$
+				set_variable = { name = pp_cplan_right_mark value = yes }
 				scope:pp_cplan_country = {
-					political_influence >= pp_cplan_country_upgrade_need
-					can_pay_price = price:upgrade_town_rights
-					pp_cplan_right_allow_$rights$ = yes
+					pay_price = price:upgrade_town_rights
+					change_variable = { name = pp_cplan_rights_n add = 1 }
 				}
 			}
-			revoke_town_rights_of_type = town_rights_type:$charter$
-			grant_town_rights = town_rights_type:$rights$
-			set_variable = { name = pp_cplan_right_mark value = yes }
-			scope:pp_cplan_country = {
-				pay_price = price:upgrade_town_rights
-				change_variable = { name = pp_cplan_rights_n add = 1 }
+			else = {
+				pp_cplan_country_plan_wait = { n = 104 }
 			}
 		}
 	}

@@ -17,6 +17,23 @@ pp_tplan_flip = {
 		remove_variable = pp_lplan_est_g_$g$
 		# what the rule closed here for its workers opens again once no plan it was for is left (pp_plan_closer.txt)
 		pp_pclose_plan_off = yes
+		# the last plan gone: nothing waits for workers here any more, and what the Locations group (105) saved for
+		# here (a level or the town or city upgrade) goes at once, so its purse is free for the other plans
+		if = {
+			limit = { NOT = { pp_tplan_held = yes } }
+			remove_variable = pp_lplan_wk
+			save_temporary_scope_as = pp_tplan_off_l
+			owner ?= {
+				if = {
+					limit = {
+						has_variable = pp_cplan_save_loc_105
+						scope:pp_tplan_off_l = var:pp_cplan_save_loc_105
+					}
+					pp_cplan_save_clear = { why = 105 }
+					remove_variable = pp_cplan_save_rank_105
+				}
+			}
+		}
 	}
 	else = {
 		grant_town_rights = town_rights_type:pp_plan_$g$

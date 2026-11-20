@@ -663,18 +663,15 @@ pp_pclose_planned = {
 		AND = {
 			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_trade }
 			OR = {
-				building_type = building_type:al_qaysariyya_market
 				building_type = building_type:clearing_house
 				building_type = building_type:commerce_center
 				building_type = building_type:customs_house
 				building_type = building_type:entrepot
 				building_type = building_type:grand_marketplace
-				building_type = building_type:hired_labor_yard
 				building_type = building_type:market_warehouse
 				building_type = building_type:marketplace
 				building_type = building_type:merchants_quarters
 				building_type = building_type:port_authority
-				building_type = building_type:smuggler_cove
 				building_type = building_type:stock_exchange
 				building_type = building_type:trading_hub
 			}

@@ -51,13 +51,20 @@ HELD_TRIGGER = "pp_tplan_held"
 ON_VALUE_PREFIX = "pp_tplan_on_"
 FLIP_EFFECT = "pp_tplan_flip"
 TOGGLE_GUI = "pp_tplan_toggle"
-DO_PREFIX = "pp_tplan_do_"  # a plan's turn where its producers may need a higher rank
+DO_PREFIX = "pp_tplan_do_"  # a plan's turn where its producers may need a higher rank, and the food plan's turn
 RAISE_EFFECT = "pp_tplan_raise"
 
 # The goods target (location_profiles: pp_lprof_t_<target>) of the two extra plans.
 FOOD_TARGET = "food"  # producers of the staple foods and the Province Food buildings (location_profiles._read_targets)
-TRADE_TARGET = "trade_category"  # the trade buildings (location_profiles.CATEGORIES)
+TRADE_TARGET = "trade_category"  # the trade buildings ([construction_plan] trade_plan, location_profiles._read_targets)
 EXTRA_TARGETS = {"food": FOOD_TARGET, "trade": TRADE_TARGET}
+# The food plan's turn (2026-11-20, Jan: farms first, kitchens second, a Tavern only while the store is short) runs
+# these targets instead of its whole list (FOOD_TARGET, which stays the plan's buildings): the staple food producers,
+# then where they have nothing to do the kitchens, with the taverns while the province's store is short.
+FOOD_FARMS_TARGET = "food_farms"
+FOOD_KITCHENS_TARGET = "food_kitchens"
+FOOD_KITCHENS_TAVERNS_TARGET = "food_kitchens_taverns"
+OWN_TURNS = ("food",)  # plans with their own turn pp_tplan_do_<plan> whatever their rank (render_food_turn)
 
 WHY = 105  # the Locations group's purse (construction_plan GROUP_WHY "profiles")
 FAIL_RANK = 108  # pp_lprof_fail: the plan needs a higher rank and the raise cannot start here now (state 11)
@@ -71,15 +78,22 @@ FAIL_RANK = 108  # pp_lprof_fail: the plan needs a higher rank and the raise can
 #   pp_tplan_order_best     set: several plans in a location go best payback first; unset (default) = they take turns
 #   pp_tplan_free_off       set: plans close no other businesses for their workers; unset (default) = they do
 #                           (plan_closer.py, scripted_effects/pp_plan_closer.txt)
-#   pp_tplan_pb_some       set by the settings' effects while any payback limit is set (the pass then works out
+#   pp_tplan_alone          set: the Businesses rule builds nothing in a location that holds a plan; unset (default) =
+#                           it builds there too, by its own payback and market limit (scripted_triggers/
+#                           pp_construction_plan.txt pp_cplan_business_site; a plan waiting for workers always comes first)
+#   pp_tplan_rights_off     set: plans grant no charter and no rights (no political influence spent); unset (default) =
+#                           they grant them
+#   pp_tplan_pb_some      set by the settings' effects while any payback limit is set (the pass then works out
 #                           the business estimates of first levels and tier upgrades)
 # Script values (country scope, the GUI reads them): pp_tplan_pb_years_all / pp_tplan_pb_years_<plan> (limit in years,
 # 0 = any; a plan's includes the all-plans value), pp_tplan_pb_own_<plan> (1 = its own setting), pp_tplan_loss_n
 # (1 = never at a loss), pp_tplan_staff_n (1 = waits for workers), pp_tplan_order_n (1 = take turns), pp_tplan_close_n
-# (1 = the game's close-buildings automation is on), pp_tplan_free_n (1 = plans close other businesses for workers).
+# (1 = the game's close-buildings automation is on), pp_tplan_free_n (1 = plans close other businesses for workers),
+# pp_tplan_alone_n (1 = other businesses may be built in planned locations), pp_tplan_rights_n (1 = plans grant their
+# charter and rights).
 # Scripted GUIs (scope country, scripted_guis/pp_town_plan_settings.txt): pp_tplan_pb_up / pp_tplan_pb_down
 # (scope:pp_key = flag:<plan> or flag:all), pp_tplan_pb_reset (flag:<plan>), pp_tplan_toggle_loss / _staff / _order /
-# _close / _free.
+# _close / _free / _alone / _rights.
 PAYBACK_STEPS: tuple[int, ...] = (1, 2, 3, 4, 5, 7, 10, 15, 20, 30, 40, 50)
 PB_ANY = len(PAYBACK_STEPS) + 1  # a plan's own "any payback"
 PB_ALL = "all"  # the all-plans key (flag:all, pp_tplan_pb_all, pp_tplan_pb_years_all)
@@ -91,11 +105,15 @@ LOSS_OK_VAR = "pp_tplan_loss_ok"
 STAFF_OFF_VAR = "pp_tplan_staff_off"
 ORDER_BEST_VAR = "pp_tplan_order_best"
 FREE_OFF_VAR = "pp_tplan_free_off"
+ALONE_VAR = "pp_tplan_alone"
+RIGHTS_OFF_VAR = "pp_tplan_rights_off"
 LOSS_VALUE = "pp_tplan_loss_n"
 STAFF_VALUE = "pp_tplan_staff_n"
 ORDER_VALUE = "pp_tplan_order_n"
 CLOSE_VALUE = "pp_tplan_close_n"
 FREE_VALUE = "pp_tplan_free_n"
+ALONE_VALUE = "pp_tplan_alone_n"
+RIGHTS_VALUE = "pp_tplan_rights_n"
 CLOSE_SYSTEM = "closebuildings"  # the game's automated system (set_automated_system / is_system_automated)
 PB_UP_GUI = "pp_tplan_pb_up"
 PB_DOWN_GUI = "pp_tplan_pb_down"
@@ -105,6 +123,8 @@ TOGGLE_STAFF_GUI = "pp_tplan_toggle_staff"
 TOGGLE_ORDER_GUI = "pp_tplan_toggle_order"
 TOGGLE_CLOSE_GUI = "pp_tplan_toggle_close"
 TOGGLE_FREE_GUI = "pp_tplan_toggle_free"
+TOGGLE_ALONE_GUI = "pp_tplan_toggle_alone"
+TOGGLE_RIGHTS_GUI = "pp_tplan_toggle_rights"
 SETTINGS_GUIS = Path("in_game/common/scripted_guis/pp_town_plan_settings.txt")
 
 
@@ -205,7 +225,7 @@ class Plan:
     @property
     def do(self) -> str:
         """The effect a held plan runs in the location's turn."""
-        return f"{DO_PREFIX}{self.key}" if self.raises else f"pp_lprof_t_{self.target}"
+        return f"{DO_PREFIX}{self.key}" if self.raises or self.key in OWN_TURNS else f"pp_lprof_t_{self.target}"
 
 
 @dataclass
@@ -382,6 +402,50 @@ def _num(value: float) -> str:
     return f"{value:g}"
 
 
+# A plan target's outcome "nothing to do" (pp_lprof_fail): every building at its highest level (101) or none can be
+# built here (102), no construction started or under way; the other reasons (workers, gold, goods, payback, loss,
+# closed, rank) sit above 102.25.
+NOTHING_TO_DO = "OR = {{\n{tab}\tNOT = {{ has_variable = pp_lprof_fail }}\n{tab}\tvar:pp_lprof_fail < 102.25\n{tab}}}"
+
+
+def render_food_turn(plan: Plan) -> str:
+    """The food plan's turn (2026-11-20, Jan): farms first, kitchens second, a Tavern only while the store is short."""
+    def nothing(tab: str) -> str:
+        return NOTHING_TO_DO.format(tab=tab)
+
+    return (
+        "\n# ---- The food plan's turn (2026-11-20, Jan: farms first, kitchens second, a Tavern only when the store is short) ----\n"
+        "# Location scope, in the plan's turn (pp_lplan_mark). First the staple food producers (pp_lprof_t_"
+        f"{FOOD_FARMS_TARGET}; a new one\n"
+        "# starts where it pays best here, the food rule's return). Where they have nothing to do (every one at its highest\n"
+        "# level, or none can be built here; no construction) and the plans are not being measured: the kitchens (their cap\n"
+        "# follows the province's farms), with the taverns while the province's store is short by the food rule's own line\n"
+        "# (NOT pp_pclose_store_ok, province scope). Nothing to do there either: \"nothing to build\" (2) where the farms or\n"
+        "# the kitchens are at their highest level, else \"cannot be built here\" (6). The plan's buildings (the plan closer,\n"
+        "# the settings, the picker) stay its whole list (pp_lprof_t_food is not run).\n"
+        f"{plan.do} = {{\n"
+        f"\tpp_lprof_t_{FOOD_FARMS_TARGET} = yes\n"
+        "\tif = {\n\t\tlimit = {\n\t\t\tNOT = { has_variable = pp_lprof_st }\n\t\t\tNOT = { pp_lplan_measuring = yes }\n"
+        f"\t\t\t{nothing(chr(9) * 3)}\n\t\t}}\n"
+        "\t\t# the farms' outcome: 101 = at their highest level, else 102\n"
+        "\t\tsave_temporary_scope_value_as = { name = pp_tplan_ff value = 102 }\n"
+        "\t\tif = {\n\t\t\tlimit = {\n\t\t\t\thas_variable = pp_lprof_fail\n\t\t\t\tvar:pp_lprof_fail < 101.25\n\t\t\t}\n"
+        "\t\t\tsave_temporary_scope_value_as = { name = pp_tplan_ff value = 101 }\n\t\t}\n"
+        "\t\tremove_variable = pp_lprof_fail\n\t\tremove_variable = pp_lprof_best\n"
+        "\t\tif = {\n\t\t\tlimit = { province ?= { NOT = { pp_pclose_store_ok = yes } } }\n"
+        f"\t\t\tpp_lprof_t_{FOOD_KITCHENS_TAVERNS_TARGET} = yes\n\t\t}}\n"
+        f"\t\telse = {{\n\t\t\tpp_lprof_t_{FOOD_KITCHENS_TARGET} = yes\n\t\t}}\n"
+        "\t\tif = {\n\t\t\tlimit = {\n\t\t\t\tNOT = { has_variable = pp_lprof_st }\n"
+        f"\t\t\t\t{nothing(chr(9) * 4)}\n\t\t\t}}\n"
+        "\t\t\tif = {\n\t\t\t\tlimit = {\n\t\t\t\t\tOR = {\n\t\t\t\t\t\tscope:pp_tplan_ff < 101.5\n"
+        "\t\t\t\t\t\tAND = {\n\t\t\t\t\t\t\thas_variable = pp_lprof_fail\n\t\t\t\t\t\t\tvar:pp_lprof_fail < 101.25\n"
+        "\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n"
+        "\t\t\t\tremove_variable = pp_lprof_fail\n\t\t\t\tpp_lprof_fail = { r = 101 }\n\t\t\t}\n"
+        "\t\t\telse = {\n\t\t\t\tpp_lprof_fail = { r = 102 }\n\t\t\t}\n"
+        "\t\t}\n\t}\n}\n"
+    )
+
+
 def render_effects(items: list[Plan], ranks) -> str:
     """The turns of the plans whose producers need a higher rank, and the rank raise. ``ranks``: the town and city as
     construction_plan_country.read_ranks gives them (source rank, population minimum)."""
@@ -407,6 +471,11 @@ def render_effects(items: list[Plan], ranks) -> str:
             f"\t\tif = {{\n\t\t\tlimit = {{ NOT = {{ pp_lplan_measuring = yes }} }}\n\t\t\t{RAISE_EFFECT} = yes\n\t\t}}\n"
             f"\t}}\n\telse = {{\n\t\tpp_lprof_t_{plan.target} = yes\n\t}}\n}}\n"
         )
+    for plan in items:
+        if plan.key in OWN_TURNS:
+            if plan.raises:
+                raise ValueError(f"plan {plan.key}: its own turn cannot raise the rank too")
+            parts.append(render_food_turn(plan))
     parts.append(
         "\n# Location scope: the next rank up, from the rank below it (Towns and Buildings' upgrade, paid from the\n"
         f"# Locations group's purse: pp_cplan_country_rank_up why = {WHY}). Its state: 1 started, 7 gold (the purse saves\n"
@@ -477,12 +546,15 @@ def render_settings_values(items: list[Plan]) -> str:
         )
     parts.append(
         "\n# The switches, 1 = the default: never at a loss, wait for free workers, take turns, close other businesses for\n"
-        "# a plan's workers; and the game's own automation that closes buildings, 1 = on.\n"
+        "# a plan's workers, other businesses in planned locations, grant a plan's charter and rights; and the game's own\n"
+        "# automation that closes buildings, 1 = on.\n"
         f"{LOSS_VALUE} = {{\n\tvalue = 1\n\tif = {{\n\t\tlimit = {{ has_variable = {LOSS_OK_VAR} }}\n\t\tvalue = 0\n\t}}\n}}\n"
         f"{STAFF_VALUE} = {{\n\tvalue = 1\n\tif = {{\n\t\tlimit = {{ has_variable = {STAFF_OFF_VAR} }}\n\t\tvalue = 0\n\t}}\n}}\n"
         f"{ORDER_VALUE} = {{\n\tvalue = 1\n\tif = {{\n\t\tlimit = {{ has_variable = {ORDER_BEST_VAR} }}\n\t\tvalue = 0\n\t}}\n}}\n"
         f"{CLOSE_VALUE} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ is_system_automated = {CLOSE_SYSTEM} }}\n\t\tvalue = 1\n\t}}\n}}\n"
         f"{FREE_VALUE} = {{\n\tvalue = 1\n\tif = {{\n\t\tlimit = {{ has_variable = {FREE_OFF_VAR} }}\n\t\tvalue = 0\n\t}}\n}}\n"
+        f"{ALONE_VALUE} = {{\n\tvalue = 1\n\tif = {{\n\t\tlimit = {{ has_variable = {ALONE_VAR} }}\n\t\tvalue = 0\n\t}}\n}}\n"
+        f"{RIGHTS_VALUE} = {{\n\tvalue = 1\n\tif = {{\n\t\tlimit = {{ has_variable = {RIGHTS_OFF_VAR} }}\n\t\tvalue = 0\n\t}}\n}}\n"
         "\n# One payback step from scope:pp_tplan_cur (the index it starts from, any = the last step + 1): longer (past the\n"
         "# last step: any payback) and shorter (from any: the last step; never below the first).\n"
         f"pp_tplan_pb_next_up = {{\n\tvalue = scope:pp_tplan_cur\n\tadd = 1\n\tmax = {PB_ANY}\n}}\n"
@@ -564,6 +636,11 @@ def render_settings_guis() -> str:
             "# building the rule closed opens again (scripted_effects/pp_plan_closer.txt).",
             f"\t\tpp_cplan_flip = {{ var = {FREE_OFF_VAR} }}\n"
             f"\t\tif = {{\n\t\t\tlimit = {{ has_variable = {FREE_OFF_VAR} }}\n\t\t\tpp_pclose_undo_all = yes\n\t\t}}\n"),
+        gui(TOGGLE_ALONE_GUI, "The Businesses rule also builds in locations with a plan (the default), or not there\n"
+            "# (scripted_triggers/pp_construction_plan.txt, pp_cplan_business_site).",
+            f"\t\tpp_cplan_flip = {{ var = {ALONE_VAR} }}\n"),
+        gui(TOGGLE_RIGHTS_GUI, "Plans grant their charter and rights (the default), or none.",
+            f"\t\tpp_cplan_flip = {{ var = {RIGHTS_OFF_VAR} }}\n"),
     ])
 
 

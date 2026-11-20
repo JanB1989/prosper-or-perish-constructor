@@ -91,19 +91,20 @@ def test_every_candidate_has_cost_data_and_guards() -> None:
     shapes = {
         "expand": rf"pp_lprof_expand = \{{ {cost} {work} lc = (?P<lc>yes|no) \}}",
         "upgrade": rf"pp_lprof_upgrade = \{{ old = \w+ {cost} {estimate} \}}",
-        "start": rf"pp_lprof_start = \{{ {cost} {work} {estimate} \}}",
+        "start": rf"pp_lprof_start = \{{ {cost} {work} {estimate} how = (?P<how>cost|roi) \}}",
     }
     calls = [(kind, match.groupdict()) for kind, shape in shapes.items() for match in re.finditer(shape, effects)]
     assert len(calls) > 300
     assert len(calls) == len(re.findall(r"pp_lprof_(?:expand|start|upgrade) = \{", effects)), "every call matched"
     database = cp._database(MOD, vanilla_root(ROOT, PROJECT), cp.BUILDING_TYPES)
+    methods = cp._database(MOD, vanilla_root(ROOT, PROJECT), lpf.PRODUCTION_METHODS)
     staff = cp.staffing(database, cp.script_value_numbers(MOD, vanilla_root(ROOT, PROJECT)))
     for kind, call in calls:
         name, demand, category = call["name"], call["demand"], call["cat"]
         assert name in known, name
         if kind == "expand":
-            # the loss check reads buildings that make goods
-            assert (call["lc"] == "yes") == ("unique_production_methods" in re.sub(r"#[^\n]*", "", database[name][1])), name
+            # the loss check reads buildings that make goods (a method with an output)
+            assert (call["lc"] == "yes") == lpf.makes_goods(database[name][1], methods), name
         else:
             # a level estimate where the Businesses rule has one
             if call["hasest"] == "yes":
@@ -146,7 +147,7 @@ def test_targets_wait_for_their_constructions() -> None:
     effects = _read(MOD / lpf.EFFECTS)
     result, _ = _build()
     for key, candidates in result.targets.items():
-        if not candidates:
+        if not candidates or key in lpf.NOT_RUN:
             continue
         body = _block(effects, f"pp_lprof_t_{key}")
         first = body.split("\n\t}")[0]
@@ -355,6 +356,10 @@ def test_plans_run_their_targets() -> None:
     for number, plan in enumerate(plans, 101):
         expected.append(f"pp_lplan_mark = {{ v = g_{plan.key} g = {plan.key} do = {plan.do} "
                         f"n = {number} lo = {number - 0.5:g} hi = {number + 0.5:g} }}")
+        if plan.key in town_plans.OWN_TURNS:  # the food plan's own turn runs its sub-targets, never its whole list
+            assert plan.target in lpf.NOT_RUN and not re.search(rf"^pp_lprof_t_{plan.target} = \{{", effects, re.MULTILINE)
+            assert re.search(rf"^{plan.do} = \{{", _code(MOD / town_plans.EFFECTS), re.MULTILINE), plan.key
+            continue
         assert re.search(rf"^pp_lprof_t_{plan.target} = \{{", effects, re.MULTILINE), plan.key
     assert lines == expected, "one line per plan, in the plans' order, numbered"
     assert len(goods) >= len(lpf.target_goods(ROOT, PROJECT)) - 2, "nearly every good has buildings"
@@ -537,7 +542,7 @@ def test_each_plan_runs_with_its_payback_limit() -> None:
     assert "name = pp_lprof_pb value = 1000000" in setpb  # 0 years = any payback
     expand = _block(hand, "pp_lprof_expand")
     assert "limit = { pp_lprof_payback100 > scope:pp_lprof_pb }\n\t\t\t\tpp_lprof_fail = { r = 103 }" in expand
-    for name, after in (("pp_lprof_start", "pp_lprof_consider = { type = $type$ }"),
+    for name, after in (("pp_lprof_start", "pp_lprof_consider_$how$ = { type = $type$ }"),
                         ("pp_lprof_upgrade", "pp_lprof_build_known = yes")):
         body = _block(hand, name)
         assert body.index("pp_cplan_ef value = pp_cplan_eff_$cat$") < body.index(
@@ -788,3 +793,83 @@ def test_the_look_stops_when_the_purse_is_spent() -> None:
     body =_block(_read(MOD / lpf.VALUES), lpf.UNREACHED)
     assert "owner ?= { has_variable = pp_lprof_cut }" in body and "var:pp_lprof_seen < owner.var:pp_lprof_look_n" in body
     assert "NOT = { has_variable = pp_lprof_seen }" in body
+
+
+def test_full_standing_line_starts_another() -> None:
+    """2026-11-20: once every standing building of a target is at its highest level and nothing else stopped them
+    (pp_lprof_fail exactly 101), another of its buildings starts, never one standing here nor an older tier of one; the
+    plan's state is then the start's reason, or "nothing to build" where nothing could start."""
+    effects = _code(MOD / lpf.EFFECTS)
+    result, _ = _build()
+    pairs = lpf.upgrade_pairs(ROOT, PROJECT, MOD, vanilla_root(ROOT, PROJECT))
+    checked = 0
+    for key, candidates in result.targets.items():
+        if not candidates or key in lpf.NOT_RUN:
+            continue
+        body = _block(effects, f"pp_lprof_t_{key}")
+        standing = body[body.index("\telse_if = {"):body.index("\n\telse = {")]
+        if len(candidates) == 1:
+            assert "pp_lprof_more" not in standing, key
+            continue
+        more = standing[standing.index("pp_lprof_more = yes"):]
+        gate = standing[standing.rindex("if = {", 0, standing.index("pp_lprof_more = yes")):standing.index("pp_lprof_more = yes")]
+        for check in ("NOT = { has_variable = pp_lprof_st }", "has_variable = pp_lprof_fail", "var:pp_lprof_fail < 101.25",
+                      "NOT = { pp_lplan_measuring = yes }"):
+            assert check in gate, (key, check)
+        assert standing.rindex("pp_lprof_expand = {") < standing.index("pp_lprof_more = yes")
+        assert more.index("pp_lprof_start_pick = yes") < more.index("pp_lprof_more_end = yes")
+        later = lpf.successors(candidates, pairs)
+        starts = re.findall(r"limit = \{ NOT = \{ any_buildings_in_location = \{ building_level > 0 OR = \{ ([^}]*) \} \} \}"
+                            r"[^\n]* \}\n\t+pp_lprof_start = \{ type = (\w+) ", more)
+        assert {name for _, name in starts} == {c.name for c in candidates}, key
+        for types, name in starts:
+            assert re.findall(r"building_type:(\w+)", types) == [name] + later[name], (key, name)
+        checked += 1
+    assert checked > 50
+    # wheat: the farm stands full -> a farmstead is never started while a farmstead or a later tier stands
+    later = lpf.successors(result.targets["wheat"], pairs)
+    assert {"wheat_farmstead", "wheat_rotations", "wheat_model_farm"} <= set(later["wheat_farm"])
+    assert later["wheat_model_farm"] == []
+    hand = _code(MOD / lpf.HAND_EFFECTS)
+    more = _block(hand, "pp_lprof_more")
+    for line in ("remove_variable = pp_lprof_fail", "remove_variable = pp_lprof_best", "pp_lprof_pick_clear = yes"):
+        assert line in more, line
+    end = _block(hand, "pp_lprof_more_end")
+    assert "var:pp_lprof_fail < 102.25" in end and "pp_lprof_fail = { r = 101 }" in end and "NOT = { has_variable = pp_lprof_st }" in end
+    # the unit: transitive successors among the target's own buildings
+    a, b, c = (lpf.Candidate(name, "d", "std", 0.0) for name in ("a2", "a1", "a0"))
+    assert lpf.successors([a, b, c], [("a0", "a1"), ("a1", "a2"), ("x", "a2")]) == {"a0": ["a1", "a2"], "a1": ["a2"], "a2": []}
+
+
+def test_loss_check_only_for_buildings_that_make_goods() -> None:
+    """2026-11-20: "never at a loss" reads only buildings with a method that has an output; a building whose methods
+    only consume (the Marketplace's upkeep, the market centre's shared maintenance) always shows a loss and would never
+    grow."""
+    shared = {"upkeep": ({}, "\n\tpaper = 2\n\tcategory = building_maintenance\n"),
+              "make": ({}, "\n\tproduced = tools\n\toutput = 1\n")}
+    assert not lpf.makes_goods("unique_production_methods = { m = { cloth = 0.06 category = building_maintenance } }", shared)
+    assert lpf.makes_goods("unique_production_methods = { m = { iron = 1 produced = tools output = 2 } }", shared)
+    assert not lpf.makes_goods("possible_production_methods = { upkeep }", shared)
+    assert lpf.makes_goods("possible_production_methods = { upkeep make }", shared)
+    assert not lpf.makes_goods("# produced = tools\nunique_production_methods = { m = { paper = 1 } }", shared)
+    effects = _code(MOD / lpf.EFFECTS)
+    lc = dict(re.findall(r"pp_lprof_expand = \{ type = (\w+) [^}]* lc = (yes|no) \}", effects))
+    for name in ("marketplace", "merchants_quarters", "port_authority", "trading_hub"):
+        assert lc[name] == "no", name
+    for name in ("wheat_farm", "lumber_mill", "cookshop"):
+        if name in lc:
+            assert lc[name] == "yes", name
+    assert lc["wheat_farm"] == "yes"
+
+
+def test_workers_flag_for_the_other_rule_groups() -> None:
+    """2026-11-20: a location whose plan ended its turn waiting for workers (state 4, or 14 while a business closes for
+    it) carries pp_lplan_wk until its next turn, for the other rule groups."""
+    hand = _code(MOD / lpf.HAND_EFFECTS)
+    turn = _block(hand, "pp_lprof_location_turn")
+    assert turn.index("remove_variable = pp_lplan_wk") < turn.index("pp_lplan_location_turn = yes")
+    finish = _block(hand, "pp_lprof_finish")
+    flag = finish[finish.index("var:$st$ > 103.5"):finish.index("set_variable = { name = pp_lplan_wk value = yes }")]
+    assert "var:$st$ < 104.5" in flag and "var:$st$ > 113.5" in flag and "var:$st$ < 114.5" in flag
+    assert finish.rindex("set_variable = { name = $st$ value") < finish.index("pp_lplan_wk")
+    assert hand.count("name = pp_lplan_wk value") == 1

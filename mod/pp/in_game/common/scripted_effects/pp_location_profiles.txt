@@ -30,7 +30,8 @@
 # another business here is being closed to free workers for it (pp_plan_closer.txt); 10 is the market limit, which no
 # plan has), pp_lplan_est_g_<plan> (the payback found), pp_lprof_seq (its number in the turn
 # order), pp_lplan_last (the n of the plan that started the last construction here: the plans take turns),
-# pp_lprof_seen (the number of the last look that reached it). Country: pp_lprof_look_n (the looks' count + 100),
+# pp_lprof_seen (the number of the last look that reached it), pp_lplan_wk (yes: one of its plans ended its last turn
+# waiting for workers, state 4 or 14; the other rule groups read it). Country: pp_lprof_look_n (the looks' count + 100),
 # pp_lprof_cut (the last look stopped, its purse spent, before every location had its turn). Pass temporaries:
 # pp_lprof_st, pp_lprof_fail, pp_lprof_best, pp_lprof_pick and what the pick carries (pp_lprof_pick_ipl / _pf / _ef /
 # _room), the measuring's pp_lplan_b* (location), the list pp_lprof_turns (country: this look's locations).
@@ -163,6 +164,8 @@ pp_lprof_target_turn = {
 # Location scope (a location that holds a plan; also where the group saved for something): its turn: its plans,
 # forced.
 pp_lprof_location_turn = {
+	# a plan waiting for workers here marks the location anew in this turn (pp_lprof_finish)
+	remove_variable = pp_lplan_wk
 	# the workers a new level can find here (pp_cplan_staff)
 	save_temporary_scope_value_as = { name = pp_cplan_free_peasants value = pp_cplan_free_peasants_here }
 	# the window: one level waiting for gold counts once a location (pp_cplan_note_wait); one construction a
@@ -531,6 +534,24 @@ pp_lprof_finish = {
 	else = {
 		set_variable = { name = $st$ value = 102 }
 	}
+	# a plan here waits for workers (4, or 14 while another business closes for it): the location carries pp_lplan_wk
+	# for the other rule groups until its next turn (pp_lprof_location_turn; the Businesses rule leaves such a location
+	# to its plans)
+	if = {
+		limit = {
+			OR = {
+				AND = {
+					var:$st$ > 103.5
+					var:$st$ < 104.5
+				}
+				AND = {
+					var:$st$ > 113.5
+					var:$st$ < 114.5
+				}
+			}
+		}
+		set_variable = { name = pp_lplan_wk value = yes }
+	}
 	# the shortest payback of a standing candidate's next level (years + 100; 1099 = no profit), shown beside the state
 	if = {
 		limit = { has_variable = pp_lprof_best }
@@ -748,11 +769,14 @@ pp_lprof_upgrade = {
 	}
 }
 
-# Location scope (none of the target's buildings stands here): $type$ joins the start candidates when it can be built
-# here, finds its workers here (unless the setting says plans do not wait for them), the market holds its construction
-# goods and, under a payback limit, its first level pays back within it by the Businesses rule's estimate (where it
-# has one: pp_lprof_new_check; without one, such as a Marketplace, a first level has nothing to measure and is not
-# checked); pp_lprof_start_pick starts the cheapest (nothing while a location's plans are measured).
+# Location scope (none of the target's buildings stands here, or every standing one is at its highest level:
+# pp_lprof_more): $type$ joins the start candidates when it can be built here, finds its workers here (unless the
+# setting says plans do not wait for them), the market holds its construction goods and, under a payback limit, its
+# first level pays back within it by the Businesses rule's estimate (where it has one: pp_lprof_new_check; without one,
+# such as a Marketplace, a first level has nothing to measure and is not checked); pp_lprof_start_pick starts the pick
+# (nothing while a location's plans are measured). $how$ = the pick rule: cost (the cheapest, pp_lprof_consider_cost)
+# or roi (the food plan's farms: the best return here by the food rule's own measure, pp_lprof_consider_roi); the trade
+# plan's order (the first that can start) is the generated target's: a later candidate is not tried once a pick stands.
 pp_lprof_start = {
 	if = {
 		limit = { pp_lplan_measuring = yes }
@@ -783,7 +807,7 @@ pp_lprof_start = {
 				pp_lprof_fail = { r = 103 }
 			}
 			else = {
-				pp_lprof_consider = { type = $type$ }
+				pp_lprof_consider_$how$ = { type = $type$ }
 			}
 		}
 	}
@@ -811,22 +835,42 @@ pp_lprof_new_check = {
 	}
 }
 
-# Location scope: scope:pp_cplan_btype ($type$) becomes the pick when it costs less than the pick so far. The pick
-# carries what its build needs (script time 2026-11-20: the build then skips the two dispatches over every building
-# type): its cost data (+ 100, a variable at 0 counts as unset) and whether a level fits under its max level here
-# (pp_lprof_pick_room; nothing is built between the pick and its start, so the room stays what it was).
-pp_lprof_consider = {
+# Location scope: scope:pp_cplan_btype ($type$) becomes the pick when it costs less than the pick so far
+# (pp_lprof_best = 1 + its cost). The pick carries what its build needs (script time 2026-11-20: the build then skips
+# the two dispatches over every building type): its cost data (+ 100, a variable at 0 counts as unset) and whether a
+# level fits under its max level here (pp_lprof_pick_room; nothing is built between the pick and its start, so the
+# room stays what it was).
+pp_lprof_consider_cost = {
+	save_temporary_scope_value_as = { name = pp_lprof_key value = pp_lprof_cost1 }
 	if = {
-		limit = { NOT = { has_variable = pp_lprof_best } }
-		pp_lprof_keep = { type = $type$ }
-	}
-	else_if = {
-		limit = { pp_lprof_cost1 < var:pp_lprof_best }
+		limit = {
+			OR = {
+				NOT = { has_variable = pp_lprof_best }
+				var:pp_lprof_best > scope:pp_lprof_key
+			}
+		}
 		pp_lprof_keep = { type = $type$ }
 	}
 }
+# Location scope (the food plan's farms, 2026-11-20): $type$ becomes the pick when it suits the location better than
+# the pick so far: the food rule's own measure, the yearly return of a level here at the market's prices and the
+# location's output, in % of its base price (pp_cplan_farm_roi_<type>, the same the food rule ranks its farm lines
+# by); pp_lprof_best = that + 10000 (never 0, which is unset; a losing farm still ranks below an earning one).
+pp_lprof_consider_roi = {
+	save_temporary_scope_value_as = { name = pp_lprof_key value = { value = pp_cplan_farm_roi_$type$ add = 10000 } }
+	if = {
+		limit = {
+			OR = {
+				NOT = { has_variable = pp_lprof_best }
+				var:pp_lprof_best < scope:pp_lprof_key
+			}
+		}
+		pp_lprof_keep = { type = $type$ }
+	}
+}
+# scope:pp_lprof_key = the pick's key (pp_lprof_consider_cost / _roi).
 pp_lprof_keep = {
-	set_variable = { name = pp_lprof_best value = pp_lprof_cost1 }
+	set_variable = { name = pp_lprof_best value = scope:pp_lprof_key }
 	set_variable = { name = pp_lprof_pick value = scope:pp_cplan_btype }
 	set_variable = { name = pp_lprof_pick_ipl value = { value = scope:pp_cplan_ipl add = 100 } }
 	set_variable = { name = pp_lprof_pick_pf value = { value = scope:pp_cplan_pf add = 100 } }
@@ -867,6 +911,30 @@ pp_lprof_pick_clear = {
 	remove_variable = pp_lprof_pick_pf
 	remove_variable = pp_lprof_pick_ef
 	remove_variable = pp_lprof_pick_room
+}
+
+# Location scope, in a target's turn (2026-11-20, Jan: plans behave sensibly by default): every standing building of
+# the target is at its highest level and nothing else stopped them (pp_lprof_fail exactly 101, no construction, not
+# measuring), so another of its buildings starts (the generated target's start phase, without the ones standing here
+# and their older tiers). The plan's state is then the start phase's reason (workers, gold, goods, ...); where nothing
+# could start (none can be built here, or none is left) it stays "nothing to build" (pp_lprof_more_end).
+pp_lprof_more = {
+	remove_variable = pp_lprof_fail
+	remove_variable = pp_lprof_best
+	pp_lprof_pick_clear = yes
+}
+pp_lprof_more_end = {
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lprof_st }
+			OR = {
+				NOT = { has_variable = pp_lprof_fail }
+				var:pp_lprof_fail < 102.25
+			}
+		}
+		remove_variable = pp_lprof_fail
+		pp_lprof_fail = { r = 101 }
+	}
 }
 
 # Location scope: one level of scope:pp_cplan_btype, paid from the Locations group's purse (the plan's construct

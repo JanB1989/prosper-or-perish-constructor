@@ -47,9 +47,23 @@ Plans add: they switch no global rule group off.
 
 - **A good**: its producers (the buildings whose main good it is). Order: an older tier standing here whose successor
   (also a producer) the country has researched is upgraded first (the game's Upgrade, one level a turn); else a
-  standing producer gets one more level, highest tier first; else the cheapest producer that can be built here starts.
-- **Food**: the same over the producers of the staple foods and the Province Food buildings (Cookshop, Tavern, ...).
-- **Trade**: the same over the trade buildings (building category `trade_category`).
+  standing producer gets one more level, highest tier first; where none stands, the cheapest producer that can be
+  built here starts. Since 2026-11-20: once every standing building of the plan is at its highest level and nothing
+  else holds it back (the best reason is exactly "at its highest level"), the plan starts another of its buildings,
+  never one standing here or an older tier of one (`pp_lprof_more`, `successors()`); the plan then shows why that
+  start waits, and reads "nothing to build" where nothing can start.
+- **Food** (2026-11-20, `pp_tplan_do_food`, `town_plans.py` `render_food_turn`): farms first: the staple food
+  producers (`pp_lprof_t_food_farms`), a new one being the farm with the best return here by the food rule's own
+  measure (`pp_cplan_farm_roi_<type>`, `pp_lprof_start ... how = roi`). Only where the farms have nothing to do (all
+  at their highest level, or none can be built) the kitchens (Cookshop, Public Kitchen; their cap follows the
+  province's farms), and a Tavern only while the province's store is short by the food rule's line
+  (`NOT pp_pclose_store_ok`: `pp_lprof_t_food_kitchens_taverns`, else `pp_lprof_t_food_kitchens`). Never a Grange,
+  Victualling Yard or Granary. Before, one flat list: a standing Tavern kept farms from starting and got levels
+  whatever the store held. The plan's building list for the closer, the settings card and the picker is unchanged.
+- **Trade** (2026-11-20): the buildings that carry trade, `[construction_plan] trade_plan` in `constructor.toml`, in
+  start order: the Marketplace line, the Port Authority, then the market centre's buildings. Where none stands, the
+  first in that order that can be built starts. No Hired Labor Yard, Smuggler's Cove or unique building (before: every
+  building of the category, the cheapest first).
 - **Rank raise**: for the 15 plans whose producers all need a town or a city, where none of them stands and the rank is
   too low, the turn raises the rank one step instead (`pp_tplan_do_<plan>` -> `pp_tplan_raise` ->
   `pp_cplan_country_rank_up = { rank n why = 105 }`, the Towns and Buildings upgrade, paid from the Locations purse).
@@ -61,7 +75,19 @@ Plans add: they switch no global rule group off.
   planned town (never a rural settlement) gets the charter when its conditions hold and a slot is free; once the rights
   it upgrades into are allowed, charter is swapped for rights (revoke + grant). Iron has rights and no charter and gets
   them directly. Normal influence prices (grant, upgrade), the influence reserve is kept; one grant or swap a location
-  a month. Details: `docs/construction_plan_country.md` "Plans: charters and rights".
+  a look (the rights look runs twice a year, in May and November). Details: `docs/construction_plan_country.md`
+  "Plans: charters and rights". Since 2026-11-20:
+  - The plan setting "Grant a plan's charter and rights" (`pp_tplan_rights_off`) stops every grant and swap of plans.
+  - **A town's specialization follows its plans.** Where a plan's charter waits only because the town holds another
+    specialization, that one makes way if its good has no plan here and its line has fewer levels here than the
+    planned good's: it is revoked and the plan's charter granted in the same step, at the normal price, the reserve
+    kept, never a revoke without the grant (`pp_cplan_plan_yield_<right>`, `pp_cplan_country_plan_make_way`). The
+    game's regional rights and iron's rights never make way, and an iron plan replaces nothing.
+  - **Why a charter waits** (`pp_tplan_cwait` on the location, written by the rights look where the line levels are
+    reached: 101 political influence, 102 the other specialization stays, 103 no free rights slot, 104 the swap to
+    rights waits for influence): the plan's tooltip in the picker and the Plans row says so, or names the charter or
+    rights the location holds.
+  - Taking a plan off keeps the charter it granted; that leftover makes way for a later plan by the rule above.
 
 ### States
 
@@ -130,7 +156,9 @@ stored), names and steps in `town_plans.py` ("Plan settings"):
 - **Never at a loss** (default on; `pp_tplan_loss_ok` set = off): no level for a standing building with production
   methods whose profit at full workers and full goods is below zero (`building_potential_profit < 0`, building scope:
   the game lays off the workers of such a building every month, subsidised or not). State 12. Tier upgrades are not
-  held back (the upgrade replaces the building).
+  held back (the upgrade replaces the building). Only buildings with a production method that makes a good are
+  checked (`makes_goods()`, since 2026-11-20): a Marketplace or a market centre's building only pays upkeep, so it
+  always shows a loss and would never have got a second level.
 - **Wait for free workers** (default on; `pp_tplan_staff_off` set = off): further and first levels need workers here
   (`pp_cplan_staff`). Tier upgrades never asked for workers.
 - **Several plans in one location** (default: take turns; `pp_tplan_order_best` set = best payback first, the old
@@ -141,6 +169,20 @@ stored), names and steps in `town_plans.py` ("Plan settings"):
 - **The game closes losing buildings**: switches the game's own automation `closebuildings` for the country
   (`set_automated_system`, read by `is_system_automated`). Default: as the player set it in the game. A plan never
   adds to a closed building (state 13).
+- **Other businesses in planned locations** (2026-11-20; default on; `pp_tplan_alone` set = off, value
+  `pp_tplan_alone_n`, GUI `pp_tplan_toggle_alone`): off, the Businesses rule builds nothing in a location that holds
+  a plan; only the plan's buildings and the other rule groups' food, logistics, improvement and public buildings are
+  built there. The gate sits in `pp_cplan_business_site` and in the Businesses look's limit.
+- **Plans come first for their workers** (always, no setting): the Businesses rule builds nothing in a location while
+  the rule frees workers there (`pp_pclose_wait`) or one of its plans waits for workers after its last look
+  (`pp_lplan_wk`, set by `pp_lprof_finish` for state 4 or 14, removed at the location's next turn and with its last
+  plan). Same two places, so a blocked pick takes none of the look's tries.
+- **Grant a plan's charter and rights** (2026-11-20; default on; `pp_tplan_rights_off` set = off, value
+  `pp_tplan_rights_n`, GUI `pp_tplan_toggle_rights`): off, plans grant no charter and no rights and spend no
+  political influence; they only build.
+- **Taking the last plan off a location** (`pp_tplan_flip`): `pp_lplan_wk` goes, and if the Locations group was
+  saving for that location (`pp_cplan_save_loc_105`, a rank raise `pp_cplan_save_rank_105`) the saving is dropped at
+  once (before: it stayed until the purse covered it or the next look).
 
 Script values for the window (country scope): `pp_tplan_pb_years_all`, `pp_tplan_pb_years_<plan>` (0 = any),
 `pp_tplan_pb_own_<plan>`, `pp_tplan_loss_n`, `pp_tplan_staff_n`, `pp_tplan_order_n`, `pp_tplan_free_n` (1 = the
@@ -230,6 +272,42 @@ plan's next level, multiplayer.
 Side effect to know: while one building of a type is closed in a market, the game's AI (and the player's Buildings
 automation) adds no new building or level of that type in that market.
 
+## Cases thought through (2026-11-20, Jan: "what happens if I turn off a plan ... other cases")
+
+- **A plan is taken off** (its tile, the picker, Clear): the location goes back to the global rules. At once: the
+  buildings the rule closed for that plan open again (only those; a building the player or the game's own automation
+  closed stays closed), the group stops saving for the location, the "waits for workers" mark goes, so the Businesses
+  rule builds there again. What the plan built stays, a town it founded stays, and the charter or rights it granted
+  stay: they are real rights the player paid influence for, the game's own revoke is the player's tool. Such a
+  leftover makes way for a later plan's charter (below).
+- **The whole Construction Plan is switched off**: plans are kept, nothing is built, and every building the plans
+  closed opens again (`pp_cplan_toggle_on` -> `pp_pclose_undo_all`; the monthly check that would do it no longer runs).
+- **Other rule groups in a planned location**: they keep building there (plans add). The Businesses rule builds its
+  own buildings in a planned location when they pay, unless the setting "Other businesses in planned locations" is
+  off. Always: a plan comes first for its location's workers. While a plan waits for workers there (state 4 or 14,
+  location mark `pp_lplan_wk`) or a closing is under way (`pp_pclose_wait`), the Businesses rule builds nothing in
+  that location, so it neither takes the people a closing freed nor builds what the plan would close next. Food,
+  logistics, improvements and public buildings are not held back (a hungry province still gets its farm).
+- **Budget**: plans are paid from the Locations group's purse (its weight on the Global Settings tab; it counts only
+  while a plan exists) and nothing else: buildings, tier upgrades, rank raises. The country's gold reserve holds for
+  it like for every group. One thing at a time is saved for; a look stops when the purse is spent. Closing and
+  opening buildings costs nothing.
+- **Political influence**: only the charter (the game's grant price) and the swap to rights (its upgrade price) cost
+  influence, twice a year, plans before the global rights rule, never below the influence kept back on the Towns and
+  Buildings tab. The setting "Grant a plan's charter and rights" stops plans spending any. A plan's tile says when its
+  charter waits and why.
+- **A town already specialized** (a conquered city keeps its charter, tested; a leftover of an earlier plan): the
+  town's specialization follows its plans. The other specialization makes way for the planned good's charter once
+  that good's line has more levels in the town than the other's and the other good has no plan there.
+- **The location is lost**: every owner change tested takes the plans off and the game reopens what the rule closed;
+  the rule's memory of the location is dropped at the next monthly check. Won back, it has no plans.
+- **A building the player opens again** stays open (keep list, tested).
+- **Several plans, too few workers**: plans never close each other's buildings; they take turns.
+- **A plan whose good cannot be made here**: state 6, nothing is built, nothing is closed.
+- Known and left: a tier upgrade goes one level a look (four a year); a plan may close a local producer of its own
+  inputs (the order is profit per worker, so a paying supplier goes last); the game's own close-buildings automation
+  may reopen or close buildings independently of the plans.
+
 ## Map mode
 
 **Location Plan** (Economy menu, first row; `gfx/map/map_modes/pp_location_plan_map_mode.txt`, game concept
@@ -255,8 +333,8 @@ overrides `map_markers.gui` hides the icons; a map mode's `index` is its row in 
 
 ## Known limits
 
-- One charter per town: the charters' own "one specialization" condition stays, so a town with plans for two charter
-  goods gets one charter.
+- One charter per town: the charters' own "one specialization" condition stays. Two charter plans in one town: the
+  first granted stays; the location carries one wait reason, so the other plan's tooltip may show it too.
 - A tier two steps old upgrades only while the middle tier can still be built (the upgrade goes to the direct
   successor).
 - Plans are lost on conquest (a hostile owner change), by design.
@@ -301,6 +379,25 @@ biggest rural location and the biggest town) and `run\pp_tp_dump.txt` (`PPTP;` l
   producers followed in the new town, and the next rights look granted the **Beer Charter** for the normal price.
 - The pop-up of the game's town rights messages is off (ten grants, none opened).
 
-Not tested: charter to rights (needs the Printing Press), a plan lost on conquest, the Food and Trade plans' builds
-(the small rural location had no free workers, state 4; Trade waited behind the Tools Guild), the pane's "saving for
-the upgrade" line for the Locations group, a tier upgrade.
+### Third round (2026-11-20 morning, same world, the closer setup `run\pp_tp3_setup.txt`, run files `run\pp_r3_*`)
+
+- **Charter to rights**: Granada (a city without rights) with the tools plan and Tools Guild levels added by script
+  got the Tools Charter at the May look (20 influence) and, with the Printing Press spawned, embraced and researched by
+  console, the Tools Rights at the November look; a second town the same. Influence over the November look: 100 -> 64 =
+  two swaps (8 each) and one new charter (20): the script revoke inside the swap costs nothing.
+- **Tier upgrade**: with `tools_workshop_advance` researched by console, the June look turned one Tools Guild level of
+  Granada into a Tools Workshop level (12 + 1; the line count stays), state 1.
+- **Owner change**: both script owner changes (`change_location_owner`, `change_location_owner_forcefully`) to a
+  second country, and making a country out of a planned location, take every plan off (the plan rights are gone, the
+  location keeps none); the game opens the buildings the rule had closed there; the monthly check then forgets the
+  rule's memory of the location. A real charter survives: Granada kept its Tools Charter both ways and lost only the
+  plan. Taken back, the plans stay gone (by design). Not tested with a peace deal; the console's `conquer` did nothing.
+- **A building opened again by hand** (through the game's open function, the call the building's own button makes): the
+  monthly check put its type on the location's keep list, and over the next three looks the rule left it open while
+  the location's plans went on building.
+- Test pitfall: the hidden widget needs a frame to close a building. A `tick_day` that runs over a look and the next
+  month's start in one go never gives it one, so the monthly check finds the building open and puts it on the keep
+  list (3 of 3 later closings in this run). In play there are frames between days. Stop a tick right after a look.
+
+Not tested: a plan lost in a peace deal, the Food and Trade plans' builds before the third round's changes, the
+pane's "saving for the upgrade" line for the Locations group.

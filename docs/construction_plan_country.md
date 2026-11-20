@@ -125,14 +125,41 @@ biggest population first:
   price:upgrade_town_rights` (8 influence in 1.4.9; the influence kept + that price, `pp_cplan_country_upgrade_need`).
   The game has no upgrade effect. The number of rights stays, so the slot is not asked.
 - grant (`pp_cplan_country_plan_grant`): holds the plan, neither the charter nor its rights, a town or more (never a
-  rural settlement: the plan's own pass raises the rank first), a free slot (`has_max_town_rights = no`: the plan right
-  brings its own slot, so a town holding only a plan has one free), and the charter's potential and allow pass: grant
-  and `pay_price = price:grant_town_rights`. The one-specialization condition of the charter's allow stays: a location
-  with plans for two charter goods gets one charter.
-- At most one grant or swap a location a month (`pp_cplan_right_mark`, gate `pp_cplan_country_plan_site`: not only
-  conquered, no mark, not rural). Every grant and swap counts in `pp_cplan_rights_n`. The plan right
-  stays on the location. Engine (1.4.9, static check): a script grant has no checks (hence every grant asks that the
-  right is not held), and each grant and revoke sends the player the game's town rights message.
+  rural settlement: the plan's own pass raises the rank first), and the charter's allow without its one-specialization
+  condition passes (`pp_cplan_right_allow_free_<right>`: the line levels; iron: the works). Then: the whole allow
+  passes -> granted where a slot is free (`has_max_town_rights = no`: the plan right brings its own slot, so a town
+  holding only a plan has one free) and the influence kept plus the price is there, `pay_price =
+  price:grant_town_rights`; else the town's other specialization may make way (below); else it waits.
+- **The town's specialization follows its plans** (2026-11-20, Jan's vision: a city you conquer or get, full of what
+  the AI built, becomes a tool city step by step, and at some point the charter comes). Where only the charter's
+  one-specialization condition fails, the specialization the town holds makes way when `pp_cplan_plan_yield_<right>`
+  passes: the town holds none of the rights that are no line with a level count (the game's regional rights such as
+  Flemish Cloth Industries, and iron's Hammer Privileges), and every line charter or rights it holds is of a good with
+  no plan here whose line levels here (`pp_location_<good>_line_levels`) are fewer than the planned good's. Then, with
+  the influence kept plus the grant's price, `pp_cplan_country_plan_make_way` revokes those (`revoke_town_rights_of_type`)
+  and the plan's charter is granted in the same step at the normal price, counted like a grant. No revoke without the
+  grant: the yield trigger and the price are asked first, and the slot is not (the number of rights stays). One trigger
+  per plan grant (19) and one generic make-way effect over the 36 line rights, not pairs. Iron has no level count, so
+  its plan never makes another one make way (`pp_cplan_plan_yield_pp_iron_rights = { always = no }`). Two charter
+  goods planned in one town: the first granted stays, the other plan's good has a plan here.
+- Taking a plan off never revokes the charter or rights it brought: they are real rights the player paid for, and the
+  game's own revoke stays the player's tool. Such a leftover counts as the town's specialization like any other: it
+  makes way for a later plan of another good under the rule above (no plan for its good here, fewer line levels).
+- Switch (`pp_tplan_rights_off`, country; the Plans tab's setting, default unset = plans grant): checked first in
+  `pp_cplan_country_plan_rights`; while set nothing is granted or swapped and the wait reasons go once
+  (`pp_tplan_cwait_any`).
+- Why a charter waits (`pp_tplan_cwait`, location, + 100), written by `pp_cplan_country_plan_wait = { n = }` only for
+  planned towns that reach the line levels: 101 political influence (everything else holds), 102 the other
+  specialization stays (its good has a plan here, its line is not smaller, or it is a right that never makes way), 103
+  no free town rights slot, 104 the swap to the rights waits for political influence. All of them go at the start of
+  every rights look and are written again. The Location Plan's tooltips of a held plan show it under the plan's state,
+  and what the location holds of it (`pp_tplan_spec_<good>`: 1 the charter, 2 the rights; location_plan.py).
+- At most one grant, make-way or swap a location a look (`pp_cplan_right_mark`, gate `pp_cplan_country_plan_site`: not
+  only conquered, no mark, not rural). The look runs twice a year. Every grant, make-way and swap counts in
+  `pp_cplan_rights_n` ("granted at the last look"). The plan right stays on the location. Engine (1.4.9, static
+  check): a script grant has no checks (hence every grant asks that the right is not held), and each grant and revoke
+  sends the player the game's town rights message. Not checked in game: whether a script revoke costs anything or
+  angers an estate (the game's own revoke button may).
 
 ## The rights database
 

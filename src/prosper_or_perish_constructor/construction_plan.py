@@ -126,6 +126,8 @@ class Config:
     business_cycle_months: int = 24  # ... and every site within this many months, however large the country
     business_tries: int = 6  # stored picks a look tries to build, best first
     weights: tuple[tuple[str, int], ...] = tuple((group, 5) for group in GROUPS)
+    # the Trade plan's buildings in start order (location_profiles.py, town plans 2026-11-20)
+    trade_plan: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -185,6 +187,7 @@ def load_config(project: Path) -> Config:
         business_cycle_months=int(data["business_cycle_months"]),
         business_tries=int(data["business_tries"]),
         weights=_weights(data["weights"]),
+        trade_plan=tuple(data["trade_plan"]),
     )
 
 

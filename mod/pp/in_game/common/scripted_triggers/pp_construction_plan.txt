@@ -55,11 +55,21 @@ pp_lplan_measuring = {
 
 # Location scope: the business rule looks for a business here: the player's location, held by the player, with a
 # market and no construction under way (pp_cplan_site_free).
+# A location's plans come first for its workers (2026-11-20, Jan; always): no business while the plan closer frees
+# workers here (pp_pclose_wait) or one of its plans waits for workers after its last look (pp_lplan_wk). With the plan
+# setting pp_tplan_alone (town_plans.py "Plan settings") no business at all in a location that holds a plan. The
+# Businesses look's limit (pp_cplan_look_business) repeats these lines, so a blocked pick takes none of its tries.
 pp_cplan_business_site = {
 	pp_cplan_location_ok = yes
+	NOT = { has_variable = pp_pclose_wait }
+	NOT = { has_variable = pp_lplan_wk }
 	controller ?= scope:pp_cplan_country
 	pp_cplan_site_free = yes
 	market ?= { always = yes }
+	OR = {
+		NOT = { scope:pp_cplan_country = { has_variable = pp_tplan_alone } }
+		NOT = { pp_tplan_held = yes }
+	}
 }
 
 # Location scope, scope:pp_cplan_free_peasants saved (pp_cplan_free_peasants_here): a level of a building that employs

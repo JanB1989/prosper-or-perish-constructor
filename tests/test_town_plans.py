@@ -153,9 +153,74 @@ def test_food_and_trade_targets(vanilla: Path) -> None:
     for name in ("wheat_farm", "furniture_mill"):
         assert (name in food) == (name == "wheat_farm"), name
     effects = _code(MOD / lpf.EFFECTS)
-    assert re.search(r"^pp_lprof_t_food = \{", effects, re.MULTILINE)
+    # the whole food list is the plan's buildings, never run; its turn runs the farms, then the kitchens
+    assert not re.search(r"^pp_lprof_t_food = \{", effects, re.MULTILINE)
+    farms = [c.name for c in found[tp.FOOD_FARMS_TARGET]]
+    assert set(farms) == food - set(config.kitchens) - set(config.taverns)
+    assert {c.name for c in found[tp.FOOD_KITCHENS_TARGET]} == set(config.kitchens)
+    assert {c.name for c in found[tp.FOOD_KITCHENS_TAVERNS_TARGET]} == set(config.kitchens) | set(config.taverns)
+    for key in (tp.FOOD_FARMS_TARGET, tp.FOOD_KITCHENS_TARGET, tp.FOOD_KITCHENS_TAVERNS_TARGET):
+        assert re.search(rf"^pp_lprof_t_{key} = \{{", effects, re.MULTILINE), key
     assert [c.name for c in found[tp.TRADE_TARGET]] and set(categories[tp.TRADE_TARGET]) >= {"marketplace"}
     assert re.search(r"^pp_lprof_t_trade_category = \{", effects, re.MULTILINE)
+
+
+def test_food_turn_farms_then_kitchens(plans: list[tp.Plan]) -> None:
+    """2026-11-20, Jan: the food plan builds farms first, kitchens second, a Tavern only while the store is short."""
+    food = next(plan for plan in plans if plan.key == "food")
+    assert food.do == "pp_tplan_do_food" and not food.raises
+    turn = _block(_code(MOD / tp.EFFECTS), food.do)
+    farms = turn.index(f"pp_lprof_t_{tp.FOOD_FARMS_TARGET} = yes")
+    gate = turn.index("if = {", farms)
+    kitchens = turn.index(f"pp_lprof_t_{tp.FOOD_KITCHENS_TARGET} = yes")
+    taverns = turn.index(f"pp_lprof_t_{tp.FOOD_KITCHENS_TAVERNS_TARGET} = yes")
+    assert farms < gate < taverns < kitchens
+    # the kitchens only where the farms have nothing to do (101 full / 102 cannot be built), not while measuring
+    limit = turn[gate:taverns]
+    for check in ("NOT = { has_variable = pp_lprof_st }", "NOT = { pp_lplan_measuring = yes }",
+                  "NOT = { has_variable = pp_lprof_fail }", "var:pp_lprof_fail < 102.25"):
+        assert check in limit, check
+    # the taverns only while the province's store is short, by the food rule's own line (the plan closer's trigger)
+    assert "limit = { province ?= { NOT = { pp_pclose_store_ok = yes } } }\n\t\t\tpp_lprof_t_food_kitchens_taverns = yes" in turn
+    assert "else = {\n\t\t\tpp_lprof_t_food_kitchens = yes" in turn
+    store = _block(_code(MOD / "in_game/common/scripted_triggers/pp_plan_closer.txt"), "pp_pclose_store_ok")
+    assert "pp_cplan_food_in_a_year >= pp_cplan_hungry_months" in store
+    # the kitchens start clean; nothing to do in either: "nothing to build" (101) when the farms or kitchens are full
+    assert turn.index("remove_variable = pp_lprof_fail") < taverns and turn.index("remove_variable = pp_lprof_best") < taverns
+    end = turn[kitchens:]
+    assert "scope:pp_tplan_ff < 101.5" in end and "pp_lprof_fail = { r = 101 }" in end and "pp_lprof_fail = { r = 102 }" in end
+    # the farm start picks the best return here (the food rule's measure); the kitchens the cheapest
+    effects = _code(MOD / lpf.EFFECTS)
+    farm_target = _block(effects, f"pp_lprof_t_{tp.FOOD_FARMS_TARGET}")
+    assert "how = roi" in farm_target and "how = cost" not in farm_target
+    values = _read(MOD / cp.VALUES)
+    for name in re.findall(r"pp_lprof_start = \{ type = (\w+) ", farm_target):
+        assert f"\npp_cplan_farm_roi_{name} = {{" in values, name
+    assert "how = roi" not in _block(effects, f"pp_lprof_t_{tp.FOOD_KITCHENS_TAVERNS_TARGET}")
+    roi = _block(_code(MOD / lpf.HAND_EFFECTS), "pp_lprof_consider_roi")
+    assert "value = { value = pp_cplan_farm_roi_$type$ add = 10000 }" in roi and "var:pp_lprof_best < scope:pp_lprof_key" in roi
+    # the construction stays the Locations group's (why 105, its purse): the same pick and build path
+    assert "pp_lprof_build_known = yes" in _block(_code(MOD / lpf.HAND_EFFECTS), "pp_lprof_start_pick")
+
+
+def test_trade_plan_builds_the_trade_carriers(vanilla: Path) -> None:
+    """2026-11-20, Jan: the trade plan's buildings are the configured list, started in its order (the first that can
+    start); no Hired Labor Yard, Smuggler's Cove or unique building."""
+    config = cp.load_config(PROJECT)
+    assert config.trade_plan[:5] == ("marketplace", "merchants_quarters", "grand_marketplace", "commerce_center",
+                                     "port_authority")
+    for name in ("hired_labor_yard", "smuggler_cove", "al_qaysariyya_market"):
+        assert name not in config.trade_plan, name
+    found, _ = lpf.targets(ROOT, PROJECT, MOD, vanilla)
+    names = {c.name for c in found[tp.TRADE_TARGET]}
+    assert names == set(config.trade_plan) & names and "marketplace" in names and "hired_labor_yard" not in names
+    target = _block(_code(MOD / lpf.EFFECTS), "pp_lprof_t_trade_category")
+    fresh = target[target.index("\n\telse = {"):]
+    order = re.findall(r"pp_lprof_start = \{ type = (\w+) ", fresh)
+    assert order == [name for name in config.trade_plan if name in names]
+    # every start after the first waits for no pick: the first that can start wins
+    assert fresh.count("limit = { NOT = { has_variable = pp_lprof_pick } }") == len(order) - 1
+    assert "how = cost" in fresh and "how = roi" not in fresh
 
 
 def test_targets_follow_the_tiers(vanilla: Path) -> None:
@@ -220,7 +285,8 @@ def test_settings_values_for_every_plan(plans: list[tp.Plan]) -> None:
     assert values.value(tp.pb_own_value("lumber"), {"game": {"var:pp_tplan_pb_lumber": 3}}) == 1
     assert values.value(tp.pb_own_value("lumber"), {"game": {"var:pp_tplan_pb_all": 3}}) == 0
     for name, var in ((tp.LOSS_VALUE, tp.LOSS_OK_VAR), (tp.STAFF_VALUE, tp.STAFF_OFF_VAR), (tp.ORDER_VALUE, tp.ORDER_BEST_VAR),
-                      (tp.FREE_VALUE, tp.FREE_OFF_VAR)):
+                      (tp.FREE_VALUE, tp.FREE_OFF_VAR), (tp.ALONE_VALUE, tp.ALONE_VAR),
+                      (tp.RIGHTS_VALUE, tp.RIGHTS_OFF_VAR)):
         assert values.value(name, {"game": {}}) == 1, name  # the default
         assert values.value(name, {"game": {f"var:{var}": 1}}) == 0, name
     assert values.value(tp.CLOSE_VALUE, {"game": {}}) == 0
@@ -235,7 +301,7 @@ def test_settings_buttons_and_effects(plans: list[tp.Plan]) -> None:
     """The settings' scripted GUIs (country scope, player only) and the effects behind them, for every plan and all."""
     guis = _code(MOD / tp.SETTINGS_GUIS)
     names = [tp.PB_UP_GUI, tp.PB_DOWN_GUI, tp.PB_RESET_GUI, tp.TOGGLE_LOSS_GUI, tp.TOGGLE_STAFF_GUI,
-             tp.TOGGLE_ORDER_GUI, tp.TOGGLE_CLOSE_GUI, tp.TOGGLE_FREE_GUI]
+             tp.TOGGLE_ORDER_GUI, tp.TOGGLE_CLOSE_GUI, tp.TOGGLE_FREE_GUI, tp.TOGGLE_ALONE_GUI, tp.TOGGLE_RIGHTS_GUI]
     assert re.findall(r"^(\w+) = \{", guis, re.MULTILINE) == names
     for name in names:
         body = _block(guis, name)
@@ -244,7 +310,8 @@ def test_settings_buttons_and_effects(plans: list[tp.Plan]) -> None:
     assert "pp_tplan_pb_key = { dir = down }" in _block(guis, tp.PB_DOWN_GUI)
     assert "pp_tplan_pb_key_reset = yes" in _block(guis, tp.PB_RESET_GUI)
     for gui, var in ((tp.TOGGLE_LOSS_GUI, tp.LOSS_OK_VAR), (tp.TOGGLE_STAFF_GUI, tp.STAFF_OFF_VAR),
-                     (tp.TOGGLE_ORDER_GUI, tp.ORDER_BEST_VAR), (tp.TOGGLE_FREE_GUI, tp.FREE_OFF_VAR)):
+                     (tp.TOGGLE_ORDER_GUI, tp.ORDER_BEST_VAR), (tp.TOGGLE_FREE_GUI, tp.FREE_OFF_VAR),
+                     (tp.TOGGLE_ALONE_GUI, tp.ALONE_VAR), (tp.TOGGLE_RIGHTS_GUI, tp.RIGHTS_OFF_VAR)):
         assert f"pp_cplan_flip = {{ var = {var} }}" in _block(guis, gui), gui
     # switched off, every building the rule closed for a plan's workers opens again (plan_closer.py)
     free = _block(guis, tp.TOGGLE_FREE_GUI)
@@ -293,6 +360,10 @@ def test_rank_step(plans: list[tp.Plan], vanilla: Path) -> None:
     assert not by_key["wheat"].raises and not by_key["food"].raises and not by_key["iron"].raises
     effects = _code(MOD / tp.EFFECTS)
     for plan in plans:
+        if plan.key in tp.OWN_TURNS:
+            assert not plan.raises and plan.do == f"{tp.DO_PREFIX}{plan.key}"
+            assert "pp_tplan_raise" not in _block(effects, plan.do), plan.key
+            continue
         if not plan.raises:
             assert f"{tp.DO_PREFIX}{plan.key} =" not in effects and plan.do == f"pp_lprof_t_{plan.target}"
             continue

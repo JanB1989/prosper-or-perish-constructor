@@ -101,3 +101,26 @@ pp_tplan_toggle_free = {
 		}
 	}
 }
+
+# The Businesses rule also builds in locations with a plan (the default), or not there
+# (scripted_triggers/pp_construction_plan.txt, pp_cplan_business_site).
+pp_tplan_toggle_alone = {
+	scope = country
+	is_valid = {
+		is_ai = no
+	}
+	effect = {
+		pp_cplan_flip = { var = pp_tplan_alone }
+	}
+}
+
+# Plans grant their charter and rights (the default), or none.
+pp_tplan_toggle_rights = {
+	scope = country
+	is_valid = {
+		is_ai = no
+	}
+	effect = {
+		pp_cplan_flip = { var = pp_tplan_rights_off }
+	}
+}

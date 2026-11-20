@@ -42,6 +42,9 @@ types PPTownPlanSettings
 
 		# ---- All plans ----
 		pp_tplan_set_title = { text = "PP_TPLAN_SET_ALL" tooltip = "PP_TPLAN_SET_ALL_TT" }
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 2
 		hbox = {
 			layoutpolicy_horizontal = expanding
 			spacing = 6
@@ -78,6 +81,14 @@ types PPTownPlanSettings
 		hbox = {
 			layoutpolicy_horizontal = expanding
 			spacing = 6
+			pp_tplan_set_label = { text = "PP_TPLAN_SET_ALONE" tooltip = "PP_TPLAN_SET_ALONE_TT" }
+			expand = {}
+			pp_tplan_set_switch = { visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_tplan_alone_n'), '(CFixedPoint)0.5')]" text = "PP_TPLAN_SET_ON" tooltip = "PP_TPLAN_SET_ALONE_TT" onclick = "[GetScriptedGui('pp_tplan_toggle_alone').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+			pp_tplan_set_switch = { visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_tplan_alone_n'), '(CFixedPoint)0.5'))]" text = "PP_TPLAN_SET_OFF" tooltip = "PP_TPLAN_SET_ALONE_TT" onclick = "[GetScriptedGui('pp_tplan_toggle_alone').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+		}
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 6
 			pp_tplan_set_label = { text = "PP_TPLAN_SET_ORDER" tooltip = "PP_TPLAN_SET_ORDER_TT" }
 			expand = {}
 			pp_tplan_set_switch = { visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_tplan_order_n'), '(CFixedPoint)0.5')]" text = "PP_TPLAN_SET_TURNS" tooltip = "PP_TPLAN_SET_ORDER_TT" onclick = "[GetScriptedGui('pp_tplan_toggle_order').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
@@ -86,10 +97,19 @@ types PPTownPlanSettings
 		hbox = {
 			layoutpolicy_horizontal = expanding
 			spacing = 6
+			pp_tplan_set_label = { text = "PP_TPLAN_SET_RIGHTS" tooltip = "PP_TPLAN_SET_RIGHTS_TT" }
+			expand = {}
+			pp_tplan_set_switch = { visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_tplan_rights_n'), '(CFixedPoint)0.5')]" text = "PP_TPLAN_SET_ON" tooltip = "PP_TPLAN_SET_RIGHTS_TT" onclick = "[GetScriptedGui('pp_tplan_toggle_rights').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+			pp_tplan_set_switch = { visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_tplan_rights_n'), '(CFixedPoint)0.5'))]" text = "PP_TPLAN_SET_OFF" tooltip = "PP_TPLAN_SET_RIGHTS_TT" onclick = "[GetScriptedGui('pp_tplan_toggle_rights').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+		}
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 6
 			pp_tplan_set_label = { text = "PP_TPLAN_SET_CLOSE" tooltip = "PP_TPLAN_SET_CLOSE_TT" }
 			expand = {}
 			pp_tplan_set_switch = { visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_tplan_close_n'), '(CFixedPoint)0.5')]" text = "PP_TPLAN_SET_ON" tooltip = "PP_TPLAN_SET_CLOSE_TT" onclick = "[GetScriptedGui('pp_tplan_toggle_close').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
 			pp_tplan_set_switch = { visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_tplan_close_n'), '(CFixedPoint)0.5'))]" text = "PP_TPLAN_SET_OFF" tooltip = "PP_TPLAN_SET_CLOSE_TT" onclick = "[GetScriptedGui('pp_tplan_toggle_close').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+		}
 		}
 
 		# ---- Each plan: the icons (a click selects one), then its card ----

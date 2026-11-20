@@ -3,7 +3,8 @@
 # Flags passed from the GUI: scope:pp_key (which setting or rule group), scope:pp_dir (up / down), scope:pp_n (w1..w10).
 
 # Country scope: the plan on / off. Switched on, the detail panes' chart starts afresh (pp_cplan_history_clear), so its
-# twelve columns are always months the plan ran.
+# twelve columns are always months the plan ran. Switched off, every building the plans closed for their workers opens
+# again (pp_plan_closer.txt: the monthly check that would undo them no longer runs; the hidden widget still opens them).
 pp_cplan_toggle_on = {
 	scope = country
 	effect = {
@@ -11,6 +12,9 @@ pp_cplan_toggle_on = {
 		if = {
 			limit = { has_variable = pp_cplan_on }
 			pp_cplan_history_clear = yes
+		}
+		else = {
+			pp_pclose_undo_all = yes
 		}
 	}
 }

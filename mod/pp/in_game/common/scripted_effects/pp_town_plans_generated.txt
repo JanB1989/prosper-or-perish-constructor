@@ -234,7 +234,7 @@ pp_tplan_do_trade = {
 	if = {
 		limit = {
 			location_rank = location_rank:rural_settlement
-			NOT = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:commerce_center building_type = building_type:grand_marketplace building_type = building_type:merchants_quarters building_type = building_type:al_qaysariyya_market building_type = building_type:clearing_house building_type = building_type:customs_house building_type = building_type:entrepot building_type = building_type:hired_labor_yard building_type = building_type:market_warehouse building_type = building_type:marketplace building_type = building_type:port_authority building_type = building_type:smuggler_cove building_type = building_type:stock_exchange building_type = building_type:trading_hub } } }
+			NOT = { any_buildings_in_location = { building_level > 0 OR = { building_type = building_type:commerce_center building_type = building_type:grand_marketplace building_type = building_type:merchants_quarters building_type = building_type:clearing_house building_type = building_type:customs_house building_type = building_type:entrepot building_type = building_type:market_warehouse building_type = building_type:marketplace building_type = building_type:port_authority building_type = building_type:stock_exchange building_type = building_type:trading_hub } } }
 		}
 		if = {
 			limit = { NOT = { pp_lplan_measuring = yes } }
@@ -243,6 +243,71 @@ pp_tplan_do_trade = {
 	}
 	else = {
 		pp_lprof_t_trade_category = yes
+	}
+}
+
+# ---- The food plan's turn (2026-11-20, Jan: farms first, kitchens second, a Tavern only when the store is short) ----
+# Location scope, in the plan's turn (pp_lplan_mark). First the staple food producers (pp_lprof_t_food_farms; a new one
+# starts where it pays best here, the food rule's return). Where they have nothing to do (every one at its highest
+# level, or none can be built here; no construction) and the plans are not being measured: the kitchens (their cap
+# follows the province's farms), with the taverns while the province's store is short by the food rule's own line
+# (NOT pp_pclose_store_ok, province scope). Nothing to do there either: "nothing to build" (2) where the farms or
+# the kitchens are at their highest level, else "cannot be built here" (6). The plan's buildings (the plan closer,
+# the settings, the picker) stay its whole list (pp_lprof_t_food is not run).
+pp_tplan_do_food = {
+	pp_lprof_t_food_farms = yes
+	if = {
+		limit = {
+			NOT = { has_variable = pp_lprof_st }
+			NOT = { pp_lplan_measuring = yes }
+			OR = {
+				NOT = { has_variable = pp_lprof_fail }
+				var:pp_lprof_fail < 102.25
+			}
+		}
+		# the farms' outcome: 101 = at their highest level, else 102
+		save_temporary_scope_value_as = { name = pp_tplan_ff value = 102 }
+		if = {
+			limit = {
+				has_variable = pp_lprof_fail
+				var:pp_lprof_fail < 101.25
+			}
+			save_temporary_scope_value_as = { name = pp_tplan_ff value = 101 }
+		}
+		remove_variable = pp_lprof_fail
+		remove_variable = pp_lprof_best
+		if = {
+			limit = { province ?= { NOT = { pp_pclose_store_ok = yes } } }
+			pp_lprof_t_food_kitchens_taverns = yes
+		}
+		else = {
+			pp_lprof_t_food_kitchens = yes
+		}
+		if = {
+			limit = {
+				NOT = { has_variable = pp_lprof_st }
+				OR = {
+					NOT = { has_variable = pp_lprof_fail }
+					var:pp_lprof_fail < 102.25
+				}
+			}
+			if = {
+				limit = {
+					OR = {
+						scope:pp_tplan_ff < 101.5
+						AND = {
+							has_variable = pp_lprof_fail
+							var:pp_lprof_fail < 101.25
+						}
+					}
+				}
+				remove_variable = pp_lprof_fail
+				pp_lprof_fail = { r = 101 }
+			}
+			else = {
+				pp_lprof_fail = { r = 102 }
+			}
+		}
 	}
 }
 

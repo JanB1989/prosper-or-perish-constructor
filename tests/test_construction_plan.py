@@ -406,6 +406,23 @@ def test_business_group_builds_the_best_returns_first() -> None:
         assert part in site, part
 
 
+def test_business_rule_leaves_plans_their_workers() -> None:
+    """2026-11-20, Jan: a location's plans come first for its workers (no business while the plan closer frees workers
+    there or a plan waits for workers), and the plan setting pp_tplan_alone keeps businesses out of planned locations.
+    The one gate and the look's limit carry the same lines, the cheap variable checks before the plan trigger."""
+    alone = "OR = {\n\t\tNOT = { scope:pp_cplan_country = { has_variable = pp_tplan_alone } }\n\t\tNOT = { pp_tplan_held = yes }\n\t}"
+    site = _effect(_read(TRIGGERS), "pp_cplan_business_site")
+    look = _effect(_read(EFFECTS), "pp_cplan_look_business")
+    limit = look[look.index("ordered_owned_location = {"):look.index("order_by = pp_cplan_bz_order")]
+    for text, tabs in ((site, "\t"), (limit, "\t\t\t\t")):
+        for part in ("NOT = { has_variable = pp_pclose_wait }", "NOT = { has_variable = pp_lplan_wk }"):
+            assert f"{tabs}{part}\n" in text, part
+        block = alone.replace("\n\t", "\n" + tabs)
+        assert block in text
+        # the country variable before the costly plan trigger, the location variables before both
+        assert text.index("has_variable = pp_lplan_wk") < text.index("has_variable = pp_tplan_alone") < text.index("pp_tplan_held = yes")
+
+
 def test_business_group_does_not_look_without_gold() -> None:
     """The pick is the pass's dear part (every free site against every business type). A group with neither gold
     saved nor gold coming in can build nothing and save for nothing, so it does not look; it marks that for its pane,

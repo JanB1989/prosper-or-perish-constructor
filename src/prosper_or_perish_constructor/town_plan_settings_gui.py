@@ -3,8 +3,9 @@
 Jan: "each of our town rights (the plans) has, in the construction manager menu, a button where we can see the baseline
 settings for what it does, which we can then adjust ... simple, everything set at good values at game start". So the
 tab is small: on top the settings every plan shares (a payback limit, never a level at a loss, wait for free workers,
-close other businesses for a plan's workers (plan_closer.py), how several plans in one location share their turn, and
-the game's own close-buildings automation), each one switch or
+close other businesses for a plan's workers (plan_closer.py), whether the Businesses rule builds in planned locations,
+how several plans in one location share their turn, whether plans grant their charter and rights, and the game's own
+close-buildings automation), each one switch or
 stepper; below it the plan icons (the Location Plan picker's groups and icons), a click selects a plan (a GUI
 variable, no script), and a small card shows what the plan builds and its payback limit, which the player may set for
 that plan alone. A plan with its own limit carries a dot on its icon.
@@ -48,12 +49,15 @@ STAFF = "pp_tplan_staff_n"  # 1 = wait for free workers
 ORDER = "pp_tplan_order_n"  # 1 = several plans in one location take turns, 0 = best payback first
 CLOSE = "pp_tplan_close_n"  # 1 = the game's close-buildings automation is on
 FREE = "pp_tplan_free_n"  # 1 = plans close other businesses for their workers (plan_closer.py)
-CONTRACT_VALUES = (PB_ALL, LOSS, STAFF, ORDER, CLOSE, FREE)
+ALONE = "pp_tplan_alone_n"  # 1 = the Businesses rule also builds in locations with a plan
+RIGHTS = "pp_tplan_rights_n"  # 1 = plans grant their charter and rights
+CONTRACT_VALUES = (PB_ALL, LOSS, STAFF, ORDER, CLOSE, FREE, ALONE, RIGHTS)
 CONTRACT_VALUE_PREFIXES = (PB_YEARS, PB_OWN)
 # Scripted GUIs, scope country; the payback ones take scope:pp_key = flag:<plan> or flag:all.
 PB_UP, PB_DOWN, PB_RESET = "pp_tplan_pb_up", "pp_tplan_pb_down", "pp_tplan_pb_reset"
 TOGGLES = {"loss": "pp_tplan_toggle_loss", "staff": "pp_tplan_toggle_staff", "order": "pp_tplan_toggle_order",
-           "close": "pp_tplan_toggle_close", "free": "pp_tplan_toggle_free"}
+           "close": "pp_tplan_toggle_close", "free": "pp_tplan_toggle_free", "alone": "pp_tplan_toggle_alone",
+           "rights": "pp_tplan_toggle_rights"}
 CONTRACT_GUIS = (PB_UP, PB_DOWN, PB_RESET, *TOGGLES.values())
 ALL = "all"
 
@@ -244,7 +248,9 @@ def render_gui(items: list[Item]) -> str:
         "\t\tlayoutpolicy_horizontal = expanding\n\t\tlayoutpolicy_vertical = expanding\n"
         "\t\tignoreinvisible = yes\n\t\tmargin = { 10 8 }\n\t\tspacing = 6\n\n"
         "\t\t# ---- All plans ----\n"
-        "\t\tpp_tplan_set_title = { text = \"PP_TPLAN_SET_ALL\" tooltip = \"PP_TPLAN_SET_ALL_TT\" }\n",
+        "\t\tpp_tplan_set_title = { text = \"PP_TPLAN_SET_ALL\" tooltip = \"PP_TPLAN_SET_ALL_TT\" }\n"
+        # the eight rows sit closer together than the tab's parts, so the plan icons below keep their room
+        "\t\tvbox = {\n\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\tspacing = 2\n",
         _row("PP_TPLAN_SET_PB", "PP_TPLAN_SET_PB_TT",
              "\t\t\tpp_tplan_set_label = { text = \"PP_TPLAN_SET_PB_ALL\" tooltip = \"PP_TPLAN_SET_PB_TT\" }\n"
              + _stepper(ALL, ("PP_TPLAN_SET_SHORTER_TT", "PP_TPLAN_SET_LONGER_TT"), "\t\t\t")),
@@ -254,10 +260,15 @@ def render_gui(items: list[Item]) -> str:
              _switch(STAFF, TOGGLES["staff"], "PP_TPLAN_SET_ON", "PP_TPLAN_SET_OFF", "PP_TPLAN_SET_STAFF_TT", "\t\t\t")),
         _row("PP_TPLAN_SET_FREE", "PP_TPLAN_SET_FREE_TT",
              _switch(FREE, TOGGLES["free"], "PP_TPLAN_SET_ON", "PP_TPLAN_SET_OFF", "PP_TPLAN_SET_FREE_TT", "\t\t\t")),
+        _row("PP_TPLAN_SET_ALONE", "PP_TPLAN_SET_ALONE_TT",
+             _switch(ALONE, TOGGLES["alone"], "PP_TPLAN_SET_ON", "PP_TPLAN_SET_OFF", "PP_TPLAN_SET_ALONE_TT", "\t\t\t")),
         _row("PP_TPLAN_SET_ORDER", "PP_TPLAN_SET_ORDER_TT",
              _switch(ORDER, TOGGLES["order"], "PP_TPLAN_SET_TURNS", "PP_TPLAN_SET_BEST", "PP_TPLAN_SET_ORDER_TT", "\t\t\t")),
+        _row("PP_TPLAN_SET_RIGHTS", "PP_TPLAN_SET_RIGHTS_TT",
+             _switch(RIGHTS, TOGGLES["rights"], "PP_TPLAN_SET_ON", "PP_TPLAN_SET_OFF", "PP_TPLAN_SET_RIGHTS_TT", "\t\t\t")),
         _row("PP_TPLAN_SET_CLOSE", "PP_TPLAN_SET_CLOSE_TT",
              _switch(CLOSE, TOGGLES["close"], "PP_TPLAN_SET_ON", "PP_TPLAN_SET_OFF", "PP_TPLAN_SET_CLOSE_TT", "\t\t\t")),
+        "\t\t}\n",
         "\n\t\t# ---- Each plan: the icons (a click selects one), then its card ----\n"
         "\t\twidget = { size = { 1 4 } }\n"
         "\t\tpp_tplan_set_title = { text = \"PP_TPLAN_SET_EACH\" tooltip = \"PP_TPLAN_SET_EACH_TT\" }\n"
@@ -368,6 +379,21 @@ def texts(items: list[Item]) -> dict[str, str]:
             "of the location's plans, a public building, a logistics building, an improvement or a subsidised "
             "building, and it keeps the buildings that feed the [province|e] open while its food store is short. "
             "Taking the plan off, or switching this off, opens them again. A building you open yourself stays open."
+        ),
+        "PP_TPLAN_SET_ALONE": "Other businesses in planned locations",
+        "PP_TPLAN_SET_ALONE_TT": (
+            "#T Other businesses in planned locations#!\nWhile on, the Businesses rule of the Global Settings tab still "
+            "builds its own businesses in a [location|e] with a plan, where they pay. A plan's own workers come "
+            "first: while a plan there waits for workers, the Businesses rule builds nothing there. Off: only the "
+            "plan's buildings are built there, and the food, logistics, improvement and public buildings of the other "
+            "rule groups."
+        ),
+        "PP_TPLAN_SET_RIGHTS": "Grant a plan's charter and rights",
+        "PP_TPLAN_SET_RIGHTS_TT": (
+            "#T Charter and rights#!\nWhile on, a planned town gets the charter of its good, and later the stronger "
+            "rights, as soon as it qualifies, for the usual price in [political_influence|e]. The political influence "
+            "you keep back on the Towns and Buildings tab is never touched. Off: plans only build, and grant no "
+            "[town_rights|e]."
         ),
         "PP_TPLAN_SET_ORDER": "Several plans in one location",
         "PP_TPLAN_SET_ORDER_TT": (

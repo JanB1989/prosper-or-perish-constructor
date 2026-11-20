@@ -266,7 +266,8 @@ pp_cplan_pub_where_terraces = {
 #                                   of the advances that unlock it (unlock_town_rights) where any does;
 #   pp_cplan_right_allow_<key>      country scope, scope:target = the location: the right's allow as written;
 #   pp_cplan_right_site_<key>       location scope: the location does not hold the right, nor the charter that
-#                                   upgrades into it (the plan does not upgrade), nor the right it upgrades into.
+#                                   upgrades into it (the rule does not upgrade; a plan does, by its own swap),
+#                                   nor the right it upgrades into.
 
 pp_cplan_right_potential_flemish_cloth_industries_right = {
 	has_advance = flemish_cloth_making
@@ -3526,4 +3527,3395 @@ pp_cplan_right_site_municipia_privilegia = {
 	NOR = {
 		has_town_rights = town_rights_type:municipia_privilegia
 	}
+}
+
+# ---- Plans: a town's specialization follows its plans (2026-11-20, Jan) ----
+#   pp_cplan_right_allow_free_<right>  country scope, scope:target = the location: the right's allow without its
+#                                      one-specialization condition (the line levels, iron: the works).
+#   pp_cplan_plan_yield_<right>        location scope: the specialization the town holds makes way for <right>:
+#                                      none that is not a line with a level count (the game's regional rights,
+#                                      iron's), and every line right it holds is of a good with no plan here
+#                                      whose line has fewer levels here than <right>'s. A good without a level
+#                                      count (iron) never makes another one make way: always = no.
+pp_cplan_right_allow_free_pp_cloth_charter = {
+	scope:target = {
+		custom_tooltip = {
+			text = pp_cloth_charter_line_tt
+			pp_location_cloth_line_levels >= pp_cloth_charter_line_levels
+		}
+	}
+}
+pp_cplan_plan_yield_pp_cloth_charter = {
+	NOR = {
+		has_town_rights = town_rights_type:pp_iron_rights
+		has_town_rights = town_rights_type:flemish_cloth_industries_right
+		has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+		has_town_rights = town_rights_type:scandinavian_tar_privileges
+		has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_fine_cloth_charter
+			has_town_rights = town_rights_type:pp_fine_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			pp_location_fine_cloth_line_levels < pp_location_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_leather_charter
+			has_town_rights = town_rights_type:pp_leather_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			pp_location_leather_line_levels < pp_location_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_pottery_charter
+			has_town_rights = town_rights_type:pp_pottery_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			pp_location_pottery_line_levels < pp_location_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_furniture_charter
+			has_town_rights = town_rights_type:pp_furniture_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			pp_location_furniture_line_levels < pp_location_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_glass_charter
+			has_town_rights = town_rights_type:pp_glass_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			pp_location_glass_line_levels < pp_location_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_jewelry_charter
+			has_town_rights = town_rights_type:pp_jewelry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			pp_location_jewelry_line_levels < pp_location_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_porcelain_charter
+			has_town_rights = town_rights_type:pp_porcelain_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			pp_location_porcelain_line_levels < pp_location_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_lacquerware_charter
+			has_town_rights = town_rights_type:pp_lacquerware_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			pp_location_lacquerware_line_levels < pp_location_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_beer_charter
+			has_town_rights = town_rights_type:pp_beer_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			pp_location_beer_line_levels < pp_location_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_liquor_charter
+			has_town_rights = town_rights_type:pp_liquor_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			pp_location_liquor_line_levels < pp_location_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_books_charter
+			has_town_rights = town_rights_type:pp_books_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			pp_location_books_line_levels < pp_location_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_paper_charter
+			has_town_rights = town_rights_type:pp_paper_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			pp_location_paper_line_levels < pp_location_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_tools_charter
+			has_town_rights = town_rights_type:pp_tools_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			pp_location_tools_line_levels < pp_location_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_weaponry_charter
+			has_town_rights = town_rights_type:pp_weaponry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			pp_location_weaponry_line_levels < pp_location_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_firearms_charter
+			has_town_rights = town_rights_type:pp_firearms_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			pp_location_firearms_line_levels < pp_location_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cannons_charter
+			has_town_rights = town_rights_type:pp_cannons_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			pp_location_cannons_line_levels < pp_location_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_naval_supplies_charter
+			has_town_rights = town_rights_type:pp_naval_supplies_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			pp_location_naval_supplies_line_levels < pp_location_cloth_line_levels
+		}
+	}
+}
+pp_cplan_right_allow_free_pp_fine_cloth_charter = {
+	scope:target = {
+		custom_tooltip = {
+			text = pp_fine_cloth_charter_line_tt
+			pp_location_fine_cloth_line_levels >= pp_fine_cloth_charter_line_levels
+		}
+	}
+}
+pp_cplan_plan_yield_pp_fine_cloth_charter = {
+	NOR = {
+		has_town_rights = town_rights_type:pp_iron_rights
+		has_town_rights = town_rights_type:flemish_cloth_industries_right
+		has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+		has_town_rights = town_rights_type:scandinavian_tar_privileges
+		has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cloth_charter
+			has_town_rights = town_rights_type:pp_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			pp_location_cloth_line_levels < pp_location_fine_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_leather_charter
+			has_town_rights = town_rights_type:pp_leather_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			pp_location_leather_line_levels < pp_location_fine_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_pottery_charter
+			has_town_rights = town_rights_type:pp_pottery_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			pp_location_pottery_line_levels < pp_location_fine_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_furniture_charter
+			has_town_rights = town_rights_type:pp_furniture_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			pp_location_furniture_line_levels < pp_location_fine_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_glass_charter
+			has_town_rights = town_rights_type:pp_glass_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			pp_location_glass_line_levels < pp_location_fine_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_jewelry_charter
+			has_town_rights = town_rights_type:pp_jewelry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			pp_location_jewelry_line_levels < pp_location_fine_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_porcelain_charter
+			has_town_rights = town_rights_type:pp_porcelain_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			pp_location_porcelain_line_levels < pp_location_fine_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_lacquerware_charter
+			has_town_rights = town_rights_type:pp_lacquerware_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			pp_location_lacquerware_line_levels < pp_location_fine_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_beer_charter
+			has_town_rights = town_rights_type:pp_beer_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			pp_location_beer_line_levels < pp_location_fine_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_liquor_charter
+			has_town_rights = town_rights_type:pp_liquor_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			pp_location_liquor_line_levels < pp_location_fine_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_books_charter
+			has_town_rights = town_rights_type:pp_books_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			pp_location_books_line_levels < pp_location_fine_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_paper_charter
+			has_town_rights = town_rights_type:pp_paper_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			pp_location_paper_line_levels < pp_location_fine_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_tools_charter
+			has_town_rights = town_rights_type:pp_tools_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			pp_location_tools_line_levels < pp_location_fine_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_weaponry_charter
+			has_town_rights = town_rights_type:pp_weaponry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			pp_location_weaponry_line_levels < pp_location_fine_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_firearms_charter
+			has_town_rights = town_rights_type:pp_firearms_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			pp_location_firearms_line_levels < pp_location_fine_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cannons_charter
+			has_town_rights = town_rights_type:pp_cannons_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			pp_location_cannons_line_levels < pp_location_fine_cloth_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_naval_supplies_charter
+			has_town_rights = town_rights_type:pp_naval_supplies_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			pp_location_naval_supplies_line_levels < pp_location_fine_cloth_line_levels
+		}
+	}
+}
+pp_cplan_right_allow_free_pp_leather_charter = {
+	scope:target = {
+		custom_tooltip = {
+			text = pp_leather_charter_line_tt
+			pp_location_leather_line_levels >= pp_leather_charter_line_levels
+		}
+	}
+}
+pp_cplan_plan_yield_pp_leather_charter = {
+	NOR = {
+		has_town_rights = town_rights_type:pp_iron_rights
+		has_town_rights = town_rights_type:flemish_cloth_industries_right
+		has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+		has_town_rights = town_rights_type:scandinavian_tar_privileges
+		has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cloth_charter
+			has_town_rights = town_rights_type:pp_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			pp_location_cloth_line_levels < pp_location_leather_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_fine_cloth_charter
+			has_town_rights = town_rights_type:pp_fine_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			pp_location_fine_cloth_line_levels < pp_location_leather_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_pottery_charter
+			has_town_rights = town_rights_type:pp_pottery_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			pp_location_pottery_line_levels < pp_location_leather_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_furniture_charter
+			has_town_rights = town_rights_type:pp_furniture_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			pp_location_furniture_line_levels < pp_location_leather_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_glass_charter
+			has_town_rights = town_rights_type:pp_glass_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			pp_location_glass_line_levels < pp_location_leather_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_jewelry_charter
+			has_town_rights = town_rights_type:pp_jewelry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			pp_location_jewelry_line_levels < pp_location_leather_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_porcelain_charter
+			has_town_rights = town_rights_type:pp_porcelain_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			pp_location_porcelain_line_levels < pp_location_leather_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_lacquerware_charter
+			has_town_rights = town_rights_type:pp_lacquerware_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			pp_location_lacquerware_line_levels < pp_location_leather_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_beer_charter
+			has_town_rights = town_rights_type:pp_beer_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			pp_location_beer_line_levels < pp_location_leather_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_liquor_charter
+			has_town_rights = town_rights_type:pp_liquor_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			pp_location_liquor_line_levels < pp_location_leather_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_books_charter
+			has_town_rights = town_rights_type:pp_books_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			pp_location_books_line_levels < pp_location_leather_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_paper_charter
+			has_town_rights = town_rights_type:pp_paper_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			pp_location_paper_line_levels < pp_location_leather_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_tools_charter
+			has_town_rights = town_rights_type:pp_tools_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			pp_location_tools_line_levels < pp_location_leather_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_weaponry_charter
+			has_town_rights = town_rights_type:pp_weaponry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			pp_location_weaponry_line_levels < pp_location_leather_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_firearms_charter
+			has_town_rights = town_rights_type:pp_firearms_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			pp_location_firearms_line_levels < pp_location_leather_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cannons_charter
+			has_town_rights = town_rights_type:pp_cannons_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			pp_location_cannons_line_levels < pp_location_leather_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_naval_supplies_charter
+			has_town_rights = town_rights_type:pp_naval_supplies_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			pp_location_naval_supplies_line_levels < pp_location_leather_line_levels
+		}
+	}
+}
+pp_cplan_right_allow_free_pp_pottery_charter = {
+	scope:target = {
+		custom_tooltip = {
+			text = pp_pottery_charter_line_tt
+			pp_location_pottery_line_levels >= pp_pottery_charter_line_levels
+		}
+	}
+}
+pp_cplan_plan_yield_pp_pottery_charter = {
+	NOR = {
+		has_town_rights = town_rights_type:pp_iron_rights
+		has_town_rights = town_rights_type:flemish_cloth_industries_right
+		has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+		has_town_rights = town_rights_type:scandinavian_tar_privileges
+		has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cloth_charter
+			has_town_rights = town_rights_type:pp_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			pp_location_cloth_line_levels < pp_location_pottery_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_fine_cloth_charter
+			has_town_rights = town_rights_type:pp_fine_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			pp_location_fine_cloth_line_levels < pp_location_pottery_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_leather_charter
+			has_town_rights = town_rights_type:pp_leather_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			pp_location_leather_line_levels < pp_location_pottery_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_furniture_charter
+			has_town_rights = town_rights_type:pp_furniture_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			pp_location_furniture_line_levels < pp_location_pottery_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_glass_charter
+			has_town_rights = town_rights_type:pp_glass_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			pp_location_glass_line_levels < pp_location_pottery_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_jewelry_charter
+			has_town_rights = town_rights_type:pp_jewelry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			pp_location_jewelry_line_levels < pp_location_pottery_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_porcelain_charter
+			has_town_rights = town_rights_type:pp_porcelain_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			pp_location_porcelain_line_levels < pp_location_pottery_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_lacquerware_charter
+			has_town_rights = town_rights_type:pp_lacquerware_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			pp_location_lacquerware_line_levels < pp_location_pottery_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_beer_charter
+			has_town_rights = town_rights_type:pp_beer_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			pp_location_beer_line_levels < pp_location_pottery_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_liquor_charter
+			has_town_rights = town_rights_type:pp_liquor_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			pp_location_liquor_line_levels < pp_location_pottery_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_books_charter
+			has_town_rights = town_rights_type:pp_books_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			pp_location_books_line_levels < pp_location_pottery_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_paper_charter
+			has_town_rights = town_rights_type:pp_paper_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			pp_location_paper_line_levels < pp_location_pottery_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_tools_charter
+			has_town_rights = town_rights_type:pp_tools_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			pp_location_tools_line_levels < pp_location_pottery_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_weaponry_charter
+			has_town_rights = town_rights_type:pp_weaponry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			pp_location_weaponry_line_levels < pp_location_pottery_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_firearms_charter
+			has_town_rights = town_rights_type:pp_firearms_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			pp_location_firearms_line_levels < pp_location_pottery_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cannons_charter
+			has_town_rights = town_rights_type:pp_cannons_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			pp_location_cannons_line_levels < pp_location_pottery_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_naval_supplies_charter
+			has_town_rights = town_rights_type:pp_naval_supplies_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			pp_location_naval_supplies_line_levels < pp_location_pottery_line_levels
+		}
+	}
+}
+pp_cplan_right_allow_free_pp_furniture_charter = {
+	scope:target = {
+		custom_tooltip = {
+			text = pp_furniture_charter_line_tt
+			pp_location_furniture_line_levels >= pp_furniture_charter_line_levels
+		}
+	}
+}
+pp_cplan_plan_yield_pp_furniture_charter = {
+	NOR = {
+		has_town_rights = town_rights_type:pp_iron_rights
+		has_town_rights = town_rights_type:flemish_cloth_industries_right
+		has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+		has_town_rights = town_rights_type:scandinavian_tar_privileges
+		has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cloth_charter
+			has_town_rights = town_rights_type:pp_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			pp_location_cloth_line_levels < pp_location_furniture_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_fine_cloth_charter
+			has_town_rights = town_rights_type:pp_fine_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			pp_location_fine_cloth_line_levels < pp_location_furniture_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_leather_charter
+			has_town_rights = town_rights_type:pp_leather_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			pp_location_leather_line_levels < pp_location_furniture_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_pottery_charter
+			has_town_rights = town_rights_type:pp_pottery_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			pp_location_pottery_line_levels < pp_location_furniture_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_glass_charter
+			has_town_rights = town_rights_type:pp_glass_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			pp_location_glass_line_levels < pp_location_furniture_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_jewelry_charter
+			has_town_rights = town_rights_type:pp_jewelry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			pp_location_jewelry_line_levels < pp_location_furniture_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_porcelain_charter
+			has_town_rights = town_rights_type:pp_porcelain_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			pp_location_porcelain_line_levels < pp_location_furniture_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_lacquerware_charter
+			has_town_rights = town_rights_type:pp_lacquerware_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			pp_location_lacquerware_line_levels < pp_location_furniture_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_beer_charter
+			has_town_rights = town_rights_type:pp_beer_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			pp_location_beer_line_levels < pp_location_furniture_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_liquor_charter
+			has_town_rights = town_rights_type:pp_liquor_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			pp_location_liquor_line_levels < pp_location_furniture_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_books_charter
+			has_town_rights = town_rights_type:pp_books_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			pp_location_books_line_levels < pp_location_furniture_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_paper_charter
+			has_town_rights = town_rights_type:pp_paper_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			pp_location_paper_line_levels < pp_location_furniture_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_tools_charter
+			has_town_rights = town_rights_type:pp_tools_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			pp_location_tools_line_levels < pp_location_furniture_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_weaponry_charter
+			has_town_rights = town_rights_type:pp_weaponry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			pp_location_weaponry_line_levels < pp_location_furniture_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_firearms_charter
+			has_town_rights = town_rights_type:pp_firearms_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			pp_location_firearms_line_levels < pp_location_furniture_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cannons_charter
+			has_town_rights = town_rights_type:pp_cannons_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			pp_location_cannons_line_levels < pp_location_furniture_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_naval_supplies_charter
+			has_town_rights = town_rights_type:pp_naval_supplies_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			pp_location_naval_supplies_line_levels < pp_location_furniture_line_levels
+		}
+	}
+}
+pp_cplan_right_allow_free_pp_glass_charter = {
+	scope:target = {
+		custom_tooltip = {
+			text = pp_glass_charter_line_tt
+			pp_location_glass_line_levels >= pp_glass_charter_line_levels
+		}
+	}
+}
+pp_cplan_plan_yield_pp_glass_charter = {
+	NOR = {
+		has_town_rights = town_rights_type:pp_iron_rights
+		has_town_rights = town_rights_type:flemish_cloth_industries_right
+		has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+		has_town_rights = town_rights_type:scandinavian_tar_privileges
+		has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cloth_charter
+			has_town_rights = town_rights_type:pp_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			pp_location_cloth_line_levels < pp_location_glass_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_fine_cloth_charter
+			has_town_rights = town_rights_type:pp_fine_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			pp_location_fine_cloth_line_levels < pp_location_glass_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_leather_charter
+			has_town_rights = town_rights_type:pp_leather_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			pp_location_leather_line_levels < pp_location_glass_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_pottery_charter
+			has_town_rights = town_rights_type:pp_pottery_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			pp_location_pottery_line_levels < pp_location_glass_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_furniture_charter
+			has_town_rights = town_rights_type:pp_furniture_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			pp_location_furniture_line_levels < pp_location_glass_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_jewelry_charter
+			has_town_rights = town_rights_type:pp_jewelry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			pp_location_jewelry_line_levels < pp_location_glass_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_porcelain_charter
+			has_town_rights = town_rights_type:pp_porcelain_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			pp_location_porcelain_line_levels < pp_location_glass_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_lacquerware_charter
+			has_town_rights = town_rights_type:pp_lacquerware_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			pp_location_lacquerware_line_levels < pp_location_glass_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_beer_charter
+			has_town_rights = town_rights_type:pp_beer_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			pp_location_beer_line_levels < pp_location_glass_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_liquor_charter
+			has_town_rights = town_rights_type:pp_liquor_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			pp_location_liquor_line_levels < pp_location_glass_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_books_charter
+			has_town_rights = town_rights_type:pp_books_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			pp_location_books_line_levels < pp_location_glass_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_paper_charter
+			has_town_rights = town_rights_type:pp_paper_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			pp_location_paper_line_levels < pp_location_glass_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_tools_charter
+			has_town_rights = town_rights_type:pp_tools_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			pp_location_tools_line_levels < pp_location_glass_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_weaponry_charter
+			has_town_rights = town_rights_type:pp_weaponry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			pp_location_weaponry_line_levels < pp_location_glass_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_firearms_charter
+			has_town_rights = town_rights_type:pp_firearms_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			pp_location_firearms_line_levels < pp_location_glass_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cannons_charter
+			has_town_rights = town_rights_type:pp_cannons_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			pp_location_cannons_line_levels < pp_location_glass_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_naval_supplies_charter
+			has_town_rights = town_rights_type:pp_naval_supplies_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			pp_location_naval_supplies_line_levels < pp_location_glass_line_levels
+		}
+	}
+}
+pp_cplan_right_allow_free_pp_jewelry_charter = {
+	scope:target = {
+		custom_tooltip = {
+			text = pp_jewelry_charter_line_tt
+			pp_location_jewelry_line_levels >= pp_jewelry_charter_line_levels
+		}
+	}
+}
+pp_cplan_plan_yield_pp_jewelry_charter = {
+	NOR = {
+		has_town_rights = town_rights_type:pp_iron_rights
+		has_town_rights = town_rights_type:flemish_cloth_industries_right
+		has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+		has_town_rights = town_rights_type:scandinavian_tar_privileges
+		has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cloth_charter
+			has_town_rights = town_rights_type:pp_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			pp_location_cloth_line_levels < pp_location_jewelry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_fine_cloth_charter
+			has_town_rights = town_rights_type:pp_fine_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			pp_location_fine_cloth_line_levels < pp_location_jewelry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_leather_charter
+			has_town_rights = town_rights_type:pp_leather_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			pp_location_leather_line_levels < pp_location_jewelry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_pottery_charter
+			has_town_rights = town_rights_type:pp_pottery_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			pp_location_pottery_line_levels < pp_location_jewelry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_furniture_charter
+			has_town_rights = town_rights_type:pp_furniture_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			pp_location_furniture_line_levels < pp_location_jewelry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_glass_charter
+			has_town_rights = town_rights_type:pp_glass_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			pp_location_glass_line_levels < pp_location_jewelry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_porcelain_charter
+			has_town_rights = town_rights_type:pp_porcelain_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			pp_location_porcelain_line_levels < pp_location_jewelry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_lacquerware_charter
+			has_town_rights = town_rights_type:pp_lacquerware_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			pp_location_lacquerware_line_levels < pp_location_jewelry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_beer_charter
+			has_town_rights = town_rights_type:pp_beer_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			pp_location_beer_line_levels < pp_location_jewelry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_liquor_charter
+			has_town_rights = town_rights_type:pp_liquor_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			pp_location_liquor_line_levels < pp_location_jewelry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_books_charter
+			has_town_rights = town_rights_type:pp_books_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			pp_location_books_line_levels < pp_location_jewelry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_paper_charter
+			has_town_rights = town_rights_type:pp_paper_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			pp_location_paper_line_levels < pp_location_jewelry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_tools_charter
+			has_town_rights = town_rights_type:pp_tools_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			pp_location_tools_line_levels < pp_location_jewelry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_weaponry_charter
+			has_town_rights = town_rights_type:pp_weaponry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			pp_location_weaponry_line_levels < pp_location_jewelry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_firearms_charter
+			has_town_rights = town_rights_type:pp_firearms_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			pp_location_firearms_line_levels < pp_location_jewelry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cannons_charter
+			has_town_rights = town_rights_type:pp_cannons_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			pp_location_cannons_line_levels < pp_location_jewelry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_naval_supplies_charter
+			has_town_rights = town_rights_type:pp_naval_supplies_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			pp_location_naval_supplies_line_levels < pp_location_jewelry_line_levels
+		}
+	}
+}
+pp_cplan_right_allow_free_pp_porcelain_charter = {
+	scope:target = {
+		custom_tooltip = {
+			text = pp_porcelain_charter_line_tt
+			pp_location_porcelain_line_levels >= pp_porcelain_charter_line_levels
+		}
+	}
+}
+pp_cplan_plan_yield_pp_porcelain_charter = {
+	NOR = {
+		has_town_rights = town_rights_type:pp_iron_rights
+		has_town_rights = town_rights_type:flemish_cloth_industries_right
+		has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+		has_town_rights = town_rights_type:scandinavian_tar_privileges
+		has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cloth_charter
+			has_town_rights = town_rights_type:pp_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			pp_location_cloth_line_levels < pp_location_porcelain_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_fine_cloth_charter
+			has_town_rights = town_rights_type:pp_fine_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			pp_location_fine_cloth_line_levels < pp_location_porcelain_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_leather_charter
+			has_town_rights = town_rights_type:pp_leather_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			pp_location_leather_line_levels < pp_location_porcelain_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_pottery_charter
+			has_town_rights = town_rights_type:pp_pottery_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			pp_location_pottery_line_levels < pp_location_porcelain_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_furniture_charter
+			has_town_rights = town_rights_type:pp_furniture_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			pp_location_furniture_line_levels < pp_location_porcelain_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_glass_charter
+			has_town_rights = town_rights_type:pp_glass_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			pp_location_glass_line_levels < pp_location_porcelain_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_jewelry_charter
+			has_town_rights = town_rights_type:pp_jewelry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			pp_location_jewelry_line_levels < pp_location_porcelain_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_lacquerware_charter
+			has_town_rights = town_rights_type:pp_lacquerware_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			pp_location_lacquerware_line_levels < pp_location_porcelain_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_beer_charter
+			has_town_rights = town_rights_type:pp_beer_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			pp_location_beer_line_levels < pp_location_porcelain_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_liquor_charter
+			has_town_rights = town_rights_type:pp_liquor_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			pp_location_liquor_line_levels < pp_location_porcelain_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_books_charter
+			has_town_rights = town_rights_type:pp_books_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			pp_location_books_line_levels < pp_location_porcelain_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_paper_charter
+			has_town_rights = town_rights_type:pp_paper_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			pp_location_paper_line_levels < pp_location_porcelain_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_tools_charter
+			has_town_rights = town_rights_type:pp_tools_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			pp_location_tools_line_levels < pp_location_porcelain_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_weaponry_charter
+			has_town_rights = town_rights_type:pp_weaponry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			pp_location_weaponry_line_levels < pp_location_porcelain_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_firearms_charter
+			has_town_rights = town_rights_type:pp_firearms_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			pp_location_firearms_line_levels < pp_location_porcelain_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cannons_charter
+			has_town_rights = town_rights_type:pp_cannons_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			pp_location_cannons_line_levels < pp_location_porcelain_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_naval_supplies_charter
+			has_town_rights = town_rights_type:pp_naval_supplies_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			pp_location_naval_supplies_line_levels < pp_location_porcelain_line_levels
+		}
+	}
+}
+pp_cplan_right_allow_free_pp_lacquerware_charter = {
+	scope:target = {
+		custom_tooltip = {
+			text = pp_lacquerware_charter_line_tt
+			pp_location_lacquerware_line_levels >= pp_lacquerware_charter_line_levels
+		}
+	}
+}
+pp_cplan_plan_yield_pp_lacquerware_charter = {
+	NOR = {
+		has_town_rights = town_rights_type:pp_iron_rights
+		has_town_rights = town_rights_type:flemish_cloth_industries_right
+		has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+		has_town_rights = town_rights_type:scandinavian_tar_privileges
+		has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cloth_charter
+			has_town_rights = town_rights_type:pp_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			pp_location_cloth_line_levels < pp_location_lacquerware_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_fine_cloth_charter
+			has_town_rights = town_rights_type:pp_fine_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			pp_location_fine_cloth_line_levels < pp_location_lacquerware_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_leather_charter
+			has_town_rights = town_rights_type:pp_leather_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			pp_location_leather_line_levels < pp_location_lacquerware_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_pottery_charter
+			has_town_rights = town_rights_type:pp_pottery_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			pp_location_pottery_line_levels < pp_location_lacquerware_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_furniture_charter
+			has_town_rights = town_rights_type:pp_furniture_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			pp_location_furniture_line_levels < pp_location_lacquerware_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_glass_charter
+			has_town_rights = town_rights_type:pp_glass_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			pp_location_glass_line_levels < pp_location_lacquerware_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_jewelry_charter
+			has_town_rights = town_rights_type:pp_jewelry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			pp_location_jewelry_line_levels < pp_location_lacquerware_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_porcelain_charter
+			has_town_rights = town_rights_type:pp_porcelain_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			pp_location_porcelain_line_levels < pp_location_lacquerware_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_beer_charter
+			has_town_rights = town_rights_type:pp_beer_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			pp_location_beer_line_levels < pp_location_lacquerware_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_liquor_charter
+			has_town_rights = town_rights_type:pp_liquor_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			pp_location_liquor_line_levels < pp_location_lacquerware_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_books_charter
+			has_town_rights = town_rights_type:pp_books_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			pp_location_books_line_levels < pp_location_lacquerware_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_paper_charter
+			has_town_rights = town_rights_type:pp_paper_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			pp_location_paper_line_levels < pp_location_lacquerware_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_tools_charter
+			has_town_rights = town_rights_type:pp_tools_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			pp_location_tools_line_levels < pp_location_lacquerware_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_weaponry_charter
+			has_town_rights = town_rights_type:pp_weaponry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			pp_location_weaponry_line_levels < pp_location_lacquerware_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_firearms_charter
+			has_town_rights = town_rights_type:pp_firearms_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			pp_location_firearms_line_levels < pp_location_lacquerware_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cannons_charter
+			has_town_rights = town_rights_type:pp_cannons_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			pp_location_cannons_line_levels < pp_location_lacquerware_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_naval_supplies_charter
+			has_town_rights = town_rights_type:pp_naval_supplies_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			pp_location_naval_supplies_line_levels < pp_location_lacquerware_line_levels
+		}
+	}
+}
+pp_cplan_right_allow_free_pp_beer_charter = {
+	scope:target = {
+		custom_tooltip = {
+			text = pp_beer_charter_line_tt
+			pp_location_beer_line_levels >= pp_beer_charter_line_levels
+		}
+	}
+}
+pp_cplan_plan_yield_pp_beer_charter = {
+	NOR = {
+		has_town_rights = town_rights_type:pp_iron_rights
+		has_town_rights = town_rights_type:flemish_cloth_industries_right
+		has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+		has_town_rights = town_rights_type:scandinavian_tar_privileges
+		has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cloth_charter
+			has_town_rights = town_rights_type:pp_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			pp_location_cloth_line_levels < pp_location_beer_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_fine_cloth_charter
+			has_town_rights = town_rights_type:pp_fine_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			pp_location_fine_cloth_line_levels < pp_location_beer_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_leather_charter
+			has_town_rights = town_rights_type:pp_leather_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			pp_location_leather_line_levels < pp_location_beer_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_pottery_charter
+			has_town_rights = town_rights_type:pp_pottery_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			pp_location_pottery_line_levels < pp_location_beer_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_furniture_charter
+			has_town_rights = town_rights_type:pp_furniture_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			pp_location_furniture_line_levels < pp_location_beer_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_glass_charter
+			has_town_rights = town_rights_type:pp_glass_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			pp_location_glass_line_levels < pp_location_beer_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_jewelry_charter
+			has_town_rights = town_rights_type:pp_jewelry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			pp_location_jewelry_line_levels < pp_location_beer_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_porcelain_charter
+			has_town_rights = town_rights_type:pp_porcelain_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			pp_location_porcelain_line_levels < pp_location_beer_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_lacquerware_charter
+			has_town_rights = town_rights_type:pp_lacquerware_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			pp_location_lacquerware_line_levels < pp_location_beer_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_liquor_charter
+			has_town_rights = town_rights_type:pp_liquor_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			pp_location_liquor_line_levels < pp_location_beer_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_books_charter
+			has_town_rights = town_rights_type:pp_books_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			pp_location_books_line_levels < pp_location_beer_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_paper_charter
+			has_town_rights = town_rights_type:pp_paper_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			pp_location_paper_line_levels < pp_location_beer_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_tools_charter
+			has_town_rights = town_rights_type:pp_tools_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			pp_location_tools_line_levels < pp_location_beer_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_weaponry_charter
+			has_town_rights = town_rights_type:pp_weaponry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			pp_location_weaponry_line_levels < pp_location_beer_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_firearms_charter
+			has_town_rights = town_rights_type:pp_firearms_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			pp_location_firearms_line_levels < pp_location_beer_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cannons_charter
+			has_town_rights = town_rights_type:pp_cannons_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			pp_location_cannons_line_levels < pp_location_beer_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_naval_supplies_charter
+			has_town_rights = town_rights_type:pp_naval_supplies_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			pp_location_naval_supplies_line_levels < pp_location_beer_line_levels
+		}
+	}
+}
+pp_cplan_right_allow_free_pp_liquor_charter = {
+	scope:target = {
+		custom_tooltip = {
+			text = pp_liquor_charter_line_tt
+			pp_location_liquor_line_levels >= pp_liquor_charter_line_levels
+		}
+	}
+}
+pp_cplan_plan_yield_pp_liquor_charter = {
+	NOR = {
+		has_town_rights = town_rights_type:pp_iron_rights
+		has_town_rights = town_rights_type:flemish_cloth_industries_right
+		has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+		has_town_rights = town_rights_type:scandinavian_tar_privileges
+		has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cloth_charter
+			has_town_rights = town_rights_type:pp_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			pp_location_cloth_line_levels < pp_location_liquor_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_fine_cloth_charter
+			has_town_rights = town_rights_type:pp_fine_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			pp_location_fine_cloth_line_levels < pp_location_liquor_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_leather_charter
+			has_town_rights = town_rights_type:pp_leather_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			pp_location_leather_line_levels < pp_location_liquor_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_pottery_charter
+			has_town_rights = town_rights_type:pp_pottery_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			pp_location_pottery_line_levels < pp_location_liquor_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_furniture_charter
+			has_town_rights = town_rights_type:pp_furniture_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			pp_location_furniture_line_levels < pp_location_liquor_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_glass_charter
+			has_town_rights = town_rights_type:pp_glass_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			pp_location_glass_line_levels < pp_location_liquor_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_jewelry_charter
+			has_town_rights = town_rights_type:pp_jewelry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			pp_location_jewelry_line_levels < pp_location_liquor_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_porcelain_charter
+			has_town_rights = town_rights_type:pp_porcelain_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			pp_location_porcelain_line_levels < pp_location_liquor_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_lacquerware_charter
+			has_town_rights = town_rights_type:pp_lacquerware_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			pp_location_lacquerware_line_levels < pp_location_liquor_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_beer_charter
+			has_town_rights = town_rights_type:pp_beer_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			pp_location_beer_line_levels < pp_location_liquor_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_books_charter
+			has_town_rights = town_rights_type:pp_books_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			pp_location_books_line_levels < pp_location_liquor_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_paper_charter
+			has_town_rights = town_rights_type:pp_paper_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			pp_location_paper_line_levels < pp_location_liquor_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_tools_charter
+			has_town_rights = town_rights_type:pp_tools_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			pp_location_tools_line_levels < pp_location_liquor_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_weaponry_charter
+			has_town_rights = town_rights_type:pp_weaponry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			pp_location_weaponry_line_levels < pp_location_liquor_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_firearms_charter
+			has_town_rights = town_rights_type:pp_firearms_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			pp_location_firearms_line_levels < pp_location_liquor_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cannons_charter
+			has_town_rights = town_rights_type:pp_cannons_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			pp_location_cannons_line_levels < pp_location_liquor_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_naval_supplies_charter
+			has_town_rights = town_rights_type:pp_naval_supplies_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			pp_location_naval_supplies_line_levels < pp_location_liquor_line_levels
+		}
+	}
+}
+pp_cplan_right_allow_free_pp_books_charter = {
+	scope:target = {
+		custom_tooltip = {
+			text = pp_books_charter_line_tt
+			pp_location_books_line_levels >= pp_books_charter_line_levels
+		}
+	}
+}
+pp_cplan_plan_yield_pp_books_charter = {
+	NOR = {
+		has_town_rights = town_rights_type:pp_iron_rights
+		has_town_rights = town_rights_type:flemish_cloth_industries_right
+		has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+		has_town_rights = town_rights_type:scandinavian_tar_privileges
+		has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cloth_charter
+			has_town_rights = town_rights_type:pp_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			pp_location_cloth_line_levels < pp_location_books_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_fine_cloth_charter
+			has_town_rights = town_rights_type:pp_fine_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			pp_location_fine_cloth_line_levels < pp_location_books_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_leather_charter
+			has_town_rights = town_rights_type:pp_leather_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			pp_location_leather_line_levels < pp_location_books_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_pottery_charter
+			has_town_rights = town_rights_type:pp_pottery_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			pp_location_pottery_line_levels < pp_location_books_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_furniture_charter
+			has_town_rights = town_rights_type:pp_furniture_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			pp_location_furniture_line_levels < pp_location_books_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_glass_charter
+			has_town_rights = town_rights_type:pp_glass_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			pp_location_glass_line_levels < pp_location_books_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_jewelry_charter
+			has_town_rights = town_rights_type:pp_jewelry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			pp_location_jewelry_line_levels < pp_location_books_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_porcelain_charter
+			has_town_rights = town_rights_type:pp_porcelain_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			pp_location_porcelain_line_levels < pp_location_books_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_lacquerware_charter
+			has_town_rights = town_rights_type:pp_lacquerware_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			pp_location_lacquerware_line_levels < pp_location_books_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_beer_charter
+			has_town_rights = town_rights_type:pp_beer_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			pp_location_beer_line_levels < pp_location_books_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_liquor_charter
+			has_town_rights = town_rights_type:pp_liquor_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			pp_location_liquor_line_levels < pp_location_books_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_paper_charter
+			has_town_rights = town_rights_type:pp_paper_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			pp_location_paper_line_levels < pp_location_books_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_tools_charter
+			has_town_rights = town_rights_type:pp_tools_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			pp_location_tools_line_levels < pp_location_books_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_weaponry_charter
+			has_town_rights = town_rights_type:pp_weaponry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			pp_location_weaponry_line_levels < pp_location_books_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_firearms_charter
+			has_town_rights = town_rights_type:pp_firearms_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			pp_location_firearms_line_levels < pp_location_books_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cannons_charter
+			has_town_rights = town_rights_type:pp_cannons_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			pp_location_cannons_line_levels < pp_location_books_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_naval_supplies_charter
+			has_town_rights = town_rights_type:pp_naval_supplies_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			pp_location_naval_supplies_line_levels < pp_location_books_line_levels
+		}
+	}
+}
+pp_cplan_right_allow_free_pp_paper_charter = {
+	scope:target = {
+		custom_tooltip = {
+			text = pp_paper_charter_line_tt
+			pp_location_paper_line_levels >= pp_paper_charter_line_levels
+		}
+	}
+}
+pp_cplan_plan_yield_pp_paper_charter = {
+	NOR = {
+		has_town_rights = town_rights_type:pp_iron_rights
+		has_town_rights = town_rights_type:flemish_cloth_industries_right
+		has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+		has_town_rights = town_rights_type:scandinavian_tar_privileges
+		has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cloth_charter
+			has_town_rights = town_rights_type:pp_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			pp_location_cloth_line_levels < pp_location_paper_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_fine_cloth_charter
+			has_town_rights = town_rights_type:pp_fine_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			pp_location_fine_cloth_line_levels < pp_location_paper_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_leather_charter
+			has_town_rights = town_rights_type:pp_leather_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			pp_location_leather_line_levels < pp_location_paper_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_pottery_charter
+			has_town_rights = town_rights_type:pp_pottery_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			pp_location_pottery_line_levels < pp_location_paper_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_furniture_charter
+			has_town_rights = town_rights_type:pp_furniture_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			pp_location_furniture_line_levels < pp_location_paper_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_glass_charter
+			has_town_rights = town_rights_type:pp_glass_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			pp_location_glass_line_levels < pp_location_paper_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_jewelry_charter
+			has_town_rights = town_rights_type:pp_jewelry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			pp_location_jewelry_line_levels < pp_location_paper_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_porcelain_charter
+			has_town_rights = town_rights_type:pp_porcelain_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			pp_location_porcelain_line_levels < pp_location_paper_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_lacquerware_charter
+			has_town_rights = town_rights_type:pp_lacquerware_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			pp_location_lacquerware_line_levels < pp_location_paper_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_beer_charter
+			has_town_rights = town_rights_type:pp_beer_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			pp_location_beer_line_levels < pp_location_paper_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_liquor_charter
+			has_town_rights = town_rights_type:pp_liquor_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			pp_location_liquor_line_levels < pp_location_paper_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_books_charter
+			has_town_rights = town_rights_type:pp_books_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			pp_location_books_line_levels < pp_location_paper_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_tools_charter
+			has_town_rights = town_rights_type:pp_tools_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			pp_location_tools_line_levels < pp_location_paper_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_weaponry_charter
+			has_town_rights = town_rights_type:pp_weaponry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			pp_location_weaponry_line_levels < pp_location_paper_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_firearms_charter
+			has_town_rights = town_rights_type:pp_firearms_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			pp_location_firearms_line_levels < pp_location_paper_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cannons_charter
+			has_town_rights = town_rights_type:pp_cannons_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			pp_location_cannons_line_levels < pp_location_paper_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_naval_supplies_charter
+			has_town_rights = town_rights_type:pp_naval_supplies_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			pp_location_naval_supplies_line_levels < pp_location_paper_line_levels
+		}
+	}
+}
+pp_cplan_right_allow_free_pp_tools_charter = {
+	scope:target = {
+		custom_tooltip = {
+			text = pp_tools_charter_line_tt
+			pp_location_tools_line_levels >= pp_tools_charter_line_levels
+		}
+	}
+}
+pp_cplan_plan_yield_pp_tools_charter = {
+	NOR = {
+		has_town_rights = town_rights_type:pp_iron_rights
+		has_town_rights = town_rights_type:flemish_cloth_industries_right
+		has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+		has_town_rights = town_rights_type:scandinavian_tar_privileges
+		has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cloth_charter
+			has_town_rights = town_rights_type:pp_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			pp_location_cloth_line_levels < pp_location_tools_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_fine_cloth_charter
+			has_town_rights = town_rights_type:pp_fine_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			pp_location_fine_cloth_line_levels < pp_location_tools_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_leather_charter
+			has_town_rights = town_rights_type:pp_leather_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			pp_location_leather_line_levels < pp_location_tools_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_pottery_charter
+			has_town_rights = town_rights_type:pp_pottery_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			pp_location_pottery_line_levels < pp_location_tools_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_furniture_charter
+			has_town_rights = town_rights_type:pp_furniture_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			pp_location_furniture_line_levels < pp_location_tools_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_glass_charter
+			has_town_rights = town_rights_type:pp_glass_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			pp_location_glass_line_levels < pp_location_tools_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_jewelry_charter
+			has_town_rights = town_rights_type:pp_jewelry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			pp_location_jewelry_line_levels < pp_location_tools_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_porcelain_charter
+			has_town_rights = town_rights_type:pp_porcelain_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			pp_location_porcelain_line_levels < pp_location_tools_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_lacquerware_charter
+			has_town_rights = town_rights_type:pp_lacquerware_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			pp_location_lacquerware_line_levels < pp_location_tools_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_beer_charter
+			has_town_rights = town_rights_type:pp_beer_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			pp_location_beer_line_levels < pp_location_tools_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_liquor_charter
+			has_town_rights = town_rights_type:pp_liquor_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			pp_location_liquor_line_levels < pp_location_tools_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_books_charter
+			has_town_rights = town_rights_type:pp_books_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			pp_location_books_line_levels < pp_location_tools_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_paper_charter
+			has_town_rights = town_rights_type:pp_paper_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			pp_location_paper_line_levels < pp_location_tools_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_weaponry_charter
+			has_town_rights = town_rights_type:pp_weaponry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			pp_location_weaponry_line_levels < pp_location_tools_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_firearms_charter
+			has_town_rights = town_rights_type:pp_firearms_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			pp_location_firearms_line_levels < pp_location_tools_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cannons_charter
+			has_town_rights = town_rights_type:pp_cannons_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			pp_location_cannons_line_levels < pp_location_tools_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_naval_supplies_charter
+			has_town_rights = town_rights_type:pp_naval_supplies_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			pp_location_naval_supplies_line_levels < pp_location_tools_line_levels
+		}
+	}
+}
+pp_cplan_right_allow_free_pp_weaponry_charter = {
+	scope:target = {
+		custom_tooltip = {
+			text = pp_weaponry_charter_line_tt
+			pp_location_weaponry_line_levels >= pp_weaponry_charter_line_levels
+		}
+	}
+}
+pp_cplan_plan_yield_pp_weaponry_charter = {
+	NOR = {
+		has_town_rights = town_rights_type:pp_iron_rights
+		has_town_rights = town_rights_type:flemish_cloth_industries_right
+		has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+		has_town_rights = town_rights_type:scandinavian_tar_privileges
+		has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cloth_charter
+			has_town_rights = town_rights_type:pp_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			pp_location_cloth_line_levels < pp_location_weaponry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_fine_cloth_charter
+			has_town_rights = town_rights_type:pp_fine_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			pp_location_fine_cloth_line_levels < pp_location_weaponry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_leather_charter
+			has_town_rights = town_rights_type:pp_leather_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			pp_location_leather_line_levels < pp_location_weaponry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_pottery_charter
+			has_town_rights = town_rights_type:pp_pottery_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			pp_location_pottery_line_levels < pp_location_weaponry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_furniture_charter
+			has_town_rights = town_rights_type:pp_furniture_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			pp_location_furniture_line_levels < pp_location_weaponry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_glass_charter
+			has_town_rights = town_rights_type:pp_glass_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			pp_location_glass_line_levels < pp_location_weaponry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_jewelry_charter
+			has_town_rights = town_rights_type:pp_jewelry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			pp_location_jewelry_line_levels < pp_location_weaponry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_porcelain_charter
+			has_town_rights = town_rights_type:pp_porcelain_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			pp_location_porcelain_line_levels < pp_location_weaponry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_lacquerware_charter
+			has_town_rights = town_rights_type:pp_lacquerware_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			pp_location_lacquerware_line_levels < pp_location_weaponry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_beer_charter
+			has_town_rights = town_rights_type:pp_beer_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			pp_location_beer_line_levels < pp_location_weaponry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_liquor_charter
+			has_town_rights = town_rights_type:pp_liquor_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			pp_location_liquor_line_levels < pp_location_weaponry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_books_charter
+			has_town_rights = town_rights_type:pp_books_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			pp_location_books_line_levels < pp_location_weaponry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_paper_charter
+			has_town_rights = town_rights_type:pp_paper_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			pp_location_paper_line_levels < pp_location_weaponry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_tools_charter
+			has_town_rights = town_rights_type:pp_tools_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			pp_location_tools_line_levels < pp_location_weaponry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_firearms_charter
+			has_town_rights = town_rights_type:pp_firearms_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			pp_location_firearms_line_levels < pp_location_weaponry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cannons_charter
+			has_town_rights = town_rights_type:pp_cannons_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			pp_location_cannons_line_levels < pp_location_weaponry_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_naval_supplies_charter
+			has_town_rights = town_rights_type:pp_naval_supplies_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			pp_location_naval_supplies_line_levels < pp_location_weaponry_line_levels
+		}
+	}
+}
+pp_cplan_right_allow_free_pp_firearms_charter = {
+	scope:target = {
+		custom_tooltip = {
+			text = pp_firearms_charter_line_tt
+			pp_location_firearms_line_levels >= pp_firearms_charter_line_levels
+		}
+	}
+}
+pp_cplan_plan_yield_pp_firearms_charter = {
+	NOR = {
+		has_town_rights = town_rights_type:pp_iron_rights
+		has_town_rights = town_rights_type:flemish_cloth_industries_right
+		has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+		has_town_rights = town_rights_type:scandinavian_tar_privileges
+		has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cloth_charter
+			has_town_rights = town_rights_type:pp_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			pp_location_cloth_line_levels < pp_location_firearms_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_fine_cloth_charter
+			has_town_rights = town_rights_type:pp_fine_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			pp_location_fine_cloth_line_levels < pp_location_firearms_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_leather_charter
+			has_town_rights = town_rights_type:pp_leather_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			pp_location_leather_line_levels < pp_location_firearms_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_pottery_charter
+			has_town_rights = town_rights_type:pp_pottery_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			pp_location_pottery_line_levels < pp_location_firearms_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_furniture_charter
+			has_town_rights = town_rights_type:pp_furniture_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			pp_location_furniture_line_levels < pp_location_firearms_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_glass_charter
+			has_town_rights = town_rights_type:pp_glass_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			pp_location_glass_line_levels < pp_location_firearms_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_jewelry_charter
+			has_town_rights = town_rights_type:pp_jewelry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			pp_location_jewelry_line_levels < pp_location_firearms_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_porcelain_charter
+			has_town_rights = town_rights_type:pp_porcelain_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			pp_location_porcelain_line_levels < pp_location_firearms_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_lacquerware_charter
+			has_town_rights = town_rights_type:pp_lacquerware_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			pp_location_lacquerware_line_levels < pp_location_firearms_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_beer_charter
+			has_town_rights = town_rights_type:pp_beer_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			pp_location_beer_line_levels < pp_location_firearms_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_liquor_charter
+			has_town_rights = town_rights_type:pp_liquor_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			pp_location_liquor_line_levels < pp_location_firearms_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_books_charter
+			has_town_rights = town_rights_type:pp_books_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			pp_location_books_line_levels < pp_location_firearms_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_paper_charter
+			has_town_rights = town_rights_type:pp_paper_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			pp_location_paper_line_levels < pp_location_firearms_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_tools_charter
+			has_town_rights = town_rights_type:pp_tools_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			pp_location_tools_line_levels < pp_location_firearms_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_weaponry_charter
+			has_town_rights = town_rights_type:pp_weaponry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			pp_location_weaponry_line_levels < pp_location_firearms_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cannons_charter
+			has_town_rights = town_rights_type:pp_cannons_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			pp_location_cannons_line_levels < pp_location_firearms_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_naval_supplies_charter
+			has_town_rights = town_rights_type:pp_naval_supplies_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			pp_location_naval_supplies_line_levels < pp_location_firearms_line_levels
+		}
+	}
+}
+pp_cplan_right_allow_free_pp_cannons_charter = {
+	scope:target = {
+		custom_tooltip = {
+			text = pp_cannons_charter_line_tt
+			pp_location_cannons_line_levels >= pp_cannons_charter_line_levels
+		}
+	}
+}
+pp_cplan_plan_yield_pp_cannons_charter = {
+	NOR = {
+		has_town_rights = town_rights_type:pp_iron_rights
+		has_town_rights = town_rights_type:flemish_cloth_industries_right
+		has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+		has_town_rights = town_rights_type:scandinavian_tar_privileges
+		has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cloth_charter
+			has_town_rights = town_rights_type:pp_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			pp_location_cloth_line_levels < pp_location_cannons_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_fine_cloth_charter
+			has_town_rights = town_rights_type:pp_fine_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			pp_location_fine_cloth_line_levels < pp_location_cannons_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_leather_charter
+			has_town_rights = town_rights_type:pp_leather_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			pp_location_leather_line_levels < pp_location_cannons_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_pottery_charter
+			has_town_rights = town_rights_type:pp_pottery_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			pp_location_pottery_line_levels < pp_location_cannons_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_furniture_charter
+			has_town_rights = town_rights_type:pp_furniture_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			pp_location_furniture_line_levels < pp_location_cannons_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_glass_charter
+			has_town_rights = town_rights_type:pp_glass_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			pp_location_glass_line_levels < pp_location_cannons_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_jewelry_charter
+			has_town_rights = town_rights_type:pp_jewelry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			pp_location_jewelry_line_levels < pp_location_cannons_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_porcelain_charter
+			has_town_rights = town_rights_type:pp_porcelain_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			pp_location_porcelain_line_levels < pp_location_cannons_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_lacquerware_charter
+			has_town_rights = town_rights_type:pp_lacquerware_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			pp_location_lacquerware_line_levels < pp_location_cannons_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_beer_charter
+			has_town_rights = town_rights_type:pp_beer_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			pp_location_beer_line_levels < pp_location_cannons_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_liquor_charter
+			has_town_rights = town_rights_type:pp_liquor_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			pp_location_liquor_line_levels < pp_location_cannons_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_books_charter
+			has_town_rights = town_rights_type:pp_books_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			pp_location_books_line_levels < pp_location_cannons_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_paper_charter
+			has_town_rights = town_rights_type:pp_paper_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			pp_location_paper_line_levels < pp_location_cannons_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_tools_charter
+			has_town_rights = town_rights_type:pp_tools_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			pp_location_tools_line_levels < pp_location_cannons_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_weaponry_charter
+			has_town_rights = town_rights_type:pp_weaponry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			pp_location_weaponry_line_levels < pp_location_cannons_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_firearms_charter
+			has_town_rights = town_rights_type:pp_firearms_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			pp_location_firearms_line_levels < pp_location_cannons_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_naval_supplies_charter
+			has_town_rights = town_rights_type:pp_naval_supplies_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			pp_location_naval_supplies_line_levels < pp_location_cannons_line_levels
+		}
+	}
+}
+pp_cplan_right_allow_free_pp_naval_supplies_charter = {
+	scope:target = {
+		custom_tooltip = {
+			text = pp_naval_supplies_charter_line_tt
+			pp_location_naval_supplies_line_levels >= pp_naval_supplies_charter_line_levels
+		}
+	}
+}
+pp_cplan_plan_yield_pp_naval_supplies_charter = {
+	NOR = {
+		has_town_rights = town_rights_type:pp_iron_rights
+		has_town_rights = town_rights_type:flemish_cloth_industries_right
+		has_town_rights = town_rights_type:scandinavian_bergslag_privileges
+		has_town_rights = town_rights_type:scandinavian_tar_privileges
+		has_town_rights = town_rights_type:constantinopolitan_silk_monopoly_rights
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cloth_charter
+			has_town_rights = town_rights_type:pp_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			pp_location_cloth_line_levels < pp_location_naval_supplies_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_fine_cloth_charter
+			has_town_rights = town_rights_type:pp_fine_cloth_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			pp_location_fine_cloth_line_levels < pp_location_naval_supplies_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_leather_charter
+			has_town_rights = town_rights_type:pp_leather_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			pp_location_leather_line_levels < pp_location_naval_supplies_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_pottery_charter
+			has_town_rights = town_rights_type:pp_pottery_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			pp_location_pottery_line_levels < pp_location_naval_supplies_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_furniture_charter
+			has_town_rights = town_rights_type:pp_furniture_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			pp_location_furniture_line_levels < pp_location_naval_supplies_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_glass_charter
+			has_town_rights = town_rights_type:pp_glass_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			pp_location_glass_line_levels < pp_location_naval_supplies_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_jewelry_charter
+			has_town_rights = town_rights_type:pp_jewelry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			pp_location_jewelry_line_levels < pp_location_naval_supplies_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_porcelain_charter
+			has_town_rights = town_rights_type:pp_porcelain_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			pp_location_porcelain_line_levels < pp_location_naval_supplies_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_lacquerware_charter
+			has_town_rights = town_rights_type:pp_lacquerware_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			pp_location_lacquerware_line_levels < pp_location_naval_supplies_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_beer_charter
+			has_town_rights = town_rights_type:pp_beer_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			pp_location_beer_line_levels < pp_location_naval_supplies_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_liquor_charter
+			has_town_rights = town_rights_type:pp_liquor_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			pp_location_liquor_line_levels < pp_location_naval_supplies_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_books_charter
+			has_town_rights = town_rights_type:pp_books_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			pp_location_books_line_levels < pp_location_naval_supplies_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_paper_charter
+			has_town_rights = town_rights_type:pp_paper_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			pp_location_paper_line_levels < pp_location_naval_supplies_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_tools_charter
+			has_town_rights = town_rights_type:pp_tools_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			pp_location_tools_line_levels < pp_location_naval_supplies_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_weaponry_charter
+			has_town_rights = town_rights_type:pp_weaponry_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			pp_location_weaponry_line_levels < pp_location_naval_supplies_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_firearms_charter
+			has_town_rights = town_rights_type:pp_firearms_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			pp_location_firearms_line_levels < pp_location_naval_supplies_line_levels
+		}
+	}
+	OR = {
+		NOR = {
+			has_town_rights = town_rights_type:pp_cannons_charter
+			has_town_rights = town_rights_type:pp_cannons_rights
+		}
+		AND = {
+			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			pp_location_cannons_line_levels < pp_location_naval_supplies_line_levels
+		}
+	}
+}
+pp_cplan_right_allow_free_pp_iron_rights = {
+	scope:target = {
+		custom_tooltip = {
+			text = pp_iron_rights_works_tt
+			OR = {
+				raw_material = goods:iron
+				has_building_with_at_least_one_level = bog_iron_smelter
+				has_building_with_at_least_one_level = bog_iron_smelter_blast_furnace
+				has_building_with_at_least_one_level = bog_iron_smelter_coke_blast_furnace
+			}
+		}
+	}
+}
+pp_cplan_plan_yield_pp_iron_rights = {
+	always = no
 }

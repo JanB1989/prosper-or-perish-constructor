@@ -18,7 +18,9 @@ the parts that follow the plan list:
 * ``scripted_effects/pp_location_plan_generated.txt``: the toggle switch (``pp_tplan_toggle_switch``), Clear
   (``pp_tplan_clear_all``), the never-run declarations;
 * ``gui/pp_location_plan_generated.gui``: the picker grid and the location window's Plans row (``town_plan_gui.py``);
-* ``localization/english/pp_location_plan_generated_l_english.yml``: per plan its tile text with the plan's state;
+* ``localization/english/pp_location_plan_generated_l_english.yml``: per plan its tile text with the plan's state (a
+  good with a specialization charter: also what the location holds of it, ``pp_tplan_spec_<good>`` in the values
+  file, and why it waits, ``pp_tplan_cwait`` from the rights look, charter_lines);
 * ``gui/map_markers.gui``: vanilla's, with the raw goods marker drawing the location's town rights in the plan map mode.
 
 Script names (``town_plans.py``): the right ``pp_plan_<plan>``, the script value ``pp_tplan_on_<plan>`` (1 while held),
@@ -63,6 +65,21 @@ COUNT = "pp_tplan_n"  # location script value: the plans held here
 # this location's turn came (script time 2026-11-20): every plan here then reads "held back for gold" (state 7)
 UNREACHED = "pp_lprof_unreached"
 UNREACHED_STATE = 7
+# A plan of a good with a specialization charter (or iron's rights; construction_plan_country.py) also tells what the
+# location holds of it and why its charter waits (2026-11-20): location script value pp_tplan_spec_<good> (0 none,
+# 1 the charter, 2 the rights) and the location variable the rights look writes (+ 100; construction_plan_country.CWAIT_*)
+SPEC_VALUE = "pp_tplan_spec_{good}"
+CWAIT = "pp_tplan_cwait"
+CWAIT_TEXTS = {
+    1: "{name}: waits for [political_influence|e] above the amount the Construction Plan keeps.",
+    2: ("{name}: waits, this town holds another specialization. The plan replaces another good's charter or rights "
+        "only when that good has no plan here and this plan's buildings here outnumber that good's; other "
+        "specialization rights stay."),
+    3: "{name}: waits for a free slot for [town_rights|e].",
+}
+# 2 for a good whose line levels nothing counts (iron): its plan never makes another specialization make way
+CWAIT_OTHER_FIXED = "{name}: waits, this town holds another specialization, and this plan replaces none."
+UPGRADE_WAIT_TEXT = "{name}: the upgrade waits for [political_influence|e] above the amount the Construction Plan keeps."
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -203,12 +220,24 @@ def toggle_call(plan: Plan, location: str = "Location.MakeScope") -> str:
 # script
 
 
-def render_values(plans: list[Plan]) -> str:
+def render_values(plans: list[Plan], grants: dict | None = None) -> str:
     parts = [HEADER, "\n# Location scope: the plans this location holds (the Plans row: none yet / more than the row shows).\n",
              f"{COUNT} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ has_any_town_rights = yes }}\n"]
     for plan in plannable(plans):
         parts.append(f"\t\tif = {{ limit = {{ has_town_rights = town_rights_type:{plan.right} }} add = 1 }}\n")
     parts.append("\t}\n}\n")
+    held = [(plan, grants[plan.key]) for plan in plannable(plans) if grants and plan.key in grants]
+    if held:
+        parts.append("\n# Location scope, per plan of a good with a specialization charter or rights: 2 while the location holds\n"
+                     "# the rights, 1 its charter, else 0 (the plan's tooltip; read only while it shows).\n")
+    for plan, grant in held:
+        lines = [f"{SPEC_VALUE.format(good=plan.key)} = {{", "\tvalue = 0"]
+        if grant.rights:
+            lines += ["\tif = {", f"\t\tlimit = {{ has_town_rights = town_rights_type:{grant.rights} }}", "\t\tvalue = 2", "\t}"]
+        if grant.charter:
+            lines += [f"\t{'else_if' if grant.rights else 'if'} = {{",
+                      f"\t\tlimit = {{ has_town_rights = town_rights_type:{grant.charter} }}", "\t\tvalue = 1", "\t}"]
+        parts.append("\n".join(lines + ["}"]) + "\n")
     return "".join(parts)
 
 
@@ -295,11 +324,67 @@ def _state_is(plan: Plan, n: int) -> str:
     return f"EqualTo_CFixedPoint(Location.MakeScope.Var('{plan.state}').GetValue, '(CFixedPoint){100 + n}')"
 
 
-def render_loc(plans: list[Plan], states: tuple[int, ...]) -> str:
+def _spec_is(plan: Plan, n: int) -> str:
+    value = SPEC_VALUE.format(good=plan.key)
+    return f"EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('{value}'), '(CFixedPoint){n}')"
+
+
+def _cwait_is(n: int) -> str:
+    return f"EqualTo_CFixedPoint(Location.MakeScope.Var('{CWAIT}').GetValue, '(CFixedPoint){100 + n}')"
+
+
+def _right_name(key: str) -> str:
+    return f"the [ShowTownRightsName('{key}')]"
+
+
+def charter_lines(plan: Plan, grant, replaces: bool = True) -> list[str]:
+    """The texts of a held plan whose good has a specialization charter or rights (C3, 2026-11-20): what the location
+    holds of it (the rights, the charter, and then whether the swap to the rights waits for political influence), else
+    why its charter (iron: its rights) waits after the last rights look (CWAIT: 1 political influence, 2 the town's
+    other specialization stays, 3 no free town rights slot). One chain of SelectLocalization keys per plan, so nothing
+    shows where nothing holds or waits."""
+    upper = plan.key.upper()
+    first = grant.charter or grant.rights
+    name = f"[ShowTownRightsName('{first}')]"
+    key = f"PP_TPLAN_CH_{upper}"
+    out: list[str] = []
+
+    def add(name_: str, text: str) -> None:
+        out.append(f'  {name_}: "{text}"')
+
+    def select(condition: str, yes: str, no: str) -> str:
+        return f"[SelectLocalization({condition}, '{yes}', '{no}')]"
+
+    waits = f"PP_TPLAN_CW_{upper}"
+    if grant.rights and grant.charter:
+        add(key, select(_spec_is(plan, 2), f"PP_TPLAN_HR_{upper}", f"PP_TPLAN_CH1_{upper}"))
+        add(f"PP_TPLAN_HR_{upper}", f"\\nHolds {_right_name(grant.rights)}.")
+        add(f"PP_TPLAN_CH1_{upper}", select(_spec_is(plan, 1), f"PP_TPLAN_HC_{upper}", waits))
+        add(f"PP_TPLAN_HC_{upper}", f"\\nHolds {_right_name(grant.charter)}."
+            + select(_cwait_is(4), f"PP_TPLAN_UW_{upper}", "PP_TPLAN_EMPTY"))
+        add(f"PP_TPLAN_UW_{upper}",
+            "\\n" + UPGRADE_WAIT_TEXT.format(name=f"[ShowTownRightsName('{grant.rights}')]"))
+    else:
+        held_key = 2 if grant.rights else 1
+        add(key, select(_spec_is(plan, held_key), f"PP_TPLAN_HR_{upper}", waits))
+        add(f"PP_TPLAN_HR_{upper}", f"\\nHolds {_right_name(first)}.")
+    add(waits, select(f"Location.MakeScope.Var('{CWAIT}').IsSet", f"PP_TPLAN_CW1_{upper}", "PP_TPLAN_EMPTY"))
+    codes = sorted(CWAIT_TEXTS)
+    for position, n in enumerate(codes):
+        nxt = f"PP_TPLAN_CW{codes[position + 1]}_{upper}" if position + 1 < len(codes) else "PP_TPLAN_EMPTY"
+        add(f"PP_TPLAN_CW{n}_{upper}", select(_cwait_is(n), f"PP_TPLAN_WAIT{n}_{upper}", nxt))
+        text = CWAIT_TEXTS[n] if replaces or n != 2 else CWAIT_OTHER_FIXED
+        add(f"PP_TPLAN_WAIT{n}_{upper}", "\\n" + text.format(name=name))
+    return out
+
+
+def render_loc(plans: list[Plan], states: tuple[int, ...], grants: dict | None = None,
+               line_goods: tuple[str, ...] | None = None) -> str:
     # no map tooltip per plan: the map marker draws the location's town rights (their own names)
     lines = ["﻿l_english:", "  # " + HEADER.strip().lstrip("# ")]
     # Per plan: the tile text of the picker and of the location window's Plans row (name, what the plan does, what a
-    # click does, and while held the plan's state after the last pass: PP_LPROF_ST_<n> for pp_lplan_st_g_<plan>).
+    # click does, and while held the plan's state after the last pass: PP_LPROF_ST_<n> for pp_lplan_st_g_<plan>; for a
+    # good with a specialization charter also what the location holds of it and why it waits, charter_lines).
     for plan in plans:
         upper = plan.key.upper()
         if not plan.plannable:
@@ -307,9 +392,13 @@ def render_loc(plans: list[Plan], states: tuple[int, ...]) -> str:
             continue
         on = held(plan)
         what = "PP_TPLAN_WHAT_GOOD" if plan.good else f"PP_TPLAN_WHAT_{upper}"
+        grant = (grants or {}).get(plan.key)
+        charter = f"[SelectLocalization({on}, 'PP_TPLAN_CH_{upper}', 'PP_TPLAN_EMPTY')]" if grant else ""
         lines.append(f'  PP_TPLAN_PICK_{upper}: "#T {_name(plan)}#!\\n${what}$\\n'
                      f'[SelectLocalization({on}, \'PP_TPLAN_PICK_ON\', \'PP_TPLAN_PICK_OFF\')]'
-                     f'[SelectLocalization({on}, \'PP_TPLAN_ST_{upper}\', \'PP_TPLAN_EMPTY\')]"')
+                     f'[SelectLocalization({on}, \'PP_TPLAN_ST_{upper}\', \'PP_TPLAN_EMPTY\')]{charter}"')
+        if grant:
+            lines += charter_lines(plan, grant, line_goods is None or plan.key in line_goods)
         state = f"Location.MakeScope.Var('{plan.state}')"
         # a location the last look did not reach (its purse spent first): held back for gold, whatever its last state
         lines.append(f'  PP_TPLAN_ST_{upper}: "\\n[SelectLocalization({unreached()}, '
@@ -459,6 +548,20 @@ def _write(path: Path, text: str, write: bool) -> bool:
     return True
 
 
+def charter_grants(mod_root: Path, vanilla_root: Path) -> dict:
+    """Good -> its plan grant (construction_plan_country.PlanGrant: the charter and the rights a plan of it brings)."""
+    from prosper_or_perish_constructor import construction_plan_country as cc
+
+    return {grant.good: grant for grant in cc.charter_grants(mod_root, vanilla_root)}
+
+
+def line_level_goods(mod_root: Path) -> tuple[str, ...]:
+    """The goods whose plan can make another specialization make way (construction_plan_country.line_level_goods)."""
+    from prosper_or_perish_constructor import construction_plan_country as cc
+
+    return cc.line_level_goods(mod_root)
+
+
 def plans_for(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -> list[Plan]:
     goods = picker_goods(repo, load_config(project))
     return build_plans(goods, targeted_goods(repo, project, mod_root, vanilla_root))
@@ -471,11 +574,12 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
     result = Result(items=plans)
     result.missing_icons = [plan.key for plan in plans if not icon_exists(plan, mod_root, vanilla_root)]
     vanilla_markers = vanilla_root / "game" / MARKERS
+    grants = charter_grants(mod_root, vanilla_root)
     texts = {
-        mod_root / VALUES: "﻿" + render_values(plans),
+        mod_root / VALUES: "﻿" + render_values(plans, grants),
         mod_root / EFFECTS: "﻿" + render_effects(plans),
         mod_root / GUI: "﻿" + render_gui(plans, config),
-        mod_root / LOC: render_loc(plans, state_numbers(mod_root)),
+        mod_root / LOC: render_loc(plans, state_numbers(mod_root), grants, line_level_goods(mod_root)),
     }
     if vanilla_markers.is_file():
         texts[mod_root / MARKERS] = "﻿" + render_markers(vanilla_markers.read_text(encoding="utf-8-sig"))

@@ -624,10 +624,18 @@ pp_cplan_look_business = {
 				}
 			}
 		}
+		# the plans' workers come first, and pp_tplan_alone keeps businesses out of planned locations (the same lines
+		# as pp_cplan_business_site): a blocked pick takes none of the look's tries
 		ordered_owned_location = {
 			limit = {
 				has_variable = pp_cplan_bz_pick
+				NOT = { has_variable = pp_pclose_wait }
+				NOT = { has_variable = pp_lplan_wk }
 				pp_cplan_site_free = yes
+				OR = {
+					NOT = { scope:pp_cplan_country = { has_variable = pp_tplan_alone } }
+					NOT = { pp_tplan_held = yes }
+				}
 			}
 			order_by = pp_cplan_bz_order
 			max = pp_cplan_bz_tries

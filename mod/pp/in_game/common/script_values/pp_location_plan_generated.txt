@@ -84,3 +84,211 @@ pp_tplan_n = {
 		if = { limit = { has_town_rights = town_rights_type:pp_plan_trade } add = 1 }
 	}
 }
+
+# Location scope, per plan of a good with a specialization charter or rights: 2 while the location holds
+# the rights, 1 its charter, else 0 (the plan's tooltip; read only while it shows).
+pp_tplan_spec_beer = {
+	value = 0
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_beer_rights }
+		value = 2
+	}
+	else_if = {
+		limit = { has_town_rights = town_rights_type:pp_beer_charter }
+		value = 1
+	}
+}
+pp_tplan_spec_liquor = {
+	value = 0
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_liquor_rights }
+		value = 2
+	}
+	else_if = {
+		limit = { has_town_rights = town_rights_type:pp_liquor_charter }
+		value = 1
+	}
+}
+pp_tplan_spec_books = {
+	value = 0
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_books_rights }
+		value = 2
+	}
+	else_if = {
+		limit = { has_town_rights = town_rights_type:pp_books_charter }
+		value = 1
+	}
+}
+pp_tplan_spec_paper = {
+	value = 0
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_paper_rights }
+		value = 2
+	}
+	else_if = {
+		limit = { has_town_rights = town_rights_type:pp_paper_charter }
+		value = 1
+	}
+}
+pp_tplan_spec_glass = {
+	value = 0
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_glass_rights }
+		value = 2
+	}
+	else_if = {
+		limit = { has_town_rights = town_rights_type:pp_glass_charter }
+		value = 1
+	}
+}
+pp_tplan_spec_pottery = {
+	value = 0
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_pottery_rights }
+		value = 2
+	}
+	else_if = {
+		limit = { has_town_rights = town_rights_type:pp_pottery_charter }
+		value = 1
+	}
+}
+pp_tplan_spec_furniture = {
+	value = 0
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_furniture_rights }
+		value = 2
+	}
+	else_if = {
+		limit = { has_town_rights = town_rights_type:pp_furniture_charter }
+		value = 1
+	}
+}
+pp_tplan_spec_jewelry = {
+	value = 0
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_jewelry_rights }
+		value = 2
+	}
+	else_if = {
+		limit = { has_town_rights = town_rights_type:pp_jewelry_charter }
+		value = 1
+	}
+}
+pp_tplan_spec_lacquerware = {
+	value = 0
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_lacquerware_rights }
+		value = 2
+	}
+	else_if = {
+		limit = { has_town_rights = town_rights_type:pp_lacquerware_charter }
+		value = 1
+	}
+}
+pp_tplan_spec_porcelain = {
+	value = 0
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_porcelain_rights }
+		value = 2
+	}
+	else_if = {
+		limit = { has_town_rights = town_rights_type:pp_porcelain_charter }
+		value = 1
+	}
+}
+pp_tplan_spec_tools = {
+	value = 0
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_tools_rights }
+		value = 2
+	}
+	else_if = {
+		limit = { has_town_rights = town_rights_type:pp_tools_charter }
+		value = 1
+	}
+}
+pp_tplan_spec_cannons = {
+	value = 0
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_cannons_rights }
+		value = 2
+	}
+	else_if = {
+		limit = { has_town_rights = town_rights_type:pp_cannons_charter }
+		value = 1
+	}
+}
+pp_tplan_spec_firearms = {
+	value = 0
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_firearms_rights }
+		value = 2
+	}
+	else_if = {
+		limit = { has_town_rights = town_rights_type:pp_firearms_charter }
+		value = 1
+	}
+}
+pp_tplan_spec_weaponry = {
+	value = 0
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_weaponry_rights }
+		value = 2
+	}
+	else_if = {
+		limit = { has_town_rights = town_rights_type:pp_weaponry_charter }
+		value = 1
+	}
+}
+pp_tplan_spec_naval_supplies = {
+	value = 0
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_naval_supplies_rights }
+		value = 2
+	}
+	else_if = {
+		limit = { has_town_rights = town_rights_type:pp_naval_supplies_charter }
+		value = 1
+	}
+}
+pp_tplan_spec_cloth = {
+	value = 0
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_cloth_rights }
+		value = 2
+	}
+	else_if = {
+		limit = { has_town_rights = town_rights_type:pp_cloth_charter }
+		value = 1
+	}
+}
+pp_tplan_spec_fine_cloth = {
+	value = 0
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_fine_cloth_rights }
+		value = 2
+	}
+	else_if = {
+		limit = { has_town_rights = town_rights_type:pp_fine_cloth_charter }
+		value = 1
+	}
+}
+pp_tplan_spec_leather = {
+	value = 0
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_leather_rights }
+		value = 2
+	}
+	else_if = {
+		limit = { has_town_rights = town_rights_type:pp_leather_charter }
+		value = 1
+	}
+}
+pp_tplan_spec_iron = {
+	value = 0
+	if = {
+		limit = { has_town_rights = town_rights_type:pp_iron_rights }
+		value = 2
+	}
+}

@@ -1192,6 +1192,11 @@ access_blacklist = ["staple_port_commercial_stagnation_modifier"]   # event modi
 # that pays back fastest at the market's prices and the location's output, at its highest buildable tier.
 kitchens = ["public_kitchen", "cookshop"]
 taverns = ["tavern"]
+# The Trade plan's buildings (town plans, 2026-11-20, Jan: the buildings that carry trade), in start order: where none
+# of them stands, the first that can be built here starts; once the standing ones are at their highest level, the
+# next one in this order. The Marketplace line (later tiers come by upgrade), the Port Authority, then the market
+# centre's buildings. Not here: Hired Labor Yard, Smuggler's Cove, unique buildings (Al-Qaysariyya).
+trade_plan = ["marketplace", "merchants_quarters", "grand_marketplace", "commerce_center", "port_authority", "clearing_house", "customs_house", "stock_exchange", "trading_hub", "entrepot", "market_warehouse"]
 granaries = ["granary"]
 granges = ["grange"]
 yards = ["victualling_yard"]

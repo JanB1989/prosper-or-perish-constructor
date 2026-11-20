@@ -184,6 +184,43 @@ def test_braces_balance() -> None:
         assert text.count("[") == text.count("]")
 
 
+def test_alone_and_rights_settings() -> None:
+    """2026-11-20: other businesses in planned locations (pp_tplan_alone) and grant a plan's charter and rights
+    (pp_tplan_rights_off): a value (1 = the default), a toggle that flips the variable, a row with its texts."""
+    values = _read(MOD / town_plans.VALUES)
+    for value, var in ((tps.ALONE, town_plans.ALONE_VAR), (tps.RIGHTS, town_plans.RIGHTS_OFF_VAR)):
+        block = _block(values, values.index(f"\n{value} = {{") + 1)
+        assert block.startswith(f"{value} = {{\n\tvalue = 1\n") and f"limit = {{ has_variable = {var} }}" in block
+        assert "value = 0" in block
+    guis = _read(MOD / town_plans.SETTINGS_GUIS)
+    for gui, var in ((tps.TOGGLES["alone"], town_plans.ALONE_VAR), (tps.TOGGLES["rights"], town_plans.RIGHTS_OFF_VAR)):
+        block = _block(guis, guis.index(f"\n{gui} = {{") + 1)
+        assert "scope = country" in block and "is_ai = no" in block
+        assert f"pp_cplan_flip = {{ var = {var} }}" in block
+    assert (tps.ALONE, tps.RIGHTS) == (town_plans.ALONE_VALUE, town_plans.RIGHTS_VALUE)
+    assert (tps.TOGGLES["alone"], tps.TOGGLES["rights"]) == (town_plans.TOGGLE_ALONE_GUI, town_plans.TOGGLE_RIGHTS_GUI)
+    gui = _gui()
+    for key, value in (("ALONE", tps.ALONE), ("RIGHTS", tps.RIGHTS)):
+        assert f'pp_tplan_set_label = {{ text = "PP_TPLAN_SET_{key}" tooltip = "PP_TPLAN_SET_{key}_TT" }}' in gui
+        assert gui.count(f"ScriptValue('{value}')") == 2  # the On and the Off switch
+        assert _loc()[f"PP_TPLAN_SET_{key}"] and _loc()[f"PP_TPLAN_SET_{key}_TT"].startswith("#T ")
+    assert "[political_influence|e]" in _loc()["PP_TPLAN_SET_RIGHTS_TT"]
+    assert "[town_rights|e]" in _loc()["PP_TPLAN_SET_RIGHTS_TT"]
+    assert "[location|e]" in _loc()["PP_TPLAN_SET_ALONE_TT"]
+
+
+def test_settings_rows_in_order_and_close_together() -> None:
+    gui = _gui()
+    rows = re.findall(r'pp_tplan_set_label = \{ text = "(PP_TPLAN_SET_[A-Z]+)" tooltip = "PP_TPLAN_SET_[A-Z]+_TT" \}',
+                      gui[:gui.index("# ---- Each plan")])
+    assert rows == ["PP_TPLAN_SET_PB", "PP_TPLAN_SET_LOSS", "PP_TPLAN_SET_STAFF", "PP_TPLAN_SET_FREE",
+                    "PP_TPLAN_SET_ALONE", "PP_TPLAN_SET_ORDER", "PP_TPLAN_SET_RIGHTS", "PP_TPLAN_SET_CLOSE"]
+    # the eight rows sit in one tighter vbox
+    at = gui.index("\t\tvbox = {\n\t\t\tlayoutpolicy_horizontal = expanding\n\t\t\tspacing = 2\n")
+    block = _block(gui, at)
+    assert all(f'text = "{row}"' in block for row in rows)
+
+
 def test_gui_functions_exist_in_the_data_type_dump() -> None:
     folder = DATA_TYPES if DATA_TYPES.is_dir() else DATA_TYPES_WSL
     if not folder.is_dir():

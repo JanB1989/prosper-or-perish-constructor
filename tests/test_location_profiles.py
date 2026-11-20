@@ -586,11 +586,15 @@ def test_never_at_a_loss_unless_switched_off() -> None:
 def test_worker_switch() -> None:
     """Plan settings: plans wait for free workers (default); with pp_tplan_staff_off they do not (expand and start)."""
     hand = _code(MOD / lpf.HAND_EFFECTS)
-    for name in ("pp_lprof_expand", "pp_lprof_start"):
+    # the worker failure is 104, or 104.25 where the level waits for workers and nothing else (plan_closer.py,
+    # tests/test_plan_closer.py)
+    fails = {"pp_lprof_expand": r"pp_pclose_worker_fail = \{ type = \$type\$ demand = \$demand\$ pt = \$pt\$ \}",
+             "pp_lprof_start": r"pp_pclose_worker_fail_new = \{ type = \$type\$ demand = \$demand\$ pt = \$pt\$ "
+                               r"ipl = \$ipl\$ cat = \$cat\$ \}"}
+    for name, fail in fails.items():
         body = _block(hand, name)
         assert re.search(r"limit = \{\n\t+scope:pp_cplan_country = \{ NOT = \{ has_variable = pp_tplan_staff_off \} \}\n"
-                         r"\t+NOT = \{ pp_cplan_staff = \{ type = \$pt\$ size = \$sz\$ \} \}\n\t+\}\n\t+pp_lprof_fail = \{ r = 104 \}",
-                         body), name
+                         r"\t+NOT = \{ pp_cplan_staff = \{ type = \$pt\$ size = \$sz\$ \} \}\n\t+\}\n[\t\n]+" + fail, body), name
 
 
 def test_plans_take_turns_unless_best_payback_first() -> None:

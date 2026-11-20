@@ -1997,6 +1997,9 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
 
     print(construction_plan_country.summary(
         construction_plan_country.apply(repo, project, mod_root, vanilla_root(repo, project))), flush=True)
+    from prosper_or_perish_constructor import plan_closer  # plans free their workers: the lists the rule reads
+
+    print(plan_closer.summary(plan_closer.apply(repo, project, mod_root, vanilla_root(repo, project))), flush=True)
     from prosper_or_perish_constructor import start_market_stock
 
     print(_start_stock_line(start_market_stock.apply(repo, project, mod_root, vanilla_root(repo, project))), flush=True)

@@ -703,6 +703,17 @@
   (`TOWN_RIGHTS_GRANTED` / `_REVOKED`) are redefined without the pop-up in `main_menu/gui/messagetypes/pp_messagetypes.txt`
   (a mod file may redefine a vanilla message type; verified in game). While the Construction Plan is off, the Location
   Plan window says so and carries the switch.
+- Plans free their workers (2026-11-20, Jan; plan setting, default on, `pp_tplan_free_off` = off; not tested in game as
+  a rule): where a plan's next level waits for workers and nothing else in a look, the location's turn closes ONE other
+  business of the player's there (open, producing, staffed, unsubsidised, no plan of the location wants it, no
+  logistics / improvement / public building, its workers peasants or the level's pop type, food makers only while the
+  province's store is not short, never a type the player reopened by hand), least profit per worker first, then waits
+  a look; the plan's state is 14. Script cannot close a building: the building goes on a country list and the hidden
+  scripted widget `gui/pp_plan_closer.gui` closes it with the game's own GUI function, a scripted GUI handshake takes it
+  off (mechanism proven in game 2026-11-20). Taking the plan off or the setting off reopens them; the lists are emptied
+  every month. `plan_closer.py` (generated lists), `pp_plan_closer.txt` (hand-written), `docs/location_plan.md` "Plans
+  free their workers", `tests/test_plan_closer.py`. Closed buildings no longer count as open jobs in the free-worker
+  count (`pp_cplan_free_peasants_here`).
 
 ## Release Checklist
 

@@ -1,0 +1,44 @@
+﻿# Prosper or Perish - Plans free their workers (2026-11-20, Jan; scripted_effects/pp_plan_closer.txt,
+# docs/location_plan.md "Plans free their workers"). A hidden scripted widget (gui/scripted_widgets/pp_plan_closer.txt),
+# always present for a player who plays a country, never for observers. Script cannot close a building; the plan
+# rule puts the building it closes on the country list pp_pclose_now (and one it opens again on pp_popen_now). Each
+# listed building gets a hidden item widget whose _show state runs once it turns visible: it closes (opens) the
+# building through the game's own function, then the scripted GUI pp_pclose_ack takes it off both lists. Once closed
+# the close item hides, so a second state after the close never runs: both lines sit in _show.
+# The shape that worked in game on 2026-11-20 (prototype: the building closed at once, also while paused; the
+# handshake took it off the list; OpenBuilding from the second list opened it). No size on a flowcontainer.
+widget = {
+	name = "pp_plan_closer"
+	size = { 0 0 }
+	visible = "[And(GetPlayer.Exists, Not(IsObserving))]"
+	flowcontainer = {
+		datamodel = "[GetPlayer.MakeScope.GetList('pp_pclose_now')]"
+		item = {
+			widget = {
+				size = { 0 0 }
+				visible_at_creation = no
+				visible = "[And(Scope.GetBuilding.IsOpen, CanCloseBuilding(Scope.GetBuilding.Self))]"
+				state = {
+					name = _show
+					on_start = "[CloseBuilding(Scope.GetBuilding.Self)]"
+					on_start = "[GetScriptedGui('pp_pclose_ack').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_b', Scope.GetBuilding.MakeScope).End)]"
+				}
+			}
+		}
+	}
+	flowcontainer = {
+		datamodel = "[GetPlayer.MakeScope.GetList('pp_popen_now')]"
+		item = {
+			widget = {
+				size = { 0 0 }
+				visible_at_creation = no
+				visible = "[And(Not(Scope.GetBuilding.IsOpen), CanOpenBuilding(Scope.GetBuilding.Self))]"
+				state = {
+					name = _show
+					on_start = "[OpenBuilding(Scope.GetBuilding.Self)]"
+					on_start = "[GetScriptedGui('pp_pclose_ack').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('pp_b', Scope.GetBuilding.MakeScope).End)]"
+				}
+			}
+		}
+	}
+}

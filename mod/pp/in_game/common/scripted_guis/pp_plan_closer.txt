@@ -1,0 +1,11 @@
+﻿# Prosper or Perish - Plans free their workers (2026-11-20, Jan; scripted_effects/pp_plan_closer.txt). The widget
+# pp_plan_closer (gui/pp_plan_closer.gui) runs this once it closed or opened a listed building (scope:pp_b): the
+# building leaves both lists, so a building the player opens again by hand is not closed again by the widget. The
+# shape that worked in game on 2026-11-20 (no is_valid: the widget shows only to a player who plays a country).
+pp_pclose_ack = {
+	scope = country
+	effect = {
+		remove_list_variable = { name = pp_pclose_now target = scope:pp_b }
+		remove_list_variable = { name = pp_popen_now target = scope:pp_b }
+	}
+}

@@ -235,7 +235,10 @@ for gold" (7), 180 "waiting behind another plan" (9). Changed:
   moved `pp_lplan_last` and the plans up to it, the starter included, ran again; nothing was built (the turn's
   construction makes every later plan wait), but they showed "waiting" (9) and were counted twice.
 
-Measured after: not yet (Jan profiles the same look in game).
+Measured after (in game 2026-11-20, script profiler, the same setup and the same look, a fresh new game): the whole
+monthly pass 0.062 s (before 0.238 s). Same outcome: 62 constructions started, 4,769 gold spent, the same purse left;
+the plans waiting behind another plan (state 9) read 120 instead of 180 (the display fault above). No script error in
+the ten years that followed.
 
 ## Budgets that save (2026-11-10, Jan, after he watched the plan run in game)
 

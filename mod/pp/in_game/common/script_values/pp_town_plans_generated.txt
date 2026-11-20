@@ -2565,8 +2565,8 @@ pp_tplan_pb_own_trade = {
 	}
 }
 
-# The switches, 1 = the default: never at a loss, wait for free workers, take turns; and the game's own
-# automation that closes buildings, 1 = on.
+# The switches, 1 = the default: never at a loss, wait for free workers, take turns, close other businesses for
+# a plan's workers; and the game's own automation that closes buildings, 1 = on.
 pp_tplan_loss_n = {
 	value = 1
 	if = {
@@ -2593,6 +2593,13 @@ pp_tplan_close_n = {
 	if = {
 		limit = { is_system_automated = closebuildings }
 		value = 1
+	}
+}
+pp_tplan_free_n = {
+	value = 1
+	if = {
+		limit = { has_variable = pp_tplan_free_off }
+		value = 0
 	}
 }
 

@@ -36,8 +36,10 @@ built, 103 payback, 104 workers, 105 goods, 106 market limit, 107 gold, 108 a hi
 
 `pp_lprof_finish` writes the state (+ 100) into the plan's `pp_lplan_st_g_<plan>` and the shortest payback found into
 `pp_lplan_est_g_<plan>`: what the target set (1 started, 3 a construction under way, 9 waiting for this turn's
-construction), else the best failure (108 -> 11, 107 -> 7, 106 -> 10, 105 -> 8, 104 -> 4, 103 -> 5, 102 -> 6, 101 ->
-2), else 6. Texts `PP_LPROF_ST_<n>`; 5 and 10 never come up for a plan. At a look `pp_lprof_count_state` counts them
+construction), else the best failure (108 -> 11, 107 -> 7, 106 -> 10, 105 -> 8, 104.25 -> 14, 104 -> 4, 103.5 -> 12,
+103 -> 5, 102.5 -> 13, 102 -> 6, 101 -> 2), else 6. 104.25: the level waits for workers and nothing else while another
+business here closes for them (`pp_pclose_plan`, `scripted_effects/pp_plan_closer.txt`, `docs/location_plan.md`
+"Plans free their workers"). Texts `PP_LPROF_ST_<n>`; 5 and 10 never come up for a plan. At a look `pp_lprof_count_state` counts them
 for the window's pane (`pp_cplan_ds_profiles_st<n>`, read as `pp_cplan_d_profiles_st<n>`).
 
 ## Turns

@@ -70,7 +70,8 @@ nothing to build (every producer at its highest level), 3 a construction under w
 built here, 7 gold (the purse cannot pay it, or the group saves for something before it), 8 the market lacks the
 construction goods, 9 waiting for another plan's construction this turn, 11 needs a higher rank that cannot be raised
 here now, 5 the next level pays back too slowly for the plan's payback limit, 12 the standing building loses money at
-full staffing (no level), 13 the standing building is closed (no level; until 2026-11-20 this showed as 6). 10 (market
+full staffing (no level), 13 the standing building is closed (no level; until 2026-11-20 this showed as 6), 14
+another business here is being closed to free workers for it ("Plans free their workers" below). 10 (market
 limit) never comes up for a plan. The Locations pane of the Construction Plan
 window counts the plans by state, names what the group saves for (a building or a town / city
 upgrade) and lists what it built: "for its plan", or a higher rank with the location's people.
@@ -85,9 +86,33 @@ the look number `pp_lprof_look_n`). A plan set after such a look on a location i
 the next look. The pane adds one line: how many locations the look did not reach; their plans are not in the state
 counts and their cost is not in what the group wanted. Inside a location the plans' two goes are split as the turn
 begins (`scope:pp_lplan_from`); the second go runs only where a plan started the location's last construction.
-Details: `docs/player_construction_manager.md` "Script time". Measured after: not yet.
+Details: `docs/player_construction_manager.md` "Script time". Measured after (in game 2026-11-20, the same setup: 615
+plans on 418 locations, first look on 1 June): the whole monthly pass 0.062 s (before 0.238 s), with the same outcome
+(62 constructions started, 4,769 gold spent, the same purse left) and no script error in ten years.
 
-### Plan settings (2026-11-20, Jan; not tested in game)
+### In-game results of the night (2026-11-20, plan test world, Castile)
+
+- **Impact, ten years, 615 plans on 418 locations** (every location its raw material, towns a manufactured good and
+  Trade, province capitals Food; all rule groups at their defaults, +20,000 gold) against a control run without plans:
+  the same total building levels (5,297 -> about 5,620) and population at the end; the country's gold is the limit in
+  both, the plans decide where it goes and spend it sooner. 3 charters granted. No mod script error in any run.
+  (The test country runs a deficit by itself and sits below the plan's gold reserve after the first years, so both
+  runs stop building early: the comparison says "no harm", not "how much better".)
+- **A bug the test found**: for one build every plan target did nothing, because the game compiles a scripted effect
+  call that passes an argument the body never uses into a silent no-op (the message is only in debug.log and the load
+  part of the rotated error logs). Fixed; `tests/test_script_call_arguments.py` scans the whole mod for it.
+- **Plan settings** (same world, year ten, one look each): defaults: 466 plans held back for gold, 40 add no level
+  because the building loses money (state 12), 69 wait for goods, 10 for workers; payback limit one year: 521 plans
+  "pays back too slowly" (state 5); losses allowed: state 12 gone.
+- **Plans take turns**: with the default, the first look started 62 constructions and the plans of one location
+  alternate.
+- **Plans free their workers** (plans on every town and village, only the Locations group funded, 60,000 gold): first
+  look 421 constructions and 18 locations with one business closed each (Fishing Villages and Market Villages in
+  villages with livestock and lumber plans; 23 plans in state 14); the next look closed nothing more (the wait), the
+  one after 3 more. Switching the setting off reopened all of them within two days; taking the plans off eight
+  locations reopened their eight buildings at once. Not tested: the keep list after a reopen by hand.
+
+### Plan settings (2026-11-20, Jan; tested in game the same night, see above)
 
 Baseline settings the player sees and may change (the settings tab of the Construction Plan window, agent G's
 `town_plan_settings_gui.py`); the defaults are meant to be left alone. Country variables (0 counts as unset, never
@@ -111,15 +136,99 @@ stored), names and steps in `town_plans.py` ("Plan settings"):
 - **Several plans in one location** (default: take turns; `pp_tplan_order_best` set = best payback first, the old
   rule): the plans after the one that started the location's last construction (`pp_lplan_last`, location) go first,
   then the rest; no measuring go (`pp_lplan_location_marks_turns`).
+- **Close other businesses for a plan's workers** (default on; `pp_tplan_free_off` set = off): see "Plans free their
+  workers" below. Switched off, every building the rule closed opens again at once (`pp_pclose_undo_all`).
 - **The game closes losing buildings**: switches the game's own automation `closebuildings` for the country
-  (`set_automated_system`, read by `is_system_automated`; script cannot close a building itself). Default: as the
-  player set it in the game. A plan never adds to a closed building (state 13).
+  (`set_automated_system`, read by `is_system_automated`). Default: as the player set it in the game. A plan never
+  adds to a closed building (state 13).
 
 Script values for the window (country scope): `pp_tplan_pb_years_all`, `pp_tplan_pb_years_<plan>` (0 = any),
-`pp_tplan_pb_own_<plan>`, `pp_tplan_loss_n`, `pp_tplan_staff_n`, `pp_tplan_order_n` (1 = the default),
-`pp_tplan_close_n` (1 = automation on). Scripted GUIs (`scripted_guis/pp_town_plan_settings.txt`, player only):
-`pp_tplan_pb_up` / `_down` (`scope:pp_key` = `flag:all` or `flag:<plan>`), `pp_tplan_pb_reset`, `pp_tplan_toggle_loss`
-/ `_staff` / `_order` / `_close`.
+`pp_tplan_pb_own_<plan>`, `pp_tplan_loss_n`, `pp_tplan_staff_n`, `pp_tplan_order_n`, `pp_tplan_free_n` (1 = the
+default), `pp_tplan_close_n` (1 = automation on). Scripted GUIs (`scripted_guis/pp_town_plan_settings.txt`, player
+only): `pp_tplan_pb_up` / `_down` (`scope:pp_key` = `flag:all` or `flag:<plan>`), `pp_tplan_pb_reset`,
+`pp_tplan_toggle_loss` / `_staff` / `_order` / `_close` / `_free`.
+
+### Plans free their workers (2026-11-20, Jan; tested in game the same night, see "In-game results")
+
+Jan: "You conquer or get a city with a bunch of businesses the AI built, and you want to specialize it ... at some
+point there is a worker shortage. Then, step by step, the other businesses that are not part of the location's plans
+should be turned off in that location, so they release the workers ... automatically, probably by profitability."
+
+**The rule** (`plan_closer.py`, hand-written `scripted_effects/pp_plan_closer.txt`, `scripted_triggers/pp_plan_closer.txt`,
+`script_values/pp_plan_closer.txt`; called by the plan engine `pp_location_profiles.txt`):
+
+- **When**: in a look of the Locations group, a plan's next level (a further level or a first level) waits for workers
+  and for nothing else: its worker test fails (`pp_cplan_staff`) while a level fits under the max level, the market
+  holds its construction goods, the group does not save for something and its purse can pay the level, and the plans
+  are not being measured (`pp_pclose_may`). The candidate's reason is then 104.25 instead of 104 and the pop type its
+  level needs is kept (`pp_pclose_worker_fail`, `_new` for a first level, which sets the cost temporaries only on this
+  path). It counts only when it is the plan's best reason (no construction, no candidate stopped at goods, gold, rank):
+  `pp_lplan_mark` then calls `pp_pclose_plan`. Player countries only, setting on, the Construction Plan on (the pass
+  runs only then). Tier upgrades ask no workers and never close anything.
+- **What**: ONE building per location per look (`pp_pclose_pick`: one ordered walk over the location's buildings), put
+  on the country list `pp_pclose_now`, which the widget closes. Then the location waits (`pp_pclose_wait`, + 100): no
+  closing in the next look, the second look after it may close again (the freed people need time to show as idle and
+  to promote or demote; looks are every three months, so at most one closing per location every six months). A walk
+  that finds nothing is not repeated in that turn (`pp_pclose_none`).
+- **Which** (`pp_pclose_candidate`, building scope): the player's own, standing (level > 0), open, nothing under
+  construction, with workers, not subsidised, producing (non-producers are public, military or capacity buildings);
+  not a logistics building, an improvement or a public building of the Towns and Buildings group (every tier;
+  generated `pp_pclose_never_type`); not a candidate of any plan the location holds, older tiers included (generated
+  `pp_pclose_planned`); its workers peasants or the pop type the plan's level needs (the people the worker test counts:
+  free peasants, or idle pops of the level's own type; generated `pp_pclose_pt_match`); a Province Food maker or staple
+  food producer (the Food plan's buildings and the food rule's kitchens, taverns, granaries, granges, yards; generated
+  `pp_pclose_food_type`) only while the province's store is not short by the food rule's own line (a normal year leaves
+  at least `pp_cplan_hungry_months` a year from now, `pp_pclose_store_ok`; no store = short); never a type the player
+  opened again by hand after the rule closed it there (`pp_pclose_keep`).
+- **Order** (`pp_pclose_rank`): the walk takes the highest value first (the game's ordered lists do; the mod's turn
+  order relies on it). Least current profit per worker first: `building_profit` (gold a month, now) over
+  `building_employed_amount` (thousands), turned round and counted in hundredths; equal steps: more workers first. A
+  building losing money goes before every earning one. Current profit, not potential: what loses money now is the
+  cheapest to give up.
+- **State 14** ("Closing another building here to free its workers for this plan"): every plan whose level waits only
+  for workers while a closing here is under way (this look's or the wait after it). Where nothing can be closed the
+  state stays 4. Counted for the Locations pane like every state (`pp_cplan_ds_profiles_st14`).
+- **Memory**: the location keeps the building types the rule closed (`pp_pclose_types`, by type: a building cannot hold
+  variables), the plans they are for (`pp_pclose_for`, the plan rights) and the types the player opened again
+  (`pp_pclose_keep`); the country keeps the locations (`pp_pclose_locs`).
+- **Undo**: when no plan the closings are for is held any more (the plan button and Clear: `pp_tplan_flip` ->
+  `pp_pclose_plan_off`, at once; or the monthly check), or the setting is switched off, every closed building of those
+  types goes on the country list `pp_popen_now`, which the widget opens; the location forgets its closings (the keep
+  list only once it holds no plan at all).
+- **Monthly check** (`pp_pclose_month`, first thing of `pp_lprof_run`): both widget lists are emptied (no entry
+  outlives a month: a destroyed or lost building just drops out, nothing stale after a load), then each location with
+  closings: lost (owner change; the game opens every closed building of a location that changes owner) -> forgotten;
+  setting off -> undo; a closed type whose building is open again (the player, or the game refused the close) -> keep
+  list, not while the game's own close-buildings automation runs (it may have reopened it, a 25 % roll per pass); no
+  plan left it is for -> undo.
+
+**The mechanism** (script cannot close or open a building): a building scope can sit in a country variable list.
+The hidden scripted widget `pp_plan_closer` (`gui/pp_plan_closer.gui`, registered in
+`gui/scripted_widgets/pp_plan_closer.txt`), always present for a player who plays a country and never for observers,
+has a datamodel over each list; each listed building gets a hidden item widget whose `_show` state runs when it turns
+visible (open and closable / closed and openable) and calls the game's own `CloseBuilding` / `OpenBuilding`, then the
+scripted GUI `pp_pclose_ack` takes the building off both lists. Without that handshake a building the player opens by
+hand while it is still listed would be closed again at once. The GUI passes `scope:pp_b`; a never-run block of
+`pp_lprof_run` declares it (`pp_pclose_declare`).
+
+**Free workers**: `pp_cplan_free_peasants_here` (the idle peasants minus the open jobs of the location's buildings)
+counts only open buildings since 2026-11-20: a closed building hires nobody but keeps its employment size, so closing
+one LOWERED the free count before. This is the correct count for both rule groups that read it: the Locations plans
+and the Businesses rule now find more free peasants where a building is closed (by the player, the game's automation
+or this rule); the Businesses rule still adds no level to a closed type.
+
+**Proven in game on 2026-11-20** (prototype, console runs, no rule): a building scope goes into a country variable
+list; the widget closed it at once, also while paused; the handshake took it off the list; `OpenBuilding` from the
+second list opened it; a closed building reports `building_employed_amount` 0 and keeps its
+`building_employment_size_amount`; `ordered_buildings_in_location` with `order_by`, `max = 1`,
+`check_range_bounds = no` works on buildings; `is_opened`, `building_level`, `building_employed_amount` work in
+building scope. **Not tested**: the rule itself (when it asks, the pick and its order, state 14, the wait), the undo
+paths (plan taken off, Clear, the setting), the keep list after a hand reopen, a building scope in a list across a
+save and load (the lists are emptied monthly, so at most a month's entries), the freed people being hired by the
+plan's next level, multiplayer.
+
+Side effect to know: while one building of a type is closed in a market, the game's AI (and the player's Buildings
+automation) adds no new building or level of that type in that market.
 
 ## Map mode
 
@@ -171,7 +280,9 @@ overrides `map_markers.gui` hides the icons; a map mode's `index` is its row in 
   (targets, turns, measuring, states; `docs/location_profiles.md`).
 - `construction_plan_country.py`: the charters and rights of planned locations; `pp_cplan_country_rank_up`.
 - `construction_plan_detail.py`: the Locations pane.
-- Tests: `tests/test_town_plans.py`, `tests/test_town_plan_gui.py`, `tests/test_location_plan.py`, `tests/test_location_profiles.py`,
+- `plan_closer.py` + hand-written `pp_plan_closer.txt` (effects, triggers, values, scripted GUI) and
+  `gui/pp_plan_closer.gui`: plans free their workers.
+- Tests: `tests/test_plan_closer.py`, `tests/test_town_plans.py`, `tests/test_town_plan_gui.py`, `tests/test_location_plan.py`, `tests/test_location_profiles.py`,
   `tests/test_construction_plan_country.py`, `tests/test_construction_plan_detail.py`.
 
 ## Tested in game (2026-11-20)

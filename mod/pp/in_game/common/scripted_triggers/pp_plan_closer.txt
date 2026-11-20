@@ -1,0 +1,57 @@
+﻿# Prosper or Perish - Plans free their workers (2026-11-20, Jan; scripted_effects/pp_plan_closer.txt, plan_closer.py,
+# docs/location_plan.md "Plans free their workers"). The generated lists are in pp_plan_closer_generated.txt.
+
+# Location scope, in a plan's turn, a candidate's worker test failed (the cost temporaries scope:pp_cplan_btype /
+# _ipl / _pf / _ef set): the level waits for workers and for nothing else: the player's country with the setting on,
+# in a look of the Locations group (not when it goes back to one location between looks), the plans not being
+# measured, the group not saving for something, a level of $type$ fits under its max level here, the market holds its
+# construction goods ($demand$) and the Locations purse can pay it.
+pp_pclose_may = {
+	scope:pp_cplan_country = {
+		is_ai = no
+		NOT = { has_variable = pp_tplan_free_off }
+		has_variable = pp_cplan_now_105
+	}
+	NOT = { pp_lplan_measuring = yes }
+	NOT = { pp_cplan_saving = { why = 105 } }
+	pp_cplan_room_$type$ >= 1
+	pp_cplan_goods_here_$demand$ = yes
+	pp_cplan_affordable = { why = 105 }
+}
+
+# Province scope: the store is not short by the food rule's own line: a normal year leaves at least
+# pp_cplan_hungry_months in it a year from now (pp_cplan_hungry is the same test the other way round). A province
+# without a food store counts as short.
+pp_pclose_store_ok = {
+	has_variable = pp_stored_food_months
+	pp_cplan_food_in_a_year >= pp_cplan_hungry_months
+}
+
+# Building scope, in pp_pclose_pick (scope:pp_cplan_country, scope:pp_pclose_l its location, scope:pp_pclose_pt the
+# pop type the plan's level needs, scope:pp_pclose_fed 1 while the province's store is not short): a building the rule
+# may close: the player's own, standing, open, nothing under construction, with workers, not subsidised (the player
+# pays to keep it), producing (non-producers are public, military or capacity buildings), none of the never-closed
+# kinds (logistics, improvements, the Towns and Buildings group's public buildings), not wanted by a plan the location
+# holds (older tiers included), its workers peasants or of the plan's pop type (those are the people the plan's worker
+# test counts: free peasants, or idle pops of the level's own type), a food maker only while the store is not short,
+# and not a type the player opened again by hand after the rule closed it (pp_pclose_keep).
+pp_pclose_candidate = {
+	owner ?= scope:pp_cplan_country
+	is_opened = yes
+	building_level > 0
+	building_levels_under_construction < 1
+	building_employed_amount > 0
+	is_subsidized = no
+	any_production_method_of_building = { always = yes }
+	NOT = { pp_pclose_never_type = yes }
+	NOT = { pp_pclose_planned = yes }
+	OR = {
+		building_pop_type = peasants
+		pp_pclose_pt_match = yes
+	}
+	OR = {
+		scope:pp_pclose_fed > 0.5
+		NOT = { pp_pclose_food_type = yes }
+	}
+	NOT = { scope:pp_pclose_l = { is_target_in_variable_list = { name = pp_pclose_keep target = prev.building_type } } }
+}

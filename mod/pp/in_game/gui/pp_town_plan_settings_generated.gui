@@ -70,6 +70,14 @@ types PPTownPlanSettings
 		hbox = {
 			layoutpolicy_horizontal = expanding
 			spacing = 6
+			pp_tplan_set_label = { text = "PP_TPLAN_SET_FREE" tooltip = "PP_TPLAN_SET_FREE_TT" }
+			expand = {}
+			pp_tplan_set_switch = { visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_tplan_free_n'), '(CFixedPoint)0.5')]" text = "PP_TPLAN_SET_ON" tooltip = "PP_TPLAN_SET_FREE_TT" onclick = "[GetScriptedGui('pp_tplan_toggle_free').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+			pp_tplan_set_switch = { visible = "[Not(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_tplan_free_n'), '(CFixedPoint)0.5'))]" text = "PP_TPLAN_SET_OFF" tooltip = "PP_TPLAN_SET_FREE_TT" onclick = "[GetScriptedGui('pp_tplan_toggle_free').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+		}
+		hbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 6
 			pp_tplan_set_label = { text = "PP_TPLAN_SET_ORDER" tooltip = "PP_TPLAN_SET_ORDER_TT" }
 			expand = {}
 			pp_tplan_set_switch = { visible = "[GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_tplan_order_n'), '(CFixedPoint)0.5')]" text = "PP_TPLAN_SET_TURNS" tooltip = "PP_TPLAN_SET_ORDER_TT" onclick = "[GetScriptedGui('pp_tplan_toggle_order').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }

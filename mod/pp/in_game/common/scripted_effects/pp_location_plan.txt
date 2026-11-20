@@ -15,6 +15,8 @@ pp_tplan_flip = {
 		revoke_town_rights_of_type = town_rights_type:pp_plan_$g$
 		remove_variable = pp_lplan_st_g_$g$
 		remove_variable = pp_lplan_est_g_$g$
+		# what the rule closed here for its workers opens again once no plan it was for is left (pp_plan_closer.txt)
+		pp_pclose_plan_off = yes
 	}
 	else = {
 		grant_town_rights = town_rights_type:pp_plan_$g$

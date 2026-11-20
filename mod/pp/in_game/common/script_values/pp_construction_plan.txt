@@ -238,12 +238,14 @@ pp_cplan_est_payback_years = {
 }
 
 # Location scope: idle peasants left for a new building here, in thousands like the pops: the idle peasants minus the
-# open jobs of the buildings here (workers they could still take). Peasants are promoted into the other classes, so
+# open jobs of the open buildings here (workers they could still take; closed ones since 2026-11-20). Peasants are promoted into the other classes, so
 # they staff any building (Jan 2026-11-09); pp_cplan_staff reads it as scope:pp_cplan_free_peasants. The idle pops
 # of the other classes are generated (pp_cplan_idle_<pop type>, pp_construction_plan_generated.txt).
 pp_cplan_free_peasants_here = {
 	value = "unemployed_pops_of_pop_type_in_location(pop_type:peasants)"
 	every_buildings_in_location = {
+		# a closed building hires nobody but keeps its employment size (in game 2026-11-20): its jobs are not open
+		limit = { is_opened = yes }
 		subtract = {
 			value = building_employment_size_amount
 			subtract = building_employed_amount

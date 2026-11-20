@@ -1,0 +1,22 @@
+﻿# Prosper or Perish - Plans free their workers (2026-11-20, Jan; scripted_effects/pp_plan_closer.txt).
+
+# Building scope: the order in which the rule closes buildings for a plan's workers (pp_pclose_pick's ordered walk
+# takes the HIGHEST first, as the game's ordered lists do: vanilla's town rights event destroys max buildings
+# order_by = building_level, the mod's pp_lprof_turn puts the location it wants first highest). Least current profit
+# per worker first: building_profit (gold a month, now) over building_employed_amount (thousands of people working
+# there), turned round and counted in steps of a hundredth; equal steps: the one with more workers first (the tie-break
+# stays below one step for any building under 99,000 workers). A building losing money ranks above every earning one.
+pp_pclose_rank = {
+	value = building_profit
+	divide = {
+		value = building_employed_amount
+		min = 0.001
+	}
+	multiply = -100
+	floor = yes
+	add = {
+		value = building_employed_amount
+		divide = 100
+		max = 0.99
+	}
+}

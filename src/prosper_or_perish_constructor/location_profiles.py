@@ -66,10 +66,12 @@ STATES = {
     11: "needs a higher location rank: the plan raises the settlement when it can (town_plans.py)",
     12: "the standing building loses money at full staffing: no level (plan setting, default on)",
     13: "the standing building is closed: no level",
+    14: "another business here is being closed to free workers for it (plan setting, default on; plan_closer.py)",
 }
 # why a candidate failed, ranked (+ 100 in pp_lprof_fail; the highest rank of a plan's candidates gives its state);
-# 102.5 (closed) and 103.5 (loses money) sit between the old integer ranks, pp_lprof_finish splits at the midpoints
-FAIL_STATE = {101: 2, 102: 6, 102.5: 13, 103: 5, 103.5: 12, 104: 4, 105: 8, 106: 10, 107: 7, 108: 11}
+# 102.5 (closed), 103.5 (loses money) and 104.25 (workers and nothing else, while another business closes for them:
+# plan_closer.py) sit between the old integer ranks, pp_lprof_finish splits at the midpoints
+FAIL_STATE = {101: 2, 102: 6, 102.5: 13, 103: 5, 103.5: 12, 104: 4, 104.25: 14, 105: 8, 106: 10, 107: 7, 108: 11}
 WHY_MARK_STEP = 0  # the ledger's step (pp_cplan_rs) of a construction a plan started
 # location script value: 1 when the last look stopped (its purse spent) before this location's turn (script time
 # 2026-11-20; the tiles read it, location_plan.py)

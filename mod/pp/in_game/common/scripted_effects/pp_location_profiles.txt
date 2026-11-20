@@ -26,8 +26,9 @@
 # construction, 4 no free workers, 5 the next level pays back too slowly for the plan's payback limit, 6 cannot be built
 # here, 7 gold (the group's purse cannot pay it, or the group saves for something before it), 8 the market lacks the
 # construction goods, 9 waiting for an earlier plan's construction this month, 11 needs a higher rank that cannot be
-# raised here now, 12 the standing building loses money at full staffing, 13 the standing building is closed; 10 is
-# the market limit, which no plan has), pp_lplan_est_g_<plan> (the payback found), pp_lprof_seq (its number in the turn
+# raised here now, 12 the standing building loses money at full staffing, 13 the standing building is closed, 14
+# another business here is being closed to free workers for it (pp_plan_closer.txt); 10 is the market limit, which no
+# plan has), pp_lplan_est_g_<plan> (the payback found), pp_lprof_seq (its number in the turn
 # order), pp_lplan_last (the n of the plan that started the last construction here: the plans take turns),
 # pp_lprof_seen (the number of the last look that reached it). Country: pp_lprof_look_n (the looks' count + 100),
 # pp_lprof_cut (the last look stopped, its purse spent, before every location had its turn). Pass temporaries:
@@ -40,6 +41,8 @@
 # ---- The monthly pass (country scope, inside pp_cplan_run: scope:pp_cplan_country and scope:actor saved) ----
 
 pp_lprof_run = {
+	# plans free their workers (pp_plan_closer.txt, 2026-11-20): the widget's lists emptied, the closings checked
+	pp_pclose_month = yes
 	if = {
 		limit = {
 			pp_lprof_has_locations = yes
@@ -63,6 +66,7 @@ pp_lprof_run = {
 		limit = { always = no }
 		pp_tplan_settings_declare = yes
 		remove_variable = pp_tplan_sflag
+		pp_pclose_declare = yes
 	}
 }
 
@@ -167,6 +171,8 @@ pp_lprof_location_turn = {
 		remove_variable = pp_cplan_noted
 		remove_variable = pp_cplan_hit
 	}
+	# plans free their workers (pp_plan_closer.txt): the wait after a closing counts down a look
+	pp_pclose_turn_start = yes
 	save_temporary_scope_value_as = { name = pp_cplan_forced value = 0 }
 	save_temporary_scope_value_as = { name = pp_lplan_mode value = 0 }
 	# its plans (town rights pp_plan_<plan>, town_plans.py; 2026-11-19)
@@ -176,6 +182,7 @@ pp_lprof_location_turn = {
 	}
 	save_temporary_scope_value_as = { name = pp_cplan_forced value = 0 }
 	save_temporary_scope_value_as = { name = pp_lplan_mode value = 0 }
+	pp_pclose_turn_end = yes
 }
 
 # Location scope: the location's plans, forced (scope:pp_cplan_forced = 1: no market limit; scope:pp_lprof_pb far away:
@@ -430,6 +437,17 @@ pp_lplan_mark = {
 					}
 					set_variable = { name = pp_lplan_last value = $n$ }
 				}
+				# its level waits for workers and nothing else: another business here closes for them
+				# (pp_plan_closer.txt; state 14 while that is under way, else 4)
+				if = {
+					limit = {
+						NOT = { has_variable = pp_lprof_st }
+						has_variable = pp_lprof_fail
+						var:pp_lprof_fail > 104.125
+						var:pp_lprof_fail < 104.625
+					}
+					pp_pclose_plan = { g = $g$ }
+				}
 			}
 			pp_lprof_finish = { st = pp_lplan_st_$v$ est = pp_lplan_est_$v$ }
 		}
@@ -443,6 +461,7 @@ pp_lprof_open = {
 	remove_variable = pp_lprof_st
 	remove_variable = pp_lprof_fail
 	remove_variable = pp_lprof_best
+	remove_variable = pp_pclose_pt
 	if = {
 		limit = { scope:pp_cplan_country = { has_variable = pp_cplan_hit } }
 		set_variable = { name = pp_lprof_st value = 109 }
@@ -455,7 +474,8 @@ pp_lprof_open = {
 
 # Location scope: writes the state of a plan into $st$: what the target set (1 started, 3 a level under construction,
 # 9 waiting), else the best reason among its candidates (pp_lprof_fail: 108 a plan needs a higher rank that cannot be
-# raised here now -> 11, 107 gold -> 7, 106 the market limit -> 10, 105 goods -> 8, 104 no workers -> 4, 103.5 the
+# raised here now -> 11, 107 gold -> 7, 106 the market limit -> 10, 105 goods -> 8, 104.25 workers and nothing else
+# while another business here closes for them (pp_pclose_plan) -> 14, 104 no workers -> 4, 103.5 the
 # standing building loses money -> 12, 103 payback -> 5, 102.5 the standing building is closed -> 13, 102 cannot be
 # built -> 6, 101 at its highest level -> 2; the half ranks split at the midpoints), else no candidate at all (6); and
 # into $est$ the shortest payback it found.
@@ -481,8 +501,12 @@ pp_lprof_finish = {
 		set_variable = { name = $st$ value = 110 }
 	}
 	else_if = {
-		limit = { var:pp_lprof_fail > 104.5 }
+		limit = { var:pp_lprof_fail > 104.625 }
 		set_variable = { name = $st$ value = 108 }
+	}
+	else_if = {
+		limit = { var:pp_lprof_fail > 104.125 }
+		set_variable = { name = $st$ value = 114 }
 	}
 	else_if = {
 		limit = { var:pp_lprof_fail > 103.75 }
@@ -525,7 +549,7 @@ pp_lprof_finish = {
 	}
 }
 
-# Location scope: the window counts the plans by their state after this pass (pp_cplan_ds_profiles_st<n>, 1..13).
+# Location scope: the window counts the plans by their state after this pass (pp_cplan_ds_profiles_st<n>, 1..14).
 pp_lprof_count_state = {
 	if = {
 		limit = { var:$st$ < 101.5 }
@@ -575,8 +599,12 @@ pp_lprof_count_state = {
 		limit = { var:$st$ < 112.5 }
 		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_st12 add = 1 } }
 	}
-	else = {
+	else_if = {
+		limit = { var:$st$ < 113.5 }
 		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_st13 add = 1 } }
+	}
+	else = {
+		scope:pp_cplan_country = { change_variable = { name = pp_cplan_ds_profiles_st14 add = 1 } }
 	}
 }
 
@@ -593,7 +621,8 @@ pp_lprof_note_payback = {
 	}
 }
 
-# Location scope: records why a candidate failed ($r$ = 101..108), keeping the reason closest to a construction.
+# Location scope: records why a candidate failed ($r$ = 101..108; 104.25: workers and nothing else, pp_plan_closer.txt),
+# keeping the reason closest to a construction.
 pp_lprof_fail = {
 	if = {
 		limit = { NOT = { has_variable = pp_lprof_fail } }
@@ -657,7 +686,8 @@ pp_lprof_expand = {
 					scope:pp_cplan_country = { NOT = { has_variable = pp_tplan_staff_off } }
 					NOT = { pp_cplan_staff = { type = $pt$ size = $sz$ } }
 				}
-				pp_lprof_fail = { r = 104 }
+				# 104, or 104.25 when it waits for workers and nothing else (pp_plan_closer.txt)
+				pp_pclose_worker_fail = { type = $type$ demand = $demand$ pt = $pt$ }
 			}
 			else_if = {
 				limit = { NOT = { pp_cplan_goods_here_$demand$ = yes } }
@@ -735,7 +765,8 @@ pp_lprof_start = {
 				scope:pp_cplan_country = { NOT = { has_variable = pp_tplan_staff_off } }
 				NOT = { pp_cplan_staff = { type = $pt$ size = $sz$ } }
 			}
-			pp_lprof_fail = { r = 104 }
+			# 104, or 104.25 when it waits for workers and nothing else (pp_plan_closer.txt)
+			pp_pclose_worker_fail_new = { type = $type$ demand = $demand$ pt = $pt$ ipl = $ipl$ cat = $cat$ }
 		}
 		else_if = {
 			limit = { NOT = { pp_cplan_goods_here_$demand$ = yes } }

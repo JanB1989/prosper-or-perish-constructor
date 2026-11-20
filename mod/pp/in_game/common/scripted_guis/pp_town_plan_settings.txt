@@ -85,3 +85,19 @@ pp_tplan_toggle_close = {
 		}
 	}
 }
+
+# Plans close other businesses for their workers (the default), or not; switched off, every
+# building the rule closed opens again (scripted_effects/pp_plan_closer.txt).
+pp_tplan_toggle_free = {
+	scope = country
+	is_valid = {
+		is_ai = no
+	}
+	effect = {
+		pp_cplan_flip = { var = pp_tplan_free_off }
+		if = {
+			limit = { has_variable = pp_tplan_free_off }
+			pp_pclose_undo_all = yes
+		}
+	}
+}

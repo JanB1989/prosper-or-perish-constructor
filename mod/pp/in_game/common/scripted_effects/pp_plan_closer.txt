@@ -1,0 +1,322 @@
+﻿# Prosper or Perish - Plans free their workers (2026-11-20, Jan, branch town-plans; plan_closer.py, docs/location_plan.md
+# "Plans free their workers"). Jan: "at some point there is a worker shortage. Then, step by step, the other
+# businesses that are not part of the location's plans should be turned off in that location, so they release the
+# workers ... automatically, probably by profitability".
+# Script cannot close a building. A building scope can sit in a country variable list, and the always-present hidden
+# scripted widget pp_plan_closer (gui/pp_plan_closer.gui) closes every open building on pp_pclose_now through the
+# game's own GUI function and opens every closed one on pp_popen_now, each then taken off the lists by the scripted GUI
+# pp_pclose_ack (in game 2026-11-20, prototype: closed at once, also while paused; the handshake took it off; reopened
+# from the second list).
+# The rule, player-only (the plan pass runs for human countries that switched the Construction Plan on; the setting
+# pp_tplan_free_off switches it off):
+# - WHEN: a plan's next level waits for workers and nothing else in a look (pp_pclose_may: construction goods, room,
+#   gold, the group not saving, not measuring); the plan engine (pp_lprof_expand / pp_lprof_start) records it as
+#   pp_lprof_fail 104.25 and the pop type the level needs (pp_pclose_pt), pp_lplan_mark calls pp_pclose_plan.
+# - WHAT: ONE building per location per look (pp_pclose_pick, one ordered walk over the location's buildings), then the
+#   location waits: no closing in the next look (pp_pclose_wait, + 100, counted down by its look turns).
+# - WHICH: pp_pclose_candidate (scripted_triggers/pp_plan_closer.txt); ORDER: pp_pclose_rank (least profit per worker
+#   first; equal: more workers first).
+# - MEMORY: location lists pp_pclose_types (the types the rule closed there), pp_pclose_for (the plans they are for,
+#   town rights), pp_pclose_keep (types the player opened again by hand: never closed again there); country list
+#   pp_pclose_locs (the locations with closings).
+# - UNDO: a plan taken off (pp_tplan_flip -> pp_pclose_plan_off), the setting switched off (pp_tplan_toggle_free ->
+#   pp_pclose_undo_all), or the monthly check finding no held plan they are for: the closed buildings of those types
+#   go onto pp_popen_now.
+# Country lists never outlive a month: pp_pclose_month empties both at every pass's start (a destroyed or lost
+# building just drops out).
+
+# ---- The monthly pass (country scope, at the start of pp_lprof_run; scope:pp_cplan_country saved) ----
+
+# Both widget lists emptied; then every location with closings is checked once (pp_pclose_check): lost, setting off,
+# opened again by hand, no plan left that needs them. The list of those locations is rebuilt on the way (a location
+# without closings left drops out), never changed while it is walked.
+pp_pclose_month = {
+	clear_variable_list = pp_pclose_now
+	clear_variable_list = pp_popen_now
+	if = {
+		limit = { has_variable_list = pp_pclose_locs }
+		scope:pp_cplan_country = { save_temporary_scope_as = pp_pclose_c }
+		clear_variable_list = pp_pclose_sweep
+		every_in_list = {
+			variable = pp_pclose_locs
+			save_temporary_scope_as = pp_pclose_l
+			scope:pp_cplan_country = { add_to_variable_list = { name = pp_pclose_sweep target = scope:pp_pclose_l } }
+		}
+		clear_variable_list = pp_pclose_locs
+		every_in_list = {
+			variable = pp_pclose_sweep
+			pp_pclose_check = yes
+		}
+		clear_variable_list = pp_pclose_sweep
+	}
+}
+
+# Location scope (scope:pp_cplan_country = scope:pp_pclose_c = the player's country): what the rule closed here.
+pp_pclose_check = {
+	save_temporary_scope_as = pp_pclose_l
+	if = {
+		# lost: the game opens every closed building of a location that changes owner by itself
+		limit = { NOT = { owner ?= scope:pp_cplan_country } }
+		pp_pclose_forget = yes
+	}
+	else_if = {
+		limit = { scope:pp_cplan_country = { has_variable = pp_tplan_free_off } }
+		pp_pclose_undo = yes
+	}
+	else = {
+		pp_pclose_taken_back = yes
+		pp_pclose_needed = yes
+	}
+	if = {
+		limit = { any_in_list = { variable = pp_pclose_types always = yes } }
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_pclose_locs target = scope:pp_pclose_l } }
+	}
+}
+
+# Location scope (scope:pp_pclose_l, scope:pp_cplan_country): a type the rule closed whose building here is open
+# again was opened by the player (the widget's list is emptied every month, so nothing of the rule's opens it), or the
+# game refused to close it: it goes onto the keep list (never closed again here) and off the closed types. Not while
+# the game's own close-buildings automation runs for the country: that one may have opened it (a 25 % roll per pass).
+pp_pclose_taken_back = {
+	if = {
+		limit = { scope:pp_cplan_country = { NOT = { is_system_automated = closebuildings } } }
+		every_in_list = {
+			variable = pp_pclose_types
+			save_temporary_scope_as = pp_pclose_t
+			if = {
+				limit = {
+					scope:pp_pclose_l = {
+						any_buildings_in_location = {
+							building_type = scope:pp_pclose_t
+							owner ?= scope:pp_cplan_country
+							is_opened = yes
+						}
+						NOT = { is_target_in_variable_list = { name = pp_pclose_keep target = scope:pp_pclose_t } }
+					}
+				}
+				scope:pp_pclose_l = { add_to_variable_list = { name = pp_pclose_keep target = scope:pp_pclose_t } }
+			}
+		}
+		every_in_list = {
+			variable = pp_pclose_keep
+			save_temporary_scope_as = pp_pclose_t
+			scope:pp_pclose_l = { remove_list_variable = { name = pp_pclose_types target = scope:pp_pclose_t } }
+		}
+	}
+}
+
+# Location scope (scope:pp_pclose_l, scope:pp_pclose_c = its owner): the closings here are kept while the location
+# holds one of the plans they are for (pp_pclose_for), else every one of them is opened again (pp_pclose_undo).
+pp_pclose_needed = {
+	remove_variable = pp_pclose_held
+	every_in_list = {
+		variable = pp_pclose_for
+		save_temporary_scope_as = pp_pclose_r
+		if = {
+			limit = { scope:pp_pclose_l = { has_town_rights = scope:pp_pclose_r } }
+			scope:pp_pclose_l = { set_variable = { name = pp_pclose_held value = yes } }
+		}
+	}
+	if = {
+		limit = { NOT = { has_variable = pp_pclose_held } }
+		pp_pclose_undo = yes
+	}
+	remove_variable = pp_pclose_held
+}
+
+# Location scope, scope:pp_pclose_c = the country whose buildings the rule closed here: every closed building of a
+# type the rule closed goes onto the country's open list (the widget opens it), and the location forgets its
+# closings. The keep list goes only once the location holds no plan at all.
+pp_pclose_undo = {
+	save_temporary_scope_as = pp_pclose_l
+	every_in_list = {
+		variable = pp_pclose_types
+		save_temporary_scope_as = pp_pclose_t
+		scope:pp_pclose_l = {
+			every_buildings_in_location = {
+				limit = {
+					building_type = scope:pp_pclose_t
+					owner ?= scope:pp_pclose_c
+					is_opened = no
+				}
+				save_temporary_scope_as = pp_pclose_b
+				scope:pp_pclose_c = { add_to_variable_list = { name = pp_popen_now target = scope:pp_pclose_b } }
+			}
+		}
+	}
+	clear_variable_list = pp_pclose_types
+	clear_variable_list = pp_pclose_for
+	remove_variable = pp_pclose_wait
+	if = {
+		limit = { NOT = { pp_tplan_held = yes } }
+		clear_variable_list = pp_pclose_keep
+	}
+}
+
+# Location scope: lost (owner change): the game opened its closed buildings itself; everything the rule kept here goes.
+pp_pclose_forget = {
+	clear_variable_list = pp_pclose_types
+	clear_variable_list = pp_pclose_for
+	clear_variable_list = pp_pclose_keep
+	remove_variable = pp_pclose_wait
+}
+
+# Country scope (the setting switched off, scripted GUI pp_tplan_toggle_free): every building the rule closed opens.
+pp_pclose_undo_all = {
+	save_temporary_scope_as = pp_pclose_c
+	every_in_list = {
+		variable = pp_pclose_locs
+		limit = { owner ?= scope:pp_pclose_c }
+		pp_pclose_undo = yes
+	}
+}
+
+# Location scope, after a plan was taken off here (pp_tplan_flip, the plan button and Clear): when no plan the
+# closings here are for is left, they open again at once.
+pp_pclose_plan_off = {
+	if = {
+		limit = {
+			has_variable_list = pp_pclose_types
+			exists = owner
+		}
+		save_temporary_scope_as = pp_pclose_l
+		owner = { save_temporary_scope_as = pp_pclose_c }
+		pp_pclose_needed = yes
+	}
+}
+
+# ---- In a location's turn (pp_lprof_location_turn, location scope, scope:pp_cplan_country saved) ----
+
+# At the turn's start: in a look, the wait after a closing counts down one look; nothing walked yet this turn.
+pp_pclose_turn_start = {
+	remove_variable = pp_pclose_none
+	remove_variable = pp_pclose_pt
+	if = {
+		limit = {
+			has_variable = pp_pclose_wait
+			scope:pp_cplan_country = { has_variable = pp_cplan_now_105 }
+		}
+		change_variable = { name = pp_pclose_wait add = -1 }
+		if = {
+			limit = { var:pp_pclose_wait < 100.5 }
+			remove_variable = pp_pclose_wait
+		}
+	}
+}
+
+# At the turn's end: the turn's marks go.
+pp_pclose_turn_end = {
+	remove_variable = pp_pclose_none
+	remove_variable = pp_pclose_pt
+}
+
+# Location scope, a candidate's worker test failed (pp_lprof_expand; the cost temporaries scope:pp_cplan_btype /
+# _ipl / _pf / _ef are set): it waits for workers and nothing else (pp_pclose_may) -> 104.25 and the pop type its level
+# needs (the first such candidate of the plan's turn keeps it), else 104 (no free workers).
+pp_pclose_worker_fail = {
+	if = {
+		limit = { pp_pclose_may = { type = $type$ demand = $demand$ } }
+		pp_lprof_fail = { r = 104.25 }
+		if = {
+			limit = { NOT = { has_variable = pp_pclose_pt } }
+			set_variable = { name = pp_pclose_pt value = pop_type:$pt$ }
+		}
+	}
+	else = {
+		pp_lprof_fail = { r = 104 }
+	}
+}
+
+# The same for a first level (pp_lprof_start, which sets the cost temporaries only after its worker test; here only on
+# the worker-blocked path, so the start candidates' usual path costs nothing more).
+pp_pclose_worker_fail_new = {
+	if = {
+		limit = {
+			scope:pp_cplan_country = {
+				is_ai = no
+				NOT = { has_variable = pp_tplan_free_off }
+			}
+		}
+		building_type:$type$ = { save_scope_as = pp_cplan_btype }
+		save_temporary_scope_value_as = { name = pp_cplan_ipl value = $ipl$ }
+		save_temporary_scope_value_as = { name = pp_cplan_pf value = pp_cplan_cd_$demand$ }
+		save_temporary_scope_value_as = { name = pp_cplan_ef value = pp_cplan_eff_$cat$ }
+		pp_pclose_worker_fail = { type = $type$ demand = $demand$ pt = $pt$ }
+	}
+	else = {
+		pp_lprof_fail = { r = 104 }
+	}
+}
+
+# Location scope, in pp_lplan_mark after the plan $g$ ran its target: its best reason is "workers and nothing else"
+# (pp_lprof_fail 104.25). While a closing here is under way (pp_pclose_wait: its people are on their way) the plan
+# is one of those the closings are for and its state is 14 (pp_lprof_finish: "closing another business here to free
+# workers"); else, once per turn, one building is closed for it (pp_pclose_pick). Nothing to close (or the walk found
+# nothing earlier this turn): its state is 4, no free workers.
+pp_pclose_plan = {
+	if = {
+		limit = {
+			NOT = { has_variable = pp_pclose_wait }
+			NOT = { has_variable = pp_pclose_none }
+			has_variable = pp_pclose_pt
+		}
+		pp_pclose_pick = yes
+	}
+	if = {
+		limit = { has_variable = pp_pclose_wait }
+		if = {
+			limit = { NOT = { is_target_in_variable_list = { name = pp_pclose_for target = town_rights_type:pp_plan_$g$ } } }
+			add_to_variable_list = { name = pp_pclose_for target = town_rights_type:pp_plan_$g$ }
+		}
+	}
+	else = {
+		set_variable = { name = pp_lprof_fail value = 104 }
+	}
+	remove_variable = pp_pclose_pt
+}
+
+# Location scope (var:pp_pclose_pt = the pop type the plan's level needs): ONE building here goes onto the country's
+# close list: the first by pp_pclose_rank among pp_pclose_candidate (one ordered walk over the location's buildings).
+# Its type is remembered here, the location joins the country's list, and the location waits (pp_pclose_wait).
+# Nothing found: pp_pclose_none (no second walk this turn).
+pp_pclose_pick = {
+	save_temporary_scope_as = pp_pclose_l
+	var:pp_pclose_pt = { save_temporary_scope_as = pp_pclose_pt }
+	# food makers only while the province's store is not short: the food rule's own line (pp_cplan_hungry)
+	save_temporary_scope_value_as = { name = pp_pclose_fed value = 0 }
+	if = {
+		limit = { province ?= { pp_pclose_store_ok = yes } }
+		save_temporary_scope_value_as = { name = pp_pclose_fed value = 1 }
+	}
+	ordered_buildings_in_location = {
+		limit = { pp_pclose_candidate = yes }
+		order_by = pp_pclose_rank
+		max = 1
+		check_range_bounds = no
+		save_temporary_scope_as = pp_pclose_b
+		scope:pp_cplan_country = {
+			add_to_variable_list = { name = pp_pclose_now target = scope:pp_pclose_b }
+			if = {
+				limit = { NOT = { is_target_in_variable_list = { name = pp_pclose_locs target = scope:pp_pclose_l } } }
+				add_to_variable_list = { name = pp_pclose_locs target = scope:pp_pclose_l }
+			}
+		}
+		scope:pp_pclose_l = {
+			if = {
+				limit = { NOT = { is_target_in_variable_list = { name = pp_pclose_types target = scope:pp_pclose_b.building_type } } }
+				add_to_variable_list = { name = pp_pclose_types target = scope:pp_pclose_b.building_type }
+			}
+			set_variable = { name = pp_pclose_wait value = 102 }
+		}
+	}
+	if = {
+		limit = { NOT = { has_variable = pp_pclose_wait } }
+		set_variable = { name = pp_pclose_none value = yes }
+	}
+}
+
+# Never runs (pp_lprof_run calls it under always = no): the scope the widget's handshake passes (scope:pp_b,
+# pp_pclose_ack) exists for the script check.
+pp_pclose_declare = {
+	save_scope_as = pp_b
+}

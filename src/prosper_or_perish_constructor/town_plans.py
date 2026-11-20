@@ -46,7 +46,7 @@ EXTRA_PLANS: tuple[str, ...] = ("food", "trade")
 #   script value  pp_tplan_on_<plan>       1 while the location holds that plan right, else 0
 #   effect        pp_tplan_flip = { g = <plan> }   sets the plan right, or takes it off when held (the button)
 #   scripted GUI  pp_tplan_toggle          scope location, scope:pp_key = flag:<plan>
-#   variables     pp_lplan_st_g_<plan>     the plan's state (1..13, location_profiles.STATES), pp_lplan_est_g_<plan> its payback
+#   variables     pp_lplan_st_g_<plan>     the plan's state (1..14, location_profiles.STATES), pp_lplan_est_g_<plan> its payback
 HELD_TRIGGER = "pp_tplan_held"
 ON_VALUE_PREFIX = "pp_tplan_on_"
 FLIP_EFFECT = "pp_tplan_flip"
@@ -69,15 +69,17 @@ FAIL_RANK = 108  # pp_lprof_fail: the plan needs a higher rank and the raise can
 #   pp_tplan_loss_ok        set: a plan may add a level to a building that loses money; unset (default) = never
 #   pp_tplan_staff_off      set: plans do not wait for free workers; unset (default) = they wait
 #   pp_tplan_order_best     set: several plans in a location go best payback first; unset (default) = they take turns
-#   pp_tplan_pb_some        set by the settings' effects while any payback limit is set (the pass then works out
+#   pp_tplan_free_off       set: plans close no other businesses for their workers; unset (default) = they do
+#                           (plan_closer.py, scripted_effects/pp_plan_closer.txt)
+#   pp_tplan_pb_some       set by the settings' effects while any payback limit is set (the pass then works out
 #                           the business estimates of first levels and tier upgrades)
 # Script values (country scope, the GUI reads them): pp_tplan_pb_years_all / pp_tplan_pb_years_<plan> (limit in years,
 # 0 = any; a plan's includes the all-plans value), pp_tplan_pb_own_<plan> (1 = its own setting), pp_tplan_loss_n
 # (1 = never at a loss), pp_tplan_staff_n (1 = waits for workers), pp_tplan_order_n (1 = take turns), pp_tplan_close_n
-# (1 = the game's close-buildings automation is on).
+# (1 = the game's close-buildings automation is on), pp_tplan_free_n (1 = plans close other businesses for workers).
 # Scripted GUIs (scope country, scripted_guis/pp_town_plan_settings.txt): pp_tplan_pb_up / pp_tplan_pb_down
 # (scope:pp_key = flag:<plan> or flag:all), pp_tplan_pb_reset (flag:<plan>), pp_tplan_toggle_loss / _staff / _order /
-# _close.
+# _close / _free.
 PAYBACK_STEPS: tuple[int, ...] = (1, 2, 3, 4, 5, 7, 10, 15, 20, 30, 40, 50)
 PB_ANY = len(PAYBACK_STEPS) + 1  # a plan's own "any payback"
 PB_ALL = "all"  # the all-plans key (flag:all, pp_tplan_pb_all, pp_tplan_pb_years_all)
@@ -88,10 +90,12 @@ PB_SOME_VAR = "pp_tplan_pb_some"
 LOSS_OK_VAR = "pp_tplan_loss_ok"
 STAFF_OFF_VAR = "pp_tplan_staff_off"
 ORDER_BEST_VAR = "pp_tplan_order_best"
+FREE_OFF_VAR = "pp_tplan_free_off"
 LOSS_VALUE = "pp_tplan_loss_n"
 STAFF_VALUE = "pp_tplan_staff_n"
 ORDER_VALUE = "pp_tplan_order_n"
 CLOSE_VALUE = "pp_tplan_close_n"
+FREE_VALUE = "pp_tplan_free_n"
 CLOSE_SYSTEM = "closebuildings"  # the game's automated system (set_automated_system / is_system_automated)
 PB_UP_GUI = "pp_tplan_pb_up"
 PB_DOWN_GUI = "pp_tplan_pb_down"
@@ -100,6 +104,7 @@ TOGGLE_LOSS_GUI = "pp_tplan_toggle_loss"
 TOGGLE_STAFF_GUI = "pp_tplan_toggle_staff"
 TOGGLE_ORDER_GUI = "pp_tplan_toggle_order"
 TOGGLE_CLOSE_GUI = "pp_tplan_toggle_close"
+TOGGLE_FREE_GUI = "pp_tplan_toggle_free"
 SETTINGS_GUIS = Path("in_game/common/scripted_guis/pp_town_plan_settings.txt")
 
 
@@ -471,12 +476,13 @@ def render_settings_values(items: list[Plan]) -> str:
             "\t\tvalue = 1\n\t}\n}\n"
         )
     parts.append(
-        "\n# The switches, 1 = the default: never at a loss, wait for free workers, take turns; and the game's own\n"
-        "# automation that closes buildings, 1 = on.\n"
+        "\n# The switches, 1 = the default: never at a loss, wait for free workers, take turns, close other businesses for\n"
+        "# a plan's workers; and the game's own automation that closes buildings, 1 = on.\n"
         f"{LOSS_VALUE} = {{\n\tvalue = 1\n\tif = {{\n\t\tlimit = {{ has_variable = {LOSS_OK_VAR} }}\n\t\tvalue = 0\n\t}}\n}}\n"
         f"{STAFF_VALUE} = {{\n\tvalue = 1\n\tif = {{\n\t\tlimit = {{ has_variable = {STAFF_OFF_VAR} }}\n\t\tvalue = 0\n\t}}\n}}\n"
         f"{ORDER_VALUE} = {{\n\tvalue = 1\n\tif = {{\n\t\tlimit = {{ has_variable = {ORDER_BEST_VAR} }}\n\t\tvalue = 0\n\t}}\n}}\n"
         f"{CLOSE_VALUE} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ is_system_automated = {CLOSE_SYSTEM} }}\n\t\tvalue = 1\n\t}}\n}}\n"
+        f"{FREE_VALUE} = {{\n\tvalue = 1\n\tif = {{\n\t\tlimit = {{ has_variable = {FREE_OFF_VAR} }}\n\t\tvalue = 0\n\t}}\n}}\n"
         "\n# One payback step from scope:pp_tplan_cur (the index it starts from, any = the last step + 1): longer (past the\n"
         "# last step: any payback) and shorter (from any: the last step; never below the first).\n"
         f"pp_tplan_pb_next_up = {{\n\tvalue = scope:pp_tplan_cur\n\tadd = 1\n\tmax = {PB_ANY}\n}}\n"
@@ -554,6 +560,10 @@ def render_settings_guis() -> str:
             f"\t\tif = {{\n\t\t\tlimit = {{ is_system_automated = {CLOSE_SYSTEM} }}\n"
             f"\t\t\tset_automated_system = {{ system = {CLOSE_SYSTEM} activate = no }}\n\t\t}}\n"
             f"\t\telse = {{\n\t\t\tset_automated_system = {{ system = {CLOSE_SYSTEM} activate = yes }}\n\t\t}}\n"),
+        gui(TOGGLE_FREE_GUI, "Plans close other businesses for their workers (the default), or not; switched off, every\n"
+            "# building the rule closed opens again (scripted_effects/pp_plan_closer.txt).",
+            f"\t\tpp_cplan_flip = {{ var = {FREE_OFF_VAR} }}\n"
+            f"\t\tif = {{\n\t\t\tlimit = {{ has_variable = {FREE_OFF_VAR} }}\n\t\t\tpp_pclose_undo_all = yes\n\t\t}}\n"),
     ])
 
 

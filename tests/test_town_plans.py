@@ -219,7 +219,8 @@ def test_settings_values_for_every_plan(plans: list[tp.Plan]) -> None:
     assert years("lumber", {"var:pp_tplan_pb_all": 7, "var:pp_tplan_pb_lumber": tp.PB_ANY}) == 0  # its own "any"
     assert values.value(tp.pb_own_value("lumber"), {"game": {"var:pp_tplan_pb_lumber": 3}}) == 1
     assert values.value(tp.pb_own_value("lumber"), {"game": {"var:pp_tplan_pb_all": 3}}) == 0
-    for name, var in ((tp.LOSS_VALUE, tp.LOSS_OK_VAR), (tp.STAFF_VALUE, tp.STAFF_OFF_VAR), (tp.ORDER_VALUE, tp.ORDER_BEST_VAR)):
+    for name, var in ((tp.LOSS_VALUE, tp.LOSS_OK_VAR), (tp.STAFF_VALUE, tp.STAFF_OFF_VAR), (tp.ORDER_VALUE, tp.ORDER_BEST_VAR),
+                      (tp.FREE_VALUE, tp.FREE_OFF_VAR)):
         assert values.value(name, {"game": {}}) == 1, name  # the default
         assert values.value(name, {"game": {f"var:{var}": 1}}) == 0, name
     assert values.value(tp.CLOSE_VALUE, {"game": {}}) == 0
@@ -234,7 +235,7 @@ def test_settings_buttons_and_effects(plans: list[tp.Plan]) -> None:
     """The settings' scripted GUIs (country scope, player only) and the effects behind them, for every plan and all."""
     guis = _code(MOD / tp.SETTINGS_GUIS)
     names = [tp.PB_UP_GUI, tp.PB_DOWN_GUI, tp.PB_RESET_GUI, tp.TOGGLE_LOSS_GUI, tp.TOGGLE_STAFF_GUI,
-             tp.TOGGLE_ORDER_GUI, tp.TOGGLE_CLOSE_GUI]
+             tp.TOGGLE_ORDER_GUI, tp.TOGGLE_CLOSE_GUI, tp.TOGGLE_FREE_GUI]
     assert re.findall(r"^(\w+) = \{", guis, re.MULTILINE) == names
     for name in names:
         body = _block(guis, name)
@@ -243,8 +244,11 @@ def test_settings_buttons_and_effects(plans: list[tp.Plan]) -> None:
     assert "pp_tplan_pb_key = { dir = down }" in _block(guis, tp.PB_DOWN_GUI)
     assert "pp_tplan_pb_key_reset = yes" in _block(guis, tp.PB_RESET_GUI)
     for gui, var in ((tp.TOGGLE_LOSS_GUI, tp.LOSS_OK_VAR), (tp.TOGGLE_STAFF_GUI, tp.STAFF_OFF_VAR),
-                     (tp.TOGGLE_ORDER_GUI, tp.ORDER_BEST_VAR)):
+                     (tp.TOGGLE_ORDER_GUI, tp.ORDER_BEST_VAR), (tp.TOGGLE_FREE_GUI, tp.FREE_OFF_VAR)):
         assert f"pp_cplan_flip = {{ var = {var} }}" in _block(guis, gui), gui
+    # switched off, every building the rule closed for a plan's workers opens again (plan_closer.py)
+    free = _block(guis, tp.TOGGLE_FREE_GUI)
+    assert free.index("pp_cplan_flip") < free.index(f"limit = {{ has_variable = {tp.FREE_OFF_VAR} }}\n\t\t\tpp_pclose_undo_all = yes")
     close = _block(guis, tp.TOGGLE_CLOSE_GUI)
     assert "limit = { is_system_automated = closebuildings }" in close
     assert close.index("set_automated_system = { system = closebuildings activate = no }") < close.index(

@@ -19268,6 +19268,14 @@ pp_cplan_d_profiles_st13 = {
 		subtract = 100
 	}
 }
+pp_cplan_d_profiles_st14 = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_cplan_ds_profiles_st14 }
+		value = var:pp_cplan_ds_profiles_st14
+		subtract = 100
+	}
+}
 pp_cplan_h_profiles_need_1 = {
 	value = 0
 	if = {

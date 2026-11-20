@@ -65,7 +65,8 @@ RANK_KEYS = {"country": "PP_CPLAN_D_SAVE_RANK_", "profiles": "PP_CPLAN_D_SAVE_RA
 # the plans' states the pass counts (pp_cplan_d_profiles_st<n>, location_profiles.STATES), with their texts
 # (pp_location_profiles_l_english.yml PP_LPROF_ST_<n>) as tooltips. The market limit does not hold a plan back (10),
 # so that one never comes up; 5: a plan's payback limit (plan settings); 11: it waits for a higher rank that cannot be
-# raised there now (town_plans.py); 12: the standing building loses money (plan settings); 13: it is closed.
+# raised there now (town_plans.py); 12: the standing building loses money (plan settings); 13: it is closed; 14:
+# another business there is being closed to free workers for it (plan_closer.py).
 PROFILE_STATES = {
     1: "started a construction",
     2: "had nothing left to build",
@@ -78,6 +79,7 @@ PROFILE_STATES = {
     11: "need a higher [location_rank|e]",
     12: "would add to a losing [building|e]",
     13: "found their [building|e] closed",
+    14: "closed another [building|e] for workers",
 }
 # the Locations group's ledger steps (pp_cplan_log_step_105): 0 a plan's building, 2 a rank raise for a plan
 # (construction_plan_country STEP_RANK, value = the location's people in thousands)

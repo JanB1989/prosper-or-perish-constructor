@@ -3,7 +3,8 @@
 Jan: "each of our town rights (the plans) has, in the construction manager menu, a button where we can see the baseline
 settings for what it does, which we can then adjust ... simple, everything set at good values at game start". So the
 tab is small: on top the settings every plan shares (a payback limit, never a level at a loss, wait for free workers,
-how several plans in one location share their turn, and the game's own close-buildings automation), each one switch or
+close other businesses for a plan's workers (plan_closer.py), how several plans in one location share their turn, and
+the game's own close-buildings automation), each one switch or
 stepper; below it the plan icons (the Location Plan picker's groups and icons), a click selects a plan (a GUI
 variable, no script), and a small card shows what the plan builds and its payback limit, which the player may set for
 that plan alone. A plan with its own limit carries a dot on its icon.
@@ -46,12 +47,13 @@ LOSS = "pp_tplan_loss_n"  # 1 = never add a level to a building that loses money
 STAFF = "pp_tplan_staff_n"  # 1 = wait for free workers
 ORDER = "pp_tplan_order_n"  # 1 = several plans in one location take turns, 0 = best payback first
 CLOSE = "pp_tplan_close_n"  # 1 = the game's close-buildings automation is on
-CONTRACT_VALUES = (PB_ALL, LOSS, STAFF, ORDER, CLOSE)
+FREE = "pp_tplan_free_n"  # 1 = plans close other businesses for their workers (plan_closer.py)
+CONTRACT_VALUES = (PB_ALL, LOSS, STAFF, ORDER, CLOSE, FREE)
 CONTRACT_VALUE_PREFIXES = (PB_YEARS, PB_OWN)
 # Scripted GUIs, scope country; the payback ones take scope:pp_key = flag:<plan> or flag:all.
 PB_UP, PB_DOWN, PB_RESET = "pp_tplan_pb_up", "pp_tplan_pb_down", "pp_tplan_pb_reset"
 TOGGLES = {"loss": "pp_tplan_toggle_loss", "staff": "pp_tplan_toggle_staff", "order": "pp_tplan_toggle_order",
-           "close": "pp_tplan_toggle_close"}
+           "close": "pp_tplan_toggle_close", "free": "pp_tplan_toggle_free"}
 CONTRACT_GUIS = (PB_UP, PB_DOWN, PB_RESET, *TOGGLES.values())
 ALL = "all"
 
@@ -250,6 +252,8 @@ def render_gui(items: list[Item]) -> str:
              _switch(LOSS, TOGGLES["loss"], "PP_TPLAN_SET_ON", "PP_TPLAN_SET_OFF", "PP_TPLAN_SET_LOSS_TT", "\t\t\t")),
         _row("PP_TPLAN_SET_STAFF", "PP_TPLAN_SET_STAFF_TT",
              _switch(STAFF, TOGGLES["staff"], "PP_TPLAN_SET_ON", "PP_TPLAN_SET_OFF", "PP_TPLAN_SET_STAFF_TT", "\t\t\t")),
+        _row("PP_TPLAN_SET_FREE", "PP_TPLAN_SET_FREE_TT",
+             _switch(FREE, TOGGLES["free"], "PP_TPLAN_SET_ON", "PP_TPLAN_SET_OFF", "PP_TPLAN_SET_FREE_TT", "\t\t\t")),
         _row("PP_TPLAN_SET_ORDER", "PP_TPLAN_SET_ORDER_TT",
              _switch(ORDER, TOGGLES["order"], "PP_TPLAN_SET_TURNS", "PP_TPLAN_SET_BEST", "PP_TPLAN_SET_ORDER_TT", "\t\t\t")),
         _row("PP_TPLAN_SET_CLOSE", "PP_TPLAN_SET_CLOSE_TT",
@@ -356,6 +360,15 @@ def texts(items: list[Item]) -> dict[str, str]:
             "#T Workers#!\nWhile on, a plan adds a level only where enough people are free to work it, so new levels "
             "do not stand empty. Off: it builds without waiting for them."
         ),
+        "PP_TPLAN_SET_FREE": "Close other businesses for a plan's workers",
+        "PP_TPLAN_SET_FREE_TT": (
+            "#T Workers for a plan#!\nWhile on, where a plan's next level waits only for workers, the plan closes one "
+            "other [building|e] of yours in that [location|e] whose workers can take the new jobs, the one that earns "
+            "least per worker first, then gives the people time before it closes the next. It never closes a building "
+            "of the location's plans, a public building, a logistics building, an improvement or a subsidised "
+            "building, and it keeps the buildings that feed the [province|e] open while its food store is short. "
+            "Taking the plan off, or switching this off, opens them again. A building you open yourself stays open."
+        ),
         "PP_TPLAN_SET_ORDER": "Several plans in one location",
         "PP_TPLAN_SET_ORDER_TT": (
             "#T Several plans in one location#!\nTake turns: the plans of a [location|e] are served one after the "
@@ -367,8 +380,7 @@ def texts(items: list[Item]) -> dict[str, str]:
         "PP_TPLAN_SET_CLOSE": "Close buildings that lose money",
         "PP_TPLAN_SET_CLOSE_TT": (
             "#T The game's own automation#!\nThis switches the game's own automation that closes buildings losing "
-            "money, for your whole country, not only for the plans. The Construction Plan cannot close buildings "
-            "itself. A plan never adds a level to a closed building."
+            "money, for your whole country, not only for the plans. A plan never adds a level to a closed building."
         ),
         "PP_TPLAN_SET_EACH": "Each plan",
         "PP_TPLAN_SET_EACH_TT": (

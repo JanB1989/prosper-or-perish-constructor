@@ -1,9 +1,13 @@
-# Town-right plans
+# Location plans
 
-Branch `town-plans`, 2026-11-19, Jan: the one per-location decision of the Construction Plan is a **plan**, and a plan
-is a town right. "This location is for lumber." Player-only; the AI never grants a plan right. **Tested in game
-2026-11-20** in the Construction Plan test world as Castile (section "Tested in game" below, three rounds); the
-engine behaviour further down that the tests did not touch comes from a static reading of EU5 1.4.9.
+Branch `town-plans` (now `0.11`), 2026-11-19, Jan: the one per-location decision of the Construction Plan is a
+**plan**. "This location is for lumber." Player-only; the AI never sets a plan. Since 2026-11-21 a plan is a plain
+marker on the location and no town right (Jan: "We just use our plans, and the plans apply the relevant town rights if
+the setting is turned on"; from 2026-11-19 to 2026-11-20 every plan was a town right `pp_plan_<plan>` without
+conditions or bonus). What a plan does did not change. **Tested in game** 2026-11-20 as town rights (sections "Tested
+in game (2026-11-20)" and after, three rounds) and 2026-11-21 as markers ("Tested in game (2026-11-21, plans as
+markers)"), in the Construction Plan test world as Castile; the engine behaviour further down that the tests did not
+touch comes from a static reading of EU5 1.4.9.
 
 It replaces the Location Profiles (slots with ordered rules) and the Location Plan marks (goods marks and building
 marks), which are gone (history: `docs/location_profiles.md`, and this file's history in git before 2026-11-19).
@@ -19,19 +23,37 @@ marks), which are gone (history: `docs/location_profiles.md`, and this file's hi
   as pressed tiles (a click takes one off), each tooltip with what the plan does and how its last check went; past 11
   tiles the title gives the count. The round button opens the Location Plan window.
 - Any owned location, rural settlements included; several plans per location. A plan stays until the player takes it
-  off, or the location is lost (below).
-- A plan also shows in the game's own town rights card of the location, with its own icon (the good's; food and trade
-  a map mode's) and name ("Plan: Lumber").
+  off, or the location changes owner (below).
+- A plan is not a town right: it does not show in the game's town rights list of the location, takes no rights slot,
+  has no colour in the town-rights map mode and sends no town rights message. The charter and rights a plan grants
+  are real town rights and show as such.
 
-## The plan right
+## How a plan is kept
 
-`pp_plan_<plan>` (`town_plans.py`, generated `town_rights/pp_plan_town_rights.txt`), one per plan: the 75 goods that
-have a forced goods target (their producers) plus `food` and `trade`. Each right: `potential = { always = no }` (never
-in the game's grant list, never granted by the AI, skipped by the Towns and Buildings rights rule), no `allow`, no
-bonus, `kept_at_conquest = no`, `local_possible_town_rights = 1` (the right brings its own slot, so it never takes the
-room of a real right), its own colour. Set and removed only by the mod: scripted GUI `pp_tplan_toggle` -> effect
-`pp_tplan_flip = { g = <plan> }` (`grant_town_rights` / `revoke_town_rights_of_type`, every grant guarded by "not
-held"). Script reads it with `has_town_rights` (trigger `pp_tplan_held`, value `pp_tplan_on_<plan>`).
+77 plans (`town_plans.py`): the 75 goods that have a forced goods target (their producers) plus `food` and `trade`.
+Since 2026-11-21:
+
+- **The marker**: location variable `pp_tplan_p_<plan>` = the location holds the plan. Set and removed only by the
+  mod: scripted GUI `pp_tplan_toggle` -> effect `pp_tplan_flip = { g = <plan> }`
+  (`scripted_effects/pp_location_plan.txt`). A plan taken off takes its state and payback along. The GUI tests a
+  held plan with `Location.MakeScope.Var('pp_tplan_p_<plan>').IsSet`.
+- **`pp_tplan_any`** (location variable): set while the location holds at least one plan; trigger `pp_tplan_held`
+  reads it. `pp_tplan_flip` asks the generated `pp_tplan_held_scan` (every marker) after it took a plan off and drops
+  `pp_tplan_any` when none is left.
+- **The country list `pp_tplan_locs`**: the country's planned locations, each once, kept by `pp_tplan_flip` (added
+  with the first plan, removed with the last). The Locations look (`pp_lprof_gather`) and the charter look
+  (`pp_cplan_country_plan_grant` / `_upgrade`) walk this list. Why a list: script has no iterator over the locations
+  that carry a variable (before, `every_locations_with_town_rights_in_country` found them through the plan right).
+  `pp_lprof_gather` first sweeps the list: entries the country no longer owns or that hold no plan come off.
+- **Owner change**: a location that changes owner loses its plans. On_action `on_location_changed_owner`
+  (`on_action/pp_construction_plan.txt`) -> `pp_tplan_owner_changed` -> `pp_tplan_owner_changed_effect`: the location
+  comes off `scope:loser`'s list, what that owner's Locations group saved for it is released, and the generated
+  `pp_tplan_strip` removes every marker, state, payback, `pp_tplan_any`, `pp_lplan_wk`, `pp_lplan_last` and
+  `pp_tplan_cwait`. Until 2026-11-21 the engine did this through the right's `kept_at_conquest = no`. The sweep of
+  `pp_lprof_gather` strips a lost location's plans that are still there only where the new owner is no player (a
+  location another player owns keeps that player's plans).
+- **What went with the rights**: the rights file, their text and the 77 icons (`town_plans.apply` deletes leftovers,
+  `stale_paths`). No entry in the town rights list, no slot, no colour, no message.
 
 ## What the Construction Plan does with a plan
 
@@ -144,6 +166,8 @@ Businesses "keeping up"; no mod script error in the three years. Not tested: a l
 country with more than 1,440 planned locations (a slice above 60), multiplayer.
 
 ### In-game results of the night (2026-11-20, plan test world, Castile)
+
+Plans were town rights `pp_plan_<plan>` then.
 
 - **Impact, ten years, 615 plans on 418 locations** (every location its raw material, towns a manufactured good and
   Trade, province capitals Food; all rule groups at their defaults, +20,000 gold) against a control run without plans:
@@ -291,8 +315,10 @@ should be turned off in that location, so they release the workers ... automatic
   for workers while a closing here is under way (this look's or the wait after it). Where nothing can be closed the
   state stays 4. Counted for the Locations pane like every state (`pp_cplan_ds_profiles_st14`).
 - **Memory**: the location keeps the building types the rule closed (`pp_pclose_types`, by type: a building cannot hold
-  variables), the plans they are for (`pp_pclose_for`, the plan rights) and the types the player opened again
-  (`pp_pclose_keep`); the country keeps the locations (`pp_pclose_locs`).
+  variables), the plans they are for (location variables `pp_pclose_for_<plan>`, read by the generated trigger
+  `pp_pclose_for_held` and cleared by the generated effect `pp_pclose_for_clear`; until 2026-11-21 a location list
+  `pp_pclose_for` of the plan rights) and the types the player opened again (`pp_pclose_keep`); the country keeps the
+  locations (`pp_pclose_locs`).
 - **Undo**: when no plan the closings are for is held any more (the plan button and Clear: `pp_tplan_flip` ->
   `pp_pclose_plan_off`, at once; or the monthly check), or the setting is switched off, every closed building of those
   types goes on the country list `pp_popen_now`, which the widget opens; the location forgets its closings (the keep
@@ -358,8 +384,9 @@ automation) adds no new building or level of that type in that market.
 - **A town already specialized** (a conquered city keeps its charter, tested; a leftover of an earlier plan): the
   town's specialization follows its plans. The other specialization makes way for the planned good's charter once
   that good's line has more levels in the town than the other's and the other good has no plan there.
-- **The location is lost**: every owner change tested takes the plans off and the game reopens what the rule closed;
-  the rule's memory of the location is dropped at the next monthly check. Won back, it has no plans.
+- **The location is lost**: every owner change tested takes the plans off (since 2026-11-21 the mod's on_action
+  `on_location_changed_owner`, before the plan right's `kept_at_conquest = no`) and the game reopens what the rule
+  closed; the rule's memory of the location is dropped at the next monthly check. Won back, it has no plans.
 - **A building the player opens again** stays open (keep list, tested).
 - **Several plans, too few workers**: plans never close each other's buildings; they take turns.
 - **A plan whose good cannot be made here**: state 6, nothing is built, nothing is closed.
@@ -370,27 +397,37 @@ automation) adds no new building or level of that type in that market.
 ## Map mode
 
 **Location Plan** (Economy menu, first row; `gfx/map/map_modes/pp_location_plan_map_mode.txt`, game concept
-`pp_location_plan`): over each of the player's locations the icons of its town rights, plans among them, at most 8
-(vanilla's raw goods marker, patched by `location_plan.py` in `gui/map_markers.gui`); each icon's tooltip names the
-right. No legend: the map under the icons is the raw material map faded almost out. Engine facts of the marker (in game
-2026-11-07): the engine makes raw goods markers only with `color_mode = raw_material`; with a color mode `map_color`
-and `tooltip_key` are ignored; marker types load only from the three `map_markers*.gui`; a mod loaded after PP that
-overrides `map_markers.gui` hides the icons; a map mode's `index` is its row in the category menu (economy shows rows
-0-3).
+`pp_location_plan`): over each of the player's locations first one icon per held plan (77 icon widgets behind the test
+of `pp_tplan_any`, each shown by its marker, tooltip `PP_TPLAN_MAP_<PLAN>`), then the location's real town rights from
+the game's datamodel, at most 8, on a tile of another colour (vanilla's raw goods marker, patched by
+`location_plan.py` in `gui/map_markers.gui`); a right's tooltip names the right. Until 2026-11-21 the plans were among
+those at most 8 town rights. No legend: the map under the icons is the raw material map faded almost out. Engine
+facts of the marker (in game 2026-11-07): the engine makes raw goods markers only with `color_mode = raw_material`;
+with a color mode `map_color` and `tooltip_key` are ignored; marker types load only from the three
+`map_markers*.gui`; a mod loaded after PP that overrides `map_markers.gui` hides the icons; a map mode's `index` is its
+row in the category menu (economy shows rows 0-3).
 
-## Engine behaviour relied on (static analysis of EU5 1.4.9; the owner change and the free script revoke were
-confirmed in game on 2026-11-20, "Third round")
+## Engine behaviour relied on (static analysis of EU5 1.4.9; the owner change, the free script revoke and the old
+saves' typeless rights were confirmed in game on 2026-11-20 and 2026-11-21)
+
+These now matter only for the real charters and rights a plan grants:
 
 - The script grant skips every check (potential, allow, slots, price) and can stack duplicates: every grant is guarded.
-- Every held right counts against the location's slots; the plan's own +1 slot cancels that.
-- A held right whose potential is false is never stripped.
-- A rank change revokes the rights above the slot count, newest first (a plan holds its own slot, so only a real right
-  can go that way; inferred).
-- An owner change destroys rights with `kept_at_conquest = no`: the new owner does not inherit the plan (in game:
-  both script owner changes and making a country from the location; a real charter is kept).
+- Every held right counts against the location's slots (a plan holds none since 2026-11-21).
+- A rank change revokes the rights above the slot count, newest first (inferred).
+- An owner change keeps a real charter (in game: both script owner changes and making a country from the location).
 - Every script grant and revoke sends the player the game's town rights message (a pop-up by the game's default; the
   mod switches the pop-up off, see "Known limits").
-- The AI never grants plan rights (potential `always = no`).
+
+For the plans themselves:
+
+- `on_location_changed_owner` fires for both `create_country_from_location` and `change_location_owner`, with the
+  previous owner as `scope:loser` (in game 2026-11-21).
+- A save's town right whose type no longer exists loads as a right WITHOUT a type: the game logs "Failed to read key
+  reference: pp_plan_<plan>", the right stays on its location, counts in the rights counter and in
+  `every_town_rights_in_Location`; `revoke_town_rights_of_type` cannot remove it ("unknown Type"), `revoke_town_rights =
+  this` inside `every_town_rights_in_Location = { limit = { NOT = { exists = town_rights_type } } ... }` can (in game
+  2026-11-21).
 
 ## Known limits
 
@@ -398,11 +435,18 @@ confirmed in game on 2026-11-20, "Third round")
   first granted stays; the location carries one wait reason, so the other plan's tooltip may show it too.
 - A tier two steps old upgrades only while the middle tier can still be built (the upgrade goes to the direct
   successor).
-- Plans are lost on conquest (a hostile owner change), by design.
+- Plans are lost on every owner change, by design. Tested: `create_country_from_location` and `change_location_owner`;
+  not tested: a peace deal, a country annexed.
 - The game's "town rights granted / revoked" messages go to the message log without a pop-up
   (`main_menu/gui/messagetypes/pp_messagetypes.txt` redefines the two message types; the default opened a pop-up for
-  every plan click and every charter the plan grants). This holds for every town right, the player's own grants too.
-- A plan right shows among the location's town rights in the game's own panels.
+  every plan click while plans were town rights, and still for every charter a plan grants). This holds for every town
+  right, the player's own grants too.
+- Saves made before 2026-11-21 keep each former plan right as a typeless town right (it still counts in the rights
+  counter) and lose their plans. The mod ships no cleanup (no old-save compatibility). For a running game a one-off
+  console file outside the mod, `run pp_plans_restore.txt` (written by the kit's
+  `pp_testing\townplan_test_20261120\gen_restore.py`), revokes the typeless rights in every location of every player
+  country and sets the plans again from the plan states left on the location (`pp_lplan_st_g_<plan>`; a plan never
+  looked at is not found). Tested on the old test save: rights 5 -> 0 and 4 -> 1, plans back.
 - Several plans in one location: until 2026-11-20 the plan that paid back best was built first, a level a look (in the
   test Oporto's Tools Guild got every level for six looks while Cloth and Trade waited); now they take turns by default
   ("Plan settings"), the old rule is the setting "best payback first".
@@ -411,20 +455,49 @@ confirmed in game on 2026-11-20, "Third round")
 
 ## Code
 
-- `town_plans.py`: the contract (names), the rights, their text and icons, `pp_tplan_held`, `pp_tplan_on_<plan>`, the
-  rank raise.
+- `town_plans.py`: the contract (names, the module docstring), `pp_tplan_held`, `pp_tplan_held_scan`,
+  `pp_tplan_strip`, the rank raise, the plan settings; `stale_paths` (what the plan rights left in the mod folder).
+- Hand-written `scripted_effects/pp_location_plan.txt`: `pp_tplan_flip` (marker, `pp_tplan_any`, the country list),
+  `pp_tplan_owner_changed_effect`; `on_action/pp_construction_plan.txt`: `pp_tplan_owner_changed` on
+  `on_location_changed_owner`.
 - `location_plan.py`: the window's picker, the toggle and Clear, the tile texts with the state, the map marker patch.
 - `town_plan_gui.py`: the Plans row.
 - `location_profiles.py` + hand-written `scripted_effects/pp_location_profiles.txt`: the engine of the Locations group
   (targets, turns, measuring, states; `docs/location_profiles.md`).
 - `construction_plan_country.py`: the charters and rights of planned locations; `pp_cplan_country_rank_up`.
 - `construction_plan_detail.py`: the Locations pane.
-- `plan_closer.py` + hand-written `pp_plan_closer.txt` (effects, triggers, values, scripted GUI) and
-  `gui/pp_plan_closer.gui`: plans free their workers.
+- `plan_closer.py` (generated `pp_pclose_for_held`, `pp_pclose_for_clear` in
+  `scripted_effects/pp_plan_closer_generated.txt`, the type lists) + hand-written `pp_plan_closer.txt` (effects,
+  triggers, values, scripted GUI) and `gui/pp_plan_closer.gui`: plans free their workers.
 - Tests: `tests/test_plan_closer.py`, `tests/test_town_plans.py`, `tests/test_town_plan_gui.py`, `tests/test_location_plan.py`, `tests/test_location_profiles.py`,
   `tests/test_construction_plan_country.py`, `tests/test_construction_plan_detail.py`.
 
+## Tested in game (2026-11-21, plans as markers)
+
+Plan test world, Castile, EU5 1.4.9; kit `pp_testing\townplan_test_20261120\gen_mk.py` -> `run\pp_mk_*.txt`, dump
+lines `PPM;`.
+
+- Setting plans through the button's effect on six locations: markers set, `pp_tplan_n` counts them, the country list
+  holds each location once (also after set, off, set of one plan).
+- A Locations look and a rights look: states written, constructions started; a plain charter grant (tools), a town's
+  other specialization making way (Granada: Cloth Charter without a cloth plan replaced by the Tools Charter), and the
+  other specialization staying where it has a plan (Avila: wait reason 2); political influence paid per grant.
+- Owner change by `create_country_from_location` and by `change_location_owner`: the plans, their states and the list
+  entry are gone at once (the on_action fires for both); coming back by `change_location_owner` brings no plan back.
+  Not tested: a peace deal, a country annexed.
+- Clear in the window: plans, states and the list entry gone.
+- Plans free their workers with 423 planned locations: one look closed 14 buildings in 14 locations (state 14 on 18
+  plans); they stayed closed over a monthly pass; taking the plans off those locations reopened all 14 at once.
+- 105 days over a sliced Locations look and a rights look: no script error from the plan files.
+- Map mode, the location window's Plans row and the Location Plan window (click a tile on / off) checked on
+  screenshots.
+- Old saves: a save made while plans were town rights loads; each former plan right stays as a typeless town right
+  ("Engine behaviour relied on"); the one-off `run pp_plans_restore.txt` ("Known limits") took the test save's rights
+  5 -> 0 and 4 -> 1 and set the plans again.
+
 ## Tested in game (2026-11-20)
+
+Plans were town rights `pp_plan_<plan>` in this and the following test sections.
 
 Construction Plan test world (playset "PP Plan Test"), new game as Castile, 1 April 1337 to March 1339, run files
 `run\pp_tp_setup.txt` (gold, influence, the plan on, plans through `pp_tplan_flip` on a small rural location, the

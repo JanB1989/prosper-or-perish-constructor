@@ -13,8 +13,11 @@ plan engine ``pp_location_profiles.txt``): where a plan's next level waits for w
 turn puts ONE other business of the player's there on the close list, the one that earns least per worker
 (``pp_pclose_rank``), then waits two looks. ``docs/location_plan.md`` "Plans free their workers".
 
-This module writes what the rule needs from the building and plan lists,
-``in_game/common/scripted_triggers/pp_plan_closer_generated.txt`` (building scope):
+This module writes what the rule needs from the building and plan lists. Per plan the location variable
+``pp_pclose_for_<plan>`` says the closings there are for that plan (set by ``pp_pclose_plan``); over them
+``in_game/common/scripted_effects/pp_plan_closer_generated.txt`` holds ``pp_pclose_for_clear`` (location scope: none
+of them left) and the triggers file ``pp_pclose_for_held`` (location scope: the location still holds a plan the
+closings are for). ``in_game/common/scripted_triggers/pp_plan_closer_generated.txt`` (building scope):
 
 * ``pp_pclose_planned``: the building is a candidate of a plan its location holds (``scope:pp_pclose_l``);
 * ``pp_pclose_never_type``: a building the rule never closes: logistics, improvements (capacity), the public buildings
@@ -33,6 +36,7 @@ from pathlib import Path
 from prosper_or_perish_constructor import town_plans
 
 TRIGGERS = Path("in_game/common/scripted_triggers/pp_plan_closer_generated.txt")
+EFFECTS = Path("in_game/common/scripted_effects/pp_plan_closer_generated.txt")
 HAND_EFFECTS = Path("in_game/common/scripted_effects/pp_plan_closer.txt")
 HAND_TRIGGERS = Path("in_game/common/scripted_triggers/pp_plan_closer.txt")
 HAND_VALUES = Path("in_game/common/script_values/pp_plan_closer.txt")
@@ -48,7 +52,9 @@ ACK_GUI = "pp_pclose_ack"  # scripted GUI: the widget took the building (scope:p
 LOCATIONS_LIST = "pp_pclose_locs"  # country: the locations where the rule closed something
 TYPES_LIST = "pp_pclose_types"  # location: the building types the rule closed there
 KEEP_LIST = "pp_pclose_keep"  # location: types the player opened again by hand (never closed again there)
-FOR_LIST = "pp_pclose_for"  # location: the plans (town rights) the closings there are for
+FOR_PREFIX = "pp_pclose_for_"  # location variable FOR_PREFIX + plan: the closings there are for that plan
+FOR_HELD = "pp_pclose_for_held"  # location trigger: it still holds a plan the closings are for
+FOR_CLEAR = "pp_pclose_for_clear"  # location effect: the closings are for no plan any more
 WAIT_VAR = "pp_pclose_wait"  # location: + 100, the looks the location still waits after a closing
 WAIT_LOOKS = 2  # a closing, then no closing in the next look; the second look after it may close again
 FAIL_CLOSE = 104.25  # pp_lprof_fail: the plan's level waits for workers and nothing else (state 14 while closing)
@@ -103,10 +109,18 @@ def render_triggers(plans: list[town_plans.Plan], never: list[str], food: list[s
     ]
     for plan in plans:
         parts.append(
-            f"\t\tAND = {{\n\t\t\tscope:pp_pclose_l = {{ has_town_rights = town_rights_type:{plan.right} }}\n"
+            f"\t\tAND = {{\n\t\t\tscope:pp_pclose_l = {{ has_variable = {plan.var} }}\n"
             "\t\t\tOR = {\n" + _types(sorted(plan.candidates), "\t\t\t\t") + "\t\t\t}\n\t\t}\n"
         )
     parts.append("\t}\n}\n")
+    parts.append(
+        "\n# Location scope: the location still holds a plan the closings here are for (pp_pclose_needed): a plan with\n"
+        f"# {FOR_PREFIX}<plan> (pp_pclose_plan) whose marker the location carries.\n"
+        f"{FOR_HELD} = {{\n\tOR = {{\n"
+        + "".join(f"\t\tAND = {{\n\t\t\thas_variable = {FOR_PREFIX}{plan.key}\n\t\t\thas_variable = {plan.var}\n\t\t}}\n"
+                  for plan in plans)
+        + "\t}\n}\n"
+    )
     parts.append(
         "\n# Building scope: a building the rule never closes: logistics, improvements (capacity) and the public\n"
         "# buildings of the Towns and Buildings group, every tier.\n"
@@ -128,6 +142,16 @@ def render_triggers(plans: list[town_plans.Plan], never: list[str], food: list[s
     return "".join(parts)
 
 
+def render_effects(plans: list[town_plans.Plan]) -> str:
+    return (
+        HEADER
+        + "\n# Location scope: the closings here are for no plan any more (pp_pclose_undo, pp_pclose_forget).\n"
+        f"{FOR_CLEAR} = {{\n"
+        + "".join(f"\tremove_variable = {FOR_PREFIX}{plan.key}\n" for plan in plans)
+        + "}\n"
+    )
+
+
 def inputs(repo: Path, project: Path, mod_root: Path, vanilla_root: Path):
     from prosper_or_perish_constructor import construction_plan as cp
     from prosper_or_perish_constructor import construction_plan_country as cc
@@ -145,14 +169,15 @@ def inputs(repo: Path, project: Path, mod_root: Path, vanilla_root: Path):
 def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: bool = True) -> Result:
     plans, never, food, pop_types = inputs(repo, project, mod_root, vanilla_root)
     result = Result(plans=len(plans), never=never, food=food, pop_types=pop_types)
-    text = render_triggers(plans, never, food, pop_types)
-    path = mod_root / TRIGGERS
-    old = path.read_text(encoding="utf-8") if path.is_file() else None
-    if old != text:
-        result.files_changed = 1
-        if write:
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(text, encoding="utf-8", newline="\n")
+    texts = {mod_root / TRIGGERS: render_triggers(plans, never, food, pop_types),
+             mod_root / EFFECTS: render_effects(plans)}
+    for path, text in texts.items():
+        old = path.read_text(encoding="utf-8") if path.is_file() else None
+        if old != text:
+            result.files_changed += 1
+            if write:
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(text, encoding="utf-8", newline="\n")
     return result
 
 

@@ -1,7 +1,8 @@
-"""Location plan: the player's plans for a location, as town rights (location_plan.py, mod/pp/.../pp_location_plan*).
-A plan is a town right pp_plan_<plan> (town_plans.py) set and taken off by the Location Plan window's icons and the
-location window's Plans row (test_town_plan_gui.py); the Construction Plan builds toward the held plans (its pass is
-tested elsewhere). Here the picker, the toggle, the texts, the map marker, and that the old building marks are gone."""
+"""Location plan: the player's plans for a location (location_plan.py, mod/pp/.../pp_location_plan*). A plan is the
+location variable pp_tplan_p_<plan> (town_plans.py; a town right pp_plan_<plan> until 2026-11-21) set and taken off by
+the Location Plan window's icons and the location window's Plans row (test_town_plan_gui.py); the Construction Plan
+builds toward the held plans (its pass is tested elsewhere). Here the picker, the toggle, the texts, the map marker,
+and that the old building marks are gone."""
 
 from __future__ import annotations
 
@@ -72,7 +73,7 @@ def test_built_mod_is_in_step() -> None:
 
 
 def test_picker_keys_are_the_plan_keys() -> None:
-    """Every plan right has its icon in the picker, in the shared order; fur (no building makes it) is shown, not
+    """Every plan has its icon in the picker, in the shared order; fur (no building makes it) is shown, not
     plannable; food and trade are a group of their own; the dummy goods never show."""
     plans = _plans()
     keys = [plan.key for plan in lp.plannable(plans)]
@@ -91,8 +92,9 @@ def test_picker_keys_are_the_plan_keys() -> None:
     fur = picker[picker.index('PP_TPLAN_NONE_FUR') - 300:picker.index('PP_TPLAN_NONE_FUR')]
     assert "onclick" not in fur and "button" not in fur
     assert "PP_LPLAN_GROUP_PLANS" in picker and "PP_LPLAN_GROUP_BUILDINGS" not in picker
-    # one held check: the plan right's script value
-    assert lp.held(plans[0]) == f"EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_{plans[0].key}'), '(CFixedPoint)1')"
+    # one held check: the plan's marker, a location variable (2026-11-21)
+    assert lp.held(plans[0]) == f"Location.MakeScope.Var('pp_tplan_p_{plans[0].key}').IsSet"
+    assert plans[0].var == town_plans.plan_var(plans[0].key) == f"pp_tplan_p_{plans[0].key}"
 
 
 def test_references_exist() -> None:
@@ -115,17 +117,26 @@ def test_references_exist() -> None:
         assert key in loc, f"text {key} missing"
 
 
-def test_toggle_flips_one_plan_right() -> None:
-    """One click sets the plan or takes it off: strictly one if / else on the held right (a script grant has no checks,
-    a revoke takes off one copy); a plan taken off takes its state along; the map redraws."""
+def _flip_parts() -> tuple[str, str]:
+    """The flip's take-off branch and its set branch (the top-level if / else)."""
     flip = _effect(_read(EFFECTS), town_plans.FLIP_EFFECT)
-    assert flip.count("has_town_rights") == 1 and flip.count("grant_town_rights") == 1
-    held_at = flip.index("limit = { has_town_rights = town_rights_type:pp_plan_$g$ }")
-    revoke = flip.index("revoke_town_rights_of_type = town_rights_type:pp_plan_$g$")
-    other = flip.index("else = {")
-    assert held_at < revoke < other < flip.index("grant_town_rights = town_rights_type:pp_plan_$g$")
+    other = flip.index("\n\telse = {")
+    return flip[:other], flip[other:]
+
+
+def test_toggle_flips_one_plan() -> None:
+    """One click sets the plan or takes it off: strictly one if / else on the plan's marker (since 2026-11-21 the
+    location variable pp_tplan_p_<plan>, no town right); a plan taken off takes its state along; the map redraws."""
+    flip = _effect(_read(EFFECTS), town_plans.FLIP_EFFECT)
+    code = re.sub(r"#[^\n]*", "", flip)
+    for gone in ("town_rights", "pp_plan_"):
+        assert gone not in code, gone
+    assert flip.count("limit = { has_variable = pp_tplan_p_$g$ }") == 1
+    off, on = _flip_parts()
+    assert off.index("limit = { has_variable = pp_tplan_p_$g$ }") < off.index("remove_variable = pp_tplan_p_$g$\n")
     for name in ("pp_lplan_st_g_$g$", "pp_lplan_est_g_$g$"):
-        assert held_at < flip.index(f"remove_variable = {name}\n") < other, name
+        assert f"remove_variable = {name}\n" in off, name
+    assert "set_variable = { name = pp_tplan_p_$g$ value = yes }" in on and "remove_variable" not in on
     assert "refresh_map_colors = yes" in flip
     # the switch: one case per plan, nothing for fur
     switch = _effect(_read(MOD / lp.EFFECTS), lp.TOGGLE_SWITCH)
@@ -135,7 +146,7 @@ def test_toggle_flips_one_plan_right() -> None:
     # Clear: only held plans are flipped (a flip on an unheld plan would grant it)
     clear = _effect(_read(MOD / lp.EFFECTS), lp.CLEAR_ALL)
     for plan in lp.plannable(_plans()):
-        assert (f"limit = {{ has_town_rights = town_rights_type:{plan.right} }}\n\t\t"
+        assert (f"limit = {{ has_variable = {plan.var} }}\n\t\t"
                 f"{town_plans.FLIP_EFFECT} = {{ g = {plan.key} }}") in clear
     # the scripted GUIs: location scope, a player owner only
     guis = _read(SCRIPTED_GUIS)
@@ -151,11 +162,12 @@ def test_toggle_flips_one_plan_right() -> None:
 def test_last_plan_off_releases_the_saving() -> None:
     """2026-11-20: when the last plan of a location goes (the button or Clear, both through the flip), nothing waits for
     workers there any more and what the Locations group (105) saved for there is let go of at once."""
-    flip = _effect(_read(EFFECTS), town_plans.FLIP_EFFECT)
-    off = flip[flip.index("revoke_town_rights_of_type"):flip.index("else = {\n\t\tgrant_town_rights")]
+    off, _ = _flip_parts()
     last = off[off.index("limit = { NOT = { pp_tplan_held = yes } }"):]
-    assert off.index("revoke_town_rights_of_type") < off.index("limit = { NOT = { pp_tplan_held = yes } }")
-    assert "remove_variable = pp_lplan_wk\n" in last
+    assert off.index("remove_variable = pp_tplan_p_$g$") < off.index("limit = { NOT = { pp_tplan_held = yes } }")
+    for name in ("pp_lplan_wk", "pp_lplan_last"):
+        assert f"remove_variable = {name}\n" in last, name
+    assert "limit = { has_variable = pp_tplan_cwait }\n\t\t\t\tremove_variable = pp_tplan_cwait" in last
     owner = last[last.index("owner ?= {"):]
     assert last.index("save_temporary_scope_as = pp_tplan_off_l") < last.index("owner ?= {")
     assert "has_variable = pp_cplan_save_loc_105\n" in owner
@@ -164,6 +176,32 @@ def test_last_plan_off_releases_the_saving() -> None:
     assert "remove_variable = pp_cplan_save_rank_105\n" in owner
     # Clear takes the plans off through the same flip
     assert f"{town_plans.FLIP_EFFECT} = {{ g = " in _effect(_read(MOD / lp.EFFECTS), lp.CLEAR_ALL)
+
+
+def test_flip_keeps_the_country_list_in_step() -> None:
+    """2026-11-21: the location is on its owner's list pp_tplan_locs exactly while it holds a plan, and pp_tplan_any
+    is set exactly while it holds one. Setting a plan adds the location to the list only when it is not on it yet (a
+    second plan would add a second copy); the last plan off takes it off. pp_tplan_any goes before the closer asks
+    whether a plan is left (pp_pclose_plan_off) and before the flip's own test of the last plan."""
+    off, on = _flip_parts()
+    # set: the marker, the mark "holds a plan", the list (once), the cache of "a location holds a plan"
+    assert "set_variable = { name = pp_tplan_any value = yes }" in on
+    add = f"add_to_variable_list = {{ name = {town_plans.LOCS_LIST} target = scope:pp_tplan_on_l }}"
+    guard = (f"limit = {{ NOT = {{ is_target_in_variable_list = {{ name = {town_plans.LOCS_LIST} "
+             "target = scope:pp_tplan_on_l } } }")
+    assert on.count(add) == 1 and on.index("save_temporary_scope_as = pp_tplan_on_l") < on.index("owner ?= {")
+    assert on.index("owner ?= {") < on.index(guard) < on.index(add)
+    assert "set_variable = { name = pp_lprof_any value = yes }" in on[on.index("owner ?= {"):]
+    # take off: pp_tplan_any by the scan of every marker, then the closer, then the last plan's clean-up
+    scan = off.index(f"limit = {{ NOT = {{ {town_plans.HELD_SCAN_TRIGGER} = yes }} }}\n\t\t\tremove_variable = "
+                     f"{town_plans.ANY_VAR}")
+    closer = off.index("pp_pclose_plan_off = yes")
+    last = off.index("limit = { NOT = { pp_tplan_held = yes } }")
+    assert off.index("remove_variable = pp_tplan_p_$g$") < scan < closer < last
+    remove = f"remove_list_variable = {{ name = {town_plans.LOCS_LIST} target = scope:pp_tplan_off_l }}"
+    assert off.count(remove) == 1 and last < off.index(remove)
+    assert off.index(remove) < off.index("pp_lprof_any_refresh = yes")
+    assert town_plans.LOCS_LIST not in off[:last]
 
 
 def test_gui_only_names_are_declared() -> None:
@@ -221,7 +259,7 @@ def test_charter_plans_show_what_is_held_and_why_it_waits() -> None:
     its charter waits after the last rights look (pp_tplan_cwait: 101 influence, 102 the other specialization stays,
     103 no free slot). Other plans show nothing of it."""
     texts = _texts()
-    grants = lp.charter_grants(MOD, vanilla_root(ROOT, PROJECT))
+    grants = lp.charter_grants(MOD, vanilla_root(ROOT, PROJECT), _plans())
     lines = lp.line_level_goods(MOD)
     assert len(grants) == 19 and grants["iron"].charter is None and "iron" not in lines
     values = _read(MOD / lp.VALUES)
@@ -270,11 +308,14 @@ def test_charter_plans_show_what_is_held_and_why_it_waits() -> None:
 
 
 def test_player_texts() -> None:
-    """Plans are town rights the Construction Plan builds toward: the texts say so, link the concepts and carry no
-    numbers; no text of the removed widgets is left."""
+    """Plans are what the Construction Plan builds toward: the texts say so, link the concepts and carry no numbers;
+    no text of the removed widgets is left. Since 2026-11-21 a plan is no town right: the texts about the plan itself
+    do not call it one; the map mode's texts still link town rights (the marker shows them after the plans)."""
     texts = dict(re.findall(r'^  ([A-Za-z0-9_.]+): "(.*)"$', _read(HAND_LOC), re.MULTILINE))
-    for key in ("PP_LPLAN_NOTE", "PP_TPLAN_PICK_ON", "PP_TPLAN_PICK_OFF", "PP_LPLAN_SHOW_MAP_TT",
-                "game_concept_pp_location_plan_desc", "MAPMODE_PP_LOCATION_PLAN", "PP_TPLAN_MAP_RIGHT"):
+    for key in ("PP_LPLAN_NOTE", "PP_TPLAN_PICK_ON", "PP_TPLAN_PICK_OFF"):
+        assert "[town_rights|e]" not in texts[key], key
+    for key in ("PP_LPLAN_SHOW_MAP_TT", "game_concept_pp_location_plan_desc", "MAPMODE_PP_LOCATION_PLAN",
+                "PP_TPLAN_MAP_RIGHT"):
         assert "[town_rights|e]" in texts[key], key
     for key in ("PP_LPLAN_NOTE", "PP_TPLAN_WHAT_GOOD", "PP_TPLAN_WHAT_FOOD", "PP_TPLAN_WHAT_TRADE",
                 "game_concept_pp_location_plan_desc", "MAPMODE_PP_LOCATION_PLAN", "PP_TPLAN_ROW_MORE_TT"):
@@ -345,10 +386,11 @@ def test_no_box_directly_inside_a_container() -> None:
             stack.append(name)
 
 
-def test_marker_draws_the_town_rights_and_leaves_vanilla_alone() -> None:
+def test_marker_draws_the_plans_and_town_rights_and_leaves_vanilla_alone() -> None:
     """The mod's map_markers.gui is vanilla's with only the raw goods marker split: vanilla's content outside the plan
-    map mode, and in it one datamodel over the location's own town rights (plans among them), shown only for the
-    player's locations that hold any right (vanilla's own size test); nothing per plan, no building icons."""
+    map mode, and in it, for the player's locations that hold a plan or any right: since 2026-11-21 first one icon per
+    plannable plan (a plan is a location variable, no datamodel lists them) behind the one test HAS_PLAN, then one
+    datamodel over the location's own town rights (vanilla's own size test); no building icons."""
     vanilla_path = vanilla_root(ROOT, PROJECT) / "game" / lp.MARKERS
     if not vanilla_path.is_file():
         return
@@ -365,10 +407,25 @@ def test_marker_draws_the_town_rights_and_leaves_vanilla_alone() -> None:
     assert f"visible = \"[Not(GetMapMode('{lp.MAP_MODE_KEY}').IsSet)]\"" in marker
     plan = marker[marker.index('name = "pp_lplan_marker"'):]
     assert (f"visible = \"[And(GetMapMode('{lp.MAP_MODE_KEY}').IsSet, And(Location.GetOwner.IsPlayer, "
-            f"{lp.HAS_RIGHTS}))]\"") in plan
-    assert plan.count("datamodel = \"[DataModelFirst(Location.GetTownRights, ") == 1
-    assert 'texture = "[TownRights.GetIcon]"' in plan and f'tooltip = "{lp.MAP_TOOLTIP}"' in plan
-    for gone in ("ScriptValue(", "Var(", "pp_lplan_b", "pp_lprof", "GetBuildingIcon", "pp_lplan_done"):
+            f"Or({lp.HAS_PLAN}, {lp.HAS_RIGHTS})))]\"") in plan
+    assert lp.HAS_PLAN == f"Location.MakeScope.Var('{town_plans.ANY_VAR}').IsSet"
+    plans_at = plan.index(f"visible = \"[{lp.HAS_PLAN}]\"")
+    rights_at = plan.index(f"visible = \"[{lp.HAS_RIGHTS}]\"")
+    assert plans_at < rights_at
+    plans_part, rights_part = plan[plans_at:rights_at], plan[rights_at:]
+    # one icon per plannable plan, in the plans' order, each behind its own marker, with its tooltip and icon
+    shown = re.findall(r"visible = \"\[Location\.MakeScope\.Var\('pp_tplan_p_(\w+)'\)\.IsSet\]\"", plans_part)
+    assert shown == [item.key for item in lp.plannable(_plans())]
+    for item in lp.plannable(_plans()):
+        icon = plans_part[plans_part.index(f"visible = \"[{lp.held(item)}]\""):]
+        icon = icon[:icon.index(f'texture = "{item.icon}"')]
+        assert f'tooltip = "{item.map_tooltip}"' in icon and lp.PLAN_TILE_COLOR in icon, item.key
+    assert "TownRights" not in plans_part and "datamodel" not in plans_part
+    # after them the location's own town rights, one datamodel, on a tile of their own colour
+    assert rights_part.count(f"datamodel = \"[DataModelFirst(Location.GetTownRights, '(int32){lp.MAP_ICONS}')]\"") == 1
+    assert 'texture = "[TownRights.GetIcon]"' in rights_part and f'tooltip = "{lp.MAP_TOOLTIP}"' in rights_part
+    assert lp.RIGHT_TILE_COLOR in rights_part and "pp_tplan_p_" not in rights_part
+    for gone in ("ScriptValue(", "pp_lplan_b", "pp_lprof", "GetBuildingIcon", "pp_lplan_done", "pp_plan_"):
         assert gone not in plan, gone
     assert "raw_goods_marker = yes" in _read(MAP_MODE) and "color_mode = raw_material" in _read(MAP_MODE)
     assert "[TownRights.GetName]" in _texts()[lp.MAP_TOOLTIP]

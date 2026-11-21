@@ -1,5 +1,6 @@
-"""Town-right plans (src/prosper_or_perish_constructor/town_plans.py, 2026-11-19): one plan right per good with a
-forced goods target plus food and trade; the Construction Plan's Locations pass builds toward every held plan."""
+"""Location plans (src/prosper_or_perish_constructor/town_plans.py, 2026-11-19): one plan per good with a forced goods
+target plus food and trade; the Construction Plan's Locations pass builds toward every held plan. Since 2026-11-21 a
+plan is the location variable pp_tplan_p_<plan> (until then a town right pp_plan_<plan>)."""
 
 from __future__ import annotations
 
@@ -54,74 +55,112 @@ def test_one_plan_per_forced_good_plus_food_and_trade(plans: list[tp.Plan], vani
     assert [plan.key for plan in plans] == goods + ["food", "trade"]
     assert len(goods) == 75 and "fur" not in goods  # fur: no producer
     for plan in plans:
-        assert re.fullmatch(r"[a-z_]+", plan.key) and plan.right == f"pp_plan_{plan.key}"
+        assert re.fullmatch(r"[a-z_]+", plan.key) and plan.var == tp.plan_var(plan.key) == f"pp_tplan_p_{plan.key}"
         assert plan.candidates == tuple(c.name for c in found[plan.target]), plan.key
     assert {plan.key: plan.target for plan in plans if plan.key in tp.EXTRA_PLANS} == {"food": "food", "trade": "trade_category"}
 
 
-def test_one_right_per_plan_with_the_template_body(plans: list[tp.Plan], vanilla: Path) -> None:
-    text = _read(MOD / tp.RIGHTS)
-    blocks = dict(cp._blocks(text))
-    assert list(blocks) == [plan.right for plan in plans]
-    for plan in plans:
-        body = blocks[plan.right]
-        color = re.search(r"color = (.+)", body).group(1)
-        assert f"{plan.right} = {{{body}}}\n" == tp.RIGHT_BODY.format(key=plan.right, color=color), plan.key
-    body = tp.RIGHT_BODY.format(key="x", color="c")
-    assert "potential = { always = no }" in body and "kept_at_conquest = no" in body
-    assert "local_possible_town_rights = 1" in body
-    assert "is_specialization" not in text and "upgrades_to" not in text and "allow" not in text
-    # each its own colour (tests/test_town_rights_order.py checks them against every other right)
-    colors = re.findall(r"color = (hsv \{ [0-9. ]+ \})\n", text)
-    assert len(colors) == len(plans) == len(set(colors))
-    # the Towns and Buildings rule never offers them (switched off: potential always = no)
+ON_ACTION = MOD / "in_game/common/on_action/pp_construction_plan.txt"
+PLAN_EFFECTS = MOD / "in_game/common/scripted_effects/pp_location_plan.txt"
+PLAN_RIGHT = re.compile(r"town_rights_type:pp_plan_|ShowTownRightsName\('pp_plan_|^\s*pp_plan_\w+\s*[:=]",
+                        re.MULTILINE)
+
+
+def test_no_plan_right_is_left(plans: list[tp.Plan], vanilla: Path) -> None:
+    """2026-11-21 (Jan: "We just use our plans, and the plans apply the relevant town rights if the setting is turned
+    on"): a plan is no town right any more. No file of the mod defines, grants, tests or names a right pp_plan_*, the
+    pass removed the former rights file, its text and its icons, and the rule's rights database has none."""
+    found = []
+    for path in sorted(MOD.rglob("*")):
+        if path.suffix in {".txt", ".gui", ".yml"} and path.is_file():
+            if PLAN_RIGHT.search(_read(path)):
+                found.append(path.relative_to(MOD).as_posix())
+    assert found == []
+    assert tp.stale_paths(MOD) == []
+    for relative in tp.STALE_FILES:
+        assert not (MOD / relative).exists(), relative
+    assert not list((MOD / tp.STALE_ICONS).glob(tp.STALE_ICON_PATTERN))
     rights, _off, _ = cpc.read_rights(MOD, vanilla)
-    assert not any(tp.is_plan_right(right.key) for right in rights)
-    # no plan right in the one-specialization lists of the charters
-    assert "pp_plan_" not in _read(MOD / "in_game/common/town_rights/pp_specialization_town_rights.txt")
+    assert not any(right.key.startswith("pp_plan_") for right in rights)
+    for gone in ("PLAN_PREFIX", "right_key", "is_plan_right", "RIGHTS", "LOC", "ICONS", "RIGHT_BODY", "render_rights",
+                 "render_values", "ON_VALUE_PREFIX"):
+        assert not hasattr(tp, gone), gone
+    assert not hasattr(tp.Plan, "right") and not hasattr(tp.Plan, "on_value")
 
 
-def test_name_description_and_icon_for_every_plan(plans: list[tp.Plan]) -> None:
-    loc = _read(MOD / tp.LOC)
-    assert loc.startswith("l_english:\n")
+def test_stale_paths_finds_what_the_plan_rights_left(tmp_path: Path) -> None:
+    """2026-11-21: the pass deletes the former rights file, its English text and every pp_plan_*.dds of the town
+    rights' icons, and nothing else in that folder."""
+    for relative in tp.STALE_FILES:
+        (tmp_path / relative).parent.mkdir(parents=True, exist_ok=True)
+        (tmp_path / relative).write_text("x", encoding="utf-8")
+    icons = tmp_path / tp.STALE_ICONS
+    icons.mkdir(parents=True)
+    for name in ("pp_plan_wheat.dds", "pp_plan_food.dds", "pp_wheat_charter.dds"):
+        (icons / name).write_bytes(b"DDS ")
+    found = {path.relative_to(tmp_path).as_posix() for path in tp.stale_paths(tmp_path)}
+    assert found == {relative.as_posix() for relative in tp.STALE_FILES} | {
+        (tp.STALE_ICONS / name).as_posix() for name in ("pp_plan_wheat.dds", "pp_plan_food.dds")}
+    assert tp.stale_paths(tmp_path / "nothing") == []
+
+
+def test_held_triggers(plans: list[tp.Plan]) -> None:
+    """2026-11-21: pp_tplan_held asks one variable (pp_tplan_any, kept in step by the flip); pp_tplan_held_scan asks
+    every plan's marker, each once, in the plans' order (the flip asks it after a plan went)."""
+    triggers = _code(MOD / tp.TRIGGERS)
+    held = _block(triggers, tp.HELD_TRIGGER)
+    assert held.split() == ["has_variable", "=", tp.ANY_VAR] and tp.ANY_VAR == "pp_tplan_any"
+    scan = _block(triggers, tp.HELD_SCAN_TRIGGER)
+    assert scan.strip().startswith("OR = {")
+    assert re.findall(r"has_variable = (\w+)", scan) == [plan.var for plan in plans]
+    assert "town_rights" not in triggers
+    # no on-values any more: the values file is the header and the settings' values
+    values = _read(MOD / tp.VALUES)
+    assert values.startswith("# Generated by ppc finalize (town_plans.py)") and "pp_tplan_on_" not in values
+
+
+def test_strip_takes_every_plan_and_its_traces(plans: list[tp.Plan]) -> None:
+    """2026-11-21: pp_tplan_strip (an owner change, the Locations look's sweep) removes every plan's marker, state and
+    payback, the mark that the location holds a plan, the workers mark, the plan that built last, and why a charter
+    waits (only when set). The list of planned locations is the caller's."""
+    strip = _block(_code(MOD / tp.EFFECTS), tp.STRIP_EFFECT)
+    removed = re.findall(r"remove_variable = (\w+)", strip)
     for plan in plans:
-        name = re.search(rf'^ {plan.right}: "Plan: ([^"]+)"$', loc, re.MULTILINE)
-        desc = re.search(rf'^ {plan.right}_desc: "(.+)"$', loc, re.MULTILINE)
-        assert name and desc, plan.key
-        text = desc.group(1)
-        assert not re.search(r"\d", re.sub(r"\[[^\]]*\]", "", text)), plan.key  # no numbers
-        assert "[location|e]" in text and "[town_rights|e]" in text, plan.key
-        if plan.key not in tp.EXTRA_PLANS:
-            assert f"[ShowGoodsName('{plan.key}')|e]" in text, plan.key
-        assert ("[location_rank|e]" in text) == plan.raises, plan.key
-        icon = MOD / tp.ICONS / f"{plan.right}.dds"
-        assert icon.is_file() and icon.read_bytes()[:4] == b"DDS ", plan.key
-    assert re.search(r'^ pp_plan_goods_gold: "Plan: Gold"$', loc, re.MULTILINE)
-    assert "specialization [town_rights|e]" in _block_line(loc, "pp_plan_books_desc")
-    assert "specialization" not in _block_line(loc, "pp_plan_wheat_desc")
-    assert len(f"mod/pp/{tp.ICONS.as_posix()}/pp_plan_naval_supplies.dds") <= 109
+        for name in (plan.var, f"pp_lplan_st_{plan.suffix}", f"pp_lplan_est_{plan.suffix}"):
+            assert removed.count(name) == 1, name
+    for name in (tp.ANY_VAR, "pp_lplan_wk", "pp_lplan_last", "pp_tplan_cwait"):
+        assert removed.count(name) == 1, name
+    assert len(removed) == 3 * len(plans) + 4
+    assert "limit = { has_variable = pp_tplan_cwait }\n\t\tremove_variable = pp_tplan_cwait" in strip
+    assert tp.LOCS_LIST not in strip and "town_rights" not in strip
 
 
-def _block_line(loc: str, key: str) -> str:
-    return re.search(rf"^ {key}: (.+)$", loc, re.MULTILINE).group(1)
+def test_owner_change_strips_the_plans() -> None:
+    """2026-11-21: a location that changes owner keeps no plan (the plan rights went by kept_at_conquest = no). The
+    game's on_location_changed_owner calls pp_tplan_owner_changed, only for a location that holds a plan; its effect
+    takes the location off the previous owner's (scope:loser) list and that owner's saving for it, then strips it."""
+    actions = _code(ON_ACTION)
+    changed = _block(actions, "on_location_changed_owner")
+    assert changed.split() == ["on_actions", "=", "{", "pp_tplan_owner_changed", "}"]
+    action = _block(actions, "pp_tplan_owner_changed")
+    assert "trigger = {\n\t\thas_variable = pp_tplan_any\n\t}" in action
+    assert "effect = {\n\t\tpp_tplan_owner_changed_effect = yes\n\t}" in action
+    effect = _block(_code(PLAN_EFFECTS), "pp_tplan_owner_changed_effect")
+    assert effect.index("limit = { pp_tplan_held = yes }") < effect.index("save_temporary_scope_as = pp_tplan_lost_l")
+    loser = effect[effect.index("scope:loser ?= {"):effect.index(f"{tp.STRIP_EFFECT} = yes")]
+    assert effect.index("save_temporary_scope_as = pp_tplan_lost_l") < effect.index("scope:loser ?= {")
+    assert f"remove_list_variable = {{ name = {tp.LOCS_LIST} target = scope:pp_tplan_lost_l }}" in loser
+    assert "scope:pp_tplan_lost_l = var:pp_cplan_save_loc_105" in loser
+    assert "pp_cplan_save_clear = { why = 105 }" in loser
+    assert "pp_lprof_any_refresh = yes" in loser
+    assert effect.count(f"{tp.STRIP_EFFECT} = yes") == 1
 
 
-def test_held_trigger_and_on_values_are_complete(plans: list[tp.Plan]) -> None:
-    held = _block(_code(MOD / tp.TRIGGERS), tp.HELD_TRIGGER)
-    assert re.findall(r"has_town_rights = town_rights_type:(\w+)", held) == [plan.right for plan in plans]
-    values = _code(MOD / tp.VALUES)
-    for plan in plans:
-        body = _block(values, plan.on_value)
-        assert body.strip().startswith("value = 0")
-        assert f"limit = {{ has_town_rights = town_rights_type:{plan.right} }}\n\t\tvalue = 1" in body, plan.key
-    assert len(re.findall(r"^pp_tplan_on_\w+ = \{", values, re.MULTILINE)) == len(plans)
-
-
-def test_the_pass_keys_on_the_held_right_and_forces_it(plans: list[tp.Plan]) -> None:
+def test_the_pass_keys_on_the_held_plan_and_forces_it(plans: list[tp.Plan]) -> None:
     hand = _code(MOD / lpf.HAND_EFFECTS)
     effects = _code(MOD / lpf.EFFECTS)
     mark = _block(hand, "pp_lplan_mark")
-    assert "limit = { has_town_rights = town_rights_type:pp_plan_$g$ }" in mark
+    assert "limit = { has_variable = pp_tplan_p_$g$ }" in mark
     assert "pp_lplan_$v$" not in mark.replace("pp_lplan_st_$v$", "").replace("pp_lplan_est_$v$", "")
     marks = _block(effects, "pp_lplan_location_marks")
     for plan in plans:
@@ -130,14 +169,16 @@ def test_the_pass_keys_on_the_held_right_and_forces_it(plans: list[tp.Plan]) -> 
     turn = _block(hand, "pp_lplan_location_turn")
     assert turn.index("name = pp_cplan_forced value = 1") < turn.index("pp_lplan_location_marks = yes")
     assert "save_temporary_scope_value_as = { name = pp_lprof_pb value = 1000000 }" in turn
-    # a location holding only plans gets its turn: the gather finds it among the locations with town rights, and
-    # its turn runs its plans
+    # a location holding only plans gets its turn: the gather walks the country's list of planned locations
+    # (2026-11-21), and its turn runs its plans
     gather = _block(hand, "pp_lprof_gather")
-    assert "every_locations_with_town_rights_in_country = {" in gather and "pp_tplan_held = yes" in gather
+    assert f"variable = {tp.LOCS_LIST}" in gather and "pp_tplan_held = yes" in gather
+    assert "locations_with_town_rights" not in gather
     location = _block(hand, "pp_lprof_location_turn")
     assert "pp_tplan_held = yes" in location
     has = _block(_code(MOD / lpf.TRIGGERS), "pp_lprof_has_locations")
-    assert "any_locations_with_town_rights_in_country" in has and "pp_tplan_held = yes" in has
+    assert has.split() == ["any_in_list", "=", "{", "variable", "=", tp.LOCS_LIST, "owner", "?=", "root",
+                           "pp_tplan_held", "=", "yes", "}"]
     # the state variables stay the marks' (the GUI reads pp_lplan_st_g_<plan>)
     assert "pp_lprof_finish = { st = pp_lplan_st_$v$ est = pp_lplan_est_$v$ }" in mark
 

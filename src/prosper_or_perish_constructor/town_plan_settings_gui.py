@@ -202,11 +202,11 @@ def build_items(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -
     if [plan.key for plan in picker] != list(plans):
         raise ValueError("the Location Plan picker and the plan list differ")
     rights, _, _ = cc.read_rights(mod_root, vanilla_root)
-    grants = {grant.plan: grant for grant in cc.plan_grants([r for r in rights if r.icon], cc.plan_right_keys(mod_root, vanilla_root))}
+    grants = {grant.plan: grant for grant in cc.plan_grants([r for r in rights if r.icon], set(plans))}
     items: list[Item] = []
     for entry in picker:
         plan = plans[entry.key]
-        grant = grants.get(plan.right)
+        grant = grants.get(plan.key)
         items.append(Item(
             key=plan.key, group=entry.group, icon=entry.icon, good=entry.good,
             builds=tuple(sorted(plan.candidates, key=lambda name: (depths.get(name, 0), name))),

@@ -1,5 +1,5 @@
 """The location window's Plans row (town_plan_gui.py): on top of the Infrastructure tab, player-owned locations only,
-the held plans (town rights pp_plan_<plan>) as pressed tiles that take the plan off, and the button that opens the
+the held plans (location variables pp_tplan_p_<plan>) as pressed tiles that take the plan off, and the button that opens the
 Location Plan window. It replaces the Profile row and the row "Also build here"."""
 
 from __future__ import annotations
@@ -75,13 +75,16 @@ def test_row_tiles_are_the_held_plans() -> None:
     assert "pp_lplan_b" not in row and "pp_lprof" not in row
 
 
-def test_count_value_counts_the_plan_rights() -> None:
+def test_count_value_counts_the_plans() -> None:
+    """The plan count of the Plans row: 0 unless the location holds a plan (pp_tplan_any), then 1 per held plan's
+    marker (2026-11-21: plans are location variables, no town rights)."""
     values = _read(MOD / lp.VALUES)
     block = values[values.index(f"{lp.COUNT} = {{"):]
     block = block[:block.index("\n}\n")]
-    assert "limit = { has_any_town_rights = yes }" in block
-    for plan in _plans():
-        assert f"if = {{ limit = {{ has_town_rights = town_rights_type:{town_plans.right_key(plan.key)} }} add = 1 }}" in block
+    assert block.index("value = 0") < block.index(f"limit = {{ has_variable = {town_plans.ANY_VAR} }}")
+    adds = re.findall(r"if = \{ limit = \{ has_variable = (\w+) \} add = 1 \}", block)
+    assert adds == [plan.var for plan in _plans()]
+    assert "town_rights" not in block
 
 
 def test_row_texts() -> None:

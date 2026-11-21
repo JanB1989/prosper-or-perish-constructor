@@ -138,10 +138,10 @@
   right, but vanilla Bergslag does not check for it (one way, like every PP right); mining charter and the Bergregal
   rights may stack with it in a city with two slots. Icon: `assets/town_right_drawings/goods/iron.py` (blast
   furnace, pick and hammer; rights frame only, `LINES` in `render.py`).
-- Plan rights `pp_plan_<plan>` (2026-11-19, Jan, branch `town-plans`, tested in game 2026-11-20) are town rights too but no
-  specialization: no bonus, own slot, never in the one-specialization lists; a planned town gets its good's charter
-  and rights from the Construction Plan ("Town-Right Plans" below). Their colours are spread hues (`town_plans.plan_color`):
-  EU5 logs every pair of rights that share a colour.
+- Plans are no town rights since 2026-11-21 (Jan; the plan rights `pp_plan_<plan>` of 2026-11-19..20, their file,
+  text and icons are gone): a plan is a location marker, and a planned town gets its good's real charter and rights
+  from the Construction Plan while the setting is on ("Location Plans" below). EU5 logs every pair of rights that share
+  a colour: keep the rights' colours distinct.
 - Trade buildings: no institution gates. Rule (Jan, 2026-10-19): a building an advance unlocks never needs an
   institution on top; once researched, it can be built (`tests/test_trade_building_gates.py` checks every loaded
   building type, vanilla and mod, scripted triggers included). The Printing Press / Global Trade gates of 2026-10-06 on
@@ -675,34 +675,50 @@
 - Watch in the next run: who colonizes overseas by half century, Holland's first colony, native backyard charters
   (Inca, Chimu, Kongo, Kilwa, Mali, Benin), running charters of a country that loses its ports.
 
-## Town-Right Plans (2026-11-19, Jan, branch `town-plans`)
+## Location Plans (town-right plans until 2026-11-21)
 
 Branch note (2026-11-20, Jan): `town-plans` became the working branch `0.11` (in development, not released; the mod's
 version field stays 0.10.0 until a release). `town-plans` and `location-profiles` no longer exist; where this file
 names them, read `0.11`.
 
-- The Construction Plan's one per-location decision is a plan: a town right `pp_plan_<plan>` (75 goods + `food` +
-  `trade`; `town_plans.py`), set and removed only by the mod's button (Location Plan window, the location window's
-  Plans row), any owned location incl. rural, several per location. The right: `potential = { always = no }` (no AI,
-  not in the game's grant list, never a Towns and Buildings tile), no bonus, `kept_at_conquest = no`, +1
-  `local_possible_town_rights` of its own, its own colour. Location Profiles and the Location Plan marks (goods and
-  building marks) are gone; the Construction Plan window has two tabs.
+- The Construction Plan's one per-location decision is a plan (77: 75 goods + `food` + `trade`; `town_plans.py`, its
+  module docstring is the contract), set and removed only by the mod's button (Location Plan window, the location
+  window's Plans row), any owned location incl. rural, several per location. Location Profiles and the Location Plan
+  marks (goods and building marks) are gone.
+- Plans as markers (2026-11-21, Jan: "why did we add the level 0 rights? ... We just use our plans, and the plans
+  apply the relevant town rights if the setting is turned on"; tested in game the same day, `docs/location_plan.md`
+  "Tested in game (2026-11-21, plans as markers)"): location variable `pp_tplan_p_<plan>`, `pp_tplan_any` while one is
+  held (trigger `pp_tplan_held`; `pp_tplan_held_scan` asks every marker), country list `pp_tplan_locs` (kept by
+  `pp_tplan_flip`; the Locations look `pp_lprof_gather` and the charter look walk it, script has no iterator over
+  locations with a variable; the gather sweeps off what the country no longer owns or holds no plan). An owner change
+  strips them: `on_location_changed_owner` -> `pp_tplan_owner_changed` -> `pp_tplan_owner_changed_effect` (off
+  `scope:loser`'s list, its Locations saving released, generated `pp_tplan_strip`). The closer's location list
+  `pp_pclose_for` became variables `pp_pclose_for_<plan>` (`pp_pclose_for_held`, `pp_pclose_for_clear`). GUI test
+  `Location.MakeScope.Var('pp_tplan_p_<plan>').IsSet`; the map mode draws the plans' icons, then the real rights. Until
+  then each plan was a town right `pp_plan_<plan>` (`potential = { always = no }`, no bonus, `kept_at_conquest = no`,
+  its own slot and colour); file, text and the 77 icons removed (`town_plans.stale_paths`). Old saves keep each former
+  plan right as a typeless town right and lose their plans; the mod ships no cleanup, a one-off console file
+  (`pp_plans_restore.txt`, kit `pp_testing\townplan_test_20261120\gen_restore.py`) restores a running game.
 - The Locations rule group (key `profiles`, code 105) builds for every held plan, forced (no payback limit, no market
   limit): the good's producers level after level, the newer tier as it unlocks (upgrade first), food = staple food
   producers + Province Food buildings, trade = trade buildings; for the 15 plans whose producers need a town or city it
   raises the rank first (`pp_tplan_raise` -> `pp_cplan_country_rank_up = { rank n why = 105 }`, state 11 where it
-  cannot). Towns and Buildings grants a planned town the good's specialization charter (18 goods; iron its rights) and
-  swaps charter for rights by revoke + grant (`pp_cplan_country_plan_rights`), at the normal influence prices.
-- Engine (static analysis of 1.4.9; behaviour only, internals stay private): a script grant skips every check and can
-  stack duplicates (every grant is guarded); every held right counts against the slots; a false potential never strips
-  a held right; a rank change revokes the newest rights above the slot count; a hostile owner change destroys
-  `kept_at_conquest = no` rights; every script grant / revoke sends the game's town rights message.
+  cannot). While the setting "Grant a plan's charter and rights" is on, Towns and Buildings grants a planned town the
+  good's real specialization charter (18 goods; iron its rights) and swaps charter for rights by revoke + grant
+  (`pp_cplan_country_plan_rights`), at the normal influence prices.
+- Engine (static analysis of 1.4.9; behaviour only, internals stay private; for the real charters): a script grant
+  skips every check and can stack duplicates (every grant is guarded); every held right counts against the slots; a
+  rank change revokes the newest rights above the slot count; every script grant / revoke sends the game's town rights
+  message. For the plans (in game 2026-11-21): `on_location_changed_owner` fires for `create_country_from_location`
+  and `change_location_owner` with `scope:loser`; a saved right whose type is gone loads typeless, only
+  `revoke_town_rights = this` inside `every_town_rights_in_Location` removes it.
 - Limits: one charter per town; a two-steps-old tier upgrades only while the middle tier can still be built; plans are
-  lost on conquest; several plans in one location are built best payback first, the others wait (open: take turns).
+  lost on every owner change (peace deal and annexation not tested); several plans in one location take turns by
+  default (setting "best payback first").
   `docs/location_plan.md` (the feature), `docs/location_profiles.md` (the engine's internal names),
   `docs/construction_plan_country.md` "Plans: charters and rights".
-- Tested in game 2026-11-20 (plan test world, Castile, two years; `docs/location_plan.md` "Tested in game"): grants on
-  rural locations, the button and the Plans row, builds, the rank raise with the plans surviving it, a charter granted
+- Tested in game 2026-11-20, plans still town rights (plan test world, Castile, two years; `docs/location_plan.md`
+  "Tested in game (2026-11-20)"): grants on rural locations, the button and the Plans row, builds, the rank raise with the plans surviving it, a charter granted
   to a planned new town. Charter to rights, an owner change and a tier upgrade: tested in the third round (below). The game's town rights messages
   (`TOWN_RIGHTS_GRANTED` / `_REVOKED`) are redefined without the pop-up in `main_menu/gui/messagetypes/pp_messagetypes.txt`
   (a mod file may redefine a vanilla message type; verified in game). While the Construction Plan is off, the Location

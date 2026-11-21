@@ -2,7 +2,7 @@
 (2026-11-19, Jan: the town-right plan is the only per-location decision, ``town_plans.py``); the module and the script
 names keep their old prefixes (``pp_lprof_*``, ``pp_lplan_*``) for what survived.
 
-A location holds plans (town rights ``pp_plan_<plan>``). In the Construction Plan's monthly pass the Locations group
+A location holds plans (location variables ``pp_tplan_p_<plan>``, town_plans.py). In the Construction Plan's monthly pass the Locations group
 (internal key "profiles", construction code 105, its own purse) gives every location of the country that holds a plan
 its turn, the locations taking turns (hand-written ``pp_lprof_look``, script value ``pp_lprof_turn``). In a location's
 turn each held plan runs its target, forced: no market limit and, unless the player set one, no payback limit; inside
@@ -484,13 +484,13 @@ def render_targets(found: dict[str, list[Candidate]], pairs: list[tuple[str, str
 
 
 def render_marks(plans: list[town_plans.Plan]) -> str:
-    """The plans a location holds (town_plans.py, 2026-11-19: a plan is a town right): each held plan runs its target
+    """The plans a location holds (town_plans.py: a plan is a location variable): each held plan runs its target
     (or, where its producers need a higher rank, the plan's turn that raises it first), in the plans' order; n = 100 +
     its place there (the plan that measured the best payback is known by it), lo / hi the bounds around n."""
     lines = [
-        "\n# ---- The location's plans (town rights pp_plan_<plan>, forced) ----\n"
+        "\n# ---- The location's plans (pp_tplan_p_<plan>, forced) ----\n"
         "# Location scope (in pp_lplan_location_turn, pp_location_profiles.txt): each held plan in the plans' order\n"
-        "# (pp_lplan_mark, has_town_rights: its target pp_lprof_t_<target>, or pp_tplan_do_<plan> where it raises the rank\n"
+        "# (pp_lplan_mark, its marker set: its target pp_lprof_t_<target>, or pp_tplan_do_<plan> where it raises the rank\n"
         "# first; no payback limit, no market limit). Run twice a turn: once to measure (scope:pp_lplan_mode 1: the plan\n"
         "# whose next level pays back soonest is built first), once to build and to write the states. The first\n"
         "# construction of the turn in the location makes the rest wait. The window's ledger shows a plan's construction as\n"
@@ -570,9 +570,9 @@ def render_triggers() -> str:
     return (
         HEADER
         + "\n# Country scope (root = this country, in the pass and in the panel): a location the country owns holds a plan\n"
-        "# (the Locations rule group has something to run). Found among the locations that hold town rights (towns with\n"
-        "# rights and planned locations), not by a list.\n"
-        f"pp_lprof_has_locations = {{\n\tany_locations_with_town_rights_in_country = {{\n\t\towner ?= root\n"
+        "# (the Locations rule group has something to run): one of its list of planned locations\n"
+        f"# ({town_plans.LOCS_LIST}, kept by pp_tplan_flip) that it still owns.\n"
+        f"pp_lprof_has_locations = {{\n\tany_in_list = {{\n\t\tvariable = {town_plans.LOCS_LIST}\n\t\towner ?= root\n"
         f"\t\t{town_plans.HELD_TRIGGER} = yes\n\t}}\n}}\n"
     )
 

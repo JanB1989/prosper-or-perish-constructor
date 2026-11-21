@@ -1,7 +1,7 @@
 """The location window's Plans row (town plans, branch town-plans, 2026-11-19, Jan).
 
 On top of the location window's Infrastructure tab, player-owned locations only (observers' commands are dropped): the
-plans the location holds (``pp_plan_<plan>`` town rights, ``town_plans.py``) as pressed tiles, a click takes that plan
+plans the location holds (location variables ``pp_tplan_p_<plan>``, ``town_plans.py``) as pressed tiles, a click takes that plan
 off, the tooltip says what the plan does and how its last check went; at the right end one round button that opens the
 Location Plan window (every plan to set). It replaces the Profile row and the row "Also build here".
 
@@ -98,7 +98,7 @@ def render_row(plans: list) -> str:
     cut = value_above("Location.MakeScope", lp.COUNT, ROW_TILES)
     out = [
         "\n\t# The Plans row of the location window's Infrastructure tab (datacontext Location): the location's plans\n"
-        "\t# (town rights) as pressed tiles, a click takes one off; the round button opens the Location Plan window.\n"
+        "\t# as pressed tiles, a click takes one off; the round button opens the Location Plan window.\n"
         f"\ttype {ROW_TYPE} = hbox {{\n"
         "\t\tlayoutpolicy_horizontal = expanding\n\t\tminimumsize = { -1 45 }\n\t\tmargin = { 5 5 }\n"
         "\t\tusing = bg_paper_card\n\t\tusing = bg_cabinet_card_frame\n"

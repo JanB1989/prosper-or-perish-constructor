@@ -188,7 +188,8 @@ def test_one_building_a_turn_then_the_location_waits() -> None:
                   "has_variable = pp_pclose_pt"):
         assert guard in first, guard
     # while a closing is under way the plan is one of those it is for (state 14); else its state is 4
-    assert "add_to_variable_list = { name = pp_pclose_for target = town_rights_type:pp_plan_$g$ }" in plan
+    # (2026-11-21: one location variable per plan, pp_pclose_for_<plan>, no list of town rights)
+    assert f"set_variable = {{ name = {pc.FOR_PREFIX}$g$ value = yes }}" in plan and "town_rights" not in plan
     assert "set_variable = { name = pp_lprof_fail value = 104 }" in plan
     # the wait counts down one look per look turn (not when the group goes back between looks)
     start = _block(_effects(), "pp_pclose_turn_start")
@@ -227,9 +228,10 @@ def test_generated_lists() -> None:
     text = _read(MOD / pc.TRIGGERS)
     assert text == pc.render_triggers(plans, never, food, pop_types).lstrip("\ufeff"), "run ppc build (plan_closer)"
     code = _code(MOD / pc.TRIGGERS)
+    assert _read(MOD / pc.EFFECTS) == pc.render_effects(plans).lstrip("﻿"), "run ppc build (plan_closer)"
     planned = _block(code, "pp_pclose_planned")
     for plan in plans:
-        part = planned[planned.index(f"has_town_rights = town_rights_type:{plan.right} }}"):]
+        part = planned[planned.index(f"scope:pp_pclose_l = {{ has_variable = {plan.var} }}"):]
         part = part[:part.index("\t\t}\n")]
         assert {f"building_type:{c}" for c in plan.candidates} == set(re.findall(r"building_type:\w+", part)), plan.key
     config = cp.load_config(PROJECT)
@@ -254,6 +256,35 @@ def test_generated_lists() -> None:
         assert f"building_pop_type = {pt}\n\t\t\tscope:pp_pclose_pt = pop_type:{pt}" in match, pt
     for name in ("pp_pclose_never_type", "pp_pclose_food_type"):
         assert _block(code, name).count("building_type = building_type:") == len(never if "never" in name else food)
+    assert "town_rights" not in code
+
+
+def test_for_held_and_for_clear_cover_every_plan() -> None:
+    """2026-11-21: the plans a location's closings are for are location variables pp_pclose_for_<plan> (was a list of
+    plan rights). pp_pclose_for_held (generated trigger) holds while the location carries one of them together with
+    that plan's marker; pp_pclose_for_clear (generated effect, its own file) removes every one; both list every plan
+    once, in the plans' order."""
+    plans = _inputs()[0]
+    assert not hasattr(pc, "FOR_LIST") and pc.FOR_PREFIX == "pp_pclose_for_"
+    held = _block(_code(MOD / pc.TRIGGERS), pc.FOR_HELD)
+    assert held.strip().startswith("OR = {")
+    pairs = re.findall(r"AND = \{\s*has_variable = (\w+)\s*has_variable = (\w+)\s*\}", held)
+    assert pairs == [(f"{pc.FOR_PREFIX}{plan.key}", plan.var) for plan in plans]
+    clear = _block(_code(MOD / pc.EFFECTS), pc.FOR_CLEAR)
+    assert re.findall(r"remove_variable = (\w+)", clear) == [f"{pc.FOR_PREFIX}{plan.key}" for plan in plans]
+    assert clear.count("\n\t") == len(plans)
+    # the hand-written closer sets them through the plan's turn and clears them only through the generated effect
+    effects = _effects()
+    assert re.findall(r"pp_pclose_for_\w+", effects.replace("pp_pclose_for_$g$", "")) == [
+        pc.FOR_HELD, pc.FOR_CLEAR, pc.FOR_CLEAR]
+    for name in ("pp_pclose_undo", "pp_pclose_forget"):
+        assert f"{pc.FOR_CLEAR} = yes" in _block(effects, name), name
+    needed = _tokens(_block(effects, "pp_pclose_needed"))
+    assert needed == f"if = {{ limit = {{ NOT = {{ {pc.FOR_HELD} = yes }} }} pp_pclose_undo = yes }}"
+
+
+def _tokens(text: str) -> str:
+    return " ".join(text.split())
 
 
 # ---- order -----------------------------------------------------------------------------------------------------------
@@ -303,19 +334,20 @@ def test_memory_and_undo() -> None:
     assert back.index("is_opened = yes") < back.index(f"add_to_variable_list = {{ name = {pc.KEEP_LIST} target = scope:pp_pclose_t }}")
     assert f"remove_list_variable = {{ name = {pc.TYPES_LIST} target = scope:pp_pclose_t }}" in back
     # kept while a plan they are for is held, else every closed building of those types opens
+    # (2026-11-21: the plans they are for are location variables, pp_pclose_for_held asks them)
     needed = _block(_effects(), "pp_pclose_needed")
-    assert f"variable = {pc.FOR_LIST}" in needed and "has_town_rights = scope:pp_pclose_r" in needed
-    assert needed.index("NOT = { has_variable = pp_pclose_held }") < needed.index("pp_pclose_undo = yes")
+    assert needed.index(f"NOT = {{ {pc.FOR_HELD} = yes }}") < needed.index("pp_pclose_undo = yes")
     undo = _block(_effects(), "pp_pclose_undo")
     for line in ("building_type = scope:pp_pclose_t", "owner ?= scope:pp_pclose_c", "is_opened = no",
                  f"add_to_variable_list = {{ name = {pc.OPEN_LIST} target = scope:pp_pclose_b }}",
-                 f"clear_variable_list = {pc.TYPES_LIST}", f"clear_variable_list = {pc.FOR_LIST}",
+                 f"clear_variable_list = {pc.TYPES_LIST}", f"{pc.FOR_CLEAR} = yes",
                  f"remove_variable = {pc.WAIT_VAR}"):
         assert line in undo, line
     assert re.search(rf"NOT = \{{ pp_tplan_held = yes \}} \}}\s*clear_variable_list = {pc.KEEP_LIST}", undo)
-    # a plan taken off (the button and Clear go through pp_tplan_flip)
+    # a plan taken off (the button and Clear go through pp_tplan_flip): its marker and pp_tplan_any first
     flip = _block(_code(COMMON / "scripted_effects/pp_location_plan.txt"), "pp_tplan_flip")
-    assert flip.index("revoke_town_rights_of_type") < flip.index("pp_pclose_plan_off = yes") < flip.index("else = {")
+    assert (flip.index("remove_variable = pp_tplan_p_$g$") < flip.index("remove_variable = pp_tplan_any")
+            < flip.index("pp_pclose_plan_off = yes") < flip.index("\telse = {"))
     off = _block(_effects(), "pp_pclose_plan_off")
     assert "owner = { save_temporary_scope_as = pp_pclose_c }" in off and "pp_pclose_needed = yes" in off
     assert "exists = owner" in off

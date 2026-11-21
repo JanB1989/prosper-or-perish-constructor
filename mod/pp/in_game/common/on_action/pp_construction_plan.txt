@@ -24,3 +24,21 @@ pp_construction_plan_monthly = {
 		pp_cplan_run = yes
 	}
 }
+
+# A location that changes owner keeps no plan (2026-11-21: a plan is a marker on the location, town_plans.py; the game
+# calls this for every owner change: root = the location, scope:loser = the previous owner, scope:winner = the new one).
+# Only a location that holds a plan does anything.
+on_location_changed_owner = {
+	on_actions = {
+		pp_tplan_owner_changed
+	}
+}
+
+pp_tplan_owner_changed = {
+	trigger = {
+		has_variable = pp_tplan_any
+	}
+	effect = {
+		pp_tplan_owner_changed_effect = yes
+	}
+}

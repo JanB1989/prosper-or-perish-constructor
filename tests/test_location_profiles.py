@@ -1,6 +1,7 @@
 """The plan engine of the Construction Plan's Locations group (src/prosper_or_perish_constructor/location_profiles.py,
 mod/pp/.../pp_location_profiles*). Location Profiles and the building marks are gone (2026-11-19); a location's plans
-(town rights pp_plan_<plan>, town_plans.py) are the one per-location decision."""
+(the location variables pp_tplan_p_<plan>, town_plans.py; town rights pp_plan_<plan> until 2026-11-21) are the one
+per-location decision."""
 
 from __future__ import annotations
 
@@ -207,8 +208,10 @@ def test_global_rules_keep_building_where_plans_are() -> None:
                               .replace("pp_lprof_any_refresh", ""))
     assert "pp_lprof_group_n" in _code(PLAN_VALUES) + _code(MOD / cp.VALUES), "the group counts as a rule group"
     has = _block(_code(MOD / lpf.TRIGGERS), "pp_lprof_has_locations")
-    assert "any_locations_with_town_rights_in_country" in has and "pp_tplan_held = yes" in has and "owner ?= root" in has
-    assert "variable =" not in has
+    # (2026-11-21: the country's list of planned locations, still owned, still holding a plan)
+    assert (f"any_in_list = {{\n\t\tvariable = {town_plans.LOCS_LIST}\n" in has and "pp_tplan_held = yes" in has
+            and "owner ?= root" in has)
+    assert "locations_with_town_rights" not in has
     hand = _code(MOD / lpf.HAND_EFFECTS)
     group = _block(hand, "pp_lprof_run")
     assert "pp_cplan_group_start = { why = 105 }" in _block(hand, "pp_lprof_look")
@@ -367,7 +370,7 @@ def test_plans_run_their_targets() -> None:
     assert lines == expected, "one line per plan, in the plans' order, numbered"
     assert len(goods) >= len(lpf.target_goods(ROOT, PROJECT)) - 2, "nearly every good has buildings"
     mark = _block(hand, "pp_lplan_mark")
-    assert "limit = { has_town_rights = town_rights_type:pp_plan_$g$ }" in mark  # only while the plan right is held
+    assert "limit = { has_variable = pp_tplan_p_$g$ }" in mark  # only while the plan is held (its marker)
     build = mark[mark.index("pp_lprof_open = yes"):]
     assert build.index("pp_lprof_open = yes") < build.index("$do$ = yes") < build.index("pp_lprof_finish = {")
     assert "limit = { NOT = { has_variable = pp_lprof_st } }" in build  # nothing is tried while it waits
@@ -505,20 +508,70 @@ def test_locations_take_turns() -> None:
 
 
 def test_planned_locations_get_their_turn() -> None:
-    """The look finds the locations that hold a plan among the country's locations with town rights, no list of its
-    own; each once."""
+    """The look finds the locations that hold a plan on the country's list of planned locations (pp_tplan_locs, since
+    2026-11-21; before, among its locations with town rights); each once."""
     hand = _code(MOD / lpf.HAND_EFFECTS)
     look = _block(hand, "pp_lprof_look")
     gather = _block(hand, "pp_lprof_gather")
     assert look.index("pp_lprof_gather = yes") < look.index("ordered_in_list")
     assert "variable = pp_lprof_turns" in look and "clear_variable_list = pp_lprof_turns" in look
-    assert "every_locations_with_town_rights_in_country = {" in gather
+    assert "locations_with_town_rights" not in gather
     for part in ("owner ?= scope:pp_cplan_country", "pp_tplan_held = yes", "pp_lprof_take_turn = yes"):
         assert part in gather, part
-    assert "variable = " not in gather.replace("clear_variable_list", "")
+    walk = gather[gather.rindex(f"every_in_list = {{\n\t\tvariable = {town_plans.LOCS_LIST}\n"):]
+    assert "pp_lprof_take_turn = yes" in walk and gather.count("pp_lprof_take_turn = yes") == 1
     assert "add_to_variable_list = { name = pp_lprof_turns target = scope:pp_lprof_this }" in _block(hand, "pp_lprof_take_turn")
+    assert town_plans.LOCS_LIST not in _block(hand, "pp_lprof_take_turn")
     finish = _block(hand, "pp_lprof_finish")
     assert "set_variable = { name = $st$ value" in finish and "set_variable = { name = $est$ value" in finish
+
+
+def _walks(text: str, variable: str) -> list[str]:
+    """The bodies of every list walk (every_ / ordered_ / random_ / any_in_list) over ``variable`` in ``text``."""
+    found = []
+    for match in re.finditer(r"\b(?:every|ordered|random|any)_in_list = \{\s*variable = (\w+)", text):
+        if match.group(1) != variable:
+            continue
+        depth, index = 0, text.index("{", match.start())
+        start = index
+        while True:
+            depth += {"{": 1, "}": -1}.get(text[index], 0)
+            index += 1
+            if depth == 0:
+                found.append(text[start:index])
+                break
+    return found
+
+
+def test_gather_sweeps_the_list_before_it_walks_it() -> None:
+    """2026-11-21: the country's list of planned locations is swept first: an entry the country no longer owns, or
+    one without a plan left, goes onto a list of its own (pp_tplan_gone) and only then off pp_tplan_locs (a list is
+    never changed while it is walked); a lost location that still holds a plan and whose owner is no player is
+    stripped. Then the cleaned list is walked for the turns. No effect changes pp_tplan_locs inside a walk over it."""
+    hand = _code(MOD / lpf.HAND_EFFECTS)
+    gather = _block(hand, "pp_lprof_gather")
+    locs = town_plans.LOCS_LIST
+    sweep = gather.index(f"every_in_list = {{\n\t\tvariable = {locs}\n")
+    gone = gather.index("every_in_list = {\n\t\tvariable = pp_tplan_gone\n")
+    walk = gather.rindex(f"every_in_list = {{\n\t\tvariable = {locs}\n")
+    assert (gather.index("clear_variable_list = pp_tplan_gone") < sweep < gone
+            < gather.rindex("clear_variable_list = pp_tplan_gone") < walk)
+    first = _walks(gather[sweep:], locs)[0]
+    assert "NOT = { owner ?= scope:pp_cplan_country }" in first and "NOT = { pp_tplan_held = yes }" in first
+    assert "add_to_variable_list = { name = pp_tplan_gone target = scope:pp_tplan_gone_l }" in first
+    drop = _walks(gather[gone:], "pp_tplan_gone")[0]
+    assert f"remove_list_variable = {{ name = {locs} target = scope:pp_tplan_gone_l }}" in drop
+    assert drop.index("pp_tplan_held = yes") < drop.index("NOT = { owner ?= { is_ai = no } }") < drop.index(
+        f"{town_plans.STRIP_EFFECT} = yes")
+    assert "pp_lprof_take_turn = yes" in _walks(gather[walk:], locs)[0]
+    # nowhere in the mod's script is the list changed inside a walk over it (the flip and the owner change change it
+    # from the location's side, outside any walk)
+    changes = re.compile(rf"(?:add_to|remove_list)_variable(?:_list)? = \{{ name = {locs}\b"
+                         rf"|clear_variable_list = {locs}\b")
+    for folder in ("scripted_effects", "scripted_guis", "on_action"):
+        for path in sorted((COMMON / folder).glob("*.txt")):
+            for body in _walks(_code(path), locs):
+                assert not changes.search(body), path.name
 
 
 def test_rank_raise_saved_under_105() -> None:
@@ -541,7 +594,7 @@ def test_each_plan_runs_with_its_payback_limit() -> None:
     rule's level estimate, where it has one, and only under a limit (the estimate needs this year's harvest)."""
     hand = _code(MOD / lpf.HAND_EFFECTS)
     mark = _block(hand, "pp_lplan_mark")
-    assert mark.index("has_town_rights = town_rights_type:pp_plan_$g$") < mark.index("pp_tplan_set_pb = { g = $g$ }")
+    assert mark.index("has_variable = pp_tplan_p_$g$") < mark.index("pp_tplan_set_pb = { g = $g$ }")
     assert mark.index("pp_tplan_set_pb = { g = $g$ }") < mark.index("$do$ = yes"), "measuring and building read it"
     setpb = _block(hand, "pp_tplan_set_pb")
     assert "scope:pp_cplan_country = {\n\t\tsave_temporary_scope_value_as = { name = pp_tplan_pby value = pp_tplan_pb_years_$g$ }" in setpb
@@ -640,7 +693,7 @@ def test_plans_take_turns_unless_best_payback_first() -> None:
     assert "pp_lplan_last" not in mark_turn
     assert "always = $first$\n\t\t\t\t\tscope:pp_lplan_from < $lo$" in mark_turn
     assert "NOT = { always = $first$ }\n\t\t\t\t\tscope:pp_lplan_from > $lo$" in mark_turn
-    assert "has_town_rights = town_rights_type:pp_plan_$g$" in mark_turn
+    assert "has_variable = pp_tplan_p_$g$" in mark_turn
     assert "pp_lplan_mark = { v = $v$ g = $g$ do = $do$ n = $n$ lo = $lo$ hi = $hi$ }" in mark_turn
     mark = _block(hand, "pp_lplan_mark")
     built = mark[mark.index("limit = { NOT = { has_variable = pp_lprof_st } }"):]
@@ -996,22 +1049,25 @@ def test_group_n_reads_a_cached_variable() -> None:
     """Script profile 2026-11-20: pp_lprof_group_n (through pp_cplan_profiles_cw / pp_cplan_w_total in every forecast
     value the window shows) walked the country's locations with town rights about a hundred times a frame. It reads
     the cache pp_lprof_any only; the real test runs at every pass's start before the weights are read, when the plan is
-    switched on, and when a location's last plan is taken off (setting a plan sets the cache)."""
+    switched on, and when a location's last plan is taken off (setting a plan sets the cache). Since 2026-11-21 the
+    test walks the country's list of planned locations (pp_tplan_locs)."""
     body = _block(_code(MOD / lpf.VALUES), "pp_lprof_group_n")
     assert not ITERATOR.search(body) and "pp_lprof_has_locations" not in body
     assert f"has_variable = {lpf.ANY}" in body
     hand = _code(MOD / lpf.HAND_EFFECTS)
     refresh = _block(hand, "pp_lprof_any_refresh")
-    assert "any_locations_with_town_rights_in_country" in refresh and "pp_tplan_held = yes" in refresh
+    assert f"any_in_list = {{\n\t\t\t\tvariable = {town_plans.LOCS_LIST}\n" in refresh
+    assert "pp_tplan_held = yes" in refresh
     assert "owner ?= scope:pp_lprof_c" in refresh and "root" not in refresh  # the flip's root is a location
     assert f"set_variable = {{ name = {lpf.ANY} value = yes }}" in refresh and f"remove_variable = {lpf.ANY}" in refresh
     begin = _block(_code(PLAN_EFFECTS), "pp_cplan_pass_begin")
     assert begin.index("pp_lprof_any_refresh = yes") < begin.index("pp_cplan_forecast_measure = yes") < begin.index(
         "pp_cplan_purses_fill = yes")
     flip = _block(_code(COMMON / "scripted_effects/pp_location_plan.txt"), "pp_tplan_flip")
-    off = flip[:flip.index("else = {\n\t\tgrant_town_rights")]
-    assert off.index("revoke_town_rights_of_type") < off.index("pp_lprof_any_refresh = yes")
-    on = flip[flip.index("grant_town_rights"):]
-    assert f"owner ?= {{ set_variable = {{ name = {lpf.ANY} value = yes }} }}" in on
+    off = flip[:flip.index("\n\telse = {")]
+    assert off.index("remove_variable = pp_tplan_p_$g$") < off.index("pp_lprof_any_refresh = yes")
+    on = flip[flip.index("\n\telse = {"):]
+    owner = on[on.index("owner ?= {"):]
+    assert f"set_variable = {{ name = {lpf.ANY} value = yes }}" in owner[:owner.index("\n\t}")]
     toggle = _block(_code(COMMON / "scripted_guis/pp_construction_plan.txt"), "pp_cplan_toggle_on")
     assert toggle.index("has_variable = pp_cplan_on") < toggle.index("pp_lprof_any_refresh = yes")

@@ -1,12 +1,12 @@
-"""Location plan (2026-11-07, Jan; plans as town rights since 2026-11-19, branch town-plans): the player decides what a
+"""Location plan (2026-11-07, Jan; a plain marker on the location since 2026-11-21): the player decides what a
 location is for.
 
-Only for the player. A plan is a town right without conditions and without a bonus (``pp_plan_<plan>``,
+Only for the player. A plan is a marker on the location (the location variable ``pp_tplan_p_<plan>``,
 ``town_plans.py``): "this location is for lumber, iron and later tools". The player sets and removes plans in the
 Location Plan window (opened from the location window's header button or its Plans row), one click per plan; several
 plans per location, rural locations too. The Construction Plan builds toward the held plans (the pass is not in this
-module). A plan shows among the location's town rights, and the Location Plan map mode draws the location's town rights
-over the player's locations.
+module). The Location Plan map mode draws the plans, and after them the location's town rights, over the player's
+locations.
 
 Plans: one per good with a forced goods target (its producers), then ``food`` and ``trade``
 (``town_plans.EXTRA_PLANS``). A good that no building makes (fur) is shown in the picker, dimmed, and cannot be set.
@@ -21,9 +21,10 @@ the parts that follow the plan list:
 * ``localization/english/pp_location_plan_generated_l_english.yml``: per plan its tile text with the plan's state (a
   good with a specialization charter: also what the location holds of it, ``pp_tplan_spec_<good>`` in the values
   file, and why it waits, ``pp_tplan_cwait`` from the rights look, charter_lines);
-* ``gui/map_markers.gui``: vanilla's, with the raw goods marker drawing the location's town rights in the plan map mode.
+* ``gui/map_markers.gui``: vanilla's, with the raw goods marker drawing the location's plans and town rights in the
+  plan map mode.
 
-Script names (``town_plans.py``): the right ``pp_plan_<plan>``, the script value ``pp_tplan_on_<plan>`` (1 while held),
+Script names (``town_plans.py``): the location variable ``pp_tplan_p_<plan>`` (set while held; the GUI reads it),
 the state ``pp_lplan_st_g_<plan>`` (+ 100, the profile rule states ``PP_LPROF_ST_<n>``) and the payback found
 ``pp_lplan_est_g_<plan>``, the effect ``pp_tplan_flip = { g = <plan> }`` and the scripted GUI ``pp_tplan_toggle``.
 Country: ``pp_lplan_sel`` (the location the window shows).
@@ -86,16 +87,17 @@ UPGRADE_WAIT_TEXT = "{name}: the upgrade waits for [political_influence|e] above
 class Plan:
     key: str
     group: str  # the picker group: the good's category, or EXTRA_GROUP
-    plannable: bool = True  # False: a good no building makes; shown dimmed, no plan right
+    plannable: bool = True  # False: a good no building makes; shown dimmed, cannot be planned
     good: bool = True
 
     @property
-    def right(self) -> str:
-        return town_plans.right_key(self.key)
+    def var(self) -> str:
+        """Location variable: set while the location holds the plan."""
+        return town_plans.plan_var(self.key)
 
     @property
-    def on_value(self) -> str:
-        return f"{town_plans.ON_VALUE_PREFIX}{self.key}"
+    def map_tooltip(self) -> str:
+        return f"PP_TPLAN_MAP_{self.key.upper()}"
 
     @property
     def state(self) -> str:
@@ -144,7 +146,7 @@ def picker_goods(repo: Path, config: Config) -> list[tuple[str, str]]:
 
 
 def targeted_goods(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -> set[str]:
-    """The goods with a forced goods target (at least one building makes them): the plan rights' goods (the targets of
+    """The goods with a forced goods target (at least one building makes them): the plans' goods (the targets of
     the plan engine, ``location_profiles.py``)."""
     from prosper_or_perish_constructor import location_profiles as lpf
 
@@ -197,9 +199,8 @@ def state_numbers(mod_root: Path) -> tuple[int, ...]:
 
 
 def held(plan: Plan, location: str = "Location.MakeScope") -> str:
-    """True while the location holds the plan right. No GUI function asks for one town right, so a script value does
-    (``pp_tplan_on_<plan>``, 1 while held)."""
-    return f"EqualTo_CFixedPoint({location}.ScriptValue('{plan.on_value}'), '(CFixedPoint)1')"
+    """True while the location holds the plan: its marker (the location variable) is set."""
+    return f"{location}.Var('{plan.var}').IsSet"
 
 
 def toggle_call(plan: Plan, location: str = "Location.MakeScope") -> str:
@@ -213,9 +214,9 @@ def toggle_call(plan: Plan, location: str = "Location.MakeScope") -> str:
 
 def render_values(plans: list[Plan], grants: dict | None = None) -> str:
     parts = [HEADER, "\n# Location scope: the plans this location holds (the Plans row: none yet / more than the row shows).\n",
-             f"{COUNT} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ has_any_town_rights = yes }}\n"]
+             f"{COUNT} = {{\n\tvalue = 0\n\tif = {{\n\t\tlimit = {{ has_variable = {town_plans.ANY_VAR} }}\n"]
     for plan in plannable(plans):
-        parts.append(f"\t\tif = {{ limit = {{ has_town_rights = town_rights_type:{plan.right} }} add = 1 }}\n")
+        parts.append(f"\t\tif = {{ limit = {{ has_variable = {plan.var} }} add = 1 }}\n")
     parts.append("\t}\n}\n")
     held = [(plan, grants[plan.key]) for plan in plannable(plans) if grants and plan.key in grants]
     if held:
@@ -244,7 +245,7 @@ def render_effects(plans: list[Plan]) -> str:
     parts.append("\t}\n}\n\n# Location scope: every plan taken off (the Location Plan window's Clear).\n"
                  f"{CLEAR_ALL} = {{\n")
     for plan in on:
-        parts.append(f"\tif = {{\n\t\tlimit = {{ has_town_rights = town_rights_type:{plan.right} }}\n"
+        parts.append(f"\tif = {{\n\t\tlimit = {{ has_variable = {plan.var} }}\n"
                      f"\t\t{town_plans.FLIP_EFFECT} = {{ g = {plan.key} }}\n\t}}\n")
     parts.append("}\n")
     parts.append(
@@ -371,7 +372,6 @@ def charter_lines(plan: Plan, grant, replaces: bool = True) -> list[str]:
 
 def render_loc(plans: list[Plan], states: tuple[int, ...], grants: dict | None = None,
                line_goods: tuple[str, ...] | None = None) -> str:
-    # no map tooltip per plan: the map marker draws the location's town rights (their own names)
     lines = ["﻿l_english:", "  # " + HEADER.strip().lstrip("# ")]
     # Per plan: the tile text of the picker and of the location window's Plans row (name, what the plan does, what a
     # click does, and while held the plan's state after the last pass: PP_LPROF_ST_<n> for pp_lplan_st_g_<plan>; for a
@@ -385,6 +385,9 @@ def render_loc(plans: list[Plan], states: tuple[int, ...], grants: dict | None =
         what = "PP_TPLAN_WHAT_GOOD" if plan.good else f"PP_TPLAN_WHAT_{upper}"
         grant = (grants or {}).get(plan.key)
         charter = f"[SelectLocalization({on}, 'PP_TPLAN_CH_{upper}', 'PP_TPLAN_EMPTY')]" if grant else ""
+        # the map marker's tooltip of a held plan: its name, what it does, its state
+        lines.append(f'  {plan.map_tooltip}: "#T {_name(plan)}#!\\n${what}$'
+                     f'[SelectLocalization({on}, \'PP_TPLAN_ST_{upper}\', \'PP_TPLAN_EMPTY\')]{charter}"')
         lines.append(f'  PP_TPLAN_PICK_{upper}: "#T {_name(plan)}#!\\n${what}$\\n'
                      f'[SelectLocalization({on}, \'PP_TPLAN_PICK_ON\', \'PP_TPLAN_PICK_OFF\')]'
                      f'[SelectLocalization({on}, \'PP_TPLAN_ST_{upper}\', \'PP_TPLAN_EMPTY\')]{charter}"')
@@ -401,7 +404,7 @@ def render_loc(plans: list[Plan], states: tuple[int, ...], grants: dict | None =
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# the map marker: vanilla's raw goods marker draws the location's town rights in the Location Plan map mode
+# the map marker: vanilla's raw goods marker draws the location's plans and town rights in the Location Plan map mode
 
 MARKERS = Path("in_game/gui/map_markers.gui")
 MAP_MODE_KEY = "pp_location_plan"
@@ -409,9 +412,12 @@ _MARKER_HEAD = "### Raw Goods Marker\nwidget = {\n\tname = \"raw_goods_marker\"\
 _PLAN_MODE = f"GetMapMode('{MAP_MODE_KEY}').IsSet"
 # one icon's size, scaled with the zoom like vanilla's marker (which caps at 85)
 _ICON_SIZE = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+HAS_PLAN = f"Location.MakeScope.Var('{town_plans.ANY_VAR}').IsSet"  # the location holds at least one plan
 HAS_RIGHTS = "GreaterThan_int32(GetDataModelSize(Location.GetTownRights), '(int32)0')"  # vanilla's own test
 MAP_ICONS = 8  # the marker draws at most this many town rights per location
 MAP_TOOLTIP = "PP_TPLAN_MAP_RIGHT"
+PLAN_TILE_COLOR = "0.12 0.12 0.12 0.8"  # a plan's tile on the map
+RIGHT_TILE_COLOR = "0.16 0.22 0.36 0.85"  # a town right's tile on the map (a charter the plan brought, any other right)
 
 
 def _marker_block_end(text: str, start: int) -> int:
@@ -423,11 +429,15 @@ def _marker_block_end(text: str, start: int) -> int:
             return index
 
 
-def render_markers(vanilla: str) -> str:
+def render_markers(vanilla: str, plans: list[Plan] | None = None) -> str:
     """Vanilla's map_markers.gui with the raw goods marker split in two: its own content outside the Location Plan map
-    mode, and in it the town rights of the player's locations that hold any (a plan is a town right; charters and
-    rights show beside the plans): one datamodel over the location's own rights, nothing per plan, so the marker costs
-    no more than vanilla's town rights card."""
+    mode, and in it, over the player's locations, the plans (``plans``: the plannable ones; one icon per plan, shown
+    while the location carries the plan's marker) and after them the location's town rights (the charter a plan
+    brought among them), on a tile of another colour.
+
+    A plan is a location variable, so no datamodel lists a location's plans: every plan has its icon, behind the test
+    of one variable (HAS_PLAN), so only the locations that hold a plan look at the plans (the same build as the map
+    icons of 2026-11-07, in game then with 84 items). The rights are one datamodel over the location's own rights."""
     if vanilla.count(_MARKER_HEAD) != 1:
         raise ValueError("map_markers.gui: raw goods marker not found once")
     start = vanilla.index(_MARKER_HEAD)
@@ -436,29 +446,48 @@ def render_markers(vanilla: str) -> str:
     first_button = block.index("\n\tbutton = {")
     head, body = block[:first_button], block[first_button:block.rindex("}")]
     body = "\n".join(("\t" + line if line.strip() else line) for line in body.split("\n"))
-    rights = (
-        "\t\t\tdatamodel = \"[DataModelFirst(Location.GetTownRights, '(int32)" + str(MAP_ICONS) + "')]\"\n"
-        "\t\t\titem = {\n"
-        "\t\t\t\twidget = {\n"
-        f"\t\t\t\t\tsize = \"{_ICON_SIZE}\"\n"
-        f"\t\t\t\t\ttooltip = \"{MAP_TOOLTIP}\"\n"
-        f"\t\t\t\t\ticon = {{ size = {{ 100% 100% }} texture = \"{TILE}\" color = {{ 0.12 0.12 0.12 0.8 }} }}\n"
-        "\t\t\t\t\ticon = { size = { 84% 84% } parentanchor = center texture = \"[TownRights.GetIcon]\" }\n"
-        "\t\t\t\t}\n"
-        "\t\t\t}\n"
+    tab = "\t\t\t\t"
+    icons = "".join(
+        f"{tab}widget = {{\n"
+        f"{tab}\tvisible = \"[{held(plan)}]\"\n"
+        f"{tab}\tsize = \"{_ICON_SIZE}\"\n"
+        f"{tab}\ttooltip = \"{plan.map_tooltip}\"\n"
+        f"{tab}\ticon = {{ size = {{ 100% 100% }} texture = \"{TILE}\" color = {{ {PLAN_TILE_COLOR} }} }}\n"
+        f"{tab}\ticon = {{ size = {{ 84% 84% }} parentanchor = center texture = \"{plan.icon}\" }}\n"
+        f"{tab}}}\n"
+        for plan in plans or ()
     )
+    rights = (
+        f"{tab}datamodel = \"[DataModelFirst(Location.GetTownRights, '(int32){MAP_ICONS}')]\"\n"
+        f"{tab}item = {{\n"
+        f"{tab}\twidget = {{\n"
+        f"{tab}\t\tsize = \"{_ICON_SIZE}\"\n"
+        f"{tab}\t\ttooltip = \"{MAP_TOOLTIP}\"\n"
+        f"{tab}\t\ticon = {{ size = {{ 100% 100% }} texture = \"{TILE}\" color = {{ {RIGHT_TILE_COLOR} }} }}\n"
+        f"{tab}\t\ticon = {{ size = {{ 84% 84% }} parentanchor = center texture = \"[TownRights.GetIcon]\" }}\n"
+        f"{tab}\t}}\n"
+        f"{tab}}}\n"
+    )
+    flow = "direction = horizontal\n\t\t\t\tallow_outside = yes\n\t\t\t\tspacing = 2\n"
     patched = (
         head
         + f"\n\t# PP Location Plan (location_plan.py): vanilla's content outside the {MAP_MODE_KEY} map mode\n"
         + f"\twidget = {{\n\t\tvisible = \"[Not({_PLAN_MODE})]\"\n\t\tsize = {{ 100% 100% }}\n\t\tallow_outside = yes\n"
         + body.rstrip() + "\n\t}\n\n"
-        + "\t# PP Location Plan: in its map mode, the town rights (plans among them) of the player's locations\n"
+        + "\t# PP Location Plan: in its map mode, the plans and the town rights of the player's locations\n"
         + "\twidget = {\n\t\tname = \"pp_lplan_marker\"\n"
-        + f"\t\tvisible = \"[And({_PLAN_MODE}, And(Location.GetOwner.IsPlayer, {HAS_RIGHTS}))]\"\n"
+        + f"\t\tvisible = \"[And({_PLAN_MODE}, And(Location.GetOwner.IsPlayer, Or({HAS_PLAN}, {HAS_RIGHTS})))]\"\n"
         + "\t\tsize = { 100% 100% }\n\t\tallow_outside = yes\n"
         + "\t\tflowcontainer = {\n\t\t\tparentanchor = center\n\t\t\twidgetanchor = center\n\t\t\tdirection = horizontal\n"
-        + "\t\t\tallow_outside = yes\n\t\t\tspacing = 2\n"
+        + "\t\t\tignoreinvisible = yes\n\t\t\tallow_outside = yes\n\t\t\tspacing = 2\n"
+        + "\t\t\t# the plans (only a location that holds one looks at them)\n"
+        + f"\t\t\tflowcontainer = {{\n\t\t\t\tvisible = \"[{HAS_PLAN}]\"\n\t\t\t\tignoreinvisible = yes\n\t\t\t\t{flow}"
+        + icons
+        + "\t\t\t}\n"
+        + "\t\t\t# the town rights\n"
+        + f"\t\t\tflowcontainer = {{\n\t\t\t\tvisible = \"[{HAS_RIGHTS}]\"\n\t\t\t\t{flow}"
         + rights
+        + "\t\t\t}\n"
         + "\t\t}\n\t}\n}"
     )
     return vanilla[:start] + patched + vanilla[end:]
@@ -539,11 +568,13 @@ def _write(path: Path, text: str, write: bool) -> bool:
     return True
 
 
-def charter_grants(mod_root: Path, vanilla_root: Path) -> dict:
-    """Good -> its plan grant (construction_plan_country.PlanGrant: the charter and the rights a plan of it brings)."""
+def charter_grants(mod_root: Path, vanilla_root: Path, plans: list[Plan]) -> dict:
+    """Good -> its plan grant (construction_plan_country.PlanGrant: the charter and the rights a plan of it brings),
+    for the plannable ones of ``plans``; from the rights that have a picture, as the build's grants are."""
     from prosper_or_perish_constructor import construction_plan_country as cc
 
-    return {grant.good: grant for grant in cc.charter_grants(mod_root, vanilla_root)}
+    rights = [right for right in cc.read_rights(mod_root, vanilla_root)[0] if right.icon]
+    return {grant.good: grant for grant in cc.plan_grants(rights, {plan.key for plan in plannable(plans)})}
 
 
 def line_level_goods(mod_root: Path) -> tuple[str, ...]:
@@ -565,7 +596,7 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
     result = Result(items=plans)
     result.missing_icons = [plan.key for plan in plans if not icon_exists(plan, mod_root, vanilla_root)]
     vanilla_markers = vanilla_root / "game" / MARKERS
-    grants = charter_grants(mod_root, vanilla_root)
+    grants = charter_grants(mod_root, vanilla_root, plans)
     texts = {
         mod_root / VALUES: "﻿" + render_values(plans, grants),
         mod_root / EFFECTS: "﻿" + render_effects(plans),
@@ -573,7 +604,7 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
         mod_root / LOC: render_loc(plans, state_numbers(mod_root), grants, line_level_goods(mod_root)),
     }
     if vanilla_markers.is_file():
-        texts[mod_root / MARKERS] = "﻿" + render_markers(vanilla_markers.read_text(encoding="utf-8-sig"))
+        texts[mod_root / MARKERS] = "﻿" + render_markers(vanilla_markers.read_text(encoding="utf-8-sig"), plannable(plans))
     for path, text in texts.items():
         if _write(path, text, write):
             result.files_changed += 1

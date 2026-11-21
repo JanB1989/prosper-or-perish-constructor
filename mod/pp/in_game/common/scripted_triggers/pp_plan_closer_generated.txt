@@ -5,27 +5,27 @@
 pp_pclose_planned = {
 	OR = {
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_camels }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_camels }
 			OR = {
 				building_type = building_type:camel_herders
 				building_type = building_type:camel_stud
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_elephants }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_elephants }
 			OR = {
 				building_type = building_type:elephant_kraal
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_horses }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_horses }
 			OR = {
 				building_type = building_type:horse_breeders
 				building_type = building_type:stud_farm
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_livestock }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_livestock }
 			OR = {
 				building_type = building_type:cattle_farm
 				building_type = building_type:cattle_farmstead
@@ -34,7 +34,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_wool }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_wool }
 			OR = {
 				building_type = building_type:enclosed_sheep_walks
 				building_type = building_type:hurdled_sheepcotes
@@ -42,13 +42,13 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_beeswax }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_beeswax }
 			OR = {
 				building_type = building_type:forest_village
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_dyes }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_dyes }
 			OR = {
 				building_type = building_type:dye_plantation
 				building_type = building_type:dyes_guild
@@ -58,14 +58,14 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_incense }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_incense }
 			OR = {
 				building_type = building_type:incense_grove
 				building_type = building_type:perfumery
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_tobacco }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_tobacco }
 			OR = {
 				building_type = building_type:market_tobacco_farm
 				building_type = building_type:tobacco_farm
@@ -73,7 +73,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_cotton }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_cotton }
 			OR = {
 				building_type = building_type:cotton_farm
 				building_type = building_type:cotton_plantation
@@ -81,14 +81,14 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_fiber_crops }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_fiber_crops }
 			OR = {
 				building_type = building_type:fiber_crops_farm
 				building_type = building_type:fiber_dressing_yard
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_silk }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_silk }
 			OR = {
 				building_type = building_type:ablaq_palace
 				building_type = building_type:regulated_sericulture_farm
@@ -97,33 +97,33 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_chili }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_chili }
 			OR = {
 				building_type = building_type:chili_plantation
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_cloves }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_cloves }
 			OR = {
 				building_type = building_type:clove_grove
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_pepper }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_pepper }
 			OR = {
 				building_type = building_type:managed_pepper_garden
 				building_type = building_type:pepper_garden
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_saffron }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_saffron }
 			OR = {
 				building_type = building_type:saffron_croft
 				building_type = building_type:saffron_kiln_croft
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_legumes }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_legumes }
 			OR = {
 				building_type = building_type:legume_farm
 				building_type = building_type:legume_farmstead
@@ -132,7 +132,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_maize }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_maize }
 			OR = {
 				building_type = building_type:maize_farm
 				building_type = building_type:maize_farmstead
@@ -141,7 +141,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_millet }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_millet }
 			OR = {
 				building_type = building_type:millet_farm
 				building_type = building_type:millet_farmstead
@@ -150,7 +150,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_potato }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_potato }
 			OR = {
 				building_type = building_type:potato_farm
 				building_type = building_type:potato_farmstead
@@ -159,7 +159,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_rice }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_rice }
 			OR = {
 				building_type = building_type:rice_farm
 				building_type = building_type:rice_farmstead
@@ -168,7 +168,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_wheat }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_wheat }
 			OR = {
 				building_type = building_type:wheat_farm
 				building_type = building_type:wheat_farmstead
@@ -177,28 +177,28 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_cocoa }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_cocoa }
 			OR = {
 				building_type = building_type:cocoa_grove
 				building_type = building_type:managed_cocoa_grove
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_coffee }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_coffee }
 			OR = {
 				building_type = building_type:coffee_grove
 				building_type = building_type:terraced_coffee_grove
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_tea }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_tea }
 			OR = {
 				building_type = building_type:tea_garden
 				building_type = building_type:tea_sorting_garden
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_sugar }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_sugar }
 			OR = {
 				building_type = building_type:sugar_plantation
 				building_type = building_type:sugarcane_farm
@@ -206,7 +206,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_fruit }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_fruit }
 			OR = {
 				building_type = building_type:fruit_orchard
 				building_type = building_type:maghreb_palm_irrigation
@@ -215,7 +215,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_olives }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_olives }
 			OR = {
 				building_type = building_type:olive_farm
 				building_type = building_type:olive_farmstead
@@ -224,7 +224,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_wine }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_wine }
 			OR = {
 				building_type = building_type:vineyard_estate
 				building_type = building_type:winery
@@ -232,7 +232,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_lumber }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_lumber }
 			OR = {
 				building_type = building_type:lumber_mill
 				building_type = building_type:lumber_mill_improved
@@ -241,7 +241,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_fish }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_fish }
 			OR = {
 				building_type = building_type:drift_net_fishery
 				building_type = building_type:fishing_village
@@ -251,34 +251,34 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_pearls }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_pearls }
 			OR = {
 				building_type = building_type:pearl_fishery
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_clay }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_clay }
 			OR = {
 				building_type = building_type:clay_pit
 				building_type = building_type:clay_washmill
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_sand }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_sand }
 			OR = {
 				building_type = building_type:sand_pit
 				building_type = building_type:sand_washery
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_medicaments }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_medicaments }
 			OR = {
 				building_type = building_type:apothecary
 				building_type = building_type:simplers_grove
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_salt }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_salt }
 			OR = {
 				building_type = building_type:engineered_brine_saltworks
 				building_type = building_type:inland_saltworks
@@ -288,27 +288,27 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_amber }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_amber }
 			OR = {
 				building_type = building_type:amber_collector
 				building_type = building_type:amber_diggings
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_ivory }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_ivory }
 			OR = {
 				building_type = building_type:elephant_hunting_grounds
 				building_type = building_type:ivory_hunting_camp
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_wild_game }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_wild_game }
 			OR = {
 				building_type = building_type:eng_royal_forest
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_beer }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_beer }
 			OR = {
 				building_type = building_type:beer_workshop
 				building_type = building_type:brewery
@@ -317,7 +317,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_liquor }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_liquor }
 			OR = {
 				building_type = building_type:distiller_manufactory
 				building_type = building_type:distiller_mill
@@ -326,7 +326,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_books }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_books }
 			OR = {
 				building_type = building_type:printing_manufactory
 				building_type = building_type:printing_mill
@@ -335,7 +335,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_paper }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_paper }
 			OR = {
 				building_type = building_type:paper_guild
 				building_type = building_type:paper_manufactory
@@ -344,14 +344,14 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_slaves_goods }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_slaves_goods }
 			OR = {
 				building_type = building_type:slave_center
 				building_type = building_type:slave_market
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_glass }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_glass }
 			OR = {
 				building_type = building_type:glass_guild
 				building_type = building_type:glass_mill
@@ -361,13 +361,13 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_masonry }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_masonry }
 			OR = {
 				building_type = building_type:mason
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_pottery }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_pottery }
 			OR = {
 				building_type = building_type:pottery_guild
 				building_type = building_type:pottery_manufactory
@@ -376,13 +376,13 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_tar }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_tar }
 			OR = {
 				building_type = building_type:tar_kiln
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_furniture }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_furniture }
 			OR = {
 				building_type = building_type:furniture_guild
 				building_type = building_type:furniture_manufactory
@@ -391,34 +391,34 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_jewelry }
 			OR = {
 				building_type = building_type:jewelry_guild
 				building_type = building_type:pounamou_carver
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_lacquerware }
 			OR = {
 				building_type = building_type:lacquerware_guild
 				building_type = building_type:lacquerware_manufactory
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_porcelain }
 			OR = {
 				building_type = building_type:porcelain_guild
 				building_type = building_type:porcelain_manufactory
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_steel }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_steel }
 			OR = {
 				building_type = building_type:steel_mill
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_tools }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_tools }
 			OR = {
 				building_type = building_type:iron_foundry
 				building_type = building_type:iron_mill
@@ -429,7 +429,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_cannons }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_cannons }
 			OR = {
 				building_type = building_type:cannon_foundry
 				building_type = building_type:cannon_maker
@@ -438,7 +438,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_firearms }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_firearms }
 			OR = {
 				building_type = building_type:firearms_factory
 				building_type = building_type:firearms_manufactory
@@ -448,7 +448,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_weaponry }
 			OR = {
 				building_type = building_type:weapon_factory
 				building_type = building_type:weapon_guild
@@ -457,7 +457,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_naval_supplies }
 			OR = {
 				building_type = building_type:naval_supplies_guild
 				building_type = building_type:naval_supplies_manufactory
@@ -466,14 +466,14 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_victuals }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_victuals }
 			OR = {
 				building_type = building_type:grange
 				building_type = building_type:victualling_yard
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_cloth }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_cloth }
 			OR = {
 				building_type = building_type:cloth_guild
 				building_type = building_type:cloth_manufactory
@@ -483,7 +483,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_fine_cloth }
 			OR = {
 				building_type = building_type:fine_cloth_guild
 				building_type = building_type:fine_cloth_manufactory
@@ -492,7 +492,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_leather }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_leather }
 			OR = {
 				building_type = building_type:managed_forest_village
 				building_type = building_type:tannery
@@ -502,21 +502,21 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_marble }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_marble }
 			OR = {
 				building_type = building_type:marble_quarry
 				building_type = building_type:marble_saw_yard
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_stone }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_stone }
 			OR = {
 				building_type = building_type:stone_quarry
 				building_type = building_type:stone_quarry_improved
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_coal }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_coal }
 			OR = {
 				building_type = building_type:charcoal_maker
 				building_type = building_type:coal_mine
@@ -526,21 +526,21 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_alum }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_alum }
 			OR = {
 				building_type = building_type:alum_quarry
 				building_type = building_type:alum_works
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_mercury }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_mercury }
 			OR = {
 				building_type = building_type:cinnabar_pit
 				building_type = building_type:quicksilver_retort
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_saltpeter }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_saltpeter }
 			OR = {
 				building_type = building_type:putrefaction_mill
 				building_type = building_type:putrefaction_works
@@ -550,7 +550,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_copper }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_copper }
 			OR = {
 				building_type = building_type:copper_mine
 				building_type = building_type:copper_mine_adit
@@ -558,7 +558,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_iron }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_iron }
 			OR = {
 				building_type = building_type:bog_iron_smelter
 				building_type = building_type:bog_iron_smelter_blast_furnace
@@ -569,7 +569,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_lead }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_lead }
 			OR = {
 				building_type = building_type:lead_mine
 				building_type = building_type:lead_mine_bole_smelting
@@ -577,28 +577,28 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_tin }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_tin }
 			OR = {
 				building_type = building_type:tin_stamping_mill
 				building_type = building_type:tin_streamworks
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_gems }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_gems }
 			OR = {
 				building_type = building_type:gem_gravel_pit
 				building_type = building_type:gem_sluice
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_goods_gold }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_goods_gold }
 			OR = {
 				building_type = building_type:gold_diggings
 				building_type = building_type:gold_stamp_mill
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_silver }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_silver }
 			OR = {
 				building_type = building_type:schwaz_mine
 				building_type = building_type:silver_mine
@@ -606,7 +606,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_food }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_food }
 			OR = {
 				building_type = building_type:camel_herders
 				building_type = building_type:camel_stud
@@ -661,7 +661,7 @@ pp_pclose_planned = {
 			}
 		}
 		AND = {
-			scope:pp_pclose_l = { has_town_rights = town_rights_type:pp_plan_trade }
+			scope:pp_pclose_l = { has_variable = pp_tplan_p_trade }
 			OR = {
 				building_type = building_type:clearing_house
 				building_type = building_type:commerce_center
@@ -675,6 +675,321 @@ pp_pclose_planned = {
 				building_type = building_type:stock_exchange
 				building_type = building_type:trading_hub
 			}
+		}
+	}
+}
+
+# Location scope: the location still holds a plan the closings here are for (pp_pclose_needed): a plan with
+# pp_pclose_for_<plan> (pp_pclose_plan) whose marker the location carries.
+pp_pclose_for_held = {
+	OR = {
+		AND = {
+			has_variable = pp_pclose_for_camels
+			has_variable = pp_tplan_p_camels
+		}
+		AND = {
+			has_variable = pp_pclose_for_elephants
+			has_variable = pp_tplan_p_elephants
+		}
+		AND = {
+			has_variable = pp_pclose_for_horses
+			has_variable = pp_tplan_p_horses
+		}
+		AND = {
+			has_variable = pp_pclose_for_livestock
+			has_variable = pp_tplan_p_livestock
+		}
+		AND = {
+			has_variable = pp_pclose_for_wool
+			has_variable = pp_tplan_p_wool
+		}
+		AND = {
+			has_variable = pp_pclose_for_beeswax
+			has_variable = pp_tplan_p_beeswax
+		}
+		AND = {
+			has_variable = pp_pclose_for_dyes
+			has_variable = pp_tplan_p_dyes
+		}
+		AND = {
+			has_variable = pp_pclose_for_incense
+			has_variable = pp_tplan_p_incense
+		}
+		AND = {
+			has_variable = pp_pclose_for_tobacco
+			has_variable = pp_tplan_p_tobacco
+		}
+		AND = {
+			has_variable = pp_pclose_for_cotton
+			has_variable = pp_tplan_p_cotton
+		}
+		AND = {
+			has_variable = pp_pclose_for_fiber_crops
+			has_variable = pp_tplan_p_fiber_crops
+		}
+		AND = {
+			has_variable = pp_pclose_for_silk
+			has_variable = pp_tplan_p_silk
+		}
+		AND = {
+			has_variable = pp_pclose_for_chili
+			has_variable = pp_tplan_p_chili
+		}
+		AND = {
+			has_variable = pp_pclose_for_cloves
+			has_variable = pp_tplan_p_cloves
+		}
+		AND = {
+			has_variable = pp_pclose_for_pepper
+			has_variable = pp_tplan_p_pepper
+		}
+		AND = {
+			has_variable = pp_pclose_for_saffron
+			has_variable = pp_tplan_p_saffron
+		}
+		AND = {
+			has_variable = pp_pclose_for_legumes
+			has_variable = pp_tplan_p_legumes
+		}
+		AND = {
+			has_variable = pp_pclose_for_maize
+			has_variable = pp_tplan_p_maize
+		}
+		AND = {
+			has_variable = pp_pclose_for_millet
+			has_variable = pp_tplan_p_millet
+		}
+		AND = {
+			has_variable = pp_pclose_for_potato
+			has_variable = pp_tplan_p_potato
+		}
+		AND = {
+			has_variable = pp_pclose_for_rice
+			has_variable = pp_tplan_p_rice
+		}
+		AND = {
+			has_variable = pp_pclose_for_wheat
+			has_variable = pp_tplan_p_wheat
+		}
+		AND = {
+			has_variable = pp_pclose_for_cocoa
+			has_variable = pp_tplan_p_cocoa
+		}
+		AND = {
+			has_variable = pp_pclose_for_coffee
+			has_variable = pp_tplan_p_coffee
+		}
+		AND = {
+			has_variable = pp_pclose_for_tea
+			has_variable = pp_tplan_p_tea
+		}
+		AND = {
+			has_variable = pp_pclose_for_sugar
+			has_variable = pp_tplan_p_sugar
+		}
+		AND = {
+			has_variable = pp_pclose_for_fruit
+			has_variable = pp_tplan_p_fruit
+		}
+		AND = {
+			has_variable = pp_pclose_for_olives
+			has_variable = pp_tplan_p_olives
+		}
+		AND = {
+			has_variable = pp_pclose_for_wine
+			has_variable = pp_tplan_p_wine
+		}
+		AND = {
+			has_variable = pp_pclose_for_lumber
+			has_variable = pp_tplan_p_lumber
+		}
+		AND = {
+			has_variable = pp_pclose_for_fish
+			has_variable = pp_tplan_p_fish
+		}
+		AND = {
+			has_variable = pp_pclose_for_pearls
+			has_variable = pp_tplan_p_pearls
+		}
+		AND = {
+			has_variable = pp_pclose_for_clay
+			has_variable = pp_tplan_p_clay
+		}
+		AND = {
+			has_variable = pp_pclose_for_sand
+			has_variable = pp_tplan_p_sand
+		}
+		AND = {
+			has_variable = pp_pclose_for_medicaments
+			has_variable = pp_tplan_p_medicaments
+		}
+		AND = {
+			has_variable = pp_pclose_for_salt
+			has_variable = pp_tplan_p_salt
+		}
+		AND = {
+			has_variable = pp_pclose_for_amber
+			has_variable = pp_tplan_p_amber
+		}
+		AND = {
+			has_variable = pp_pclose_for_ivory
+			has_variable = pp_tplan_p_ivory
+		}
+		AND = {
+			has_variable = pp_pclose_for_wild_game
+			has_variable = pp_tplan_p_wild_game
+		}
+		AND = {
+			has_variable = pp_pclose_for_beer
+			has_variable = pp_tplan_p_beer
+		}
+		AND = {
+			has_variable = pp_pclose_for_liquor
+			has_variable = pp_tplan_p_liquor
+		}
+		AND = {
+			has_variable = pp_pclose_for_books
+			has_variable = pp_tplan_p_books
+		}
+		AND = {
+			has_variable = pp_pclose_for_paper
+			has_variable = pp_tplan_p_paper
+		}
+		AND = {
+			has_variable = pp_pclose_for_slaves_goods
+			has_variable = pp_tplan_p_slaves_goods
+		}
+		AND = {
+			has_variable = pp_pclose_for_glass
+			has_variable = pp_tplan_p_glass
+		}
+		AND = {
+			has_variable = pp_pclose_for_masonry
+			has_variable = pp_tplan_p_masonry
+		}
+		AND = {
+			has_variable = pp_pclose_for_pottery
+			has_variable = pp_tplan_p_pottery
+		}
+		AND = {
+			has_variable = pp_pclose_for_tar
+			has_variable = pp_tplan_p_tar
+		}
+		AND = {
+			has_variable = pp_pclose_for_furniture
+			has_variable = pp_tplan_p_furniture
+		}
+		AND = {
+			has_variable = pp_pclose_for_jewelry
+			has_variable = pp_tplan_p_jewelry
+		}
+		AND = {
+			has_variable = pp_pclose_for_lacquerware
+			has_variable = pp_tplan_p_lacquerware
+		}
+		AND = {
+			has_variable = pp_pclose_for_porcelain
+			has_variable = pp_tplan_p_porcelain
+		}
+		AND = {
+			has_variable = pp_pclose_for_steel
+			has_variable = pp_tplan_p_steel
+		}
+		AND = {
+			has_variable = pp_pclose_for_tools
+			has_variable = pp_tplan_p_tools
+		}
+		AND = {
+			has_variable = pp_pclose_for_cannons
+			has_variable = pp_tplan_p_cannons
+		}
+		AND = {
+			has_variable = pp_pclose_for_firearms
+			has_variable = pp_tplan_p_firearms
+		}
+		AND = {
+			has_variable = pp_pclose_for_weaponry
+			has_variable = pp_tplan_p_weaponry
+		}
+		AND = {
+			has_variable = pp_pclose_for_naval_supplies
+			has_variable = pp_tplan_p_naval_supplies
+		}
+		AND = {
+			has_variable = pp_pclose_for_victuals
+			has_variable = pp_tplan_p_victuals
+		}
+		AND = {
+			has_variable = pp_pclose_for_cloth
+			has_variable = pp_tplan_p_cloth
+		}
+		AND = {
+			has_variable = pp_pclose_for_fine_cloth
+			has_variable = pp_tplan_p_fine_cloth
+		}
+		AND = {
+			has_variable = pp_pclose_for_leather
+			has_variable = pp_tplan_p_leather
+		}
+		AND = {
+			has_variable = pp_pclose_for_marble
+			has_variable = pp_tplan_p_marble
+		}
+		AND = {
+			has_variable = pp_pclose_for_stone
+			has_variable = pp_tplan_p_stone
+		}
+		AND = {
+			has_variable = pp_pclose_for_coal
+			has_variable = pp_tplan_p_coal
+		}
+		AND = {
+			has_variable = pp_pclose_for_alum
+			has_variable = pp_tplan_p_alum
+		}
+		AND = {
+			has_variable = pp_pclose_for_mercury
+			has_variable = pp_tplan_p_mercury
+		}
+		AND = {
+			has_variable = pp_pclose_for_saltpeter
+			has_variable = pp_tplan_p_saltpeter
+		}
+		AND = {
+			has_variable = pp_pclose_for_copper
+			has_variable = pp_tplan_p_copper
+		}
+		AND = {
+			has_variable = pp_pclose_for_iron
+			has_variable = pp_tplan_p_iron
+		}
+		AND = {
+			has_variable = pp_pclose_for_lead
+			has_variable = pp_tplan_p_lead
+		}
+		AND = {
+			has_variable = pp_pclose_for_tin
+			has_variable = pp_tplan_p_tin
+		}
+		AND = {
+			has_variable = pp_pclose_for_gems
+			has_variable = pp_tplan_p_gems
+		}
+		AND = {
+			has_variable = pp_pclose_for_goods_gold
+			has_variable = pp_tplan_p_goods_gold
+		}
+		AND = {
+			has_variable = pp_pclose_for_silver
+			has_variable = pp_tplan_p_silver
+		}
+		AND = {
+			has_variable = pp_pclose_for_food
+			has_variable = pp_tplan_p_food
+		}
+		AND = {
+			has_variable = pp_pclose_for_trade
+			has_variable = pp_tplan_p_trade
 		}
 	}
 }

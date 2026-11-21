@@ -18,8 +18,9 @@
 #   location waits: no closing in the next look (pp_pclose_wait, + 100, counted down by its look turns).
 # - WHICH: pp_pclose_candidate (scripted_triggers/pp_plan_closer.txt); ORDER: pp_pclose_rank (least profit per worker
 #   first; equal: more workers first).
-# - MEMORY: location lists pp_pclose_types (the types the rule closed there), pp_pclose_for (the plans they are for,
-#   town rights), pp_pclose_keep (types the player opened again by hand: never closed again there); country list
+# - MEMORY: location lists pp_pclose_types (the types the rule closed there) and pp_pclose_keep (types the player
+#   opened again by hand: never closed again there), location variables pp_pclose_for_<plan> (the plans the closings
+#   are for; plan_closer.py writes pp_pclose_for_held and pp_pclose_for_clear over them); country list
 #   pp_pclose_locs (the locations with closings).
 # - UNDO: a plan taken off (pp_tplan_flip -> pp_pclose_plan_off), the setting switched off (pp_tplan_toggle_free ->
 #   pp_pclose_undo_all), or the monthly check finding no held plan they are for: the closed buildings of those types
@@ -108,22 +109,13 @@ pp_pclose_taken_back = {
 }
 
 # Location scope (scope:pp_pclose_l, scope:pp_pclose_c = its owner): the closings here are kept while the location
-# holds one of the plans they are for (pp_pclose_for), else every one of them is opened again (pp_pclose_undo).
+# holds one of the plans they are for (pp_pclose_for_held, generated: a plan with pp_pclose_for_<plan> whose marker
+# the location still carries), else every one of them is opened again (pp_pclose_undo).
 pp_pclose_needed = {
-	remove_variable = pp_pclose_held
-	every_in_list = {
-		variable = pp_pclose_for
-		save_temporary_scope_as = pp_pclose_r
-		if = {
-			limit = { scope:pp_pclose_l = { has_town_rights = scope:pp_pclose_r } }
-			scope:pp_pclose_l = { set_variable = { name = pp_pclose_held value = yes } }
-		}
-	}
 	if = {
-		limit = { NOT = { has_variable = pp_pclose_held } }
+		limit = { NOT = { pp_pclose_for_held = yes } }
 		pp_pclose_undo = yes
 	}
-	remove_variable = pp_pclose_held
 }
 
 # Location scope, scope:pp_pclose_c = the country whose buildings the rule closed here: every closed building of a
@@ -147,7 +139,7 @@ pp_pclose_undo = {
 		}
 	}
 	clear_variable_list = pp_pclose_types
-	clear_variable_list = pp_pclose_for
+	pp_pclose_for_clear = yes
 	remove_variable = pp_pclose_wait
 	if = {
 		limit = { NOT = { pp_tplan_held = yes } }
@@ -158,7 +150,7 @@ pp_pclose_undo = {
 # Location scope: lost (owner change): the game opened its closed buildings itself; everything the rule kept here goes.
 pp_pclose_forget = {
 	clear_variable_list = pp_pclose_types
-	clear_variable_list = pp_pclose_for
+	pp_pclose_for_clear = yes
 	clear_variable_list = pp_pclose_keep
 	remove_variable = pp_pclose_wait
 }
@@ -269,10 +261,7 @@ pp_pclose_plan = {
 	}
 	if = {
 		limit = { has_variable = pp_pclose_wait }
-		if = {
-			limit = { NOT = { is_target_in_variable_list = { name = pp_pclose_for target = town_rights_type:pp_plan_$g$ } } }
-			add_to_variable_list = { name = pp_pclose_for target = town_rights_type:pp_plan_$g$ }
-		}
+		set_variable = { name = pp_pclose_for_$g$ value = yes }
 	}
 	else = {
 		set_variable = { name = pp_lprof_fail value = 104 }

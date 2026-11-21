@@ -1,10 +1,11 @@
-﻿# Prosper or Perish - Location Plan window (2026-11-07, Jan; plans as town rights since 2026-11-19). A scripted widget
+﻿# Prosper or Perish - Location Plan window (2026-11-07, Jan; a plan is a marker on the location). A scripted widget
 # (gui/scripted_widgets/pp_location_plan.txt), so no vanilla window is overridden; opened by the plan button in the
 # location window's header (location_plan.py patches it in) and by the round button of the location window's Plans row.
-# The player sets what the location is for: one click per plan (a town right pp_plan_<plan>), several per location;
+# The player sets what the location is for: one click per plan (the location variable pp_tplan_p_<plan>), several per
+# location;
 # the Construction Plan builds toward the held plans. The picker grid is generated (pp_location_plan_generated.gui; a
-# plan's tooltip carries its state after the last look); the map mode pp_location_plan shows the location's town
-# rights as icons. Shown only to a player who plays a country.
+# plan's tooltip carries its state after the last look); the map mode pp_location_plan shows the location's plans
+# and town rights as icons. Shown only to a player who plays a country.
 
 types PPLocationPlan
 {

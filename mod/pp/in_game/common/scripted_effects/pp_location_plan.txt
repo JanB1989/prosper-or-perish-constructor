@@ -1,29 +1,42 @@
-﻿# Prosper or Perish - Location plan (2026-11-07, Jan; plans as town rights since 2026-11-19, branch town-plans): the
-# player decides what a location is for (gui/pp_location_plan.gui, the location window's Plans row, map mode
-# pp_location_plan). A plan is a town right without conditions and without a bonus (pp_plan_<plan>,
-# common/town_rights), set and removed only by these buttons; the Construction Plan builds toward the held plans. The
-# toggle switch, Clear and the declarations are generated into pp_location_plan_generated.txt (location_plan.py).
-# Location variables: pp_lplan_st_g_<plan> (the plan's state after the last pass + 100) and pp_lplan_est_g_<plan> (the
-# shortest payback found, years + 100). Country: pp_lplan_sel (the location the window shows).
+﻿# Prosper or Perish - Location plan (2026-11-07, Jan; a plain marker on the location since 2026-11-21, town_plans.py):
+# the player decides what a location is for (gui/pp_location_plan.gui, the location window's Plans row, map mode
+# pp_location_plan). A plan is the location variable pp_tplan_p_<plan>, set and removed only by these buttons; it is no
+# town right and gives nothing by itself. The Construction Plan builds toward the held plans and, while its setting is
+# on, grants the plan's real charter and rights. The toggle switch, Clear and the declarations are generated into
+# pp_location_plan_generated.txt (location_plan.py).
+# Location variables: pp_tplan_p_<plan> (the plan), pp_tplan_any (it holds at least one), pp_lplan_st_g_<plan> (the
+# plan's state after the last pass + 100) and pp_lplan_est_g_<plan> (the shortest payback found, years + 100).
+# Country: the list pp_tplan_locs (its locations with a plan), pp_lplan_sel (the location the window shows).
 
-# Location scope: sets the plan $g$, or takes it off when the location holds it. Strictly one if / else on the held
-# right: a script grant has no checks (the same right could be held twice) and a revoke takes off one copy. A plan
-# taken off takes its state along. The game sends its own town rights message for both.
+# Location scope: sets the plan $g$, or takes it off when the location holds it. A plan taken off takes its state
+# along. The location is on its owner's list pp_tplan_locs exactly while it holds a plan.
 pp_tplan_flip = {
 	if = {
-		limit = { has_town_rights = town_rights_type:pp_plan_$g$ }
-		revoke_town_rights_of_type = town_rights_type:pp_plan_$g$
+		limit = { has_variable = pp_tplan_p_$g$ }
+		remove_variable = pp_tplan_p_$g$
 		remove_variable = pp_lplan_st_g_$g$
 		remove_variable = pp_lplan_est_g_$g$
+		# the mark "holds a plan" follows before anything asks it (pp_tplan_held)
+		if = {
+			limit = { NOT = { pp_tplan_held_scan = yes } }
+			remove_variable = pp_tplan_any
+		}
 		# what the rule closed here for its workers opens again once no plan it was for is left (pp_plan_closer.txt)
 		pp_pclose_plan_off = yes
-		# the last plan gone: nothing waits for workers here any more, and what the Locations group (105) saved for
-		# here (a level or the town or city upgrade) goes at once, so its purse is free for the other plans
+		# the last plan gone: nothing waits for workers or for a charter here any more, and what the Locations group
+		# (105) saved for here (a level or the town or city upgrade) goes at once, so its purse is free for the other
+		# plans
 		if = {
 			limit = { NOT = { pp_tplan_held = yes } }
 			remove_variable = pp_lplan_wk
+			remove_variable = pp_lplan_last
+			if = {
+				limit = { has_variable = pp_tplan_cwait }
+				remove_variable = pp_tplan_cwait
+			}
 			save_temporary_scope_as = pp_tplan_off_l
 			owner ?= {
+				remove_list_variable = { name = pp_tplan_locs target = scope:pp_tplan_off_l }
 				if = {
 					limit = {
 						has_variable = pp_cplan_save_loc_105
@@ -38,8 +51,16 @@ pp_tplan_flip = {
 		}
 	}
 	else = {
-		grant_town_rights = town_rights_type:pp_plan_$g$
-		owner ?= { set_variable = { name = pp_lprof_any value = yes } }
+		set_variable = { name = pp_tplan_p_$g$ value = yes }
+		set_variable = { name = pp_tplan_any value = yes }
+		save_temporary_scope_as = pp_tplan_on_l
+		owner ?= {
+			if = {
+				limit = { NOT = { is_target_in_variable_list = { name = pp_tplan_locs target = scope:pp_tplan_on_l } } }
+				add_to_variable_list = { name = pp_tplan_locs target = scope:pp_tplan_on_l }
+			}
+			set_variable = { name = pp_lprof_any value = yes }
+		}
 	}
 	# the window's forecast: the Locations weight may start or stop counting (construction_plan_forecast.py)
 	owner ?= { pp_cplan_forecast_store = yes }
@@ -50,6 +71,32 @@ pp_tplan_flip = {
 pp_tplan_clear_do = {
 	pp_tplan_clear_all = yes
 	refresh_map_colors = yes
+}
+
+# Location scope, root of the game's on_location_changed_owner (on_action/pp_construction_plan.txt; scope:loser = the
+# previous owner, can be gone): a location that changes owner, in a peace deal, by script or however, keeps no plan
+# (2026-11-21; the plan rights went by kept_at_conquest = no). It comes off the previous owner's list, what that
+# owner's Locations group saved for here goes, and every plan and what the plans left here goes (pp_tplan_strip,
+# generated). What the rule closed here needs nothing: the game opens a location's closed buildings on an owner
+# change, and the closer's monthly check forgets them (pp_pclose_check).
+pp_tplan_owner_changed_effect = {
+	if = {
+		limit = { pp_tplan_held = yes }
+		save_temporary_scope_as = pp_tplan_lost_l
+		scope:loser ?= {
+			remove_list_variable = { name = pp_tplan_locs target = scope:pp_tplan_lost_l }
+			if = {
+				limit = {
+					has_variable = pp_cplan_save_loc_105
+					scope:pp_tplan_lost_l = var:pp_cplan_save_loc_105
+				}
+				pp_cplan_save_clear = { why = 105 }
+				remove_variable = pp_cplan_save_rank_105
+			}
+			pp_lprof_any_refresh = yes
+		}
+		pp_tplan_strip = yes
+	}
 }
 
 # Location scope (root, from the scripted GUI): the window shows this location.

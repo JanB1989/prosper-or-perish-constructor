@@ -13,132 +13,132 @@ types PPLocationPlanGenerated
 			spacing = 3
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_camels'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_camels').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_camels.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_camels'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_camels').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_CAMELS"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('camels')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_elephants'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_elephants').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_elephants.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_elephants'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_elephants').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_ELEPHANTS"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('elephants')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_horses'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_horses').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_horses.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_horses'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_horses').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_HORSES"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('horses')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_livestock'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_livestock').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_livestock.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_livestock'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_livestock').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_LIVESTOCK"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('livestock')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_wool'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_wool').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_wool.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_wool'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_wool').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_WOOL"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('wool')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_beeswax'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_beeswax').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_beeswax.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_beeswax'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_beeswax').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_BEESWAX"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('beeswax')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_dyes'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_dyes').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_dyes.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_dyes'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_dyes').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_DYES"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('dyes')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_incense'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_incense').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_incense.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_incense'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_incense').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_INCENSE"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('incense')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_tobacco'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_tobacco').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_tobacco.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_tobacco'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_tobacco').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_TOBACCO"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('tobacco')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_cotton'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_cotton').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_cotton.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_cotton'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_cotton').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_COTTON"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('cotton')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_fiber_crops'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_fiber_crops').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_fiber_crops.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_fiber_crops'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_fiber_crops').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_FIBER_CROPS"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('fiber_crops')).End)]"
 				}
@@ -150,132 +150,132 @@ types PPLocationPlanGenerated
 			spacing = 3
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_silk'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_silk').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_silk.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_silk'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_silk').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_SILK"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('silk')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_chili'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_chili').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_chili.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_chili'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_chili').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_CHILI"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('chili')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_cloves'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_cloves').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_cloves.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_cloves'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_cloves').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_CLOVES"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('cloves')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_pepper'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_pepper').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_pepper.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_pepper'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_pepper').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_PEPPER"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('pepper')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_saffron'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_saffron').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_saffron.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_saffron'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_saffron').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_SAFFRON"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('saffron')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_legumes'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_legumes').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_legumes.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_legumes'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_legumes').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_LEGUMES"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('legumes')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_maize'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_maize').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_maize.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_maize'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_maize').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_MAIZE"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('maize')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_millet'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_millet').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_millet.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_millet'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_millet').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_MILLET"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('millet')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_potato'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_potato').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_potato.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_potato'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_potato').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_POTATO"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('potato')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_rice'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_rice').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_rice.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_rice'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_rice').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_RICE"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('rice')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_wheat'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_wheat').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_wheat'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_wheat').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_WHEAT"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('wheat')).End)]"
 				}
@@ -287,84 +287,84 @@ types PPLocationPlanGenerated
 			spacing = 3
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_cocoa'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_cocoa').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_cocoa.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_cocoa'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_cocoa').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_COCOA"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('cocoa')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_coffee'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_coffee').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_coffee.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_coffee'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_coffee').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_COFFEE"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('coffee')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_tea'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_tea').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_tea.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_tea'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_tea').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_TEA"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('tea')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_sugar'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_sugar').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_sugar.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_sugar'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_sugar').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_SUGAR"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('sugar')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_fruit'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_fruit').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_fruit.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_fruit'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_fruit').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_FRUIT"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('fruit')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_olives'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_olives').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_olives.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_olives'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_olives').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_OLIVES"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('olives')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_wine'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_wine').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_wine.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_wine'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_wine').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_WINE"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('wine')).End)]"
 				}
@@ -377,12 +377,12 @@ types PPLocationPlanGenerated
 			spacing = 3
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_lumber'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_lumber').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_lumber.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_lumber'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_lumber').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_LUMBER"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('lumber')).End)]"
 				}
@@ -395,84 +395,84 @@ types PPLocationPlanGenerated
 			spacing = 3
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_fish'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_fish').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_fish.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_fish'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_fish').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_FISH"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('fish')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_pearls'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_pearls').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_pearls.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_pearls'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_pearls').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_PEARLS"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('pearls')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_clay'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_clay').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_clay.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_clay'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_clay').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_CLAY"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('clay')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_sand'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_sand').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_sand.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_sand'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_sand').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_SAND"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('sand')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_medicaments'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_medicaments').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_medicaments.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_medicaments'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_medicaments').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_MEDICAMENTS"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('medicaments')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_salt'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_salt').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_salt.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_salt'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_salt').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_SALT"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('salt')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_amber'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_amber').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_amber.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_amber'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_amber').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_AMBER"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('amber')).End)]"
 				}
@@ -495,24 +495,24 @@ types PPLocationPlanGenerated
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_ivory'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_ivory').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_ivory.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_ivory'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_ivory').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_IVORY"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('ivory')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_wild_game'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_wild_game').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_wild_game.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_wild_game'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_wild_game').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_WILD_GAME"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('wild_game')).End)]"
 				}
@@ -525,132 +525,132 @@ types PPLocationPlanGenerated
 			spacing = 3
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_beer'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_beer').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_beer.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_beer'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_beer').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_BEER"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('beer')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_liquor'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_liquor').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_liquor.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_liquor'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_liquor').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_LIQUOR"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('liquor')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_books'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_books').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_books.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_books'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_books').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_BOOKS"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('books')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_paper'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_paper').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_paper.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_paper'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_paper').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_PAPER"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('paper')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_slaves_goods'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_slaves_goods').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_slaves_goods.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_slaves_goods'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_slaves_goods').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_SLAVES_GOODS"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('slaves_goods')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_glass'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_glass').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_glass.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_glass'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_glass').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_GLASS"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('glass')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_masonry'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_masonry').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_masonry.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_masonry'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_masonry').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_MASONRY"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('masonry')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_pottery'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_pottery').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_pottery.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_pottery'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_pottery').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_POTTERY"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('pottery')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_tar'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_tar').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_tar.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_tar'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_tar').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_TAR"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('tar')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_furniture'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_furniture').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_furniture.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_furniture'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_furniture').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_FURNITURE"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('furniture')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_jewelry'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_jewelry').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_jewelry.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_jewelry'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_jewelry').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_JEWELRY"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('jewelry')).End)]"
 				}
@@ -662,132 +662,132 @@ types PPLocationPlanGenerated
 			spacing = 3
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_lacquerware'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_lacquerware').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_lacquerware.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_lacquerware'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_lacquerware').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_LACQUERWARE"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('lacquerware')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_porcelain'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_porcelain').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_porcelain.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_porcelain'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_porcelain').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_PORCELAIN"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('porcelain')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_steel'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_steel').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_steel.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_steel'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_steel').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_STEEL"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('steel')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_tools'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_tools').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_tools.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_tools'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_tools').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_TOOLS"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('tools')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_cannons'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_cannons').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_cannons.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_cannons'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_cannons').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_CANNONS"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('cannons')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_firearms'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_firearms').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_firearms.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_firearms'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_firearms').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_FIREARMS"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('firearms')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_weaponry'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_weaponry').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_weaponry.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_weaponry'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_weaponry').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_WEAPONRY"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('weaponry')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_naval_supplies'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_naval_supplies').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_naval_supplies.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_naval_supplies'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_naval_supplies').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_NAVAL_SUPPLIES"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('naval_supplies')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_victuals'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_victuals').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_victuals.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_victuals'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_victuals').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_VICTUALS"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('victuals')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_cloth'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_cloth').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_cloth.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_cloth'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_cloth').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_CLOTH"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('cloth')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_fine_cloth'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_fine_cloth').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_fine_cloth.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_fine_cloth'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_fine_cloth').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_FINE_CLOTH"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('fine_cloth')).End)]"
 				}
@@ -799,12 +799,12 @@ types PPLocationPlanGenerated
 			spacing = 3
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_leather'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_leather').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_leather.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_leather'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_leather').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_LEATHER"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('leather')).End)]"
 				}
@@ -817,132 +817,132 @@ types PPLocationPlanGenerated
 			spacing = 3
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_marble'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_marble').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_marble.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_marble'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_marble').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_MARBLE"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('marble')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_stone'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_stone').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_stone.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_stone'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_stone').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_STONE"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('stone')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_coal'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_coal').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_coal.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_coal'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_coal').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_COAL"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('coal')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_alum'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_alum').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_alum.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_alum'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_alum').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_ALUM"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('alum')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_mercury'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_mercury').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_mercury.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_mercury'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_mercury').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_MERCURY"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('mercury')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_saltpeter'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_saltpeter').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_saltpeter.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_saltpeter'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_saltpeter').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_SALTPETER"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('saltpeter')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_copper'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_copper').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_copper.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_copper'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_copper').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_COPPER"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('copper')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_iron'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_iron').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_iron.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_iron'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_iron').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_IRON"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('iron')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_lead'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_lead').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_lead.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_lead'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_lead').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_LEAD"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('lead')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_tin'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_tin').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_tin.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_tin'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_tin').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_TIN"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('tin')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_gems'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_gems').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_gems.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_gems'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_gems').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_GEMS"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('gems')).End)]"
 				}
@@ -954,24 +954,24 @@ types PPLocationPlanGenerated
 			spacing = 3
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_goods_gold'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_goods_gold').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_goods_gold.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_goods_gold'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_goods_gold').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_GOODS_GOLD"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('goods_gold')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_silver'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_silver').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/trade_goods/icon_goods_silver.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_silver'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_silver').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_SILVER"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('silver')).End)]"
 				}
@@ -984,24 +984,24 @@ types PPLocationPlanGenerated
 			spacing = 3
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_food'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_food').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/location_icons/food.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_food'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_food').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_FOOD"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('food')).End)]"
 				}
 			}
 			widget = {
 				size = { 40 40 }
-				icon = { visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_trade'), '(CFixedPoint)1')]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
+				icon = { visible = "[Location.MakeScope.Var('pp_tplan_p_trade').IsSet]" size = { 40 40 } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.9 0.7 0.25 0.95 } }
 				button = {
 					size = { 34 34 }
 					parentanchor = center
 					texture = "gfx/interface/icons/building_categories/trade_category.dds"
-					alpha = "[Select_float(EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_trade'), '(CFixedPoint)1'), '(float)1.0', '(float)0.45')]"
+					alpha = "[Select_float(Location.MakeScope.Var('pp_tplan_p_trade').IsSet, '(float)1.0', '(float)0.45')]"
 					tooltip = "PP_TPLAN_PICK_TRADE"
 					onclick = "[GetScriptedGui('pp_tplan_toggle').Execute(GuiScope.SetRoot(Location.MakeScope).AddScope('pp_key', MakeScopeFlag('trade')).End)]"
 				}
@@ -1011,7 +1011,7 @@ types PPLocationPlanGenerated
 	}
 
 	# The Plans row of the location window's Infrastructure tab (datacontext Location): the location's plans
-	# (town rights) as pressed tiles, a click takes one off; the round button opens the Location Plan window.
+	# as pressed tiles, a click takes one off; the round button opens the Location Plan window.
 	type pp_tplan_location_row = hbox {
 		layoutpolicy_horizontal = expanding
 		minimumsize = { -1 45 }
@@ -1063,7 +1063,7 @@ types PPLocationPlanGenerated
 							direction = horizontal
 							ignoreinvisible = yes
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_camels'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_camels').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1079,7 +1079,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_elephants'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_elephants').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1095,7 +1095,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_horses'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_horses').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1111,7 +1111,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_livestock'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_livestock').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1127,7 +1127,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_wool'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_wool').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1143,7 +1143,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_beeswax'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_beeswax').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1159,7 +1159,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_dyes'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_dyes').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1175,7 +1175,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_incense'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_incense').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1191,7 +1191,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_tobacco'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_tobacco').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1207,7 +1207,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_cotton'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_cotton').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1223,7 +1223,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_fiber_crops'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_fiber_crops').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1239,7 +1239,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_silk'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_silk').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1255,7 +1255,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_chili'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_chili').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1271,7 +1271,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_cloves'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_cloves').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1287,7 +1287,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_pepper'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_pepper').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1303,7 +1303,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_saffron'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_saffron').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1319,7 +1319,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_legumes'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_legumes').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1335,7 +1335,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_maize'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_maize').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1351,7 +1351,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_millet'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_millet').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1367,7 +1367,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_potato'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_potato').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1383,7 +1383,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_rice'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_rice').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1399,7 +1399,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_wheat'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_wheat').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1415,7 +1415,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_cocoa'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_cocoa').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1431,7 +1431,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_coffee'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_coffee').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1447,7 +1447,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_tea'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_tea').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1463,7 +1463,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_sugar'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_sugar').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1479,7 +1479,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_fruit'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_fruit').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1495,7 +1495,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_olives'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_olives').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1511,7 +1511,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_wine'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_wine').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1527,7 +1527,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_lumber'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_lumber').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1543,7 +1543,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_fish'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_fish').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1559,7 +1559,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_pearls'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_pearls').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1575,7 +1575,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_clay'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_clay').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1591,7 +1591,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_sand'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_sand').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1607,7 +1607,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_medicaments'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_medicaments').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1623,7 +1623,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_salt'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_salt').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1639,7 +1639,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_amber'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_amber').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1655,7 +1655,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_ivory'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_ivory').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1671,7 +1671,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_wild_game'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_wild_game').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1687,7 +1687,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_beer'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_beer').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1703,7 +1703,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_liquor'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_liquor').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1719,7 +1719,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_books'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_books').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1735,7 +1735,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_paper'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_paper').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1751,7 +1751,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_slaves_goods'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_slaves_goods').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1767,7 +1767,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_glass'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_glass').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1783,7 +1783,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_masonry'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_masonry').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1799,7 +1799,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_pottery'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_pottery').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1815,7 +1815,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_tar'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_tar').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1831,7 +1831,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_furniture'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_furniture').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1847,7 +1847,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_jewelry'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_jewelry').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1863,7 +1863,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_lacquerware'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_lacquerware').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1879,7 +1879,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_porcelain'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_porcelain').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1895,7 +1895,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_steel'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_steel').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1911,7 +1911,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_tools'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_tools').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1927,7 +1927,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_cannons'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_cannons').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1943,7 +1943,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_firearms'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_firearms').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1959,7 +1959,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_weaponry'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_weaponry').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1975,7 +1975,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_naval_supplies'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_naval_supplies').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -1991,7 +1991,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_victuals'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_victuals').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -2007,7 +2007,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_cloth'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_cloth').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -2023,7 +2023,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_fine_cloth'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_fine_cloth').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -2039,7 +2039,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_leather'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_leather').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -2055,7 +2055,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_marble'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_marble').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -2071,7 +2071,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_stone'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_stone').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -2087,7 +2087,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_coal'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_coal').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -2103,7 +2103,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_alum'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_alum').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -2119,7 +2119,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_mercury'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_mercury').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -2135,7 +2135,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_saltpeter'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_saltpeter').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -2151,7 +2151,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_copper'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_copper').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -2167,7 +2167,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_iron'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_iron').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -2183,7 +2183,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_lead'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_lead').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -2199,7 +2199,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_tin'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_tin').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -2215,7 +2215,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_gems'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_gems').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -2231,7 +2231,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_goods_gold'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_goods_gold').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -2247,7 +2247,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_silver'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_silver').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -2263,7 +2263,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_food'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_food').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template
@@ -2279,7 +2279,7 @@ types PPLocationPlanGenerated
 								}
 							}
 							widget = {
-								visible = "[EqualTo_CFixedPoint(Location.MakeScope.ScriptValue('pp_tplan_on_trade'), '(CFixedPoint)1')]"
+								visible = "[Location.MakeScope.Var('pp_tplan_p_trade').IsSet]"
 								size = { 37 34 }
 								button = {
 									using = header_button_template

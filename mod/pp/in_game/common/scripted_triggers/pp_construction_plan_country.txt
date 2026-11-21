@@ -3559,7 +3559,7 @@ pp_cplan_plan_yield_pp_cloth_charter = {
 			has_town_rights = town_rights_type:pp_fine_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			NOT = { has_variable = pp_tplan_p_fine_cloth }
 			pp_location_fine_cloth_line_levels < pp_location_cloth_line_levels
 		}
 	}
@@ -3569,7 +3569,7 @@ pp_cplan_plan_yield_pp_cloth_charter = {
 			has_town_rights = town_rights_type:pp_leather_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			NOT = { has_variable = pp_tplan_p_leather }
 			pp_location_leather_line_levels < pp_location_cloth_line_levels
 		}
 	}
@@ -3579,7 +3579,7 @@ pp_cplan_plan_yield_pp_cloth_charter = {
 			has_town_rights = town_rights_type:pp_pottery_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			NOT = { has_variable = pp_tplan_p_pottery }
 			pp_location_pottery_line_levels < pp_location_cloth_line_levels
 		}
 	}
@@ -3589,7 +3589,7 @@ pp_cplan_plan_yield_pp_cloth_charter = {
 			has_town_rights = town_rights_type:pp_furniture_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			NOT = { has_variable = pp_tplan_p_furniture }
 			pp_location_furniture_line_levels < pp_location_cloth_line_levels
 		}
 	}
@@ -3599,7 +3599,7 @@ pp_cplan_plan_yield_pp_cloth_charter = {
 			has_town_rights = town_rights_type:pp_glass_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			NOT = { has_variable = pp_tplan_p_glass }
 			pp_location_glass_line_levels < pp_location_cloth_line_levels
 		}
 	}
@@ -3609,7 +3609,7 @@ pp_cplan_plan_yield_pp_cloth_charter = {
 			has_town_rights = town_rights_type:pp_jewelry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			NOT = { has_variable = pp_tplan_p_jewelry }
 			pp_location_jewelry_line_levels < pp_location_cloth_line_levels
 		}
 	}
@@ -3619,7 +3619,7 @@ pp_cplan_plan_yield_pp_cloth_charter = {
 			has_town_rights = town_rights_type:pp_porcelain_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			NOT = { has_variable = pp_tplan_p_porcelain }
 			pp_location_porcelain_line_levels < pp_location_cloth_line_levels
 		}
 	}
@@ -3629,7 +3629,7 @@ pp_cplan_plan_yield_pp_cloth_charter = {
 			has_town_rights = town_rights_type:pp_lacquerware_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			NOT = { has_variable = pp_tplan_p_lacquerware }
 			pp_location_lacquerware_line_levels < pp_location_cloth_line_levels
 		}
 	}
@@ -3639,7 +3639,7 @@ pp_cplan_plan_yield_pp_cloth_charter = {
 			has_town_rights = town_rights_type:pp_beer_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			NOT = { has_variable = pp_tplan_p_beer }
 			pp_location_beer_line_levels < pp_location_cloth_line_levels
 		}
 	}
@@ -3649,7 +3649,7 @@ pp_cplan_plan_yield_pp_cloth_charter = {
 			has_town_rights = town_rights_type:pp_liquor_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			NOT = { has_variable = pp_tplan_p_liquor }
 			pp_location_liquor_line_levels < pp_location_cloth_line_levels
 		}
 	}
@@ -3659,7 +3659,7 @@ pp_cplan_plan_yield_pp_cloth_charter = {
 			has_town_rights = town_rights_type:pp_books_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			NOT = { has_variable = pp_tplan_p_books }
 			pp_location_books_line_levels < pp_location_cloth_line_levels
 		}
 	}
@@ -3669,7 +3669,7 @@ pp_cplan_plan_yield_pp_cloth_charter = {
 			has_town_rights = town_rights_type:pp_paper_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			NOT = { has_variable = pp_tplan_p_paper }
 			pp_location_paper_line_levels < pp_location_cloth_line_levels
 		}
 	}
@@ -3679,7 +3679,7 @@ pp_cplan_plan_yield_pp_cloth_charter = {
 			has_town_rights = town_rights_type:pp_tools_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			NOT = { has_variable = pp_tplan_p_tools }
 			pp_location_tools_line_levels < pp_location_cloth_line_levels
 		}
 	}
@@ -3689,7 +3689,7 @@ pp_cplan_plan_yield_pp_cloth_charter = {
 			has_town_rights = town_rights_type:pp_weaponry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			NOT = { has_variable = pp_tplan_p_weaponry }
 			pp_location_weaponry_line_levels < pp_location_cloth_line_levels
 		}
 	}
@@ -3699,7 +3699,7 @@ pp_cplan_plan_yield_pp_cloth_charter = {
 			has_town_rights = town_rights_type:pp_firearms_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			NOT = { has_variable = pp_tplan_p_firearms }
 			pp_location_firearms_line_levels < pp_location_cloth_line_levels
 		}
 	}
@@ -3709,7 +3709,7 @@ pp_cplan_plan_yield_pp_cloth_charter = {
 			has_town_rights = town_rights_type:pp_cannons_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			NOT = { has_variable = pp_tplan_p_cannons }
 			pp_location_cannons_line_levels < pp_location_cloth_line_levels
 		}
 	}
@@ -3719,7 +3719,7 @@ pp_cplan_plan_yield_pp_cloth_charter = {
 			has_town_rights = town_rights_type:pp_naval_supplies_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			NOT = { has_variable = pp_tplan_p_naval_supplies }
 			pp_location_naval_supplies_line_levels < pp_location_cloth_line_levels
 		}
 	}
@@ -3746,7 +3746,7 @@ pp_cplan_plan_yield_pp_fine_cloth_charter = {
 			has_town_rights = town_rights_type:pp_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			NOT = { has_variable = pp_tplan_p_cloth }
 			pp_location_cloth_line_levels < pp_location_fine_cloth_line_levels
 		}
 	}
@@ -3756,7 +3756,7 @@ pp_cplan_plan_yield_pp_fine_cloth_charter = {
 			has_town_rights = town_rights_type:pp_leather_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			NOT = { has_variable = pp_tplan_p_leather }
 			pp_location_leather_line_levels < pp_location_fine_cloth_line_levels
 		}
 	}
@@ -3766,7 +3766,7 @@ pp_cplan_plan_yield_pp_fine_cloth_charter = {
 			has_town_rights = town_rights_type:pp_pottery_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			NOT = { has_variable = pp_tplan_p_pottery }
 			pp_location_pottery_line_levels < pp_location_fine_cloth_line_levels
 		}
 	}
@@ -3776,7 +3776,7 @@ pp_cplan_plan_yield_pp_fine_cloth_charter = {
 			has_town_rights = town_rights_type:pp_furniture_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			NOT = { has_variable = pp_tplan_p_furniture }
 			pp_location_furniture_line_levels < pp_location_fine_cloth_line_levels
 		}
 	}
@@ -3786,7 +3786,7 @@ pp_cplan_plan_yield_pp_fine_cloth_charter = {
 			has_town_rights = town_rights_type:pp_glass_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			NOT = { has_variable = pp_tplan_p_glass }
 			pp_location_glass_line_levels < pp_location_fine_cloth_line_levels
 		}
 	}
@@ -3796,7 +3796,7 @@ pp_cplan_plan_yield_pp_fine_cloth_charter = {
 			has_town_rights = town_rights_type:pp_jewelry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			NOT = { has_variable = pp_tplan_p_jewelry }
 			pp_location_jewelry_line_levels < pp_location_fine_cloth_line_levels
 		}
 	}
@@ -3806,7 +3806,7 @@ pp_cplan_plan_yield_pp_fine_cloth_charter = {
 			has_town_rights = town_rights_type:pp_porcelain_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			NOT = { has_variable = pp_tplan_p_porcelain }
 			pp_location_porcelain_line_levels < pp_location_fine_cloth_line_levels
 		}
 	}
@@ -3816,7 +3816,7 @@ pp_cplan_plan_yield_pp_fine_cloth_charter = {
 			has_town_rights = town_rights_type:pp_lacquerware_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			NOT = { has_variable = pp_tplan_p_lacquerware }
 			pp_location_lacquerware_line_levels < pp_location_fine_cloth_line_levels
 		}
 	}
@@ -3826,7 +3826,7 @@ pp_cplan_plan_yield_pp_fine_cloth_charter = {
 			has_town_rights = town_rights_type:pp_beer_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			NOT = { has_variable = pp_tplan_p_beer }
 			pp_location_beer_line_levels < pp_location_fine_cloth_line_levels
 		}
 	}
@@ -3836,7 +3836,7 @@ pp_cplan_plan_yield_pp_fine_cloth_charter = {
 			has_town_rights = town_rights_type:pp_liquor_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			NOT = { has_variable = pp_tplan_p_liquor }
 			pp_location_liquor_line_levels < pp_location_fine_cloth_line_levels
 		}
 	}
@@ -3846,7 +3846,7 @@ pp_cplan_plan_yield_pp_fine_cloth_charter = {
 			has_town_rights = town_rights_type:pp_books_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			NOT = { has_variable = pp_tplan_p_books }
 			pp_location_books_line_levels < pp_location_fine_cloth_line_levels
 		}
 	}
@@ -3856,7 +3856,7 @@ pp_cplan_plan_yield_pp_fine_cloth_charter = {
 			has_town_rights = town_rights_type:pp_paper_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			NOT = { has_variable = pp_tplan_p_paper }
 			pp_location_paper_line_levels < pp_location_fine_cloth_line_levels
 		}
 	}
@@ -3866,7 +3866,7 @@ pp_cplan_plan_yield_pp_fine_cloth_charter = {
 			has_town_rights = town_rights_type:pp_tools_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			NOT = { has_variable = pp_tplan_p_tools }
 			pp_location_tools_line_levels < pp_location_fine_cloth_line_levels
 		}
 	}
@@ -3876,7 +3876,7 @@ pp_cplan_plan_yield_pp_fine_cloth_charter = {
 			has_town_rights = town_rights_type:pp_weaponry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			NOT = { has_variable = pp_tplan_p_weaponry }
 			pp_location_weaponry_line_levels < pp_location_fine_cloth_line_levels
 		}
 	}
@@ -3886,7 +3886,7 @@ pp_cplan_plan_yield_pp_fine_cloth_charter = {
 			has_town_rights = town_rights_type:pp_firearms_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			NOT = { has_variable = pp_tplan_p_firearms }
 			pp_location_firearms_line_levels < pp_location_fine_cloth_line_levels
 		}
 	}
@@ -3896,7 +3896,7 @@ pp_cplan_plan_yield_pp_fine_cloth_charter = {
 			has_town_rights = town_rights_type:pp_cannons_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			NOT = { has_variable = pp_tplan_p_cannons }
 			pp_location_cannons_line_levels < pp_location_fine_cloth_line_levels
 		}
 	}
@@ -3906,7 +3906,7 @@ pp_cplan_plan_yield_pp_fine_cloth_charter = {
 			has_town_rights = town_rights_type:pp_naval_supplies_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			NOT = { has_variable = pp_tplan_p_naval_supplies }
 			pp_location_naval_supplies_line_levels < pp_location_fine_cloth_line_levels
 		}
 	}
@@ -3933,7 +3933,7 @@ pp_cplan_plan_yield_pp_leather_charter = {
 			has_town_rights = town_rights_type:pp_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			NOT = { has_variable = pp_tplan_p_cloth }
 			pp_location_cloth_line_levels < pp_location_leather_line_levels
 		}
 	}
@@ -3943,7 +3943,7 @@ pp_cplan_plan_yield_pp_leather_charter = {
 			has_town_rights = town_rights_type:pp_fine_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			NOT = { has_variable = pp_tplan_p_fine_cloth }
 			pp_location_fine_cloth_line_levels < pp_location_leather_line_levels
 		}
 	}
@@ -3953,7 +3953,7 @@ pp_cplan_plan_yield_pp_leather_charter = {
 			has_town_rights = town_rights_type:pp_pottery_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			NOT = { has_variable = pp_tplan_p_pottery }
 			pp_location_pottery_line_levels < pp_location_leather_line_levels
 		}
 	}
@@ -3963,7 +3963,7 @@ pp_cplan_plan_yield_pp_leather_charter = {
 			has_town_rights = town_rights_type:pp_furniture_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			NOT = { has_variable = pp_tplan_p_furniture }
 			pp_location_furniture_line_levels < pp_location_leather_line_levels
 		}
 	}
@@ -3973,7 +3973,7 @@ pp_cplan_plan_yield_pp_leather_charter = {
 			has_town_rights = town_rights_type:pp_glass_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			NOT = { has_variable = pp_tplan_p_glass }
 			pp_location_glass_line_levels < pp_location_leather_line_levels
 		}
 	}
@@ -3983,7 +3983,7 @@ pp_cplan_plan_yield_pp_leather_charter = {
 			has_town_rights = town_rights_type:pp_jewelry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			NOT = { has_variable = pp_tplan_p_jewelry }
 			pp_location_jewelry_line_levels < pp_location_leather_line_levels
 		}
 	}
@@ -3993,7 +3993,7 @@ pp_cplan_plan_yield_pp_leather_charter = {
 			has_town_rights = town_rights_type:pp_porcelain_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			NOT = { has_variable = pp_tplan_p_porcelain }
 			pp_location_porcelain_line_levels < pp_location_leather_line_levels
 		}
 	}
@@ -4003,7 +4003,7 @@ pp_cplan_plan_yield_pp_leather_charter = {
 			has_town_rights = town_rights_type:pp_lacquerware_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			NOT = { has_variable = pp_tplan_p_lacquerware }
 			pp_location_lacquerware_line_levels < pp_location_leather_line_levels
 		}
 	}
@@ -4013,7 +4013,7 @@ pp_cplan_plan_yield_pp_leather_charter = {
 			has_town_rights = town_rights_type:pp_beer_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			NOT = { has_variable = pp_tplan_p_beer }
 			pp_location_beer_line_levels < pp_location_leather_line_levels
 		}
 	}
@@ -4023,7 +4023,7 @@ pp_cplan_plan_yield_pp_leather_charter = {
 			has_town_rights = town_rights_type:pp_liquor_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			NOT = { has_variable = pp_tplan_p_liquor }
 			pp_location_liquor_line_levels < pp_location_leather_line_levels
 		}
 	}
@@ -4033,7 +4033,7 @@ pp_cplan_plan_yield_pp_leather_charter = {
 			has_town_rights = town_rights_type:pp_books_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			NOT = { has_variable = pp_tplan_p_books }
 			pp_location_books_line_levels < pp_location_leather_line_levels
 		}
 	}
@@ -4043,7 +4043,7 @@ pp_cplan_plan_yield_pp_leather_charter = {
 			has_town_rights = town_rights_type:pp_paper_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			NOT = { has_variable = pp_tplan_p_paper }
 			pp_location_paper_line_levels < pp_location_leather_line_levels
 		}
 	}
@@ -4053,7 +4053,7 @@ pp_cplan_plan_yield_pp_leather_charter = {
 			has_town_rights = town_rights_type:pp_tools_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			NOT = { has_variable = pp_tplan_p_tools }
 			pp_location_tools_line_levels < pp_location_leather_line_levels
 		}
 	}
@@ -4063,7 +4063,7 @@ pp_cplan_plan_yield_pp_leather_charter = {
 			has_town_rights = town_rights_type:pp_weaponry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			NOT = { has_variable = pp_tplan_p_weaponry }
 			pp_location_weaponry_line_levels < pp_location_leather_line_levels
 		}
 	}
@@ -4073,7 +4073,7 @@ pp_cplan_plan_yield_pp_leather_charter = {
 			has_town_rights = town_rights_type:pp_firearms_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			NOT = { has_variable = pp_tplan_p_firearms }
 			pp_location_firearms_line_levels < pp_location_leather_line_levels
 		}
 	}
@@ -4083,7 +4083,7 @@ pp_cplan_plan_yield_pp_leather_charter = {
 			has_town_rights = town_rights_type:pp_cannons_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			NOT = { has_variable = pp_tplan_p_cannons }
 			pp_location_cannons_line_levels < pp_location_leather_line_levels
 		}
 	}
@@ -4093,7 +4093,7 @@ pp_cplan_plan_yield_pp_leather_charter = {
 			has_town_rights = town_rights_type:pp_naval_supplies_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			NOT = { has_variable = pp_tplan_p_naval_supplies }
 			pp_location_naval_supplies_line_levels < pp_location_leather_line_levels
 		}
 	}
@@ -4120,7 +4120,7 @@ pp_cplan_plan_yield_pp_pottery_charter = {
 			has_town_rights = town_rights_type:pp_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			NOT = { has_variable = pp_tplan_p_cloth }
 			pp_location_cloth_line_levels < pp_location_pottery_line_levels
 		}
 	}
@@ -4130,7 +4130,7 @@ pp_cplan_plan_yield_pp_pottery_charter = {
 			has_town_rights = town_rights_type:pp_fine_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			NOT = { has_variable = pp_tplan_p_fine_cloth }
 			pp_location_fine_cloth_line_levels < pp_location_pottery_line_levels
 		}
 	}
@@ -4140,7 +4140,7 @@ pp_cplan_plan_yield_pp_pottery_charter = {
 			has_town_rights = town_rights_type:pp_leather_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			NOT = { has_variable = pp_tplan_p_leather }
 			pp_location_leather_line_levels < pp_location_pottery_line_levels
 		}
 	}
@@ -4150,7 +4150,7 @@ pp_cplan_plan_yield_pp_pottery_charter = {
 			has_town_rights = town_rights_type:pp_furniture_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			NOT = { has_variable = pp_tplan_p_furniture }
 			pp_location_furniture_line_levels < pp_location_pottery_line_levels
 		}
 	}
@@ -4160,7 +4160,7 @@ pp_cplan_plan_yield_pp_pottery_charter = {
 			has_town_rights = town_rights_type:pp_glass_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			NOT = { has_variable = pp_tplan_p_glass }
 			pp_location_glass_line_levels < pp_location_pottery_line_levels
 		}
 	}
@@ -4170,7 +4170,7 @@ pp_cplan_plan_yield_pp_pottery_charter = {
 			has_town_rights = town_rights_type:pp_jewelry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			NOT = { has_variable = pp_tplan_p_jewelry }
 			pp_location_jewelry_line_levels < pp_location_pottery_line_levels
 		}
 	}
@@ -4180,7 +4180,7 @@ pp_cplan_plan_yield_pp_pottery_charter = {
 			has_town_rights = town_rights_type:pp_porcelain_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			NOT = { has_variable = pp_tplan_p_porcelain }
 			pp_location_porcelain_line_levels < pp_location_pottery_line_levels
 		}
 	}
@@ -4190,7 +4190,7 @@ pp_cplan_plan_yield_pp_pottery_charter = {
 			has_town_rights = town_rights_type:pp_lacquerware_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			NOT = { has_variable = pp_tplan_p_lacquerware }
 			pp_location_lacquerware_line_levels < pp_location_pottery_line_levels
 		}
 	}
@@ -4200,7 +4200,7 @@ pp_cplan_plan_yield_pp_pottery_charter = {
 			has_town_rights = town_rights_type:pp_beer_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			NOT = { has_variable = pp_tplan_p_beer }
 			pp_location_beer_line_levels < pp_location_pottery_line_levels
 		}
 	}
@@ -4210,7 +4210,7 @@ pp_cplan_plan_yield_pp_pottery_charter = {
 			has_town_rights = town_rights_type:pp_liquor_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			NOT = { has_variable = pp_tplan_p_liquor }
 			pp_location_liquor_line_levels < pp_location_pottery_line_levels
 		}
 	}
@@ -4220,7 +4220,7 @@ pp_cplan_plan_yield_pp_pottery_charter = {
 			has_town_rights = town_rights_type:pp_books_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			NOT = { has_variable = pp_tplan_p_books }
 			pp_location_books_line_levels < pp_location_pottery_line_levels
 		}
 	}
@@ -4230,7 +4230,7 @@ pp_cplan_plan_yield_pp_pottery_charter = {
 			has_town_rights = town_rights_type:pp_paper_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			NOT = { has_variable = pp_tplan_p_paper }
 			pp_location_paper_line_levels < pp_location_pottery_line_levels
 		}
 	}
@@ -4240,7 +4240,7 @@ pp_cplan_plan_yield_pp_pottery_charter = {
 			has_town_rights = town_rights_type:pp_tools_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			NOT = { has_variable = pp_tplan_p_tools }
 			pp_location_tools_line_levels < pp_location_pottery_line_levels
 		}
 	}
@@ -4250,7 +4250,7 @@ pp_cplan_plan_yield_pp_pottery_charter = {
 			has_town_rights = town_rights_type:pp_weaponry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			NOT = { has_variable = pp_tplan_p_weaponry }
 			pp_location_weaponry_line_levels < pp_location_pottery_line_levels
 		}
 	}
@@ -4260,7 +4260,7 @@ pp_cplan_plan_yield_pp_pottery_charter = {
 			has_town_rights = town_rights_type:pp_firearms_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			NOT = { has_variable = pp_tplan_p_firearms }
 			pp_location_firearms_line_levels < pp_location_pottery_line_levels
 		}
 	}
@@ -4270,7 +4270,7 @@ pp_cplan_plan_yield_pp_pottery_charter = {
 			has_town_rights = town_rights_type:pp_cannons_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			NOT = { has_variable = pp_tplan_p_cannons }
 			pp_location_cannons_line_levels < pp_location_pottery_line_levels
 		}
 	}
@@ -4280,7 +4280,7 @@ pp_cplan_plan_yield_pp_pottery_charter = {
 			has_town_rights = town_rights_type:pp_naval_supplies_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			NOT = { has_variable = pp_tplan_p_naval_supplies }
 			pp_location_naval_supplies_line_levels < pp_location_pottery_line_levels
 		}
 	}
@@ -4307,7 +4307,7 @@ pp_cplan_plan_yield_pp_furniture_charter = {
 			has_town_rights = town_rights_type:pp_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			NOT = { has_variable = pp_tplan_p_cloth }
 			pp_location_cloth_line_levels < pp_location_furniture_line_levels
 		}
 	}
@@ -4317,7 +4317,7 @@ pp_cplan_plan_yield_pp_furniture_charter = {
 			has_town_rights = town_rights_type:pp_fine_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			NOT = { has_variable = pp_tplan_p_fine_cloth }
 			pp_location_fine_cloth_line_levels < pp_location_furniture_line_levels
 		}
 	}
@@ -4327,7 +4327,7 @@ pp_cplan_plan_yield_pp_furniture_charter = {
 			has_town_rights = town_rights_type:pp_leather_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			NOT = { has_variable = pp_tplan_p_leather }
 			pp_location_leather_line_levels < pp_location_furniture_line_levels
 		}
 	}
@@ -4337,7 +4337,7 @@ pp_cplan_plan_yield_pp_furniture_charter = {
 			has_town_rights = town_rights_type:pp_pottery_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			NOT = { has_variable = pp_tplan_p_pottery }
 			pp_location_pottery_line_levels < pp_location_furniture_line_levels
 		}
 	}
@@ -4347,7 +4347,7 @@ pp_cplan_plan_yield_pp_furniture_charter = {
 			has_town_rights = town_rights_type:pp_glass_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			NOT = { has_variable = pp_tplan_p_glass }
 			pp_location_glass_line_levels < pp_location_furniture_line_levels
 		}
 	}
@@ -4357,7 +4357,7 @@ pp_cplan_plan_yield_pp_furniture_charter = {
 			has_town_rights = town_rights_type:pp_jewelry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			NOT = { has_variable = pp_tplan_p_jewelry }
 			pp_location_jewelry_line_levels < pp_location_furniture_line_levels
 		}
 	}
@@ -4367,7 +4367,7 @@ pp_cplan_plan_yield_pp_furniture_charter = {
 			has_town_rights = town_rights_type:pp_porcelain_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			NOT = { has_variable = pp_tplan_p_porcelain }
 			pp_location_porcelain_line_levels < pp_location_furniture_line_levels
 		}
 	}
@@ -4377,7 +4377,7 @@ pp_cplan_plan_yield_pp_furniture_charter = {
 			has_town_rights = town_rights_type:pp_lacquerware_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			NOT = { has_variable = pp_tplan_p_lacquerware }
 			pp_location_lacquerware_line_levels < pp_location_furniture_line_levels
 		}
 	}
@@ -4387,7 +4387,7 @@ pp_cplan_plan_yield_pp_furniture_charter = {
 			has_town_rights = town_rights_type:pp_beer_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			NOT = { has_variable = pp_tplan_p_beer }
 			pp_location_beer_line_levels < pp_location_furniture_line_levels
 		}
 	}
@@ -4397,7 +4397,7 @@ pp_cplan_plan_yield_pp_furniture_charter = {
 			has_town_rights = town_rights_type:pp_liquor_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			NOT = { has_variable = pp_tplan_p_liquor }
 			pp_location_liquor_line_levels < pp_location_furniture_line_levels
 		}
 	}
@@ -4407,7 +4407,7 @@ pp_cplan_plan_yield_pp_furniture_charter = {
 			has_town_rights = town_rights_type:pp_books_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			NOT = { has_variable = pp_tplan_p_books }
 			pp_location_books_line_levels < pp_location_furniture_line_levels
 		}
 	}
@@ -4417,7 +4417,7 @@ pp_cplan_plan_yield_pp_furniture_charter = {
 			has_town_rights = town_rights_type:pp_paper_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			NOT = { has_variable = pp_tplan_p_paper }
 			pp_location_paper_line_levels < pp_location_furniture_line_levels
 		}
 	}
@@ -4427,7 +4427,7 @@ pp_cplan_plan_yield_pp_furniture_charter = {
 			has_town_rights = town_rights_type:pp_tools_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			NOT = { has_variable = pp_tplan_p_tools }
 			pp_location_tools_line_levels < pp_location_furniture_line_levels
 		}
 	}
@@ -4437,7 +4437,7 @@ pp_cplan_plan_yield_pp_furniture_charter = {
 			has_town_rights = town_rights_type:pp_weaponry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			NOT = { has_variable = pp_tplan_p_weaponry }
 			pp_location_weaponry_line_levels < pp_location_furniture_line_levels
 		}
 	}
@@ -4447,7 +4447,7 @@ pp_cplan_plan_yield_pp_furniture_charter = {
 			has_town_rights = town_rights_type:pp_firearms_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			NOT = { has_variable = pp_tplan_p_firearms }
 			pp_location_firearms_line_levels < pp_location_furniture_line_levels
 		}
 	}
@@ -4457,7 +4457,7 @@ pp_cplan_plan_yield_pp_furniture_charter = {
 			has_town_rights = town_rights_type:pp_cannons_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			NOT = { has_variable = pp_tplan_p_cannons }
 			pp_location_cannons_line_levels < pp_location_furniture_line_levels
 		}
 	}
@@ -4467,7 +4467,7 @@ pp_cplan_plan_yield_pp_furniture_charter = {
 			has_town_rights = town_rights_type:pp_naval_supplies_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			NOT = { has_variable = pp_tplan_p_naval_supplies }
 			pp_location_naval_supplies_line_levels < pp_location_furniture_line_levels
 		}
 	}
@@ -4494,7 +4494,7 @@ pp_cplan_plan_yield_pp_glass_charter = {
 			has_town_rights = town_rights_type:pp_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			NOT = { has_variable = pp_tplan_p_cloth }
 			pp_location_cloth_line_levels < pp_location_glass_line_levels
 		}
 	}
@@ -4504,7 +4504,7 @@ pp_cplan_plan_yield_pp_glass_charter = {
 			has_town_rights = town_rights_type:pp_fine_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			NOT = { has_variable = pp_tplan_p_fine_cloth }
 			pp_location_fine_cloth_line_levels < pp_location_glass_line_levels
 		}
 	}
@@ -4514,7 +4514,7 @@ pp_cplan_plan_yield_pp_glass_charter = {
 			has_town_rights = town_rights_type:pp_leather_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			NOT = { has_variable = pp_tplan_p_leather }
 			pp_location_leather_line_levels < pp_location_glass_line_levels
 		}
 	}
@@ -4524,7 +4524,7 @@ pp_cplan_plan_yield_pp_glass_charter = {
 			has_town_rights = town_rights_type:pp_pottery_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			NOT = { has_variable = pp_tplan_p_pottery }
 			pp_location_pottery_line_levels < pp_location_glass_line_levels
 		}
 	}
@@ -4534,7 +4534,7 @@ pp_cplan_plan_yield_pp_glass_charter = {
 			has_town_rights = town_rights_type:pp_furniture_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			NOT = { has_variable = pp_tplan_p_furniture }
 			pp_location_furniture_line_levels < pp_location_glass_line_levels
 		}
 	}
@@ -4544,7 +4544,7 @@ pp_cplan_plan_yield_pp_glass_charter = {
 			has_town_rights = town_rights_type:pp_jewelry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			NOT = { has_variable = pp_tplan_p_jewelry }
 			pp_location_jewelry_line_levels < pp_location_glass_line_levels
 		}
 	}
@@ -4554,7 +4554,7 @@ pp_cplan_plan_yield_pp_glass_charter = {
 			has_town_rights = town_rights_type:pp_porcelain_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			NOT = { has_variable = pp_tplan_p_porcelain }
 			pp_location_porcelain_line_levels < pp_location_glass_line_levels
 		}
 	}
@@ -4564,7 +4564,7 @@ pp_cplan_plan_yield_pp_glass_charter = {
 			has_town_rights = town_rights_type:pp_lacquerware_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			NOT = { has_variable = pp_tplan_p_lacquerware }
 			pp_location_lacquerware_line_levels < pp_location_glass_line_levels
 		}
 	}
@@ -4574,7 +4574,7 @@ pp_cplan_plan_yield_pp_glass_charter = {
 			has_town_rights = town_rights_type:pp_beer_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			NOT = { has_variable = pp_tplan_p_beer }
 			pp_location_beer_line_levels < pp_location_glass_line_levels
 		}
 	}
@@ -4584,7 +4584,7 @@ pp_cplan_plan_yield_pp_glass_charter = {
 			has_town_rights = town_rights_type:pp_liquor_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			NOT = { has_variable = pp_tplan_p_liquor }
 			pp_location_liquor_line_levels < pp_location_glass_line_levels
 		}
 	}
@@ -4594,7 +4594,7 @@ pp_cplan_plan_yield_pp_glass_charter = {
 			has_town_rights = town_rights_type:pp_books_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			NOT = { has_variable = pp_tplan_p_books }
 			pp_location_books_line_levels < pp_location_glass_line_levels
 		}
 	}
@@ -4604,7 +4604,7 @@ pp_cplan_plan_yield_pp_glass_charter = {
 			has_town_rights = town_rights_type:pp_paper_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			NOT = { has_variable = pp_tplan_p_paper }
 			pp_location_paper_line_levels < pp_location_glass_line_levels
 		}
 	}
@@ -4614,7 +4614,7 @@ pp_cplan_plan_yield_pp_glass_charter = {
 			has_town_rights = town_rights_type:pp_tools_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			NOT = { has_variable = pp_tplan_p_tools }
 			pp_location_tools_line_levels < pp_location_glass_line_levels
 		}
 	}
@@ -4624,7 +4624,7 @@ pp_cplan_plan_yield_pp_glass_charter = {
 			has_town_rights = town_rights_type:pp_weaponry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			NOT = { has_variable = pp_tplan_p_weaponry }
 			pp_location_weaponry_line_levels < pp_location_glass_line_levels
 		}
 	}
@@ -4634,7 +4634,7 @@ pp_cplan_plan_yield_pp_glass_charter = {
 			has_town_rights = town_rights_type:pp_firearms_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			NOT = { has_variable = pp_tplan_p_firearms }
 			pp_location_firearms_line_levels < pp_location_glass_line_levels
 		}
 	}
@@ -4644,7 +4644,7 @@ pp_cplan_plan_yield_pp_glass_charter = {
 			has_town_rights = town_rights_type:pp_cannons_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			NOT = { has_variable = pp_tplan_p_cannons }
 			pp_location_cannons_line_levels < pp_location_glass_line_levels
 		}
 	}
@@ -4654,7 +4654,7 @@ pp_cplan_plan_yield_pp_glass_charter = {
 			has_town_rights = town_rights_type:pp_naval_supplies_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			NOT = { has_variable = pp_tplan_p_naval_supplies }
 			pp_location_naval_supplies_line_levels < pp_location_glass_line_levels
 		}
 	}
@@ -4681,7 +4681,7 @@ pp_cplan_plan_yield_pp_jewelry_charter = {
 			has_town_rights = town_rights_type:pp_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			NOT = { has_variable = pp_tplan_p_cloth }
 			pp_location_cloth_line_levels < pp_location_jewelry_line_levels
 		}
 	}
@@ -4691,7 +4691,7 @@ pp_cplan_plan_yield_pp_jewelry_charter = {
 			has_town_rights = town_rights_type:pp_fine_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			NOT = { has_variable = pp_tplan_p_fine_cloth }
 			pp_location_fine_cloth_line_levels < pp_location_jewelry_line_levels
 		}
 	}
@@ -4701,7 +4701,7 @@ pp_cplan_plan_yield_pp_jewelry_charter = {
 			has_town_rights = town_rights_type:pp_leather_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			NOT = { has_variable = pp_tplan_p_leather }
 			pp_location_leather_line_levels < pp_location_jewelry_line_levels
 		}
 	}
@@ -4711,7 +4711,7 @@ pp_cplan_plan_yield_pp_jewelry_charter = {
 			has_town_rights = town_rights_type:pp_pottery_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			NOT = { has_variable = pp_tplan_p_pottery }
 			pp_location_pottery_line_levels < pp_location_jewelry_line_levels
 		}
 	}
@@ -4721,7 +4721,7 @@ pp_cplan_plan_yield_pp_jewelry_charter = {
 			has_town_rights = town_rights_type:pp_furniture_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			NOT = { has_variable = pp_tplan_p_furniture }
 			pp_location_furniture_line_levels < pp_location_jewelry_line_levels
 		}
 	}
@@ -4731,7 +4731,7 @@ pp_cplan_plan_yield_pp_jewelry_charter = {
 			has_town_rights = town_rights_type:pp_glass_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			NOT = { has_variable = pp_tplan_p_glass }
 			pp_location_glass_line_levels < pp_location_jewelry_line_levels
 		}
 	}
@@ -4741,7 +4741,7 @@ pp_cplan_plan_yield_pp_jewelry_charter = {
 			has_town_rights = town_rights_type:pp_porcelain_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			NOT = { has_variable = pp_tplan_p_porcelain }
 			pp_location_porcelain_line_levels < pp_location_jewelry_line_levels
 		}
 	}
@@ -4751,7 +4751,7 @@ pp_cplan_plan_yield_pp_jewelry_charter = {
 			has_town_rights = town_rights_type:pp_lacquerware_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			NOT = { has_variable = pp_tplan_p_lacquerware }
 			pp_location_lacquerware_line_levels < pp_location_jewelry_line_levels
 		}
 	}
@@ -4761,7 +4761,7 @@ pp_cplan_plan_yield_pp_jewelry_charter = {
 			has_town_rights = town_rights_type:pp_beer_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			NOT = { has_variable = pp_tplan_p_beer }
 			pp_location_beer_line_levels < pp_location_jewelry_line_levels
 		}
 	}
@@ -4771,7 +4771,7 @@ pp_cplan_plan_yield_pp_jewelry_charter = {
 			has_town_rights = town_rights_type:pp_liquor_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			NOT = { has_variable = pp_tplan_p_liquor }
 			pp_location_liquor_line_levels < pp_location_jewelry_line_levels
 		}
 	}
@@ -4781,7 +4781,7 @@ pp_cplan_plan_yield_pp_jewelry_charter = {
 			has_town_rights = town_rights_type:pp_books_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			NOT = { has_variable = pp_tplan_p_books }
 			pp_location_books_line_levels < pp_location_jewelry_line_levels
 		}
 	}
@@ -4791,7 +4791,7 @@ pp_cplan_plan_yield_pp_jewelry_charter = {
 			has_town_rights = town_rights_type:pp_paper_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			NOT = { has_variable = pp_tplan_p_paper }
 			pp_location_paper_line_levels < pp_location_jewelry_line_levels
 		}
 	}
@@ -4801,7 +4801,7 @@ pp_cplan_plan_yield_pp_jewelry_charter = {
 			has_town_rights = town_rights_type:pp_tools_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			NOT = { has_variable = pp_tplan_p_tools }
 			pp_location_tools_line_levels < pp_location_jewelry_line_levels
 		}
 	}
@@ -4811,7 +4811,7 @@ pp_cplan_plan_yield_pp_jewelry_charter = {
 			has_town_rights = town_rights_type:pp_weaponry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			NOT = { has_variable = pp_tplan_p_weaponry }
 			pp_location_weaponry_line_levels < pp_location_jewelry_line_levels
 		}
 	}
@@ -4821,7 +4821,7 @@ pp_cplan_plan_yield_pp_jewelry_charter = {
 			has_town_rights = town_rights_type:pp_firearms_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			NOT = { has_variable = pp_tplan_p_firearms }
 			pp_location_firearms_line_levels < pp_location_jewelry_line_levels
 		}
 	}
@@ -4831,7 +4831,7 @@ pp_cplan_plan_yield_pp_jewelry_charter = {
 			has_town_rights = town_rights_type:pp_cannons_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			NOT = { has_variable = pp_tplan_p_cannons }
 			pp_location_cannons_line_levels < pp_location_jewelry_line_levels
 		}
 	}
@@ -4841,7 +4841,7 @@ pp_cplan_plan_yield_pp_jewelry_charter = {
 			has_town_rights = town_rights_type:pp_naval_supplies_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			NOT = { has_variable = pp_tplan_p_naval_supplies }
 			pp_location_naval_supplies_line_levels < pp_location_jewelry_line_levels
 		}
 	}
@@ -4868,7 +4868,7 @@ pp_cplan_plan_yield_pp_porcelain_charter = {
 			has_town_rights = town_rights_type:pp_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			NOT = { has_variable = pp_tplan_p_cloth }
 			pp_location_cloth_line_levels < pp_location_porcelain_line_levels
 		}
 	}
@@ -4878,7 +4878,7 @@ pp_cplan_plan_yield_pp_porcelain_charter = {
 			has_town_rights = town_rights_type:pp_fine_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			NOT = { has_variable = pp_tplan_p_fine_cloth }
 			pp_location_fine_cloth_line_levels < pp_location_porcelain_line_levels
 		}
 	}
@@ -4888,7 +4888,7 @@ pp_cplan_plan_yield_pp_porcelain_charter = {
 			has_town_rights = town_rights_type:pp_leather_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			NOT = { has_variable = pp_tplan_p_leather }
 			pp_location_leather_line_levels < pp_location_porcelain_line_levels
 		}
 	}
@@ -4898,7 +4898,7 @@ pp_cplan_plan_yield_pp_porcelain_charter = {
 			has_town_rights = town_rights_type:pp_pottery_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			NOT = { has_variable = pp_tplan_p_pottery }
 			pp_location_pottery_line_levels < pp_location_porcelain_line_levels
 		}
 	}
@@ -4908,7 +4908,7 @@ pp_cplan_plan_yield_pp_porcelain_charter = {
 			has_town_rights = town_rights_type:pp_furniture_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			NOT = { has_variable = pp_tplan_p_furniture }
 			pp_location_furniture_line_levels < pp_location_porcelain_line_levels
 		}
 	}
@@ -4918,7 +4918,7 @@ pp_cplan_plan_yield_pp_porcelain_charter = {
 			has_town_rights = town_rights_type:pp_glass_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			NOT = { has_variable = pp_tplan_p_glass }
 			pp_location_glass_line_levels < pp_location_porcelain_line_levels
 		}
 	}
@@ -4928,7 +4928,7 @@ pp_cplan_plan_yield_pp_porcelain_charter = {
 			has_town_rights = town_rights_type:pp_jewelry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			NOT = { has_variable = pp_tplan_p_jewelry }
 			pp_location_jewelry_line_levels < pp_location_porcelain_line_levels
 		}
 	}
@@ -4938,7 +4938,7 @@ pp_cplan_plan_yield_pp_porcelain_charter = {
 			has_town_rights = town_rights_type:pp_lacquerware_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			NOT = { has_variable = pp_tplan_p_lacquerware }
 			pp_location_lacquerware_line_levels < pp_location_porcelain_line_levels
 		}
 	}
@@ -4948,7 +4948,7 @@ pp_cplan_plan_yield_pp_porcelain_charter = {
 			has_town_rights = town_rights_type:pp_beer_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			NOT = { has_variable = pp_tplan_p_beer }
 			pp_location_beer_line_levels < pp_location_porcelain_line_levels
 		}
 	}
@@ -4958,7 +4958,7 @@ pp_cplan_plan_yield_pp_porcelain_charter = {
 			has_town_rights = town_rights_type:pp_liquor_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			NOT = { has_variable = pp_tplan_p_liquor }
 			pp_location_liquor_line_levels < pp_location_porcelain_line_levels
 		}
 	}
@@ -4968,7 +4968,7 @@ pp_cplan_plan_yield_pp_porcelain_charter = {
 			has_town_rights = town_rights_type:pp_books_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			NOT = { has_variable = pp_tplan_p_books }
 			pp_location_books_line_levels < pp_location_porcelain_line_levels
 		}
 	}
@@ -4978,7 +4978,7 @@ pp_cplan_plan_yield_pp_porcelain_charter = {
 			has_town_rights = town_rights_type:pp_paper_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			NOT = { has_variable = pp_tplan_p_paper }
 			pp_location_paper_line_levels < pp_location_porcelain_line_levels
 		}
 	}
@@ -4988,7 +4988,7 @@ pp_cplan_plan_yield_pp_porcelain_charter = {
 			has_town_rights = town_rights_type:pp_tools_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			NOT = { has_variable = pp_tplan_p_tools }
 			pp_location_tools_line_levels < pp_location_porcelain_line_levels
 		}
 	}
@@ -4998,7 +4998,7 @@ pp_cplan_plan_yield_pp_porcelain_charter = {
 			has_town_rights = town_rights_type:pp_weaponry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			NOT = { has_variable = pp_tplan_p_weaponry }
 			pp_location_weaponry_line_levels < pp_location_porcelain_line_levels
 		}
 	}
@@ -5008,7 +5008,7 @@ pp_cplan_plan_yield_pp_porcelain_charter = {
 			has_town_rights = town_rights_type:pp_firearms_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			NOT = { has_variable = pp_tplan_p_firearms }
 			pp_location_firearms_line_levels < pp_location_porcelain_line_levels
 		}
 	}
@@ -5018,7 +5018,7 @@ pp_cplan_plan_yield_pp_porcelain_charter = {
 			has_town_rights = town_rights_type:pp_cannons_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			NOT = { has_variable = pp_tplan_p_cannons }
 			pp_location_cannons_line_levels < pp_location_porcelain_line_levels
 		}
 	}
@@ -5028,7 +5028,7 @@ pp_cplan_plan_yield_pp_porcelain_charter = {
 			has_town_rights = town_rights_type:pp_naval_supplies_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			NOT = { has_variable = pp_tplan_p_naval_supplies }
 			pp_location_naval_supplies_line_levels < pp_location_porcelain_line_levels
 		}
 	}
@@ -5055,7 +5055,7 @@ pp_cplan_plan_yield_pp_lacquerware_charter = {
 			has_town_rights = town_rights_type:pp_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			NOT = { has_variable = pp_tplan_p_cloth }
 			pp_location_cloth_line_levels < pp_location_lacquerware_line_levels
 		}
 	}
@@ -5065,7 +5065,7 @@ pp_cplan_plan_yield_pp_lacquerware_charter = {
 			has_town_rights = town_rights_type:pp_fine_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			NOT = { has_variable = pp_tplan_p_fine_cloth }
 			pp_location_fine_cloth_line_levels < pp_location_lacquerware_line_levels
 		}
 	}
@@ -5075,7 +5075,7 @@ pp_cplan_plan_yield_pp_lacquerware_charter = {
 			has_town_rights = town_rights_type:pp_leather_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			NOT = { has_variable = pp_tplan_p_leather }
 			pp_location_leather_line_levels < pp_location_lacquerware_line_levels
 		}
 	}
@@ -5085,7 +5085,7 @@ pp_cplan_plan_yield_pp_lacquerware_charter = {
 			has_town_rights = town_rights_type:pp_pottery_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			NOT = { has_variable = pp_tplan_p_pottery }
 			pp_location_pottery_line_levels < pp_location_lacquerware_line_levels
 		}
 	}
@@ -5095,7 +5095,7 @@ pp_cplan_plan_yield_pp_lacquerware_charter = {
 			has_town_rights = town_rights_type:pp_furniture_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			NOT = { has_variable = pp_tplan_p_furniture }
 			pp_location_furniture_line_levels < pp_location_lacquerware_line_levels
 		}
 	}
@@ -5105,7 +5105,7 @@ pp_cplan_plan_yield_pp_lacquerware_charter = {
 			has_town_rights = town_rights_type:pp_glass_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			NOT = { has_variable = pp_tplan_p_glass }
 			pp_location_glass_line_levels < pp_location_lacquerware_line_levels
 		}
 	}
@@ -5115,7 +5115,7 @@ pp_cplan_plan_yield_pp_lacquerware_charter = {
 			has_town_rights = town_rights_type:pp_jewelry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			NOT = { has_variable = pp_tplan_p_jewelry }
 			pp_location_jewelry_line_levels < pp_location_lacquerware_line_levels
 		}
 	}
@@ -5125,7 +5125,7 @@ pp_cplan_plan_yield_pp_lacquerware_charter = {
 			has_town_rights = town_rights_type:pp_porcelain_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			NOT = { has_variable = pp_tplan_p_porcelain }
 			pp_location_porcelain_line_levels < pp_location_lacquerware_line_levels
 		}
 	}
@@ -5135,7 +5135,7 @@ pp_cplan_plan_yield_pp_lacquerware_charter = {
 			has_town_rights = town_rights_type:pp_beer_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			NOT = { has_variable = pp_tplan_p_beer }
 			pp_location_beer_line_levels < pp_location_lacquerware_line_levels
 		}
 	}
@@ -5145,7 +5145,7 @@ pp_cplan_plan_yield_pp_lacquerware_charter = {
 			has_town_rights = town_rights_type:pp_liquor_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			NOT = { has_variable = pp_tplan_p_liquor }
 			pp_location_liquor_line_levels < pp_location_lacquerware_line_levels
 		}
 	}
@@ -5155,7 +5155,7 @@ pp_cplan_plan_yield_pp_lacquerware_charter = {
 			has_town_rights = town_rights_type:pp_books_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			NOT = { has_variable = pp_tplan_p_books }
 			pp_location_books_line_levels < pp_location_lacquerware_line_levels
 		}
 	}
@@ -5165,7 +5165,7 @@ pp_cplan_plan_yield_pp_lacquerware_charter = {
 			has_town_rights = town_rights_type:pp_paper_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			NOT = { has_variable = pp_tplan_p_paper }
 			pp_location_paper_line_levels < pp_location_lacquerware_line_levels
 		}
 	}
@@ -5175,7 +5175,7 @@ pp_cplan_plan_yield_pp_lacquerware_charter = {
 			has_town_rights = town_rights_type:pp_tools_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			NOT = { has_variable = pp_tplan_p_tools }
 			pp_location_tools_line_levels < pp_location_lacquerware_line_levels
 		}
 	}
@@ -5185,7 +5185,7 @@ pp_cplan_plan_yield_pp_lacquerware_charter = {
 			has_town_rights = town_rights_type:pp_weaponry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			NOT = { has_variable = pp_tplan_p_weaponry }
 			pp_location_weaponry_line_levels < pp_location_lacquerware_line_levels
 		}
 	}
@@ -5195,7 +5195,7 @@ pp_cplan_plan_yield_pp_lacquerware_charter = {
 			has_town_rights = town_rights_type:pp_firearms_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			NOT = { has_variable = pp_tplan_p_firearms }
 			pp_location_firearms_line_levels < pp_location_lacquerware_line_levels
 		}
 	}
@@ -5205,7 +5205,7 @@ pp_cplan_plan_yield_pp_lacquerware_charter = {
 			has_town_rights = town_rights_type:pp_cannons_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			NOT = { has_variable = pp_tplan_p_cannons }
 			pp_location_cannons_line_levels < pp_location_lacquerware_line_levels
 		}
 	}
@@ -5215,7 +5215,7 @@ pp_cplan_plan_yield_pp_lacquerware_charter = {
 			has_town_rights = town_rights_type:pp_naval_supplies_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			NOT = { has_variable = pp_tplan_p_naval_supplies }
 			pp_location_naval_supplies_line_levels < pp_location_lacquerware_line_levels
 		}
 	}
@@ -5242,7 +5242,7 @@ pp_cplan_plan_yield_pp_beer_charter = {
 			has_town_rights = town_rights_type:pp_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			NOT = { has_variable = pp_tplan_p_cloth }
 			pp_location_cloth_line_levels < pp_location_beer_line_levels
 		}
 	}
@@ -5252,7 +5252,7 @@ pp_cplan_plan_yield_pp_beer_charter = {
 			has_town_rights = town_rights_type:pp_fine_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			NOT = { has_variable = pp_tplan_p_fine_cloth }
 			pp_location_fine_cloth_line_levels < pp_location_beer_line_levels
 		}
 	}
@@ -5262,7 +5262,7 @@ pp_cplan_plan_yield_pp_beer_charter = {
 			has_town_rights = town_rights_type:pp_leather_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			NOT = { has_variable = pp_tplan_p_leather }
 			pp_location_leather_line_levels < pp_location_beer_line_levels
 		}
 	}
@@ -5272,7 +5272,7 @@ pp_cplan_plan_yield_pp_beer_charter = {
 			has_town_rights = town_rights_type:pp_pottery_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			NOT = { has_variable = pp_tplan_p_pottery }
 			pp_location_pottery_line_levels < pp_location_beer_line_levels
 		}
 	}
@@ -5282,7 +5282,7 @@ pp_cplan_plan_yield_pp_beer_charter = {
 			has_town_rights = town_rights_type:pp_furniture_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			NOT = { has_variable = pp_tplan_p_furniture }
 			pp_location_furniture_line_levels < pp_location_beer_line_levels
 		}
 	}
@@ -5292,7 +5292,7 @@ pp_cplan_plan_yield_pp_beer_charter = {
 			has_town_rights = town_rights_type:pp_glass_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			NOT = { has_variable = pp_tplan_p_glass }
 			pp_location_glass_line_levels < pp_location_beer_line_levels
 		}
 	}
@@ -5302,7 +5302,7 @@ pp_cplan_plan_yield_pp_beer_charter = {
 			has_town_rights = town_rights_type:pp_jewelry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			NOT = { has_variable = pp_tplan_p_jewelry }
 			pp_location_jewelry_line_levels < pp_location_beer_line_levels
 		}
 	}
@@ -5312,7 +5312,7 @@ pp_cplan_plan_yield_pp_beer_charter = {
 			has_town_rights = town_rights_type:pp_porcelain_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			NOT = { has_variable = pp_tplan_p_porcelain }
 			pp_location_porcelain_line_levels < pp_location_beer_line_levels
 		}
 	}
@@ -5322,7 +5322,7 @@ pp_cplan_plan_yield_pp_beer_charter = {
 			has_town_rights = town_rights_type:pp_lacquerware_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			NOT = { has_variable = pp_tplan_p_lacquerware }
 			pp_location_lacquerware_line_levels < pp_location_beer_line_levels
 		}
 	}
@@ -5332,7 +5332,7 @@ pp_cplan_plan_yield_pp_beer_charter = {
 			has_town_rights = town_rights_type:pp_liquor_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			NOT = { has_variable = pp_tplan_p_liquor }
 			pp_location_liquor_line_levels < pp_location_beer_line_levels
 		}
 	}
@@ -5342,7 +5342,7 @@ pp_cplan_plan_yield_pp_beer_charter = {
 			has_town_rights = town_rights_type:pp_books_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			NOT = { has_variable = pp_tplan_p_books }
 			pp_location_books_line_levels < pp_location_beer_line_levels
 		}
 	}
@@ -5352,7 +5352,7 @@ pp_cplan_plan_yield_pp_beer_charter = {
 			has_town_rights = town_rights_type:pp_paper_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			NOT = { has_variable = pp_tplan_p_paper }
 			pp_location_paper_line_levels < pp_location_beer_line_levels
 		}
 	}
@@ -5362,7 +5362,7 @@ pp_cplan_plan_yield_pp_beer_charter = {
 			has_town_rights = town_rights_type:pp_tools_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			NOT = { has_variable = pp_tplan_p_tools }
 			pp_location_tools_line_levels < pp_location_beer_line_levels
 		}
 	}
@@ -5372,7 +5372,7 @@ pp_cplan_plan_yield_pp_beer_charter = {
 			has_town_rights = town_rights_type:pp_weaponry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			NOT = { has_variable = pp_tplan_p_weaponry }
 			pp_location_weaponry_line_levels < pp_location_beer_line_levels
 		}
 	}
@@ -5382,7 +5382,7 @@ pp_cplan_plan_yield_pp_beer_charter = {
 			has_town_rights = town_rights_type:pp_firearms_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			NOT = { has_variable = pp_tplan_p_firearms }
 			pp_location_firearms_line_levels < pp_location_beer_line_levels
 		}
 	}
@@ -5392,7 +5392,7 @@ pp_cplan_plan_yield_pp_beer_charter = {
 			has_town_rights = town_rights_type:pp_cannons_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			NOT = { has_variable = pp_tplan_p_cannons }
 			pp_location_cannons_line_levels < pp_location_beer_line_levels
 		}
 	}
@@ -5402,7 +5402,7 @@ pp_cplan_plan_yield_pp_beer_charter = {
 			has_town_rights = town_rights_type:pp_naval_supplies_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			NOT = { has_variable = pp_tplan_p_naval_supplies }
 			pp_location_naval_supplies_line_levels < pp_location_beer_line_levels
 		}
 	}
@@ -5429,7 +5429,7 @@ pp_cplan_plan_yield_pp_liquor_charter = {
 			has_town_rights = town_rights_type:pp_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			NOT = { has_variable = pp_tplan_p_cloth }
 			pp_location_cloth_line_levels < pp_location_liquor_line_levels
 		}
 	}
@@ -5439,7 +5439,7 @@ pp_cplan_plan_yield_pp_liquor_charter = {
 			has_town_rights = town_rights_type:pp_fine_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			NOT = { has_variable = pp_tplan_p_fine_cloth }
 			pp_location_fine_cloth_line_levels < pp_location_liquor_line_levels
 		}
 	}
@@ -5449,7 +5449,7 @@ pp_cplan_plan_yield_pp_liquor_charter = {
 			has_town_rights = town_rights_type:pp_leather_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			NOT = { has_variable = pp_tplan_p_leather }
 			pp_location_leather_line_levels < pp_location_liquor_line_levels
 		}
 	}
@@ -5459,7 +5459,7 @@ pp_cplan_plan_yield_pp_liquor_charter = {
 			has_town_rights = town_rights_type:pp_pottery_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			NOT = { has_variable = pp_tplan_p_pottery }
 			pp_location_pottery_line_levels < pp_location_liquor_line_levels
 		}
 	}
@@ -5469,7 +5469,7 @@ pp_cplan_plan_yield_pp_liquor_charter = {
 			has_town_rights = town_rights_type:pp_furniture_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			NOT = { has_variable = pp_tplan_p_furniture }
 			pp_location_furniture_line_levels < pp_location_liquor_line_levels
 		}
 	}
@@ -5479,7 +5479,7 @@ pp_cplan_plan_yield_pp_liquor_charter = {
 			has_town_rights = town_rights_type:pp_glass_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			NOT = { has_variable = pp_tplan_p_glass }
 			pp_location_glass_line_levels < pp_location_liquor_line_levels
 		}
 	}
@@ -5489,7 +5489,7 @@ pp_cplan_plan_yield_pp_liquor_charter = {
 			has_town_rights = town_rights_type:pp_jewelry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			NOT = { has_variable = pp_tplan_p_jewelry }
 			pp_location_jewelry_line_levels < pp_location_liquor_line_levels
 		}
 	}
@@ -5499,7 +5499,7 @@ pp_cplan_plan_yield_pp_liquor_charter = {
 			has_town_rights = town_rights_type:pp_porcelain_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			NOT = { has_variable = pp_tplan_p_porcelain }
 			pp_location_porcelain_line_levels < pp_location_liquor_line_levels
 		}
 	}
@@ -5509,7 +5509,7 @@ pp_cplan_plan_yield_pp_liquor_charter = {
 			has_town_rights = town_rights_type:pp_lacquerware_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			NOT = { has_variable = pp_tplan_p_lacquerware }
 			pp_location_lacquerware_line_levels < pp_location_liquor_line_levels
 		}
 	}
@@ -5519,7 +5519,7 @@ pp_cplan_plan_yield_pp_liquor_charter = {
 			has_town_rights = town_rights_type:pp_beer_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			NOT = { has_variable = pp_tplan_p_beer }
 			pp_location_beer_line_levels < pp_location_liquor_line_levels
 		}
 	}
@@ -5529,7 +5529,7 @@ pp_cplan_plan_yield_pp_liquor_charter = {
 			has_town_rights = town_rights_type:pp_books_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			NOT = { has_variable = pp_tplan_p_books }
 			pp_location_books_line_levels < pp_location_liquor_line_levels
 		}
 	}
@@ -5539,7 +5539,7 @@ pp_cplan_plan_yield_pp_liquor_charter = {
 			has_town_rights = town_rights_type:pp_paper_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			NOT = { has_variable = pp_tplan_p_paper }
 			pp_location_paper_line_levels < pp_location_liquor_line_levels
 		}
 	}
@@ -5549,7 +5549,7 @@ pp_cplan_plan_yield_pp_liquor_charter = {
 			has_town_rights = town_rights_type:pp_tools_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			NOT = { has_variable = pp_tplan_p_tools }
 			pp_location_tools_line_levels < pp_location_liquor_line_levels
 		}
 	}
@@ -5559,7 +5559,7 @@ pp_cplan_plan_yield_pp_liquor_charter = {
 			has_town_rights = town_rights_type:pp_weaponry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			NOT = { has_variable = pp_tplan_p_weaponry }
 			pp_location_weaponry_line_levels < pp_location_liquor_line_levels
 		}
 	}
@@ -5569,7 +5569,7 @@ pp_cplan_plan_yield_pp_liquor_charter = {
 			has_town_rights = town_rights_type:pp_firearms_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			NOT = { has_variable = pp_tplan_p_firearms }
 			pp_location_firearms_line_levels < pp_location_liquor_line_levels
 		}
 	}
@@ -5579,7 +5579,7 @@ pp_cplan_plan_yield_pp_liquor_charter = {
 			has_town_rights = town_rights_type:pp_cannons_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			NOT = { has_variable = pp_tplan_p_cannons }
 			pp_location_cannons_line_levels < pp_location_liquor_line_levels
 		}
 	}
@@ -5589,7 +5589,7 @@ pp_cplan_plan_yield_pp_liquor_charter = {
 			has_town_rights = town_rights_type:pp_naval_supplies_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			NOT = { has_variable = pp_tplan_p_naval_supplies }
 			pp_location_naval_supplies_line_levels < pp_location_liquor_line_levels
 		}
 	}
@@ -5616,7 +5616,7 @@ pp_cplan_plan_yield_pp_books_charter = {
 			has_town_rights = town_rights_type:pp_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			NOT = { has_variable = pp_tplan_p_cloth }
 			pp_location_cloth_line_levels < pp_location_books_line_levels
 		}
 	}
@@ -5626,7 +5626,7 @@ pp_cplan_plan_yield_pp_books_charter = {
 			has_town_rights = town_rights_type:pp_fine_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			NOT = { has_variable = pp_tplan_p_fine_cloth }
 			pp_location_fine_cloth_line_levels < pp_location_books_line_levels
 		}
 	}
@@ -5636,7 +5636,7 @@ pp_cplan_plan_yield_pp_books_charter = {
 			has_town_rights = town_rights_type:pp_leather_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			NOT = { has_variable = pp_tplan_p_leather }
 			pp_location_leather_line_levels < pp_location_books_line_levels
 		}
 	}
@@ -5646,7 +5646,7 @@ pp_cplan_plan_yield_pp_books_charter = {
 			has_town_rights = town_rights_type:pp_pottery_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			NOT = { has_variable = pp_tplan_p_pottery }
 			pp_location_pottery_line_levels < pp_location_books_line_levels
 		}
 	}
@@ -5656,7 +5656,7 @@ pp_cplan_plan_yield_pp_books_charter = {
 			has_town_rights = town_rights_type:pp_furniture_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			NOT = { has_variable = pp_tplan_p_furniture }
 			pp_location_furniture_line_levels < pp_location_books_line_levels
 		}
 	}
@@ -5666,7 +5666,7 @@ pp_cplan_plan_yield_pp_books_charter = {
 			has_town_rights = town_rights_type:pp_glass_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			NOT = { has_variable = pp_tplan_p_glass }
 			pp_location_glass_line_levels < pp_location_books_line_levels
 		}
 	}
@@ -5676,7 +5676,7 @@ pp_cplan_plan_yield_pp_books_charter = {
 			has_town_rights = town_rights_type:pp_jewelry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			NOT = { has_variable = pp_tplan_p_jewelry }
 			pp_location_jewelry_line_levels < pp_location_books_line_levels
 		}
 	}
@@ -5686,7 +5686,7 @@ pp_cplan_plan_yield_pp_books_charter = {
 			has_town_rights = town_rights_type:pp_porcelain_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			NOT = { has_variable = pp_tplan_p_porcelain }
 			pp_location_porcelain_line_levels < pp_location_books_line_levels
 		}
 	}
@@ -5696,7 +5696,7 @@ pp_cplan_plan_yield_pp_books_charter = {
 			has_town_rights = town_rights_type:pp_lacquerware_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			NOT = { has_variable = pp_tplan_p_lacquerware }
 			pp_location_lacquerware_line_levels < pp_location_books_line_levels
 		}
 	}
@@ -5706,7 +5706,7 @@ pp_cplan_plan_yield_pp_books_charter = {
 			has_town_rights = town_rights_type:pp_beer_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			NOT = { has_variable = pp_tplan_p_beer }
 			pp_location_beer_line_levels < pp_location_books_line_levels
 		}
 	}
@@ -5716,7 +5716,7 @@ pp_cplan_plan_yield_pp_books_charter = {
 			has_town_rights = town_rights_type:pp_liquor_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			NOT = { has_variable = pp_tplan_p_liquor }
 			pp_location_liquor_line_levels < pp_location_books_line_levels
 		}
 	}
@@ -5726,7 +5726,7 @@ pp_cplan_plan_yield_pp_books_charter = {
 			has_town_rights = town_rights_type:pp_paper_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			NOT = { has_variable = pp_tplan_p_paper }
 			pp_location_paper_line_levels < pp_location_books_line_levels
 		}
 	}
@@ -5736,7 +5736,7 @@ pp_cplan_plan_yield_pp_books_charter = {
 			has_town_rights = town_rights_type:pp_tools_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			NOT = { has_variable = pp_tplan_p_tools }
 			pp_location_tools_line_levels < pp_location_books_line_levels
 		}
 	}
@@ -5746,7 +5746,7 @@ pp_cplan_plan_yield_pp_books_charter = {
 			has_town_rights = town_rights_type:pp_weaponry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			NOT = { has_variable = pp_tplan_p_weaponry }
 			pp_location_weaponry_line_levels < pp_location_books_line_levels
 		}
 	}
@@ -5756,7 +5756,7 @@ pp_cplan_plan_yield_pp_books_charter = {
 			has_town_rights = town_rights_type:pp_firearms_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			NOT = { has_variable = pp_tplan_p_firearms }
 			pp_location_firearms_line_levels < pp_location_books_line_levels
 		}
 	}
@@ -5766,7 +5766,7 @@ pp_cplan_plan_yield_pp_books_charter = {
 			has_town_rights = town_rights_type:pp_cannons_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			NOT = { has_variable = pp_tplan_p_cannons }
 			pp_location_cannons_line_levels < pp_location_books_line_levels
 		}
 	}
@@ -5776,7 +5776,7 @@ pp_cplan_plan_yield_pp_books_charter = {
 			has_town_rights = town_rights_type:pp_naval_supplies_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			NOT = { has_variable = pp_tplan_p_naval_supplies }
 			pp_location_naval_supplies_line_levels < pp_location_books_line_levels
 		}
 	}
@@ -5803,7 +5803,7 @@ pp_cplan_plan_yield_pp_paper_charter = {
 			has_town_rights = town_rights_type:pp_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			NOT = { has_variable = pp_tplan_p_cloth }
 			pp_location_cloth_line_levels < pp_location_paper_line_levels
 		}
 	}
@@ -5813,7 +5813,7 @@ pp_cplan_plan_yield_pp_paper_charter = {
 			has_town_rights = town_rights_type:pp_fine_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			NOT = { has_variable = pp_tplan_p_fine_cloth }
 			pp_location_fine_cloth_line_levels < pp_location_paper_line_levels
 		}
 	}
@@ -5823,7 +5823,7 @@ pp_cplan_plan_yield_pp_paper_charter = {
 			has_town_rights = town_rights_type:pp_leather_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			NOT = { has_variable = pp_tplan_p_leather }
 			pp_location_leather_line_levels < pp_location_paper_line_levels
 		}
 	}
@@ -5833,7 +5833,7 @@ pp_cplan_plan_yield_pp_paper_charter = {
 			has_town_rights = town_rights_type:pp_pottery_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			NOT = { has_variable = pp_tplan_p_pottery }
 			pp_location_pottery_line_levels < pp_location_paper_line_levels
 		}
 	}
@@ -5843,7 +5843,7 @@ pp_cplan_plan_yield_pp_paper_charter = {
 			has_town_rights = town_rights_type:pp_furniture_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			NOT = { has_variable = pp_tplan_p_furniture }
 			pp_location_furniture_line_levels < pp_location_paper_line_levels
 		}
 	}
@@ -5853,7 +5853,7 @@ pp_cplan_plan_yield_pp_paper_charter = {
 			has_town_rights = town_rights_type:pp_glass_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			NOT = { has_variable = pp_tplan_p_glass }
 			pp_location_glass_line_levels < pp_location_paper_line_levels
 		}
 	}
@@ -5863,7 +5863,7 @@ pp_cplan_plan_yield_pp_paper_charter = {
 			has_town_rights = town_rights_type:pp_jewelry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			NOT = { has_variable = pp_tplan_p_jewelry }
 			pp_location_jewelry_line_levels < pp_location_paper_line_levels
 		}
 	}
@@ -5873,7 +5873,7 @@ pp_cplan_plan_yield_pp_paper_charter = {
 			has_town_rights = town_rights_type:pp_porcelain_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			NOT = { has_variable = pp_tplan_p_porcelain }
 			pp_location_porcelain_line_levels < pp_location_paper_line_levels
 		}
 	}
@@ -5883,7 +5883,7 @@ pp_cplan_plan_yield_pp_paper_charter = {
 			has_town_rights = town_rights_type:pp_lacquerware_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			NOT = { has_variable = pp_tplan_p_lacquerware }
 			pp_location_lacquerware_line_levels < pp_location_paper_line_levels
 		}
 	}
@@ -5893,7 +5893,7 @@ pp_cplan_plan_yield_pp_paper_charter = {
 			has_town_rights = town_rights_type:pp_beer_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			NOT = { has_variable = pp_tplan_p_beer }
 			pp_location_beer_line_levels < pp_location_paper_line_levels
 		}
 	}
@@ -5903,7 +5903,7 @@ pp_cplan_plan_yield_pp_paper_charter = {
 			has_town_rights = town_rights_type:pp_liquor_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			NOT = { has_variable = pp_tplan_p_liquor }
 			pp_location_liquor_line_levels < pp_location_paper_line_levels
 		}
 	}
@@ -5913,7 +5913,7 @@ pp_cplan_plan_yield_pp_paper_charter = {
 			has_town_rights = town_rights_type:pp_books_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			NOT = { has_variable = pp_tplan_p_books }
 			pp_location_books_line_levels < pp_location_paper_line_levels
 		}
 	}
@@ -5923,7 +5923,7 @@ pp_cplan_plan_yield_pp_paper_charter = {
 			has_town_rights = town_rights_type:pp_tools_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			NOT = { has_variable = pp_tplan_p_tools }
 			pp_location_tools_line_levels < pp_location_paper_line_levels
 		}
 	}
@@ -5933,7 +5933,7 @@ pp_cplan_plan_yield_pp_paper_charter = {
 			has_town_rights = town_rights_type:pp_weaponry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			NOT = { has_variable = pp_tplan_p_weaponry }
 			pp_location_weaponry_line_levels < pp_location_paper_line_levels
 		}
 	}
@@ -5943,7 +5943,7 @@ pp_cplan_plan_yield_pp_paper_charter = {
 			has_town_rights = town_rights_type:pp_firearms_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			NOT = { has_variable = pp_tplan_p_firearms }
 			pp_location_firearms_line_levels < pp_location_paper_line_levels
 		}
 	}
@@ -5953,7 +5953,7 @@ pp_cplan_plan_yield_pp_paper_charter = {
 			has_town_rights = town_rights_type:pp_cannons_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			NOT = { has_variable = pp_tplan_p_cannons }
 			pp_location_cannons_line_levels < pp_location_paper_line_levels
 		}
 	}
@@ -5963,7 +5963,7 @@ pp_cplan_plan_yield_pp_paper_charter = {
 			has_town_rights = town_rights_type:pp_naval_supplies_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			NOT = { has_variable = pp_tplan_p_naval_supplies }
 			pp_location_naval_supplies_line_levels < pp_location_paper_line_levels
 		}
 	}
@@ -5990,7 +5990,7 @@ pp_cplan_plan_yield_pp_tools_charter = {
 			has_town_rights = town_rights_type:pp_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			NOT = { has_variable = pp_tplan_p_cloth }
 			pp_location_cloth_line_levels < pp_location_tools_line_levels
 		}
 	}
@@ -6000,7 +6000,7 @@ pp_cplan_plan_yield_pp_tools_charter = {
 			has_town_rights = town_rights_type:pp_fine_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			NOT = { has_variable = pp_tplan_p_fine_cloth }
 			pp_location_fine_cloth_line_levels < pp_location_tools_line_levels
 		}
 	}
@@ -6010,7 +6010,7 @@ pp_cplan_plan_yield_pp_tools_charter = {
 			has_town_rights = town_rights_type:pp_leather_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			NOT = { has_variable = pp_tplan_p_leather }
 			pp_location_leather_line_levels < pp_location_tools_line_levels
 		}
 	}
@@ -6020,7 +6020,7 @@ pp_cplan_plan_yield_pp_tools_charter = {
 			has_town_rights = town_rights_type:pp_pottery_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			NOT = { has_variable = pp_tplan_p_pottery }
 			pp_location_pottery_line_levels < pp_location_tools_line_levels
 		}
 	}
@@ -6030,7 +6030,7 @@ pp_cplan_plan_yield_pp_tools_charter = {
 			has_town_rights = town_rights_type:pp_furniture_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			NOT = { has_variable = pp_tplan_p_furniture }
 			pp_location_furniture_line_levels < pp_location_tools_line_levels
 		}
 	}
@@ -6040,7 +6040,7 @@ pp_cplan_plan_yield_pp_tools_charter = {
 			has_town_rights = town_rights_type:pp_glass_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			NOT = { has_variable = pp_tplan_p_glass }
 			pp_location_glass_line_levels < pp_location_tools_line_levels
 		}
 	}
@@ -6050,7 +6050,7 @@ pp_cplan_plan_yield_pp_tools_charter = {
 			has_town_rights = town_rights_type:pp_jewelry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			NOT = { has_variable = pp_tplan_p_jewelry }
 			pp_location_jewelry_line_levels < pp_location_tools_line_levels
 		}
 	}
@@ -6060,7 +6060,7 @@ pp_cplan_plan_yield_pp_tools_charter = {
 			has_town_rights = town_rights_type:pp_porcelain_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			NOT = { has_variable = pp_tplan_p_porcelain }
 			pp_location_porcelain_line_levels < pp_location_tools_line_levels
 		}
 	}
@@ -6070,7 +6070,7 @@ pp_cplan_plan_yield_pp_tools_charter = {
 			has_town_rights = town_rights_type:pp_lacquerware_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			NOT = { has_variable = pp_tplan_p_lacquerware }
 			pp_location_lacquerware_line_levels < pp_location_tools_line_levels
 		}
 	}
@@ -6080,7 +6080,7 @@ pp_cplan_plan_yield_pp_tools_charter = {
 			has_town_rights = town_rights_type:pp_beer_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			NOT = { has_variable = pp_tplan_p_beer }
 			pp_location_beer_line_levels < pp_location_tools_line_levels
 		}
 	}
@@ -6090,7 +6090,7 @@ pp_cplan_plan_yield_pp_tools_charter = {
 			has_town_rights = town_rights_type:pp_liquor_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			NOT = { has_variable = pp_tplan_p_liquor }
 			pp_location_liquor_line_levels < pp_location_tools_line_levels
 		}
 	}
@@ -6100,7 +6100,7 @@ pp_cplan_plan_yield_pp_tools_charter = {
 			has_town_rights = town_rights_type:pp_books_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			NOT = { has_variable = pp_tplan_p_books }
 			pp_location_books_line_levels < pp_location_tools_line_levels
 		}
 	}
@@ -6110,7 +6110,7 @@ pp_cplan_plan_yield_pp_tools_charter = {
 			has_town_rights = town_rights_type:pp_paper_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			NOT = { has_variable = pp_tplan_p_paper }
 			pp_location_paper_line_levels < pp_location_tools_line_levels
 		}
 	}
@@ -6120,7 +6120,7 @@ pp_cplan_plan_yield_pp_tools_charter = {
 			has_town_rights = town_rights_type:pp_weaponry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			NOT = { has_variable = pp_tplan_p_weaponry }
 			pp_location_weaponry_line_levels < pp_location_tools_line_levels
 		}
 	}
@@ -6130,7 +6130,7 @@ pp_cplan_plan_yield_pp_tools_charter = {
 			has_town_rights = town_rights_type:pp_firearms_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			NOT = { has_variable = pp_tplan_p_firearms }
 			pp_location_firearms_line_levels < pp_location_tools_line_levels
 		}
 	}
@@ -6140,7 +6140,7 @@ pp_cplan_plan_yield_pp_tools_charter = {
 			has_town_rights = town_rights_type:pp_cannons_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			NOT = { has_variable = pp_tplan_p_cannons }
 			pp_location_cannons_line_levels < pp_location_tools_line_levels
 		}
 	}
@@ -6150,7 +6150,7 @@ pp_cplan_plan_yield_pp_tools_charter = {
 			has_town_rights = town_rights_type:pp_naval_supplies_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			NOT = { has_variable = pp_tplan_p_naval_supplies }
 			pp_location_naval_supplies_line_levels < pp_location_tools_line_levels
 		}
 	}
@@ -6177,7 +6177,7 @@ pp_cplan_plan_yield_pp_weaponry_charter = {
 			has_town_rights = town_rights_type:pp_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			NOT = { has_variable = pp_tplan_p_cloth }
 			pp_location_cloth_line_levels < pp_location_weaponry_line_levels
 		}
 	}
@@ -6187,7 +6187,7 @@ pp_cplan_plan_yield_pp_weaponry_charter = {
 			has_town_rights = town_rights_type:pp_fine_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			NOT = { has_variable = pp_tplan_p_fine_cloth }
 			pp_location_fine_cloth_line_levels < pp_location_weaponry_line_levels
 		}
 	}
@@ -6197,7 +6197,7 @@ pp_cplan_plan_yield_pp_weaponry_charter = {
 			has_town_rights = town_rights_type:pp_leather_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			NOT = { has_variable = pp_tplan_p_leather }
 			pp_location_leather_line_levels < pp_location_weaponry_line_levels
 		}
 	}
@@ -6207,7 +6207,7 @@ pp_cplan_plan_yield_pp_weaponry_charter = {
 			has_town_rights = town_rights_type:pp_pottery_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			NOT = { has_variable = pp_tplan_p_pottery }
 			pp_location_pottery_line_levels < pp_location_weaponry_line_levels
 		}
 	}
@@ -6217,7 +6217,7 @@ pp_cplan_plan_yield_pp_weaponry_charter = {
 			has_town_rights = town_rights_type:pp_furniture_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			NOT = { has_variable = pp_tplan_p_furniture }
 			pp_location_furniture_line_levels < pp_location_weaponry_line_levels
 		}
 	}
@@ -6227,7 +6227,7 @@ pp_cplan_plan_yield_pp_weaponry_charter = {
 			has_town_rights = town_rights_type:pp_glass_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			NOT = { has_variable = pp_tplan_p_glass }
 			pp_location_glass_line_levels < pp_location_weaponry_line_levels
 		}
 	}
@@ -6237,7 +6237,7 @@ pp_cplan_plan_yield_pp_weaponry_charter = {
 			has_town_rights = town_rights_type:pp_jewelry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			NOT = { has_variable = pp_tplan_p_jewelry }
 			pp_location_jewelry_line_levels < pp_location_weaponry_line_levels
 		}
 	}
@@ -6247,7 +6247,7 @@ pp_cplan_plan_yield_pp_weaponry_charter = {
 			has_town_rights = town_rights_type:pp_porcelain_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			NOT = { has_variable = pp_tplan_p_porcelain }
 			pp_location_porcelain_line_levels < pp_location_weaponry_line_levels
 		}
 	}
@@ -6257,7 +6257,7 @@ pp_cplan_plan_yield_pp_weaponry_charter = {
 			has_town_rights = town_rights_type:pp_lacquerware_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			NOT = { has_variable = pp_tplan_p_lacquerware }
 			pp_location_lacquerware_line_levels < pp_location_weaponry_line_levels
 		}
 	}
@@ -6267,7 +6267,7 @@ pp_cplan_plan_yield_pp_weaponry_charter = {
 			has_town_rights = town_rights_type:pp_beer_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			NOT = { has_variable = pp_tplan_p_beer }
 			pp_location_beer_line_levels < pp_location_weaponry_line_levels
 		}
 	}
@@ -6277,7 +6277,7 @@ pp_cplan_plan_yield_pp_weaponry_charter = {
 			has_town_rights = town_rights_type:pp_liquor_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			NOT = { has_variable = pp_tplan_p_liquor }
 			pp_location_liquor_line_levels < pp_location_weaponry_line_levels
 		}
 	}
@@ -6287,7 +6287,7 @@ pp_cplan_plan_yield_pp_weaponry_charter = {
 			has_town_rights = town_rights_type:pp_books_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			NOT = { has_variable = pp_tplan_p_books }
 			pp_location_books_line_levels < pp_location_weaponry_line_levels
 		}
 	}
@@ -6297,7 +6297,7 @@ pp_cplan_plan_yield_pp_weaponry_charter = {
 			has_town_rights = town_rights_type:pp_paper_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			NOT = { has_variable = pp_tplan_p_paper }
 			pp_location_paper_line_levels < pp_location_weaponry_line_levels
 		}
 	}
@@ -6307,7 +6307,7 @@ pp_cplan_plan_yield_pp_weaponry_charter = {
 			has_town_rights = town_rights_type:pp_tools_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			NOT = { has_variable = pp_tplan_p_tools }
 			pp_location_tools_line_levels < pp_location_weaponry_line_levels
 		}
 	}
@@ -6317,7 +6317,7 @@ pp_cplan_plan_yield_pp_weaponry_charter = {
 			has_town_rights = town_rights_type:pp_firearms_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			NOT = { has_variable = pp_tplan_p_firearms }
 			pp_location_firearms_line_levels < pp_location_weaponry_line_levels
 		}
 	}
@@ -6327,7 +6327,7 @@ pp_cplan_plan_yield_pp_weaponry_charter = {
 			has_town_rights = town_rights_type:pp_cannons_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			NOT = { has_variable = pp_tplan_p_cannons }
 			pp_location_cannons_line_levels < pp_location_weaponry_line_levels
 		}
 	}
@@ -6337,7 +6337,7 @@ pp_cplan_plan_yield_pp_weaponry_charter = {
 			has_town_rights = town_rights_type:pp_naval_supplies_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			NOT = { has_variable = pp_tplan_p_naval_supplies }
 			pp_location_naval_supplies_line_levels < pp_location_weaponry_line_levels
 		}
 	}
@@ -6364,7 +6364,7 @@ pp_cplan_plan_yield_pp_firearms_charter = {
 			has_town_rights = town_rights_type:pp_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			NOT = { has_variable = pp_tplan_p_cloth }
 			pp_location_cloth_line_levels < pp_location_firearms_line_levels
 		}
 	}
@@ -6374,7 +6374,7 @@ pp_cplan_plan_yield_pp_firearms_charter = {
 			has_town_rights = town_rights_type:pp_fine_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			NOT = { has_variable = pp_tplan_p_fine_cloth }
 			pp_location_fine_cloth_line_levels < pp_location_firearms_line_levels
 		}
 	}
@@ -6384,7 +6384,7 @@ pp_cplan_plan_yield_pp_firearms_charter = {
 			has_town_rights = town_rights_type:pp_leather_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			NOT = { has_variable = pp_tplan_p_leather }
 			pp_location_leather_line_levels < pp_location_firearms_line_levels
 		}
 	}
@@ -6394,7 +6394,7 @@ pp_cplan_plan_yield_pp_firearms_charter = {
 			has_town_rights = town_rights_type:pp_pottery_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			NOT = { has_variable = pp_tplan_p_pottery }
 			pp_location_pottery_line_levels < pp_location_firearms_line_levels
 		}
 	}
@@ -6404,7 +6404,7 @@ pp_cplan_plan_yield_pp_firearms_charter = {
 			has_town_rights = town_rights_type:pp_furniture_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			NOT = { has_variable = pp_tplan_p_furniture }
 			pp_location_furniture_line_levels < pp_location_firearms_line_levels
 		}
 	}
@@ -6414,7 +6414,7 @@ pp_cplan_plan_yield_pp_firearms_charter = {
 			has_town_rights = town_rights_type:pp_glass_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			NOT = { has_variable = pp_tplan_p_glass }
 			pp_location_glass_line_levels < pp_location_firearms_line_levels
 		}
 	}
@@ -6424,7 +6424,7 @@ pp_cplan_plan_yield_pp_firearms_charter = {
 			has_town_rights = town_rights_type:pp_jewelry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			NOT = { has_variable = pp_tplan_p_jewelry }
 			pp_location_jewelry_line_levels < pp_location_firearms_line_levels
 		}
 	}
@@ -6434,7 +6434,7 @@ pp_cplan_plan_yield_pp_firearms_charter = {
 			has_town_rights = town_rights_type:pp_porcelain_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			NOT = { has_variable = pp_tplan_p_porcelain }
 			pp_location_porcelain_line_levels < pp_location_firearms_line_levels
 		}
 	}
@@ -6444,7 +6444,7 @@ pp_cplan_plan_yield_pp_firearms_charter = {
 			has_town_rights = town_rights_type:pp_lacquerware_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			NOT = { has_variable = pp_tplan_p_lacquerware }
 			pp_location_lacquerware_line_levels < pp_location_firearms_line_levels
 		}
 	}
@@ -6454,7 +6454,7 @@ pp_cplan_plan_yield_pp_firearms_charter = {
 			has_town_rights = town_rights_type:pp_beer_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			NOT = { has_variable = pp_tplan_p_beer }
 			pp_location_beer_line_levels < pp_location_firearms_line_levels
 		}
 	}
@@ -6464,7 +6464,7 @@ pp_cplan_plan_yield_pp_firearms_charter = {
 			has_town_rights = town_rights_type:pp_liquor_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			NOT = { has_variable = pp_tplan_p_liquor }
 			pp_location_liquor_line_levels < pp_location_firearms_line_levels
 		}
 	}
@@ -6474,7 +6474,7 @@ pp_cplan_plan_yield_pp_firearms_charter = {
 			has_town_rights = town_rights_type:pp_books_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			NOT = { has_variable = pp_tplan_p_books }
 			pp_location_books_line_levels < pp_location_firearms_line_levels
 		}
 	}
@@ -6484,7 +6484,7 @@ pp_cplan_plan_yield_pp_firearms_charter = {
 			has_town_rights = town_rights_type:pp_paper_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			NOT = { has_variable = pp_tplan_p_paper }
 			pp_location_paper_line_levels < pp_location_firearms_line_levels
 		}
 	}
@@ -6494,7 +6494,7 @@ pp_cplan_plan_yield_pp_firearms_charter = {
 			has_town_rights = town_rights_type:pp_tools_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			NOT = { has_variable = pp_tplan_p_tools }
 			pp_location_tools_line_levels < pp_location_firearms_line_levels
 		}
 	}
@@ -6504,7 +6504,7 @@ pp_cplan_plan_yield_pp_firearms_charter = {
 			has_town_rights = town_rights_type:pp_weaponry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			NOT = { has_variable = pp_tplan_p_weaponry }
 			pp_location_weaponry_line_levels < pp_location_firearms_line_levels
 		}
 	}
@@ -6514,7 +6514,7 @@ pp_cplan_plan_yield_pp_firearms_charter = {
 			has_town_rights = town_rights_type:pp_cannons_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			NOT = { has_variable = pp_tplan_p_cannons }
 			pp_location_cannons_line_levels < pp_location_firearms_line_levels
 		}
 	}
@@ -6524,7 +6524,7 @@ pp_cplan_plan_yield_pp_firearms_charter = {
 			has_town_rights = town_rights_type:pp_naval_supplies_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			NOT = { has_variable = pp_tplan_p_naval_supplies }
 			pp_location_naval_supplies_line_levels < pp_location_firearms_line_levels
 		}
 	}
@@ -6551,7 +6551,7 @@ pp_cplan_plan_yield_pp_cannons_charter = {
 			has_town_rights = town_rights_type:pp_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			NOT = { has_variable = pp_tplan_p_cloth }
 			pp_location_cloth_line_levels < pp_location_cannons_line_levels
 		}
 	}
@@ -6561,7 +6561,7 @@ pp_cplan_plan_yield_pp_cannons_charter = {
 			has_town_rights = town_rights_type:pp_fine_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			NOT = { has_variable = pp_tplan_p_fine_cloth }
 			pp_location_fine_cloth_line_levels < pp_location_cannons_line_levels
 		}
 	}
@@ -6571,7 +6571,7 @@ pp_cplan_plan_yield_pp_cannons_charter = {
 			has_town_rights = town_rights_type:pp_leather_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			NOT = { has_variable = pp_tplan_p_leather }
 			pp_location_leather_line_levels < pp_location_cannons_line_levels
 		}
 	}
@@ -6581,7 +6581,7 @@ pp_cplan_plan_yield_pp_cannons_charter = {
 			has_town_rights = town_rights_type:pp_pottery_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			NOT = { has_variable = pp_tplan_p_pottery }
 			pp_location_pottery_line_levels < pp_location_cannons_line_levels
 		}
 	}
@@ -6591,7 +6591,7 @@ pp_cplan_plan_yield_pp_cannons_charter = {
 			has_town_rights = town_rights_type:pp_furniture_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			NOT = { has_variable = pp_tplan_p_furniture }
 			pp_location_furniture_line_levels < pp_location_cannons_line_levels
 		}
 	}
@@ -6601,7 +6601,7 @@ pp_cplan_plan_yield_pp_cannons_charter = {
 			has_town_rights = town_rights_type:pp_glass_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			NOT = { has_variable = pp_tplan_p_glass }
 			pp_location_glass_line_levels < pp_location_cannons_line_levels
 		}
 	}
@@ -6611,7 +6611,7 @@ pp_cplan_plan_yield_pp_cannons_charter = {
 			has_town_rights = town_rights_type:pp_jewelry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			NOT = { has_variable = pp_tplan_p_jewelry }
 			pp_location_jewelry_line_levels < pp_location_cannons_line_levels
 		}
 	}
@@ -6621,7 +6621,7 @@ pp_cplan_plan_yield_pp_cannons_charter = {
 			has_town_rights = town_rights_type:pp_porcelain_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			NOT = { has_variable = pp_tplan_p_porcelain }
 			pp_location_porcelain_line_levels < pp_location_cannons_line_levels
 		}
 	}
@@ -6631,7 +6631,7 @@ pp_cplan_plan_yield_pp_cannons_charter = {
 			has_town_rights = town_rights_type:pp_lacquerware_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			NOT = { has_variable = pp_tplan_p_lacquerware }
 			pp_location_lacquerware_line_levels < pp_location_cannons_line_levels
 		}
 	}
@@ -6641,7 +6641,7 @@ pp_cplan_plan_yield_pp_cannons_charter = {
 			has_town_rights = town_rights_type:pp_beer_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			NOT = { has_variable = pp_tplan_p_beer }
 			pp_location_beer_line_levels < pp_location_cannons_line_levels
 		}
 	}
@@ -6651,7 +6651,7 @@ pp_cplan_plan_yield_pp_cannons_charter = {
 			has_town_rights = town_rights_type:pp_liquor_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			NOT = { has_variable = pp_tplan_p_liquor }
 			pp_location_liquor_line_levels < pp_location_cannons_line_levels
 		}
 	}
@@ -6661,7 +6661,7 @@ pp_cplan_plan_yield_pp_cannons_charter = {
 			has_town_rights = town_rights_type:pp_books_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			NOT = { has_variable = pp_tplan_p_books }
 			pp_location_books_line_levels < pp_location_cannons_line_levels
 		}
 	}
@@ -6671,7 +6671,7 @@ pp_cplan_plan_yield_pp_cannons_charter = {
 			has_town_rights = town_rights_type:pp_paper_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			NOT = { has_variable = pp_tplan_p_paper }
 			pp_location_paper_line_levels < pp_location_cannons_line_levels
 		}
 	}
@@ -6681,7 +6681,7 @@ pp_cplan_plan_yield_pp_cannons_charter = {
 			has_town_rights = town_rights_type:pp_tools_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			NOT = { has_variable = pp_tplan_p_tools }
 			pp_location_tools_line_levels < pp_location_cannons_line_levels
 		}
 	}
@@ -6691,7 +6691,7 @@ pp_cplan_plan_yield_pp_cannons_charter = {
 			has_town_rights = town_rights_type:pp_weaponry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			NOT = { has_variable = pp_tplan_p_weaponry }
 			pp_location_weaponry_line_levels < pp_location_cannons_line_levels
 		}
 	}
@@ -6701,7 +6701,7 @@ pp_cplan_plan_yield_pp_cannons_charter = {
 			has_town_rights = town_rights_type:pp_firearms_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			NOT = { has_variable = pp_tplan_p_firearms }
 			pp_location_firearms_line_levels < pp_location_cannons_line_levels
 		}
 	}
@@ -6711,7 +6711,7 @@ pp_cplan_plan_yield_pp_cannons_charter = {
 			has_town_rights = town_rights_type:pp_naval_supplies_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_naval_supplies }
+			NOT = { has_variable = pp_tplan_p_naval_supplies }
 			pp_location_naval_supplies_line_levels < pp_location_cannons_line_levels
 		}
 	}
@@ -6738,7 +6738,7 @@ pp_cplan_plan_yield_pp_naval_supplies_charter = {
 			has_town_rights = town_rights_type:pp_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cloth }
+			NOT = { has_variable = pp_tplan_p_cloth }
 			pp_location_cloth_line_levels < pp_location_naval_supplies_line_levels
 		}
 	}
@@ -6748,7 +6748,7 @@ pp_cplan_plan_yield_pp_naval_supplies_charter = {
 			has_town_rights = town_rights_type:pp_fine_cloth_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_fine_cloth }
+			NOT = { has_variable = pp_tplan_p_fine_cloth }
 			pp_location_fine_cloth_line_levels < pp_location_naval_supplies_line_levels
 		}
 	}
@@ -6758,7 +6758,7 @@ pp_cplan_plan_yield_pp_naval_supplies_charter = {
 			has_town_rights = town_rights_type:pp_leather_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_leather }
+			NOT = { has_variable = pp_tplan_p_leather }
 			pp_location_leather_line_levels < pp_location_naval_supplies_line_levels
 		}
 	}
@@ -6768,7 +6768,7 @@ pp_cplan_plan_yield_pp_naval_supplies_charter = {
 			has_town_rights = town_rights_type:pp_pottery_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_pottery }
+			NOT = { has_variable = pp_tplan_p_pottery }
 			pp_location_pottery_line_levels < pp_location_naval_supplies_line_levels
 		}
 	}
@@ -6778,7 +6778,7 @@ pp_cplan_plan_yield_pp_naval_supplies_charter = {
 			has_town_rights = town_rights_type:pp_furniture_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_furniture }
+			NOT = { has_variable = pp_tplan_p_furniture }
 			pp_location_furniture_line_levels < pp_location_naval_supplies_line_levels
 		}
 	}
@@ -6788,7 +6788,7 @@ pp_cplan_plan_yield_pp_naval_supplies_charter = {
 			has_town_rights = town_rights_type:pp_glass_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_glass }
+			NOT = { has_variable = pp_tplan_p_glass }
 			pp_location_glass_line_levels < pp_location_naval_supplies_line_levels
 		}
 	}
@@ -6798,7 +6798,7 @@ pp_cplan_plan_yield_pp_naval_supplies_charter = {
 			has_town_rights = town_rights_type:pp_jewelry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_jewelry }
+			NOT = { has_variable = pp_tplan_p_jewelry }
 			pp_location_jewelry_line_levels < pp_location_naval_supplies_line_levels
 		}
 	}
@@ -6808,7 +6808,7 @@ pp_cplan_plan_yield_pp_naval_supplies_charter = {
 			has_town_rights = town_rights_type:pp_porcelain_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_porcelain }
+			NOT = { has_variable = pp_tplan_p_porcelain }
 			pp_location_porcelain_line_levels < pp_location_naval_supplies_line_levels
 		}
 	}
@@ -6818,7 +6818,7 @@ pp_cplan_plan_yield_pp_naval_supplies_charter = {
 			has_town_rights = town_rights_type:pp_lacquerware_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_lacquerware }
+			NOT = { has_variable = pp_tplan_p_lacquerware }
 			pp_location_lacquerware_line_levels < pp_location_naval_supplies_line_levels
 		}
 	}
@@ -6828,7 +6828,7 @@ pp_cplan_plan_yield_pp_naval_supplies_charter = {
 			has_town_rights = town_rights_type:pp_beer_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_beer }
+			NOT = { has_variable = pp_tplan_p_beer }
 			pp_location_beer_line_levels < pp_location_naval_supplies_line_levels
 		}
 	}
@@ -6838,7 +6838,7 @@ pp_cplan_plan_yield_pp_naval_supplies_charter = {
 			has_town_rights = town_rights_type:pp_liquor_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_liquor }
+			NOT = { has_variable = pp_tplan_p_liquor }
 			pp_location_liquor_line_levels < pp_location_naval_supplies_line_levels
 		}
 	}
@@ -6848,7 +6848,7 @@ pp_cplan_plan_yield_pp_naval_supplies_charter = {
 			has_town_rights = town_rights_type:pp_books_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_books }
+			NOT = { has_variable = pp_tplan_p_books }
 			pp_location_books_line_levels < pp_location_naval_supplies_line_levels
 		}
 	}
@@ -6858,7 +6858,7 @@ pp_cplan_plan_yield_pp_naval_supplies_charter = {
 			has_town_rights = town_rights_type:pp_paper_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_paper }
+			NOT = { has_variable = pp_tplan_p_paper }
 			pp_location_paper_line_levels < pp_location_naval_supplies_line_levels
 		}
 	}
@@ -6868,7 +6868,7 @@ pp_cplan_plan_yield_pp_naval_supplies_charter = {
 			has_town_rights = town_rights_type:pp_tools_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_tools }
+			NOT = { has_variable = pp_tplan_p_tools }
 			pp_location_tools_line_levels < pp_location_naval_supplies_line_levels
 		}
 	}
@@ -6878,7 +6878,7 @@ pp_cplan_plan_yield_pp_naval_supplies_charter = {
 			has_town_rights = town_rights_type:pp_weaponry_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_weaponry }
+			NOT = { has_variable = pp_tplan_p_weaponry }
 			pp_location_weaponry_line_levels < pp_location_naval_supplies_line_levels
 		}
 	}
@@ -6888,7 +6888,7 @@ pp_cplan_plan_yield_pp_naval_supplies_charter = {
 			has_town_rights = town_rights_type:pp_firearms_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_firearms }
+			NOT = { has_variable = pp_tplan_p_firearms }
 			pp_location_firearms_line_levels < pp_location_naval_supplies_line_levels
 		}
 	}
@@ -6898,7 +6898,7 @@ pp_cplan_plan_yield_pp_naval_supplies_charter = {
 			has_town_rights = town_rights_type:pp_cannons_rights
 		}
 		AND = {
-			NOT = { has_town_rights = town_rights_type:pp_plan_cannons }
+			NOT = { has_variable = pp_tplan_p_cannons }
 			pp_location_cannons_line_levels < pp_location_naval_supplies_line_levels
 		}
 	}

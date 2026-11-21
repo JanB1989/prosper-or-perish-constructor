@@ -254,7 +254,7 @@ def texts() -> dict[str, str]:
     out["PP_CPLAN_D_BUSINESS_SKIPPED"] = (
         "It had no gold saved and none came in, so it did not rank its businesses: what they would have cost is not "
         "counted.")
-    # the group runs the plans the locations hold (town rights pp_plan_<plan>, town_plans.py), each counted by state
+    # the group runs the plans the locations hold (pp_tplan_p_<plan>, town_plans.py), each counted by state
     out["PP_CPLAN_D_PROFILES_SIT"] = (
         f"[locations|e] with a plan: {_show(d('profiles', 'locs'))}. Their plans at its last look:")
     for state, text in PROFILE_STATES.items():

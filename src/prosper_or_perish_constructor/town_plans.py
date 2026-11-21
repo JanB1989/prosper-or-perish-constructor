@@ -1,30 +1,44 @@
-"""Town-right plans (branch town-plans, 2026-11-19, Jan).
+"""Location plans (2026-11-19, Jan; a plain marker on the location since 2026-11-21).
 
-The player's one decision per location is a town right used as a plan: "this location is for lumber". A plan is a
-town right without conditions and without a bonus (`pp_plan_<plan>`), set and removed by the mod's own button on any
-owned location, rural ones included, several per location. The Construction Plan reads the held plan rights
-(`has_town_rights`) and builds toward them: the good's producers, forced, tier after tier as they unlock, a higher
-location rank where the producers need one, and the good's charter and rights where the mod has them.
+The player's one decision per location is a plan: "this location is for lumber". A plan is a marker on the location
+(the location variable ``pp_tplan_p_<plan>``), set and removed by the mod's own button on any owned location, rural
+ones included, several per location. It is no town right and gives nothing by itself (2026-11-21, Jan: "We just use
+our plans, and the plans apply the relevant town rights if the setting is turned on"; until then every plan was a
+town right ``pp_plan_<plan>`` without conditions or bonus, which sat beside the real rights in the game's list). The
+Construction Plan reads the markers and builds toward them: the good's producers, forced, tier after tier as they
+unlock, a higher location rank where the producers need one, and, while the setting "Grant a plan's charter and
+rights" is on, the good's real charter and rights where the mod has them (construction_plan_country.py).
 
 Plans: one per good that has a forced goods target (location_profiles.targets), plus the two below.
 
+Where a plan is kept:
+
+* location variable ``pp_tplan_p_<plan>`` (yes): the location holds the plan;
+* location variable ``pp_tplan_any`` (yes): it holds at least one (the trigger ``pp_tplan_held``; kept in step by the
+  button's effect ``pp_tplan_flip``, which asks ``pp_tplan_held_scan`` after it took a plan off);
+* country variable list ``pp_tplan_locs``: the country's locations with a plan (the Locations look and the charter
+  look walk it: script has no iterator over the locations that carry a variable).
+
+A location that changes owner loses its plans (``pp_tplan_owner_changed`` on the game's
+``on_location_changed_owner`` runs ``pp_tplan_strip``); the Locations look also takes off the list what the country
+no longer owns (``pp_lprof_gather``).
+
 This module holds the naming contract every part of the feature shares and the finalize pass that writes:
 
-* ``in_game/common/town_rights/pp_plan_town_rights.txt``: one right per plan (RIGHT_BODY);
-* ``main_menu/localization/english/pp_plan_town_rights_l_english.yml``: each right's name and description;
-* ``main_menu/gfx/interface/icons/town_rights/pp_plan_<plan>.dds``: its icon (the good's icon; food and trade: a map
-  mode's), in the game format;
-* ``in_game/common/scripted_triggers/pp_town_plans_generated.txt``: ``pp_tplan_held``;
-* ``in_game/common/script_values/pp_town_plans_generated.txt``: ``pp_tplan_on_<plan>``;
-* ``in_game/common/scripted_effects/pp_town_plans_generated.txt``: per plan whose producers all need a higher rank than
-  a rural settlement, its turn ``pp_tplan_do_<plan>`` (raise the rank where none of them stands and the rank is too low,
-  else the goods target) and the rank raise ``pp_tplan_raise`` (Towns and Buildings' ``pp_cplan_country_rank_up``, paid
-  from the Locations group's purse, ``why = 105``), and the plan settings' effects (``pp_tplan_pb_*``);
+* ``in_game/common/scripted_triggers/pp_town_plans_generated.txt``: ``pp_tplan_held``, ``pp_tplan_held_scan``;
+* ``in_game/common/scripted_effects/pp_town_plans_generated.txt``: ``pp_tplan_strip`` (every plan and what the plans
+  left on a location goes); per plan whose producers all need a higher rank than a rural settlement, its turn
+  ``pp_tplan_do_<plan>`` (raise the rank where none of them stands and the rank is too low, else the goods target)
+  and the rank raise ``pp_tplan_raise`` (Towns and Buildings' ``pp_cplan_country_rank_up``, paid from the Locations
+  group's purse, ``why = 105``), and the plan settings' effects (``pp_tplan_pb_*``);
+* ``in_game/common/script_values/pp_town_plans_generated.txt``: the settings' and options' script values;
 * ``in_game/common/scripted_guis/pp_town_plan_settings.txt``: the plan settings' buttons (see "Plan settings" below);
-  the settings' script values go into the values file above;
 * the plan options (2026-11-20, "Plan options" below, contract town_plan_options.py): their values, effects, buttons,
   the trigger ``pp_tplan_eff_low`` and the turns' option checks (the rank raise, the food plan's parts, the trade
   plan's groups ``pp_tplan_trade_split``), in the same files.
+
+It also removes what the plan rights left in the mod folder (``stale_paths``: the rights file, their text, their
+icons).
 
 The monthly pass that runs a held plan is location_profiles.render_marks (``pp_lplan_location_marks``, one
 ``pp_lplan_mark`` per plan) and the hand-written ``pp_lplan_mark`` (scripted_effects/pp_location_profiles.txt: the plan
@@ -38,20 +52,25 @@ from collections.abc import Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
 
-# The right's key is PLAN_PREFIX + plan, e.g. pp_plan_lumber, pp_plan_food, pp_plan_trade.
-PLAN_PREFIX = "pp_plan_"
+# The plan marker: the location variable PLAN_VAR_PREFIX + plan, e.g. pp_tplan_p_lumber, pp_tplan_p_food.
+PLAN_VAR_PREFIX = "pp_tplan_p_"
+ANY_VAR = "pp_tplan_any"  # location: it holds at least one plan
+LOCS_LIST = "pp_tplan_locs"  # country: its locations that hold a plan
 
 # Plans that are no good: food (the buildings that feed the province) and trade (the trade buildings).
 EXTRA_PLANS: tuple[str, ...] = ("food", "trade")
 
 # Script names (location scope unless noted):
-#   trigger       pp_tplan_held            the location holds at least one plan right
-#   script value  pp_tplan_on_<plan>       1 while the location holds that plan right, else 0
-#   effect        pp_tplan_flip = { g = <plan> }   sets the plan right, or takes it off when held (the button)
+#   trigger       pp_tplan_held            the location holds at least one plan (has_variable = pp_tplan_any)
+#   trigger       pp_tplan_held_scan       the same, asked of every plan marker (after a plan was taken off)
+#   effect        pp_tplan_flip = { g = <plan> }   sets the plan, or takes it off when held (the button)
+#   effect        pp_tplan_strip           every plan and what the plans left here goes (owner change)
 #   scripted GUI  pp_tplan_toggle          scope location, scope:pp_key = flag:<plan>
-#   variables     pp_lplan_st_g_<plan>     the plan's state (1..14, location_profiles.STATES), pp_lplan_est_g_<plan> its payback
+#   variables     pp_tplan_p_<plan>        the plan marker; pp_lplan_st_g_<plan> the plan's state (1..16,
+#                 location_profiles.STATES), pp_lplan_est_g_<plan> its payback
 HELD_TRIGGER = "pp_tplan_held"
-ON_VALUE_PREFIX = "pp_tplan_on_"
+HELD_SCAN_TRIGGER = "pp_tplan_held_scan"
+STRIP_EFFECT = "pp_tplan_strip"
 FLIP_EFFECT = "pp_tplan_flip"
 TOGGLE_GUI = "pp_tplan_toggle"
 DO_PREFIX = "pp_tplan_do_"  # a plan's turn where its producers may need a higher rank, and the food plan's turn
@@ -228,28 +247,16 @@ def pb_years_value(key: str) -> str:
 def pb_own_value(plan: str) -> str:
     return PB_OWN_PREFIX + plan
 
-RIGHTS = Path("in_game/common/town_rights/pp_plan_town_rights.txt")
-LOC = Path("main_menu/localization/english/pp_plan_town_rights_l_english.yml")
-ICONS = Path("main_menu/gfx/interface/icons/town_rights")
 TRIGGERS = Path("in_game/common/scripted_triggers/pp_town_plans_generated.txt")
 VALUES = Path("in_game/common/script_values/pp_town_plans_generated.txt")
 EFFECTS = Path("in_game/common/scripted_effects/pp_town_plans_generated.txt")
 HEADER = "﻿# Generated by ppc finalize (town_plans.py); do not edit by hand.\n"
-
-# One plan right. Engine (static check of 1.4.9, 2026-11-19): a held right whose potential is false is never
-# stripped, and potential = no keeps it out of the game's grant list and away from the AI (construction_plan_country
-# skips it: switched off); the engine counts every held right against local_possible_town_rights, so +1 on the right
-# frees the slot it takes; kept_at_conquest = no destroys it on a hostile owner change (default yes: the conqueror
-# would inherit the plan). No is_specialization (a UI filter), no upgrades_to.
-RIGHT_BODY = """{key} = {{
-	potential = {{ always = no }}
-	kept_at_conquest = no
-	location_modifier = {{
-		local_possible_town_rights = 1
-	}}
-	color = {color}
-}}
-"""
+# What the plan rights left in the mod folder (a plan was a town right pp_plan_<plan> until 2026-11-21): removed by
+# apply. The icons: every pp_plan_*.dds of the town rights' icon folder.
+STALE_FILES = (Path("in_game/common/town_rights/pp_plan_town_rights.txt"),
+               Path("main_menu/localization/english/pp_plan_town_rights_l_english.yml"))
+STALE_ICONS = Path("main_menu/gfx/interface/icons/town_rights")
+STALE_ICON_PATTERN = "pp_plan_*.dds"
 
 # Location ranks from the lowest; a building may stand on a rank when its flag (rural_settlement / town / city) is yes.
 RANKS = ("rural_settlement", "town", "city")
@@ -258,17 +265,11 @@ RANKS = ("rural_settlement", "town", "city")
 # that reading (memory ai-rural-urbanization-ban: transport_office, no flag, is town-only). Not checked in the engine.
 # A missing town / city flag stays unknown (no plan has only such producers today).
 DEFAULT_FLAGS = {"rural_settlement": "no"}
-ICON_ROOTS = (Path("main_menu"), Path("in_game"))
-GOODS_ICON = "gfx/interface/icons/trade_goods/icon_goods_{good}.dds"
-EXTRA_ICONS = {"food": "gfx/interface/icons/map_modes/province_food.dds", "trade": "gfx/interface/icons/map_modes/market.dds"}
-PLAN_SATURATION = 0.45  # the plans' colours (plan_color)
-PLAN_VALUE = 0.62
-EXTRA_NAMES = {"food": "Food", "trade": "Trade"}
 
 
-def right_key(plan: str) -> str:
-    """The town right of a plan."""
-    return f"{PLAN_PREFIX}{plan}"
+def plan_var(plan: str) -> str:
+    """The location variable that marks a plan."""
+    return f"{PLAN_VAR_PREFIX}{plan}"
 
 
 def plan_keys(goods: Iterable[str]) -> list[str]:
@@ -279,11 +280,6 @@ def plan_keys(goods: Iterable[str]) -> list[str]:
     return keys
 
 
-def is_plan_right(key: str) -> bool:
-    """True for a plan right's key."""
-    return key.startswith(PLAN_PREFIX)
-
-
 @dataclass(frozen=True)
 class Plan:
     key: str
@@ -292,17 +288,14 @@ class Plan:
     rank: str | None  # the lowest rank (RANKS) on which one of them may stand; None = a flag is unknown (no raise)
 
     @property
-    def right(self) -> str:
-        return right_key(self.key)
+    def var(self) -> str:
+        """The location variable that marks the plan."""
+        return plan_var(self.key)
 
     @property
     def suffix(self) -> str:
         """The plan in the mark machinery's variable names (pp_lplan_st_<suffix>)."""
         return f"g_{self.key}"
-
-    @property
-    def on_value(self) -> str:
-        return ON_VALUE_PREFIX + self.key
 
     @property
     def raises(self) -> bool:
@@ -319,8 +312,8 @@ class Plan:
 class Result:
     plans: list[Plan] = field(default_factory=list)
     unknown_rank: list[str] = field(default_factory=list)  # plans whose lowest rank is unknown (a flag missing)
-    missing_icons: list[str] = field(default_factory=list)
     files_changed: int = 0
+    stale_removed: int = 0  # files of the former plan rights taken out of the mod folder
 
 
 def lowest_rank(flags: Iterable[dict[str, str]]) -> str | None:
@@ -357,132 +350,38 @@ def plans(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -> list
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# rights, text, icons
-
-
-def plan_color(index: int, count: int) -> str:
-    """Plan i of n: its own colour, hues spread evenly at one saturation and value (no two town rights may share a
-    colour: EU5 logs every pair and the town-rights map mode cannot tell them apart; the goods' named colours are taken
-    by the charters and vanilla rights, tests/test_town_rights_order.py)."""
-    return f"hsv {{ {(index + 0.5) / count:.3f} {PLAN_SATURATION:.3f} {PLAN_VALUE:.3f} }}"
-
-
-def render_rights(items: list[Plan]) -> str:
-    parts = [
-        HEADER,
-        "# The plan rights (town_plans.py): the player's plan for a location, set and removed by the mod's own button\n"
-        "# (grant_town_rights / revoke_town_rights_of_type); the Construction Plan builds toward every held plan.\n\n",
-    ]
-    for index, plan in enumerate(items):
-        parts.append(RIGHT_BODY.format(key=plan.right, color=plan_color(index, len(items))) + "\n")
-    return "".join(parts)
-
-
-_LOC_LINE = re.compile(r'^\s*([A-Za-z0-9_.\-]+):\d*\s*"(.*)"\s*$')
-
-
-def english_names(mod_root: Path, vanilla_root: Path, keys: Iterable[str]) -> dict[str, str]:
-    """The English text of plain loc keys (the goods' names): the mod's files (replace too) over the game's."""
-    wanted = set(keys)
-    found: dict[str, str] = {}
-    for root in (mod_root / "main_menu/localization", vanilla_root / "game/main_menu/localization/english"):
-        if not root.is_dir():
-            continue
-        paths = sorted(root.rglob("*_l_english.yml"))
-        for path in paths:
-            for line in path.read_text(encoding="utf-8-sig", errors="replace").splitlines():
-                match = _LOC_LINE.match(line)
-                if match and match.group(1) in wanted and match.group(1) not in found:
-                    found[match.group(1)] = match.group(2)
-    return found
-
-
-def _quote(text: str) -> str:
-    return text.replace('"', '\\"')
-
-
-def describe(plan: Plan, charters: set[str]) -> str:
-    """A plan right's description: what the plan does for the player (no numbers, linked)."""
-    if plan.key == "food":
-        what = ("builds here the buildings that feed the [province|e]: the producers of [pp_staple_foods|e], the "
-                "[ShowBuildingTypeName('cookshop')|e] and the [ShowBuildingTypeName('tavern')|e], as they become possible")
-    elif plan.key == "trade":
-        what = ("builds here the trade buildings, such as the [ShowBuildingTypeName('marketplace')|e], as they become "
-                "possible")
-    else:
-        what = f"builds here the producers of [ShowGoodsName('{plan.key}')|e], tier after tier as they become possible"
-    parts = [f"Your plan for this [location|e]: the Construction Plan {what}."]
-    if plan.raises:
-        need = "a town" if plan.rank == "town" else "a city"
-        parts.append(f"They need {need}, so the plan raises the settlement's [location_rank|e] when it can.")
-    if plan.key in charters:
-        parts.append(f"Where the conditions of the [ShowGoodsName('{plan.key}')|e] specialization [town_rights|e] hold, "
-                     "the plan grants them.")
-    parts.append("The plan itself gives no bonus, and the location keeps its room for other [town_rights|e].")
-    return " ".join(parts)
-
-
-def charter_goods(mod_root: Path) -> set[str]:
-    """Goods with a PP specialization charter or rights (pp_<good>_charter / pp_<good>_rights)."""
-    text = (mod_root / "in_game/common/town_rights/pp_specialization_town_rights.txt").read_text(encoding="utf-8-sig")
-    return set(re.findall(r"(?m)^pp_(\w+?)_(?:charter|rights) = \{", text))
-
-
-def render_loc(items: list[Plan], names: dict[str, str], charters: set[str]) -> str:
-    lines = ["﻿l_english:\n"]
-    for plan in items:
-        name = EXTRA_NAMES.get(plan.key) or names.get(plan.key)
-        if not name:
-            raise ValueError(f"plan {plan.key}: no English name for the good")
-        lines.append(f' {plan.right}: "Plan: {_quote(name)}"\n')
-        lines.append(f' {plan.right}_desc: "{_quote(describe(plan, charters))}"\n')
-    return "".join(lines)
-
-
-def icon_source(plan: Plan, mod_root: Path, vanilla_root: Path) -> Path | None:
-    relative = EXTRA_ICONS.get(plan.key) or GOODS_ICON.format(good=plan.key)
-    for root in (mod_root, vanilla_root / "game"):
-        for sub in ICON_ROOTS:
-            if (root / sub / relative).is_file():
-                return root / sub / relative
-    return None
-
-
-def render_icons(items: list[Plan], mod_root: Path, vanilla_root: Path) -> tuple[dict[Path, bytes], list[str]]:
-    from prosper_or_perish_constructor import interface_dds
-
-    out: dict[Path, bytes] = {}
-    missing: list[str] = []
-    for plan in items:
-        source = icon_source(plan, mod_root, vanilla_root)
-        if source is None:
-            missing.append(plan.key)
-            continue
-        target = ICONS / f"{plan.right}.dds"
-        out[mod_root / target] = interface_dds.normalized(source.read_bytes(), target)
-    return out, missing
-
-
-# ---------------------------------------------------------------------------------------------------------------------
 # script
 
 
 def render_triggers(items: list[Plan]) -> str:
     return (
         HEADER
-        + "\n# Location scope: the location holds at least one plan right (the Locations group gives it its turn).\n"
-        f"{HELD_TRIGGER} = {{\n\tOR = {{\n"
-        + "".join(f"\t\thas_town_rights = town_rights_type:{plan.right}\n" for plan in items)
+        + "\n# Location scope: the location holds at least one plan (the Locations group gives it its turn). One variable,\n"
+        f"# kept in step by the button's effect (pp_tplan_flip) and taken off with the plans ({STRIP_EFFECT}).\n"
+        f"{HELD_TRIGGER} = {{\n\thas_variable = {ANY_VAR}\n}}\n"
+        "\n# Location scope: the same, asked of every plan marker: after a plan was taken off, is one left?\n"
+        f"{HELD_SCAN_TRIGGER} = {{\n\tOR = {{\n"
+        + "".join(f"\t\thas_variable = {plan.var}\n" for plan in items)
         + "\t}\n}\n"
     )
 
 
-def render_values(items: list[Plan]) -> str:
-    parts = [HEADER, "\n# Location scope: 1 while the location holds the plan right, else 0 (the GUI reads them).\n"]
-    for plan in items:
-        parts.append(f"{plan.on_value} = {{\n\tvalue = 0\n\tif = {{\n"
-                     f"\t\tlimit = {{ has_town_rights = town_rights_type:{plan.right} }}\n\t\tvalue = 1\n\t}}\n}}\n")
-    return "".join(parts)
+def render_strip(items: list[Plan]) -> str:
+    """Location scope: the location is no planned location any more (it changed owner): every plan marker, each plan's
+    state and payback, and what the plans left here (the workers mark, the last plan that built, why a charter waits)
+    go. The owner's list of planned locations (LOCS_LIST) is the caller's."""
+    return (
+        "\n# ---- A location loses its plans (town_plans.py) ----\n"
+        "# Location scope (pp_tplan_owner_changed on the game's on_location_changed_owner; the Locations look's sweep,\n"
+        "# pp_lprof_gather): every plan marker with its state and payback, the mark that it holds a plan, the workers\n"
+        "# mark, the plan that built last and the reason a charter waits. The country's list of planned locations is\n"
+        "# the caller's.\n"
+        f"{STRIP_EFFECT} = {{\n"
+        + "".join(f"\tremove_variable = {plan.var}\n\tremove_variable = pp_lplan_st_{plan.suffix}\n"
+                  f"\tremove_variable = pp_lplan_est_{plan.suffix}\n" for plan in items)
+        + f"\tremove_variable = {ANY_VAR}\n\tremove_variable = pp_lplan_wk\n\tremove_variable = pp_lplan_last\n"
+        "\tif = {\n\t\tlimit = { has_variable = pp_tplan_cwait }\n\t\tremove_variable = pp_tplan_cwait\n\t}\n}\n"
+    )
 
 
 def _num(value: float) -> str:
@@ -1093,41 +992,41 @@ def _write_text(path: Path, text: str, write: bool) -> bool:
     return True
 
 
-def _write_bytes(path: Path, data: bytes, write: bool) -> bool:
-    if path.is_file() and path.read_bytes() == data:
-        return False
-    if write:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_bytes(data)
-    return True
+def stale_paths(mod_root: Path) -> list[Path]:
+    """What the plan rights left in the mod folder (STALE_FILES, the plan rights' icons)."""
+    found = [mod_root / relative for relative in STALE_FILES if (mod_root / relative).is_file()]
+    icons = mod_root / STALE_ICONS
+    if icons.is_dir():
+        found += sorted(icons.glob(STALE_ICON_PATTERN))
+    return found
 
 
 def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: bool = True) -> Result:
-    """Writes the plan rights, their text and icons and the plan's triggers, values and rank raise."""
+    """Writes the plans' triggers, values, effects and settings buttons, and removes what the plan rights left."""
     from prosper_or_perish_constructor import construction_plan_country as cc
 
     items = plans(repo, project, mod_root, vanilla_root)
     result = Result(plans=items, unknown_rank=[plan.key for plan in items if plan.rank is None])
-    names = english_names(mod_root, vanilla_root, [plan.key for plan in items])
     texts = {
-        mod_root / RIGHTS: render_rights(items),
-        mod_root / LOC: render_loc(items, names, charter_goods(mod_root)),
         mod_root / TRIGGERS: render_triggers(items) + render_option_triggers(),
-        mod_root / VALUES: (render_values(items) + render_settings_values(items)
+        mod_root / VALUES: (HEADER + render_settings_values(items)
                             + render_option_values(items, eff_short_lived_amounts(mod_root, vanilla_root))),
-        mod_root / EFFECTS: (render_effects(items, cc.read_ranks(mod_root, vanilla_root)) + render_settings_effects(items)
-                             + render_option_effects(items)),
+        mod_root / EFFECTS: (render_effects(items, cc.read_ranks(mod_root, vanilla_root)) + render_strip(items)
+                             + render_settings_effects(items) + render_option_effects(items)),
         mod_root / SETTINGS_GUIS: render_settings_guis() + render_option_guis(),
     }
-    icons, result.missing_icons = render_icons(items, mod_root, vanilla_root)
     result.files_changed = sum(_write_text(path, text, write) for path, text in texts.items())
-    result.files_changed += sum(_write_bytes(path, data, write) for path, data in icons.items())
+    stale = stale_paths(mod_root)
+    result.stale_removed = len(stale)
+    if write:
+        for path in stale:
+            path.unlink()
     return result
 
 
 def summary(result: Result) -> str:
     raising = [plan.key for plan in result.plans if plan.raises]
-    return (f"Town plans: {len(result.plans)} plan rights, {len(raising)} raise the rank first"
+    return (f"Location plans: {len(result.plans)} plans, {len(raising)} raise the rank first"
             + (f", lowest rank unknown for: {', '.join(result.unknown_rank)}" if result.unknown_rank else "")
-            + (f"; NO ICON for: {', '.join(result.missing_icons)}" if result.missing_icons else "")
+            + (f"; {result.stale_removed} files of the former plan rights removed" if result.stale_removed else "")
             + f", {result.files_changed} files changed.")

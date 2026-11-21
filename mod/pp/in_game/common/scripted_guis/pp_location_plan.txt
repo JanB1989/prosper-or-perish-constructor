@@ -1,5 +1,5 @@
 ﻿# Prosper or Perish - Location plan buttons (gui/pp_location_plan*.gui, the location window's plan button and its Plans
-# row). They set and take off the location's plans (town rights pp_plan_<plan>): what the Construction Plan builds
+# row). They set and take off the location's plans (location variables pp_tplan_p_<plan>): what the Construction Plan builds
 # toward there. scope:pp_key = the plan's flag. The GUI shows them only to the player who owns the location (observers'
 # commands are dropped); the script checks the owner is a player too.
 

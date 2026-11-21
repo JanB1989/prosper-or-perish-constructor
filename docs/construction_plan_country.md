@@ -76,7 +76,7 @@ goods: its raw material is the good, or a standing building there produces it (g
 the Location Plan's "made here"); every other public building asks `pp_cplan_pub_anywhere` (always yes). The trigger is
 passed as `where` to `pp_cplan_country_public` and sits in its location filter before `can_build_building`. The tile's
 tooltip names the goods and, until 2026-11-19, said to mark the building in a location to have one anywhere else
-(building marks went with the profiles on 2026-11-19; the one per-location decision is a town-right plan,
+(building marks went with the profiles on 2026-11-19; the one per-location decision is a plan,
 `docs/location_plan.md`, which builds a good's producers, not a single building). Before, a ticked Windmill went into every location that could have one, whether
 anything there was milled or not.
 
@@ -111,14 +111,17 @@ check the raw effect skips (B) is asked by the rule.
 - The marks (`pp_cplan_right_mark`) are cleared at the end of every rights look, rule on or off, by walking only the
   locations with town rights (`every_locations_with_town_rights_in_country`; a marked location holds what it got).
 
-**Plans: charters and rights** (2026-11-19, branch `town-plans`; NOT TESTED IN GAME). A plan right `pp_plan_<plan>`
-(`town_plans.py`) is never a tile and never a grant of the rule (`read_rights` skips every key `is_plan_right` names,
-whatever its potential). For every good with a plan right and a specialization charter `pp_<good>_charter` (18) the
-plan is the switch for that charter and the rights it upgrades into (`upgrades_to`, read from the database); `iron` has
-rights and no charter and gets `pp_iron_rights` directly. `pp_cplan_country_plan_rights` runs first in every rights look
-(`pp_cplan_country_rights`), whether the rule's switch is on or not, while the country has `can_grant_town_rights` and
-the influence to keep plus the price. Per good, only the locations with town rights are walked (a plan is one),
-biggest population first:
+**Plans: charters and rights** (2026-11-19, branch `town-plans`; tested in game 2026-11-20 and, with plans as markers,
+2026-11-21, `docs/location_plan.md`). A plan is a location marker `pp_tplan_p_<plan>` (`town_plans.py`; until
+2026-11-21 a town right `pp_plan_<plan>`, which `read_rights` skipped), never a tile and never a right in the database.
+`plan_keys(...)` names the plans (it replaced `plan_right_keys`); a `PlanGrant` carries the good, the plan key (`plan`,
+the good) and the charter and rights it grants; `Result.plans` holds the plans. For
+every good with a plan and a specialization charter `pp_<good>_charter` (18) the plan is the switch for that charter and
+the rights it upgrades into (`upgrades_to`, read from the database); `iron` has rights and no charter and gets
+`pp_iron_rights` directly. `pp_cplan_country_plan_rights` runs first in every rights look (`pp_cplan_country_rights`),
+whether the rule's switch is on or not, while the country has `can_grant_town_rights` and the influence to keep plus
+the price. Per good, the country's list of planned locations `pp_tplan_locs` is walked (`ordered_in_list`, the
+locations holding that plan's marker), biggest population first:
 
 - swap (`pp_cplan_country_plan_upgrade`): holds the plan and the charter, not the rights, and the rights' potential and
   allow pass: `revoke_town_rights_of_type` the charter, `grant_town_rights` the rights, `pay_price =
@@ -127,8 +130,8 @@ biggest population first:
 - grant (`pp_cplan_country_plan_grant`): holds the plan, neither the charter nor its rights, a town or more (never a
   rural settlement: the plan's own pass raises the rank first), and the charter's allow without its one-specialization
   condition passes (`pp_cplan_right_allow_free_<right>`: the line levels; iron: the works). Then: the whole allow
-  passes -> granted where a slot is free (`has_max_town_rights = no`: the plan right brings its own slot, so a town
-  holding only a plan has one free) and the influence kept plus the price is there, `pay_price =
+  passes -> granted where a slot is free (`has_max_town_rights = no`; a plan takes no slot) and the influence kept
+  plus the price is there, `pay_price =
   price:grant_town_rights`; else the town's other specialization may make way (below); else it waits.
 - **The town's specialization follows its plans** (2026-11-20, Jan's vision: a city you conquer or get, full of what
   the AI built, becomes a tool city step by step, and at some point the charter comes). Where only the charter's
@@ -156,10 +159,10 @@ biggest population first:
   and what the location holds of it (`pp_tplan_spec_<good>`: 1 the charter, 2 the rights; location_plan.py).
 - At most one grant, make-way or swap a location a look (`pp_cplan_right_mark`, gate `pp_cplan_country_plan_site`: not
   only conquered, no mark, not rural). The look runs twice a year. Every grant, make-way and swap counts in
-  `pp_cplan_rights_n` ("granted at the last look"). The plan right stays on the location. Engine (1.4.9, static
+  `pp_cplan_rights_n` ("granted at the last look"). The plan stays on the location. Engine (1.4.9, static
   check): a script grant has no checks (hence every grant asks that the right is not held), and each grant and revoke
-  sends the player the game's town rights message. Not checked in game: whether a script revoke costs anything or
-  angers an estate (the game's own revoke button may).
+  sends the player the game's town rights message. In game 2026-11-20 the script revoke inside a swap cost no
+  influence; not checked: whether it angers an estate (the game's own revoke button may).
 
 ## The rights database
 
@@ -216,7 +219,8 @@ the never-run branch of `pp_cplan_run`); inside: `pp_cplan_country_upgrades`, `p
 `pp_cplan_country_upgrade_to`, `pp_cplan_country_buildings`, `pp_cplan_country_public`, `pp_cplan_country_ranks`,
 `pp_cplan_country_rank_up = { rank n why }` (`why` = the paying rule group's construction code: its purse, ledger,
 save variables and test-log line; 107 here, 105 for a plan's rank raise by the Locations group), `pp_cplan_rank_charge`,
-`pp_cplan_country_grant`, `pp_cplan_country_plan_rights`, `pp_cplan_country_plan_grant = { plan right }`,
+`pp_cplan_country_grant`, `pp_cplan_country_plan_rights`, `pp_cplan_country_plan_grant = { plan right }` (`plan` = the
+plan key, the good),
 `pp_cplan_country_plan_upgrade = { plan charter rights }`.
 Triggers: `pp_cplan_country_site`, `pp_cplan_country_rights_site`, `pp_cplan_country_plan_site`,
 `pp_cplan_country_upgradable` (building scope),

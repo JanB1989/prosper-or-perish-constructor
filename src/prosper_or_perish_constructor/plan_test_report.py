@@ -480,7 +480,7 @@ def series_levels(series: Sequence[tuple[str, Snapshot]], tag: str, kinds: dict[
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# Location plans (town rights pp_plan_<plan>; the plan engine writes each held plan's state on the location)
+# Location plans (location variables pp_tplan_p_<plan>; the plan engine writes each held plan's state on the location)
 # ---------------------------------------------------------------------------------------------------------------------
 _PLAN_STATE = r"^pp_lplan_st_g_(\w+)$"
 _PLAN_EST = r"^pp_lplan_est_g_(\w+)$"

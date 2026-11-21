@@ -4054,25 +4054,580 @@ widget = {
 		}
 	}
 
-	# PP Location Plan: in its map mode, the town rights (plans among them) of the player's locations
+	# PP Location Plan: in its map mode, the plans and the town rights of the player's locations
 	widget = {
 		name = "pp_lplan_marker"
-		visible = "[And(GetMapMode('pp_location_plan').IsSet, And(Location.GetOwner.IsPlayer, GreaterThan_int32(GetDataModelSize(Location.GetTownRights), '(int32)0')))]"
+		visible = "[And(GetMapMode('pp_location_plan').IsSet, And(Location.GetOwner.IsPlayer, Or(Location.MakeScope.Var('pp_tplan_any').IsSet, GreaterThan_int32(GetDataModelSize(Location.GetTownRights), '(int32)0'))))]"
 		size = { 100% 100% }
 		allow_outside = yes
 		flowcontainer = {
 			parentanchor = center
 			widgetanchor = center
 			direction = horizontal
+			ignoreinvisible = yes
 			allow_outside = yes
 			spacing = 2
-			datamodel = "[DataModelFirst(Location.GetTownRights, '(int32)8')]"
-			item = {
+			# the plans (only a location that holds one looks at them)
+			flowcontainer = {
+				visible = "[Location.MakeScope.Var('pp_tplan_any').IsSet]"
+				ignoreinvisible = yes
+				direction = horizontal
+				allow_outside = yes
+				spacing = 2
 				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_camels').IsSet]"
 					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
-					tooltip = "PP_TPLAN_MAP_RIGHT"
+					tooltip = "PP_TPLAN_MAP_CAMELS"
 					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
-					icon = { size = { 84% 84% } parentanchor = center texture = "[TownRights.GetIcon]" }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_camels.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_elephants').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_ELEPHANTS"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_elephants.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_horses').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_HORSES"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_horses.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_livestock').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_LIVESTOCK"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_livestock.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_wool').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_WOOL"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_wool.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_beeswax').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_BEESWAX"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_beeswax.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_dyes').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_DYES"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_dyes.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_incense').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_INCENSE"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_incense.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_tobacco').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_TOBACCO"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_tobacco.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_cotton').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_COTTON"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_cotton.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_fiber_crops').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_FIBER_CROPS"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_fiber_crops.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_silk').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_SILK"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_silk.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_chili').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_CHILI"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_chili.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_cloves').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_CLOVES"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_cloves.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_pepper').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_PEPPER"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_pepper.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_saffron').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_SAFFRON"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_saffron.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_legumes').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_LEGUMES"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_legumes.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_maize').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_MAIZE"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_maize.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_millet').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_MILLET"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_millet.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_potato').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_POTATO"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_potato.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_rice').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_RICE"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_rice.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_wheat').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_WHEAT"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_wheat.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_cocoa').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_COCOA"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_cocoa.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_coffee').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_COFFEE"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_coffee.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_tea').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_TEA"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_tea.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_sugar').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_SUGAR"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_sugar.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_fruit').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_FRUIT"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_fruit.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_olives').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_OLIVES"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_olives.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_wine').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_WINE"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_wine.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_lumber').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_LUMBER"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_lumber.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_fish').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_FISH"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_fish.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_pearls').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_PEARLS"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_pearls.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_clay').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_CLAY"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_clay.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_sand').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_SAND"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_sand.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_medicaments').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_MEDICAMENTS"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_medicaments.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_salt').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_SALT"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_salt.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_amber').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_AMBER"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_amber.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_ivory').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_IVORY"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_ivory.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_wild_game').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_WILD_GAME"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_wild_game.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_beer').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_BEER"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_beer.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_liquor').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_LIQUOR"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_liquor.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_books').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_BOOKS"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_books.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_paper').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_PAPER"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_paper.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_slaves_goods').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_SLAVES_GOODS"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_slaves_goods.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_glass').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_GLASS"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_glass.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_masonry').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_MASONRY"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_masonry.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_pottery').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_POTTERY"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_pottery.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_tar').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_TAR"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_tar.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_furniture').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_FURNITURE"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_furniture.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_jewelry').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_JEWELRY"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_jewelry.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_lacquerware').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_LACQUERWARE"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_lacquerware.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_porcelain').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_PORCELAIN"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_porcelain.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_steel').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_STEEL"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_steel.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_tools').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_TOOLS"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_tools.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_cannons').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_CANNONS"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_cannons.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_firearms').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_FIREARMS"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_firearms.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_weaponry').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_WEAPONRY"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_weaponry.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_naval_supplies').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_NAVAL_SUPPLIES"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_naval_supplies.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_victuals').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_VICTUALS"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_victuals.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_cloth').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_CLOTH"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_cloth.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_fine_cloth').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_FINE_CLOTH"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_fine_cloth.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_leather').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_LEATHER"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_leather.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_marble').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_MARBLE"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_marble.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_stone').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_STONE"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_stone.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_coal').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_COAL"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_coal.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_alum').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_ALUM"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_alum.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_mercury').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_MERCURY"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_mercury.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_saltpeter').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_SALTPETER"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_saltpeter.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_copper').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_COPPER"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_copper.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_iron').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_IRON"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_iron.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_lead').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_LEAD"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_lead.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_tin').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_TIN"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_tin.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_gems').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_GEMS"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_gems.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_goods_gold').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_GOODS_GOLD"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_goods_gold.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_silver').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_SILVER"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/trade_goods/icon_goods_silver.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_food').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_FOOD"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/location_icons/food.dds" }
+				}
+				widget = {
+					visible = "[Location.MakeScope.Var('pp_tplan_p_trade').IsSet]"
+					size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+					tooltip = "PP_TPLAN_MAP_TRADE"
+					icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.12 0.12 0.12 0.8 } }
+					icon = { size = { 84% 84% } parentanchor = center texture = "gfx/interface/icons/building_categories/trade_category.dds" }
+				}
+			}
+			# the town rights
+			flowcontainer = {
+				visible = "[GreaterThan_int32(GetDataModelSize(Location.GetTownRights), '(int32)0')]"
+				direction = horizontal
+				allow_outside = yes
+				spacing = 2
+				datamodel = "[DataModelFirst(Location.GetTownRights, '(int32)8')]"
+				item = {
+					widget = {
+						size = "[Min_CVector2f(Multiply_CVector2f(GetInverseZoom2, '(CVector2f)9333, 9333'), '(CVector2f)60, 60')]"
+						tooltip = "PP_TPLAN_MAP_RIGHT"
+						icon = { size = { 100% 100% } texture = "gfx/interface/component_tiles/square_tile.dds" color = { 0.16 0.22 0.36 0.85 } }
+						icon = { size = { 84% 84% } parentanchor = center texture = "[TownRights.GetIcon]" }
+					}
 				}
 			}
 		}

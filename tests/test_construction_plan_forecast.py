@@ -341,7 +341,9 @@ def test_the_store_runs_wherever_an_input_changes() -> None:
     toggle = _effect(guis, "pp_cplan_toggle_on")
     assert toggle.index("pp_cplan_history_clear = yes") < toggle.index("pp_lprof_any_refresh = yes") < toggle.index(call)
     flip = _effect(_read(COMMON / "scripted_effects/pp_location_plan.txt"), "pp_tplan_flip")
-    assert flip.rindex("owner ?= { pp_cplan_forecast_store = yes }") > flip.index("grant_town_rights")
+    # after both branches (a plan set: its marker, 2026-11-21; a plan taken off)
+    assert flip.rindex("owner ?= { pp_cplan_forecast_store = yes }") > flip.index(
+        "set_variable = { name = pp_tplan_p_$g$ value = yes }") > flip.index("remove_variable = pp_tplan_p_$g$")
     country = _effect(_read(COMMON / "scripted_guis/pp_construction_plan_country.txt"), "pp_cplan_country_toggle")
     assert country.index("switch = {") < country.index(call)
 

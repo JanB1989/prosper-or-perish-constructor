@@ -1,6 +1,7 @@
 ﻿# Prosper or Perish - the plan engine of the Construction Plan's Locations group (rule group "profiles", construction
 # code 105, its own purse). Location Profiles and the Location Plan's building marks are gone (2026-11-19, Jan): the one
-# per-location decision is the plan, a town right pp_plan_<plan> (town_plans.py, scripted_effects/pp_location_plan.txt).
+# per-location decision is the plan, a marker on the location (the variable pp_tplan_p_<plan>; town_plans.py,
+# scripted_effects/pp_location_plan.txt; a town right pp_plan_<plan> until 2026-11-21).
 # The script names keep their old prefixes (pp_lprof_*, pp_lplan_*).
 # A location that holds a plan gets its turn in the group's looks; in it every held plan runs its target (the plan's
 # producers, generated pp_lprof_t_<target> in pp_location_profiles_generated.txt, location_profiles.py), FORCED (Jan
@@ -95,13 +96,15 @@ pp_lprof_run = {
 # Country scope: the cache pp_lprof_any (yes: a location of the country holds a plan; pp_lprof_group_n reads it, the
 # window's rows read that about a hundred times a frame) from the real test, once: at every pass's start before the
 # purses move (pp_cplan_pass_begin), when the plan is switched on (pp_cplan_toggle_on) and when a location's last plan
-# is taken off (pp_tplan_flip; setting a plan sets it at once). A plan lost by conquest is caught by the next pass.
-# The test as pp_lprof_has_locations, with this country instead of root (the flip's root is a location).
+# is taken off (pp_tplan_flip; setting a plan sets it at once) or lost with the location (pp_tplan_owner_changed).
+# The test as pp_lprof_has_locations, with this country instead of root (the flip's root is a location): one of
+# the country's list of planned locations (pp_tplan_locs) is still its own and holds a plan.
 pp_lprof_any_refresh = {
 	save_temporary_scope_as = pp_lprof_c
 	if = {
 		limit = {
-			any_locations_with_town_rights_in_country = {
+			any_in_list = {
+				variable = pp_tplan_locs
 				owner ?= scope:pp_lprof_c
 				pp_tplan_held = yes
 			}
@@ -347,7 +350,7 @@ pp_lprof_location_turn = {
 	pp_pclose_turn_start = yes
 	save_temporary_scope_value_as = { name = pp_cplan_forced value = 0 }
 	save_temporary_scope_value_as = { name = pp_lplan_mode value = 0 }
-	# its plans (town rights pp_plan_<plan>, town_plans.py; 2026-11-19)
+	# its plans (pp_tplan_p_<plan>, town_plans.py)
 	if = {
 		limit = { pp_tplan_held = yes }
 		pp_lplan_location_turn = yes
@@ -457,7 +460,7 @@ pp_tplan_set_pb = {
 # Location scope (the plans take turns, pp_lplan_location_marks_turns): the plan $g$ runs in the first go
 # ($first$ = yes) when it comes after the plan that started the location's last construction (scope:pp_lplan_from,
 # pp_lplan_last as it stood when the turn began; 0 when none did: all of them), in the second go when it does not
-# (the generated effect skips the second go when none did); the plan is checked held too.
+# (the generated effect skips the second go when none did); the plan is checked held too (its marker).
 # The split is taken at the turn's start (2026-11-20): read live, a plan that started a construction in the first go
 # moved pp_lplan_last, and the plans up to it ran a second time, the starter itself included: no construction (the
 # turn's first construction makes every later plan wait), but their states became "waiting" (9) and they were counted
@@ -475,7 +478,7 @@ pp_lplan_mark_turn = {
 					scope:pp_lplan_from > $lo$
 				}
 			}
-			has_town_rights = town_rights_type:pp_plan_$g$
+			has_variable = pp_tplan_p_$g$
 		}
 		pp_lplan_mark = { v = $v$ g = $g$ do = $do$ n = $n$ lo = $lo$ hi = $hi$ }
 	}
@@ -539,15 +542,41 @@ pp_lplan_measure_after = {
 	pp_lprof_pick_clear = yes
 }
 
-# Country scope: the list pp_lprof_turns = the country's locations that hold a plan right (town_plans.py, 2026-11-19:
-# found among the country's locations with town rights, no list of their own), each once.
+# Country scope: the list pp_lprof_turns = the country's locations that hold a plan, each once: the country's list
+# of planned locations (pp_tplan_locs, kept by pp_tplan_flip: a location is on it exactly while it holds a plan).
+# First the list is swept (never changed while it is walked): a location the country no longer owns, or one
+# without a plan left, comes off it. The plans of a lost location went with the owner change
+# (pp_tplan_owner_changed); where they are still there and the new owner is no player (or there is none), they
+# go now (pp_tplan_strip). A location another player owns is left alone: its plans are that player's.
 pp_lprof_gather = {
 	clear_variable_list = pp_lprof_turns
-	every_locations_with_town_rights_in_country = {
+	clear_variable_list = pp_tplan_gone
+	every_in_list = {
+		variable = pp_tplan_locs
 		limit = {
-			owner ?= scope:pp_cplan_country
-			pp_tplan_held = yes
+			OR = {
+				NOT = { owner ?= scope:pp_cplan_country }
+				NOT = { pp_tplan_held = yes }
+			}
 		}
+		save_temporary_scope_as = pp_tplan_gone_l
+		scope:pp_cplan_country = { add_to_variable_list = { name = pp_tplan_gone target = scope:pp_tplan_gone_l } }
+	}
+	every_in_list = {
+		variable = pp_tplan_gone
+		save_temporary_scope_as = pp_tplan_gone_l
+		scope:pp_cplan_country = { remove_list_variable = { name = pp_tplan_locs target = scope:pp_tplan_gone_l } }
+		if = {
+			limit = {
+				pp_tplan_held = yes
+				NOT = { owner ?= { is_ai = no } }
+			}
+			pp_tplan_strip = yes
+		}
+	}
+	clear_variable_list = pp_tplan_gone
+	every_in_list = {
+		variable = pp_tplan_locs
 		pp_lprof_take_turn = yes
 	}
 }
@@ -563,7 +592,7 @@ pp_lprof_take_turn = {
 	scope:pp_cplan_country = { add_to_variable_list = { name = pp_lprof_turns target = scope:pp_lprof_this } }
 }
 
-# Location scope: the plan $g$ (town_plans.py, 2026-11-19: the town right pp_plan_$g$), when the location holds it:
+# Location scope: the plan $g$ (town_plans.py: the location variable pp_tplan_p_$g$), when the location holds it:
 # "build this here", forced. $do$ is the plan's generated target effect (pp_lprof_t_<target>, or pp_tplan_do_$g$ where
 # it raises the rank first), with no payback limit (scope:pp_lprof_pb, pp_lplan_location_turn). $n$ is the plan's
 # number in the plans' order (+ 100), $lo$ / $hi$ the bounds around it. While the plans are measured
@@ -573,7 +602,7 @@ pp_lprof_take_turn = {
 # payback found into pp_lplan_est_$v$.
 pp_lplan_mark = {
 	if = {
-		limit = { has_town_rights = town_rights_type:pp_plan_$g$ }
+		limit = { has_variable = pp_tplan_p_$g$ }
 		# the plan's payback limit (plan settings; none = forced)
 		pp_tplan_set_pb = { g = $g$ }
 		if = {
@@ -631,7 +660,7 @@ pp_lplan_mark = {
 				# its level waits for workers and nothing else: another business here closes for them
 				# (pp_plan_closer.txt; state 14 while that is under way, else 4). Never in a costing turn
 				# (pp_lprof_location_turn): pp_pclose_may already refuses while the group saves; here a plan the
-				# closing under way is for (pp_pclose_for) still reads 14, without touching the closer
+				# closing under way is for (pp_pclose_for_<plan>) still reads 14, without touching the closer
 				if = {
 					limit = {
 						scope:pp_lprof_costing < 0.5
@@ -650,7 +679,7 @@ pp_lplan_mark = {
 						var:pp_lprof_fail > 103.75
 						var:pp_lprof_fail < 104.625
 						has_variable = pp_pclose_wait
-						is_target_in_variable_list = { name = pp_pclose_for target = town_rights_type:pp_plan_$g$ }
+						has_variable = pp_pclose_for_$g$
 					}
 					set_variable = { name = pp_lprof_fail value = 104.25 }
 				}

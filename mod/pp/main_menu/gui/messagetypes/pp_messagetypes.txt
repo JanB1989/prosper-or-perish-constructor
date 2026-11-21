@@ -21,10 +21,10 @@ pausepopup=no
 message_category = diplomacy
 }
 
-# Town rights granted / revoked: the game's own types with the pop-up off (town-right plans, 2026-11-20). A plan is a
-# town right set and taken off with one click, and the Construction Plan grants charters by itself; the game's default
-# opened a pop-up for every one of them. They go to the message log instead; the player can change it in the game's
-# message settings.
+# Town rights granted / revoked: the game's own types with the pop-up off (2026-11-20). The Construction Plan grants a
+# plan's charter and swaps it for the rights by itself; the game's default opened a pop-up for every one of them. They
+# go to the message log instead; the player can change it in the game's message settings. (A plan itself is no town
+# right any more, 2026-11-21, and sends no message.)
 TOWN_RIGHTS_GRANTED={
 log=yes
 onmap=no

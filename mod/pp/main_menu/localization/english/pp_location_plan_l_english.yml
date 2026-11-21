@@ -1,14 +1,15 @@
 ﻿l_english:
   # Location Plan (gui/pp_location_plan.gui, the location window's Plans row, map mode pp_location_plan): what the
-  # player decides a location is for, as plans (town rights pp_plan_<plan>); the Construction Plan builds toward them
+  # player decides a location is for, as plans (markers on the location, pp_tplan_p_<plan>); the Construction Plan
+  # builds toward them
   PP_LPLAN_TITLE: "Location Plan"
   PP_LPLAN_LOCATION_BUTTON: "Location Plan: decide what this location is for, and the Construction Plan builds toward it"
   PP_LPLAN_NONE_PICKED: "No location picked. Open a location of yours and click the plan button next to its name."
   PP_LPLAN_SHOW_MAP: "Show on map"
-  PP_LPLAN_SHOW_MAP_TT: "Switch to the Location Plan map mode: the [town_rights|e] of your [locations|e], plans among them, as icons"
+  PP_LPLAN_SHOW_MAP_TT: "Switch to the Location Plan map mode: the plans of your [locations|e] as icons, and the [town_rights|e] they hold"
   PP_LPLAN_CLEAR: "Clear"
   PP_LPLAN_CLEAR_TT: "Take every plan off this location"
-  PP_LPLAN_NOTE: "Click what this location is for: goods, Food or Trade, as many as you like. Each plan is kept among the location's [town_rights|e], and the Construction Plan builds toward it."
+  PP_LPLAN_NOTE: "Click what this location is for: goods, Food or Trade, as many as you like. The Construction Plan builds toward every plan."
   PP_LPLAN_OFF: "The Construction Plan is switched off. Your plans are kept, and nothing is built until it runs."
   PP_LPLAN_SWITCH_ON: "Switch on"
   PP_LPLAN_SWITCH_ON_TT: "Switch the Construction Plan on: it builds every month from the gold above its reserve, for your plans and by its other rules. Its window holds the settings."
@@ -27,8 +28,8 @@
   PP_TPLAN_WHAT_GOOD: "The Construction Plan builds the buildings that make this good here: more levels where one stands, a first one where none does, a newer kind once you have researched it, and a higher rank for the location where they need one."
   PP_TPLAN_WHAT_FOOD: "The Construction Plan builds the buildings that feed this location's [province|e] here."
   PP_TPLAN_WHAT_TRADE: "The Construction Plan builds the trade buildings here."
-  PP_TPLAN_PICK_ON: "#G Planned:#! one of this location's [town_rights|e]. Click to take the plan off."
-  PP_TPLAN_PICK_OFF: "Click to plan it: it becomes one of this location's [town_rights|e], with no conditions and no bonus, and stays until you take it off."
+  PP_TPLAN_PICK_ON: "#G Planned.#! Click to take the plan off."
+  PP_TPLAN_PICK_OFF: "Click to plan it. The plan has no conditions, gives no bonus by itself and stays until you take it off."
   PP_TPLAN_EMPTY: ""
   PP_TPLAN_NONE: "No building makes this good, so nothing can be planned for it."
   # the location window's Plans row (Infrastructure tab)
@@ -36,10 +37,10 @@
   PP_TPLAN_ROW_NONE: "No plan yet"
   PP_TPLAN_ROW_COUNT: "[Location.MakeScope.ScriptValue('pp_tplan_n')|0] plans, all of them in the Location Plan"
   PP_TPLAN_ROW_MORE_TT: "#T Location Plan#!\nOpen this location in the Location Plan window and pick what it is for: the Construction Plan builds toward its plans."
-  # the map marker's icon: one of the location's town rights (a plan, a charter or a right)
-  PP_TPLAN_MAP_RIGHT: "#T [TownRights.GetName]#!\nOne of this location's [town_rights|e]. Plans are set in the Location Plan window; the Construction Plan builds toward them."
+  # the map marker's icons after the plans: the location's town rights (a plan's own tooltip is generated)
+  PP_TPLAN_MAP_RIGHT: "#T [TownRights.GetName]#!\nOne of this location's [town_rights|e]."
   # map mode
   game_concept_pp_location_plan: "Location Plan"
-  game_concept_pp_location_plan_desc: "What each of your [locations|e] is for: its plans, set in the Location Plan window (the plan button next to a location's name, or the Plans row of the location window). A plan is one of the location's [town_rights|e], with no conditions and no bonus; the Construction Plan builds toward it. The map mode shows the town rights of your locations as icons."
+  game_concept_pp_location_plan_desc: "What each of your [locations|e] is for: its plans, set in the Location Plan window (the plan button next to a location's name, or the Plans row of the location window). A plan has no conditions and gives no bonus by itself: the Construction Plan builds toward it and, where its settings allow it, grants the plan's charter among the location's [town_rights|e]. The map mode shows the plans of your locations as icons, and the town rights they hold."
   mapmode_pp_location_plan_name: "Location Plan"
-  MAPMODE_PP_LOCATION_PLAN: "#T $mapmode_pp_location_plan_name$#!\nThe [town_rights|e] of each of your [locations|e] as icons, its plans among them: what the Construction Plan builds toward there. Hover an icon to see which it is."
+  MAPMODE_PP_LOCATION_PLAN: "#T $mapmode_pp_location_plan_name$#!\nThe plans of each of your [locations|e] as icons: what the Construction Plan builds toward there. After them, the [town_rights|e] the location holds. Hover an icon to see which it is."

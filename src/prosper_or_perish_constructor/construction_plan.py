@@ -26,7 +26,7 @@ purse: ``render_purse_values``, "Budgets that save" below in this module). The f
   the buildings there (peasants are promoted into the other classes), or idle pops of its own class.
 
 The per-location layer is the "profiles" group (the player's "Locations"; the plan engine ``location_profiles.py``):
-the plans the player set on locations (town rights ``pp_plan_<plan>``, ``town_plans.py``), which add to these groups
+the plans the player set on locations (location variables ``pp_tplan_p_<plan>``, ``town_plans.py``), which add to these groups
 and switch nothing off (Location Profiles, which could, are gone since 2026-11-19).
 
 Payback is the one money number (Jan: cost and profit alone say nothing across buildings): a level's build cost over

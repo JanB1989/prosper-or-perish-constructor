@@ -2,7 +2,8 @@
 
 Status 2026-11-19 (Jan, branch `town-plans`, not tested in game): **two tabs**, Global Settings and Towns and
 Buildings; six rule groups. The Location Profiles tab, the profiles and the Location Plan marks are gone: the one
-per-location decision is a **town-right plan** (`pp_plan_<plan>`), and the rule group **Locations** (code 105) builds
+per-location decision is a **plan** (a location marker `pp_tplan_p_<plan>` since 2026-11-21, before a town right
+`pp_plan_<plan>`), and the rule group **Locations** (code 105) builds
 for the plans the locations hold, forced, raises a location's rank where a plan's producers need it, and Towns and
 Buildings grants a planned town its specialization charter and rights (`docs/location_plan.md`). Where the sections
 below speak of profiles, profile rules or marks, read plans; their engine is `docs/location_profiles.md`.
@@ -194,8 +195,8 @@ group's last look. Said in the plan's tooltip (`PP_CPLAN_MASTER_TT`) and the bud
 Not tested in game. Open: the business group's first cover of a country takes the cycle (21 months at 330
 locations); a ticked-everything Towns and Buildings look is the dearest single walk left.
 
-**The Locations look with town-right plans (2026-11-20; same outcome, less script).** Measured before, in game with the
-script profiler (615 plans on 418 locations, one look of the Locations group, which looks 4 times a year): the pass
+**The Locations look with plans (2026-11-20, plans still town rights; same outcome, less script).** Measured before,
+in game with the script profiler (615 plans on 418 locations, one look of the Locations group, which looks 4 times a year): the pass
 0.238 s in the look month, the look (`pp_lprof_run` -> `pp_lprof_look`) 0.197 s of it. `pp_lplan_mark_turn` 64,372
 calls (418 locations x 77 plans x 2 goes), about 0.018 s for its gates; 675 of them ran a plan (`pp_lplan_mark`, 0.156
 s inclusive). Inside: the trigger `pp_cplan_no_room` (one OR over every building type) 450 calls, 0.065 s inclusive,
@@ -390,7 +391,7 @@ beside the bars), and the pass's cost now that the business group looks whenever
 - **Maintenance 2026-11-10**:
   - *Six rule groups.* `GROUPS` = profiles, food, logistics, improve, business, country (code 107). The player's names
     of two differ from their keys: profiles = **Locations** (what the player set for single locations: until
-    2026-11-19 their profiles' rules, then their marks; since then the town-right plans they hold,
+    2026-11-19 their profiles' rules, then their marks; since then the plans they hold (town rights until 2026-11-21),
     `docs/location_plan.md`), country = **Towns and Buildings** (its row has no line: its settings are on its
     tab). Both count in the sum of the weights only while they have something to do (`pp_cplan_profiles_cw`: a
     location has a profile or a mark; `pp_cplan_country_cw`: `pp_cplan_country_active`, a public building ticked or an

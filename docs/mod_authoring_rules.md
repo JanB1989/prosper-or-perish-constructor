@@ -296,3 +296,13 @@ the practice tables), Market Sales, Old Ways and the logistics networks from the
 - A method tied to a location (`location_allow`) also says where it works.
 
 `tests/test_method_descriptions.py` fails when a method has none or the text runs past 60 words.
+
+## Estates may build every production building
+
+An estate pays for buildings its own people work in (nobles: noble, laborer, soldier, peasant and slave buildings;
+burghers: burgher buildings; clergy: clergy buildings), unless the type carries `forbidden_for_estates = yes`. Since
+2026-11-22 (Jan) no building with a goods output carries that ban: fifteen had it (the sheep and orchard lines, Stud
+Farm, Camel Stud, the English royal forest, the fishing and forest villages with the Net Curing Yard, the Rural
+Clothmaker and the Rural Glassmaker), three from vanilla, twelve inherited from the old 0.8 mod file without a
+written reason. Military, naval and administration buildings keep theirs. A new production blueprint leaves the key
+out or sets `no`; `tests/test_estates_may_build_producers.py` fails on a ban.

@@ -56,7 +56,7 @@ building:
         town = yes
         city = yes
         megalopolis = yes
-        forbidden_for_estates = yes
+        forbidden_for_estates = no # every production building is open to estates (Jan 2026-11-22)
         # the AI answers a low province store (pp_food_urgency_weight, flat)
         ai_construct_weight = {
             value = 0

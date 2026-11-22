@@ -60,7 +60,7 @@ building:
         # the AI answers a low province store (pp_food_urgency_weight, flat)
         add = pp_food_urgency_weight
     }
-    forbidden_for_estates = yes
+    forbidden_for_estates = no # every production building is open to estates (Jan 2026-11-22)
     ai_forbid_shutdown = no
     can_close = yes
     build_time = workshop_build_time

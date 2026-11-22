@@ -32,7 +32,7 @@ building:
     }
     startup_ramp_target = rural_startup_ramp_target
     pop_type = peasants
-    forbidden_for_estates = yes
+    forbidden_for_estates = no # every production building is open to estates (Jan 2026-11-22)
     category = government_category
     employment_size = 1.25
     # a staple food maker (2026-10-04): staffed with the farms and fisheries (pp_employment_priority.txt)

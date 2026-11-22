@@ -27,7 +27,7 @@ building:
     pop_type = laborers
     max_levels = guild_max_level
     startup_ramp_target = rural_startup_ramp_target
-    forbidden_for_estates = yes
+    forbidden_for_estates = no # every production building is open to estates (Jan 2026-11-22)
     category = basic_industry_category
     employment_size = 1.0
     rural_settlement = yes

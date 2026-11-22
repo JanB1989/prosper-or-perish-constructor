@@ -635,10 +635,10 @@ loan capacity changes, and market prices via `stockpile` per good.
 Measured from the save's queues and running constructions. The save has no term breakdowns.
 - **In practice only countries build farms.** At the time of this run every crop farm was `forbidden_for_estates`.
   Since 2026-10-03 the crop farms are open to estates (`config/crop_farms.toml`), yet in run ebdb631e (2026-11-02,
-  99 five-year saves) estates still paid for no crop farm, herd, Tavern, Cookshop or logistics building. Still banned
-  for estates among production buildings (2026-11-22, 15 of 241): the sheep and orchard lines, Stud Farm, Camel Stud,
-  the English royal forest, the fishing village and its Net Curing Yard, both forest villages, the Rural Clothmaker
-  and the Rural Glassmaker.
+  99 five-year saves) estates still paid for no crop farm, herd, Tavern, Cookshop or logistics building. Until
+  2026-11-22 fifteen of the 241 production buildings were banned for estates (the sheep and orchard lines, Stud Farm,
+  Camel Stud, the English royal forest, the fishing village and its Net Curing Yard, both forest villages, the Rural
+  Clothmaker and the Rural Glassmaker); since then every production building is open to them.
 - Running country constructions (started within the last year): horse breeders 43, fruit orchard 31, millet 28,
   wheat 23, legume 20, cattle 16, rice 8, fibre crops 6, hurdled sheepcotes 6, others 1–2.
   - Horse breeders stand out: 43 constructions against 508 existing buildings and 58 queue entries.

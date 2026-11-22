@@ -23,7 +23,7 @@ ai_construct_weight = {
     add = pp_food_urgency_weight
     add = pp_market_short_fish
 }
-forbidden_for_estates = yes
+forbidden_for_estates = no # every production building is open to estates (Jan 2026-11-22)
 ai_forbid_shutdown = no
 can_close = yes
 build_time = workshop_build_time

@@ -46,6 +46,14 @@ TRIBESMEN_BRAKE = ("local_tribesmen_pop_growth", "-1.0")
 # only armies hostile to the location (at war with it, rebels, pirates). Rivers carry none.
 HOSTILE_MOVEMENT_KEY = "hostile_movement_cost"
 HOSTILE_MOVEMENT_ATTRIBUTES = ("topography", "vegetation", "soil_type")
+# Hand-set attribute effects (2026-11-22, Jan): [worldbuilder.attribute_effects.<attribute>] <class> = { <modifier> = <value> },
+# small flavour lines added on top of what the class carries. Capacity, food, the hostile movement cost (own section) and the
+# output of the goods the World Builder fit owns stay out; rivers ([worldbuilder.river_levels]) and shores
+# ([worldbuilder.flavour]) have their own sections.
+ATTRIBUTE_EFFECT_ATTRIBUTES = ("climate", "vegetation", "topography", "soil_type", "fertility")
+STATIC_ATTRIBUTES = {"fertility": "pp_wb_fertility_", "soil_type": "pp_wb_soil_"}   # one static modifier per class
+_OUTPUT_KEY = re.compile(r"local_(\w+)_output_modifier")
+MODIFIER_TYPES_DIR = Path("game/main_menu/common/modifier_type_definitions")
 ASSIGNMENT_FILES = {
     "climate": ("climate_assignments.csv", "vanilla_climate", "game_climate"),
     "vegetation": ("vegetation_assignments.csv", "vanilla_vegetation", "applied_game_vegetation"),
@@ -80,6 +88,12 @@ _NUM_RE = re.compile(r"^\s*(?P<key>[a-z_]+)\s*=\s*(?P<value>-?\d+(?:\.\d+)?)\s*(
 
 def _fmt(value: float) -> str:
     text = f"{value:.2f}".rstrip("0").rstrip(".")
+    return text if text not in ("", "-0") else "0"
+
+
+def _fmt_fine(value: float) -> str:
+    """A hand-set value as written in the config (up to four decimals): two would round a tuned 0.075 to 0.07."""
+    text = f"{value:.4f}".rstrip("0").rstrip(".")
     return text if text not in ("", "-0") else "0"
 
 
@@ -257,16 +271,79 @@ def hostile_movement(raw: Mapping[str, object] | None, contract: Contract) -> di
     for attribute, classes in (raw or {}).items():
         if attribute not in HOSTILE_MOVEMENT_ATTRIBUTES or not isinstance(classes, Mapping):
             raise ValueError(f"[worldbuilder.hostile_movement.{attribute}]: only {', '.join(HOSTILE_MOVEMENT_ATTRIBUTES)} take a hostile movement cost")
-        known = {str(v) for v in contract.attribute_rows.filter(pl.col("attribute") == attribute)["value"].to_list()}
-        if attribute in contract.location_attributes.columns:
-            known |= {str(v) for v in contract.location_attributes[attribute].unique().to_list() if v}
-        unknown = sorted(str(c) for c in classes if str(c) not in known)
+        unknown = sorted(str(c) for c in classes if str(c) not in _known_classes(contract, attribute))
         if unknown:
             raise ValueError(f"[worldbuilder.hostile_movement.{attribute}]: unknown classes {unknown}")
         for value, cost in classes.items():
             if float(cost):
                 out[(attribute, str(value))] = float(cost)
     return out
+
+
+def _known_classes(contract: Contract, attribute: str) -> set[str]:
+    """The classes of an attribute: its fit rows (reference class excluded) and every class on the map."""
+    known = {str(v) for v in contract.attribute_rows.filter(pl.col("attribute") == attribute)["value"].to_list()}
+    if attribute in contract.location_attributes.columns:
+        known |= {str(v) for v in contract.location_attributes[attribute].unique().to_list() if v}
+    return known
+
+
+def game_modifier_types(vanilla_root: Path | None) -> set[str] | None:
+    """The modifier types vanilla defines (``main_menu/common/modifier_type_definitions``); None without the folder (unit
+    tests). Only vanilla's: a hand-set attribute effect names a game modifier, and the mod's own types are not a stage input."""
+    folder = Path(vanilla_root) / MODIFIER_TYPES_DIR if vanilla_root is not None else None
+    if folder is None or not folder.is_dir():
+        return None
+    return {m[1] for path in sorted(folder.glob("*.txt")) for m in re.finditer(r"(?m)^(?:[A-Z_]+:)?(\w+)\s*=\s*\{", path.read_text(encoding="utf-8-sig"))}
+
+
+def attribute_effects(raw: Mapping[str, object] | None, contract: Contract,
+                      modifier_types: set[str] | None = None) -> dict[tuple[str, str], dict[str, float]]:
+    """(attribute, class) -> {modifier: value} from ``[worldbuilder.attribute_effects]``. Unknown attributes, classes or (with
+    ``modifier_types``) modifier types raise, and so do lines another part owns: capacity and food (the fit), the fit's goods
+    output, the hostile movement cost and the tribesmen brake (their own sections), so no value is written twice."""
+    fitted = set(contract.goods)
+    owned = {*CAPACITY_KEYS, *FOOD_KEYS, HOSTILE_MOVEMENT_KEY, TRIBESMEN_BRAKE[0]}
+    out: dict[tuple[str, str], dict[str, float]] = {}
+    for attribute, classes in (raw or {}).items():
+        where = f"[worldbuilder.attribute_effects.{attribute}]"
+        if attribute not in ATTRIBUTE_EFFECT_ATTRIBUTES or not isinstance(classes, Mapping):
+            raise ValueError(f"{where}: only {', '.join(ATTRIBUTE_EFFECT_ATTRIBUTES)} take hand-set effects")
+        unknown = sorted(str(c) for c in classes if str(c) not in _known_classes(contract, attribute))
+        if unknown:
+            raise ValueError(f"{where}: unknown classes {unknown}")
+        for value, effects in classes.items():
+            if not isinstance(effects, Mapping) or not effects:
+                raise ValueError(f"{where} {value}: expected a table {{ <modifier> = <value> }}")
+            lines: dict[str, float] = {}
+            for key, number in effects.items():
+                key = str(key)
+                good = _OUTPUT_KEY.fullmatch(key)
+                if key in owned:
+                    raise ValueError(f"{where} {value}: {key} is not hand-set here (capacity and food are the World Builder fit's, "
+                                     "the hostile movement cost has its own section)")
+                if good and good[1] in fitted:
+                    raise ValueError(f"{where} {value}: the World Builder fit owns the {good[1]} output rows")
+                if modifier_types is not None and key not in modifier_types:
+                    raise ValueError(f"{where} {value}: {key} is no modifier type of the game")
+                if isinstance(number, bool) or not isinstance(number, int | float):
+                    raise ValueError(f"{where} {value}: {key} must be a number")
+                if float(number):
+                    lines[key] = float(number)
+            if lines:
+                out[(attribute, str(value))] = lines
+    return out
+
+
+def _add_line(lines: dict[str, str], key: str, value: float) -> None:
+    """Add a hand-set value to a block's lines, summed with a number already there (the inject adds up either way)."""
+    if key not in lines:
+        lines[key] = _fmt_fine(value)
+        return
+    try:
+        lines[key] = _fmt_fine(float(lines[key]) + value)
+    except ValueError:
+        raise ValueError(f"{key} = {lines[key]}: a hand-set attribute effect cannot be added to a named value") from None
 
 
 def game_key_of(contract: Contract, attribute: str, value: str) -> str:
@@ -285,11 +362,15 @@ def render_block(header: str, lines: Mapping[str, str], *, nested: str | None = 
 
 
 def write_class_injects(contract: Contract, export_dir: Path, mod_root: Path, repo: Path, vanilla_root: Path | None = None,
-                        hostile_config: Mapping[str, object] | None = None) -> dict[str, int]:
+                        hostile_config: Mapping[str, object] | None = None,
+                        effects_config: Mapping[str, object] | None = None) -> dict[str, int]:
     """One inject file per class directory, cancelling the effective vanilla capacity and food values and adding the rows
-    (and the hand-set hostile movement cost, ``hostile_config`` = ``[worldbuilder.hostile_movement]``)."""
+    (and the hand-set hostile movement cost, ``hostile_config`` = ``[worldbuilder.hostile_movement]``, and attribute effects,
+    ``effects_config`` = ``[worldbuilder.attribute_effects]``: an output line replaces the vanilla class's line for that good
+    like the fitted goods rows, any other line adds to what the class carries)."""
     rows = class_rows(contract)
     hostile = hostile_movement(hostile_config, contract)
+    effects = attribute_effects(effects_config, contract, game_modifier_types(vanilla_root))
     written: dict[str, int] = {}
     script_values = numeric_script_values(Path(vanilla_root) / "game" if vanilla_root is not None else None, mod_root)
     for attribute, directory in CLASS_DIRS.items():
@@ -317,6 +398,10 @@ def write_class_injects(contract: Contract, export_dir: Path, mod_root: Path, re
             for name, v in mods.items():
                 if name != "local_population_capacity":
                     lines[name] = _fmt(v - vanilla.get(name, 0.0))
+            extra = effects.get((attr, value), {})
+            for name, v in extra.items():   # hand-set output lines the same way (never a fitted good: attribute_effects)
+                if _OUTPUT_KEY.fullmatch(name):
+                    lines[name] = _fmt_fine(v - vanilla.get(name, 0.0))
             for name, v in vanilla.items():
                 if (name.endswith("_output_modifier") or name in FOOD_KEYS) and name not in lines and abs(v) >= 0.005:
                     lines[name] = _fmt(-v)
@@ -326,6 +411,9 @@ def write_class_injects(contract: Contract, export_dir: Path, mod_root: Path, re
                 lines[TRIBESMEN_BRAKE[0]] = TRIBESMEN_BRAKE[1]
             if (attr, value) in hostile:
                 lines[HOSTILE_MOVEMENT_KEY] = _fmt(hostile[(attr, value)])
+            for name, v in extra.items():   # on top of the class's own line (vanilla's road time stays)
+                if not _OUTPUT_KEY.fullmatch(name):
+                    _add_line(lines, name, v)
             if lines:
                 blocks.append(render_block(f"TRY_INJECT:{key}", lines, nested="location_modifier"))
         # classes the fit never saw (no ownable location) still need their vanilla capacity and food cancelled
@@ -353,6 +441,9 @@ def write_class_injects(contract: Contract, export_dir: Path, mod_root: Path, re
         unwritten = sorted(v for (a, v) in hostile if a == attribute and (a, v) not in rows)
         if unwritten:
             raise ValueError(f"[worldbuilder.hostile_movement.{attribute}]: {unwritten} have no attribute row to carry the cost")
+        unwritten = sorted(v for (a, v) in effects if a == attribute and (a, v) not in rows)
+        if unwritten:
+            raise ValueError(f"[worldbuilder.attribute_effects.{attribute}]: {unwritten} have no attribute row to carry the effects")
         written[attribute] = len(blocks)
     return written
 
@@ -426,11 +517,12 @@ def setup_modifier_keys(contract: Contract) -> dict[str, list[str]]:
 def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root: Path, vanilla_root: Path) -> dict[str, object]:
     rows = class_rows(contract)
     hostile = hostile_movement(cfg.raw.get("hostile_movement"), contract)
+    effects = attribute_effects(cfg.raw.get("attribute_effects"), contract, game_modifier_types(vanilla_root))
     names: dict[str, str] = {}
     blocks: list[str] = []
     per_location = setup_modifier_keys(contract)   # location tag -> modifier keys
     attrs = contract.location_attributes
-    for attribute, prefix in (("fertility", "pp_wb_fertility_"), ("soil_type", "pp_wb_soil_")):
+    for attribute, prefix in (("fertility", STATIC_ATTRIBUTES["fertility"]), ("soil_type", STATIC_ATTRIBUTES["soil_type"])):
         if attribute not in attrs.columns:
             continue
         column = [str(v) for v in attrs[attribute].to_list()]
@@ -444,7 +536,13 @@ def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root
             names[key] = f"{pretty(value)} {'Fertility' if attribute == 'fertility' else 'Soil'}"
             if (attribute, value) in hostile:
                 mods = {**mods, HOSTILE_MOVEMENT_KEY: hostile[(attribute, value)]}
-            blocks.append(render_block(key, {"game_data": "{ category = location }", **{k: _fmt(v) for k, v in mods.items()}}))
+            lines = {k: _fmt(v) for k, v in mods.items()}
+            for name, v in effects.get((attribute, value), {}).items():
+                _add_line(lines, name, v)
+            blocks.append(render_block(key, {"game_data": "{ category = location }", **lines}))
+        unwritten = sorted(v for (a, v) in effects if a == attribute and v not in classes)
+        if unwritten:
+            raise ValueError(f"[worldbuilder.attribute_effects.{attribute}]: {unwritten} have no static modifier to carry the effects")
     flavour = cfg.raw.get("flavour") if isinstance(cfg.raw.get("flavour"), dict) else {}
     for attribute, key, label in (("is_coastal", "pp_wb_coastal", "Sea Coast"), ("is_adjacent_to_lake", "pp_wb_lake", "Lakeside")):
         mods = rows.get((attribute, "True"), {})

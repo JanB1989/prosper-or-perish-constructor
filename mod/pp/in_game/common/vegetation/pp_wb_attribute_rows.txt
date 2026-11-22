@@ -22,6 +22,7 @@ TRY_INJECT:ha1300_veg_coniferous_forest = {
 		local_tea_output_modifier = 0.18
 		local_wheat_output_modifier = -0.04
 		local_wine_output_modifier = -0.14
+		local_tar_output_modifier = 0.1
 		free_building_levels = -3
 		local_build_buildings_efficiency = -0.08
 		local_construction_speed = -0.08
@@ -140,6 +141,7 @@ TRY_INJECT:ha1300_veg_marsh = {
 		local_silk_output_modifier = 0.12
 		local_tobacco_output_modifier = -0.09
 		hostile_movement_cost = 0.3
+		local_road_building_time = 0.3
 	}
 }
 
@@ -244,6 +246,7 @@ TRY_INJECT:ha1300_veg_swamp = {
 		local_build_buildings_efficiency = -0.08
 		local_construction_speed = -0.08
 		hostile_movement_cost = 0.35
+		local_road_building_time = 0.3
 	}
 }
 
@@ -269,6 +272,7 @@ TRY_INJECT:ha1300_veg_tundra = {
 	location_modifier = {
 		local_population_capacity = -25
 		local_medicaments_output_modifier = -0.09
+		local_fur_output_modifier = 0.05
 		free_building_levels = -4
 		local_build_buildings_efficiency = -0.12
 		local_construction_speed = -0.12

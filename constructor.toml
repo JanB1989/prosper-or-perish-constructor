@@ -162,6 +162,34 @@ woods = 0.075
 peat = 0.15                        # bog ground
 clay = 0.075                      # mud in the wet season
 
+# Hand-set attribute effects (2026-11-22, Jan; first values, to be tuned): small flavour lines per World Builder class,
+# `<class> = { <modifier> = <value> }`. `ppc worldbuilder apply` writes them into the climate/vegetation/topography class
+# injects and the soil/fertility static modifiers, like the hostile movement cost above, and adds them on top of what the
+# class already carries (vanilla's class lines stay). Capacity, food, hostile movement and the goods the World Builder fit
+# owns stay out (the stage refuses them); an output line hits every source of the good in the location, its RGO and every
+# building making it. Keep the output lines small (Jan). Rivers and shores have their own sections.
+[worldbuilder.attribute_effects.climate]
+arctic = { local_fur_output_modifier = 0.10 }             # fur RGOs, Forest Villages
+subpolar = { local_fur_output_modifier = 0.10 }
+subpolar_oceanic = { local_fur_output_modifier = 0.05 }
+
+[worldbuilder.attribute_effects.vegetation]
+tundra = { local_fur_output_modifier = 0.05 }             # adds to the cold climates' line
+coniferous_forest = { local_tar_output_modifier = 0.10 }  # pine resin: Tar Kilns
+marsh = { local_road_building_time = 0.30 }               # the class has no road line of its own (as grasslands)
+swamp = { local_road_building_time = 0.30 }               # on top of the class's +100 % (as forest): +130 %
+
+[worldbuilder.attribute_effects.soil_type]
+clay = { local_clay_output_modifier = 0.10 }              # clay RGOs, Clay Pits/Washmills, fireclay and alum side methods
+stony = { local_road_building_time = -0.20 }              # gravel for the roadbed at hand
+peat = { local_road_building_time = 0.30 }                # bog ground has to be drained first
+
+[worldbuilder.attribute_effects.fertility]
+very_high = { local_supply_limit_modifier = 0.10 }        # armies live off rich land
+high = { local_supply_limit_modifier = 0.05 }
+low = { local_supply_limit_modifier = -0.05 }
+very_low = { local_supply_limit_modifier = -0.10 }
+
 [worldbuilder.buildings.map]
 # World Builder ledger type -> blueprint key
 clearing = "land_clearance"

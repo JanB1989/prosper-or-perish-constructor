@@ -441,6 +441,7 @@ pp_tt_vegetation_ha1300_veg_marsh = {
 	local_monthly_food_modifier = monthly_food_productivity_severe_bonus
 	supply_limit = 2
 	hostile_movement_cost = 0.3
+	local_road_building_time = 0.3
 	pp_wb_capacity_land_clearance = 1
 	pp_wb_capacity_field_management = 1
 	pp_wb_capacity_water_control = 2
@@ -452,7 +453,7 @@ pp_tt_vegetation_ha1300_veg_swamp = {
 	game_data = { category = location }
 	local_frontage_allowed = -3
 	local_rgo_build_time = 0.33
-	local_road_building_time = 1
+	local_road_building_time = 1.3
 	local_population_capacity = 1.3
 	local_monthly_development_modifier = -0.25
 	blocks_vision_from_land = yes
@@ -726,6 +727,7 @@ pp_tt_topography_pp_river_falls = {
 pp_tt_fertility_high = {
 	game_data = { category = location }
 	local_population_capacity = 3.8
+	local_supply_limit_modifier = 0.05
 	pp_wb_capacity_land_clearance = 1
 	pp_wb_capacity_field_management = 1
 	pp_wb_capacity_irrigated_fields = 1
@@ -735,6 +737,7 @@ pp_tt_fertility_high = {
 pp_tt_fertility_low = {
 	game_data = { category = location }
 	local_population_capacity = -4.8
+	local_supply_limit_modifier = -0.05
 	pp_wb_capacity_land_clearance = -1
 	pp_wb_capacity_field_management = -1
 	pp_wb_capacity_irrigated_fields = -1
@@ -744,6 +747,7 @@ pp_tt_fertility_low = {
 pp_tt_fertility_very_high = {
 	game_data = { category = location }
 	local_population_capacity = 5.6
+	local_supply_limit_modifier = 0.1
 	pp_wb_capacity_land_clearance = 2
 	pp_wb_capacity_field_management = 2
 	pp_wb_capacity_irrigated_fields = 1
@@ -753,6 +757,7 @@ pp_tt_fertility_very_high = {
 pp_tt_fertility_very_low = {
 	game_data = { category = location }
 	local_population_capacity = -11.4
+	local_supply_limit_modifier = -0.1
 	pp_wb_capacity_land_clearance = -1
 	pp_wb_capacity_field_management = -3
 	pp_wb_capacity_irrigated_fields = -1
@@ -769,6 +774,7 @@ pp_tt_soil_peat = {
 	game_data = { category = location }
 	local_population_capacity = 1
 	hostile_movement_cost = 0.15
+	local_road_building_time = 0.3
 }
 
 pp_tt_soil_sand = {
@@ -784,6 +790,7 @@ pp_tt_soil_silt = {
 pp_tt_soil_stony = {
 	game_data = { category = location }
 	local_population_capacity = 0.1
+	local_road_building_time = -0.2
 }
 
 pp_tt_lake_lake = {

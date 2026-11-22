@@ -57,6 +57,31 @@ pp_land_potential_low_chili = {
 	max = -4
 }
 
+pp_land_potential_clay = {
+	value = 0
+	if = { limit = { has_location_modifier = pp_wb_soil_clay } add = 0.1 }
+}
+
+pp_land_potential_step_clay = {
+	value = pp_land_potential_clay
+	multiply = 100
+	round = yes
+	divide = 2
+	floor = yes
+	min = -11
+	max = 20
+}
+
+pp_land_potential_low_clay = {
+	value = pp_land_potential_clay
+	multiply = 100
+	round = yes
+	divide = 5
+	floor = yes
+	min = -8
+	max = -4
+}
+
 pp_land_potential_cloves = {
 	value = 0
 	if = { limit = { climate = continental } add = -0.25 }
@@ -436,6 +461,34 @@ pp_land_potential_step_fruit = {
 
 pp_land_potential_low_fruit = {
 	value = pp_land_potential_fruit
+	multiply = 100
+	round = yes
+	divide = 5
+	floor = yes
+	min = -8
+	max = -4
+}
+
+pp_land_potential_fur = {
+	value = 0
+	if = { limit = { climate = subpolar } add = 0.1 }
+	else_if = { limit = { climate = arctic } add = 0.1 }
+	else_if = { limit = { climate = ha1300_climate_subpolar_oceanic } add = 0.05 }
+	if = { limit = { vegetation = ha1300_veg_tundra } add = 0.05 }
+}
+
+pp_land_potential_step_fur = {
+	value = pp_land_potential_fur
+	multiply = 100
+	round = yes
+	divide = 2
+	floor = yes
+	min = -11
+	max = 20
+}
+
+pp_land_potential_low_fur = {
+	value = pp_land_potential_fur
 	multiply = 100
 	round = yes
 	divide = 5
@@ -1155,6 +1208,31 @@ pp_land_potential_step_sugar = {
 
 pp_land_potential_low_sugar = {
 	value = pp_land_potential_sugar
+	multiply = 100
+	round = yes
+	divide = 5
+	floor = yes
+	min = -8
+	max = -4
+}
+
+pp_land_potential_tar = {
+	value = 0
+	if = { limit = { vegetation = ha1300_veg_coniferous_forest } add = 0.1 }
+}
+
+pp_land_potential_step_tar = {
+	value = pp_land_potential_tar
+	multiply = 100
+	round = yes
+	divide = 2
+	floor = yes
+	min = -11
+	max = 20
+}
+
+pp_land_potential_low_tar = {
+	value = pp_land_potential_tar
 	multiply = 100
 	round = yes
 	divide = 5

@@ -792,3 +792,144 @@ def test_hostile_movement_config_matches_the_handover_classes():
     config = tomllib.loads((repo / "constructor.toml").read_text(encoding="utf-8"))["worldbuilder"]["hostile_movement"]
     assert set(config) == {"topography", "vegetation", "soil_type"}   # never rivers (Jan, 2026-10-07)
     assert all(0 < v <= 0.45 for classes in config.values() for v in classes.values())   # x1.5 on 2026-10-16 (Jan)
+
+
+def _effects_contract(tmp_path: Path) -> Contract:
+    base = _contract(tmp_path)
+    extra = pl.DataFrame({"attribute": ["vegetation", "soil_type"], "value": ["swamp", "clay"], "capacity_people": [1300.0, 1100.0],
+                          "game_key": ["ha1300_veg_swamp", "ha1300_soil_is_clay"]})
+    rows = pl.concat([base.attribute_rows, extra], how="diagonal")
+    la = base.location_attributes.with_columns(pl.Series("vegetation", ["swamp", "grasslands"]), pl.Series("soil_type", ["clay", "loam"]))
+    return Contract(root=base.root, meta=base.meta, attribute_rows=rows, building_types=base.building_types, location_buildings=base.location_buildings,
+                    location_targets=base.location_targets, location_attributes=la, goods_floor=base.goods_floor)
+
+
+def _block(text: str, header: str) -> str:
+    start = text.index(header + " = {")
+    return text[start: text.index("\n}", start)]
+
+
+def test_attribute_effects_land_on_class_injects_and_static_modifiers(tmp_path):
+    import dataclasses
+    c = _effects_contract(tmp_path)
+    vanilla, export = tmp_path / "vanilla", tmp_path / "export"
+    types = vanilla / wb_modifiers.MODIFIER_TYPES_DIR
+    types.mkdir(parents=True)
+    (types / "00_modifier_types.txt").write_text("".join(f"{k}={{\n\tpercent=yes\n}}\n" for k in (
+        "local_fur_output_modifier", "local_road_building_time", "local_supply_limit_modifier", "local_clay_output_modifier")), encoding="utf-8")
+    (vanilla / "game/main_menu/common/static_modifiers").mkdir(parents=True)
+    (vanilla / "game/main_menu/common/static_modifiers/location.txt").write_text("", encoding="utf-8")
+    for d in ("climates", "vegetation", "topography"):
+        (export / "in_game/common" / d).mkdir(parents=True)
+    # the class's own lines: a vanilla fur line (replaced like a goods row) and the swamp's road time (kept, the effect adds)
+    (export / "in_game/common/climates/00_default.txt").write_text("arid = {\n\tlocation_modifier = {\n\t\tlocal_fur_output_modifier = 0.02\n\t}\n}\n", encoding="utf-8")
+    (export / "in_game/common/vegetation/ha1300_global_vegetation.txt").write_text("ha1300_veg_swamp = {\n\tlocation_modifier = {\n\t\tlocal_road_building_time = 1.0\n\t}\n}\n", encoding="utf-8")
+    effects = {"climate": {"arid": {"local_fur_output_modifier": 0.10}}, "vegetation": {"swamp": {"local_road_building_time": 0.30}},
+               "soil_type": {"clay": {"local_clay_output_modifier": 0.10}},
+               "fertility": {"high": {"local_supply_limit_modifier": 0.05}, "moderate": {"local_supply_limit_modifier": 0.075}}}
+    wb_modifiers.write_class_injects(c, export, tmp_path, tmp_path, vanilla, hostile_config={"vegetation": {"swamp": 0.35}}, effects_config=effects)
+    climates = (tmp_path / "in_game/common/climates/pp_wb_attribute_rows.txt").read_text(encoding="utf-8-sig")
+    assert "local_fur_output_modifier = 0.08" in _block(climates, "TRY_INJECT:arid")     # 0.10 in game: vanilla's 0.02 replaced
+    assert climates.count("local_fur_output_modifier") == 1
+    swamp = _block((tmp_path / "in_game/common/vegetation/pp_wb_attribute_rows.txt").read_text(encoding="utf-8-sig"), "TRY_INJECT:ha1300_veg_swamp")
+    assert "local_road_building_time = 0.3" in swamp and "hostile_movement_cost = 0.35" in swamp   # on top of the class's 1.0
+    cfg = dataclasses.replace(_cfg(tmp_path), raw={"attribute_effects": effects, "hostile_movement": {"soil_type": {"clay": 0.075}}})
+    wb_modifiers.write_static_modifiers(c, cfg, tmp_path, vanilla)
+    statics = (tmp_path / wb_modifiers.STATIC_MODIFIERS_PATH).read_text(encoding="utf-8-sig")
+    clay = _block(statics, "pp_wb_soil_clay")
+    assert "local_clay_output_modifier = 0.1" in clay and "hostile_movement_cost" in clay and "local_population_capacity = 1.1" in clay
+    assert "local_supply_limit_modifier = 0.05" in _block(statics, "pp_wb_fertility_high")
+    # the reference class (no fit row) carries effects too; a tuned third decimal is written as set
+    assert "local_supply_limit_modifier = 0.075" in _block(statics, "pp_wb_fertility_moderate")
+    assert statics.count("local_supply_limit_modifier") == 2 and statics.count("local_clay_output_modifier") == 1
+
+
+def test_attribute_effects_refuse_lines_owned_elsewhere_and_unknown_names(tmp_path):
+    c = _effects_contract(tmp_path)
+    known = {"local_road_building_time", "local_fur_output_modifier"}
+    assert wb_modifiers.attribute_effects({"vegetation": {"swamp": {"local_road_building_time": 0.3}}}, c, known) == {("vegetation", "swamp"): {"local_road_building_time": 0.3}}
+    bad = [
+        ({"river_level": {"1": {"local_road_building_time": 0.1}}}, "only climate"),                 # rivers: [worldbuilder.river_levels]
+        ({"vegetation": {"swampz": {"local_road_building_time": 0.1}}}, "unknown classes"),
+        ({"climate": {"arid": {"local_wheat_output_modifier": 0.1}}}, "fit owns the wheat"),          # a fitted good
+        ({"climate": {"arid": {"local_population_capacity": 1.0}}}, "not hand-set here"),            # capacity is the fit's
+        ({"climate": {"arid": {"local_monthly_food_modifier": 0.1}}}, "not hand-set here"),          # no food on attributes
+        ({"soil_type": {"clay": {"hostile_movement_cost": 0.1}}}, "not hand-set here"),             # its own section
+        ({"climate": {"arid": {"local_fur_output_modifer": 0.1}}}, "no modifier type"),             # a typo
+        ({"climate": {"arid": {"local_fur_output_modifier": "0.1"}}}, "must be a number"),
+        ({"climate": {"arid": 0.1}}, "expected a table"),
+    ]
+    for raw, message in bad:
+        with pytest.raises(ValueError, match=message):
+            wb_modifiers.attribute_effects(raw, c, known)
+    export = tmp_path / "export"
+    for d in ("climates", "vegetation", "topography"):
+        (export / "in_game/common" / d).mkdir(parents=True)
+    with pytest.raises(ValueError, match="no attribute row"):   # grasslands is the reference vegetation: no inject block carries it
+        wb_modifiers.write_class_injects(c, export, tmp_path, tmp_path, effects_config={"vegetation": {"grasslands": {"local_road_building_time": 0.1}}})
+
+
+def _game_and_handover():
+    """(repo, vanilla root, contract) of this checkout, or a skip when the vanilla mirror or the handover is missing."""
+    from prosper_or_perish_constructor.worldbuilder.contract import load_config, load_contract
+    from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
+
+    repo = Path(__file__).resolve().parents[1]
+    vanilla = vanilla_root(repo, repo / "constructor.toml")
+    if not (vanilla / wb_modifiers.MODIFIER_TYPES_DIR).is_dir():
+        pytest.skip(f"vanilla game files not available at {vanilla}")
+    handover = load_config(repo, repo / "constructor.toml").handover
+    if not (handover / "attribute_rows.csv").is_file():
+        pytest.skip(f"World Builder handover not available at {handover}")
+    return repo, vanilla, load_contract(handover)
+
+
+def _effects_config(repo: Path) -> dict:
+    import tomllib
+    return tomllib.loads((repo / "constructor.toml").read_text(encoding="utf-8"))["worldbuilder"]["attribute_effects"]
+
+
+def test_attribute_effects_config_is_small_and_names_game_modifiers_and_handover_classes():
+    repo, vanilla, contract = _game_and_handover()
+    config = _effects_config(repo)
+    effects = wb_modifiers.attribute_effects(config, contract, wb_modifiers.game_modifier_types(vanilla))   # raises on anything unknown
+    assert effects and set(config) <= set(wb_modifiers.ATTRIBUTE_EFFECT_ATTRIBUTES)
+    for (attribute, value), lines in effects.items():
+        for key, number in lines.items():
+            limit = 0.15 if key.endswith("_output_modifier") else 0.5    # Jan 2026-11-22: keep the output lines small
+            assert abs(number) <= limit, (attribute, value, key, number)
+
+
+def test_built_mod_carries_and_shows_the_attribute_effects():
+    """The class injects and static modifiers of the built mod hold every configured line, and the location-window
+    chips (attribute_tooltips views, read from the files the game loads) show it: goods output in the goods table,
+    the rest among the effects, on top of the class's own line."""
+    import re
+
+    from prosper_or_perish_constructor import attribute_tooltips as tt
+
+    repo, vanilla, contract = _game_and_handover()
+    mod = repo / "mod/pp"
+    effects = wb_modifiers.attribute_effects(_effects_config(repo), contract)
+    views = tt.build_views(vanilla, mod)
+    by_view = {(view.attribute, view.value): view for attribute_views in views.values() for view in attribute_views}
+    statics = (mod / wb_modifiers.STATIC_MODIFIERS_PATH).read_text(encoding="utf-8-sig")
+    for (attribute, value), lines in effects.items():
+        if attribute in wb_modifiers.STATIC_ATTRIBUTES:
+            block = _block(statics, wb_modifiers.STATIC_ATTRIBUTES[attribute] + value)
+            view = by_view[("soil" if attribute == "soil_type" else attribute, value)]
+            own: dict[str, str] = {}
+        else:
+            key = wb_modifiers.game_key_of(contract, attribute, value)
+            inject = (mod / "in_game/common" / wb_modifiers.CLASS_DIRS[attribute] / "pp_wb_attribute_rows.txt").read_text(encoding="utf-8-sig")
+            block = _block(inject, f"TRY_INJECT:{key}")
+            view = by_view[(attribute, key)]
+            files = [p for p in tt.game_files(vanilla, mod, f"in_game/common/{wb_modifiers.CLASS_DIRS[attribute]}") if p.name != "pp_wb_attribute_rows.txt"]
+            own = tt.modifier_lines(tt.definitions(files)[key], "location_modifier")   # the class without the mod's inject
+        for name, number in lines.items():
+            assert f"{name} = {wb_modifiers._fmt_fine(number)}" in block, (attribute, value, name)   # no vanilla class has these output lines
+            good = re.fullmatch(r"local_(\w+)_output_modifier", name)
+            if good:
+                assert (good[1], pytest.approx(number)) in view.goods, (attribute, value, name)
+            else:
+                assert float(view.effects[name]) == pytest.approx(float(own.get(name, 0)) + number), (attribute, value, name)

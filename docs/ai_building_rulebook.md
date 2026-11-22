@@ -98,8 +98,12 @@ The automation panel's building systems are not a separate brain:
   - So everything this rulebook says about what the AI values also holds for an automated player.
   - A mod change that steers the AI steers automated players too.
 - The other toggles only switch parts of that pipeline on or off:
-  - **"Destroy Buildings"**: acts only if "Buildings" is also on, as the game says.
-  - **"Close and Open Buildings"** and **"Subsidize Buildings"**: use the AI's close/reopen and subsidy routines.
+  - **"Destroy Buildings"**: acts only if "Buildings" is also on, as the game says. It runs the AI's fort-demolition
+    routine and nothing else: forts over the fort budget or with overlapping zones of control. "Destroy Estate
+    Buildings" does the same for estate-owned forts. Neither ever demolishes an economic building (checked in 1.4.9).
+  - **"Close and Open Buildings"** and **"Subsidize Buildings"**: use the AI's close/reopen and subsidy pass for
+    producing buildings (section 4), without the AI's 2-8 month cadence. Players never get the maintenance-budget close
+    of buildings without goods output.
   - **"Production methods"**: uses the AI's method switcher.
   - **"Finances"**: uses the AI's budget-slider routine (including the food slider in 2.4h).
 - **"Auto-Expand Buildings"** is separate and has no utility. For each building the player marked, it builds the
@@ -873,7 +877,34 @@ therefore deleted temporarily closed buildings that the AI then rebuilt at full 
 20.1k review culls 1337-1446 (masons 6.1k, cookshops 2.6k, libraries 1.5k with ~2.7k built to keep 1.15k,
 marketplaces 1.4k); run f3368e9e: culls grew from ~600 to 1,026 levels per 5 years by 1417-1422, more than bankruptcy.
 
-### Maintenance budget: closing and reopening buildings without goods output (EU5 1.4, 2026-10-04)
+### Producing buildings: layoffs, closing, subsidies, reopening (EU5 1.4; unchanged in 1.4.9, checked 2026-11-22)
+
+- **Layoffs (monthly, every building, AI and player):** a building whose profit at full staffing is negative and that is
+  not subsidised lays off `UNPROFITABLE_BUILDING_WORKERS_LAID_OFF_PERCENTAGE` of its jobs a month (vanilla 10, PP 15);
+  otherwise it rehires `PROFITABLE_BUILDING_WORKERS_REHIRED_PERCENTAGE` (vanilla 10, PP 15) up to full staffing. Only
+  full-staff profit counts; the number of free workers does not.
+- **Who gets the workers** when a location has fewer pops than jobs: a pop type with a surplus fills every job of that
+  type; otherwise the owner's employment system `priority` orders the open buildings, the highest is filled first, equal
+  values share pro rata, closed buildings get none. No wage or profit test beyond what the priority script reads.
+  (Read on 1.3.11; not re-read since, and nothing points to a change.)
+- **The AI's close/subsidy pass** runs on the country's cadence month (every 8 / 6 / 4 / 2 months for county / duchy /
+  kingdom / empire; no define). A candidate is an open, unsubsidised producing building with negative profit last
+  month (at its actual staffing), not `ai_forbid_shutdown`, not estate-built. One decision per country, market and type
+  per pass. The decision is the sign of the AI's score for one new level of that type at that location, without the
+  build price and without `ai_construct_weight`, and gated like a new building:
+  - score above 0: subsidise (no gold test);
+  - score below 0: close, if the building may close (`can_close`, owned by the country, not a fort);
+  - score exactly 0 (the profit-margin gate or the urbanization ban): nothing; the building keeps laying off workers.
+  - Every subsidised building is rescored with the build price and `ai_construct_weight`; below 0 the subsidy ends
+    (so subsidies flip on and off while one score is positive and the other negative).
+- **Reopening:** each closed producing building has a `AI_CHANCE_TO_REOPEN_PROFITABLE_BUILDING` (0.25) chance per pass to
+  be rescored and reopens above `AI_UTILITY_MARGIN_REQUIRED_TO_REOPEN_BUILDING` (0.20); its profit is not checked.
+- **Nothing in this pass looks at workers**: not the building's staffing, not vacancies, not idle pops. Missing workers
+  only stop NEW buildings (the worker check at candidate generation: about 1,000 spare peasants and laborers in the
+  location, and the building's own pop type not already short there; `AI_ignore_available_worker_flag` and upgrades of
+  an `obsolete` predecessor skip it). No routine closes or removes a building because workers are short.
+
+### Maintenance budget: closing and reopening buildings without goods output (EU5 1.4, 2026-10-04; unchanged in 1.4.9)
 
 Libraries, temples, monasteries, universities, marketplaces, armories, docks, assemblies and the like (no goods output)
 are closed and reopened by the country's maintenance budget, not by profit:
@@ -907,9 +938,18 @@ Shutdown"). Their maintenance always counts, so an over-budget AI closes its bar
 stops building new ones; had they stayed open in run 4f95382e, AI building maintenance would have been ~12 % higher
 (~3.4 % of world income, worst for small countries with a university or grand palace).
 
-### Engine paths that remove building levels (verified 2026-09-30)
+### Engine paths that remove building levels (verified 2026-09-30; unchanged in 1.4.9, checked 2026-11-22)
 
-The AI never demolishes ordinary economic buildings. Levels disappear through these engine paths:
+The AI never demolishes ordinary economic buildings, and it never downgrades a building. Its own demolitions are:
+- **Forts**: at peace, a fort whose zone of control overlaps a neighbouring own fort, and, when fort maintenance is far
+  over the fort budget (`AI_ALLOWED_FORT_BUDGET`) six months after a war, the one fort it values least.
+  `ai_destroy_weight` is read only here, so it steers which fort goes and nothing else.
+- **Governor seats**: a second building with `local_proximity_source` closer than `AI_PROXIMITY_SOURCE_MINIMUM_DISTANCE`
+  to another one (countries with tax base of at least `AI_LOCAL_GOVERNOR_TAX_BASE_THRESHOLD`), one per pass.
+- **Town swaps**: countries whose time horizon reaches `AI_BUILDING_OPTIMIZATION_TIMEMULTI_THRESHOLD` (250) may swap two
+  buildings between two towns (build both, demolish the two they replace). How often this happens was never measured.
+
+Levels otherwise disappear through these engine paths:
 
 - **Bankruptcy** (gold still negative after the forced estate loans): each building the bankrupt country owns in its
   own locations has an 11 % chance to be hit, whatever its type, employment or open state (a few types are exempt).

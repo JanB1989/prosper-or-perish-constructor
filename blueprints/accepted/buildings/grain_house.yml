@@ -52,7 +52,7 @@ localization:
   entries:
     grain_house_slot_0: Maintenance
     pp_grain_house_maintenance: "[ShowBuildingTypeName('grain_house')|e] Maintenance"
-    pp_grain_house_maintenance_desc: "Stone for the walls and floors that keep the stored grain dry and safe from vermin."
+    pp_grain_house_maintenance_desc: "Stone for the walls and floors keeps the stored grain dry and safe from vermin."
 evaluation:
   allow_rules:
     profit_percent: Grain houses are food-security infrastructure with upkeep inputs and no direct goods output.

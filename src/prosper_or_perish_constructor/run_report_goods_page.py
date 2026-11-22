@@ -2,7 +2,7 @@
 
 Static HTML + one script; the data comes from `goods/index.js`, `goods/summary.js` and one `goods/<n>.js` per
 save (written by `run_report_goods`), fetched when needed, so the page itself stays small. Layout: the goods list on
-the left (grouped, searchable, share, stock and price), save / region / detail pickers on top, then for the chosen good its
+the left (grouped, searchable, share of output, share of the workforce, stock and price), save / region / detail pickers on top, then for the chosen good its
 figures, a flow chart (inputs -> producers -> good -> users -> products, by value at base price; any good in it
 opens that good), producer and user tables (buildings that open into their production methods, with the recipe per
 level), the run over time and the split by world region. State lives in the URL hash (#g=cloth&s=12&r=...&d=method).
@@ -17,7 +17,7 @@ from prosper_or_perish_constructor.run_report_data import LOADER_JS
 
 GOODS_CSS = r"""
 body{margin:0}
-.app{display:grid;grid-template-columns:308px minmax(0,1fr);min-height:100vh}
+.app{display:grid;grid-template-columns:350px minmax(0,1fr);min-height:100vh}
 .side{position:sticky;top:0;height:100vh;overflow:auto;border-right:1px solid var(--line);background:var(--card);padding:14px 10px 30px}
 .side .back{display:block;font-size:13px;margin:0 6px 4px;text-decoration:none}
 .side .run{font-size:12px;color:var(--muted);margin:0 6px 10px}
@@ -27,12 +27,15 @@ body{margin:0}
 .glist a{display:flex;align-items:center;gap:8px;padding:3px 6px;border-radius:6px;color:var(--ink);text-decoration:none;font-size:13px;line-height:22px}
 .glist a:hover{background:var(--chip)} .glist a.on{background:var(--accent);color:#fff} .glist a.on .badge{color:#fff!important}
 .glist img{width:20px;height:20px} .glist .noicon{display:inline-block;width:20px}
-.glist h4 .gshare{margin-left:auto;font-variant-numeric:tabular-nums;letter-spacing:0;text-transform:none}
+.glist h4 .gshare,.glist h4 .gwork{font-variant-numeric:tabular-nums;letter-spacing:0;text-transform:none;min-width:38px;text-align:right}
+.glist h4 .gshare{margin-left:auto} .glist h4 .gwork{margin-left:2px;margin-right:82px}
 .glist .share{margin-left:auto;font-size:11px;font-variant-numeric:tabular-nums;color:var(--ink);min-width:38px;text-align:right}
+.glist .work{font-size:11px;font-variant-numeric:tabular-nums;color:var(--ink);min-width:38px;text-align:right}
 .glist .badge{font-size:11px;font-variant-numeric:tabular-nums;color:var(--muted);min-width:36px;text-align:right}
 .glist .months{font-size:11px;font-variant-numeric:tabular-nums;min-width:30px;text-align:right}
-.glist a.on .share{color:#fff} .glist a.on .months{color:#fff!important} .glist .legend{display:flex;gap:8px;font-size:11px;color:var(--muted);margin:8px 6px 0}
-.glist .legend span:first-child{margin-left:auto;min-width:38px;text-align:right} .glist .legend span:nth-child(2){min-width:30px;text-align:right} .glist .legend span:last-child{min-width:36px;text-align:right}
+.glist a.on .share,.glist a.on .work{color:#fff} .glist a.on .months{color:#fff!important} .glist .legend{display:flex;gap:8px;font-size:11px;color:var(--muted);margin:8px 6px 0}
+.glist .legend span{text-align:right} .glist .legend .l-share{margin-left:auto;min-width:38px} .glist .legend .l-work{min-width:38px} .glist .legend .l-months{min-width:30px} .glist .legend .l-price{min-width:36px}
+.glist .nonegoods{font-size:11px;color:var(--muted);margin:0 6px;line-height:1.45}
 .main{padding:0 22px 48px;min-width:0}
 .bar{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;position:sticky;top:0;background:var(--bg);padding:12px 0 10px;z-index:5;border-bottom:1px solid var(--line);margin-bottom:16px;font-size:13px;color:var(--muted)}
 .bar select,.bar button{font:inherit;font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink)}
@@ -118,7 +121,7 @@ GOODS_JS = r"""
     }
     const months = new Array(n).fill(null);
     for (const r of raw.w || []) months[r[0]] = r[1];
-    return {by, mIn, mOut, price, months};
+    return {by, mIn, mOut, price, months, f: raw.f || []};
   }
   function loadSave(i) {
     if (!SAVES.has(i)) SAVES.set(i, loadData(IX.saves[i].file).then(prepare));
@@ -539,7 +542,21 @@ GOODS_JS = r"""
       for (const r of D.by[g].m) if (inRegion(r[1])) { pv += r[2] || 0; vol += r[3] || 0; if (S.r >= 0) months[g] = r[10]; }
       if (vol > 0) price[g] = pv / vol / pg;
     }
-    return {share: made.map(v => total > 0 ? v / total : 0), price, months, total};
+    return {share: made.map(v => total > 0 ? v / total : 0), price, months, total, ...workforceShares(D)};
+  }
+  // each good's share of the employed people (RGO + building jobs) in the chosen region; buildings that make no
+  // tradeable good (services, logistics, government) are the rest, `none`, by building type
+  function workforceShares(D) {
+    const n = IX.goods.length, workers = new Array(n).fill(0), none = new Map();
+    let total = 0, rest = 0;
+    for (const r of D.f) {
+      if (!inRegion(r[2])) continue;
+      const v = r[3] || 0;
+      total += v;
+      if (r[0] >= 0) workers[r[0]] += v; else { rest += v; none.set(r[1], (none.get(r[1]) || 0) + v); }
+    }
+    const noneBy = [...none.entries()].sort((a, b) => b[1] - a[1]);
+    return {work: total > 0 ? workers.map(v => v / total) : null, workers, workTotal: total, noneShare: total > 0 ? rest / total : null, noneWorkers: rest, noneBy};
   }
   const monthsText = m => m >= 99.5 ? '99+' : m >= 9.95 ? m.toFixed(0) : m.toFixed(1);
   const mixColor = (token, share) => `color-mix(in srgb,var(${token}) ${Math.round(Math.min(1, Math.max(0, share)) * 100)}%,var(--muted))`;
@@ -558,18 +575,29 @@ GOODS_JS = r"""
     const q = $('#search').value.trim().toLowerCase();
     const where = S.r >= 0 ? IX.regions[S.r].name : 'the world';
     const O = D ? outputShares(D) : null;
-    let h = `<div class=legend title="Share: the good's production value at base price ÷ the value of everything produced in ${esc(where)}. Months: how many months of its demand the typical market holds in stock: the market's stock ÷ its demand, the median of the markets weighted by demand, so stock in markets that hardly use the good barely counts; red empty, neutral at ${IX.priceScale.normalMonths} months, blue from ${IX.priceScale.cheapMonths}. Price: price ÷ base price, each market weighted by its supply + demand of the good; neutral colour at the normal price ${IX.priceScale.normal}×${IX.priceScale.note ? ' (' + esc(IX.priceScale.note) + ')' : ''}, red dearer, blue cheaper."><span>share</span><span>months</span><span>price</span></div>`;
+    const wk = i => O && O.work ? O.work[i] : null;
+    const workTip = `Work: the people working for the good ÷ all employed people in ${esc(where)} (RGO and building jobs, ${O && O.work ? num(O.workTotal * 1000) : '–'}): its RGOs' workers plus the workers of the buildings that make it; a building that makes several goods splits its workers by the value of its outputs at base price. Buildings that make no tradeable good are the line at the end.`;
+    let h = `<div class=legend title="${workTip} Share: the good's production value at base price ÷ the value of everything produced in ${esc(where)}. Months: how many months of its demand the typical market holds in stock: the market's stock ÷ its demand, the median of the markets weighted by demand, so stock in markets that hardly use the good barely counts; red empty, neutral at ${IX.priceScale.normalMonths} months, blue from ${IX.priceScale.cheapMonths}. Price: price ÷ base price, each market weighted by its supply + demand of the good; neutral colour at the normal price ${IX.priceScale.normal}×${IX.priceScale.note ? ' (' + esc(IX.priceScale.note) + ')' : ''}, red dearer, blue cheaper."><span class=l-share>share</span><span class=l-work>work</span><span class=l-months>months</span><span class=l-price>price</span></div>`;
     for (const grp of IX.groups) {
       let items = IX.goodOrder.filter(i => IX.goods[i].group === grp.key && (!q || IX.goods[i].name.toLowerCase().includes(q)));
       if (!items.length) continue;
       if (O) items = items.slice().sort((a, b) => O.share[b] - O.share[a] || goodName(a).localeCompare(goodName(b)));
-      const gshare = O ? IX.goodOrder.filter(i => IX.goods[i].group === grp.key).reduce((a, i) => a + O.share[i], 0) : null;
-      h += `<h4><i style="background:${grp.color}"></i>${esc(grp.label)}<span class=gshare title="share of all output in ${esc(where)}">${gshare == null ? '' : shareText(gshare)}</span></h4>`;
+      const members = IX.goodOrder.filter(i => IX.goods[i].group === grp.key);
+      const gshare = O ? members.reduce((a, i) => a + O.share[i], 0) : null;
+      const gwork = O && O.work ? members.reduce((a, i) => a + O.work[i], 0) : null;
+      h += `<h4><i style="background:${grp.color}"></i>${esc(grp.label)}<span class=gshare title="share of all output in ${esc(where)}">${gshare == null ? '' : shareText(gshare)}</span>` +
+        `<span class=gwork title="share of all employed people in ${esc(where)}">${gwork == null ? '' : shareText(gwork)}</span></h4>`;
       for (const i of items) {
-        const pr = O ? O.price[i] : null, sh = O ? O.share[i] : null, mo = O ? O.months[i] : null;
-        h += `<a href="#" data-i="${i}" class="${i === S.g ? 'on' : ''}" title="${esc(goodName(i))}: ${sh == null ? '' : shareText(sh) + ' of all output in ' + esc(where) + ', '}${mo == null ? '' : monthsText(mo) + ' months stored in the typical market, '}price ${pr == null ? '–' : pr.toFixed(2) + '× base'}">` +
-          `${imgHtml(i) || '<span class=noicon></span>'}<span>${esc(IX.goods[i].name)}</span><span class=share>${sh == null ? '' : shareText(sh)}</span><span class=months${mo == null ? '' : ` style="color:${monthsColor(mo)}"`}>${mo == null ? '' : monthsText(mo)}</span><span class=badge${pr == null ? '' : ` style="color:${priceColor(pr)}"`}>${pr == null ? '' : pr.toFixed(2) + '×'}</span></a>`;
+        const pr = O ? O.price[i] : null, sh = O ? O.share[i] : null, mo = O ? O.months[i] : null, wf = wk(i);
+        h += `<a href="#" data-i="${i}" class="${i === S.g ? 'on' : ''}" title="${esc(goodName(i))}: ${sh == null ? '' : shareText(sh) + ' of all output in ' + esc(where) + ', '}${wf == null ? '' : shareText(wf) + ' of the workforce (' + num(O.workers[i] * 1000) + ' workers), '}${mo == null ? '' : monthsText(mo) + ' months stored in the typical market, '}price ${pr == null ? '–' : pr.toFixed(2) + '× base'}">` +
+          `${imgHtml(i) || '<span class=noicon></span>'}<span>${esc(IX.goods[i].name)}</span><span class=share>${sh == null ? '' : shareText(sh)}</span><span class=work>${wf == null ? '' : shareText(wf)}</span><span class=months${mo == null ? '' : ` style="color:${monthsColor(mo)}"`}>${mo == null ? '' : monthsText(mo)}</span><span class=badge${pr == null ? '' : ` style="color:${priceColor(pr)}"`}>${pr == null ? '' : pr.toFixed(2) + '×'}</span></a>`;
       }
+    }
+    // the workers of buildings that make no tradeable good: so the work column adds up to all employed people
+    if (O && O.work && !q) {
+      const top = O.noneBy.slice(0, 8).map(([b, v]) => `${bName(b)} ${shareText(v / O.workTotal)}`).join(', ');
+      h += `<h4><i style="background:#9a9a96"></i>No goods output<span class=gshare></span><span class=gwork title="share of all employed people in ${esc(where)}">${shareText(O.noneShare)}</span></h4>` +
+        `<div class=nonegoods>${num(O.noneWorkers * 1000)} people work in buildings that make no tradeable good (services, kitchens and taverns, logistics, government, forts…): ${esc(top)}${O.noneBy.length > 8 ? ', …' : '.'}</div>`;
     }
     $('#goodlist').innerHTML = h || '<div class=empty>No good matches.</div>';
   }
@@ -581,6 +609,7 @@ GOODS_JS = r"""
     const t = [
       ['Made', num(X.made) + ' / mo', num(X.made * pg) + ' gold at base price'],
       ['Share of output', shareText(O.share[X.g]), `of everything made in ${S.r >= 0 ? IX.regions[S.r].name : 'the world'} (${num(O.total)} gold / mo)`],
+      ['Share of workforce', O.work ? shareText(O.work[X.g]) : '–', O.work ? `${num(O.workers[X.g] * 1000)} of ${num(O.workTotal * 1000)} employed people (RGO and building jobs)` : 'no workforce data in this report'],
       ['Used', num(X.used) + ' / mo', `${num(X.usedB)} by buildings · ${num(X.usedD)} other`],
       ['Unmet demand', pct(unmet), `${num(Math.max(0, X.wanted - X.used))} / mo wanted but not received`],
       ['Price ÷ base', ratio(priceRatio), `base price ${num(pg)} gold`],

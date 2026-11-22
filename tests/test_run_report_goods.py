@@ -92,6 +92,37 @@ def test_save_flows_add_up_to_the_market_totals(tmp_path: Path) -> None:
     assert {k: len(v) for k, v in encoded.items()}["p"] == producers.height
 
 
+def test_workforce_counts_every_employed_worker_once(tmp_path: Path) -> None:
+    """RGO workers make the raw material; a building's workers split over its goods by output value at the default price;
+    a building that makes only dummy goods or has no method is "no goods output" (good_id null); idle peasants never
+    count. The sum is every employed worker of the save."""
+    dataset = _dataset(tmp_path)
+    folder = dataset / "tables"
+    # the sheep farm runs a second slot that makes 1 cloth per level (value 3 vs 4 wool x 1): its 1k workers split 4:3;
+    # a tavern (Province Food only) and a manor (no method) employ 0.6k and 0.4k
+    pl.DataFrame({"building_id": [10, 11, 12, 12, 13], "production_method": ["weave", "weave", "graze", "shear", "serve"]}).write_parquet(
+        folder / "building_methods" / "playthrough_id=run" / "s1.parquet")
+    buildings = pl.read_parquet(folder / "buildings" / "playthrough_id=run" / "s1.parquet")
+    pl.concat([buildings, pl.DataFrame({"building_id": [13, 14], "building_type": ["tavern", "manor"], "location_id": [1, 2],
+                                        "market_id": [1, 2], "level": [1.0, 1.0], "employed": [0.6, 0.4]})]).write_parquet(
+        folder / "buildings" / "playthrough_id=run" / "s1.parquet")
+    recipes = _recipes()
+    recipes.outputs = pl.concat([recipes.outputs, pl.DataFrame({"method": ["shear", "serve"], "good_id": ["cloth", "local_food"], "per_level": [1.0, 5.0]})])
+    flows = rg.save_flows(dataset, "run", "s1", recipes)
+    work = flows["workforce"]
+    by_good = {g: w for g, w in work.group_by("good_id").agg(pl.col("workers").sum()).iter_rows()}
+    # weavers 1 + 0.25, the farm's cloth slot 3/7; wool: RGO 2 + farm 4/7; no goods output: tavern + manor
+    assert by_good["cloth"] == pytest.approx(1.25 + 3 / 7)
+    assert by_good["wool"] == pytest.approx(2.0 + 4 / 7)
+    assert by_good[None] == pytest.approx(1.0)
+    assert set(work.filter(pl.col("good_id").is_null())["building_type"]) == {"tavern", "manor"}
+    # every employed worker once: buildings 1 + 0.25 + 1 + 0.6 + 0.4, RGO 2 (the 2k idle peasants are not in it)
+    assert work["workers"].sum() == pytest.approx(5.25)
+    assert rg.IDLE not in set(work["building_type"])
+    f = rg.encode_save(flows, rg.Index())["f"]
+    assert len(f) == work.height and all(len(r) == 4 for r in f) and sum(r[0] == -1 for r in f) == 2
+
+
 def test_worker_processes_fill_the_same_flows_as_one_save_at_a_time(tmp_path: Path) -> None:
     import shutil
 
@@ -117,8 +148,9 @@ def test_goods_page_reads_its_data_files() -> None:
     assert "goods/index.js" in page and "goods/summary.js" in page and "id=goodlist" in page and "type: 'sankey'" in page
     assert "Price across markets" in page and "Months across markets" in page and "Fill across markets" in page and "&tv=${S.tv}" in page
     assert "e.bands.months" in page and "e.bands.fill" in page
-    assert "<span>months</span>" in page and "O.months[i]" in page and "monthsColor(mo)" in page
+    assert "<span class=l-months>months</span>" in page and "O.months[i]" in page and "monthsColor(mo)" in page
     assert "priceColor(pr)" in page and "' hi'" not in page  # prices coloured around the normal price, no fixed thresholds
+    assert "<span class=l-work>work</span>" in page and "workforceShares(D)" in page and "No goods output" in page and "class=gwork" in page
 
 
 def test_consumption_splits_into_minting_slaves_and_orders(tmp_path: Path) -> None:

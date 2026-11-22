@@ -8,8 +8,9 @@
   recipe], building inputs ``c`` [good, building, method, region, wanted, received, recipe], other demand ``d``
   [good, bucket, region, wanted, received], trade and other supply ``s`` [good, bucket, region, amount], market
   figures ``m`` [good, region, price x volume, volume, supply, demand, stockpile, markets short, markets in surplus,
-  markets, months stored], months stored in the world ``w`` [good, months] and trade between world regions ``x`` [good,
-  region, imports, exports] (the trade routes that ran and cross the region's border); amounts are goods per month,
+  markets, months stored], months stored in the world ``w`` [good, months], trade between world regions ``x`` [good,
+  region, imports, exports] (the trade routes that ran and cross the region's border) and the workforce ``f`` [good or
+  -1 = no goods output, building, region, workers] (`save_workforce`); amounts are goods per month,
   indices point into the index lists (-1 = none); months stored = the typical market's stock ÷ its demand (`_weighted_median`);
 - `goods/summary.js`: per good and save the world production, use and price, production / use by building type,
   and the spread over markets of the price, the months stored and the stock fill (`market_bands`), for the charts over the run.
@@ -49,7 +50,7 @@ from prosper_or_perish_constructor.run_report_charts import (
 if TYPE_CHECKING:
     from prosper_or_perish_constructor.run_report import RunData
 
-CACHE_VERSION = "goods-8"
+CACHE_VERSION = "goods-9"
 RGO = "rgo"  # pseudo building of the RGO rows
 OTHER = "_other"  # pseudo building for market totals no recipe explains
 IDLE = "_idle"  # pseudo building of the goods' base production by idle peasants
@@ -103,7 +104,7 @@ PAGE_GROUP_BY_SUBCATEGORY = {
     "luxury_crafts": "crafts", "books_and_paper": "crafts", "medicinals": "crafts",
     "metal_goods": "industry", "military_goods": "industry", "naval_goods": "industry", "industrial_inputs": "industry",
 }
-FLOW_TABLES = ("producers", "consumers", "demand", "supply", "market", "stock_months", "trade")
+FLOW_TABLES = ("producers", "consumers", "demand", "supply", "market", "stock_months", "trade", "workforce")
 FACTOR_LIMITS = (0.02, 50.0)
 
 
@@ -347,7 +348,40 @@ def save_flows(dataset: Path, playthrough: str, snapshot: str, recipes: Recipes)
         exports = ran.group_by("good_id", pl.col("from_region").alias("region")).agg(pl.col("cached").sum().alias("exports"))
         trade = imports.join(exports, on=["good_id", "region"], how="full", coalesce=True).with_columns(
             pl.col("imports", "exports").fill_null(0.0)).filter(pl.col("imports") + pl.col("exports") > 0)
-    return {"producers": producers, "consumers": consumers, "demand": demand, "supply": supply, "market": market, "stock_months": stock_months, "trade": trade}
+    workforce = save_workforce(buildings, methods, locations, goods, recipes)
+    return {"producers": producers, "consumers": consumers, "demand": demand, "supply": supply, "market": market, "stock_months": stock_months,
+            "trade": trade, "workforce": workforce}
+
+
+def save_workforce(buildings: pl.DataFrame, methods: pl.DataFrame, locations: pl.DataFrame, goods: pl.DataFrame,
+                   recipes: Recipes) -> pl.DataFrame:
+    """Every employed worker of the save by the good they make: [good_id, building_type, region, workers] (thousands).
+
+    RGO workers (`locations.rgo_employed`) all make the location's raw material. A building's workers
+    (`buildings.employed`) are split over the goods its active methods make by their value at the default price (output
+    per level x default price, summed over the building's slots); the save does not say more. Dummy goods (offset,
+    logistics, Province Food, ...) count as no output, so a building that makes only those (Taverns, Cookshops, logistics
+    buildings) or has no producing method (government, forts, ...) is a row with good_id null: "no goods output". Idle
+    peasants are not employed and never count. The workers sum to the world's employed people (RGO + building jobs)."""
+    region_of_location = locations.select("location_id", "region")
+    price = goods.group_by("good_id").agg(pl.col("default_price").max().alias("dp"))  # tradeable goods only
+    jobs = (
+        buildings.filter(pl.col("employed").fill_null(0.0) > 0)
+        .join(region_of_location, on="location_id", how="left")
+        .select("building_id", "building_type", pl.col("region").fill_null(OTHER_REGION), pl.col("employed").cast(pl.Float64))
+    )
+    value = (
+        methods.join(recipes.outputs, on="method").join(price, on="good_id", how="inner")
+        .group_by("building_id", "good_id").agg((pl.col("per_level") * pl.col("dp")).sum().alias("v"))
+        .filter(pl.col("v") > 0)
+    )
+    made = jobs.join(value, on="building_id", how="left").with_columns(
+        pl.when(pl.col("v").is_null()).then(pl.col("employed"))
+        .otherwise(pl.col("employed") * pl.col("v") / pl.col("v").sum().over("building_id")).alias("workers"))
+    rgo = locations.filter(pl.col("raw_material").is_not_null() & (pl.col("rgo_employed").fill_null(0.0) > 0)).select(
+        pl.col("raw_material").alias("good_id"), pl.lit(RGO).alias("building_type"), "region", pl.col("rgo_employed").cast(pl.Float64).alias("workers"))
+    return pl.concat([made.select("good_id", "building_type", "region", "workers"), rgo]).group_by(
+        "good_id", "building_type", "region").agg(pl.col("workers").sum()).filter(pl.col("workers") > 0)
 
 
 # --------------------------------------------------------------------------------------------------------
@@ -400,7 +434,10 @@ def encode_save(flows: dict[str, Any], index: Index) -> dict[str, list[list[Any]
     w = [[of("good", r["good_id"]), _sig(r["months"], 3)] for r in flows["stock_months"].iter_rows(named=True)]
     x = [[of("good", r["good_id"]), of("region", r["region"]), _sig(r["imports"]), _sig(r["exports"])]
          for r in flows["trade"].iter_rows(named=True)]
-    return {"p": p, "c": c, "d": d, "s": s, "m": m, "w": w, "x": x}
+    # workforce: [good (-1 = no goods output), building, region, workers (thousands)]
+    f = [[of("good", r["good_id"]), of("building", r["building_type"]), of("region", r["region"]), _sig(r["workers"])]
+         for r in flows["workforce"].sort("workers", descending=True).iter_rows(named=True)]
+    return {"p": p, "c": c, "d": d, "s": s, "m": m, "w": w, "x": x, "f": f}
 
 
 def _summary_rows(flows: dict[str, Any]) -> dict[str, dict[str, Any]]:

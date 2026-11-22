@@ -126,9 +126,10 @@ def tier_price(value: float, below: int | None, config: Config) -> int:
 
 
 def _profit_per_level(body: str, prices: dict[str, float]) -> float:
-    """Sum over the slots of the slot's most profitable method."""
+    """Sum over the slots of the slot's most profitable method. A location-gated method runs only where its gate holds
+    (location_methods.py), and a tier's price is the same everywhere, so it does not count."""
     slots, _ = pg.body_slots(body)
-    return sum(max((m.value(prices) - m.cost(prices) for m in slot.methods), default=0.0) for slot in slots)
+    return sum(max((m.value(prices) - m.cost(prices) for m in slot.methods if not m.gated), default=0.0) for slot in slots)
 
 
 def _bound_to_raw_material(body: str) -> bool:

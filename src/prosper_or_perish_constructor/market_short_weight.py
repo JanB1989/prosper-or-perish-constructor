@@ -177,6 +177,7 @@ class Method:
     name: str
     produced: str | None
     output: float
+    gated: bool = False  # location_allow: runs only where its gate holds (location_methods.py)
 
 
 def _method(name: str, node: _Node) -> Method:
@@ -186,16 +187,17 @@ def _method(name: str, node: _Node) -> Method:
         amount = float(output.value) if output is not None and output.value is not None else 0.0
     except ValueError:
         amount = 0.0
-    return Method(name, produced.value if produced is not None else None, amount)
+    return Method(name, produced.value if produced is not None else None, amount, node.get("location_allow") is not None)
 
 
 def main_good(slots: list[list[Method]], prices: dict[str, float], not_goods: frozenset[str]) -> str | None:
-    """The good the building is there for: its market leg's (the gate follows that price), else its largest output by value."""
+    """The good the building is there for: its market leg's (the gate follows that price), else its largest output by value
+    (a location-gated method runs only where its gate holds and does not count)."""
     outputs: dict[str, float] = {}
     leg = None
     for slot in slots:
         for method in slot:
-            if method.produced and method.output > 0:
+            if method.produced and method.output > 0 and not method.gated:
                 outputs[method.produced] = max(outputs.get(method.produced, 0.0), method.output)
                 if method.name.endswith(LEG_SUFFIX):
                     leg = method.produced

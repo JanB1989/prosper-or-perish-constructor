@@ -6127,26 +6127,39 @@ pp_cplan_bz_roi_cattle_rotations = {
 
 pp_cplan_bm_charcoal_maker_1_1 = {
 	value = 0
+	if = {
+		limit = { has_location_modifier = pp_wb_soil_peat }
+		add = { value = "market.market_price(goods:coal)" multiply = { value = modifier:local_coal_output_modifier add = 1 min = 0 } multiply = 0.155 }
+		subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.062 }
+	}
+}
+pp_cplan_bs_charcoal_maker_1 = {
+	value = pp_cplan_bm_charcoal_maker_1_1
+	min = 0
+}
+pp_cplan_bm_charcoal_maker_2_1 = {
+	value = 0
 	add = { value = "market.market_price(goods:coal)" multiply = { value = modifier:local_coal_output_modifier add = 1 min = 0 } multiply = 0.62 }
 	subtract = { value = "market.market_price(goods:clay)" multiply = 0.87 }
 	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.37 }
 	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.41 }
 }
-pp_cplan_bs_charcoal_maker_1 = {
-	value = pp_cplan_bm_charcoal_maker_1_1
+pp_cplan_bs_charcoal_maker_2 = {
+	value = pp_cplan_bm_charcoal_maker_2_1
 }
-pp_cplan_bm_charcoal_maker_2_1 = {
+pp_cplan_bm_charcoal_maker_3_1 = {
 	value = 0
 	add = { value = "market.market_price(goods:coal)" multiply = { value = modifier:local_coal_output_modifier add = 1 min = 0 } multiply = 0.009 }
 	subtract = { value = "market.market_price(goods:offset)" multiply = 0.017 }
 }
-pp_cplan_bs_charcoal_maker_2 = {
-	value = pp_cplan_bm_charcoal_maker_2_1
+pp_cplan_bs_charcoal_maker_3 = {
+	value = pp_cplan_bm_charcoal_maker_3_1
 }
 pp_cplan_bz_est_charcoal_maker = {
 	value = 0
 	add = pp_cplan_bs_charcoal_maker_1
 	add = pp_cplan_bs_charcoal_maker_2
+	add = pp_cplan_bs_charcoal_maker_3
 }
 pp_cplan_bz_roi_charcoal_maker = {
 	value = pp_cplan_bz_est_charcoal_maker
@@ -9469,26 +9482,39 @@ pp_cplan_bz_roi_hurdled_sheepcotes = {
 
 pp_cplan_bm_improved_charcoal_maker_1_1 = {
 	value = 0
+	if = {
+		limit = { has_location_modifier = pp_wb_soil_peat }
+		add = { value = "market.market_price(goods:coal)" multiply = { value = modifier:local_coal_output_modifier add = 1 min = 0 } multiply = 0.2 }
+		subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.08 }
+	}
+}
+pp_cplan_bs_improved_charcoal_maker_1 = {
+	value = pp_cplan_bm_improved_charcoal_maker_1_1
+	min = 0
+}
+pp_cplan_bm_improved_charcoal_maker_2_1 = {
+	value = 0
 	add = { value = "market.market_price(goods:coal)" multiply = { value = modifier:local_coal_output_modifier add = 1 min = 0 } multiply = 0.9 }
 	subtract = { value = "market.market_price(goods:clay)" multiply = 1.23 }
 	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.52 }
 	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.32 }
 }
-pp_cplan_bs_improved_charcoal_maker_1 = {
-	value = pp_cplan_bm_improved_charcoal_maker_1_1
+pp_cplan_bs_improved_charcoal_maker_2 = {
+	value = pp_cplan_bm_improved_charcoal_maker_2_1
 }
-pp_cplan_bm_improved_charcoal_maker_2_1 = {
+pp_cplan_bm_improved_charcoal_maker_3_1 = {
 	value = 0
 	add = { value = "market.market_price(goods:coal)" multiply = { value = modifier:local_coal_output_modifier add = 1 min = 0 } multiply = 0.009 }
 	subtract = { value = "market.market_price(goods:offset)" multiply = 0.017 }
 }
-pp_cplan_bs_improved_charcoal_maker_2 = {
-	value = pp_cplan_bm_improved_charcoal_maker_2_1
+pp_cplan_bs_improved_charcoal_maker_3 = {
+	value = pp_cplan_bm_improved_charcoal_maker_3_1
 }
 pp_cplan_bz_est_improved_charcoal_maker = {
 	value = 0
 	add = pp_cplan_bs_improved_charcoal_maker_1
 	add = pp_cplan_bs_improved_charcoal_maker_2
+	add = pp_cplan_bs_improved_charcoal_maker_3
 }
 pp_cplan_bz_roi_improved_charcoal_maker = {
 	value = pp_cplan_bz_est_improved_charcoal_maker
@@ -10509,9 +10535,12 @@ pp_cplan_bs_lumber_mill_1 = {
 }
 pp_cplan_bm_lumber_mill_2_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:lumber)" multiply = { value = modifier:local_lumber_output_modifier add = 1 min = 0 } multiply = 0.25 }
-	subtract = { value = "market.market_price(goods:elephants)" multiply = 0.1 }
-	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.19 }
+	if = {
+		limit = { market ?= { is_produced_in_market = goods:elephants } }
+		add = { value = "market.market_price(goods:lumber)" multiply = { value = modifier:local_lumber_output_modifier add = 1 min = 0 } multiply = 0.25 }
+		subtract = { value = "market.market_price(goods:elephants)" multiply = 0.1 }
+		subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.19 }
+	}
 }
 pp_cplan_bs_lumber_mill_2 = {
 	value = pp_cplan_bm_lumber_mill_2_1
@@ -10605,9 +10634,12 @@ pp_cplan_bs_lumber_mill_improved_1 = {
 }
 pp_cplan_bm_lumber_mill_improved_2_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:lumber)" multiply = { value = modifier:local_lumber_output_modifier add = 1 min = 0 } multiply = 0.297 }
-	subtract = { value = "market.market_price(goods:elephants)" multiply = 0.15 }
-	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.15 }
+	if = {
+		limit = { market ?= { is_produced_in_market = goods:elephants } }
+		add = { value = "market.market_price(goods:lumber)" multiply = { value = modifier:local_lumber_output_modifier add = 1 min = 0 } multiply = 0.297 }
+		subtract = { value = "market.market_price(goods:elephants)" multiply = 0.15 }
+		subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.15 }
+	}
 }
 pp_cplan_bs_lumber_mill_improved_2 = {
 	value = pp_cplan_bm_lumber_mill_improved_2_1
@@ -13493,39 +13525,54 @@ pp_cplan_bz_roi_rice_rotations = {
 
 pp_cplan_bm_rural_clothmaker_1_1 = {
 	value = 0
+	if = {
+		limit = { has_river = yes OR = { topography = hills topography = mountains topography = ha1300_topo_valleys } }
+		add = { value = "market.market_price(goods:cloth)" multiply = { value = modifier:local_cloth_output_modifier add = 1 min = 0 } multiply = 0.075 }
+		subtract = { value = "market.market_price(goods:lumber)" multiply = 0.008 }
+		subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.042 }
+		subtract = { value = "market.market_price(goods:wool)" multiply = 0.05 }
+	}
+}
+pp_cplan_bs_rural_clothmaker_1 = {
+	value = pp_cplan_bm_rural_clothmaker_1_1
+	min = 0
+}
+pp_cplan_bm_rural_clothmaker_2_1 = {
+	value = 0
 	add = { value = "market.market_price(goods:cloth)" multiply = { value = modifier:local_cloth_output_modifier add = 1 min = 0 } multiply = 0.28 }
 	subtract = { value = "market.market_price(goods:fiber_crops)" multiply = 0.26 }
 	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.27 }
 }
-pp_cplan_bm_rural_clothmaker_1_2 = {
+pp_cplan_bm_rural_clothmaker_2_2 = {
 	value = 0
 	add = { value = "market.market_price(goods:cloth)" multiply = { value = modifier:local_cloth_output_modifier add = 1 min = 0 } multiply = 0.35 }
 	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.35 }
 	subtract = { value = "market.market_price(goods:wool)" multiply = 0.26 }
 }
-pp_cplan_bm_rural_clothmaker_1_3 = {
+pp_cplan_bm_rural_clothmaker_2_3 = {
 	value = 0
 	add = { value = "market.market_price(goods:cloth)" multiply = { value = modifier:local_cloth_output_modifier add = 1 min = 0 } multiply = 0.35 }
 	subtract = { value = "market.market_price(goods:cotton)" multiply = 0.22 }
 	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.34 }
 }
-pp_cplan_bs_rural_clothmaker_1 = {
-	value = pp_cplan_bm_rural_clothmaker_1_1
-	min = pp_cplan_bm_rural_clothmaker_1_2
-	min = pp_cplan_bm_rural_clothmaker_1_3
+pp_cplan_bs_rural_clothmaker_2 = {
+	value = pp_cplan_bm_rural_clothmaker_2_1
+	min = pp_cplan_bm_rural_clothmaker_2_2
+	min = pp_cplan_bm_rural_clothmaker_2_3
 }
-pp_cplan_bm_rural_clothmaker_2_1 = {
+pp_cplan_bm_rural_clothmaker_3_1 = {
 	value = 0
 	add = { value = "market.market_price(goods:cloth)" multiply = { value = modifier:local_cloth_output_modifier add = 1 min = 0 } multiply = 0.006 }
 	subtract = { value = "market.market_price(goods:offset)" multiply = 0.017 }
 }
-pp_cplan_bs_rural_clothmaker_2 = {
-	value = pp_cplan_bm_rural_clothmaker_2_1
+pp_cplan_bs_rural_clothmaker_3 = {
+	value = pp_cplan_bm_rural_clothmaker_3_1
 }
 pp_cplan_bz_est_rural_clothmaker = {
 	value = 0
 	add = pp_cplan_bs_rural_clothmaker_1
 	add = pp_cplan_bs_rural_clothmaker_2
+	add = pp_cplan_bs_rural_clothmaker_3
 }
 pp_cplan_bz_roi_rural_clothmaker = {
 	value = pp_cplan_bz_est_rural_clothmaker
@@ -13535,25 +13582,40 @@ pp_cplan_bz_roi_rural_clothmaker = {
 
 pp_cplan_bm_rural_glassmaker_1_1 = {
 	value = 0
+	if = {
+		limit = { OR = { vegetation = forest vegetation = ha1300_veg_mixed_forest vegetation = woods } }
+		add = { value = "market.market_price(goods:glass)" multiply = { value = modifier:local_glass_output_modifier add = 1 min = 0 } multiply = 0.05 }
+		subtract = { value = "market.market_price(goods:lumber)" multiply = 0.022 }
+		subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.038 }
+		subtract = { value = "market.market_price(goods:sand)" multiply = 0.069 }
+	}
+}
+pp_cplan_bs_rural_glassmaker_1 = {
+	value = pp_cplan_bm_rural_glassmaker_1_1
+	min = 0
+}
+pp_cplan_bm_rural_glassmaker_2_1 = {
+	value = 0
 	add = { value = "market.market_price(goods:glass)" multiply = { value = modifier:local_glass_output_modifier add = 1 min = 0 } multiply = 0.14 }
 	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.12 }
 	subtract = { value = "market.market_price(goods:sand)" multiply = 0.49 }
 }
-pp_cplan_bs_rural_glassmaker_1 = {
-	value = pp_cplan_bm_rural_glassmaker_1_1
+pp_cplan_bs_rural_glassmaker_2 = {
+	value = pp_cplan_bm_rural_glassmaker_2_1
 }
-pp_cplan_bm_rural_glassmaker_2_1 = {
+pp_cplan_bm_rural_glassmaker_3_1 = {
 	value = 0
 	add = { value = "market.market_price(goods:glass)" multiply = { value = modifier:local_glass_output_modifier add = 1 min = 0 } multiply = 0.006 }
 	subtract = { value = "market.market_price(goods:offset)" multiply = 0.017 }
 }
-pp_cplan_bs_rural_glassmaker_2 = {
-	value = pp_cplan_bm_rural_glassmaker_2_1
+pp_cplan_bs_rural_glassmaker_3 = {
+	value = pp_cplan_bm_rural_glassmaker_3_1
 }
 pp_cplan_bz_est_rural_glassmaker = {
 	value = 0
 	add = pp_cplan_bs_rural_glassmaker_1
 	add = pp_cplan_bs_rural_glassmaker_2
+	add = pp_cplan_bs_rural_glassmaker_3
 }
 pp_cplan_bz_roi_rural_glassmaker = {
 	value = pp_cplan_bz_est_rural_glassmaker
@@ -13660,10 +13722,11 @@ pp_cplan_bs_salt_collector_1 = {
 }
 pp_cplan_bm_salt_collector_2_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:salt)" multiply = { value = modifier:local_salt_output_modifier add = 1 min = 0 } multiply = 0.24 }
-	subtract = { value = "market.market_price(goods:clay)" multiply = 0.97 }
-	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.28 }
-	subtract = { value = "market.market_price(goods:pottery)" multiply = 0.28 }
+	if = {
+		limit = { OR = { climate = arid climate = hot_semi_arid climate = mediterranean } }
+		add = { value = "market.market_price(goods:salt)" multiply = { value = modifier:local_salt_output_modifier add = 1 min = 0 } multiply = 0.048 }
+		subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.048 }
+	}
 }
 pp_cplan_bs_salt_collector_2 = {
 	value = pp_cplan_bm_salt_collector_2_1
@@ -13671,17 +13734,29 @@ pp_cplan_bs_salt_collector_2 = {
 }
 pp_cplan_bm_salt_collector_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:salt)" multiply = { value = modifier:local_salt_output_modifier add = 1 min = 0 } multiply = 0.004 }
-	subtract = { value = "market.market_price(goods:offset)" multiply = 0.019 }
+	add = { value = "market.market_price(goods:salt)" multiply = { value = modifier:local_salt_output_modifier add = 1 min = 0 } multiply = 0.24 }
+	subtract = { value = "market.market_price(goods:clay)" multiply = 0.97 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.28 }
+	subtract = { value = "market.market_price(goods:pottery)" multiply = 0.28 }
 }
 pp_cplan_bs_salt_collector_3 = {
 	value = pp_cplan_bm_salt_collector_3_1
+	min = 0
+}
+pp_cplan_bm_salt_collector_4_1 = {
+	value = 0
+	add = { value = "market.market_price(goods:salt)" multiply = { value = modifier:local_salt_output_modifier add = 1 min = 0 } multiply = 0.004 }
+	subtract = { value = "market.market_price(goods:offset)" multiply = 0.019 }
+}
+pp_cplan_bs_salt_collector_4 = {
+	value = pp_cplan_bm_salt_collector_4_1
 }
 pp_cplan_bz_est_salt_collector = {
 	value = 0
 	add = pp_cplan_bs_salt_collector_1
 	add = pp_cplan_bs_salt_collector_2
 	add = pp_cplan_bs_salt_collector_3
+	add = pp_cplan_bs_salt_collector_4
 }
 pp_cplan_bz_roi_salt_collector = {
 	value = pp_cplan_bz_est_salt_collector
@@ -15562,9 +15637,12 @@ pp_cplan_bs_water_sawmill_1 = {
 }
 pp_cplan_bm_water_sawmill_2_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:lumber)" multiply = { value = modifier:local_lumber_output_modifier add = 1 min = 0 } multiply = 0.24 }
-	subtract = { value = "market.market_price(goods:elephants)" multiply = 0.12 }
-	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.15 }
+	if = {
+		limit = { market ?= { is_produced_in_market = goods:elephants } }
+		add = { value = "market.market_price(goods:lumber)" multiply = { value = modifier:local_lumber_output_modifier add = 1 min = 0 } multiply = 0.24 }
+		subtract = { value = "market.market_price(goods:elephants)" multiply = 0.12 }
+		subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.15 }
+	}
 }
 pp_cplan_bs_water_sawmill_2 = {
 	value = pp_cplan_bm_water_sawmill_2_1
@@ -17323,15 +17401,15 @@ pp_cplan_uc_here_lumber = {
 	}
 	every_buildings_in_location = {
 		limit = { building_levels_under_construction > 0 building_type = building_type:lumber_mill }
-		add = { value = building_levels_under_construction multiply = 1.699 }
+		add = { value = building_levels_under_construction multiply = 1.449 }
 	}
 	every_buildings_in_location = {
 		limit = { building_levels_under_construction > 0 building_type = building_type:water_sawmill }
-		add = { value = building_levels_under_construction multiply = 2.938 }
+		add = { value = building_levels_under_construction multiply = 2.698 }
 	}
 	every_buildings_in_location = {
 		limit = { building_levels_under_construction > 0 building_type = building_type:lumber_mill_improved }
-		add = { value = building_levels_under_construction multiply = 3.575 }
+		add = { value = building_levels_under_construction multiply = 3.278 }
 	}
 }
 pp_cplan_uc_market_lumber = {

@@ -299,7 +299,7 @@ pp_tt_vegetation_woods = {
 	free_building_levels = -1
 	local_build_buildings_efficiency = -0.03
 	local_construction_speed = -0.03
-	hostile_movement_cost = 0.07
+	hostile_movement_cost = 0.075
 	pp_wb_capacity_field_management = 2
 	pp_wb_capacity_irrigated_fields = 4
 	pp_wb_capacity_paddy_water_control = 4
@@ -523,7 +523,7 @@ pp_tt_topography_plateau = {
 	local_build_buildings_efficiency = -0.15
 	local_construction_speed = -0.15
 	local_tribesmen_pop_growth = -1
-	hostile_movement_cost = 0.07
+	hostile_movement_cost = 0.075
 	pp_wb_capacity_irrigated_fields = -2
 	pp_wb_capacity_paddy_water_control = -2
 }
@@ -767,7 +767,7 @@ pp_tt_fertility_very_low = {
 pp_tt_soil_clay = {
 	game_data = { category = location }
 	local_population_capacity = 1.1
-	hostile_movement_cost = 0.07
+	hostile_movement_cost = 0.075
 }
 
 pp_tt_soil_peat = {

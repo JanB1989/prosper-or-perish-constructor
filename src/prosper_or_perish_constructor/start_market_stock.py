@@ -13,7 +13,8 @@ The stock of a market and good comes out of game, from what the build itself pla
 
 Solving the price law at supply = demand for the good's settled price x (price / default): that many months of flow put
 the target at x. use and make are start flows per market: people x the goods' pop demand, building levels x inputs and
-outputs (each slot's methods averaged), RGO workers by rank, land quality from the World Builder rows. The ceiling is the
+outputs (each slot's methods averaged; a location-gated method only where its gate holds, location_methods.py), RGO
+workers by rank, land quality from the World Builder rows. The ceiling is the
 market's stock ceiling from its centre's development: at 90 % of it the AI stops building producers of the good there
 (LOCAL_OVERSUPPLY_STOCKPILE_THRESHOLD), so the injection stays below that.
 
@@ -175,11 +176,17 @@ def _markets_of_locations(repo: Path, mod_root: Path, vanilla_root: Path, locati
     return out
 
 
+def _attributes(repo: Path, project: Path) -> dict[str, dict[str, str]]:
+    """location -> its World Builder attribute row."""
+    handover = load_worldbuilder_config(repo, project).handover
+    with (handover / "location_attributes.csv").open(encoding="utf-8-sig") as handle:
+        return {r["location_tag"]: r for r in csv.DictReader(handle)}
+
+
 def _land_output(repo: Path, project: Path):
     """location, good -> the World Builder rows' local output modifier."""
     handover = load_worldbuilder_config(repo, project).handover
-    with (handover / "location_attributes.csv").open(encoding="utf-8-sig") as handle:
-        attributes = {r["location_tag"]: r for r in csv.DictReader(handle)}
+    attributes = _attributes(repo, project)
     rows: dict[str, dict[str, dict[str, float]]] = defaultdict(dict)
     with (handover / "attribute_rows.csv").open(encoding="utf-8-sig") as handle:
         for r in csv.DictReader(handle):
@@ -219,21 +226,51 @@ def _pop_demand_values(mod_root: Path) -> dict[str, float]:
     return {m.group(1): float(m.group(2)) for m in re.finditer(r"^\s*([a-z_]+)\s*=\s*([0-9.]+)", block, re.M)}
 
 
-def _slot_flows(buildings: pl.DataFrame, methods: pl.DataFrame) -> tuple[dict[str, dict[str, float]], dict[str, dict[str, float]]]:
-    """building -> good -> input and output per level, each slot's methods averaged (the engine picks among them)."""
+GatedSlot = list[tuple[dict, str | None]]  # (method row, its location gate or None)
+
+
+def _average(found: list[dict], inputs: dict[str, float], outputs: dict[str, float]) -> None:
+    """Add the methods' flows, averaged (the engine picks among them), to ``inputs`` and ``outputs``."""
+    for method in found:
+        for good, amount in zip(method["input_goods"] or [], method["input_amounts"] or []):
+            inputs[good] = inputs.get(good, 0.0) + amount / len(found)
+        if method["produced"] and method["output"]:
+            good = method["produced"]
+            outputs[good] = outputs.get(good, 0.0) + method["output"] / len(found)
+
+
+def _slot_flows(
+    buildings: pl.DataFrame, methods: pl.DataFrame, gates: dict[str, str] | None = None
+) -> tuple[dict[str, dict[str, float]], dict[str, dict[str, float]], dict[str, list[GatedSlot]]]:
+    """building -> good -> input and output per level, each slot's methods averaged (the engine picks among them), and
+    building -> its slots that hold a location-gated method (``gates``: method -> gate, location_methods.py): those run
+    only where their gate holds, so they are averaged per location (``_gated_flows``)."""
+    gates = gates or {}
     by_name = {r["name"]: r for r in methods.to_dicts()}
     inputs: dict[str, dict[str, float]] = defaultdict(dict)
     outputs: dict[str, dict[str, float]] = defaultdict(dict)
+    gated: dict[str, list[GatedSlot]] = defaultdict(list)
     for building in buildings.to_dicts():
         name = building["name"]
         for slot in building["unique_production_method_groups"] or []:
             found = [by_name[m] for m in slot if m in by_name]
-            for method in found:
-                for good, amount in zip(method["input_goods"] or [], method["input_amounts"] or []):
-                    inputs[name][good] = inputs[name].get(good, 0.0) + amount / len(found)
-                if method["produced"] and method["output"]:
-                    good = method["produced"]
-                    outputs[name][good] = outputs[name].get(good, 0.0) + method["output"] / len(found)
+            if any(m["name"] in gates for m in found):
+                gated[name].append([(m, gates.get(m["name"])) for m in found])
+                continue
+            _average(found, inputs[name], outputs[name])
+    return inputs, outputs, gated
+
+
+def _gated_flows(slots: list[GatedSlot], facts: dict) -> tuple[dict[str, float], dict[str, float]]:
+    """A building's gated slots in one location: each slot's methods allowed there, averaged."""
+    from prosper_or_perish_constructor.location_methods import allowed
+
+    inputs: dict[str, float] = {}
+    outputs: dict[str, float] = {}
+    for slot in slots:
+        found = [method for method, gate in slot if allowed(gate, facts)]
+        if found:
+            _average(found, inputs, outputs)
     return inputs, outputs
 
 
@@ -261,15 +298,29 @@ def model_flows(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -
                     flows.pop[(market, good)] += pop.size_k * per_type[pop.type]
 
     land_output = _land_output(repo, project)
-    inputs, outputs = _slot_flows(building_data.buildings, building_data.production_methods)
+    from prosper_or_perish_constructor import location_methods as lm
+
+    gates = lm.game_gates(lm.building_type_files(repo, project))
+    inputs, outputs, gated = _slot_flows(building_data.buildings, building_data.production_methods, gates)
+    attributes = _attributes(repo, project)
+    produced = load_presence(repo) if (repo / PRESENCE).is_file() else {}
     for tag, levels in setup_levels(vanilla_root, mod_root).items():
         market = market_of.get(tag)
         if not market:
             continue
+        facts = None
         for building, level in levels.items():
-            for good, amount in inputs.get(building, {}).items():
+            building_inputs, building_outputs = inputs.get(building, {}), outputs.get(building, {})
+            if building in gated:
+                # a gated slot runs its gated method only where the gate holds (setup buildings there start on it)
+                if facts is None:
+                    facts = {**lm.attribute_facts(attributes.get(tag, {})), "market_goods": produced.get(market)}
+                extra_inputs, extra_outputs = _gated_flows(gated[building], facts)
+                building_inputs = {g: building_inputs.get(g, 0.0) + extra_inputs.get(g, 0.0) for g in {*building_inputs, *extra_inputs}}
+                building_outputs = {g: building_outputs.get(g, 0.0) + extra_outputs.get(g, 0.0) for g in {*building_outputs, *extra_outputs}}
+            for good, amount in building_inputs.items():
                 flows.inputs[(market, good)] += level * amount
-            for good, amount in outputs.get(building, {}).items():
+            for good, amount in building_outputs.items():
                 flows.outputs[(market, good)] += level * amount * max(0.05, 1 + land_output(tag, good))
 
     start = sp.StartConfig.from_raw(tomllib.loads(project.read_text(encoding="utf-8"))["worldbuilder"]["start"])
@@ -312,8 +363,11 @@ def plan(
 
 def _fingerprint(repo: Path, project: Path, mod_root: Path, vanilla_root: Path) -> str:
     """Everything the plan reads; the finalize pass skips the parser while this holds (ppc sync must stay fast)."""
+    from prosper_or_perish_constructor import location_methods
+
     handover = load_worldbuilder_config(repo, project).handover
-    files = [repo / TABLE, repo / PRESENCE, repo / START_MARKETS, repo / LOCATIONS, project, Path(__file__), handover / "location_attributes.csv", handover / "attribute_rows.csv"]
+    files = [repo / TABLE, repo / PRESENCE, repo / START_MARKETS, repo / LOCATIONS, project, Path(__file__), Path(location_methods.__file__),
+             handover / "location_attributes.csv", handover / "attribute_rows.csv"]
     files.extend(sorted((vanilla_root / VANILLA_GOODS).glob("*.txt")))
     for folder in INPUT_FOLDERS:
         files.extend(sorted((mod_root / folder).glob("*.txt")))

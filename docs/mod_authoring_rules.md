@@ -55,6 +55,35 @@ The local output modifier map modes (`M/in_game/gfx/map/map_modes/pp_local_outpu
 `tools/generate_pp_goods_output_map_modes.py` writes `pp_goods_output_map_modes_generated.txt`. Edit the generators,
 not the files.
 
+## Location-gated methods
+
+A production method can be tied to a location with `location_allow = { <trigger> }` (location scope, inside the
+method). The game reads it when a building is created, valued by the AI, switched by the AI or set by the player, and
+never again for a running building. Rules for a blueprint (`tests/test_location_gated_methods.py`):
+
+- Gate only on what never changes: `has_location_modifier = pp_wb_soil_<soil>`, `climate`, `vegetation`, `topography`
+  (World Builder classes by their own keys, e.g. `ha1300_topo_valleys`; vanilla keys such as `forest` mean only the
+  vanilla class), `has_river`, `is_coastal`.
+- Give the method a slot of its own: an empty method first (no goods, no output, `category = building_maintenance`,
+  named "No <method>"), the gated method second, nothing else. Never put a gated method beside other producers, alone in
+  a slot or in the Market leg; never let it gate.
+- Every tier that replaces the building (`obsolete`) gets its own copy with the same gate, so the site keeps it after the
+  upgrade (an upgrade picks every slot again).
+- The method pays where it runs at the labour price the game sees (about 1.8): a building leaves a losing method only
+  slowly. Tag it for the labour pass like any method.
+- Text: name the slot and both methods, and write the gated method's `_desc`: what it is, then where it works, with
+  links (`[location|e]`, `[river|e]`, `[ShowModifier('pp_wb_soil_peat')]`, `[ShowClimateName('arid')]` with
+  `[climate|e]`, `[ShowVegetationName('woods')]` with `[vegetation|e]`, `[ShowTopographyName('hills')]` with
+  `[topography|e]`) and no numbers. The game's tooltip names a single failed condition but says only that the
+  requirements are not met for an `OR`, so the description is where players learn where it works.
+- Slot names are positional (`<building>_slot_<n>`). Add the new slot and its name at the place you insert it, renumber
+  the ones after it, then run `ppc gate apply`, which orders the slots and renumbers the names with them.
+- Reuse a goods icon (`icon_type = goods`, `icon = <good>`), no new art.
+- No script may set a production method (`set_production_method` ignores the gate and the building stays there).
+
+A building's own gate (where it may stand) on soil or vegetation can sit in `location_potential`: those never change, so
+the engine's re-check on an owner change cannot remove the building. Owner and capital conditions stay in `allow`.
+
 ## Pop types: the upper flag
 
 `upper = yes` on a pop type is more than a demand group. It also decides who a pop is when the game creates it at game

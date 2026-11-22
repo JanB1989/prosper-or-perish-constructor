@@ -58,6 +58,7 @@ WORLDBUILDER_CODE_AND_DATA = (
     "src/prosper_or_perish_constructor/goods_categories.py",      # crop_farms (start crop allocation) imports these
     "src/prosper_or_perish_constructor/interface_dds.py",         # the geography sync copies icons in the game format
     "src/prosper_or_perish_constructor/location_baseline.py",
+    "src/prosper_or_perish_constructor/location_methods.py",     # production_gate reads the methods' location gates
     "src/prosper_or_perish_constructor/logistics.py",            # production_labour skips its network methods
     "src/prosper_or_perish_constructor/production_gate.py",
     "src/prosper_or_perish_constructor/production_labour.py",
@@ -3572,8 +3573,13 @@ def _load_production_throughput_inputs(
         data.advancements,
         include_specific_unlocks=include_specific,
     )
+    from prosper_or_perish_constructor.location_methods import gated_method_names
+
     goods = sorted(str(row["name"]) for row in data.goods.to_dicts())
-    return goods, annotated.production_methods.to_dicts(), list(AGE_ORDER)
+    # a location-gated method runs only where its gate holds (location_methods.py): throughput outside every gate
+    gated = gated_method_names(profile, load_order_path)
+    methods = [row for row in annotated.production_methods.to_dicts() if row["name"] not in gated]
+    return goods, methods, list(AGE_ORDER)
 
 
 def _production_throughput_rows(

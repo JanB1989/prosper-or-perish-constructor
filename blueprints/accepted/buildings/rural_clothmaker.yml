@@ -3,6 +3,8 @@ tag: rural_clothmaker
 footprint: mill_works
 labour:
   class: cottage
+  methods:
+    pp_rural_clothmaker_fulling_mill: craft_medieval  # a water mill, not a home craft: the wheel does the pounding
 gate_method: pp_rural_clothmaker_market_sales
 building:
   key: rural_clothmaker
@@ -11,10 +13,14 @@ building:
   production_method_slots:
   - name: slot_0
     methods:
+    - pp_rural_clothmaker_no_fulling_mill
+    - pp_rural_clothmaker_fulling_mill
+  - name: slot_1
+    methods:
     - pp_rural_clothmaker_rural_fiber_clothmaker
     - pp_rural_clothmaker_rural_wool_clothmaker
     - pp_rural_clothmaker_rural_cotton_clothmaker
-  - name: slot_1
+  - name: slot_2
     methods:
     - pp_rural_clothmaker_market_sales
   possible_production_methods: []
@@ -32,6 +38,31 @@ building:
     town = no
     city = no
     build_time = rural_build_time
+    # location-gated methods 2026-11-22 (Jan): a water-driven fulling mill where a river falls through hills, mountains
+    # or valleys. A slot of its own with an empty method first (location_methods.py); river and topography never change.
+    unique_production_methods = {
+        pp_rural_clothmaker_no_fulling_mill = {
+            category = building_maintenance
+        }
+        pp_rural_clothmaker_fulling_mill = {
+            icon_type = goods
+            icon = cloth
+            location_allow = {
+                has_river = yes
+                OR = {
+                    topography = hills
+                    topography = mountains
+                    topography = ha1300_topo_valleys
+                }
+            }
+            wool = 0.05 # woven wool, fulled into dense cloth
+            lumber = 0.008 # wheel, shafts and fulling stocks
+            manual_labor = 0.042
+            produced = cloth
+            output = 0.075
+            category = building_maintenance
+        }
+    }
     unique_production_methods = {
         pp_rural_clothmaker_rural_fiber_clothmaker = {
             fiber_crops = 0.26
@@ -83,13 +114,17 @@ prices:
 localization:
   entries:
     pp_rural_clothmaker_price: "[ShowBuildingTypeName('rural_clothmaker')|e] Price"
-    rural_clothmaker_slot_0: "[ShowBuildingTypeName('rural_clothmaker')|e] Work"
+    rural_clothmaker_slot_0: Fulling
+    rural_clothmaker_slot_1: "[ShowBuildingTypeName('rural_clothmaker')|e] Work"
+    rural_clothmaker_slot_2: Market
     pp_rural_clothmaker_rural_wool_clothmaker: Wool Cloth
     pp_rural_clothmaker_rural_cotton_clothmaker: Cotton Cloth
     pp_rural_clothmaker_rural_fiber_clothmaker: Linen Cloth
     pp_rural_clothmaker_market_sales: Market Sales
     pp_rural_clothmaker_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
-    rural_clothmaker_slot_1: Market
+    pp_rural_clothmaker_no_fulling_mill: No Fulling Mill
+    pp_rural_clothmaker_fulling_mill: Fulling Mill
+    pp_rural_clothmaker_fulling_mill_desc: "A water wheel drives heavy wooden hammers that pound woven wool into dense, felted cloth, work that once took many feet in a trough. Only where a [river|e] runs through a [location|e] of [ShowTopographyName('hills')], [ShowTopographyName('mountains')] or [ShowTopographyName('ha1300_topo_valleys')] [topography|e], where the water falls fast enough to turn the wheel."
 evaluation:
   allow_rules:
     amortization_months: Non-raw producer under the building price brake (double price, triple level cost, 2026-09-30); slow payback is the point.
@@ -97,6 +132,15 @@ evaluation:
     input_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
     output_throughput: Converted vanilla producer preserves vanilla production shape while targeting profit per building, not throughput per worker.
   production_methods:
+    pp_rural_clothmaker_no_fulling_mill:
+      production_efficiency: 1.0
+      allow_rules:
+        profit_percent: Empty selector method intentionally leaves cloth output unchanged away from fast rivers.
+    pp_rural_clothmaker_fulling_mill:
+      production_efficiency: 1.0
+      allow_rules:
+        input_throughput: The fulling mill is a small add-on by fast rivers only, deliberately below the full-building throughput.
+        output_throughput: The fulling mill is a small add-on by fast rivers only, deliberately below the full-building throughput.
     pp_rural_clothmaker_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

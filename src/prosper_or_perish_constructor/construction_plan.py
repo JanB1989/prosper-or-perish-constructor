@@ -562,11 +562,21 @@ def staple_food_lines(repo: Path, mod_root: Path, crop_lines: dict[str, list[str
 
 @dataclass(frozen=True)
 class Recipe:
-    """One production method: the good it makes, how much, and its inputs (per level)."""
+    """One production method: the good it makes, how much, and its inputs (per level). ``location_allow``: the
+    method's location gate (location_methods.py), it runs only where that holds."""
 
     produced: str | None
     output: float
     inputs: tuple[tuple[str, float], ...]
+    location_allow: str | None = None
+
+
+def _within_gate(lines: list[str], recipe: Recipe) -> list[str]:
+    """A method value's terms (after ``value = 0``), inside the method's location gate when it has one: elsewhere the
+    method cannot run, so it is worth 0 there."""
+    if recipe.location_allow is None:
+        return lines
+    return [f"\tif = {{\n\t\tlimit = {{ {recipe.location_allow} }}", *("\t" + line for line in lines), "\t}"]
 
 
 def farm_recipes(repo: Path, buildings: list[str]) -> dict[str, list[list[Recipe]]]:
@@ -583,7 +593,8 @@ def farm_recipes(repo: Path, buildings: list[str]) -> dict[str, list[list[Recipe
             continue
         slots, _ = pg.body_slots(building.get("body") or "")
         found[key] = [
-            [Recipe(m.produced, float(m.output or 0.0), tuple(sorted((g, float(a)) for g, a in (m.inputs or {}).items())))
+            [Recipe(m.produced, float(m.output or 0.0), tuple(sorted((g, float(a)) for g, a in (m.inputs or {}).items())),
+                    m.location_allow)
              for m in slot.methods]
             for slot in slots
         ]
@@ -601,7 +612,8 @@ def built_recipes(database: dict[str, tuple[dict[str, str], str]], buildings: li
             continue
         slots, _ = pg.body_slots(database[key][1], key)
         found[key] = [
-            [Recipe(m.produced, float(m.output or 0.0), tuple(sorted((g, float(a)) for g, a in (m.inputs or {}).items())))
+            [Recipe(m.produced, float(m.output or 0.0), tuple(sorted((g, float(a)) for g, a in (m.inputs or {}).items())),
+                    m.location_allow)
              for m in slot.methods]
             for slot in slots
         ]
@@ -1233,16 +1245,16 @@ def _first_that_can(buildings: tuple[str, ...], costs: dict[str, BuildingCost], 
 
 def _method_value(name: str, recipe: Recipe) -> str:
     """A script value: one level's monthly profit of this method at the location's market prices and output."""
-    lines = [f"{name} = {{", "\tvalue = 0"]
+    terms = []
     if recipe.produced:
-        lines.append(
+        terms.append(
             f"\tadd = {{ value = \"market.market_price(goods:{recipe.produced})\" "
             f"multiply = {{ value = modifier:local_{recipe.produced}_output_modifier add = 1 min = 0 }} "
             f"multiply = {_num(recipe.output)} }}"
         )
     for good, amount in recipe.inputs:
-        lines.append(f"\tsubtract = {{ value = \"market.market_price(goods:{good})\" multiply = {_num(amount)} }}")
-    lines.append("}")
+        terms.append(f"\tsubtract = {{ value = \"market.market_price(goods:{good})\" multiply = {_num(amount)} }}")
+    lines = [f"{name} = {{", "\tvalue = 0", *_within_gate(terms, recipe), "}"]
     return "\n".join(lines) + "\n"
 
 
@@ -1531,19 +1543,20 @@ def render_effects(config: Config, farm_lines: dict[str, list[str]],
 
 def _business_method(name: str, recipe: Recipe, harvest_goods: set[str]) -> str:
     """A script value: one level's monthly profit of this method at the location's market prices and its output, this
-    year's Variable Harvest taken out (scope:pp_cplan_hv_<good>, set by pp_cplan_business_harvest)."""
-    lines = [f"{name} = {{", "\tvalue = 0"]
+    year's Variable Harvest taken out (scope:pp_cplan_hv_<good>, set by pp_cplan_business_harvest). A location-gated
+    method is worth something only where its gate holds."""
+    terms = []
     if recipe.produced:
         good = recipe.produced
         normal = f" subtract = scope:pp_cplan_hv_{good}" if good in harvest_goods else ""
-        lines.append(
+        terms.append(
             f"\tadd = {{ value = \"market.market_price(goods:{good})\" "
             f"multiply = {{ value = modifier:local_{good}_output_modifier add = 1{normal} min = 0 }} "
             f"multiply = {_num(recipe.output)} }}"
         )
     for good, amount in recipe.inputs:
-        lines.append(f"\tsubtract = {{ value = \"market.market_price(goods:{good})\" multiply = {_num(amount)} }}")
-    lines.append("}")
+        terms.append(f"\tsubtract = {{ value = \"market.market_price(goods:{good})\" multiply = {_num(amount)} }}")
+    lines = [f"{name} = {{", "\tvalue = 0", *_within_gate(terms, recipe), "}"]
     return "\n".join(lines) + "\n"
 
 
@@ -1692,8 +1705,9 @@ MARKET_LIMITED = ("business", "profiles")
 
 def main_output(slots: list[list[Recipe]], good: str) -> float:
     """One level's monthly output of ``good``: in every slot the method that makes the most of it (the business
-    estimate's recipes; the location's output modifiers left out)."""
-    return sum(max((m.output for m in slot if m.produced == good), default=0.0) for slot in slots)
+    estimate's recipes; the location's output modifiers left out). A location-gated method does not count: it runs only
+    where its gate holds, and the limit is one number per building."""
+    return sum(max((m.output for m in slot if m.produced == good and m.location_allow is None), default=0.0) for slot in slots)
 
 
 def market_outputs(businesses: dict[str, str], recipes: dict[str, list[list[Recipe]]]) -> dict[str, dict[str, float]]:

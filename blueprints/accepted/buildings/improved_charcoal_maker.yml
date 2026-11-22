@@ -3,6 +3,8 @@ tag: improved_charcoal_maker
 footprint: forestry
 labour:
   class: primary_absolutism
+  methods:
+    pp_improved_charcoal_maker_peat_cutting: base
 gate_method: pp_improved_charcoal_maker_market_sales
 building:
   key: improved_charcoal_maker
@@ -11,8 +13,12 @@ building:
   production_method_slots:
     - name: slot_0
       methods:
-        - pp_improved_char_coal_maintenance
+        - pp_improved_charcoal_maker_no_peat_cutting
+        - pp_improved_charcoal_maker_peat_cutting
     - name: slot_1
+      methods:
+        - pp_improved_char_coal_maintenance
+    - name: slot_2
       methods:
         - pp_improved_charcoal_maker_market_sales
   possible_production_methods: []
@@ -41,6 +47,24 @@ building:
         }
         build_time = rural_build_time
 
+        # location-gated methods 2026-11-22 (Jan): the Charcoal Clamp's peat cutting, a little more with drying sheds. A
+        # slot of its own with an empty method first (location_methods.py); the soil never changes.
+        unique_production_methods = {
+            pp_improved_charcoal_maker_no_peat_cutting = {
+                category = building_maintenance
+            }
+            pp_improved_charcoal_maker_peat_cutting = {
+                icon_type = goods
+                icon = coal
+                location_allow = {
+                    has_location_modifier = pp_wb_soil_peat
+                }
+                manual_labor = 0.08 # turf cut by hand, dried in sheds
+                produced = coal
+                output = 0.2
+                category = building_maintenance
+            }
+        }
         unique_production_methods = {
             pp_improved_char_coal_maintenance = {
                 produced = coal
@@ -75,8 +99,12 @@ localization:
     pp_improved_char_coal_maintenance: Sealed Retort Charring
     pp_improved_charcoal_maker_market_sales: Market Sales
     pp_improved_charcoal_maker_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
-    improved_charcoal_maker_slot_0: Charcoal Burning
-    improved_charcoal_maker_slot_1: Market
+    improved_charcoal_maker_slot_0: Peat Bog
+    improved_charcoal_maker_slot_1: Charcoal Burning
+    improved_charcoal_maker_slot_2: Market
+    pp_improved_charcoal_maker_no_peat_cutting: No Peat Cutting
+    pp_improved_charcoal_maker_peat_cutting: Peat Cutting
+    pp_improved_charcoal_maker_peat_cutting_desc: "Colliers cut turf from the bog and dry it in sheds before it feeds the retorts, a fuel won without felling a tree. Only where the [location|e] has [ShowModifier('pp_wb_soil_peat')]."
 
 evaluation:
   allow_rules:
@@ -86,6 +114,16 @@ evaluation:
   production_methods:
     pp_improved_char_coal_maintenance:
       production_efficiency: 1.05
+    pp_improved_charcoal_maker_no_peat_cutting:
+      production_efficiency: 1.0
+      allow_rules:
+        profit_percent: Empty selector method intentionally leaves charcoal output unchanged off peat soil.
+    pp_improved_charcoal_maker_peat_cutting:
+      production_efficiency: 1.0
+      allow_rules:
+        input_throughput: Peat cutting is a small add-on on peat soil only, deliberately below the full-building throughput.
+        output_throughput: Peat cutting is a small add-on on peat soil only, deliberately below the full-building throughput.
+        base_output_per_1k: Peat cutting is a labour-only add-on on peat soil only (a quarter of the clamp charcoal, a little more in the retort), not a base yield.
     pp_improved_charcoal_maker_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

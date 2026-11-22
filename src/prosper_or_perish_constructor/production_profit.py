@@ -266,6 +266,11 @@ def production_profit_rows(
         annotated.buildings.to_dicts(),
         annotated.production_methods.to_dicts(),
     )
+    # a location-gated method runs only where its gate holds (location_methods.py): profit per building outside every gate
+    from prosper_or_perish_constructor.location_methods import gated_method_names
+
+    gated = gated_method_names(profile, load_order_path)
+    method_rows = [row for row in method_rows if row.get("name") not in gated]
     worker_food = _base_worker_food_by_building(data.building_worker_food_costs.to_dicts())
     rows, benchmark_by_age = _rows_and_benchmarks_by_age(
         method_rows,

@@ -4,6 +4,10 @@
   pp_char_coal_maintenance: "Earth Clamp Burning"
   pp_charcoal_maker_market_sales: "Market Sales"
   pp_charcoal_maker_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
-  charcoal_maker_slot_0: "Charcoal Burning"
-  charcoal_maker_slot_1: "Market"
+  charcoal_maker_slot_0: "Peat Bog"
+  charcoal_maker_slot_1: "Charcoal Burning"
+  charcoal_maker_slot_2: "Market"
+  pp_charcoal_maker_no_peat_cutting: "No Peat Cutting"
+  pp_charcoal_maker_peat_cutting: "Peat Cutting"
+  pp_charcoal_maker_peat_cutting_desc: "Colliers cut turf from the bog, stack it to dry and burn it beside their clamps, a fuel won without felling a tree. Only where the [location|e] has [ShowModifier('pp_wb_soil_peat')]."
 # <<< eu5-building-pipeline:charcoal_maker:localization

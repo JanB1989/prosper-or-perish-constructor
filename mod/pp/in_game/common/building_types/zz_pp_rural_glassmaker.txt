@@ -16,6 +16,32 @@ location_potential = {
     is_produced_in_location_market = goods:sand
 }
 build_time = rural_build_time
+# location-gated methods 2026-11-22 (Jan): forest glass, the furnace moved into broadleaf and mixed woods for their
+# fuel and ash. A slot of its own with an empty method first (location_methods.py); the vegetation never changes.
+unique_production_methods = {
+    pp_rural_glassmaker_no_forest_glass = {
+        icon_type = building_type
+        icon = rural_glassmaker
+        category = building_maintenance
+    }
+    pp_rural_glassmaker_forest_glass = {
+        icon_type = goods
+        icon = glass
+        location_allow = {
+            OR = {
+                vegetation = forest
+                vegetation = ha1300_veg_mixed_forest
+                vegetation = woods
+            }
+        }
+        sand = 0.069
+        lumber = 0.022 # furnace wood and potash from its ash
+        manual_labor = 0.038
+        produced = glass
+        output = 0.05
+        category = building_maintenance
+    }
+}
 unique_production_methods = {
     pp_rural_glassmaker_rural_glassmaker_maintenance = {
         icon_type = building_type

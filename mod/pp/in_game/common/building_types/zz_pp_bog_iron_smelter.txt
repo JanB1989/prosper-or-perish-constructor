@@ -19,6 +19,9 @@ location_potential = {
     OR = {
         is_adjacent_to_lake = yes
         topography = wetlands
+        # 2026-11-22 (Jan): bog ore also forms in peat bogs and swamps (marsh left out: 2,241 locations, iron skips the AI profit check); soil and vegetation never change, so location_potential is safe here
+        has_location_modifier = pp_wb_soil_peat
+        vegetation = ha1300_veg_swamp
     }
     NOR = {
         raw_material = goods:coal

@@ -410,7 +410,7 @@ def write_class_injects(contract: Contract, export_dir: Path, mod_root: Path, re
             if attribute == "topography":
                 lines[TRIBESMEN_BRAKE[0]] = TRIBESMEN_BRAKE[1]
             if (attr, value) in hostile:
-                lines[HOSTILE_MOVEMENT_KEY] = _fmt(hostile[(attr, value)])
+                lines[HOSTILE_MOVEMENT_KEY] = _fmt_fine(hostile[(attr, value)])
             for name, v in extra.items():   # on top of the class's own line (vanilla's road time stays)
                 if not _OUTPUT_KEY.fullmatch(name):
                     _add_line(lines, name, v)
@@ -536,7 +536,7 @@ def write_static_modifiers(contract: Contract, cfg: WorldBuilderConfig, mod_root
             names[key] = f"{pretty(value)} {'Fertility' if attribute == 'fertility' else 'Soil'}"
             if (attribute, value) in hostile:
                 mods = {**mods, HOSTILE_MOVEMENT_KEY: hostile[(attribute, value)]}
-            lines = {k: _fmt(v) for k, v in mods.items()}
+            lines = {k: _fmt_fine(v) if k == HOSTILE_MOVEMENT_KEY else _fmt(v) for k, v in mods.items()}
             for name, v in effects.get((attribute, value), {}).items():
                 _add_line(lines, name, v)
             blocks.append(render_block(key, {"game_data": "{ category = location }", **lines}))

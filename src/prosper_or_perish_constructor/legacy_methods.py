@@ -26,7 +26,9 @@ as legacy methods ``pp_<building>_legacy_<origin method>``, at lower throughput 
 ``ppc legacy apply`` writes the legacy methods (body, production_method_slots, localization, evaluation allow rules,
 advancement unlocks) and removes stale ones; ``ppc legacy check`` reports what apply would change. The labour pass
 skips legacy methods (their labour comes from the origin), the gate pass lists them after the building's own methods
-(a slot's first method is what new buildings run). Order after editing recipes: ``ppc labour apply``,
+(a new building takes the best allowed method whose inputs are in the market, else the allowed method with the largest
+output, else the slot's first). A location-gated method (location_methods.py) is no recipe of the line: it is never
+carried and never a reference. Order after editing recipes: ``ppc labour apply``,
 ``ppc legacy apply``, ``ppc logistics apply``, ``ppc gate apply``.
 """
 
@@ -133,6 +135,11 @@ class MethodData:
     blocks: tuple[str, ...]  # keys of nested blocks (potential, allow, ...)
 
     @property
+    def gated(self) -> bool:
+        """Tied to a location (``location_allow``, location_methods.py)."""
+        return "location_allow" in self.blocks
+
+    @property
     def goods(self) -> frozenset[str]:
         return frozenset(g for g in self.inputs if g != LABOUR_GOOD)
 
@@ -154,15 +161,16 @@ class Tier:
     unlocks: dict[str, frozenset[str]]  # method -> advances (base names) whose advancement entries unlock it
 
     def real_slots(self) -> list[int]:
-        """Body indices of the producing slots that are not the gate leg."""
+        """Body indices of the producing slots that are not the gate leg. A slot of a location-gated method
+        (location_methods.py) holds no recipe of the line: it runs only where its gate holds."""
         return [
             i
             for i, slot in enumerate(self.slots)
-            if slot and not any(is_leg(m.name) for m in slot) and any(m.produced for m in slot)
+            if slot and not any(is_leg(m.name) for m in slot) and any(m.produced and not m.gated for m in slot)
         ]
 
     def own(self, slot: int) -> list[MethodData]:
-        return [m for m in self.slots[slot] if not is_legacy(m.name) and m.produced]
+        return [m for m in self.slots[slot] if not is_legacy(m.name) and m.produced and not m.gated]
 
     def method(self, name: str) -> MethodData:
         for slot in self.slots:

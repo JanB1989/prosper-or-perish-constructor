@@ -21,6 +21,8 @@ location_potential = {
         has_river = yes
         is_adjacent_to_lake = yes
         raw_material = goods:clay
+        # 2026-11-22 (Jan): also on clay soil; soil never changes, so location_potential is safe here
+        has_location_modifier = pp_wb_soil_clay
     }
 }
 construction_demand = workshop_construction

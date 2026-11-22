@@ -176,8 +176,8 @@ mod adds no monthly script (Jan's rule). What was checked (engine behaviour in 1
   building changes), so they can go stale for years.
 - **Production methods.** `potential` / `allow` are country scope; `location_allow` is location scope, but a running
   building is not moved off a method that stops being allowed (the method switcher moves one building per building
-  type, market and slot a month, and new buildings take the slot's first method). Tiered leg methods would stick on
-  stale tiers.
+  type, market and slot a month, and new buildings take the best allowed method whose inputs are in the market).
+  Tiered leg methods would stick on stale tiers.
 - **Building `allow` / `max_levels`**: construction checks only; levels that exist keep running.
 - **Diseases and movements** scale a location modifier by their presence, which their spread model updates per
   location. Using one as a storage carrier would be a disguised per-location loop shown to the player as an

@@ -28,6 +28,30 @@ unique_production_methods = {
         category = building_maintenance
     }
 }
+# location-gated methods 2026-11-22 (Jan): in hot, dry summers the sun alone dries the pans, about a seventh more
+# salt. A slot of its own with an empty method first (location_methods.py); the climate never changes.
+unique_production_methods = {
+    pp_coastal_saltern_no_sun_pans = {
+        icon_type = building_type
+        icon = salt_collector
+        category = building_maintenance
+    }
+    pp_coastal_saltern_sun_pans = {
+        icon_type = goods
+        icon = salt
+        location_allow = {
+            OR = {
+                climate = arid
+                climate = hot_semi_arid
+                climate = mediterranean
+            }
+        }
+        manual_labor = 0.048 # raking the crust
+        produced = salt
+        output = 0.048
+        category = building_maintenance
+    }
+}
 unique_production_methods = {
     pp_coastal_saltern_open_salt_marshes = {
         icon_type = building_type

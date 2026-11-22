@@ -14,19 +14,24 @@ knows by then:
 - makes: each slot's most valuable method (every slot running), summed output value: the upgrade's is at least the old
   building's.
 
+A location-gated method (``location_allow``, location_methods.py) runs only where its gate holds, so both buildings are
+compared outside every gate (no gated method) and inside each gate of the old building (its methods of that gate added);
+``tests/test_location_gated_methods.py`` makes sure the upgrade carries the same gate.
+
 No exceptions. Amounts are rounded to 3 decimals, so values within TOLERANCE count as equal.
 """
 
 from __future__ import annotations
 
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import pytest
 from eu5gameparser.domain.availability import AGE_ORDER, annotate_building_data_availability
 from eu5gameparser.domain.eu5 import load_eu5_data
 
+from prosper_or_perish_constructor import location_methods as lm
 from prosper_or_perish_constructor import production_gate as pg
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -40,6 +45,7 @@ class World:
     methods: dict[str, dict]
     shared: dict[str, list[str]]  # production method group -> its shared methods
     prices: dict[str, float]
+    gates: dict[str, str] = field(default_factory=dict)  # location-gated method -> its gate
 
     def slots(self, building: str) -> list[list[str]]:
         row = self.buildings[building]
@@ -59,17 +65,27 @@ class World:
         amounts = zip(method["input_goods"] or [], method["input_amounts"] or [])
         return sum(amount * self.prices.get(good, 0.0) for good, amount in amounts if amount and amount > 0)
 
-    def known(self, building: str, age: int) -> list[list[dict]]:
+    def known(self, building: str, age: int, gate: str | None = None) -> list[list[dict]]:
+        """Each slot's methods known by ``age`` that run outside every location gate, plus those of ``gate``."""
         return [
-            [self.methods[name] for name in slot if name in self.methods and age_index(self.methods[name], "effective_") <= age]
+            [
+                self.methods[name]
+                for name in slot
+                if name in self.methods
+                and age_index(self.methods[name], "effective_") <= age
+                and self.gates.get(name, gate) == gate
+            ]
             for slot in self.slots(building)
         ]
 
-    def earns(self, building: str, age: int) -> float:
-        return sum(max(self.value(m) - self.cost(m) for m in slot) for slot in self.known(building, age) if slot)
+    def building_gates(self, building: str) -> list[str]:
+        return sorted({self.gates[name] for slot in self.slots(building) for name in slot if name in self.gates})
 
-    def makes(self, building: str, age: int) -> float:
-        return sum(max(self.value(m) for m in slot) for slot in self.known(building, age) if slot)
+    def earns(self, building: str, age: int, gate: str | None = None) -> float:
+        return sum(max(self.value(m) - self.cost(m) for m in slot) for slot in self.known(building, age, gate) if slot)
+
+    def makes(self, building: str, age: int, gate: str | None = None) -> float:
+        return sum(max(self.value(m) for m in slot) for slot in self.known(building, age, gate) if slot)
 
     def pairs(self) -> list[tuple[str, str]]:
         """(upgrade, the producing building it replaces), every `obsolete` line of the compiled mod."""
@@ -101,18 +117,21 @@ def load_world(root: Path = ROOT, project: Path = PROJECT) -> World:
         methods=methods,
         shared=dict(shared),
         prices=pg.load_prices(root, project),
+        gates=lm.game_gates(lm.building_type_files(root, project)),
     )
 
 
 def shortfalls(world: World, measure: str) -> list[str]:
     rows = []
     for tag, old in world.pairs():
-        for age in range(age_index(world.buildings[tag]), len(AGE_ORDER)):
-            new_value = getattr(world, measure)(tag, age)
-            old_value = getattr(world, measure)(old, age)
-            if new_value < old_value - TOLERANCE:
-                rows.append(f"{old} -> {tag} in {AGE_ORDER[age]}: {old_value:.3f} -> {new_value:.3f}")
-                break
+        for gate in (None, *world.building_gates(old)):
+            where = "" if gate is None else f" where {gate}"
+            for age in range(age_index(world.buildings[tag]), len(AGE_ORDER)):
+                new_value = getattr(world, measure)(tag, age, gate)
+                old_value = getattr(world, measure)(old, age, gate)
+                if new_value < old_value - TOLERANCE:
+                    rows.append(f"{old} -> {tag} in {AGE_ORDER[age]}{where}: {old_value:.3f} -> {new_value:.3f}")
+                    break
     return rows
 
 
@@ -127,6 +146,9 @@ def test_the_check_sees_the_upgrade_lines(world: World) -> None:
     assert len(pairs) > 100
     assert ("clay_washmill", "clay_pit") in pairs and ("iron_mine_deep", "iron_mine") in pairs
     assert world.earns("clay_pit", 0) > 0 and world.makes("iron_mine", 0) > world.earns("iron_mine", 0) > 0
+    peat = world.building_gates("charcoal_maker")
+    assert peat == world.building_gates("improved_charcoal_maker") and len(peat) == 1
+    assert world.makes("charcoal_maker", 0, peat[0]) > world.makes("charcoal_maker", 0)
 
 
 def test_an_upgrade_earns_at_least_what_it_replaces(world: World) -> None:

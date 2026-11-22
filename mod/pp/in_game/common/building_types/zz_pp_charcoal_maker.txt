@@ -24,6 +24,26 @@ increase_per_level_cost = 0.18
     }
     build_time = rural_build_time
 
+    # location-gated methods 2026-11-22 (Jan): peat soil gives fuel without wood. A slot of its own with an empty
+    # method first (location_methods.py); the soil never changes, so the gate cannot strand a running clamp.
+    unique_production_methods = {
+        pp_charcoal_maker_no_peat_cutting = {
+            icon_type = building_type
+            icon = charcoal_maker
+            category = building_maintenance
+        }
+        pp_charcoal_maker_peat_cutting = {
+            icon_type = goods
+            icon = coal
+            location_allow = {
+                has_location_modifier = pp_wb_soil_peat
+            }
+            manual_labor = 0.062 # turf cut, stacked and dried by hand
+            produced = coal
+            output = 0.155
+            category = building_maintenance
+        }
+    }
     unique_production_methods = {
         pp_char_coal_maintenance = {
             icon_type = building_type

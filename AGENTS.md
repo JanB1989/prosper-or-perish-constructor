@@ -65,7 +65,9 @@
   crop farm loses money (so none lays off workers) on land 0 in a -0.5 harvest or on land -0.10 in a -0.4 harvest.
   Workers are laid off whenever profit at full staffing is negative unless the AI subsidises; `can_close` /
   `ai_forbid_shutdown` do not stop that.
-- A slot's first method is what new and game-start buildings run, so reordering can change defaults.
+- New, upgraded and game-start buildings take in every slot the best allowed method whose inputs are in the market, else
+  the allowed method with the largest output, else the slot's first method (EU5 1.4.9, tested in game 2026-11-22; an
+  upgrade picks every slot again). The order still decides that fallback.
 - Rural producers next to a town (`docs/ai_building_rulebook.md` 2.5b): a rural-capable building (`rural_settlement = yes`)
   that can make any good a town-only building also makes gets no AI levels at rural locations with a town in the province
   once the evaluating country has both (for most goods from day 1), whatever the weight or price. Every method counts, so
@@ -94,6 +96,39 @@
 - The cannon foundry/factory, firearms manufactory/factory and fine cloth mill run their line's two slots (barrels and
   ammunition, weaving and dyeing; the combined vanilla method split by goods cost, tin and lead restored); the leather
   line keeps tar in every tier (`labour.keep_goods: [tar]`: goods the labour pass never drops).
+
+## Location-Gated Methods (2026-11-22, Jan)
+
+- A unique method may carry `location_allow = { <trigger> }` (location scope): it runs only where the trigger holds. The
+  game applies it when a building is created (new, upgrade, game start: setup buildings in a gate location start on the
+  gated method), when the AI values a building, when the player picks a method and when the AI's method switch moves
+  one; a running building is never checked again. So gate only on what never changes: soil
+  (`has_location_modifier = pp_wb_soil_<soil>`), climate, vegetation and topography (World Builder classes by their own
+  keys, e.g. `ha1300_veg_mixed_forest`), `has_river`, `is_coastal`. The lumber mills' Forest Elephants gate on the
+  market's elephants, which can change: a mill keeps the method after its market loses them.
+- Pattern (`tests/test_location_gated_methods.py`): the gated method has a slot of its own, an ungated empty method (no
+  goods, no output) first, the gated method second, nothing else, one gate per slot. Never the Market leg, never alone
+  in a slot (a one-method slot runs without any check), never beside ungated producers (the AI's switch picks one
+  favourite per country, building type, market and slot whatever the gate; in game a gated method in a shared slot
+  froze every Clay Pit outside its gate). Every `obsolete` successor carries a method with the same gate. The gated
+  method pays at the labour price the game sees (about 1.8), because buildings leave a losing method only slowly.
+- Text: a single failed condition is named in the method's tooltip, an `OR` only says the requirements are not met, so
+  the method's `_desc` says where it works (links, no numbers). Slot names are positional (`<building>_slot_<n>`):
+  `ppc gate apply` renumbers the blueprint's labels with the slots; the test wants a name for every slot.
+- `set_production_method` ignores the gate and the building stays on the method: the compiled mod calls it nowhere (the
+  test keeps it so); a script that ever needs it tests the gate itself.
+- Passes and calculators (`location_methods.py`): the gate pass never makes a gated slot a base slot, never gates on a
+  gated method and leaves it out of the main good (the slot sorts among the ordinary slots by value, so a small add-on
+  comes first); labour tags them like any method (labour-only ones take `base`); tier prices and the Old Ways pass leave
+  them out; the start market stock counts them only where the gate holds (World Builder attributes, the start markets'
+  goods); the Construction Plan's business estimate wraps the method's profit in its gate and its market limit leaves it
+  out; `tests/test_upgrade_not_worse.py` compares an upgrade outside every gate and inside each gate.
+- The methods (2026-11-22, not tested in game): Peat Cutting (Charcoal Clamp and Charcoal Retort, peat soil, labour ->
+  coal), Sun Pans (Coastal Saltern, arid, hot semi-arid or mediterranean climate, labour -> salt), Fulling Mill (Rural
+  Clothmaker, a river through hills, mountains or valleys, wool and lumber -> cloth, tagged `craft_medieval`: the wheel
+  does the pounding), Forest Glass (Rural Glassmaker, forest, mixed forest or woods, sand and lumber -> glass). Building
+  gates on soil and vegetation never change, so they sit in `location_potential`: the Clay Pit and Clay Washmill also
+  stand on clay soil, the three bog iron tiers also on peat soil and swamp.
 
 ## Manufacturing Tiers, Specialization Rights, Trade Buildings (2026-10-06, Jan)
 

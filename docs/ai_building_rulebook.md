@@ -726,7 +726,9 @@ The **"Too low profit margin"** gate (utility × 0) hits about half of all candi
 - PP builds on this since 2026-09-29: every production blueprint names its gate with `gate_method:`, and
   `ppc gate apply` puts that method's block last and the method last in it (base blocks first, the blocks that follow the
   province store last, the rest by output value; `constructor.toml` `[production_gate]`, test
-  `tests/test_production_gate.py`). A slot's **first** method is what new and game-start buildings run.
+  `tests/test_production_gate.py`). New, upgraded and game-start buildings take in every slot the best allowed method
+  whose inputs are in the market, else the allowed method with the largest output, else the slot's first method (EU5
+  1.4.9, tested in game 2026-11-22; it was read as "the first method" from a 1.3.11 test).
 - **Gate leg (2026-09-30).** From 09-29 to 09-30 farms, fisheries, orchards and forest villages gated on **Provision**,
   which buys the building's own crop: the dearer the crop, the lower the margin, so the AI stopped building new farms
   exactly when their crop was short (h03 lab run: new Wheat Farms 0 % gated at wheat 1.05-1.25, 89 % at 1.7-2.2,

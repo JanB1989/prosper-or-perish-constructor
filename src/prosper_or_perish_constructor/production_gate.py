@@ -28,12 +28,14 @@ allow rules) and flags it; buildings without a market good and storage-leg gates
 ``ppc gate apply`` rewrites the body so the flagged method gates: its slot becomes the last unique block and the method
 is listed last in it. Everything else is ordered by importance, bottom = most important:
 
-- slots: base slots at the top (every producing method pays only ``base_inputs``, e.g. ``*_base``), then the other
-  slots by their highest output value at base prices, the dynamic slots (a method produces one of ``dynamic_goods``, the
-  goods whose output follows the province store: Province Food and the Grange's Surplus Sales) at the bottom, the flagged slot last;
+- slots: base slots at the top (every producing method pays only ``base_inputs``, e.g. ``*_base``; never a slot of a
+  location-gated method, ``location_methods.py``), then the other slots by their highest output value at base prices,
+  the dynamic slots (a method produces one of ``dynamic_goods``, the goods whose output follows the province store:
+  Province Food and the Grange's Surplus Sales) at the bottom, the flagged slot last;
 - methods: output-less methods first (idle choices never gate), then by output value, legacy methods (older recipes
-  carried up an upgrade line, ``legacy_methods.py``) after the building's own ones, so a slot's first method (what new
-  buildings run) is never an old recipe; the flagged method last.
+  carried up an upgrade line, ``legacy_methods.py``) after the building's own ones, so a slot's first method is never an
+  old recipe (a new building takes the best allowed method whose inputs are in the market, else the allowed method with
+  the largest output, else the first); the flagged method last. A location-gated method never gates.
 
 Ties keep the file order. Methods never move between slots, amounts never change (the leg is written whole). The slot labels
 (``<building>_slot_<n>``), the ``production_method_slots`` list and ``# slot <n>`` comments follow their slot. A
@@ -167,10 +169,16 @@ class Method:
     produced: str | None
     output: float | None
     inputs: Mapping[str, float]  # numeric input lines, zero amounts included
+    # the method's location_allow trigger text (location_methods.py): it runs only where that holds
+    location_allow: str | None = field(default=None, compare=False)
 
     @property
     def has_output(self) -> bool:
         return self.produced is not None
+
+    @property
+    def gated(self) -> bool:
+        return self.location_allow is not None
 
     def value(self, prices: Mapping[str, float]) -> float:
         if self.produced is None or not self.output:
@@ -195,9 +203,12 @@ class Slot:
 
 def body_slots(body: str, source: Path | str = "<body>") -> tuple[list[Slot], bool]:
     """(unique slots in file order, whether a possible_production_methods group exists)."""
+    from prosper_or_perish_constructor.location_methods import gates_in_text
+
     block = parse_text(f"x = {{\n{body}\n}}\n", Path(str(source))).entries[0].value
     if not isinstance(block, CList):
         return [], False
+    gates = gates_in_text(body)
     slots: list[Slot] = []
     for group in block.values(UNIQUE):
         if not isinstance(group, CList):
@@ -220,6 +231,7 @@ def body_slots(body: str, source: Path | str = "<body>") -> tuple[list[Slot], bo
                     produced=str(produced) if produced is not None and not isinstance(produced, CList) else None,
                     output=_number(entry.value.first("output")),
                     inputs=inputs,
+                    location_allow=gates.get(entry.key),
                 )
             )
         slots.append(Slot(tuple(methods)))
@@ -235,10 +247,13 @@ def is_production(slots: Sequence[Slot]) -> bool:
 
 
 def slot_class(slot: Slot, config: GateConfig) -> int:
-    """0 = base slot, 1 = ordinary, 2 = dynamic (reacts to the province store or the market)."""
+    """0 = base slot, 1 = ordinary, 2 = dynamic (reacts to the province store or the market). A slot of a
+    location-gated method is never a base slot: it runs only where its gate holds (location_methods.py)."""
     producing = [m for m in slot.methods if m.has_output]
     if any(m.produced in config.dynamic_goods for m in producing):
         return 2
+    if any(m.gated for m in slot.methods):
+        return 1
     if producing and all(set(g for g, a in m.inputs.items() if a > 0) <= config.base_inputs for m in producing):
         return 0
     return 1
@@ -256,14 +271,15 @@ def suggest_gate(slots: Sequence[Slot], config: GateConfig, prices: Mapping[str,
     """The method the importance order puts last: in the most important slot, the most important method with an
     output. In a dynamic slot a method that buys its inputs (Provision, Serve) beats a no-input dummy, because a
     dummy may earn nothing at an empty store."""
-    candidates = [i for i, slot in enumerate(slots) if any(m.has_output for m in slot.methods)]
+    # a location-gated method is read only where its gate holds, so it never gates (location_methods.py)
+    candidates = [i for i, slot in enumerate(slots) if any(m.has_output and not m.gated for m in slot.methods)]
     if not candidates:
         return None
     best = max(candidates, key=lambda i: (slot_key(slots[i], config, prices), i))
     slot = slots[best]
     dynamic = slot_class(slot, config) == 2
     ranked = [
-        (m.has_output, dynamic and any(g not in config.base_inputs and a > 0 for g, a in m.inputs.items()), m.value(prices), i)
+        (m.has_output and not m.gated, dynamic and any(g not in config.base_inputs and a > 0 for g, a in m.inputs.items()), m.value(prices), i)
         for i, m in enumerate(slot.methods)
     ]
     return slot.methods[max(ranked)[3]].name
@@ -302,10 +318,12 @@ def without_legs(slots: Sequence[Slot]) -> list[Slot]:
 
 def main_good(slots: Sequence[Slot], config: GateConfig, prices: Mapping[str, float]) -> str | None:
     """The market good the building exists to make: its base method's good (a one-method slot paying only base inputs),
-    else the good of its most valuable producing method. Floor-pinned dummies and storage-leg goods never count."""
+    else the good of its most valuable producing method. Floor-pinned dummies, storage-leg goods and location-gated
+    methods (they run only where their gate holds) never count."""
     def signal(method: Method) -> bool:
         return (
             method.has_output
+            and not method.gated
             and not is_leg(method.name)
             and method.produced not in config.pinned_goods
             and method.produced not in config.dynamic_goods
@@ -489,6 +507,8 @@ def gate_problems(slots: Sequence[Slot], gate: str | None, has_possible: bool) -
     method = slots[where[0]].methods[where[1]]
     if not method.has_output:
         problems.append(f"{FLAG} {gate} has no output good, so it never sets the margin")
+    if method.gated:
+        problems.append(f"{FLAG} {gate} is tied to a location (location_allow), so it is not read everywhere")
     if has_possible:
         problems.append("a building with both possible and unique production methods is not supported by the gate pass")
     if where[0] != len(slots) - 1:

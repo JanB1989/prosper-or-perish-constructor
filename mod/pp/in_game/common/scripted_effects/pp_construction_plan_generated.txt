@@ -3763,7 +3763,7 @@ pp_cplan_business_pick = {
 		save_temporary_scope_value_as = { name = pp_cplan_r value = pp_cplan_bz_roi_lumber_mill }
 		if = {
 			limit = { scope:pp_cplan_r > var:pp_cplan_bz_roi }
-			pp_cplan_business_take = { g = lumber out = 1.699 demand = basic_construction_needs }
+			pp_cplan_business_take = { g = lumber out = 1.449 demand = basic_construction_needs }
 		}
 	}
 	if = {
@@ -3779,7 +3779,7 @@ pp_cplan_business_pick = {
 		save_temporary_scope_value_as = { name = pp_cplan_r value = pp_cplan_bz_roi_lumber_mill_improved }
 		if = {
 			limit = { scope:pp_cplan_r > var:pp_cplan_bz_roi }
-			pp_cplan_business_take = { g = lumber out = 3.575 demand = workshop_construction }
+			pp_cplan_business_take = { g = lumber out = 3.278 demand = workshop_construction }
 		}
 	}
 	if = {
@@ -5507,7 +5507,7 @@ pp_cplan_business_pick = {
 		save_temporary_scope_value_as = { name = pp_cplan_r value = pp_cplan_bz_roi_water_sawmill }
 		if = {
 			limit = { scope:pp_cplan_r > var:pp_cplan_bz_roi }
-			pp_cplan_business_take = { g = lumber out = 2.938 demand = workshop_construction }
+			pp_cplan_business_take = { g = lumber out = 2.698 demand = workshop_construction }
 		}
 	}
 	if = {
@@ -6948,15 +6948,15 @@ pp_cplan_market_do = {
 	}
 	else_if = {
 		limit = { OR = { scope:pp_cplan_btype = building_type:lumber_mill } }
-		pp_cplan_market_$do$_good = { g = lumber out = 1.699 }
+		pp_cplan_market_$do$_good = { g = lumber out = 1.449 }
 	}
 	else_if = {
 		limit = { OR = { scope:pp_cplan_btype = building_type:water_sawmill } }
-		pp_cplan_market_$do$_good = { g = lumber out = 2.938 }
+		pp_cplan_market_$do$_good = { g = lumber out = 2.698 }
 	}
 	else_if = {
 		limit = { OR = { scope:pp_cplan_btype = building_type:lumber_mill_improved } }
-		pp_cplan_market_$do$_good = { g = lumber out = 3.575 }
+		pp_cplan_market_$do$_good = { g = lumber out = 3.278 }
 	}
 	else_if = {
 		limit = { OR = { scope:pp_cplan_btype = building_type:maize_farm } }
@@ -7929,15 +7929,15 @@ pp_cplan_market_count_building = {
 	}
 	else_if = {
 		limit = { building_type = building_type:lumber_mill }
-		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = lumber out = 1.699 } }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = lumber out = 1.449 } }
 	}
 	else_if = {
 		limit = { building_type = building_type:water_sawmill }
-		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = lumber out = 2.938 } }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = lumber out = 2.698 } }
 	}
 	else_if = {
 		limit = { building_type = building_type:lumber_mill_improved }
-		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = lumber out = 3.575 } }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = lumber out = 3.278 } }
 	}
 	else_if = {
 		limit = { building_type = building_type:maize_farm }

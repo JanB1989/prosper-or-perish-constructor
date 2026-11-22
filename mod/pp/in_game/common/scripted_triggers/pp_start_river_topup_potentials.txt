@@ -44,6 +44,7 @@ pp_start_topup_clay_pit_potential = {
 		has_river = yes
 		is_adjacent_to_lake = yes
 		raw_material = goods:clay
+		has_location_modifier = pp_wb_soil_clay
 	}
 }
 

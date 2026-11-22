@@ -1848,8 +1848,12 @@
   pp_char_coal_maintenance: "Earth Clamp Burning"
   pp_charcoal_maker_market_sales: "Market Sales"
   pp_charcoal_maker_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
-  charcoal_maker_slot_0: "Charcoal Burning"
-  charcoal_maker_slot_1: "Market"
+  charcoal_maker_slot_0: "Peat Bog"
+  charcoal_maker_slot_1: "Charcoal Burning"
+  charcoal_maker_slot_2: "Market"
+  pp_charcoal_maker_no_peat_cutting: "No Peat Cutting"
+  pp_charcoal_maker_peat_cutting: "Peat Cutting"
+  pp_charcoal_maker_peat_cutting_desc: "Colliers cut turf from the bog, stack it to dry and burn it beside their clamps, a fuel won without felling a tree. Only where the [location|e] has [ShowModifier('pp_wb_soil_peat')]."
 # <<< eu5-building-pipeline:charcoal_maker:localization
  # pp_chili_plantation_l_english.yml
 
@@ -2022,13 +2026,17 @@
 
 # >>> eu5-building-pipeline:salt_collector:localization
   salt_collector_slot_0: "Coastal Salt"
-  salt_collector_slot_1: "Evaporation Pans"
+  salt_collector_slot_1: "Solar Evaporation"
+  salt_collector_slot_2: "Evaporation Pans"
+  salt_collector_slot_3: "Market"
   pp_coastal_saltern_base_salt: "Surveyed Salt Marshes"
   pp_coastal_saltern_open_salt_marshes: "Open Salt Marshes"
   pp_coastal_saltern_lined_evaporation_pans: "Lined Evaporation Pans"
   pp_salt_collector_market_sales: "Market Sales"
   pp_salt_collector_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
-  salt_collector_slot_2: "Market"
+  pp_coastal_saltern_no_sun_pans: "No Sun Pans"
+  pp_coastal_saltern_sun_pans: "Sun Pans"
+  pp_coastal_saltern_sun_pans_desc: "Through the long dry summer the sun alone draws the water out of shallow pans of brine, and the salt crust is raked up by hand. Only in a [location|e] of [ShowClimateName('arid')], [ShowClimateName('hot_semi_arid')] or [ShowClimateName('mediterranean')] [climate|e]."
 # <<< eu5-building-pipeline:salt_collector:localization
  # pp_coastal_shipping_office_l_english.yml
 
@@ -4857,8 +4865,12 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   pp_improved_char_coal_maintenance: "Sealed Retort Charring"
   pp_improved_charcoal_maker_market_sales: "Market Sales"
   pp_improved_charcoal_maker_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
-  improved_charcoal_maker_slot_0: "Charcoal Burning"
-  improved_charcoal_maker_slot_1: "Market"
+  improved_charcoal_maker_slot_0: "Peat Bog"
+  improved_charcoal_maker_slot_1: "Charcoal Burning"
+  improved_charcoal_maker_slot_2: "Market"
+  pp_improved_charcoal_maker_no_peat_cutting: "No Peat Cutting"
+  pp_improved_charcoal_maker_peat_cutting: "Peat Cutting"
+  pp_improved_charcoal_maker_peat_cutting_desc: "Colliers cut turf from the bog and dry it in sheds before it feeds the retorts, a fuel won without felling a tree. Only where the [location|e] has [ShowModifier('pp_wb_soil_peat')]."
 # <<< eu5-building-pipeline:improved_charcoal_maker:localization
  # pp_incamisana_l_english.yml
 
@@ -8721,13 +8733,17 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
 
 # >>> eu5-building-pipeline:rural_clothmaker:localization
   pp_rural_clothmaker_price: "[ShowBuildingTypeName('rural_clothmaker')|e] Price"
-  rural_clothmaker_slot_0: "[ShowBuildingTypeName('rural_clothmaker')|e] Work"
+  rural_clothmaker_slot_0: "Fulling"
+  rural_clothmaker_slot_1: "[ShowBuildingTypeName('rural_clothmaker')|e] Work"
+  rural_clothmaker_slot_2: "Market"
   pp_rural_clothmaker_rural_wool_clothmaker: "Wool Cloth"
   pp_rural_clothmaker_rural_cotton_clothmaker: "Cotton Cloth"
   pp_rural_clothmaker_rural_fiber_clothmaker: "Linen Cloth"
   pp_rural_clothmaker_market_sales: "Market Sales"
   pp_rural_clothmaker_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
-  rural_clothmaker_slot_1: "Market"
+  pp_rural_clothmaker_no_fulling_mill: "No Fulling Mill"
+  pp_rural_clothmaker_fulling_mill: "Fulling Mill"
+  pp_rural_clothmaker_fulling_mill_desc: "A water wheel drives heavy wooden hammers that pound woven wool into dense, felted cloth, work that once took many feet in a trough. Only where a [river|e] runs through a [location|e] of [ShowTopographyName('hills')], [ShowTopographyName('mountains')] or [ShowTopographyName('ha1300_topo_valleys')] [topography|e], where the water falls fast enough to turn the wheel."
 # <<< eu5-building-pipeline:rural_clothmaker:localization
  # pp_rural_daywork_yard_l_english.yml
 
@@ -8747,11 +8763,15 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
 
 # >>> eu5-building-pipeline:rural_glassmaker:localization
   pp_rural_glassmaker_price: "[ShowBuildingTypeName('rural_glassmaker')|e] Price"
-  rural_glassmaker_slot_0: "[ShowBuildingTypeName('rural_glassmaker')|e] Work"
+  rural_glassmaker_slot_0: "Forest Furnace"
+  rural_glassmaker_slot_1: "[ShowBuildingTypeName('rural_glassmaker')|e] Work"
+  rural_glassmaker_slot_2: "Market"
   pp_rural_glassmaker_rural_glassmaker_maintenance: "Glassblowing"
   pp_rural_glassmaker_market_sales: "Market Sales"
   pp_rural_glassmaker_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
-  rural_glassmaker_slot_1: "Market"
+  pp_rural_glassmaker_no_forest_glass: "No Forest Glass"
+  pp_rural_glassmaker_forest_glass: "Forest Glass"
+  pp_rural_glassmaker_forest_glass_desc: "The glassmakers move a furnace into the woods, burn the trees for heat and their ash for potash, and blow a green forest glass. Only in a [location|e] of [ShowVegetationName('forest')], [ShowVegetationName('ha1300_veg_mixed_forest')] or [ShowVegetationName('woods')] [vegetation|e]."
 # <<< eu5-building-pipeline:rural_glassmaker:localization
  # pp_saffron_croft_l_english.yml
 

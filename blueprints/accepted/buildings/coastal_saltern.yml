@@ -5,6 +5,7 @@ labour:
   class: primary_medieval
   methods:
     pp_coastal_saltern_base_salt: base
+    pp_coastal_saltern_sun_pans: base
 gate_method: pp_salt_collector_market_sales
 building:
   key: salt_collector
@@ -16,9 +17,13 @@ building:
         - pp_coastal_saltern_base_salt
     - name: slot_1
       methods:
+        - pp_coastal_saltern_no_sun_pans
+        - pp_coastal_saltern_sun_pans
+    - name: slot_2
+      methods:
         - pp_coastal_saltern_open_salt_marshes
         - pp_coastal_saltern_lined_evaporation_pans
-    - name: slot_2
+    - name: slot_3
       methods:
         - pp_salt_collector_market_sales
   possible_production_methods: []
@@ -46,6 +51,28 @@ building:
             manual_labor = 0.08
             produced = salt
             output = 0.080
+            category = building_maintenance
+        }
+    }
+    # location-gated methods 2026-11-22 (Jan): in hot, dry summers the sun alone dries the pans, about a seventh more
+    # salt. A slot of its own with an empty method first (location_methods.py); the climate never changes.
+    unique_production_methods = {
+        pp_coastal_saltern_no_sun_pans = {
+            category = building_maintenance
+        }
+        pp_coastal_saltern_sun_pans = {
+            icon_type = goods
+            icon = salt
+            location_allow = {
+                OR = {
+                    climate = arid
+                    climate = hot_semi_arid
+                    climate = mediterranean
+                }
+            }
+            manual_labor = 0.048 # raking the crust
+            produced = salt
+            output = 0.048
             category = building_maintenance
         }
     }
@@ -82,7 +109,9 @@ building:
 localization:
   entries:
     salt_collector_slot_0: Coastal Salt
-    salt_collector_slot_1: Evaporation Pans
+    salt_collector_slot_1: Solar Evaporation
+    salt_collector_slot_2: Evaporation Pans
+    salt_collector_slot_3: Market
     salt_collector: Coastal Saltern
     salt_collector_desc: Coastal salterns draw seawater into salt marshes, settling ponds, and shallow pans where sun, wind, and careful boiling turn brine into usable salt.
     pp_coastal_saltern_base_salt: Surveyed Salt Marshes
@@ -90,7 +119,9 @@ localization:
     pp_coastal_saltern_lined_evaporation_pans: Lined Evaporation Pans
     pp_salt_collector_market_sales: Market Sales
     pp_salt_collector_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
-    salt_collector_slot_2: Market
+    pp_coastal_saltern_no_sun_pans: No Sun Pans
+    pp_coastal_saltern_sun_pans: Sun Pans
+    pp_coastal_saltern_sun_pans_desc: "Through the long dry summer the sun alone draws the water out of shallow pans of brine, and the salt crust is raked up by hand. Only in a [location|e] of [ShowClimateName('arid')], [ShowClimateName('hot_semi_arid')] or [ShowClimateName('mediterranean')] [climate|e]."
 icon:
   source_dds: /mnt/c/Games/steamapps/common/Europa Universalis V/game/main_menu/gfx/interface/icons/buildings/salt_collector.dds
   output_dds: salt_collector.dds
@@ -107,6 +138,16 @@ evaluation:
       production_efficiency: 1.05
       allow_rules:
         input_throughput: Rounded unit-employment inputs land on the evaluator floor.
+    pp_coastal_saltern_no_sun_pans:
+      production_efficiency: 1.00
+      allow_rules:
+        profit_percent: Empty selector method intentionally leaves coastal salt output unchanged outside hot, dry climates.
+    pp_coastal_saltern_sun_pans:
+      production_efficiency: 1.00
+      allow_rules:
+        input_throughput: Sun pans are a small add-on in hot, dry climates only, deliberately below the full-building throughput.
+        output_throughput: Sun pans are a small add-on in hot, dry climates only, deliberately below the full-building throughput.
+        base_output_per_1k: Sun pans are a labour-only add-on in hot, dry climates only (about a seventh more salt per level), not a base yield.
     pp_salt_collector_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

@@ -70,7 +70,8 @@ Each month the country walks its queue **from the highest utility down** and sta
      - The walk starts only when treasury ≥ the "Gold Buffer Target" = **3 × the country's tax base** (sum of
        location tax; `AI_BUFFER_TAX_BASE_FACTOR`, doubled in some war state).
      - Checked: the logged target ÷ (3 × Σ tax) has median 0.99, and 95 % of lab starts had treasury ≥ the target.
-     - After the gate, an entry starts if the treasury covers its price. The first entry it cannot pay stops the walk.
+     - After the gate, an entry starts if the treasury covers its price. The first entry it cannot pay stops the walk
+       (gold-only prices; a price with any other currency is skipped instead, see 2.2c).
      - Entries walked past leave the queue.
      - A country only processes its queue every max(4 − rank, 1) months: counties every 3, duchies every 2,
        kingdoms and empires monthly (`AI_CONSTRUCTION_DAILY_RANK_BASE_DIVISION`). The lab's gaps between starts
@@ -116,6 +117,54 @@ The automation panel's building systems are not a separate brain:
   - the country passes the same affordability check as the queue.
 - The per-location candidate list and utilities are the AI's. The PP rule "give buildings the AI should want a
   valued effect" (2.4d) applies to automation as well.
+
+### 2.2c Prices in other currencies (EU5 1.4.9, read in the engine 2026-11-22; checked on saves, not tested in game)
+
+A building's `price` can hold any price currency, `political_influence` included. No vanilla, DLC or PP building
+costs political influence. Seven vanilla buildings cost religious influence: the orthodox and miaphysite monasteries,
+the Novodevichy Convent, Debere Meshwae, the Lutheran and Calvinist preachers and the merchant guild chapel.
+
+- **Score.** Each currency of the price is its own cost term: -1.2 (`BUILDING_THRESHOLD_FACTOR`) x the cost horizon
+  x the currency's AI value x the amount.
+  - Political influence has a flat AI value of `AI_PI_INHERENT_UTIL` (0.0001) per point. Its stock, the 100 cap
+    and its income play no part, except that the cost counts only up to what the country holds. At 0 influence the
+    influence part costs nothing in the score.
+  - In gold: 1 influence weighs about 6 gold for the median late-game PP AI (20 influence about 100-120 gold). For
+    a poor AI near its gold buffer it weighs about 0.1 gold, and the most for rich AIs with large treasuries.
+  - Religious influence has no AI value: the vanilla monastery and preacher prices score 0.
+- **Queue.** Candidates are scored and queued without a price check.
+  - In the walk, an entry whose price has any non-gold part and that the country cannot pay (the other currency or
+    the gold) is skipped. The walk goes on with the next entry, and the skipped entry leaves the queue until the next
+    rebuild.
+  - Only a gold-only price stops the walk so the AI saves up (2.2).
+  - So the AI never saves influence, and never saves gold, for a building with a non-gold price. It builds one only
+    in a walk where it can pay all of it at once.
+  - Each start lowers the influence the rest of that walk sees.
+- **No reserve.** The building AI keeps no political influence back.
+  - The other AI spenders act only above a saved stock (NAI defines): expeditions 99, town rights 95, industry
+    promotion 85, culture acceptance 70, estate privileges 50.
+  - Influence-priced buildings can hold the stock below those lines and delay them.
+- **Payment.** Every currency is paid in full when construction starts. A cancel refunds 80 % (`REFUND_FACTOR`), 100 %
+  early on. `increase_per_level_cost`, the upgrade discount and build efficiency scale the influence part like the gold.
+- **Estates** check and pay gold only (x `ESTATE_MAX_PRICE_MULTIPLIER`). Estates build a building they may build
+  without paying the other currency.
+- **Player automation.** "Buildings" automation runs the same walk: it spends influence down to the price and skips
+  when short. "Auto-Expand Buildings" expands whenever influence covers the price.
+- **Measured.** Data: run 97a9c752 (1347-1837, 5-year saves) and Jan's Venice game (1340-1516). Counted: AI land
+  owners, without the Pope.
+  - Political influence is plentiful. At the 100 cap: 22 % in 1347, 44 % in 1402, 67-79 % from 1452 on.
+  - Before 1450 kingdoms and empires hold a median of 77-80 (10th percentile about 37).
+  - Income is 1.4-2.5 a month, and about 70 % of it is earned at the cap and lost.
+  - Religious influence is scarce: the median orthodox AI holds 6-12.
+  - In 97a9c752 the AI started the influence-priced orthodox monastery 2 times, against 261 starts of the gold
+    monastery. About 90 % of orthodox monasteries come from the clergy parliament agenda.
+- **Trap: a short queue of unaffordable entries.** A small country whose few queue entries all cost a currency it
+  lacks skips them all. The empty queue is rebuilt the next month with the same entries, because their cost in that
+  currency scores little or nothing. So no gold building ever gets in.
+  - Seen in 33 country-saves of small orthodox countries with only monastery entries.
+  - Within a month, 3 % of them started anything, against 27 % of small countries with a gold top entry.
+- **For PP.** A political influence price rarely blocks the AI, because most AIs sit at the cap. It lowers the
+  score and draws on the stock that town rights and expeditions wait for.
 
 ### 2.3 What makes a country build more or less
 

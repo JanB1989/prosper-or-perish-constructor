@@ -268,7 +268,7 @@ labour_class = "base"
 [beekeeping.1]
 key = "yard_hives"
 name = "Yard Hives"
-desc = ""
+desc = "Straw skeps and clay pot hives stand in a sheltered corner of the farmstead yard. The bees work the bean and clover blossom of the fields around it, and the household cuts the combs for wax."
 inputs = { fiber_crops = 0.022, pottery = 0.01 }
 manual_labor = 0.008
 output = 0.12
@@ -290,6 +290,15 @@ slot_provisioning = "Provisioning"
 no_cultivation = "No Cultivation"
 no_beekeeping = "No Beekeeping"
 provision_desc = "The household keeps back a little of its crop and cooks for the province. The lower the province store is, the more food it makes of it."
+no_cultivation_desc = "No improved husbandry is practised here, the land gives what plain work takes from it."
+no_beekeeping_desc = "No hives are kept here, the household leaves the bees to the wild."
+
+# description of the base method, by the crop's slot0_name
+[loc.base_desc]
+Fields = "The fields themselves: what the sown land yields with plain work before any improved husbandry."
+Paddies = "The paddies themselves: what the rice land yields with plain work before any improved husbandry."
+Groves = "The groves themselves: what the olive trees yield with plain care before any improved husbandry."
+Pastures = "The pastures themselves: what the grazing herd yields with plain herding before any improved husbandry."
 
 # ---------------------------------------------------------------------------------------------------------------------
 # Crops

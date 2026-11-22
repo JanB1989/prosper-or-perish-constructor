@@ -138,9 +138,12 @@ localization:
     enclosed_sheep_walks_desc: "Enclosed sheep walks gather pasture, shearing sheds, wool sorting, and flock records into a larger pastoral estate. When the province's [Concept('provincial_food', 'food store')|e] is high, it produces more goods for the market; when the store is low, it produces more [ShowGoodsName('local_food')|e] and fewer goods for the market."
     pp_enclosed_sheep_walks: Sheep Enclosure
     pp_enclosed_sheep_walks_base_wool: Wool Pasture
+    pp_enclosed_sheep_walks_base_wool_desc: "The flock itself: what the sheep give from open pasture before any improved husbandry."
     pp_enclosed_sheep_walks_desc: Enclosure, flock records, shearing sheds, and improved husbandry move more wool through organized pasture.
     pp_enclosed_sheep_walks_improved_flocks: Improved Flocks
+    pp_enclosed_sheep_walks_improved_flocks_desc: "The walled sheep walks are grazed in turn, and breeders keep the best rams to raise heavier fleeces, as the English improvers of the eighteenth century did. The clip is sorted and packed in woolsacks at the shearing shed."
     pp_enclosed_sheep_walks_no_primary: No Improved Flocks
+    pp_enclosed_sheep_walks_no_primary_desc: "No improved breeding is done here, the flock grazes the walks as it always has."
     pp_enclosed_sheep_walks_market_sales: Market Sales
     pp_enclosed_sheep_walks_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
     enclosed_sheep_walks_slot_3: Market

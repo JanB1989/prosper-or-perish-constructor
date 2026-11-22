@@ -278,3 +278,21 @@ Linked support concepts without a card of their own:
 
 Map mode concepts are `*_map_mode.txt` (see Map modes above); the World Builder's soil and fertility concepts
 (`ha1300_*.txt`) come with the geography sync.
+
+## Production method descriptions
+
+Every production method has a description: the localization key `<method>_desc`, which the game shows as the flavour
+text at the bottom of the method's tooltip (2026-11-22, Jan). It lives in the blueprint's `localization.entries`
+right below the method's name; the crop farms take theirs from `config/crop_farms.toml` (`[loc]`, `[loc.base_desc]`,
+the practice tables), Market Sales, Old Ways and the logistics networks from their passes.
+
+- A real method (a technique, a product line, a regional practice): two or three sentences, 25 to 50 words, on what
+  the people do and the history behind it. An explanation, written plainly; a true general statement beats a doubtful
+  detail. The text fits the recipe the player sees next to it (name the grain the recipe uses, not another).
+- An accounting method (upkeep, a deposit or base method, an empty "No ..." choice): one short sentence in the game
+  world's terms on why it is there, with one wording per kind.
+- The usual rules for player text hold: no numbers of the balance, no developer words, buildings and concepts as
+  links (easiest: describe the work without typing a building's name), ASCII, no double quotes inside the text.
+- A method tied to a location (`location_allow`) also says where it works.
+
+`tests/test_method_descriptions.py` fails when a method has none or the text runs past 60 words.

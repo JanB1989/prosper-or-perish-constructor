@@ -103,8 +103,11 @@ localization:
     macadam_works_desc: Surveyors and road crews break graded stone, tend rollers and carts, and keep engineered roads crowned, drained, and open to heavy traffic.
     pp_macadam_works_construction: "[ShowBuildingTypeName('macadam_works')|e] Construction"
     pp_macadam_works_maintenance: Macadam Crews
+    pp_macadam_works_maintenance_desc: "Crews spread layers of broken stone over a raised and drained roadbed, and traffic and rollers pack them down. John McAdam's method made roads smooth and dry in all weathers."
     pp_macadam_works_hand_broken_stone: Hand-Broken Road Stone
+    pp_macadam_works_hand_broken_stone_desc: "Stonebreakers sit by the road and break stone with hammers until each piece passes through a ring. Gangs of labourers then spread it over the roadbed by hand."
     pp_macadam_works_graded_aggregate: Graded Stone and Rollers
+    pp_macadam_works_graded_aggregate_desc: "Stone is crushed and sorted into grades, then pressed into a tight surface by heavy rollers. The road is laid faster and needs fewer hands."
     pp_macadam_works_price: "[ShowBuildingTypeName('macadam_works')|e] Price"
 icon:
   source_png: ../assets/icons/macadam_works.png

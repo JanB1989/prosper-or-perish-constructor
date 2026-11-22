@@ -6,9 +6,11 @@
   rural_glassmaker_slot_1: "[ShowBuildingTypeName('rural_glassmaker')|e] Work"
   rural_glassmaker_slot_2: "Market"
   pp_rural_glassmaker_rural_glassmaker_maintenance: "Glassblowing"
+  pp_rural_glassmaker_rural_glassmaker_maintenance_desc: "A village glassmaker melts local sand with ash in a small furnace and blows simple green bottles, beakers and beads for the country market and the nearby towns."
   pp_rural_glassmaker_market_sales: "Market Sales"
   pp_rural_glassmaker_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
   pp_rural_glassmaker_no_forest_glass: "No Forest Glass"
+  pp_rural_glassmaker_no_forest_glass_desc: "The glassmakers keep to their village furnace and do not move into the woods."
   pp_rural_glassmaker_forest_glass: "Forest Glass"
   pp_rural_glassmaker_forest_glass_desc: "The glassmakers move a furnace into the woods, burn the trees for heat and their ash for potash, and blow a green forest glass. Only in a [location|e] of [ShowVegetationName('forest')], [ShowVegetationName('ha1300_veg_mixed_forest')] or [ShowVegetationName('woods')] [vegetation|e]."
 # <<< eu5-building-pipeline:rural_glassmaker:localization

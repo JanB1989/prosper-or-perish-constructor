@@ -140,8 +140,11 @@ localization:
     carrier_inn_desc: Packhorses, carts and stable yards gather at the carrier inn before setting out along the roads. Its keepers turn scattered rural loads into regular traffic to the market.
     pp_carrier_inn_construction: "[ShowBuildingTypeName('carrier_inn')|e] Construction"
     pp_carrier_inn_maintenance: Pack Horses
+    pp_carrier_inn_maintenance_desc: "Strings of packhorses carry the loads along the roads, led by carriers who stop at the inn each night. Horses, fodder and harness are the main cost."
     pp_carrier_inn_hand_porters: Hand Porters
+    pp_carrier_inn_hand_porters_desc: "Where animals are scarce, porters carry the loads on their backs from inn to inn. It takes many hands and much food, but almost no gear."
     pp_carrier_inn_waybills_and_fitted_carts: Waybills and Fitted Carts
+    pp_carrier_inn_waybills_and_fitted_carts_desc: "Heavy carts drawn by oxen and horses run on fixed days, and every load travels with a written waybill. Fewer goods go astray, and each trip carries more."
     pp_carrier_inn_logistics_network: Carrier Network
     pp_carrier_inn_logistics_network_desc: Regular carriers call at the inn on fixed days and take on loads, so some traffic keeps moving even when the inn's own stables stand empty.
 icon:

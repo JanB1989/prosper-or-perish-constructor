@@ -266,30 +266,55 @@ localization:
     mining_village: Mining Village
     mining_village_desc: A compact mining settlement that extracts local ores and minerals, including coal, metals, and ornamental marble where deposits exist. Basic workings gather small amounts without organized inputs, while intensified mines use lumber, tools, and beeswax. Villages can also haul modest amounts of building stone with horse or ox teams.
     pp_mining_village_base_coal: Coal Deposit
+    pp_mining_village_base_coal_desc: "The coal seam itself: what the ground gives before the villagers work it in earnest."
     pp_mining_village_base_iron: Iron Deposit
+    pp_mining_village_base_iron_desc: "The iron ore bed itself: what the ground gives before the villagers work it in earnest."
     pp_mining_village_base_copper: Copper Deposit
+    pp_mining_village_base_copper_desc: "The copper lode itself: what the ground gives before the villagers work it in earnest."
     pp_mining_village_base_goods_gold: Gold Deposit
+    pp_mining_village_base_goods_gold_desc: "The gold-bearing ground itself: what the ground gives before the villagers work it in earnest."
     pp_mining_village_base_goods_silver: Silver Deposit
+    pp_mining_village_base_goods_silver_desc: "The silver vein itself: what the ground gives before the villagers work it in earnest."
     pp_mining_village_base_goods_tin: Tin Deposit
+    pp_mining_village_base_goods_tin_desc: "The tin ground itself: what the ground gives before the villagers work it in earnest."
     pp_mining_village_base_goods_lead: Lead Deposit
+    pp_mining_village_base_goods_lead_desc: "The galena vein itself: what the ground gives before the villagers work it in earnest."
     pp_mining_village_base_goods_gems: Gem Deposit
+    pp_mining_village_base_goods_gems_desc: "The gem-bearing gravel itself: what the ground gives before the villagers work it in earnest."
     pp_mining_village_base_goods_alum: Alum Deposit
+    pp_mining_village_base_goods_alum_desc: "The alum stone itself: what the ground gives before the villagers work it in earnest."
     pp_mining_village_base_goods_mercury: Mercury Deposit
+    pp_mining_village_base_goods_mercury_desc: "The cinnabar ore itself: what the ground gives before the villagers work it in earnest."
     pp_mining_village_base_goods_marble: Marble Deposit
+    pp_mining_village_base_goods_marble_desc: "The marble bed itself: what the ground gives before the villagers work it in earnest."
     pp_mining_coal: Coal Galleries
+    pp_mining_coal_desc: "Villagers dig coal from shallow galleries where the seam reaches the hillside, propped with timber and lit by candles. The coal goes to smiths, lime burners and households that have run short of wood."
     pp_mining_iron: Iron Workings
+    pp_mining_iron_desc: "The village digs iron ore from shallow pits and outcrops, breaks it with hammers and smelts it in small bloomeries, hammering the spongy bloom into wrought iron. Most of the iron of medieval Europe came from work like this."
     pp_mining_copper: Copper Workings
+    pp_mining_copper_desc: "Small crews follow a copper lode into the hill with picks and candles, roast the ore in heaps and smelt it in little furnaces. The copper goes to coppersmiths, bell founders and bronze casters."
     pp_mining_goods_gold: Gold Workings
+    pp_mining_goods_gold_desc: "The villagers wash gold from river gravels in pans and over sheepskins or rough cloth, and dig the richest quartz to crush by hand. Much of the work goes into moving earth and water for a little gold dust."
     pp_mining_goods_silver: Silver Workings
+    pp_mining_goods_silver_desc: "A village crew cuts silver ore from shallow veins, sorts it by hand and smelts it with lead, then refines the silver on a hearth of bone ash. Many medieval silver districts began with workings like these."
     pp_mining_goods_tin: Tin Workings
+    pp_mining_goods_tin_desc: "Tinners dig and wash the valley gravels for heavy black tin stone, letting diverted water carry the lighter waste away. Cornwall and Devon lived for centuries on tin won this way."
     pp_mining_goods_lead: Lead Workings
+    pp_mining_goods_lead_desc: "Villagers work galena veins in shallow shafts and open cuts, wash the heavy ore and smelt it on hearths into lead. Roofers, plumbers and pewterers buy it."
     pp_mining_goods_gems: Gem Workings
+    pp_mining_goods_gems_desc: "Villagers dig pits into old river gravels and wash the gravel in baskets, picking out rubies, sapphires or garnets by eye. Ceylon and Burma were famed for stones won this way."
     pp_mining_goods_alum: Alum Workings
+    pp_mining_goods_alum_desc: "The alum stone is quarried, roasted in kilns, weathered and leached with water, and the liquor is boiled down until alum crystals form. Dyers need it to fix their colours, and the cloth trade buys all it can get."
     pp_mining_goods_mercury: Mercury Workings
+    pp_mining_goods_mercury_desc: "The red cinnabar ore is dug and heated in closed pots or furnaces, and the quicksilver that boils off is condensed and caught. The vapour poisons the workers, as the miners of Almaden knew well."
     pp_mining_goods_marble: Marble Quarrying
+    pp_mining_goods_marble_desc: "Quarrymen split marble blocks from the bed with iron wedges and with wooden ones swelled by water, then lower them on sledges and haul them away with horses. Sculptors and builders pay well for a sound white block."
     mining_village_no_stone: No Stone Haulage
+    mining_village_no_stone_desc: "No stone is carted away here, the waste rock stays on the tips."
     mining_village_stone_horses: Horse-Drawn Stone
+    mining_village_stone_horses_desc: "Horse carts haul broken stone and waste rock from the workings to builders in the district. The village turns its spoil into a modest second trade, and walls and byres nearby rise from mine rock."
     mining_village_stone_livestock: Ox-Drawn Stone
+    mining_village_stone_livestock_desc: "Slow ox teams drag sledges and carts of broken stone from the workings to nearby builders. Oxen cost little to keep on village pasture and pull heavy loads without complaint."
     pp_mining_village_price: "[ShowBuildingTypeName('mining_village')|e] Price"
 icon:
   source_dds: ../../../mod/pp/main_menu/gfx/interface/icons/buildings/mining_village.dds

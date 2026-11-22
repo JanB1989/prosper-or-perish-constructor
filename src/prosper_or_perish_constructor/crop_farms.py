@@ -682,7 +682,12 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
         entries[f"{building}_slot_{index}"] = slot_labels[kind]
     entries[f"{building}_slot_{len(slots)}"] = str(loc.get("slot_provisioning", provisioning.SLOT_LABEL))
     entries[f"pp_{building}_base"] = crop.slot0_name
+    base_desc = dict(loc.get("base_desc", {})).get(crop.slot0_name)
+    if base_desc:
+        entries[f"pp_{building}_base_desc"] = str(base_desc)
     entries[f"pp_{building}_no_cultivation"] = str(loc.get("no_cultivation", "No Cultivation"))
+    if loc.get("no_cultivation_desc"):
+        entries[f"pp_{building}_no_cultivation_desc"] = str(loc["no_cultivation_desc"])
     for method in crop.tier_methods(tier):
         entries[f"pp_{building}_{method.key}"] = method.name
         if method.desc:
@@ -690,6 +695,8 @@ def render_blueprint(table: CropTable, crop: Crop, tier: int, context: RenderCon
     if has_beekeeping(table, crop, tier):
         hive = table.raw["beekeeping"][str(tier)]
         entries[f"pp_{building}_no_beekeeping"] = str(loc.get("no_beekeeping", "No Beekeeping"))
+        if loc.get("no_beekeeping_desc"):
+            entries[f"pp_{building}_no_beekeeping_desc"] = str(loc["no_beekeeping_desc"])
         entries[f"pp_{building}_{hive['key']}"] = str(hive["name"])
         if hive.get("desc"):
             entries[f"pp_{building}_{hive['key']}_desc"] = str(hive["desc"])

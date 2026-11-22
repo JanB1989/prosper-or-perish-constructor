@@ -111,8 +111,11 @@ localization:
     permanent_way_depot_desc: Platelayers, gangers, timber sleepers, rails, ballast, and tool stores keep the permanent way fit for trains and freight.
     pp_permanent_way_depot_construction: "[ShowBuildingTypeName('permanent_way_depot')|e] Construction"
     pp_permanent_way_depot_maintenance: Permanent Way Crews
+    pp_permanent_way_depot_maintenance_desc: "Platelayers replace worn rails, rotten sleepers and sunken ballast so the trains can run. Steel, timber, stone and coal for the forges keep the line fit."
     pp_permanent_way_depot_hand_laying: Hand-Laid Permanent Way
+    pp_permanent_way_depot_hand_laying_desc: "Gangs of navvies lift, carry and lay every rail and sleeper by hand. The track goes down slowly, and the gangs need food and wages."
     pp_permanent_way_depot_standardized_fittings: Standardized Rails and Fittings
+    pp_permanent_way_depot_standardized_fittings_desc: "Rails, chairs and fishplates are made to fixed patterns, so any piece fits anywhere on the line. Repairs go faster and need less timber and stone."
     pp_permanent_way_depot_price: "[ShowBuildingTypeName('permanent_way_depot')|e] Price"
 icon:
   source_png: ../assets/icons/permanent_way_depot.png

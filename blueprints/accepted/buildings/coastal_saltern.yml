@@ -115,11 +115,15 @@ localization:
     salt_collector: Coastal Saltern
     salt_collector_desc: Coastal salterns draw seawater into salt marshes, settling ponds, and shallow pans where sun, wind, and careful boiling turn brine into usable salt.
     pp_coastal_saltern_base_salt: Surveyed Salt Marshes
+    pp_coastal_saltern_base_salt_desc: "The surveyed salt marshes: what the tide and the sun gives before the works improve on it."
     pp_coastal_saltern_open_salt_marshes: Open Salt Marshes
+    pp_coastal_saltern_open_salt_marshes_desc: "The salters let the tide into the old marsh and rake up what the sun leaves behind."
     pp_coastal_saltern_lined_evaporation_pans: Lined Evaporation Pans
+    pp_coastal_saltern_lined_evaporation_pans_desc: "Seawater flows through a ladder of shallow clay-lined pans, growing saltier in each, until the salt crystals are raked from the last. Salt from the Atlantic marshes of France and Portugal was shipped across northern Europe this way."
     pp_salt_collector_market_sales: Market Sales
     pp_salt_collector_market_sales_desc: A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price.
     pp_coastal_saltern_no_sun_pans: No Sun Pans
+    pp_coastal_saltern_no_sun_pans_desc: "No pans are left to dry in the sun alone, the salters keep to their marsh."
     pp_coastal_saltern_sun_pans: Sun Pans
     pp_coastal_saltern_sun_pans_desc: "Through the long dry summer the sun alone draws the water out of shallow pans of brine, and the salt crust is raked up by hand. Only in a [location|e] of [ShowClimateName('arid')], [ShowClimateName('hot_semi_arid')] or [ShowClimateName('mediterranean')] [climate|e]."
 icon:

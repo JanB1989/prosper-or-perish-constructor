@@ -58,6 +58,7 @@ building:
 localization:
   entries:
     pp_shipyard_maintenance: "[ShowBuildingTypeName('shipyard')|e] Maintenance"
+    pp_shipyard_maintenance_desc: "Tar, timber, ship stores, tools and rations that keep the slipways building and repairing ships."
 
 evaluation:
   allow_rules:

@@ -859,6 +859,39 @@ about one shortage in five; falling demand and imports end the rest.
   burghers started a construction within one month, in 2 of 469 untreated.** They built 104 gravel roads, 32 local
   markets, 30 burgher mansions, then guilds. Burghers are not unwilling, they are broke.
 
+### 3.1 The estate planner (EU5 1.4.9, read 2026-11-22; replayed on run ebdb631e, not tested in game)
+
+The estates do not use the country's scored queue and never read a building's `ai_construct_weight`. Once a month an
+estate without a plan runs its own planner:
+
+1. Types: only buildings whose worker pop type belongs to the estate (nobles: noble, laborer, soldier, peasant and
+   slave buildings, because the peasants estate hands its people to the nobles; burghers: burgher buildings; clergy:
+   clergy buildings; tribes: nearly all), unlocked by advances, not `forbidden_for_estates`. The estate's own estate
+   buildings are a separate mode, more likely at low satisfaction, and need control below
+   `ESTATE_BUILD_MAX_CONTROL_THRESHOLD` (0.75).
+2. Locations must have room: building levels plus constructions at most 0.75 x the free building levels, and at most
+   one estate construction running there.
+3. It draws random types until one has a valid location. A location is valid when it has spare peasants and laborers
+   and free workers of the building's pop type, the type is allowed at that rank and passes its script conditions and
+   max levels, market access is at least 0.5, the construction goods and one recipe per slot are available, the
+   control share (1 - control in practice) is at least 0.2, and **every good the building produces is short in that
+   market** (supply below 1.5 x demand). In a rural location every produced good must also sell at 1.5 x its default
+   price or more, so nearly all estate production starts are in towns and cities.
+4. The best location wins: control share / (constructions + 1) x population / (current level + 1), plus noise.
+5. Cost = gold price x `ESTATE_MAX_PRICE_MULTIPLIER`. The plan starts when the estate's gold covers it, last month's
+   balance is not negative, and it holds about a year of income or its comparative wealth is at the cap. A plan it
+   cannot afford is kept, never re-drawn.
+
+Consequences in PP:
+- Every building that makes one of the mod's placeholder goods (Province Food, offset, logistics, manual labour,
+  province food sales) fails the "short in the market" rule everywhere, because those goods have a huge supply and
+  almost no demand in every market. So estates never build a staple crop farm, a provisioning herd or fishery, a
+  Tavern, Cookshop, Public Kitchen, Grange, logistics building or labour yard, although all are open to them. The
+  Victualling Yard makes only victuals and passes.
+- Estates build where the crown is weak: 97 % of noble starts are at control 0.8 or less (median 0.44).
+- The planner cannot spend a rich estate's gold: one plan a month at most, a few hundred gold each. Noble estates start
+  44-79 buildings a year world-wide, 3-14 % of their income; the 50 richest hold 53-90 % of all noble gold.
+
 ## 4. Mod scripts that build or remove buildings
 
 Flagged since 2026-09-28 with `PPBLD;...` `error_log` lines and the location counters `pp_dbg_script_build` /

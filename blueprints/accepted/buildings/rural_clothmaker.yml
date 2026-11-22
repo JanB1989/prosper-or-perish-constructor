@@ -55,11 +55,11 @@ building:
                     topography = ha1300_topo_valleys
                 }
             }
-            wool = 0.05 # woven wool, fulled into dense cloth
-            lumber = 0.008 # wheel, shafts and fulling stocks
-            manual_labor = 0.042
+            wool = 0.021 # woven wool, fulled into dense cloth
+            lumber = 0.003 # wheel, shafts and fulling stocks
+            manual_labor = 0.017
             produced = cloth
-            output = 0.075
+            output = 0.036 # add-on rule: about 10 % of the clothmaker's output (cloth is balanced)
             category = building_maintenance
         }
     }
@@ -143,8 +143,10 @@ evaluation:
     pp_rural_clothmaker_fulling_mill:
       production_efficiency: 1.0
       allow_rules:
-        input_throughput: The fulling mill is a small add-on by fast rivers only, deliberately below the full-building throughput.
-        output_throughput: The fulling mill is a small add-on by fast rivers only, deliberately below the full-building throughput.
+        profit_percent: Location-gated add-on, rated by the add-on rule (8-16 % of the building's output value, output / input at least 1.2 with labour at 1.8; AGENTS.md Location-Gated Methods), not by the whole-building bands.
+        input_throughput: Location-gated add-on, rated by the add-on rule (8-16 % of the building's output value, output / input at least 1.2 with labour at 1.8; AGENTS.md Location-Gated Methods), not by the whole-building bands.
+        output_throughput: Location-gated add-on, rated by the add-on rule (8-16 % of the building's output value, output / input at least 1.2 with labour at 1.8; AGENTS.md Location-Gated Methods), not by the whole-building bands.
+        amortization_months: Location-gated add-on, rated by the add-on rule (8-16 % of the building's output value, output / input at least 1.2 with labour at 1.8; AGENTS.md Location-Gated Methods), not by the whole-building bands.
     pp_rural_clothmaker_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

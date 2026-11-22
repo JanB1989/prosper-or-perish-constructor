@@ -6129,8 +6129,8 @@ pp_cplan_bm_charcoal_maker_1_1 = {
 	value = 0
 	if = {
 		limit = { has_location_modifier = pp_wb_soil_peat }
-		add = { value = "market.market_price(goods:coal)" multiply = { value = modifier:local_coal_output_modifier add = 1 min = 0 } multiply = 0.155 }
-		subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.062 }
+		add = { value = "market.market_price(goods:coal)" multiply = { value = modifier:local_coal_output_modifier add = 1 min = 0 } multiply = 0.1 }
+		subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.04 }
 	}
 }
 pp_cplan_bs_charcoal_maker_1 = {
@@ -9484,8 +9484,8 @@ pp_cplan_bm_improved_charcoal_maker_1_1 = {
 	value = 0
 	if = {
 		limit = { has_location_modifier = pp_wb_soil_peat }
-		add = { value = "market.market_price(goods:coal)" multiply = { value = modifier:local_coal_output_modifier add = 1 min = 0 } multiply = 0.2 }
-		subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.08 }
+		add = { value = "market.market_price(goods:coal)" multiply = { value = modifier:local_coal_output_modifier add = 1 min = 0 } multiply = 0.14 }
+		subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.056 }
 	}
 }
 pp_cplan_bs_improved_charcoal_maker_1 = {
@@ -13527,10 +13527,10 @@ pp_cplan_bm_rural_clothmaker_1_1 = {
 	value = 0
 	if = {
 		limit = { has_river = yes OR = { topography = hills topography = mountains topography = ha1300_topo_valleys } }
-		add = { value = "market.market_price(goods:cloth)" multiply = { value = modifier:local_cloth_output_modifier add = 1 min = 0 } multiply = 0.075 }
-		subtract = { value = "market.market_price(goods:lumber)" multiply = 0.008 }
-		subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.042 }
-		subtract = { value = "market.market_price(goods:wool)" multiply = 0.05 }
+		add = { value = "market.market_price(goods:cloth)" multiply = { value = modifier:local_cloth_output_modifier add = 1 min = 0 } multiply = 0.036 }
+		subtract = { value = "market.market_price(goods:lumber)" multiply = 0.003 }
+		subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.017 }
+		subtract = { value = "market.market_price(goods:wool)" multiply = 0.021 }
 	}
 }
 pp_cplan_bs_rural_clothmaker_1 = {
@@ -13584,10 +13584,10 @@ pp_cplan_bm_rural_glassmaker_1_1 = {
 	value = 0
 	if = {
 		limit = { OR = { vegetation = forest vegetation = ha1300_veg_mixed_forest vegetation = woods } }
-		add = { value = "market.market_price(goods:glass)" multiply = { value = modifier:local_glass_output_modifier add = 1 min = 0 } multiply = 0.05 }
-		subtract = { value = "market.market_price(goods:lumber)" multiply = 0.022 }
-		subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.038 }
-		subtract = { value = "market.market_price(goods:sand)" multiply = 0.069 }
+		add = { value = "market.market_price(goods:glass)" multiply = { value = modifier:local_glass_output_modifier add = 1 min = 0 } multiply = 0.016 }
+		subtract = { value = "market.market_price(goods:lumber)" multiply = 0.006 }
+		subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.01 }
+		subtract = { value = "market.market_price(goods:sand)" multiply = 0.018 }
 	}
 }
 pp_cplan_bs_rural_glassmaker_1 = {
@@ -13724,8 +13724,8 @@ pp_cplan_bm_salt_collector_2_1 = {
 	value = 0
 	if = {
 		limit = { OR = { climate = arid climate = hot_semi_arid climate = mediterranean } }
-		add = { value = "market.market_price(goods:salt)" multiply = { value = modifier:local_salt_output_modifier add = 1 min = 0 } multiply = 0.048 }
-		subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.048 }
+		add = { value = "market.market_price(goods:salt)" multiply = { value = modifier:local_salt_output_modifier add = 1 min = 0 } multiply = 0.05 }
+		subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.05 }
 	}
 }
 pp_cplan_bs_salt_collector_2 = {

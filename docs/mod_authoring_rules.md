@@ -69,8 +69,8 @@ never again for a running building. Rules for a blueprint (`tests/test_location_
   a slot or in the Market leg; never let it gate.
 - Every tier that replaces the building (`obsolete`) gets its own copy with the same gate, so the site keeps it after the
   upgrade (an upgrade picks every slot again).
-- The method pays where it runs at the labour price the game sees (about 1.8): a building leaves a losing method only
-  slowly. Tag it for the labour pass like any method.
+- Size and price it by the add-on rule in the constructor `AGENTS.md` ("Location-Gated Methods"; the test enforces
+  it). Tag it for the labour pass like any method.
 - Text: name the slot and both methods, and write the gated method's `_desc`: what it is, then where it works, with
   links (`[location|e]`, `[river|e]`, `[ShowModifier('pp_wb_soil_peat')]`, `[ShowClimateName('arid')]` with
   `[climate|e]`, `[ShowVegetationName('woods')]` with `[vegetation|e]`, `[ShowTopographyName('hills')]` with

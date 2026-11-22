@@ -53,11 +53,11 @@ building:
                     vegetation = woods
                 }
             }
-            sand = 0.069
-            lumber = 0.022 # furnace wood and potash from its ash
-            manual_labor = 0.038
+            sand = 0.018
+            lumber = 0.006 # furnace wood and potash from its ash
+            manual_labor = 0.01
             produced = glass
-            output = 0.05
+            output = 0.016 # add-on rule: about 11 % of the glassmaker's output (glass is balanced); 0.015 sat exactly at the 1.2 limit
             category = building_maintenance
         }
     }
@@ -121,8 +121,10 @@ evaluation:
     pp_rural_glassmaker_forest_glass:
       production_efficiency: 1.0
       allow_rules:
-        input_throughput: Forest glass is a small add-on in broadleaf and mixed woods only, deliberately below the full-building throughput.
-        output_throughput: Forest glass is a small add-on in broadleaf and mixed woods only, deliberately below the full-building throughput.
+        profit_percent: Location-gated add-on, rated by the add-on rule (8-16 % of the building's output value, output / input at least 1.2 with labour at 1.8; AGENTS.md Location-Gated Methods), not by the whole-building bands.
+        input_throughput: Location-gated add-on, rated by the add-on rule (8-16 % of the building's output value, output / input at least 1.2 with labour at 1.8; AGENTS.md Location-Gated Methods), not by the whole-building bands.
+        output_throughput: Location-gated add-on, rated by the add-on rule (8-16 % of the building's output value, output / input at least 1.2 with labour at 1.8; AGENTS.md Location-Gated Methods), not by the whole-building bands.
+        amortization_months: Location-gated add-on, rated by the add-on rule (8-16 % of the building's output value, output / input at least 1.2 with labour at 1.8; AGENTS.md Location-Gated Methods), not by the whole-building bands.
     pp_rural_glassmaker_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

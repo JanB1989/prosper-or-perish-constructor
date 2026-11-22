@@ -54,7 +54,7 @@ building:
             category = building_maintenance
         }
     }
-    # location-gated methods 2026-11-22 (Jan): in hot, dry summers the sun alone dries the pans, about a seventh more
+    # location-gated methods 2026-11-22 (Jan): in hot, dry summers the sun alone dries the pans, about 15 % more
     # salt. A slot of its own with an empty method first (location_methods.py); the climate never changes.
     unique_production_methods = {
         pp_coastal_saltern_no_sun_pans = {
@@ -70,9 +70,9 @@ building:
                     climate = mediterranean
                 }
             }
-            manual_labor = 0.048 # raking the crust
+            manual_labor = 0.05 # raking the crust
             produced = salt
-            output = 0.048
+            output = 0.05 # add-on rule: about 15 % of the saltern's output (salt is short)
             category = building_maintenance
         }
     }
@@ -149,9 +149,7 @@ evaluation:
     pp_coastal_saltern_sun_pans:
       production_efficiency: 1.00
       allow_rules:
-        input_throughput: Sun pans are a small add-on in hot, dry climates only, deliberately below the full-building throughput.
-        output_throughput: Sun pans are a small add-on in hot, dry climates only, deliberately below the full-building throughput.
-        base_output_per_1k: Sun pans are a labour-only add-on in hot, dry climates only (about a seventh more salt per level), not a base yield.
+        base_output_per_1k: Location-gated add-on, rated by the add-on rule (8-16 % of the building's output value, output / input at least 1.2 with labour at 1.8; AGENTS.md Location-Gated Methods), not by the whole-building bands.
     pp_salt_collector_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

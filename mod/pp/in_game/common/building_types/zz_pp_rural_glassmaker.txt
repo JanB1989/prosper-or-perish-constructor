@@ -34,11 +34,11 @@ unique_production_methods = {
                 vegetation = woods
             }
         }
-        sand = 0.069
-        lumber = 0.022 # furnace wood and potash from its ash
-        manual_labor = 0.038
+        sand = 0.018
+        lumber = 0.006 # furnace wood and potash from its ash
+        manual_labor = 0.01
         produced = glass
-        output = 0.05
+        output = 0.016 # add-on rule: about 11 % of the glassmaker's output (glass is balanced); 0.015 sat exactly at the 1.2 limit
         category = building_maintenance
     }
 }

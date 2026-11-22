@@ -38,9 +38,9 @@ increase_per_level_cost = 0.18
             location_allow = {
                 has_location_modifier = pp_wb_soil_peat
             }
-            manual_labor = 0.062 # turf cut, stacked and dried by hand
+            manual_labor = 0.04 # turf cut, stacked and dried by hand
             produced = coal
-            output = 0.155
+            output = 0.10 # add-on rule: about 16 % of the clamp's output (coal is tight)
             category = building_maintenance
         }
     }

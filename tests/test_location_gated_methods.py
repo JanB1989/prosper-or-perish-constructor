@@ -8,6 +8,7 @@ outside its gate (in game 2026-11-22). So every gated method of the mod's bluepr
 - is not the building's gate (the Market leg, the last slot) and not alone in a slot;
 - comes back, with the same gate, in every building that replaces its building (``obsolete``);
 - has a name and a description (where it works) in the compiled English text, and every slot of its building has a name;
+- follows the add-on rule: 8-16 % of the building's output value, output / input at least 1.2 with labour at 1.8;
 
 and no file of the compiled mod sets a production method (``set_production_method`` ignores the gate).
 """
@@ -130,6 +131,39 @@ def test_gated_methods_and_their_slots_have_names(gated) -> None:
             for loc in (method.name, f"{method.name}_desc") if method.gated else (method.name,):
                 if loc not in keys:
                     problems.append(f"{path.name}: no text {loc}")
+    assert not problems, "\n".join(problems)
+
+
+ADD_ON_SIZE = (0.08, 0.16)  # share of the building's output value per level the gated method adds
+ADD_ON_LABOUR_PRICE = 1.8  # manual_labor as the game sees it in a running game
+ADD_ON_MIN_RETURN = 1.2  # the gated method's own output / input at that labour price
+MARKET_GATE = re.compile(r"\bmarket\s*\??=")  # a gate on the market's goods can change: not a location add-on
+
+
+def test_a_gated_method_follows_the_add_on_rule(gated) -> None:
+    """Add-on rule (AGENTS.md "Location-Gated Methods"), base prices (production_gate.load_prices): the gated method
+    adds 8-16 % of the building's output value per level, the other slots on their most profitable ungated method (the
+    Market leg included), and its own output / input is at least 1.2 with manual_labor at 1.8, so the building with it
+    beats the empty choice at the labour price the game sees. Gates on the market (the lumber mills' Forest Elephants)
+    are left out: they follow a price, not the land."""
+    prices = pg.load_prices(ROOT, PROJECT)
+    dear_labour = {**prices, "manual_labor": ADD_ON_LABOUR_PRICE}
+    problems, checked = [], 0
+    for key, (path, _, slots) in sorted(gated.items()):
+        ungated = [[m for m in slot.methods if not m.gated] for slot in slots]
+        best = [max(methods, key=lambda m: m.value(prices) - m.cost(prices)) for methods in ungated if methods]
+        building_value = sum(m.value(prices) for m in best)
+        for method in (m for slot in slots for m in slot.methods if m.gated and m.has_output):
+            if MARKET_GATE.search(method.location_allow or ""):
+                continue
+            checked += 1
+            size = method.value(prices) / building_value if building_value > 0 else float("inf")
+            back = method.value(dear_labour) / max(method.cost(dear_labour), 1e-9)
+            if not ADD_ON_SIZE[0] - 1e-9 <= size <= ADD_ON_SIZE[1] + 1e-9:
+                problems.append(f"{path.name}: {method.name} adds {size:.1%} of the building's output value")
+            if back < ADD_ON_MIN_RETURN - 1e-9:
+                problems.append(f"{path.name}: {method.name} returns {back:.3f} x its input at labour {ADD_ON_LABOUR_PRICE}")
+    assert checked >= 5, "the add-on rule checked fewer gated methods than the mod has"
     assert not problems, "\n".join(problems)
 
 

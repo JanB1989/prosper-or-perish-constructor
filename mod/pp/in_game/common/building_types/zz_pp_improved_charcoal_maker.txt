@@ -38,9 +38,9 @@ increase_per_level_cost = 0.18
             location_allow = {
                 has_location_modifier = pp_wb_soil_peat
             }
-            manual_labor = 0.08 # turf cut by hand, dried in sheds
+            manual_labor = 0.056 # turf cut by hand, dried in sheds
             produced = coal
-            output = 0.2
+            output = 0.14 # add-on rule: about 15 % of the retort's output (coal is tight)
             category = building_maintenance
         }
     }

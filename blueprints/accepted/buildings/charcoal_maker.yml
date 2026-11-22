@@ -59,9 +59,9 @@ building:
                 location_allow = {
                     has_location_modifier = pp_wb_soil_peat
                 }
-                manual_labor = 0.062 # turf cut, stacked and dried by hand
+                manual_labor = 0.04 # turf cut, stacked and dried by hand
                 produced = coal
-                output = 0.155
+                output = 0.10 # add-on rule: about 16 % of the clamp's output (coal is tight)
                 category = building_maintenance
             }
         }
@@ -123,9 +123,7 @@ evaluation:
     pp_charcoal_maker_peat_cutting:
       production_efficiency: 1.0
       allow_rules:
-        input_throughput: Peat cutting is a small add-on on peat soil only, deliberately below the full-building throughput.
-        output_throughput: Peat cutting is a small add-on on peat soil only, deliberately below the full-building throughput.
-        base_output_per_1k: Peat cutting is a labour-only add-on on peat soil only (a quarter of the clamp charcoal, a little more in the retort), not a base yield.
+        base_output_per_1k: Location-gated add-on, rated by the add-on rule (8-16 % of the building's output value, output / input at least 1.2 with labour at 1.8; AGENTS.md Location-Gated Methods), not by the whole-building bands.
     pp_charcoal_maker_market_sales:
       allow_rules:
         profit_percent: The Market Sales gate leg is balanced at its gate margin, not at a profit band.

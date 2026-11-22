@@ -110,8 +110,20 @@
   goods, no output) first, the gated method second, nothing else, one gate per slot. Never the Market leg, never alone
   in a slot (a one-method slot runs without any check), never beside ungated producers (the AI's switch picks one
   favourite per country, building type, market and slot whatever the gate; in game a gated method in a shared slot
-  froze every Clay Pit outside its gate). Every `obsolete` successor carries a method with the same gate. The gated
-  method pays at the labour price the game sees (about 1.8), because buildings leave a losing method only slowly.
+  froze every Clay Pit outside its gate). Every `obsolete` successor carries a method with the same gate.
+- Add-on rule (2026-11-22, Jan: a special method must be a bit better than the empty choice, which stays selectable;
+  `tests/test_location_gated_methods.py` enforces it at base prices, `production_gate.load_prices`):
+  - Size: the gated method adds 8-16 % of the building's output value per level, the other slots on their most
+    profitable ungated method (Market leg included); near the top where its good is short or tight in the runs, about
+    10 % where it is balanced. That is the size of the +0.10 attribute output modifiers of the same day.
+  - Always better: its own output / input is at least 1.2 with `manual_labor` at 1.8, so the building with it beats
+    the empty choice at the labour price the game sees (buildings leave a losing method only slowly). Labour-only
+    methods (`base` class, labour 20 % of output) return 2.78 there.
+  - It is rated by this rule, not by the whole-building throughput, margin or base-output bands of `ppc blueprint
+    evaluate`; its `evaluation` allow rules say so in one wording. Gates on the market (the lumber mills' Forest
+    Elephants) are price switches, not add-ons, and stay outside the rule.
+  - To give a method more or less: labour-only methods scale `output` (the labour pass sets labour); methods with
+    goods scale every amount by one factor (margin and labour share stay; output alone would move the margin).
 - Text: a single failed condition is named in the method's tooltip, an `OR` only says the requirements are not met, so
   the method's `_desc` says where it works (links, no numbers). Slot names are positional (`<building>_slot_<n>`):
   `ppc gate apply` renumbers the blueprint's labels with the slots; the test wants a name for every slot.
@@ -123,10 +135,12 @@
   them out; the start market stock counts them only where the gate holds (World Builder attributes, the start markets'
   goods); the Construction Plan's business estimate wraps the method's profit in its gate and its market limit leaves it
   out; `tests/test_upgrade_not_worse.py` compares an upgrade outside every gate and inside each gate.
-- The methods (2026-11-22, not tested in game): Peat Cutting (Charcoal Clamp and Charcoal Retort, peat soil, labour ->
-  coal), Sun Pans (Coastal Saltern, arid, hot semi-arid or mediterranean climate, labour -> salt), Fulling Mill (Rural
-  Clothmaker, a river through hills, mountains or valleys, wool and lumber -> cloth, tagged `craft_medieval`: the wheel
-  does the pounding), Forest Glass (Rural Glassmaker, forest, mixed forest or woods, sand and lumber -> glass). Building
+- The methods (2026-11-22, not tested in game; per level, % = share of the building's output value): Peat Cutting
+  (peat soil; Charcoal Clamp labour 0.04 -> coal 0.10, 16 %; Charcoal Retort 0.056 -> 0.14, 15 %; coal tight from
+  1502), Sun Pans (Coastal Saltern, arid, hot semi-arid or mediterranean climate, labour 0.05 -> salt 0.05, 15 %; salt
+  short from 1602), Fulling Mill (Rural Clothmaker, a river through hills, mountains or valleys, wool 0.021 + lumber
+  0.003 + labour 0.017 -> cloth 0.036, 10-13 %, tagged `craft_medieval`: the wheel does the pounding), Forest Glass
+  (Rural Glassmaker, forest, mixed forest or woods, sand 0.018 + lumber 0.006 + labour 0.01 -> glass 0.015, 10 %). Building
   gates on soil and vegetation never change, so they sit in `location_potential`: the Clay Pit and Clay Washmill also
   stand on clay soil, the three bog iron tiers also on peat soil and swamp.
 

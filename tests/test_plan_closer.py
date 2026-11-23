@@ -228,7 +228,7 @@ def test_generated_lists() -> None:
     text = _read(MOD / pc.TRIGGERS)
     assert text == pc.render_triggers(plans, never, food, pop_types).lstrip("\ufeff"), "run ppc build (plan_closer)"
     code = _code(MOD / pc.TRIGGERS)
-    assert _read(MOD / pc.EFFECTS) == pc.render_effects(plans).lstrip("﻿"), "run ppc build (plan_closer)"
+    assert _read(MOD / pc.EFFECTS) == pc.render_effects(plans, pop_types).lstrip("﻿"), "run ppc build (plan_closer)"
     planned = _block(code, "pp_pclose_planned")
     for plan in plans:
         part = planned[planned.index(f"scope:pp_pclose_l = {{ has_variable = {plan.var} }}"):]
@@ -436,3 +436,40 @@ def test_calls_pass_exactly_what_the_bodies_use() -> None:
     for path in (MOD / pc.HAND_EFFECTS, MOD / pc.HAND_TRIGGERS, MOD / pc.SCRIPTED_GUIS, MOD / pc.TRIGGERS):
         text = _code(path)
         assert text.count("{") == text.count("}"), path.name
+
+
+def test_row_lock() -> None:
+    """The padlock on each pop type row of the location window (2026-11-23, Jan): one click closes the row's
+    producing buildings of the player, the next opens them, through the widget's two lists."""
+    window = _read(MOD / "in_game/gui/location_window.gui")
+    assert window.count(pc.ROW_MARK) == 1
+    assert pc.add_row_locks(window) == window
+    button = window[window.index(pc.ROW_MARK):]
+    button = button[:button.index("action_tooltip") + 700]
+    assert f"GetScriptedGui('{pc.ROW_GUI}').Execute(" in button and "MakeScopeFlag(PopType.GetKey)" in button
+    assert f"Concatenate('{pc.ROW_VAR}', PopType.GetKey)" in button and pc.ROW_VISIBLE in button
+    # the lock lies after the header's own button (on top of it)
+    assert window.index("ShowLocationProductionViewForPopType(LocationView.GetLocation.GetId") < window.index(pc.ROW_MARK)
+    gui = _block(_code(MOD / pc.SCRIPTED_GUIS), pc.ROW_GUI)
+    assert "scope = location" in gui and "save_scope_as = pp_row_c" in gui and f"{pc.ROW_PICK} = yes" in gui
+    assert "is_ai = no" in gui
+    pick = _block(_code(MOD / pc.EFFECTS), pc.ROW_PICK)
+    _, _, _, pop_types = _inputs()
+    for pt in {*pop_types, "peasants"}:
+        assert f"scope:pp_key = flag:{pt} }}\n\t\tpp_row_toggle_do = {{ pt = {pt} }}" in pick, pt
+    do = _block(_effects(), "pp_row_toggle_do")
+    assert set(re.findall(r"\$(\w+)\$", do)) == {"pt"}
+    opened, closed = do.split("else_if", 1)
+    assert f"has_variable = {pc.ROW_VAR}$pt$" in opened and f"remove_variable = {pc.ROW_VAR}$pt$" in opened
+    assert "is_opened = no" in opened and f"add_to_variable_list = {{ name = {pc.OPEN_LIST} " in opened
+    assert f"remove_list_variable = {{ name = {pc.CLOSE_LIST} " in opened
+    assert f"set_variable = {pc.ROW_VAR}$pt$" in closed and "is_opened = no" not in closed
+    assert f"add_to_variable_list = {{ name = {pc.CLOSE_LIST} " in closed
+    assert f"remove_list_variable = {{ name = {pc.OPEN_LIST} " in closed
+    building = _block(_triggers(), "pp_row_building")
+    assert set(re.findall(r"\$(\w+)\$", building)) == {"pt"}
+    for line in ("owner ?= scope:pp_row_c", "building_pop_type = $pt$", "any_production_method_of_building"):
+        assert line in building, line
+    text = _read(MOD / "main_menu/localization/english/pp_location_plan_l_english.yml")
+    for key in ("PP_ROW_LOCK_CLOSE", "PP_ROW_LOCK_OPEN", "PP_ROW_LOCK_DESC"):
+        assert f"  {key}: " in text and f"'{key}'" in button or f'"{key}"' in button, key

@@ -61,6 +61,97 @@ FAIL_CLOSE = 104.25  # pp_lprof_fail: the plan's level waits for workers and not
 STATE = 14  # the plan state "closing another business here to free workers"
 OFF_VAR = town_plans.FREE_OFF_VAR  # country: set = the setting is off
 
+# The row lock (2026-11-23, Jan: "a button there, one maybe for each estate, that when you click it, all production
+# buildings ... are closed. And if you click it again, all would be opened"): the location window lists a location's
+# buildings in one row per pop type; each row's header carries the game's own padlock checkbox. A click runs the
+# scripted GUI ROW_GUI (location scope, scope:pp_key = flag:<pop type>): the player's producing buildings of that row
+# go onto the widget's close list and the location remembers it (ROW_VAR + pop type); the next click puts them on the
+# open list. Nothing else reads the variable.
+ROW_GUI = "pp_row_toggle"
+ROW_PICK = "pp_row_toggle_pick"  # generated, location scope: the pop type the flag names -> pp_row_toggle_do
+ROW_VAR = "pp_row_closed_"  # location variable ROW_VAR + pop type: the row's lock is on
+ROW_MARK = "# PP: row lock (plan_closer.py)"
+_ROW_ANCHOR = 'on_action = "[ShowLocationProductionViewForPopType(LocationView.GetLocation.GetId, PopType.GetKey)]"'
+_ROW_HEADER = "card_header_button_04 = {"
+_ROW_LOCKED = f"LocationView.GetLocation.MakeScope.Var(Concatenate('{ROW_VAR}', PopType.GetKey)).IsSet"
+ROW_VISIBLE = "And(LocationView.GetLocation.GetOwner.IsPlayer, Not(IsObserving))"
+_ROW_BUTTON = f"""button_square_checkbox = {{ {ROW_MARK}
+	size = {{ 18 16 }}
+	parentanchor = top|right
+	position = {{ -2 2 }}
+	visible = "[{ROW_VISIBLE}]"
+	blockoverride "check_texture" {{
+		texture = "gfx/interface/icons/achievements/padlock.dds"
+	}}
+	blockoverride "checked_icon_size" {{
+		size = {{ 12 12 }}
+	}}
+	blockoverride "unchecked_icon_size" {{
+		size = {{ 12 12 }}
+	}}
+	blockoverride "checked_visible" {{
+		visible = "[{_ROW_LOCKED}]"
+	}}
+	blockoverride "unchecked_visible" {{
+		visible = "[Not({_ROW_LOCKED})]"
+	}}
+	background = {{
+		texture = "gfx/interface/buttons/checkbox_bg_square.dds"
+		texture_density = 2
+		modify_texture = {{
+			using = color_market_grey_texture
+			blend_mode = add
+			alpha = 0.5
+		}}
+	}}
+	action_tooltip = {{
+		click_type = left
+		title = "[SelectLocalization({_ROW_LOCKED}, 'PP_ROW_LOCK_OPEN', 'PP_ROW_LOCK_CLOSE')]"
+		description = "PP_ROW_LOCK_DESC"
+		on_action = "[GetScriptedGui('{ROW_GUI}').Execute(GuiScope.SetRoot(LocationView.GetLocation.MakeScope).AddScope('pp_key', MakeScopeFlag(PopType.GetKey)).End)]"
+	}}
+}}
+"""
+
+
+def _block_end(text: str, open_brace: int) -> int:
+    depth = 0
+    quoted = comment = False
+    for i in range(open_brace, len(text)):
+        c = text[i]
+        if comment:
+            comment = c != "\n"
+        elif quoted:
+            quoted = c != '"'
+        elif c == "#":
+            comment = True
+        elif c == '"':
+            quoted = True
+        elif c == "{":
+            depth += 1
+        elif c == "}":
+            depth -= 1
+            if depth == 0:
+                return i + 1
+    raise ValueError("location window: unbalanced block")
+
+
+def add_row_locks(text: str) -> str:
+    """The padlock in the top right corner of each pop type row's header card (location window, buildings list):
+    placed after the header's own button, so it lies on top of it and takes its clicks."""
+    if ROW_MARK in text:
+        return text
+    if text.count(_ROW_ANCHOR) != 1:
+        raise ValueError("location window: the pop type row's header button not found once")
+    start = text.rindex(_ROW_HEADER, 0, text.index(_ROW_ANCHOR))
+    line_start = text.rindex("\n", 0, start) + 1
+    tab = text[line_start:start]
+    if tab.strip():
+        raise ValueError("location window: the pop type row's header button no longer starts its line")
+    end = text.index("\n", _block_end(text, text.index("{", start))) + 1
+    button = "".join(tab + line + "\n" for line in _ROW_BUTTON.splitlines())
+    return text[:end] + button + text[end:]
+
 
 @dataclass
 class Result:
@@ -142,12 +233,17 @@ def render_triggers(plans: list[town_plans.Plan], never: list[str], food: list[s
     return "".join(parts)
 
 
-def render_effects(plans: list[town_plans.Plan]) -> str:
+def render_effects(plans: list[town_plans.Plan], pop_types: list[str]) -> str:
     return (
         HEADER
         + "\n# Location scope: the closings here are for no plan any more (pp_pclose_undo, pp_pclose_forget).\n"
         f"{FOR_CLEAR} = {{\n"
         + "".join(f"\tremove_variable = {FOR_PREFIX}{plan.key}\n" for plan in plans)
+        + "}\n"
+        + f"\n# Location scope, scope:pp_key = flag:<pop type> (scripted GUI {ROW_GUI}): the row lock of that pop type.\n"
+        f"{ROW_PICK} = {{\n"
+        + "".join(f"\tif = {{\n\t\tlimit = {{ scope:pp_key = flag:{pt} }}\n\t\tpp_row_toggle_do = {{ pt = {pt} }}\n\t}}\n"
+                  for pt in sorted({*pop_types, "peasants"}))
         + "}\n"
     )
 
@@ -170,7 +266,7 @@ def apply(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, write: 
     plans, never, food, pop_types = inputs(repo, project, mod_root, vanilla_root)
     result = Result(plans=len(plans), never=never, food=food, pop_types=pop_types)
     texts = {mod_root / TRIGGERS: render_triggers(plans, never, food, pop_types),
-             mod_root / EFFECTS: render_effects(plans)}
+             mod_root / EFFECTS: render_effects(plans, pop_types)}
     for path, text in texts.items():
         old = path.read_text(encoding="utf-8") if path.is_file() else None
         if old != text:

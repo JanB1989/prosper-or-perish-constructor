@@ -8580,6 +8580,42 @@ pp_land_potential_chip = {}
 														}
 													}
 												}
+												button_square_checkbox = { # PP: row lock (plan_closer.py)
+													size = { 18 16 }
+													parentanchor = top|right
+													position = { -2 2 }
+													visible = "[And(LocationView.GetLocation.GetOwner.IsPlayer, Not(IsObserving))]"
+													blockoverride "check_texture" {
+														texture = "gfx/interface/icons/achievements/padlock.dds"
+													}
+													blockoverride "checked_icon_size" {
+														size = { 12 12 }
+													}
+													blockoverride "unchecked_icon_size" {
+														size = { 12 12 }
+													}
+													blockoverride "checked_visible" {
+														visible = "[LocationView.GetLocation.MakeScope.Var(Concatenate('pp_row_closed_', PopType.GetKey)).IsSet]"
+													}
+													blockoverride "unchecked_visible" {
+														visible = "[Not(LocationView.GetLocation.MakeScope.Var(Concatenate('pp_row_closed_', PopType.GetKey)).IsSet)]"
+													}
+													background = {
+														texture = "gfx/interface/buttons/checkbox_bg_square.dds"
+														texture_density = 2
+														modify_texture = {
+															using = color_market_grey_texture
+															blend_mode = add
+															alpha = 0.5
+														}
+													}
+													action_tooltip = {
+														click_type = left
+														title = "[SelectLocalization(LocationView.GetLocation.MakeScope.Var(Concatenate('pp_row_closed_', PopType.GetKey)).IsSet, 'PP_ROW_LOCK_OPEN', 'PP_ROW_LOCK_CLOSE')]"
+														description = "PP_ROW_LOCK_DESC"
+														on_action = "[GetScriptedGui('pp_row_toggle').Execute(GuiScope.SetRoot(LocationView.GetLocation.MakeScope).AddScope('pp_key', MakeScopeFlag(PopType.GetKey)).End)]"
+													}
+												}
 											}
 										}
 

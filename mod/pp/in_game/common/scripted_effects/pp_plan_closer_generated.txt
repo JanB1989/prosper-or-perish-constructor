@@ -80,3 +80,39 @@ pp_pclose_for_clear = {
 	remove_variable = pp_pclose_for_food
 	remove_variable = pp_pclose_for_trade
 }
+
+# Location scope, scope:pp_key = flag:<pop type> (scripted GUI pp_row_toggle): the row lock of that pop type.
+pp_row_toggle_pick = {
+	if = {
+		limit = { scope:pp_key = flag:burghers }
+		pp_row_toggle_do = { pt = burghers }
+	}
+	if = {
+		limit = { scope:pp_key = flag:clergy }
+		pp_row_toggle_do = { pt = clergy }
+	}
+	if = {
+		limit = { scope:pp_key = flag:laborers }
+		pp_row_toggle_do = { pt = laborers }
+	}
+	if = {
+		limit = { scope:pp_key = flag:nobles }
+		pp_row_toggle_do = { pt = nobles }
+	}
+	if = {
+		limit = { scope:pp_key = flag:peasants }
+		pp_row_toggle_do = { pt = peasants }
+	}
+	if = {
+		limit = { scope:pp_key = flag:slaves }
+		pp_row_toggle_do = { pt = slaves }
+	}
+	if = {
+		limit = { scope:pp_key = flag:soldiers }
+		pp_row_toggle_do = { pt = soldiers }
+	}
+	if = {
+		limit = { scope:pp_key = flag:tribesmen }
+		pp_row_toggle_do = { pt = tribesmen }
+	}
+}

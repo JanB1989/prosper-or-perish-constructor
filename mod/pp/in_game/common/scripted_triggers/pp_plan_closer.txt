@@ -55,3 +55,12 @@ pp_pclose_candidate = {
 	}
 	NOT = { scope:pp_pclose_l = { is_target_in_variable_list = { name = pp_pclose_keep target = prev.building_type } } }
 }
+
+# Building scope, in pp_row_toggle_do (scope:pp_row_c = the player's country): a building the row lock of the $pt$
+# row closes and opens: ours, standing, worked by that pop type, producing (anything with a production method).
+pp_row_building = {
+	owner ?= scope:pp_row_c
+	building_level > 0
+	building_pop_type = $pt$
+	any_production_method_of_building = { always = yes }
+}

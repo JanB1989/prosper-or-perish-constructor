@@ -9,3 +9,17 @@ pp_pclose_ack = {
 		remove_list_variable = { name = pp_popen_now target = scope:pp_b }
 	}
 }
+
+# The row lock (2026-11-23, Jan; plan_closer.py "The row lock"): the padlock on a pop type row of the location
+# window's buildings list. Location scope, scope:pp_key = flag:<pop type>; only in the player's own location.
+pp_row_toggle = {
+	scope = location
+	is_valid = {
+		exists = owner
+		owner = { is_ai = no }
+	}
+	effect = {
+		owner = { save_scope_as = pp_row_c }
+		pp_row_toggle_pick = yes
+	}
+}

@@ -44,3 +44,7 @@
   game_concept_pp_location_plan_desc: "What each of your [locations|e] is for: its plans, set in the Location Plan window (the plan button next to a location's name, or the Plans row of the location window). A plan has no conditions and gives no bonus by itself: the Construction Plan builds toward it and, where its settings allow it, grants the plan's charter among the location's [town_rights|e]. The map mode shows the plans of your locations as icons, and the town rights they hold."
   mapmode_pp_location_plan_name: "Location Plan"
   MAPMODE_PP_LOCATION_PLAN: "#T $mapmode_pp_location_plan_name$#!\nThe plans of each of your [locations|e] as icons: what the Construction Plan builds toward there. After them, the [town_rights|e] the location holds. Hover an icon to see which it is."
+  # the padlock on each pop type row of the location window's buildings list (plan_closer.py "The row lock")
+  PP_ROW_LOCK_CLOSE: "Close this row's producing buildings"
+  PP_ROW_LOCK_OPEN: "Open this row's producing buildings"
+  PP_ROW_LOCK_DESC: "Closes every one of our [buildings|e] in this row that has a [production_method|e], so its [pops|e] are free for other work. Click again to open them all."

@@ -17,7 +17,8 @@ import re
 from pathlib import Path
 
 from prosper_or_perish_constructor import (
-    arable_land_bar, attribute_tooltips, construction_plan, location_plan, location_status, town_plan_gui,
+    arable_land_bar, attribute_tooltips, construction_plan, location_plan, location_status, plan_closer,
+    town_plan_gui,
 )
 from prosper_or_perish_constructor.worldbuilder.geography import EXPORT_BUILD_FILE, LOCATION_WINDOW
 
@@ -665,6 +666,8 @@ def build_window(export_text: str, mod_root: Path, vanilla: Path | None, stored_
     # the Plans row on top of the Infrastructure tab: the location's plans (town rights), which the Construction Plan
     # builds toward (town_plan_gui.py)
     merged = town_plan_gui.add_plan_row(merged)
+    # the padlock on each pop type row of the buildings list: closes / opens the row's producing buildings
+    merged = plan_closer.add_row_locks(merged)
     return widen_window(chip_frames(merged))
 
 

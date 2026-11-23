@@ -314,3 +314,49 @@ pp_pclose_pick = {
 pp_pclose_declare = {
 	save_scope_as = pp_b
 }
+
+# ---- The row lock (2026-11-23, Jan; plan_closer.py "The row lock") ----
+
+# Location scope, from the scripted GUI pp_row_toggle through the generated pp_row_toggle_pick (scope:pp_row_c = the
+# location's owner, the player who clicked): the padlock on the $pt$ row of the location window's buildings list.
+# Lock off: every open producing building of ours in that row goes onto the widget's close list, and the location
+# remembers the lock (only where there was something to close). Lock on: every closed one goes onto the open list.
+# A building leaves the other list on the way, so a click never fights the click before it. The plan rule sees these
+# like closings and openings by hand.
+pp_row_toggle_do = {
+	if = {
+		limit = { has_variable = pp_row_closed_$pt$ }
+		remove_variable = pp_row_closed_$pt$
+		every_buildings_in_location = {
+			limit = {
+				pp_row_building = { pt = $pt$ }
+				is_opened = no
+			}
+			save_scope_as = pp_row_b
+			scope:pp_row_c = {
+				remove_list_variable = { name = pp_pclose_now target = scope:pp_row_b }
+				add_to_variable_list = { name = pp_popen_now target = scope:pp_row_b }
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			any_buildings_in_location = {
+				pp_row_building = { pt = $pt$ }
+				is_opened = yes
+			}
+		}
+		set_variable = pp_row_closed_$pt$
+		every_buildings_in_location = {
+			limit = {
+				pp_row_building = { pt = $pt$ }
+				is_opened = yes
+			}
+			save_scope_as = pp_row_b
+			scope:pp_row_c = {
+				remove_list_variable = { name = pp_popen_now target = scope:pp_row_b }
+				add_to_variable_list = { name = pp_pclose_now target = scope:pp_row_b }
+			}
+		}
+	}
+}

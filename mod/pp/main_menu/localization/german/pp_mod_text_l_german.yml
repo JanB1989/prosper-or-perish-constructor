@@ -6286,7 +6286,9 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   # the padlock on each pop type row of the location window's buildings list (plan_closer.py "The row lock")
   PP_ROW_LOCK_CLOSE: "Close this row's producing buildings"
   PP_ROW_LOCK_OPEN: "Open this row's producing buildings"
-  PP_ROW_LOCK_DESC: "Closes every one of our [buildings|e] in this row that has a [production_method|e], so its [pops|e] are free for other work. Click again to open them all."
+  PP_ROW_LOCK_TITLE_OPEN: "Producing Buildings Open"
+  PP_ROW_LOCK_TITLE_CLOSED: "Producing Buildings Closed"
+  PP_ROW_LOCK_DESC: "One click closes every one of our [buildings|e] in this row that has a [production_method|e], so its [pops|e] are free for other work. The next click opens them all again."
  # pp_location_profiles_l_english.yml
   # The state of a location's plan after the Construction Plan's last monthly pass (pp_lplan_st_g_<plan>; the plan
   # engine of the Locations group, location_profiles.py). A plan has no market limit, so 10 does not come up; its text

@@ -446,6 +446,9 @@ def test_row_lock() -> None:
     assert pc.add_row_locks(window) == window
     button = window[window.index(pc.ROW_MARK):]
     button = button[:button.index("action_tooltip") + 700]
+    assert "tooltipwidget" in button and "ContextualTooltipType" in button
+    for key in ("PP_ROW_LOCK_TITLE_OPEN", "PP_ROW_LOCK_TITLE_CLOSED"):
+        assert f"'{key}'" in button, key
     assert f"GetScriptedGui('{pc.ROW_GUI}').Execute(" in button and "MakeScopeFlag(PopType.GetKey)" in button
     assert f"Concatenate('{pc.ROW_VAR}', PopType.GetKey)" in button and pc.ROW_VISIBLE in button
     # the lock lies after the header's own button (on top of it)

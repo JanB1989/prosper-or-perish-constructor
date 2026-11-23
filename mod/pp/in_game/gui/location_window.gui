@@ -8609,10 +8609,43 @@ pp_land_potential_chip = {}
 															alpha = 0.5
 														}
 													}
+													tooltipwidget = {
+														ContextualTooltipType = {
+															blockoverride "title_text" {
+																text = "[SelectLocalization(LocationView.GetLocation.MakeScope.Var(Concatenate('pp_row_closed_', PopType.GetKey)).IsSet, 'PP_ROW_LOCK_TITLE_CLOSED', 'PP_ROW_LOCK_TITLE_OPEN')]"
+															}
+															blockoverride "title_icon" {
+																icon = {
+																	using = tooltip_title_icon_size
+																	visible = "[LocationView.GetLocation.MakeScope.Var(Concatenate('pp_row_closed_', PopType.GetKey)).IsSet]"
+																	texture = "gfx/interface/icons/achievements/padlock.dds"
+																}
+																icon = {
+																	using = tooltip_title_icon_size
+																	visible = "[Not(LocationView.GetLocation.MakeScope.Var(Concatenate('pp_row_closed_', PopType.GetKey)).IsSet)]"
+																	texture = "gfx/interface/icons/achievements/padlock.dds"
+																	modify_texture = {
+																		using = color_black_texture
+																		blend_mode = multiply
+																		alpha = 0.6
+																	}
+																}
+															}
+															blockoverride "concept_link" {
+																text = "[building|e]"
+															}
+															blockoverride "tooltip_content" {
+																TooltipTextBlock = {
+																	blockoverride "text" {
+																		text = "PP_ROW_LOCK_DESC"
+																	}
+																}
+															}
+														}
+													}
 													action_tooltip = {
 														click_type = left
 														title = "[SelectLocalization(LocationView.GetLocation.MakeScope.Var(Concatenate('pp_row_closed_', PopType.GetKey)).IsSet, 'PP_ROW_LOCK_OPEN', 'PP_ROW_LOCK_CLOSE')]"
-														description = "PP_ROW_LOCK_DESC"
 														on_action = "[GetScriptedGui('pp_row_toggle').Execute(GuiScope.SetRoot(LocationView.GetLocation.MakeScope).AddScope('pp_key', MakeScopeFlag(PopType.GetKey)).End)]"
 													}
 												}

@@ -104,10 +104,43 @@ _ROW_BUTTON = f"""button_square_checkbox = {{ {ROW_MARK}
 			alpha = 0.5
 		}}
 	}}
+	tooltipwidget = {{
+		ContextualTooltipType = {{
+			blockoverride "title_text" {{
+				text = "[SelectLocalization({_ROW_LOCKED}, 'PP_ROW_LOCK_TITLE_CLOSED', 'PP_ROW_LOCK_TITLE_OPEN')]"
+			}}
+			blockoverride "title_icon" {{
+				icon = {{
+					using = tooltip_title_icon_size
+					visible = "[{_ROW_LOCKED}]"
+					texture = "gfx/interface/icons/achievements/padlock.dds"
+				}}
+				icon = {{
+					using = tooltip_title_icon_size
+					visible = "[Not({_ROW_LOCKED})]"
+					texture = "gfx/interface/icons/achievements/padlock.dds"
+					modify_texture = {{
+						using = color_black_texture
+						blend_mode = multiply
+						alpha = 0.6
+					}}
+				}}
+			}}
+			blockoverride "concept_link" {{
+				text = "[building|e]"
+			}}
+			blockoverride "tooltip_content" {{
+				TooltipTextBlock = {{
+					blockoverride "text" {{
+						text = "PP_ROW_LOCK_DESC"
+					}}
+				}}
+			}}
+		}}
+	}}
 	action_tooltip = {{
 		click_type = left
 		title = "[SelectLocalization({_ROW_LOCKED}, 'PP_ROW_LOCK_OPEN', 'PP_ROW_LOCK_CLOSE')]"
-		description = "PP_ROW_LOCK_DESC"
 		on_action = "[GetScriptedGui('{ROW_GUI}').Execute(GuiScope.SetRoot(LocationView.GetLocation.MakeScope).AddScope('pp_key', MakeScopeFlag(PopType.GetKey)).End)]"
 	}}
 }}

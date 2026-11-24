@@ -1639,7 +1639,7 @@
   MAPMODE_PP_BUILDING_LEVELS_RANGE_400_500: "400 to 500 building levels"
   MAPMODE_PP_BUILDING_LEVELS_CAPPED: "500 or more building levels"
   MAPMODE_PP_BUILDING_LEVELS_OVER_SUPPORTED: "Above supported building levels"
-  MAPMODE_PP_BUILDING_LEVELS_TT_LAND: "[ROOT.GetLocation.GetName] has [ROOT.GetLocation.GetNumBuildingLevels|0] total [building|e] levels and supports [ROOT.GetLocation.GetModifierValueFixed('free_building_levels')|0] levels."
+  MAPMODE_PP_BUILDING_LEVELS_TT_LAND: "[ROOT.GetLocation.GetName] has [ROOT.GetLocation.GetNumBuildingLevels|0] [building|e] levels. [ROOT.GetLocation.MakeScope.ScriptValue('pp_counted_building_levels_map_value')|0] count toward its limit of [ROOT.GetLocation.MakeScope.ScriptValue('pp_supported_building_levels_map_value')|0]."
   MAPMODE_PP_BUILDING_LEVELS_TT_WATER: "$MAPMODE_PP_LOCAL_OUTPUT_TT_WATER$"
 
   # Supported building levels map mode (free_building_levels)
@@ -1653,7 +1653,7 @@
   MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_MEDIUM: "70 to 120 supported building levels"
   MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_HIGH: "120 to 200 supported building levels"
   MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_CAPPED: "200 to 300 supported building levels"
-  MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_TT_LAND: "[ROOT.GetLocation.GetName] supports [ROOT.GetLocation.GetModifierValueFixed('free_building_levels')|0] [building|e] levels. It currently has [ROOT.GetLocation.GetNumBuildingLevels|0] total levels."
+  MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_TT_LAND: "[ROOT.GetLocation.GetName] has a limit of [ROOT.GetLocation.MakeScope.ScriptValue('pp_supported_building_levels_map_value')|0] [building|e] levels. [ROOT.GetLocation.MakeScope.ScriptValue('pp_counted_building_levels_map_value')|0] count toward it."
   MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_TT_WATER: "$MAPMODE_PP_LOCAL_OUTPUT_TT_WATER$"
 
   # Unsupported building levels map mode (total building levels above free_building_levels)
@@ -1667,7 +1667,7 @@
   MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_MEDIUM: "5 to 14 unsupported building levels"
   MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_HIGH: "15 to 29 unsupported building levels"
   MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_SEVERE: "30 or more unsupported building levels"
-  MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_TT_LAND: "[ROOT.GetLocation.GetName] has [ROOT.GetLocation.MakeScope.ScriptValue('pp_unsupported_building_levels_map_value')|0] unsupported [building|e] levels: [ROOT.GetLocation.GetNumBuildingLevels|0] total levels and [ROOT.GetLocation.GetModifierValueFixed('free_building_levels')|0] supported levels."
+  MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_TT_LAND: "[ROOT.GetLocation.GetName] is [ROOT.GetLocation.MakeScope.ScriptValue('pp_unsupported_building_levels_map_value')|0] [building|e] levels over its limit: [ROOT.GetLocation.MakeScope.ScriptValue('pp_counted_building_levels_map_value')|0] counted, limit [ROOT.GetLocation.MakeScope.ScriptValue('pp_supported_building_levels_map_value')|0]."
   MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_TT_WATER: "$MAPMODE_PP_LOCAL_OUTPUT_TT_WATER$"
 
   # Building efficiency map mode (local_build_buildings_efficiency)
@@ -1698,13 +1698,16 @@
   MAPMODE_PP_RGO_LEVEL_TT_LAND: "[ROOT.GetLocation.GetName] has [rgo|e] level [ROOT.GetLocation.GetMaxRGOWorkers|0]"
   MAPMODE_PP_RGO_LEVEL_TT_WATER: "$MAPMODE_PP_LOCAL_OUTPUT_TT_WATER$"
  # pp_building_levels_tooltip_l_english.yml
- # Building levels circle (in_game/gui/shared/pp_building_levels_tooltip.gui)
- PP_BLD_LEVELS_COUNTED: "Counted toward the limit: #V [Divide_CFixedPoint(Add_CFixedPoint(Location.GetNumBuildingLevelsTowardLimit, Location.GetNumBuildingLevelsWithEmployment), '(CFixedPoint)2')|1]#! of #V [Divide_CFixedPoint(Add_CFixedPoint(Location.GetSupportedBuildingLevels, Location.GetNumBuildingLevelsWithEmployment), '(CFixedPoint)2')|0]#!"
- PP_BLD_LEVELS_STANDING: "[building|e] levels: #V [Location.GetNumBuildingLevelsTowardLimit|0]#!, fully staffed: #V [Location.GetNumBuildingLevelsWithEmployment|1]#!"
- PP_BLD_LEVELS_RULE: "A fully staffed level counts as one. A closed level, a level without workers and a level under construction count as half."
- PP_BLD_LEVELS_LIMIT_LABEL: "The limit of [Divide_CFixedPoint(Add_CFixedPoint(Location.GetSupportedBuildingLevels, Location.GetNumBuildingLevelsWithEmployment), '(CFixedPoint)2')|0G] comes from"
- PP_BLD_LEVELS_LIMIT_NOTE: "$STATIC_MODIFIER_NAME_building_levels$ in this list is the staffed levels, already counted above."
- PP_BLD_LEVELS_OVER_LABEL: "@warning_icon! [Location.GetNameWithNoTooltip] is over its limit, which has the following impact"
+ # Building levels circle (in_game/gui/shared/pp_building_levels_tooltip.gui): levels, limit, over
+ PP_BLD_LEVELS_COUNTED: "[building|e] levels: #V [Divide_CFixedPoint(Add_CFixedPoint(Location.GetNumBuildingLevelsTowardLimit, Location.GetNumBuildingLevelsWithEmployment), '(CFixedPoint)2')|0]#!"
+ PP_BLD_LEVELS_LIMIT: "Limit: #V [Divide_CFixedPoint(Add_CFixedPoint(Location.GetSupportedBuildingLevels, Location.GetNumBuildingLevelsWithEmployment), '(CFixedPoint)2')|0]#!"
+ PP_BLD_LEVELS_OVER_LABEL: "@warning_icon! [Divide_CFixedPoint(Subtract_CFixedPoint(Location.GetNumBuildingLevelsTowardLimit, Location.GetSupportedBuildingLevels), '(CFixedPoint)2')|0R] over the limit, which costs"
+ PP_BLD_LEVELS_RULE: "Closed, unstaffed and unfinished levels count half. Logistics buildings win lost [market_access|e] back."
+ PP_BLD_LEVELS_LIMIT_TITLE: "What sets the limit"
+ PP_BLD_LEVELS_LIMIT_NOTE: "The game lists $STATIC_MODIFIER_NAME_building_levels$ here as a minus. That is this location's own staffed levels, not a cut to the limit."
+ # the staffed building levels as a number script can read (static modifier building_levels)
+ MODIFIER_TYPE_NAME_local_pp_staffed_building_levels: "Staffed Building Levels"
+ MODIFIER_TYPE_DESC_local_pp_staffed_building_levels: "The [building|e] levels of this [location|e] that have their workers. They count fully toward its [supported_building_levels|e]."
  # pp_bund_l_english.yml
 
 # >>> eu5-building-pipeline:bund:localization

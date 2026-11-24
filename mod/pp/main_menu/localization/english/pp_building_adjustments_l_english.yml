@@ -874,7 +874,7 @@
   MAPMODE_PP_BUILDING_LEVELS_RANGE_400_500: "400 to 500 building levels"
   MAPMODE_PP_BUILDING_LEVELS_CAPPED: "500 or more building levels"
   MAPMODE_PP_BUILDING_LEVELS_OVER_SUPPORTED: "Above supported building levels"
-  MAPMODE_PP_BUILDING_LEVELS_TT_LAND: "[ROOT.GetLocation.GetName] has [ROOT.GetLocation.GetNumBuildingLevels|0] total [building|e] levels and supports [ROOT.GetLocation.GetModifierValueFixed('free_building_levels')|0] levels."
+  MAPMODE_PP_BUILDING_LEVELS_TT_LAND: "[ROOT.GetLocation.GetName] has [ROOT.GetLocation.GetNumBuildingLevels|0] [building|e] levels. [ROOT.GetLocation.MakeScope.ScriptValue('pp_counted_building_levels_map_value')|0] count toward its limit of [ROOT.GetLocation.MakeScope.ScriptValue('pp_supported_building_levels_map_value')|0]."
   MAPMODE_PP_BUILDING_LEVELS_TT_WATER: "$MAPMODE_PP_LOCAL_OUTPUT_TT_WATER$"
 
   # Supported building levels map mode (free_building_levels)
@@ -888,7 +888,7 @@
   MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_MEDIUM: "70 to 120 supported building levels"
   MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_HIGH: "120 to 200 supported building levels"
   MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_CAPPED: "200 to 300 supported building levels"
-  MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_TT_LAND: "[ROOT.GetLocation.GetName] supports [ROOT.GetLocation.GetModifierValueFixed('free_building_levels')|0] [building|e] levels. It currently has [ROOT.GetLocation.GetNumBuildingLevels|0] total levels."
+  MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_TT_LAND: "[ROOT.GetLocation.GetName] has a limit of [ROOT.GetLocation.MakeScope.ScriptValue('pp_supported_building_levels_map_value')|0] [building|e] levels. [ROOT.GetLocation.MakeScope.ScriptValue('pp_counted_building_levels_map_value')|0] count toward it."
   MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_TT_WATER: "$MAPMODE_PP_LOCAL_OUTPUT_TT_WATER$"
 
   # Unsupported building levels map mode (total building levels above free_building_levels)
@@ -902,7 +902,7 @@
   MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_MEDIUM: "5 to 14 unsupported building levels"
   MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_HIGH: "15 to 29 unsupported building levels"
   MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_SEVERE: "30 or more unsupported building levels"
-  MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_TT_LAND: "[ROOT.GetLocation.GetName] has [ROOT.GetLocation.MakeScope.ScriptValue('pp_unsupported_building_levels_map_value')|0] unsupported [building|e] levels: [ROOT.GetLocation.GetNumBuildingLevels|0] total levels and [ROOT.GetLocation.GetModifierValueFixed('free_building_levels')|0] supported levels."
+  MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_TT_LAND: "[ROOT.GetLocation.GetName] is [ROOT.GetLocation.MakeScope.ScriptValue('pp_unsupported_building_levels_map_value')|0] [building|e] levels over its limit: [ROOT.GetLocation.MakeScope.ScriptValue('pp_counted_building_levels_map_value')|0] counted, limit [ROOT.GetLocation.MakeScope.ScriptValue('pp_supported_building_levels_map_value')|0]."
   MAPMODE_PP_UNSUPPORTED_BUILDING_LEVELS_TT_WATER: "$MAPMODE_PP_LOCAL_OUTPUT_TT_WATER$"
 
   # Building efficiency map mode (local_build_buildings_efficiency)

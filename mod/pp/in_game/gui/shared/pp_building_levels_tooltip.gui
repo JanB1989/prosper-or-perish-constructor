@@ -2,6 +2,7 @@
 # The limit counts every building level once and every staffed level once more against a doubled
 # allowance, so in level terms: counted = (levels + staffed) / 2, limit = (supported + staffed) / 2.
 # A fully staffed level counts as one, a closed, unstaffed or unfinished level as half.
+# Three rows (levels, limit, over); the buildings and what sets the limit sit behind their rows' own tooltips.
 template PPLocationBuildingLevels_tooltip {
 	ContextualTooltipType = {
 		blockoverride "title_icon" {
@@ -20,14 +21,10 @@ template PPLocationBuildingLevels_tooltip {
 		}
 		blockoverride "tooltip_content" {
 
+			# building levels counted; hover: the buildings
 			TooltipStringPairList = {
 				datacontext = "[Location]"
 				textcontext = "PP_BLD_LEVELS_COUNTED"
-			}
-
-			TooltipStringPairList = {
-				datacontext = "[Location]"
-				textcontext = "PP_BLD_LEVELS_STANDING"
 
 				tooltipwidget = {
 					SimpleContextualStringPairTooltipType = {
@@ -45,24 +42,36 @@ template PPLocationBuildingLevels_tooltip {
 				}
 			}
 
+			# the limit; hover: what sets it
 			TooltipStringPairList = {
 				datacontext = "[Location]"
-				textcontext = "PP_BLD_LEVELS_RULE"
-			}
+				textcontext = "PP_BLD_LEVELS_LIMIT"
 
-			TooltipStringPairList = {
-				blockoverride "block_title" {
-					datacontext = "[Location]"
-					text = "PP_BLD_LEVELS_LIMIT_LABEL"
+				tooltipwidget = {
+					SimpleContextualStringPairTooltipType = {
+						blockoverride "title_icon" {
+							icon = {
+								using = tooltip_title_icon_size
+								texture = "[GetConceptTexture('supported_building_levels')]"
+							}
+						}
+						blockoverride "tooltip_title_text" {
+							text = "PP_BLD_LEVELS_LIMIT_TITLE"
+						}
+						blockoverride "concept_link" {
+							text = [supported_building_levels|E]
+						}
+						lowpriotextcontext = "[Location.GetDescriptionFor('free_building_levels')]"
+						blockoverride "tooltip_extra_content" {
+							TooltipTextBlock = {
+								textcontext = "PP_BLD_LEVELS_LIMIT_NOTE"
+							}
+						}
+					}
 				}
-				textcontext = "[Location.GetDescriptionFor('free_building_levels')]"
 			}
 
-			TooltipStringPairList = {
-				datacontext = "[Location]"
-				textcontext = "PP_BLD_LEVELS_LIMIT_NOTE"
-			}
-
+			# over the limit: by how much, and what it costs
 			TooltipStringPairList = {
 				visible = "[Location.HasTooManyBuildingLevel]"
 				datacontext = "[Location]"
@@ -70,6 +79,10 @@ template PPLocationBuildingLevels_tooltip {
 					text = "PP_BLD_LEVELS_OVER_LABEL"
 				}
 				textcontext = "[Location.GetTooManyBuildingInfo]"
+			}
+
+			TooltipTextBlock = {
+				textcontext = "PP_BLD_LEVELS_RULE"
 			}
 		}
 	}

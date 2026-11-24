@@ -707,7 +707,8 @@ def test_building_levels_stripes_locations_above_supported_levels() -> None:
     assert "total_building_levels > pp_supported_building_levels_map_value" in block
     assert "MAPMODE_PP_BUILDING_LEVELS_OVER_SUPPORTED" in block
     assert "Above supported building levels" in text
-    assert "supports [ROOT.GetLocation.GetModifierValueFixed('free_building_levels')|0] levels" in text
+    # the tooltip shows the limit and the counted levels in level terms, as the location view does
+    assert "count toward its limit of [ROOT.GetLocation.MakeScope.ScriptValue('pp_supported_building_levels_map_value')|0]" in text
 
 
 def test_supported_building_levels_map_mode_uses_weighted_capacity_buckets() -> None:
@@ -723,7 +724,8 @@ def test_supported_building_levels_map_mode_uses_weighted_capacity_buckets() -> 
     assert "mapmode_pp_supported_building_levels_name" in text
     assert 'mapmode_pp_supported_building_levels_name: "Supported Building Levels"' in text
     assert "MAPMODE_PP_SUPPORTED_BUILDING_LEVELS_TT_LAND" in text
-    assert "GetModifierValueFixed('free_building_levels')|0" in text
+    assert "has a limit of [ROOT.GetLocation.MakeScope.ScriptValue('pp_supported_building_levels_map_value')|0]" in text
+    assert "GetModifierValueFixed('free_building_levels')" not in text   # the raw modifier is not the limit any more
     assert (
         MOD_ROOT
         / "main_menu"

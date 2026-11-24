@@ -119,6 +119,8 @@ TRY_REPLACE:building_levels = {
 	# per staffed level (2026-11-24, Jan): with every country's +100 % free building levels (country base values) a
 	# staffed level takes one of the doubled allowance on top of counting as a level
 	free_building_levels = -0.5
+	# the staffed levels as a number script can read (map modes)
+	local_pp_staffed_building_levels = 1
 }
 TRY_REPLACE:unsupported_building_levels = {
 	game_data = {

@@ -1,0 +1,11 @@
+﻿# Prosper or Perish - building level counters (2026-11-24).
+# local_pp_staffed_building_levels: one per staffed building level, carried by the static modifier building_levels
+# (which the engine scales by level x share of jobs filled). Script cannot read the staffed levels any other way; the
+# building level map modes use it to show the limit and the levels over it in level terms
+# (script_values/pp_building_efficiency_map_mode.txt).
+local_pp_staffed_building_levels = {
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}

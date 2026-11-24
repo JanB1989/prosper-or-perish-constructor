@@ -82,10 +82,11 @@ building:
     			is_merchant_republic = yes
     			culture = { has_culture_group = culture_group:italian_group }
     		}
-    		# 2026-11-24 (Jan): no landless banks or trading houses (vanilla's building countries)
+    		# 2026-11-24 (Jan): no landless banks (vanilla's building countries); merchant federations and trading
+    		# companies are trade nations and may build (pp_landless_trade_body)
     		custom_tooltip = {
     			text = pp_merchant_house_builder_tt
-    			NOT = { country_type = building }
+    			OR = { NOT = { country_type = building } pp_landless_trade_body = yes }
     		}
     		# a new house: one per owner and market, and no more houses than the trade reach allows
     		# (script_values/pp_trade_reach_values.txt); further steps of a standing house stay open

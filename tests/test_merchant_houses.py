@@ -112,10 +112,10 @@ def test_no_landless_banks_except_the_hansa(buildings, key) -> None:
     body = buildings[key]
     assert "country_type = building" not in _text(_first(body, "location_potential"))
     if key == "hanseatic_kontor":
-        assert "NOT = { country_type = building }" not in actor
+        assert "country_type = building" not in actor
         assert "allows_hanseatic_federation_buildings" in _text(_first(body, "country_potential"))
     else:
-        assert re.search(r"custom_tooltip = \{\s*text = pp_merchant_house_builder_tt\s*NOT = \{ country_type = building \}",
+        assert re.search(r"custom_tooltip = \{\s*text = pp_merchant_house_builder_tt\s*OR = \{ NOT = \{ country_type = building \} pp_landless_trade_body = yes \}",
                          actor)
 
 

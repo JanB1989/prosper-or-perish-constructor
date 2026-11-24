@@ -14,6 +14,17 @@ pp_merchant_house_site = {
 	}
 }
 
+# A landless trade body (2026-11-24, Jan: the Hansa was a trading nation, never exclude it): a building country that is a
+# merchant federation (the Hansa's reform) or a trading company (subject type). Banks are building countries too and are
+# not trade bodies. Country scope; read by the trade reach points and the Trade Office's and Fondaco's allow.
+pp_landless_trade_body = {
+	country_type = building
+	OR = {
+		has_reform = government_reform:hanseatic_merchant_federation
+		is_subject_type = trade_company
+	}
+}
+
 # One merchant house per owner and market (2026-11-24, Jan): the location holds a Trade Office, Fondaco or Hanseatic
 # Kontor of scope:actor with at least one level. Location scope; read by the three houses' allow for a new house.
 pp_merchant_house_of_actor = {

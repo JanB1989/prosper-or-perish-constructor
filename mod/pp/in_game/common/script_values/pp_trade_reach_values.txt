@@ -15,7 +15,9 @@
 #   towns           0.5 per percent of the population living in towns and cities, at most 15 (the share is stored
 #                   once a year: on_action/pp_subsistence_land.txt, scripted_effects/pp_trade_reach_effects.txt)
 #   trade buildings up to 15 at 4 levels per 100,000 people of the trade buildings at home (list below)
-#   full reach at 150 points; every country keeps at least half (the floor); landless countries get the floor
+#   full reach at 150 points; every country keeps at least half (the floor)
+#   landless: a merchant federation or trading company (pp_landless_trade_body) gets 100 points for being one plus its
+#   societal values; every other landless country (the banks) gets the floor
 # Societal values run -100 (left pole) .. +100 (right pole). Population is counted in thousands.
 
 # --- points per input (country scope) ---
@@ -147,7 +149,7 @@ pp_trade_reach_pts_trade_buildings = {
 
 # --- reach ---
 
-# All points; a country without land has none (it gets the floor). Each row is one input in the tooltip.
+# All points. Each row is one input in the tooltip. A landless country has none unless it is a trade body.
 pp_trade_reach_points = {
 	if = {
 		limit = { num_locations > 0 }
@@ -159,6 +161,19 @@ pp_trade_reach_points = {
 		add = { desc = "PP_TRADE_REACH_FREE_SUBJECTS" value = this.pp_trade_reach_pts_free_subjects }
 		add = { desc = "PP_TRADE_REACH_TOWNS" value = this.pp_trade_reach_pts_towns }
 		add = { desc = "PP_TRADE_REACH_TRADE_BUILDINGS" value = this.pp_trade_reach_pts_trade_buildings }
+	}
+	# A landless trade body (the Hansa, a trading company) has no people, ports or towns of its own: being a merchant
+	# federation or company stands for them (100 points), its societal values count as for everyone.
+	if = {
+		limit = {
+			num_locations < 1
+			pp_landless_trade_body = yes
+		}
+		add = { desc = "PP_TRADE_REACH_MERCHANT_BODY" value = 100 }
+		add = { desc = "PP_TRADE_REACH_CAPITAL_ECONOMY" value = this.pp_trade_reach_pts_capital_economy }
+		add = { desc = "PP_TRADE_REACH_PLUTOCRACY" value = this.pp_trade_reach_pts_plutocracy }
+		add = { desc = "PP_TRADE_REACH_NAVAL" value = this.pp_trade_reach_pts_naval }
+		add = { desc = "PP_TRADE_REACH_FREE_SUBJECTS" value = this.pp_trade_reach_pts_free_subjects }
 	}
 }
 

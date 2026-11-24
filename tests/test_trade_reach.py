@@ -99,14 +99,16 @@ def _holds(entry, scope: dict) -> bool:
     actual = scope.get(entry.key)
     if actual is None:
         actual = _evaluate(VALS[entry.key], scope)
-    return {">": actual > float(value), "<": actual < float(value), "=": actual == value}[entry.op]
+    if entry.op == "=":
+        return actual == value
+    return actual > float(value) if entry.op == ">" else actual < float(value)
 
 
-def country(*, pop=1000.0, burghers=0.0, maritime=0.0, sv=None, urban=0.0, levels=0.0, locations=10, advances=()):
+def country(*, pop=1000.0, burghers=0.0, maritime=0.0, sv=None, urban=0.0, levels=0.0, locations=10, advances=(), trade_body=False):
     """A country scope: population in thousands, burgher share 0..1, maritime reach 0..1, societal values -100..100."""
     scope = {"total_population": pop, "percentage_pop_type_in_country:burghers": burghers, "pp_maritime_reach": maritime,
              "num_locations": locations, "var:pp_trade_reach_urban_share": urban, "pp_trade_reach_trade_levels": levels,
-             "advances": set(advances)}
+             "advances": set(advances), "pp_landless_trade_body": "yes" if trade_body else "no"}
     # default: every slider gives nothing (plutocracy counts over the whole slider, so it starts at full aristocracy)
     for key in SV:
         scope[f"societal_value:{key}"] = (sv or {}).get(key, -100.0 if key == "aristocracy_vs_plutocracy" else 0.0)
@@ -158,9 +160,16 @@ def test_full_reach_at_150_points_and_the_floor_holds() -> None:
     some = dict(burghers=0.06, maritime=1, urban=0.3)                    # 45 + 40 + 15 = 100 points
     assert _reach("pp_trade_reach", **some) == pytest.approx(100 / 150)
     assert _reach("pp_trade_reach_raw") == 0 and _reach("pp_trade_reach") == 0.5   # nothing: the floor
-    # a country without land gets the floor, whatever its societal values
+    # a landless bank gets the floor, whatever its societal values
     landless = dict(full, locations=0)
     assert _reach("pp_trade_reach_points", **landless) == 0 and _reach("pp_trade_reach", **landless) == 0.5
+    # a landless merchant federation or trading company (the Hansa): 100 points for being one, plus its societal values
+    body = dict(locations=0, trade_body=True)
+    assert _reach("pp_trade_reach_points", **body) == pytest.approx(100)
+    assert _reach("pp_trade_reach", **body) == pytest.approx(100 / 150)
+    assert _reach("pp_trade_reach_points", **dict(landless, trade_body=True)) == pytest.approx(175)
+    # with land the trade body rule adds nothing
+    assert _reach("pp_trade_reach_points", **dict(full, trade_body=True)) == pytest.approx(190)
 
 
 def test_shortfall_takes_the_unreached_part_of_the_advances_range() -> None:

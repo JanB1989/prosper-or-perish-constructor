@@ -7075,7 +7075,7 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
 # <<< eu5-building-pipeline:mason:localization
  # pp_merchant_houses_l_english.yml
  pp_merchant_house_site_tt: "Is a [market_center|e], a [ShowLocationRankName('megalopolis')] or a port with a great [natural_harbor_suitability|e]"
- pp_merchant_house_builder_tt: "We are not a bank or trading house without land of our own"
+ pp_merchant_house_builder_tt: "We are not a bank without land of our own"
  pp_merchant_house_one_per_market_tt: "We keep no other merchant house in this [market|e]"
  pp_merchant_house_cap_tt: "We keep fewer merchant houses abroad than our trade reach allows: [GetPlayer.MakeScope.ScriptValue('pp_merchant_houses_held')|0] of [GetPlayer.MakeScope.ScriptValue('pp_merchant_house_cap_shown')|0]"
  # pp_merchants_quarters_l_english.yml
@@ -7423,6 +7423,7 @@ PP_TRADE_REACH_NAVAL: "[ShowSocietyDirectionName('naval')]"
 PP_TRADE_REACH_FREE_SUBJECTS: "[ShowSocietyDirectionName('free_subjects')]"
 PP_TRADE_REACH_TOWNS: "People in [towns_and_cities|e]"
 PP_TRADE_REACH_TRADE_BUILDINGS: "Trade buildings at home"
+PP_TRADE_REACH_MERCHANT_BODY: "Merchant federation or trading company"
  # pp_naval_base_l_english.yml
 
 # >>> eu5-building-pipeline:naval_base:localization

@@ -3,6 +3,7 @@
  PP_BLD_LEVELS_COUNTED: "[building|e] levels: #V [Divide_CFixedPoint(Add_CFixedPoint(Location.GetNumBuildingLevelsTowardLimit, Location.GetNumBuildingLevelsWithEmployment), '(CFixedPoint)2')|0]#!"
  PP_BLD_LEVELS_LIMIT: "Limit: #V [Divide_CFixedPoint(Add_CFixedPoint(Location.GetSupportedBuildingLevels, Location.GetNumBuildingLevelsWithEmployment), '(CFixedPoint)2')|0]#!"
  PP_BLD_LEVELS_OVER_LABEL: "@warning_icon! [Divide_CFixedPoint(Subtract_CFixedPoint(Location.GetNumBuildingLevelsTowardLimit, Location.GetSupportedBuildingLevels), '(CFixedPoint)2')|0R] over the limit, which costs"
+ PP_BLD_LEVELS_ACCESS: "[market_access|e] now: #V [Location.GetMarketAccess|%0]#!"
  PP_BLD_LEVELS_RULE: "Closed, unstaffed and unfinished levels count half. Logistics buildings win lost [market_access|e] back."
  PP_BLD_LEVELS_LIMIT_TITLE: "What sets the limit"
  PP_BLD_LEVELS_LIMIT_NOTE: "The game lists $STATIC_MODIFIER_NAME_building_levels$ here as a minus. That is this location's own staffed levels, not a cut to the limit."

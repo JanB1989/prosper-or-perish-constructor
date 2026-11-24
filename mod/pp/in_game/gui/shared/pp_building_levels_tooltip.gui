@@ -81,6 +81,12 @@ template PPLocationBuildingLevels_tooltip {
 				textcontext = "[Location.GetTooManyBuildingInfo]"
 			}
 
+			# where the location stands after everything else (logistics buildings, market centre, distance)
+			TooltipStringPairList = {
+				datacontext = "[Location]"
+				textcontext = "PP_BLD_LEVELS_ACCESS"
+			}
+
 			TooltipTextBlock = {
 				textcontext = "PP_BLD_LEVELS_RULE"
 			}

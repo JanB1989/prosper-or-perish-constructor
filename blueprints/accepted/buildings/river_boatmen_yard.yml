@@ -94,7 +94,7 @@ building:
     }
 
     raw_modifier = {
-      local_market_access = 0.1
+      local_market_access = 0.15
     }
 
     modifier = {
@@ -145,7 +145,7 @@ localization:
     pp_river_boatmen_yard_fitted_barges: Fitted Barges
     pp_river_boatmen_yard_fitted_barges_desc: "Barges with sails, tow lines and horses on the towpath move larger loads up and down the [river|e]. Better rigging and caulking keep them working longer between repairs."
     river_boatmen_yard: River Boatmen's Yard
-    river_boatmen_yard_desc: Boatmen, barges, rope stores and timber landings turn a riverbank into a working freight yard. Goods go down with the current, come back up by towpath, and reach the market by habit.
+    river_boatmen_yard_desc: "Boatmen, barges and timber landings turn a riverbank into a working freight yard. A [location|e] with more [building|e] levels than its [supported_building_levels|e] loses [market_access|e], and every level of this building gives some of it back. It stands on a [river|e], and a bigger river takes more levels."
     pp_river_boatmen_yard_logistics_network: River Pilots
     pp_river_boatmen_yard_logistics_network_desc: Pilots who know every shoal, weir and ferry guide passing barges, so some freight keeps moving on the river even when the yard's own boats lie idle.
 icon:

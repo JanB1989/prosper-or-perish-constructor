@@ -1,0 +1,76 @@
+﻿# Tooltip of the building levels circle (location view, build menu, production view).
+# The limit counts every building level once and every staffed level once more against a doubled
+# allowance, so in level terms: counted = (levels + staffed) / 2, limit = (supported + staffed) / 2.
+# A fully staffed level counts as one, a closed, unstaffed or unfinished level as half.
+template PPLocationBuildingLevels_tooltip {
+	ContextualTooltipType = {
+		blockoverride "title_icon" {
+			icon = {
+				using = tooltip_title_icon_size
+				texture = "[GetConceptTexture('supported_building_levels')]"
+			}
+		}
+
+		blockoverride "title_text" {
+			datacontext = "[Location]"
+			text = "BUILDING_LEVELS_LABEL"
+		}
+		blockoverride "concept_link" {
+			text = [supported_building_levels|E]
+		}
+		blockoverride "tooltip_content" {
+
+			TooltipStringPairList = {
+				datacontext = "[Location]"
+				textcontext = "PP_BLD_LEVELS_COUNTED"
+			}
+
+			TooltipStringPairList = {
+				datacontext = "[Location]"
+				textcontext = "PP_BLD_LEVELS_STANDING"
+
+				tooltipwidget = {
+					SimpleContextualStringPairTooltipType = {
+						blockoverride "title_icon" {
+							icon = {
+								using = tooltip_title_icon_size
+								texture = "gfx/interface/icons/outliner/categories/buildings.dds"
+							}
+						}
+						blockoverride "concept_link" {
+							text = "[buildings|e]"
+						}
+						lowpriotextcontext = "[Location.GetBuildingLevelInfo]"
+					}
+				}
+			}
+
+			TooltipStringPairList = {
+				datacontext = "[Location]"
+				textcontext = "PP_BLD_LEVELS_RULE"
+			}
+
+			TooltipStringPairList = {
+				blockoverride "block_title" {
+					datacontext = "[Location]"
+					text = "PP_BLD_LEVELS_LIMIT_LABEL"
+				}
+				textcontext = "[Location.GetDescriptionFor('free_building_levels')]"
+			}
+
+			TooltipStringPairList = {
+				datacontext = "[Location]"
+				textcontext = "PP_BLD_LEVELS_LIMIT_NOTE"
+			}
+
+			TooltipStringPairList = {
+				visible = "[Location.HasTooManyBuildingLevel]"
+				datacontext = "[Location]"
+				blockoverride "block_title" {
+					text = "PP_BLD_LEVELS_OVER_LABEL"
+				}
+				textcontext = "[Location.GetTooManyBuildingInfo]"
+			}
+		}
+	}
+}

@@ -48,7 +48,7 @@ building:
           local_horses_output_modifier = 0.0035
           local_population_capacity = 5
           pp_wb_levels_polders = 1
-          free_building_levels = 1
+          free_building_levels = 0.5
         }
 
       unique_production_methods = {

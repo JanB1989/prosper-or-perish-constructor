@@ -86,12 +86,22 @@ in locations.png:
   `config/start_markets.csv`) come from saves with base 1.0; re-run `tools/markets/save_inputs.py` on a save made with the
   new base before trusting `food-sim --markets` for high-access locations.
 - `unsupported_building_levels` (static modifier, scaled by the building levels above the supported ones) carries
-  `local_market_access = -0.01` per level and, since 2026-10-01, `local_logistics_output_modifier = 0.001` per level (a
-  nudge for the AI to build logistics where the location is overbuilt). The vanilla foreign buildings (trade office,
+  `local_market_access = -0.005` per count and, since 2026-10-01, `local_logistics_output_modifier = 0.0005` per count (a
+  nudge for the AI to build logistics where the location is overbuilt; -0.01 / 0.001 until 2026-11-24). The engine
+  applies it max(0, A - B) times: A = every non-foreign level + queued constructions (closed and employment-0 levels
+  included), B = max(0, local `free_building_levels` x (1 + owner `global_free_building_levels_modifier`)). Since
+  2026-11-24 (Jan) every country has +1.0 of that percent in its base values, the ages none (vanilla's +0.25 / +0.5 /
+  +1.0 are cancelled in `age/pp_age_adjustments.txt`), `building_levels` (applied at the staffed sum) gives -0.5 free
+  levels per staffed level and development 1 free level per point (was 0.5). So B = 2 x F0 - staffed levels (F0 = the
+  free levels from attributes, rank, development, buildings) and the count is A + staffed - 2 x F0: a fully staffed
+  level over the limit counts twice at half the penalty (0.01, as before), a closed or unstaffed level counts once
+  (half). The 0 floor on B binds once staffed levels pass 2 x F0; from there each further staffed level counts once.
+  The map modes' script values: `pp_supported_building_levels_map_value` = B, `pp_unsupported_building_levels_map_value`
+  = half the count (a staffed level over the limit as one, a closed one as half). The vanilla foreign buildings (trade office,
   embassy, missionary building, slave center, overseas trading post, colonial administration, merchant guild chapel,
   viceroyalty) carry `raw_modifier free_building_levels = 1`: foreign countries open them with 1 + 0.1 x development +
   0.05 x population levels each (Mantova: 267 foreign levels of 437), and each level now supports itself.
-- The logistics buildings add `local_market_access = +0.10` per level through `raw_modifier`, can be built only while
+- The logistics buildings add `local_market_access = +0.15` per level (+0.10 until 2026-11-24) through `raw_modifier`, can be built only while
   `market_access < 0.99` (0.85 until 2026-10-23) and `total_building_levels >= 15` (`allow`), one level at a time per
   location (`max_levels` = levels built + 1 while no other logistics construction runs there; the engine counts levels
   under construction against it), and produce the floor-pinned `logistics` good for

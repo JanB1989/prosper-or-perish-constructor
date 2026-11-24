@@ -89,7 +89,7 @@ building:
     }
 
     raw_modifier = {
-      local_market_access = 0.1
+      local_market_access = 0.15
     }
 
     modifier = {
@@ -133,7 +133,7 @@ localization:
     pp_oasis_caravan_station_slot_0: Desert Network
     pp_oasis_caravan_station_slot_1: Desert Crossings
     pp_oasis_caravan_station: Oasis Caravan Station
-    pp_oasis_caravan_station_desc: Wells, palm groves and store rooms mark the stations of the desert roads. Their keepers water the camel trains and hold provisions for the long crossings between the Saharan oases and the markets of the Sahel.
+    pp_oasis_caravan_station_desc: "Wells, palm groves and store rooms mark the stations of the desert roads, where camel trains water before the long crossings. A [location|e] with more [building|e] levels than its [supported_building_levels|e] loses [market_access|e], and every level of this building gives some of it back. It stands in the Sahara and the Sahel and needs no road."
     pp_oasis_caravan_station_construction: "[ShowBuildingTypeName('pp_oasis_caravan_station')|e] Construction"
     pp_oasis_caravan_station_camel_train: Camel Train
     pp_oasis_caravan_station_camel_train_desc: "Camel trains cross the desert from well to well, carrying goods between the oases and the towns of the Sahel. The station keeps water and fodder ready."

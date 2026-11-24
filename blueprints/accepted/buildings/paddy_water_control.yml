@@ -36,7 +36,7 @@ building:
     raw_modifier = {
       local_population_capacity = 5
       pp_wb_levels_paddy_water_control = 1
-      free_building_levels = 1
+      free_building_levels = 0.5
     }
 
     unique_production_methods = {

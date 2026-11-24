@@ -4,7 +4,7 @@
   pp_yam_station_slot_0: "Relay Network"
   pp_yam_station_slot_1: "Relay Stages"
   pp_yam_station: "Yam Station"
-  pp_yam_station_desc: "A relay post of the great courier network, with fresh horses, sledges and provisions kept ready for the next stage. Officials, envoys and merchants follow its stations across the long distances of the steppe and the northern forests."
+  pp_yam_station_desc: "A relay post of the great courier network, with fresh horses, sledges and provisions kept ready for the next stage. A [location|e] with more [building|e] levels than its [supported_building_levels|e] loses [market_access|e], and every level of this building gives some of it back. It stands from Russia to Mongolia and needs no road."
   pp_yam_station_construction: "[ShowBuildingTypeName('pp_yam_station')|e] Construction"
   pp_yam_station_post_horses: "Post Horses"
   pp_yam_station_post_horses_desc: "Fresh horses wait at every station, so riders and carts change mounts and press on. The Mongol yam carried messages and goods across the empire this way."

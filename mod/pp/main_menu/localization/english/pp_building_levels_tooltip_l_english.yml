@@ -1,0 +1,8 @@
+﻿l_english:
+ # Building levels circle (in_game/gui/shared/pp_building_levels_tooltip.gui)
+ PP_BLD_LEVELS_COUNTED: "Counted toward the limit: #V [Divide_CFixedPoint(Add_CFixedPoint(Location.GetNumBuildingLevelsTowardLimit, Location.GetNumBuildingLevelsWithEmployment), '(CFixedPoint)2')|1]#! of #V [Divide_CFixedPoint(Add_CFixedPoint(Location.GetSupportedBuildingLevels, Location.GetNumBuildingLevelsWithEmployment), '(CFixedPoint)2')|0]#!"
+ PP_BLD_LEVELS_STANDING: "[building|e] levels: #V [Location.GetNumBuildingLevelsTowardLimit|0]#!, fully staffed: #V [Location.GetNumBuildingLevelsWithEmployment|1]#!"
+ PP_BLD_LEVELS_RULE: "A fully staffed level counts as one. A closed level, a level without workers and a level under construction count as half."
+ PP_BLD_LEVELS_LIMIT_LABEL: "The limit of [Divide_CFixedPoint(Add_CFixedPoint(Location.GetSupportedBuildingLevels, Location.GetNumBuildingLevelsWithEmployment), '(CFixedPoint)2')|0G] comes from"
+ PP_BLD_LEVELS_LIMIT_NOTE: "$STATIC_MODIFIER_NAME_building_levels$ in this list is the staffed levels, already counted above."
+ PP_BLD_LEVELS_OVER_LABEL: "@warning_icon! [Location.GetNameWithNoTooltip] is over its limit, which has the following impact"

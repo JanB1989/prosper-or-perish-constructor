@@ -3,9 +3,22 @@ pp_building_efficiency_map_value = {
 	value = modifier:local_build_buildings_efficiency
 }
 
-# Script value for the unsupported building levels map mode and AI logistics construction.
+# The allowance the engine compares the levels with: local free building levels x (1 + the owner's
+# global_free_building_levels_modifier), never below 0. Since 2026-11-24 (Jan) every country has +100 % from its base
+# values and building_levels takes 0.5 per staffed level, so this is twice the free levels minus the staffed levels.
+pp_supported_building_levels_map_value = {
+	value = 1
+	owner ?= { add = modifier:global_free_building_levels_modifier }
+	multiply = modifier:free_building_levels
+	min = 0
+}
+
+# Script value for the unsupported building levels map mode: levels over the limit, a fully staffed level as one, a
+# closed or unstaffed level as half. The engine applies unsupported_building_levels at twice this (levels minus the
+# allowance above; a staffed level over counts twice at half the penalty), so one staffed level over costs 0.01.
 pp_unsupported_building_levels_map_value = {
 	value = total_building_levels
-	subtract = modifier:free_building_levels
+	subtract = pp_supported_building_levels_map_value
 	min = 0
+	divide = 2
 }

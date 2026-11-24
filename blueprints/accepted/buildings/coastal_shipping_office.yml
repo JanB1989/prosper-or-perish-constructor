@@ -94,7 +94,7 @@ building:
     }
 
     raw_modifier = {
-      local_market_access = 0.1
+      local_market_access = 0.15
     }
 
     modifier = {
@@ -138,7 +138,7 @@ localization:
     coastal_shipping_office_slot_0: Coastal Network
     coastal_shipping_office_slot_1: Coastal Crews
     coastal_shipping_office: Coastal Shipping Office
-    coastal_shipping_office_desc: Coasting masters, freight clerks and hired hands keep short-sea traffic moving between nearby ports. Their office turns loose cargo, small craft and quay labour into a steady coastal trade.
+    coastal_shipping_office_desc: "Coasting masters, freight clerks and small craft keep short-sea traffic moving between nearby ports. A [location|e] with more [building|e] levels than its [supported_building_levels|e] loses [market_access|e], and every level of this building gives some of it back. It stands in a [port|e], and a better harbour takes more levels."
     pp_coastal_shipping_office_construction: "[ShowBuildingTypeName('coastal_shipping_office')|e] Construction"
     pp_coastal_shipping_office_maintenance: Coasting Crews
     pp_coastal_shipping_office_maintenance_desc: "Small coasters hop from port to port with mixed cargo, never far from land. Their crews need sails, tar and timber for the constant repairs."

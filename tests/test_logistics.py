@@ -474,8 +474,32 @@ def test_market_access_defines_and_the_overbuilding_penalty() -> None:
     lines = [line.strip() for line in block.split("\n") if line.strip() and not line.strip().startswith("#")]
     # 2026-10-01: overbuilt locations also pay logistics a little more (a nudge for the AI to build them there)
     assert lines == [
-        "game_data = {", "category = location", "}", "local_market_access = -0.01", "local_logistics_output_modifier = 0.001",
+        "game_data = {", "category = location", "}", "local_market_access = -0.005", "local_logistics_output_modifier = 0.0005",
     ]
+
+
+def test_the_free_building_level_allowance_is_doubled_and_staffed_levels_count_twice() -> None:
+    """2026-11-24 (Jan): every country +100 % free building levels from its base values, the ages none, building_levels
+    -0.5 per staffed level, 1 free level per development point; with the halved penalty a fully staffed level over the
+    limit costs what it did and a closed one half."""
+    from eu5gameparser.load_order import load_merged_directory, load_profile
+
+    def scalar_sum(block, key: str) -> float:
+        return sum(float(str(v)) for v in block.values(key))
+
+    profile = load_profile("constructor", ROOT / "constructor.load_order.toml")
+    ages = {e.key: e.value for e in load_merged_directory(profile, "age", scope="in_game").entries}
+    for age in ("age_1_traditions", "age_2_renaissance", "age_3_discovery", "age_4_reformation", "age_5_absolutism",
+                "age_6_revolutions"):
+        total = sum(scalar_sum(m, "global_free_building_levels_modifier") for m in ages[age].values("modifier"))
+        assert total == pytest.approx(0.0), age
+    country = (MOD_ROOT / "in_game/common/auto_modifiers/pp_country_base_values.txt").read_text(encoding="utf-8-sig")
+    assert re.search(r"(?m)^\tglobal_free_building_levels_modifier = 1\.0\b", country)
+    modifiers = (MOD_ROOT / "main_menu/common/static_modifiers/pp_location_modifier_adjustments.txt").read_text(encoding="utf-8-sig")
+    levels = modifiers.split("TRY_REPLACE:building_levels = {", 1)[1].split("\n}", 1)[0]
+    assert re.search(r"(?m)^\tfree_building_levels = -0\.5$", levels)
+    development = modifiers.split("TRY_REPLACE:development = {", 1)[1].split("\n}", 1)[0]
+    assert re.search(r"(?m)^\tfree_building_levels = 1$", development)
 
 
 def test_the_scripted_logistics_builder_is_gone() -> None:

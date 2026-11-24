@@ -116,15 +116,21 @@ TRY_REPLACE:building_levels = {
 	local_road_building_time = 0.01
 	# local_market_access = -0.0015
 	# local_build_buildings_efficiency = -0.003
+	# per staffed level (2026-11-24, Jan): with every country's +100 % free building levels (country base values) a
+	# staffed level takes one of the doubled allowance on top of counting as a level
+	free_building_levels = -0.5
 }
 TRY_REPLACE:unsupported_building_levels = {
 	game_data = {
 		category = location
 	}
-	# per building level above the supported levels: goods reach the market worse (logistics buildings add it back)
-	local_market_access = -0.01
+	# The limit counts every level once and every staffed level once more against the doubled allowance (country base
+	# values +100 % free building levels, building_levels -0.5 per staffed level), so one fully staffed level over the
+	# limit still costs 0.01 and a closed or unstaffed level counts half (2026-11-24, Jan).
+	# per count over the limit: goods reach the market worse (logistics buildings add it back)
+	local_market_access = -0.005
 	# and carrying pays a little more, a nudge for the AI to build logistics where the location is overbuilt
-	local_logistics_output_modifier = 0.001
+	local_logistics_output_modifier = 0.0005
 }
 
 TRY_REPLACE:total_population = {
@@ -228,7 +234,7 @@ TRY_REPLACE:development = {
 
 	local_food_capacity = 2 # 2026-10-06 (Jan): was 30, which gave sparse rural provinces 40+ months of free storage
 
-	free_building_levels = 0.5
+	free_building_levels = 1
 
 	local_max_rgo_size = 0.15
 

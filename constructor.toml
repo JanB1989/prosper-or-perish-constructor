@@ -1500,7 +1500,7 @@ wine = ["winery", "winery_manufactory"]
 # the zone sizes (ppc build prints it). Order: ppc labour apply, ppc logistics apply, ppc gate apply.
 good = "logistics"
 input_cost = 3.0              # gold per level per method at default prices, manual_labor and floor goods at 1
-market_access = 0.10          # raw_modifier local_market_access per level
+market_access = 0.15          # raw_modifier local_market_access per level (0.10 until 2026-11-24, Jan)
 # allow: market_access < this. 2026-10-23 (Jan): 0.99 (was 0.85), buildable as soon as a location falls below full
 # access. Checked first: no war, occupation, blockade, devastation or plague term moves market access; the only timed
 # minus is vanilla's staple port stagnation event option; market changes move it (run 4c623702: drops below 0.99 ~1.5x

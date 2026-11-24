@@ -94,7 +94,7 @@ building:
     }
 
     raw_modifier = {
-      local_market_access = 0.1
+      local_market_access = 0.15
     }
 
     modifier = {
@@ -145,7 +145,7 @@ localization:
     pp_transport_office_ledgered_dispatch: Ledgered Dispatch
     pp_transport_office_ledgered_dispatch_desc: "Every load is weighed, entered in a ledger and sent off with a dispatch note, so the carts leave full and on time. Paperwork takes the place of much running about."
     transport_office: Transport Office
-    transport_office_desc: Freight clerks, porters, haulers and weighmen crowd the transport office. Ledgers, yard gates and hired hands turn a town's bulk into ordered dispatches for the market.
+    transport_office_desc: "Freight clerks, porters and weighmen turn a town's bulk into ordered dispatches for the market. A [location|e] with more [building|e] levels than its [supported_building_levels|e] loses [market_access|e], and every level of this building gives some of it back. It stands in cities and developed towns."
     pp_transport_office_logistics_network: Dispatch Network
     pp_transport_office_logistics_network_desc: Agents in the neighbouring towns pass consignments along a standing schedule, so some freight keeps moving even when the office's own carts stand idle.
 icon:

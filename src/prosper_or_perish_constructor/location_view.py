@@ -642,6 +642,30 @@ def chip_frames(text: str) -> str:
     return "".join(out) + text[pos:]
 
 
+_LEVELS = "Location.GetNumBuildingLevelsTowardLimit"
+_STAFFED = "Location.GetNumBuildingLevelsWithEmployment"
+_SUPPORTED = "Location.GetSupportedBuildingLevels"
+# Counted levels as a percentage of the limit. The engine compares all levels with an allowance of twice the free
+# levels minus the staffed levels (country base value +100 %, static modifier building_levels -0.5 per staffed level),
+# so in level terms counted = (levels + staffed) / 2 and limit = (supported + staffed) / 2: a fully staffed level
+# counts as one, a closed, unstaffed or unfinished one as half. The game's own percentage reads levels / supported.
+BUILDING_LEVELS_SHARE = (
+    f"FixedPointToFloat(Divide_CFixedPoint(Multiply_CFixedPoint(Add_CFixedPoint({_LEVELS}, {_STAFFED}), "
+    f"'(CFixedPoint)100'), Max_CFixedPoint(Add_CFixedPoint({_SUPPORTED}, {_STAFFED}), '(CFixedPoint)1')))"
+)
+VANILLA_LEVELS_SHARE = "Location.GetBuildingLevelsPercentage"
+VANILLA_LEVELS_TOOLTIP = "using = LocationBuildingLevels_tooltip"
+PP_LEVELS_TOOLTIP = "using = PPLocationBuildingLevels_tooltip"   # in_game/gui/shared/pp_building_levels_tooltip.gui
+
+
+def building_levels_circle(text: str) -> str:
+    """The building levels circle fills with the counted levels over the limit and opens the mod's tooltip."""
+    shares, tooltips = text.count(VANILLA_LEVELS_SHARE), text.count(VANILLA_LEVELS_TOOLTIP)
+    if shares != 2 or tooltips != 2:
+        raise ValueError(f"location_window.gui: expected 2 building level shares and 2 tooltips in the circle, found {shares} and {tooltips}")
+    return text.replace(VANILLA_LEVELS_SHARE, BUILDING_LEVELS_SHARE).replace(VANILLA_LEVELS_TOOLTIP, PP_LEVELS_TOOLTIP)
+
+
 def build_window(export_text: str, mod_root: Path, vanilla: Path | None, stored_food: tuple[tuple[str, float], ...] = ()) -> str:
     """The mod's location window from the export's; writes the harvest chip's localization files on the way.
 
@@ -668,6 +692,8 @@ def build_window(export_text: str, mod_root: Path, vanilla: Path | None, stored_
     merged = town_plan_gui.add_plan_row(merged)
     # the padlock on each pop type row of the buildings list: closes / opens the row's producing buildings
     merged = plan_closer.add_row_locks(merged)
+    # the building levels circle: counted levels over the limit, with the mod's tooltip
+    merged = building_levels_circle(merged)
     return widen_window(chip_frames(merged))
 
 

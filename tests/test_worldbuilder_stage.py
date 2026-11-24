@@ -692,7 +692,9 @@ def test_terrain_free_building_levels_come_from_the_weights_sheet() -> None:
 
 def test_zero_employment_buildings_support_their_own_level() -> None:
     # 2026-09-30: the engine counts raw levels of every building (employment 0 included) against the free building
-    # levels, so a worker-less building gives one free level per level.
+    # levels, so a worker-less building supports its own level. Since 2026-11-24 the allowance is doubled (country base
+    # value +100 %) and a staffed level counts twice: a worker-less level counts once, so it carries half a free level
+    # (doubled to one); a capacity building with workers counts twice and keeps one.
     import re as _re
 
     import yaml as _yaml
@@ -707,7 +709,10 @@ def test_zero_employment_buildings_support_their_own_level() -> None:
         body = str((_yaml.safe_load(path.read_text(encoding="utf-8")) or {}).get("building", {}).get("body", ""))
         zero = _re.search(r"(?m)^\s*employment_size\s*=\s*0(?:\.0+)?\s*$", body)
         capacity = "max_levels = pp_wb_cap_" in body   # farmland units, not buildings that need logistics
-        if (zero or capacity) and "free_building_levels = 1" not in body:
+        if not (zero or capacity):
+            continue
+        want = "free_building_levels = 0.5" if zero else "free_building_levels = 1"
+        if not _re.search(rf"(?m)^\s*{_re.escape(want)}\s*$", body):
             missing.append(rel)
     assert missing == []
 

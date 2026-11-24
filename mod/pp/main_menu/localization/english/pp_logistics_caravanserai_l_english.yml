@@ -4,7 +4,7 @@
   pp_caravanserai_slot_0: "Caravan Network"
   pp_caravanserai_slot_1: "Caravan Crews"
   pp_caravanserai: "Caravanserai"
-  pp_caravanserai_desc: "A walled courtyard of stables, storerooms and lodgings, a day's march from the next along the caravan roads. Camel strings rest and water here, and the merchants' loads move on to the market under one roof."
+  pp_caravanserai_desc: "A walled courtyard of stables, storerooms and lodgings, a day's march from the next along the caravan roads. A [location|e] with more [building|e] levels than its [supported_building_levels|e] loses [market_access|e], and every level of this building gives some of it back. It stands in the dry lands from the Maghreb to Central Asia and needs no road."
   pp_caravanserai_construction: "[ShowBuildingTypeName('pp_caravanserai')|e] Construction"
   pp_caravanserai_pack_camels: "Pack Camels"
   pp_caravanserai_pack_camels_desc: "Strings of camels carry bales and sacks from one caravanserai to the next, a day's march apart. Camels bear heavy loads across dry country on little water."

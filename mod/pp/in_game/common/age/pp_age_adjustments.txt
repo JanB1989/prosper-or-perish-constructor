@@ -26,14 +26,25 @@ TRY_INJECT:age_4_reformation = {
 	efficiency = 1.0
 	price_stability = 0.20
 	max_price = 3
+	modifier = {
+		# 2026-11-24, Jan: the ages give no percent on free building levels (an inject can only add, so this cancels
+		# vanilla's +0.25); every country has +1.0 from its base values instead (pp_country_base_values.txt)
+		global_free_building_levels_modifier = -0.25
+	}
 }
 TRY_INJECT:age_5_absolutism = {
 	efficiency = 1.0
 	price_stability = 0.20
 	max_price = 3
+	modifier = {
+		global_free_building_levels_modifier = -0.5 # cancels vanilla's +0.5 (2026-11-24, Jan)
+	}
 }
 TRY_INJECT:age_6_revolutions = {
 	efficiency = 1.0
 	price_stability = 0.20
 	max_price = 3
+	modifier = {
+		global_free_building_levels_modifier = -1.0 # cancels vanilla's +1.0 (2026-11-24, Jan)
+	}
 }

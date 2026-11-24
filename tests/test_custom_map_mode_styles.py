@@ -210,7 +210,7 @@ STRUCTURE_SNIPPETS = {
         "category = economy",
         "index = 0",
         "secondary_map_color = {",
-        "total_building_levels > modifier:free_building_levels",
+        "total_building_levels > pp_supported_building_levels_map_value",
         "MAPMODE_PP_BUILDING_LEVELS_OVER_SUPPORTED",
         "color_refresh_counters = { ProductionList LocationDevelopmentChanged }",
     ),
@@ -704,7 +704,7 @@ def test_building_levels_stripes_locations_above_supported_levels() -> None:
     assert "500 or more building levels" in text
     assert "secondary_map_color = {" in block
     assert "has_owner = yes" in block
-    assert "total_building_levels > modifier:free_building_levels" in block
+    assert "total_building_levels > pp_supported_building_levels_map_value" in block
     assert "MAPMODE_PP_BUILDING_LEVELS_OVER_SUPPORTED" in block
     assert "Above supported building levels" in text
     assert "supports [ROOT.GetLocation.GetModifierValueFixed('free_building_levels')|0] levels" in text
@@ -714,7 +714,7 @@ def test_supported_building_levels_map_mode_uses_weighted_capacity_buckets() -> 
     block = _all_blocks()["pp_supported_building_levels"]
     text = LOCALIZATION.read_text(encoding="utf-8-sig")
 
-    assert _thresholds(block, "modifier:free_building_levels") == [30.0, 70.0, 120.0, 200.0, 300.0]
+    assert _thresholds(block, "pp_supported_building_levels_map_value") == [30.0, 70.0, 120.0, 200.0, 300.0]
     assert "limit = { has_owner = yes }" not in block
     assert block.count("lerp = {") == 5
     assert block.count("legend_key =") == 5
@@ -800,7 +800,12 @@ def test_unsupported_building_levels_map_mode_uses_over_capacity_buckets() -> No
     assert "max_color = define:NMapColors|MAP_COLOR_MIN" in block
     assert "pp_unsupported_building_levels_map_value = {" in script_value
     assert "value = total_building_levels" in script_value
-    assert "subtract = modifier:free_building_levels" in script_value
+    assert "subtract = pp_supported_building_levels_map_value" in script_value
+    assert "divide = 2" in script_value  # a staffed level over the limit shows as one, a closed one as half
+    # the engine's allowance: local free levels x (1 + the owner's global percent), floored at 0 (2026-11-24)
+    supported = script_value.split("pp_supported_building_levels_map_value = {", 1)[1].split("\n}", 1)[0]
+    assert "owner ?= { add = modifier:global_free_building_levels_modifier }" in supported
+    assert "multiply = modifier:free_building_levels" in supported and "min = 0" in supported
     assert "min = 0" in script_value
     assert "mapmode_pp_unsupported_building_levels_name" in text
     assert 'mapmode_pp_unsupported_building_levels_name: "Unsupported Building Levels"' in text

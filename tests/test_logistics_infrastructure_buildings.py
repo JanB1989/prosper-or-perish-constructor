@@ -158,7 +158,7 @@ def test_logistics_buildings_are_laborer_buildings_that_never_close() -> None:
         # market access and owner conditions never go into location_potential (the game re-checks it on owner change)
         potential = _block(body, "location_potential") if "location_potential = {" in body else ""
         assert "market_access" not in potential and "owner" not in potential and "development" not in potential
-        assert _block(body, "raw_modifier").split() == ["local_market_access", "=", "0.1"]
+        assert _block(body, "raw_modifier").split() == ["local_market_access", "=", "0.15"]
 
 
 def test_transport_office_opens_in_cities_and_developed_towns() -> None:

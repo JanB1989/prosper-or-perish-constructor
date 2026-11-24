@@ -755,7 +755,8 @@ def test_compile_free_building_level_modifiers_updates_without_clobbering(tmp_pa
     assert "free_building_levels" not in river_1 and "local_build_buildings_efficiency" not in river_1
     assert "TRY_INJECT:river_flowing_through_2" not in static_text
     assert "TRY_REPLACE:development" in static_text
-    assert "free_building_levels = 0.5" in static_text
+    development = static_text[static_text.index("TRY_REPLACE:development"):].split("\n}")[0]
+    assert "\tfree_building_levels = 1\n" in development  # 1 per development point since 2026-11-24 (was 0.5)
     assert "local_food_capacity = 10" in static_text
     assert "TRY_INJECT:is_port" in static_text
     assert "TRY_INJECT:naval_governor" not in static_text

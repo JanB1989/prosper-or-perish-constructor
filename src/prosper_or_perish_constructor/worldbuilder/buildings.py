@@ -608,8 +608,12 @@ def patch_improvement_blueprints(contract: Contract, cfg: WorldBuilderConfig, re
             raw[LEVELS_MODIFIER.format(key=key)] = "1"
         # The engine's unsupported-level count takes raw levels of every building (decompiled FUN_144612a10). Capacity
         # improvements are farmland units, not buildings that need logistics (62 % of all levels at game start), so each
-        # level supports itself (2026-09-30).
-        raw["free_building_levels"] = "1"
+        # level supports itself (2026-09-30). Since 2026-11-24 the allowance is doubled (country base value +100 %) and a
+        # staffed level counts twice (static modifier building_levels, free_building_levels -0.5): a level without
+        # workers counts once, so half a free level (doubled to one) is what makes it support itself; a staffed
+        # improvement counts twice and keeps one.
+        employment = re.search(r"(?m)^\s*employment_size\s*=\s*([0-9.]+)", body)
+        raw["free_building_levels"] = "1" if employment and float(employment.group(1)) > 0 else "0.5"
         body = _replace_raw_modifier(body, raw, drop_prefixes=("farm_capacity_from_", "pp_wb_levels_"))
         lock = [str(l) for l in cfg.niche.get(key, {}).get("lock", [])]
         extra_gate = cfg.niche.get(key, {}).get("gate", [])

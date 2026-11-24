@@ -4,7 +4,7 @@
   carrier_inn_slot_0: "Road Network"
   carrier_inn_slot_1: "Carrier Crews"
   carrier_inn: "Carrier Inn"
-  carrier_inn_desc: "Packhorses, carts and stable yards gather at the carrier inn before setting out along the roads. Its keepers turn scattered rural loads into regular traffic to the market."
+  carrier_inn_desc: "Packhorses, carts and stable yards gather at the carrier inn before setting out along the roads. A [location|e] with more [building|e] levels than its [supported_building_levels|e] loses [market_access|e], and every level of this building gives some of it back. It stands wherever a [road|e] runs."
   pp_carrier_inn_construction: "[ShowBuildingTypeName('carrier_inn')|e] Construction"
   pp_carrier_inn_maintenance: "Pack Horses"
   pp_carrier_inn_maintenance_desc: "Strings of packhorses carry the loads along the roads, led by carriers who stop at the inn each night. Horses, fodder and harness are the main cost."

@@ -29,7 +29,7 @@ REPLACE:irrigation_systems = {
   raw_modifier = {
     local_population_capacity = 5
     pp_wb_levels_irrigation_systems = 1
-    free_building_levels = 1
+    free_building_levels = 0.5
   }
 
   unique_production_methods = {

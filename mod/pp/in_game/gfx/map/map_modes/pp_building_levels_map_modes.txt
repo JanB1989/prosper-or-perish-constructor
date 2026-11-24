@@ -142,7 +142,7 @@ pp_building_levels = {
 		if = {
 			limit = {
 				has_owner = yes
-				total_building_levels > modifier:free_building_levels
+				total_building_levels > pp_supported_building_levels_map_value
 			}
 			value = rgb { 35 35 42 }
 		}
@@ -204,12 +204,12 @@ pp_supported_building_levels = {
 			value = rgb { 128 128 128 }
 		}
 		else_if = {
-			limit = { modifier:free_building_levels < @pp_supported_building_levels_low }
+			limit = { pp_supported_building_levels_map_value < @pp_supported_building_levels_low }
 			lerp = {
 				min_color = define:NMapColors|MAP_COLOR_MIN
 				max_color = define:NMapColors|MAP_COLOR_LOW
 				factor = {
-					value = modifier:free_building_levels
+					value = pp_supported_building_levels_map_value
 					divide = @pp_supported_building_levels_low
 					max = 1
 					min = 0
@@ -217,12 +217,12 @@ pp_supported_building_levels = {
 			}
 		}
 		else_if = {
-			limit = { modifier:free_building_levels < @pp_supported_building_levels_mid }
+			limit = { pp_supported_building_levels_map_value < @pp_supported_building_levels_mid }
 			lerp = {
 				min_color = define:NMapColors|MAP_COLOR_LOW
 				max_color = define:NMapColors|MAP_COLOR_MID
 				factor = {
-					value = modifier:free_building_levels
+					value = pp_supported_building_levels_map_value
 					subtract = @pp_supported_building_levels_low
 					divide = 40
 					max = 1
@@ -231,12 +231,12 @@ pp_supported_building_levels = {
 			}
 		}
 		else_if = {
-			limit = { modifier:free_building_levels < @pp_supported_building_levels_high }
+			limit = { pp_supported_building_levels_map_value < @pp_supported_building_levels_high }
 			lerp = {
 				min_color = define:NMapColors|MAP_COLOR_MID
 				max_color = define:NMapColors|MAP_COLOR_HIGH
 				factor = {
-					value = modifier:free_building_levels
+					value = pp_supported_building_levels_map_value
 					subtract = @pp_supported_building_levels_mid
 					divide = 50
 					max = 1
@@ -245,12 +245,12 @@ pp_supported_building_levels = {
 			}
 		}
 		else_if = {
-			limit = { modifier:free_building_levels < @pp_supported_building_levels_very_high }
+			limit = { pp_supported_building_levels_map_value < @pp_supported_building_levels_very_high }
 			lerp = {
 				min_color = define:NMapColors|MAP_COLOR_HIGH
 				max_color = define:NMapColors|MAP_COLOR_MAX
 				factor = {
-					value = modifier:free_building_levels
+					value = pp_supported_building_levels_map_value
 					subtract = @pp_supported_building_levels_high
 					divide = 80
 					max = 1
@@ -259,12 +259,12 @@ pp_supported_building_levels = {
 			}
 		}
 		else_if = {
-			limit = { modifier:free_building_levels < @pp_supported_building_levels_cap }
+			limit = { pp_supported_building_levels_map_value < @pp_supported_building_levels_cap }
 			lerp = {
 				min_color = define:NMapColors|MAP_COLOR_MAX
 				max_color = rgb { 245 245 245 }
 				factor = {
-					value = modifier:free_building_levels
+					value = pp_supported_building_levels_map_value
 					subtract = @pp_supported_building_levels_very_high
 					divide = 100
 					max = 1

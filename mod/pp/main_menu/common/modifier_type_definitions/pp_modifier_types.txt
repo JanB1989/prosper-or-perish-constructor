@@ -957,3 +957,27 @@ pp_copper_mine_deep_price_cost_modifier={
 		category=country
 	}
 }
+
+pp_fondaco_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}
+
+pp_hanseatic_kontor_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}
+
+pp_trade_office_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}

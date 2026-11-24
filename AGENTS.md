@@ -201,6 +201,40 @@
 - Also: `rural_building_cap` development term 0.15 -> 0.25 (mines, quarries, rural works); decentralization
   `global_production_efficiency` -0.05 -> -0.07. Not tested in game.
 
+## Merchant Houses (2026-11-24, Jan)
+
+- The Trade Office, Fondaco and Hanseatic Kontor are merchant houses: few, big, expensive steps instead of many small
+  levels (Jan's Venice game: 500 Trade Office levels in 75 foreign towns, 16 towns in the Pest market). `REPLACE:` copies
+  of vanilla in their blueprints (`blueprints/accepted/buildings/{trade_office,fondaco,hanseatic_kontor}.yml`, numbers
+  in the body, vanilla's value in each comment); port them on game updates (vanilla pins).
+- Sites (`allow`, never `location_potential`): `pp_merchant_house_site` (`scripted_triggers/pp_merchant_house_triggers.txt`,
+  hand-written) = market centre, megalopolis, or a port with `natural_harbor_suitability` >= 0.75 (vanilla's deep-bay
+  step: about 170 ports of the 1337 map outside market centres, 51 of them towns or cities); town rank or more. All three
+  need `market = { in_trade_range_of = scope:actor }`; the Fondaco lost the `fondaco_rights` relation and its naval range
+  (the AI never asks for the right). A house gives its owner a merchant in that market, which the engine counts as an
+  origin of the trade range, so chains grow market by market.
+- Relations and steps in `allow` (`need_good_relation = no`; the engine check would bind the first step too): no war, no
+  rivalry either way; the first step needs the host's opinion of the builder >= 0, every further step >= 100. The
+  builder's own levels (`location_building_level = { building_type owner = scope:actor value }`) gate step 2 on
+  `trade_range_advance_age_3`, step 3 on `chartered_companies`, step 4 on a merchant republic (Fondaco: Italian; Kontor:
+  the Hanseatic merchant federation). `max_levels = 4`.
+- Strength per step = 10 vanilla levels (capacity / power: Trade Office 6 / 2, Fondaco 2 / 10, Kontor 2.5 / 10; maritime
+  presence x5; upkeep goods x10 in renamed unique methods `pp_<building>_...`), `market_center_modifier` +50 % capacity
+  and power; employment = created pop 0.25 (the most a burgher building may employ after the cut,
+  `tests/test_building_scaling.py`). Host gains in `modifier`: institution growth, max literacy,
+  `local_merchant_capacity_modifier`, migration attraction (Fondaco literacy and institutions, Kontor merchant capacity and
+  migration, Trade Office a small mix).
+- Price: own keys `pp_<building>_price` 1625 (the blueprint) -> 3170 gold (`zz_pp_building_price_stockpile.txt`) = 10
+  vanilla Fondaco levels at age 1; `increase_per_level_cost` 1.0 after `[building_scaling]` x0.75 (the blueprint holds
+  1.3334), so steps cost 3170 / 6340 / 9510 / 12680 before the goods factor and efficiencies.
+- AI: the engine values them by merchant capacity only; `ai_construct_weight` (root = location, `scope:builder` = builder,
+  `scope:owner` = host) = (50 + 50 market centre + 100 no merchant of ours in the market + traded value x 0.1 up to 100 +
+  100 merchant republic) / (builder income + 10), the merchant line's scale.
+- Game start (`start_simulation.merchant_house_rows`, `[worldbuilder.start.merchant_houses]`): vanilla's start houses stay
+  where their rules hold without the World Builder river (the setup audit's view), at level 1; the `great_houses` list
+  starts at 2 in a market centre. 85 rows -> 43 (122 -> 50 levels), `artifacts/data/worldbuilder/food_simulation/merchant_houses.csv`.
+  `tests/test_merchant_houses.py`. Not tested in game.
+
 ## Store Lever
 
 - All stored-food effects ride ONE province modifier per whole stored month, `pp_food_store_0` .. `_24` ("Stored Food:

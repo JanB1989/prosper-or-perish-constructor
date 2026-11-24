@@ -711,6 +711,21 @@ max_cookshop_levels_per_location = 6
 laborer_conversion_share = 0.5        # share of a location's peasants that may become the Cookshops' laborers
 # No setup exceptions (2026-10-23, Jan): a vanilla setup building that fails its building's rank, location_potential or
 # allow is removed from the setup (start_simulation drop_invalid); no building rule names start locations.
+[worldbuilder.start.merchant_houses]
+# Merchant houses (trade_office, fondaco, hanseatic_kontor; 2026-11-24, Jan; AGENTS.md "Merchant Houses"): every vanilla
+# start house that passes its building's rules (site, rank) starts at `level`; the historic great houses below
+# ("TAG:location") start at `great_level` where their location is a market centre. Setup data, not a building rule.
+level = 1
+great_level = 2
+great_houses = [
+  "VEN:constantinople",   # the Venetian quarter
+  "VEN:alexandria",       # the fondaco dei Veneziani
+  "GEN:kaffa",            # Caffa, head of the Genoese Black Sea trade
+  "HSA:lubeck",           # the League's head
+  "HSA:london",           # the Steelyard
+  "HSA:bruges",
+  "HSA:novgorod",         # the Peterhof
+]
 [worldbuilder.start.processors]
 # raw material -> building placed at game start (its laborers are converted from local peasants); levels as before
 alum = { building = "alum_quarry", levels = 1 }

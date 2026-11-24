@@ -3879,6 +3879,13 @@ PP_EU_LABOR_WHERE_DESC: "$BULLET$ #T The map:#! the $mapmode_pp_manual_labor_mar
   pp_fishing_village_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
   fishing_village_slot_5: "Market"
 # <<< eu5-building-pipeline:fishing_village:localization
+ # pp_fondaco_l_english.yml
+
+# >>> eu5-building-pipeline:fondaco:localization
+  pp_fondaco_price: "[ShowBuildingTypeName('fondaco')|e] Price"
+  pp_fondaco_maintenance: "[ShowBuildingTypeName('fondaco')|e] Maintenance"
+  pp_fondaco_maintenance_desc: "Timber for the storerooms and stacks of paper for contracts, letters and ledgers keep the house trading."
+# <<< eu5-building-pipeline:fondaco:localization
  # pp_food_building_modifier_types_l_english.yml
   MODIFIER_TYPE_NAME_local_pp_farm_levels: "Farm Levels"
   MODIFIER_TYPE_DESC_local_pp_farm_levels: "The farm and orchard levels standing in this location. A [ShowBuildingTypeName('cookshop')|e] in the province grows with the farms around it, and new farms prefer places that hold fewer of them."
@@ -5181,6 +5188,13 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   pp_hand_cannon_guild_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
   hand_cannon_guild_slot_1: "Market"
 # <<< eu5-building-pipeline:hand_cannon_guild:localization
+ # pp_hanseatic_kontor_l_english.yml
+
+# >>> eu5-building-pipeline:hanseatic_kontor:localization
+  pp_hanseatic_kontor_price: "[ShowBuildingTypeName('hanseatic_kontor')|e] Price"
+  pp_hanseatic_kontor_maintenance: "[ShowBuildingTypeName('hanseatic_kontor')|e] Maintenance"
+  pp_hanseatic_kontor_maintenance_desc: "Timber, tools and paper keep the warehouses, the cranes and the League's books in order."
+# <<< eu5-building-pipeline:hanseatic_kontor:localization
  # pp_hired_labor_yard_l_english.yml
 
 # >>> eu5-building-pipeline:hired_labor_yard:localization
@@ -7059,6 +7073,8 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   pp_mason_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
   mason_slot_1: "Market"
 # <<< eu5-building-pipeline:mason:localization
+ # pp_merchant_houses_l_english.yml
+ pp_merchant_house_site_tt: "Is a [market_center|e], a [ShowLocationRankName('megalopolis')] or a port with a great [natural_harbor_suitability|e]"
  # pp_merchants_quarters_l_english.yml
 
 # >>> eu5-building-pipeline:merchants_quarters:localization
@@ -7378,6 +7394,12 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   MODIFIER_TYPE_NAME_pp_amber_diggings_price_cost_modifier: "[ShowBuildingTypeName('amber_diggings')|e] Cost"
   MODIFIER_TYPE_DESC_pp_copper_mine_deep_price_cost_modifier: "Affects the cost of building [ShowBuildingTypeName('copper_mine_deep')|e]."
   MODIFIER_TYPE_NAME_pp_copper_mine_deep_price_cost_modifier: "[ShowBuildingTypeName('copper_mine_deep')|e] Cost"
+  MODIFIER_TYPE_DESC_pp_fondaco_price_cost_modifier: "Affects the cost of building [ShowBuildingTypeName('fondaco')|e]."
+  MODIFIER_TYPE_NAME_pp_fondaco_price_cost_modifier: "[ShowBuildingTypeName('fondaco')|e] Cost"
+  MODIFIER_TYPE_DESC_pp_hanseatic_kontor_price_cost_modifier: "Affects the cost of building [ShowBuildingTypeName('hanseatic_kontor')|e]."
+  MODIFIER_TYPE_NAME_pp_hanseatic_kontor_price_cost_modifier: "[ShowBuildingTypeName('hanseatic_kontor')|e] Cost"
+  MODIFIER_TYPE_DESC_pp_trade_office_price_cost_modifier: "Affects the cost of building [ShowBuildingTypeName('trade_office')|e]."
+  MODIFIER_TYPE_NAME_pp_trade_office_price_cost_modifier: "[ShowBuildingTypeName('trade_office')|e] Cost"
  # pp_modifiers_l_english.yml
 STATIC_MODIFIER_NAME_pp_harder_ai_harder_modifier: "Harder AI Food Efficiency"
 STATIC_MODIFIER_NAME_pp_harder_ai_very_hard_modifier: "Very Hard AI Food Efficiency"
@@ -11512,6 +11534,13 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
   PP_TPLAN_SET_PICK_TRADE: "#T $PP_TPLAN_NAME_TRADE$#!\nPayback limit: $PP_TPLAN_SET_PB_TRADE$[SelectLocalization(GreaterThan_CFixedPoint(GetPlayer.MakeScope.ScriptValue('pp_tplan_pb_own_trade'), '(CFixedPoint)0.5'), 'PP_TPLAN_SET_OWN_MARK', 'PP_TPLAN_SET_EMPTY')]\n#weak Click to see what it builds#!"
   PP_TPLAN_SET_CARD_TRADE: "Builds the trade buildings, such as the [ShowBuildingTypeName('marketplace')|e], each newer kind once you have researched it.\nThey need a [ShowLocationRankName('town')], so the plan raises the [location_rank|e] of a smaller settlement first."
   PP_TPLAN_SET_EMPTY: ""
+ # pp_trade_office_l_english.yml
+
+# >>> eu5-building-pipeline:trade_office:localization
+  pp_trade_office_price: "[ShowBuildingTypeName('trade_office')|e] Price"
+  pp_trade_office_requirements: "[ShowBuildingTypeName('trade_office')|e] Requirements"
+  pp_trade_office_requirements_desc: "Paper for the ledgers, cloth samples and salt keep the factors of the house in business."
+# <<< eu5-building-pipeline:trade_office:localization
  # pp_training_fields_l_english.yml
 
 # >>> eu5-building-pipeline:training_fields:localization

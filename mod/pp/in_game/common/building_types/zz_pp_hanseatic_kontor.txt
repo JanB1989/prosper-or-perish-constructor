@@ -1,6 +1,122 @@
 ﻿# >>> eu5-building-pipeline:hanseatic_kontor:building
-INJECT:hanseatic_kontor = {
+REPLACE:hanseatic_kontor = {
 # Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+# Merchant house (2026-11-24, Jan): few, big, expensive steps, only in a market centre, a great natural harbour or a
+# megalopolis within our trade range (vanilla had no allow at all). One step = 10 vanilla levels; the first step
+# needs a host that is not hostile, further steps its good opinion and an advance, the last the Hanseatic merchant
+# federation. AGENTS.md "Merchant Houses".
+audio_tier = 3
+is_special = yes
+is_foreign = yes
+# the relation rule is written in allow: the engine's good-relation check would also bind the first step
+need_good_relation = no
+pop_type = burghers
+
+category = trade_category
+
+max_levels = 4
+# the merchant house: 0.25, the most a burgher building may employ after the employment cut
+# (tests/test_building_scaling.py; vanilla 0.2 per level); its own staff comes with it
+employment_size = 0.25
+pop_size_created = 0.25
+
+rural_settlement = no
+town = yes
+city = yes
+megalopolis = yes
+
+price = pp_hanseatic_kontor_price
+increase_per_level_cost = 1.00 # x [building_scaling] increase_per_level_cost_multiplier 0.75 = 1.0 in the build
+
+country_potential = {
+	modifier:allows_hanseatic_federation_buildings = yes
+}
+
+allow = {
+	custom_tooltip = {
+		text = pp_merchant_house_site_tt
+		pp_merchant_house_site = yes
+	}
+	market = { in_trade_range_of = scope:actor }
+	owner = {
+		NOT = { is_at_war_with = scope:actor }
+		NOT = { is_rival_of = scope:actor }
+		trigger_if = {
+			limit = { root = { location_building_level = { building_type = building_type:hanseatic_kontor owner = scope:actor value >= 1 } } }
+			opinion = { target = scope:actor value >= 100 }
+		}
+		trigger_else = {
+			opinion = { target = scope:actor value >= 0 }
+		}
+	}
+	scope:actor = {
+		NOT = { is_rival_of = root.owner }
+		trigger_if = {
+			limit = { root = { location_building_level = { building_type = building_type:hanseatic_kontor owner = scope:actor value >= 1 } } }
+			has_advance = trade_range_advance_age_3
+		}
+		trigger_if = {
+			limit = { root = { location_building_level = { building_type = building_type:hanseatic_kontor owner = scope:actor value >= 2 } } }
+			has_advance = chartered_companies
+		}
+		trigger_if = {
+			limit = { root = { location_building_level = { building_type = building_type:hanseatic_kontor owner = scope:actor value >= 3 } } }
+			has_reform = government_reform:hanseatic_merchant_federation
+		}
+	}
+}
+
+build_time = trade_post_build_time
+
+# owner: 10 vanilla levels of capacity and power, maritime presence x5; host: merchant capacity of its own and
+# settlers drawn to the Hanseatic town
+modifier = {
+	merchant_power_from_building = 10
+	building_owner_maritime_presence = 0.5
+	merchant_capacity_from_building = 2.5
+	local_merchant_capacity_modifier = 0.05
+	local_migration_attraction = 0.05
+	local_institution_growth_modifier = 0.02
+	local_max_literacy = 0.5
+}
+
+# the house in the market centre itself: +50 % capacity and power
+market_center_modifier = {
+	merchant_capacity_from_building = 1.25
+	merchant_power_from_building = 5
+}
+
+# each level supports itself, so foreign levels never count as unsupported building levels of the location
+raw_modifier = {
+	free_building_levels = 1
+}
+
+# the engine values these buildings only by merchant capacity (never power or market rank): a market centre, a rich
+# market, a market where we have no merchant yet (the next link of a chain) and merchant republics come first;
+# / (builder income + 10) as for the merchant line (scope:owner is the host here)
+ai_construct_weight = {
+	value = 50
+	if = { limit = { is_market_center = yes } add = 50 }
+	if = {
+		limit = { exists = market }
+		if = { limit = { market = { NOT = { has_merchant = scope:builder } } } add = 100 }
+		add = { value = market.total_goods_value_traded multiply = 0.1 max = 100 }
+	}
+	if = { limit = { scope:builder = { is_merchant_republic = yes } } add = 100 }
+	divide = { value = scope:builder.monthly_income_total add = 10 }
+}
+
+unique_production_methods = {
+	pp_hanseatic_kontor_maintenance = {
+		icon_type = building_type
+		icon = hanseatic_kontor
+		lumber = 1 # vanilla 0.1 per level (kontor_maintenance)
+		tools = 1 # 0.1
+		paper = 2.5 # 0.25
+		category = building_maintenance
+	}
+}
+construction_demand = kontor_construction
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
 }

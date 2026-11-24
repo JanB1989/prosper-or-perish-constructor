@@ -83,6 +83,11 @@ def test_pop_rgo_building_cost_classification_uses_raw_material_methods() -> Non
         "hired_labor_yard": "pp_hired_labor_yard_price",
         "rural_daywork_yard": "pp_rural_daywork_yard_price",
         "slave_labor_yard": "pp_slave_labor_yard_price",
+
+        # merchant houses (2026-11-24, Jan): one step = 10 vanilla Fondaco levels of price
+        "trade_office": "pp_trade_office_price",
+        "fondaco": "pp_fondaco_price",
+        "hanseatic_kontor": "pp_hanseatic_kontor_price",
     }
 
 

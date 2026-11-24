@@ -26478,7 +26478,7 @@ pp_cplan_room_fishing_village = {
 	subtract = "location_building_level(building_type:fishing_village)"
 }
 pp_cplan_room_fondaco = {
-	value = guild_max_level
+	value = 4
 	subtract = "location_building_level(building_type:fondaco)"
 }
 pp_cplan_room_forbidden_city = {
@@ -26698,7 +26698,7 @@ pp_cplan_room_hand_cannon_guild = {
 	subtract = "location_building_level(building_type:hand_cannon_guild)"
 }
 pp_cplan_room_hanseatic_kontor = {
-	value = hanseatic_kontor_max_level
+	value = 4
 	subtract = "location_building_level(building_type:hanseatic_kontor)"
 }
 pp_cplan_room_hanseatic_shipwright_guild = {
@@ -28141,7 +28141,7 @@ pp_cplan_room_trade_company_local_venture = {
 	subtract = "location_building_level(building_type:trade_company_local_venture)"
 }
 pp_cplan_room_trade_office = {
-	value = trade_office_max_level
+	value = 4
 	subtract = "location_building_level(building_type:trade_office)"
 }
 pp_cplan_room_trading_hub = {

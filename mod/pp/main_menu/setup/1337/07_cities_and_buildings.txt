@@ -3457,103 +3457,43 @@ building_manager = {
 	}
 	hanseatic_kontor = {
 		tag = HSA
-		level = 3
+		level = 2
 		location = lubeck
 	}
 	hanseatic_kontor = {
 		tag = HSA
-		level = 2
-		location = visby
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 2
+		level = 1
 		location = riga
 	}
 	hanseatic_kontor = {
 		tag = HSA
-		level = 2
+		level = 1
 		location = hamburg
 	}
 	hanseatic_kontor = {
 		tag = HSA
-		level = 2
-		location = goslar
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 2
-		location = bremen
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 2
+		level = 1
 		location = rostock
 	}
 	hanseatic_kontor = {
 		tag = HSA
-		level = 2
-		location = wismar
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 2
-		location = stralsund
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 2
+		level = 1
 		location = kiel
 	}
 	hanseatic_kontor = {
 		tag = HSA
-		level = 2
-		location = wittenberg
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 2
-		location = luneburg
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 2
+		level = 1
 		location = wolgast
 	}
 	hanseatic_kontor = {
 		tag = HSA
-		level = 2
-		location = magdeburg
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 2
-		location = stettin
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 2
+		level = 1
 		location = gdansk
 	}
 	hanseatic_kontor = {
 		tag = HSA
-		level = 2
-		location = brunswick
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 2
-		location = konigsberg
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 2
+		level = 1
 		location = cologne
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 2
-		location = dortmund
 	}
 	hanseatic_kontor = {
 		tag = HSA
@@ -3562,73 +3502,18 @@ building_manager = {
 	}
 	hanseatic_kontor = {
 		tag = HSA
-		level = 2
+		level = 1
 		location = antwerp
 	}
 	hanseatic_kontor = {
 		tag = HSA
-		level = 1
-		location = berlin
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 1
-		location = leipzig
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 1
-		location = erfurt
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 1
-		location = frankfurt
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 1
-		location = paderborn
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 1
-		location = dusseldorf
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 1
-		location = osnabruck
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 1
-		location = munster
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 1
-		location = tallinn
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 1
-		location = tartu
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 1
+		level = 2
 		location = london
 	}
 	hanseatic_kontor = {
 		tag = HSA
-		level = 1
+		level = 2
 		location = novgorod
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 1
-		location = torun
 	}
 	hanseatic_shipwright_guild = {
 		tag = HSA
@@ -5342,33 +5227,13 @@ building_manager = {
 	}
 	trade_office = {
 		tag = GRA
-		level = 4
+		level = 1
 		location = niani
 	}
 	trade_office = {
 		tag = GRA
-		level = 4
-		location = timbuktu
-	}
-	trade_office = {
-		tag = GRA
-		level = 4
-		location = sijilmasa
-	}
-	trade_office = {
-		tag = GRA
-		level = 3
+		level = 1
 		location = fez
-	}
-	trade_office = {
-		tag = GRA
-		level = 3
-		location = marrakesh
-	}
-	trade_office = {
-		tag = GRA
-		level = 2
-		location = meknes
 	}
 	brethren_marsh = {
 		tag = CAS
@@ -5418,11 +5283,6 @@ building_manager = {
 	trade_office = {
 		tag = ARA
 		level = 1
-		location = pisa
-	}
-	trade_office = {
-		tag = ARA
-		level = 1
 		location = bejaia
 	}
 	trade_office = {
@@ -5439,16 +5299,6 @@ building_manager = {
 		tag = ARA
 		level = 1
 		location = messina
-	}
-	trade_office = {
-		tag = ARA
-		level = 1
-		location = palermo
-	}
-	trade_office = {
-		tag = ARA
-		level = 1
-		location = montpellier
 	}
 	trade_office = {
 		tag = ARA
@@ -5558,11 +5408,6 @@ building_manager = {
 	trade_office = {
 		tag = VEN
 		level = 1
-		location = rome
-	}
-	trade_office = {
-		tag = VEN
-		level = 1
 		location = naples
 	}
 	trade_office = {
@@ -5577,23 +5422,8 @@ building_manager = {
 	}
 	trade_office = {
 		tag = VEN
-		level = 1
+		level = 2
 		location = constantinople
-	}
-	trade_office = {
-		tag = VEN
-		level = 1
-		location = ismail
-	}
-	trade_office = {
-		tag = VEN
-		level = 1
-		location = tana
-	}
-	trade_office = {
-		tag = VEN
-		level = 1
-		location = antioch
 	}
 	trade_office = {
 		tag = VEN
@@ -5602,13 +5432,8 @@ building_manager = {
 	}
 	trade_office = {
 		tag = VEN
-		level = 1
+		level = 2
 		location = alexandria
-	}
-	trade_office = {
-		tag = VEN
-		level = 1
-		location = mahdia
 	}
 	trade_office = {
 		tag = VEN
@@ -5643,11 +5468,6 @@ building_manager = {
 	trade_office = {
 		tag = GEN
 		level = 1
-		location = rome
-	}
-	trade_office = {
-		tag = GEN
-		level = 1
 		location = naples
 	}
 	trade_office = {
@@ -5663,22 +5483,7 @@ building_manager = {
 	trade_office = {
 		tag = GEN
 		level = 1
-		location = ismail
-	}
-	trade_office = {
-		tag = GEN
-		level = 1
-		location = tana
-	}
-	trade_office = {
-		tag = GEN
-		level = 1
 		location = trebizond
-	}
-	trade_office = {
-		tag = GEN
-		level = 1
-		location = antioch
 	}
 	trade_office = {
 		tag = GEN
@@ -5689,11 +5494,6 @@ building_manager = {
 		tag = GEN
 		level = 1
 		location = alexandria
-	}
-	trade_office = {
-		tag = GEN
-		level = 1
-		location = mahdia
 	}
 	trade_office = {
 		tag = GEN
@@ -5722,18 +5522,8 @@ building_manager = {
 	}
 	fondaco = {
 		tag = GEN
-		level = 1
+		level = 2
 		location = kaffa
-	}
-	fondaco = {
-		tag = GEN
-		level = 1
-		location = soldaia
-	}
-	fondaco = {
-		tag = GEN
-		level = 1
-		location = tana
 	}
 	fondaco = {
 		tag = GEN

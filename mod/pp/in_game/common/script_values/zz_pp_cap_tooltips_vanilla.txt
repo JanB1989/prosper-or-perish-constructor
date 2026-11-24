@@ -63,46 +63,6 @@ fulani_cattle_rearing_pen_max_level_building_level_development = {
 	multiply = 0.1
 }
 
-REPLACE:hanseatic_kontor_max_level = {
-	add = {
-		desc = "BUILDING_LEVEL_BASE"
-		value = 3
-	}
-	if = {
-		limit = {
-			location_rank ?= location_rank:city
-		}
-		add = {
-			desc = "BUILDING_LEVEL_IS_CITY"
-			value = 2
-		}
-	}
-	if = {
-		limit = {
-			location_rank ?= location_rank:megalopolis
-		}
-		add = {
-			desc = "BUILDING_LEVEL_IS_MEGAPOLIS"
-			value = 10
-		}
-	}
-	
-	if = {
-		limit = { exists = owner }
-	
-		multiply = {
-			desc = "BUILDING_LEVEL_FROM_OWNER_MODIFIERS"
-			value = this.hanseatic_kontor_max_level_building_level_from_owner_modifiers
-		}
-	}
-}
-
-# Tooltip helpers of hanseatic_kontor_max_level (cap_tooltips.py): each is one row of the cap, read through this.
-hanseatic_kontor_max_level_building_level_from_owner_modifiers = {
-	value = 1
-	add = owner.modifier:market_building_levels
-}
-
 REPLACE:japanese_clan_building_cap = {
 	add = {
 		desc = "BUILDING_LEVEL_BASE"
@@ -336,64 +296,6 @@ REPLACE:slave_market_max_level = {
 slave_market_max_level_building_level_development = {
 	value = development
 	multiply = 0.2
-}
-
-REPLACE:trade_office_max_level = {
-	add = {
-		desc = "BUILDING_LEVEL_BASE"
-		value = 1
-	}
-	add = {
-		desc = "BUILDING_LEVEL_DEVELOPMENT"
-		value = this.trade_office_max_level_building_level_development
-	}
-	add = {
-		desc = "BUILDING_LEVEL_POPULATION"
-		value = this.trade_office_max_level_building_level_population
-	}
-	if = {
-		limit = {
-			location_rank ?= location_rank:city
-		}
-		add = {
-			desc = "BUILDING_LEVEL_IS_CITY"
-			value = 5
-		}
-	}
-	if = {
-		limit = {
-			location_rank ?= location_rank:megalopolis
-		}
-		add = {
-			desc = "BUILDING_LEVEL_IS_MEGAPOLIS"
-			value = 10
-		}
-	}
-		
-	if = {
-		limit = { exists = owner }
-	
-		multiply = {
-			desc = "BUILDING_LEVEL_FROM_OWNER_MODIFIERS"
-			value = this.trade_office_max_level_building_level_from_owner_modifiers
-		}
-	}
-}
-
-# Tooltip helpers of trade_office_max_level (cap_tooltips.py): each is one row of the cap, read through this.
-trade_office_max_level_building_level_development = {
-	value = development
-	multiply = 0.1
-}
-
-trade_office_max_level_building_level_population = {
-	value = population
-	multiply = 0.05
-}
-
-trade_office_max_level_building_level_from_owner_modifiers = {
-	value = 1
-	add = owner.modifier:market_building_levels
 }
 
 REPLACE:venetian_palaces_max_level = {

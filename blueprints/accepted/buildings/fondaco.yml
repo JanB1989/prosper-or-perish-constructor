@@ -3,9 +3,152 @@ tag: fondaco
 footprint: trade
 building:
   key: fondaco
-  mode: INJECT
-  source: pp_building_footprint.txt
-  production_method_slots: []
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_fondaco_maintenance
   possible_production_methods: []
   body: |-
     # Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+    # Merchant house (2026-11-24, Jan): few, big, expensive steps, only in a market centre, a great natural harbour or a
+    # megalopolis within our trade range. No fondaco_rights relation and no naval range any more (the AI never asks for
+    # the right, so AI Genoa built none in 175 years). One step = 10 vanilla levels; the first step needs a host that is
+    # not hostile, further steps its good opinion and an advance, the last an Italian merchant republic. AGENTS.md
+    # "Merchant Houses".
+    audio_tier = 3
+    is_special = yes
+    is_foreign = yes
+    # the relation rule is written in allow: the engine's good-relation check would also bind the first step
+    need_good_relation = no
+    pop_type = burghers
+
+    category = trade_category
+
+    max_levels = 4
+    # the merchant house: 0.25, the most a burgher building may employ after the employment cut
+    # (tests/test_building_scaling.py; vanilla 0.1 per level); its own staff comes with it
+    employment_size = 0.25
+    pop_size_created = 0.25
+
+    rural_settlement = no
+    town = yes
+    city = yes
+    megalopolis = yes
+
+    price = pp_fondaco_price
+    increase_per_level_cost = 1.3334 # x [building_scaling] increase_per_level_cost_multiplier 0.75 = 1.0 in the build
+
+    country_potential = {
+    	OR = {
+    		AND = {
+    			is_merchant_republic = yes
+    			culture = { has_culture_group = culture_group:italian_group }
+    		}
+    		has_policy = ara_consulate_sea
+    	}
+    }
+    allow = {
+    	custom_tooltip = {
+    		text = pp_merchant_house_site_tt
+    		pp_merchant_house_site = yes
+    	}
+    	market = { in_trade_range_of = scope:actor }
+    	owner = {
+    		NOT = { is_at_war_with = scope:actor }
+    		NOT = { is_rival_of = scope:actor }
+    		trigger_if = {
+    			limit = { root = { location_building_level = { building_type = building_type:fondaco owner = scope:actor value >= 1 } } }
+    			opinion = { target = scope:actor value >= 100 }
+    		}
+    		trigger_else = {
+    			opinion = { target = scope:actor value >= 0 }
+    		}
+    	}
+    	scope:actor = {
+    		NOT = { is_rival_of = root.owner }
+    		trigger_if = {
+    			limit = { root = { location_building_level = { building_type = building_type:fondaco owner = scope:actor value >= 1 } } }
+    			has_advance = trade_range_advance_age_3
+    		}
+    		trigger_if = {
+    			limit = { root = { location_building_level = { building_type = building_type:fondaco owner = scope:actor value >= 2 } } }
+    			has_advance = chartered_companies
+    		}
+    		trigger_if = {
+    			limit = { root = { location_building_level = { building_type = building_type:fondaco owner = scope:actor value >= 3 } } }
+    			is_merchant_republic = yes
+    			culture = { has_culture_group = culture_group:italian_group }
+    		}
+    	}
+    }
+
+    build_time = trade_post_build_time
+
+    unique_production_methods = {
+    	pp_fondaco_maintenance = {
+    		icon_type = building_type
+    		icon = fondaco
+    		lumber = 1 # vanilla 0.1 per level (fondaco_maintenance)
+    		paper = 2 # 0.2
+    		category = building_maintenance
+    	}
+    }
+
+    # owner: 10 vanilla levels of capacity and power, maritime presence x5; host: Italian bookkeeping (literacy,
+    # institutions), vanilla's Italian settlers
+    modifier = {
+    	merchant_power_from_building = 10
+    	building_owner_maritime_presence = 0.125
+    	merchant_capacity_from_building = 2
+    	local_institution_growth_modifier = 0.05
+    	local_max_literacy = 1
+    	local_merchant_capacity_modifier = 0.02
+    	#Italian merchants settle in the new location
+    	local_migration_attraction = 0.025
+    }
+
+    # the house in the market centre itself: +50 % capacity and power
+    market_center_modifier = {
+    	merchant_capacity_from_building = 1
+    	merchant_power_from_building = 5
+    }
+
+    # each level supports itself, so foreign levels never count as unsupported building levels of the location
+    raw_modifier = {
+    	free_building_levels = 1
+    }
+
+    # the engine values these buildings only by merchant capacity (never power or market rank): a market centre, a rich
+    # market, a market where we have no merchant yet (the next link of a chain) and merchant republics come first;
+    # / (builder income + 10) as for the merchant line (scope:owner is the host here)
+    ai_construct_weight = {
+    	value = 50
+    	if = { limit = { is_market_center = yes } add = 50 }
+    	if = {
+    		limit = { exists = market }
+    		if = { limit = { market = { NOT = { has_merchant = scope:builder } } } add = 100 }
+    		add = { value = market.total_goods_value_traded multiply = 0.1 max = 100 }
+    	}
+    	if = { limit = { scope:builder = { is_merchant_republic = yes } } add = 100 }
+    	divide = { value = scope:builder.monthly_income_total add = 10 }
+    }
+
+    construction_demand = fondaco_construction
+prices:
+  - key: pp_fondaco_price
+    body: |2-
+      {gold = 1625}
+localization:
+  entries:
+    pp_fondaco_price: "[ShowBuildingTypeName('fondaco')|e] Price"
+    fondaco_desc: "Warehouse, lodging and counting house of a merchant nation in a foreign town, where its merchants live under their own consul and keep their books in the Italian manner. It stands only in a [market_center|e], in a town with a great [natural_harbor_suitability|e] or in a [ShowLocationRankName('megalopolis')], within our [trade_range|e], and our trade reaches on from its [market|e]. It grows in a few large steps: the first needs only a host that is not hostile to us, the next ones the host's good [opinion|e] of us and the [advance|e] [ShowAdvanceName('trade_range_advance_age_3')] and then [ShowAdvanceName('chartered_companies')], and the last is open only to a [ShowGovernmentReformName('merchant_republic')] of [ShowCultureGroupName('italian_group')] culture. Each step gives us much [merchant_power|e] and some [merchant_capacity|e] there, more in the market centre itself; the town learns from its guests: more [literacy|e], faster spread of [institution|e]s and a few settlers."
+    pp_fondaco_maintenance: "[ShowBuildingTypeName('fondaco')|e] Maintenance"
+    pp_fondaco_maintenance_desc: "Timber for the storerooms and stacks of paper for contracts, letters and ledgers keep the house trading."
+
+evaluation:
+  allow_rules:
+    profit_percent: Upkeep only, the building sells nothing.
+    input_throughput: Vanilla upkeep on a small staff, not a recipe.
+    output_throughput: Upkeep only, the building sells nothing.

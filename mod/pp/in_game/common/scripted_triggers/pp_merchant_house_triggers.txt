@@ -1,0 +1,15 @@
+﻿# Merchant houses (2026-11-24, Jan): where a Trade Office, Fondaco or Hanseatic Kontor may stand (their allow; the
+# rank rule sits on the buildings). A market centre, a megalopolis, or a port with a great natural harbour: 0.75 is
+# vanilla's "deep bay" step and admits about 170 ports of the 1337 map outside market centres (51 of them towns or
+# cities at the start). Owner-independent, but it sits in allow (never location_potential): market centres can move.
+# AGENTS.md "Merchant Houses".
+pp_merchant_house_site = {
+	OR = {
+		is_market_center = yes
+		location_rank = location_rank:megalopolis
+		AND = {
+			is_port = yes
+			modifier:natural_harbor_suitability >= 0.75
+		}
+	}
+}

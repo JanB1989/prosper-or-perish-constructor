@@ -212,6 +212,52 @@ def additional_setups(vanilla_root, mod_root):
     return result
 
 
+MERCHANT_HOUSES = ("trade_office", "fondaco", "hanseatic_kontor")
+
+
+def merchant_house_rows(sim, doc, raw):
+    """Start levels of the merchant houses (2026-11-24, Jan; AGENTS.md "Merchant Houses"): every vanilla setup row of a
+    house stays only where its building's rank, location_potential and allow hold, read as the setup audit reads them
+    (without the World Builder river, whose harbour share the engine may not trace), at ``level``; a great house of
+    ``great_houses`` ("TAG:location") starts at ``great_level`` where its location is a market centre. Rows are per
+    owner, so the doc's rows are rewritten and ``sim.counts`` set to their sum. Returns (doc, one report row per house)."""
+    raw = dict(raw or {})
+    level = int(raw.get("level", 1))
+    great_level = int(raw.get("great_level", 2))
+    great = {str(x) for x in raw.get("great_houses", ())}
+    site = {}
+    report = []
+    totals = defaultdict(Counter)
+    managers = []
+    for top in doc.entries:
+        if top.key != "building_manager" or not isinstance(top.value, CList):
+            managers.append(top)
+            continue
+        rows = []
+        for entry in top.value.entries:
+            if entry.key not in MERCHANT_HOUSES or not isinstance(entry.value, CList):
+                rows.append(entry)
+                continue
+            loc, tag = str(first(entry.value, "location")), str(first(entry.value, "tag"))
+            before = int(first(entry.value, "level", 0))
+            if (loc, entry.key) not in site:
+                site[loc, entry.key] = loc in sim.locations and sim.merchant_house_site(loc, entry.key)
+            n = 0
+            if site[loc, entry.key]:
+                n = great_level if f"{tag}:{loc}" in great and sim.base[loc].get("is_market_center") else level
+            report.append({"building": entry.key, "owner": tag, "location": loc, "before": before, "after": n})
+            if loc in sim.locations:
+                totals[loc][entry.key] += n
+            if n:
+                fields = [replace(f, value=n) if f.key == "level" else f for f in entry.value.entries]
+                rows.append(replace(entry, value=replace(entry.value, entries=fields)))
+        managers.append(replace(top, value=replace(top.value, entries=rows)))
+    for loc, keys in totals.items():
+        for key, n in keys.items():
+            sim.counts[loc][key] = n
+    return replace(doc, entries=managers), report
+
+
 TOPUP_PATH = Path("in_game/common/scripted_effects/pp_start_river_topup.txt")
 CROP_REPORT_RELATIVE_PATH = Path("artifacts/data/worldbuilder/crop_allocation.csv")
 
@@ -909,6 +955,20 @@ class Simulation:
         if cached is None:
             cached = cache[state] = self.rules.cap(key, self.ctx(tag), gates=gates)
         return cached
+
+    def merchant_house_site(self, tag, key):
+        """Whether a setup row of ``key`` may stand in ``tag``: rank and placement gates as the setup audit reads them
+        (no river: the audit's view). A rule the evaluator cannot read fails the build, as in the audit."""
+        body = self.rules.buildings.get(key)
+        if body is None:
+            return False
+        ctx = self.ctx(tag)
+        if ctx.get("has_river"):
+            ctx = without_river(ctx, self.rules)
+        ctx = {**ctx, "placement": True}
+        if not rank_allowed(body, ctx.get("location_rank", "rural_settlement")):
+            return False
+        return all(self.rules.test(node, ctx) for _gate, node in placement_gates(body))
 
     def drop_invalid(self):
         """Remove setup rows that break the building's own rules: a location rank the building may not stand in, a
@@ -2186,6 +2246,7 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
         improvement_keys=set(caps),
         market_centres=centres,
     )
+    doc, merchant_houses = merchant_house_rows(sim, doc, (cfg.raw.get("start") or {}).get("merchant_houses"))
     sim.drop_invalid()
     sim.clamp()
     sim.refresh_navigation()
@@ -2278,6 +2339,10 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
             "after": pl.Int64,
         },
     ).write_csv(folder / "clamped_buildings.csv")
+    pl.DataFrame(
+        merchant_houses,
+        schema={"building": pl.String, "owner": pl.String, "location": pl.String, "before": pl.Int64, "after": pl.Int64},
+    ).write_csv(folder / "merchant_houses.csv")
     sensitivity = []
     for factor in sorted({1.0, 1.25, float(rules.subsistence), 1.75, 2.0}):
         b = list(sim.budgets(factor).values())
@@ -2413,6 +2478,9 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
         "over_cap_rows": 0,
         "setup_validation": setup_validation,
         "clamped_rows": len(sim.trimmed),
+        "merchant_houses": {"rows": len(merchant_houses), "kept": sum(r["after"] > 0 for r in merchant_houses),
+                            "levels_before": sum(r["before"] for r in merchant_houses),
+                            "levels_after": sum(r["after"] for r in merchant_houses)},
         "clamped_levels": sum(r["before"] - r["after"] for r in sim.trimmed),
         "provinces": len(budgets),
         "provinces_short_of_food": sum(b["shortfall"] > 1e-6 for b in budgets.values()),

@@ -248,6 +248,13 @@ NCountry = {
 	# itself (route cost x MERCHANT_ROUTE_COST_MULTIPLIER 5 against the trade range, MERCHANT_DISTANCE_COST_DIVISOR 800)
 	# and its institution trade spread uses the same x5 cost; PP's curb (minimum percent 0.4, halfcost 25, minimum
 	# volume 20, spread values 65 %, Print Culture halved) and its trade range cut (+50 per range advance) are gone.
+	# 2026-11-24 (Jan: everybody traded with everyone; range should matter): past its trade range a traded unit uses
+	# 1 + (5 x route cost - range) / divisor capacity. At vanilla's 800 a third of the 1342 world trade value ran far
+	# beyond the range (Chinese states into Europe at about 6x capacity). With 200 and the base range 1000
+	# (auto_modifiers/pp_country_base_values.txt) the normal routes of their time cost 1.0x (Venice-Alexandria,
+	# Genoa-Caffa, Lubeck-Novgorod; 1.6x before) and Beijing-Venice 20x (6.8x). Static estimate from run 77768726,
+	# not tested in game. The multiplier stays 5: the institution trade spread reads it too.
+	MERCHANT_DISTANCE_COST_DIVISOR = 200 # 800
 }
 
 NUnit = {

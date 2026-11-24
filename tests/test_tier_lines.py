@@ -59,7 +59,7 @@ def test_price_pass_carries_the_same_factor() -> None:
     config = tier_lines.load_config(PROJECT)
     text = (MOD / "in_game/common/prices/zz_pp_building_price_stockpile.txt").read_text(encoding="utf-8-sig")
     rows = re.findall(r"(?m)^TRY_INJECT:(\w+) = \{ gold = (\d+) \} # ([\d.]+) ", text)
-    assert len(rows) == 70
+    assert len(rows) == 73
     for key, gold, old in rows:
         assert int(gold) == tier_lines.final_gold(float(old) * 1.5, config), key
 

@@ -5,6 +5,12 @@ TRY_INJECT:country_base_values = {
 	# per head about 40 % in 1352-1522. -0.65 from 2026-11-03, Jan: raw goods too abundant at the start; run 16fe282a made 1.9x the
 	# raw goods it used at 1342, 62 % of them from RGOs). Raw Materials Output is the RGO's multiplier; per-good output modifiers are untouched.
 	global_raw_material_output = -0.65
+	# Trade range: vanilla's 300 + this = 1000 (2026-11-24, Jan: range should matter and be extended with merchant houses).
+	# With 300 no trader reached a historic first partner in range in 1342 (Venice-Alexandria, Lubeck-London); with 1000
+	# Venice reaches Constantinople, Alexandria, Damascus and Bruges, the Hansa London, Bruges, Bergen and Novgorod. The
+	# range advances stay vanilla; NCountry.MERCHANT_DISTANCE_COST_DIVISOR makes trade past the range dear (run 77768726,
+	# pp_workspace/trade_range_study/sim). Not tested in game.
+	trade_range = 700
 	# Free building levels +100 % from day 0 (2026-11-24, Jan; the ages' +25/50/100 % are cancelled in age/pp_age_adjustments.txt):
 	# with building_levels -0.5 per staffed level the allowance is twice the free levels minus the staffed levels, so a
 	# staffed level over the limit counts twice at half the unsupported_building_levels penalty and a closed one once

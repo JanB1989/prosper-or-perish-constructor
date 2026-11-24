@@ -213,7 +213,8 @@
   need `market = { in_trade_range_of = scope:actor }`; the Fondaco lost the `fondaco_rights` relation and its naval range
   (the AI never asks for the right). A house gives its owner a merchant in that market, which the engine counts as an
   origin of the trade range, so chains grow market by market.
-- Relations and steps in `allow` (`need_good_relation = no`; the engine check would bind the first step too): no war, no
+- `need_good_relation = yes` (the engine refuses a foreign building without the flag, error.log 2026-11-24, so every
+  step needs the host's opinion of 100; Jan's wish of a first step without good relations is open). Relations and steps in `allow`: no war, no
   rivalry either way; the first step needs the host's opinion of the builder >= 0, every further step >= 100. The
   builder's own levels (`location_building_level = { building_type owner = scope:actor value }`) gate step 2 on
   `trade_range_advance_age_3`, step 3 on `chartered_companies`, step 4 on a merchant republic (Fondaco: Italian; Kontor:

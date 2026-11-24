@@ -59,7 +59,8 @@ def test_built_by_trade_range_and_relations_in_allow(buildings, key) -> None:
     assert re.search(r"market\s*=\s*\{\s*in_trade_range_of\s*=\s*scope:actor\s*\}", allow)
     assert "fondaco_rights" not in render_value(body)
     assert "within_naval_range_of" not in allow
-    assert _first(body, "need_good_relation") is False
+    # the engine refuses a foreign building without the flag (error.log, 2026-11-24)
+    assert _first(body, "need_good_relation") is True
     # the first step needs a host that is not hostile, further steps opinion 100 and the builder's own levels counted
     assert f"building_type = building_type:{key}" in allow and "owner = scope:actor" in allow
     assert "is_at_war_with = scope:actor" in allow and "is_rival_of" in allow

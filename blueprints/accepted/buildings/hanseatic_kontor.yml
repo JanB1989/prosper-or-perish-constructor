@@ -19,8 +19,9 @@ building:
     audio_tier = 3
     is_special = yes
     is_foreign = yes
-    # the relation rule is written in allow: the engine's good-relation check would also bind the first step
-    need_good_relation = no
+    # the engine refuses a foreign building without this flag (error.log, 2026-11-24), so every step needs the host's
+    # opinion of 100; the allow block keeps its own relation lines
+    need_good_relation = yes
     pop_type = burghers
 
     category = trade_category

@@ -1617,7 +1617,12 @@ def test_non_base_production_method_slots_have_inputs_or_outputs() -> None:
 
 
 def test_buildings_have_at_most_one_free_output_slot_except_provisioning_sales() -> None:
+    from prosper_or_perish_constructor import location_methods
+
     data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
+    # A location-gated method (location_allow) sits in a slot of its own on purpose and may pay in labour only
+    # (Sun Pans on the Coastal Saltern): it is an add-on where the land allows it, not a second free base slot.
+    gated = location_methods.gated_method_names("constructor", ROOT / "constructor.load_order.toml")
     slots_by_building: dict[str, dict[int, list[str]]] = {}
     for row in data.building_data.production_methods.select(
         [
@@ -1641,7 +1646,7 @@ def test_buildings_have_at_most_one_free_output_slot_except_provisioning_sales()
             continue
         if not _production_method_outputs_without_inputs(row):
             continue
-        if _is_provisioning_sale_method(row):
+        if _is_provisioning_sale_method(row) or row["name"] in gated:
             continue
 
         source_file = Path(str(row["source_file"]))

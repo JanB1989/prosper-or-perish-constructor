@@ -2995,7 +2995,12 @@ def test_victuals_trade_construction_and_coastal_saltern_debug_keys_are_localize
     base_values = _entry_values(base)
     assert base_values["output"] == 0.08
 
-    worked_methods = body.values("unique_production_methods")[1]
+    # slot 1 is the location-gated Sun Pans slot (2026-11-22); the worked methods follow it
+    sun_pans_slot = body.values("unique_production_methods")[1]
+    assert isinstance(sun_pans_slot, CList)
+    assert list(_entry_values(sun_pans_slot)) == ["pp_coastal_saltern_no_sun_pans", "pp_coastal_saltern_sun_pans"]
+
+    worked_methods = body.values("unique_production_methods")[2]
     assert isinstance(worked_methods, CList)
     lined_pans = _entry_values(worked_methods)["pp_coastal_saltern_lined_evaporation_pans"]
     assert isinstance(lined_pans, CList)

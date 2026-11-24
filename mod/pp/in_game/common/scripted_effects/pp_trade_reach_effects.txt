@@ -1,0 +1,6 @@
+﻿# Trade reach (2026-11-24, Jan; script_values/pp_trade_reach_values.txt): the one input that walks the country's
+# locations, the share of its people in towns and cities, is stored once a year by the same yearly country pulse that
+# refreshes Subsistence Land (on_action/pp_subsistence_land.txt) and at game start. Country scope.
+pp_refresh_trade_reach = {
+	set_variable = { name = pp_trade_reach_urban_share value = pp_trade_reach_urban_share_now }
+}

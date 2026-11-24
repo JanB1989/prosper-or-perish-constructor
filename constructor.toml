@@ -712,19 +712,59 @@ laborer_conversion_share = 0.5        # share of a location's peasants that may 
 # No setup exceptions (2026-10-23, Jan): a vanilla setup building that fails its building's rank, location_potential or
 # allow is removed from the setup (start_simulation drop_invalid); no building rule names start locations.
 [worldbuilder.start.merchant_houses]
-# Merchant houses (trade_office, fondaco, hanseatic_kontor; 2026-11-24, Jan; AGENTS.md "Merchant Houses"): every vanilla
-# start house that passes its building's rules (site, rank) starts at `level`; the historic great houses below
-# ("TAG:location") start at `great_level` where their location is a market centre. Setup data, not a building rule.
-level = 1
-great_level = 2
-great_houses = [
-  "VEN:constantinople",   # the Venetian quarter
-  "VEN:alexandria",       # the fondaco dei Veneziani
-  "GEN:kaffa",            # Caffa, head of the Genoese Black Sea trade
-  "HSA:lubeck",           # the League's head
-  "HSA:london",           # the Steelyard
-  "HSA:bruges",
-  "HSA:novgorod",         # the Peterhof
+# Merchant houses (trade_office, fondaco, hanseatic_kontor; 2026-11-24, Jan; AGENTS.md "Merchant Houses"): the whole
+# start list ("TAG:building:location:step"); every vanilla house row is replaced by it. Each house must stand on a site
+# by its building's rules (the build fails otherwise), one per owner and market (config/start_markets.txt), no
+# landless bank or trading house as builder except `landless_builders`, step 1, step 2 only for the great houses.
+# tests/test_merchant_houses.py checks it. Estimated cap (1 + 7 x raw trade reach, from run 5023bdba at 1342) in
+# brackets after each builder. Historic houses on sites the rule refuses: AGENTS.md "Merchant Houses".
+landless_builders = ["HSA"]   # the Hanseatic League is a building country in vanilla and the Kontor's only builder
+houses = [
+  # Venice [8]
+  "VEN:trade_office:constantinople:2",  # the Venetian quarter
+  "VEN:trade_office:alexandria:2",      # the fondaci dei Veneziani
+  "VEN:trade_office:trebizond:1",       # fondaco from 1319
+  "VEN:trade_office:tunis:1",           # fondaco by treaty
+  "VEN:trade_office:bruges:1",          # the Flanders galleys' consul
+  "VEN:trade_office:london:1",          # the Flanders galleys
+  "VEN:trade_office:naples:1",
+  # Genoa [6] (Pera is Genoa's own; Caffa is the Horde's in game)
+  "GEN:fondaco:kaffa:2",                # Caffa, head of the Genoese Black Sea trade
+  "GEN:trade_office:alexandria:1",
+  "GEN:trade_office:tunis:1",
+  "GEN:trade_office:sevilla:1",         # the largest Genoese colony in Castile
+  "GEN:trade_office:bruges:1",          # the Genoese loggia
+  "GEN:trade_office:trebizond:1",       # Leontokastron
+  # Aragon, the Catalan consulates [5]
+  "ARA:trade_office:tunis:1",
+  "ARA:trade_office:alexandria:1",
+  "ARA:trade_office:constantinople:1",
+  "ARA:trade_office:sevilla:1",
+  "ARA:trade_office:messina:1",
+  # Granada [4] (vanilla's trans-Saharan offices on the two sites left)
+  "GRA:trade_office:fez:1",
+  "GRA:trade_office:niani:1",
+  # the Hanseatic League [1 by rule, landless; history demands its four kontors]
+  "HSA:hanseatic_kontor:london:2",      # the Steelyard
+  "HSA:hanseatic_kontor:bruges:2",
+  "HSA:hanseatic_kontor:novgorod:2",    # the Peterhof
+  "HSA:hanseatic_kontor:bergen:1",      # Bryggen
+  # Pisa [5]
+  "PIS:trade_office:tunis:1",           # the Pisan fondaco
+  # Ragusa [7]
+  "RAG:trade_office:constantinople:1",
+  # the Mamluks [4]: the Karimi merchants of Egypt in Aden
+  "MAM:trade_office:adan:1",
+  # Rasulid Yemen [4]: Arab merchants of Calicut
+  "YEM:trade_office:kozhikode:1",
+  # Hormuz [6]: Persian merchants in Cambay, Calicut and Quanzhou
+  "ORM:trade_office:khambat:1",
+  "ORM:trade_office:kozhikode:1",
+  "ORM:trade_office:jinjiang:1",
+  # Yuan China [4]: Chinese traders at Temasek
+  "CHI:trade_office:temasek:1",
+  # Kilwa [6]: the Sofala gold trade
+  "ZAN:trade_office:sofala:1",
 ]
 [worldbuilder.start.processors]
 # raw material -> building placed at game start (its laborers are converted from local peasants); levels as before

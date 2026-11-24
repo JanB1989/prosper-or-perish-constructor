@@ -254,7 +254,9 @@ NCountry = {
 	# (auto_modifiers/pp_country_base_values.txt) the normal routes of their time cost 1.0x (Venice-Alexandria,
 	# Genoa-Caffa, Lubeck-Novgorod; 1.6x before) and Beijing-Venice 20x (6.8x). Static estimate from run 77768726,
 	# not tested in game. The multiplier stays 5: the institution trade spread reads it too.
-	MERCHANT_DISTANCE_COST_DIVISOR = 200 # 800
+	# 300 later on 2026-11-24 (Jan, the mellow trade reach: auto_modifiers/pp_trade_reach.txt cuts the range advances of
+	# countries that are not built for trade, so far trade gets a little cheaper again). Not tested in game.
+	MERCHANT_DISTANCE_COST_DIVISOR = 300 # 800 vanilla, 200 on 2026-11-24
 }
 
 NUnit = {

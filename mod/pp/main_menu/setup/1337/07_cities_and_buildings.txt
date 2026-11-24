@@ -3455,66 +3455,6 @@ building_manager = {
 		level = 1
 		location = lubeck
 	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 2
-		location = lubeck
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 1
-		location = riga
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 1
-		location = hamburg
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 1
-		location = rostock
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 1
-		location = kiel
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 1
-		location = wolgast
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 1
-		location = gdansk
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 1
-		location = cologne
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 2
-		location = bruges
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 1
-		location = antwerp
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 2
-		location = london
-	}
-	hanseatic_kontor = {
-		tag = HSA
-		level = 2
-		location = novgorod
-	}
 	hanseatic_shipwright_guild = {
 		tag = HSA
 		level = 1
@@ -5225,16 +5165,6 @@ building_manager = {
 		level = 1
 		location = granada
 	}
-	trade_office = {
-		tag = GRA
-		level = 1
-		location = niani
-	}
-	trade_office = {
-		tag = GRA
-		level = 1
-		location = fez
-	}
 	brethren_marsh = {
 		tag = CAS
 		level = 1
@@ -5264,46 +5194,6 @@ building_manager = {
 		tag = CAS
 		level = 1
 		location = tolosa
-	}
-	trade_office = {
-		tag = ARA
-		level = 1
-		location = genoa
-	}
-	trade_office = {
-		tag = ARA
-		level = 1
-		location = tunis
-	}
-	trade_office = {
-		tag = ARA
-		level = 1
-		location = alexandria
-	}
-	trade_office = {
-		tag = ARA
-		level = 1
-		location = bejaia
-	}
-	trade_office = {
-		tag = ARA
-		level = 1
-		location = constantinople
-	}
-	trade_office = {
-		tag = ARA
-		level = 1
-		location = sevilla
-	}
-	trade_office = {
-		tag = ARA
-		level = 1
-		location = messina
-	}
-	trade_office = {
-		tag = ARA
-		level = 1
-		location = trapani
 	}
 	pirate_haven = {
 		tag = BIJ
@@ -5405,46 +5295,6 @@ building_manager = {
 		level = 1
 		location = venice
 	}
-	trade_office = {
-		tag = VEN
-		level = 1
-		location = naples
-	}
-	trade_office = {
-		tag = VEN
-		level = 1
-		location = dubrovnik
-	}
-	trade_office = {
-		tag = VEN
-		level = 1
-		location = smyrna
-	}
-	trade_office = {
-		tag = VEN
-		level = 2
-		location = constantinople
-	}
-	trade_office = {
-		tag = VEN
-		level = 1
-		location = acre
-	}
-	trade_office = {
-		tag = VEN
-		level = 2
-		location = alexandria
-	}
-	trade_office = {
-		tag = VEN
-		level = 1
-		location = tunis
-	}
-	trade_office = {
-		tag = VEN
-		level = 1
-		location = athens
-	}
 	sergeantry = {
 		tag = VER
 		level = 1
@@ -5464,71 +5314,6 @@ building_manager = {
 		tag = NAX
 		level = 1
 		location = milos
-	}
-	trade_office = {
-		tag = GEN
-		level = 1
-		location = naples
-	}
-	trade_office = {
-		tag = GEN
-		level = 1
-		location = smyrna
-	}
-	trade_office = {
-		tag = GEN
-		level = 1
-		location = constantinople
-	}
-	trade_office = {
-		tag = GEN
-		level = 1
-		location = trebizond
-	}
-	trade_office = {
-		tag = GEN
-		level = 1
-		location = acre
-	}
-	trade_office = {
-		tag = GEN
-		level = 1
-		location = alexandria
-	}
-	trade_office = {
-		tag = GEN
-		level = 1
-		location = tunis
-	}
-	trade_office = {
-		tag = GEN
-		level = 1
-		location = marseille
-	}
-	trade_office = {
-		tag = GEN
-		level = 1
-		location = barcelona
-	}
-	trade_office = {
-		tag = GEN
-		level = 1
-		location = sevilla
-	}
-	trade_office = {
-		tag = GEN
-		level = 1
-		location = bruges
-	}
-	fondaco = {
-		tag = GEN
-		level = 2
-		location = kaffa
-	}
-	fondaco = {
-		tag = GEN
-		level = 1
-		location = vosporo
 	}
 	galley_barracks = {
 		tag = GEN
@@ -14889,6 +14674,171 @@ building_manager = {
 		tag = ROS
 		level = 1
 		location = dingwall
+	}
+	trade_office = {
+		tag = VEN
+		level = 2
+		location = constantinople
+	}
+	trade_office = {
+		tag = VEN
+		level = 2
+		location = alexandria
+	}
+	trade_office = {
+		tag = VEN
+		level = 1
+		location = trebizond
+	}
+	trade_office = {
+		tag = VEN
+		level = 1
+		location = tunis
+	}
+	trade_office = {
+		tag = VEN
+		level = 1
+		location = bruges
+	}
+	trade_office = {
+		tag = VEN
+		level = 1
+		location = london
+	}
+	trade_office = {
+		tag = VEN
+		level = 1
+		location = naples
+	}
+	fondaco = {
+		tag = GEN
+		level = 2
+		location = kaffa
+	}
+	trade_office = {
+		tag = GEN
+		level = 1
+		location = alexandria
+	}
+	trade_office = {
+		tag = GEN
+		level = 1
+		location = tunis
+	}
+	trade_office = {
+		tag = GEN
+		level = 1
+		location = sevilla
+	}
+	trade_office = {
+		tag = GEN
+		level = 1
+		location = bruges
+	}
+	trade_office = {
+		tag = GEN
+		level = 1
+		location = trebizond
+	}
+	trade_office = {
+		tag = ARA
+		level = 1
+		location = tunis
+	}
+	trade_office = {
+		tag = ARA
+		level = 1
+		location = alexandria
+	}
+	trade_office = {
+		tag = ARA
+		level = 1
+		location = constantinople
+	}
+	trade_office = {
+		tag = ARA
+		level = 1
+		location = sevilla
+	}
+	trade_office = {
+		tag = ARA
+		level = 1
+		location = messina
+	}
+	trade_office = {
+		tag = GRA
+		level = 1
+		location = fez
+	}
+	trade_office = {
+		tag = GRA
+		level = 1
+		location = niani
+	}
+	hanseatic_kontor = {
+		tag = HSA
+		level = 2
+		location = london
+	}
+	hanseatic_kontor = {
+		tag = HSA
+		level = 2
+		location = bruges
+	}
+	hanseatic_kontor = {
+		tag = HSA
+		level = 2
+		location = novgorod
+	}
+	hanseatic_kontor = {
+		tag = HSA
+		level = 1
+		location = bergen
+	}
+	trade_office = {
+		tag = PIS
+		level = 1
+		location = tunis
+	}
+	trade_office = {
+		tag = RAG
+		level = 1
+		location = constantinople
+	}
+	trade_office = {
+		tag = MAM
+		level = 1
+		location = adan
+	}
+	trade_office = {
+		tag = YEM
+		level = 1
+		location = kozhikode
+	}
+	trade_office = {
+		tag = ORM
+		level = 1
+		location = khambat
+	}
+	trade_office = {
+		tag = ORM
+		level = 1
+		location = kozhikode
+	}
+	trade_office = {
+		tag = ORM
+		level = 1
+		location = jinjiang
+	}
+	trade_office = {
+		tag = CHI
+		level = 1
+		location = temasek
+	}
+	trade_office = {
+		tag = ZAN
+		level = 1
+		location = sofala
 	}
  brewery = { tag = AAC level = 2 location = aachen }
  castle = { tag = AAC level = 1 location = aachen }

@@ -13,7 +13,7 @@ from dataclasses import replace
 from pathlib import Path
 
 import polars as pl
-from eu5gameparser.clausewitz.parser import parse_file
+from eu5gameparser.clausewitz.parser import parse_file, parse_text
 from eu5gameparser.clausewitz.serializer import render_entry
 from eu5gameparser.clausewitz.syntax import CList
 
@@ -215,20 +215,30 @@ def additional_setups(vanilla_root, mod_root):
 MERCHANT_HOUSES = ("trade_office", "fondaco", "hanseatic_kontor")
 
 
+def parse_merchant_houses(raw):
+    """The configured start houses ``houses`` ("TAG:building:location:step") as (building, tag, location, step)."""
+    out = []
+    for text in (raw or {}).get("houses", ()):
+        parts = str(text).split(":")
+        if len(parts) != 4 or parts[1] not in MERCHANT_HOUSES or not parts[3].isdigit() or not 1 <= int(parts[3]) <= 4:
+            raise ValueError(f"[worldbuilder.start.merchant_houses] houses: bad entry {text!r} (TAG:building:location:step)")
+        out.append((parts[1], parts[0], parts[2], int(parts[3])))
+    return out
+
+
 def merchant_house_rows(sim, doc, raw):
-    """Start levels of the merchant houses (2026-11-24, Jan; AGENTS.md "Merchant Houses"): every vanilla setup row of a
-    house stays only where its building's rank, location_potential and allow hold, read as the setup audit reads them
-    (without the World Builder river, whose harbour share the engine may not trace), at ``level``; a great house of
-    ``great_houses`` ("TAG:location") starts at ``great_level`` where its location is a market centre. Rows are per
-    owner, so the doc's rows are rewritten and ``sim.counts`` set to their sum. Returns (doc, one report row per house)."""
-    raw = dict(raw or {})
-    level = int(raw.get("level", 1))
-    great_level = int(raw.get("great_level", 2))
-    great = {str(x) for x in raw.get("great_houses", ())}
-    site = {}
-    report = []
-    totals = defaultdict(Counter)
+    """Start merchant houses (2026-11-24, Jan; AGENTS.md "Merchant Houses"): every vanilla setup row of a Trade Office,
+    Fondaco or Hanseatic Kontor is replaced by the configured list ``houses`` ("TAG:building:location:step"), a
+    historically grounded start that obeys the building rules. Each configured house must stand where its building's
+    rank, location_potential and allow hold, read as the setup audit reads them (without the World Builder river, whose
+    harbour share the engine may not trace); a house that does not fails the build. Rows are per owner, so
+    ``sim.counts`` is set to the configured sum in every location that had or gets a house. Returns (doc, one report
+    row per vanilla or configured house: before = vanilla level, after = configured step)."""
+    houses = parse_merchant_houses(raw)
+    before = {}
+    touched = set()
     managers = []
+    target = None
     for top in doc.entries:
         if top.key != "building_manager" or not isinstance(top.value, CList):
             managers.append(top)
@@ -239,22 +249,39 @@ def merchant_house_rows(sim, doc, raw):
                 rows.append(entry)
                 continue
             loc, tag = str(first(entry.value, "location")), str(first(entry.value, "tag"))
-            before = int(first(entry.value, "level", 0))
-            if (loc, entry.key) not in site:
-                site[loc, entry.key] = loc in sim.locations and sim.merchant_house_site(loc, entry.key)
-            n = 0
-            if site[loc, entry.key]:
-                n = great_level if f"{tag}:{loc}" in great and sim.base[loc].get("is_market_center") else level
-            report.append({"building": entry.key, "owner": tag, "location": loc, "before": before, "after": n})
-            if loc in sim.locations:
-                totals[loc][entry.key] += n
-            if n:
-                fields = [replace(f, value=n) if f.key == "level" else f for f in entry.value.entries]
-                rows.append(replace(entry, value=replace(entry.value, entries=fields)))
+            before[entry.key, tag, loc] = before.get((entry.key, tag, loc), 0) + int(first(entry.value, "level", 0))
+            touched.add(loc)
+        if target is None:
+            target = len(managers)
         managers.append(replace(top, value=replace(top.value, entries=rows)))
-    for loc, keys in totals.items():
-        for key, n in keys.items():
-            sim.counts[loc][key] = n
+    if houses and target is None:
+        raise ValueError("start setup has no building_manager for the merchant houses")
+    after = {}
+    bad = []
+    for key, tag, loc, step in houses:
+        if (key, tag, loc) in after:
+            raise ValueError(f"start merchant house listed twice: {tag}:{key}:{loc}")
+        if loc not in sim.locations or not sim.merchant_house_site(loc, key):
+            bad.append(f"{tag}:{key}:{loc}")
+        after[key, tag, loc] = step
+    if bad:
+        raise ValueError("start merchant houses off their sites (rank, site rule): " + ", ".join(bad))
+    if houses:
+        text = "\n".join(f"{key} = {{ tag = {tag} level = {step} location = {loc} }}" for key, tag, loc, step in houses)
+        top = managers[target]
+        added = list(parse_text(text).entries)
+        managers[target] = replace(top, value=replace(top.value, entries=[*top.value.entries, *added]))
+    totals = defaultdict(Counter)
+    for (key, _tag, loc), step in after.items():
+        totals[loc][key] += step
+        touched.add(loc)
+    for loc in touched:
+        if loc in sim.locations:
+            for key in MERCHANT_HOUSES:
+                sim.counts[loc][key] = totals[loc][key]
+    report = [{"building": key, "owner": tag, "location": loc, "before": before.get((key, tag, loc), 0),
+               "after": after.get((key, tag, loc), 0)}
+              for key, tag, loc in sorted(set(before) | set(after), key=lambda k: (k[1], k[0], k[2]))]
     return replace(doc, entries=managers), report
 
 

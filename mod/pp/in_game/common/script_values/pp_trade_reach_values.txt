@@ -1,0 +1,265 @@
+﻿# Trade reach (2026-11-24, Jan: nations that invest in trade and are built for it get better at it over time; a nation
+# that is not trade focused must not jump in with gold. The mellow variant: "so we don't fuck over some countries").
+# The flat trade range of the researched advances counts only by pp_trade_reach (0.5..1); the auto modifier
+# pp_limited_trade_reach takes the rest off. The base range (country_base_values, 1000) and every percentage trade range
+# modifier stay. The raw reach (0..1, no floor) also sets how many merchant houses a country may hold
+# (pp_merchant_house_cap). AGENTS.md "Trade Reach"; fit in pp_workspace/trade_range_study/sim2 (r3_best_weights.json).
+#
+# ALL NUMBERS OF THE RULE ARE IN THIS FILE (tests/test_trade_reach.py pins them):
+#   burghers        10 points per percent of the population that are burghers above 1.5 %, at most 45
+#   seafaring       40 x the maritime reach (pp_maritime_reach, 0..1; its port counting is not repeated here)
+#   capital economy up to 30: the capital-economy half of capital economy vs traditional economy, linear to the pole
+#   plutocracy      up to 15: linear over the whole slider, 0 at full aristocracy
+#   naval           up to 15: the naval half of land vs naval
+#   free subjects   up to 15: the free half of serfdom vs free subjects
+#   towns           0.5 per percent of the population living in towns and cities, at most 15 (the share is stored
+#                   once a year: on_action/pp_subsistence_land.txt, scripted_effects/pp_trade_reach_effects.txt)
+#   trade buildings up to 15 at 4 levels per 100,000 people of the trade buildings at home (list below)
+#   full reach at 150 points; every country keeps at least half (the floor); landless countries get the floor
+# Societal values run -100 (left pole) .. +100 (right pole). Population is counted in thousands.
+
+# --- points per input (country scope) ---
+
+pp_trade_reach_pts_burghers = {
+	value = 0
+	if = {
+		limit = { total_population > 0 }
+		value = percentage_pop_type_in_country:burghers
+		multiply = 100
+		subtract = 1.5
+		multiply = 10
+		min = 0
+		max = 45
+	}
+}
+
+pp_trade_reach_pts_seafaring = {
+	value = pp_maritime_reach
+	multiply = 40
+}
+
+# capital economy is the left pole (-100)
+pp_trade_reach_pts_capital_economy = {
+	value = 0
+	if = {
+		limit = { has_societal_value = societal_value_type:capital_economy_vs_traditional_economy }
+		value = societal_value:capital_economy_vs_traditional_economy
+		multiply = -0.3
+		min = 0
+		max = 30
+	}
+}
+
+# plutocracy is the right pole (+100): 0 at -100, 15 at +100
+pp_trade_reach_pts_plutocracy = {
+	value = 0
+	if = {
+		limit = { has_societal_value = societal_value_type:aristocracy_vs_plutocracy }
+		value = societal_value:aristocracy_vs_plutocracy
+		add = 100
+		multiply = 0.075
+		min = 0
+		max = 15
+	}
+}
+
+# naval is the right pole (+100)
+pp_trade_reach_pts_naval = {
+	value = 0
+	if = {
+		limit = { has_societal_value = societal_value_type:land_vs_naval }
+		value = societal_value:land_vs_naval
+		multiply = 0.15
+		min = 0
+		max = 15
+	}
+}
+
+# free subjects is the right pole (+100)
+pp_trade_reach_pts_free_subjects = {
+	value = 0
+	if = {
+		limit = { has_societal_value = societal_value_type:serfdom_vs_free_subjects }
+		value = societal_value:serfdom_vs_free_subjects
+		multiply = 0.15
+		min = 0
+		max = 15
+	}
+}
+
+# Share (0..1) of the people living in towns, cities and megalopolises. Walks every owned location, so only the yearly
+# refresh reads it (scripted_effects/pp_trade_reach_effects.txt); the points read the stored share.
+pp_trade_reach_urban_share_now = {
+	value = 0
+	if = {
+		limit = { total_population > 0 }
+		every_owned_location = {
+			limit = { NOT = { location_rank = location_rank:rural_settlement } }
+			add = population
+		}
+		divide = total_population
+		min = 0
+		max = 1
+	}
+}
+
+pp_trade_reach_pts_towns = {
+	value = 0
+	if = {
+		limit = { has_variable = pp_trade_reach_urban_share }
+		value = var:pp_trade_reach_urban_share
+		multiply = 50
+		min = 0
+		max = 15
+	}
+}
+
+# Trade buildings at home: the marketplace line and the country's own market buildings (not the foreign merchant
+# houses or banking offices). The engine's level count of the building type in the country.
+pp_trade_reach_trade_levels = {
+	value = 0
+	add = total_effective_building_levels:marketplace
+	add = total_effective_building_levels:merchants_quarters
+	add = total_effective_building_levels:grand_marketplace
+	add = total_effective_building_levels:commerce_center
+	add = total_effective_building_levels:port_authority
+	add = total_effective_building_levels:stock_exchange
+	add = total_effective_building_levels:trading_hub
+	add = total_effective_building_levels:entrepot
+	add = total_effective_building_levels:market_warehouse
+	add = total_effective_building_levels:funduq
+	add = total_effective_building_levels:caravan_stop
+	add = total_effective_building_levels:caravanserai
+}
+
+# 15 points at 4 levels per 100,000 people: levels / (population in thousands / 100) / 4 x 15 = levels x 375 / population
+pp_trade_reach_pts_trade_buildings = {
+	value = 0
+	if = {
+		limit = { total_population > 0 }
+		value = pp_trade_reach_trade_levels
+		multiply = 375
+		divide = total_population
+		min = 0
+		max = 15
+	}
+}
+
+# --- reach ---
+
+# All points; a country without land has none (it gets the floor). Each row is one input in the tooltip.
+pp_trade_reach_points = {
+	if = {
+		limit = { num_locations > 0 }
+		add = { desc = "PP_TRADE_REACH_BURGHERS" value = this.pp_trade_reach_pts_burghers }
+		add = { desc = "PP_TRADE_REACH_SEAFARING" value = this.pp_trade_reach_pts_seafaring }
+		add = { desc = "PP_TRADE_REACH_CAPITAL_ECONOMY" value = this.pp_trade_reach_pts_capital_economy }
+		add = { desc = "PP_TRADE_REACH_PLUTOCRACY" value = this.pp_trade_reach_pts_plutocracy }
+		add = { desc = "PP_TRADE_REACH_NAVAL" value = this.pp_trade_reach_pts_naval }
+		add = { desc = "PP_TRADE_REACH_FREE_SUBJECTS" value = this.pp_trade_reach_pts_free_subjects }
+		add = { desc = "PP_TRADE_REACH_TOWNS" value = this.pp_trade_reach_pts_towns }
+		add = { desc = "PP_TRADE_REACH_TRADE_BUILDINGS" value = this.pp_trade_reach_pts_trade_buildings }
+	}
+}
+
+# 0..1 without the floor: full at 150 points. Sets the merchant house cap.
+pp_trade_reach_raw = {
+	value = pp_trade_reach_points
+	divide = 150
+	min = 0
+	max = 1
+}
+
+# 0.5..1: the share of the advances' flat trade range that counts.
+pp_trade_reach = {
+	value = pp_trade_reach_raw
+	min = 0.5
+}
+
+# The flat trade range of the researched advances (tests/test_trade_reach.py keeps this list equal to every advance
+# with a trade_range line, same value).
+pp_advance_trade_range = {
+	value = 0
+	if = {
+		limit = { has_advance = merchants_and_trade }
+		add = 250
+	}
+	if = {
+		limit = { has_advance = trade_range_advance_age_2 }
+		add = 250
+	}
+	if = {
+		limit = { has_advance = trade_range_advance_age_3 }
+		add = 250
+	}
+	if = {
+		limit = { has_advance = chartered_companies }
+		add = 200
+	}
+	if = {
+		limit = { has_advance = joint_stock_companies }
+		add = 200
+	}
+	if = {
+		limit = { has_advance = kvn_the_free_port_of_varna }
+		add = 200
+	}
+	if = {
+		limit = { has_advance = zta_maritime_fiefdoms_of_the_adriatic }
+		add = 200
+	}
+	if = {
+		limit = { has_advance = emilian_the_via_emilia }
+		add = 200
+	}
+	if = {
+		limit = { has_advance = crt_the_malvasia_wine_export_advance }
+		add = 200
+	}
+	if = {
+		limit = { has_advance = patron_of_music }
+		add = 200
+	}
+	if = {
+		limit = { has_advance = kilwan_trade_network }
+		add = 150
+	}
+}
+
+# The part of the advances' trade range our trade does not carry.
+pp_trade_reach_shortfall = {
+	value = 1
+	subtract = pp_trade_reach
+	multiply = pp_advance_trade_range
+}
+
+# --- merchant houses (Trade Office, Fondaco, Hanseatic Kontor) ---
+
+# Merchant houses the country holds, any of the three types, any step.
+pp_merchant_houses_held = {
+	value = 0
+	every_owned_foreign_building = {
+		limit = {
+			OR = {
+				building_type = building_type:trade_office
+				building_type = building_type:fondaco
+				building_type = building_type:hanseatic_kontor
+			}
+		}
+		add = 1
+	}
+}
+
+# A new house needs pp_merchant_houses_held < this: 1 + 7 x raw reach, so a country holds at most the next whole
+# number up (1 without any trade focus, 8 for a full trade nation). Houses above it stay; only new ones wait.
+pp_merchant_house_cap = {
+	value = pp_trade_reach_raw
+	multiply = 7
+	add = 1
+}
+
+# What the tooltip shows: the cap as a whole number of houses.
+pp_merchant_house_cap_shown = {
+	value = pp_merchant_house_cap
+	ceiling = yes
+}

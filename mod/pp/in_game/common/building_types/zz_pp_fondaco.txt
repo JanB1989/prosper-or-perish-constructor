@@ -28,7 +28,7 @@ city = yes
 megalopolis = yes
 
 price = pp_fondaco_price
-increase_per_level_cost = 1.00 # x [building_scaling] increase_per_level_cost_multiplier 0.75 = 1.0 in the build
+increase_per_level_cost = 2.00 # x [building_scaling] increase_per_level_cost_multiplier 0.75 = 2.0 in the build: each step adds 200 % of the first (2026-11-24, Jan)
 
 country_potential = {
 	OR = {
@@ -70,6 +70,29 @@ allow = {
 			limit = { root = { location_building_level = { building_type = building_type:fondaco owner = scope:actor value >= 3 } } }
 			is_merchant_republic = yes
 			culture = { has_culture_group = culture_group:italian_group }
+		}
+		# 2026-11-24 (Jan): no landless banks or trading houses (vanilla's building countries)
+		custom_tooltip = {
+			text = pp_merchant_house_builder_tt
+			NOT = { country_type = building }
+		}
+		# a new house: one per owner and market, and no more houses than the trade reach allows
+		# (script_values/pp_trade_reach_values.txt); further steps of a standing house stay open
+		trigger_if = {
+			limit = { root = { NOT = { location_building_level = { building_type = building_type:fondaco owner = scope:actor value >= 1 } } } }
+			custom_tooltip = {
+				text = pp_merchant_house_one_per_market_tt
+				NOT = {
+					any_owned_foreign_building_location = {
+						market = root.market
+						pp_merchant_house_of_actor = yes
+					}
+				}
+			}
+			custom_tooltip = {
+				text = pp_merchant_house_cap_tt
+				pp_merchant_houses_held < pp_merchant_house_cap
+			}
 		}
 	}
 }

@@ -697,8 +697,12 @@ pp_cplan_btype_data = {
 		save_temporary_scope_value_as = { name = pp_cplan_ipl value = 0.75 }
 	}
 	else_if = {
-		limit = { OR = { scope:pp_cplan_btype = building_type:fondaco scope:pp_cplan_btype = building_type:hanseatic_kontor scope:pp_cplan_btype = building_type:hsa_burgtor scope:pp_cplan_btype = building_type:trade_office } }
+		limit = { OR = { scope:pp_cplan_btype = building_type:hsa_burgtor } }
 		save_temporary_scope_value_as = { name = pp_cplan_ipl value = 1 }
+	}
+	else_if = {
+		limit = { OR = { scope:pp_cplan_btype = building_type:fondaco scope:pp_cplan_btype = building_type:hanseatic_kontor scope:pp_cplan_btype = building_type:trade_office } }
+		save_temporary_scope_value_as = { name = pp_cplan_ipl value = 2 }
 	}
 	save_temporary_scope_value_as = { name = pp_cplan_pf value = pp_cplan_cd_default_construct_building }
 	save_temporary_scope_value_as = { name = pp_cplan_gok value = 1 }

@@ -22,15 +22,17 @@ on_game_start = {
 	}
 }
 
-# Country scope.
+# Country scope. The same pulse stores the trade reach's town share (2026-11-24, Jan; scripted_effects/
+# pp_trade_reach_effects.txt); the cost test switch stops only the Subsistence Land part.
 pp_subsistence_land_country_refresh = {
-	trigger = {
-		NOT = { has_global_variable = pp_subsistence_land_off }
-	}
 	effect = {
-		every_owned_location = {
-			pp_refresh_subsistence_land = yes
+		if = {
+			limit = { NOT = { has_global_variable = pp_subsistence_land_off } }
+			every_owned_location = {
+				pp_refresh_subsistence_land = yes
+			}
 		}
+		pp_refresh_trade_reach = yes
 	}
 }
 
@@ -40,6 +42,7 @@ pp_subsistence_land_game_start = {
 			every_owned_location = {
 				pp_refresh_subsistence_land = yes
 			}
+			pp_refresh_trade_reach = yes
 		}
 	}
 }

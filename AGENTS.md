@@ -225,16 +225,43 @@
   `tests/test_building_scaling.py`). Host gains in `modifier`: institution growth, max literacy,
   `local_merchant_capacity_modifier`, migration attraction (Fondaco literacy and institutions, Kontor merchant capacity and
   migration, Trade Office a small mix).
-- Price: own keys `pp_<building>_price` 1625 (the blueprint) -> 3170 gold (`zz_pp_building_price_stockpile.txt`) = 10
-  vanilla Fondaco levels at age 1; `increase_per_level_cost` 1.0 after `[building_scaling]` x0.75 (the blueprint holds
-  1.3334), so steps cost 3170 / 6340 / 9510 / 12680 before the goods factor and efficiencies.
+- Who builds (later on 2026-11-24, Jan: a nation that is not trade focused must not jump in with gold; in run 5023bdba
+  countries with at most 3 locations held 449 of 682 houses in 1837, and nothing was built before 1450), all in the
+  `scope:actor` block of `allow` (never `location_potential` or `country_potential`, so no standing house is removed):
+  - never a landless bank or trading house (vanilla `country_type = building`, tooltip `pp_merchant_house_builder_tt`) for
+    the Trade Office and Fondaco. The Kontor has no such line: its only builder, the Hanseatic merchant federation (HSA),
+    is a building country in vanilla (setup `type = building`, the reform requires it).
+  - a new house (no level of ours at the site yet): no other house of ours, any of the three types, in a location of
+    the same market (`any_owned_foreign_building_location` with `market = root.market` and the scripted trigger
+    `pp_merchant_house_of_actor`), and fewer houses than `pp_merchant_house_cap` = 1 + 7 x raw trade reach (see "Trade
+    Reach": 1 house without any trade focus, 8 for a full trade nation; count `pp_merchant_houses_held` over
+    `every_owned_foreign_building`). Houses above the cap stay; further steps of a standing house stay open.
+- Price (later on 2026-11-24, Jan): own keys `pp_<building>_price` 820 (the blueprint) -> 1600 gold
+  (`zz_pp_building_price_stockpile.txt`, x1.5 x1.30); `increase_per_level_cost` 2.0 after `[building_scaling]` x0.75 (the
+  blueprint holds 2.6667), so steps cost 1600 / 4800 / 8000 / 11200 before the goods factor and efficiencies (first
+  version: 3170 / 6340 / 9510 / 12680).
 - AI: the engine values them by merchant capacity only; `ai_construct_weight` (root = location, `scope:builder` = builder,
   `scope:owner` = host) = (50 + 50 market centre + 100 no merchant of ours in the market + traded value x 0.1 up to 100 +
   100 merchant republic) / (builder income + 10), the merchant line's scale.
-- Game start (`start_simulation.merchant_house_rows`, `[worldbuilder.start.merchant_houses]`): vanilla's start houses stay
-  where their rules hold without the World Builder river (the setup audit's view), at level 1; the `great_houses` list
-  starts at 2 in a market centre. 85 rows -> 43 (122 -> 50 levels), `artifacts/data/worldbuilder/food_simulation/merchant_houses.csv`.
-  `tests/test_merchant_houses.py`. Not tested in game.
+- Game start (`start_simulation.merchant_house_rows`, `[worldbuilder.start.merchant_houses]`, later on 2026-11-24): the
+  config lists the whole start (`houses`, "TAG:building:location:step"); every vanilla house row is replaced. A listed
+  house off its site (rank and allow as the setup audit reads them, without the World Builder river) fails the build;
+  the test checks one house per owner and market (`config/start_markets.txt`), no building country except
+  `landless_builders` (HSA), step 1 and step 2 only in a market centre. 33 houses, 39 steps (vanilla 85 rows / 122
+  levels, first version 43 / 50): Venice 7 (Constantinople and Alexandria at 2), Genoa 6 (Caffa at 2), Aragon 5, Granada
+  2, the Hansa 4 (London, Bruges, Novgorod at 2, Bergen; its member cities lost their vanilla Kontors), Hormuz 3 (Cambay,
+  Calicut, Quanzhou), Pisa, Ragusa, the Mamluks (Karimi merchants in Aden), Rasulid Yemen (Calicut), Yuan China
+  (Temasek), Kilwa (Sofala) 1 each. Every builder is within its cap estimated from run 5023bdba at 1342 except the
+  landless Hansa (cap 1, 4 houses: history). `artifacts/data/worldbuilder/food_simulation/merchant_houses.csv`.
+- Historic houses whose sites the rule refuses (left out; Jan decides): Tana (Venice, Genoa: a town in the Sarai market,
+  harbour 0.5), Famagusta (rural in the setup, Damascus market, harbour 0.25), Laiazzo/Ayas (rural, harbour 0), Beirut
+  (rural, harbour 0.25), Southampton (rural, harbour 0.75, London market), Theologos/Ayasuluk (rural, harbour 0), Chios
+  (rural, harbour 0.25), Malaga (a city in the Sevilla market, harbour 0.25), Soldaia (a town in the Caffa market,
+  harbour 0.25), Visby (Novgorod's Gotland court and the Hansa: a town in the Stockholm market, harbour 0.25), Pasai (a
+  town in the Temasek market, harbour 0). Vanilla rows left out on purpose: Acre (destroyed 1291), Smyrna, Athens and
+  Ismail (one per market beside Constantinople), Rome, Antioch, Mahdia, Genoa's Constantinople (Pera is Genoa's own),
+  Aragon in Genoa (at war 1331-1336), Granada's other Saharan offices, the Hansa's member-city Kontors.
+- `tests/test_merchant_houses.py`. Not tested in game.
 
 ## Store Lever
 
@@ -758,6 +785,37 @@
   gate's trigger cost 0.146 s over 82k evaluations in the 2026-11-10 profile. Not tested in game.
 - Watch in the next run: who colonizes overseas by half century, Holland's first colony, native backyard charters
   (Inca, Chimu, Kongo, Kilwa, Mali, Benin), running charters of a country that loses its ports.
+
+## Trade Reach (2026-11-24, Jan)
+
+- Rule (Jan: nations that invest in trade and are built for it get better at it over time; a nation that is not trade
+  focused must not jump in with gold; the mellow variant, "so we don't fuck over some countries"): the base trade range
+  (1000) and every percentage trade range modifier stay; the flat trade range of the researched advances
+  (`pp_advance_trade_range`: merchants and trade, the age 2 and age 3 range advances 250 each, chartered companies and
+  joint stock companies 200 each, and the seven country and culture advances with a `trade_range` line, 150-200) counts
+  by `pp_trade_reach` (0.5..1). The auto modifier `pp_limited_trade_reach` takes the rest off (`trade_range = -1` scaled
+  by `pp_trade_reach_shortfall`), like the maritime reach. `NCountry.MERCHANT_DISTANCE_COST_DIVISOR` 200 -> 300 the same
+  day (800 vanilla).
+- Points (all numbers in `script_values/pp_trade_reach_values.txt`; fit in `pp_workspace/trade_range_study/sim2`,
+  `r3_best_weights.json`): burghers 10 per percent of the population above 1.5 %, at most 45
+  (`percentage_pop_type_in_country:burghers`); seafaring 40 x `pp_maritime_reach`; capital economy up to 30 (its half of
+  the slider), plutocracy up to 15 (linear over the whole slider), naval and free subjects up to 15 (their halves); people
+  in towns and cities 0.5 per percent, at most 15; trade buildings at home up to 15 at 4 levels per 100,000 people
+  (`total_effective_building_levels` of the marketplace line, port authority, stock exchange, trading hub, entrepot,
+  market warehouse, funduq, caravan stop, caravanserai; not the merchant houses or banking offices). Raw reach = points /
+  150, clamped 0..1 (the simulation's 100 saturated the trade nations by 1450; Jan wants them to keep improving); reach =
+  max(0.5, raw); a country without locations has no points (the floor). The raw reach also sets the merchant house cap
+  ("Merchant Houses").
+- The town share is the one input that walks the country's locations: `pp_refresh_trade_reach`
+  (`scripted_effects/pp_trade_reach_effects.txt`) stores it in the country variable `pp_trade_reach_urban_share` once a
+  year from the Subsistence Land pulse (`on_action/pp_subsistence_land.txt`, the cost switch stops only Subsistence Land)
+  and at game start; a country created later has 0 town points until its first pulse. Everything else is read live.
+- Text: the modifier's description names the inputs and shows the viewing player's points per input
+  (`GetPlayer.MakeScope.ScriptValue`); the points total carries one described row per input (`PP_TRADE_REACH_*`).
+- Estimated reach at 1342 (run 5023bdba, points / raw / house cap): Venice 143 / 0.95 / 8, Ragusa 122 / 0.81 / 7, Hormuz
+  88 / 0.59 / 6, Genoa 87 / 0.58 / 6, Aragon 82 / 0.54 / 5, Pisa 81 / 0.54 / 5, Granada 63 / 0.42 / 4, Yuan 61 / 0.41 / 4,
+  the Mamluks 56 / 0.38 / 4, Novgorod 42 / 0.28 / 3; landless countries (the Hansa, the banks) 0 / 0 / 1.
+- `tests/test_trade_reach.py`. Not tested in game.
 
 ## Location Plans (town-right plans until 2026-11-21)
 

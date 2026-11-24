@@ -13,3 +13,13 @@ pp_merchant_house_site = {
 		}
 	}
 }
+
+# One merchant house per owner and market (2026-11-24, Jan): the location holds a Trade Office, Fondaco or Hanseatic
+# Kontor of scope:actor with at least one level. Location scope; read by the three houses' allow for a new house.
+pp_merchant_house_of_actor = {
+	OR = {
+		location_building_level = { building_type = building_type:trade_office owner = scope:actor value >= 1 }
+		location_building_level = { building_type = building_type:fondaco owner = scope:actor value >= 1 }
+		location_building_level = { building_type = building_type:hanseatic_kontor owner = scope:actor value >= 1 }
+	}
+}

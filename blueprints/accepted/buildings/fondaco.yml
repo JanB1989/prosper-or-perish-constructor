@@ -39,7 +39,7 @@ building:
     megalopolis = yes
 
     price = pp_fondaco_price
-    increase_per_level_cost = 1.3334 # x [building_scaling] increase_per_level_cost_multiplier 0.75 = 1.0 in the build
+    increase_per_level_cost = 2.6667 # x [building_scaling] increase_per_level_cost_multiplier 0.75 = 2.0 in the build: each step adds 200 % of the first (2026-11-24, Jan)
 
     country_potential = {
     	OR = {
@@ -81,6 +81,29 @@ building:
     			limit = { root = { location_building_level = { building_type = building_type:fondaco owner = scope:actor value >= 3 } } }
     			is_merchant_republic = yes
     			culture = { has_culture_group = culture_group:italian_group }
+    		}
+    		# 2026-11-24 (Jan): no landless banks or trading houses (vanilla's building countries)
+    		custom_tooltip = {
+    			text = pp_merchant_house_builder_tt
+    			NOT = { country_type = building }
+    		}
+    		# a new house: one per owner and market, and no more houses than the trade reach allows
+    		# (script_values/pp_trade_reach_values.txt); further steps of a standing house stay open
+    		trigger_if = {
+    			limit = { root = { NOT = { location_building_level = { building_type = building_type:fondaco owner = scope:actor value >= 1 } } } }
+    			custom_tooltip = {
+    				text = pp_merchant_house_one_per_market_tt
+    				NOT = {
+    					any_owned_foreign_building_location = {
+    						market = root.market
+    						pp_merchant_house_of_actor = yes
+    					}
+    				}
+    			}
+    			custom_tooltip = {
+    				text = pp_merchant_house_cap_tt
+    				pp_merchant_houses_held < pp_merchant_house_cap
+    			}
     		}
     	}
     }
@@ -140,11 +163,11 @@ building:
 prices:
   - key: pp_fondaco_price
     body: |2-
-      {gold = 1625}
+      {gold = 820}
 localization:
   entries:
     pp_fondaco_price: "[ShowBuildingTypeName('fondaco')|e] Price"
-    fondaco_desc: "Warehouse, lodging and counting house of a merchant nation in a foreign town, where its merchants live under their own consul and keep their books in the Italian manner. It stands only in a [market_center|e], in a town with a great [natural_harbor_suitability|e] or in a [ShowLocationRankName('megalopolis')], within our [trade_range|e], and our trade reaches on from its [market|e]. It grows in a few large steps: the first needs only a host that is not hostile to us, the next ones the host's good [opinion|e] of us and the [advance|e] [ShowAdvanceName('trade_range_advance_age_3')] and then [ShowAdvanceName('chartered_companies')], and the last is open only to a [ShowGovernmentReformName('merchant_republic')] of [ShowCultureGroupName('italian_group')] culture. Each step gives us much [merchant_power|e] and some [merchant_capacity|e] there, more in the market centre itself; the town learns from its guests: more [literacy|e], faster spread of [institution|e]s and a few settlers."
+    fondaco_desc: "Warehouse, lodging and counting house of a merchant nation in a foreign town, where its merchants live under their own consul and keep their books in the Italian manner. It stands only in a [market_center|e], in a town with a great [natural_harbor_suitability|e] or in a [ShowLocationRankName('megalopolis')], within our [trade_range|e], and our trade reaches on from its [market|e]. We keep at most one merchant house in a market, and how many we may keep abroad grows with our trade reach: our [ShowPopTypeName('burghers')], our seafaring, our [societal_values|e] and our towns; banks and trading houses without land of their own found none. It grows in a few large steps: the first needs only a host that is not hostile to us, the next ones the host's good [opinion|e] of us and the [advance|e] [ShowAdvanceName('trade_range_advance_age_3')] and then [ShowAdvanceName('chartered_companies')], and the last is open only to a [ShowGovernmentReformName('merchant_republic')] of [ShowCultureGroupName('italian_group')] culture. Each step gives us much [merchant_power|e] and some [merchant_capacity|e] there, more in the market centre itself; the town learns from its guests: more [literacy|e], faster spread of [institution|e]s and a few settlers."
     pp_fondaco_maintenance: "[ShowBuildingTypeName('fondaco')|e] Maintenance"
     pp_fondaco_maintenance_desc: "Timber for the storerooms and stacks of paper for contracts, letters and ledgers keep the house trading."
 

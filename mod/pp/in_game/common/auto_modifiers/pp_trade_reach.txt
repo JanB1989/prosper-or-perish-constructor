@@ -1,0 +1,14 @@
+﻿# Limited trade reach (2026-11-24, Jan: a nation built for trade gets better at it over time, one that is not trade
+# focused cannot jump in with gold; the mellow variant). Every country keeps the base trade range (country_base_values)
+# and every percentage trade range modifier; the flat range its advances add counts only by its trade reach
+# (script_values/pp_trade_reach_values.txt: burghers, seafaring, capital economy, plutocracy, naval, free subjects,
+# towns, trade buildings; at least half of it always counts). Evaluated only for countries whose advances add trade
+# range and whose reach is not full. AGENTS.md "Trade Reach". Not tested in game.
+pp_limited_trade_reach = {
+	potential_trigger = {
+		pp_advance_trade_range > 0
+		pp_trade_reach < 1
+	}
+	scales_with = pp_trade_reach_shortfall
+	trade_range = -1
+}

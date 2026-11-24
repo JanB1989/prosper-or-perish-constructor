@@ -38,7 +38,7 @@ building:
     megalopolis = yes
 
     price = pp_hanseatic_kontor_price
-    increase_per_level_cost = 1.3334 # x [building_scaling] increase_per_level_cost_multiplier 0.75 = 1.0 in the build
+    increase_per_level_cost = 2.6667 # x [building_scaling] increase_per_level_cost_multiplier 0.75 = 2.0 in the build: each step adds 200 % of the first (2026-11-24, Jan)
 
     country_potential = {
     	modifier:allows_hanseatic_federation_buildings = yes
@@ -74,6 +74,26 @@ building:
     		trigger_if = {
     			limit = { root = { location_building_level = { building_type = building_type:hanseatic_kontor owner = scope:actor value >= 3 } } }
     			has_reform = government_reform:hanseatic_merchant_federation
+    		}
+    		# no building-country rule here (2026-11-24): the Hanseatic merchant federation, the only builder of the
+    		# Kontor (country_potential), is itself a building country in vanilla (HSA, setup and reform)
+    		# a new house: one per owner and market, and no more houses than the trade reach allows
+    		# (script_values/pp_trade_reach_values.txt); further steps of a standing house stay open
+    		trigger_if = {
+    			limit = { root = { NOT = { location_building_level = { building_type = building_type:hanseatic_kontor owner = scope:actor value >= 1 } } } }
+    			custom_tooltip = {
+    				text = pp_merchant_house_one_per_market_tt
+    				NOT = {
+    					any_owned_foreign_building_location = {
+    						market = root.market
+    						pp_merchant_house_of_actor = yes
+    					}
+    				}
+    			}
+    			custom_tooltip = {
+    				text = pp_merchant_house_cap_tt
+    				pp_merchant_houses_held < pp_merchant_house_cap
+    			}
     		}
     	}
     }
@@ -132,11 +152,11 @@ building:
 prices:
   - key: pp_hanseatic_kontor_price
     body: |2-
-      {gold = 1625}
+      {gold = 820}
 localization:
   entries:
     pp_hanseatic_kontor_price: "[ShowBuildingTypeName('hanseatic_kontor')|e] Price"
-    hanseatic_kontor_desc: "A walled yard of the Hanseatic League in a foreign town, with its own warehouses, hall and law, where the League's merchants live and trade together. It stands only in a [market_center|e], in a town with a great [natural_harbor_suitability|e] or in a [ShowLocationRankName('megalopolis')], within our [trade_range|e], and our trade reaches on from its [market|e]. It grows in a few large steps: the first needs only a host that is not hostile to us, the next ones the host's good [opinion|e] of us and the [advance|e] [ShowAdvanceName('trade_range_advance_age_3')] and then [ShowAdvanceName('chartered_companies')], and the last is open only to the [ShowGovernmentReformName('hanseatic_merchant_federation')]. Each step gives us much [merchant_power|e] and some [merchant_capacity|e] there, more in the market centre itself; the town gains merchant capacity of its own, draws newcomers and picks up a little [literacy|e] and faster spread of [institution|e]s."
+    hanseatic_kontor_desc: "A walled yard of the Hanseatic League in a foreign town, with its own warehouses, hall and law, where the League's merchants live and trade together. It stands only in a [market_center|e], in a town with a great [natural_harbor_suitability|e] or in a [ShowLocationRankName('megalopolis')], within our [trade_range|e], and our trade reaches on from its [market|e]. We keep at most one merchant house in a market, and how many we may keep abroad grows with our trade reach: our [ShowPopTypeName('burghers')], our seafaring, our [societal_values|e] and our towns. It grows in a few large steps: the first needs only a host that is not hostile to us, the next ones the host's good [opinion|e] of us and the [advance|e] [ShowAdvanceName('trade_range_advance_age_3')] and then [ShowAdvanceName('chartered_companies')], and the last is open only to the [ShowGovernmentReformName('hanseatic_merchant_federation')]. Each step gives us much [merchant_power|e] and some [merchant_capacity|e] there, more in the market centre itself; the town gains merchant capacity of its own, draws newcomers and picks up a little [literacy|e] and faster spread of [institution|e]s."
     pp_hanseatic_kontor_maintenance: "[ShowBuildingTypeName('hanseatic_kontor')|e] Maintenance"
     pp_hanseatic_kontor_maintenance_desc: "Timber, tools and paper keep the warehouses, the cranes and the League's books in order."
 

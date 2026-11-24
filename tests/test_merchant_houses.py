@@ -43,6 +43,11 @@ def _text(node) -> str:
     return render_value(node) if node is not None else ""
 
 
+def _flat(node) -> str:
+    """The rendered block on one line, single spaces."""
+    return re.sub(r"\s+", " ", _text(node))
+
+
 @pytest.mark.parametrize("key", HOUSES)
 def test_site_rule_in_allow_not_in_potential(buildings, key) -> None:
     body = buildings[key]
@@ -71,11 +76,63 @@ def test_built_by_trade_range_and_relations_in_allow(buildings, key) -> None:
     assert "has_advance = trade_range_advance_age_3" in allow and "has_advance = chartered_companies" in allow
 
 
+def _actor_block(body) -> CList:
+    blocks = [e.value for e in _first(body, "allow").entries if e.key == "scope:actor"]
+    assert len(blocks) == 1
+    return blocks[0]
+
+
+@pytest.mark.parametrize("key", HOUSES)
+def test_new_house_one_per_market_and_reach_cap(buildings, key) -> None:
+    """2026-11-24 (Jan): a new house (no level of ours here yet) needs no other house of ours in the market and fewer
+    houses than the trade reach allows; further steps of a standing house stay open. All builder conditions sit in
+    the scope:actor block, which the start check reads as held."""
+    actor = _actor_block(buildings[key])
+    new = [e.value for e in actor.entries if e.key == "trigger_if"
+           and re.search(rf"NOT = \{{ location_building_level = \{{ building_type = building_type:{key} owner = scope:actor "
+                         r"value >= 1 \} \}", _flat(e.value.first("limit")))]
+    assert len(new) == 1
+    text = _flat(new[0])
+    assert "text = pp_merchant_house_one_per_market_tt" in text and "text = pp_merchant_house_cap_tt" in text
+    assert re.search(r"any_owned_foreign_building_location = \{\s*market = root\.market\s*pp_merchant_house_of_actor = yes",
+                     text)
+    assert "pp_merchant_houses_held < pp_merchant_house_cap" in text
+    trigger = parse_file(MOD / "in_game/common/scripted_triggers/pp_merchant_house_triggers.txt")
+    of_actor = _flat(next(e.value for e in trigger.entries if e.key == "pp_merchant_house_of_actor"))
+    for house in HOUSES:
+        assert f"building_type = building_type:{house} owner = scope:actor value >= 1" in of_actor
+
+
+@pytest.mark.parametrize("key", HOUSES)
+def test_no_landless_banks_except_the_hansa(buildings, key) -> None:
+    """Vanilla's building countries (the Florentine banks, the Japanese clans' houses) never build a Trade Office or
+    Fondaco; the Kontor's only builder, the Hanseatic merchant federation, is itself a building country (its reform
+    requires it), so the Kontor has no such line. In allow, so no standing house is removed."""
+    actor = _flat(_actor_block(buildings[key]))
+    body = buildings[key]
+    assert "country_type = building" not in _text(_first(body, "location_potential"))
+    if key == "hanseatic_kontor":
+        assert "NOT = { country_type = building }" not in actor
+        assert "allows_hanseatic_federation_buildings" in _text(_first(body, "country_potential"))
+    else:
+        assert re.search(r"custom_tooltip = \{\s*text = pp_merchant_house_builder_tt\s*NOT = \{ country_type = building \}",
+                         actor)
+
+
+def test_house_tooltips_have_text() -> None:
+    text = (MOD / "main_menu/localization/english/pp_merchant_houses_l_english.yml").read_text(encoding="utf-8-sig")
+    for key in ("pp_merchant_house_builder_tt", "pp_merchant_house_one_per_market_tt", "pp_merchant_house_cap_tt"):
+        m = re.search(rf'^ {key}: "(.+)"$', text, re.M)
+        assert m, key
+        assert not re.search(r"\d", re.sub(r"\[[^\]]*\]", "", m.group(1))), key
+
+
 @pytest.mark.parametrize("key", HOUSES)
 def test_steps_strength_price_and_weight(buildings, key) -> None:
     body = buildings[key]
     assert _first(body, "max_levels") == 4
-    assert float(_first(body, "increase_per_level_cost")) == pytest.approx(1.0)
+    # 2026-11-24 (Jan): 1,600 gold for step 1, each further step adds 200 % of it: 1,600 / 4,800 / 8,000 / 11,200
+    assert float(_first(body, "increase_per_level_cost")) == pytest.approx(2.0)
     assert _first(body, "price") == f"pp_{key}_price"
     modifier = _first(body, "modifier")
     for line in (*HOST_MODIFIERS, "merchant_capacity_from_building", "merchant_power_from_building"):
@@ -87,7 +144,7 @@ def test_steps_strength_price_and_weight(buildings, key) -> None:
     assert "scope:builder.monthly_income_total" in weight and "has_merchant = scope:builder" in weight
     assert float(_first(_first(body, "raw_modifier"), "free_building_levels")) == 1
     prices = (MOD / "in_game/common/prices/zz_pp_building_price_stockpile.txt").read_text(encoding="utf-8-sig")
-    assert re.search(rf"^TRY_INJECT:pp_{key}_price = \{{ gold = \d+ \}}", prices, re.M)
+    assert re.search(rf"^TRY_INJECT:pp_{key}_price = \{{ gold = 1600 \}}", prices, re.M)
 
 
 def test_site_trigger() -> None:
@@ -133,7 +190,12 @@ def test_start_houses_stand_on_sites() -> None:
             assert not re.search(r"\b(trade_office|fondaco|hanseatic_kontor) = \{", path.read_text(encoding="utf-8-sig")), path
 
 
-def test_start_rows_levels_and_drops() -> None:
+def _sim(**counts):
+    return SimpleNamespace(locations={"port": {}, "inland": {}, "bay": {}}, counts={k: dict(v) for k, v in counts.items()},
+                           merchant_house_site=lambda tag, key: tag != "inland")
+
+
+def test_start_rows_replace_vanilla_with_the_configured_list() -> None:
     doc = parse_text(
         "building_manager = {"
         " trade_office = { tag = VEN level = 1 location = port }"
@@ -142,16 +204,65 @@ def test_start_rows_levels_and_drops() -> None:
         " hanseatic_kontor = { tag = HSA level = 3 location = port }"
         " temple = { tag = AAA level = 2 location = port } }"
     )
-    sim = SimpleNamespace(
-        locations={"port": {}, "inland": {}},
-        base={"port": {"is_market_center": True}, "inland": {"is_market_center": False}},
-        counts={"port": {"trade_office": 4, "hanseatic_kontor": 3}, "inland": {"trade_office": 1}},
-        merchant_house_site=lambda tag, key: tag == "port",
-    )
-    out, report = ss.merchant_house_rows(sim, doc, {"level": 1, "great_level": 2, "great_houses": ["VEN:port"]})
+    sim = _sim(port={"trade_office": 4, "hanseatic_kontor": 3}, inland={"trade_office": 1}, bay={})
+    raw = {"houses": ["VEN:trade_office:port:2", "HSA:hanseatic_kontor:port:1", "GEN:fondaco:bay:1"]}
+    out, report = ss.merchant_house_rows(sim, doc, raw)
     rows = {(e.key, str(_first(e.value, "tag")), str(_first(e.value, "location"))): _first(e.value, "level")
             for m in out.values("building_manager") for e in m.entries}
-    assert rows == {("trade_office", "VEN", "port"): 2, ("trade_office", "GEN", "port"): 1,
-                    ("hanseatic_kontor", "HSA", "port"): 1, ("temple", "AAA", "port"): 2}
-    assert sim.counts == {"port": {"trade_office": 3, "hanseatic_kontor": 1}, "inland": {"trade_office": 0}}
-    assert sorted((r["location"], r["after"]) for r in report) == [("inland", 0), ("port", 1), ("port", 1), ("port", 2)]
+    assert rows == {("trade_office", "VEN", "port"): 2, ("hanseatic_kontor", "HSA", "port"): 1,
+                    ("fondaco", "GEN", "bay"): 1, ("temple", "AAA", "port"): 2}
+    assert sim.counts["port"] == {"trade_office": 2, "fondaco": 0, "hanseatic_kontor": 1}
+    assert sim.counts["inland"] == {"trade_office": 0, "fondaco": 0, "hanseatic_kontor": 0}
+    assert sim.counts["bay"]["fondaco"] == 1
+    got = sorted((r["owner"], r["building"], r["location"], r["before"], r["after"]) for r in report)
+    assert got == [("GEN", "fondaco", "bay", 0, 1), ("GEN", "trade_office", "port", 3, 0),
+                   ("HSA", "hanseatic_kontor", "port", 3, 1), ("VEN", "trade_office", "inland", 1, 0),
+                   ("VEN", "trade_office", "port", 1, 2)]
+
+
+def test_start_rows_refuse_a_house_off_its_site() -> None:
+    doc = parse_text("building_manager = { temple = { tag = AAA level = 2 location = port } }")
+    with pytest.raises(ValueError, match="off their sites"):
+        ss.merchant_house_rows(_sim(port={}, inland={}, bay={}), doc, {"houses": ["VEN:trade_office:inland:1"]})
+    with pytest.raises(ValueError, match="bad entry"):
+        ss.merchant_house_rows(_sim(port={}, inland={}, bay={}), doc, {"houses": ["VEN:temple:port:1"]})
+
+
+def _country_types() -> dict[str, str]:
+    vanilla = LoadOrderConfig.load(ROOT / "constructor.load_order.toml").vanilla_root
+    path = MOD / "main_menu/setup/1337/10_countries.txt"
+    if not path.exists():
+        path = vanilla / "game/main_menu/setup/1337/10_countries.txt"
+    out = {}
+    countries = _first(next(iter(parse_file(path).values("countries"))), "countries")  # countries = { countries = { TAG } }
+    for e in countries.entries:
+        if isinstance(e.value, CList) and re.fullmatch(r"[A-Z0-9_]{3}", e.key):
+            out[e.key] = str(_first(e.value, "type") or "")
+    return out
+
+
+def test_configured_start_houses_follow_the_rules() -> None:
+    """The start list (constructor.toml [worldbuilder.start.merchant_houses]): one house per owner and market (the
+    1337 markets of config/start_markets.txt), no landless bank or trading house as builder except the listed ones, step
+    1 or 2, and step 2 only in a market centre or megalopolis."""
+    import tomllib
+
+    raw = tomllib.loads((ROOT / "constructor.toml").read_text(encoding="utf-8"))["worldbuilder"]["start"]["merchant_houses"]
+    houses = ss.parse_merchant_houses(raw)
+    assert houses
+    market = dict(line.split() for line in (ROOT / "config/start_markets.txt").read_text(encoding="utf-8").splitlines()
+                  if line.strip() and not line.startswith("#"))
+    seen = {}
+    for key, tag, loc, step in houses:
+        assert loc in market, loc
+        assert (tag, market[loc]) not in seen, f"{tag}: {loc} and {seen.get((tag, market[loc]))} share the market"
+        seen[tag, market[loc]] = loc
+        assert step in (1, 2), (tag, loc)
+        if step == 2:
+            assert market[loc] == loc or loc == "constantinople", (tag, loc)
+    types = _country_types()
+    landless = set(raw.get("landless_builders", ()))
+    assert landless <= {t for t, kind in types.items() if kind == "building"}
+    for _key, tag, _loc, _step in houses:
+        assert tag in types, tag
+        assert types[tag] != "building" or tag in landless, tag

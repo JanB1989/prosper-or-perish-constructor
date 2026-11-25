@@ -761,6 +761,21 @@
   6 37, 7 24, 8 10 (`pp_workspace/techstart/speed/`). A bonus per advance researched (`num_of_advances_researched`
   works in an auto modifier's `scales_with`) was considered and left out: a growing global buff that widens gaps.
 
+## Hansa Members (2026-11-25, Jan)
+
+- The AI Hansa (HSA, a landless building country) never gained a member in any run: the AI's only peacetime routine
+  for offering a subject relation skips every subject type that cannot be annexed, and vanilla's `hanseatic_member`
+  has `can_be_annexed = no` (as have tributary, march, trade company and others; the AI gets those only by peace deal
+  or script). `subject_types/pp_hanseatic_member.txt` is a `REPLACE:` copy with `can_be_annexed = yes` and annexation
+  blocked for good (`annexation_min_opinion` and `annexation_stall_opinion` 1000, opinion stops at 200;
+  `annexation_min_years_before` 1000), no `annexation_speed` line. Port it on game updates (vanilla pin).
+- Side effects: a player Hansa sees an Annex action that always refuses; an AI Hansa that wins a war may demand
+  membership in the peace deal; the Hansa's rivals see the option to guarantee a member's independence.
+- Not tested in game. Open: the routine takes candidates from the AI's conquest wishes, which are scaled by military
+  strength against the target, so a Hansa without ships and soldiers may still find none. Who may join is vanilla's
+  rule in the same file (a town or city, fewer than five locations with subjects, opinion of the Hansa 100): 92
+  independent countries at 1342 in run 5023bdba, 34 of them in the two German regions.
+
 ## Vanilla Replace Pins (2026-11-02, Jan)
 
 - A `REPLACE:` or `TRY_REPLACE:` block is a frozen copy of vanilla, and `ppc update-audit` compares vanilla with vanilla

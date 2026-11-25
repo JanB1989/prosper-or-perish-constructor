@@ -17,7 +17,6 @@ pp_village_school = {
 	category = cultural_category
 	employment_size = religious_building_employment # 0.05, half the Library's cultural_employment
 	custom_tags = { pp_education_priority }
-	icon = local_schools # placeholder until pp_village_school is drawn
 
 	AI_ignore_available_worker_flag = yes
 
@@ -61,7 +60,6 @@ pp_trade_school = {
 	category = cultural_category
 	employment_size = small_burgher_employment # 0.05
 	custom_tags = { pp_education_priority }
-	icon = counting_house # placeholder until pp_trade_school is drawn
 
 	AI_ignore_available_worker_flag = yes
 

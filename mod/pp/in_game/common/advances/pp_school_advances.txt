@@ -4,13 +4,12 @@
 # The AI's advance picker ignores research cost and puts no value on what these give (class literacy caps, a building
 # level), so each carries an ai_weight like the writing branch of the Starting Technology Ladder
 # (config/starting_technology.toml [ai_weight]).
-# Icons are vanilla placeholders until pp_village_schools_advance, pp_reckoning_schools_advance and
-# pp_common_schooling_advance are drawn.
+# Icons: assets/icon_drawings/<advance>/draw.py, installed by tools/build_school_icons.py.
 
 # Renaissance: the Village School, the commoners' school (building_types/pp_school_buildings.txt).
 pp_village_schools_advance = {
 	age = age_2_renaissance
-	icon = ruthenia_commoner_education # placeholder
+	icon = pp_village_schools_advance
 	requires = renaissance_advance
 	unlock_building = pp_village_school
 	ai_weight = { add = 200 }
@@ -19,7 +18,7 @@ pp_village_schools_advance = {
 # Banking: the Trade School, where burghers learn reckoning and bookkeeping.
 pp_reckoning_schools_advance = {
 	age = age_2_renaissance
-	icon = court_accounting # placeholder
+	icon = pp_reckoning_schools_advance
 	requires = banking_advance
 	unlock_building = pp_trade_school
 	ai_weight = { add = 150 }
@@ -29,7 +28,7 @@ pp_reckoning_schools_advance = {
 # pp_village_school_max_level).
 pp_common_schooling_advance = {
 	age = age_4_reformation
-	icon = scottish_education # placeholder
+	icon = pp_common_schooling_advance
 	requires = confessionalism_advance
 	pp_village_school_levels = 1
 	ai_weight = { add = 150 }

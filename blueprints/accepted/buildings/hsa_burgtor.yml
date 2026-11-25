@@ -1,11 +1,111 @@
 version: 2
 tag: hsa_burgtor
 footprint: fortification
+shutdown: never  # the League's gate in a member town is never mothballed: closed it gives neither men nor defence
 building:
   key: hsa_burgtor
-  mode: INJECT
-  source: pp_building_footprint.txt
-  production_method_slots: []
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_hsa_burgtor_maintenance
   possible_production_methods: []
   body: |-
     # Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+    # The League's gate and guard in a member town (2026-11-25, Jan: levels from the town's development and the League's
+    # advances, dear to build, cheap to keep, and the town gains too; AGENTS.md "Hansa Military Buildings"). Vanilla:
+    # two levels, cities only, unlocked by hsa_hanseatic_fortifications (age 2), any location whose owner shares the
+    # League's culture group, 500 soldiers a level, the age price, burgtor_maintenance.
+    audio_tier = 3
+    is_special = yes
+    is_foreign = yes
+    # 1 + one per 25 development of the town + the owner's pp_hsa_burgtor_levels (two advances), 4 at most
+    max_levels = pp_hsa_burgtor_max_level
+    pop_type = soldiers
+    need_good_relation = yes
+    category = defense_category
+    # 250 guards a level (vanilla castle_employment 500)
+    employment_size = 0.25
+    pop_size_created = 0.25
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = small_fort_building
+
+    price = pp_hsa_burgtor_price
+    increase_per_level_cost = 1.3333 # x [building_scaling] increase_per_level_cost_multiplier 0.75 = 1.0 in the build: each level adds the first level's price again
+
+    # no advance unlocks it any more (the League has it from the start), so the builder rule sits here as for the
+    # League's other buildings
+    country_potential = {
+    	modifier:allows_hanseatic_federation_buildings = yes
+    }
+
+    # root = location; membership gates new levels only (never in location_potential, which the engine checks again
+    # when the location changes owner and then removes the building)
+    allow = {
+    	custom_tooltip = {
+    		text = pp_hansa_member_town_tt
+    		owner = { is_subject_of = scope:actor }
+    	}
+    }
+
+    # root = building
+    remove_if = {
+    	OR = {
+    		location = { has_owner = no }
+    		location.owner ?= { is_at_war_with = root.owner }
+    	}
+    }
+
+    construction_demand = fort_construction
+
+    # owner: men (vanilla 0.005); town: garrison and defence as in vanilla and men of its own
+    modifier = {
+    	local_garrison_size = 0.1
+    	local_defensive = 0.1
+    	manpower_to_building_owner = 0.01
+    	local_manpower = 0.005
+    }
+
+    # each level supports itself, so foreign levels never count as unsupported building levels of the location
+    raw_modifier = {
+    	free_building_levels = 1
+    }
+
+    # the engine values the gate by its men and the fort value alone and the League is poor; / (builder income + 10) as
+    # for the merchant houses (scope:owner is the host here)
+    ai_construct_weight = {
+    	value = 100
+    	divide = { value = scope:builder.monthly_income_total add = 10 }
+    }
+
+    unique_production_methods = {
+    	pp_hsa_burgtor_maintenance = {
+    		icon_type = building_type
+    		icon = hsa_burgtor
+    		# a third of vanilla's burgtor_maintenance per level (2026-11-25, Jan: dear to build, cheap to keep; one
+    		# vanilla level cost the League about 1 gold a month in run 5d232536, on an income of 13 to 20)
+    		stone = 0.065 # vanilla 0.19
+    		tools = 0.065 # 0.19
+    		weaponry = 0.125 # 0.37
+    		category = building_maintenance
+    	}
+    }
+prices:
+  - key: pp_hsa_burgtor_price
+    body: |2-
+      {gold = 513}
+localization:
+  entries:
+    pp_hsa_burgtor_price: "[ShowBuildingTypeName('hsa_burgtor')|e] Price"
+    hsa_burgtor_desc: "The great gate of a member town of the Hanseatic League, with the guard the League keeps in it. It sends the League [manpower|e] and makes the town harder to take: a larger [garrison|e], stronger walls and men of its own. The gate can be enlarged as the town's [development|e] rises and as the League learns to fortify its towns, and each enlargement costs more than the last."
+    pp_hsa_burgtor_maintenance: "[ShowBuildingTypeName('hsa_burgtor')|e] Maintenance"
+    pp_hsa_burgtor_maintenance_desc: "Stone, tools and arms keep the gate in repair and its guard equipped."
+
+evaluation:
+  allow_rules:
+    profit_percent: Upkeep only, the building sells nothing.
+    input_throughput: A third of vanilla's upkeep on a small staff, not a recipe.
+    output_throughput: Upkeep only, the building sells nothing.

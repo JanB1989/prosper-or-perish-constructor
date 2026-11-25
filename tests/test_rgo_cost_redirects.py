@@ -88,6 +88,10 @@ def test_pop_rgo_building_cost_classification_uses_raw_material_methods() -> Non
         "trade_office": "pp_trade_office_price",
         "fondaco": "pp_fondaco_price",
         "hanseatic_kontor": "pp_hanseatic_kontor_price",
+
+        # the Hansa's buildings in its member towns (2026-11-25, Jan)
+        "hanseatic_shipwright_guild": "pp_hanseatic_shipwright_guild_price",
+        "hsa_burgtor": "pp_hsa_burgtor_price",
     }
 
 

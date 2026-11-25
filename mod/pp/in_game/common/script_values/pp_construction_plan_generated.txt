@@ -26702,7 +26702,7 @@ pp_cplan_room_hanseatic_kontor = {
 	subtract = "location_building_level(building_type:hanseatic_kontor)"
 }
 pp_cplan_room_hanseatic_shipwright_guild = {
-	value = hanseatic_shipwright_guild_max_level
+	value = pp_hanseatic_shipwright_guild_max_level
 	subtract = "location_building_level(building_type:hanseatic_shipwright_guild)"
 }
 pp_cplan_room_hanseatic_town_hall = {
@@ -26746,7 +26746,7 @@ pp_cplan_room_hre_imperial_armory_own = {
 	subtract = "location_building_level(building_type:hre_imperial_armory_own)"
 }
 pp_cplan_room_hsa_burgtor = {
-	value = 2
+	value = pp_hsa_burgtor_max_level
 	subtract = "location_building_level(building_type:hsa_burgtor)"
 }
 pp_cplan_room_hurdled_sheepcotes = {

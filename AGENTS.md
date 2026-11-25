@@ -222,10 +222,10 @@
 - The Hansa grows by its own buildings (2026-11-25, Jan; not tested in game): the Kontor has no advance gates. Every
   Kontor step gives its owner 0.1 `pp_hanseatic_kontor_steps` (`foreign_country_modifier`, which the engine scales by
   level and goods access); two steps are always open, the third needs 1 (ten steps kept), the fourth 2 (twenty), in
-  `allow`, so a network that shrinks never takes a standing step. The Hanseatic Shipwright Guild gives its owner 1
-  `pp_merchant_houses` per level and the Hanseatic Town Hall 2 (INJECT blueprints), added to `pp_merchant_house_cap`.
-  The Hansa's limit at the start is about 12 houses (reach of a landless trade body about 8, two guilds and the Town
-  Hall 4) and it holds 4. Modifier types and icons: `pp_hansa_modifier_types.txt`, `pp_hansa_modifier_icons.txt`
+  `allow`, so a network that shrinks never takes a standing step. The Hanseatic Shipwright Guild gives its owner 0.5
+  `pp_merchant_houses` per level (1 until it got up to five levels, see "Hansa Military Buildings") and the Hanseatic
+  Town Hall 2 (an INJECT blueprint), added to `pp_merchant_house_cap`. The Hansa's limit at the start is about 11
+  houses (reach of a landless trade body about 8, two guild levels 1, the Town Hall 2) and it holds 4. Modifier types and icons: `pp_hansa_modifier_types.txt`, `pp_hansa_modifier_icons.txt`
   (hand-written); texts in `pp_merchant_houses_l_english.yml`. Members add nothing yet.
 - Strength per step = 10 vanilla levels of power and 8 of capacity (capacity / power: Trade Office 4.8 / 2, Fondaco
   1.6 / 10, Kontor 2 / 10; capacity was 6 / 2 / 2.5 until 2026-11-25, Jan: the houses gave too much capacity; maritime
@@ -775,6 +775,44 @@
   strength against the target, so a Hansa without ships and soldiers may still find none. Who may join is vanilla's
   rule in the same file (a town or city, fewer than five locations with subjects, opinion of the Hansa 100): 92
   independent countries at 1342 in run 5023bdba, 34 of them in the two German regions.
+
+## Hansa Military Buildings (2026-11-25, Jan)
+
+- Jan: the Hansa's two military buildings work like its merchant houses: levels from the town's development and from
+  the League's advances, dear to build, cheap to keep, and the town gains too ("not a parasitic relationship").
+  Not tested in game. Both are `REPLACE` blueprints (`hanseatic_shipwright_guild.yml`, `hsa_burgtor.yml`).
+- Where: only the League builds them (`country_potential`, `allows_hanseatic_federation_buildings`), only in a town,
+  city or megalopolis whose owner is its member (`allow`, `owner = { is_subject_of = scope:actor }`, tooltip
+  `pp_hansa_member_town_tt`; the guild also needs a port). Membership sits in `allow`, never in `location_potential`
+  (vanilla's guild had it there, and the engine removes a building whose potential fails after an owner change): a
+  building that stands stays, `remove_if` takes it only when the location has no owner or its owner is at war with
+  the League. Vanilla's Burgtor needed a city, the advance `hsa_hanseatic_fortifications` (age 2) and an owner of the
+  League's culture group; it stands from the start now, in member towns of any culture.
+- Levels (`script_values/pp_hansa_building_values.txt`): Shipwright Guild 1 + development / 20 + the owner's
+  `hanseatic_shipwright_guild_max_level` (vanilla's `hsa_hanseatic_shipwrights`, age 2, and `hsa_mastery_of_the_sea`,
+  age 3), 5 at most; Burgtor 1 + development / 25 + the owner's `pp_hsa_burgtor_levels`
+  (`hsa_hanseatic_fortifications`, age 2, a `TRY_REPLACE` copy without its `unlock_building`, and
+  `hsa_regularized_contributions`, age 5), 4 at most (`advances/pp_hansa_advances.txt`; vanilla 1 to 2 and 2).
+  Lübeck, Hamburg and Bremen (development 32, 27, 24) allow two levels of each at the start.
+- Price: own keys, 513 in the blueprint -> 1,000 gold (`zz_pp_building_price_stockpile.txt`), `increase_per_level_cost`
+  1.0 after `[building_scaling]` x0.75, so levels cost 1,000 / 2,000 / 3,000 / ... before the goods and efficiencies
+  (the merchant republic reform's foreign build efficiency about halves it for the League).
+- Upkeep: a third of vanilla's per level in the unique methods `pp_<building>_maintenance` (one vanilla guild level
+  cost the League 0.5 to 1.4 gold a month in run 5d232536, a Burgtor level about 1, on an income of 13 to 20). Staff
+  250 a level (vanilla 1,000 laborers, 500 soldiers): five guild levels would have taken half of Lübeck's laborers,
+  and a `modifier` block gives nothing without workers (the guilds of run 5d232536 stood empty from about 1500, when
+  Lübeck had no laborers left). The Burgtor has `shutdown: never`.
+- Per staffed level, the League gets: guild 10 sailors a month, one ship slot (both vanilla) and
+  `gold_to_building_owner` 0.5 (the dues on shipped goods; the League paid its wars from such a levy); Burgtor 10 men a
+  month (vanilla 5). The town gets: guild harbour suitability and repair (vanilla), `local_sailors` 0.005 and
+  `local_monthly_development` 0.002; Burgtor garrison and defence (vanilla) and `local_manpower` 0.005. Both carry
+  `raw_modifier free_building_levels = 1` and `ai_construct_weight` 100 / (builder income + 10).
+- Start, three towns at two levels each: about 60 sailors and 60 men a month (pools of five years) and 3 gold; vanilla
+  gave 20 sailors and no men before the age 2 advance.
+- Open: whether `gold_to_building_owner` pays a landless owner as written (vanilla uses it on two buildings); whether
+  the AI League builds the levels (500 gold for it is three years of income) and raises ships and regiments (it planned
+  a navy of zero in every run); the guilds' workers in towns that run out of laborers.
+- `tests/test_merchant_houses.py` (`test_hansa_buildings_in_member_towns`, `test_hansa_advances_give_levels`).
 
 ## Vanilla Replace Pins (2026-11-02, Jan)
 

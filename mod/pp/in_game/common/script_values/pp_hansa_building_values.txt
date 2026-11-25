@@ -1,0 +1,65 @@
+﻿# The Hansa's buildings in its member towns (2026-11-25, Jan; hand-written). AGENTS.md "Hansa Military Buildings".
+# Location scope, scope:owner = the building's owner (the League), as in vanilla's building_caps.txt.
+# Levels grow with the town's development and with the League's advances: the Shipwright Guild one per 20 development
+# and one each from hsa_hanseatic_shipwrights and hsa_mastery_of_the_sea (vanilla's modifier
+# hanseatic_shipwright_guild_max_level), five at most; the Burgtor one per 25 development and one each from
+# hsa_hanseatic_fortifications and hsa_regularized_contributions (pp_hsa_burgtor_levels), four at most.
+# Every row of a cap is one labelled number (cap_tooltips.py), so the most a building may have is kept by the
+# development row: it never gives more levels than the base and the advances leave room for.
+pp_hanseatic_shipwright_guild_max_level = {
+	add = {
+		desc = "BUILDING_LEVEL_BASE"
+		value = 1
+	}
+	add = {
+		desc = "BUILDING_LEVEL_DEVELOPMENT"
+		value = this.pp_hanseatic_shipwright_guild_development_levels
+	}
+	add = {
+		desc = "BUILDING_LEVEL_FROM_OWNER_MODIFIERS"
+		value = scope:owner.modifier:hanseatic_shipwright_guild_max_level
+	}
+}
+
+# five at most: the room left beside the base level and the advances, or the town's development, whichever is less
+pp_hanseatic_shipwright_guild_development_levels = {
+	value = 4
+	subtract = scope:owner.modifier:hanseatic_shipwright_guild_max_level
+	max = pp_hanseatic_shipwright_guild_levels_by_development
+	min = 0
+}
+
+pp_hanseatic_shipwright_guild_levels_by_development = {
+	value = development
+	multiply = 0.05
+	floor = yes
+}
+
+pp_hsa_burgtor_max_level = {
+	add = {
+		desc = "BUILDING_LEVEL_BASE"
+		value = 1
+	}
+	add = {
+		desc = "BUILDING_LEVEL_DEVELOPMENT"
+		value = this.pp_hsa_burgtor_development_levels
+	}
+	add = {
+		desc = "BUILDING_LEVEL_FROM_OWNER_MODIFIERS"
+		value = scope:owner.modifier:pp_hsa_burgtor_levels
+	}
+}
+
+# four at most: the room left beside the base level and the advances, or the town's development, whichever is less
+pp_hsa_burgtor_development_levels = {
+	value = 3
+	subtract = scope:owner.modifier:pp_hsa_burgtor_levels
+	max = pp_hsa_burgtor_levels_by_development
+	min = 0
+}
+
+pp_hsa_burgtor_levels_by_development = {
+	value = development
+	multiply = 0.04
+	floor = yes
+}

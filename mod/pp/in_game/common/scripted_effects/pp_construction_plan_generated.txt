@@ -697,7 +697,7 @@ pp_cplan_btype_data = {
 		save_temporary_scope_value_as = { name = pp_cplan_ipl value = 0.75 }
 	}
 	else_if = {
-		limit = { OR = { scope:pp_cplan_btype = building_type:hsa_burgtor } }
+		limit = { OR = { scope:pp_cplan_btype = building_type:hanseatic_shipwright_guild scope:pp_cplan_btype = building_type:hsa_burgtor } }
 		save_temporary_scope_value_as = { name = pp_cplan_ipl value = 1 }
 	}
 	else_if = {

@@ -3,6 +3,8 @@
 # allow opens the third step at 1 and the fourth at 2.
 # pp_merchant_houses: more merchant houses a country may keep abroad (added to pp_merchant_house_cap); from the
 # Hanseatic Shipwright Guild and the Hanseatic Town Hall.
+# pp_hsa_burgtor_levels: more levels of the Burgtor in every member town (script_values/pp_hansa_building_values.txt);
+# from the advances hsa_hanseatic_fortifications and hsa_regularized_contributions.
 
 pp_hanseatic_kontor_steps = {
 	color = good
@@ -15,6 +17,14 @@ pp_hanseatic_kontor_steps = {
 pp_merchant_houses = {
 	color = good
 	decimals = 1
+	game_data = {
+		category = country
+	}
+}
+
+pp_hsa_burgtor_levels = {
+	color = good
+	decimals = 0
 	game_data = {
 		category = country
 	}

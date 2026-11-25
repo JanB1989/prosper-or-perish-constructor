@@ -5197,6 +5197,13 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   pp_hanseatic_kontor_maintenance: "[ShowBuildingTypeName('hanseatic_kontor')|e] Maintenance"
   pp_hanseatic_kontor_maintenance_desc: "Timber, tools and paper keep the warehouses, the cranes and the League's books in order."
 # <<< eu5-building-pipeline:hanseatic_kontor:localization
+ # pp_hanseatic_shipwright_guild_l_english.yml
+
+# >>> eu5-building-pipeline:hanseatic_shipwright_guild:localization
+  pp_hanseatic_shipwright_guild_price: "[ShowBuildingTypeName('hanseatic_shipwright_guild')|e] Price"
+  pp_hanseatic_shipwright_guild_maintenance: "[ShowBuildingTypeName('hanseatic_shipwright_guild')|e] Maintenance"
+  pp_hanseatic_shipwright_guild_maintenance_desc: "Tar, cordage, timber and tools keep the slipways and the guild's sheds in working order."
+# <<< eu5-building-pipeline:hanseatic_shipwright_guild:localization
  # pp_hired_labor_yard_l_english.yml
 
 # >>> eu5-building-pipeline:hired_labor_yard:localization
@@ -5239,6 +5246,13 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   pp_horse_breeders_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
   horse_breeders_slot_2: "Market"
 # <<< eu5-building-pipeline:horse_breeders:localization
+ # pp_hsa_burgtor_l_english.yml
+
+# >>> eu5-building-pipeline:hsa_burgtor:localization
+  pp_hsa_burgtor_price: "[ShowBuildingTypeName('hsa_burgtor')|e] Price"
+  pp_hsa_burgtor_maintenance: "[ShowBuildingTypeName('hsa_burgtor')|e] Maintenance"
+  pp_hsa_burgtor_maintenance_desc: "Stone, tools and arms keep the gate in repair and its guard equipped."
+# <<< eu5-building-pipeline:hsa_burgtor:localization
  # pp_improved_charcoal_maker_l_english.yml
 
 # >>> eu5-building-pipeline:improved_charcoal_maker:localization
@@ -7085,6 +7099,9 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
  MODIFIER_TYPE_DESC_pp_hanseatic_kontor_steps: "Every step of every [ShowBuildingTypeName('hanseatic_kontor')|e] we keep abroad adds to the League's network. Each whole point of it opens one more step for all of them."
  MODIFIER_TYPE_NAME_pp_merchant_houses: "Merchant Houses Abroad"
  MODIFIER_TYPE_DESC_pp_merchant_houses: "We may keep this many more merchant houses abroad than our trade reach alone allows."
+ pp_hansa_member_town_tt: "The owner of this town is a member of our League"
+ MODIFIER_TYPE_NAME_pp_hsa_burgtor_levels: "[ShowBuildingTypeName('hsa_burgtor')|e] Max Level"
+ MODIFIER_TYPE_DESC_pp_hsa_burgtor_levels: "Every [ShowBuildingTypeName('hsa_burgtor')|e] in our member towns can be enlarged by this many more levels."
  # pp_merchants_quarters_l_english.yml
 
 # >>> eu5-building-pipeline:merchants_quarters:localization
@@ -7410,6 +7427,10 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
   MODIFIER_TYPE_NAME_pp_hanseatic_kontor_price_cost_modifier: "[ShowBuildingTypeName('hanseatic_kontor')|e] Cost"
   MODIFIER_TYPE_DESC_pp_trade_office_price_cost_modifier: "Affects the cost of building [ShowBuildingTypeName('trade_office')|e]."
   MODIFIER_TYPE_NAME_pp_trade_office_price_cost_modifier: "[ShowBuildingTypeName('trade_office')|e] Cost"
+  MODIFIER_TYPE_DESC_pp_hanseatic_shipwright_guild_price_cost_modifier: "Affects the cost of building [ShowBuildingTypeName('hanseatic_shipwright_guild')|e]."
+  MODIFIER_TYPE_NAME_pp_hanseatic_shipwright_guild_price_cost_modifier: "[ShowBuildingTypeName('hanseatic_shipwright_guild')|e] Cost"
+  MODIFIER_TYPE_DESC_pp_hsa_burgtor_price_cost_modifier: "Affects the cost of building [ShowBuildingTypeName('hsa_burgtor')|e]."
+  MODIFIER_TYPE_NAME_pp_hsa_burgtor_price_cost_modifier: "[ShowBuildingTypeName('hsa_burgtor')|e] Cost"
  # pp_modifiers_l_english.yml
 STATIC_MODIFIER_NAME_pp_harder_ai_harder_modifier: "Harder AI Food Efficiency"
 STATIC_MODIFIER_NAME_pp_harder_ai_very_hard_modifier: "Very Hard AI Food Efficiency"

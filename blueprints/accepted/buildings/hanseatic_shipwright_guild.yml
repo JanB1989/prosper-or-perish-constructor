@@ -3,15 +3,121 @@ tag: hanseatic_shipwright_guild
 footprint: maritime
 building:
   key: hanseatic_shipwright_guild
-  mode: INJECT
-  source: pp_building_footprint.txt
-  production_method_slots: []
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_hanseatic_shipwright_guild_maintenance
   possible_production_methods: []
   body: |-
     # Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
-    # The League at home carries its houses abroad (2026-11-25, Jan: the Hansa's own buildings are the vehicle of its
-    # growth): every guild level lets its owner keep one more merchant house (pp_merchant_house_cap reads the modifier;
-    # the engine scales this block by level and goods access). AGENTS.md "Merchant Houses".
-    foreign_country_modifier = {
-    	pp_merchant_houses = 1
+    # The League's shipwrights in a member port (2026-11-25, Jan: levels from the town's development and the League's
+    # advances, dear to build, cheap to keep, and the town gains too; AGENTS.md "Hansa Military Buildings"). Vanilla:
+    # one level (two with hsa_hanseatic_shipwrights), 1,000 laborers a level, the age price, port_building_maintenance.
+    audio_tier = 3
+    is_special = yes
+    is_foreign = yes
+    need_good_relation = yes
+
+    pop_type = laborers
+    # 1 + one per 20 development of the town + the owner's hanseatic_shipwright_guild_max_level (two advances), 5 at most
+    max_levels = pp_hanseatic_shipwright_guild_max_level
+    category = military_category
+    country_potential = {
+    	modifier:allows_hanseatic_federation_buildings = yes
     }
+    location_potential = {
+    	is_port = yes
+    }
+    # membership gates new levels only (vanilla had it in location_potential, which the engine checks again when the
+    # location changes owner and then removes the building): a guild that stands stays while its town is at peace with us
+    allow = {
+    	custom_tooltip = {
+    		text = pp_hansa_member_town_tt
+    		owner = { is_subject_of = scope:actor }
+    	}
+    }
+    remove_if = {
+    	OR = {
+    		location = { has_owner = no }
+    		location.owner ?= { is_at_war_with = root.owner }
+    	}
+    }
+    # 250 shipwrights a level (vanilla dock_employment 1,000): five levels must not take half a town's laborers
+    employment_size = 0.25
+    pop_size_created = 0.25
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = medium_port_building_time
+
+    price = pp_hanseatic_shipwright_guild_price
+    increase_per_level_cost = 1.3333 # x [building_scaling] increase_per_level_cost_multiplier 0.75 = 1.0 in the build: each level adds the first level's price again
+
+    construction_demand = port_building_construction
+
+    # owner: one ship at a time and sailors per level as in vanilla, and the dues on the goods shipped through the port
+    # (the League paid its wars from a levy on shipped goods); town: harbour and repair as in vanilla, sailors of its
+    # own and a little development
+    modifier = {
+    	max_ships_built_at_same_time = 1
+    	sailors_to_building_owner = 0.01
+    	gold_to_building_owner = 0.5
+    	can_build_ships_in_this_location = yes
+    	harbor_suitability = 0.1
+    	local_repair_speed = 0.01
+    	local_sailors = 0.005
+    	local_monthly_development = 0.002
+    }
+
+    # The League at home carries its houses abroad (2026-11-25, Jan: the Hansa's own buildings are the vehicle of its
+    # growth): two guild levels let its owner keep one more merchant house (pp_merchant_house_cap reads the modifier;
+    # the engine scales this block by level and goods access; 1 per level while the guild had one or two levels).
+    # AGENTS.md "Merchant Houses".
+    foreign_country_modifier = {
+    	pp_merchant_houses = 0.5
+    }
+
+    # each level supports itself, so foreign levels never count as unsupported building levels of the location
+    raw_modifier = {
+    	free_building_levels = 1
+    }
+
+    # the engine values the guild by its sailors and its ship slot alone and the League is poor; / (builder income + 10)
+    # as for the merchant houses (scope:owner is the host here)
+    ai_construct_weight = {
+    	value = 100
+    	divide = { value = scope:builder.monthly_income_total add = 10 }
+    }
+
+    unique_production_methods = {
+    	pp_hanseatic_shipwright_guild_maintenance = {
+    		icon_type = building_type
+    		icon = hanseatic_shipwright_guild
+    		# a third of vanilla's port_building_maintenance per level (2026-11-25, Jan: dear to build, cheap to keep;
+    		# one vanilla level cost the League 0.5 to 1.4 gold a month in run 5d232536, on an income of 13 to 20)
+    		tar = 0.07 # vanilla 0.2
+    		naval_supplies = 0.13 # 0.4
+    		tools = 0.035 # 0.1
+    		lumber = 0.07 # 0.2
+    		stone = 0.035 # 0.1
+    		category = building_maintenance
+    	}
+    }
+prices:
+  - key: pp_hanseatic_shipwright_guild_price
+    body: |2-
+      {gold = 513}
+localization:
+  entries:
+    pp_hanseatic_shipwright_guild_price: "[ShowBuildingTypeName('hanseatic_shipwright_guild')|e] Price"
+    hanseatic_shipwright_guild_desc: "The shipwrights of the Hanseatic League, settled in the [port|e] of one of its member towns. They build the League's [ship|e]s there, send it [sailors|e] and pass on the dues on the goods shipped through the port. The town gains with them: a better harbour, faster repairs, sailors of its own and a little faster [development|e]. The guild can be enlarged as the town's development rises and as the League learns to build better ships, and each enlargement costs more than the last. The more guilds the League keeps at home, the more merchant houses such as the [ShowBuildingTypeName('hanseatic_kontor')|e] it may keep abroad."
+    pp_hanseatic_shipwright_guild_maintenance: "[ShowBuildingTypeName('hanseatic_shipwright_guild')|e] Maintenance"
+    pp_hanseatic_shipwright_guild_maintenance_desc: "Tar, cordage, timber and tools keep the slipways and the guild's sheds in working order."
+
+evaluation:
+  allow_rules:
+    profit_percent: Upkeep only, the building sells nothing.
+    input_throughput: A third of vanilla's upkeep on a small staff, not a recipe.
+    output_throughput: Upkeep only, the building sells nothing.

@@ -1,0 +1,24 @@
+﻿# The Hansa's advances and its buildings in member towns (2026-11-25, Jan; hand-written). AGENTS.md "Hansa Military
+# Buildings". The Burgtor stands from the start of the game, so its advance no longer unlocks it and gives a level
+# instead; a later advance gives each building one more level.
+
+# vanilla copied whole; PP's line is marked "PP"
+TRY_REPLACE:hsa_hanseatic_fortifications = {
+	content_priority = 500
+	age = age_2_renaissance
+	potential = {
+		has_or_had_tag = HSA
+	}
+	requires = gunpowder_advance
+	pp_hsa_burgtor_levels = 1 # PP (vanilla unlock_building = hsa_burgtor)
+}
+
+# age 5: the members' regular contributions pay for larger guards
+TRY_INJECT:hsa_regularized_contributions = {
+	pp_hsa_burgtor_levels = 1
+}
+
+# age 3: a second level for the Shipwright Guild beside vanilla's hsa_hanseatic_shipwrights (age 2)
+TRY_INJECT:hsa_mastery_of_the_sea = {
+	hanseatic_shipwright_guild_max_level = 1
+}

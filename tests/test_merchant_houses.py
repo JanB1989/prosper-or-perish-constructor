@@ -89,19 +89,115 @@ def test_built_by_trade_range_and_relations_in_allow(buildings, key) -> None:
 def test_hansa_buildings_carry_its_growth() -> None:
     """2026-11-25 (Jan): the Hansa's own buildings are the vehicle of its growth. The Shipwright Guild and the Town
     Hall give their owner more merchant houses abroad (read by the cap), the two modifiers are defined and named."""
-    for key, houses in (("hanseatic_shipwright_guild", 1), ("hanseatic_town_hall", 2)):
+    # the guild has up to five levels since 2026-11-25, so two levels carry one house (one each before)
+    for key, mode, houses in (("hanseatic_shipwright_guild", "REPLACE", 0.5), ("hanseatic_town_hall", "INJECT", 2)):
         path = MOD / f"in_game/common/building_types/zz_pp_{key}.txt"
-        blocks = [e.value for e in parse_file(path).entries if e.key == f"INJECT:{key}"]
+        blocks = [e.value for e in parse_file(path).entries if e.key == f"{mode}:{key}"]
         assert len(blocks) == 1, key
         assert float(_first(_first(blocks[0], "foreign_country_modifier"), "pp_merchant_houses")) == houses
     values = (MOD / "in_game/common/script_values/pp_trade_reach_values.txt").read_text(encoding="utf-8-sig")
     assert re.search(r"pp_merchant_house_cap = \{[^}]*add = modifier:pp_merchant_houses", values)
     types = (MOD / "main_menu/common/modifier_type_definitions/pp_hansa_modifier_types.txt").read_text(encoding="utf-8-sig")
+    icons = (MOD / "main_menu/common/modifier_icons/pp_hansa_modifier_icons.txt").read_text(encoding="utf-8-sig")
     text = (MOD / "main_menu/localization/english/pp_merchant_houses_l_english.yml").read_text(encoding="utf-8-sig")
-    for name in ("pp_hanseatic_kontor_steps", "pp_merchant_houses"):
+    for name in ("pp_hanseatic_kontor_steps", "pp_merchant_houses", "pp_hsa_burgtor_levels"):
         assert re.search(rf"^{name} = \{{", types, re.M), name
+        assert re.search(rf"^{name} = \{{", icons, re.M), name
         for kind in ("NAME", "DESC"):
             assert re.search(rf'^ MODIFIER_TYPE_{kind}_{name}: ".+"$', text, re.M), (kind, name)
+
+
+# key: (level script value, levels per development point, the owner's level modifier, most levels, vanilla's upkeep,
+#       what the owner gets, what the town gets)
+HANSA_TOWN_BUILDINGS = {
+    "hanseatic_shipwright_guild": ("pp_hanseatic_shipwright_guild_max_level", "0.05", "hanseatic_shipwright_guild_max_level",
+                                   5, "port_building_maintenance",
+                                   {"sailors_to_building_owner": 0.01, "max_ships_built_at_same_time": 1},
+                                   ("gold_to_building_owner", "harbor_suitability", "local_repair_speed", "local_sailors",
+                                    "local_monthly_development")),
+    "hsa_burgtor": ("pp_hsa_burgtor_max_level", "0.04", "pp_hsa_burgtor_levels", 4, "burgtor_maintenance",
+                    {"manpower_to_building_owner": 0.01},
+                    ("local_garrison_size", "local_defensive", "local_manpower")),
+}
+
+
+def _numbers(node) -> dict[str, float]:
+    out = {}
+    for e in node.entries:
+        try:
+            out[e.key] = float(e.value)
+        except (TypeError, ValueError):
+            pass
+    return out
+
+
+@pytest.mark.parametrize("key", HANSA_TOWN_BUILDINGS)
+def test_hansa_buildings_in_member_towns(key) -> None:
+    """2026-11-25 (Jan): the Shipwright Guild and the Burgtor get levels from the town's development and the League's
+    advances, are dear to build and cheap to keep, and the town gains too. AGENTS.md "Hansa Military Buildings"."""
+    value, per_development, owner_modifier, cap, vanilla_method, owner_lines, town_lines = HANSA_TOWN_BUILDINGS[key]
+    blocks = [e.value for e in parse_file(MOD / f"in_game/common/building_types/zz_pp_{key}.txt").entries
+              if e.key == f"REPLACE:{key}"]
+    assert len(blocks) == 1
+    body = blocks[0]
+    # levels: base, the town's development, the owner's advances, a cap
+    assert str(_first(body, "max_levels")) == value
+    values = {e.key: _flat(e.value) for e in
+              parse_file(MOD / "in_game/common/script_values/pp_hansa_building_values.txt").entries}
+    stem = value.removesuffix("_max_level")
+    assert "desc = BUILDING_LEVEL_BASE value = 1 }" in values[value]
+    assert f"desc = BUILDING_LEVEL_DEVELOPMENT value = this.{stem}_development_levels }}" in values[value]
+    assert f"desc = BUILDING_LEVEL_FROM_OWNER_MODIFIERS value = scope:owner.modifier:{owner_modifier} }}" in values[value]
+    # the development row gives one level per so much development, and never more than the cap leaves room for
+    assert values[f"{stem}_development_levels"] == (
+        f"{{ value = {cap - 1} subtract = scope:owner.modifier:{owner_modifier} "
+        f"max = {stem}_levels_by_development min = 0 }}")
+    assert values[f"{stem}_levels_by_development"] == f"{{ value = development multiply = {per_development} floor = yes }}"
+    # dear to build: 1,000 gold, and every level adds that again
+    assert _first(body, "price") == f"pp_{key}_price"
+    assert float(_first(body, "increase_per_level_cost")) == pytest.approx(1.0)
+    prices = (MOD / "in_game/common/prices/zz_pp_building_price_stockpile.txt").read_text(encoding="utf-8-sig")
+    assert re.search(rf"^TRY_INJECT:pp_{key}_price = \{{ gold = 1000 \}}", prices, re.M)
+    # cheap to keep: about a third of vanilla's upkeep per level, on a quarter or half of its staff
+    vanilla = LoadOrderConfig.load(ROOT / "constructor.load_order.toml").vanilla_root
+    upkeep = parse_file(vanilla / "game/in_game/common/production_methods/unsorted_building_inputs.txt")
+    old = _numbers(next(e.value for e in upkeep.entries if e.key == vanilla_method))
+    own = _numbers(_first(_first(body, "unique_production_methods"), f"pp_{key}_maintenance"))
+    assert set(own) == set(old)
+    assert all(0.3 <= own[good] / old[good] <= 0.36 for good in old), own
+    assert float(_first(body, "employment_size")) == float(_first(body, "pop_size_created")) == 0.25
+    # only the League builds it, only in a member's town; membership gates new levels and never removes a building
+    assert "allows_hanseatic_federation_buildings" in _text(_first(body, "country_potential"))
+    assert "is_subject_of = scope:actor" in _flat(_first(body, "allow"))
+    assert "is_subject_of" not in _text(_first(body, "location_potential"))
+    assert "is_at_war_with = root.owner" in _flat(_first(body, "remove_if"))
+    assert all(_first(body, rank) is True for rank in URBAN)
+    assert _first(body, "need_good_relation") is True and _first(body, "is_foreign") is True
+    # the League and the town both gain
+    modifier = _numbers(_first(body, "modifier"))
+    for line, amount in owner_lines.items():
+        assert modifier[line] == pytest.approx(amount), line
+    for line in town_lines:
+        assert modifier.get(line, 0) > 0, line
+    assert "scope:builder.monthly_income_total" in _text(_first(body, "ai_construct_weight"))
+    assert float(_first(_first(body, "raw_modifier"), "free_building_levels")) == 1
+
+
+def test_hansa_advances_give_levels() -> None:
+    """The Burgtor stands from the start (no advance unlocks it); two advances each give one more level."""
+    doc = parse_file(MOD / "in_game/common/advances/pp_hansa_advances.txt")
+    blocks = {e.key: e.value for e in doc.entries}
+    fort = blocks["TRY_REPLACE:hsa_hanseatic_fortifications"]
+    assert _first(fort, "unlock_building") is None
+    assert float(_first(fort, "pp_hsa_burgtor_levels")) == 1
+    assert float(_first(blocks["TRY_INJECT:hsa_regularized_contributions"], "pp_hsa_burgtor_levels")) == 1
+    assert float(_first(blocks["TRY_INJECT:hsa_mastery_of_the_sea"], "hanseatic_shipwright_guild_max_level")) == 1
+    vanilla = LoadOrderConfig.load(ROOT / "constructor.load_order.toml").vanilla_root
+    hsa = parse_file(vanilla / "game/in_game/common/advances/country_hsa.txt")
+    unlockers = [e.key for e in hsa.entries if "hsa_burgtor" in {str(v) for v in e.value.values("unlock_building")}]
+    assert unlockers == ["hsa_hanseatic_fortifications"]   # the one the mod replaces
+    assert float(_first(next(e.value for e in hsa.entries if e.key == "hsa_hanseatic_shipwrights"),
+                        "hanseatic_shipwright_guild_max_level")) == 1
 
 
 def _actor_block(body) -> CList:
@@ -150,7 +246,7 @@ def test_no_landless_banks_except_the_hansa(buildings, key) -> None:
 def test_house_tooltips_have_text() -> None:
     text = (MOD / "main_menu/localization/english/pp_merchant_houses_l_english.yml").read_text(encoding="utf-8-sig")
     for key in ("pp_merchant_house_builder_tt", "pp_merchant_house_one_per_market_tt", "pp_merchant_house_cap_tt",
-                "pp_hanseatic_kontor_steps_tt"):
+                "pp_hanseatic_kontor_steps_tt", "pp_hansa_member_town_tt"):
         m = re.search(rf'^ {key}: "(.+)"$', text, re.M)
         assert m, key
         assert not re.search(r"\d", re.sub(r"\[[^\]]*\]", "", m.group(1))), key

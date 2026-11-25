@@ -53,6 +53,8 @@ SINGLE_KEYS = {
 # A vanilla update that changes a replaced advance shows up here: merge the change into the REPLACE unless the mod
 # overrides that line on purpose, then update this table.
 DELIBERATE_REPLACE_DIFFERENCES: dict[str, tuple[set[str], set[str]]] = {
+    # 2026-11-25 (Jan): the Burgtor stands from the start; its advance gives a level instead of unlocking it
+    "hsa_hanseatic_fortifications": ({"unlock_building = hsa_burgtor"}, {"pp_hsa_burgtor_levels = 1"}),
     # Public Health (2026-10-05): growth comes only from food, so growth -> disease resistance; the population
     # capacity % that came with it became more resistance on 2026-10-27 (Jan: capacity is farmland)
     "sanitation_advance": (

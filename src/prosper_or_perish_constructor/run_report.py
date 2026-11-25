@@ -165,7 +165,7 @@ class RunData:
     urban: UrbanCatalog = field(default_factory=UrbanCatalog)  # town right and industry type definitions
     # land improvements built and possible per snapshot and cap (improvement_room.room); empty without the model
     improvements: pl.DataFrame = field(default_factory=pl.DataFrame)
-    # the labour good per snapshot and market: price, default_price, supply, demand (labour_charts)
+    # the labour good per snapshot and market, the columns of market_goods (labour_charts, the goods page)
     labour: pl.DataFrame = field(default_factory=pl.DataFrame)
 
     @property
@@ -283,28 +283,25 @@ def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | Non
         .filter(pl.col("snapshot_id").is_in(wanted) & pl.col("good_id").is_in(sorted(DUMMY_GOODS)))
         .group_by("snapshot_id", "market_id").agg(pl.col("stockpile").max().alias("stock_cap"))
     )
-    market_goods = (
-        _scan(dataset, "market_goods", playthrough)
-        .filter(pl.col("snapshot_id").is_in(wanted) & ~pl.col("good_id").is_in(sorted(DUMMY_GOODS))
-                & (pl.col("default_price") > 0))
-        .select(
-            "snapshot_id", "market_id", "good_id", goods_group_expr().alias("group"), "price", "default_price",
-            pl.col("supply").fill_null(0.0), pl.col("demand").fill_null(0.0),
-            pl.col("supplied_Production").fill_null(0.0).alias("production"),
-            pl.col("supplied_Trade").fill_null(0.0).alias("imports"),
-            pl.col("demanded_Trade").fill_null(0.0).alias("exports"),
-            pl.col("demanded_BurgherTrades").fill_null(0.0).alias("burgher_trade"),
-            pl.col("stockpile").fill_null(0.0),
+    def goods_rows(which: pl.Expr) -> pl.DataFrame:
+        return (
+            _scan(dataset, "market_goods", playthrough)
+            .filter(pl.col("snapshot_id").is_in(wanted) & which & (pl.col("default_price") > 0))
+            .select(
+                "snapshot_id", "market_id", "good_id", goods_group_expr().alias("group"), "price", "default_price",
+                pl.col("supply").fill_null(0.0), pl.col("demand").fill_null(0.0),
+                pl.col("supplied_Production").fill_null(0.0).alias("production"),
+                pl.col("supplied_Trade").fill_null(0.0).alias("imports"),
+                pl.col("demanded_Trade").fill_null(0.0).alias("exports"),
+                pl.col("demanded_BurgherTrades").fill_null(0.0).alias("burgher_trade"),
+                pl.col("stockpile").fill_null(0.0),
+            )
+            .join(stock_caps, on=["snapshot_id", "market_id"], how="left")
+            .collect()
         )
-        .join(stock_caps, on=["snapshot_id", "market_id"], how="left")
-        .collect()
-    )
-    labour = (
-        _scan(dataset, "market_goods", playthrough)
-        .filter(pl.col("snapshot_id").is_in(wanted) & (pl.col("good_id") == LABOUR_GOOD) & (pl.col("default_price") > 0))
-        .select("snapshot_id", "market_id", "price", "default_price", pl.col("supply").fill_null(0.0), pl.col("demand").fill_null(0.0))
-        .collect()
-    )
+
+    market_goods = goods_rows(~pl.col("good_id").is_in(sorted(DUMMY_GOODS)))
+    labour = goods_rows(pl.col("good_id") == LABOUR_GOOD)  # the labour chart and the goods page's labour entry
     markets = (
         _scan(dataset, "markets", playthrough)
         .filter(pl.col("snapshot_id").is_in(wanted))
@@ -1874,7 +1871,8 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
         shutil.rmtree(out)
     out.mkdir(parents=True)
     canvas = build_canvas(repo, project, width)
-    run.good_icons = write_good_icons(run.market_goods["good_id"].to_list() if not run.market_goods.is_empty() else [],
+    run.good_icons = write_good_icons((run.market_goods["good_id"].to_list() if not run.market_goods.is_empty() else [])
+                                       + ([] if run.labour.is_empty() else [LABOUR_GOOD]),
                                       good_icon_sources(repo, project), out, log)
     # independent steps side by side: the goods and food pages (from the flows above), the map videos, the trade and
     # promotion maps, and the charts here

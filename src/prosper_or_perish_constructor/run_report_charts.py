@@ -34,7 +34,8 @@ if TYPE_CHECKING:
 
 # Mod bookkeeping goods without a real market (pinned 1-gold offsets, province food accounting, labour, logistics).
 DUMMY_GOODS = frozenset({"offset", "logistics", "local_food", "manual_labor", "province_food_sales"})
-# The labour good production methods buy: no market good of the goods page, but its price is charted (labour_charts).
+# The labour good production methods buy: out of the price heatmap and the world sums, but it has its own chart
+# (labour_charts) and is a good of its own on the goods page.
 LABOUR_GOOD = "manual_labor"
 
 # Goods groups (display order): key, label, colour on a light surface, colour on the dark video map.
@@ -501,7 +502,7 @@ def price_charts(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dic
         f"the normal price {scale.normal:g}×{' (' + scale.note + ')' if scale.note else ''}: red = dearer, "
         "blue = cheaper. Goods grouped (the coloured bar: farming, mining, gathering/hunting/forestry, manufactured), "
         "the most produced first; hover a cell or an icon for the name, click an icon for the good's spread of price and "
-        "stock over the markets (goods page). Mod bookkeeping goods (offset, logistics, province food, labour) are left out.",
+        "stock over the markets (goods page). Mod bookkeeping goods (offset, logistics, province food) are left out; labour has its own chart below and its own entry on the goods page.",
         [view("Price ÷ base", "ratio", price, fields=tip), view("Change since first save", "ratio", change, fields=tip)],
         height=_heat_height(goods), goods_legend="groups")]
 

@@ -92,6 +92,28 @@ def test_save_flows_add_up_to_the_market_totals(tmp_path: Path) -> None:
     assert {k: len(v) for k, v in encoded.items()}["p"] == producers.height
 
 
+def test_labour_is_a_good_of_the_page_and_the_other_bookkeeping_goods_are_not(tmp_path: Path) -> None:
+    dataset = _dataset(tmp_path)
+    path = dataset / "tables" / "market_goods" / "playthrough_id=run" / "s1.parquet"
+    rows = pl.read_parquet(path)
+    extra = {c: [0.0, 0.0] for c in rows.columns}
+    # Paris: its 2k idle peasants make 2 labour, the weaver asks for 1; the offset good sits beside it
+    extra.update({"market_id": [1, 1], "good_id": ["manual_labor", "offset"], "price": [1.0, 1.0], "default_price": [5.0, 1.0],
+                  "supply": [4.0, 1.0], "demand": [1.0, 1.0], "supplied_Production": [2.0, 1.0],
+                  "demanded_Building": [1.0, 1.0], "taken_Building": [1.0, 1.0]})
+    pl.concat([rows, pl.DataFrame(extra, schema=rows.schema)]).write_parquet(path)
+    recipes = _recipes()
+    recipes.inputs = pl.concat([recipes.inputs, pl.DataFrame({"method": ["weave"], "good_id": ["manual_labor"], "per_level": [0.5]})])
+    recipes.base_production = {"wool": 0.5, "manual_labor": 1.0}
+    flows = rg.save_flows(dataset, "run", "s1", recipes)
+    listed = set(flows["market"]["good_id"].to_list())
+    assert "manual_labor" in listed and "offset" not in listed
+    bought = flows["consumers"].filter(pl.col("good_id") == "manual_labor")
+    assert bought["building_type"].to_list() == ["weaver"] and bought["wanted"].sum() == pytest.approx(1.0)
+    made = flows["producers"].filter(pl.col("good_id") == "manual_labor")
+    assert made["building_type"].to_list() == [rg.IDLE] and made["amount"].sum() == pytest.approx(2.0)
+
+
 def test_workforce_counts_every_employed_worker_once(tmp_path: Path) -> None:
     """RGO workers make the raw material; a building's workers split over its goods by output value at the default price;
     a building that makes only dummy goods or has no method is "no goods output" (good_id null); idle peasants never

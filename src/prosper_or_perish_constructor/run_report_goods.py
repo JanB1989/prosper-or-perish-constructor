@@ -41,6 +41,7 @@ import polars as pl
 from prosper_or_perish_constructor.run_report_data import write_data
 from prosper_or_perish_constructor.run_report_charts import (
     DUMMY_GOODS,
+    LABOUR_GOOD,
     OTHER_GREY,
     land_region_expr,
     region_palette,
@@ -50,7 +51,10 @@ from prosper_or_perish_constructor.run_report_charts import (
 if TYPE_CHECKING:
     from prosper_or_perish_constructor.run_report import RunData
 
-CACHE_VERSION = "goods-9"
+CACHE_VERSION = "goods-10"
+# What the goods page leaves out: the bookkeeping goods except labour, which it lists as a good of its own (what
+# makes it, which buildings buy it, its price over the markets).
+HIDDEN_GOODS = DUMMY_GOODS - {LABOUR_GOOD}
 RGO = "rgo"  # pseudo building of the RGO rows
 OTHER = "_other"  # pseudo building for market totals no recipe explains
 IDLE = "_idle"  # pseudo building of the goods' base production by idle peasants
@@ -209,7 +213,7 @@ def save_flows(dataset: Path, playthrough: str, snapshot: str, recipes: Recipes)
         "market_id", "good_id", "price", "default_price", "supply", "demand", "stockpile", "supplied_Production",
         "demanded_Building", "taken_Building", *[f"demanded_{b}" for b in buckets], *[f"taken_{b}" for b in buckets],
         *[f"supplied_{b}" for b in supplies]])
-    goods = goods.filter(~pl.col("good_id").is_in(sorted(DUMMY_GOODS)) & (pl.col("default_price") > 0)).with_columns(
+    goods = goods.filter(~pl.col("good_id").is_in(sorted(HIDDEN_GOODS)) & (pl.col("default_price") > 0)).with_columns(
         pl.exclude("market_id", "good_id").cast(pl.Float64).fill_null(0.0))
     locations = read("locations", ["location_id", "slug", "market_id", "raw_material", "rgo_employed", "macro_region",
                                    "super_region", "unemployed_peasants"])
@@ -268,7 +272,7 @@ def save_flows(dataset: Path, playthrough: str, snapshot: str, recipes: Recipes)
         .join(made.group_by(keys).agg(pl.col("recipe").sum().alias("b")), on=keys, how="full", coalesce=True)
         .join(rgo.group_by(keys).agg(pl.col("recipe").sum().alias("r")), on=keys, how="full", coalesce=True)
         .with_columns(pl.col("actual", "b", "r").fill_null(0.0))
-        .filter(~pl.col("good_id").is_in(sorted(DUMMY_GOODS)))
+        .filter(~pl.col("good_id").is_in(sorted(HIDDEN_GOODS)))
     )
     factors = {}
     for (good,), part in nominal.partition_by("good_id", as_dict=True).items():
@@ -338,7 +342,7 @@ def save_flows(dataset: Path, playthrough: str, snapshot: str, recipes: Recipes)
     trade = pl.DataFrame(schema={"good_id": pl.String, "region": pl.String, "imports": pl.Float64, "exports": pl.Float64})
     if routes.height:
         ran = (
-            routes.filter((pl.col("happened") == "yes") & ~pl.col("good_id").is_in(sorted(DUMMY_GOODS)))
+            routes.filter((pl.col("happened") == "yes") & ~pl.col("good_id").is_in(sorted(HIDDEN_GOODS)))
             .join(markets.rename({"market_id": "from_market", "region": "from_region"}), on="from_market", how="left")
             .join(markets.rename({"market_id": "to_market", "region": "to_region"}), on="to_market", how="left")
             .with_columns(pl.col("from_region", "to_region").fill_null(OTHER_REGION), pl.col("cached").cast(pl.Float64).fill_null(0.0))
@@ -360,7 +364,7 @@ def save_workforce(buildings: pl.DataFrame, methods: pl.DataFrame, locations: pl
     RGO workers (`locations.rgo_employed`) all make the location's raw material. A building's workers
     (`buildings.employed`) are split over the goods its active methods make by their value at the default price (output
     per level x default price, summed over the building's slots); the save does not say more. Dummy goods (offset,
-    logistics, Province Food, ...) count as no output, so a building that makes only those (Taverns, Cookshops, logistics
+    logistics, Province Food, ...; not labour) count as no output, so a building that makes only those (Taverns, Cookshops, logistics
     buildings) or has no producing method (government, forts, ...) is a row with good_id null: "no goods output". Idle
     peasants are not employed and never count. The workers sum to the world's employed people (RGO + building jobs)."""
     region_of_location = locations.select("location_id", "region")
@@ -386,6 +390,15 @@ def save_workforce(buildings: pl.DataFrame, methods: pl.DataFrame, locations: pl
 
 # --------------------------------------------------------------------------------------------------------
 # Page data
+
+
+def page_market_goods(run: RunData) -> pl.DataFrame:
+    """RunData.market_goods plus the labour good's rows: the goods the page lists."""
+    if run.labour.is_empty():
+        return run.market_goods
+    if run.market_goods.is_empty():
+        return run.labour
+    return pl.concat([run.market_goods, run.labour], how="diagonal_relaxed")
 
 
 def _sig(value: float | None, digits: int = 4) -> float | int | None:
@@ -596,7 +609,7 @@ def build_goods_data(run: RunData, dataset: Path, out: Path, recipes: Recipes, *
 
     # over the run: production by building type and use by building type / bucket (top 8 + other) per good
     summary: dict[str, Any] = {}
-    bands = market_bands(run.market_goods, [s["snapshot_id"] for s in snapshots])
+    bands = market_bands(page_market_goods(run), [s["snapshot_id"] for s in snapshots])
     goods = sorted({g for s in summaries for g in s})
     for good in goods:
         rows = [s.get(good, {"made": {}, "used": {}}) for s in summaries]
@@ -661,10 +674,11 @@ def index_payload(run: RunData, built: dict[str, Any], recipes: Recipes, dataset
     method_names = catalog("production_method_catalog", "production_method", "production_method_name")
     # goods: every good any save has, in the report's order (group, then the most produced at the last save)
     groups = page_groups(repo) if repo else {}
-    prices = {g: p for g, p in run.market_goods.select("good_id", "default_price").unique("good_id").iter_rows()} if not run.market_goods.is_empty() else {}
+    listed = page_market_goods(run)
+    prices = {g: p for g, p in listed.select("good_id", "default_price").unique("good_id").iter_rows()} if not listed.is_empty() else {}
     order = {k: i for i, (k, _, _) in enumerate(PAGE_GROUPS)}
-    made_last = run.market_goods.filter(pl.col("snapshot_id") == last).group_by("good_id").agg(
-        (pl.col("production") * pl.col("default_price")).sum().alias("v")) if not run.market_goods.is_empty() else pl.DataFrame()
+    made_last = listed.filter(pl.col("snapshot_id") == last).group_by("good_id").agg(
+        (pl.col("production") * pl.col("default_price")).sum().alias("v")) if not listed.is_empty() else pl.DataFrame()
     value = dict(made_last.iter_rows()) if made_last.height else {}
     goods = []
     for good in index.lists["good"]:

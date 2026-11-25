@@ -1,0 +1,94 @@
+﻿# Prosper or Perish - schools (literacy rework 2026-11-25, Jan; hand-written like the Library and University in
+# pp_culture_building_adjustments.txt). Literacy is earned in the location: the Village School gives the lower classes
+# (peasants, laborers, soldiers) their literacy cap, the Trade School the burghers'. Both are open to the estates whose
+# people work in them (an estate pays for buildings of its own pop type: clergy for the Village School, burghers for the
+# Trade School; docs/mod_authoring_rules.md "Estates may build every production building").
+# The AI values class literacy caps at about zero (private notes literacy_ai_149.md), so each school carries a positive
+# ai_construct_weight (script_values/pp_school_values.txt): bigger places first, divided by the owner's income like the
+# Library's. Levels: script_values/pp_school_values.txt. Upkeep: production_methods/pp_culture_maintenance_adjustments.txt.
+# Icons are vanilla placeholders until the drawn ones are installed (icon = ... here and on the maintenance methods).
+
+pp_village_school = {
+	audio_tier = 1
+	is_foreign = no
+	pop_type = clergy
+	max_levels = pp_village_school_max_level
+
+	category = cultural_category
+	employment_size = religious_building_employment # 0.05, half the Library's cultural_employment
+	custom_tags = { pp_education_priority }
+	icon = local_schools # placeholder until pp_village_school is drawn
+
+	AI_ignore_available_worker_flag = yes
+
+	rural_settlement = yes
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	forbidden_for_estates = no
+
+	build_time = cultural_building_time
+
+	ai_construct_weight = {
+		value = pp_village_school_ai_weight
+		divide = { value = scope:owner.monthly_income_total add = 10 }
+	}
+
+	modifier = {
+		local_peasants_max_literacy = 5
+		local_laborers_max_literacy = 5
+		local_soldiers_max_literacy = 5
+		local_monthly_literacy = 0.01
+		local_pop_promotion_speed = 0.002 # moved from the Library (2026-11-25)
+	}
+
+	possible_production_methods = {
+		pp_village_school_maintenance
+	}
+
+	construction_demand = library_construction
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
+}
+
+pp_trade_school = {
+	audio_tier = 1
+	is_foreign = no
+	pop_type = burghers
+	max_levels = pp_trade_school_max_level
+
+	category = cultural_category
+	employment_size = small_burgher_employment # 0.05
+	custom_tags = { pp_education_priority }
+	icon = counting_house # placeholder until pp_trade_school is drawn
+
+	AI_ignore_available_worker_flag = yes
+
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	forbidden_for_estates = no
+
+	build_time = cultural_building_time
+
+	ai_construct_weight = {
+		value = pp_trade_school_ai_weight
+		divide = { value = scope:owner.monthly_income_total add = 10 }
+	}
+
+	modifier = {
+		local_burghers_max_literacy = 10
+		local_monthly_literacy = 0.01
+		local_burghers_desired_pop = 0.3 # moved from the Library (2026-11-25)
+	}
+
+	possible_production_methods = {
+		pp_trade_school_maintenance
+	}
+
+	construction_demand = library_construction
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
+}

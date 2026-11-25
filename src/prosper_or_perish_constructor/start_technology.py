@@ -38,6 +38,7 @@ drops the ``?=`` operator and the quotes of strings, and a REPLACE must copy the
 from __future__ import annotations
 
 import csv
+import dataclasses
 import io
 import re
 import tomllib
@@ -215,6 +216,7 @@ class Ladder:
     remove_start_buildings: bool
     research_base: float | None = None                                  # flat research a month without any advance
     research_speed: dict[str, float] = field(default_factory=dict)      # advance -> flat research a month it adds
+    literacy: object | None = None   # literacy_sources.Rule: the country-wide literacy cut, applied to the blocks written here
 
     @property
     def replaced(self) -> set[str]:
@@ -236,7 +238,25 @@ def load_ladder(repo: Path) -> Ladder:
         remove_start_buildings=bool(raw.get("start_buildings", {}).get("remove_when_advance_above_group", True)),
         research_base=(float(raw["research_speed"]["base"]) if "research_speed" in raw else None),
         research_speed={str(k): float(v) for k, v in raw.get("research_speed", {}).get("advances", {}).items()},
+        literacy=_literacy_rule(repo),
     )
+
+
+def _literacy_rule(repo: Path):
+    from prosper_or_perish_constructor import literacy_sources   # lazy: not part of the World Builder stage's imports
+
+    return literacy_sources.try_load_rule(Path(repo))
+
+
+def literacy_body(ladder: Ladder, adv: Advance) -> tuple[Stmt, ...]:
+    """The advance's effective body with the country-wide literacy cut (config/literacy_sources.toml): a first-age
+    advance this pass writes carries the cut here (one replace per block: an INJECT of the level would be ignored after
+    another file's replace)."""
+    if ladder.literacy is None:
+        return adv.body
+    from prosper_or_perish_constructor import literacy_sources
+
+    return literacy_sources.cut_advance(ladder.literacy, adv)[0]  # type: ignore[arg-type]
 
 
 # ---------------------------------------------------------------------------------------------- layered files
@@ -600,9 +620,10 @@ def plan_advances(ladder: Ladder, advances: dict[str, Advance]) -> AdvancePlan:
     for key, level in sorted(targets.items()):
         adv = advances[key]
         final[key] = level
-        if key in ladder.replaced or adv.replaced:
+        cut = literacy_body(ladder, adv)
+        if key in ladder.replaced or adv.replaced or cut != adv.body:
             replaces[key] = _replace_body(
-                adv,
+                dataclasses.replace(adv, body=cut),
                 level=level,
                 requires=ladder.requires.get(key),
                 research_cost=ladder.research_cost.get(key),
@@ -612,7 +633,7 @@ def plan_advances(ladder: Ladder, advances: dict[str, Advance]) -> AdvancePlan:
         else:
             injects[key] = level
     for key in sorted(set(ladder.requires) - set(targets)):   # a specific advance without a level: new parents only
-        replaces[key] = _replace_body(advances[key], level=None, requires=ladder.requires[key], research_cost=None,
+        replaces[key] = _replace_body(dataclasses.replace(advances[key], body=literacy_body(ladder, advances[key])), level=None, requires=ladder.requires[key], research_cost=None,
                                       ai_weight=None)
     for key, adv in first_age(advances).items():
         if key not in final and adv.level is not None:
@@ -626,7 +647,8 @@ def render_advances(ladder: Ladder, plan: AdvancePlan) -> str:
         f"# {_HEADER}",
         "# Starting technology ladder (config/starting_technology.toml): a country starts with the first-age advances",
         "# whose level is at most its group. REPLACE blocks are the effective block with the ladder's requires,",
-        "# research cost and AI weight (or a block another mod file already replaced: the engine ignores injects there).",
+        "# research cost and AI weight (or a block another mod file already replaced: the engine ignores injects there),",
+        "# and with the country-wide literacy cut of config/literacy_sources.toml (literacy_sources.py).",
         "",
     ]
     general = sorted((k for k in plan.injects if k in plan.general), key=lambda k: (plan.injects[k], k))

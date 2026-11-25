@@ -1,11 +1,11 @@
-﻿# Printing branch: vanilla's Printing Press advance (+10 max literacy; PP's research-speed swap of 2026-10-04 went
+﻿# Printing branch: vanilla's Printing Press advance (max literacy, cut to +4 with the country-wide literacy sources 2026-11-25 (config/literacy_sources.toml); PP's research-speed swap of 2026-10-04 went
 # 2026-10-22 with the rest of the institution spread curb) plus cheaper merchants and the specialization rights.
 
 TRY_REPLACE:printing_press_advance = {
 	age = age_3_discovery
 	icon = printing_press_advance
 
-	global_max_literacy = 10
+	global_max_literacy = 4 # vanilla 10; literacy_sources.py checks it (2026-11-25, Jan: literacy is earned locally)
 	merchant_maintenance_efficiency = 0.10 # 2026-10-07, Jan: a little cheaper trade for the printing countries
 
 	# specialization rights (2026-10-07): a rights type with no unlocking advance counts as unlocked from the start, and

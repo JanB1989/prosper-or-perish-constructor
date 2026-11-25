@@ -43,8 +43,10 @@ def _inject(good: str) -> str:
 @pytest.mark.parametrize("pop_type", ["laborers", "soldiers"])
 def test_workers_are_lower_class(pop_type: str) -> None:
     text = _text(MOD_ROOT / "in_game/common/pop_types/pp_pop_adjustments.txt")
-    body = next(body for _, body in _blocks(text, rf"TRY_INJECT:{pop_type}"))
-    assert not re.search(r"\bupper\s*=", body)
+    # laborers are a full REPLACE copy since the literacy rework (2026-11-25), soldiers still an inject
+    bodies = [body for _, body in _blocks(text, rf"(?:TRY_INJECT|REPLACE):{pop_type}")]
+    assert len(bodies) == 1, pop_type
+    assert not re.search(r"\bupper\s*=", bodies[0])
 
 
 def test_lumber_still_cancels_all_pop_demand() -> None:

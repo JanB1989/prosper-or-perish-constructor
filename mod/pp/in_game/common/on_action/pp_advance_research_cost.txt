@@ -4895,6 +4895,8 @@ pp_advance_research_cost = {
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:pp_clay_washmill value = 22.1 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:pp_coastal_drift_nets value = 32.5 }
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:pp_coastal_drift_nets value = 22.1 }
+			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:pp_common_schooling_advance value = 36.25 }
+			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:pp_common_schooling_advance value = 24.65 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:pp_distant_water_fishing value = 40 }
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:pp_distant_water_fishing value = 27.2 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:pp_enclosed_sheep_walks value = 40 }
@@ -4957,6 +4959,8 @@ pp_advance_research_cost = {
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:pp_potato_farm_advance_general value = 27.2 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:pp_public_kitchen value = 40 }
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:pp_public_kitchen value = 27.2 }
+			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:pp_reckoning_schools_advance value = 28.75 }
+			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:pp_reckoning_schools_advance value = 19.55 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:pp_regulated_sericulture_farm value = 32.5 }
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:pp_regulated_sericulture_farm value = 22.1 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:pp_reverberatory_copper value = 40 }
@@ -4983,6 +4987,8 @@ pp_advance_research_cost = {
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:pp_terraced_coffee_grove value = 22.1 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:pp_trapiche_sugarcane_farm value = 32.5 }
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:pp_trapiche_sugarcane_farm value = 22.1 }
+			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:pp_village_schools_advance value = 28.75 }
+			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:pp_village_schools_advance value = 19.55 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:pp_water_lifting value = 36.25 }
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:pp_water_lifting value = 24.65 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:pp_wattle_fish_weirs value = 28.75 }

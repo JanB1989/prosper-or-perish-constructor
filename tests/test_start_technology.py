@@ -144,7 +144,9 @@ def test_generated_blocks_match_the_effective_advances(ladder: st.Ladder, advanc
             assert [s.key for s in body] == [st.LEVEL_KEY], key
             continue
         skip = _configured_keys(ladder, key)
-        if [s for s in body if s.key not in skip] != [s for s in advances[key].body if s.key not in skip]:
+        # the effective block with the country-wide literacy cut (config/literacy_sources.toml), which this pass carries
+        effective = st.literacy_body(ladder, advances[key])
+        if [s for s in body if s.key not in skip] != [s for s in effective if s.key not in skip]:
             off.append(key)
         level = [s.value for s in body if s.key == st.LEVEL_KEY]
         # a specific advance moved by [requires] carries a level only if it had one (then the remapped level)
@@ -163,6 +165,8 @@ def test_generated_blocks_match_the_effective_advances(ladder: st.Ladder, advanc
     assert not off, f"REPLACE blocks that differ from the effective advance: {off} (run uv run ppc start-tech apply)"
     # the engine ignores an inject into a block another mod file replaced: those must be replaced again here
     assert not [k for k in plan.injects if advances[k].replaced]
+    # an advance the literacy cut changes is replaced here, never injected (its numbers would stay vanilla's)
+    assert not [k for k in plan.injects if st.literacy_body(ladder, advances[k]) != advances[k].body]
 
 
 def test_advance_file_sorts_after_every_advance_file(vanilla: Path) -> None:

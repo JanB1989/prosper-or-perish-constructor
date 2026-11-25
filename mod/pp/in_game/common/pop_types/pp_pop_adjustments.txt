@@ -3,9 +3,41 @@ TRY_INJECT:nobles = {
 	pop_food_consumption = 25 # 25.0 # 20.0
 	promotion_factor = 0.3
 }
-TRY_INJECT:clergy = {
-	pop_food_consumption = 6.5 # 10 2026-10-05..14 (early-game nerf); 6.5 before # 5.0
-	promotion_factor = 0.3
+# Literacy rework (2026-11-25, Jan): clergy, laborers and peasants are full copies of vanilla (00_default.txt) with
+# PP's lines marked "PP", so their literacy_impact blocks are exactly what is written here. An injected literacy_impact
+# block could replace vanilla's block or add to it (not established: never tested in game), and the laborers' vanilla
+# production efficiency line can only go in a replace. The PP lines that the injects carried until then are kept as
+# written (the PP numbers were meant to replace vanilla's: peasant promotion 2.0 -> 1.0, laborer RGO size 0.1 -> 0.05).
+# Port vanilla changes into these copies (tests/vanilla_replace_pins.csv).
+REPLACE:clergy = {
+	color = pop_clergy
+	power_per_pop = 10
+
+	editor = 0.05
+
+	grow = yes
+
+	assimilation_conversion_factor = 0.05
+
+	city_graphics = 1.0
+
+	promotion_factor = 0.3 # PP (vanilla 0.1)
+
+	pop_food_consumption = 6.5 # PP (vanilla 5.0); 10 2026-10-05..14 (early-game nerf)
+
+	dhimmi_estate = { is_dhimmi = yes }
+	tribes_estate = { is_gaelic_clans = yes }
+	cossacks_estate = { is_cossacks = yes }
+	clergy_estate = {}
+
+	upper = yes
+	has_cap = yes
+
+	literacy_impact = {
+		local_pop_conversion_speed_modifier = 0.25
+		local_pop_assimilation_speed_modifier = 0.25
+		local_monthly_literacy = 0.02 # PP 2026-11-25: literate clergy teach (at full clergy literacy)
+	}
 }
 TRY_INJECT:burghers = {
 	pop_food_consumption = 6.5 # 2026-10-14 (Jan: upper classes ate 31 % of the food by 1837); 10 2026-10-05..14; 8 2026-10-03..05 # 4.0
@@ -22,13 +54,40 @@ TRY_INJECT:burghers = {
 # Political power per pop (2026-10-11, Jan, after MEIOU and Taxes): the peasants estate's pops x6 (MEIOU raised the
 # whole estate 0.025 -> 0.15), tribesmen x50 (Jan: 0.01 -> 0.5, MEIOU x20; also the Cossacks, who are tribesmen). EU5 1.4 keeps
 # power on the pop type, so dhimmi pops follow their type.
-TRY_INJECT:laborers = {
-	power_per_pop = 0.225 # vanilla 0.0375
-	pop_food_consumption = 1.5 # 1.75 2026-10-05..14 (early-game nerf)
-	promotion_factor = 4
-	pop_percentage_impact = {
+REPLACE:laborers = {
+	color = pop_laborers
+	power_per_pop = 0.225 # PP (vanilla 0.0375)
+
+	editor = 1.0
+
+	grow = yes
+
+	assimilation_conversion_factor = 0.5
+
+	pop_food_consumption = 1.5 # PP (vanilla 1.0); 1.75 2026-10-05..14 (early-game nerf)
+
+	city_graphics = 0.05
+
+	promote_to = soldiers
+	promote_to = burghers
+
+	has_cap = yes
+
+	promotion_factor = 4 # PP (vanilla 1.5)
+
+	migration_factor = 0.1
+
+	dhimmi_estate = { is_dhimmi = yes }
+	tribes_estate = { is_gaelic_clans = yes }
+	cossacks_estate = { is_cossacks = yes }
+	peasants_estate = {}
+
+	pop_percentage_impact = { # PP (vanilla has none)
 		local_monthly_development = 0.003
 	}
+
+	# PP: vanilla's local_production_efficiency (medium_production_efficiency_bonus) is gone (2026-11-25, Jan: nothing
+	# in its place for now); RGO size 0.05 (vanilla 0.1)
 	literacy_impact = {
 		local_max_rgo_size_modifier = 0.05
 		# local_raw_material_output = 0.05
@@ -42,16 +101,42 @@ TRY_INJECT:soldiers = {
 		local_max_control = 1.0
 	}
 }
-TRY_INJECT:peasants = {
-	power_per_pop = 0.15 # vanilla 0.025
-	pop_food_consumption = 1.0 # 1.0
+REPLACE:peasants = {
+	color = pop_peasants
+	power_per_pop = 0.15 # PP (vanilla 0.025)
+
+	promote_to = burghers
+	promote_to = clergy
+	promote_to = nobles
+	promote_to = laborers
+	promote_to = soldiers
+
+	pop_food_consumption = 1.0
+
 	promotion_factor = 0.5
-	pop_percentage_impact = {
+
+	grow = yes
+
+	assimilation_conversion_factor = 1.0
+
+	migration_factor = 0.1
+
+	city_graphics = 0.01
+	dhimmi_estate = { is_dhimmi = yes }
+	tribes_estate = { is_gaelic_clans = yes }
+	cossacks_estate = { is_cossacks = yes }
+	peasants_estate = {}
+
+	pop_percentage_impact = { # PP (vanilla has none)
 		local_devastation_recovery = 0.002
 		local_construction_speed = 0.50
 		# local_build_buildings_efficiency = 0.20
 	}
+	# PP: promotion 1.0 (vanilla 2.0), the crop output lines; vanilla's levy recruitment line kept; estate power
+	# 2026-11-25 (Jan: literate peasants want a say)
 	literacy_impact = {
+		local_levy_recruitment_speed_modifier = 0.2
+		local_peasants_estate_power = 0.25
 		local_pop_promotion_speed_modifier = 1.0
 		local_wheat_output_modifier = 0.10
 		local_rice_output_modifier = 0.10

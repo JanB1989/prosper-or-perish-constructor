@@ -890,6 +890,8 @@ pp_cplan_no_room = {
 		AND = { scope:pp_cplan_btype = building_type:pp_caravanserai pp_cplan_room_pp_caravanserai < 1 }
 		AND = { scope:pp_cplan_btype = building_type:pp_llama_caravan_post pp_cplan_room_pp_llama_caravan_post < 1 }
 		AND = { scope:pp_cplan_btype = building_type:pp_oasis_caravan_station pp_cplan_room_pp_oasis_caravan_station < 1 }
+		AND = { scope:pp_cplan_btype = building_type:pp_trade_school pp_cplan_room_pp_trade_school < 1 }
+		AND = { scope:pp_cplan_btype = building_type:pp_village_school pp_cplan_room_pp_village_school < 1 }
 		AND = { scope:pp_cplan_btype = building_type:pp_yam_station pp_cplan_room_pp_yam_station < 1 }
 		AND = { scope:pp_cplan_btype = building_type:printing_manufactory pp_cplan_room_printing_manufactory < 1 }
 		AND = { scope:pp_cplan_btype = building_type:printing_mill pp_cplan_room_printing_mill < 1 }

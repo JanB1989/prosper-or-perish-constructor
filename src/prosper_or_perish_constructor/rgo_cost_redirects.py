@@ -284,6 +284,10 @@ def write_rgo_cost_redirect_files(
 
     collection_blocks: dict[tuple[str, str], list[str]] = defaultdict(list)
     patch_count = 0
+    # A block replaced here is its only replace, so it carries the country-wide literacy cut (literacy_sources.py).
+    from prosper_or_perish_constructor import literacy_sources
+
+    literacy = literacy_sources.try_load_rule(mod_root.parent.parent)
     mod_replaced: dict[tuple[str, str], set[str]] = {}
     for (scope, collection, top_key), patches_by_path in sorted(grouped.items()):
         if profile is not None and (scope, collection) not in mod_replaced:
@@ -311,6 +315,7 @@ def write_rgo_cost_redirect_files(
                     patches_by_path=patches_by_path,
                     modifiers_by_method=modifiers_by_method,
                     compensations=RGO_REDIRECT_COMPENSATIONS.get((scope, collection, top_key, ()), ()),
+                    literacy=literacy,
                 )
             )
             collection_blocks[(scope, collection)].append("")
@@ -402,6 +407,7 @@ def _render_source_replacement_block(
     patches_by_path: Mapping[tuple[str, ...], list[RgoCostAssignment]],
     modifiers_by_method: Mapping[str, tuple[str, ...]],
     compensations: Iterable[tuple[str, float]] = (),
+    literacy: object | None = None,
 ) -> list[str]:
     merged_entry = _merged_entry_for_key(profile, scope, collection, top_key)
     source = _replacement_source_record(merged_entry)
@@ -468,7 +474,12 @@ def _render_source_replacement_block(
             rendered.append(line)
     extra = [f"	{key} = {_format_number(value)}" for key, value in compensations]
     extra.extend(_dlc_inject_lines(profile, scope, collection, top_key))
-    return [*rendered[:-1], *extra, rendered[-1]] if extra else rendered
+    out = [*rendered[:-1], *extra, rendered[-1]] if extra else rendered
+    if literacy is not None:
+        from prosper_or_perish_constructor import literacy_sources
+
+        out = literacy_sources.cut_lines(literacy, collection, top_key, source_path.name, out)  # type: ignore[arg-type]
+    return out
 
 
 def _dlc_inject_lines(profile: DataProfile, scope: str, collection: str, top_key: str) -> list[str]:

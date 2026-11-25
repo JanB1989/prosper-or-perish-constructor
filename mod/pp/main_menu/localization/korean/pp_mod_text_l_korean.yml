@@ -9143,7 +9143,7 @@ PP_TRADE_REACH_MERCHANT_BODY: "Merchant federation or trading company"
 # <<< eu5-building-pipeline:printing_press_shop:localization
  # pp_promotion_modifier_types_l_english.yml
   MODIFIER_TYPE_NAME_local_pp_surplus_laborer_jobs: "Open Laborer Jobs"
-  MODIFIER_TYPE_DESC_local_pp_surplus_laborer_jobs: "Laborer jobs here that nobody fills. Where peasants stand idle next to them, the AI values a [ShowBuildingTypeName('library')|e] or [ShowBuildingTypeName('university')|e] that promotes them."
+  MODIFIER_TYPE_DESC_local_pp_surplus_laborer_jobs: "Laborer jobs here that nobody fills. Where peasants stand idle next to them, the AI values a [ShowBuildingTypeName('university')|e] that promotes them."
  # pp_public_kitchen_l_english.yml
 
 # >>> eu5-building-pipeline:public_kitchen:localization
@@ -9682,6 +9682,26 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
   pp_sand_washery_market_sales_desc: "A few hands carry a small share of the produce straight to market. It pays only while the goods fetch a good price."
   sand_washery_slot_3: "Market"
 # <<< eu5-building-pipeline:sand_washery:localization
+ # pp_schools_l_english.yml
+  pp_village_school: "Village School"
+  pp_village_school_desc: "A schoolroom beside the church where the priest or a hired master teaches the children of the village their letters, their prayers and a little sums. It raises the [literacy|e] of the location's [ShowPopTypeName('peasants')], [ShowPopTypeName('laborers')] and [ShowPopTypeName('soldiers')], and gifted children find a way up into the trades and the church."
+  pp_village_school_maintenance: "[ShowBuildingTypeName('pp_village_school')|e] Upkeep"
+  pp_village_school_maintenance_desc: "The school burns candles through the dark months and needs slates and clay tablets for its pupils."
+  pp_trade_school: "Trade School"
+  pp_trade_school_desc: "A reckoning school where the sons of merchants and craftsmen learn arithmetic, bookkeeping and the writing of letters and contracts. It raises the [literacy|e] of the town's [ShowPopTypeName('burghers')] and makes room for more of them; a town with its own trade [town_rights|e] keeps a larger school."
+  pp_trade_school_maintenance: "[ShowBuildingTypeName('pp_trade_school')|e] Upkeep"
+  pp_trade_school_maintenance_desc: "The masters need reckoning books and ledgers for their pupils and candles for the evening lessons."
+  pp_village_schools_advance: "Village Schools"
+  pp_village_schools_advance_desc: "The new learning of the towns reaches the countryside: parishes and village communities pay a master to teach their children to read. We may build the [ShowBuildingTypeName('pp_village_school')|e]."
+  pp_reckoning_schools_advance: "Reckoning Schools"
+  pp_reckoning_schools_advance_desc: "Merchant towns open schools of the abacus where boys learn the arithmetic, double-entry bookkeeping and letter writing of the counting house. We may build the [ShowBuildingTypeName('pp_trade_school')|e]."
+  pp_common_schooling_advance: "Common Schooling"
+  pp_common_schooling_advance_desc: "Churches of every confession want their faithful to read the catechism for themselves, and parish ordinances call for a school in every village. Our [ShowBuildingTypeName('pp_village_school')|e] can grow larger."
+  MODIFIER_TYPE_NAME_pp_village_school_levels: "[ShowBuildingTypeName('pp_village_school')|e] Max Level"
+  MODIFIER_TYPE_DESC_pp_village_school_levels: "Every [ShowBuildingTypeName('pp_village_school')|e] in our locations can be enlarged by this many more levels."
+  PP_BUILDING_LEVEL_PRINTING_PRESS: "From $printing_press_advance$"
+  PP_BUILDING_LEVEL_EDUCATION_POLICY: "From the $education_masses_law$ policy"
+  PP_BUILDING_LEVEL_SPECIALIZATION_RIGHTS: "From Specialization Town Rights"
  # pp_schwaz_mine_l_english.yml
 
 # >>> eu5-building-pipeline:schwaz_mine:localization

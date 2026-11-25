@@ -23,11 +23,11 @@ REPLACE:library = {
 
 	build_time = cultural_building_time
 
-	# AI: open laborer jobs with idle peasants next to them (pp_promotion_signal, 0..1), like the other PP weights
-	# divided by the owner's income, so it outweighs the library's own score (~1 in a mid-size country) where it applies.
+	# AI (literacy rework 2026-11-25): the literacy cap of nobles, burghers and clergy (pp_library_ai_weight, more of
+	# them weigh more), like the other PP weights divided by the owner's income. Until then the weight read open laborer
+	# jobs (pp_promotion_signal x 200): the promotion moved to the Village School.
 	ai_construct_weight = {
-		value = pp_promotion_signal
-		multiply = 200
+		value = pp_library_ai_weight
 		divide = { value = scope:owner.monthly_income_total add = 10 }
 	}
 
@@ -36,15 +36,16 @@ REPLACE:library = {
 	# ("Failed to find 'library_cordoba' ... for link 'building_type'") even inside the has_dlc limit, and the gate can
 	# never apply. tests/test_building_type_references.py keeps DLC-only links out of the mod.
 
+	# literacy rework 2026-11-25 (Jan): the cap only for the upper classes (vanilla local_max_literacy 5 for all), monthly
+	# literacy 0.1 -> 0.02; the promotion speed went to the Village School, the burghers' room to the Trade School, the
+	# laborers' 0.6 and clergy's 0.1 room were dropped.
 	modifier = {
 		local_cultural_influence = 0.1
-		local_max_literacy = 5
-		local_monthly_literacy = 0.1
-		local_pop_promotion_speed = 0.002
+		local_nobles_max_literacy = 5
+		local_burghers_max_literacy = 5
+		local_clergy_max_literacy = 5
+		local_monthly_literacy = 0.02
 		local_institution_growth_modifier = 0.25
-		local_laborers_desired_pop = 0.6
-		local_burghers_desired_pop = 0.3
-		local_clergy_desired_pop = 0.1
 	}
 
 	possible_production_methods = {
@@ -94,7 +95,7 @@ REPLACE:university = {
 		local_cultural_influence = 0.5
 		local_burghers_max_literacy = 10
 		local_nobles_max_literacy = 10
-		local_monthly_literacy = 0.1
+		local_monthly_literacy = 0.02 # literacy rework 2026-11-25 (Jan): 0.1 -> 0.02
 		local_migration_attraction = 0.05
 		local_pop_promotion_speed = 0.005
 		local_institution_growth_modifier = 0.33

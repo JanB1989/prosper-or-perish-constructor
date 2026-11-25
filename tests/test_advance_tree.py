@@ -31,6 +31,8 @@ GENERATED_REDIRECTS = "pp_rgo_building_cost_redirects.txt"
 # INJECT of an existing starting_technology_level replaces it, tested in game 2026-11-25) and its REPLACE blocks are
 # checked against the effective advance by tests/test_start_technology.py.
 GENERATED_START_TECHNOLOGY = "zz_pp_start_technology.txt"
+# literacy_sources.py: the cut country-wide literacy bonuses, guarded by tests/test_literacy_sources.py
+GENERATED_LITERACY_SOURCES = "zz_pp_literacy_sources.txt"
 
 AGES = (
     "age_1_traditions",
@@ -66,9 +68,10 @@ DELIBERATE_REPLACE_DIFFERENCES: dict[str, tuple[set[str], set[str]]] = {
         {"global_disease_resistance = 0.13"},
     ),
     # trade (2026-10-07, Jan): a little cheaper merchants for the printing countries
+    # literacy (2026-11-25, Jan): the country-wide literacy bonuses are cut (literacy_sources.py checks this number)
     "printing_press_advance": (
-        set(),
-        {"merchant_maintenance_efficiency = 0.1"}
+        {"global_max_literacy = 10"},
+        {"global_max_literacy = 4", "merchant_maintenance_efficiency = 0.1"}
         # specialization rights (2026-10-07): unlocked here, so their charters can be granted before
         | {f"unlock_town_rights = pp_{good}_rights" for good in (
             "cloth", "fine_cloth", "leather", "pottery", "furniture", "glass", "jewelry", "porcelain", "lacquerware",
@@ -394,7 +397,7 @@ def test_replaced_advances_differ_from_vanilla_only_where_the_mod_means_to() -> 
     vanilla = _merged("advances", profile="vanilla")
     actual: dict[str, tuple[set[str], set[str]]] = {}
     for path in _mod_advance_files():
-        if path.name in (GENERATED_REDIRECTS, GENERATED_START_TECHNOLOGY):
+        if path.name in (GENERATED_REDIRECTS, GENERATED_START_TECHNOLOGY, GENERATED_LITERACY_SOURCES):
             continue
         for entry in parse_file(path).entries:
             mode, _, key = entry.key.rpartition(":")

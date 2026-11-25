@@ -1,0 +1,103 @@
+# Country-wide literacy sources (Jan, 2026-11-25). Source of truth for the constructor pass `literacy_sources.py`
+# (`uv run ppc literacy apply|check`).
+#
+# Why: a pop creeps up to its literacy cap, and nearly all of that cap came from country-wide bonuses for every class
+# (observer runs: a French peasant at 55 % with no school, the world at about 48 % by 1837; history about 12 %).
+# Literacy is to be earned by local buildings, so the big generic country-wide sources are cut. Upper-class caps
+# (nobles, burghers, clergy), every local_*_max_literacy, buildings, PP's own objects and the specific sources listed
+# under [folders.*].exclude / [exclude_objects] keep their numbers.
+#
+# The pass reads every object of the folders below as the game merges them (vanilla, the DLC folders, the mod),
+# changes the numbers where they stand (inside the object's modifier blocks; an advance's body is its modifier) and
+# writes each changed object whole as a REPLACE (TRY_REPLACE for an object only a DLC folder defines) into
+# `<folder>/zz_pp_literacy_sources.txt`. Objects another pass already replaces carry the cut there:
+# first-age advances in the starting technology ladder (start_technology.py), legal_code_law in the RGO cost
+# redirects (rgo_cost_redirects.py), printing_press_advance by hand in pp_institution_advances_adjustments.txt.
+
+# Maximum literacy: positive values x factor, rounded to a whole number, at least `minimum` (+10 -> +4, +5 -> +2,
+# +3 -> +1, +2 -> +1). Zero and negative values stay.
+[max_literacy]
+keys = ["global_max_literacy", "global_peasants_max_literacy", "global_laborers_max_literacy", "global_soldiers_max_literacy"]
+factor = 0.4
+minimum = 1
+
+# Speed of literacy: values above `keep_at_or_below` x factor, rounded to `decimals`, at least `minimum`
+# (0.1 -> 0.02, 0.05 -> 0.01, 0.25 -> 0.05, 0.33 -> 0.07, 0.03 -> 0.01, 0.02 -> 0.01). Values of 0.01 or less stay.
+[speed]
+keys = ["global_monthly_literacy", "local_monthly_literacy"]
+factor = 0.2
+decimals = 2
+minimum = 0.01
+keep_at_or_below = 0.01
+
+# The base rate (Jan, 2026-11-25: halved): explicit values, "<folder>.<object>.<key>" = value. They win over the rules
+# above. Both advances are first-age advances of the ladder, which writes them.
+[base_rate]
+"advances.written_alphabet.global_monthly_literacy" = 0.005
+"advances.educated_bureaucrats.global_monthly_literacy" = 0.005
+
+# Folders in scope. An object is judged by the file that first defines it (vanilla or DLC); an object PP defines
+# itself keeps its numbers. `include` / `exclude` are file name globs: an object with literacy lines in a file that
+# matches neither fails the pass (a game update added a file: decide where it belongs). `skip_tag_gated`: an object
+# whose own `potential` names a country tag is country-specific and stays.
+[folders.advances]
+path = "in_game/common/advances"
+top_level = true                 # an advance's body is its modifier
+ladder_age = "age_1_traditions"  # these are written by the starting technology ladder
+include = ["0_age_of_*.txt", "1_*.txt", "2_*.txt", "3_*.txt", "4_choices_*.txt", "colonial_nations.txt", "ctype_*.txt",
+           "government_*.txt", "diplomacy_unlocks.txt", "canal_advances.txt", "new_world.txt"]
+exclude = ["country_*.txt", "culture_*.txt", "religion_*.txt", "region_*.txt", "frankokratia.txt", "beyliks.txt",
+           "japanese_unique.txt", "estate_*.txt", "D008_*.txt", "d009_*.txt"]
+
+[folders.societal_values]
+path = "in_game/common/societal_values"
+include = ["*.txt"]
+
+[folders.laws]
+path = "in_game/common/laws"
+include = ["*.txt"]
+exclude = ["02_country_specific.txt", "d009_02_country_specific.txt"]
+
+[folders.government_reforms]
+path = "in_game/common/government_reforms"
+skip_tag_gated = true
+include = ["common.txt", "monarchy.txt", "republic.txt", "steppe_horde.txt", "theocracy.txt"]
+exclude = ["country_specific.txt", "d009_*.txt"]
+
+[folders.estate_privileges]
+path = "in_game/common/estate_privileges"
+skip_tag_gated = true
+include = ["*.txt"]
+
+[folders.religions]
+path = "in_game/common/religions"
+include = ["*.txt"]
+
+[folders.religious_aspects]
+path = "in_game/common/religious_aspects"
+include = ["*.txt"]
+
+[folders.religious_schools]
+path = "in_game/common/religious_schools"
+include = ["*.txt"]
+
+# Folders left out on purpose (Jan decides later); the pass lists their literacy lines in
+# artifacts/data/literacy_sources/left_out.csv: "<path>" = reason.
+[left_out_folders]
+"in_game/common/building_types" = "buildings (another pass; unique and event-only buildings)"
+"in_game/common/gods" = "gods"
+"in_game/common/avatars" = "avatars"
+"in_game/common/cabinet_actions" = "cabinet actions"
+"in_game/common/bureaucracies" = "bureaucracies"
+"in_game/common/parliament_issues" = "parliament issues (only while in debate)"
+"in_game/common/religious_order_callings" = "religious order callings"
+"in_game/common/traits" = "character traits"
+"in_game/common/artist_types" = "artist types"
+"in_game/common/holy_site_types" = "holy site types (local)"
+"in_game/common/town_rights" = "town rights (local)"
+"main_menu/common/static_modifiers" = "static modifiers (timed event modifiers, local modifiers)"
+
+# Objects in an included file that stay anyway: "<folder>.<object>" = reason.
+[exclude_objects]
+"government_reforms.citizenship_through_service" = "only with the Latinization vs Hellenization value (Fate of the Phoenix, Byzantine successors)"
+"government_reforms.latin_tutors" = "only with the Latinization vs Hellenization value (Fate of the Phoenix, Byzantine successors)"

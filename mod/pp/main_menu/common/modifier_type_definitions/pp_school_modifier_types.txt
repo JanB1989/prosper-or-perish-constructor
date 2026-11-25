@@ -1,0 +1,11 @@
+﻿# Schools (literacy rework 2026-11-25, Jan; hand-written).
+# pp_village_school_levels: more levels of the Village School in every location of the country
+# (script_values/pp_school_values.txt); from the advance pp_common_schooling_advance.
+
+pp_village_school_levels = {
+	color = good
+	decimals = 0
+	game_data = {
+		category = country
+	}
+}

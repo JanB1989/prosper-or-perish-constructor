@@ -1,0 +1,64 @@
+﻿# Schools (literacy rework 2026-11-25, Jan; hand-written). Read by the schools' level caps in
+# script_values/pp_school_values.txt.
+
+# Location scope: the location holds one of the mod's specialization town rights, charter or rights
+# (town_rights/pp_specialization_town_rights.txt; the switched-off vanilla bundles are not counted). The engine has no
+# trigger for "any specialization right", so every right is named; has_any_town_rights first skips the many places
+# without any town right. tests/test_schools.py keeps the list equal to the rights in that file.
+pp_has_specialization_town_rights = {
+	has_any_town_rights = yes
+	OR = {
+		has_town_rights = town_rights_type:pp_cloth_rights
+		has_town_rights = town_rights_type:pp_cloth_charter
+		has_town_rights = town_rights_type:pp_fine_cloth_rights
+		has_town_rights = town_rights_type:pp_fine_cloth_charter
+		has_town_rights = town_rights_type:pp_leather_rights
+		has_town_rights = town_rights_type:pp_leather_charter
+		has_town_rights = town_rights_type:pp_pottery_rights
+		has_town_rights = town_rights_type:pp_pottery_charter
+		has_town_rights = town_rights_type:pp_furniture_rights
+		has_town_rights = town_rights_type:pp_furniture_charter
+		has_town_rights = town_rights_type:pp_glass_rights
+		has_town_rights = town_rights_type:pp_glass_charter
+		has_town_rights = town_rights_type:pp_jewelry_rights
+		has_town_rights = town_rights_type:pp_jewelry_charter
+		has_town_rights = town_rights_type:pp_porcelain_rights
+		has_town_rights = town_rights_type:pp_porcelain_charter
+		has_town_rights = town_rights_type:pp_lacquerware_rights
+		has_town_rights = town_rights_type:pp_lacquerware_charter
+		has_town_rights = town_rights_type:pp_beer_rights
+		has_town_rights = town_rights_type:pp_beer_charter
+		has_town_rights = town_rights_type:pp_liquor_rights
+		has_town_rights = town_rights_type:pp_liquor_charter
+		has_town_rights = town_rights_type:pp_books_rights
+		has_town_rights = town_rights_type:pp_books_charter
+		has_town_rights = town_rights_type:pp_paper_rights
+		has_town_rights = town_rights_type:pp_paper_charter
+		has_town_rights = town_rights_type:pp_tools_rights
+		has_town_rights = town_rights_type:pp_tools_charter
+		has_town_rights = town_rights_type:pp_weaponry_rights
+		has_town_rights = town_rights_type:pp_weaponry_charter
+		has_town_rights = town_rights_type:pp_firearms_rights
+		has_town_rights = town_rights_type:pp_firearms_charter
+		has_town_rights = town_rights_type:pp_cannons_rights
+		has_town_rights = town_rights_type:pp_cannons_charter
+		has_town_rights = town_rights_type:pp_naval_supplies_rights
+		has_town_rights = town_rights_type:pp_naval_supplies_charter
+		has_town_rights = town_rights_type:pp_iron_rights
+	}
+}
+
+# Country scope: the Education of the Masses law (education_masses_law) is set to a policy that teaches the common
+# people, i.e. one whose vanilla effect included a literacy cap for peasants or for everyone: basic religious,
+# theocratic, Scottish presbyterian, personal religious (printing press), secular (Enlightenment) and Vedic education.
+# Not: uneducated masses, apprenticeships (burghers only), oral tradition and the two epic traditions (no literacy).
+pp_educates_the_masses = {
+	OR = {
+		has_policy = basic_religious_education
+		has_policy = theocratic_education
+		has_policy = scottish_presbyterian_education
+		has_policy = personal_religious_education
+		has_policy = secular_education
+		has_policy = vedic_education
+	}
+}

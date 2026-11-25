@@ -307,21 +307,25 @@ FOOD_SECURITY_PRIORITY_TAGS_BY_GROUP = {
 }
 EDUCATION_PRIORITY_TAG = "pp_education_priority"
 EDUCATION_PRIORITY_BONUS = 20000000
-EDUCATION_PRIORITY_BUILDINGS = ("library", "university")
+EDUCATION_PRIORITY_BUILDINGS = ("library", "university", "pp_village_school", "pp_trade_school")
 EDUCATION_POP_TYPES = {
     "library": "clergy",
     "university": "clergy",
+    "pp_village_school": "clergy",
+    "pp_trade_school": "burghers",
 }
+# Literacy rework 2026-11-25 (Jan): the Library's promotion speed moved to the Village School, its burgher room to the
+# Trade School; the Library has neither any more.
 EDUCATION_PROMOTION_SPEEDS = {
-    "library": 0.002,
+    "library": None,
     "university": 0.005,
+    "pp_village_school": 0.002,
+    "pp_trade_school": None,
 }
 EDUCATION_DESIRED_POP_MODIFIERS = {
-    "library": {
-        "local_laborers_desired_pop": 0.6,
-        "local_burghers_desired_pop": 0.3,
-        "local_clergy_desired_pop": 0.1,
-    },
+    "library": {},
+    "pp_village_school": {},
+    "pp_trade_school": {"local_burghers_desired_pop": 0.3},
     "university": {
         "local_laborers_desired_pop": 1.2,
         "local_burghers_desired_pop": 0.6,
@@ -675,10 +679,10 @@ def test_education_building_priorities_are_in_employment_systems() -> None:
         modifier = values["modifier"]
         assert isinstance(modifier, CList)
         modifier_values = _entry_values(modifier)
-        for modifier_key, expected_value in EDUCATION_DESIRED_POP_MODIFIERS[building].items():
-            assert modifier_values[modifier_key] == expected_value
+        desired = {k: v for k, v in modifier_values.items() if k.endswith("_desired_pop")}
+        assert desired == EDUCATION_DESIRED_POP_MODIFIERS[building], building
 
-        assert modifier_values["local_pop_promotion_speed"] == EDUCATION_PROMOTION_SPEEDS[building]
+        assert modifier_values.get("local_pop_promotion_speed") == EDUCATION_PROMOTION_SPEEDS[building], building
 
     library_maintenance = production_methods["pp_library_maintenance"]
     assert isinstance(library_maintenance, CList)

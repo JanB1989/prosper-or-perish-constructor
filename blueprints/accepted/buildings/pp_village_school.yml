@@ -1,0 +1,12 @@
+version: 2
+tag: pp_village_school
+footprint: institutional
+building:
+  key: pp_village_school
+  mode: INJECT
+  source: pp_school_buildings.txt
+  production_method_slots: []
+  possible_production_methods: []
+  body: |-
+    # The mod defines this building by hand in in_game/common/building_types/pp_school_buildings.txt.
+    # This blueprint stays disabled and only carries the footprint class; ppc build writes the capacity there.

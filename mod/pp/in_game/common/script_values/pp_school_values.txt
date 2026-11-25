@@ -1,0 +1,92 @@
+﻿# Prosper or Perish - schools (literacy rework 2026-11-25, Jan; hand-written). building_types/pp_school_buildings.txt.
+# Location scope, scope:owner = the building's owner, as in vanilla's building_caps.txt.
+# Every row of a cap is one labelled number (cap_tooltips.py: a row with steps would show as sub-rows), so each
+# condition sits in a helper read through this.
+
+# Village School: 1 level with Village Schools (the advance unlocks the building), +1 with the Printing Press advance,
+# +1 with Common Schooling (its country modifier pp_village_school_levels), +1 while the owner's Education of the
+# Masses law is a policy that teaches the common people (scripted trigger pp_educates_the_masses). At most 4.
+pp_village_school_max_level = {
+	add = {
+		desc = "BUILDING_LEVEL_BASE"
+		value = 1
+	}
+	add = {
+		desc = "PP_BUILDING_LEVEL_PRINTING_PRESS"
+		value = this.pp_village_school_printing_press_level
+	}
+	add = {
+		desc = "BUILDING_LEVEL_FROM_OWNER_MODIFIERS"
+		value = scope:owner.modifier:pp_village_school_levels
+	}
+	add = {
+		desc = "PP_BUILDING_LEVEL_EDUCATION_POLICY"
+		value = this.pp_village_school_education_level
+	}
+}
+
+pp_village_school_printing_press_level = {
+	value = 0
+	if = {
+		limit = { scope:owner = { has_advance = printing_press_advance } }
+		value = 1
+	}
+}
+
+pp_village_school_education_level = {
+	value = 0
+	if = {
+		limit = { scope:owner = { pp_educates_the_masses = yes } }
+		value = 1
+	}
+}
+
+# Trade School: 1 level with Reckoning Schools (the advance unlocks the building), +1 where the town holds one of the
+# mod's specialization town rights, charter or rights (scripted trigger pp_has_specialization_town_rights). At most 2.
+pp_trade_school_max_level = {
+	add = {
+		desc = "BUILDING_LEVEL_BASE"
+		value = 1
+	}
+	add = {
+		desc = "PP_BUILDING_LEVEL_SPECIALIZATION_RIGHTS"
+		value = this.pp_trade_school_specialization_level
+	}
+}
+
+pp_trade_school_specialization_level = {
+	value = 0
+	if = {
+		limit = { pp_has_specialization_town_rights = yes }
+		value = 1
+	}
+}
+
+# AI (ai_construct_weight, divided there by the owner's monthly income + 10 like the Library's): the engine values the
+# schools' class literacy caps at about zero, so this flat weight is what builds them. Location values only.
+# Village School: 30 + 2 per 1,000 people of the location, at most 150.
+pp_village_school_ai_weight = {
+	value = population
+	multiply = 2
+	add = 30
+	max = 150
+}
+
+# Trade School: 30 + 10 per 1,000 burghers of the location, at most 150.
+pp_trade_school_ai_weight = {
+	value = num_pop_type:burghers
+	multiply = 10
+	add = 30
+	max = 150
+}
+
+# Library (2026-11-25): it now raises the literacy cap of nobles, burghers and clergy and gives no promotion any more,
+# so its weight follows those classes: 20 + 10 per 1,000 nobles, burghers and clergy of the location, at most 150.
+pp_library_ai_weight = {
+	value = num_pop_type:nobles
+	add = num_pop_type:burghers
+	add = num_pop_type:clergy
+	multiply = 10
+	add = 20
+	max = 150
+}

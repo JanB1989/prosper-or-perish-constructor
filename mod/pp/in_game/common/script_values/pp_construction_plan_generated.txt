@@ -27573,6 +27573,14 @@ pp_cplan_room_pp_oasis_caravan_station = {
 	value = pp_oasis_caravan_station_logistics_max_level
 	subtract = "location_building_level(building_type:pp_oasis_caravan_station)"
 }
+pp_cplan_room_pp_trade_school = {
+	value = pp_trade_school_max_level
+	subtract = "location_building_level(building_type:pp_trade_school)"
+}
+pp_cplan_room_pp_village_school = {
+	value = pp_village_school_max_level
+	subtract = "location_building_level(building_type:pp_village_school)"
+}
 pp_cplan_room_pp_yam_station = {
 	value = pp_yam_station_logistics_max_level
 	subtract = "location_building_level(building_type:pp_yam_station)"

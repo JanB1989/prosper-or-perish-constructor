@@ -67,6 +67,7 @@ WORLDBUILDER_CODE_AND_DATA = (
     "src/prosper_or_perish_constructor/setup_layout.py",          # the setup folder every setup writer uses
     "src/prosper_or_perish_constructor/staple_foods.py",          # the staple crops of the start crop allocation
     "src/prosper_or_perish_constructor/start_technology.py",      # the start buildings a ladder group keeps
+    "src/prosper_or_perish_constructor/literacy_sources.py",      # the ladder applies the literacy cut to its advances
     "src/prosper_or_perish_constructor/stored_food.py",           # store_lever (start-food validator) reads its config
     "src/prosper_or_perish_constructor/store_lever.py",           # the start-food validator reads the store lever's numbers
     "src/prosper_or_perish_constructor/vanilla_food_productivity.py",   # script value resolution (EU5 1.4 override rule)
@@ -407,6 +408,18 @@ def _build_parser() -> argparse.ArgumentParser:
         help="apply writes the advance file, the setup level file, the start building table and the reports; check reports whether they are current.",
     )
     start_tech.add_argument("--verbose", action="store_true", help="also list the floors and the setup things that need a ladder advance.")
+    literacy = _add_command(
+        subcommands,
+        "literacy",
+        "Country-wide literacy sources: cut the generic max literacy and literacy speed (config/literacy_sources.toml).",
+        _literacy,
+    )
+    literacy.add_argument(
+        "action",
+        choices=("apply", "check"),
+        help="apply writes the replace files (<folder>/zz_pp_literacy_sources.txt) and the reports; check reports whether they are current.",
+    )
+    literacy.add_argument("--verbose", action="store_true", help="also print every changed value.")
     advance_cost = _add_command(
         subcommands,
         "advance-cost",
@@ -1422,6 +1435,20 @@ def _start_tech(args: argparse.Namespace, extra: Sequence[str], repo: Path, proj
     return 1 if check and result.changed else 0
 
 
+def _literacy(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("literacy does not accept extra arguments.")
+    from prosper_or_perish_constructor import literacy_sources
+
+    check = args.action == "check"
+    result = literacy_sources.apply(repo, project, _project_mod_root(repo, project), write=not check)
+    if args.verbose:
+        for change, by in result.changes:
+            print(f"{change.folder}/{change.obj} [{change.block}] {change.key}: {change.old} -> {change.new} ({by})")
+    print(literacy_sources.summary(result, check=check))
+    return 1 if check and result.changed else 0
+
+
 def _blockade(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
     if extra:
         raise SystemExit("blockade does not accept extra arguments.")
@@ -2068,6 +2095,9 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
     from prosper_or_perish_constructor import start_technology  # after every step that writes advances
 
     print(start_technology.summary(start_technology.apply(repo, project, mod_root, vanilla_root(repo, project))), flush=True)
+    from prosper_or_perish_constructor import literacy_sources  # after the ladder and the RGO redirects: it checks theirs
+
+    print(literacy_sources.summary(literacy_sources.apply(repo, project, mod_root, vanilla_root(repo, project))), flush=True)
     from prosper_or_perish_constructor import advance_research_cost  # after the ladder: it reads the ladder's costs
 
     print(advance_research_cost.summary(*advance_research_cost.apply(repo, project, mod_root, vanilla_root(repo, project))),

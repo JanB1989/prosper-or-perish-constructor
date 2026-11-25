@@ -6,3 +6,24 @@
 	glass = 0.1
 	category = building_maintenance
 }
+
+# Schools (literacy rework 2026-11-25, Jan): upkeep per level. Provisional amounts, change them here only (Jan: watch
+# goods demand). No paper, no lumber. Icons are placeholders (the vanilla buildings below) until the schools' own are
+# installed.
+pp_village_school_maintenance = {
+	icon_type = building_type
+	icon = local_schools
+	beeswax = 0.03 # candles
+	clay = 0.1 # slates and writing tablets
+	manual_labor = 0.5
+	category = building_maintenance
+}
+
+pp_trade_school_maintenance = {
+	icon_type = building_type
+	icon = counting_house
+	books = 0.15 # reckoning books and ledgers
+	beeswax = 0.05
+	manual_labor = 0.5
+	category = building_maintenance
+}

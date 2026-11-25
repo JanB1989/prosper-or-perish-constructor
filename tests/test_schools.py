@@ -205,7 +205,9 @@ def test_pop_literacy_impact(vanilla) -> None:
     assert set(impact) == {"clergy", "laborers", "peasants"}
     assert impact["clergy"] == {"local_pop_conversion_speed_modifier": 0.25,
                                 "local_pop_assimilation_speed_modifier": 0.25, "local_monthly_literacy": 0.02}
-    assert impact["laborers"] == {"local_max_rgo_size_modifier": 0.05}
+    # no production efficiency line of vanilla; literate laborers organise and move up a little faster (Jan)
+    assert impact["laborers"] == {"local_max_rgo_size_modifier": 0.05, "local_peasants_estate_power": 0.25,
+                                  "local_pop_promotion_speed_modifier": 0.25}
     assert impact["peasants"]["local_peasants_estate_power"] == 0.25
     assert impact["peasants"]["local_pop_promotion_speed_modifier"] == 1.0
     # nothing else of vanilla's type lost: every vanilla key outside literacy_impact is in the copy

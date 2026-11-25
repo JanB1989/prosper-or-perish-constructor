@@ -90,6 +90,10 @@ REPLACE:laborers = {
 	# in its place for now); RGO size 0.05 (vanilla 0.1)
 	literacy_impact = {
 		local_max_rgo_size_modifier = 0.05
+		# 2026-11-25, Jan: literate laborers organise (they count toward the peasants' estate) and move up a little
+		# faster; vanilla's production efficiency line stays out. Values at full literacy.
+		local_peasants_estate_power = 0.25
+		local_pop_promotion_speed_modifier = 0.25
 		# local_raw_material_output = 0.05
 	}
 }

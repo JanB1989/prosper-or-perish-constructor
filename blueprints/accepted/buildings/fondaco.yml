@@ -115,8 +115,9 @@ building:
     	pp_fondaco_maintenance = {
     		icon_type = building_type
     		icon = fondaco
-    		lumber = 1 # vanilla 0.1 per level (fondaco_maintenance)
-    		paper = 2 # 0.2
+    		# upkeep of 3.5 vanilla levels per step (2026-11-25, Jan: dear to build, cheap to keep)
+    		lumber = 0.35 # vanilla 0.1 per level (fondaco_maintenance)
+    		paper = 0.7 # 0.2
     		category = building_maintenance
     	}
     }

@@ -220,7 +220,9 @@
   `trade_range_advance_age_3`, step 3 on `chartered_companies`, step 4 on a merchant republic (Fondaco: Italian; Kontor:
   the Hanseatic merchant federation). `max_levels = 4`.
 - Strength per step = 10 vanilla levels (capacity / power: Trade Office 6 / 2, Fondaco 2 / 10, Kontor 2.5 / 10; maritime
-  presence x5; upkeep goods x10 in renamed unique methods `pp_<building>_...`), `market_center_modifier` +50 % capacity
+  presence x5; upkeep goods x3.5 in renamed unique methods `pp_<building>_...`, x10 until 2026-11-25: dear to build,
+  cheap to keep, Jan; at x10 the Hansa's 16 start steps cost 27 gold a month on an income of 15 and it went bankrupt
+  in 1358, run 5023bdba), `market_center_modifier` +50 % capacity
   and power; employment = created pop 0.25 (the most a burgher building may employ after the cut,
   `tests/test_building_scaling.py`). Host gains in `modifier`: institution growth, max literacy,
   `local_merchant_capacity_modifier`, migration attraction (Fondaco literacy and institutions, Kontor merchant capacity and

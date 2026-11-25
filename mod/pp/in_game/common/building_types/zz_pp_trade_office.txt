@@ -103,9 +103,10 @@ unique_production_methods = {
 	pp_trade_office_requirements = {
 		icon_type = building_type
 		icon = trade_office
-		paper = 0.3 # vanilla 0.03 per level
-		cloth = 0.35 # 0.035
-		salt = 0.25 # 0.025
+		# upkeep of 3.5 vanilla levels per step (2026-11-25, Jan: dear to build, cheap to keep)
+		paper = 0.105 # vanilla 0.03 per level
+		cloth = 0.1225 # 0.035
+		salt = 0.0875 # 0.025
 		category = building_maintenance
 	}
 }

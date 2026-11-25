@@ -306,6 +306,22 @@ def test_payload_splits_peasants_filters_regions_and_ranks_countries() -> None:
     assert charts["price_heatmap"]["goods_legend"] == "groups" and charts["world_trade"]["goods_legend"] == "goods"
 
 
+def test_labour_cost_chart_weights_markets_by_their_labour_demand() -> None:
+    from prosper_or_perish_constructor.run_report_charts import build_payload
+
+    run = _trade_run()
+    assert "labour_cost" not in {c["key"] for c in build_payload(run)["charts"]}  # a dataset without the labour good
+    run.labour = pl.DataFrame({
+        "snapshot_id": ["s1", "s1", "s2", "s2"], "market_id": [1, 2, 1, 2], "price": [1.0, 2.0, 1.0, 3.0],
+        "default_price": [5.0] * 4, "supply": [100.0, 40.0, 100.0, 40.0], "demand": [10.0, 30.0, 10.0, 30.0]})
+    chart = {c["key"]: c for c in build_payload(run)["charts"]}["labour_cost"]
+    assert chart["section"] == "prices"
+    price, used = ({s["name"]: [v for _, v in s["data"]] for s in view["option"]["series"]} for view in chart["views"])
+    assert price["Western Europe"] == pytest.approx([0.2, 0.2]) and price["British Isles"] == pytest.approx([0.4, 0.6])
+    assert price["World"] == pytest.approx([0.35, 0.5])  # London asks for three times Paris's labour
+    assert used["World"] == pytest.approx([40 / 140 * 100] * 2, abs=0.01) and used["Western Europe"] == pytest.approx([10.0, 10.0])
+
+
 def test_burgher_trade_chart_compares_burgher_and_country_trade() -> None:
     from prosper_or_perish_constructor.run_report_charts import build_payload, burgher_trade_share
 

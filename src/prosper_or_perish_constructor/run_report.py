@@ -49,6 +49,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from prosper_or_perish_constructor.run_report_charts import (
     DUMMY_GOODS,
+    LABOUR_GOOD,
     GOODS_GROUPS,
     PriceScale,
     build_payload,
@@ -164,6 +165,8 @@ class RunData:
     urban: UrbanCatalog = field(default_factory=UrbanCatalog)  # town right and industry type definitions
     # land improvements built and possible per snapshot and cap (improvement_room.room); empty without the model
     improvements: pl.DataFrame = field(default_factory=pl.DataFrame)
+    # the labour good per snapshot and market: price, default_price, supply, demand (labour_charts)
+    labour: pl.DataFrame = field(default_factory=pl.DataFrame)
 
     @property
     def investment_prices(self) -> str:
@@ -296,6 +299,12 @@ def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | Non
         .join(stock_caps, on=["snapshot_id", "market_id"], how="left")
         .collect()
     )
+    labour = (
+        _scan(dataset, "market_goods", playthrough)
+        .filter(pl.col("snapshot_id").is_in(wanted) & (pl.col("good_id") == LABOUR_GOOD) & (pl.col("default_price") > 0))
+        .select("snapshot_id", "market_id", "price", "default_price", pl.col("supply").fill_null(0.0), pl.col("demand").fill_null(0.0))
+        .collect()
+    )
     markets = (
         _scan(dataset, "markets", playthrough)
         .filter(pl.col("snapshot_id").is_in(wanted))
@@ -321,7 +330,7 @@ def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | Non
         names = goods_scan.select("good_id", "good_name").unique("good_id").collect()
         labels.goods = {**{g: n for g, n in names.iter_rows() if n}, **labels.goods}
     run = RunData(playthrough, str(name), snapshots, locations, building_levels, buildings_by_category, countries,
-                  market_goods, markets, trades, economy, labels, institutions=institutions)
+                  market_goods, markets, trades, economy, labels, institutions=institutions, labour=labour)
     if improvements is not None:
         from prosper_or_perish_constructor.improvement_room import room
 

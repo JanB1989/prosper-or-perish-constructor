@@ -34,6 +34,8 @@ if TYPE_CHECKING:
 
 # Mod bookkeeping goods without a real market (pinned 1-gold offsets, province food accounting, labour, logistics).
 DUMMY_GOODS = frozenset({"offset", "logistics", "local_food", "manual_labor", "province_food_sales"})
+# The labour good production methods buy: no market good of the goods page, but its price is charted (labour_charts).
+LABOUR_GOOD = "manual_labor"
 
 # Goods groups (display order): key, label, colour on a light surface, colour on the dark video map.
 GOODS_GROUPS: tuple[tuple[str, str, str, str], ...] = (
@@ -526,6 +528,46 @@ def price_charts(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dic
          view("Production value", "gold", line_option(xs, [_series(label, pv[k], colour) for k, label, colour in groups],
                                                       unit="gold", stack=True))], goods_legend="goods"))
     return charts
+
+
+def labour_charts(run: RunData, x: pl.DataFrame) -> list[dict[str, Any]]:
+    """Labour cost: the price of the labour good against its base price, and what the methods ask for against the
+    labour on offer; world and world regions (the region of each market's centre, markets weighted by their labour
+    demand)."""
+    if run.labour.is_empty() or run.markets.is_empty():
+        return []
+    region_of = run.locations.filter(land_region_expr()).select(
+        "snapshot_id", pl.col("slug").alias("center_slug"), pl.col("macro_region").alias("region"))
+    rows = (
+        run.labour.join(run.markets.select("snapshot_id", "market_id", "center_slug"), on=["snapshot_id", "market_id"], how="inner")
+        .join(region_of, on=["snapshot_id", "center_slug"], how="inner")
+    )
+
+    def summed(by: list[str]) -> pl.DataFrame:
+        return rows.group_by(by).agg(
+            (pl.col("price") / pl.col("default_price") * pl.col("demand")).sum().alias("weighted"),
+            pl.col("demand").sum(), pl.col("supply").sum(),
+        ).with_columns(
+            pl.when(pl.col("demand") > 0).then(pl.col("weighted") / pl.col("demand")).alias("price_ratio"),
+            pl.when(pl.col("supply") > 0).then(pl.col("demand") / pl.col("supply") * 100).alias("used"))
+
+    xs = x["x"].to_list()
+    regions, world = summed(["snapshot_id", "region"]), summed(["snapshot_id"])
+    palette = region_palette(run)
+
+    def lines(value: str) -> list[dict[str, Any]]:
+        by_region = _by_key(regions, "region", value, x)
+        return [_series("World", _aligned(world, value, x), WORLD, width=3)] + [
+            _series(label, by_region[key], colour, width=1.6) for key, label, colour in palette if key in by_region]
+
+    return [chart(
+        "labour_cost", "prices", "Labour cost",
+        "Price of the labour good that production methods buy, as a multiple of its base price (dashed: a fifth of base, "
+        "the lowest a price can go). Labour used: the labour the methods ask for as a share of the labour on offer; "
+        "near 100 % labour is scarce and its price climbs. World and world regions (the region of each market's "
+        "centre), markets weighted by their labour demand.",
+        [view("Price ÷ base", "ratio", line_option(xs, lines("price_ratio"), unit="ratio", y_min=None, reference=0.2)),
+         view("Labour used", "pct", line_option(xs, lines("used"), unit="pct"))])]
 
 
 def trade_charts(run: RunData, x: pl.DataFrame, world: pl.DataFrame) -> list[dict[str, Any]]:
@@ -1212,6 +1254,7 @@ def build_payload(run: RunData) -> dict[str, Any]:
         tables += region_trade_tables(run, x, flows)
         tables += trade_tables(run, x, world)
         charts += price_charts(run, x, world)
+    charts += labour_charts(run, x)
     charts += building_charts(run, x) + improvement_charts(run, x)
     from prosper_or_perish_constructor.run_report_urban import urban_charts  # it imports this module
 

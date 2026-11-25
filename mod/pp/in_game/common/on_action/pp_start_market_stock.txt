@@ -98,16 +98,16 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:fruit amount = 6 }
 			add_goods_supply = { goods = goods:furniture amount = 5.1 }
 			add_goods_supply = { goods = goods:jewelry amount = 13.3 }
-			add_goods_supply = { goods = goods:leather amount = 4.7 }
+			add_goods_supply = { goods = goods:leather amount = 4.4 }
 			add_goods_supply = { goods = goods:livestock amount = 138.8 }
-			add_goods_supply = { goods = goods:lumber amount = 184.9 }
+			add_goods_supply = { goods = goods:lumber amount = 174.7 }
 			add_goods_supply = { goods = goods:masonry amount = 5.1 }
 			add_goods_supply = { goods = goods:paper amount = 2.2 }
 			add_goods_supply = { goods = goods:pearls amount = 133.4 }
 			add_goods_supply = { goods = goods:pottery amount = 18.2 }
 			add_goods_supply = { goods = goods:rice amount = 61.1 }
 			add_goods_supply = { goods = goods:sand amount = 189.5 }
-			add_goods_supply = { goods = goods:stone amount = 94.9 }
+			add_goods_supply = { goods = goods:stone amount = 62.4 }
 			add_goods_supply = { goods = goods:tools amount = 16.7 }
 			add_goods_supply = { goods = goods:victuals amount = 27.1 }
 			add_goods_supply = { goods = goods:weaponry amount = 10.8 }
@@ -116,7 +116,7 @@ pp_start_market_stock = {
 		}
 		location:al_hajr.market = {
 			add_goods_supply = { goods = goods:clay amount = 76.6 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 3.9 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 3.8 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 2.8 }
 			add_goods_supply = { goods = goods:fish amount = 51.3 }
 			add_goods_supply = { goods = goods:fruit amount = 25.2 }
@@ -125,39 +125,39 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:jewelry amount = 6.6 }
 			add_goods_supply = { goods = goods:leather amount = 2.2 }
 			add_goods_supply = { goods = goods:livestock amount = 369.1 }
-			add_goods_supply = { goods = goods:lumber amount = 79.7 }
+			add_goods_supply = { goods = goods:lumber amount = 74 }
 			add_goods_supply = { goods = goods:masonry amount = 1.7 }
 			add_goods_supply = { goods = goods:pottery amount = 12.1 }
 			add_goods_supply = { goods = goods:salt amount = 54.5 }
 			add_goods_supply = { goods = goods:sand amount = 189.5 }
-			add_goods_supply = { goods = goods:stone amount = 44.3 }
-			add_goods_supply = { goods = goods:tools amount = 4.3 }
+			add_goods_supply = { goods = goods:stone amount = 22.1 }
+			add_goods_supply = { goods = goods:tools amount = 4 }
 			add_goods_supply = { goods = goods:victuals amount = 110.5 }
-			add_goods_supply = { goods = goods:weaponry amount = 8.2 }
+			add_goods_supply = { goods = goods:weaponry amount = 7.2 }
 			add_goods_supply = { goods = goods:wheat amount = 60.3 }
 			add_goods_supply = { goods = goods:wool amount = 61 }
 		}
 		location:alexandria.market = {
-			add_goods_supply = { goods = goods:alum amount = 281.1 }
+			add_goods_supply = { goods = goods:alum amount = 270.9 }
 			add_goods_supply = { goods = goods:beer amount = 42.6 }
 			add_goods_supply = { goods = goods:beeswax amount = 900.2 }
 			add_goods_supply = { goods = goods:camels amount = 6.6 }
 			add_goods_supply = { goods = goods:clay amount = 1666.6 }
-			add_goods_supply = { goods = goods:cloth amount = 3.3 }
-			add_goods_supply = { goods = goods:copper amount = 621.9 }
+			add_goods_supply = { goods = goods:cloth amount = 3.2 }
+			add_goods_supply = { goods = goods:copper amount = 631.5 }
 			add_goods_supply = { goods = goods:cotton amount = 512.4 }
 			add_goods_supply = { goods = goods:dyes amount = 271.3 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 68.3 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 62.6 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 97.4 }
 			add_goods_supply = { goods = goods:fish amount = 1922.2 }
 			add_goods_supply = { goods = goods:fruit amount = 30 }
 			add_goods_supply = { goods = goods:furniture amount = 30.6 }
 			add_goods_supply = { goods = goods:iron amount = 1010.9 }
 			add_goods_supply = { goods = goods:jewelry amount = 133.4 }
-			add_goods_supply = { goods = goods:leather amount = 108.4 }
+			add_goods_supply = { goods = goods:leather amount = 107.6 }
 			add_goods_supply = { goods = goods:legumes amount = 939.7 }
 			add_goods_supply = { goods = goods:livestock amount = 911.8 }
-			add_goods_supply = { goods = goods:lumber amount = 1034.8 }
+			add_goods_supply = { goods = goods:lumber amount = 1018.6 }
 			add_goods_supply = { goods = goods:marble amount = 131.4 }
 			add_goods_supply = { goods = goods:masonry amount = 69.9 }
 			add_goods_supply = { goods = goods:millet amount = 337.1 }
@@ -169,10 +169,10 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:salt amount = 245.5 }
 			add_goods_supply = { goods = goods:sand amount = 672.7 }
 			add_goods_supply = { goods = goods:silk amount = 341.4 }
-			add_goods_supply = { goods = goods:stone amount = 1374.3 }
+			add_goods_supply = { goods = goods:stone amount = 1371.3 }
 			add_goods_supply = { goods = goods:sugar amount = 208 }
 			add_goods_supply = { goods = goods:tin amount = 179.7 }
-			add_goods_supply = { goods = goods:tools amount = 144 }
+			add_goods_supply = { goods = goods:tools amount = 148.1 }
 			add_goods_supply = { goods = goods:victuals amount = 220.4 }
 			add_goods_supply = { goods = goods:weaponry amount = 197.7 }
 			add_goods_supply = { goods = goods:wheat amount = 307.4 }
@@ -252,7 +252,7 @@ pp_start_market_stock = {
 		}
 		location:angkor.market = {
 			add_goods_supply = { goods = goods:alum amount = 93.7 }
-			add_goods_supply = { goods = goods:beer amount = 52 }
+			add_goods_supply = { goods = goods:beer amount = 50.8 }
 			add_goods_supply = { goods = goods:beeswax amount = 526.9 }
 			add_goods_supply = { goods = goods:clay amount = 745.1 }
 			add_goods_supply = { goods = goods:cloth amount = 1.3 }
@@ -260,7 +260,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:cotton amount = 148.3 }
 			add_goods_supply = { goods = goods:dyes amount = 107.5 }
 			add_goods_supply = { goods = goods:elephants amount = 516.6 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 53.7 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 50.3 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 23.8 }
 			add_goods_supply = { goods = goods:fish amount = 728 }
 			add_goods_supply = { goods = goods:fruit amount = 11 }
@@ -279,17 +279,17 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:masonry amount = 27.3 }
 			add_goods_supply = { goods = goods:medicaments amount = 267 }
 			add_goods_supply = { goods = goods:millet amount = 194.7 }
-			add_goods_supply = { goods = goods:paper amount = 5.9 }
+			add_goods_supply = { goods = goods:paper amount = 1.3 }
 			add_goods_supply = { goods = goods:pearls amount = 30.8 }
-			add_goods_supply = { goods = goods:pottery amount = 68.2 }
+			add_goods_supply = { goods = goods:pottery amount = 67.9 }
 			add_goods_supply = { goods = goods:rice amount = 2696.2 }
 			add_goods_supply = { goods = goods:salt amount = 46.1 }
 			add_goods_supply = { goods = goods:sand amount = 251 }
 			add_goods_supply = { goods = goods:silk amount = 106.8 }
-			add_goods_supply = { goods = goods:stone amount = 397.4 }
+			add_goods_supply = { goods = goods:stone amount = 315.4 }
 			add_goods_supply = { goods = goods:sugar amount = 41.4 }
 			add_goods_supply = { goods = goods:tar amount = 58.9 }
-			add_goods_supply = { goods = goods:tools amount = 56.6 }
+			add_goods_supply = { goods = goods:tools amount = 54.4 }
 			add_goods_supply = { goods = goods:victuals amount = 179.4 }
 			add_goods_supply = { goods = goods:weaponry amount = 32.4 }
 			add_goods_supply = { goods = goods:wild_game amount = 232.4 }
@@ -305,16 +305,16 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:furniture amount = 7.6 }
 			add_goods_supply = { goods = goods:horses amount = 1.8 }
 			add_goods_supply = { goods = goods:jewelry amount = 15 }
-			add_goods_supply = { goods = goods:leather amount = 17.3 }
+			add_goods_supply = { goods = goods:leather amount = 16.8 }
 			add_goods_supply = { goods = goods:livestock amount = 932.6 }
-			add_goods_supply = { goods = goods:lumber amount = 344 }
+			add_goods_supply = { goods = goods:lumber amount = 336.5 }
 			add_goods_supply = { goods = goods:masonry amount = 10.2 }
 			add_goods_supply = { goods = goods:medicaments amount = 117.3 }
 			add_goods_supply = { goods = goods:pottery amount = 41 }
 			add_goods_supply = { goods = goods:salt amount = 43.4 }
 			add_goods_supply = { goods = goods:sand amount = 136.5 }
 			add_goods_supply = { goods = goods:stone amount = 816.2 }
-			add_goods_supply = { goods = goods:tools amount = 22.2 }
+			add_goods_supply = { goods = goods:tools amount = 21.8 }
 			add_goods_supply = { goods = goods:victuals amount = 54 }
 			add_goods_supply = { goods = goods:weaponry amount = 28.3 }
 			add_goods_supply = { goods = goods:wheat amount = 52.1 }
@@ -322,7 +322,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:wool amount = 1044.3 }
 		}
 		location:axum.market = {
-			add_goods_supply = { goods = goods:beer amount = 12.2 }
+			add_goods_supply = { goods = goods:beer amount = 11 }
 			add_goods_supply = { goods = goods:beeswax amount = 388.3 }
 			add_goods_supply = { goods = goods:clay amount = 447.9 }
 			add_goods_supply = { goods = goods:coffee amount = 136.8 }
@@ -333,12 +333,12 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:fish amount = 176.8 }
 			add_goods_supply = { goods = goods:fruit amount = 4.1 }
 			add_goods_supply = { goods = goods:furniture amount = 3.6 }
-			add_goods_supply = { goods = goods:gems amount = 39.2 }
+			add_goods_supply = { goods = goods:gems amount = 36.7 }
 			add_goods_supply = { goods = goods:goods_gold amount = 17 }
 			add_goods_supply = { goods = goods:iron amount = 337 }
 			add_goods_supply = { goods = goods:ivory amount = 87.4 }
-			add_goods_supply = { goods = goods:jewelry amount = 22.2 }
-			add_goods_supply = { goods = goods:leather amount = 9.7 }
+			add_goods_supply = { goods = goods:jewelry amount = 21.9 }
+			add_goods_supply = { goods = goods:leather amount = 9.2 }
 			add_goods_supply = { goods = goods:legumes amount = 256.3 }
 			add_goods_supply = { goods = goods:livestock amount = 558.4 }
 			add_goods_supply = { goods = goods:lumber amount = 208.6 }
@@ -348,12 +348,12 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:millet amount = 261.7 }
 			add_goods_supply = { goods = goods:paper amount = 4.3 }
 			add_goods_supply = { goods = goods:pearls amount = 30.8 }
-			add_goods_supply = { goods = goods:pottery amount = 33.8 }
+			add_goods_supply = { goods = goods:pottery amount = 33.1 }
 			add_goods_supply = { goods = goods:salt amount = 27.3 }
 			add_goods_supply = { goods = goods:sand amount = 146.8 }
 			add_goods_supply = { goods = goods:stone amount = 1426 }
 			add_goods_supply = { goods = goods:sugar amount = 26 }
-			add_goods_supply = { goods = goods:tools amount = 32.5 }
+			add_goods_supply = { goods = goods:tools amount = 39.3 }
 			add_goods_supply = { goods = goods:victuals amount = 69.2 }
 			add_goods_supply = { goods = goods:weaponry amount = 24.6 }
 			add_goods_supply = { goods = goods:wheat amount = 268.7 }
@@ -389,11 +389,11 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:salt amount = 68.3 }
 			add_goods_supply = { goods = goods:sand amount = 355.7 }
 			add_goods_supply = { goods = goods:silver amount = 52.3 }
-			add_goods_supply = { goods = goods:stone amount = 731.5 }
+			add_goods_supply = { goods = goods:stone amount = 715.5 }
 			add_goods_supply = { goods = goods:tobacco amount = 531.3 }
 			add_goods_supply = { goods = goods:tools amount = 101.9 }
 			add_goods_supply = { goods = goods:victuals amount = 411.8 }
-			add_goods_supply = { goods = goods:weaponry amount = 41 }
+			add_goods_supply = { goods = goods:weaponry amount = 21 }
 			add_goods_supply = { goods = goods:wheat amount = 86.2 }
 			add_goods_supply = { goods = goods:wild_game amount = 350.6 }
 			add_goods_supply = { goods = goods:wool amount = 93.3 }
@@ -403,36 +403,36 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:camels amount = 1.6 }
 			add_goods_supply = { goods = goods:clay amount = 755.7 }
 			add_goods_supply = { goods = goods:cloth amount = 1.1 }
-			add_goods_supply = { goods = goods:copper amount = 203.7 }
+			add_goods_supply = { goods = goods:copper amount = 213.3 }
 			add_goods_supply = { goods = goods:cotton amount = 534.3 }
-			add_goods_supply = { goods = goods:dyes amount = 85.4 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 31 }
+			add_goods_supply = { goods = goods:dyes amount = 83.3 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 25.3 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 33.5 }
 			add_goods_supply = { goods = goods:fish amount = 181.3 }
 			add_goods_supply = { goods = goods:fruit amount = 13.2 }
 			add_goods_supply = { goods = goods:fur amount = 5 }
 			add_goods_supply = { goods = goods:furniture amount = 15.3 }
-			add_goods_supply = { goods = goods:iron amount = 33.3 }
+			add_goods_supply = { goods = goods:iron amount = 35.5 }
 			add_goods_supply = { goods = goods:jewelry amount = 40.7 }
-			add_goods_supply = { goods = goods:leather amount = 24 }
+			add_goods_supply = { goods = goods:leather amount = 23.2 }
 			add_goods_supply = { goods = goods:legumes amount = 418.4 }
 			add_goods_supply = { goods = goods:livestock amount = 754.2 }
-			add_goods_supply = { goods = goods:lumber amount = 352.8 }
+			add_goods_supply = { goods = goods:lumber amount = 342.2 }
 			add_goods_supply = { goods = goods:masonry amount = 18.8 }
 			add_goods_supply = { goods = goods:millet amount = 139.7 }
 			add_goods_supply = { goods = goods:olives amount = 25.2 }
-			add_goods_supply = { goods = goods:paper amount = 12.3 }
+			add_goods_supply = { goods = goods:paper amount = 12.1 }
 			add_goods_supply = { goods = goods:pottery amount = 65.7 }
 			add_goods_supply = { goods = goods:rice amount = 258.4 }
 			add_goods_supply = { goods = goods:saffron amount = 101.3 }
 			add_goods_supply = { goods = goods:sand amount = 231.2 }
 			add_goods_supply = { goods = goods:silk amount = 90.9 }
-			add_goods_supply = { goods = goods:stone amount = 350.9 }
+			add_goods_supply = { goods = goods:stone amount = 334.2 }
 			add_goods_supply = { goods = goods:sugar amount = 86.5 }
-			add_goods_supply = { goods = goods:tar amount = 10.4 }
-			add_goods_supply = { goods = goods:tools amount = 53.8 }
+			add_goods_supply = { goods = goods:tar amount = 10.3 }
+			add_goods_supply = { goods = goods:tools amount = 57.8 }
 			add_goods_supply = { goods = goods:victuals amount = 183.4 }
-			add_goods_supply = { goods = goods:weaponry amount = 46.1 }
+			add_goods_supply = { goods = goods:weaponry amount = 45.1 }
 			add_goods_supply = { goods = goods:wheat amount = 230.5 }
 			add_goods_supply = { goods = goods:wild_game amount = 83.2 }
 			add_goods_supply = { goods = goods:wine amount = 121.1 }
@@ -494,7 +494,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:fish amount = 35.4 }
 			add_goods_supply = { goods = goods:goods_gold amount = 120.8 }
 			add_goods_supply = { goods = goods:jewelry amount = 27.2 }
-			add_goods_supply = { goods = goods:leather amount = 11.9 }
+			add_goods_supply = { goods = goods:leather amount = 11.5 }
 			add_goods_supply = { goods = goods:legumes amount = 80.9 }
 			add_goods_supply = { goods = goods:livestock amount = 221.5 }
 			add_goods_supply = { goods = goods:lumber amount = 125.2 }
@@ -505,7 +505,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:rice amount = 21.6 }
 			add_goods_supply = { goods = goods:saffron amount = 229.4 }
 			add_goods_supply = { goods = goods:sand amount = 24.7 }
-			add_goods_supply = { goods = goods:stone amount = 218.4 }
+			add_goods_supply = { goods = goods:stone amount = 153.4 }
 			add_goods_supply = { goods = goods:tools amount = 36.5 }
 			add_goods_supply = { goods = goods:victuals amount = 41.7 }
 			add_goods_supply = { goods = goods:weaponry amount = 20.1 }
@@ -528,23 +528,23 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:iron amount = 561.6 }
 			add_goods_supply = { goods = goods:ivory amount = 174.8 }
 			add_goods_supply = { goods = goods:jewelry amount = 53.3 }
-			add_goods_supply = { goods = goods:leather amount = 17.9 }
+			add_goods_supply = { goods = goods:leather amount = 16.3 }
 			add_goods_supply = { goods = goods:legumes amount = 535.1 }
 			add_goods_supply = { goods = goods:livestock amount = 252 }
 			add_goods_supply = { goods = goods:lumber amount = 324 }
 			add_goods_supply = { goods = goods:masonry amount = 23.9 }
 			add_goods_supply = { goods = goods:medicaments amount = 53 }
 			add_goods_supply = { goods = goods:millet amount = 129.8 }
-			add_goods_supply = { goods = goods:paper amount = 8.4 }
+			add_goods_supply = { goods = goods:paper amount = 7.6 }
 			add_goods_supply = { goods = goods:pearls amount = 30.8 }
 			add_goods_supply = { goods = goods:pottery amount = 72.9 }
 			add_goods_supply = { goods = goods:saffron amount = 143.5 }
 			add_goods_supply = { goods = goods:salt amount = 89.8 }
 			add_goods_supply = { goods = goods:sand amount = 193.3 }
-			add_goods_supply = { goods = goods:stone amount = 382.8 }
+			add_goods_supply = { goods = goods:stone amount = 246.8 }
 			add_goods_supply = { goods = goods:tools amount = 70.8 }
 			add_goods_supply = { goods = goods:victuals amount = 148.4 }
-			add_goods_supply = { goods = goods:weaponry amount = 33.8 }
+			add_goods_supply = { goods = goods:weaponry amount = 32.7 }
 			add_goods_supply = { goods = goods:wheat amount = 32.9 }
 			add_goods_supply = { goods = goods:wild_game amount = 115.8 }
 			add_goods_supply = { goods = goods:wool amount = 276.9 }
@@ -569,10 +569,9 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:pottery amount = 8.9 }
 			add_goods_supply = { goods = goods:rice amount = 915.1 }
 			add_goods_supply = { goods = goods:sand amount = 94.7 }
-			add_goods_supply = { goods = goods:stone amount = 32.4 }
-			add_goods_supply = { goods = goods:tools amount = 5.6 }
+			add_goods_supply = { goods = goods:stone amount = 16.2 }
+			add_goods_supply = { goods = goods:tools amount = 5.2 }
 			add_goods_supply = { goods = goods:victuals amount = 33.6 }
-			add_goods_supply = { goods = goods:weaponry amount = 3 }
 			add_goods_supply = { goods = goods:wool amount = 47.8 }
 		}
 		location:bordeaux.market = {
@@ -580,11 +579,11 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:beer amount = 83.5 }
 			add_goods_supply = { goods = goods:beeswax amount = 879.1 }
 			add_goods_supply = { goods = goods:clay amount = 1237.9 }
-			add_goods_supply = { goods = goods:cloth amount = 1.1 }
+			add_goods_supply = { goods = goods:cloth amount = 1 }
 			add_goods_supply = { goods = goods:coal amount = 55.8 }
 			add_goods_supply = { goods = goods:copper amount = 203.9 }
 			add_goods_supply = { goods = goods:dyes amount = 290.2 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 34.7 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 32.8 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 56.8 }
 			add_goods_supply = { goods = goods:fish amount = 501.2 }
 			add_goods_supply = { goods = goods:fruit amount = 12.2 }
@@ -598,12 +597,12 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:leather amount = 26.1 }
 			add_goods_supply = { goods = goods:legumes amount = 586.5 }
 			add_goods_supply = { goods = goods:livestock amount = 853.3 }
-			add_goods_supply = { goods = goods:lumber amount = 622.1 }
+			add_goods_supply = { goods = goods:lumber amount = 619.7 }
 			add_goods_supply = { goods = goods:marble amount = 53.2 }
 			add_goods_supply = { goods = goods:masonry amount = 25.6 }
 			add_goods_supply = { goods = goods:millet amount = 219 }
 			add_goods_supply = { goods = goods:olives amount = 96.4 }
-			add_goods_supply = { goods = goods:paper amount = 11 }
+			add_goods_supply = { goods = goods:paper amount = 10.1 }
 			add_goods_supply = { goods = goods:pottery amount = 134.4 }
 			add_goods_supply = { goods = goods:saffron amount = 110.8 }
 			add_goods_supply = { goods = goods:salt amount = 132.1 }
@@ -627,7 +626,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:cloth amount = 10.8 }
 			add_goods_supply = { goods = goods:coal amount = 67.9 }
 			add_goods_supply = { goods = goods:dyes amount = 356.5 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 164 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 158.3 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 73.8 }
 			add_goods_supply = { goods = goods:fish amount = 1369.6 }
 			add_goods_supply = { goods = goods:fruit amount = 7.3 }
@@ -638,7 +637,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:leather amount = 40.3 }
 			add_goods_supply = { goods = goods:legumes amount = 552.5 }
 			add_goods_supply = { goods = goods:livestock amount = 602.9 }
-			add_goods_supply = { goods = goods:lumber amount = 804.5 }
+			add_goods_supply = { goods = goods:lumber amount = 797.2 }
 			add_goods_supply = { goods = goods:masonry amount = 32.4 }
 			add_goods_supply = { goods = goods:millet amount = 253.5 }
 			add_goods_supply = { goods = goods:paper amount = 17.8 }
@@ -754,7 +753,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:furniture amount = 2.5 }
 			add_goods_supply = { goods = goods:goods_gold amount = 22 }
 			add_goods_supply = { goods = goods:jewelry amount = 8.5 }
-			add_goods_supply = { goods = goods:leather amount = 4.7 }
+			add_goods_supply = { goods = goods:leather amount = 4.4 }
 			add_goods_supply = { goods = goods:livestock amount = 815.3 }
 			add_goods_supply = { goods = goods:lumber amount = 217.3 }
 			add_goods_supply = { goods = goods:masonry amount = 11.9 }
@@ -763,7 +762,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:rice amount = 44.5 }
 			add_goods_supply = { goods = goods:salt amount = 105.9 }
 			add_goods_supply = { goods = goods:sand amount = 19.8 }
-			add_goods_supply = { goods = goods:stone amount = 146.1 }
+			add_goods_supply = { goods = goods:stone amount = 142.3 }
 			add_goods_supply = { goods = goods:tin amount = 96.6 }
 			add_goods_supply = { goods = goods:tools amount = 18 }
 			add_goods_supply = { goods = goods:victuals amount = 78.3 }
@@ -789,7 +788,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:leather amount = 17 }
 			add_goods_supply = { goods = goods:legumes amount = 1330.4 }
 			add_goods_supply = { goods = goods:livestock amount = 996.8 }
-			add_goods_supply = { goods = goods:lumber amount = 607.8 }
+			add_goods_supply = { goods = goods:lumber amount = 602.7 }
 			add_goods_supply = { goods = goods:marble amount = 81.6 }
 			add_goods_supply = { goods = goods:masonry amount = 23.9 }
 			add_goods_supply = { goods = goods:medicaments amount = 96.7 }
@@ -804,7 +803,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:silk amount = 104 }
 			add_goods_supply = { goods = goods:stone amount = 1131.2 }
 			add_goods_supply = { goods = goods:sugar amount = 24.9 }
-			add_goods_supply = { goods = goods:tools amount = 56.4 }
+			add_goods_supply = { goods = goods:tools amount = 56 }
 			add_goods_supply = { goods = goods:victuals amount = 199.4 }
 			add_goods_supply = { goods = goods:weaponry amount = 24.9 }
 			add_goods_supply = { goods = goods:wheat amount = 122.7 }
@@ -837,7 +836,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:wool amount = 2.5 }
 		}
 		location:chinchay.market = {
-			add_goods_supply = { goods = goods:alum amount = 93.7 }
+			add_goods_supply = { goods = goods:alum amount = 83.4 }
 			add_goods_supply = { goods = goods:beer amount = 30.8 }
 			add_goods_supply = { goods = goods:beeswax amount = 728.7 }
 			add_goods_supply = { goods = goods:chili amount = 284.5 }
@@ -848,12 +847,12 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:fine_cloth amount = 84.6 }
 			add_goods_supply = { goods = goods:fish amount = 670.8 }
 			add_goods_supply = { goods = goods:fruit amount = 2.7 }
-			add_goods_supply = { goods = goods:gems amount = 63.7 }
+			add_goods_supply = { goods = goods:gems amount = 61.2 }
 			add_goods_supply = { goods = goods:goods_gold amount = 22.6 }
 			add_goods_supply = { goods = goods:jewelry amount = 62.5 }
-			add_goods_supply = { goods = goods:leather amount = 3.6 }
+			add_goods_supply = { goods = goods:leather amount = 3.3 }
 			add_goods_supply = { goods = goods:livestock amount = 127.1 }
-			add_goods_supply = { goods = goods:lumber amount = 250.8 }
+			add_goods_supply = { goods = goods:lumber amount = 239.2 }
 			add_goods_supply = { goods = goods:maize amount = 300.8 }
 			add_goods_supply = { goods = goods:masonry amount = 20.5 }
 			add_goods_supply = { goods = goods:medicaments amount = 45.5 }
@@ -863,11 +862,11 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:salt amount = 115.8 }
 			add_goods_supply = { goods = goods:sand amount = 168 }
 			add_goods_supply = { goods = goods:silver amount = 52.1 }
-			add_goods_supply = { goods = goods:stone amount = 266.3 }
+			add_goods_supply = { goods = goods:stone amount = 217.6 }
 			add_goods_supply = { goods = goods:tin amount = 97 }
 			add_goods_supply = { goods = goods:tools amount = 44 }
 			add_goods_supply = { goods = goods:victuals amount = 140.6 }
-			add_goods_supply = { goods = goods:weaponry amount = 12.9 }
+			add_goods_supply = { goods = goods:weaponry amount = 6.3 }
 			add_goods_supply = { goods = goods:wild_game amount = 73.1 }
 			add_goods_supply = { goods = goods:wool amount = 256.6 }
 		}
@@ -899,9 +898,9 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:rice amount = 1146.4 }
 			add_goods_supply = { goods = goods:sand amount = 136.5 }
 			add_goods_supply = { goods = goods:silk amount = 99.4 }
-			add_goods_supply = { goods = goods:stone amount = 349.5 }
+			add_goods_supply = { goods = goods:stone amount = 154.6 }
 			add_goods_supply = { goods = goods:sugar amount = 49.4 }
-			add_goods_supply = { goods = goods:tools amount = 41.5 }
+			add_goods_supply = { goods = goods:tools amount = 36.4 }
 			add_goods_supply = { goods = goods:victuals amount = 91.2 }
 			add_goods_supply = { goods = goods:weaponry amount = 52.2 }
 			add_goods_supply = { goods = goods:wheat amount = 160.4 }
@@ -909,7 +908,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:wool amount = 543.3 }
 		}
 		location:chunsua.market = {
-			add_goods_supply = { goods = goods:alum amount = 93.7 }
+			add_goods_supply = { goods = goods:alum amount = 83.4 }
 			add_goods_supply = { goods = goods:beer amount = 7.6 }
 			add_goods_supply = { goods = goods:beeswax amount = 26.8 }
 			add_goods_supply = { goods = goods:clay amount = 62.5 }
@@ -919,27 +918,26 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:gems amount = 39.8 }
 			add_goods_supply = { goods = goods:iron amount = 141.8 }
 			add_goods_supply = { goods = goods:jewelry amount = 1.1 }
-			add_goods_supply = { goods = goods:lumber amount = 28.4 }
+			add_goods_supply = { goods = goods:lumber amount = 26.3 }
 			add_goods_supply = { goods = goods:marble amount = 53.2 }
 			add_goods_supply = { goods = goods:masonry amount = 3.4 }
 			add_goods_supply = { goods = goods:pottery amount = 9.6 }
 			add_goods_supply = { goods = goods:salt amount = 21.7 }
 			add_goods_supply = { goods = goods:sand amount = 20.7 }
-			add_goods_supply = { goods = goods:stone amount = 147.8 }
+			add_goods_supply = { goods = goods:stone amount = 144.9 }
 			add_goods_supply = { goods = goods:tools amount = 5.3 }
 			add_goods_supply = { goods = goods:victuals amount = 14.7 }
-			add_goods_supply = { goods = goods:weaponry amount = 3.4 }
 			add_goods_supply = { goods = goods:wild_game amount = 9.8 }
 			add_goods_supply = { goods = goods:wool amount = 27.3 }
 		}
 		location:cologne.market = {
-			add_goods_supply = { goods = goods:alum amount = 148.9 }
-			add_goods_supply = { goods = goods:beer amount = 383.2 }
+			add_goods_supply = { goods = goods:alum amount = 123.5 }
+			add_goods_supply = { goods = goods:beer amount = 382.6 }
 			add_goods_supply = { goods = goods:beeswax amount = 1843.7 }
-			add_goods_supply = { goods = goods:clay amount = 2093.9 }
+			add_goods_supply = { goods = goods:clay amount = 2092.3 }
 			add_goods_supply = { goods = goods:cloth amount = 2.9 }
 			add_goods_supply = { goods = goods:coal amount = 148.8 }
-			add_goods_supply = { goods = goods:copper amount = 774 }
+			add_goods_supply = { goods = goods:copper amount = 783.5 }
 			add_goods_supply = { goods = goods:dyes amount = 181.8 }
 			add_goods_supply = { goods = goods:fiber_crops amount = 112.5 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 116.7 }
@@ -956,23 +954,23 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:leather amount = 76.4 }
 			add_goods_supply = { goods = goods:legumes amount = 1190.4 }
 			add_goods_supply = { goods = goods:livestock amount = 1347.5 }
-			add_goods_supply = { goods = goods:lumber amount = 1117.3 }
+			add_goods_supply = { goods = goods:lumber amount = 1082.1 }
 			add_goods_supply = { goods = goods:marble amount = 122.4 }
 			add_goods_supply = { goods = goods:masonry amount = 71.6 }
 			add_goods_supply = { goods = goods:medicaments amount = 201.5 }
 			add_goods_supply = { goods = goods:mercury amount = 173.6 }
 			add_goods_supply = { goods = goods:millet amount = 614.9 }
-			add_goods_supply = { goods = goods:paper amount = 26.1 }
-			add_goods_supply = { goods = goods:pottery amount = 324 }
+			add_goods_supply = { goods = goods:paper amount = 14.3 }
+			add_goods_supply = { goods = goods:pottery amount = 323.7 }
 			add_goods_supply = { goods = goods:salt amount = 228.4 }
 			add_goods_supply = { goods = goods:sand amount = 723.8 }
 			add_goods_supply = { goods = goods:silver amount = 98.6 }
-			add_goods_supply = { goods = goods:stone amount = 1734.1 }
+			add_goods_supply = { goods = goods:stone amount = 1737.3 }
 			add_goods_supply = { goods = goods:tar amount = 33.3 }
 			add_goods_supply = { goods = goods:tin amount = 125.9 }
-			add_goods_supply = { goods = goods:tools amount = 277 }
+			add_goods_supply = { goods = goods:tools amount = 280.4 }
 			add_goods_supply = { goods = goods:victuals amount = 642.3 }
-			add_goods_supply = { goods = goods:weaponry amount = 109.4 }
+			add_goods_supply = { goods = goods:weaponry amount = 109.2 }
 			add_goods_supply = { goods = goods:wheat amount = 929 }
 			add_goods_supply = { goods = goods:wild_game amount = 753.7 }
 			add_goods_supply = { goods = goods:wine amount = 839.3 }
@@ -988,7 +986,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:copper amount = 409.3 }
 			add_goods_supply = { goods = goods:cotton amount = 442.9 }
 			add_goods_supply = { goods = goods:dyes amount = 471.1 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 78 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 70.5 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 88.8 }
 			add_goods_supply = { goods = goods:fish amount = 2500.1 }
 			add_goods_supply = { goods = goods:fruit amount = 16.5 }
@@ -1001,17 +999,17 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:jewelry amount = 74.8 }
 			add_goods_supply = { goods = goods:leather amount = 64.7 }
 			add_goods_supply = { goods = goods:legumes amount = 730 }
-			add_goods_supply = { goods = goods:livestock amount = 1066.9 }
-			add_goods_supply = { goods = goods:lumber amount = 1713.6 }
+			add_goods_supply = { goods = goods:livestock amount = 1078.4 }
+			add_goods_supply = { goods = goods:lumber amount = 1703.9 }
 			add_goods_supply = { goods = goods:marble amount = 226.4 }
 			add_goods_supply = { goods = goods:masonry amount = 51.2 }
 			add_goods_supply = { goods = goods:medicaments amount = 314.3 }
 			add_goods_supply = { goods = goods:mercury amount = 173.6 }
-			add_goods_supply = { goods = goods:millet amount = 256.7 }
+			add_goods_supply = { goods = goods:millet amount = 267.8 }
 			add_goods_supply = { goods = goods:olives amount = 1032.8 }
 			add_goods_supply = { goods = goods:paper amount = 31.8 }
 			add_goods_supply = { goods = goods:pottery amount = 268.2 }
-			add_goods_supply = { goods = goods:rice amount = 830 }
+			add_goods_supply = { goods = goods:rice amount = 875.8 }
 			add_goods_supply = { goods = goods:saffron amount = 617.8 }
 			add_goods_supply = { goods = goods:salt amount = 456.8 }
 			add_goods_supply = { goods = goods:saltpeter amount = 256.3 }
@@ -1022,7 +1020,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:tar amount = 68.8 }
 			add_goods_supply = { goods = goods:tin amount = 97 }
 			add_goods_supply = { goods = goods:tools amount = 161.7 }
-			add_goods_supply = { goods = goods:victuals amount = 233.9 }
+			add_goods_supply = { goods = goods:victuals amount = 227.9 }
 			add_goods_supply = { goods = goods:weaponry amount = 123.6 }
 			add_goods_supply = { goods = goods:wheat amount = 316.4 }
 			add_goods_supply = { goods = goods:wild_game amount = 657.4 }
@@ -1081,7 +1079,7 @@ pp_start_market_stock = {
 		location:damascus.market = {
 			add_goods_supply = { goods = goods:beeswax amount = 583.1 }
 			add_goods_supply = { goods = goods:camels amount = 1.5 }
-			add_goods_supply = { goods = goods:clay amount = 318.5 }
+			add_goods_supply = { goods = goods:clay amount = 315.4 }
 			add_goods_supply = { goods = goods:cotton amount = 348.4 }
 			add_goods_supply = { goods = goods:dyes amount = 110.1 }
 			add_goods_supply = { goods = goods:fiber_crops amount = 17.1 }
@@ -1090,22 +1088,22 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:fruit amount = 15.2 }
 			add_goods_supply = { goods = goods:furniture amount = 7.6 }
 			add_goods_supply = { goods = goods:iron amount = 390.3 }
-			add_goods_supply = { goods = goods:jewelry amount = 26.8 }
+			add_goods_supply = { goods = goods:jewelry amount = 26.5 }
 			add_goods_supply = { goods = goods:leather amount = 14.8 }
 			add_goods_supply = { goods = goods:legumes amount = 384.9 }
 			add_goods_supply = { goods = goods:livestock amount = 441.1 }
-			add_goods_supply = { goods = goods:lumber amount = 210 }
+			add_goods_supply = { goods = goods:lumber amount = 208.1 }
 			add_goods_supply = { goods = goods:masonry amount = 6.8 }
 			add_goods_supply = { goods = goods:millet amount = 88.1 }
 			add_goods_supply = { goods = goods:olives amount = 464.7 }
 			add_goods_supply = { goods = goods:paper amount = 6.5 }
-			add_goods_supply = { goods = goods:pottery amount = 36.8 }
+			add_goods_supply = { goods = goods:pottery amount = 36.1 }
 			add_goods_supply = { goods = goods:saffron amount = 15.7 }
 			add_goods_supply = { goods = goods:salt amount = 98.5 }
 			add_goods_supply = { goods = goods:sand amount = 189.5 }
 			add_goods_supply = { goods = goods:silk amount = 121.5 }
 			add_goods_supply = { goods = goods:silver amount = 22.6 }
-			add_goods_supply = { goods = goods:stone amount = 173.7 }
+			add_goods_supply = { goods = goods:stone amount = 168.9 }
 			add_goods_supply = { goods = goods:sugar amount = 22.4 }
 			add_goods_supply = { goods = goods:tin amount = 6.2 }
 			add_goods_supply = { goods = goods:tools amount = 27.3 }
@@ -1117,43 +1115,43 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:wool amount = 434.5 }
 		}
 		location:delhi.market = {
-			add_goods_supply = { goods = goods:alum amount = 36.8 }
-			add_goods_supply = { goods = goods:beer amount = 139.4 }
+			add_goods_supply = { goods = goods:alum amount = 33.2 }
+			add_goods_supply = { goods = goods:beer amount = 138.2 }
 			add_goods_supply = { goods = goods:beeswax amount = 1110 }
-			add_goods_supply = { goods = goods:clay amount = 1412.8 }
+			add_goods_supply = { goods = goods:clay amount = 1409.7 }
 			add_goods_supply = { goods = goods:cloth amount = 4.3 }
-			add_goods_supply = { goods = goods:copper amount = 543.3 }
+			add_goods_supply = { goods = goods:copper amount = 562.4 }
 			add_goods_supply = { goods = goods:cotton amount = 1532.3 }
 			add_goods_supply = { goods = goods:dyes amount = 487.2 }
 			add_goods_supply = { goods = goods:elephants amount = 774.9 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 79.1 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 75.3 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 74.3 }
 			add_goods_supply = { goods = goods:fish amount = 1600.2 }
 			add_goods_supply = { goods = goods:fruit amount = 46.7 }
 			add_goods_supply = { goods = goods:horses amount = 3.2 }
 			add_goods_supply = { goods = goods:iron amount = 673.9 }
 			add_goods_supply = { goods = goods:ivory amount = 575.9 }
-			add_goods_supply = { goods = goods:jewelry amount = 112.9 }
-			add_goods_supply = { goods = goods:leather amount = 76.5 }
+			add_goods_supply = { goods = goods:jewelry amount = 112.6 }
+			add_goods_supply = { goods = goods:leather amount = 75.5 }
 			add_goods_supply = { goods = goods:legumes amount = 1291.4 }
 			add_goods_supply = { goods = goods:livestock amount = 1194.2 }
 			add_goods_supply = { goods = goods:lumber amount = 1359.5 }
 			add_goods_supply = { goods = goods:marble amount = 118.9 }
 			add_goods_supply = { goods = goods:masonry amount = 122.8 }
 			add_goods_supply = { goods = goods:medicaments amount = 234.9 }
-			add_goods_supply = { goods = goods:millet amount = 678.7 }
+			add_goods_supply = { goods = goods:millet amount = 675.5 }
 			add_goods_supply = { goods = goods:paper amount = 16.1 }
-			add_goods_supply = { goods = goods:pottery amount = 277.4 }
+			add_goods_supply = { goods = goods:pottery amount = 277.1 }
 			add_goods_supply = { goods = goods:rice amount = 1097.2 }
 			add_goods_supply = { goods = goods:salt amount = 129.6 }
 			add_goods_supply = { goods = goods:saltpeter amount = 150.4 }
 			add_goods_supply = { goods = goods:sand amount = 430.1 }
 			add_goods_supply = { goods = goods:silk amount = 252.4 }
 			add_goods_supply = { goods = goods:silver amount = 99.4 }
-			add_goods_supply = { goods = goods:stone amount = 1497.2 }
+			add_goods_supply = { goods = goods:stone amount = 1405.9 }
 			add_goods_supply = { goods = goods:sugar amount = 241.5 }
 			add_goods_supply = { goods = goods:tin amount = 97 }
-			add_goods_supply = { goods = goods:tools amount = 166.5 }
+			add_goods_supply = { goods = goods:tools amount = 173.3 }
 			add_goods_supply = { goods = goods:victuals amount = 234.7 }
 			add_goods_supply = { goods = goods:weaponry amount = 192 }
 			add_goods_supply = { goods = goods:wheat amount = 619.9 }
@@ -1163,24 +1161,24 @@ pp_start_market_stock = {
 		location:dongola.market = {
 			add_goods_supply = { goods = goods:beer amount = 11.4 }
 			add_goods_supply = { goods = goods:beeswax amount = 120.5 }
-			add_goods_supply = { goods = goods:clay amount = 351.1 }
+			add_goods_supply = { goods = goods:clay amount = 346.4 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 11.2 }
 			add_goods_supply = { goods = goods:fish amount = 210.1 }
 			add_goods_supply = { goods = goods:fruit amount = 6 }
 			add_goods_supply = { goods = goods:furniture amount = 4.2 }
 			add_goods_supply = { goods = goods:goods_gold amount = 21.8 }
 			add_goods_supply = { goods = goods:ivory amount = 87.4 }
-			add_goods_supply = { goods = goods:jewelry amount = 21.2 }
-			add_goods_supply = { goods = goods:leather amount = 10.1 }
+			add_goods_supply = { goods = goods:jewelry amount = 20.9 }
+			add_goods_supply = { goods = goods:leather amount = 9.6 }
 			add_goods_supply = { goods = goods:livestock amount = 428.1 }
-			add_goods_supply = { goods = goods:lumber amount = 76.9 }
+			add_goods_supply = { goods = goods:lumber amount = 63.6 }
 			add_goods_supply = { goods = goods:masonry amount = 25.6 }
 			add_goods_supply = { goods = goods:millet amount = 102.7 }
 			add_goods_supply = { goods = goods:paper amount = 3.1 }
-			add_goods_supply = { goods = goods:pottery amount = 37 }
+			add_goods_supply = { goods = goods:pottery amount = 36.5 }
 			add_goods_supply = { goods = goods:sand amount = 955.3 }
-			add_goods_supply = { goods = goods:stone amount = 255.8 }
-			add_goods_supply = { goods = goods:tools amount = 27.5 }
+			add_goods_supply = { goods = goods:stone amount = 210.9 }
+			add_goods_supply = { goods = goods:tools amount = 33.7 }
 			add_goods_supply = { goods = goods:victuals amount = 72.7 }
 			add_goods_supply = { goods = goods:weaponry amount = 24.4 }
 			add_goods_supply = { goods = goods:wheat amount = 79.7 }
@@ -1205,7 +1203,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:leather amount = 18.1 }
 			add_goods_supply = { goods = goods:legumes amount = 526.7 }
 			add_goods_supply = { goods = goods:livestock amount = 972.9 }
-			add_goods_supply = { goods = goods:lumber amount = 643.2 }
+			add_goods_supply = { goods = goods:lumber amount = 637.8 }
 			add_goods_supply = { goods = goods:masonry amount = 13.6 }
 			add_goods_supply = { goods = goods:medicaments amount = 84.2 }
 			add_goods_supply = { goods = goods:millet amount = 175.8 }
@@ -1215,7 +1213,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:silver amount = 17.9 }
 			add_goods_supply = { goods = goods:stone amount = 427 }
 			add_goods_supply = { goods = goods:tin amount = 193.6 }
-			add_goods_supply = { goods = goods:tools amount = 45.1 }
+			add_goods_supply = { goods = goods:tools amount = 44.2 }
 			add_goods_supply = { goods = goods:victuals amount = 367.4 }
 			add_goods_supply = { goods = goods:weaponry amount = 27 }
 			add_goods_supply = { goods = goods:wheat amount = 231.4 }
@@ -1298,7 +1296,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:copper amount = 391.9 }
 			add_goods_supply = { goods = goods:cotton amount = 301.3 }
 			add_goods_supply = { goods = goods:dyes amount = 315.9 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 70.3 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 68.4 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 79.7 }
 			add_goods_supply = { goods = goods:fish amount = 763.1 }
 			add_goods_supply = { goods = goods:fruit amount = 14.8 }
@@ -1306,10 +1304,10 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:iron amount = 620.6 }
 			add_goods_supply = { goods = goods:jewelry amount = 60.3 }
 			add_goods_supply = { goods = goods:lead amount = 10.5 }
-			add_goods_supply = { goods = goods:leather amount = 44.9 }
+			add_goods_supply = { goods = goods:leather amount = 44.7 }
 			add_goods_supply = { goods = goods:legumes amount = 176.8 }
 			add_goods_supply = { goods = goods:livestock amount = 503.7 }
-			add_goods_supply = { goods = goods:lumber amount = 491.4 }
+			add_goods_supply = { goods = goods:lumber amount = 488.9 }
 			add_goods_supply = { goods = goods:masonry amount = 25.6 }
 			add_goods_supply = { goods = goods:mercury amount = 173.6 }
 			add_goods_supply = { goods = goods:millet amount = 130.1 }
@@ -1416,7 +1414,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:clay amount = 458.3 }
 			add_goods_supply = { goods = goods:coal amount = 91.9 }
 			add_goods_supply = { goods = goods:copper amount = 273.9 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 11.5 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 10.2 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 6.2 }
 			add_goods_supply = { goods = goods:fish amount = 776.3 }
 			add_goods_supply = { goods = goods:furniture amount = 2.5 }
@@ -1435,9 +1433,9 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:sand amount = 136.5 }
 			add_goods_supply = { goods = goods:stone amount = 401.8 }
 			add_goods_supply = { goods = goods:tin amount = 1 }
-			add_goods_supply = { goods = goods:tools amount = 9.6 }
+			add_goods_supply = { goods = goods:tools amount = 9.2 }
 			add_goods_supply = { goods = goods:victuals amount = 92.7 }
-			add_goods_supply = { goods = goods:weaponry amount = 3.4 }
+			add_goods_supply = { goods = goods:weaponry amount = 2.6 }
 			add_goods_supply = { goods = goods:wild_game amount = 11.5 }
 			add_goods_supply = { goods = goods:wool amount = 45.9 }
 		}
@@ -1546,11 +1544,11 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:pottery amount = 24.9 }
 			add_goods_supply = { goods = goods:sand amount = 157.2 }
 			add_goods_supply = { goods = goods:silver amount = 52.3 }
-			add_goods_supply = { goods = goods:stone amount = 245 }
+			add_goods_supply = { goods = goods:stone amount = 212.5 }
 			add_goods_supply = { goods = goods:tin amount = 97.4 }
 			add_goods_supply = { goods = goods:tools amount = 36.5 }
 			add_goods_supply = { goods = goods:victuals amount = 131.2 }
-			add_goods_supply = { goods = goods:weaponry amount = 10 }
+			add_goods_supply = { goods = goods:weaponry amount = 4.1 }
 			add_goods_supply = { goods = goods:wool amount = 128.3 }
 		}
 		location:hormuz.market = {
@@ -1569,13 +1567,13 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:iron amount = 372.1 }
 			add_goods_supply = { goods = goods:jewelry amount = 26.8 }
 			add_goods_supply = { goods = goods:lead amount = 9.4 }
-			add_goods_supply = { goods = goods:leather amount = 8.4 }
+			add_goods_supply = { goods = goods:leather amount = 8.1 }
 			add_goods_supply = { goods = goods:legumes amount = 283.8 }
 			add_goods_supply = { goods = goods:livestock amount = 664.9 }
-			add_goods_supply = { goods = goods:lumber amount = 351.7 }
+			add_goods_supply = { goods = goods:lumber amount = 346 }
 			add_goods_supply = { goods = goods:masonry amount = 13.6 }
 			add_goods_supply = { goods = goods:medicaments amount = 94.7 }
-			add_goods_supply = { goods = goods:paper amount = 3.8 }
+			add_goods_supply = { goods = goods:paper amount = 3.6 }
 			add_goods_supply = { goods = goods:pearls amount = 305.8 }
 			add_goods_supply = { goods = goods:pottery amount = 22 }
 			add_goods_supply = { goods = goods:salt amount = 116.2 }
@@ -1583,9 +1581,9 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:silver amount = 22 }
 			add_goods_supply = { goods = goods:stone amount = 569.4 }
 			add_goods_supply = { goods = goods:sugar amount = 87.4 }
-			add_goods_supply = { goods = goods:tools amount = 18.4 }
+			add_goods_supply = { goods = goods:tools amount = 17.2 }
 			add_goods_supply = { goods = goods:victuals amount = 272.6 }
-			add_goods_supply = { goods = goods:weaponry amount = 21.8 }
+			add_goods_supply = { goods = goods:weaponry amount = 20.8 }
 			add_goods_supply = { goods = goods:wheat amount = 91.9 }
 			add_goods_supply = { goods = goods:wild_game amount = 257.6 }
 			add_goods_supply = { goods = goods:wine amount = 24.4 }
@@ -1612,7 +1610,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:fish amount = 51.8 }
 			add_goods_supply = { goods = goods:fur amount = 5.7 }
 			add_goods_supply = { goods = goods:furniture amount = 2.5 }
-			add_goods_supply = { goods = goods:leather amount = 5.3 }
+			add_goods_supply = { goods = goods:leather amount = 4.8 }
 			add_goods_supply = { goods = goods:legumes amount = 449.5 }
 			add_goods_supply = { goods = goods:livestock amount = 149.9 }
 			add_goods_supply = { goods = goods:lumber amount = 416.6 }
@@ -1624,7 +1622,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:tin amount = 2.1 }
 			add_goods_supply = { goods = goods:tools amount = 8.7 }
 			add_goods_supply = { goods = goods:victuals amount = 37.6 }
-			add_goods_supply = { goods = goods:weaponry amount = 6.3 }
+			add_goods_supply = { goods = goods:weaponry amount = 5.4 }
 			add_goods_supply = { goods = goods:wheat amount = 134.1 }
 			add_goods_supply = { goods = goods:wild_game amount = 206.1 }
 			add_goods_supply = { goods = goods:wool amount = 17.9 }
@@ -1638,7 +1636,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:copper amount = 241.9 }
 			add_goods_supply = { goods = goods:cotton amount = 265.7 }
 			add_goods_supply = { goods = goods:dyes amount = 78.5 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 26.3 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 24.4 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 36.8 }
 			add_goods_supply = { goods = goods:fish amount = 133.8 }
 			add_goods_supply = { goods = goods:fruit amount = 21.4 }
@@ -1646,10 +1644,10 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:iron amount = 390.3 }
 			add_goods_supply = { goods = goods:jewelry amount = 40.9 }
 			add_goods_supply = { goods = goods:lead amount = 21.3 }
-			add_goods_supply = { goods = goods:leather amount = 20.5 }
+			add_goods_supply = { goods = goods:leather amount = 20.3 }
 			add_goods_supply = { goods = goods:legumes amount = 171.7 }
 			add_goods_supply = { goods = goods:livestock amount = 512.1 }
-			add_goods_supply = { goods = goods:lumber amount = 357.6 }
+			add_goods_supply = { goods = goods:lumber amount = 355.2 }
 			add_goods_supply = { goods = goods:marble amount = 40.8 }
 			add_goods_supply = { goods = goods:masonry amount = 25.6 }
 			add_goods_supply = { goods = goods:medicaments amount = 72.2 }
@@ -1779,10 +1777,10 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:iron amount = 922.4 }
 			add_goods_supply = { goods = goods:jewelry amount = 20.9 }
 			add_goods_supply = { goods = goods:lead amount = 10.8 }
-			add_goods_supply = { goods = goods:leather amount = 20.4 }
+			add_goods_supply = { goods = goods:leather amount = 19.8 }
 			add_goods_supply = { goods = goods:legumes amount = 300 }
 			add_goods_supply = { goods = goods:livestock amount = 646.4 }
-			add_goods_supply = { goods = goods:lumber amount = 235.9 }
+			add_goods_supply = { goods = goods:lumber amount = 228.6 }
 			add_goods_supply = { goods = goods:marble amount = 40.8 }
 			add_goods_supply = { goods = goods:masonry amount = 22.2 }
 			add_goods_supply = { goods = goods:medicaments amount = 37.1 }
@@ -1855,7 +1853,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:beeswax amount = 154 }
 			add_goods_supply = { goods = goods:clay amount = 401.4 }
 			add_goods_supply = { goods = goods:dyes amount = 26.9 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 18.2 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 17 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 9.3 }
 			add_goods_supply = { goods = goods:fish amount = 128 }
 			add_goods_supply = { goods = goods:fruit amount = 2.8 }
@@ -1863,10 +1861,10 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:furniture amount = 5.1 }
 			add_goods_supply = { goods = goods:iron amount = 10.8 }
 			add_goods_supply = { goods = goods:jewelry amount = 10.4 }
-			add_goods_supply = { goods = goods:leather amount = 9.2 }
+			add_goods_supply = { goods = goods:leather amount = 8.6 }
 			add_goods_supply = { goods = goods:legumes amount = 5.7 }
 			add_goods_supply = { goods = goods:livestock amount = 166.2 }
-			add_goods_supply = { goods = goods:lumber amount = 223.5 }
+			add_goods_supply = { goods = goods:lumber amount = 213.3 }
 			add_goods_supply = { goods = goods:masonry amount = 10.2 }
 			add_goods_supply = { goods = goods:millet amount = 56 }
 			add_goods_supply = { goods = goods:paper amount = 13.5 }
@@ -1874,7 +1872,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:salt amount = 152.8 }
 			add_goods_supply = { goods = goods:sand amount = 67 }
 			add_goods_supply = { goods = goods:stone amount = 389.2 }
-			add_goods_supply = { goods = goods:tools amount = 23 }
+			add_goods_supply = { goods = goods:tools amount = 22.1 }
 			add_goods_supply = { goods = goods:victuals amount = 50.8 }
 			add_goods_supply = { goods = goods:weaponry amount = 17.5 }
 			add_goods_supply = { goods = goods:wheat amount = 16.5 }
@@ -1930,7 +1928,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:clay amount = 600.9 }
 			add_goods_supply = { goods = goods:cotton amount = 400.5 }
 			add_goods_supply = { goods = goods:dyes amount = 302.3 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 14 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 10.1 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 92.1 }
 			add_goods_supply = { goods = goods:fish amount = 73 }
 			add_goods_supply = { goods = goods:fruit amount = 2.1 }
@@ -1939,16 +1937,16 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:iron amount = 195.2 }
 			add_goods_supply = { goods = goods:ivory amount = 87.4 }
 			add_goods_supply = { goods = goods:jewelry amount = 79.3 }
-			add_goods_supply = { goods = goods:leather amount = 27.1 }
+			add_goods_supply = { goods = goods:leather amount = 25.2 }
 			add_goods_supply = { goods = goods:livestock amount = 345.9 }
 			add_goods_supply = { goods = goods:lumber amount = 247.7 }
 			add_goods_supply = { goods = goods:masonry amount = 22.2 }
 			add_goods_supply = { goods = goods:millet amount = 249.6 }
-			add_goods_supply = { goods = goods:paper amount = 14 }
+			add_goods_supply = { goods = goods:paper amount = 13.3 }
 			add_goods_supply = { goods = goods:pottery amount = 107.6 }
 			add_goods_supply = { goods = goods:rice amount = 1040.8 }
 			add_goods_supply = { goods = goods:sand amount = 136.5 }
-			add_goods_supply = { goods = goods:stone amount = 506 }
+			add_goods_supply = { goods = goods:stone amount = 427 }
 			add_goods_supply = { goods = goods:tin amount = 96.2 }
 			add_goods_supply = { goods = goods:tools amount = 101 }
 			add_goods_supply = { goods = goods:victuals amount = 103.1 }
@@ -1995,7 +1993,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:clay amount = 287.6 }
 			add_goods_supply = { goods = goods:copper amount = 62.6 }
 			add_goods_supply = { goods = goods:cotton amount = 360.2 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 6 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 4.9 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 31.2 }
 			add_goods_supply = { goods = goods:fish amount = 41.2 }
 			add_goods_supply = { goods = goods:fruit amount = 1.5 }
@@ -2004,7 +2002,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:gems amount = 120.8 }
 			add_goods_supply = { goods = goods:iron amount = 372.1 }
 			add_goods_supply = { goods = goods:jewelry amount = 23.8 }
-			add_goods_supply = { goods = goods:leather amount = 11.9 }
+			add_goods_supply = { goods = goods:leather amount = 11.6 }
 			add_goods_supply = { goods = goods:livestock amount = 156.3 }
 			add_goods_supply = { goods = goods:lumber amount = 87.9 }
 			add_goods_supply = { goods = goods:masonry amount = 11.9 }
@@ -2015,7 +2013,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:rice amount = 122 }
 			add_goods_supply = { goods = goods:sand amount = 94.7 }
 			add_goods_supply = { goods = goods:silk amount = 61.2 }
-			add_goods_supply = { goods = goods:stone amount = 156.7 }
+			add_goods_supply = { goods = goods:stone amount = 140.4 }
 			add_goods_supply = { goods = goods:tools amount = 26.3 }
 			add_goods_supply = { goods = goods:victuals amount = 41.8 }
 			add_goods_supply = { goods = goods:weaponry amount = 22.7 }
@@ -2042,7 +2040,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:ivory amount = 366.8 }
 			add_goods_supply = { goods = goods:jewelry amount = 112.5 }
 			add_goods_supply = { goods = goods:lead amount = 10.6 }
-			add_goods_supply = { goods = goods:leather amount = 26.8 }
+			add_goods_supply = { goods = goods:leather amount = 26 }
 			add_goods_supply = { goods = goods:legumes amount = 687.1 }
 			add_goods_supply = { goods = goods:livestock amount = 618.5 }
 			add_goods_supply = { goods = goods:lumber amount = 592.4 }
@@ -2096,46 +2094,46 @@ pp_start_market_stock = {
 		}
 		location:khambat.market = {
 			add_goods_supply = { goods = goods:alum amount = 308.9 }
-			add_goods_supply = { goods = goods:beer amount = 299 }
+			add_goods_supply = { goods = goods:beer amount = 296.6 }
 			add_goods_supply = { goods = goods:beeswax amount = 1454.6 }
 			add_goods_supply = { goods = goods:camels amount = 16 }
-			add_goods_supply = { goods = goods:clay amount = 1984.9 }
+			add_goods_supply = { goods = goods:clay amount = 1978.7 }
 			add_goods_supply = { goods = goods:cloth amount = 16.2 }
-			add_goods_supply = { goods = goods:copper amount = 1646.5 }
+			add_goods_supply = { goods = goods:copper amount = 1656 }
 			add_goods_supply = { goods = goods:cotton amount = 2550.5 }
 			add_goods_supply = { goods = goods:dyes amount = 444.9 }
 			add_goods_supply = { goods = goods:elephants amount = 330.8 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 274.9 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 263.6 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 268.8 }
 			add_goods_supply = { goods = goods:fish amount = 2097.2 }
 			add_goods_supply = { goods = goods:fruit amount = 74.4 }
 			add_goods_supply = { goods = goods:horses amount = 4 }
 			add_goods_supply = { goods = goods:incense amount = 21.8 }
 			add_goods_supply = { goods = goods:iron amount = 1577.9 }
-			add_goods_supply = { goods = goods:jewelry amount = 399.5 }
+			add_goods_supply = { goods = goods:jewelry amount = 399 }
 			add_goods_supply = { goods = goods:lead amount = 15.3 }
-			add_goods_supply = { goods = goods:leather amount = 158.7 }
+			add_goods_supply = { goods = goods:leather amount = 156.9 }
 			add_goods_supply = { goods = goods:legumes amount = 2033.5 }
 			add_goods_supply = { goods = goods:livestock amount = 1814.2 }
-			add_goods_supply = { goods = goods:lumber amount = 1219.3 }
+			add_goods_supply = { goods = goods:lumber amount = 1184.8 }
 			add_goods_supply = { goods = goods:marble amount = 122.4 }
 			add_goods_supply = { goods = goods:masonry amount = 162.1 }
 			add_goods_supply = { goods = goods:medicaments amount = 318.6 }
-			add_goods_supply = { goods = goods:millet amount = 1046.4 }
+			add_goods_supply = { goods = goods:millet amount = 1040 }
 			add_goods_supply = { goods = goods:paper amount = 50.2 }
 			add_goods_supply = { goods = goods:pearls amount = 108 }
-			add_goods_supply = { goods = goods:pottery amount = 305.1 }
+			add_goods_supply = { goods = goods:pottery amount = 304.5 }
 			add_goods_supply = { goods = goods:rice amount = 2171.8 }
 			add_goods_supply = { goods = goods:salt amount = 487.6 }
 			add_goods_supply = { goods = goods:saltpeter amount = 150.4 }
 			add_goods_supply = { goods = goods:sand amount = 1081.1 }
 			add_goods_supply = { goods = goods:silk amount = 823.5 }
 			add_goods_supply = { goods = goods:silver amount = 329 }
-			add_goods_supply = { goods = goods:stone amount = 2524.6 }
+			add_goods_supply = { goods = goods:stone amount = 2530.3 }
 			add_goods_supply = { goods = goods:sugar amount = 122.6 }
-			add_goods_supply = { goods = goods:tools amount = 336 }
+			add_goods_supply = { goods = goods:tools amount = 337.5 }
 			add_goods_supply = { goods = goods:victuals amount = 258.4 }
-			add_goods_supply = { goods = goods:weaponry amount = 308.9 }
+			add_goods_supply = { goods = goods:weaponry amount = 308.1 }
 			add_goods_supply = { goods = goods:wheat amount = 676.2 }
 			add_goods_supply = { goods = goods:wild_game amount = 839.2 }
 			add_goods_supply = { goods = goods:wool amount = 2587 }
@@ -2181,7 +2179,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:cotton amount = 462.3 }
 			add_goods_supply = { goods = goods:dyes amount = 189.2 }
 			add_goods_supply = { goods = goods:elephants amount = 1033.2 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 155 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 128.5 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 87.2 }
 			add_goods_supply = { goods = goods:fish amount = 903.3 }
 			add_goods_supply = { goods = goods:fruit amount = 23.9 }
@@ -2195,7 +2193,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:leather amount = 77.1 }
 			add_goods_supply = { goods = goods:legumes amount = 703.7 }
 			add_goods_supply = { goods = goods:livestock amount = 938.7 }
-			add_goods_supply = { goods = goods:lumber amount = 605.7 }
+			add_goods_supply = { goods = goods:lumber amount = 571.5 }
 			add_goods_supply = { goods = goods:masonry amount = 63.1 }
 			add_goods_supply = { goods = goods:medicaments amount = 79 }
 			add_goods_supply = { goods = goods:millet amount = 372.5 }
@@ -2218,7 +2216,7 @@ pp_start_market_stock = {
 		location:krakow.market = {
 			add_goods_supply = { goods = goods:alum amount = 374.8 }
 			add_goods_supply = { goods = goods:amber amount = 228.3 }
-			add_goods_supply = { goods = goods:beer amount = 150.5 }
+			add_goods_supply = { goods = goods:beer amount = 149.9 }
 			add_goods_supply = { goods = goods:beeswax amount = 2234.8 }
 			add_goods_supply = { goods = goods:clay amount = 2075.2 }
 			add_goods_supply = { goods = goods:coal amount = 91.9 }
@@ -2241,15 +2239,15 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:lumber amount = 1072.2 }
 			add_goods_supply = { goods = goods:masonry amount = 42.6 }
 			add_goods_supply = { goods = goods:millet amount = 1016.9 }
-			add_goods_supply = { goods = goods:paper amount = 5.1 }
-			add_goods_supply = { goods = goods:pottery amount = 152.4 }
+			add_goods_supply = { goods = goods:paper amount = 2.5 }
+			add_goods_supply = { goods = goods:pottery amount = 152.1 }
 			add_goods_supply = { goods = goods:salt amount = 275.3 }
 			add_goods_supply = { goods = goods:sand amount = 556.2 }
 			add_goods_supply = { goods = goods:silver amount = 52.5 }
-			add_goods_supply = { goods = goods:stone amount = 751.7 }
+			add_goods_supply = { goods = goods:stone amount = 695.3 }
 			add_goods_supply = { goods = goods:tar amount = 58.9 }
-			add_goods_supply = { goods = goods:tin amount = 17.6 }
-			add_goods_supply = { goods = goods:tools amount = 103.2 }
+			add_goods_supply = { goods = goods:tin amount = 19.7 }
+			add_goods_supply = { goods = goods:tools amount = 101.5 }
 			add_goods_supply = { goods = goods:victuals amount = 317 }
 			add_goods_supply = { goods = goods:weaponry amount = 69.3 }
 			add_goods_supply = { goods = goods:wheat amount = 803.7 }
@@ -2263,13 +2261,13 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:cloth amount = 3.1 }
 			add_goods_supply = { goods = goods:copper amount = 359.9 }
 			add_goods_supply = { goods = goods:cotton amount = 645.2 }
-			add_goods_supply = { goods = goods:dyes amount = 498.5 }
+			add_goods_supply = { goods = goods:dyes amount = 496.5 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 44.9 }
 			add_goods_supply = { goods = goods:fish amount = 26.7 }
 			add_goods_supply = { goods = goods:fruit amount = 5.6 }
 			add_goods_supply = { goods = goods:fur amount = 5.2 }
 			add_goods_supply = { goods = goods:furniture amount = 22.9 }
-			add_goods_supply = { goods = goods:gems amount = 34.2 }
+			add_goods_supply = { goods = goods:gems amount = 30 }
 			add_goods_supply = { goods = goods:jewelry amount = 32.5 }
 			add_goods_supply = { goods = goods:lacquerware amount = 9.5 }
 			add_goods_supply = { goods = goods:lead amount = 1.9 }
@@ -2280,16 +2278,16 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:marble amount = 63.2 }
 			add_goods_supply = { goods = goods:masonry amount = 29 }
 			add_goods_supply = { goods = goods:medicaments amount = 37.6 }
-			add_goods_supply = { goods = goods:paper amount = 9.9 }
+			add_goods_supply = { goods = goods:paper amount = 9.7 }
 			add_goods_supply = { goods = goods:porcelain amount = 3.7 }
 			add_goods_supply = { goods = goods:pottery amount = 152 }
 			add_goods_supply = { goods = goods:rice amount = 1359.9 }
 			add_goods_supply = { goods = goods:sand amount = 105.1 }
 			add_goods_supply = { goods = goods:silk amount = 146.3 }
-			add_goods_supply = { goods = goods:stone amount = 428.5 }
-			add_goods_supply = { goods = goods:tools amount = 68.8 }
+			add_goods_supply = { goods = goods:stone amount = 347.3 }
+			add_goods_supply = { goods = goods:tools amount = 66.7 }
 			add_goods_supply = { goods = goods:victuals amount = 72.1 }
-			add_goods_supply = { goods = goods:weaponry amount = 33.3 }
+			add_goods_supply = { goods = goods:weaponry amount = 18.2 }
 			add_goods_supply = { goods = goods:wheat amount = 77.9 }
 			add_goods_supply = { goods = goods:wild_game amount = 508.8 }
 			add_goods_supply = { goods = goods:wine amount = 116.1 }
@@ -2313,10 +2311,10 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:pottery amount = 11 }
 			add_goods_supply = { goods = goods:salt amount = 27.4 }
 			add_goods_supply = { goods = goods:sand amount = 51.9 }
-			add_goods_supply = { goods = goods:stone amount = 95.5 }
+			add_goods_supply = { goods = goods:stone amount = 79.2 }
 			add_goods_supply = { goods = goods:tools amount = 7.7 }
 			add_goods_supply = { goods = goods:victuals amount = 30.2 }
-			add_goods_supply = { goods = goods:weaponry amount = 4.2 }
+			add_goods_supply = { goods = goods:weaponry amount = 3 }
 			add_goods_supply = { goods = goods:wheat amount = 13.1 }
 			add_goods_supply = { goods = goods:wild_game amount = 27 }
 		}
@@ -2404,7 +2402,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:beeswax amount = 439.2 }
 			add_goods_supply = { goods = goods:clay amount = 1688.7 }
 			add_goods_supply = { goods = goods:cloth amount = 3.2 }
-			add_goods_supply = { goods = goods:coal amount = 121.3 }
+			add_goods_supply = { goods = goods:coal amount = 115.5 }
 			add_goods_supply = { goods = goods:copper amount = 134.7 }
 			add_goods_supply = { goods = goods:dyes amount = 547.9 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 47.6 }
@@ -2416,7 +2414,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:leather amount = 25.1 }
 			add_goods_supply = { goods = goods:legumes amount = 161.9 }
 			add_goods_supply = { goods = goods:livestock amount = 1010.3 }
-			add_goods_supply = { goods = goods:lumber amount = 768.9 }
+			add_goods_supply = { goods = goods:lumber amount = 758.7 }
 			add_goods_supply = { goods = goods:masonry amount = 30.7 }
 			add_goods_supply = { goods = goods:medicaments amount = 156.4 }
 			add_goods_supply = { goods = goods:millet amount = 403.4 }
@@ -2428,9 +2426,9 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:sand amount = 95.2 }
 			add_goods_supply = { goods = goods:stone amount = 544.1 }
 			add_goods_supply = { goods = goods:tin amount = 96.2 }
-			add_goods_supply = { goods = goods:tools amount = 76.3 }
+			add_goods_supply = { goods = goods:tools amount = 75.4 }
 			add_goods_supply = { goods = goods:victuals amount = 135.2 }
-			add_goods_supply = { goods = goods:weaponry amount = 35.1 }
+			add_goods_supply = { goods = goods:weaponry amount = 29.1 }
 			add_goods_supply = { goods = goods:wheat amount = 95 }
 			add_goods_supply = { goods = goods:wild_game amount = 253.4 }
 			add_goods_supply = { goods = goods:wine amount = 162.2 }
@@ -2451,7 +2449,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:leather amount = 11.8 }
 			add_goods_supply = { goods = goods:legumes amount = 55.2 }
 			add_goods_supply = { goods = goods:livestock amount = 606 }
-			add_goods_supply = { goods = goods:lumber amount = 123.4 }
+			add_goods_supply = { goods = goods:lumber amount = 113.4 }
 			add_goods_supply = { goods = goods:masonry amount = 15.4 }
 			add_goods_supply = { goods = goods:millet amount = 70.8 }
 			add_goods_supply = { goods = goods:paper amount = 3.1 }
@@ -2459,10 +2457,10 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:salt amount = 41 }
 			add_goods_supply = { goods = goods:sand amount = 71.9 }
 			add_goods_supply = { goods = goods:silk amount = 84.1 }
-			add_goods_supply = { goods = goods:stone amount = 270.7 }
+			add_goods_supply = { goods = goods:stone amount = 254.4 }
 			add_goods_supply = { goods = goods:tools amount = 32.1 }
 			add_goods_supply = { goods = goods:victuals amount = 74.5 }
-			add_goods_supply = { goods = goods:weaponry amount = 21.2 }
+			add_goods_supply = { goods = goods:weaponry amount = 18.2 }
 			add_goods_supply = { goods = goods:wheat amount = 96.1 }
 			add_goods_supply = { goods = goods:wild_game amount = 203.9 }
 			add_goods_supply = { goods = goods:wool amount = 795.1 }
@@ -2472,7 +2470,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:clay amount = 699.8 }
 			add_goods_supply = { goods = goods:copper amount = 102 }
 			add_goods_supply = { goods = goods:cotton amount = 58.5 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 5.6 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 3.9 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 9.6 }
 			add_goods_supply = { goods = goods:fish amount = 41.3 }
 			add_goods_supply = { goods = goods:furniture amount = 2.5 }
@@ -2480,10 +2478,10 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:iron amount = 141.8 }
 			add_goods_supply = { goods = goods:jewelry amount = 7.6 }
 			add_goods_supply = { goods = goods:lead amount = 10.6 }
-			add_goods_supply = { goods = goods:leather amount = 4.1 }
+			add_goods_supply = { goods = goods:leather amount = 3.8 }
 			add_goods_supply = { goods = goods:legumes amount = 71.7 }
 			add_goods_supply = { goods = goods:livestock amount = 766.4 }
-			add_goods_supply = { goods = goods:lumber amount = 79.1 }
+			add_goods_supply = { goods = goods:lumber amount = 74 }
 			add_goods_supply = { goods = goods:masonry amount = 8.5 }
 			add_goods_supply = { goods = goods:medicaments amount = 24.6 }
 			add_goods_supply = { goods = goods:paper amount = 1.8 }
@@ -2492,7 +2490,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:salt amount = 27.3 }
 			add_goods_supply = { goods = goods:sand amount = 136.5 }
 			add_goods_supply = { goods = goods:silver amount = 17.4 }
-			add_goods_supply = { goods = goods:stone amount = 128.6 }
+			add_goods_supply = { goods = goods:stone amount = 112.3 }
 			add_goods_supply = { goods = goods:tools amount = 21 }
 			add_goods_supply = { goods = goods:victuals amount = 86.6 }
 			add_goods_supply = { goods = goods:weaponry amount = 8.2 }
@@ -2622,10 +2620,10 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:beer amount = 368.5 }
 			add_goods_supply = { goods = goods:beeswax amount = 1791.4 }
 			add_goods_supply = { goods = goods:clay amount = 2524.2 }
-			add_goods_supply = { goods = goods:cloth amount = 2.3 }
-			add_goods_supply = { goods = goods:copper amount = 492.1 }
+			add_goods_supply = { goods = goods:cloth amount = 2.1 }
+			add_goods_supply = { goods = goods:copper amount = 454 }
 			add_goods_supply = { goods = goods:dyes amount = 119.3 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 118.4 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 105.7 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 87.2 }
 			add_goods_supply = { goods = goods:fish amount = 2500.4 }
 			add_goods_supply = { goods = goods:fruit amount = 21.9 }
@@ -2638,19 +2636,19 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:leather amount = 66.2 }
 			add_goods_supply = { goods = goods:legumes amount = 2778.5 }
 			add_goods_supply = { goods = goods:livestock amount = 2003 }
-			add_goods_supply = { goods = goods:lumber amount = 1632.2 }
+			add_goods_supply = { goods = goods:lumber amount = 1605.3 }
 			add_goods_supply = { goods = goods:masonry amount = 51.2 }
 			add_goods_supply = { goods = goods:medicaments amount = 254.1 }
 			add_goods_supply = { goods = goods:millet amount = 979.2 }
-			add_goods_supply = { goods = goods:paper amount = 20.2 }
+			add_goods_supply = { goods = goods:paper amount = 11 }
 			add_goods_supply = { goods = goods:pottery amount = 271 }
 			add_goods_supply = { goods = goods:salt amount = 346.9 }
 			add_goods_supply = { goods = goods:sand amount = 1501.1 }
 			add_goods_supply = { goods = goods:silver amount = 72.2 }
-			add_goods_supply = { goods = goods:stone amount = 1172.8 }
+			add_goods_supply = { goods = goods:stone amount = 1149.6 }
 			add_goods_supply = { goods = goods:tar amount = 62.7 }
 			add_goods_supply = { goods = goods:tools amount = 161.5 }
-			add_goods_supply = { goods = goods:victuals amount = 918.5 }
+			add_goods_supply = { goods = goods:victuals amount = 1028.7 }
 			add_goods_supply = { goods = goods:weaponry amount = 92.5 }
 			add_goods_supply = { goods = goods:wheat amount = 1134.3 }
 			add_goods_supply = { goods = goods:wild_game amount = 449.7 }
@@ -2677,19 +2675,19 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:masonry amount = 13.6 }
 			add_goods_supply = { goods = goods:medicaments amount = 132.1 }
 			add_goods_supply = { goods = goods:millet amount = 130.2 }
-			add_goods_supply = { goods = goods:paper amount = 3.4 }
+			add_goods_supply = { goods = goods:paper amount = 1.6 }
 			add_goods_supply = { goods = goods:pearls amount = 30.8 }
 			add_goods_supply = { goods = goods:pottery amount = 43.2 }
 			add_goods_supply = { goods = goods:rice amount = 2196 }
 			add_goods_supply = { goods = goods:salt amount = 65.9 }
 			add_goods_supply = { goods = goods:sand amount = 283.3 }
-			add_goods_supply = { goods = goods:stone amount = 249.8 }
+			add_goods_supply = { goods = goods:stone amount = 152.3 }
 			add_goods_supply = { goods = goods:sugar amount = 20.5 }
 			add_goods_supply = { goods = goods:tar amount = 15.5 }
 			add_goods_supply = { goods = goods:tin amount = 83.2 }
-			add_goods_supply = { goods = goods:tools amount = 35.8 }
+			add_goods_supply = { goods = goods:tools amount = 33.2 }
 			add_goods_supply = { goods = goods:victuals amount = 85.6 }
-			add_goods_supply = { goods = goods:weaponry amount = 24.2 }
+			add_goods_supply = { goods = goods:weaponry amount = 17.5 }
 			add_goods_supply = { goods = goods:wheat amount = 87.8 }
 			add_goods_supply = { goods = goods:wild_game amount = 144.7 }
 			add_goods_supply = { goods = goods:wine amount = 47.1 }
@@ -2708,10 +2706,10 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:fine_cloth amount = 8.6 }
 			add_goods_supply = { goods = goods:fish amount = 1176.4 }
 			add_goods_supply = { goods = goods:fruit amount = 4.2 }
-			add_goods_supply = { goods = goods:gems amount = 41.2 }
+			add_goods_supply = { goods = goods:gems amount = 38.7 }
 			add_goods_supply = { goods = goods:goods_gold amount = 13.4 }
 			add_goods_supply = { goods = goods:jewelry amount = 10.3 }
-			add_goods_supply = { goods = goods:leather amount = 5 }
+			add_goods_supply = { goods = goods:leather amount = 4.7 }
 			add_goods_supply = { goods = goods:legumes amount = 272.9 }
 			add_goods_supply = { goods = goods:livestock amount = 110.7 }
 			add_goods_supply = { goods = goods:lumber amount = 372.2 }
@@ -2725,15 +2723,15 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:tobacco amount = 58.2 }
 			add_goods_supply = { goods = goods:tools amount = 25.1 }
 			add_goods_supply = { goods = goods:victuals amount = 149.6 }
-			add_goods_supply = { goods = goods:weaponry amount = 13.3 }
+			add_goods_supply = { goods = goods:weaponry amount = 13.2 }
 			add_goods_supply = { goods = goods:wild_game amount = 244.4 }
 			add_goods_supply = { goods = goods:wool amount = 86.3 }
 		}
 		location:maynila.market = {
-			add_goods_supply = { goods = goods:alum amount = 93.7 }
+			add_goods_supply = { goods = goods:alum amount = 83.4 }
 			add_goods_supply = { goods = goods:beer amount = 7 }
 			add_goods_supply = { goods = goods:beeswax amount = 175.4 }
-			add_goods_supply = { goods = goods:clay amount = 450.6 }
+			add_goods_supply = { goods = goods:clay amount = 447.9 }
 			add_goods_supply = { goods = goods:copper amount = 187.9 }
 			add_goods_supply = { goods = goods:cotton amount = 167.8 }
 			add_goods_supply = { goods = goods:fiber_crops amount = 12.1 }
@@ -2746,7 +2744,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:jewelry amount = 2.1 }
 			add_goods_supply = { goods = goods:leather amount = 2.3 }
 			add_goods_supply = { goods = goods:legumes amount = 147.3 }
-			add_goods_supply = { goods = goods:livestock amount = 82.4 }
+			add_goods_supply = { goods = goods:livestock amount = 82.3 }
 			add_goods_supply = { goods = goods:lumber amount = 482.9 }
 			add_goods_supply = { goods = goods:masonry amount = 5.1 }
 			add_goods_supply = { goods = goods:medicaments amount = 48.6 }
@@ -2756,10 +2754,10 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:rice amount = 620.6 }
 			add_goods_supply = { goods = goods:salt amount = 27.4 }
 			add_goods_supply = { goods = goods:sand amount = 6.2 }
-			add_goods_supply = { goods = goods:stone amount = 51.5 }
-			add_goods_supply = { goods = goods:tools amount = 8 }
+			add_goods_supply = { goods = goods:stone amount = 35.2 }
+			add_goods_supply = { goods = goods:tools amount = 7.1 }
 			add_goods_supply = { goods = goods:victuals amount = 45.9 }
-			add_goods_supply = { goods = goods:weaponry amount = 3.2 }
+			add_goods_supply = { goods = goods:weaponry amount = 1.6 }
 			add_goods_supply = { goods = goods:wild_game amount = 29.7 }
 			add_goods_supply = { goods = goods:wool amount = 45.3 }
 		}
@@ -2767,8 +2765,8 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:beeswax amount = 82.9 }
 			add_goods_supply = { goods = goods:clay amount = 348 }
 			add_goods_supply = { goods = goods:copper amount = 103.3 }
-			add_goods_supply = { goods = goods:dyes amount = 39.2 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 17.1 }
+			add_goods_supply = { goods = goods:dyes amount = 37.2 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 11.5 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 13.4 }
 			add_goods_supply = { goods = goods:fish amount = 595.9 }
 			add_goods_supply = { goods = goods:fruit amount = 41.6 }
@@ -2778,23 +2776,23 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:iron amount = 230.3 }
 			add_goods_supply = { goods = goods:jewelry amount = 22.2 }
 			add_goods_supply = { goods = goods:lead amount = 9.4 }
-			add_goods_supply = { goods = goods:leather amount = 8.3 }
+			add_goods_supply = { goods = goods:leather amount = 7.6 }
 			add_goods_supply = { goods = goods:legumes amount = 198.3 }
 			add_goods_supply = { goods = goods:livestock amount = 555.2 }
-			add_goods_supply = { goods = goods:lumber amount = 332.8 }
+			add_goods_supply = { goods = goods:lumber amount = 322.2 }
 			add_goods_supply = { goods = goods:masonry amount = 15.4 }
-			add_goods_supply = { goods = goods:paper amount = 3.9 }
+			add_goods_supply = { goods = goods:paper amount = 3.7 }
 			add_goods_supply = { goods = goods:pearls amount = 61.6 }
 			add_goods_supply = { goods = goods:pottery amount = 33.8 }
 			add_goods_supply = { goods = goods:saffron amount = 64.4 }
 			add_goods_supply = { goods = goods:salt amount = 41.7 }
 			add_goods_supply = { goods = goods:sand amount = 294.6 }
-			add_goods_supply = { goods = goods:stone amount = 216.2 }
+			add_goods_supply = { goods = goods:stone amount = 194 }
 			add_goods_supply = { goods = goods:sugar amount = 14.6 }
 			add_goods_supply = { goods = goods:tin amount = 3.1 }
 			add_goods_supply = { goods = goods:tools amount = 24.5 }
 			add_goods_supply = { goods = goods:victuals amount = 148.9 }
-			add_goods_supply = { goods = goods:weaponry amount = 23.2 }
+			add_goods_supply = { goods = goods:weaponry amount = 22.1 }
 			add_goods_supply = { goods = goods:wheat amount = 223.4 }
 			add_goods_supply = { goods = goods:wool amount = 142.2 }
 		}
@@ -2950,8 +2948,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:beeswax amount = 161.1 }
 			add_goods_supply = { goods = goods:camels amount = 4.3 }
 			add_goods_supply = { goods = goods:clay amount = 1465 }
-			add_goods_supply = { goods = goods:cloth amount = 1 }
-			add_goods_supply = { goods = goods:copper amount = 520.1 }
+			add_goods_supply = { goods = goods:copper amount = 529.6 }
 			add_goods_supply = { goods = goods:cotton amount = 381.6 }
 			add_goods_supply = { goods = goods:dyes amount = 130.7 }
 			add_goods_supply = { goods = goods:fiber_crops amount = 62.3 }
@@ -2963,22 +2960,22 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:horses amount = 2.3 }
 			add_goods_supply = { goods = goods:iron amount = 815.8 }
 			add_goods_supply = { goods = goods:ivory amount = 349.6 }
-			add_goods_supply = { goods = goods:jewelry amount = 114.4 }
-			add_goods_supply = { goods = goods:leather amount = 39.1 }
+			add_goods_supply = { goods = goods:jewelry amount = 114.3 }
+			add_goods_supply = { goods = goods:leather amount = 37.2 }
 			add_goods_supply = { goods = goods:legumes amount = 254.6 }
 			add_goods_supply = { goods = goods:livestock amount = 1612.7 }
-			add_goods_supply = { goods = goods:lumber amount = 342.4 }
+			add_goods_supply = { goods = goods:lumber amount = 296.6 }
 			add_goods_supply = { goods = goods:masonry amount = 34.1 }
 			add_goods_supply = { goods = goods:medicaments amount = 94.7 }
 			add_goods_supply = { goods = goods:millet amount = 555.7 }
 			add_goods_supply = { goods = goods:paper amount = 20.8 }
 			add_goods_supply = { goods = goods:pearls amount = 38.1 }
-			add_goods_supply = { goods = goods:pottery amount = 140.7 }
+			add_goods_supply = { goods = goods:pottery amount = 140.4 }
 			add_goods_supply = { goods = goods:rice amount = 1717.7 }
 			add_goods_supply = { goods = goods:salt amount = 245.2 }
 			add_goods_supply = { goods = goods:sand amount = 682.3 }
-			add_goods_supply = { goods = goods:stone amount = 688.9 }
-			add_goods_supply = { goods = goods:tools amount = 124.3 }
+			add_goods_supply = { goods = goods:stone amount = 448.3 }
+			add_goods_supply = { goods = goods:tools amount = 127.7 }
 			add_goods_supply = { goods = goods:victuals amount = 286.9 }
 			add_goods_supply = { goods = goods:weaponry amount = 67.4 }
 			add_goods_supply = { goods = goods:wheat amount = 84.2 }
@@ -3000,10 +2997,10 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:goods_gold amount = 13.9 }
 			add_goods_supply = { goods = goods:iron amount = 283.4 }
 			add_goods_supply = { goods = goods:jewelry amount = 21 }
-			add_goods_supply = { goods = goods:leather amount = 10.7 }
+			add_goods_supply = { goods = goods:leather amount = 10.5 }
 			add_goods_supply = { goods = goods:legumes amount = 131.5 }
 			add_goods_supply = { goods = goods:livestock amount = 670.7 }
-			add_goods_supply = { goods = goods:lumber amount = 159 }
+			add_goods_supply = { goods = goods:lumber amount = 156.6 }
 			add_goods_supply = { goods = goods:marble amount = 40.8 }
 			add_goods_supply = { goods = goods:masonry amount = 10.2 }
 			add_goods_supply = { goods = goods:millet amount = 37.9 }
@@ -3031,17 +3028,17 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:fish amount = 79.8 }
 			add_goods_supply = { goods = goods:fruit amount = 1.4 }
 			add_goods_supply = { goods = goods:jewelry amount = 19.8 }
-			add_goods_supply = { goods = goods:leather amount = 8.7 }
+			add_goods_supply = { goods = goods:leather amount = 8.4 }
 			add_goods_supply = { goods = goods:livestock amount = 471.8 }
-			add_goods_supply = { goods = goods:lumber amount = 65.5 }
+			add_goods_supply = { goods = goods:lumber amount = 57.5 }
 			add_goods_supply = { goods = goods:masonry amount = 5.1 }
 			add_goods_supply = { goods = goods:millet amount = 125 }
 			add_goods_supply = { goods = goods:pottery amount = 26.8 }
 			add_goods_supply = { goods = goods:rice amount = 146.3 }
 			add_goods_supply = { goods = goods:salt amount = 98.5 }
 			add_goods_supply = { goods = goods:sand amount = 272.9 }
-			add_goods_supply = { goods = goods:stone amount = 96.1 }
-			add_goods_supply = { goods = goods:tools amount = 14.1 }
+			add_goods_supply = { goods = goods:stone amount = 47.4 }
+			add_goods_supply = { goods = goods:tools amount = 12.8 }
 			add_goods_supply = { goods = goods:victuals amount = 39.5 }
 			add_goods_supply = { goods = goods:weaponry amount = 14.8 }
 			add_goods_supply = { goods = goods:wheat amount = 13.5 }
@@ -3060,7 +3057,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:fish amount = 43.8 }
 			add_goods_supply = { goods = goods:gems amount = 39.8 }
 			add_goods_supply = { goods = goods:jewelry amount = 3.7 }
-			add_goods_supply = { goods = goods:leather amount = 1.3 }
+			add_goods_supply = { goods = goods:leather amount = 1.1 }
 			add_goods_supply = { goods = goods:lumber amount = 158.4 }
 			add_goods_supply = { goods = goods:maize amount = 49.8 }
 			add_goods_supply = { goods = goods:marble amount = 40.8 }
@@ -3070,7 +3067,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:stone amount = 287.2 }
 			add_goods_supply = { goods = goods:tools amount = 12.4 }
 			add_goods_supply = { goods = goods:victuals amount = 42.7 }
-			add_goods_supply = { goods = goods:weaponry amount = 7.5 }
+			add_goods_supply = { goods = goods:weaponry amount = 2.4 }
 			add_goods_supply = { goods = goods:wild_game amount = 102.8 }
 			add_goods_supply = { goods = goods:wool amount = 54.7 }
 		}
@@ -3112,7 +3109,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:beer amount = 218.1 }
 			add_goods_supply = { goods = goods:beeswax amount = 1655.1 }
 			add_goods_supply = { goods = goods:clay amount = 1151.7 }
-			add_goods_supply = { goods = goods:cloth amount = 1.7 }
+			add_goods_supply = { goods = goods:cloth amount = 1.6 }
 			add_goods_supply = { goods = goods:coal amount = 91.9 }
 			add_goods_supply = { goods = goods:copper amount = 364.7 }
 			add_goods_supply = { goods = goods:cotton amount = 22 }
@@ -3137,7 +3134,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:masonry amount = 40.9 }
 			add_goods_supply = { goods = goods:medicaments amount = 361 }
 			add_goods_supply = { goods = goods:millet amount = 505.3 }
-			add_goods_supply = { goods = goods:paper amount = 13.5 }
+			add_goods_supply = { goods = goods:paper amount = 10.1 }
 			add_goods_supply = { goods = goods:pearls amount = 61.6 }
 			add_goods_supply = { goods = goods:pottery amount = 161.6 }
 			add_goods_supply = { goods = goods:salt amount = 188.5 }
@@ -3188,7 +3185,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:stone amount = 991.7 }
 			add_goods_supply = { goods = goods:tar amount = 44.2 }
 			add_goods_supply = { goods = goods:tools amount = 47.9 }
-			add_goods_supply = { goods = goods:victuals amount = 183.7 }
+			add_goods_supply = { goods = goods:victuals amount = 147 }
 			add_goods_supply = { goods = goods:weaponry amount = 30.3 }
 			add_goods_supply = { goods = goods:wheat amount = 106.1 }
 			add_goods_supply = { goods = goods:wild_game amount = 485.2 }
@@ -3198,7 +3195,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:beer amount = 248.8 }
 			add_goods_supply = { goods = goods:beeswax amount = 3240 }
 			add_goods_supply = { goods = goods:clay amount = 3087.8 }
-			add_goods_supply = { goods = goods:cloth amount = 3.8 }
+			add_goods_supply = { goods = goods:cloth amount = 3.7 }
 			add_goods_supply = { goods = goods:coal amount = 192.3 }
 			add_goods_supply = { goods = goods:copper amount = 653.5 }
 			add_goods_supply = { goods = goods:dyes amount = 380.5 }
@@ -3216,12 +3213,12 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:leather amount = 71.5 }
 			add_goods_supply = { goods = goods:legumes amount = 3168 }
 			add_goods_supply = { goods = goods:livestock amount = 3092 }
-			add_goods_supply = { goods = goods:lumber amount = 1747.1 }
+			add_goods_supply = { goods = goods:lumber amount = 1727.5 }
 			add_goods_supply = { goods = goods:marble amount = 81.6 }
 			add_goods_supply = { goods = goods:masonry amount = 76.8 }
 			add_goods_supply = { goods = goods:medicaments amount = 217.5 }
 			add_goods_supply = { goods = goods:millet amount = 1195.8 }
-			add_goods_supply = { goods = goods:paper amount = 32 }
+			add_goods_supply = { goods = goods:paper amount = 25.3 }
 			add_goods_supply = { goods = goods:pottery amount = 402.3 }
 			add_goods_supply = { goods = goods:saffron amount = 258.5 }
 			add_goods_supply = { goods = goods:salt amount = 344.2 }
@@ -3262,7 +3259,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:leather amount = 67 }
 			add_goods_supply = { goods = goods:legumes amount = 1085.1 }
 			add_goods_supply = { goods = goods:livestock amount = 1012 }
-			add_goods_supply = { goods = goods:lumber amount = 751.9 }
+			add_goods_supply = { goods = goods:lumber amount = 737.2 }
 			add_goods_supply = { goods = goods:masonry amount = 54.6 }
 			add_goods_supply = { goods = goods:medicaments amount = 171.4 }
 			add_goods_supply = { goods = goods:millet amount = 514.4 }
@@ -3355,7 +3352,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:medicaments amount = 100.9 }
 			add_goods_supply = { goods = goods:mercury amount = 173.6 }
 			add_goods_supply = { goods = goods:millet amount = 137.2 }
-			add_goods_supply = { goods = goods:paper amount = 2.5 }
+			add_goods_supply = { goods = goods:paper amount = 1.4 }
 			add_goods_supply = { goods = goods:pottery amount = 29.6 }
 			add_goods_supply = { goods = goods:rice amount = 1461.3 }
 			add_goods_supply = { goods = goods:salt amount = 44.6 }
@@ -3371,7 +3368,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:wool amount = 254.5 }
 		}
 		location:prague.market = {
-			add_goods_supply = { goods = goods:alum amount = 32.4 }
+			add_goods_supply = { goods = goods:alum amount = 30.6 }
 			add_goods_supply = { goods = goods:beer amount = 126.7 }
 			add_goods_supply = { goods = goods:beeswax amount = 1278.4 }
 			add_goods_supply = { goods = goods:clay amount = 751.5 }
@@ -3398,7 +3395,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:masonry amount = 27.3 }
 			add_goods_supply = { goods = goods:medicaments amount = 91.2 }
 			add_goods_supply = { goods = goods:millet amount = 437.9 }
-			add_goods_supply = { goods = goods:paper amount = 6.7 }
+			add_goods_supply = { goods = goods:paper amount = 5.9 }
 			add_goods_supply = { goods = goods:pottery amount = 92.5 }
 			add_goods_supply = { goods = goods:sand amount = 157.2 }
 			add_goods_supply = { goods = goods:silver amount = 80.6 }
@@ -3414,7 +3411,7 @@ pp_start_market_stock = {
 		}
 		location:riga.market = {
 			add_goods_supply = { goods = goods:amber amount = 36 }
-			add_goods_supply = { goods = goods:beer amount = 72.4 }
+			add_goods_supply = { goods = goods:beer amount = 71.1 }
 			add_goods_supply = { goods = goods:beeswax amount = 1310.2 }
 			add_goods_supply = { goods = goods:clay amount = 2187.9 }
 			add_goods_supply = { goods = goods:dyes amount = 31.6 }
@@ -3433,15 +3430,15 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:masonry amount = 20.5 }
 			add_goods_supply = { goods = goods:medicaments amount = 171.3 }
 			add_goods_supply = { goods = goods:millet amount = 446.3 }
-			add_goods_supply = { goods = goods:paper amount = 2.5 }
-			add_goods_supply = { goods = goods:pottery amount = 94.3 }
+			add_goods_supply = { goods = goods:paper amount = 1.7 }
+			add_goods_supply = { goods = goods:pottery amount = 93.6 }
 			add_goods_supply = { goods = goods:salt amount = 41.7 }
 			add_goods_supply = { goods = goods:sand amount = 136.5 }
-			add_goods_supply = { goods = goods:stone amount = 356.3 }
+			add_goods_supply = { goods = goods:stone amount = 335.3 }
 			add_goods_supply = { goods = goods:tar amount = 29.5 }
-			add_goods_supply = { goods = goods:tools amount = 47.3 }
+			add_goods_supply = { goods = goods:tools amount = 46.8 }
 			add_goods_supply = { goods = goods:victuals amount = 237.4 }
-			add_goods_supply = { goods = goods:weaponry amount = 24 }
+			add_goods_supply = { goods = goods:weaponry amount = 22.8 }
 			add_goods_supply = { goods = goods:wheat amount = 254.9 }
 			add_goods_supply = { goods = goods:wild_game amount = 464.4 }
 			add_goods_supply = { goods = goods:wine amount = 67.4 }
@@ -3456,7 +3453,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:copper amount = 206.8 }
 			add_goods_supply = { goods = goods:cotton amount = 307 }
 			add_goods_supply = { goods = goods:dyes amount = 88.3 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 24.9 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 13.6 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 29.1 }
 			add_goods_supply = { goods = goods:fish amount = 298.8 }
 			add_goods_supply = { goods = goods:fruit amount = 7.3 }
@@ -3468,10 +3465,10 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:iron amount = 585.5 }
 			add_goods_supply = { goods = goods:jewelry amount = 34.5 }
 			add_goods_supply = { goods = goods:lead amount = 10.7 }
-			add_goods_supply = { goods = goods:leather amount = 18.4 }
+			add_goods_supply = { goods = goods:leather amount = 17.2 }
 			add_goods_supply = { goods = goods:legumes amount = 756.4 }
 			add_goods_supply = { goods = goods:livestock amount = 1486.5 }
-			add_goods_supply = { goods = goods:lumber amount = 232.7 }
+			add_goods_supply = { goods = goods:lumber amount = 218.1 }
 			add_goods_supply = { goods = goods:masonry amount = 23.9 }
 			add_goods_supply = { goods = goods:mercury amount = 173.6 }
 			add_goods_supply = { goods = goods:millet amount = 106.3 }
@@ -3512,7 +3509,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:stone amount = 284.7 }
 			add_goods_supply = { goods = goods:tools amount = 17.9 }
 			add_goods_supply = { goods = goods:victuals amount = 157.9 }
-			add_goods_supply = { goods = goods:weaponry amount = 13.1 }
+			add_goods_supply = { goods = goods:weaponry amount = 12.1 }
 			add_goods_supply = { goods = goods:wheat amount = 191.2 }
 			add_goods_supply = { goods = goods:wild_game amount = 42.8 }
 			add_goods_supply = { goods = goods:wine amount = 60.3 }
@@ -3526,7 +3523,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:furniture amount = 2.5 }
 			add_goods_supply = { goods = goods:horses amount = 1.8 }
 			add_goods_supply = { goods = goods:livestock amount = 277.6 }
-			add_goods_supply = { goods = goods:lumber amount = 30.7 }
+			add_goods_supply = { goods = goods:lumber amount = 28.3 }
 			add_goods_supply = { goods = goods:sand amount = 94.7 }
 			add_goods_supply = { goods = goods:stone amount = 51 }
 			add_goods_supply = { goods = goods:tools amount = 8 }
@@ -3587,16 +3584,16 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:wool amount = 787.5 }
 		}
 		location:shangyuan.market = {
-			add_goods_supply = { goods = goods:alum amount = 1031.8 }
+			add_goods_supply = { goods = goods:alum amount = 1022.7 }
 			add_goods_supply = { goods = goods:beer amount = 526.7 }
 			add_goods_supply = { goods = goods:beeswax amount = 3736.1 }
 			add_goods_supply = { goods = goods:clay amount = 2938.7 }
 			add_goods_supply = { goods = goods:cloth amount = 27.7 }
-			add_goods_supply = { goods = goods:coal amount = 1029 }
+			add_goods_supply = { goods = goods:coal amount = 1012.8 }
 			add_goods_supply = { goods = goods:copper amount = 1001.6 }
 			add_goods_supply = { goods = goods:cotton amount = 1695.1 }
 			add_goods_supply = { goods = goods:dyes amount = 3690.5 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 525.5 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 516 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 407 }
 			add_goods_supply = { goods = goods:fish amount = 3558.3 }
 			add_goods_supply = { goods = goods:fruit amount = 116.4 }
@@ -3610,7 +3607,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:leather amount = 210.3 }
 			add_goods_supply = { goods = goods:legumes amount = 3685 }
 			add_goods_supply = { goods = goods:livestock amount = 3606.5 }
-			add_goods_supply = { goods = goods:lumber amount = 3240.5 }
+			add_goods_supply = { goods = goods:lumber amount = 3242.6 }
 			add_goods_supply = { goods = goods:marble amount = 225.4 }
 			add_goods_supply = { goods = goods:masonry amount = 288.3 }
 			add_goods_supply = { goods = goods:medicaments amount = 348.1 }
@@ -3623,9 +3620,9 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:sand amount = 665.4 }
 			add_goods_supply = { goods = goods:silk amount = 1063.2 }
 			add_goods_supply = { goods = goods:silver amount = 53.4 }
-			add_goods_supply = { goods = goods:stone amount = 3597.2 }
+			add_goods_supply = { goods = goods:stone amount = 3592.6 }
 			add_goods_supply = { goods = goods:sugar amount = 34.8 }
-			add_goods_supply = { goods = goods:tools amount = 655.6 }
+			add_goods_supply = { goods = goods:tools amount = 653.5 }
 			add_goods_supply = { goods = goods:victuals amount = 459.8 }
 			add_goods_supply = { goods = goods:weaponry amount = 301.2 }
 			add_goods_supply = { goods = goods:wheat amount = 1247.8 }
@@ -3647,7 +3644,6 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:stone amount = 518.9 }
 			add_goods_supply = { goods = goods:tools amount = 5.3 }
 			add_goods_supply = { goods = goods:victuals amount = 13.4 }
-			add_goods_supply = { goods = goods:weaponry amount = 3.4 }
 			add_goods_supply = { goods = goods:wool amount = 203.5 }
 		}
 		location:sofala.market = {
@@ -3685,7 +3681,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:beeswax amount = 701.9 }
 			add_goods_supply = { goods = goods:clay amount = 821 }
 			add_goods_supply = { goods = goods:copper amount = 203.9 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 35.3 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 33.4 }
 			add_goods_supply = { goods = goods:fish amount = 1358.2 }
 			add_goods_supply = { goods = goods:fur amount = 2.9 }
 			add_goods_supply = { goods = goods:furniture amount = 2.5 }
@@ -3718,10 +3714,10 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:beer amount = 43.5 }
 			add_goods_supply = { goods = goods:beeswax amount = 1098.6 }
 			add_goods_supply = { goods = goods:clay amount = 881.2 }
-			add_goods_supply = { goods = goods:cloth amount = 1.4 }
+			add_goods_supply = { goods = goods:cloth amount = 1.3 }
 			add_goods_supply = { goods = goods:cotton amount = 62.9 }
 			add_goods_supply = { goods = goods:dyes amount = 117.3 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 72.5 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 64.9 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 14.3 }
 			add_goods_supply = { goods = goods:fish amount = 2254 }
 			add_goods_supply = { goods = goods:fruit amount = 15.4 }
@@ -3731,22 +3727,22 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:iron amount = 585.5 }
 			add_goods_supply = { goods = goods:jewelry amount = 16.7 }
 			add_goods_supply = { goods = goods:leather amount = 24.4 }
-			add_goods_supply = { goods = goods:legumes amount = 423.4 }
-			add_goods_supply = { goods = goods:livestock amount = 574.2 }
+			add_goods_supply = { goods = goods:legumes amount = 466.9 }
+			add_goods_supply = { goods = goods:livestock amount = 585.7 }
 			add_goods_supply = { goods = goods:lumber amount = 1687.4 }
 			add_goods_supply = { goods = goods:marble amount = 40.8 }
 			add_goods_supply = { goods = goods:masonry amount = 39.2 }
-			add_goods_supply = { goods = goods:millet amount = 222.4 }
-			add_goods_supply = { goods = goods:paper amount = 3.4 }
+			add_goods_supply = { goods = goods:millet amount = 233.5 }
+			add_goods_supply = { goods = goods:paper amount = 1.6 }
 			add_goods_supply = { goods = goods:pearls amount = 61.6 }
 			add_goods_supply = { goods = goods:pottery amount = 111.2 }
 			add_goods_supply = { goods = goods:rice amount = 1072.4 }
 			add_goods_supply = { goods = goods:salt amount = 87.3 }
 			add_goods_supply = { goods = goods:saltpeter amount = 300.8 }
 			add_goods_supply = { goods = goods:sand amount = 283.3 }
-			add_goods_supply = { goods = goods:stone amount = 378 }
+			add_goods_supply = { goods = goods:stone amount = 376.7 }
 			add_goods_supply = { goods = goods:sugar amount = 52 }
-			add_goods_supply = { goods = goods:tools amount = 53 }
+			add_goods_supply = { goods = goods:tools amount = 51.7 }
 			add_goods_supply = { goods = goods:victuals amount = 126.1 }
 			add_goods_supply = { goods = goods:weaponry amount = 44.4 }
 			add_goods_supply = { goods = goods:wild_game amount = 259.2 }
@@ -3755,29 +3751,29 @@ pp_start_market_stock = {
 		location:tabriz.market = {
 			add_goods_supply = { goods = goods:alum amount = 93.7 }
 			add_goods_supply = { goods = goods:beeswax amount = 397.2 }
-			add_goods_supply = { goods = goods:clay amount = 547.2 }
+			add_goods_supply = { goods = goods:clay amount = 544.1 }
 			add_goods_supply = { goods = goods:copper amount = 204.6 }
 			add_goods_supply = { goods = goods:cotton amount = 368.1 }
 			add_goods_supply = { goods = goods:dyes amount = 81.5 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 20.4 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 16.7 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 26.4 }
 			add_goods_supply = { goods = goods:fish amount = 176.2 }
 			add_goods_supply = { goods = goods:fruit amount = 5.7 }
 			add_goods_supply = { goods = goods:furniture amount = 10.2 }
 			add_goods_supply = { goods = goods:gems amount = 101.3 }
 			add_goods_supply = { goods = goods:goods_gold amount = 30.5 }
-			add_goods_supply = { goods = goods:jewelry amount = 41.6 }
+			add_goods_supply = { goods = goods:jewelry amount = 41.4 }
 			add_goods_supply = { goods = goods:lead amount = 31.6 }
-			add_goods_supply = { goods = goods:leather amount = 22.8 }
+			add_goods_supply = { goods = goods:leather amount = 22.2 }
 			add_goods_supply = { goods = goods:legumes amount = 685.1 }
 			add_goods_supply = { goods = goods:livestock amount = 919.4 }
-			add_goods_supply = { goods = goods:lumber amount = 508.5 }
+			add_goods_supply = { goods = goods:lumber amount = 496.4 }
 			add_goods_supply = { goods = goods:masonry amount = 20.5 }
 			add_goods_supply = { goods = goods:medicaments amount = 112.8 }
-			add_goods_supply = { goods = goods:millet amount = 75.7 }
+			add_goods_supply = { goods = goods:millet amount = 72.6 }
 			add_goods_supply = { goods = goods:olives amount = 330.4 }
 			add_goods_supply = { goods = goods:paper amount = 13.4 }
-			add_goods_supply = { goods = goods:pottery amount = 77.4 }
+			add_goods_supply = { goods = goods:pottery amount = 76.7 }
 			add_goods_supply = { goods = goods:rice amount = 216.8 }
 			add_goods_supply = { goods = goods:saffron amount = 127.7 }
 			add_goods_supply = { goods = goods:salt amount = 53.7 }
@@ -3786,7 +3782,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:stone amount = 714.7 }
 			add_goods_supply = { goods = goods:sugar amount = 15 }
 			add_goods_supply = { goods = goods:tar amount = 39.3 }
-			add_goods_supply = { goods = goods:tools amount = 45.1 }
+			add_goods_supply = { goods = goods:tools amount = 44.1 }
 			add_goods_supply = { goods = goods:victuals amount = 245.5 }
 			add_goods_supply = { goods = goods:weaponry amount = 47.4 }
 			add_goods_supply = { goods = goods:wheat amount = 234.3 }
@@ -3798,7 +3794,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:beer amount = 108.4 }
 			add_goods_supply = { goods = goods:beeswax amount = 1115.8 }
 			add_goods_supply = { goods = goods:clay amount = 1793.9 }
-			add_goods_supply = { goods = goods:coal amount = 64.8 }
+			add_goods_supply = { goods = goods:coal amount = 51.9 }
 			add_goods_supply = { goods = goods:copper amount = 204.6 }
 			add_goods_supply = { goods = goods:cotton amount = 193.3 }
 			add_goods_supply = { goods = goods:dyes amount = 204.9 }
@@ -3822,11 +3818,11 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:salt amount = 105.1 }
 			add_goods_supply = { goods = goods:sand amount = 272.9 }
 			add_goods_supply = { goods = goods:silver amount = 10.1 }
-			add_goods_supply = { goods = goods:stone amount = 639.6 }
+			add_goods_supply = { goods = goods:stone amount = 574.6 }
 			add_goods_supply = { goods = goods:tar amount = 19.6 }
 			add_goods_supply = { goods = goods:tools amount = 68.3 }
 			add_goods_supply = { goods = goods:victuals amount = 147 }
-			add_goods_supply = { goods = goods:weaponry amount = 51.5 }
+			add_goods_supply = { goods = goods:weaponry amount = 39.4 }
 			add_goods_supply = { goods = goods:wheat amount = 269.3 }
 			add_goods_supply = { goods = goods:wild_game amount = 277.6 }
 			add_goods_supply = { goods = goods:wine amount = 374.5 }
@@ -3850,7 +3846,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:iron amount = 1117.6 }
 			add_goods_supply = { goods = goods:jewelry amount = 20.9 }
 			add_goods_supply = { goods = goods:lead amount = 31.6 }
-			add_goods_supply = { goods = goods:leather amount = 9.7 }
+			add_goods_supply = { goods = goods:leather amount = 9.3 }
 			add_goods_supply = { goods = goods:legumes amount = 740.9 }
 			add_goods_supply = { goods = goods:livestock amount = 539.1 }
 			add_goods_supply = { goods = goods:lumber amount = 389 }
@@ -3876,10 +3872,10 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:beer amount = 15.8 }
 			add_goods_supply = { goods = goods:beeswax amount = 1206.8 }
 			add_goods_supply = { goods = goods:clay amount = 702.5 }
-			add_goods_supply = { goods = goods:coal amount = 21.1 }
+			add_goods_supply = { goods = goods:coal amount = 17.8 }
 			add_goods_supply = { goods = goods:copper amount = 96.7 }
 			add_goods_supply = { goods = goods:elephants amount = 516.6 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 30.5 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 26.7 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 6 }
 			add_goods_supply = { goods = goods:fish amount = 1905.8 }
 			add_goods_supply = { goods = goods:fruit amount = 8.6 }
@@ -3888,14 +3884,13 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:horses amount = 1.4 }
 			add_goods_supply = { goods = goods:incense amount = 13 }
 			add_goods_supply = { goods = goods:iron amount = 337 }
-			add_goods_supply = { goods = goods:leather amount = 7.8 }
+			add_goods_supply = { goods = goods:leather amount = 7.3 }
 			add_goods_supply = { goods = goods:legumes amount = 82.3 }
 			add_goods_supply = { goods = goods:livestock amount = 460.9 }
 			add_goods_supply = { goods = goods:lumber amount = 2052.5 }
 			add_goods_supply = { goods = goods:masonry amount = 11.9 }
 			add_goods_supply = { goods = goods:medicaments amount = 225.4 }
 			add_goods_supply = { goods = goods:millet amount = 72.4 }
-			add_goods_supply = { goods = goods:paper amount = 1.7 }
 			add_goods_supply = { goods = goods:pearls amount = 30.8 }
 			add_goods_supply = { goods = goods:pottery amount = 23.6 }
 			add_goods_supply = { goods = goods:rice amount = 462 }
@@ -3905,7 +3900,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:stone amount = 417.4 }
 			add_goods_supply = { goods = goods:sugar amount = 35.5 }
 			add_goods_supply = { goods = goods:tin amount = 673.3 }
-			add_goods_supply = { goods = goods:tools amount = 30.7 }
+			add_goods_supply = { goods = goods:tools amount = 30.3 }
 			add_goods_supply = { goods = goods:victuals amount = 191.6 }
 			add_goods_supply = { goods = goods:weaponry amount = 7.1 }
 			add_goods_supply = { goods = goods:wild_game amount = 164.1 }
@@ -3930,9 +3925,8 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:rice amount = 14.1 }
 			add_goods_supply = { goods = goods:sand amount = 6.2 }
 			add_goods_supply = { goods = goods:stone amount = 259.4 }
-			add_goods_supply = { goods = goods:tools amount = 5.2 }
+			add_goods_supply = { goods = goods:tools amount = 4.8 }
 			add_goods_supply = { goods = goods:victuals amount = 27.5 }
-			add_goods_supply = { goods = goods:weaponry amount = 3 }
 			add_goods_supply = { goods = goods:wool amount = 47.8 }
 		}
 		location:teyuna.market = {
@@ -3941,14 +3935,13 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:clay amount = 45.9 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 5 }
 			add_goods_supply = { goods = goods:fish amount = 100.7 }
-			add_goods_supply = { goods = goods:lumber amount = 33.9 }
+			add_goods_supply = { goods = goods:lumber amount = 31.2 }
 			add_goods_supply = { goods = goods:masonry amount = 1.7 }
 			add_goods_supply = { goods = goods:pottery amount = 8.9 }
 			add_goods_supply = { goods = goods:silver amount = 22.6 }
-			add_goods_supply = { goods = goods:stone amount = 32.4 }
+			add_goods_supply = { goods = goods:stone amount = 16.2 }
 			add_goods_supply = { goods = goods:tools amount = 4 }
 			add_goods_supply = { goods = goods:victuals amount = 1.6 }
-			add_goods_supply = { goods = goods:weaponry amount = 3 }
 			add_goods_supply = { goods = goods:wild_game amount = 4.1 }
 			add_goods_supply = { goods = goods:wool amount = 28.6 }
 		}
@@ -3961,7 +3954,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:copper amount = 125.1 }
 			add_goods_supply = { goods = goods:dyes amount = 333.1 }
 			add_goods_supply = { goods = goods:elephants amount = 1291.5 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 46.6 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 44.4 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 34.4 }
 			add_goods_supply = { goods = goods:fish amount = 822.7 }
 			add_goods_supply = { goods = goods:fruit amount = 8.2 }
@@ -3973,7 +3966,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:lead amount = 9.4 }
 			add_goods_supply = { goods = goods:leather amount = 23.2 }
 			add_goods_supply = { goods = goods:legumes amount = 747.2 }
-			add_goods_supply = { goods = goods:livestock amount = 503.6 }
+			add_goods_supply = { goods = goods:livestock amount = 494.2 }
 			add_goods_supply = { goods = goods:lumber amount = 2039.8 }
 			add_goods_supply = { goods = goods:masonry amount = 42.6 }
 			add_goods_supply = { goods = goods:medicaments amount = 146.5 }
@@ -3984,14 +3977,14 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:pottery amount = 103.2 }
 			add_goods_supply = { goods = goods:rice amount = 1667.6 }
 			add_goods_supply = { goods = goods:salt amount = 77.3 }
-			add_goods_supply = { goods = goods:saltpeter amount = 451.2 }
+			add_goods_supply = { goods = goods:saltpeter amount = 416.6 }
 			add_goods_supply = { goods = goods:sand amount = 250.3 }
-			add_goods_supply = { goods = goods:stone amount = 544.4 }
+			add_goods_supply = { goods = goods:stone amount = 528.1 }
 			add_goods_supply = { goods = goods:sugar amount = 86.9 }
 			add_goods_supply = { goods = goods:tar amount = 19.6 }
-			add_goods_supply = { goods = goods:tools amount = 67.2 }
+			add_goods_supply = { goods = goods:tools amount = 66.8 }
 			add_goods_supply = { goods = goods:victuals amount = 124.7 }
-			add_goods_supply = { goods = goods:weaponry amount = 42.2 }
+			add_goods_supply = { goods = goods:weaponry amount = 39.1 }
 			add_goods_supply = { goods = goods:wheat amount = 84.1 }
 			add_goods_supply = { goods = goods:wild_game amount = 214.9 }
 			add_goods_supply = { goods = goods:wine amount = 82.4 }
@@ -4012,7 +4005,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:copper amount = 334.5 }
 			add_goods_supply = { goods = goods:cotton amount = 44 }
 			add_goods_supply = { goods = goods:dyes amount = 170.3 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 28.2 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 24.5 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 39.6 }
 			add_goods_supply = { goods = goods:fish amount = 580.7 }
 			add_goods_supply = { goods = goods:fruit amount = 7.2 }
@@ -4020,10 +4013,10 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:furniture amount = 10.2 }
 			add_goods_supply = { goods = goods:iron amount = 780.6 }
 			add_goods_supply = { goods = goods:jewelry amount = 27.2 }
-			add_goods_supply = { goods = goods:leather amount = 34.6 }
+			add_goods_supply = { goods = goods:leather amount = 34.2 }
 			add_goods_supply = { goods = goods:legumes amount = 222.6 }
 			add_goods_supply = { goods = goods:livestock amount = 676.1 }
-			add_goods_supply = { goods = goods:lumber amount = 518.9 }
+			add_goods_supply = { goods = goods:lumber amount = 514.1 }
 			add_goods_supply = { goods = goods:masonry amount = 25.6 }
 			add_goods_supply = { goods = goods:medicaments amount = 59.6 }
 			add_goods_supply = { goods = goods:millet amount = 68.5 }
@@ -4047,8 +4040,8 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:wool amount = 662.2 }
 		}
 		location:tunis.market = {
-			add_goods_supply = { goods = goods:alum amount = 35.4 }
-			add_goods_supply = { goods = goods:beer amount = 39.5 }
+			add_goods_supply = { goods = goods:alum amount = 31.8 }
+			add_goods_supply = { goods = goods:beer amount = 38.3 }
 			add_goods_supply = { goods = goods:beeswax amount = 670.8 }
 			add_goods_supply = { goods = goods:camels amount = 2 }
 			add_goods_supply = { goods = goods:clay amount = 979.7 }
@@ -4056,7 +4049,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:copper amount = 150.9 }
 			add_goods_supply = { goods = goods:cotton amount = 265.7 }
 			add_goods_supply = { goods = goods:dyes amount = 382.6 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 56.9 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 53 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 54.8 }
 			add_goods_supply = { goods = goods:fish amount = 1617.8 }
 			add_goods_supply = { goods = goods:fruit amount = 19.7 }
@@ -4066,27 +4059,27 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:goods_gold amount = 14.2 }
 			add_goods_supply = { goods = goods:iron amount = 390.3 }
 			add_goods_supply = { goods = goods:jewelry amount = 44 }
-			add_goods_supply = { goods = goods:leather amount = 23 }
-			add_goods_supply = { goods = goods:legumes amount = 371.8 }
+			add_goods_supply = { goods = goods:leather amount = 22.6 }
+			add_goods_supply = { goods = goods:legumes amount = 458.9 }
 			add_goods_supply = { goods = goods:livestock amount = 552.5 }
-			add_goods_supply = { goods = goods:lumber amount = 692.6 }
+			add_goods_supply = { goods = goods:lumber amount = 685.8 }
 			add_goods_supply = { goods = goods:marble amount = 94.1 }
 			add_goods_supply = { goods = goods:masonry amount = 22.2 }
-			add_goods_supply = { goods = goods:millet amount = 155.1 }
+			add_goods_supply = { goods = goods:millet amount = 159.9 }
 			add_goods_supply = { goods = goods:olives amount = 913 }
 			add_goods_supply = { goods = goods:paper amount = 13.9 }
-			add_goods_supply = { goods = goods:pottery amount = 116.9 }
+			add_goods_supply = { goods = goods:pottery amount = 116.2 }
 			add_goods_supply = { goods = goods:saffron amount = 193.1 }
 			add_goods_supply = { goods = goods:salt amount = 187.3 }
 			add_goods_supply = { goods = goods:saltpeter amount = 196.7 }
 			add_goods_supply = { goods = goods:sand amount = 125.9 }
 			add_goods_supply = { goods = goods:silk amount = 125.6 }
 			add_goods_supply = { goods = goods:silver amount = 22.6 }
-			add_goods_supply = { goods = goods:stone amount = 380.4 }
+			add_goods_supply = { goods = goods:stone amount = 374.4 }
 			add_goods_supply = { goods = goods:sugar amount = 68 }
 			add_goods_supply = { goods = goods:tin amount = 96.2 }
-			add_goods_supply = { goods = goods:tools amount = 53.1 }
-			add_goods_supply = { goods = goods:victuals amount = 147 }
+			add_goods_supply = { goods = goods:tools amount = 52.9 }
+			add_goods_supply = { goods = goods:victuals amount = 220.4 }
 			add_goods_supply = { goods = goods:weaponry amount = 40.2 }
 			add_goods_supply = { goods = goods:wheat amount = 225.9 }
 			add_goods_supply = { goods = goods:wild_game amount = 92.2 }
@@ -4104,10 +4097,10 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:horses amount = 1.1 }
 			add_goods_supply = { goods = goods:iron amount = 141.8 }
 			add_goods_supply = { goods = goods:jewelry amount = 12.8 }
-			add_goods_supply = { goods = goods:leather amount = 15.2 }
+			add_goods_supply = { goods = goods:leather amount = 15 }
 			add_goods_supply = { goods = goods:legumes amount = 29.5 }
 			add_goods_supply = { goods = goods:livestock amount = 672.5 }
-			add_goods_supply = { goods = goods:lumber amount = 62.4 }
+			add_goods_supply = { goods = goods:lumber amount = 60 }
 			add_goods_supply = { goods = goods:masonry amount = 10.2 }
 			add_goods_supply = { goods = goods:millet amount = 17.3 }
 			add_goods_supply = { goods = goods:paper amount = 3.2 }
@@ -4135,10 +4128,10 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:fruit amount = 2 }
 			add_goods_supply = { goods = goods:furniture amount = 2.5 }
 			add_goods_supply = { goods = goods:jewelry amount = 7.6 }
-			add_goods_supply = { goods = goods:leather amount = 3.4 }
+			add_goods_supply = { goods = goods:leather amount = 3.2 }
 			add_goods_supply = { goods = goods:legumes amount = 52.1 }
 			add_goods_supply = { goods = goods:livestock amount = 322.5 }
-			add_goods_supply = { goods = goods:lumber amount = 52.5 }
+			add_goods_supply = { goods = goods:lumber amount = 50 }
 			add_goods_supply = { goods = goods:masonry amount = 8.5 }
 			add_goods_supply = { goods = goods:millet amount = 24.2 }
 			add_goods_supply = { goods = goods:paper amount = 1.7 }
@@ -4152,20 +4145,20 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:wool amount = 104.5 }
 		}
 		location:varanasi.market = {
-			add_goods_supply = { goods = goods:alum amount = 94.6 }
+			add_goods_supply = { goods = goods:alum amount = 83.7 }
 			add_goods_supply = { goods = goods:beer amount = 273 }
 			add_goods_supply = { goods = goods:beeswax amount = 1747.4 }
 			add_goods_supply = { goods = goods:clay amount = 2186.5 }
 			add_goods_supply = { goods = goods:cloth amount = 11.9 }
-			add_goods_supply = { goods = goods:coal amount = 249.9 }
+			add_goods_supply = { goods = goods:coal amount = 190 }
 			add_goods_supply = { goods = goods:cotton amount = 2410.4 }
 			add_goods_supply = { goods = goods:dyes amount = 1051.4 }
 			add_goods_supply = { goods = goods:elephants amount = 3536.6 }
-			add_goods_supply = { goods = goods:fiber_crops amount = 201.5 }
+			add_goods_supply = { goods = goods:fiber_crops amount = 190.1 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 154.4 }
 			add_goods_supply = { goods = goods:fish amount = 2356.8 }
 			add_goods_supply = { goods = goods:fruit amount = 84.5 }
-			add_goods_supply = { goods = goods:gems amount = 469.2 }
+			add_goods_supply = { goods = goods:gems amount = 453.9 }
 			add_goods_supply = { goods = goods:goods_gold amount = 205.2 }
 			add_goods_supply = { goods = goods:horses amount = 2.3 }
 			add_goods_supply = { goods = goods:iron amount = 2785.3 }
@@ -4185,10 +4178,10 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:saltpeter amount = 451.2 }
 			add_goods_supply = { goods = goods:sand amount = 524.9 }
 			add_goods_supply = { goods = goods:silk amount = 514.9 }
-			add_goods_supply = { goods = goods:stone amount = 2531.9 }
+			add_goods_supply = { goods = goods:stone amount = 2250.4 }
 			add_goods_supply = { goods = goods:sugar amount = 288.5 }
 			add_goods_supply = { goods = goods:tar amount = 41.2 }
-			add_goods_supply = { goods = goods:tools amount = 223.9 }
+			add_goods_supply = { goods = goods:tools amount = 231.9 }
 			add_goods_supply = { goods = goods:victuals amount = 185.4 }
 			add_goods_supply = { goods = goods:weaponry amount = 290.6 }
 			add_goods_supply = { goods = goods:wheat amount = 796.4 }
@@ -4243,11 +4236,10 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:wool amount = 1020.8 }
 		}
 		location:vijaya.market = {
-			add_goods_supply = { goods = goods:alum amount = 5.2 }
+			add_goods_supply = { goods = goods:alum amount = 3.3 }
 			add_goods_supply = { goods = goods:beer amount = 39.2 }
 			add_goods_supply = { goods = goods:beeswax amount = 229.1 }
 			add_goods_supply = { goods = goods:clay amount = 293.6 }
-			add_goods_supply = { goods = goods:coal amount = 22.6 }
 			add_goods_supply = { goods = goods:copper amount = 34 }
 			add_goods_supply = { goods = goods:elephants amount = 258.3 }
 			add_goods_supply = { goods = goods:fine_cloth amount = 18 }
@@ -4264,10 +4256,10 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:rice amount = 455.2 }
 			add_goods_supply = { goods = goods:salt amount = 38.2 }
 			add_goods_supply = { goods = goods:sand amount = 83.4 }
-			add_goods_supply = { goods = goods:stone amount = 297.1 }
-			add_goods_supply = { goods = goods:tools amount = 20.7 }
+			add_goods_supply = { goods = goods:stone amount = 183.4 }
+			add_goods_supply = { goods = goods:tools amount = 17.8 }
 			add_goods_supply = { goods = goods:victuals amount = 49.5 }
-			add_goods_supply = { goods = goods:weaponry amount = 23.6 }
+			add_goods_supply = { goods = goods:weaponry amount = 5.7 }
 			add_goods_supply = { goods = goods:wild_game amount = 53.2 }
 			add_goods_supply = { goods = goods:wine amount = 19.8 }
 			add_goods_supply = { goods = goods:wool amount = 103 }
@@ -4283,7 +4275,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:fiber_crops amount = 22 }
 			add_goods_supply = { goods = goods:fish amount = 349.8 }
 			add_goods_supply = { goods = goods:fruit amount = 2.5 }
-			add_goods_supply = { goods = goods:gems amount = 57.3 }
+			add_goods_supply = { goods = goods:gems amount = 54.8 }
 			add_goods_supply = { goods = goods:goods_gold amount = 18.9 }
 			add_goods_supply = { goods = goods:jewelry amount = 17.9 }
 			add_goods_supply = { goods = goods:leather amount = 7.8 }
@@ -4301,7 +4293,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:tobacco amount = 100.8 }
 			add_goods_supply = { goods = goods:tools amount = 29.1 }
 			add_goods_supply = { goods = goods:victuals amount = 188.1 }
-			add_goods_supply = { goods = goods:weaponry amount = 13.3 }
+			add_goods_supply = { goods = goods:weaponry amount = 6.3 }
 			add_goods_supply = { goods = goods:wild_game amount = 168.1 }
 		}
 		location:zaranj.market = {
@@ -4317,7 +4309,7 @@ pp_start_market_stock = {
 			add_goods_supply = { goods = goods:jewelry amount = 7.6 }
 			add_goods_supply = { goods = goods:legumes amount = 49.2 }
 			add_goods_supply = { goods = goods:livestock amount = 355.8 }
-			add_goods_supply = { goods = goods:lumber amount = 86.8 }
+			add_goods_supply = { goods = goods:lumber amount = 84.3 }
 			add_goods_supply = { goods = goods:marble amount = 40.8 }
 			add_goods_supply = { goods = goods:masonry amount = 5.1 }
 			add_goods_supply = { goods = goods:millet amount = 22.9 }

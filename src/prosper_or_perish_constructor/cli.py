@@ -66,6 +66,7 @@ WORLDBUILDER_CODE_AND_DATA = (
     "src/prosper_or_perish_constructor/rural_capacity.py",
     "src/prosper_or_perish_constructor/setup_layout.py",          # the setup folder every setup writer uses
     "src/prosper_or_perish_constructor/staple_foods.py",          # the staple crops of the start crop allocation
+    "src/prosper_or_perish_constructor/start_technology.py",      # the start buildings a ladder group keeps
     "src/prosper_or_perish_constructor/stored_food.py",           # store_lever (start-food validator) reads its config
     "src/prosper_or_perish_constructor/store_lever.py",           # the start-food validator reads the store lever's numbers
     "src/prosper_or_perish_constructor/vanilla_food_productivity.py",   # script value resolution (EU5 1.4 override rule)
@@ -394,6 +395,18 @@ def _build_parser() -> argparse.ArgumentParser:
         help="apply writes the price file (and the new prices' modifier types, icons and names) from vanilla unit types, goods demands and default prices; check reports whether they are current.",
     )
     ship_upkeep.add_argument("--verbose", action="store_true", help="also print every ship with its old and new base upkeep.")
+    start_tech = _add_command(
+        subcommands,
+        "start-tech",
+        "Starting technology ladder: first-age advance levels, each country's group and the start buildings it keeps (config/starting_technology.toml).",
+        _start_tech,
+    )
+    start_tech.add_argument(
+        "action",
+        choices=("apply", "check"),
+        help="apply writes the advance file, the setup level file, the start building table and the reports; check reports whether they are current.",
+    )
+    start_tech.add_argument("--verbose", action="store_true", help="also list the floors and the setup things that need a ladder advance.")
     stockpile = _add_command(
         subcommands,
         "stockpile",
@@ -1212,9 +1225,19 @@ def _worldbuilder_apply_on_build(project: Path) -> bool:
     return bool(isinstance(section, dict) and section.get("apply_on_build", True))
 
 
+def _refresh_start_building_table(repo: Path, project: Path) -> None:
+    """The start stage reads which buildings a ladder group may start with from a table, not from the advance files
+    (an advance edit does not rerun the start setup); bring it up to date before the stage looks."""
+    from prosper_or_perish_constructor import start_technology
+
+    if (repo / start_technology.CONFIG).is_file() and start_technology.refresh_building_table(repo, project):
+        print(f"Starting technology: {start_technology.BUILDINGS_CSV} rewritten from the advances.", flush=True)
+
+
 def _worldbuilder_apply(repo: Path, project: Path) -> dict[str, object]:
     from prosper_or_perish_constructor.worldbuilder.stage import apply
 
+    _refresh_start_building_table(repo, project)
     report = apply(repo, project, _project_mod_root(repo, project))
     print(
         "World Builder stage applied: "
@@ -1356,6 +1379,25 @@ def _ship_upkeep(args: argparse.Namespace, extra: Sequence[str], repo: Path, pro
     state = ("written" if changed else "unchanged") if args.action == "apply" else ("OFF (run ppc ship-upkeep apply)" if changed else "current")
     print(f"ship upkeep: {len(ships)} navy unit types, {ship_upkeep.OUTPUT} (+ modifier types, icons, names) {state}.")
     return 0 if args.action == "apply" or not changed else 1
+
+
+def _start_tech(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("start-tech does not accept extra arguments.")
+    from prosper_or_perish_constructor import start_technology
+
+    check = args.action == "check"
+    result = start_technology.apply(repo, project, _project_mod_root(repo, project), write=not check)
+    if args.verbose:
+        for group in result.floors:
+            print(f"floor: {group.tag} {group.csv_group} -> {group.level} ({group.floor})")
+        for row in result.requirements:
+            if row["countries_affected"]:
+                print(f"needs {row['advance']} ({row['advance_level']}): {row['kind']} {row['thing']} [{row['how']}"
+                      f"{', negated' if row['negated'] else ''}] {row['countries_affected']} of {row['countries_using']}"
+                      f" ({row['affected_with_vanilla_levels']} with vanilla levels, {row['newly_affected']} new)")
+    print(start_technology.summary(result, check=check))
+    return 1 if check and result.changed else 0
 
 
 def _blockade(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
@@ -2001,6 +2043,9 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
     from prosper_or_perish_constructor import plan_closer  # plans free their workers: the lists the rule reads
 
     print(plan_closer.summary(plan_closer.apply(repo, project, mod_root, vanilla_root(repo, project))), flush=True)
+    from prosper_or_perish_constructor import start_technology  # after every step that writes advances
+
+    print(start_technology.summary(start_technology.apply(repo, project, mod_root, vanilla_root(repo, project))), flush=True)
     from prosper_or_perish_constructor import start_market_stock
 
     print(_start_stock_line(start_market_stock.apply(repo, project, mod_root, vanilla_root(repo, project))), flush=True)
@@ -4867,6 +4912,7 @@ def _deploy_built_mod(repo: Path, project: Path, *, force: bool, while_running: 
 def _smart_sync(args: argparse.Namespace, repo: Path, project: Path, clock: "_StageClock") -> int:
     state = _load_sync_state(repo)
     ran_generator = False
+    clock.run("start building table", _refresh_start_building_table, repo, project)   # a World Builder input
     for stage in SYNC_STAGES:
         # Taken when the stage is reached: the World Builder stage patches blueprints the render stage reads.
         fingerprint = clock.run(f"{stage} fingerprint", _sync_stage_fingerprint, repo, project, stage)

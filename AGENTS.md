@@ -696,6 +696,45 @@
 - The goods market percentage and maintenance efficiency still apply on top. The AI spends a fixed share of income on
   its navy, so cheaper late ships mean larger AI navies. Not tested in game.
 
+## Starting Technology Ladder (2026-11-25, Jan)
+
+- What: every country of the 1337 setup starts in a group 1..9 and gets the general first-age advances whose level is
+  at most its group; group 9 = what a vanilla level-3 country held. Design: `config/starting_technology.toml` (levels,
+  `[requires]`, `[research_cost]`, `[ai_weight]`, `[specific_remap]`, `[floors]`, `[caps]`: societies of pops are written at level 1 and hold nothing, as in vanilla). Groups:
+  `config/starting_technology_countries.csv` (`tag,group,confidence,basis,note`, one row per country block of
+  `10_countries.txt`; a placeholder from the vanilla level until the researched table arrives,
+  `tools/start_technology_placeholder.py`). Plain-language rules and the ladder table: `docs/starting_technology.md`.
+- Code: `start_technology.py`; `uv run ppc start-tech apply|check [--verbose]`; finalize step of `ppc build` / `ppc
+  sync` (after every step that writes advances). Outputs: `in_game/common/advances/zz_pp_start_technology.txt`
+  (INJECT of the level; REPLACE with the effective block where the ladder changes requires, research cost or AI
+  weight, and where another mod file already replaced the advance: the engine ignores an inject into a replaced block),
+  `main_menu/setup/1337/28_pp_start_technology.txt` (partial country blocks, no BOM), `config/starting_technology_buildings.csv`
+  (building -> ladder advance -> level) and the reports in `artifacts/data/start_technology/` (countries, removed start
+  buildings, setup requirements, `withheld_specific_advances.csv`: tag-gated first-age advances a country on the map
+  held with vanilla levels and loses under the ladder, with the blocking ancestor and what it unlocks; culture,
+  religion and government gates are not evaluated). `[requires]` (only that section) may also name a specific
+  first-age advance: REPLACE with the new parents, no level unless it had one (then remapped); Mali's
+  `kouroukan_fouga_advance` under Subject Nations keeps its start reform (load log 2026-11-25).
+- Start buildings: the World Builder start stage (`start_simulation.drop_locked`, and `add` for the placement) drops
+  and never places a building whose unlocking ladder advance is above the owner's group; it reads the building table,
+  not the advance files, so advance edits do not rerun the start setup (`ppc build` / `ppc sync` refresh the table
+  before the stage; a table the finalize step changes is applied on the next build). Raising a group and rebuilding
+  brings the buildings back (the CSV is in `config`, a World Builder input).
+- Engine facts (in game 2026-11-25): an Age of Traditions advance is granted at start when its level <= the country's
+  level (none = 0), `allow` / `potential` pass and one parent is granted; a withheld advance withholds its subtree;
+  levels are a plain integer compare (5, 6, 8, 9 tested). `INJECT:<advance> = { starting_technology_level = N }` raises
+  a vanilla level (2 -> 9 tested; a lower value is untested); `REPLACE:` works. In a country block the LAST level in
+  reading order wins (includes expanded in place); a later setup file's partial `countries = { countries = { TAG = {
+  starting_technology_level = N } } }` merges and wins. Setup files are UTF-8 without BOM, advance files with BOM. A
+  start subject relation is invalid when the overlord lacks Subject Nations (vassal checked; other subject types, laws,
+  reforms, privileges and parliament types untested; `setup_requirements.csv` lists what the start countries use).
+  First-age cost once that age is past = 17 x (1 + `research_cost`); `ai_weight = { add = N }` adds to the AI score.
+- Change a country's group: edit its CSV row and rebuild. The pass fails, naming the tags, on a setup country without a
+  row, a row without a setup country, a duplicate or a group outside 1..9.
+- After a game update: `uv run ppc start-tech check` and `tests/test_start_technology.py` (new or renamed countries need
+  rows, a new general first-age advance needs a level, a changed replaced advance is carried by `apply`), then `uv run
+  ppc vanilla-pins record` for the pass's REPLACE blocks.
+
 ## Vanilla Replace Pins (2026-11-02, Jan)
 
 - A `REPLACE:` or `TRY_REPLACE:` block is a frozen copy of vanilla, and `ppc update-audit` compares vanilla with vanilla

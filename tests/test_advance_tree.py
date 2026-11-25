@@ -27,6 +27,10 @@ MOD_ADVANCES = MOD_ROOT / "in_game" / "common" / "advances"
 BLUEPRINT_ROOT = ROOT / "blueprints" / "accepted"
 MANIFEST_PATH = ROOT / "blueprints" / "buildings.manifest.yml"
 GENERATED_REDIRECTS = "pp_rgo_building_cost_redirects.txt"
+# The starting technology ladder (start_technology.py): its INJECTs set the level of vanilla and mod advances (an
+# INJECT of an existing starting_technology_level replaces it, tested in game 2026-11-25) and its REPLACE blocks are
+# checked against the effective advance by tests/test_start_technology.py.
+GENERATED_START_TECHNOLOGY = "zz_pp_start_technology.txt"
 
 AGES = (
     "age_1_traditions",
@@ -252,6 +256,8 @@ def test_mod_advance_patches_target_existing_vanilla_advances() -> None:
     for path in _mod_advance_files():
         for entry in parse_file(path).entries:
             mode, _, key = entry.key.rpartition(":")
+            if mode and path.name == GENERATED_START_TECHNOLOGY and key in created:
+                continue   # the ladder sets the level of the mod's own first-age advances too
             if mode and key not in vanilla:
                 offenders.append(f"{path.name}: {entry.key} patches an advance vanilla no longer has")
             elif not mode and key in vanilla:
@@ -371,16 +377,22 @@ def test_mod_touched_advances_hold_single_keys_once() -> None:
         for key, entry in _advances().items()
         if _mod_touched(entry)
         for name, count in Counter(item.key for item in entry.value.entries).items()
-        if name in SINGLE_KEYS and count > 1
+        if name in SINGLE_KEYS and count > 1 and not _ladder_level(entry, name)
     ]
     assert not offenders, "\n".join(offenders)
+
+
+def _ladder_level(entry: MergedEntry, name: str) -> bool:
+    """The ladder's INJECT of starting_technology_level, the last write to the advance (it replaces the old level)."""
+    return (name == "starting_technology_level" and Path(entry.source_history[-1].file).name == GENERATED_START_TECHNOLOGY
+            and sum(1 for item in entry.value.entries if item.key == name) == 2)
 
 
 def test_replaced_advances_differ_from_vanilla_only_where_the_mod_means_to() -> None:
     vanilla = _merged("advances", profile="vanilla")
     actual: dict[str, tuple[set[str], set[str]]] = {}
     for path in _mod_advance_files():
-        if path.name == GENERATED_REDIRECTS:
+        if path.name in (GENERATED_REDIRECTS, GENERATED_START_TECHNOLOGY):
             continue
         for entry in parse_file(path).entries:
             mode, _, key = entry.key.rpartition(":")

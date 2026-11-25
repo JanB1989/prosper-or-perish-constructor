@@ -1,0 +1,181 @@
+# Starting technology ladder (Jan, 2026-11-25). Source of truth for the constructor pass `start_technology.py`.
+#
+# A country's `starting_technology_level` is its group (1..9). At game start the engine grants a first-age advance
+# when the advance's level <= the country's level, its `allow` passes and one parent is granted; an advance without a
+# level counts as 0. Group 9 holds exactly what a level-3 country held before this pass.
+# Research cost of an advance = 17 x (1 + research_cost) once the Age of Traditions is the past age.
+
+# Level for advances nobody starts with (vanilla used 4 on its 1..3 scale).
+nobody = 10
+
+[groups]
+1 = "Foraging bands"
+2 = "Village societies"
+3 = "Chiefdoms"
+4 = "Paramount chiefdoms and confederacies"
+5 = "Oral kingdoms"
+6 = "Scribal kingdoms"
+7 = "Charter kingdoms"
+8 = "Bureaucratic realms"
+9 = "Commercial heartlands"
+
+# A country with subjects at game start holds at least this group (the overlord needs Subject Nations).
+[floors]
+overlord = 4
+
+# A landless society of pops (`type = pop`) is written at this level whatever its group. Level 1 holds nothing, which
+# is what these societies hold in vanilla (level 0). With their group's advances they held Taxation without a capital
+# (script errors in the coin laws, in-game test 2026-11-25) and three of the four advances the game asks for before
+# a society may settle. Their group stays in the table for the day they settle.
+[caps]
+society_of_pops = 1
+
+# Every generic first-age advance (no country, culture, religion or government condition) and its level.
+# A test fails when vanilla or the mod adds or drops a generic first-age advance.
+[levels]
+# group 2: village societies (farming, herding, smelting; iron, horses and herds stay bound to vanilla's region conditions)
+agriculture_advance = 2
+ranching = 2
+horse_riding_advance = 2
+mining_advance = 2
+metallurgy = 2
+iron_working = 2
+local_smelters_advance = 2
+unlock_footmen_advance = 2
+unlock_archers_advance = 2
+# law advances: every country's setup block already sets these laws, and the engine keeps a start law whether or not
+# the country holds its advance (it only logs "Setting a law ... that the country doesn't have the advance for",
+# 3,290 lines in the load log of 2026-11-25). The ladder does not gate laws a country starts with.
+mining_law_advance = 2
+distribution_of_power_advance = 2
+cultural_traditions_law_advance = 2
+# group 3: chiefdoms (tribute, bronze and fine metals, boats, mounted men)
+taxation_advance = 3
+bronze_working = 3
+fine_metals_mining = 3
+ship_building_advance = 3
+unlock_horsemen_advance = 3
+# group 4: paramount chiefdoms and confederacies (subjects, trade fairs)
+subjects_advance = 4
+trade_advance_age_of_trad = 4
+faster_levy_recruitment = 4
+# group 5: oral kingdoms (towns and royal seats; the feudal package where the institution is present)
+city_building_advance = 5
+feudalism_advance = 5
+unlock_feudal_levy_advance = 5
+castle_advance = 5
+royal_court_advance = 5
+# group 6: scribal kingdoms (writing in government)
+written_alphabet = 6
+scriptorium_advance = 6
+cultural_acceptance_advance = 6
+mapmaking = 6
+colonies = 6
+road_building = 6
+unlock_traditional_galley_advance = 6
+advanced_mining = 6
+fort_limit_1_advance = 6
+meritocracy_advance = 6
+# group 7: charter kingdoms (written law, chartered towns, coin)
+codified_laws = 7
+chancery_advance = 7
+weapon_guild_advance = 7
+windmills_advance = 7
+pp_heavy_plough = 7
+unlock_cog_advance = 7
+legalism_advance = 7
+medieval_administration = 7
+pest_house_advance = 7
+republican_assembly_advance = 7
+abacus_advance = 7
+educated_bureaucrats = 7
+government_sanctioned_celebrations = 7
+# group 8: bureaucratic realms (learned institutions)
+alchemy_advance = 8
+apothecary_advance = 8
+library_advance = 8
+paper_guild_advance = 8
+paper_guild_fiber_pulp_maintenance_advance = 8
+hospital_advance = 8
+ledgers_double_checking = 8
+power_projection_advance_1 = 8
+talented_traders = 8
+silk_production_guild_advance = 8
+efficient_bureaucracy = 8
+efficient_logistics = 8
+province_governors = 8
+right_to_rule = 8
+smooth_administration = 8
+temporary_appointments = 8
+non_inheritable_offices = 8
+# group 9: commercial heartlands (the old common start)
+more_merchants_age_of_trad = 9
+industry_promotion_advance = 9
+# nobody (as in vanilla): Improved Religious Organization and everything below it
+organized_religion = 10
+guilds = 10
+diplomatic_capacity_traditions = 10
+peasant_connections_advance = 10
+construction_speed_traditions = 10
+rural_rgo_traditions = 10
+scholasticism = 10
+
+# First-age advances with a country, culture, religion or government condition that carry a vanilla level:
+# vanilla level -> ladder level. Every other specific advance stays without a level (granted with its parents).
+[specific_remap]
+1 = 2
+2 = 6
+3 = 8
+4 = 10
+
+# New parents (replaces every `requires` of the advance). Reason: vanilla hangs these under branches a low group
+# never holds (ranching under Windmill, tribute and subjects under Codified Laws).
+[requires]
+ranching = ["agriculture_advance"]
+taxation_advance = []
+subjects_advance = ["taxation_advance"]
+# Mali's Kouroukan Fouga (the oral charter of 1236) hung under Distribution of Power, which needs written law; under
+# it Mali (group 6) lost its start reform Manden Kurufa at game start (load log, 2026-11-25). An oral charter of a
+# federation needs subjects, not codified law.
+kouroukan_fouga_advance = ["subjects_advance"]
+# Royal Court Customs (monarchies; unlocks the royal court customs law) hung under Codified Laws. A court's customs
+# belong to every ruler who takes tribute (group 3), written law or not; under Codified Laws Mali lost its harem law
+# at game start (load log, 2026-11-25).
+monarchy_royal_court_advance = ["taxation_advance"]
+# The same for the other laws a setup block sets: their advances hung under Codified Laws or the legalism branch.
+distribution_of_power_advance = []
+cultural_traditions_law_advance = []
+feudal_de_jure_law_advance = ["taxation_advance"]
+republican_foundation_law_advance = ["taxation_advance"]
+tribal_religious_values_law_advance = []
+
+# The gate advances: the vanilla key `research_cost` (cost factor = 1 + value).
+[research_cost]
+taxation_advance = 3.0          # vanilla 2.5
+subjects_advance = 5.0          # vanilla 2.5
+trade_advance_age_of_trad = 1.0 # vanilla 0
+city_building_advance = 5.0     # vanilla 2.0
+castle_advance = 1.0            # vanilla 0
+written_alphabet = 5.0          # vanilla 2.0
+cultural_acceptance_advance = 1.0
+codified_laws = 5.0             # vanilla 2.0
+windmills_advance = 1.0
+alchemy_advance = 2.0
+library_advance = 1.0
+paper_guild_advance = 1.0
+more_merchants_age_of_trad = 3.0
+industry_promotion_advance = 2.0
+
+# The AI adds this to its score for the advance, so a country climbs the ladder before it picks later-age advances
+# (the AI ignores research cost).
+[ai_weight]
+taxation_advance = 60
+subjects_advance = 50
+city_building_advance = 50
+written_alphabet = 50
+codified_laws = 40
+
+# Start buildings a country keeps only when its group holds the unlocking advance (decided by the level alone; vanilla's
+# institution and region conditions are left as they were).
+[start_buildings]
+remove_when_advance_above_group = true

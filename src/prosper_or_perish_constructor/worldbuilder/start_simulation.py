@@ -502,6 +502,7 @@ class Simulation:
     crop_cfg = None            # crop_allocation.CropConfig; None skips the crop farms
     food_model = fm.FoodModelConfig()
     yield_k: dict = {}         # location -> food per 1,000 jobless peasants/slaves (start_food_model_v2)
+    tech_gate = None           # start_technology.StartBuildingGate; None keeps every building (no ladder)
 
     def __init__(
         self,
@@ -1020,6 +1021,26 @@ class Simulation:
                     self.trimmed.append({"location": tag, "building": key, "before": n, "after": 0})
                     self.counts[tag][key] = 0
 
+    def tech_locked(self, tag, key):
+        """(advance, its level, the owner's group) when the owner's starting technology group lacks the ladder advance
+        that unlocks ``key`` (start_technology.StartBuildingGate), else None."""
+        gate = self.tech_gate
+        return gate.locked(self.owners.get(tag), key) if gate is not None else None
+
+    def drop_locked(self):
+        """Remove setup rows of buildings whose unlocking ladder advance is above the owner's group (2026-11-25, Jan:
+        a country keeps a start building only when its group holds the advance). Decided by the level alone; vanilla's
+        institution and region conditions stay as they were. Rebuilt from the sources every run, so raising a group
+        brings the levels back."""
+        removed = self.__dict__.setdefault("tech_removed", [])
+        for tag in sorted(self.locations):
+            for key, n in sorted(self.counts[tag].items()):
+                need = self.tech_locked(tag, key) if n else None
+                if need:
+                    removed.append({"tag": self.owners[tag], "building": key, "location": tag, "levels": n,
+                                    "advance": need[0], "advance_level": need[1], "group": need[2], "source": "setup"})
+                    self.counts[tag][key] = 0
+
     def river_topup(self):
         """(location, building) -> starting levels that need the location's river; added at game start.
 
@@ -1137,6 +1158,11 @@ class Simulation:
     def add(self, tag, key, wanted=1):
         num = self.numbers.get(key)
         if not num:
+            return 0
+        if wanted > 0 and (need := self.tech_locked(tag, key)):
+            self.rejections[key + ": starting technology"] += 1
+            skipped = self.__dict__.setdefault("tech_skipped", {})
+            skipped[(tag, key)] = (max(wanted, skipped.get((tag, key), (0,))[0]), need)
             return 0
         pool = self.pools[tag]
         count = 0
@@ -2274,7 +2300,12 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
         market_centres=centres,
     )
     doc, merchant_houses = merchant_house_rows(sim, doc, (cfg.raw.get("start") or {}).get("merchant_houses"))
+    from prosper_or_perish_constructor import start_technology
+
+    if (Path(repo) / start_technology.CONFIG).is_file():
+        sim.tech_gate = start_technology.StartBuildingGate.load(repo, vanilla_root, mod_root)
     sim.drop_invalid()
+    sim.drop_locked()
     sim.clamp()
     sim.refresh_navigation()
     # Keep source rows split: improvements, expanded vanilla presets, new plan.
@@ -2342,6 +2373,12 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
         if n
     ]
     sp.write_start_setup(placements, mod_root)
+    tech_rows = list(getattr(sim, "tech_removed", []))
+    tech_rows += [{"tag": owners[tag], "building": key, "location": tag, "levels": wanted, "advance": need[0],
+                   "advance_level": need[1], "group": need[2], "source": "placement"}
+                  for (tag, key), (wanted, need) in sorted(getattr(sim, "tech_skipped", {}).items())]
+    if sim.tech_gate is not None:
+        start_technology.write_removed(repo, tech_rows)
     setup_validation = validate_setup(sim, repo, vanilla_root, mod_root)
     pop_report = sp.write_pops(vanilla_root, mod_root, sim.conversions)
     for rel in sp.LEGACY_FILES:
@@ -2505,6 +2542,12 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
         "over_cap_rows": 0,
         "setup_validation": setup_validation,
         "clamped_rows": len(sim.trimmed),
+        "start_technology": {
+            "removed_rows": sum(r["source"] == "setup" for r in tech_rows),
+            "removed_levels": sum(int(r["levels"]) for r in tech_rows if r["source"] == "setup"),
+            "placements_skipped": sum(r["source"] == "placement" for r in tech_rows),
+            "table": str(start_technology.REMOVED_REPORT),
+        },
         "merchant_houses": {"rows": len(merchant_houses), "kept": sum(r["after"] > 0 for r in merchant_houses),
                             "levels_before": sum(r["before"] for r in merchant_houses),
                             "levels_after": sum(r["after"] for r in merchant_houses)},

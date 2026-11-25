@@ -122,12 +122,12 @@ building:
     	}
     }
 
-    # owner: 10 vanilla levels of capacity and power, maritime presence x5; host: Italian bookkeeping (literacy,
-    # institutions), vanilla's Italian settlers
+    # owner: 10 vanilla levels of power, 8 of capacity (1.6; 2 until 2026-11-25, Jan: the houses gave too much merchant
+    # capacity), maritime presence x5; host: Italian bookkeeping (literacy, institutions), vanilla's Italian settlers
     modifier = {
     	merchant_power_from_building = 10
     	building_owner_maritime_presence = 0.125
-    	merchant_capacity_from_building = 2
+    	merchant_capacity_from_building = 1.6
     	local_institution_growth_modifier = 0.05
     	local_max_literacy = 1
     	local_merchant_capacity_modifier = 0.02
@@ -137,7 +137,7 @@ building:
 
     # the house in the market centre itself: +50 % capacity and power
     market_center_modifier = {
-    	merchant_capacity_from_building = 1
+    	merchant_capacity_from_building = 0.8
     	merchant_power_from_building = 5
     }
 

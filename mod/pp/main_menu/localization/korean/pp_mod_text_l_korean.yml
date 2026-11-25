@@ -7080,6 +7080,11 @@ PP_BUILDING_MAINTENANCE_RULE_ACTIVE: ""
  pp_merchant_house_builder_tt: "We are not a bank without land of our own"
  pp_merchant_house_one_per_market_tt: "We keep no other merchant house in this [market|e]"
  pp_merchant_house_cap_tt: "We keep fewer merchant houses abroad than our trade reach allows: [GetPlayer.MakeScope.ScriptValue('pp_merchant_houses_held')|0] of [GetPlayer.MakeScope.ScriptValue('pp_merchant_house_cap_shown')|0]"
+ pp_hanseatic_kontor_steps_tt: "The League's network abroad is wide enough for this step: the [GetPlayer.MakeScope.ScriptValue('pp_hanseatic_kontor_steps_held')|0] steps of all our [ShowBuildingTypeName('hanseatic_kontor')|e] buildings open step [GetPlayer.MakeScope.ScriptValue('pp_hanseatic_kontor_steps_open')|0]"
+ MODIFIER_TYPE_NAME_pp_hanseatic_kontor_steps: "[ShowBuildingTypeName('hanseatic_kontor')|e] Network"
+ MODIFIER_TYPE_DESC_pp_hanseatic_kontor_steps: "Every step of every [ShowBuildingTypeName('hanseatic_kontor')|e] we keep abroad adds to the League's network. Each whole point of it opens one more step for all of them."
+ MODIFIER_TYPE_NAME_pp_merchant_houses: "Merchant Houses Abroad"
+ MODIFIER_TYPE_DESC_pp_merchant_houses: "We may keep this many more merchant houses abroad than our trade reach alone allows."
  # pp_merchants_quarters_l_english.yml
 
 # >>> eu5-building-pipeline:merchants_quarters:localization

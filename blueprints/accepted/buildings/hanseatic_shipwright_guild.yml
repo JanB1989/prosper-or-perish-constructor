@@ -9,3 +9,9 @@ building:
   possible_production_methods: []
   body: |-
     # Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+    # The League at home carries its houses abroad (2026-11-25, Jan: the Hansa's own buildings are the vehicle of its
+    # growth): every guild level lets its owner keep one more merchant house (pp_merchant_house_cap reads the modifier;
+    # the engine scales this block by level and goods access). AGENTS.md "Merchant Houses".
+    foreign_country_modifier = {
+    	pp_merchant_houses = 1
+    }

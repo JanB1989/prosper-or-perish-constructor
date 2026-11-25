@@ -73,7 +73,35 @@ def test_built_by_trade_range_and_relations_in_allow(buildings, key) -> None:
     assert re.search(r"opinion\s*=\s*\{\s*target\s*=\s*scope:actor\s+value\s*>=\s*0\b", allow)
     for step in (1, 2, 3):
         assert re.search(rf"value\s*>=\s*{step}\s*\}}", allow), step
-    assert "has_advance = trade_range_advance_age_3" in allow and "has_advance = chartered_companies" in allow
+    if key == "hanseatic_kontor":
+        # 2026-11-25 (Jan): the Kontor's steps follow the League's own network, not the generic advances: every
+        # Kontor step gives its owner 0.1 pp_hanseatic_kontor_steps, the third step needs 1, the fourth 2
+        assert "has_advance" not in allow
+        assert re.search(r"value >= 3 \} \} \}\s*custom_tooltip = \{\s*text = pp_hanseatic_kontor_steps_tt\s*"
+                         r"modifier:pp_hanseatic_kontor_steps >= 2\s*\}", _flat(_first(body, "allow")))
+        assert re.search(r"value >= 2 \} \} \}\s*custom_tooltip = \{\s*text = pp_hanseatic_kontor_steps_tt\s*"
+                         r"modifier:pp_hanseatic_kontor_steps >= 1\s*\}", _flat(_first(body, "allow")))
+        assert float(_first(_first(body, "foreign_country_modifier"), "pp_hanseatic_kontor_steps")) == pytest.approx(0.1)
+    else:
+        assert "has_advance = trade_range_advance_age_3" in allow and "has_advance = chartered_companies" in allow
+
+
+def test_hansa_buildings_carry_its_growth() -> None:
+    """2026-11-25 (Jan): the Hansa's own buildings are the vehicle of its growth. The Shipwright Guild and the Town
+    Hall give their owner more merchant houses abroad (read by the cap), the two modifiers are defined and named."""
+    for key, houses in (("hanseatic_shipwright_guild", 1), ("hanseatic_town_hall", 2)):
+        path = MOD / f"in_game/common/building_types/zz_pp_{key}.txt"
+        blocks = [e.value for e in parse_file(path).entries if e.key == f"INJECT:{key}"]
+        assert len(blocks) == 1, key
+        assert float(_first(_first(blocks[0], "foreign_country_modifier"), "pp_merchant_houses")) == houses
+    values = (MOD / "in_game/common/script_values/pp_trade_reach_values.txt").read_text(encoding="utf-8-sig")
+    assert re.search(r"pp_merchant_house_cap = \{[^}]*add = modifier:pp_merchant_houses", values)
+    types = (MOD / "main_menu/common/modifier_type_definitions/pp_hansa_modifier_types.txt").read_text(encoding="utf-8-sig")
+    text = (MOD / "main_menu/localization/english/pp_merchant_houses_l_english.yml").read_text(encoding="utf-8-sig")
+    for name in ("pp_hanseatic_kontor_steps", "pp_merchant_houses"):
+        assert re.search(rf"^{name} = \{{", types, re.M), name
+        for kind in ("NAME", "DESC"):
+            assert re.search(rf'^ MODIFIER_TYPE_{kind}_{name}: ".+"$', text, re.M), (kind, name)
 
 
 def _actor_block(body) -> CList:
@@ -121,7 +149,8 @@ def test_no_landless_banks_except_the_hansa(buildings, key) -> None:
 
 def test_house_tooltips_have_text() -> None:
     text = (MOD / "main_menu/localization/english/pp_merchant_houses_l_english.yml").read_text(encoding="utf-8-sig")
-    for key in ("pp_merchant_house_builder_tt", "pp_merchant_house_one_per_market_tt", "pp_merchant_house_cap_tt"):
+    for key in ("pp_merchant_house_builder_tt", "pp_merchant_house_one_per_market_tt", "pp_merchant_house_cap_tt",
+                "pp_hanseatic_kontor_steps_tt"):
         m = re.search(rf'^ {key}: "(.+)"$', text, re.M)
         assert m, key
         assert not re.search(r"\d", re.sub(r"\[[^\]]*\]", "", m.group(1))), key

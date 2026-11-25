@@ -63,17 +63,22 @@ building:
     	}
     	scope:actor = {
     		NOT = { is_rival_of = root.owner }
-    		trigger_if = {
-    			limit = { root = { location_building_level = { building_type = building_type:hanseatic_kontor owner = scope:actor value >= 1 } } }
-    			has_advance = trade_range_advance_age_3
-    		}
-    		trigger_if = {
-    			limit = { root = { location_building_level = { building_type = building_type:hanseatic_kontor owner = scope:actor value >= 2 } } }
-    			has_advance = chartered_companies
-    		}
+    		# steps by the League's own network, not by the generic advances (2026-11-25, Jan): two steps are always
+    		# open, the third needs pp_hanseatic_kontor_steps of 1, the fourth of 2 (every Kontor step gives 0.1, see
+    		# foreign_country_modifier). In allow, so a network that shrinks never takes a standing step.
     		trigger_if = {
     			limit = { root = { location_building_level = { building_type = building_type:hanseatic_kontor owner = scope:actor value >= 3 } } }
-    			has_reform = government_reform:hanseatic_merchant_federation
+    			custom_tooltip = {
+    				text = pp_hanseatic_kontor_steps_tt
+    				modifier:pp_hanseatic_kontor_steps >= 2
+    			}
+    		}
+    		trigger_else_if = {
+    			limit = { root = { location_building_level = { building_type = building_type:hanseatic_kontor owner = scope:actor value >= 2 } } }
+    			custom_tooltip = {
+    				text = pp_hanseatic_kontor_steps_tt
+    				modifier:pp_hanseatic_kontor_steps >= 1
+    			}
     		}
     		# no building-country rule here (2026-11-24): the Hanseatic merchant federation, the only builder of the
     		# Kontor (country_potential), is itself a building country in vanilla (HSA, setup and reform)
@@ -100,12 +105,12 @@ building:
 
     build_time = trade_post_build_time
 
-    # owner: 10 vanilla levels of capacity and power, maritime presence x5; host: merchant capacity of its own and
-    # settlers drawn to the Hanseatic town
+    # owner: 10 vanilla levels of power, 8 of capacity (2; 2.5 until 2026-11-25, Jan: the houses gave too much merchant
+    # capacity), maritime presence x5; host: merchant capacity of its own and settlers drawn to the Hanseatic town
     modifier = {
     	merchant_power_from_building = 10
     	building_owner_maritime_presence = 0.5
-    	merchant_capacity_from_building = 2.5
+    	merchant_capacity_from_building = 2
     	local_merchant_capacity_modifier = 0.05
     	local_migration_attraction = 0.05
     	local_institution_growth_modifier = 0.02
@@ -114,8 +119,15 @@ building:
 
     # the house in the market centre itself: +50 % capacity and power
     market_center_modifier = {
-    	merchant_capacity_from_building = 1.25
+    	merchant_capacity_from_building = 1
     	merchant_power_from_building = 5
+    }
+
+    # the League's network (2026-11-25, Jan: the Hansa's own buildings carry its growth): every Kontor step adds to its
+    # owner's pp_hanseatic_kontor_steps (the engine scales this block by level and goods access); the allow above reads
+    # it for the third and fourth step
+    foreign_country_modifier = {
+    	pp_hanseatic_kontor_steps = 0.1
     }
 
     # each level supports itself, so foreign levels never count as unsupported building levels of the location
@@ -158,7 +170,7 @@ prices:
 localization:
   entries:
     pp_hanseatic_kontor_price: "[ShowBuildingTypeName('hanseatic_kontor')|e] Price"
-    hanseatic_kontor_desc: "A walled yard of the Hanseatic League in a foreign town, with its own warehouses, hall and law, where the League's merchants live and trade together. It stands only in a [market_center|e], in a town with a great [natural_harbor_suitability|e] or in a [ShowLocationRankName('megalopolis')], within our [trade_range|e], and our trade reaches on from its [market|e]. We keep at most one merchant house in a market, and how many we may keep abroad grows with our trade reach: our [ShowPopTypeName('burghers')], our seafaring, our [societal_values|e] and our towns. It grows in a few large steps: the first needs only a host that is not hostile to us, the next ones the host's good [opinion|e] of us and the [advance|e] [ShowAdvanceName('trade_range_advance_age_3')] and then [ShowAdvanceName('chartered_companies')], and the last is open only to the [ShowGovernmentReformName('hanseatic_merchant_federation')]. Each step gives us much [merchant_power|e] and some [merchant_capacity|e] there, more in the market centre itself; the town gains merchant capacity of its own, draws newcomers and picks up a little [literacy|e] and faster spread of [institution|e]s."
+    hanseatic_kontor_desc: "A walled yard of the Hanseatic League in a foreign town, with its own warehouses, hall and law, where the League's merchants live and trade together. It stands only in a [market_center|e], in a town with a great [natural_harbor_suitability|e] or in a [ShowLocationRankName('megalopolis')], within our [trade_range|e], and our trade reaches on from its [market|e]. We keep at most one merchant house in a market, and how many we may keep abroad grows with our trade reach and with every [ShowBuildingTypeName('hanseatic_shipwright_guild')|e] and [ShowBuildingTypeName('hanseatic_town_hall')|e] of the League. It grows in a few large steps: the first needs only a host that is not hostile to us, the next ones the host's good [opinion|e] of us, and the highest steps open as the League's network grows, because every step of every Kontor we keep abroad lets all of them rise further. Each step gives us much [merchant_power|e] and some [merchant_capacity|e] there, more in the market centre itself; the town gains merchant capacity of its own, draws newcomers and picks up a little [literacy|e] and faster spread of [institution|e]s."
     pp_hanseatic_kontor_maintenance: "[ShowBuildingTypeName('hanseatic_kontor')|e] Maintenance"
     pp_hanseatic_kontor_maintenance_desc: "Timber, tools and paper keep the warehouses, the cranes and the League's books in order."
 

@@ -1,0 +1,21 @@
+﻿# The Hansa's growth by its own buildings (2026-11-25, Jan; hand-written). AGENTS.md "Merchant Houses".
+# pp_hanseatic_kontor_steps: 0.1 per Kontor step its owner keeps (the Kontor's foreign_country_modifier); the Kontor's
+# allow opens the third step at 1 and the fourth at 2.
+# pp_merchant_houses: more merchant houses a country may keep abroad (added to pp_merchant_house_cap); from the
+# Hanseatic Shipwright Guild and the Hanseatic Town Hall.
+
+pp_hanseatic_kontor_steps = {
+	color = good
+	decimals = 2
+	game_data = {
+		category = country
+	}
+}
+
+pp_merchant_houses = {
+	color = good
+	decimals = 1
+	game_data = {
+		category = country
+	}
+}

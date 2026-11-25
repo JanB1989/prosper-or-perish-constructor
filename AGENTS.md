@@ -217,9 +217,18 @@
   step needs the host's opinion of 100; Jan's wish of a first step without good relations is open). Relations and steps in `allow`: no war, no
   rivalry either way; the first step needs the host's opinion of the builder >= 0, every further step >= 100. The
   builder's own levels (`location_building_level = { building_type owner = scope:actor value }`) gate step 2 on
-  `trade_range_advance_age_3`, step 3 on `chartered_companies`, step 4 on a merchant republic (Fondaco: Italian; Kontor:
-  the Hanseatic merchant federation). `max_levels = 4`.
-- Strength per step = 10 vanilla levels (capacity / power: Trade Office 6 / 2, Fondaco 2 / 10, Kontor 2.5 / 10; maritime
+  `trade_range_advance_age_3`, step 3 on `chartered_companies`, step 4 on a merchant republic (Fondaco: Italian).
+  `max_levels = 4`.
+- The Hansa grows by its own buildings (2026-11-25, Jan; not tested in game): the Kontor has no advance gates. Every
+  Kontor step gives its owner 0.1 `pp_hanseatic_kontor_steps` (`foreign_country_modifier`, which the engine scales by
+  level and goods access); two steps are always open, the third needs 1 (ten steps kept), the fourth 2 (twenty), in
+  `allow`, so a network that shrinks never takes a standing step. The Hanseatic Shipwright Guild gives its owner 1
+  `pp_merchant_houses` per level and the Hanseatic Town Hall 2 (INJECT blueprints), added to `pp_merchant_house_cap`.
+  The Hansa's limit at the start is about 12 houses (reach of a landless trade body about 8, two guilds and the Town
+  Hall 4) and it holds 4. Modifier types and icons: `pp_hansa_modifier_types.txt`, `pp_hansa_modifier_icons.txt`
+  (hand-written); texts in `pp_merchant_houses_l_english.yml`. Members add nothing yet.
+- Strength per step = 10 vanilla levels of power and 8 of capacity (capacity / power: Trade Office 4.8 / 2, Fondaco
+  1.6 / 10, Kontor 2 / 10; capacity was 6 / 2 / 2.5 until 2026-11-25, Jan: the houses gave too much capacity; maritime
   presence x5; upkeep goods x3.5 in renamed unique methods `pp_<building>_...`, x10 until 2026-11-25: dear to build,
   cheap to keep, Jan; at x10 the Hansa's 16 start steps cost 27 gold a month on an income of 15 and it went bankrupt
   in 1358, run 5023bdba), `market_center_modifier` +50 % capacity

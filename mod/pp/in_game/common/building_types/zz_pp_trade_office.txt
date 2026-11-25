@@ -105,15 +105,16 @@ unique_production_methods = {
 		icon = trade_office
 		# upkeep of 3.5 vanilla levels per step (2026-11-25, Jan: dear to build, cheap to keep)
 		paper = 0.105 # vanilla 0.03 per level
-		cloth = 0.1225 # 0.035
-		salt = 0.0875 # 0.025
+		cloth = 0.123 # 0.035 (three decimals at most)
+		salt = 0.088 # 0.025
 		category = building_maintenance
 	}
 }
 
-# owner: 10 vanilla levels of capacity and power, maritime presence x5; host: a small plain mix
+# owner: 10 vanilla levels of power, 8 of capacity (4.8; 6 until 2026-11-25, Jan: the houses gave too much merchant
+# capacity), maritime presence x5; host: a small plain mix
 modifier = {
-	merchant_capacity_from_building = 6
+	merchant_capacity_from_building = 4.8
 	building_owner_maritime_presence = 0.25
 	merchant_power_from_building = 2
 	local_institution_growth_modifier = 0.02
@@ -124,7 +125,7 @@ modifier = {
 
 # the house in the market centre itself: +50 % capacity and power
 market_center_modifier = {
-	merchant_capacity_from_building = 3
+	merchant_capacity_from_building = 2.4
 	merchant_power_from_building = 1
 }
 

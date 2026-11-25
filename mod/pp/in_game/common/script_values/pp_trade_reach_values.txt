@@ -267,10 +267,28 @@ pp_merchant_houses_held = {
 
 # A new house needs pp_merchant_houses_held < this: 1 + 7 x raw reach, so a country holds at most the next whole
 # number up (1 without any trade focus, 8 for a full trade nation). Houses above it stay; only new ones wait.
+# On top: the country modifier pp_merchant_houses (2026-11-25, Jan: the Hansa's own buildings carry its growth; one per
+# Hanseatic Shipwright Guild level, two per Hanseatic Town Hall level, from their foreign_country_modifier).
 pp_merchant_house_cap = {
 	value = pp_trade_reach_raw
 	multiply = 7
 	add = 1
+	add = modifier:pp_merchant_houses
+}
+
+# The highest Kontor step the country's network allows, for the tooltip: two steps are always open, one more per whole
+# point of pp_hanseatic_kontor_steps (0.1 per Kontor step it keeps), four at most (the Kontor's allow holds the rule).
+pp_hanseatic_kontor_steps_open = {
+	value = modifier:pp_hanseatic_kontor_steps
+	floor = yes
+	add = 2
+	max = 4
+}
+
+# The Kontor steps the country keeps, for the tooltip.
+pp_hanseatic_kontor_steps_held = {
+	value = modifier:pp_hanseatic_kontor_steps
+	multiply = 10
 }
 
 # What the tooltip shows: the cap as a whole number of houses.

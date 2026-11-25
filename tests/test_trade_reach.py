@@ -80,6 +80,8 @@ def _evaluate(block: CList, scope: dict, result: float = 0.0) -> float:
             result = min(result, operand(value))
         elif key == "ceiling":
             result = math.ceil(result - 1e-9)
+        elif key == "floor":
+            result = math.floor(result + 1e-9)
         elif key == "if":
             if all(_holds(e, scope) for e in value.first("limit").entries):
                 result = _evaluate(CList([e for e in value.entries if e.key != "limit"]), scope, result)
@@ -104,11 +106,14 @@ def _holds(entry, scope: dict) -> bool:
     return actual > float(value) if entry.op == ">" else actual < float(value)
 
 
-def country(*, pop=1000.0, burghers=0.0, maritime=0.0, sv=None, urban=0.0, levels=0.0, locations=10, advances=(), trade_body=False):
-    """A country scope: population in thousands, burgher share 0..1, maritime reach 0..1, societal values -100..100."""
+def country(*, pop=1000.0, burghers=0.0, maritime=0.0, sv=None, urban=0.0, levels=0.0, locations=10, advances=(), trade_body=False,
+            houses=0.0, kontor_steps=0.0):
+    """A country scope: population in thousands, burgher share 0..1, maritime reach 0..1, societal values -100..100;
+    ``houses`` and ``kontor_steps`` are the country modifiers the Hansa's own buildings give."""
     scope = {"total_population": pop, "percentage_pop_type_in_country:burghers": burghers, "pp_maritime_reach": maritime,
              "num_locations": locations, "var:pp_trade_reach_urban_share": urban, "pp_trade_reach_trade_levels": levels,
-             "advances": set(advances), "pp_landless_trade_body": "yes" if trade_body else "no"}
+             "advances": set(advances), "pp_landless_trade_body": "yes" if trade_body else "no",
+             "modifier:pp_merchant_houses": houses, "modifier:pp_hanseatic_kontor_steps": kontor_steps}
     # default: every slider gives nothing (plutocracy counts over the whole slider, so it starts at full aristocracy)
     for key in SV:
         scope[f"societal_value:{key}"] = (sv or {}).get(key, -100.0 if key == "aristocracy_vs_plutocracy" else 0.0)
@@ -186,6 +191,15 @@ def test_merchant_house_cap_is_one_plus_seven_raw_reach() -> None:
     assert _reach("pp_merchant_house_cap_shown", burghers=0.06, maritime=0.75) == 5
     assert _reach("pp_merchant_house_cap_shown", burghers=0.06, maritime=1, urban=0.3, levels=40,
                   sv={"capital_economy_vs_traditional_economy": -100, "land_vs_naval": 40}) == 8
+    # 2026-11-25 (Jan): the Hansa's own buildings add houses on top (two Shipwright Guilds and the Town Hall = 4)
+    hansa = dict(locations=0, trade_body=True, houses=4)
+    assert _reach("pp_merchant_house_cap", **hansa) == pytest.approx(1 + 7 * 100 / 150 + 4)
+    # Kontor steps the network opens: two always, one more per whole point (0.1 per step kept), four at most
+    assert _reach("pp_hanseatic_kontor_steps_open", kontor_steps=0.7) == 2
+    assert _reach("pp_hanseatic_kontor_steps_open", kontor_steps=1.0) == 3
+    assert _reach("pp_hanseatic_kontor_steps_open", kontor_steps=1.9) == 3
+    assert _reach("pp_hanseatic_kontor_steps_open", kontor_steps=3.5) == 4
+    assert _reach("pp_hanseatic_kontor_steps_held", kontor_steps=0.7) == pytest.approx(7)
     held = VALS["pp_merchant_houses_held"]
     body = held.first("every_owned_foreign_building")
     types = {str(e.value) for e in body.first("limit").first("OR").entries}

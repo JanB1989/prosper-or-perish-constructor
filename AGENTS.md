@@ -1022,6 +1022,22 @@ names them, read `0.11`.
   nine, so hidden goods leave no gap and top-five lists keep five); a new internal good goes into that tuple, then
   rerun the tool.
   Tests: `tests/test_internal_goods_gui.py`.
+- Research time in the advance tree (2026-11-25, Jan: "you should see straight when you look at it how long each
+  research takes ... in years ... maybe with colours"; tested in game as Scotland, new game): every advance a country has
+  not researched carries a chip below its card with the years it takes at the country's present research (cost / (12 x
+  `research_speed` x (1 + `research_speed_modifier`))), green under 3 years, yellow to 6, red from 6
+  (`ADVANCE_TIME_FAST_YEARS` / `_SLOW_YEARS` in `tools/port_vanilla_gui.py`). `port_technology_view` adds one `using`
+  line (marker `### PP: research time`) to both node forms of vanilla `technology_lateralview.gui` (the round icon when
+  zoomed out, the card when zoomed in); the chip's templates are `shared/pp_advance_time.gui`. Port again after a game
+  update (`--check` must report none). The cost comes from two global variable maps keyed by the advance
+  (`pp_advance_cost`, `pp_advance_cost_past`), written at game start by `advance_research_cost.py` (`ppc advance-cost
+  apply|check`, finalize step after the ladder) from the advances and the four research cost defines; the GUI picks the
+  past-age cost by `Advance.HasResearchCostDiscount` (not seen in game past 1342 yet). Engine facts: the GUI's
+  `Advance.GetResearchCost` is the cost factor cut to a whole number (1 for 25 points), there is no number for the real
+  cost; the tree runs top to bottom with its lines through the cards' centres, and a widget that overlaps a card is
+  drawn behind it, so the chip sits outside, below the right half; one global variable per advance made the game log
+  "set but never used" with four suggestions each (36,000 lines at load), a map read once in script does not. A save
+  older than the pass has no maps and shows no chip. Tests: `tests/test_advance_time_gui.py`.
 - Construction Plan tab (2026-11-20, Jan: the opener docked under the top-left tab row stuck out): the mod carries
   vanilla `panels/left_panel/left_panel.gui` plus one `button_panel_tab_alt` at the end of the `tabs_buttons` row
   (marker `### PP: Construction Plan tab`, game icon `flat_icons/mass_construct.dds`) that toggles `pp_cplan_open`

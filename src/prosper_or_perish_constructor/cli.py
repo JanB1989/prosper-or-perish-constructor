@@ -407,6 +407,17 @@ def _build_parser() -> argparse.ArgumentParser:
         help="apply writes the advance file, the setup level file, the start building table and the reports; check reports whether they are current.",
     )
     start_tech.add_argument("--verbose", action="store_true", help="also list the floors and the setup things that need a ladder advance.")
+    advance_cost = _add_command(
+        subcommands,
+        "advance-cost",
+        "Research cost of every advance as global variables, for the advance tree's research-time chip (in_game/common/on_action/pp_advance_research_cost.txt).",
+        _advance_cost,
+    )
+    advance_cost.add_argument(
+        "action",
+        choices=("apply", "check"),
+        help="apply writes the on_action file from the advances and the research cost defines; check reports whether it is current.",
+    )
     stockpile = _add_command(
         subcommands,
         "stockpile",
@@ -1381,6 +1392,17 @@ def _ship_upkeep(args: argparse.Namespace, extra: Sequence[str], repo: Path, pro
     return 0 if args.action == "apply" or not changed else 1
 
 
+def _advance_cost(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("advance-cost does not accept extra arguments.")
+    from prosper_or_perish_constructor import advance_research_cost
+
+    write = args.action == "apply"
+    rows, changed = advance_research_cost.apply(repo, project, _project_mod_root(repo, project), write=write)
+    print(advance_research_cost.summary(rows, changed, write))
+    return 0 if write or not changed else 1
+
+
 def _start_tech(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
     if extra:
         raise SystemExit("start-tech does not accept extra arguments.")
@@ -2046,6 +2068,10 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
     from prosper_or_perish_constructor import start_technology  # after every step that writes advances
 
     print(start_technology.summary(start_technology.apply(repo, project, mod_root, vanilla_root(repo, project))), flush=True)
+    from prosper_or_perish_constructor import advance_research_cost  # after the ladder: it reads the ladder's costs
+
+    print(advance_research_cost.summary(*advance_research_cost.apply(repo, project, mod_root, vanilla_root(repo, project))),
+          flush=True)
     from prosper_or_perish_constructor import start_market_stock
 
     print(_start_stock_line(start_market_stock.apply(repo, project, mod_root, vanilla_root(repo, project))), flush=True)

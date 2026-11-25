@@ -57,7 +57,9 @@ def _read(path: Path) -> str:
 
 def _format_texts(vanilla_game: Path, mod_root: Path) -> list[str]:
     texts = [_read(vanilla_game / rel) for rel in VANILLA_FORMAT_FILES if (vanilla_game / rel).is_file()]
-    texts += [_read(p) for p in sorted((mod_root / "main_menu/gui").rglob("*.gui")) if "textformatting" in _read(p)]
+    # the mod defines formats in main_menu/gui (the aliases) and beside the widgets that use them in in_game/gui
+    for folder in ("main_menu/gui", "in_game/gui"):
+        texts += [_read(p) for p in sorted((mod_root / folder).rglob("*.gui")) if "textformatting" in _read(p)]
     return texts
 
 

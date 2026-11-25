@@ -42,13 +42,18 @@ def test_the_tree_is_vanilla_plus_two_chips() -> None:
     assert re.sub(r"\n{2,}", "\n", stripped) == re.sub(r"\n{2,}", "\n", vanilla.rstrip("\n"))
 
 
-def test_each_chip_closes_its_own_node() -> None:
-    """The chip is the last child of the node whose `visible` names the form, so it is drawn on top of the node."""
+def test_each_line_sits_where_it_is_drawn_on_top() -> None:
+    """The card's line closes the card's own container (a child of the node is drawn behind the card); the round
+    icon's line closes the icon's button."""
     tool = _tool()
     mod = tool._read(MOD_ROOT / tool.GUI / tool.TECH_VIEW)
     for visible, template in tool._ADVANCE_NODE_FORMS:
         at = mod.index(visible)
-        end = tool._block_end(mod, mod.rfind("{", 0, at))
+        opening = mod.rfind("{", 0, at)
+        end = tool._block_end(mod, opening)
+        if template == "pp_advance_time_chip":
+            mark = mod.index("# data container", at, end)
+            end = tool._block_end(mod, mod.index("{", mark))
         tail = mod[:end].rstrip("}").rstrip()
         assert tail.endswith(f"using = {template} {tool.ADVANCE_TIME_MARK}"), template
 
@@ -64,7 +69,9 @@ def test_the_chip_templates_and_their_text() -> None:
     assert "'pp_advance_cost'" in years and "'pp_advance_cost_past'" in years and "HasResearchCostDiscount" in years
     assert "research_speed" in years and "research_speed_modifier" in years
     # three colour bands that cover every duration exactly once
-    assert gui.count('visible = "[') == 5   # three colour bands, and each chip only where the cost is known
+    assert gui.count('visible = "[') == 5   # three colour bands, and each line only where the cost is known
+    for fmt in ("pp_advance_time_fast", "pp_advance_time_middling", "pp_advance_time_slow"):
+        assert gui.count(f"name = {fmt}\n") == 1 and gui.count(f'default_format = "#{fmt}"') == 1
     assert f"'(float){tool.ADVANCE_TIME_FAST_YEARS}'" in gui and f"'(float){tool.ADVANCE_TIME_SLOW_YEARS}'" in gui
     assert tool.ADVANCE_TIME_FAST_YEARS < tool.ADVANCE_TIME_SLOW_YEARS
     loc = (MOD_ROOT / "main_menu/localization/english/pp_advance_time_l_english.yml").read_text(encoding="utf-8-sig")

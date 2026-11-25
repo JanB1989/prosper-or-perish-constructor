@@ -1199,6 +1199,8 @@ types AdvancesTreeView
 										default_format = "#flavor_title"
 									}
 								}
+
+								using = pp_advance_time_chip ### PP: research time
 							}
 
 							# icon
@@ -1453,8 +1455,6 @@ types AdvancesTreeView
 
 								using = special_advance
 							}
-
-							using = pp_advance_time_chip ### PP: research time
 						}
 					}
 				}

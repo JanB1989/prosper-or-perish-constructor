@@ -616,14 +616,15 @@ def test_population_growth_scale_follows_the_store():
     assert [growth[s] for s in sorted(growth)] == sorted(growth.values())
     assert empty == 0 and growth[empty] == 0 and full == max(growth)
     decline = _rank_growth()
-    assert decline["town"] == decline["city"] == decline["megalopolis"] < decline["rural_settlement"] < 0
+    # cities and megalopolises carry the most, towns less (2026-11-25, Jan), rural settlements the least
+    assert decline["city"] == decline["megalopolis"] < decline["town"] < decline["rural_settlement"] < 0
     for step, rank in ((rural, "rural_settlement"), (towns, "town")):
         assert abs(growth[step] + decline[rank]) < 1e-9 and growth[step - 1] + decline[rank] < 0, step
     assert empty < rural < towns < grows < full
-    assert growth[grows] + decline["town"] > 0
+    assert growth[grows] + decline["city"] > 0
     starving = (MOD_ROOT / "main_menu/common/static_modifiers/pp_location_modifier_adjustments.txt").read_text(encoding="utf-8-sig")
     block = re.search(r"(?s)TRY_REPLACE:province_starving = \{(.*?)\n\}", starving).group(1)
-    assert float(re.search(r"\blocal_population_growth = (-?[\d.]+)", block).group(1)) < decline["town"]
+    assert float(re.search(r"\blocal_population_growth = (-?[\d.]+)", block).group(1)) < decline["city"]
 
 
 def test_banners_are_paintings_of_their_own():

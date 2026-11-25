@@ -1023,25 +1023,28 @@ names them, read `0.11`.
   rerun the tool.
   Tests: `tests/test_internal_goods_gui.py`.
 - Research time in the advance tree (2026-11-25, Jan: "you should see straight when you look at it how long each
-  research takes ... in years ... maybe with colours", then "it should be in the space of the advancement thing ... not
-  dangling around ... write years out ... this whole screen should look classy as it did before"; tested in game as
-  Scotland, new game): every advance a country has not researched carries one line in its card's footer, between the
-  two corner ornaments, with the years it takes at the country's present research (cost / (12 x `research_speed` x (1 +
-  `research_speed_modifier`))): "4.3 years" in the titles' lettering (header font, italic), no box, green under 3
-  years, gold to 6, red from 6 (`ADVANCE_TIME_FAST_YEARS` / `_SLOW_YEARS` in `tools/port_vanilla_gui.py`; the three text
-  formats `pp_advance_time_*` and the templates are `shared/pp_advance_time.gui`). `port_technology_view` adds one
-  `using` line (marker `### PP: research time`) to vanilla `technology_lateralview.gui` per node form: for the card as
-  the last child of the card's own `# data container`, for the round icon (far zoom) as the last child of its button.
-  Port again after a game update (`--check` must report none). The cost comes from two global variable maps keyed by
-  the advance (`pp_advance_cost`, `pp_advance_cost_past`), written at game start by `advance_research_cost.py` (`ppc
-  advance-cost apply|check`, finalize step after the ladder) from the advances and the four research cost defines; the
-  GUI picks the past-age cost by `Advance.HasResearchCostDiscount` (not seen in game past 1342 yet). Engine facts: the
-  GUI's `Advance.GetResearchCost` is the cost factor cut to a whole number (1 for 25 points), there is no number for
-  the real cost; the tree runs top to bottom with its lines through the cards' centres; a widget added to the node
-  itself is drawn BEHIND the card wherever it overlaps it (a child of the data container is drawn on top); the effect
-  rows end above the footer, also with two effects; one global variable per advance made the game log "set but never
-  used" with four suggestions each (36,000 lines at load), a map the on_action reads itself does not. A save older than
-  the pass has no maps and shows no line. Tests: `tests/test_advance_time_gui.py`.
+  research takes ... in years ... maybe with colours"; "in the space of the advancement thing ... not dangling around
+  ... write years out ... classy as it did before"; "somewhere at the top, where it can't be hidden" by a card whose
+  effect rows scroll; tested in game as Scotland, new game): every advance a country has not researched carries a
+  small badge in its card's upper right corner, beside the medallion: the years it takes at the country's present
+  research (cost / (12 x `research_speed` x (1 + `research_speed_modifier`))) over the word "years", in the titles'
+  lettering (header font, italic) on a faint dark plate; the number is green under 3 years, gold to 6, red from 6
+  (`ADVANCE_TIME_FAST_YEARS` / `_SLOW_YEARS`, size and place `ADVANCE_TIME_BADGE*` in `tools/port_vanilla_gui.py`; the
+  text formats `pp_advance_time_*` and the templates are `shared/pp_advance_time.gui`). `port_technology_view` adds
+  `using` lines (marker `### PP: research time`) to vanilla `technology_lateralview.gui`: for the card as the last
+  child of the card's button (`# button not in progress`) and of each of its six `#unlock` artwork widgets, for the
+  round icon (far zoom, not seen in game) as the last child of its button. Port again after a game update (`--check`
+  must report none). Draw order found in game: the card's own container is at the bottom, its button (the effect
+  rows) above it, the unlock artwork above the button, and a widget added to the node itself ends up behind all of
+  them; so the badge rides in the button and in every artwork widget, at the same spot. The cost comes from two
+  global variable maps keyed by the advance (`pp_advance_cost`, `pp_advance_cost_past`), written at game start by
+  `advance_research_cost.py` (`ppc advance-cost apply|check`, finalize step after the ladder) from the advances and the
+  four research cost defines; the GUI picks the past-age cost by `Advance.HasResearchCostDiscount` (not seen in game
+  past 1342 yet). Engine facts: the GUI's `Advance.GetResearchCost` is the cost factor cut to a whole number (1 for
+  25 points), there is no number for the real cost; one global variable per advance made the game log "set but never
+  used" with four suggestions each (36,000 lines at load), a map the on_action reads itself does not. Card size: the
+  tree lays its nodes on a fixed grid, so a card that grew with its unlocks would cover the lines and the row below
+  (not done). A save older than the pass has no maps and shows no badge. Tests: `tests/test_advance_time_gui.py`.
 - Construction Plan tab (2026-11-20, Jan: the opener docked under the top-left tab row stuck out): the mod carries
   vanilla `panels/left_panel/left_panel.gui` plus one `button_panel_tab_alt` at the end of the `tabs_buttons` row
   (marker `### PP: Construction Plan tab`, game icon `flat_icons/mass_construct.dds`) that toggles `pp_cplan_open`

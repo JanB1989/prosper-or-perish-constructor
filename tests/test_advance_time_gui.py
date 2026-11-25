@@ -29,49 +29,61 @@ def _vanilla() -> Path:
     return root
 
 
-def test_the_tree_is_vanilla_plus_two_chips() -> None:
+def test_the_tree_is_vanilla_plus_the_badges() -> None:
     tool = _tool()
     vanilla = tool._read(_vanilla() / tool.GUI / tool.TECH_VIEW)
     mod = tool._read(MOD_ROOT / tool.GUI / tool.TECH_VIEW)
     assert mod == tool.port_technology_view(vanilla), "run tools/port_vanilla_gui.py"
     added = [line.strip() for line in mod.splitlines() if tool.ADVANCE_TIME_MARK in line]
-    assert added == [f"using = pp_advance_time_chip_round {tool.ADVANCE_TIME_MARK}",
-                     f"using = pp_advance_time_chip {tool.ADVANCE_TIME_MARK}"]
+    mark = tool.ADVANCE_TIME_MARK
+    # the round icon's button, the card's button, then the card's six unlock artwork widgets
+    assert added == [f"using = pp_advance_time_chip_round {mark}", f"using = pp_advance_time_chip {mark}"] + \
+        [f"using = pp_advance_time_chip_art {mark}"] * 6
     # nothing else differs from vanilla
-    stripped = "\n".join(line for line in mod.splitlines() if tool.ADVANCE_TIME_MARK not in line)
+    stripped = "\n".join(line for line in mod.splitlines() if mark not in line)
     assert re.sub(r"\n{2,}", "\n", stripped) == re.sub(r"\n{2,}", "\n", vanilla.rstrip("\n"))
 
 
-def test_each_line_sits_where_it_is_drawn_on_top() -> None:
-    """The card's line closes the card's own container (a child of the node is drawn behind the card); the round
-    icon's line closes the icon's button."""
+def test_the_badge_sits_in_the_layers_that_are_drawn_on_top() -> None:
+    """The card's button and every unlock artwork widget of the card end with the badge (a widget added to the node
+    itself is drawn behind the card); both placements name the same spot of the card."""
     tool = _tool()
     mod = tool._read(MOD_ROOT / tool.GUI / tool.TECH_VIEW)
-    for visible, template in tool._ADVANCE_NODE_FORMS:
-        at = mod.index(visible)
-        opening = mod.rfind("{", 0, at)
-        end = tool._block_end(mod, opening)
-        if template == "pp_advance_time_chip":
-            mark = mod.index("# data container", at, end)
-            end = tool._block_end(mod, mod.index("{", mark))
-        tail = mod[:end].rstrip("}").rstrip()
-        assert tail.endswith(f"using = {template} {tool.ADVANCE_TIME_MARK}"), template
+    visible, _ = tool._ADVANCE_NODE_FORMS[1]
+    at = mod.index(visible)
+    end = tool._block_end(mod, mod.rfind("{", 0, at))
+    node = mod[at:end]
+    button = node.index("# button not in progress")
+    block = node[button:tool._block_end(node, node.index("{", button))]
+    assert block.rstrip("}").rstrip().endswith(f"using = pp_advance_time_chip {tool.ADVANCE_TIME_MARK}")
+    starts = [m.start() for m in re.finditer(r"widget = \{\s*#unlock", node)]
+    assert len(starts) == 6
+    for start in starts:
+        block = node[start:tool._block_end(node, node.index("{", start))]
+        assert block.rstrip("}").rstrip().endswith(f"using = pp_advance_time_chip_art {tool.ADVANCE_TIME_MARK}")
+    gui = tool._read(MOD_ROOT / tool.GUI / tool.ADVANCE_TIME_GUI)
+    width, right, top = tool.ADVANCE_TIME_BADGE[0], tool.ADVANCE_TIME_BADGE_RIGHT, tool.ADVANCE_TIME_BADGE_TOP
+    assert f"position = {{ -{right} {top} }}" in gui                       # in the 270-wide button
+    assert f"position = {{ -{right + (305 - 270) // 2} {top - 2} }}" in gui   # in the 305-wide artwork, 2 lower
+    assert right + width < (270 - 113) // 2 + 10                           # clear of the medallion (113 wide, centred)
 
 
 def test_the_chip_templates_and_their_text() -> None:
     tool = _tool()
     gui = tool._read(MOD_ROOT / tool.GUI / tool.ADVANCE_TIME_GUI)
     assert gui == tool.advance_time_gui(), "run tools/port_vanilla_gui.py"
-    for template in ("pp_advance_time_body", "pp_advance_time_chip", "pp_advance_time_chip_round"):
+    for template in ("pp_advance_time_number", "pp_advance_time_badge", "pp_advance_time_chip",
+                     "pp_advance_time_chip_art", "pp_advance_time_chip_round"):
         assert gui.count(f"template {template} {{") == 1
     assert gui.count("{") == gui.count("}")
     years = tool.advance_years()
     assert "'pp_advance_cost'" in years and "'pp_advance_cost_past'" in years and "HasResearchCostDiscount" in years
     assert "research_speed" in years and "research_speed_modifier" in years
     # three colour bands that cover every duration exactly once
-    assert gui.count('visible = "[') == 5   # three colour bands, and each line only where the cost is known
+    assert gui.count('visible = "[') == 6   # three colour bands, and each of the three placements only where the cost is known
     for fmt in ("pp_advance_time_fast", "pp_advance_time_middling", "pp_advance_time_slow"):
         assert gui.count(f"name = {fmt}\n") == 1 and gui.count(f'default_format = "#{fmt}"') == 1
+    assert gui.count("name = pp_advance_time_unit\n") == 1
     assert f"'(float){tool.ADVANCE_TIME_FAST_YEARS}'" in gui and f"'(float){tool.ADVANCE_TIME_SLOW_YEARS}'" in gui
     assert tool.ADVANCE_TIME_FAST_YEARS < tool.ADVANCE_TIME_SLOW_YEARS
     loc = (MOD_ROOT / "main_menu/localization/english/pp_advance_time_l_english.yml").read_text(encoding="utf-8-sig")

@@ -1199,8 +1199,6 @@ types AdvancesTreeView
 										default_format = "#flavor_title"
 									}
 								}
-
-								using = pp_advance_time_chip ### PP: research time
 							}
 
 							# icon
@@ -1316,6 +1314,8 @@ types AdvancesTreeView
 								parentanchor = center
 								
 								using = advances_tree_item_modifiers
+
+								using = pp_advance_time_chip ### PP: research time
 							}
 
 							widget = {#unlock building
@@ -1329,6 +1329,8 @@ types AdvancesTreeView
 								blockoverride "unlock_texture" {
 									texture = "gfx/interface/advance/unlocks/building.dds"
 								}
+
+								using = pp_advance_time_chip_art ### PP: research time
 							}
 							widget = {#unlock navy
 								parentanchor = hcenter|top
@@ -1342,6 +1344,8 @@ types AdvancesTreeView
 								blockoverride "unlock_texture" {
 									texture = "gfx/interface/advance/unlocks/navy.dds"
 								}
+
+								using = pp_advance_time_chip_art ### PP: research time
 							}
 							widget = {#unlock army
 								parentanchor = hcenter|top
@@ -1354,6 +1358,8 @@ types AdvancesTreeView
 								blockoverride "unlock_texture" {
 									texture = "gfx/interface/advance/unlocks/army.dds"
 								}
+
+								using = pp_advance_time_chip_art ### PP: research time
 							}
 							widget = {#unlock laws
 								parentanchor = hcenter|top
@@ -1366,6 +1372,8 @@ types AdvancesTreeView
 								blockoverride "unlock_texture" {
 									texture = "gfx/interface/advance/unlocks/laws.dds"
 								}
+
+								using = pp_advance_time_chip_art ### PP: research time
 							}
 							widget = {#unlock privileges
 								parentanchor = hcenter|top
@@ -1378,6 +1386,8 @@ types AdvancesTreeView
 								blockoverride "unlock_texture" {
 									texture = "gfx/interface/advance/unlocks/privileges.dds"
 								}
+
+								using = pp_advance_time_chip_art ### PP: research time
 							}
 
 							widget = {	#unlock chivalric order
@@ -1389,6 +1399,8 @@ types AdvancesTreeView
 								blockoverride "unlock_texture" {
 									texture = "gfx/interface/advance/unlocks/privileges.dds"	#TODO 
 								}
+
+								using = pp_advance_time_chip_art ### PP: research time
 							}
 
 							# percentage

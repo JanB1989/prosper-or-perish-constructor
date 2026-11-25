@@ -1159,8 +1159,8 @@ pp_advance_research_cost = {
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:cir_multireligious_society value = 1 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:cir_tribal_elections value = 5 }
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:cir_tribal_elections value = 1 }
-			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:city_building_advance value = 150 }
-			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:city_building_advance value = 102 }
+			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:city_building_advance value = 100 }
+			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:city_building_advance value = 68 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:city_of_artists value = 36.25 }
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:city_of_artists value = 24.65 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:city_of_churches value = 5.75 }
@@ -1213,8 +1213,8 @@ pp_advance_research_cost = {
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:coastal_fort_advance value = 19.55 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:coastal_trade_routes_advance value = 32.5 }
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:coastal_trade_routes_advance value = 22.1 }
-			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:codified_laws value = 150 }
-			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:codified_laws value = 102 }
+			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:codified_laws value = 100 }
+			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:codified_laws value = 68 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:coffea_arabica value = 5 }
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:coffea_arabica value = 1 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:coke_blast_furnace value = 40 }
@@ -6067,8 +6067,8 @@ pp_advance_research_cost = {
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:subject_integration value = 19.55 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:subject_loyalty_absolutism value = 40 }
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:subject_loyalty_absolutism value = 27.2 }
-			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:subjects_advance value = 150 }
-			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:subjects_advance value = 102 }
+			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:subjects_advance value = 100 }
+			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:subjects_advance value = 68 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:subsaharan_musketeer_corps value = 36.25 }
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:subsaharan_musketeer_corps value = 24.65 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:successors_of_genghis_khan value = 5 }
@@ -7155,8 +7155,8 @@ pp_advance_research_cost = {
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:woodblock_printing value = 1 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:write_new_sagas value = 8 }
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:write_new_sagas value = 1 }
-			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:written_alphabet value = 150 }
-			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:written_alphabet value = 102 }
+			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:written_alphabet value = 100 }
+			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:written_alphabet value = 68 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:xuanzang_travels value = 28.75 }
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:xuanzang_travels value = 19.55 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:yams_of_the_great_khan value = 25 }

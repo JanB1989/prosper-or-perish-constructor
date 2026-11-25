@@ -26,10 +26,8 @@ INJECT:fort_limit_1_advance = { starting_technology_level = 6 }
 INJECT:mapmaking = { starting_technology_level = 6 }
 INJECT:meritocracy_advance = { starting_technology_level = 6 }
 INJECT:road_building = { starting_technology_level = 6 }
-INJECT:scriptorium_advance = { starting_technology_level = 6 }
 INJECT:unlock_traditional_galley_advance = { starting_technology_level = 6 }
 INJECT:abacus_advance = { starting_technology_level = 7 }
-INJECT:chancery_advance = { starting_technology_level = 7 }
 INJECT:educated_bureaucrats = { starting_technology_level = 7 }
 INJECT:government_sanctioned_celebrations = { starting_technology_level = 7 }
 INJECT:legalism_advance = { starting_technology_level = 7 }
@@ -162,7 +160,7 @@ REPLACE:taxation_advance = {
 REPLACE:subjects_advance = {
 	age = age_1_traditions
 	icon = diplomatic_influence
-	research_cost = 5.0
+	research_cost = 3.0
 	allow_subjects = yes
 	unlock_subject_type = vassal
 	requires = taxation_advance
@@ -193,7 +191,7 @@ REPLACE:castle_advance = {
 REPLACE:city_building_advance = {
 	age = age_1_traditions
 	icon = city_building_advance
-	research_cost = 5.0
+	research_cost = 3.0
 	can_build_cities = yes
 	can_grant_town_rights = yes
 	unlock_town_rights = tooling_charter
@@ -231,27 +229,46 @@ REPLACE:cultural_acceptance_advance = {
 	requires = cultural_traditions_law_advance
 }
 
+REPLACE:scriptorium_advance = {
+	age = age_1_traditions
+	unlock_building = scriptorium
+	requires = written_alphabet
+	research_speed = 0.1
+	ai_weight = { add = 250 }
+	starting_technology_level = 6
+}
+
 REPLACE:written_alphabet = {
 	age = age_1_traditions
 	icon = abacus_advance
 	depth = 0
-	research_cost = 5.0
+	research_cost = 3.0
 	global_max_literacy = 5
 	global_monthly_literacy = 0.01
 	unlock_estate_privilege = clergy_literacy_rights
 	starting_technology_level = 6
-	ai_weight = { add = 50 }
+	research_speed = 0.2
+	ai_weight = { add = 300 }
+}
+
+REPLACE:chancery_advance = {
+	age = age_1_traditions
+	requires = codified_laws
+	unlock_building = chancery
+	research_speed = 0.1
+	ai_weight = { add = 200 }
+	starting_technology_level = 7
 }
 
 REPLACE:codified_laws = {
 	age = age_1_traditions
 	icon = scholasticism
 	requires = written_alphabet
-	research_cost = 5.0
+	research_cost = 3.0
 	has_codified_laws = yes
 	allow_council_parliament = yes
 	starting_technology_level = 7
-	ai_weight = { add = 40 }
+	ai_weight = { add = 150 }
 }
 
 REPLACE:windmills_advance = {
@@ -277,6 +294,8 @@ REPLACE:library_advance = {
 	research_cost = 1.0
 	requires = scriptorium_advance
 	unlock_building = library
+	research_speed = 0.1
+	ai_weight = { add = 200 }
 	starting_technology_level = 8
 }
 
@@ -285,6 +304,8 @@ REPLACE:paper_guild_advance = {
 	research_cost = 1.0
 	unlock_building = paper_guild
 	requires = scriptorium_advance
+	research_speed = 0.1
+	ai_weight = { add = 200 }
 	starting_technology_level = 8
 }
 

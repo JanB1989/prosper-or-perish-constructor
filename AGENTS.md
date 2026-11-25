@@ -735,6 +735,21 @@
   rows, a new general first-age advance needs a level, a changed replaced advance is carried by `apply`), then `uv run
   ppc vanilla-pins record` for the pass's REPLACE blocks.
 
+- Research speed on the writing branch (2026-11-25, Jan: "we disperse this research speed on them ... the AI
+  researches these first and our other nations have a head start"; a new game loads clean and the numbers show in
+  game, no full run): vanilla's flat 1 research a month becomes base 0.4 plus Written Alphabet 0.2, Scriptorium 0.1,
+  Chancery 0.1, Library 0.1, Paper Guild 0.1 (`[research_speed]`, base and shares must add up to 1: groups 8 and 9
+  research as before, nobody gains; start research 0.4 for groups 1-5, 0.7 group 6, 0.8 group 7). The pass writes the
+  shares as `research_speed` lines into the advances' REPLACE blocks and the base into
+  `in_game/common/auto_modifiers/pp_research_base.txt` (a REPLACE of every vanilla auto modifier with
+  `research_speed = 1`, copied from vanilla on every build; pops keep 0.1; pinned in `tests/vanilla_replace_pins.csv`).
+  The AI puts no value on flat research, so the five advances carry the ladder's highest AI weights (300-200,
+  Codified Laws 150 because the Chancery hangs under it; a test keeps them above every gate). The four big gates went
+  from research cost 5.0 to 3.0 the same day (Jan: the worst nations should need about 100 years, not 150). Simulated
+  catch-up to every institution-free first-age advance, researching nothing else: group 2 99 years, 3 80, 4 72, 5 66,
+  6 37, 7 24, 8 10 (`pp_workspace/techstart/speed/`). A bonus per advance researched (`num_of_advances_researched`
+  works in an auto modifier's `scales_with`) was considered and left out: a growing global buff that widens gaps.
+
 ## Vanilla Replace Pins (2026-11-02, Jan)
 
 - A `REPLACE:` or `TRY_REPLACE:` block is a frozen copy of vanilla, and `ppc update-audit` compares vanilla with vanilla

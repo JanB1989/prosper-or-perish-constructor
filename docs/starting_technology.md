@@ -26,15 +26,15 @@ Years = the research points of the block at research 1.0, counted once the Age o
 
 | group | name | advances gained | years for the block | years from group 1 |
 | --- | --- | --- | --- | --- |
-| 1 | Foraging bands | none | 0 | 0 |
+| 1 | Foraging bands | none | 0.0 | 0.0 |
 | 2 | Village societies | Agriculture, Ranching, Horse Riding, Mining, Metallurgy, Iron Working, Local Smelters, Footmen, Archers; the law advances Mining Law, Distribution of Power, Cultural Traditions | 31.2 | 31.2 |
 | 3 | Chiefdoms | Taxation, Bronze Working, Fine Metals Mining, Shipbuilding, Horsemen | 19.8 | 51.0 |
-| 4 | Paramount chiefdoms and confederacies | Subject Nations, Trade, Faster Levy Recruitment | 12.8 | 63.8 |
-| 5 | Oral kingdoms | City Building, Feudalism, Feudal Levy, Castle, Royal Court | 15.6 | 79.4 |
-| 6 | Scribal kingdoms | Written Alphabet, Scriptorium, Cultural Acceptance, Mapmaking, Colonies, Road Building, Traditional Galley, Advanced Mining, Fort Limit, Meritocracy | 31.2 | 110.6 |
-| 7 | Charter kingdoms | Codified Laws, Chancery, Weapon Guild, Windmills, Heavy Plough, Cog, Legalism, Medieval Administration, Pest House, Republican Assembly, Abacus, Educated Bureaucrats, Sanctioned Celebrations | 26.9 | 137.5 |
-| 8 | Bureaucratic realms | Alchemy, Apothecary, Library, Paper Guild and its fibre pulp method, Hospital, Double-Checked Ledgers, Power Projection, Talented Traders, Silk Guild, Efficient Bureaucracy, Efficient Logistics, Province Governors, Right to Rule, Smooth Administration, Temporary Appointments, Non-Inheritable Offices | 29.8 | 167.3 |
-| 9 | Commercial heartlands | More Merchants, Industrial Patronage | 9.9 | 177.2 |
+| 4 | Paramount chiefdoms and confederacies | Subject Nations, Trade, Faster Levy Recruitment | 9.9 | 60.9 |
+| 5 | Oral kingdoms | City Building, Feudalism, Feudal Levy, Castle, Royal Court | 12.8 | 73.7 |
+| 6 | Scribal kingdoms | Written Alphabet, Scriptorium, Cultural Acceptance, Mapmaking, Colonies, Road Building, Traditional Galley, Advanced Mining, Fort Limit, Meritocracy | 28.3 | 102.0 |
+| 7 | Charter kingdoms | Codified Laws, Chancery, Weapon Guild, Windmills, Heavy Plough, Cog, Legalism, Medieval Administration, Pest House, Republican Assembly, Abacus, Educated Bureaucrats, Sanctioned Celebrations | 24.1 | 126.1 |
+| 8 | Bureaucratic realms | Alchemy, Apothecary, Library, Paper Guild and its fibre pulp method, Hospital, Double-Checked Ledgers, Power Projection, Talented Traders, Silk Guild, Efficient Bureaucracy, Efficient Logistics, Province Governors, Right to Rule, Smooth Administration, Temporary Appointments, Non-Inheritable Offices | 29.8 | 155.8 |
+| 9 | Commercial heartlands | More Merchants, Industrial Patronage | 9.9 | 165.7 |
 | 10 | nobody starts with it | Improved Religious Organization and everything below it (Guilds, Scholasticism, Peasant Connections, ...) | | |
 
 The table lists the config keys' names in short. The config is the source: `[levels]` names every advance with its
@@ -62,6 +62,37 @@ Power, so Mali keeps its start reform Manden Kurufa.
 The gate advances cost more (`[research_cost]`), and the AI adds a weight to Taxation, Subject Nations, City Building,
 Written Alphabet and Codified Laws (`[ai_weight]`). The AI ignores research cost when it picks, so the weight is what
 makes a country climb the ladder before it picks later-age advances.
+
+## Research speed sits on the writing branch
+
+Jan, 2026-11-25: "we disperse this research speed on them ... the AI researches these first and our other nations
+have a head start". Vanilla gives every country 1 research a month. Here a country without writing gets 0.4, and five
+advances add the rest (`[research_speed]`): Written Alphabet 0.2, Scriptorium 0.1, Chancery 0.1, Library 0.1, Paper
+Guild 0.1. They add up to 1, so groups 8 and 9 research exactly as before and nobody gains. Societies of pops keep
+vanilla's 0.1.
+
+| group | research a month at the start |
+| --- | --- |
+| 1 to 5 | 0.4 |
+| 6 Scribal kingdoms | 0.7 |
+| 7 Charter kingdoms | 0.8 |
+| 8 and 9 | 1.0 |
+
+- The base is written by replacing vanilla's four auto modifiers that give `research_speed = 1` (countries with land,
+  building, army and navy countries) in `in_game/common/auto_modifiers/pp_research_base.txt`; the pass copies them
+  from vanilla on every build and changes that one number.
+- The AI puts no value on flat research, so the five advances carry the highest AI weights of the ladder (300 to
+  200); Codified Laws weighs 150 because the Chancery hangs under it. A country behind takes writing first, then the
+  Scriptorium, then Library, Paper Guild or the law branch in any order, then the other gates.
+- The same day the four big gates (Subject Nations, City Building, Written Alphabet, Codified Laws) went from
+  `research_cost` 5.0 to 3.0 (Jan: "150 years, that's too long. For the worst nations probably 100").
+- Catch-up, simulated (`pp_workspace/techstart/speed/`): a country that researches nothing else and has no literacy
+  bonus holds every first-age advance that needs no institution after 99 years from group 2, 80 from group 3, 72 from
+  group 4, 66 from group 5, 37 from group 6, 24 from group 7, 10 from group 8. Full research speed after 32 years
+  (groups 2 to 5), 16 (group 6) and 7 (group 7). If the AI ignored the weights and took the five advances last,
+  group 2 would need about 150 years.
+- Why not a bonus per advance researched (asked the same day): the game can count them (`num_of_advances_researched`
+  in an auto modifier), but it would be a growing global buff and widen gaps for good. Left out (Jan).
 
 Advances with a country, culture, religion or government condition keep no level of their own unless vanilla gave
 them one. Those levels are remapped: 1 to 2, 2 to 6, 3 to 8, 4 to 10 (`[specific_remap]`). The others are granted

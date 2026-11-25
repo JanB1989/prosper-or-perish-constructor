@@ -17,6 +17,11 @@ Outputs (``apply``; ``check`` reports them current or off):
 - ``main_menu/setup/1337/28_pp_start_technology.txt`` (no BOM): one partial country block per country of the
   effective ``10_countries.txt``; a later setup file's partial block merges into the country and its level wins
   (tested in game). The name sorts after every setup file that sets a level.
+- ``in_game/common/auto_modifiers/pp_research_base.txt`` (``[research_speed]``): a ``REPLACE:`` of every vanilla
+  auto modifier that gives a country the flat ``research_speed = 1`` (countries with land, building, army and navy
+  countries; the societies of pops keep their 0.1), with the ladder's base instead. The advances of
+  ``[research_speed.advances]`` carry the rest as ``research_speed`` lines, so a country that holds them all researches
+  as in vanilla.
 - ``config/starting_technology_buildings.csv``: building -> the ladder advance that unlocks it and its level. The
   World Builder start stage reads it (``StartBuildingGate``), drops every start building whose advance is above the
   owner's group and never places one (start_simulation ``drop_locked`` / ``add``), so raising a group and rebuilding
@@ -48,6 +53,10 @@ COUNTRIES_CSV = Path("config/starting_technology_countries.csv")
 BUILDINGS_CSV = Path("config/starting_technology_buildings.csv")
 ADVANCES_DIR = Path("in_game/common/advances")
 ADVANCES_OUTPUT = ADVANCES_DIR / "zz_pp_start_technology.txt"
+AUTO_MODIFIERS_DIR = Path("in_game/common/auto_modifiers")
+RESEARCH_OUTPUT = AUTO_MODIFIERS_DIR / "pp_research_base.txt"
+RESEARCH_KEY = "research_speed"
+VANILLA_RESEARCH_BASE = 1.0   # the flat research a month vanilla gives every country but a society of pops
 SETUP_OUTPUT = SETUP_DIR / "28_pp_start_technology.txt"
 TEMPLATES_DIR = Path("main_menu/setup/templates")
 COUNTRIES_FILE = "10_countries.txt"
@@ -204,10 +213,12 @@ class Ladder:
     research_cost: dict[str, float]
     ai_weight: dict[str, float]
     remove_start_buildings: bool
+    research_base: float | None = None                                  # flat research a month without any advance
+    research_speed: dict[str, float] = field(default_factory=dict)      # advance -> flat research a month it adds
 
     @property
     def replaced(self) -> set[str]:
-        return set(self.requires) | set(self.research_cost) | set(self.ai_weight)
+        return set(self.requires) | set(self.research_cost) | set(self.ai_weight) | set(self.research_speed)
 
 
 def load_ladder(repo: Path) -> Ladder:
@@ -223,6 +234,8 @@ def load_ladder(repo: Path) -> Ladder:
         research_cost={str(k): float(v) for k, v in raw.get("research_cost", {}).items()},
         ai_weight={str(k): float(v) for k, v in raw.get("ai_weight", {}).items()},
         remove_start_buildings=bool(raw.get("start_buildings", {}).get("remove_when_advance_above_group", True)),
+        research_base=(float(raw["research_speed"]["base"]) if "research_speed" in raw else None),
+        research_speed={str(k): float(v) for k, v in raw.get("research_speed", {}).get("advances", {}).items()},
     )
 
 
@@ -445,9 +458,9 @@ class AdvancePlan:
 
 
 def _replace_body(adv: Advance, *, level: int | None, requires: list[str] | None, research_cost: float | None,
-                  ai_weight: float | None) -> tuple[Stmt, ...]:
-    """The effective block, key for key, with the level (None: the block keeps none), the requires, the research cost
-    and the AI weight set."""
+                  ai_weight: float | None, research_speed: float | None = None) -> tuple[Stmt, ...]:
+    """The effective block, key for key, with the level (None: the block keeps none), the requires, the research cost,
+    the AI weight and the flat research the advance adds set."""
     out: list[Stmt] = []
     lead = {"age", "icon", "depth"}
     placed = {"level": level is None, "requires": requires is None, "research_cost": research_cost is None,
@@ -488,6 +501,8 @@ def _replace_body(adv: Advance, *, level: int | None, requires: list[str] | None
                 out.append(_ai_weight_stmt(stmt, ai_weight))
                 placed["ai_weight"] = True
             continue
+        if stmt.key == RESEARCH_KEY and research_speed is not None:
+            continue   # written once, below
         out.append(stmt)
         if stmt.key in lead and lead_done(index):
             if not placed["requires"] and "requires" not in present:
@@ -500,6 +515,8 @@ def _replace_body(adv: Advance, *, level: int | None, requires: list[str] | None
         out.extend(new_requires)
     if not placed["research_cost"]:
         out.append(Stmt("research_cost", "=", _number(research_cost)))  # type: ignore[arg-type]
+    if research_speed is not None:
+        out.append(Stmt(RESEARCH_KEY, "=", _number(research_speed)))
     if not placed["ai_weight"]:
         out.append(Stmt("ai_weight", "=", (Stmt("add", "=", _number(ai_weight)),)))  # type: ignore[arg-type]
     if not placed["level"]:
@@ -535,10 +552,16 @@ def plan_advances(ladder: Ladder, advances: dict[str, Advance]) -> AdvancePlan:
         problems.append(f"[levels] names advances the game does not have: {', '.join(unknown)}")
     if not_general:
         problems.append(f"[levels] names advances that are not general first-age advances: {', '.join(not_general)}")
-    for section, keys in (("research_cost", ladder.research_cost), ("ai_weight", ladder.ai_weight)):
+    for section, keys in (("research_cost", ladder.research_cost), ("ai_weight", ladder.ai_weight),
+                          ("research_speed.advances", ladder.research_speed)):
         bad = sorted(set(keys) - set(ladder.levels))
         if bad:
             problems.append(f"[{section}] names advances outside [levels]: {', '.join(bad)}")
+    if ladder.research_base is not None:
+        total = ladder.research_base + sum(ladder.research_speed.values())
+        if abs(total - VANILLA_RESEARCH_BASE) > 1e-9 or ladder.research_base <= 0 or min(ladder.research_speed.values(), default=1) <= 0:
+            problems.append(f"[research_speed] base and advances must be positive and add up to {VANILLA_RESEARCH_BASE:g} "
+                            f"(vanilla's flat research, so a country that holds them all gains nothing); they add up to {total:g}")
     # [requires] may also move a country, culture, religion or government advance of the first age
     bad = sorted(set(ladder.requires) - set(ladder.levels) - specific)
     if bad:
@@ -552,6 +575,7 @@ def plan_advances(ladder: Ladder, advances: dict[str, Advance]) -> AdvancePlan:
         configured = {"requires"} if key in ladder.requires else set()
         configured |= {"research_cost"} if key in ladder.research_cost else set()
         configured |= {"ai_weight"} if key in ladder.ai_weight else set()
+        configured |= {RESEARCH_KEY} if key in ladder.research_speed else set()
         clash = advances[key].mod_keys & (configured | {LEVEL_KEY})
         if clash:
             files = ", ".join(f"{m}:{f}" for m, layer, f in advances[key].history if layer == "mod")
@@ -583,6 +607,7 @@ def plan_advances(ladder: Ladder, advances: dict[str, Advance]) -> AdvancePlan:
                 requires=ladder.requires.get(key),
                 research_cost=ladder.research_cost.get(key),
                 ai_weight=ladder.ai_weight.get(key),
+                research_speed=ladder.research_speed.get(key),
             )
         else:
             injects[key] = level
@@ -621,6 +646,55 @@ def render_advances(ladder: Ladder, plan: AdvancePlan) -> str:
         lines.append(f"{prefix}:{key} = {{")
         lines.extend(render_statements(plan.replaces[key], 1))
         lines.append("}")
+    return "\n".join(lines) + "\n"
+
+
+def research_base_blocks(ladder: Ladder, vanilla_root: Path, mod_root: Path | None) -> dict[str, tuple[Stmt, ...]]:
+    """Vanilla's auto modifiers that give a country its flat research (``research_speed`` = vanilla's base), each with
+    the ladder's base instead. Empty without ``[research_speed]``."""
+    if ladder.research_base is None:
+        return {}
+    out: dict[str, tuple[Stmt, ...]] = {}
+    for path in layered_files(vanilla_root, None, AUTO_MODIFIERS_DIR):
+        for stmt in parse_statements(path.read_text(encoding="utf-8-sig")):
+            if stmt.key is None or not stmt.is_block:
+                continue
+            value = _last_scalar(stmt.value, RESEARCH_KEY)  # type: ignore[arg-type]
+            try:
+                is_base = value is not None and abs(float(value) - VANILLA_RESEARCH_BASE) < 1e-9
+            except ValueError:
+                is_base = False
+            if not is_base:
+                continue
+            mode, key = _mode(stmt.key)
+            if mode != "CREATE":
+                raise StartTechnologyError(f"vanilla auto modifier {stmt.key} in {path.name}: unexpected prefix")
+            out[key] = tuple(Stmt(RESEARCH_KEY, s.op, _number(ladder.research_base)) if s.key == RESEARCH_KEY else s
+                             for s in stmt.value)  # type: ignore[union-attr]
+    if not out:
+        raise StartTechnologyError(f"no vanilla auto modifier gives research_speed = {VANILLA_RESEARCH_BASE:g} any more; "
+                                   "[research_speed] has nothing to replace")
+    if mod_root is not None:
+        folder = Path(mod_root) / AUTO_MODIFIERS_DIR
+        for path in sorted(folder.glob("*.txt")) if folder.is_dir() else []:
+            if path.name == RESEARCH_OUTPUT.name:
+                continue
+            for stmt in parse_statements(path.read_text(encoding="utf-8-sig")):
+                if stmt.key and stmt.is_block and _mode(stmt.key)[1] in out:
+                    raise StartTechnologyError(f"{path.name} also writes the auto modifier {_mode(stmt.key)[1]}; "
+                                               "the research base replaces that block whole")
+    return out
+
+
+def render_research_base(ladder: Ladder, blocks: dict[str, tuple[Stmt, ...]]) -> str:
+    lines = [
+        f"# {_HEADER}",
+        "# Flat research a month without any advance (config/starting_technology.toml [research_speed]): vanilla gives",
+        f"# {VANILLA_RESEARCH_BASE:g}; here the base is {ladder.research_base:g} and the advances of the writing branch add the rest,",
+        "# so a country that holds them all researches as before. The blocks are vanilla's, with that one number changed.",
+    ]
+    for key in sorted(blocks):
+        lines += ["", f"REPLACE:{key} = {{", *render_statements(blocks[key], 1), "}"]
     return "\n".join(lines) + "\n"
 
 
@@ -1244,6 +1318,14 @@ def apply(repo: Path, project: Path, mod_root: Path | None = None, vanilla_root:
         changed.append(ADVANCES_OUTPUT)
     if _write(mod_root / SETUP_OUTPUT, render_setup(groups), write=write, bom=False):
         changed.append(SETUP_OUTPUT)
+    research = research_base_blocks(ladder, vanilla_root, mod_root)
+    if research:
+        if _write(mod_root / RESEARCH_OUTPUT, render_research_base(ladder, research), write=write, bom=True):
+            changed.append(RESEARCH_OUTPUT)
+    elif (mod_root / RESEARCH_OUTPUT).is_file():
+        changed.append(RESEARCH_OUTPUT)
+        if write:
+            (mod_root / RESEARCH_OUTPUT).unlink()
     table_changed = _write(repo / BUILDINGS_CSV, render_building_table(building_gates(ladder, advances)),
                            write=write, bom=False)
     if table_changed:
@@ -1272,7 +1354,9 @@ def summary(result: Result, *, check: bool = False) -> str:
         state = f"{len(result.changed)} files rewritten" if result.changed else "unchanged"
     line = (f"Starting technology: {len(result.plan.injects)} level injects, {len(result.plan.replaces)} replaced advances, "
             f"{len(result.plan.remapped)} specific remapped; {len(result.groups)} countries by level {levels}, "
-            f"{len(result.floors)} changed by floors or caps; start building levels removed {removed}; {state}.")
+            f"{len(result.floors)} changed by floors or caps; start building levels removed {removed}; "
+            + (f"research base {result.ladder.research_base:g} + {len(result.ladder.research_speed)} advances; "
+               if result.ladder.research_base is not None else "") + f"{state}.")
     if result.table_changed and not check:
         line += " The start building table changed: the next build reruns the start setup."
     return line

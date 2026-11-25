@@ -127,6 +127,8 @@ def _configured_keys(ladder: st.Ladder, key: str) -> set[str]:
         keys.add("research_cost")
     if key in ladder.ai_weight:
         keys.add("ai_weight")
+    if key in ladder.research_speed:
+        keys.add(st.RESEARCH_KEY)
     return keys
 
 
@@ -156,6 +158,8 @@ def test_generated_blocks_match_the_effective_advances(ladder: st.Ladder, advanc
         if key in ladder.ai_weight:
             weights = [s.value for s in body if s.key == "ai_weight"]
             assert len(weights) == 1 and float(dict((s.key, s.value) for s in weights[0])["add"]) == ladder.ai_weight[key]
+        if key in ladder.research_speed:
+            assert [float(s.value) for s in body if s.key == st.RESEARCH_KEY] == [ladder.research_speed[key]], key
     assert not off, f"REPLACE blocks that differ from the effective advance: {off} (run uv run ppc start-tech apply)"
     # the engine ignores an inject into a block another mod file replaced: those must be replaced again here
     assert not [k for k in plan.injects if advances[k].replaced]
@@ -216,6 +220,52 @@ def test_group_nine_keeps_todays_start(ladder: st.Ladder, advances: dict[str, st
     top = st.granted(general, st.parents_after(ladder, advances), ladder.levels, max(ladder.groups))
     assert top == today, f"only in group 9: {sorted(top - today)}; only today: {sorted(today - top)}"
     assert len(st.granted(general, st.parents_after(ladder, advances), ladder.levels, min(ladder.groups))) == 0
+
+
+def _start_research(ladder: st.Ladder, advances: dict[str, st.Advance], group: int) -> float:
+    held = st.granted(st.general_first_age(advances), st.parents_after(ladder, advances), ladder.levels, group)
+    return ladder.research_base + sum(v for k, v in ladder.research_speed.items() if k in held)
+
+
+def test_research_speed_adds_up_to_vanillas_base(ladder: st.Ladder, advances: dict[str, st.Advance]) -> None:
+    """Base and advances add up to vanilla's flat research: the top groups research as before, nobody gains, and no
+    group starts faster than the group above it."""
+    assert ladder.research_base is not None and ladder.research_speed
+    assert ladder.research_base + sum(ladder.research_speed.values()) == pytest.approx(st.VANILLA_RESEARCH_BASE)
+    by_group = {g: _start_research(ladder, advances, g) for g in sorted(ladder.groups)}
+    assert by_group[max(ladder.groups)] == pytest.approx(st.VANILLA_RESEARCH_BASE)
+    assert by_group[min(ladder.groups)] == pytest.approx(ladder.research_base)
+    values = [by_group[g] for g in sorted(by_group)]
+    assert values == sorted(values), by_group
+    # none of them sits behind an institution or a region: every country can research its way to full speed
+    gates = st.gate_classes(advances)
+    assert {gates[k] for k in ladder.research_speed} == {"free"}
+
+
+def test_research_advances_outweigh_every_gate(ladder: st.Ladder) -> None:
+    """The AI puts no value on flat research, so the weight is what makes a country behind take these first."""
+    others = [w for k, w in ladder.ai_weight.items() if k not in ladder.research_speed]
+    assert set(ladder.research_speed) <= set(ladder.ai_weight)
+    assert min(ladder.ai_weight[k] for k in ladder.research_speed) > max(others)
+
+
+def test_research_base_replaces_vanillas_flat_research(ladder: st.Ladder, vanilla: Path) -> None:
+    """The auto modifier file is vanilla's blocks with one number changed; the societies of pops keep theirs."""
+    blocks = st.research_base_blocks(ladder, vanilla, MOD)
+    assert {"location_tt_name", "building_tt_name", "army_tt_name", "navy_tt_name"} <= set(blocks)
+    assert "pop_tt_name" not in blocks
+    text = (MOD / st.RESEARCH_OUTPUT).read_text(encoding="utf-8-sig")
+    assert text == st.render_research_base(ladder, blocks), "run uv run ppc start-tech apply"
+    written = {s.key: s.value for s in st.parse_statements(text) if s.key and s.is_block}
+    assert set(written) == {f"REPLACE:{k}" for k in blocks}
+    vanilla_blocks = {}
+    for path in st.layered_files(vanilla, None, st.AUTO_MODIFIERS_DIR):
+        for s in st.parse_statements(path.read_text(encoding="utf-8-sig")):
+            if s.key in blocks:
+                vanilla_blocks[s.key] = s.value
+    for key, body in blocks.items():
+        assert [s for s in body if s.key != st.RESEARCH_KEY] == [s for s in vanilla_blocks[key] if s.key != st.RESEARCH_KEY]
+        assert [float(s.value) for s in body if s.key == st.RESEARCH_KEY] == [ladder.research_base]
 
 
 def test_check_is_current_after_apply(vanilla: Path) -> None:

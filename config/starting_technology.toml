@@ -150,15 +150,18 @@ republican_foundation_law_advance = ["taxation_advance"]
 tribal_religious_values_law_advance = []
 
 # The gate advances: the vanilla key `research_cost` (cost factor = 1 + value).
+# 2026-11-25 (Jan: "150 years, that's too long. For the worst nations probably 100"): the four big gates went from
+# 5.0 to 3.0, the same as Taxation. With [research_speed] a village society (group 2) that researches nothing else
+# then holds every first-age advance that needs no institution after about 100 years (pp_workspace/techstart/speed).
 [research_cost]
 taxation_advance = 3.0          # vanilla 2.5
-subjects_advance = 5.0          # vanilla 2.5
+subjects_advance = 3.0          # vanilla 2.5
 trade_advance_age_of_trad = 1.0 # vanilla 0
-city_building_advance = 5.0     # vanilla 2.0
+city_building_advance = 3.0     # vanilla 2.0
 castle_advance = 1.0            # vanilla 0
-written_alphabet = 5.0          # vanilla 2.0
+written_alphabet = 3.0          # vanilla 2.0
 cultural_acceptance_advance = 1.0
-codified_laws = 5.0             # vanilla 2.0
+codified_laws = 3.0             # vanilla 2.0
 windmills_advance = 1.0
 alchemy_advance = 2.0
 library_advance = 1.0
@@ -166,14 +169,40 @@ paper_guild_advance = 1.0
 more_merchants_age_of_trad = 3.0
 industry_promotion_advance = 2.0
 
+# Flat research a month (2026-11-25, Jan: "we disperse this research speed on them ... they add up to what they add up
+# in general"). Vanilla gives every country 1 a month. Here a country without any of these advances gets `base`, and
+# each advance of the writing branch adds its share; base and shares add up to 1, so groups 8 and 9 research as before
+# and nobody gains. Start research: groups 1-5 0.4, group 6 0.7, group 7 0.8, groups 8-9 1.0. Societies of pops keep
+# vanilla's 0.1. Why these: writing lets knowledge outlive the people who hold it (the biggest step); the scriptorium
+# copies and teaches; the chancery trains clerks and keeps archives; the library gathers books for scholars; paper
+# makes books cheap. Codified Laws (law, not learning), Alchemy (farming branch) and Classic Scholasticism (nobody
+# starts with it, so it would slow everyone) carry none.
+[research_speed]
+base = 0.4
+
+[research_speed.advances]
+written_alphabet = 0.2
+scriptorium_advance = 0.1
+chancery_advance = 0.1
+library_advance = 0.1
+paper_guild_advance = 0.1
+
 # The AI adds this to its score for the advance, so a country climbs the ladder before it picks later-age advances
-# (the AI ignores research cost).
+# (the AI ignores research cost, and it puts no value on flat research). The research advances weigh more than every
+# gate, so a country behind takes them first (Jan: "kind of mandatory, but there's some choice"); Codified Laws weighs
+# more than the other gates because the Chancery hangs under it. Vanilla's own weights run from 1 to 200 (two at
+# 1000 and 2000). In the first ladder run the AI left unweighted first-age advances lying for 50 years (Mali 1388:
+# no Library, no Paper Guild).
 [ai_weight]
+written_alphabet = 300
+scriptorium_advance = 250
+library_advance = 200
+paper_guild_advance = 200
+chancery_advance = 200
+codified_laws = 150
 taxation_advance = 60
 subjects_advance = 50
 city_building_advance = 50
-written_alphabet = 50
-codified_laws = 40
 
 # Start buildings a country keeps only when its group holds the unlocking advance (decided by the level alone; vanilla's
 # institution and region conditions are left as they were).

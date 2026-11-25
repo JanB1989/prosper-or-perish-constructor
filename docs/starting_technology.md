@@ -91,6 +91,10 @@ vanilla's 0.1.
   group 4, 66 from group 5, 37 from group 6, 24 from group 7, 10 from group 8. Full research speed after 32 years
   (groups 2 to 5), 16 (group 6) and 7 (group 7). If the AI ignored the weights and took the five advances last,
   group 2 would need about 150 years.
+- The AI picks one advance at a time (`NAI.AI_PERFORMANCE_TECH_QUEUE_SIZE` 1, vanilla 5). With five it queued its
+  top advance and four others and did not look again until all were done: in the first run with the split Oyo and
+  Tonga had Written Alphabet first and then Heavy Plough, Windmill, Weaponsmith and Merchant Guilds queued, years of
+  research before the Scriptorium (seen in game, September 1343).
 - Why not a bonus per advance researched (asked the same day): the game can count them (`num_of_advances_researched`
   in an auto modifier), but it would be a growing global buff and widen gaps for good. Left out (Jan).
 

@@ -268,6 +268,15 @@ def test_research_base_replaces_vanillas_flat_research(ladder: st.Ladder, vanill
         assert [float(s.value) for s in body if s.key == st.RESEARCH_KEY] == [ladder.research_base]
 
 
+def test_the_ai_picks_one_advance_at_a_time() -> None:
+    """With vanilla's queue of five the AI takes its top advance and four others before it looks again, so a country
+    behind researched unrelated advances between Written Alphabet and the Scriptorium (observer run 2026-11-25)."""
+    text = (MOD / "loading_screen/common/defines/pp_defines_adjustments.txt").read_text(encoding="utf-8-sig")
+    values = [line.split("=")[1].split("#")[0].strip() for line in text.splitlines()
+              if line.strip().startswith("AI_PERFORMANCE_TECH_QUEUE_SIZE")]
+    assert values == ["1"]
+
+
 def test_check_is_current_after_apply(vanilla: Path) -> None:
     result = st.apply(REPO, PROJECT, MOD, vanilla, write=False)
     assert not result.changed, f"run uv run ppc start-tech apply: {result.changed}"

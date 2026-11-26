@@ -9,6 +9,7 @@ from __future__ import annotations
 import math
 import re
 from collections import Counter, defaultdict
+from pathlib import Path
 
 from eu5gameparser.clausewitz.parser import parse_text
 from eu5gameparser.clausewitz.syntax import CList
@@ -17,6 +18,23 @@ from prosper_or_perish_constructor import yaml_io
 
 
 BUILDING_LEVEL = re.compile(r"location_building_level\(building_type:(\w+)\)")
+
+
+def load_scripted_geographies(*roots):
+    """Scripted geographies that are one plain list of locations (the Grand Canal): name -> set of location tags.
+
+    Geographies built from areas, regions or several blocks are left out, so a rule that needs one stays unresolved.
+    """
+    found = {}
+    for base in roots:
+        folder = Path(base) / "in_game/common/scripted_geography"
+        if not folder.is_dir():
+            continue
+        for path in sorted(folder.glob("*.txt")):
+            text = re.sub(r"#[^\n]*", "", path.read_text(encoding="utf-8-sig"))
+            for match in re.finditer(r"(?m)^(\w+)\s*=\s*\{\s*location\s*=\s*\{([^{}]*)\}\s*\}", text):
+                found[match.group(1)] = set(match.group(2).split())
+    return found
 
 
 class Unresolved(ValueError):
@@ -128,6 +146,8 @@ class Rules:
                         defines[group.key, entry.key] = entry.value
         self.subsistence = float(defines["NLocation", "SUBSISTENCE_AGRICULTURE"])
         self.unsupported = Counter()
+        # scripted geographies given as plain location lists (load_scripted_geographies), by name
+        self.geographies = {}
         self.footprint_classes = cfg["building_footprint"]["classes"]
         self.footprints = {}
         enabled = yaml_io.safe_load(
@@ -290,6 +310,11 @@ class Rules:
                 return ctx["integration_level"] == "core"
             if key == "always":
                 return bool(v)
+            if key == "is_in_scripted_geography":
+                name = str(v).split(":")[-1]
+                if name not in self.geographies:
+                    raise Unresolved("trigger " + key + " " + name)
+                return ctx.get("location_tag") in self.geographies[name]
             if key in ctx.get("trigger_values", {}):
                 # scripted triggers the start model knows the answer to (water access, read from the map)
                 return ctx["trigger_values"][key] == (str(v) == "yes" if isinstance(v, str) else bool(v))

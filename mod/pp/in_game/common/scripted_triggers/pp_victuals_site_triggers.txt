@@ -7,3 +7,12 @@ pp_victualling_yard_site = {
 		modifier:natural_harbor_suitability >= 0.4
 	}
 }
+
+# Great waterways (yard_site.waterway_geographies): a location on the water in one of these geographies holds
+# Victualling Yards whatever its harbour. Add a geography to the config list to use it elsewhere.
+pp_victualling_yard_waterway = {
+	is_coastal = yes
+	OR = {
+		is_in_scripted_geography = scripted_geography:chinese_canal_geography
+	}
+}

@@ -162,7 +162,15 @@ def test_the_logistics_caps_are_generated_under_the_new_names() -> None:
         assert re.search(rf"TRY_INJECT:{right} = \{{\s*location_modifier = \{{\s*{key} = {n}\s*\}}", rights)
     types = (MOD_ROOT / "main_menu/common/modifier_type_definitions/pp_building_cap_modifiers.txt").read_text(encoding="utf-8-sig")
     assert f"{key} = {{" in types
-    assert yard.count(staple) == 2
+    # three branches: harbour site, inland market centre, great waterway alone (2026-11-26, Jan: the Grand Canal)
+    assert yard.count(staple) == 3
+    waterway = "if = { limit = { pp_victualling_yard_waterway = yes } add = { desc = PP_VM_CAP_WATERWAY value = 3 } }"
+    assert yard.split("grange_max_level")[0].count(waterway) == 2   # on top in the harbour and the inland branch
+    assert "else_if = { limit = { pp_victualling_yard_waterway = yes } add = { desc = PP_VM_CAP_WATERWAY value = 3 }" in yard
+    sites = (MOD_ROOT / "in_game/common/scripted_triggers/pp_victuals_site_triggers.txt").read_text(encoding="utf-8-sig")
+    assert "is_in_scripted_geography = scripted_geography:chinese_canal_geography" in sites
+    building = (MOD_ROOT / "in_game/common/building_types/zz_pp_victualling_yard.txt").read_text(encoding="utf-8-sig")
+    assert "pp_victualling_yard_waterway = yes" in building
     # no upper limit (2026-10-04, Jan)
     assert "PP_VM_CAP_MAXIMUM" not in yard.split("grange_max_level")[0]
     assert f"min = {{ desc = PP_VM_CAP_MINIMUM value = 2 }} {staple}" in yard

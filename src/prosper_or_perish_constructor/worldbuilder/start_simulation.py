@@ -22,7 +22,7 @@ from . import start_food_model_v2 as fm
 from . import start_placement as sp
 from .market_capacity import write as write_market_caps
 from .modifiers import setup_modifier_keys
-from .start_rules import Rules, Unresolved, entries, first
+from .start_rules import Rules, Unresolved, entries, first, load_scripted_geographies
 from ..setup_layout import SETUP_DIR
 
 # Bumped on every change of a location's building levels in the plan (_TrackedCounter): the province farm and Yard
@@ -2236,6 +2236,7 @@ def check_river_size_modifier(rules):
 def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations, development=None):
     write_market_caps(repo, mod_root)
     rules = Rules(repo, project)
+    rules.geographies = load_scripted_geographies(Path(vanilla_root) / "game", mod_root)
     check_river_size_modifier(rules)
     start = sp.StartConfig.from_raw(cfg.raw.get("start"))
     owners = sp.load_owners(vanilla_root, mod_root)

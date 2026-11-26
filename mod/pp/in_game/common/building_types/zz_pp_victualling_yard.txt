@@ -30,6 +30,8 @@ location_potential = {
   OR = {
     pp_victualling_yard_site = yes
     is_market_center = yes
+    # great waterways (2026-11-26, Jan): the Grand Canal's locations on the water, three levels each
+    pp_victualling_yard_waterway = yes
   }
 }
 

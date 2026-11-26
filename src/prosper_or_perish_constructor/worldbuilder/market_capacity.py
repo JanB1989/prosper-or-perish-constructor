@@ -35,10 +35,11 @@ def write(repo, mod_root):
         "MINIMUM": "Minimum",
         "MAXIMUM": "Upper limit",
         "SITE_TAVERN": "Not a [province_capital|e]",
-        "SITE_YARD": f"Not a {YARD} site or a [market_center|e]",
+        "SITE_YARD": f"Not a {YARD} site, a [market_center|e] or on a great waterway",
         "INLAND_MARKET": "Inland market centre",
         "WATER_ACCESS": "River or sea access",
         "STAPLE_PORT": "Urban rights",
+        "WATERWAY": "Great waterway",
         "SITE_GRANGE": f"Not a [province_capital|e], or a {YARD} site",
     }
 
@@ -124,6 +125,9 @@ def write(repo, mod_root):
     y = cfg["victualling_yard"]
     levels = f"modifier:{y['building_levels_modifier']}"
     staple = when(f"{levels} > 0", "STAPLE_PORT", levels)
+    # Great waterways (2026-11-26, Jan): locations on the water along the Grand Canal (pp_victualling_yard_waterway,
+    # below) carry `waterway` levels on top of whatever else they are, and are a site by themselves.
+    waterway = when("pp_victualling_yard_waterway = yes", "WATERWAY", y["waterway"])
     harbour = " ".join([
         add("HARBOR_CAPACITY", f"modifier:harbor_suitability multiply = {y['harbor_capacity']}"),
         when("is_market_center = yes", "MARKET", y["market_center"]),
@@ -132,6 +136,7 @@ def write(repo, mod_root):
         clamp("min", "MINIMUM", y["minimum"]),
         *([clamp("max", "MAXIMUM", y["maximum"])] if y.get("maximum") else []),
         staple,
+        waterway,
     ])
     inland_cfg = y["inland_market_center"]
     inland = " ".join([
@@ -140,10 +145,12 @@ def write(repo, mod_root):
         add("DEVELOPMENT", f"development multiply = {inland_cfg['development']}"),
         *([clamp("max", "MAXIMUM", inland_cfg["maximum"])] if inland_cfg.get("maximum") else []),
         staple,
+        waterway,
     ])
     body = [
         f"if = {{ limit = {{ pp_victualling_yard_site = yes }} {harbour} }}",
         f"else_if = {{ limit = {{ is_market_center = yes }} {inland} }}",
+        f"else_if = {{ limit = {{ pp_victualling_yard_waterway = yes }} {add('WATERWAY', y['waterway'])} {staple} }}",
         f"else = {{ {add('SITE_YARD', 0)} }}",
     ]
     lines.append("victualling_yard_max_level = {\n " + "\n ".join(body) + "\n}")
@@ -177,6 +184,17 @@ def write(repo, mod_root):
         f"\t\tAND = {{ has_location_modifier = pp_wb_coastal modifier:natural_harbor_suitability >= {site['sea_harbor']} }}\n"
         f"\t\tmodifier:natural_harbor_suitability >= {site['any_harbor']}\n"
         "\t}\n"
+        "}\n"
+        "\n"
+        "# Great waterways (yard_site.waterway_geographies): a location on the water in one of these geographies holds\n"
+        "# Victualling Yards whatever its harbour. Add a geography to the config list to use it elsewhere.\n"
+        "pp_victualling_yard_waterway = {\n"
+        "\tis_coastal = yes\n"
+        "\tOR = {\n"
+        + "".join(
+            f"\t\tis_in_scripted_geography = scripted_geography:{name}\n" for name in site["waterway_geographies"]
+        )
+        + "\t}\n"
         "}\n"
     )
     trigger_path = mod_root / "in_game/common/scripted_triggers/pp_victuals_site_triggers.txt"

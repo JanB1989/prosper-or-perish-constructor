@@ -309,5 +309,6 @@ pp_start_topup_victualling_yard_potential = {
 	OR = {
 		pp_victualling_yard_site = yes
 		is_market_center = yes
+		pp_victualling_yard_waterway = yes
 	}
 }

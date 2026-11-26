@@ -11905,10 +11905,11 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
  PP_VM_CAP_MINIMUM: "Minimum"
  PP_VM_CAP_MAXIMUM: "Upper limit"
  PP_VM_CAP_SITE_TAVERN: "Not a [province_capital|e]"
- PP_VM_CAP_SITE_YARD: "Not a [ShowBuildingTypeName('victualling_yard')|e] site or a [market_center|e]"
+ PP_VM_CAP_SITE_YARD: "Not a [ShowBuildingTypeName('victualling_yard')|e] site, a [market_center|e] or on a great waterway"
  PP_VM_CAP_INLAND_MARKET: "Inland market centre"
  PP_VM_CAP_WATER_ACCESS: "River or sea access"
  PP_VM_CAP_STAPLE_PORT: "Urban rights"
+ PP_VM_CAP_WATERWAY: "Great waterway"
  PP_VM_CAP_SITE_GRANGE: "Not a [province_capital|e], or a [ShowBuildingTypeName('victualling_yard')|e] site"
  # pp_victuals_modifier_types_l_english.yml
   MODIFIER_TYPE_NAME_ban_exports_of_victuals: "Ban exports of victuals"

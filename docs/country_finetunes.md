@@ -22,6 +22,20 @@ Hand-tuned changes for single countries, one entry each: what and why.
   on 18 country, culture and religion advances (Tamed Steppes, Chinampas, Holy Rivers, Fertile Rivers ...). Why: the mod
   values their only line, vanilla's food modifier, 0. Same for the event modifiers of England (`invested_in_farming_output`),
   Russia (`unattended_crops`) and Tunis (`tun_control_over_countryside_restored`) in `static_modifiers/pp_empty_effects.txt`.
+- **Ottomans: the power base is size, then Egypt, then North Africa and Arabia** (2026-11-26, Jan, not tested in game).
+  `scripted_triggers/pp_ottoman_triggers.txt`: `pp_ottoman_power_base` = owns Constantinople and at least 400 locations
+  (was: no other ruler with a capital in Anatolia, which Cyprus, rebels and Mamluk vassals kept false until 1487-1767
+  in nine runs; the size gate is first true 1447-1527 in 10 of 13 runs and ends if the empire shrinks). The Mamluk war
+  target needs 12 months of peace (was 24): a war moves about 25 locations, Egypt takes several. New step
+  `pp_ottoman_holds_egypt` (power base + Cairo): every ruler in the Maghreb, the Hejaz or Yemen scores +40 and x1.5 and
+  is a war target across the sea (`pp_ottoman_north_africa` score, `pp_ottoman_north_africa_targets`), and
+  `pp_ottoman.2` adds the preference `pp_ottoman_north_africa` (x3). Vanilla aims: Persia 1 -> 2, Hungary 1 -> 0.5,
+  Caucasus, Pontic shore and the Empire 0.1 (Caucasus and Pontic were 0.5), `pp_ottoman_less_northeast` -0.25 -> -0.5.
+  Why: in the nine runs since 2026-11-01 the north-east share of Ottoman land did not move (24-33 %), the Levant fell
+  before 1650 in 3, Egypt once (1777), the Maghreb never; the Ottoman tax base was 1.3-4x the Mamluks' by 1492, and
+  where the old gate held by 1490 the Levant fell 1517-1607. Preferences alone moved nothing; the gate and the war
+  spacing are the levers. Watch: Ottomans losing Mamluk wars (5 of 9 runs lost land to them), wars across the sea
+  against Tunis and Morocco, Hungary and the Habsburgs growing with less pressure.
 - **Ottomans: a little more towards the Mamluks, North Africa and Arabia, a little less northeast** (2026-11-01, Jan, not
   tested in game). `area_preferences/pp_conquest_preferences.txt` REPLACEs vanilla's aims, which keep vanilla's steps: Levant
   + Egypt, Maghreb, Hejaz + Yemen modifier 1 -> 2; Caucasus and Pontic shore 1 -> 0.5. New `pp_ottoman_less_northeast`

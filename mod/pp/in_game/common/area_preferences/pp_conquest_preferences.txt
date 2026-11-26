@@ -34,7 +34,7 @@ pp_muscovy_gather_russian_lands = {
 	region = russian_region
 }
 
-# Ottomans, once they hold Constantinople and Anatolia (events/pp_ottoman_events.txt): the Levant and Egypt.
+# Ottomans, once their power base stands (events/pp_ottoman_events.txt): the Levant and Egypt.
 pp_ottoman_crush_mamluks = {
 	preference_type = conquest
 	modifier = 5
@@ -43,9 +43,20 @@ pp_ottoman_crush_mamluks = {
 	region = crescent_region
 }
 
-# Ottomans (docs/country_finetunes.md): vanilla's aims at vanilla's steps (ai_area_conqest_events), a little more towards
-# the Mamluks, North Africa and Arabia (modifier 1 -> 2), a little less to the northeast (1 -> 0.5). Re-check after a
-# game update.
+# Ottomans, once Egypt is theirs (events/pp_ottoman_events.txt): North Africa and Arabia.
+pp_ottoman_north_africa = {
+	preference_type = conquest
+	modifier = 3
+
+	region = maghreb_region
+	area = hedjaz_area
+	area = north_yemen_area
+	area = south_yemen_area
+}
+
+# Ottomans (docs/country_finetunes.md): vanilla's aims at vanilla's steps (ai_area_conqest_events). South first: the
+# Mamluks, North Africa, Arabia 1 -> 2 and Persia 1 -> 2; Hungary 1 -> 0.5; the Caucasus, the Pontic shore and the
+# Empire 1 -> 0.1. Re-check after a game update.
 REPLACE:ottoman_expansion_crescent_egypt = {
 	preference_type = conquest
 	modifier = 2
@@ -72,14 +83,14 @@ REPLACE:ottoman_expansion_arabia = {
 
 REPLACE:ottoman_expansion_caucasus = {
 	preference_type = conquest
-	modifier = 0.5
+	modifier = 0.1
 
 	region = caucasus_region
 }
 
 REPLACE:ottoman_expansion_pontic = {
 	preference_type = conquest
-	modifier = 0.5
+	modifier = 0.1
 
 	area = crimea_area
 	area = yedisan_area
@@ -88,10 +99,43 @@ REPLACE:ottoman_expansion_pontic = {
 	area = matrega_area
 }
 
-# Ottomans, from the start: a little less pull to the steppe and Russia, which have no vanilla aim to lower.
+REPLACE:ottoman_expansion_carpathia = {
+	preference_type = conquest
+	modifier = 0.5
+
+	region = carpathia_region
+}
+
+REPLACE:ottoman_expansion_persia = {
+	preference_type = conquest
+	modifier = 2
+
+	area = azerbaijan_area
+	area = mazandaran_area
+	area = iraq_ajam_area
+	area = kordestan_area
+	area = khuzestan_area
+}
+
+REPLACE:ottoman_expansion_hre = {
+	preference_type = conquest
+	modifier = 0.1
+
+	area = styria_area
+	area = carinthia_area
+	area = austria_area
+	area = upper_austria_area
+	area = salzburg_area
+	area = tirol_area
+	area = veneto_area
+	area = lombardy_area
+	area = emilia_area
+}
+
+# Ottomans, from the start: less pull to the steppe and Russia, which have no vanilla aim to lower.
 pp_ottoman_less_northeast = {
 	preference_type = conquest
-	modifier = -0.25
+	modifier = -0.5
 
 	region = steppes_region
 	region = russian_region

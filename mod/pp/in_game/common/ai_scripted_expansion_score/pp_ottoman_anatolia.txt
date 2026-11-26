@@ -39,7 +39,7 @@ pp_ottoman_balkans_later = {
 	}
 }
 
-# Once the power base stands (Constantinople + Anatolia, scripted_triggers/pp_ottoman_triggers.txt): crush the
+# Once the power base stands (Constantinople + size, scripted_triggers/pp_ottoman_triggers.txt): crush the
 # Mamluks. Every country ruling from the Levant or Egypt scores +60 and counts double.
 pp_ottoman_crush_mamluks = {
 	attacker_potential = {
@@ -60,5 +60,31 @@ pp_ottoman_crush_mamluks = {
 	}
 	multiplier = {
 		add = 1
+	}
+}
+
+# Once Egypt is theirs: North Africa and Arabia. Every country ruling from the Maghreb, the Hejaz or Yemen scores +40
+# and counts half again as much.
+pp_ottoman_north_africa = {
+	attacker_potential = {
+		tag = TUR
+		pp_ottoman_holds_egypt = yes
+	}
+	target_trigger = {
+		NOT = { is_subject_of = scope:attacker }
+		capital ?= {
+			OR = {
+				region = region:maghreb_region
+				area = area:hedjaz_area
+				area = area:north_yemen_area
+				area = area:south_yemen_area
+			}
+		}
+	}
+	score = {
+		add = 40
+	}
+	multiplier = {
+		add = 0.5
 	}
 }

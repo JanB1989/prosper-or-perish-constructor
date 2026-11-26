@@ -1,12 +1,13 @@
-﻿# Ottoman aim (docs/country_finetunes.md): the power base is complete once the Ottomans hold Constantinople and no
-# other country (their own subjects aside) rules from Anatolia. Scope: the Ottoman country.
+﻿# Ottoman aim (docs/country_finetunes.md): the power base stands once the Ottomans hold Constantinople and are large
+# enough. No check on who else rules from Anatolia: Cyprus, rebels and Mamluk vassals kept the old gate shut for
+# centuries. It ends again if the empire shrinks. Scope: the Ottoman country.
 pp_ottoman_power_base = {
 	owns = location:constantinople
-	NOT = {
-		any_country = {
-			NOT = { this = root }
-			NOT = { is_subject_of = root }
-			capital ?= { region = region:anatolia_region }
-		}
-	}
+	num_locations >= 400
+}
+
+# Egypt is theirs: the next step is North Africa and Arabia. Scope: the Ottoman country.
+pp_ottoman_holds_egypt = {
+	pp_ottoman_power_base = yes
+	owns = location:cairo
 }

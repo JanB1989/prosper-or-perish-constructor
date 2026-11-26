@@ -22,12 +22,12 @@ pp_ottoman_anatolia_targets = {
 	}
 }
 
-# Once the power base stands (Constantinople + Anatolia, scripted_triggers/pp_ottoman_triggers.txt): every country
-# ruling from the Levant or Egypt (the Mamluks) is a war target.
+# Once the power base stands (Constantinople + size, scripted_triggers/pp_ottoman_triggers.txt): every country
+# ruling from the Levant or Egypt (the Mamluks) is a war target. Twelve months of peace: Egypt takes several wars.
 pp_ottoman_mamluk_targets = {
 	attacker_potential = {
 		tag = TUR
-		months_since_war >= 24
+		months_since_war >= 12
 		pp_ottoman_power_base = yes
 	}
 	candidate_list = {
@@ -49,5 +49,36 @@ pp_ottoman_mamluk_targets = {
 		add = scope:target.country_tax_base
 		multiply = 10
 		add = 60
+	}
+}
+
+# Once Egypt is theirs: every country ruling from the Maghreb, the Hejaz or Yemen is a war target, across the sea too.
+pp_ottoman_north_africa_targets = {
+	attacker_potential = {
+		tag = TUR
+		months_since_war >= 12
+		pp_ottoman_holds_egypt = yes
+	}
+	candidate_list = {
+		every_country = {
+			limit = {
+				NOT = { this = root }
+				NOT = { is_subject_of = root }
+				capital ?= {
+					OR = {
+						region = region:maghreb_region
+						area = area:hedjaz_area
+						area = area:north_yemen_area
+						area = area:south_yemen_area
+					}
+				}
+			}
+			add_to_list = source
+		}
+	}
+	score = {
+		add = scope:target.country_tax_base
+		multiply = 10
+		add = 40
 	}
 }

@@ -13,3 +13,16 @@ pp_ottoman.1 = {
 		add_area_preference = pp_ottoman_crush_mamluks
 	}
 }
+
+# Once Egypt is theirs: North Africa and Arabia (vanilla's own aims there come at x1 and only after its Egypt aim).
+pp_ottoman.2 = {
+	type = country_event outcome = neutral title = empty_text desc = empty_text hidden = yes fire_only_once = yes
+	dynamic_historical_event = { tag = TUR from = 1337.4.2 to = 1836.12.31 monthly_chance = 20 }
+	trigger = {
+		NOT = { has_area_preference = pp_ottoman_north_africa }
+		pp_ottoman_holds_egypt = yes
+	}
+	immediate = {
+		add_area_preference = pp_ottoman_north_africa
+	}
+}

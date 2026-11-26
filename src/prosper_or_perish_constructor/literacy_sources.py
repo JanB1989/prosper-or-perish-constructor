@@ -1,10 +1,13 @@
-"""Country-wide literacy sources (2026-11-25, Jan): the generic country-wide maximum literacy and literacy speed cut.
+"""Country-wide literacy sources (2026-11-25/26, Jan): who the generic country-wide literacy sources reach.
 
 A pop creeps up to its literacy cap, and nearly all of that cap came from country-wide bonuses for every class. Jan:
-literacy is earned by local buildings. This pass cuts the generic country-wide sources by the rule of
-``config/literacy_sources.toml``: maximum literacy for every class and the lower classes (``global_max_literacy``,
-``global_{peasants,laborers,soldiers}_max_literacy``) x 0.4 to clean numbers, literacy speed (``global_/local_monthly_
-literacy``) to a fifth, the base rate (Written Alphabet, Educated Bureaucrats) set explicitly.
+literacy is earned by local buildings, and research follows the country's average literacy, which tracks the learned
+estates only if commoners read as little as in history. The rule of ``config/literacy_sources.toml``: a positive
+all-class cap (``global_max_literacy = X``) becomes ``global_{nobles,clergy,burghers}_max_literacy = X`` (added to an
+estate line the block already has; Written Alphabet keeps 2 for everyone, ``[split_exceptions]``); the lower-class
+caps (``global_{peasants,laborers,soldiers}_max_literacy``) x 0.4 to clean numbers; literacy speed
+(``global_/local_monthly_literacy``) to a fifth; explicit values for the base rate (Written Alphabet, Educated
+Bureaucrats) and the estates' start (Guilds, Improved Religious Organization).
 
 Scope: the folders of ``[folders.*]``; an object is judged by the file that first defines it (vanilla or a DLC
 folder); an object PP defines itself keeps its numbers. Numbers change where they stand: in an advance's body, or in a
@@ -82,7 +85,10 @@ class FolderScope:
 
 @dataclass(frozen=True)
 class Rule:
-    max_keys: frozenset[str]
+    split_key: str                               # all-class cap: a positive value goes to the estates
+    split_into: tuple[str, ...]                  # the estate keys it goes to, at the same value
+    split_exceptions: dict[tuple[str, str], tuple[Decimal, Decimal]]   # (folder, object) -> (kept for all, per estate)
+    max_keys: frozenset[str]                     # lower-class caps: x factor
     max_factor: Decimal
     max_minimum: Decimal
     speed_keys: frozenset[str]
@@ -90,22 +96,20 @@ class Rule:
     speed_decimals: int
     speed_minimum: Decimal
     speed_keep: Decimal
-    base_rate: dict[tuple[str, str, str], Decimal]
+    values: dict[tuple[str, str, str], Decimal]  # explicit values ([base_rate], [estate_start])
     folders: dict[str, FolderScope]
     exclude_objects: dict[tuple[str, str], str]
     left_out_folders: dict[str, str] = field(default_factory=dict)
 
     @property
     def keys(self) -> frozenset[str]:
-        return self.max_keys | self.speed_keys
+        """Every key the rule reads (the estate keys only where an explicit value names them)."""
+        return frozenset({self.split_key, *self.max_keys, *self.speed_keys, *(k for _f, _o, k in self.values)})
 
     def new_value(self, folder: str, obj: str, key: str, value: str) -> str | None:
-        """The new number for one line, or None when it stays."""
-        try:
-            old = Decimal(value)
-        except InvalidOperation:
-            raise LiteracySourcesError(f"{folder}/{obj}: {key} = {value} is not a number") from None
-        fixed = self.base_rate.get((folder, obj, key))
+        """The new number for one line (not the split key), or None when it stays."""
+        old = _decimal(folder, obj, key, value)
+        fixed = self.values.get((folder, obj, key))
         if fixed is not None:
             new = fixed
         elif key in self.max_keys:
@@ -127,6 +131,13 @@ def _number(value: Decimal) -> str:
     return text
 
 
+def _decimal(folder: str, obj: str, key: str, value: str) -> Decimal:
+    try:
+        return Decimal(value)
+    except InvalidOperation:
+        raise LiteracySourcesError(f"{folder}/{obj}: {key} = {value} is not a number") from None
+
+
 def load_rule(repo: Path) -> Rule:
     raw = tomllib.loads((Path(repo) / CONFIG).read_text(encoding="utf-8"))
     folders = {}
@@ -134,20 +145,27 @@ def load_rule(repo: Path) -> Rule:
         folders[name] = FolderScope(name, Path(spec["path"]), tuple(spec.get("include", ())), tuple(spec.get("exclude", ())),
                                     bool(spec.get("top_level", False)), bool(spec.get("skip_tag_gated", False)),
                                     spec.get("ladder_age"))
-    base_rate = {}
-    for dotted, value in raw.get("base_rate", {}).items():
-        folder, obj, key = dotted.split(".")
-        base_rate[(folder, obj, key)] = Decimal(str(value))
+    values = {}
+    for section in ("base_rate", "estate_start"):
+        for dotted, value in raw.get(section, {}).items():
+            folder, obj, key = dotted.split(".")
+            values[(folder, obj, key)] = Decimal(str(value))
     excluded = {}
     for dotted, reason in raw.get("exclude_objects", {}).items():
         folder, obj = dotted.split(".")
         excluded[(folder, obj)] = str(reason)
+    split = raw["split"]
+    exceptions = {}
+    for dotted, spec in raw.get("split_exceptions", {}).items():
+        folder, obj = dotted.split(".")
+        exceptions[(folder, obj)] = (Decimal(str(spec["keep"])), Decimal(str(spec["estates"])))
     m, s = raw["max_literacy"], raw["speed"]
     return Rule(
+        split_key=str(split["key"]), split_into=tuple(split["into"]), split_exceptions=exceptions,
         max_keys=frozenset(m["keys"]), max_factor=Decimal(str(m["factor"])), max_minimum=Decimal(str(m["minimum"])),
         speed_keys=frozenset(s["keys"]), speed_factor=Decimal(str(s["factor"])), speed_decimals=int(s["decimals"]),
         speed_minimum=Decimal(str(s["minimum"])), speed_keep=Decimal(str(s["keep_at_or_below"])),
-        base_rate=base_rate, folders=folders, exclude_objects=excluded,
+        values=values, folders=folders, exclude_objects=excluded,
         left_out_folders={str(k): str(v) for k, v in raw.get("left_out_folders", {}).items()},
     )
 
@@ -229,23 +247,58 @@ def _counts(parent: str | None, top: bool, scope: FolderScope) -> bool:
 
 
 def cut_statements(rule: Rule, scope: FolderScope, obj: str, body: tuple[Stmt, ...]) -> tuple[tuple[Stmt, ...], list[Change]]:
-    """The body with every literacy number of the rule changed where it stands, and the changes."""
+    """The body with the rule applied where each line stands, and the changes.
+
+    A positive all-class cap (``split_key``) leaves the block and its value goes to each estate key (``split_into``)
+    in the same block: added to that key's line when the block has one, else a new line where the cap stood. A
+    ``[split_exceptions]`` object keeps part of it for everyone. Zero and negative caps stay. Lower-class caps, speed
+    and the explicit values go through ``Rule.new_value``."""
     changes: list[Change] = []
+    exception = rule.split_exceptions.get((scope.name, obj))
 
     def walk(stmts: tuple[Stmt, ...], path: tuple[str, ...], top: bool) -> tuple[Stmt, ...]:
-        out = []
+        out: list[Stmt] = []
         parent = path[-1] if path else None
+        block = "/".join(path) or "(advance)"
+        counts = _counts(parent, top, scope)
+        adds: dict[str, Decimal] = {}
+        insert_at: int | None = None
         for s in stmts:
             if s.is_block:
                 out.append(dataclasses.replace(s, value=walk(s.value, (*path, s.key or "{}"), False)))  # type: ignore[arg-type]
                 continue
-            if s.key in rule.keys and s.op == "=" and _counts(parent, top, scope):
+            if counts and s.op == "=" and s.key == rule.split_key:
+                old = _decimal(scope.name, obj, s.key, str(s.value))
+                if old > 0:
+                    keep, per_estate = exception if exception is not None else (Decimal(0), old)
+                    if keep > 0:
+                        out.append(Stmt(s.key, s.op, _number(keep)) if keep != old else s)
+                    if insert_at is None:
+                        insert_at = len(out)   # the estate lines follow what stays for everyone
+                    if keep != old:
+                        changes.append(Change(scope.name, obj, block, s.key, str(s.value), _number(keep) if keep > 0 else ""))
+                    for estate in rule.split_into:
+                        adds[estate] = adds.get(estate, Decimal(0)) + per_estate
+                    continue
+            elif counts and s.op == "=" and s.key in rule.keys:
                 new = rule.new_value(scope.name, obj, s.key, str(s.value))
                 if new is not None:
-                    changes.append(Change(scope.name, obj, "/".join(path) or "(advance)", s.key, str(s.value), new))
+                    changes.append(Change(scope.name, obj, block, s.key, str(s.value), new))
                     out.append(Stmt(s.key, s.op, new))
                     continue
             out.append(s)
+        new_lines: list[Stmt] = []
+        for estate, amount in adds.items():
+            index = next((i for i, x in enumerate(out) if x.key == estate and x.op == "=" and not x.is_block), None)
+            if index is None:
+                new_lines.append(Stmt(estate, "=", _number(amount)))
+                changes.append(Change(scope.name, obj, block, estate, "", _number(amount)))
+            else:
+                old = _decimal(scope.name, obj, estate, str(out[index].value))
+                out[index] = Stmt(estate, "=", _number(old + amount))
+                changes.append(Change(scope.name, obj, block, estate, str(old), _number(old + amount)))
+        if new_lines:
+            out[insert_at:insert_at] = new_lines  # type: ignore[misc]
         return tuple(out)
 
     return walk(body, (), True), changes
@@ -311,7 +364,14 @@ def cut_lines(rule: Rule | None, folder: str, obj: str, origin_file: str, lines:
         code = line.split("#", 1)[0]
         match = _LINE.match(line)
         if match and match.group(2) in rule.keys and stack and stack[-1].endswith("modifier") and "{" not in code:
-            new = rule.new_value(folder, obj, match.group(2), match.group(4))
+            if match.group(2) == rule.split_key:
+                if Decimal(match.group(4)) > 0:
+                    # moving a cap to the estates needs the whole block (an estate line may already stand in it)
+                    raise LiteracySourcesError(f"{folder}/{obj}: cut_lines cannot move {rule.split_key} to the estates; "
+                                               "extend it or let literacy_sources.py replace the object")
+                new = None
+            else:
+                new = rule.new_value(folder, obj, match.group(2), match.group(4))
             if new is not None:
                 line = f"{match.group(1)}{match.group(2)}{match.group(3)}{new}{match.group(5)}"
         out.append(line)
@@ -360,7 +420,8 @@ def plan(rule: Rule, vanilla_root: Path, mod_root: Path) -> Result:
                 continue
             if not ok:
                 left_out += [{"folder": name, "object": key, "file": obj.origin[1], "block": b, "key": k, "value": v,
-                              "reason": reason} for b, k, v in lines if k in rule.keys]
+                              "reason": reason} for b, k, v in lines
+                             if k == rule.split_key or k in rule.max_keys or k in rule.speed_keys]
                 continue
             expected, wanted = cut_statements(rule, scope, key, vanilla.body)  # type: ignore[union-attr]
             if not wanted:
@@ -369,8 +430,8 @@ def plan(rule: Rule, vanilla_root: Path, mod_root: Path) -> Result:
             owner = "start_technology.py (ladder)" if ladder else obj.replacer()
             if owner:
                 # another file writes the object: its numbers must be the rule's
-                have = Counter(x for x in literacy_lines(obj.body) if x[1] in rule.keys)
-                want = Counter(x for x in literacy_lines(expected) if x[1] in rule.keys)
+                have = Counter(literacy_lines(obj.body))
+                want = Counter(literacy_lines(expected))
                 if have != want:
                     problems.append(f"{name}/{key} is written by {owner}: literacy lines {sorted(have - want)} should be "
                                     f"{sorted(want - have)}" + (" (run uv run ppc start-tech apply)" if ladder else ""))
@@ -400,7 +461,7 @@ def render(scope: FolderScope, blocks: dict[str, tuple[str, tuple[Stmt, ...]]]) 
         f"# {_HEADER}",
         "# Country-wide literacy sources (config/literacy_sources.toml): the generic objects with a country-wide maximum",
         "# literacy or literacy speed, each whole as the game merges it (vanilla, DLC folders, the mod) with only those",
-        "# numbers changed.",
+        "# lines changed (an all-class cap moved to the three estates, lower-class caps and speed cut).",
     ]
     for key in sorted(blocks):
         mode, body = blocks[key]

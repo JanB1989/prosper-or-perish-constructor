@@ -68,10 +68,11 @@ DELIBERATE_REPLACE_DIFFERENCES: dict[str, tuple[set[str], set[str]]] = {
         {"global_disease_resistance = 0.13"},
     ),
     # trade (2026-10-07, Jan): a little cheaper merchants for the printing countries
-    # literacy (2026-11-25, Jan): the country-wide literacy bonuses are cut (literacy_sources.py checks this number)
+    # literacy (2026-11-26, Jan): the all-class cap goes to the three estates (literacy_sources.py checks these lines)
     "printing_press_advance": (
         {"global_max_literacy = 10"},
-        {"global_max_literacy = 4", "merchant_maintenance_efficiency = 0.1"}
+        {"global_nobles_max_literacy = 10", "global_clergy_max_literacy = 10", "global_burghers_max_literacy = 10",
+         "merchant_maintenance_efficiency = 0.1"}
         # specialization rights (2026-10-07): unlocked here, so their charters can be granted before
         | {f"unlock_town_rights = pp_{good}_rights" for good in (
             "cloth", "fine_cloth", "leather", "pottery", "furniture", "glass", "jewelry", "porcelain", "lacquerware",

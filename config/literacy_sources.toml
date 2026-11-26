@@ -1,23 +1,37 @@
-# Country-wide literacy sources (Jan, 2026-11-25). Source of truth for the constructor pass `literacy_sources.py`
-# (`uv run ppc literacy apply|check`).
+# Country-wide literacy sources (Jan, 2026-11-25; rule of 2026-11-26). Source of truth for the constructor pass
+# `literacy_sources.py` (`uv run ppc literacy apply|check`).
 #
 # Why: a pop creeps up to its literacy cap, and nearly all of that cap came from country-wide bonuses for every class
 # (observer runs: a French peasant at 55 % with no school, the world at about 48 % by 1837; history about 12 %).
-# Literacy is to be earned by local buildings, so the big generic country-wide sources are cut. Upper-class caps
-# (nobles, burghers, clergy), every local_*_max_literacy, buildings, PP's own objects and the specific sources listed
-# under [folders.*].exclude / [exclude_objects] keep their numbers.
+# Literacy is to be earned by local buildings. Research follows the country's average literacy, which tracks the
+# learned estates only if commoners read as little as they did in history (Jan, 2026-11-26): so the generic
+# all-class bonuses stop reaching the commoners, and clergy, nobles and burghers keep what vanilla gave them. Every
+# local_*_max_literacy, buildings, PP's own objects and the specific sources listed under [folders.*].exclude /
+# [exclude_objects] keep their numbers.
 #
 # The pass reads every object of the folders below as the game merges them (vanilla, the DLC folders, the mod),
-# changes the numbers where they stand (inside the object's modifier blocks; an advance's body is its modifier) and
+# changes the lines where they stand (inside the object's modifier blocks; an advance's body is its modifier) and
 # writes each changed object whole as a REPLACE (TRY_REPLACE for an object only a DLC folder defines) into
-# `<folder>/zz_pp_literacy_sources.txt`. Objects another pass already replaces carry the cut there:
+# `<folder>/zz_pp_literacy_sources.txt`. Objects another pass already replaces carry the rule there:
 # first-age advances in the starting technology ladder (start_technology.py), legal_code_law in the RGO cost
 # redirects (rgo_cost_redirects.py), printing_press_advance by hand in pp_institution_advances_adjustments.txt.
 
-# Maximum literacy: positive values x factor, rounded to a whole number, at least `minimum` (+10 -> +4, +5 -> +2,
-# +3 -> +1, +2 -> +1). Zero and negative values stay.
+# All-class maximum literacy: a positive `key = X` leaves its block and each key of `into` gets X in the same block
+# (added to that key's line when the block already has one, else a new line where the cap stood). Zero and negative
+# values stay for everyone.
+[split]
+key = "global_max_literacy"
+into = ["global_nobles_max_literacy", "global_clergy_max_literacy", "global_burghers_max_literacy"]
+
+# The commoners' base: "<folder>.<object>" = { keep = what stays for everyone, estates = what each estate key gets }.
+# Written Alphabet: vanilla 5 = 2 for everyone + 3 more for each estate.
+[split_exceptions]
+"advances.written_alphabet" = { keep = 2, estates = 3 }
+
+# Lower-class maximum literacy (country-wide): positive values x factor, rounded to a whole number, at least
+# `minimum` (+10 -> +4, +5 -> +2, +3 -> +1, +2 -> +1). Zero and negative values stay.
 [max_literacy]
-keys = ["global_max_literacy", "global_peasants_max_literacy", "global_laborers_max_literacy", "global_soldiers_max_literacy"]
+keys = ["global_peasants_max_literacy", "global_laborers_max_literacy", "global_soldiers_max_literacy"]
 factor = 0.4
 minimum = 1
 
@@ -30,11 +44,17 @@ decimals = 2
 minimum = 0.01
 keep_at_or_below = 0.01
 
-# The base rate (Jan, 2026-11-25: halved): explicit values, "<folder>.<object>.<key>" = value. They win over the rules
-# above. Both advances are first-age advances of the ladder, which writes them.
+# Explicit values, "<folder>.<object>.<key>" = value; they win over the rules above.
+# The base rate (Jan, 2026-11-25: halved). Both are first-age advances of the ladder, which writes them.
 [base_rate]
 "advances.written_alphabet.global_monthly_literacy" = 0.005
 "advances.educated_bureaucrats.global_monthly_literacy" = 0.005
+
+# The estates' start, closer to history (Jan, 2026-11-26): Guilds (burghers) and Improved Religious Organization
+# (clergy), vanilla 5 each. First-age advances of the ladder, which writes them.
+[estate_start]
+"advances.guilds.global_burghers_max_literacy" = 20
+"advances.organized_religion.global_clergy_max_literacy" = 20
 
 # Folders in scope. An object is judged by the file that first defines it (vanilla or DLC); an object PP defines
 # itself keeps its numbers. `include` / `exclude` are file name globs: an object with literacy lines in a file that

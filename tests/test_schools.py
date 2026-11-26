@@ -57,7 +57,7 @@ SCHOOL_RULES = {
         "max_levels": "pp_village_school_max_level",
         "ranks": {"rural_settlement", "town", "city", "megalopolis"},
         "modifier": {
-            "local_peasants_max_literacy": 5, "local_laborers_max_literacy": 5, "local_soldiers_max_literacy": 5,
+            "local_peasants_max_literacy": 10, "local_laborers_max_literacy": 10, "local_soldiers_max_literacy": 10,
             "local_monthly_literacy": 0.01, "local_pop_promotion_speed": 0.002,
         },
         "method": "pp_village_school_maintenance",
@@ -229,3 +229,15 @@ def test_texts() -> None:
                 "pp_village_schools_advance", "pp_reckoning_schools_advance", "pp_common_schooling_advance"):
         assert f"  {key}_desc:" in text, key
     assert not any(ch.isdigit() for line in text.splitlines()[1:] for ch in line.split(":", 1)[1]), "no numbers"
+
+
+def test_average_literacy_research() -> None:
+    """Research stays on the country's average literacy (Jan, 2026-11-26); a point is worth 1.2 % (vanilla 1 %),
+    and the two other lines of vanilla's block are kept."""
+    import re
+
+    text = (MOD / "main_menu/common/static_modifiers/pp_country_modifiers.txt").read_text(encoding="utf-8-sig")
+    block = re.search(r"(?s)TRY_REPLACE:average_literacy = \{(.*?)\n\}", text).group(1)
+    assert re.search(r"\bresearch_speed_modifier = 1\.2\b", block)
+    assert "monthly_towards_innovative = societal_value_monthly_move" in block and "skill_of_new_artists = 0.1" in block
+

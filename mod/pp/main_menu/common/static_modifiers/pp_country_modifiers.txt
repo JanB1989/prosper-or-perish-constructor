@@ -26,3 +26,18 @@ TRY_REPLACE:average_control_50 = {
 	}
 	crown_power_from_population = 0.5
 }
+
+# Research from the country's average literacy (2026-11-26, Jan): research stays on the average, the game's own
+# link, and the average follows the learned estates because commoners read as little as they did in history
+# (country-wide literacy goes to clergy, nobles and burghers only; commoners rise through Village Schools).
+# Real history, 19 societies 1337-1800: average literacy against the estates' literacy correlates at about 0.8
+# (pp_workspace/literacy/history_proxy_test.py). The average is lower than before, so a point is worth 1.2 % research
+# (vanilla 1 %): a country that schools its commoners researches about as fast as before from 1600 on.
+TRY_REPLACE:average_literacy = {
+	game_data = {
+		category = country
+	}
+	research_speed_modifier = 1.2
+	monthly_towards_innovative = societal_value_monthly_move
+	skill_of_new_artists = 0.1
+}

@@ -786,16 +786,24 @@
 
 - Jan: literacy is earned by local buildings, so the country-wide sources are cut. `config/literacy_sources.toml` +
   `literacy_sources.py`, `uv run ppc literacy apply|check` (a finalize step of `ppc build` right after the ladder).
-- Maximum literacy for every class and for peasants, laborers and soldiers country-wide (`global_max_literacy`,
-  `global_<lower class>_max_literacy`): x0.4 to whole numbers (10 -> 4, 5 -> 2, at least 1). Upper-class and every
-  `local_*` cap are not touched. Speed (`global_/local_monthly_literacy`) on the same sources: to a fifth (0.1 -> 0.02,
-  0.05 -> 0.01), and the base rate is halved (`[base_rate]`: Written Alphabet and Educated Bureaucrats 0.01 -> 0.005).
-  All literacy speed is flat points a month; the game has no base rate and no percentage modifier for it.
+- Rule of 2026-11-26 (Jan: research follows the country's average literacy, which tracks the learned estates only if
+  commoners read as little as in history): a positive all-class cap `global_max_literacy = X` becomes
+  `global_{nobles,clergy,burghers}_max_literacy = X` at vanilla's value (`[split]`; added to an estate line the same
+  block already has); zero and negative caps stay for everyone. Exception, the commoners' base (`[split_exceptions]`):
+  Written Alphabet keeps 2 for everyone and gives each estate 3 (vanilla 5). The estate keys are country modifiers
+  (`category=country` in vanilla's modifier types, like `global_max_literacy`). The estates' start
+  (`[estate_start]`): Guilds burghers 5 -> 20, Improved Religious Organization clergy 5 -> 20 (both written by the
+  ladder). Lower-class caps country-wide (`global_<peasants|laborers|soldiers>_max_literacy`): x0.4 to whole numbers
+  (10 -> 4, 5 -> 2, at least 1). Every `local_*` cap is not touched. Speed (`global_/local_monthly_literacy`) on the
+  same sources: to a fifth (0.1 -> 0.02, 0.05 -> 0.01), and the base rate is halved (`[base_rate]`: Written Alphabet
+  and Educated Bureaucrats 0.01 -> 0.005). All literacy speed is flat points a month; the game has no base rate and
+  no percentage modifier for it.
 - Scope: generic advances, the Innovative societal value, laws and their policies, non-country reforms, estate
   privileges, religions, religious aspects and schools. Each changed object is written whole as a `REPLACE` into
   `<folder>/zz_pp_literacy_sources.txt` (pins in `tests/vanilla_replace_pins.csv`); objects another generator already
-  replaces (`written_alphabet`, `educated_bureaucrats` by the ladder, `legal_code_law` by the RGO redirects,
-  `printing_press_advance` by hand) carry the cut at their own source and the pass checks them.
+  replaces (`written_alphabet`, `educated_bureaucrats`, `guilds`, `organized_religion` by the ladder, `legal_code_law`
+  by the RGO redirects, `printing_press_advance` by hand) carry the rule at their own source and the pass checks them
+  (`rgo_cost_redirects.py`'s text copy cannot move an all-class cap to the estates and fails if one appears).
 - Left out on purpose (`artifacts/data/literacy_sources/left_out.csv`): country, culture, religion and region
   advances, country-specific reforms, unique and event buildings, gods, timed event modifiers.
 - Not tested in game (2026-11-25): the mod never replaced religions, religious schools or the societal value before.

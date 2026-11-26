@@ -53,7 +53,8 @@ def result(rule: ls.Rule, vanilla: Path) -> ls.Result:
 
 
 def test_rule_gives_clean_numbers(rule: ls.Rule) -> None:
-    cut = {v: rule.new_value("laws", "x", "global_max_literacy", v) for v in ("10", "5", "3", "2", "2.5", "1", "0", "-5")}
+    cut = {v: rule.new_value("laws", "x", "global_peasants_max_literacy", v)
+           for v in ("10", "5", "3", "2", "2.5", "1", "0", "-5")}
     assert cut == {"10": "4", "5": "2", "3": "1", "2": "1", "2.5": "1", "1": None, "0": None, "-5": None}
     speed = {v: rule.new_value("laws", "x", "global_monthly_literacy", v)
              for v in ("0.1", "0.05", "0.25", "0.33", "0.03", "0.02", "0.01", "0.005")}
@@ -63,16 +64,67 @@ def test_rule_gives_clean_numbers(rule: ls.Rule) -> None:
     assert rule.new_value("laws", "x", "local_max_literacy", "10") is None
 
 
-def test_upper_classes_and_local_caps_are_never_cut(rule: ls.Rule, result: ls.Result) -> None:
-    assert not (rule.keys & UPPER)
-    assert not [k for k in rule.max_keys if k.startswith("local_")]
-    assert {c.key for c, _ in result.changes} <= rule.keys
+def _scope(rule: ls.Rule, folder: str) -> ls.FolderScope:
+    return rule.folders[folder]
+
+
+def test_all_class_cap_goes_to_the_estates(rule: ls.Rule) -> None:
+    """Jan, 2026-11-26: a positive all-class cap becomes the three estate caps at vanilla's value, added to an estate
+    line the block already has; zero and negative caps stay for everyone."""
+    assert rule.split_key == "global_max_literacy" and set(rule.split_into) == UPPER
+    body = st.parse_statements("country_modifier = { global_max_literacy = 10 global_clergy_max_literacy = 5 a = 1 }"
+                               " other_modifier = { global_max_literacy = -5 } potential = { global_max_literacy = 3 }")
+    out, changes = ls.cut_statements(rule, _scope(rule, "laws"), "x", body)
+    assert st.flat_text(out) == (
+        "country_modifier = { global_nobles_max_literacy = 10 global_burghers_max_literacy = 10 "
+        "global_clergy_max_literacy = 15 a = 1 } other_modifier = { global_max_literacy = -5 } "
+        "potential = { global_max_literacy = 3 }")
+    assert {(c.key, c.old, c.new) for c in changes} == {
+        ("global_max_literacy", "10", ""), ("global_nobles_max_literacy", "", "10"),
+        ("global_burghers_max_literacy", "", "10"), ("global_clergy_max_literacy", "5", "15")}
+
+
+def test_written_alphabet_keeps_the_commoners_base(rule: ls.Rule, vanilla: Path) -> None:
+    """Written Alphabet: 2 for everyone, 3 more for each estate (vanilla's 5 for the estates); the halved base rate."""
+    assert rule.split_exceptions == {("advances", "written_alphabet"): (Decimal(2), Decimal(3))}
+    body = ls.effective_objects(vanilla, MOD, st.ADVANCES_DIR)["written_alphabet"].body
+    lines = {s.key: s.value for s in body if s.key and "literacy" in s.key}
+    assert lines == {"global_max_literacy": "2", "global_nobles_max_literacy": "3", "global_clergy_max_literacy": "3",
+                     "global_burghers_max_literacy": "3", "global_monthly_literacy": "0.005"}
+
+
+def test_estates_start_closer_to_history(rule: ls.Rule, vanilla: Path) -> None:
+    """Jan, 2026-11-26: Guilds 5 -> 20 for burghers, Improved Religious Organization 5 -> 20 for clergy."""
+    advances = ls.effective_objects(vanilla, MOD, st.ADVANCES_DIR)
+    assert [s.value for s in advances["guilds"].body if s.key == "global_burghers_max_literacy"] == ["20"]
+    assert [s.value for s in advances["organized_religion"].body if s.key == "global_clergy_max_literacy"] == ["20"]
+
+
+def test_no_positive_all_class_cap_is_left_in_scope(rule: ls.Rule, result: ls.Result, vanilla: Path) -> None:
+    """Every cut object, as the game loads it now, gives a positive all-class cap only where an exception says so."""
+    cut = {(c.folder, c.obj) for c, _ in result.changes}
+    for folder, obj in cut:
+        body = ls.effective_objects(vanilla, MOD, rule.folders[folder].path)[obj].body
+        positive = [v for _b, k, v in ls.literacy_lines(body) if k == rule.split_key and Decimal(v) > 0]
+        keep = rule.split_exceptions.get((folder, obj))
+        assert positive == ([ls._number(keep[0])] if keep else []), (folder, obj, positive)
+
+
+def test_local_caps_are_never_touched(rule: ls.Rule, result: ls.Result) -> None:
+    assert not [k for k in rule.keys if k.startswith("local_") and "max_literacy" in k]
+    assert {c.key for c, _ in result.changes} <= rule.keys | set(rule.split_into)
+    # upper-class keys change only by the split or an explicit value
+    explicit = {(f, o, k) for f, o, k in rule.values}
+    for change, _ in result.changes:
+        if change.key in UPPER and (change.folder, change.obj, change.key) not in explicit:
+            assert Decimal(change.new) - Decimal(change.old or 0) > 0, change
 
 
 def test_base_rate_is_explicit_and_halved(rule: ls.Rule, vanilla: Path) -> None:
     """Jan, 2026-11-25: the base rate of literacy (Written Alphabet, Educated Bureaucrats) halved to 0.005 a month."""
-    assert rule.base_rate == {("advances", "written_alphabet", "global_monthly_literacy"): Decimal("0.005"),
-                              ("advances", "educated_bureaucrats", "global_monthly_literacy"): Decimal("0.005")}
+    assert {k: v for k, v in rule.values.items() if k[2] == "global_monthly_literacy"} == {
+        ("advances", "written_alphabet", "global_monthly_literacy"): Decimal("0.005"),
+        ("advances", "educated_bureaucrats", "global_monthly_literacy"): Decimal("0.005")}
     advances = ls.effective_objects(vanilla, MOD, st.ADVANCES_DIR)
     for key in ("written_alphabet", "educated_bureaucrats"):
         assert [s.value for s in advances[key].body if s.key == "global_monthly_literacy"] == ["0.005"], key
@@ -110,7 +162,7 @@ def test_written_blocks_are_the_effective_objects_with_only_literacy_numbers_cha
 
             def strip(stmts):
                 return tuple(st.Stmt(s.key, s.op, strip(s.value)) if s.is_block else s
-                             for s in stmts if s.is_block or s.key not in rule.keys)
+                             for s in stmts if s.is_block or not (s.key and ls.LITERACY_KEY.match(s.key)))
 
             assert strip(body) == strip(effective[key].body), f"{name}/{key}: more than literacy numbers changed"
 
@@ -132,6 +184,8 @@ def test_other_owners_carry_the_cut(result: ls.Result) -> None:
     owners = {(c.folder, c.obj): by for c, by in result.changes if by != ls.OWN_WRITER}
     assert owners[("advances", "written_alphabet")].startswith("start_technology")
     assert owners[("advances", "educated_bureaucrats")].startswith("start_technology")
+    assert owners[("advances", "guilds")].startswith("start_technology")
+    assert owners[("advances", "organized_religion")].startswith("start_technology")
     assert owners[("laws", "legal_code_law")] == "pp_rgo_building_cost_redirects.txt"
     assert owners[("advances", "printing_press_advance")] == "pp_institution_advances_adjustments.txt"
 
@@ -144,3 +198,7 @@ def test_cut_lines_keeps_text_and_cuts_modifier_lines_only(rule: ls.Rule) -> Non
     assert out[4] == "\t\t\tglobal_peasants_max_literacy = 4 # note"
     assert out[:4] == lines[:4] and out[5:] == lines[5:]
     assert ls.cut_lines(rule, "laws", "x", "02_country_specific.txt", lines) == lines
+    # moving an all-class cap to the estates needs the whole block: cut_lines refuses rather than guess
+    with pytest.raises(ls.LiteracySourcesError):
+        ls.cut_lines(rule, "laws", "x", "01_common.txt", ["a = {", "\tcountry_modifier = {", "\t\tglobal_max_literacy = 5",
+                                                          "\t}", "}"])

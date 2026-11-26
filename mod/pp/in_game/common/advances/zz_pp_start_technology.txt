@@ -53,8 +53,6 @@ INJECT:talented_traders = { starting_technology_level = 8 }
 INJECT:temporary_appointments = { starting_technology_level = 8 }
 INJECT:construction_speed_traditions = { starting_technology_level = 10 }
 INJECT:diplomatic_capacity_traditions = { starting_technology_level = 10 }
-INJECT:guilds = { starting_technology_level = 10 }
-INJECT:organized_religion = { starting_technology_level = 10 }
 INJECT:rural_rgo_traditions = { starting_technology_level = 10 }
 INJECT:scholasticism = { starting_technology_level = 10 }
 
@@ -244,6 +242,9 @@ REPLACE:written_alphabet = {
 	depth = 0
 	research_cost = 3.0
 	global_max_literacy = 2
+	global_nobles_max_literacy = 3
+	global_clergy_max_literacy = 3
+	global_burghers_max_literacy = 3
 	global_monthly_literacy = 0.005
 	unlock_estate_privilege = clergy_literacy_rights
 	starting_technology_level = 6
@@ -335,6 +336,23 @@ REPLACE:more_merchants_age_of_trad = {
 	requires = trade_advance_age_of_trad
 	global_merchant_capacity_modifier = 0.05
 	starting_technology_level = 9
+}
+
+REPLACE:guilds = {
+	age = age_1_traditions
+	icon = guilds
+	requires = organized_religion
+	global_burghers_city_desired_pop = 0.1
+	global_burghers_max_literacy = 20
+	starting_technology_level = 10
+}
+
+REPLACE:organized_religion = {
+	age = age_1_traditions
+	global_clergy_city_desired_pop = 0.05
+	global_clergy_max_literacy = 20
+	depth = 0
+	starting_technology_level = 10
 }
 
 REPLACE:peasant_connections_advance = {

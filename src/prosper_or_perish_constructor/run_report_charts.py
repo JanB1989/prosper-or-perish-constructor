@@ -382,6 +382,82 @@ def institution_charts(run: RunData, x: pl.DataFrame) -> list[dict[str, Any]]:
 
 
 # --------------------------------------------------------------------------------------------------------
+# Research
+
+RESEARCH_BASE_REGION = "western_europe"  # the relative view divides every region by this one
+RESEARCH_QUANTILES = ((0.1, "10th percentile"), (0.25, "25th percentile"), (0.5, "Median"), (0.75, "75th percentile"),
+                      (0.9, "90th percentile"))
+
+
+def research_charts(run: RunData, x: pl.DataFrame) -> list[dict[str, Any]]:
+    """Research points (research cost of the advances held, summed): the leading countries, the points per person of
+    the world regions (and against Western Europe), and how evenly the world's people share them."""
+    if run.research.is_empty() or "research" not in run.locations.columns:
+        return []
+    xs = x["x"].to_list()
+    countries = run.countries.select("snapshot_id", pl.col("country_id").cast(pl.Int64), "country_tag", "country_name",
+                                     "population").unique(["snapshot_id", "country_id"])
+    # one row per tag and save; ties in points go to the larger country
+    frame = (run.research.join(countries, on=["snapshot_id", "country_id"], how="inner")
+             .sort(["points", "population"], descending=True, nulls_last=True)
+             .unique(["snapshot_id", "country_tag"], keep="first", maintain_order=True))
+    best = frame.group_by("snapshot_id").agg(pl.col("points").max().alias("best"))
+    frame = frame.join(best, on="snapshot_id").with_columns(
+        pl.when(pl.col("best") > 0).then(pl.col("points") / pl.col("best") * 100).alias("of_best"))
+    names = {t: run.labels.country(t, n) for t, n in frame.sort("snapshot_id").select("country_tag", "country_name").iter_rows()}
+    leaders = _leaders(frame, "points", x, n_any=1)  # many small states sit close together: only past leaders join
+    colour = {t: CATEGORICAL[i % len(CATEGORICAL)] for i, t in enumerate(leaders)}
+    points, of_best = _by_key(frame, "country_tag", "points", x), _by_key(frame, "country_tag", "of_best", x)
+    charts = [chart(
+        "research_countries", "research", "Leading countries by research points",
+        "The ten countries with the most research points at the last save and every country that held the most at any "
+        "save (land owners only; between equal points the larger country ranks first). Against the "
+        "highest: the country's points as a share of the highest any country holds in that save.",
+        [view("Research points", "num", line_option(xs, [_series(names[t], points[t], colour[t]) for t in leaders], unit="num")),
+         view("Against the highest", "pct0", line_option(xs, [_series(names[t], of_best[t], colour[t]) for t in leaders],
+                                                         unit="pct0", y_max=100))])]
+
+    known = run.locations.filter(pl.col("research").is_not_null() & (pl.col("total_population") > 0))
+    weighted = (pl.col("research") * pl.col("total_population")).sum() / pl.col("total_population").sum()
+    world = known.group_by("snapshot_id").agg(weighted.alias("per_person"))
+    regions = known.filter(land_region_expr()).group_by("snapshot_id", "macro_region").agg(weighted.alias("per_person"))
+    per_region = _by_key(regions, "macro_region", "per_person", x)
+    palette = region_palette(run)
+    world_line = _aligned(world, "per_person", x)
+    views = [view("Per person", "num", line_option(xs, [_series("World", world_line, WORLD, width=3)] + [
+        _series(label, per_region.get(key, []), c, width=1.6) for key, label, c in palette], unit="num"))]
+    base = per_region.get(RESEARCH_BASE_REGION)
+    if base:
+        views.append(view("Against Western Europe", "pct0", line_option(
+            xs, [_series("World", _ratio(world_line, base, 100), WORLD, width=3)] + [
+                _series(label, _ratio(per_region.get(key, []), base, 100), c, width=1.6)
+                for key, label, c in palette if key != RESEARCH_BASE_REGION],
+            unit="pct0", reference=100.0)))
+    charts.append(chart(
+        "research_regions", "research", "Research points per person by world region",
+        "The research points of each location's owner, averaged over the people who live there, world and world regions "
+        "(owned land only). Against Western Europe: a region's points per person as a share of Western Europe's.",
+        views, height=500))
+
+    # the points at which a share of the world's people (sorted by their owner's points) is reached
+    order = pl.col("total_population").sort_by("research").cum_sum() / pl.col("total_population").sum()
+    spread = known.group_by("snapshot_id").agg(
+        *[pl.col("research").sort().filter(order >= q).first().alias(f"q{i}") for i, (q, _) in enumerate(RESEARCH_QUANTILES)],
+        pl.col("research").max().alias("max"))
+    shades = ("#9ec5f4", "#6da7ec", WORLD, "#256abf", "#123055")
+    lines = [_series("Highest country", _aligned(spread, "max", x), OTHER_GREY, dashed=True)] + [
+        _series(label, _aligned(spread, f"q{i}", x), shades[i], width=3 if q == 0.5 else 1.8)
+        for i, (q, label) in reversed(list(enumerate(RESEARCH_QUANTILES)))]
+    charts.append(chart(
+        "research_spread", "research", "How evenly the world's people share research",
+        "The world's people ranked by the research points of the country that owns their location: a tenth of them live "
+        "under owners with at most the 10th percentile's points, half with at most the median's, nine tenths with at "
+        "most the 90th percentile's (owned land only). Dashed: the highest any country holds.",
+        [view("Research points", "num", line_option(xs, lines, unit="num"))], height=440))
+    return charts
+
+
+# --------------------------------------------------------------------------------------------------------
 # Goods: prices, production and trade
 
 
@@ -1243,7 +1319,7 @@ def speed_charts(run: RunData, x: pl.DataFrame) -> list[dict[str, Any]]:
 def build_payload(run: RunData) -> dict[str, Any]:
     """Every chart and table of the page, in section order."""
     x = xaxis(run)
-    charts = population_charts(run, x) + institution_charts(run, x)
+    charts = population_charts(run, x) + institution_charts(run, x) + research_charts(run, x)
     tables: list[dict[str, Any]] = []
     goods: dict[str, dict[str, Any]] = {}
     if not run.market_goods.is_empty():

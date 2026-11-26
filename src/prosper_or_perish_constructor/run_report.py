@@ -4,7 +4,7 @@
 writes `graphs/report/<run>/`:
 
 - `maps/*.mp4` - one H.264 video per map (political, population, population change, unemployment, development,
-  institutions, building levels, building investment, trade between world regions, the largest trade routes, market trade
+  institutions, research points, building levels, building investment, trade between world regions, the largest trade routes, market trade
   balance, industry promotions), one frame per save, sized to stay
   under 10 MB so Discord and GitHub play it inline; `maps/*.png` - the last frame of each (a poster / thumbnail);
 - `index.html` - the page: summary tiles, the videos and the interactive charts and tables of
@@ -153,6 +153,11 @@ class RunData:
     # engine table location_institutions, institutions at 100 % spread: snapshot_id, institution, population (thousands
     # living where it is present); locations then carry `institutions` (count, null in snapshots without the table)
     institutions: pl.DataFrame = field(default_factory=pl.DataFrame)
+    # engine table country_advances priced by the advances' research cost: snapshot_id, country_id, points (sum of the
+    # research cost of every advance held), land owners only; locations then carry `research` (the owner's points,
+    # null where unowned or in snapshots without the table); research_saves: the snapshots that have it
+    research: pl.DataFrame = field(default_factory=pl.DataFrame)
+    research_saves: list[str] = field(default_factory=list)
     good_icons: dict[str, str] = field(default_factory=dict)  # good_id -> page-relative PNG (write_good_icons)
     price_scale: PriceScale = field(default_factory=PriceScale)  # the price colours (load_price_scale)
     # engine tables town_rights and industry_promotions (empty for snapshots ingested before the dataset kept them)
@@ -213,9 +218,10 @@ def run_snapshots(dataset: Path, playthrough: str) -> pl.DataFrame:
 
 
 def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | None = None,
-             improvements: RoomModel | None = None) -> RunData:
+             improvements: RoomModel | None = None, advance_costs: Mapping[str, float] | None = None) -> RunData:
     """``improvements``: the improvement caps of the built mod (improvement_room.load_model); None leaves the
-    improvements chart out."""
+    improvements chart out. ``advance_costs``: research cost per advance (load_advance_costs); None or empty leaves
+    the Research section out."""
     playthrough = playthrough or latest_playthrough(dataset)
     snapshots = run_snapshots(dataset, playthrough)
     # the game writes playthrough_name only for some starts (e.g. "England #7558ddce"); else the id's first block
@@ -231,6 +237,7 @@ def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | Non
     ]
     locations = _scan(dataset, "locations", playthrough).select(loc_columns).filter(pl.col("snapshot_id").is_in(wanted)).collect()
     locations, institutions = _institutions(dataset, playthrough, wanted, locations)
+    locations, research, research_saves = _research(dataset, playthrough, wanted, locations, advance_costs or {})
     buildings = _scan(dataset, "buildings", playthrough).select("snapshot_id", "building_type", "location_slug", "level")
     catalog = (
         _scan(dataset, "building_catalog", playthrough)
@@ -327,7 +334,8 @@ def load_run(dataset: Path, playthrough: str | None = None, labels: Labels | Non
         names = goods_scan.select("good_id", "good_name").unique("good_id").collect()
         labels.goods = {**{g: n for g, n in names.iter_rows() if n}, **labels.goods}
     run = RunData(playthrough, str(name), snapshots, locations, building_levels, buildings_by_category, countries,
-                  market_goods, markets, trades, economy, labels, institutions=institutions, labour=labour)
+                  market_goods, markets, trades, economy, labels, institutions=institutions, labour=labour,
+                  research=research, research_saves=research_saves)
     if improvements is not None:
         from prosper_or_perish_constructor.improvement_room import room
 
@@ -398,6 +406,69 @@ def _institutions(dataset: Path, playthrough: str, wanted: list[str],
         .group_by("snapshot_id", "institution").agg(pl.col("total_population").sum().alias("population"))
     )
     return locations, population
+
+
+_ADVANCE_COST = re.compile(r"name = pp_advance_cost key = advance_type:(\S+) value = ([0-9.]+)")
+
+
+def load_advance_costs(repo: Path, project: Path) -> dict[str, float]:
+    """Research cost of every advance (the built mod's generated pp_advance_research_cost.txt, the cost while the
+    advance's age is current); empty when the file is missing."""
+    import tomllib
+
+    from prosper_or_perish_constructor.advance_research_cost import OUTPUT
+
+    mod_root = tomllib.loads(project.read_text(encoding="utf-8")).get("project", {}).get("mod_root") or "mod/pp"
+    path = (Path(mod_root) if Path(mod_root).is_absolute() else repo / mod_root) / OUTPUT
+    if not path.is_file():
+        return {}
+    return {k: float(v) for k, v in _ADVANCE_COST.findall(path.read_text(encoding="utf-8-sig"))}
+
+
+def _research(dataset: Path, playthrough: str, wanted: list[str], locations: pl.DataFrame,
+              costs: Mapping[str, float]) -> tuple[pl.DataFrame, pl.DataFrame, list[str]]:
+    """Research points per land-owning country (engine table country_advances, each advance at its research cost;
+    an advance without a cost counts 0): adds the owner's points `research` to the locations and returns the points
+    per snapshot and country and the snapshots that have the table."""
+    empty = locations.with_columns(pl.lit(None, dtype=pl.Float64).alias("research"))
+    scan = _scan_optional(dataset, "country_advances", playthrough)
+    if scan is None or not costs:
+        return empty, pl.DataFrame(), []
+    root = dataset / "tables" / "country_advances" / f"playthrough_id={playthrough}"
+    have = {f.stem for f in root.glob("*.parquet")}
+    saves = [s for s in wanted if s in have]
+    price = pl.LazyFrame({"advance": list(costs), "cost": [float(v) for v in costs.values()]})
+    points = (
+        scan.filter(pl.col("snapshot_id").is_in(saves))
+        .select("snapshot_id", pl.col("country_id").cast(pl.Int64), "advance")
+        .join(price, on="advance", how="left")
+        .group_by("snapshot_id", "country_id").agg(pl.col("cost").fill_null(0.0).sum().alias("points"))
+        .collect()
+    )
+    owners = (locations.filter(pl.col("owner_country_id").is_not_null() & pl.col("snapshot_id").is_in(saves))
+              .select("snapshot_id", pl.col("owner_country_id").cast(pl.Int64).alias("country_id")).unique())
+    # every land owner counts, one without a researched advance at 0
+    research = owners.join(points, on=["snapshot_id", "country_id"], how="left").with_columns(pl.col("points").fill_null(0.0))
+    locations = (
+        locations.with_columns(pl.col("owner_country_id").cast(pl.Int64).alias("_owner"))
+        .join(research.rename({"country_id": "_owner", "points": "research"}), on=["snapshot_id", "_owner"], how="left")
+        .drop("_owner")
+    )
+    return locations, research, saves
+
+
+def research_per_person(locations: pl.DataFrame, order: list[str]) -> list[tuple[str, float]]:
+    """(snapshot_id, research points per person over the owned land) per save that has research data, in save order."""
+    if "research" not in locations.columns:
+        return []
+    rows = (
+        locations.filter(pl.col("research").is_not_null())
+        .group_by("snapshot_id")
+        .agg((pl.col("research") * pl.col("total_population")).sum().alias("w"), pl.col("total_population").sum().alias("p"))
+        .filter(pl.col("p") > 0)
+    )
+    by = {r["snapshot_id"]: r["w"] / r["p"] for r in rows.to_dicts()}
+    return [(snap, by[snap]) for snap in order if snap in by]
 
 
 def _load_investment(run: RunData, dataset: Path, wanted: list[str]) -> None:
@@ -678,6 +749,10 @@ class MapSpec:
     subtitle: str
     values: Callable[[RunData, pl.DataFrame], pl.DataFrame] | None  # snapshot locations -> slug, value
     scale: Callable[[pl.DataFrame], Scale] | None
+    nodata_label: str = "no data"
+    skip_empty: bool = False  # leave out the saves without a single value (a table older snapshots lack)
+    # key figures in the bar: snapshot locations -> [(label, value)]; None: population and countries
+    stats: Callable[[RunData, pl.DataFrame], list[tuple[str, str]]] | None = None
 
 
 def _values_array(canvas: MapCanvas, frame: pl.DataFrame) -> np.ndarray:
@@ -736,6 +811,27 @@ def _institution_values(run: RunData, locs: pl.DataFrame) -> pl.DataFrame:
     return locs.select("slug", pl.col("institutions").alias("value"))
 
 
+def _research_values(run: RunData, locs: pl.DataFrame) -> pl.DataFrame:
+    return locs.select("slug", pl.col("research").alias("value"))
+
+
+def _research_stats(run: RunData, locs: pl.DataFrame) -> list[tuple[str, str]]:
+    owned = locs.filter(pl.col("research").is_not_null())
+    people = float(owned["total_population"].sum() or 0.0)
+    per_person = float((owned["research"] * owned["total_population"]).sum()) / people if people else float("nan")
+    return [("points per person", _format_number(per_person)), ("highest country", _format_number(float(owned["research"].max() or 0.0)))]
+
+
+def _research_scale(frames: pl.DataFrame) -> Scale:
+    """Linear from 0 to the largest points (99.5th percentile) in round steps: the points of a run span about one
+    decade, so a log scale would leave one tick and little contrast; linear shows the climb over the years."""
+    values = frames["value"].drop_nulls()
+    high = max(1.0, float(values.quantile(0.995) or 1.0)) if values.len() else 1.0
+    raw = high / 5
+    step = next(m * 10 ** math.floor(math.log10(raw)) for m in (1, 2, 2.5, 5, 10) if m * 10 ** math.floor(math.log10(raw)) >= raw)
+    return _linear_scale(0.0, high, [(float(v), _format_number(v) if v else "0") for v in np.arange(0.0, high + 1e-9, step)])
+
+
 def _count_scale(frames: pl.DataFrame) -> Scale:
     high = max(1.0, float(frames["value"].max() or 1.0))
     step = max(1, math.ceil(high / 6))
@@ -783,6 +879,8 @@ def default_maps() -> list[MapSpec]:
                                         [(v, f"{v:.0f}") for v in np.linspace(0, max(1.0, float(f["value"].quantile(0.995) or 1.0)), 5)])),
         MapSpec("institutions", "Institutions", "Institutions present in every location (spread at 100 %)",
                 _institution_values, _count_scale),
+        MapSpec("research", "Research points", "Research cost of every advance the owner holds, summed",
+                _research_values, _research_scale, nodata_label="unowned", skip_empty=True, stats=_research_stats),
         MapSpec("buildings", "Building levels", "Sum of building levels per location (log scale)", _building_values,
                 lambda f: _log_scale(f)),
         MapSpec("investment", "Building investment", "Gold the buildings of a location cost to build (log scale)",
@@ -866,6 +964,8 @@ def render_maps(run: RunData, canvas: MapCanvas, out: Path, *, repo: Path, proje
         specs = [s for s in specs if s.key not in {"investment", "investment_change"}]
     if run.institutions.is_empty():
         specs = [s for s in specs if s.key != "institutions"]
+    if run.research.is_empty() or "research" not in run.locations.columns:
+        specs = [s for s in specs if s.key != "research"]
     snapshots = run.snapshots.to_dicts()
     by_snapshot = run.locations.partition_by("snapshot_id", as_dict=True)
     first = by_snapshot.get((snapshots[0]["snapshot_id"],), pl.DataFrame())
@@ -907,11 +1007,13 @@ def render_maps(run: RunData, canvas: MapCanvas, out: Path, *, repo: Path, proje
                 values = (locs.filter(pl.col("owner_country_id").is_not_null()).select("slug", "owner_country_id")
                           .join(rgb.drop("snapshot_id"), on="owner_country_id", how="inner")
                           if rgb is not None and not locs.is_empty() else pl.DataFrame())
+            if spec.skip_empty and (values.is_empty() or values["value"].drop_nulls().is_empty()):
+                continue
             frames.append((snap, values))
         scale = None
         if spec.scale is not None:
             scale = spec.scale(pl.concat([f for _, f in frames if not f.is_empty()]).filter(pl.col("value").is_finite()))
-        composer = FrameComposer(canvas, spec.title, spec.subtitle, scale)
+        composer = FrameComposer(canvas, spec.title, spec.subtitle, scale, nodata_label=spec.nodata_label)
         video = out / f"{spec.key}.mp4"
         writer = VideoWriter(video, composer.width, composer.height, fps, max_kbps)
         last = None
@@ -927,12 +1029,10 @@ def render_maps(run: RunData, canvas: MapCanvas, out: Path, *, repo: Path, proje
             else:
                 location_rgb = scale.colours(_values_array(canvas, values))
             stats = world_by.get(snap["snapshot_id"], {})
-            frame = composer.compose(
-                _paint(canvas, location_rgb),
-                str(snap.get("year") or snap.get("date") or ""),
-                [("population", _format_number(float(stats.get("population") or 0) * 1000)),
-                 ("countries", str(stats.get("countries") or 0))],
-            )
+            figures = (spec.stats(run, by_snapshot.get((snap["snapshot_id"],), pl.DataFrame())) if spec.stats is not None
+                       else [("population", _format_number(float(stats.get("population") or 0) * 1000)),
+                             ("countries", str(stats.get("countries") or 0))])
+            frame = composer.compose(_paint(canvas, location_rgb), str(snap.get("year") or snap.get("date") or ""), figures)
             writer.write(frame)
             last = frame
         if last is not None:
@@ -953,6 +1053,7 @@ def render_maps(run: RunData, canvas: MapCanvas, out: Path, *, repo: Path, proje
 # Industry promotions map
 
 PROMOTION_VIDEOS = ("industry_promotions",)
+RESEARCH_VIDEOS = ("research",)  # in the Research section, not among the world maps
 PROMOTION_SHORT = {"paper_goods": "Paper"}  # legend names that would not fit
 
 
@@ -1399,6 +1500,8 @@ def _summary(run: RunData) -> dict[str, object]:
         urban = {"rights_last": count(run.town_rights, last), "rights_first": count(run.town_rights, run.urban_saves[0]),
                  "promotions_last": count(run.promotions, last)}
     per_person = institutions_per_person(run.locations, run.snapshots["snapshot_id"].to_list())
+    research = research_per_person(run.locations, run.snapshots["snapshot_id"].to_list())
+    years = dict(run.snapshots.select("snapshot_id", "year").iter_rows())
     improvements: dict[str, float] = {}
     if not run.improvements.is_empty():
         from prosper_or_perish_constructor.improvement_room import world
@@ -1411,6 +1514,8 @@ def _summary(run: RunData) -> dict[str, object]:
             "investment_first": world_investment.get(first), "investment_last": world_investment.get(last),
             "institutions_first": per_person[0] if per_person else None,
             "institutions_last": per_person[-1] if per_person else None,
+            "research_first": research[0][1] if research else None, "research_last": research[-1][1] if research else None,
+            "research_first_year": years.get(research[0][0]) if research else None,
             "trade_first": trade.get(first), "trade_last": trade.get(last),
             "burgher_first": burgher.get(first), "burgher_last": burgher.get(last), "leaders": leaders, **urban, **improvements}
 
@@ -1419,6 +1524,9 @@ SECTIONS = (
     ("population", "Population", "Who lives where, and how many have work."),
     ("institutions", "Institutions", "How far the institutions have spread: a location has an institution once its "
                                      "spread reaches 100 %."),
+    ("research", "Research", "How far technology has come, in research points: a country's points are the research "
+                             "cost of every advance it holds, summed. A location counts its owner's points; only "
+                             "countries that own land count."),
     ("trade", "Trade", "What moved between markets and what did not: the routes and the trade balance of every market "
                        "as videos, then trade per goods group, per good and per market."),
     ("prices", "Prices", "Every good's price against its base price, and whether the world uses more than it makes."),
@@ -1742,6 +1850,10 @@ def write_page(run: RunData, out: Path, maps: list[dict[str, str]], payload: dic
     if summary.get("institutions_last") is not None:
         tiles.insert(3, ("Institutions per person", f"{float(summary['institutions_last']):.1f}",  # type: ignore[arg-type]
                          f"{float(summary['institutions_first'] or 0):.1f} in {start}"))  # type: ignore[arg-type]
+    if summary.get("research_last") is not None:
+        at = 4 if summary.get("institutions_last") is not None else 3
+        tiles.insert(at, ("Research points per person", _format_number(float(summary["research_last"])),  # type: ignore[arg-type]
+                          f"{_format_number(float(summary['research_first'] or 0))} in {summary['research_first_year']}"))  # type: ignore[arg-type]
     if summary.get("rights_last") is not None:
         tiles.insert(-1, ("Town rights", str(summary["rights_last"]),
                           f"{summary['rights_first']} in {start} · {summary['promotions_last']} industry promotions"))
@@ -1755,7 +1867,7 @@ def write_page(run: RunData, out: Path, maps: list[dict[str, str]], payload: dic
                           f"{float(summary['improvements_first']) * 100:.0f}% in {start}"))  # type: ignore[arg-type]
     tile_html = "".join(f"<div class=tile><div class=label>{esc(a)}</div><div class=value>{esc(b)}</div><div class=sub>{esc(c)}</div></div>"
                         for a, b, c in tiles)
-    section_videos = {"trade": TRADE_VIDEOS, "towns": PROMOTION_VIDEOS}
+    section_videos = {"research": RESEARCH_VIDEOS, "trade": TRADE_VIDEOS, "towns": PROMOTION_VIDEOS}
     in_sections = {key for keys in section_videos.values() for key in keys}
     world_maps = "".join(_video_card(m) for m in maps if m["key"] not in in_sections)
     sections, nav = [], ["<a href='#maps'>Maps</a>"]
@@ -1861,7 +1973,13 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
     for snap in budget_saves:
         snap["month"] = int(str(snap["date"]).split(".")[1])
     prepare_budget_flows(playthrough, budget_saves, dataset=dataset, cache=budget_cache, log=log)
-    run = load_run(dataset, playthrough, labels=load_labels(repo, project), improvements=_improvement_model(repo, project, log))
+    advance_costs = load_advance_costs(repo, project)
+    log(f"research: {len(advance_costs)} advances with a research cost" if advance_costs
+        else "research: left out (no pp_advance_research_cost.txt in the built mod)")
+    run = load_run(dataset, playthrough, labels=load_labels(repo, project), improvements=_improvement_model(repo, project, log),
+                   advance_costs=advance_costs)
+    if run.research_saves:
+        log(f"research: {len(run.research_saves)} of {run.snapshots.height} saves have the researched advances")
     run.price_scale = load_price_scale(project)
     if run.urban_saves:
         run.urban = load_urban_catalog(repo, project)

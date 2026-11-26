@@ -472,6 +472,81 @@ def test_institutions_count_full_spread_per_location_and_feed_map_chart_and_tile
     assert abs(shares["Feudalism"][-1][1] - 225 / 226.5 * 100) < 0.01
 
 
+def test_research_points_price_held_advances_for_land_owners_and_feed_map_charts_and_page(tmp_path: Path, monkeypatch) -> None:
+    import shutil
+
+    import numpy as np
+
+    from prosper_or_perish_constructor.run_report_charts import build_payload
+
+    # the cost file of the built mod: the current-age map counts, the past-age map does not
+    mod = tmp_path / "mod" / "pp" / "in_game" / "common" / "on_action"
+    mod.mkdir(parents=True)
+    (mod / "pp_advance_research_cost.txt").write_text(
+        "﻿x = {\n"
+        "\t\t\tadd_to_global_variable_map = { name = pp_advance_cost key = advance_type:a value = 10 }\n"
+        "\t\t\tadd_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:a value = 7.5 }\n"
+        "\t\t\tadd_to_global_variable_map = { name = pp_advance_cost key = advance_type:b value = 5 }\n"
+        "\t\t\tadd_to_global_variable_map = { name = pp_advance_cost key = advance_type:c value = 2.5 }\n}\n", encoding="utf-8")
+    project = tmp_path / "constructor.toml"
+    project.write_text('[project]\nmod_root = "mod/pp"\n', encoding="utf-8")
+    costs = rr.load_advance_costs(tmp_path, project)
+    assert costs == {"a": 10.0, "b": 5.0, "c": 2.5}
+
+    run = _trade_run()
+    run.locations = run.locations.with_columns(
+        pl.col("slug").replace_strict({"paris": 1, "london": 2, "atlantis": 3}, return_dtype=pl.Int64).alias("location_id"),
+        pl.col("owner").cast(pl.Int64).alias("owner_country_id"))
+    folder = tmp_path / "tables" / "country_advances" / "playthrough_id=run"
+    folder.mkdir(parents=True)
+    # only s2 has the table; FRA holds a, b and an advance without a cost, ENG a, the landless pretender (3) everything
+    pl.DataFrame({"snapshot_id": ["s2"] * 7, "country_id": [2, 2, 2, 1, 3, 3, 3],
+                  "advance": ["a", "b", "z", "a", "a", "b", "c"]}).write_parquet(folder / "s2.parquet")
+    run.locations, run.research, run.research_saves = rr._research(tmp_path, "run", ["s1", "s2"], run.locations, costs)
+
+    assert run.research_saves == ["s2"]
+    assert sorted(run.research.select("country_id", "points").rows()) == [(1, 10.0), (2, 15.0)]
+    research = {(s, slug): v for s, slug, v in run.locations.select("snapshot_id", "slug", "research").iter_rows()}
+    assert research[("s2", "paris")] == 15.0 and research[("s2", "london")] == 10.0
+    assert research[("s2", "atlantis")] is None and research[("s1", "paris")] is None  # unowned; save without the table
+    assert rr.research_per_person(run.locations, ["s1", "s2"]) == [("s2", (150 * 15 + 75 * 10) / 225)]
+    scale = rr._research_scale(pl.DataFrame({"value": [1_600.0, 9_000.0, 20_000.0, None]}))
+    assert scale.kind == "linear" and scale.low == 0.0
+    assert [label for _, label in scale.ticks][:4] == ["0", "5.0k", "10.0k", "15.0k"]  # round steps up to the top value
+    assert scale.ticks[-1][0] <= scale.high
+
+    payload = build_payload(run)
+    charts = {c["key"]: c for c in payload["charts"] if c["section"] == "research"}
+    assert list(charts) == ["research_countries", "research_regions", "research_spread"]
+    leaders = {s["name"]: s["data"][-1][1] for s in charts["research_countries"]["views"][0]["option"]["series"]}
+    assert leaders == {"Fra": 15.0, "Gbr": 10.0}
+    against = {s["name"]: s["data"][-1][1] for s in charts["research_regions"]["views"][1]["option"]["series"]}
+    assert against["British Isles"] == pytest.approx(100 * 10 / 15, rel=1e-3) and "Western Europe" not in against
+    spread = {s["name"]: s["data"][-1][1] for s in charts["research_spread"]["views"][0]["option"]["series"]}
+    # a third of the people (London) at 10 points, the rest (Paris) at 15
+    assert spread["10th percentile"] == 10.0 and spread["25th percentile"] == 10.0 and spread["Median"] == 15.0
+    assert spread["Highest country"] == 15.0
+    page = rr.write_page(run, tmp_path, [], payload).read_text(encoding="utf-8")
+    assert "<h2 id=research>Research</h2>" in page and "Research points per person" in page and "in 1347" in page
+
+    if shutil.which("ffmpeg"):
+        index = np.full((20, 40), -1, dtype=np.int32)
+        index[4:16, 4:18], index[4:16, 18:30], index[4:16, 30:34] = 0, 1, 2
+        canvas = rr.MapCanvas(index=index, tags=["paris", "london", "atlantis"], width=40, height=20,
+                              tag_index={"paris": 0, "london": 1, "atlantis": 2})
+        monkeypatch.setattr(rr, "_country_colours", lambda repo, project, tags: {})  # only the political map uses them
+        monkeypatch.setattr(rr, "political_colours", lambda run, setup: pl.DataFrame(
+            schema={"snapshot_id": pl.String, "owner_country_id": pl.Int64, "rgb": pl.Int64}))
+        logs: list[str] = []
+        spec = next(s for s in rr.default_maps() if s.key == "research")
+        (video,) = rr.render_maps(run, canvas, tmp_path / "maps", repo=tmp_path, project=project, fps=2, specs=[spec],
+                                  log=logs.append)
+        assert video["key"] in rr.RESEARCH_VIDEOS and (tmp_path / "maps" / "research.mp4").stat().st_size > 0
+        assert logs[0].startswith("map research: 1 frames")  # the save without the table is left out
+        page = rr.write_page(run, tmp_path, [video], payload).read_text(encoding="utf-8")
+        assert page.index("maps/research.mp4") > page.index("<h2 id=research>")  # in its section, not among the maps
+
+
 def test_speed_chart_from_save_times_leaves_pauses_out(tmp_path: Path) -> None:
     from prosper_or_perish_constructor.run_report_charts import build_payload, speed_charts, speed_running, speed_segments, xaxis
 

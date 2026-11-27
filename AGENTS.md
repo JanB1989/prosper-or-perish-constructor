@@ -829,6 +829,12 @@
   0.03, about four Library levels; no literacy cap and no institution growth any more), plus what it had (migration,
   promotion, room for the classes) and its place under the Society of Sciences.
 - Trade School: +2 levels with a specialization town right (3 at most; was +1).
+- Two tiers of speed (Jan, later the same night): passive country-wide sources (advances, religions) keep the hard cut
+  (x0.08 of vanilla); what a country chooses (societal values, laws and policies, reforms, estate privileges, religious
+  aspects and schools: `[speed] active_folders`) x0.4 of vanilla (0.1 -> 0.04, one such choice is worth ten Village
+  School levels everywhere). Flavour (unique and event buildings, timed modifiers, traits, gods) is never touched; the
+  few chosen sources in left-out folders (parliament issues, peasant cabinet action, religious order callings, two town
+  rights) keep vanilla's numbers. The University gives burghers and nobles 5 maximum literacy again (was 10, then 0).
 
 ### Literacy sources (the cut, same day)
 

@@ -49,6 +49,19 @@ decimals = 3
 minimum = 0.004
 keep_at_or_below = 0.01
 small_factor = 0.4
+# Two tiers (Jan, 2026-11-27, later the same night): what a country gets passively, country-wide, by researching or by
+# being what it is (advances, religions) takes the hard cut above. What a country chooses (its societal values, laws
+# and policies, reforms, estate privileges, religious aspects and schools) stays decently strong: values above
+# `keep_at_or_below` x active_factor, rounded to `active_decimals`, at least `active_minimum`
+# (0.1 -> 0.04, 0.05 -> 0.02, 0.25 -> 0.1, 0.03 and 0.02 -> 0.01); 0.01 and less stay. One such choice at 0.04 is worth
+# ten Village School levels in every location of the country. Flavour (unique and event buildings, timed event
+# modifiers, traits, gods) is never touched: [left_out_folders]. The few chosen sources in left-out folders
+# (parliament issues, the peasant cabinet action, religious order callings, two town rights) keep vanilla's numbers.
+active_folders = ["societal_values", "laws", "government_reforms", "estate_privileges", "religious_aspects",
+                  "religious_schools"]
+active_factor = 0.4
+active_decimals = 2
+active_minimum = 0.01
 
 # Explicit values, "<folder>.<object>.<key>" = value; they win over the rules above.
 # The base rate (Jan, 2026-11-25: halved; 2026-11-27 x0.4 with every other speed). Both are first-age advances of the ladder, which writes them.

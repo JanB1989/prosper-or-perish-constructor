@@ -17,17 +17,3 @@ REPLACE:freedom_of_interpretation = {
 		global_clergy_estate_power = 0.25
 	}
 }
-
-REPLACE:sponsor_printing_of_religious_texts = {
-	estate = clergy_estate
-	potential = {
-		government_type = government_type:theocracy
-		has_advance = printing_of_religious_texts
-	}
-	country_modifier = {
-		global_monthly_literacy = 0.004
-		global_institution_growth_modifier = 0.1
-		clergy_estate_target_satisfaction = medium_privilege_target_satisfaction
-		global_clergy_estate_power = 0.5
-	}
-}

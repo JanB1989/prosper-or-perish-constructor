@@ -97,6 +97,10 @@ class Rule:
     speed_minimum: Decimal
     speed_keep: Decimal
     speed_small_factor: Decimal
+    speed_active_folders: frozenset[str]         # sources a country chooses: a milder cut
+    speed_active_factor: Decimal
+    speed_active_decimals: int
+    speed_active_minimum: Decimal
     values: dict[tuple[str, str, str], Decimal]  # explicit values ([base_rate], [estate_start])
     folders: dict[str, FolderScope]
     exclude_objects: dict[tuple[str, str], str]
@@ -120,6 +124,13 @@ class Rule:
         elif key in self.speed_keys:
             if old <= 0:
                 return None
+            if folder in self.speed_active_folders:   # chosen sources: values above the threshold x the active factor
+                if old <= self.speed_keep:
+                    return None
+                step = Decimal(1).scaleb(-self.speed_active_decimals)
+                new = max(self.speed_active_minimum,
+                          (old * self.speed_active_factor).quantize(step, rounding=ROUND_HALF_UP))
+                return None if new == old else _number(new)
             step = Decimal(1).scaleb(-self.speed_decimals)
             if old <= self.speed_keep:   # the small sources: their own factor, no minimum
                 new = (old * self.speed_small_factor).quantize(step, rounding=ROUND_HALF_UP)
@@ -170,6 +181,10 @@ def load_rule(repo: Path) -> Rule:
         speed_keys=frozenset(s["keys"]), speed_factor=Decimal(str(s["factor"])), speed_decimals=int(s["decimals"]),
         speed_minimum=Decimal(str(s["minimum"])), speed_keep=Decimal(str(s["keep_at_or_below"])),
         speed_small_factor=Decimal(str(s.get("small_factor", 1))),
+        speed_active_folders=frozenset(s.get("active_folders", ())),
+        speed_active_factor=Decimal(str(s.get("active_factor", s["factor"]))),
+        speed_active_decimals=int(s.get("active_decimals", s["decimals"])),
+        speed_active_minimum=Decimal(str(s.get("active_minimum", s["minimum"]))),
         values=values, folders=folders, exclude_objects=excluded,
         left_out_folders={str(k): str(v) for k, v in raw.get("left_out_folders", {}).items()},
     )

@@ -14,13 +14,6 @@ REPLACE:mula_sangh_school = {
 	}
 }
 
-REPLACE:nyaya_school = {
-	color = rgb { 58 0 14 }
-	enabled_for_country = { religion = religion:hindu }
-	enabled_for_character = { religion = religion:hindu }
-	modifier = { global_monthly_literacy = 0.004 }
-}
-
 REPLACE:vaisheshika_school = {
 	color = rgb { 38 0 1 }
 	enabled_for_country = { religion = religion:hindu }

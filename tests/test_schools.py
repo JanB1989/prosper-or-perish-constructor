@@ -206,9 +206,11 @@ def test_library_and_university(vanilla) -> None:
     assert _values(culture["REPLACE:library"])["max_levels"] == "pp_library_max_level"
     assert "pp_library_levels >= 2" in _text(CULTURE, "REPLACE:university")
     university = _values(_values(culture["REPLACE:university"])["modifier"])
-    # the Library sets how high, the University how fast (2026-11-27): no cap, no institution growth, a big speed
+    # the Library sets how high, the University how fast (2026-11-27): half its old cap, no institution growth, a big speed
     assert _num(university["local_monthly_literacy"]) == 0.03
-    assert not [k for k in university if "max_literacy" in k or "institution" in k]
+    assert {k: _num(v) for k, v in university.items() if "max_literacy" in k} == {
+        "local_burghers_max_literacy": 5, "local_nobles_max_literacy": 5}
+    assert not [k for k in university if "institution" in k]
 
 
 def test_printing_shop_spreads_literacy() -> None:

@@ -27,19 +27,6 @@ REPLACE:peasant_labor_rights_reform = {
 	years = 2
 }
 
-REPLACE:righteous_government = {
-	age = age_2_renaissance
-	societal_values = { sinicized_focus }
-	country_modifier = {
-		monthly_legitimacy = 0.1
-		monthly_republican_tradition = 0.1
-		monthly_devotion = 0.1
-		monthly_righteousness = 0.05
-		global_monthly_literacy = 0.004
-	}
-	years = 2
-}
-
 REPLACE:the_education_act = {
 	age = age_4_reformation
 	country_modifier = {

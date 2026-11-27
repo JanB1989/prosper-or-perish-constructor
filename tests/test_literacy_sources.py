@@ -56,11 +56,20 @@ def test_rule_gives_clean_numbers(rule: ls.Rule) -> None:
     cut = {v: rule.new_value("laws", "x", "global_peasants_max_literacy", v)
            for v in ("10", "5", "3", "2", "2.5", "1", "0", "-5")}
     assert cut == {"10": "4", "5": "2", "3": "1", "2": "1", "2.5": "1", "1": None, "0": None, "-5": None}
-    speed = {v: rule.new_value("laws", "x", "global_monthly_literacy", v)
+    # passive sources (advances, religions): the hard cut
+    speed = {v: rule.new_value("religions", "x", "global_monthly_literacy", v)
              for v in ("0.1", "0.05", "0.25", "0.33", "0.03", "0.02", "0.01", "0.005")}
     assert speed == {"0.1": "0.008", "0.05": "0.004", "0.25": "0.02", "0.33": "0.026", "0.03": "0.004",
                      "0.02": "0.004", "0.01": "0.004", "0.005": "0.002"}
-    assert rule.new_value("laws", "x", "global_monthly_literacy", "-0.02") is None
+    # what a country chooses (laws, reforms, privileges, societal values, aspects, schools): a milder cut
+    chosen = {v: rule.new_value("laws", "x", "global_monthly_literacy", v)
+              for v in ("0.1", "0.05", "0.25", "0.33", "0.03", "0.02", "0.01", "0.005")}
+    assert chosen == {"0.1": "0.04", "0.05": "0.02", "0.25": "0.1", "0.33": "0.13", "0.03": "0.01", "0.02": "0.01",
+                      "0.01": None, "0.005": None}
+    assert rule.speed_active_folders == {"societal_values", "laws", "government_reforms", "estate_privileges",
+                                         "religious_aspects", "religious_schools"}
+    for folder in ("laws", "religions"):
+        assert rule.new_value(folder, "x", "global_monthly_literacy", "-0.02") is None
     assert rule.new_value("laws", "x", "global_nobles_max_literacy", "10") is None
     assert rule.new_value("laws", "x", "local_max_literacy", "10") is None
 

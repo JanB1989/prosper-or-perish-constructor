@@ -45,14 +45,46 @@ pp_disaster_civil_war_fits_trigger = {
 	}
 }
 
-# Country scope: $estate$ is the strongest estate besides the crown.
-pp_disaster_strongest_estate_trigger = {
-	country_has_estate = estate_type:$estate$
+# Country scope: this estate is the strongest besides the crown. One trigger per estate: the engine does not put a
+# scripted trigger's argument into a quoted value (tested in game 2026-11-27: "Invalid estate type", the civil war
+# never started).
+pp_disaster_strongest_nobles_trigger = {
+	country_has_estate = estate_type:nobles_estate
 	NOT = {
 		any_estate = {
 			estate_type != estate_type:crown_estate
-			estate_type != estate_type:$estate$
-			power > "root.estate_power(estate_type:$estate$)"
+			estate_type != estate_type:nobles_estate
+			power > "root.estate_power(estate_type:nobles_estate)"
+		}
+	}
+}
+pp_disaster_strongest_clergy_trigger = {
+	country_has_estate = estate_type:clergy_estate
+	NOT = {
+		any_estate = {
+			estate_type != estate_type:crown_estate
+			estate_type != estate_type:clergy_estate
+			power > "root.estate_power(estate_type:clergy_estate)"
+		}
+	}
+}
+pp_disaster_strongest_burghers_trigger = {
+	country_has_estate = estate_type:burghers_estate
+	NOT = {
+		any_estate = {
+			estate_type != estate_type:crown_estate
+			estate_type != estate_type:burghers_estate
+			power > "root.estate_power(estate_type:burghers_estate)"
+		}
+	}
+}
+pp_disaster_strongest_peasants_trigger = {
+	country_has_estate = estate_type:peasants_estate
+	NOT = {
+		any_estate = {
+			estate_type != estate_type:crown_estate
+			estate_type != estate_type:peasants_estate
+			power > "root.estate_power(estate_type:peasants_estate)"
 		}
 	}
 }

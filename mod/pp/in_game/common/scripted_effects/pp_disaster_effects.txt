@@ -163,19 +163,19 @@ pp_disaster_breakaway_effect = {
 # allegiance, start_civil_war with the levies raised at once).
 pp_disaster_civil_war_effect = {
 	if = {
-		limit = { pp_disaster_strongest_estate_trigger = { estate = nobles_estate } }
+		limit = { pp_disaster_strongest_nobles_trigger = yes }
 		create_rebel = { category = estate estate = nobles_estate save_scope_as = pp_breaking_rebel }
 	}
 	else_if = {
-		limit = { pp_disaster_strongest_estate_trigger = { estate = clergy_estate } }
+		limit = { pp_disaster_strongest_clergy_trigger = yes }
 		create_rebel = { category = estate estate = clergy_estate save_scope_as = pp_breaking_rebel }
 	}
 	else_if = {
-		limit = { pp_disaster_strongest_estate_trigger = { estate = burghers_estate } }
+		limit = { pp_disaster_strongest_burghers_trigger = yes }
 		create_rebel = { category = estate estate = burghers_estate save_scope_as = pp_breaking_rebel }
 	}
 	else_if = {
-		limit = { pp_disaster_strongest_estate_trigger = { estate = peasants_estate } }
+		limit = { pp_disaster_strongest_peasants_trigger = yes }
 		create_rebel = { category = estate estate = peasants_estate save_scope_as = pp_breaking_rebel }
 	}
 	if = {

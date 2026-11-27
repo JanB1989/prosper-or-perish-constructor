@@ -939,6 +939,14 @@
   Guild and Burgtor a quarter of vanilla per level (was a third); Town Hall a third of vanilla
   (`production_methods/pp_hansa_maintenance.txt`, hand-written `TRY_REPLACE:hanseatic_town_hall_maintenance`, vanilla
   pin; the Town Hall blueprint is an INJECT and keeps vanilla's method).
+- Tax base share (2026-11-27, Jan, same day, later: "another little buff to the Hansa"): the Kontor's `modifier` block
+  carries `scaled_gold_to_building_owner = 0.01`: each staffed step pays the League 1 % of the host town's tax base
+  (after control) a month, so it earns where its host towns prosper without running a market itself. The engine
+  creates this gold (the host keeps its tax; checked on run b18a10d6), pays it only from `modifier`, and the AI counts
+  it as plain gold, so the AI League wants Kontors in rich towns more. At the start Kontors of run defb89f2 (London,
+  Bruges, Novgorod, Bergen; 7 steps) it is about 1.3 gold a month; a four-step Kontor in a town with a tax base of 100
+  pays 4. Vanilla's banking office takes 2.5 % per office. Not tested in game.
+  (`test_kontor_earns_a_share_of_its_host_towns_tax_base`.)
 - Trade: Kontor merchant capacity per step 2 -> 2.3 (+15 %; market centre 1 -> 1.15), most of the fifth cut on
   2026-11-25 back for the Kontor only.
 - `tests/test_merchant_houses.py` (`test_kontor_cheaper_to_keep_and_more_capacity_than_the_other_houses`,

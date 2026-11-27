@@ -97,10 +97,15 @@ build_time = trade_post_build_time
 # owner: 10 vanilla levels of power, about 9 of capacity (2.3; 2.5 until 2026-11-25, Jan: the houses gave too much
 # merchant capacity; 2 until 2026-11-27, Jan: the League's trade a bit more profitable, the Kontor only), maritime
 # presence x5; host: merchant capacity of its own and settlers drawn to the Hanseatic town
+# scaled_gold_to_building_owner (2026-11-27, Jan: another little buff to the Hansa, it earns where its host towns
+# prosper): each staffed step pays the League 1 % of the host town's tax base a month (vanilla's banking office
+# takes 2.5 % per office). The engine pays it only from this block, creates the gold (the host loses nothing) and
+# pays nothing where control is zero; the AI counts it as plain gold (private notes gold_modifiers_149.md).
 modifier = {
 	merchant_power_from_building = 10
 	building_owner_maritime_presence = 0.5
 	merchant_capacity_from_building = 2.3
+	scaled_gold_to_building_owner = 0.01
 	local_merchant_capacity_modifier = 0.05
 	local_migration_attraction = 0.05
 	local_institution_growth_modifier = 0.02

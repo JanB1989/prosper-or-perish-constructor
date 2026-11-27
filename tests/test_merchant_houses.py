@@ -205,6 +205,17 @@ def test_kontor_cheaper_to_keep_and_more_capacity_than_the_other_houses(building
     assert float(_first(_first(kontor, "modifier"), "merchant_capacity_from_building")) == pytest.approx(2.3)
 
 
+def test_kontor_earns_a_share_of_its_host_towns_tax_base(buildings) -> None:
+    """2026-11-27 (Jan: another little buff to the Hansa): every staffed Kontor step pays the League a share of the
+    host town's tax base. The engine pays this key only from the `modifier` block (a line in `raw_modifier` pays
+    nothing), and the Trade Office and the Fondaco do not carry it."""
+    kontor = buildings["hanseatic_kontor"]
+    assert float(_first(_first(kontor, "modifier"), "scaled_gold_to_building_owner")) == pytest.approx(0.01)
+    assert "scaled_gold_to_building_owner" not in _flat(_first(kontor, "raw_modifier"))
+    for key in ("trade_office", "fondaco"):
+        assert "gold_to_building_owner" not in _flat(buildings[key]), key
+
+
 def test_town_hall_upkeep_a_third_of_vanilla() -> None:
     """2026-11-27 (Jan): the Town Hall gives no merchant capacity and cost the League 2.3 to 3.4 gold a month in run
     defb89f2, so it must not bankrupt a League without Kontors: vanilla's method at a third, same goods."""

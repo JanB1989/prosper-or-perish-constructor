@@ -340,3 +340,11 @@ How blocs break (checked in game 2026-10-13, observer game ac43ec8a with the cha
 - `LOYALTY_FROM_INDEPENDENCE_MOVEMENT_SCALE` 12.5 (vanilla 10) and `_MAX` 25 (vanilla 20): a movement lowers its
   members' loyalty a little more, so it holds together until it fights. Not tested in game.
 
+## Kontors (2026-11-27, Jan)
+
+Vanilla's `disband_kontor` let any winner close every Kontor of the losing Hanseatic League, also those standing in
+neutral third countries, so the landless League lost its whole network in its first lost war. `peace_treaties/
+pp_disband_kontor.txt` (`REPLACE:`, vanilla pin) lets a winner pick only Kontors in towns it or its subjects own
+(`select_trigger` `visible`, `scope:actor` = the taker); its war allies are not counted. Everything else is vanilla.
+Constructor AGENTS.md "Hansa Survival". Not tested in game.
+

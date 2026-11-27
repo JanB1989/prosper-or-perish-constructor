@@ -95,13 +95,14 @@ building:
     	pp_hanseatic_shipwright_guild_maintenance = {
     		icon_type = building_type
     		icon = hanseatic_shipwright_guild
-    		# a third of vanilla's port_building_maintenance per level (2026-11-25, Jan: dear to build, cheap to keep;
-    		# one vanilla level cost the League 0.5 to 1.4 gold a month in run 5d232536, on an income of 13 to 20)
-    		tar = 0.07 # vanilla 0.2
-    		naval_supplies = 0.13 # 0.4
-    		tools = 0.035 # 0.1
-    		lumber = 0.07 # 0.2
-    		stone = 0.035 # 0.1
+    		# a quarter of vanilla's port_building_maintenance per level (2026-11-25, Jan: dear to build, cheap to keep;
+    		# one vanilla level cost the League 0.5 to 1.4 gold a month in run 5d232536, on an income of 13 to 20; a
+    		# third until 2026-11-27, Jan: the League's upkeep a bit lower)
+    		tar = 0.05 # vanilla 0.2
+    		naval_supplies = 0.1 # 0.4
+    		tools = 0.025 # 0.1
+    		lumber = 0.05 # 0.2
+    		stone = 0.025 # 0.1
     		category = building_maintenance
     	}
     }
@@ -119,5 +120,5 @@ localization:
 evaluation:
   allow_rules:
     profit_percent: Upkeep only, the building sells nothing.
-    input_throughput: A third of vanilla's upkeep on a small staff, not a recipe.
+    input_throughput: A quarter of vanilla's upkeep on a small staff, not a recipe.
     output_throughput: Upkeep only, the building sells nothing.

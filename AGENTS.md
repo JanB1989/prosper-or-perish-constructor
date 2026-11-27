@@ -231,7 +231,8 @@
   1.6 / 10, Kontor 2 / 10; capacity was 6 / 2 / 2.5 until 2026-11-25, Jan: the houses gave too much capacity; maritime
   presence x5; upkeep goods x3.5 in renamed unique methods `pp_<building>_...`, x10 until 2026-11-25: dear to build,
   cheap to keep, Jan; at x10 the Hansa's 16 start steps cost 27 gold a month on an income of 15 and it went bankrupt
-  in 1358, run 5023bdba), `market_center_modifier` +50 % capacity
+  in 1358, run 5023bdba; since 2026-11-27 the Kontor alone keeps 2.5 levels of upkeep and 2.3 capacity, about 9 vanilla
+  levels, see "Hansa Survival"), `market_center_modifier` +50 % capacity
   and power; employment = created pop 0.25 (the most a burgher building may employ after the cut,
   `tests/test_building_scaling.py`). Host gains in `modifier`: institution growth, max literacy,
   `local_merchant_capacity_modifier`, migration attraction (Fondaco literacy and institutions, Kontor merchant capacity and
@@ -898,7 +899,7 @@
 - Price: own keys, 513 in the blueprint -> 1,000 gold (`zz_pp_building_price_stockpile.txt`), `increase_per_level_cost`
   1.0 after `[building_scaling]` x0.75, so levels cost 1,000 / 2,000 / 3,000 / ... before the goods and efficiencies
   (the merchant republic reform's foreign build efficiency about halves it for the League).
-- Upkeep: a third of vanilla's per level in the unique methods `pp_<building>_maintenance` (one vanilla guild level
+- Upkeep: a quarter of vanilla's per level since 2026-11-27 (a third before; see "Hansa Survival") in the unique methods `pp_<building>_maintenance` (one vanilla guild level
   cost the League 0.5 to 1.4 gold a month in run 5d232536, a Burgtor level about 1, on an income of 13 to 20). Staff
   250 a level (vanilla 1,000 laborers, 500 soldiers): five guild levels would have taken half of Lübeck's laborers,
   and a `modifier` block gives nothing without workers (the guilds of run 5d232536 stood empty from about 1500, when
@@ -914,6 +915,33 @@
   the AI League builds the levels (500 gold for it is three years of income) and raises ships and regiments (it planned
   a navy of zero in every run); the guilds' workers in towns that run out of laborers.
 - `tests/test_merchant_houses.py` (`test_hansa_buildings_in_member_towns`, `test_hansa_advances_give_levels`).
+
+## Hansa Survival (2026-11-27, Jan)
+
+- Jan: "buff the Hansa a little bit more ... they shouldn't always die ... their trade a bit more profitable ... reduce
+  their special building maintenance by a bit". In observer run defb89f2 the AI League died as in every run: its
+  Kontors went in peace deals (vanilla `disband_kontor` lets any winner close every Kontor of the loser, also those in
+  neutral third countries; three of four start Kontors gone by 1347, Bruges about 1500), all its merchant capacity
+  came from them, and the Town Hall (2.3 to 3.4 gold a month, no capacity) drained 1,760 gold into the bankruptcies of
+  1547 and 1552. Not tested in game, no run yet.
+- Peace deals: `peace_treaties/pp_disband_kontor.txt` is a `REPLACE:` copy of vanilla (vanilla pin) whose
+  `select_trigger` `visible` also needs the Kontor's town to be owned by the taker (`scope:actor`) or one of its
+  subjects. War allies of the taker are not included: the select trigger's documented scopes are actor, recipient and
+  the targets, `scope:war` is not among them. Cost, antagonism, potential, effect and AI desire stay vanilla. Player
+  text `disband_kontor_desc` (moved to the replace folder by `loc_replace.py`).
+- Members' opinion: `subject_opinions = 50` in the `overlord_modifier` of `pp_hanseatic_member.txt` (the opinion an
+  overlord's subjects have of it; vanilla's Livonian reform gives 25), so a member can reach the opinion of 100 that
+  the guild and the Burgtor need (`need_good_relation`). No pulse or event. The members' opinion of the League was
+  never measured (not in the save tables); whether the modifier counts once or per member is not known.
+- Upkeep: Kontor 2.5 vanilla levels per step (was 3.5 like the Trade Office and Fondaco, which keep it); Shipwright
+  Guild and Burgtor a quarter of vanilla per level (was a third); Town Hall a third of vanilla
+  (`production_methods/pp_hansa_maintenance.txt`, hand-written `TRY_REPLACE:hanseatic_town_hall_maintenance`, vanilla
+  pin; the Town Hall blueprint is an INJECT and keeps vanilla's method).
+- Trade: Kontor merchant capacity per step 2 -> 2.3 (+15 %; market centre 1 -> 1.15), most of the fifth cut on
+  2026-11-25 back for the Kontor only.
+- `tests/test_merchant_houses.py` (`test_kontor_cheaper_to_keep_and_more_capacity_than_the_other_houses`,
+  `test_town_hall_upkeep_a_third_of_vanilla`, `test_members_think_well_of_the_league`,
+  `test_kontors_demanded_only_in_the_winners_towns`).
 
 ## Vanilla Replace Pins (2026-11-02, Jan)
 

@@ -1,5 +1,5 @@
 ﻿# Hanseatic membership the AI can offer (2026-11-25, Jan; AGENTS.md "Hansa Members"): vanilla's hanseatic_member copied
-# whole, PP's lines are marked "PP". Not tested in game.
+# whole, PP's lines are marked "PP". Not tested in game. 2026-11-27: members' opinion of the League (overlord_modifier).
 REPLACE:hanseatic_member = { 
 	subject_pays = hanseatic_member_cost
 	color = subject_hanseatic_member
@@ -54,6 +54,10 @@ REPLACE:hanseatic_member = {
 	
 	overlord_modifier = {
 		global_merchant_capacity_modifier = 0.025
+		# PP (2026-11-27, Jan): members think well of the League, so its Shipwright Guild and Burgtor (need_good_relation:
+		# the engine skips a host below opinion 100) can be built in their towns and loyalty rises with opinion. The
+		# overlord's subject_opinions is the opinion its subjects have of it; vanilla's Livonian reform gives 25.
+		subject_opinions = 50 # PP
 	}
 
 	subject_modifier = {

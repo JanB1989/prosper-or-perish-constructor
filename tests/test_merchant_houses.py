@@ -158,13 +158,14 @@ def test_hansa_buildings_in_member_towns(key) -> None:
     assert float(_first(body, "increase_per_level_cost")) == pytest.approx(1.0)
     prices = (MOD / "in_game/common/prices/zz_pp_building_price_stockpile.txt").read_text(encoding="utf-8-sig")
     assert re.search(rf"^TRY_INJECT:pp_{key}_price = \{{ gold = 1000 \}}", prices, re.M)
-    # cheap to keep: about a third of vanilla's upkeep per level, on a quarter or half of its staff
+    # cheap to keep: about a quarter of vanilla's upkeep per level (a third until 2026-11-27, Jan: the League's upkeep
+    # a bit lower), on a quarter or half of its staff
     vanilla = LoadOrderConfig.load(ROOT / "constructor.load_order.toml").vanilla_root
     upkeep = parse_file(vanilla / "game/in_game/common/production_methods/unsorted_building_inputs.txt")
     old = _numbers(next(e.value for e in upkeep.entries if e.key == vanilla_method))
     own = _numbers(_first(_first(body, "unique_production_methods"), f"pp_{key}_maintenance"))
     assert set(own) == set(old)
-    assert all(0.3 <= own[good] / old[good] <= 0.36 for good in old), own
+    assert all(0.24 <= own[good] / old[good] <= 0.26 for good in old), own
     assert float(_first(body, "employment_size")) == float(_first(body, "pop_size_created")) == 0.25
     # only the League builds it, only in a member's town; membership gates new levels and never removes a building
     assert "allows_hanseatic_federation_buildings" in _text(_first(body, "country_potential"))
@@ -181,6 +182,70 @@ def test_hansa_buildings_in_member_towns(key) -> None:
         assert modifier.get(line, 0) > 0, line
     assert "scope:builder.monthly_income_total" in _text(_first(body, "ai_construct_weight"))
     assert float(_first(_first(body, "raw_modifier"), "free_building_levels")) == 1
+
+
+def _vanilla_method(key: str) -> dict[str, float]:
+    vanilla = LoadOrderConfig.load(ROOT / "constructor.load_order.toml").vanilla_root
+    upkeep = parse_file(vanilla / "game/in_game/common/production_methods/unsorted_building_inputs.txt")
+    return _numbers(next(e.value for e in upkeep.entries if e.key == key))
+
+
+def test_kontor_cheaper_to_keep_and_more_capacity_than_the_other_houses(buildings) -> None:
+    """2026-11-27 (Jan: the Hansa should not always die, its trade a bit more profitable, its upkeep a bit lower): the
+    Kontor keeps 2.5 vanilla levels of upkeep per step where the Trade Office and the Fondaco keep 3.5, and its merchant
+    capacity per step is 2.3 (2 until then)."""
+    for key, vanilla_method, levels in (("hanseatic_kontor", "kontor_maintenance", 2.5),
+                                         ("fondaco", "fondaco_maintenance", 3.5)):
+        old = _vanilla_method(vanilla_method)
+        own = _numbers(_first(_first(buildings[key], "unique_production_methods"), f"pp_{key}_maintenance"))
+        assert set(own) == set(old), key
+        for good in old:
+            assert own[good] == pytest.approx(levels * old[good], rel=0.02), (key, good)
+    kontor = buildings["hanseatic_kontor"]
+    assert float(_first(_first(kontor, "modifier"), "merchant_capacity_from_building")) == pytest.approx(2.3)
+
+
+def test_town_hall_upkeep_a_third_of_vanilla() -> None:
+    """2026-11-27 (Jan): the Town Hall gives no merchant capacity and cost the League 2.3 to 3.4 gold a month in run
+    defb89f2, so it must not bankrupt a League without Kontors: vanilla's method at a third, same goods."""
+    doc = parse_file(MOD / "in_game/common/production_methods/pp_hansa_maintenance.txt")
+    blocks = [e.value for e in doc.entries if e.key == "TRY_REPLACE:hanseatic_town_hall_maintenance"]
+    assert len(blocks) == 1
+    own = _numbers(blocks[0])
+    old = _vanilla_method("hanseatic_town_hall_maintenance")
+    assert set(own) == set(old)
+    assert all(0.32 <= own[good] / old[good] <= 0.34 for good in old), own
+    assert str(_first(blocks[0], "category")) == "building_maintenance"
+
+
+def test_members_think_well_of_the_league() -> None:
+    """2026-11-27 (Jan): the League's members get a lasting opinion of it through the subject type (the overlord's
+    subject_opinions), so the guild and the Burgtor (need_good_relation, opinion 100) can be built in their towns."""
+    doc = parse_file(MOD / "in_game/common/subject_types/pp_hanseatic_member.txt")
+    body = next(e.value for e in doc.entries if e.key == "REPLACE:hanseatic_member")
+    assert float(_first(_first(body, "overlord_modifier"), "subject_opinions")) == pytest.approx(50)
+    assert _first(body, "on_monthly") is None
+
+
+def test_kontors_demanded_only_in_the_winners_towns() -> None:
+    """2026-11-27 (Jan): a winner may close only the Kontors standing in towns it or its subjects own, never those in
+    neutral third countries; the rest of vanilla's disband_kontor is kept."""
+    doc = parse_file(MOD / "in_game/common/peace_treaties/pp_disband_kontor.txt")
+    blocks = [e.value for e in doc.entries if e.key == "REPLACE:disband_kontor"]
+    assert len(blocks) == 1
+    select = _first(blocks[0], "select_trigger")
+    assert str(_first(select, "source")) == "recipient"
+    visible = _flat(_first(select, "visible"))
+    assert "building_type = building_type:hanseatic_kontor" in visible and "owner = scope:recipient" in visible
+    # the parser does not keep `?=` as one operator, so the winner's side is read from the file's text
+    raw = re.sub(r"#[^\n]*", "", (MOD / "in_game/common/peace_treaties/pp_disband_kontor.txt").read_text(encoding="utf-8-sig"))
+    visible_raw = re.sub(r"\s+", " ", raw.split("visible = {", 1)[1].split("allow = {", 1)[0])
+    assert re.search(r"owner \?= \{ OR = \{ this = scope:actor is_subject_of = scope:actor \} \}", visible_raw), visible_raw
+    vanilla = LoadOrderConfig.load(ROOT / "constructor.load_order.toml").vanilla_root
+    old = next(e.value for e in parse_file(vanilla / "game/in_game/common/peace_treaties/disband_kontor.txt").entries
+               if e.key == "disband_kontor")
+    for key in ("cost", "potential", "effect", "ai_desire", "base_antagonism", "antagonism_type"):
+        assert _flat(_first(blocks[0], key)) == _flat(_first(old, key)), key
 
 
 def test_hansa_advances_give_levels() -> None:

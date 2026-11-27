@@ -105,12 +105,13 @@ building:
 
     build_time = trade_post_build_time
 
-    # owner: 10 vanilla levels of power, 8 of capacity (2; 2.5 until 2026-11-25, Jan: the houses gave too much merchant
-    # capacity), maritime presence x5; host: merchant capacity of its own and settlers drawn to the Hanseatic town
+    # owner: 10 vanilla levels of power, about 9 of capacity (2.3; 2.5 until 2026-11-25, Jan: the houses gave too much
+    # merchant capacity; 2 until 2026-11-27, Jan: the League's trade a bit more profitable, the Kontor only), maritime
+    # presence x5; host: merchant capacity of its own and settlers drawn to the Hanseatic town
     modifier = {
     	merchant_power_from_building = 10
     	building_owner_maritime_presence = 0.5
-    	merchant_capacity_from_building = 2
+    	merchant_capacity_from_building = 2.3
     	local_merchant_capacity_modifier = 0.05
     	local_migration_attraction = 0.05
     	local_institution_growth_modifier = 0.02
@@ -119,7 +120,7 @@ building:
 
     # the house in the market centre itself: +50 % capacity and power
     market_center_modifier = {
-    	merchant_capacity_from_building = 1
+    	merchant_capacity_from_building = 1.15
     	merchant_power_from_building = 5
     }
 
@@ -154,11 +155,12 @@ building:
     	pp_hanseatic_kontor_maintenance = {
     		icon_type = building_type
     		icon = hanseatic_kontor
-    		# upkeep of 3.5 vanilla levels per step (2026-11-25, Jan: dear to build, cheap to keep; at 10 levels the
-    		# Hansa's start houses cost more than it earned and it went bankrupt in 1358, run 5023bdba)
-    		lumber = 0.35 # vanilla 0.1 per level (kontor_maintenance)
-    		tools = 0.35 # 0.1
-    		paper = 0.875 # 0.25
+    		# upkeep of 2.5 vanilla levels per step (2026-11-25, Jan: dear to build, cheap to keep; at 10 levels the
+    		# Hansa's start houses cost more than it earned and it went bankrupt in 1358, run 5023bdba; 3.5 like the
+    		# Trade Office and Fondaco until 2026-11-27, Jan: the League's upkeep a bit lower, it died in every run)
+    		lumber = 0.25 # vanilla 0.1 per level (kontor_maintenance)
+    		tools = 0.25 # 0.1
+    		paper = 0.625 # 0.25
     		category = building_maintenance
     	}
     }

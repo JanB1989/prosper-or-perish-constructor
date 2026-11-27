@@ -1,0 +1,71 @@
+﻿# Disband Kontor (2026-11-27, Jan: the Hansa should not always die; AGENTS.md "Hansa Members"): vanilla's disband_kontor
+# copied whole, PP's lines are marked "PP". Vanilla let any winner close every Kontor of the loser, also those standing in
+# neutral third countries, so the landless League lost its whole network in its first lost war (observer runs 5023bdba,
+# 5d232536, defb89f2). Now a winner may close only the Kontors in towns it or its subjects own. Not tested in game.
+# Port it on game updates (vanilla pin, tests/vanilla_replace_pins.csv).
+REPLACE:disband_kontor = {
+
+	cost = {
+		add = {
+			desc = "DIPLOREASON_BASE"
+			value = "scope:target.location_peace_cost(scope:loser|scope:winner)"
+			multiply = 0.75
+		}
+	}
+
+	base_antagonism = 1
+	antagonism_type = antagonism_disband_kontor
+
+	potential = {
+		scope:war = {
+			or = {
+				has_casus_belli = no
+				casus_belli = {
+					is_trade_cb = no
+				}
+			}
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = location
+		source = recipient
+		target_flag = target
+        visible = {
+			location_building_level = {
+				building_type = building_type:hanseatic_kontor
+				value > 0
+				owner = scope:recipient
+			}
+			# PP: only a Kontor in a town of the winner (scope:actor = the taker) or of one of its subjects
+			owner ?= {
+				OR = {
+					this = scope:actor
+					is_subject_of = scope:actor
+				}
+			}
+		}
+    }
+
+	allow = {
+	}
+
+	effect = {
+		scope:target = {
+			if = {
+				limit = {
+					location_building_level = {
+						building_type = building_type:hanseatic_kontor
+						value > 0
+						owner = scope:recipient
+					}
+				}
+				destroy_building_forcefully = "building(building_type:hanseatic_kontor|scope:recipient)"
+			}
+		}
+	}
+
+	ai_desire = {
+		value = 10
+	}
+}

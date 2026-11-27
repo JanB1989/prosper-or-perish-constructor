@@ -1,0 +1,18 @@
+﻿# Hanseatic Town Hall upkeep (2026-11-27, Jan: the League's upkeep a bit lower, it died in every run; AGENTS.md "Hansa
+# Military Buildings"): vanilla's hanseatic_town_hall_maintenance at a third per level. Hand-written: the Town Hall is an
+# INJECT blueprint and keeps vanilla's method name. In observer run defb89f2 the Town Hall cost the League 2.3 to 3.4
+# gold a month and gave no merchant capacity; once its Kontors were gone it drained 1,760 gold into two bankruptcies.
+# Not tested in game. Port it on game updates (vanilla pin, tests/vanilla_replace_pins.csv).
+TRY_REPLACE:hanseatic_town_hall_maintenance = {
+	icon_type = building_type
+	icon = hanseatic_town_hall
+	lumber = 0.033 # vanilla 0.1
+	tools = 0.033 # 0.1
+	glass = 0.11 # 0.33
+	fine_cloth = 0.167 # 0.5
+	books = 0.033 # 0.1
+	goods_gold = 0.033 # 0.1
+	marble = 0.033 # 0.1
+
+	category = building_maintenance
+}

@@ -171,7 +171,9 @@ def test_each_copy_is_vanilla_with_the_rule_added(game) -> None:
         # the steps, from the disaster's own on_monthly
         assert _body(ctext, cin["on_monthly"][0]) == _body(vtext, vin["on_monthly"][0]) + monthly, key
         # vanilla's on_end unchanged (the reward stays), the pain goes
-        assert _body(ctext, cin["on_end"][0]) == f"{head}{vbody} pp_disaster_pain_clear_effect = {{ {t} }}", key
+        # (a disaster without a relaxed end has no relief variable: it clears only its step modifiers)
+        clear = "pp_disaster_pain_clear_effect" if head else "pp_disaster_pain_clear_modifiers_effect"
+        assert _body(ctext, cin["on_end"][0]) == f"{head}{vbody} {clear} = {{ {t} }}", key
 
 
 def test_relaxed_end_is_vanilla_with_a_lower_stability_bar(game) -> None:

@@ -80,7 +80,7 @@ revolution_disaster = {
 	on_end = {
 		trigger_event_non_silently = revolution_disaster.3
 		# PP: growing pain
-		pp_disaster_pain_clear_effect = { type = revolution_disaster }
+		pp_disaster_pain_clear_modifiers_effect = { type = revolution_disaster }
 	}
 	
 	on_monthly = {

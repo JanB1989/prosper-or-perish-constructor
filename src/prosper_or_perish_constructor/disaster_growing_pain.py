@@ -558,8 +558,10 @@ def rewrite(name: str, text: str) -> tuple[str, str]:
                 f"\t\t\tlimit = {{ NOT = {{ AND = {{{vanilla_end}}} }} }}{nl}"
                 f"\t\t\tpp_disaster_restart_block_effect = {{ {t} }}{nl}"
                 f"\t\t}}")
+    # without a relaxed end there is no relief variable to remove (in-game 2026-11-27: "used but is never set")
+    clear = "pp_disaster_pain_clear_effect" if relief else "pp_disaster_pain_clear_modifiers_effect"
     edits.append((on_end.open + 1, on_end.close, (
-        f"{head}{body}\t{MARK}{nl}\t\tpp_disaster_pain_clear_effect = {{ {t} }}{nl}\t")))
+        f"{head}{body}\t{MARK}{nl}\t\t{clear} = {{ {t} }}{nl}\t")))
     out = text
     for start, end, new in sorted(edits, key=lambda e: e[0], reverse=True):
         out = out[:start] + new + out[end:]

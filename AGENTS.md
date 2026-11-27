@@ -782,6 +782,37 @@
   production efficiency line could only go in a replace. Clergy literacy teaches (`local_monthly_literacy`), peasant
   literacy brings peasant estate power. Not tested in game; icons are vanilla placeholders.
 
+### Education pyramid and institution spread on estate literacy (2026-11-27, Jan; not tested in game)
+
+- Pyramid: the Trade School needs a Village School in the town (`allow`). The Library has levels by rank
+  (`pp_library_max_level`: 1, town 2, city and megalopolis 3); a University needs two Library levels in its location
+  (`pp_library_levels >= 2` in `allow`, read only when it is built). The **Academy of Sciences**
+  (`pp_academy_of_sciences`, `building_types/pp_school_buildings.txt`) stands in the capital: one level per three
+  Universities of the country, at most ten (`pp_academy_university_levels`, a walk over the owner's locations that runs
+  for the capital only), research speed per staffed level through `capital_country_modifier`, gone when the capital
+  moves (`remove_if`), unlocked by `pp_academy_of_sciences_advance` (Scientific Revolution tree). It uses
+  `location_potential = { counts_as_capital = yes }` like vanilla's Chancery (a capital building should go with the
+  capital). The University's AI weight (`pp_university_ai_weight`) gets a push once the owner holds that advance; the
+  engine values the Academy itself. Icons are vanilla placeholders.
+- Game start: `[worldbuilder.start.foundations]` (constructor.toml, `start_simulation.lay_foundations`) gives every
+  location with a start University two Library levels before the invalid rows are dropped, and the advance lock leaves
+  those rows alone (Gladzor). All 23 historic Universities stay.
+- Spread: `script_values/pp_institution_spread.txt` replaces vanilla's channel values. They read
+  `pp_institution_literacy` = (0.8 x literacy of nobles, clergy and burghers by size + 0.2 x literacy of all people;
+  all people where the estate numbers read nothing) x the rank factor (rural 0.1, town 0.6, city and megalopolis 1.5);
+  the trade value (market centres) reads it without the rank factor. Vanilla's coefficients are kept. The estate
+  numbers are hidden location modifiers `local_pp_<estate>_literacy` (pop type `literacy_impact`) and
+  `local_pp_<estate>_share` (`pop_percentage_impact`); nobles and burghers are full `REPLACE:` copies for it now.
+  After the owner embraced, every institution reads `pp_institution_control_spread` (reading x 0.006, at most 0.3 a
+  month x control; vanilla flat 2): `in_game/common/institution/*.txt` are same-path copies of vanilla with that one
+  line changed (`tests/test_institution_spread.py` fails when a game update changes them; copy them anew then).
+- Numbers from a forward simulation on run b18a10d6 (`pp_workspace/literacy/rank_spread_sim`, set R5): market centres
+  and towns and cities about twice as fast as before, rural land as slow or slower; years to half a region's people
+  W Europe about 73 (92 before), China about 207 (338). Risks: Asia catches up faster (its upper classes read as well as
+  Europe's), small rural realms without a town may never reach the embrace threshold, and if the estate modifiers read
+  nothing in game the rule falls back to all people x the rank factor (rural then far slower than before). Check a
+  location's modifiers ("Literacy of the Nobles") in game.
+
 ### Literacy sources (the cut, same day)
 
 - Jan: literacy is earned by local buildings, so the country-wide sources are cut. `config/literacy_sources.toml` +

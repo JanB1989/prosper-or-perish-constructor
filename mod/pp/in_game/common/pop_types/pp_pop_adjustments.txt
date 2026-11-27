@@ -1,7 +1,45 @@
 ﻿# Cranked up food consumption base by 50% across the board, except for peasants (10% up)
-TRY_INJECT:nobles = {
-	pop_food_consumption = 25 # 25.0 # 20.0
-	promotion_factor = 0.3
+# Institution spread on estate literacy (2026-11-27, Jan): nobles and burghers are full copies of vanilla too, and
+# each of the three estates writes two hidden location numbers: its literacy (literacy_impact, applied at the
+# type's literacy in the location, 0..1) and its share of the people (pop_percentage_impact). The spread values
+# read them (script_values/pp_institution_spread.txt). PP lines are marked "PP".
+REPLACE:nobles = {
+	color = pop_nobles
+	power_per_pop = 25
+
+	editor = 0.05
+	
+	assimilation_conversion_factor = 0.05
+
+	pop_food_consumption = 25 # PP (vanilla 20.0)
+
+	city_graphics = 1.0
+	grow = yes
+	
+	
+	dhimmi_estate = { is_dhimmi = yes }
+	tribes_estate = { is_gaelic_clans = yes }
+	cossacks_estate = { is_cossacks = yes }
+	nobles_estate = {}
+	
+	
+	promotion_factor = 0.3 # PP (vanilla 0.1)
+	
+	upper = yes
+	has_cap = yes
+	
+	literacy_impact = {
+		local_cultural_tradition = 0.2
+		local_monthly_control = 0.01
+		local_pp_nobles_literacy = 1 # PP: institution spread reads it
+	}
+
+	pop_percentage_impact = { # PP (vanilla has none)
+		local_pp_nobles_share = 1
+	}
+
+	#ai_local_pop_cap_desire = { value = 0 } #root = location
+
 }
 # Literacy rework (2026-11-25, Jan): clergy, laborers and peasants are full copies of vanilla (00_default.txt) with
 # PP's lines marked "PP", so their literacy_impact blocks are exactly what is written here. An injected literacy_impact
@@ -37,14 +75,52 @@ REPLACE:clergy = {
 		local_pop_conversion_speed_modifier = 0.25
 		local_pop_assimilation_speed_modifier = 0.25
 		local_monthly_literacy = 0.02 # PP 2026-11-25: literate clergy teach (at full clergy literacy)
+		local_pp_clergy_literacy = 1 # PP 2026-11-27: institution spread reads it
+	}
+
+	pop_percentage_impact = { # PP 2026-11-27 (vanilla has none)
+		local_pp_clergy_share = 1
 	}
 }
-TRY_INJECT:burghers = {
-	pop_food_consumption = 6.5 # 2026-10-14 (Jan: upper classes ate 31 % of the food by 1837); 10 2026-10-05..14; 8 2026-10-03..05 # 4.0
-	promotion_factor = 0.25
-	pop_percentage_impact = {
-		local_pop_promotion_speed = 0.001
+REPLACE:burghers = {
+	color = pop_burghers
+	power_per_pop = 4
+
+	editor = 0.1
+	
+	grow = yes
+	
+	assimilation_conversion_factor = 0.1
+	
+	pop_food_consumption = 6.5 # PP (vanilla 4.0); 2026-10-14 (Jan: upper classes ate 31 % of the food by 1837)
+
+	city_graphics = 1.0
+	
+	dhimmi_estate = { is_dhimmi = yes }
+	tribes_estate = { is_gaelic_clans = yes }
+	cossacks_estate = { is_cossacks = yes }
+	burghers_estate = {}
+	
+	promotion_factor = 0.25 # PP (vanilla 0.5)
+	
+	migration_factor = 0.5
+	
+	upper = yes
+	has_cap = yes
+	counts_towards_market_language = yes
+	
+	literacy_impact = {
+		local_monthly_development_modifier = 0.25
+		local_trades_per_burgher = 0.5
+		local_building_establishment_speed = 0.25
+		local_pp_burghers_literacy = 1 # PP: institution spread reads it
 	}
+
+	pop_percentage_impact = { # PP (vanilla has none)
+		local_pop_promotion_speed = 0.001
+		local_pp_burghers_share = 1
+	}
+
 }
 # Laborers and soldiers are lower class, as in vanilla (2026-11-03, Jan, players saw odd cultures). They carried upper = yes
 # from the first version of this file: every laborer the game creates at game start then took the owner's primary culture and

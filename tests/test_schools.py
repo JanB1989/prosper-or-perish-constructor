@@ -37,6 +37,22 @@ def _values(block: CList) -> dict[str, object]:
     return {e.key: e.value for e in block.entries}
 
 
+def _text(path: Path, key: str) -> str:
+    """The block ``key = { ... }`` of a script file as one line: comments stripped, whitespace collapsed."""
+    import re
+
+    raw = re.sub(r"#.*", "", path.read_text(encoding="utf-8-sig"))
+    start = re.search(rf"(?m)^{re.escape(key)} = \{{", raw)
+    assert start, key
+    depth, i = 0, start.end() - 1
+    while True:
+        depth += {"{": 1, "}": -1}.get(raw[i], 0)
+        i += 1
+        if depth == 0:
+            break
+    return " ".join(raw[start.end() - 1:i].split())
+
+
 def _num(value: object) -> float:
     return float(str(value))
 
@@ -186,6 +202,9 @@ def test_library_and_university(vanilla) -> None:
         "local_clergy_max_literacy": 5, "local_monthly_literacy": 0.02, "local_institution_growth_modifier": 0.25,
     }
     assert "pp_library_ai_weight" in str(_values(culture["REPLACE:library"])["ai_construct_weight"])
+    # education pyramid (2026-11-27): Library levels by rank, two of them allow a University
+    assert _values(culture["REPLACE:library"])["max_levels"] == "pp_library_max_level"
+    assert "pp_library_levels >= 2" in _text(CULTURE, "REPLACE:university")
     university = _values(_values(culture["REPLACE:university"])["modifier"])
     assert _num(university["local_monthly_literacy"]) == 0.02
 
@@ -202,9 +221,18 @@ def test_pop_literacy_impact(vanilla) -> None:
     pops = _blocks(POPS)
     impact = {k.split(":", 1)[1]: {e.key: _num(e.value) for e in _values(v)["literacy_impact"].entries}
               for k, v in pops.items() if k.startswith("REPLACE:")}
-    assert set(impact) == {"clergy", "laborers", "peasants"}
+    assert set(impact) == {"clergy", "laborers", "peasants", "nobles", "burghers"}
     assert impact["clergy"] == {"local_pop_conversion_speed_modifier": 0.25,
-                                "local_pop_assimilation_speed_modifier": 0.25, "local_monthly_literacy": 0.02}
+                                "local_pop_assimilation_speed_modifier": 0.25, "local_monthly_literacy": 0.02,
+                                "local_pp_clergy_literacy": 1}
+    # nobles and burghers keep vanilla's lines and add the number institution spread reads (2026-11-27)
+    assert impact["nobles"] == {"local_cultural_tradition": 0.2, "local_monthly_control": 0.01,
+                                "local_pp_nobles_literacy": 1}
+    assert impact["burghers"] == {"local_monthly_development_modifier": 0.25, "local_trades_per_burgher": 0.5,
+                                  "local_building_establishment_speed": 0.25, "local_pp_burghers_literacy": 1}
+    for estate in ("nobles", "clergy", "burghers"):
+        share = _values(_values(pops[f"REPLACE:{estate}"])["pop_percentage_impact"])
+        assert _num(share[f"local_pp_{estate}_share"]) == 1
     # no production efficiency line of vanilla; literate laborers organise and move up a little faster (Jan)
     assert impact["laborers"] == {"local_max_rgo_size_modifier": 0.05, "local_peasants_estate_power": 0.25,
                                   "local_pop_promotion_speed_modifier": 0.25}
@@ -241,3 +269,34 @@ def test_average_literacy_research() -> None:
     assert re.search(r"\bresearch_speed_modifier = 1\.2\b", block)
     assert "monthly_towards_innovative = societal_value_monthly_move" in block and "skill_of_new_artists = 0.1" in block
 
+
+
+
+def test_education_pyramid(schools) -> None:
+    """Village School -> Trade School; Libraries -> University -> Academy of Sciences in the capital (2026-11-27)."""
+    assert "allow = { has_building = building_type:pp_village_school }" in _text(SCHOOLS, "pp_trade_school")
+    academy = _values(schools["pp_academy_of_sciences"])
+    assert academy["max_levels"] == "pp_academy_of_sciences_max_level"
+    assert {k: _num(v) for k, v in _values(academy["capital_country_modifier"]).items()} == {
+        "research_speed_modifier": 0.02}
+    allow = _text(SCHOOLS, "pp_academy_of_sciences")
+    assert "is_capital = yes" in allow and "country_has_no_other_copy_of_building" in allow
+    assert "remove_if = { is_no_longer_capital = yes }" in allow
+    # staffed (the capital block is scaled by staffing) and never closed
+    assert academy["pop_type"] == "clergy" and academy["can_close"] is False and academy["ai_forbid_shutdown"] is True
+    assert [str(i) for i in academy["possible_production_methods"].items] == ["pp_academy_of_sciences_maintenance"]
+    values = _blocks(VALUES)
+    levels = _text(VALUES, "pp_academy_university_levels")
+    assert "has_building = building_type:university" in levels
+    cap = _values(values["pp_academy_university_levels"])
+    assert _num(cap["divide"]) == 3 and _num(cap["max"]) == 10 and cap["floor"] is True
+    advance = _values(_blocks(ADVANCES)["pp_academy_of_sciences_advance"])
+    assert advance["requires"] == "scientific_revolution_advance"
+    assert advance["unlock_building"] == "pp_academy_of_sciences"
+    text = LOC.read_text(encoding="utf-8-sig")
+    for key in ("pp_academy_of_sciences", "pp_academy_of_sciences_desc", "pp_academy_of_sciences_maintenance",
+                "pp_academy_of_sciences_maintenance_desc", "pp_academy_of_sciences_advance",
+                "pp_academy_of_sciences_advance_desc", "PP_BUILDING_LEVEL_LOCATION_RANK",
+                "PP_BUILDING_LEVEL_UNIVERSITIES"):
+        assert f"  {key}:" in text, key
+    assert (MOD / "in_game/gfx/interface/icons/buildings/pp_academy_of_sciences.dds").is_file()

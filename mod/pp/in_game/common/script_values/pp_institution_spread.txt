@@ -1,0 +1,253 @@
+﻿# Prosper or Perish - institution spread on estate literacy (2026-11-27, Jan; hand-written).
+# Jan: an institution reaches the trade centres quickly and the literate cities around them; everything else is a slog,
+# and what counts is the literacy of the upper classes of the place, hardly the commoners'.
+# Every spread channel is a script value read in the RECEIVING location. Vanilla multiplies them by
+# average_location_literacy (all people). Here they read pp_institution_literacy instead:
+#   reading = 0.8 x literacy of nobles, clergy and burghers (by size) + 0.2 x literacy of all people, 0..100
+#             (a place without upper classes, or where the estate numbers read nothing: all people)
+#   x the rank factor (rural settlement / town / city and megalopolis)
+# The estate numbers are the hidden location modifiers local_pp_<estate>_literacy / _share written by the pop types
+# (pop_types/pp_pop_adjustments.txt): six modifier reads, no walk over pops.
+# Trade (market centres only) reads the reading without the rank factor. After the owner embraced, the control channel
+# (vanilla: flat 2 a month x control) is pp_institution_control_spread (institution/*.txt, same-path copies): the
+# reading without the rank factor x 0.006, at most 0.3, so a country that embraced still needs a generation or more to
+# carry the institution into its countryside.
+# Numbers (rank factors 0.1 / 0.6 / 1.5, the control channel) from the forward simulation on run b18a10d6, set R5
+# (pp_workspace/literacy/rank_spread_sim): market centres and towns and cities about twice as fast as before, rural
+# land as slow or slower. Not tested in game.
+# The channel coefficients below are vanilla's. Tests: tests/test_institution_spread.py.
+
+# Location scope. Share of the people who are nobles, clergy or burghers, 0..1.
+pp_upper_class_share = {
+	value = modifier:local_pp_nobles_share
+	add = modifier:local_pp_clergy_share
+	add = modifier:local_pp_burghers_share
+}
+
+# Location scope. Literate upper-class people as a share of all people (literacy x share per estate), 0..1.
+pp_upper_class_literate = {
+	value = 0
+	add = {
+		value = modifier:local_pp_nobles_literacy
+		multiply = modifier:local_pp_nobles_share
+	}
+	add = {
+		value = modifier:local_pp_clergy_literacy
+		multiply = modifier:local_pp_clergy_share
+	}
+	add = {
+		value = modifier:local_pp_burghers_literacy
+		multiply = modifier:local_pp_burghers_share
+	}
+}
+
+# Location scope, 0..100: what an institution reads of the place's literacy.
+pp_institution_reading = {
+	value = average_location_literacy
+	if = {
+		limit = { pp_upper_class_literate > 0 }
+		multiply = 0.2
+		add = {
+			value = pp_upper_class_literate
+			divide = pp_upper_class_share
+			multiply = 80
+		}
+	}
+}
+
+# Location scope: how readily a place of this rank takes up an institution from its neighbours and its market.
+pp_institution_rank_factor = {
+	value = 0.1
+	if = {
+		limit = { location_rank ?= location_rank:town }
+		value = 0.6
+	}
+	else_if = {
+		limit = {
+			OR = {
+				location_rank ?= location_rank:city
+				location_rank ?= location_rank:megalopolis
+			}
+		}
+		value = 1.5
+	}
+}
+
+# Location scope: the reading x the rank factor. Every channel but trade reads this.
+pp_institution_literacy = {
+	value = pp_institution_reading
+	multiply = pp_institution_rank_factor
+}
+
+# Location scope: monthly progress per point of control once the owner has embraced the institution (vanilla 2).
+pp_institution_control_spread = {
+	value = pp_institution_reading
+	multiply = 0.006
+	max = 0.3
+}
+
+#########################################
+# Early factors
+#########################################
+REPLACE:institution_trade_spread_value_early = {
+	value = development
+	multiply = 0.03
+	add = {
+		value = pp_institution_reading
+		multiply = 0.1
+	}
+
+}
+
+REPLACE:institution_base_spread_from_friendly_neighbor_with_early = {
+	value = pp_institution_literacy
+	multiply = 0.050
+}
+
+REPLACE:institution_base_spread_from_neighbor_with_early = {
+	value = pp_institution_literacy
+	multiply = 0.010
+
+}
+
+
+REPLACE:institution_spread_from_was_possible_spawn_early = {
+	value = pp_institution_literacy
+	if = {
+		limit = {
+			has_game_rule = institution_spawn_random_city
+		}
+		multiply = 0
+	}
+	if = {
+		limit = {
+			has_game_rule = institution_could_have_spawned_spread_disabled
+		}
+		multiply = 0
+	}
+	multiply = 0.2
+}
+
+
+REPLACE:institution_total_embraced_to_capital_early = {
+	value = pp_institution_literacy
+	multiply = 0.05
+
+}
+
+REPLACE:institution_spread_to_market_member_early = {
+	value = pp_institution_literacy
+	multiply = 0.03
+
+}
+
+
+#########################################
+# Mid factors
+#########################################
+REPLACE:institution_trade_spread_value_mid = {
+	value = development
+	multiply = 0.01
+	add = {
+		value = pp_institution_reading
+		multiply = 0.025
+	}
+
+}
+
+REPLACE:institution_base_spread_from_friendly_neighbor_with_mid = {
+	value = pp_institution_literacy
+	multiply = 0.0375
+}
+
+REPLACE:institution_base_spread_from_neighbor_with_mid = {
+	value = pp_institution_literacy
+	multiply = 0.005
+
+}
+
+
+REPLACE:institution_spread_from_was_possible_spawn_mid = {
+	value = pp_institution_literacy
+	if = {
+		limit = {
+			has_game_rule = institution_spawn_random_city
+		}
+		multiply = 0
+	}
+	if = {
+		limit = {
+			has_game_rule = institution_could_have_spawned_spread_disabled
+		}
+		multiply = 0
+	}
+	multiply = 0.05
+}
+
+
+REPLACE:institution_total_embraced_to_capital_mid = {
+	value = pp_institution_literacy
+	multiply = 0.025
+
+}
+
+REPLACE:institution_spread_to_market_member_mid = {
+	value = pp_institution_literacy
+	multiply = 0.012
+
+}
+
+
+#########################################
+# Late factors
+#########################################
+REPLACE:institution_trade_spread_value_late = {
+	value = development
+	multiply = 0.004
+	add = {
+		value = pp_institution_reading
+		multiply = 0.01
+	}
+}
+
+REPLACE:institution_base_spread_from_friendly_neighbor_with_late = {
+	value = pp_institution_literacy
+	multiply = 0.025
+}
+
+REPLACE:institution_base_spread_from_neighbor_with_late = {
+	value = pp_institution_literacy
+	multiply = 0.002
+
+}
+
+
+REPLACE:institution_spread_from_was_possible_spawn_late = {
+	value = pp_institution_literacy
+	if = {
+		limit = {
+			has_game_rule = institution_spawn_random_city
+		}
+		multiply = 0
+	}
+	if = {
+		limit = {
+			has_game_rule = institution_could_have_spawned_spread_disabled
+		}
+		multiply = 0
+	}
+	multiply = 0.025
+}
+
+
+REPLACE:institution_total_embraced_to_capital_late = {
+	value = pp_institution_literacy
+	multiply = 0.012
+
+}
+
+REPLACE:institution_spread_to_market_member_late = {
+	value = pp_institution_literacy
+	multiply = 0.006
+
+}

@@ -4,7 +4,7 @@ REPLACE:library = {
 	audio_tier = 2
 	is_foreign = no
 	pop_type = clergy
-	max_levels = 1
+	max_levels = pp_library_max_level # education pyramid 2026-11-27 (Jan): 1, town 2, city 3; two allow a University
 
 	category = cultural_category
 	employment_size = cultural_employment
@@ -77,10 +77,10 @@ REPLACE:university = {
 
 	build_time = large_cultural_building_time
 
-	# AI: the Library's promotion term (pp_promotion_signal), a bit weaker; universities stand in towns and up only.
+	# AI: pp_university_ai_weight (script_values/pp_school_values.txt): the promotion term, plus a push once the owner
+	# can build the Academy of Sciences.
 	ai_construct_weight = {
-		value = pp_promotion_signal
-		multiply = 150
+		value = pp_university_ai_weight
 		divide = { value = scope:owner.monthly_income_total add = 10 }
 	}
 
@@ -89,6 +89,9 @@ REPLACE:university = {
 	allow = {
 		is_core_of = owner
 		owner = { modifier:university_construction_blocked = no }
+		# education pyramid 2026-11-27 (Jan): a University grows out of a place's Libraries. allow is read when it is
+		# built, never for a standing one, so the Universities of the game start stay.
+		pp_library_levels >= 2
 	}
 
 	modifier = {

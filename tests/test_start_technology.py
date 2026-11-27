@@ -210,9 +210,18 @@ def test_building_table_is_current(ladder: st.Ladder, advances: dict[str, st.Adv
 def test_no_start_building_above_its_owners_group(groups: list[st.CountryGroup], vanilla: Path) -> None:
     level = {g.tag: g.level for g in groups}
     needs = st.load_building_table(REPO)
+    rows = [r for r in st.setup_building_rows(vanilla, MOD) if r[3] > 0]
+    # what a historic building stands on stays with it ([worldbuilder.start.foundations], 2026-11-27: the two Library
+    # levels under a start University, e.g. Gladzor's under an owner without the Library advance)
+    import tomllib
+
+    foundations = tomllib.loads((REPO / "constructor.toml").read_text(encoding="utf-8"))["worldbuilder"]["start"].get(
+        "foundations", {})
+    stands = {(building, location) for _tag, building, location, _n in rows}
+    kept = {(dep, location) for building, location in stands for dep in foundations.get(building, {})}
     bad = [f"{tag} {building} at {location} ({needs[building][0]} {needs[building][1]} > group {level.get(tag)})"
-           for tag, building, location, n in st.setup_building_rows(vanilla, MOD)
-           if n > 0 and building in needs and needs[building][1] > level.get(tag, 0)]
+           for tag, building, location, n in rows
+           if building in needs and needs[building][1] > level.get(tag, 0) and (building, location) not in kept]
     assert not bad, f"{len(bad)} start buildings above their owner's group (rebuild: ppc build): {bad[:20]}"
 
 

@@ -26965,7 +26965,7 @@ pp_cplan_room_legume_rotations = {
 	subtract = "location_building_level(building_type:legume_rotations)"
 }
 pp_cplan_room_library = {
-	value = 1
+	value = pp_library_max_level
 	subtract = "location_building_level(building_type:library)"
 }
 pp_cplan_room_library_cordoba = {
@@ -27556,6 +27556,10 @@ pp_cplan_room_pounamou_carver = {
 pp_cplan_room_pound_lock_canal_infrastructure = {
 	value = 1
 	subtract = "location_building_level(building_type:pound_lock_canal_infrastructure)"
+}
+pp_cplan_room_pp_academy_of_sciences = {
+	value = pp_academy_of_sciences_max_level
+	subtract = "location_building_level(building_type:pp_academy_of_sciences)"
 }
 pp_cplan_room_pp_banjara_tanda = {
 	value = pp_banjara_tanda_logistics_max_level

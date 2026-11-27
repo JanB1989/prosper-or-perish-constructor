@@ -711,6 +711,12 @@ max_cookshop_levels_per_location = 6
 laborer_conversion_share = 0.5        # share of a location's peasants that may become the Cookshops' laborers
 # No setup exceptions (2026-10-23, Jan): a vanilla setup building that fails its building's rank, location_potential or
 # allow is removed from the setup (start_simulation drop_invalid); no building rule names start locations.
+[worldbuilder.start.foundations]
+# Education pyramid (2026-11-27, Jan): a building of the game start brings the buildings it is built upon, so the
+# start still holds only what could be built there. The 23 historic Universities need two Library levels in their
+# place (the University's allow): building = { needed building = levels }. Laid before the invalid rows are dropped.
+university = { library = 2 }
+
 [worldbuilder.start.merchant_houses]
 # Merchant houses (trade_office, fondaco, hanseatic_kontor; 2026-11-24, Jan; AGENTS.md "Merchant Houses"): the whole
 # start list ("TAG:building:location:step"); every vanilla house row is replaced by it. Each house must stand on a site

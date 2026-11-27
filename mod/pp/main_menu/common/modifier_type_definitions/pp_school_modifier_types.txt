@@ -9,3 +9,61 @@ pp_village_school_levels = {
 		category = country
 	}
 }
+
+# Institution spread on estate literacy (2026-11-27): per estate, its literacy in the location (0..1, from the pop
+# type's literacy_impact) and its share of the location's people (0..1, pop_percentage_impact). Read by
+# script_values/pp_institution_spread.txt.
+
+local_pp_nobles_literacy = {
+	color = good
+	percent = yes
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}
+
+local_pp_nobles_share = {
+	color = good
+	percent = yes
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}
+
+local_pp_clergy_literacy = {
+	color = good
+	percent = yes
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}
+
+local_pp_clergy_share = {
+	color = good
+	percent = yes
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}
+
+local_pp_burghers_literacy = {
+	color = good
+	percent = yes
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}
+
+local_pp_burghers_share = {
+	color = good
+	percent = yes
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}

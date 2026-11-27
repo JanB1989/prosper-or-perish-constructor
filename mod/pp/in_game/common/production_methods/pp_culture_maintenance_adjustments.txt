@@ -27,3 +27,14 @@ pp_trade_school_maintenance = {
 	manual_labor = 0.5
 	category = building_maintenance
 }
+
+# Academy of Sciences (education pyramid 2026-11-27): upkeep per level. Provisional.
+pp_academy_of_sciences_maintenance = {
+	icon_type = building_type
+	icon = pp_academy_of_sciences
+	books = 0.5
+	paper = 0.5
+	glass = 0.5 # lenses and vessels
+	tools = 0.2 # instruments
+	category = building_maintenance
+}

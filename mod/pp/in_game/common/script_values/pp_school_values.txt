@@ -90,3 +90,76 @@ pp_library_ai_weight = {
 	add = 20
 	max = 150
 }
+
+# Education pyramid (2026-11-27, Jan): Libraries -> University -> Academy of Sciences.
+# Library: 1 level anywhere, +1 in a town, +2 in a city or megalopolis.
+pp_library_max_level = {
+	add = {
+		desc = "BUILDING_LEVEL_BASE"
+		value = 1
+	}
+	add = {
+		desc = "PP_BUILDING_LEVEL_LOCATION_RANK"
+		value = this.pp_library_rank_level
+	}
+}
+
+pp_library_rank_level = {
+	value = 0
+	if = {
+		limit = { location_rank ?= location_rank:town }
+		value = 1
+	}
+	else_if = {
+		limit = {
+			OR = {
+				location_rank ?= location_rank:city
+				location_rank ?= location_rank:megalopolis
+			}
+		}
+		value = 2
+	}
+}
+
+# Location scope: the Library levels standing here. The University needs two (its allow).
+pp_library_levels = {
+	value = 0
+	if = {
+		limit = { has_building = building_type:library }
+		add = "location_building_level(building_type:library)"
+	}
+}
+
+# Academy of Sciences (capital only): one level per three Universities in the owner's locations, at most ten.
+# The walk over the owner's locations runs only for the capital (the building's location_potential).
+pp_academy_of_sciences_max_level = {
+	add = {
+		desc = "PP_BUILDING_LEVEL_UNIVERSITIES"
+		value = this.pp_academy_university_levels
+	}
+}
+
+pp_academy_university_levels = {
+	value = 0
+	scope:owner ?= {
+		every_owned_location = {
+			limit = { has_building = building_type:university }
+			add = 1
+		}
+	}
+	divide = 3
+	floor = yes
+	max = 10
+}
+
+# AI: the University's weight (location scope; divided by the owner's income there). The promotion term it had, plus a
+# flat push once the owner can build the Academy of Sciences: the engine values the Academy's research highly but never
+# builds a University in order to raise the Academy's cap.
+pp_university_ai_weight = {
+	value = pp_promotion_signal
+	multiply = 150
+	if = {
+		limit = { scope:owner ?= { has_advance = pp_academy_of_sciences_advance } }
+		add = 100
+	}
+}

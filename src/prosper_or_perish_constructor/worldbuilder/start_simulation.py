@@ -998,6 +998,26 @@ class Simulation:
             return False
         return all(self.rules.test(node, ctx) for _gate, node in placement_gates(body))
 
+    def lay_foundations(self, raw):
+        """Give every location that holds a setup building the buildings it is built upon
+        (``[worldbuilder.start.foundations]``: building = { needed building = levels }), e.g. two Library levels under
+        a historic University. Runs before ``drop_invalid``, so the row passes its own allow. The advance lock
+        (``drop_locked``) leaves these rows alone: the historic building stood, so did what it stood on (Gladzor's
+        University under an owner without the Library advance). Returns the rows added."""
+        added = []
+        kept = self.__dict__.setdefault("foundation_rows", set())
+        for key, needs in sorted((raw or {}).items()):
+            for tag in sorted(self.locations):
+                if not self.counts[tag].get(key, 0):
+                    continue
+                for dep, level in sorted(needs.items()):
+                    have = self.counts[tag].get(dep, 0)
+                    kept.add((tag, dep))
+                    if have < int(level):
+                        self.counts[tag][dep] = int(level)
+                        added.append({"location": tag, "building": dep, "before": have, "after": int(level), "for": key})
+        return added
+
     def drop_invalid(self):
         """Remove setup rows that break the building's own rules: a location rank the building may not stand in, a
         failing location_potential (vanilla tar kilns on land the World Builder made unwooded) or a failing allow
@@ -1036,6 +1056,8 @@ class Simulation:
         for tag in sorted(self.locations):
             for key, n in sorted(self.counts[tag].items()):
                 need = self.tech_locked(tag, key) if n else None
+                if need and (tag, key) in self.__dict__.get("foundation_rows", ()):
+                    need = None
                 if need:
                     removed.append({"tag": self.owners[tag], "building": key, "location": tag, "levels": n,
                                     "advance": need[0], "advance_level": need[1], "group": need[2], "source": "setup"})
@@ -2305,6 +2327,7 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
 
     if (Path(repo) / start_technology.CONFIG).is_file():
         sim.tech_gate = start_technology.StartBuildingGate.load(repo, vanilla_root, mod_root)
+    sim.lay_foundations((cfg.raw.get("start") or {}).get("foundations"))
     sim.drop_invalid()
     sim.drop_locked()
     sim.clamp()

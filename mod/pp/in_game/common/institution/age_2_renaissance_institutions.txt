@@ -1,0 +1,200 @@
+﻿renaissance = {
+	age = age_2_renaissance 
+	
+	location = florence	#fallback for when no valid
+	
+	can_spawn = {
+		trigger_if = {
+			limit = {
+				NOT = { has_game_rule = institution_spawn_fixed_historical }
+				has_dlc = "d008_fate_of_the_phoenix"
+				OR = {
+					c:BYZ ?= { has_variable = won_fate_of_the_phoenix_disaster_variable }
+					c:ROM ?= { has_variable = won_fate_of_the_phoenix_disaster_variable }
+				}
+			}
+			is_capital = yes
+			root.owner = {
+				custom_tooltip = {
+					text = won_fate_of_the_phoenix_disaster_tt
+					has_variable = won_fate_of_the_phoenix_disaster_variable
+				}
+			}
+		}
+		trigger_else_if = {
+			limit = {
+				NOT = { has_game_rule = institution_spawn_fixed_historical }
+				has_dlc = "d008_fate_of_the_phoenix"
+				OR = {
+					c:BYZ ?= { any_active_disaster = { disaster_type = disaster_type:fate_of_the_phoenix } }
+					c:ROM ?= { any_active_disaster = { disaster_type = disaster_type:fate_of_the_phoenix } }
+				}
+			}
+			OR = {
+				AND = {
+					is_capital = yes
+					root.owner = {
+						custom_tooltip = {
+							text = fop_renaissance_latin_merchants_tt
+							has_variable = grant_latin_merchants_privileges_variable
+						}
+					}
+				}
+				AND = {
+					custom_tooltip = {
+						text = constantinople_to_spawn_renaissance_tt
+						has_variable = center_of_renaissance_variable
+					}
+				}
+				AND = {
+					has_game_rule = institution_spawn_random_city
+					OR = {
+						location_rank = location_rank:city
+						location_rank = location_rank:megalopolis
+					}
+				}
+				AND = {
+					has_game_rule = institution_spawn_plausible
+					renaissance_plausible_location = yes
+				}
+			}
+		}
+		trigger_else = {
+			OR = {
+				AND = {
+					has_game_rule = institution_spawn_random_city
+					OR = {
+						location_rank = location_rank:city
+						location_rank = location_rank:megalopolis
+					}
+				}
+				AND = {
+					has_game_rule = institution_spawn_fixed_historical
+					this = location:florence
+				}
+				AND = {
+					has_game_rule = institution_spawn_plausible
+					renaissance_plausible_location = yes
+				}
+			}
+		}
+	}
+	
+
+	promote_chance = {
+		add = {
+			value = average_location_literacy
+		}
+		add = {
+			value = num_pop_type:burghers
+			multiply = 10
+		}
+	}
+	
+	#hardcoded spreads for optimisations..
+	spread_from_friendly_coast_border_location = institution_base_spread_from_friendly_neighbor_with_early
+	spread_from_any_coast_border_location = institution_base_spread_from_neighbor_with_early
+	spread_from_any_import = institution_trade_spread_value_early
+	spread_from_any_export = institution_trade_spread_value_early
+	spread_from_was_possible_spawn = institution_spread_from_was_possible_spawn_early
+	spread_scale_on_control_if_owner_embraced = pp_institution_control_spread # PP (vanilla 2)
+	spread_embraced_to_capital = institution_total_embraced_to_capital_early
+	spread_to_market_member = institution_spread_to_market_member_early
+	spread_to_market_center = institution_spread_to_market_center
+}
+
+banking = {
+	age = age_2_renaissance 
+	
+	
+	location = genoa	#fallback for when no valid
+	
+	can_spawn = {
+		OR = {
+			AND = {
+				has_game_rule = institution_spawn_fixed_historical
+				this = location:genoa
+			}
+			AND = {
+				has_game_rule = institution_spawn_random_city
+				OR = {
+					location_rank = location_rank:city
+					location_rank = location_rank:megalopolis
+				}
+			}
+			AND = {
+				has_game_rule = institution_spawn_plausible
+				banking_plausible_location = yes
+			}
+		}
+	}
+
+	promote_chance = {
+		add = {
+			value = average_location_literacy
+		}
+		add = {
+			value = num_pop_type:burghers
+			multiply = 10
+		}
+	}
+	
+	#hardcoded spreads for optimisations..
+	spread_from_friendly_coast_border_location = institution_base_spread_from_friendly_neighbor_with_early
+	spread_from_any_coast_border_location = institution_base_spread_from_neighbor_with_early
+	spread_from_any_import = institution_trade_spread_value_early
+	spread_from_any_export = institution_trade_spread_value_early
+	spread_from_was_possible_spawn = institution_spread_from_was_possible_spawn_early
+	spread_scale_on_control_if_owner_embraced = pp_institution_control_spread # PP (vanilla 2)
+	spread_embraced_to_capital = institution_total_embraced_to_capital_early
+	spread_to_market_member = institution_spread_to_market_member_early
+	spread_to_market_center = institution_spread_to_market_center	
+}
+
+
+professional_armies = {
+	age = age_2_renaissance 
+	
+	location = paris	#fallback for when no valid
+	
+	can_spawn = {
+		OR = {
+			AND = {
+				has_game_rule = institution_spawn_random_city
+				OR = {
+					location_rank = location_rank:city
+					location_rank = location_rank:megalopolis
+				}
+			}
+			AND = {
+				has_game_rule = institution_spawn_fixed_historical
+				this = location:paris
+			}
+			AND = {
+				has_game_rule = institution_spawn_plausible
+				professional_armies_plausible_location = yes
+			}
+		}
+	}
+	promote_chance = {
+		add = {
+			value = average_location_literacy
+		}
+		add = {
+			value = modifier:local_manpower
+			multiply = 2
+		}
+
+	}
+	
+	#hardcoded spreads for optimisations..
+	spread_from_friendly_coast_border_location = institution_base_spread_from_friendly_neighbor_with_early
+	spread_from_any_coast_border_location = institution_base_spread_from_neighbor_with_early
+	spread_from_any_import = institution_trade_spread_value_early
+	spread_from_any_export = institution_trade_spread_value_early
+	spread_from_was_possible_spawn = institution_spread_from_was_possible_spawn_early
+	spread_scale_on_control_if_owner_embraced = pp_institution_control_spread # PP (vanilla 2)
+	spread_embraced_to_capital = institution_total_embraced_to_capital_early
+	spread_to_market_member = institution_spread_to_market_member_early
+	spread_to_market_center = institution_spread_to_market_center	
+}

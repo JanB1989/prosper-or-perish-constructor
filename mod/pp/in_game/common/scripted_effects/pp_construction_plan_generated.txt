@@ -1104,7 +1104,7 @@ pp_cplan_btype_data = {
 		save_temporary_scope_value_as = { name = pp_cplan_pf value = pp_cplan_cd_tur_kodjabashi_office_construction } save_temporary_scope_value_as = { name = pp_cplan_gok value = 1 } if = { limit = { NOT = { pp_cplan_goods_here_tur_kodjabashi_office_construction = yes } } save_temporary_scope_value_as = { name = pp_cplan_gok value = 0 } }
 	}
 	else_if = {
-		limit = { OR = { scope:pp_cplan_btype = building_type:gymnasium_building scope:pp_cplan_btype = building_type:jesuit_college scope:pp_cplan_btype = building_type:segovia_artillery_academy scope:pp_cplan_btype = building_type:university scope:pp_cplan_btype = building_type:usa_academy_of_arts_and_sciences scope:pp_cplan_btype = building_type:usa_philosophical_society } }
+		limit = { OR = { scope:pp_cplan_btype = building_type:gymnasium_building scope:pp_cplan_btype = building_type:jesuit_college scope:pp_cplan_btype = building_type:pp_academy_of_sciences scope:pp_cplan_btype = building_type:segovia_artillery_academy scope:pp_cplan_btype = building_type:university scope:pp_cplan_btype = building_type:usa_academy_of_arts_and_sciences scope:pp_cplan_btype = building_type:usa_philosophical_society } }
 		save_temporary_scope_value_as = { name = pp_cplan_pf value = pp_cplan_cd_university_construction } save_temporary_scope_value_as = { name = pp_cplan_gok value = 1 } if = { limit = { NOT = { pp_cplan_goods_here_university_construction = yes } } save_temporary_scope_value_as = { name = pp_cplan_gok value = 0 } }
 	}
 	else_if = {

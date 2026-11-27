@@ -4887,6 +4887,8 @@ pp_advance_research_cost = {
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:power_projection_advance_6 value = 29.75 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:powerful_statues value = 40 }
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:powerful_statues value = 27.2 }
+			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:pp_academy_of_sciences_advance value = 40 }
+			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:pp_academy_of_sciences_advance value = 27.2 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:pp_amber_diggings value = 36.25 }
 			add_to_global_variable_map = { name = pp_advance_cost_past key = advance_type:pp_amber_diggings value = 24.65 }
 			add_to_global_variable_map = { name = pp_advance_cost key = advance_type:pp_camel_stud value = 36.25 }

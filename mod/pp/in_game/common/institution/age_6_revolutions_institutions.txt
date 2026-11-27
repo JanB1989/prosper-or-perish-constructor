@@ -1,0 +1,163 @@
+﻿enlightenment = {
+	age = age_6_revolutions
+	
+	
+	location = paris	#fallback for when no valid
+	
+	can_spawn = {
+		OR = {
+			AND = {
+				has_game_rule = institution_spawn_random_city
+				OR = {
+					location_rank = location_rank:city
+					location_rank = location_rank:megalopolis
+				}
+			}
+			AND = {
+				has_game_rule = institution_spawn_fixed_historical
+				this = location:paris
+			}
+			AND = {
+				has_game_rule = institution_spawn_plausible
+				enlightenment_plausible_location = yes
+			}
+		}
+		
+	}
+
+	
+	promote_chance = {
+		add = {
+			value = average_location_literacy
+		}
+
+		add = {
+			value = num_pop_type:burghers
+			multiply = 10
+		}
+		add = {
+			value = num_pop_type:nobles
+			multiply = 10
+		}
+	}
+	
+	#hardcoded spreads for optimisations..
+	spread_from_friendly_coast_border_location = institution_base_spread_from_friendly_neighbor_with_late
+	spread_from_any_coast_border_location = institution_base_spread_from_neighbor_with_late
+	spread_from_any_import = institution_trade_spread_value_late
+	spread_from_any_export = institution_trade_spread_value_late
+	
+	spread_from_was_possible_spawn = institution_spread_from_was_possible_spawn_late
+	spread_scale_on_control_if_owner_embraced = pp_institution_control_spread # PP (vanilla 2)
+	spread_embraced_to_capital = institution_total_embraced_to_capital_late
+	spread_to_market_member = institution_spread_to_market_member_late
+	spread_to_market_center = institution_spread_to_market_center
+
+}
+
+industrialization = {
+	age = age_6_revolutions 
+	
+	location = blackburn	#fallback for when no valid
+	
+	can_spawn = {
+		OR = {
+			AND = {
+				has_game_rule = institution_spawn_random_city
+				OR = {
+					location_rank = location_rank:city
+					location_rank = location_rank:megalopolis
+				}
+			}
+			AND = {
+				has_game_rule = institution_spawn_fixed_historical
+				this = location:blackburn
+			}
+			AND = {
+				has_game_rule = institution_spawn_plausible
+				industrialization_plausible_location = yes
+			}
+		}
+
+	}
+	
+	promote_chance = {
+		add = {
+			value = average_location_literacy
+		}
+
+		add = {
+			value = owner.total_population
+		}
+	}
+	
+		#hardcoded spreads for optimisations..
+	spread_from_friendly_coast_border_location = institution_base_spread_from_friendly_neighbor_with_late
+	spread_from_any_coast_border_location = institution_base_spread_from_neighbor_with_late
+	spread_from_any_import = institution_trade_spread_value_late
+	spread_from_any_export = institution_trade_spread_value_late
+	spread_from_was_possible_spawn = institution_spread_from_was_possible_spawn_late
+	spread_scale_on_control_if_owner_embraced = pp_institution_control_spread # PP (vanilla 2)
+	spread_embraced_to_capital = institution_total_embraced_to_capital_late
+	spread_to_market_member = institution_spread_to_market_member_late
+	spread_to_market_center = institution_spread_to_market_center
+
+}
+
+levee_en_masse = {
+	age = age_6_revolutions
+	
+	
+	location = paris	#fallback for when no valid
+	
+	can_spawn = {
+		OR = {
+			AND = {
+				has_game_rule = institution_spawn_random_city
+				OR = {
+					location_rank = location_rank:city
+					location_rank = location_rank:megalopolis
+				}
+			}
+			AND = {
+				has_game_rule = institution_spawn_fixed_historical
+				this = location:paris
+			}
+			AND = {
+				has_game_rule = institution_spawn_plausible
+				levee_en_masse_plausible_location = yes
+			}
+		}
+		
+	}
+	
+	promote_chance = {
+		add = {
+			value = average_location_literacy
+		}
+
+		add = num_pop_type:peasants
+	}
+		#hardcoded spreads for optimisations..
+	spread_from_friendly_coast_border_location = institution_base_spread_from_friendly_neighbor_with_late
+	spread_from_any_coast_border_location = institution_base_spread_from_neighbor_with_late
+	spread_from_any_import = institution_trade_spread_value_late
+	spread_from_any_export = institution_trade_spread_value_late
+	spread_from_was_possible_spawn = institution_spread_from_was_possible_spawn_late
+	spread_scale_on_control_if_owner_embraced = pp_institution_control_spread # PP (vanilla 2)
+	spread_embraced_to_capital = institution_total_embraced_to_capital_late
+	spread_to_market_member = institution_spread_to_market_member_late
+	spread_to_market_center = institution_spread_to_market_center
+
+}
+
+
+
+
+
+
+
+
+
+
+

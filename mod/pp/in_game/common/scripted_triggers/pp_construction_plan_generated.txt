@@ -886,6 +886,7 @@ pp_cplan_no_room = {
 		AND = { scope:pp_cplan_btype = building_type:pottery_workshop pp_cplan_room_pottery_workshop < 1 }
 		AND = { scope:pp_cplan_btype = building_type:pounamou_carver pp_cplan_room_pounamou_carver < 1 }
 		AND = { scope:pp_cplan_btype = building_type:pound_lock_canal_infrastructure pp_cplan_room_pound_lock_canal_infrastructure < 1 }
+		AND = { scope:pp_cplan_btype = building_type:pp_academy_of_sciences pp_cplan_room_pp_academy_of_sciences < 1 }
 		AND = { scope:pp_cplan_btype = building_type:pp_banjara_tanda pp_cplan_room_pp_banjara_tanda < 1 }
 		AND = { scope:pp_cplan_btype = building_type:pp_caravanserai pp_cplan_room_pp_caravanserai < 1 }
 		AND = { scope:pp_cplan_btype = building_type:pp_llama_caravan_post pp_cplan_room_pp_llama_caravan_post < 1 }

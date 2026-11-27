@@ -1,0 +1,178 @@
+﻿manufactories = {
+	age = age_5_absolutism 
+	
+	location = derby	#fallback for when no valid
+	
+	can_spawn = {
+		OR = {
+			AND = {
+				has_game_rule = institution_spawn_random_city
+				OR = {
+					location_rank = location_rank:city
+					location_rank = location_rank:megalopolis
+				}
+			}
+			AND = {
+				has_game_rule = institution_spawn_fixed_historical
+				this = location:derby
+			}
+			AND = {
+				has_game_rule = institution_spawn_plausible
+				manufactories_plausible_location = yes
+			}
+		}
+		
+	}
+	
+	
+	promote_chance = {
+		add = { #Any higher level production building - some of these require you to have embraced it already, but not all.
+			if = {
+				limit = {
+					NOR = {
+						has_building = building_type:cannon_foundry
+						has_building = building_type:firearms_manufactory
+						has_building = building_type:weapon_manufactory
+						has_building = building_type:fine_cloth_manufactory
+						has_building = building_type:fine_cloth_manufactory
+						has_building = building_type:cloth_manufactory
+						has_building = building_type:paper_guild
+						has_building = building_type:printing_press_shop
+						has_building = building_type:glassworks
+						has_building = building_type:perfumery
+						has_building = building_type:porcelain_manufactory
+						has_building = building_type:tannery_manufactory
+						has_building = building_type:putrefaction_works
+						has_building = building_type:naval_supplies_manufactory
+					}
+				}
+				value = num_pop_type:burghers
+				multiply = 10
+			}
+			else = { #Ie we have one of the higher level production buildings
+				value = num_pop_type:burghers
+				multiply = 25
+			}
+		}
+	}
+
+
+	#hardcoded spreads for optimisations..
+	spread_from_friendly_coast_border_location = institution_base_spread_from_friendly_neighbor_with_late
+	spread_from_any_coast_border_location = institution_base_spread_from_neighbor_with_late
+	spread_from_any_import = institution_trade_spread_value_late
+	spread_from_any_export = institution_trade_spread_value_late
+	spread_from_was_possible_spawn = institution_spread_from_was_possible_spawn_late
+	spread_scale_on_control_if_owner_embraced = pp_institution_control_spread # PP (vanilla 2)
+	spread_embraced_to_capital = institution_total_embraced_to_capital_late
+	spread_to_market_member = institution_spread_to_market_member_late
+	spread_to_market_center = institution_spread_to_market_center	
+	
+}
+
+scientific_revolution = {
+	age = age_5_absolutism 
+	
+	
+	location = cambridge	#fallback for when no valid
+	
+	can_spawn = {
+		OR = {
+			AND = {
+				has_game_rule = institution_spawn_random_city
+				OR = {
+					location_rank = location_rank:city
+					location_rank = location_rank:megalopolis
+				}
+			}
+			AND = {
+				has_game_rule = institution_spawn_fixed_historical
+				this = location:cambridge
+			}
+			AND = {
+				has_game_rule = institution_spawn_plausible
+				scientific_revolution_plausible_location = yes
+			}
+		}
+		
+	}
+	
+
+	
+	promote_chance = {
+		add = {
+			value = num_pop_type:clergy
+			multiply = 10
+		}
+		add = {
+			value = num_pop_type:burghers
+			multiply = 10
+		}
+	}
+	
+	#hardcoded spreads for optimisations..
+	spread_from_friendly_coast_border_location = institution_base_spread_from_friendly_neighbor_with_late
+	spread_from_any_coast_border_location = institution_base_spread_from_neighbor_with_late
+	spread_from_any_import = institution_trade_spread_value_late
+	spread_from_any_export = institution_trade_spread_value_late
+	spread_from_was_possible_spawn = institution_spread_from_was_possible_spawn_late
+	spread_scale_on_control_if_owner_embraced = pp_institution_control_spread # PP (vanilla 2)
+	spread_embraced_to_capital = institution_total_embraced_to_capital_late
+	spread_to_market_member = institution_spread_to_market_member_late
+	spread_to_market_center = institution_spread_to_market_center	
+}
+
+military_revolution = {
+	age = age_5_absolutism 
+	
+	
+	location = stockholm	#fallback for when no valid
+	
+	can_spawn = {
+		OR = {
+			AND = {
+				has_game_rule = institution_spawn_random_city
+				OR = {
+					location_rank = location_rank:city
+					location_rank = location_rank:megalopolis
+				}
+			}
+			AND = {
+				has_game_rule = institution_spawn_fixed_historical
+				this = location:stockholm
+			}
+			AND = {
+				has_game_rule = institution_spawn_plausible
+				military_revolution_plausible_location = yes
+			}
+		}
+		
+	}
+
+
+	promote_chance = {
+		add = {
+			value = modifier:local_manpower
+			multiply = 25
+		}
+	}
+	
+	#hardcoded spreads for optimisations..
+	spread_from_friendly_coast_border_location = institution_base_spread_from_friendly_neighbor_with_late
+	spread_from_any_coast_border_location = institution_base_spread_from_neighbor_with_late
+	spread_from_any_import = institution_trade_spread_value_late
+	spread_from_any_export = institution_trade_spread_value_late
+	spread_from_was_possible_spawn = institution_spread_from_was_possible_spawn_late
+	spread_scale_on_control_if_owner_embraced = pp_institution_control_spread # PP (vanilla 2)
+	spread_embraced_to_capital = institution_total_embraced_to_capital_late
+	spread_to_market_member = institution_spread_to_market_member_late
+	spread_to_market_center = institution_spread_to_market_center	
+}
+
+
+
+
+
+
+
+

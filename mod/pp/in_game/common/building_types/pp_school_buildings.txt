@@ -71,6 +71,11 @@ pp_trade_school = {
 
 	build_time = cultural_building_time
 
+	# education pyramid 2026-11-27 (Jan): the burghers' school stands on the commoners' school.
+	allow = {
+		has_building = building_type:pp_village_school
+	}
+
 	ai_construct_weight = {
 		value = pp_trade_school_ai_weight
 		divide = { value = scope:owner.monthly_income_total add = 10 }
@@ -87,6 +92,65 @@ pp_trade_school = {
 	}
 
 	construction_demand = library_construction
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
+}
+
+# Academy of Sciences (education pyramid 2026-11-27, Jan): the top of the pyramid, in the capital. One level per three
+# Universities of the country (pp_academy_of_sciences_max_level, at most ten); each staffed level gives the whole
+# country research speed (capital_country_modifier: applied for the current capital, scaled by level, staffing and
+# upkeep bought). Unlocked by the advance pp_academy_of_sciences_advance (Scientific Revolution tree).
+# location_potential like vanilla's Chancery: a capital building, shown only in the capital, gone when the capital
+# moves (remove_if); the project rule against owner gates in location_potential is about buildings that should survive
+# an owner change, this one should not. The engine values research speed in a capital block very highly, so it carries
+# no AI weight. No pp_education_priority tag: staffed like any other building.
+pp_academy_of_sciences = {
+	audio_tier = 3
+	is_foreign = no
+	pop_type = clergy
+	max_levels = pp_academy_of_sciences_max_level
+
+	category = cultural_category
+	employment_size = religious_building_employment
+
+	AI_ignore_available_worker_flag = yes
+
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	expensive = yes
+
+	forbidden_for_estates = yes
+
+	build_time = large_cultural_building_time
+
+	location_potential = {
+		counts_as_capital = yes
+	}
+
+	allow = {
+		is_capital = yes
+		country_has_no_other_copy_of_building = { type = pp_academy_of_sciences }
+	}
+
+	remove_if = {
+		is_no_longer_capital = yes
+	}
+
+	modifier = {
+		local_cultural_influence = 0.25
+	}
+
+	capital_country_modifier = {
+		research_speed_modifier = 0.02
+	}
+
+	possible_production_methods = {
+		pp_academy_of_sciences_maintenance
+	}
+
+	construction_demand = university_construction
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
 }

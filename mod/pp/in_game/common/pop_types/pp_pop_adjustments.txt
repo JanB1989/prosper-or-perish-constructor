@@ -119,6 +119,9 @@ REPLACE:burghers = {
 	pop_percentage_impact = { # PP (vanilla has none)
 		local_pop_promotion_speed = 0.001
 		local_pp_burghers_share = 1
+		# PP 2026-11-27 (Jan): every burgher takes 4 burgher room (share x the location's people = the number of
+		# burghers); a burgher building gives it back per filled job. [job_room] room_per_head, job_room.py.
+		local_burghers_desired_pop_scaled = -4
 	}
 
 }

@@ -38,6 +38,7 @@ REPLACE:urban_parliament_seat = {
 		}
 	}
 	modifier = {
+		local_burghers_desired_pop = 0.4 # job_room
 		local_burghers_estate_power = 0.25
 		has_parliament_seat = yes
 	}
@@ -109,6 +110,9 @@ REPLACE:chancery = {
 		}
 	}
 	construction_demand = pp_early_capital_jewelry_construction
+	modifier = {
+		local_burghers_desired_pop = 0.4 # job_room
+	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
 }
@@ -136,6 +140,7 @@ REPLACE:provincial_chancery = {
 		}
 	}
 	modifier = {
+		local_burghers_desired_pop = 0.4 # job_room
 		local_burghers_max_literacy = 2.5
 		local_nobles_max_literacy = 2.5
 		local_pop_join_rebel_threshold = 0.05
@@ -487,6 +492,7 @@ REPLACE:funduq = {
 	}
 	build_time = market_build_time
 	modifier = {
+		local_burghers_desired_pop = 0.4 # job_room
 		local_merchant_power = 0.5
 		local_merchant_capacity = 1
 		local_trades_per_burgher = 0.1
@@ -802,6 +808,9 @@ REPLACE:patrician_hall = {
 	graphical_tags = { palace }
 
 	construction_demand = pp_early_capital_jewelry_construction
+	modifier = {
+		local_burghers_desired_pop = 1.2 # job_room
+	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
 }

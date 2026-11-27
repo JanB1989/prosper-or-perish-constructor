@@ -113,7 +113,6 @@ custom_tags = {
 }
 construction_demand = mill_construction
 raw_modifier = {
-	local_laborers_desired_pop = -1.16 # job_room
     local_pp_cannons_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
     local_burghers_desired_pop = 0.05
 }
@@ -127,8 +126,5 @@ ai_construct_weight = {
     add = pp_market_short_cannons
 }
 	can_close = no # building_shutdown
-	modifier = {
-		local_laborers_desired_pop = 1.16 # job_room
-	}
 }
 # <<< eu5-building-pipeline:cannons_factory:building

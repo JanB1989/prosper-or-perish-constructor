@@ -114,6 +114,7 @@ unique_production_methods = {
 # owner: 10 vanilla levels of power, 8 of capacity (4.8; 6 until 2026-11-25, Jan: the houses gave too much merchant
 # capacity), maritime presence x5; host: a small plain mix
 modifier = {
+	local_burghers_desired_pop = 1 # job_room
 	merchant_capacity_from_building = 4.8
 	building_owner_maritime_presence = 0.25
 	merchant_power_from_building = 2

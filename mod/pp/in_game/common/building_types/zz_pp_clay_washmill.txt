@@ -101,14 +101,10 @@ unique_production_methods = {
 
 
 modifier = {
-	local_laborers_desired_pop = 0.8 # job_room
     local_migration_attraction = 0.003
     local_population_growth = -0.0000
 }
 	can_close = no # building_shutdown
-	raw_modifier = {
-		local_laborers_desired_pop = -0.8 # job_room
-	}
 ai_construct_weight = {
     value = 0
     add = pp_market_short_clay

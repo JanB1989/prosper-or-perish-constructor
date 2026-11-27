@@ -11,7 +11,7 @@ maintenance and profit closing) into the block that owns each "never" building i
 step. The lines carry a marker comment, so a building switched back to "keep" loses them again.
 
 Buildings with a goods output (2026-11-27, Jan: nobody closes a production building; a closed building keeps its jobs
-in its class's equilibrium and applies none of its own lines, see job_room.py): every producer gets ``can_close = no``
+in its class's equilibrium and applies none of its own lines): every producer gets ``can_close = no``
 and nothing else, whatever its class says and whatever its definition says (an explicit ``can_close = yes`` is
 replaced). ``can_close`` is the engine's last check for the player's button and the AI's close alike, so nobody closes
 it; without ``ai_forbid_shutdown`` the building stays in the AI's close / subsidy pass, so the AI still subsidises it

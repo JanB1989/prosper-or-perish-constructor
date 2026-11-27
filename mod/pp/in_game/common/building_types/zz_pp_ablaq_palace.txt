@@ -31,7 +31,7 @@ capital_country_modifier = {
     global_silk_output_modifier = 0.025
 }
 modifier = {
-	local_burghers_desired_pop = 0.25 # job_room
+	local_burghers_desired_pop = 1 # job_room
     local_cloth_output_modifier = 0.05
 }
 custom_tags = {
@@ -64,9 +64,6 @@ unique_production_methods = {
     }
 }
 	can_close = no # building_shutdown
-	raw_modifier = {
-		local_burghers_desired_pop = -0.25 # job_room
-	}
 ai_construct_weight = {
     value = 0
     add = pp_market_short_silk

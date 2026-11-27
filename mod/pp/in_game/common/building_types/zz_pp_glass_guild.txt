@@ -56,7 +56,7 @@ unique_production_methods = {
 }
 construction_demand = guild_construction
 modifier = {
-	local_burghers_desired_pop = 0.25 # job_room
+	local_burghers_desired_pop = 1 # job_room
     local_glass_output_modifier = -0.005  # manufacturing tiers 2026-10-06: stack malus per staffed level
 }
 custom_tags = {
@@ -66,7 +66,6 @@ custom_tags = {
 increase_per_level_cost = 0.34
 price = pp_glass_guild_price
 raw_modifier = {
-	local_burghers_desired_pop = -0.25 # job_room
     local_pp_glass_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
 }
 	can_close = no # building_shutdown

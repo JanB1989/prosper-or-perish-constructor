@@ -41,8 +41,8 @@ pp_village_school = {
 		local_soldiers_max_literacy = 10
 		local_monthly_literacy = 0.004 # 0.01 until 2026-11-27 (every literacy speed x0.4)
 		local_pop_promotion_speed = 0.002 # moved from the Library (2026-11-25)
-		# Spare room (2026-11-27, Jan): since job_room.py a production building gives room for its class only as far as
-		# it is staffed, so a new building hires from the spare room the location has. The schooling buildings add
+		# Spare room (2026-11-27, Jan): since job_room.py an unfilled job gives little room for its class, so a new
+		# building hires from the spare room the location has. The schooling buildings add
 		# that buffer, each for the classes it teaches: one laborer building level (0.8) per school level here (0.4
 		# at first; Jan the same day: "these things should probably cover at least like a building"). A typical town
 		# promotes 7-10 laborers a month, so one level's room takes 7-10 years to fill (run defb89f2).
@@ -91,11 +91,11 @@ pp_trade_school = {
 	}
 
 	modifier = {
+		local_burghers_desired_pop = 0.7 # job_room base 0.5
 		local_burghers_max_literacy = 10
 		local_monthly_literacy = 0.004 # 0.01 until 2026-11-27
 		# spare room (2026-11-27, Jan: at least a building): two guild levels (0.25 each) per school level; 0.3 since
 		# 2026-11-25, when it moved here from the Library. A typical town promotes about one burgher a month.
-		local_burghers_desired_pop = 0.5
 	}
 
 	possible_production_methods = {

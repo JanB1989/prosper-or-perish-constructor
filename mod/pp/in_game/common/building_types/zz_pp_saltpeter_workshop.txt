@@ -46,11 +46,8 @@ obsolete = saltpeter_guild
 custom_tags = { workshop }
 construction_demand = workshop_construction
 	can_close = no # building_shutdown
-	raw_modifier = {
-		local_burghers_desired_pop = -0.1 # job_room
-	}
 	modifier = {
-		local_burghers_desired_pop = 0.1 # job_room
+		local_burghers_desired_pop = 0.4 # job_room
 	}
 ai_construct_weight = {
     value = 0

@@ -58,11 +58,5 @@ unique_production_methods = {
   }
 }
 	can_close = no # building_shutdown
-	raw_modifier = {
-		local_laborers_desired_pop = -2 # job_room
-	}
-	modifier = {
-		local_laborers_desired_pop = 2 # job_room
-	}
 }
 # <<< eu5-building-pipeline:hired_labor_yard:building

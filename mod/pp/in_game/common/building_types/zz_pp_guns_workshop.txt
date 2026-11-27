@@ -103,7 +103,7 @@ unique_production_methods = {
 obsolete = gun_smith
 construction_demand = workshop_construction
 modifier = {
-	local_burghers_desired_pop = 0.287 # job_room
+	local_burghers_desired_pop = 1.148 # job_room
     local_firearms_output_modifier = -0.0025  # manufacturing tiers 2026-10-06: stack malus per staffed level
 }
 custom_tags = {
@@ -111,7 +111,6 @@ custom_tags = {
 }
 increase_per_level_cost = 0.19
 raw_modifier = {
-	local_burghers_desired_pop = -0.287 # job_room
     local_pp_firearms_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
 }
 # manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the

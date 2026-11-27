@@ -63,13 +63,12 @@ unique_production_methods = {
 }
 construction_demand = simple_colony_construction
 modifier = {
-	local_burghers_desired_pop = 0.25 # job_room
+	local_burghers_desired_pop = 1 # job_room
     building_enslavement_power = 0.3 # vanilla 0.20; 2026-11-27 (Jan): the refill keeps up with the larger trade
     local_slave_pop_satisfaction = -0.05
 }
 # foreign building (2026-10-01): each level supports itself
 raw_modifier = {
-	local_burghers_desired_pop = -0.25 # job_room
     free_building_levels = 1
 }
 increase_per_level_cost = 0.15

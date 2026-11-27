@@ -332,6 +332,7 @@ REPLACE:trade_company_harbor = {
 	}
 	custom_tags = { trade_company_building satellite_trade_building }
 	modifier = {
+		local_burghers_desired_pop = 0.8 # job_room
 		merchant_power_from_building = 0.5
 		building_owner_maritime_presence = 0.01
 		building_owner_overlord_maritime_presence = 0.02
@@ -420,6 +421,7 @@ REPLACE:por_feitoria = {
 	construction_demand = por_feitoria_building_construction
 
 	modifier = {
+		local_burghers_desired_pop = 0.4 # job_room
 		building_owner_maritime_presence = 0.025
 		merchant_capacity_from_building = 1
 		merchant_power_from_building = 1
@@ -468,6 +470,7 @@ REPLACE:cinque_port = {
 	
 
 	modifier = {
+		local_burghers_desired_pop = 0.8 # job_room
 		local_navy_levy_size_modifier = 1.0
 		local_sailors = 0.002
 		local_burghers_estate_power = 1.0

@@ -38,6 +38,7 @@ construction_demand = town_building_construction
 # trade buildings 2026-10-06: merchant capacity per level 2 -> 3, +50 %
 # burgher trade capacity 2026-11-03: 2 -> 0.9, each upgrade adds 0.1 (run 16fe282a used 13-36 % of it)
 modifier = {
+	local_burghers_desired_pop = 0.4 # job_room
 	local_pop_assimilation_speed_modifier = 0.01
 	local_burghers_estate_power = 0.1
 

@@ -77,12 +77,11 @@ unique_production_methods = {
 construction_demand = workshop_construction
 increase_per_level_cost = 0.16
 modifier = {
-	local_burghers_desired_pop = 0.287 # job_room
+	local_burghers_desired_pop = 1.148 # job_room
     local_books_output_modifier = -0.0025  # manufacturing tiers 2026-10-06: stack malus per staffed level
     local_monthly_literacy = 0.002  # literacy rework 2026-11-25 (Jan): print shops spread reading where they stand; 0.005 until 2026-11-27
 }
 raw_modifier = {
-	local_burghers_desired_pop = -0.287 # job_room
     local_pp_books_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
 }
 # manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the

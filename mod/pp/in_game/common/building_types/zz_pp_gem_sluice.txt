@@ -93,15 +93,11 @@ unique_production_methods = {
 
 
 modifier = {
-	local_laborers_desired_pop = 0.8 # job_room
     local_population_growth = -0.00015
     local_migration_attraction = 0.010
     local_gems_output_modifier = 0.01875
 }
 	can_close = no # building_shutdown
-	raw_modifier = {
-		local_laborers_desired_pop = -0.8 # job_room
-	}
 ai_construct_weight = {
     value = 0
     add = pp_market_short_gems

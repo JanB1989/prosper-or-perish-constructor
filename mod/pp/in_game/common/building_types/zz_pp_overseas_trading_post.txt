@@ -8,5 +8,8 @@ raw_modifier = {
 }
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
+	modifier = {
+		local_burghers_desired_pop = 0.4 # job_room
+	}
 }
 # <<< eu5-building-pipeline:overseas_trading_post:building

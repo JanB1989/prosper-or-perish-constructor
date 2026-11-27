@@ -105,6 +105,7 @@ build_time = trade_post_build_time
 # takes 2.5 % per office). The engine pays it only from this block, creates the gold (the host loses nothing) and
 # pays nothing where control is zero; the AI counts it as plain gold (private notes gold_modifiers_149.md).
 modifier = {
+	local_burghers_desired_pop = 1 # job_room
 	merchant_power_from_building = 10
 	building_owner_maritime_presence = 0.5
 	merchant_capacity_from_building = 2.3

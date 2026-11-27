@@ -53,11 +53,9 @@ construction_demand = guild_construction
 increase_per_level_cost = 0.47
 price = pp_scriptorium_price
 modifier = {
-	local_clergy_desired_pop = 0.3 # job_room
     local_books_output_modifier = -0.005  # manufacturing tiers 2026-10-06: stack malus per staffed level
 }
 raw_modifier = {
-	local_clergy_desired_pop = -0.3 # job_room
     local_pp_books_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
 }
 	can_close = no # building_shutdown

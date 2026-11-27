@@ -45,11 +45,8 @@ unique_production_methods = {
 custom_tags = { midgame_manufactory }
 construction_demand = manufactory_construction
 	can_close = no # building_shutdown
-	raw_modifier = {
-		local_burghers_desired_pop = -0.2 # job_room
-	}
 	modifier = {
-		local_burghers_desired_pop = 0.2 # job_room
+		local_burghers_desired_pop = 0.8 # job_room
 	}
 ai_construct_weight = {
     value = 0

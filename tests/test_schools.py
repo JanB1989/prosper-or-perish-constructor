@@ -86,7 +86,8 @@ SCHOOL_RULES = {
         "max_levels": "pp_trade_school_max_level",
         "ranks": {"town", "city", "megalopolis"},
         "modifier": {
-            "local_burghers_max_literacy": 10, "local_monthly_literacy": 0.004, "local_burghers_desired_pop": 0.5,
+            "local_burghers_max_literacy": 10, "local_monthly_literacy": 0.004,
+            "local_burghers_desired_pop": 0.7,  # 0.5 of its own + 4 x its 0.05 jobs given back (job_room.py)
         },
         "method": "pp_trade_school_maintenance",
         "upkeep": {"books": 0.15, "beeswax": 0.05, "manual_labor": 0.5},
@@ -216,8 +217,8 @@ def test_library_and_university(vanilla) -> None:
 
 
 def test_schooling_buildings_give_spare_room_and_the_ai_builds_them_where_it_is_missing(schools) -> None:
-    """2026-11-27 (Jan): since job_room.py a production building gives room for its class only as far as it is
-    staffed, so new buildings hire from spare room. The schooling buildings add it for the classes they teach (in
+    """2026-11-27 (Jan): since job_room.py an unfilled job gives little room for its class (a fifth of a place for
+    burghers), so new buildings hire from spare room. The schooling buildings add it for the classes they teach (in
     `modifier`: a school without staff gives none), and their AI weight rises where an open building of that class is
     short of workers and few people of the class are idle."""
     culture = _blocks(CULTURE)
@@ -228,7 +229,7 @@ def test_schooling_buildings_give_spare_room_and_the_ai_builds_them_where_it_is_
     # each level covers at least one building level of the class it is for (Jan): a laborer building level employs
     # 0.8, a guild level 0.25
     assert room(schools["pp_village_school"]) == {"local_laborers_desired_pop": 0.8, "local_soldiers_desired_pop": 0.1}
-    assert room(schools["pp_trade_school"]) == {"local_burghers_desired_pop": 0.5}
+    assert room(schools["pp_trade_school"]) == {"local_burghers_desired_pop": 0.7}  # 0.5 + 4 x its 0.05 jobs (job_room.py)
     assert room(culture["REPLACE:library"]) == {
         "local_burghers_desired_pop": 0.25, "local_clergy_desired_pop": 0.1, "local_nobles_desired_pop": 0.05}
     assert room(culture["REPLACE:university"]) == {

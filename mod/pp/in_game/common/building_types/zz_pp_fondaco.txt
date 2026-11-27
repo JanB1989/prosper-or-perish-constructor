@@ -114,6 +114,7 @@ unique_production_methods = {
 # owner: 10 vanilla levels of power, 8 of capacity (1.6; 2 until 2026-11-25, Jan: the houses gave too much merchant
 # capacity), maritime presence x5; host: Italian bookkeeping (literacy, institutions), vanilla's Italian settlers
 modifier = {
+	local_burghers_desired_pop = 1 # job_room
 	merchant_power_from_building = 10
 	building_owner_maritime_presence = 0.125
 	merchant_capacity_from_building = 1.6

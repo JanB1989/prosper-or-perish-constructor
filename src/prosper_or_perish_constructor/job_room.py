@@ -1,55 +1,48 @@
-"""Job room: a production building's room for its workers' class follows its staffing (2026-11-27, Jan).
+"""Job room: the people of a class take its room, their workplaces give it back (2026-11-27, Jan).
 
-The engine counts a building's jobs (employment_size x level) in its pop type's equilibrium whether the jobs are
-offered or not: a building that laid its workers off, or that never found any, still lets people promote into the
-class, and they sit idle (run b18a10d6, 1837: 1.5 M burghers and 15.9 M laborers unemployed next to unfilled jobs in
-open buildings). Jan: "If a building is full, it should give ... just what its employment size is. But if it's empty,
-it should give not what its employment size is ... I want surplus to demote."
+The engine counts a building's jobs (employment_size x level) in its pop type's equilibrium whether anyone works there
+or not: a building that laid its workers off, or that never found any, still lets people promote into the class, and
+they sit idle (run b18a10d6, 1837: 1.5 M burghers and 15.9 M laborers unemployed next to unfilled jobs in open
+buildings). Jan: "I want surplus to demote."
 
-Two lines per level do that, both for the building's own pop type and both the size of its jobs E:
+Nothing on a building can take that room away again: every modifier block of a building is scaled by its input
+fulfilment, which is 0 while nobody works there (measured in game the same day; the first version, a raw_modifier and
+a modifier line that cancelled, lost its negative line exactly in the empty building). So the negative line sits on
+the people instead, who are always there. For a class in ``[job_room] room_per_head`` at k:
 
-    raw_modifier = { local_<pop>_desired_pop = -E }   # x input fulfilment
-    modifier     = { local_<pop>_desired_pop =  E }   # x input fulfilment x staffing
+    pop type:   pop_percentage_impact = { local_<pop>_desired_pop_scaled = -k }   # hand-written, checked here
+    building:   modifier = { local_<pop>_desired_pop = k x E }                    # per level, x staffing; written here
 
-Jobs and flat desired pop go into one sum in the engine, so the building's room is E x (1 - f + f x staffing), f the
-average input fulfilment of its method slots: E when fully staffed, E x staffing when its inputs are supplied, and
-never more than E. A new building opens no room of its own; it hires from the spare room the location already has
-(the location ranks give burghers and laborers flat room) and brings its own room in as it fills. The AI counts both
-lines in full, so they cancel in its score, and it values burgher and laborer room at zero anyway.
+The pop type's block is applied at the class's share of the location's people and the ``_scaled`` room modifier is
+multiplied by the location's people, so the first line is -k room per person of the class. E is the building's jobs
+per level, so the second gives k back per filled job. With the engine's own count of every job once:
 
-A closed building applies neither block and keeps all its jobs in the equilibrium, which is why production buildings
-cannot be closed any more (building_shutdown.py). Read from the 1.4.9 code and private notes, not tested in game.
+    idle people of the class allowed = (flat room + unfilled jobs) / (1 + k)
 
-Written at finalize, after the employment cut: the size is read from the building's final employment_size at every
-build, so it follows any change of a building's employment by itself. Every blueprint building with a goods output
-carries the lines when its pop type has an equilibrium (``has_cap = yes`` in the pop type: nobles, clergy, burghers,
-laborers, soldiers; peasants, tribesmen and slaves have none), food makers included (Jan, 2026-11-27: "they can
-still be subsidized. Same logic. We can just apply it to everything"; the first version of that day left them out).
-``[job_room] not_buildings`` takes single buildings out. The lines carry a marker comment; a building that leaves the
-set loses them again. A line of the same key the building already has in that block is folded into ours (the engine
-would otherwise see the key twice) and comes back when ours goes.
+People at work are always covered; an unfilled job, in an empty building as in a short-staffed one, counts 1 / (1 + k)
+of a place, and so does every flat source of room (ranks, schools, laws).
 
-Game start (2026-11-27, three test games and a control game the same day): when a new game starts the engine first
-employs the pops the setup defines and then fills every class up to its room from the peasants. The setup defines few
-of them (2.4 M burghers, 2.0 M laborers); the rest of day 0 (3.9 M burghers, 45.3 M laborers in the control) is made by
-that fill. With the two lines a building nobody works in yet gives no room, so the fill made nothing for it: per
-location the loss was either all of the producers' jobs or none (burghers 2.34 M of 3.22 M producer jobs in 675
-locations, laborers 11.3 M of 12.3 M), and the class does not come back by itself (a typical town promotes one burgher
-a month). ``pp_job_room_start`` (on_game_start, a day in, once; never a pulse) does the fill for those jobs: per owned
-location and class, the jobs of its open buildings that nobody fills (``pp_job_room_open_<pop>``, read from the
-buildings in the running game) are filled from the peasants, every peasant pop giving the same share. The people get
-the culture and religion the engine's own fill gives them (measured in the control game): those of the class's largest
-pop in the location (98-100 % of the game-made people join it); where the class has no pop there, the owner's culture
-and religion for an upper class, the peasants' own otherwise.
+Written at finalize, after the employment cut: E is read from the building's final employment_size at every build, so
+it follows any change of a building's employment by itself. Every building that employs a listed class carries the
+line, production building or not: a person at work in a building without it would take room and get none back. A
+vanilla building the mod only injects into gets the line in its INJECT (modifier blocks add up). ``not_buildings``
+takes single buildings out. The line carries a marker comment; a building that leaves the set loses it again. A line
+of the same key the building's own block already has is folded into ours (the engine would otherwise see the key
+twice) and comes back when ours goes.
 
-Setup groups first: where the setup gives a class several groups in a location (Stockholm's Swedish, Holsatian and
-Lower Saxon burghers), the engine's start trimmed them all alike to the smaller room, and filling everything into the
-largest would lose the others (third test game: the 604 burgher groups beside the largest held 106k people against
-151k in the control). So the step first brings each group of such a class and location back to its setup size, the largest
-first (``pp_job_room_group``, one generated line per group, read from the mod's pops setup at every build), within the
-class's open jobs, and only then fills the rest into the largest. The largest has to be among them: in the fourth test
-game only the others were brought back, Stockholm's Holsatians then outnumbered its trimmed Swedes and took the rest. The location variable ``pp_job_room_done_<pop>`` carries what the
-groups took, for that one step.
+Game start. When a new game starts the engine sizes every class to its room in one pass, and at that moment no
+building has workers: nothing is given back yet, so a listed class is cut to (flat room + jobs) / (1 + k) and the rest
+go back to the peasants (in game 2026-11-27, k = 4: 1.83 M burghers on day 0 against 3.88 M in a game without any of
+this, and a million at work after three years, because promotion refills only a few thousand a month).
+``pp_job_room_start`` (on_game_start, a day in, once; never a pulse) does the fill for those jobs: per owned location
+and class, the jobs of its open buildings that nobody fills (``pp_job_room_open_<pop>``, read from the buildings in
+the running game) are filled from the peasants, every peasant pop giving the same share. The people get the culture
+and religion the engine's own fill gives them: those of the class's largest pop in the location; where the class has
+no pop there, the owner's culture and religion for an upper class, the peasants' own otherwise. Where the setup gives
+a class several groups in a location (Stockholm's Swedish, Holsatian and Lower Saxon burghers) each group is first
+brought back to its setup size, the largest first (``pp_job_room_group``, one generated line per group, read from the
+mod's pops setup at every build), within the class's open jobs; the location variable ``pp_job_room_done_<pop>``
+carries what the groups took, for that one step.
 """
 
 from __future__ import annotations
@@ -65,9 +58,9 @@ from prosper_or_perish_constructor import building_shutdown as bs
 
 CONFIG_SECTION = "job_room"
 MARKER = "# job_room"
-BLOCKS = (("raw_modifier", -1), ("modifier", 1))  # block -> sign of the line
+BLOCK = "modifier"  # scaled by staffing: the line that gives the room back
 POP_TYPES = Path("in_game/common/pop_types")
-START_DELAY_DAYS = 1  # after the game's own fill of the classes, before the first monthly tick
+START_DELAY_DAYS = 1  # after the game's own sizing of the classes, before the first monthly tick
 VALUES = Path("in_game/common/script_values/pp_job_room_values.txt")
 EFFECTS = Path("in_game/common/scripted_effects/pp_job_room_effects.txt")
 ON_ACTION = Path("in_game/common/on_action/pp_job_room.txt")
@@ -77,7 +70,7 @@ MAX_SHARE = "0.9"  # of a location's peasants, the most the start step moves int
 _POP_RE = re.compile(r"^[ \t]*pop_type\s*=\s*(?P<pop>[A-Za-z_0-9]+)", re.MULTILINE)
 _EMPLOYMENT_RE = re.compile(r"^[ \t]*employment_size\s*=\s*(?P<value>[^\s#{}]+)", re.MULTILINE)
 _MARKED_RE = re.compile(
-    r"^(?P<indent>[ \t]*)(?P<key>local_[a-z_0-9]+_desired_pop|local_pp_job_room_[a-z_0-9]+)\s*=\s*\S+[ \t]*#\s*job_room(?:[ \t]+base[ \t]+(?P<base>-?[0-9.]+))?[^\n]*\n?",
+    r"^(?P<indent>[ \t]*)(?P<key>local_[a-z_0-9]+_desired_pop)\s*=\s*\S+[ \t]*#\s*job_room(?:[ \t]+base[ \t]+(?P<base>-?[0-9.]+))?[^\n]*\n?",
     re.MULTILINE,
 )
 _HAS_CAP_RE = re.compile(r"^[ \t]*has_cap\s*=\s*(?P<value>yes|no)", re.MULTILINE)
@@ -86,14 +79,14 @@ _UPPER_RE = re.compile(r"^[ \t]*upper\s*=\s*(?P<value>yes|no)", re.MULTILINE)
 
 @dataclass(frozen=True)
 class Config:
+    room_per_head: dict[str, Decimal]  # pop type -> k, the room each person of the class takes
     not_buildings: frozenset[str]
-    enabled: bool = True  # false: no building carries the lines (control builds for in-game comparisons)
 
 
 @dataclass
 class Result:
     written: list[str] = field(default_factory=list)
-    pop_types: list[str] = field(default_factory=list)  # the pop types with an equilibrium
+    room_per_head: dict[str, Decimal] = field(default_factory=dict)
     other_pop: list[str] = field(default_factory=list)
     excluded: list[str] = field(default_factory=list)
     files_changed: int = 0
@@ -101,40 +94,62 @@ class Result:
 
 def load_config(project: Path) -> Config:
     raw = tomllib.loads(project.read_text(encoding="utf-8-sig")).get(CONFIG_SECTION)
-    if not isinstance(raw, dict) or not isinstance(raw.get("not_buildings"), list):
-        raise ValueError(f"{project}: [{CONFIG_SECTION}] needs not_buildings (a list of building keys, may be empty)")
-    return Config(frozenset(raw["not_buildings"]), bool(raw.get("enabled", True)))
+    if (not isinstance(raw, dict) or not isinstance(raw.get("not_buildings"), list)
+            or not isinstance(raw.get("room_per_head"), dict)):
+        raise ValueError(f"{project}: [{CONFIG_SECTION}] needs room_per_head (pop type -> room each person takes, may "
+                         "be empty) and not_buildings (a list of building keys, may be empty)")
+    heads = {str(pop): Decimal(str(value)) for pop, value in raw["room_per_head"].items()}
+    bad = sorted(pop for pop, value in heads.items() if value <= 0)
+    if bad:
+        raise ValueError(f"{project}: [{CONFIG_SECTION}] room_per_head must be above 0: {', '.join(bad)}")
+    return Config(heads, frozenset(raw["not_buildings"]))
 
 
-def capped_pop_types(vanilla_root: Path, mod_root: Path) -> frozenset[str]:
-    """The pop types with an equilibrium (``has_cap = yes``)."""
-    return _flagged_pop_types(vanilla_root, mod_root, _HAS_CAP_RE)
+def pop_type_bodies(vanilla_root: Path, mod_root: Path) -> dict[str, str]:
+    """Pop type -> its definition as the game reads it: vanilla's, then the mod's (a REPLACE is the whole definition,
+    an INJECT adds to vanilla's)."""
+    bodies: dict[str, str] = {}
+    for path in bf.vanilla_files(vanilla_root, POP_TYPES):
+        text = bf._read(path)
+        for block in bf.blocks(path, text):
+            bodies[block.key] = text[block.open + 1: block.close]
+    for path in sorted((mod_root / POP_TYPES).glob("*.txt")):
+        text = bf._read(path)
+        for block in bf.blocks(path, text):
+            body = text[block.open + 1: block.close]
+            bodies[block.key] = bodies.get(block.key, "") + "\n" + body if block.mode in bf._INJECT_MODES else body
+    return bodies
 
 
 def upper_pop_types(vanilla_root: Path, mod_root: Path) -> frozenset[str]:
     """The upper classes (``upper = yes``): a pop of theirs the game makes at game start gets the owner's culture."""
-    return _flagged_pop_types(vanilla_root, mod_root, _UPPER_RE)
+    out = set()
+    for pop, body in pop_type_bodies(vanilla_root, mod_root).items():
+        flags = _UPPER_RE.findall(bf._depth_zero_text(body))
+        if flags and flags[-1] == "yes":
+            out.add(pop)
+    return frozenset(out)
 
 
-def _flagged_pop_types(vanilla_root: Path, mod_root: Path, _HAS_CAP_RE: re.Pattern[str]) -> frozenset[str]:
-    """The pop types whose definition sets a yes / no key to yes: vanilla's definitions, then the mod's (a REPLACE is
-    the whole definition, an INJECT adds to vanilla's)."""
-    capped: dict[str, bool] = {}
-    for path in bf.vanilla_files(vanilla_root, POP_TYPES):
-        text = bf._read(path)
-        for block in bf.blocks(path, text):
-            match = _HAS_CAP_RE.search(bf._depth_zero_text(text[block.open + 1: block.close]))
-            capped[block.key] = bool(match and match.group("value") == "yes")
-    for path in sorted((mod_root / POP_TYPES).glob("*.txt")):
-        text = bf._read(path)
-        for block in bf.blocks(path, text):
-            match = _HAS_CAP_RE.search(bf._depth_zero_text(text[block.open + 1: block.close]))
-            if block.mode in bf._INJECT_MODES:
-                if match:
-                    capped[block.key] = match.group("value") == "yes"
-            else:
-                capped[block.key] = bool(match and match.group("value") == "yes")
-    return frozenset(name for name, value in capped.items() if value)
+def pop_type_problems(config: Config, vanilla_root: Path, mod_root: Path) -> list[str]:
+    """What is wrong with the hand-written half: each listed class needs an equilibrium and the per-person line."""
+    bodies = pop_type_bodies(vanilla_root, mod_root)
+    problems: list[str] = []
+    for pop, k in sorted(config.room_per_head.items()):
+        body = bodies.get(pop)
+        if body is None:
+            problems.append(f"[{CONFIG_SECTION}] room_per_head: no pop type {pop}")
+            continue
+        caps = _HAS_CAP_RE.findall(bf._depth_zero_text(body))
+        if not caps or caps[-1] != "yes":
+            problems.append(f"[{CONFIG_SECTION}] room_per_head: {pop} has no equilibrium (has_cap = yes)")
+        found = _top_block(body, "pop_percentage_impact")
+        inner = body[found[1] + 1: found[2]] if found else ""
+        line = re.search(rf"^[ \t]*local_{pop}_desired_pop_scaled\s*=\s*(?P<value>-?[0-9.]+)", inner, re.MULTILINE)
+        if line is None or Decimal(line.group("value")) != -k:
+            problems.append(f"pop type {pop}: pop_percentage_impact needs local_{pop}_desired_pop_scaled = {fmt(-k)} "
+                            f"([{CONFIG_SECTION}] room_per_head)")
+    return problems
 
 
 def fmt(value: Decimal) -> str:
@@ -153,70 +168,62 @@ def _top_block(body: str, name: str) -> tuple[re.Match[str], int, int] | None:
 
 
 def _clear(body: str, drop_empty: bool) -> str:
-    """Take our marked lines out of the top-level modifier blocks: a folded line comes back at its base value. A block
+    """Take our marked line out of the top-level modifier block: a folded line comes back at its base value. A block
     left empty goes with ``drop_empty`` (the building leaves the set); otherwise it stays where it is, so writing the
-    lines again puts them back in the same place whatever later passes appended to the building."""
-    for name, _sign in BLOCKS:
-        found = _top_block(body, name)
-        if found is None:
-            continue
-        match, open_, close = found
-        inner = body[open_ + 1: close]
-        if MARKER not in inner:
-            continue
+    line again puts it back in the same place whatever later passes appended to the building."""
+    found = _top_block(body, BLOCK)
+    if found is None:
+        return body
+    match, open_, close = found
+    inner = body[open_ + 1: close]
+    if MARKER not in inner:
+        return body
 
-        def restore(m: re.Match[str]) -> str:
-            return f"{m.group('indent')}{m.group('key')} = {m.group('base')}\n" if m.group("base") is not None else ""
+    def restore(m: re.Match[str]) -> str:
+        return f"{m.group('indent')}{m.group('key')} = {m.group('base')}\n" if m.group("base") is not None else ""
 
-        inner = _MARKED_RE.sub(restore, inner)
-        if inner.strip() or not drop_empty:
-            body = body[: open_ + 1] + inner + body[close:]
-        else:
-            end = close + 1 + (body[close + 1: close + 2] == "\n")
-            body = body[: match.start()] + body[end:]
-    return body
+    inner = _MARKED_RE.sub(restore, inner)
+    if inner.strip() or not drop_empty:
+        return body[: open_ + 1] + inner + body[close:]
+    end = close + 1 + (body[close + 1: close + 2] == "\n")
+    return body[: match.start()] + body[end:]
 
 
-def set_room(body: str, pop: str | None, employment: Decimal | None) -> str:
-    """The body with the two job room lines of ``pop`` at ``employment`` (None: without them)."""
-    body = _clear(body, drop_empty=pop is None or employment is None)
-    if pop is None or employment is None:
+def set_room(body: str, pop: str | None, room: Decimal | None) -> str:
+    """The body with the job room line of ``pop`` at ``room`` per level (None: without it)."""
+    body = _clear(body, drop_empty=pop is None or room is None)
+    if pop is None or room is None:
         return body
     key = f"local_{pop}_desired_pop"
     own = re.compile(rf"^[ \t]*{key}\s*=\s*(?P<value>-?[0-9.]+)[^\n]*\n?", re.MULTILINE)
-    for name, sign in BLOCKS:
-        value = employment * sign
-        found = _top_block(body, name)
-        if found is None:
-            indent = bf._body_indent(body)
-            block = f"{indent}{name} = {{\n{indent}{bf._step(indent)}{key} = {fmt(value)} {MARKER}\n{indent}}}\n"
-            head = body.rstrip(" \t")
-            body = head + ("" if head.endswith("\n") or not head else "\n") + block
-            continue
-        match, open_, close = found
-        indent = match.group("indent")
-        inner = body[open_ + 1: close]
-        note = MARKER
-        existing = own.search(inner)
-        if existing:
-            base = Decimal(existing.group("value"))
-            value += base
-            note = f"{MARKER} base {fmt(base)}"
-            inner = inner[: existing.start()] + inner[existing.end():]
-        line = f"\n{indent}{bf._step(indent)}{key} = {fmt(value)} {note}"
-        if not inner.strip():
-            body = body[: open_ + 1] + line + f"\n{indent}" + body[close:]
-        else:
-            body = body[: open_ + 1] + line + ("" if inner.startswith("\n") else "\n") + inner + body[close:]
-    return body
+    found = _top_block(body, BLOCK)
+    if found is None:
+        indent = bf._body_indent(body)
+        block = f"{indent}{BLOCK} = {{\n{indent}{bf._step(indent)}{key} = {fmt(room)} {MARKER}\n{indent}}}\n"
+        head = body.rstrip(" \t")
+        return head + ("" if head.endswith("\n") or not head else "\n") + block
+    match, open_, close = found
+    indent = match.group("indent")
+    inner = body[open_ + 1: close]
+    note = MARKER
+    existing = own.search(inner)
+    if existing:
+        base = Decimal(existing.group("value"))
+        room += base
+        note = f"{MARKER} base {fmt(base)}"
+        inner = inner[: existing.start()] + inner[existing.end():]
+    line = f"\n{indent}{bf._step(indent)}{key} = {fmt(room)} {note}"
+    if not inner.strip():
+        return body[: open_ + 1] + line + f"\n{indent}" + body[close:]
+    return body[: open_ + 1] + line + ("" if inner.startswith("\n") else "\n") + inner + body[close:]
 
 
 SetupGroup = tuple[str, str, str, str, str]  # location, pop type, culture, religion, size in thousands
 
 
 def setup_groups(mod_root: Path, pop_types: list[str]) -> list[SetupGroup]:
-    """The setup's groups of a class in a location where it has several, the largest first, for the classes that
-    carry the lines (the mod's pops setup, written by the World Builder stage)."""
+    """The setup's groups of a class in a location where it has several, the largest first, for the listed classes
+    (the mod's pops setup, written by the World Builder stage)."""
     from prosper_or_perish_constructor.worldbuilder import start_placement as sp
 
     path = mod_root / sp.POPS_SETUP_PATH
@@ -238,7 +245,7 @@ def setup_groups(mod_root: Path, pop_types: list[str]) -> list[SetupGroup]:
 
 
 def support_files(pop_types: list[str], upper: frozenset[str], groups: list[SetupGroup] = ()) -> dict[Path, str]:
-    """The one-off start step for the pop types that carry the lines: script values, effects and on_action."""
+    """The one-off start step for the listed classes: script values, effects and on_action."""
     values = HEADER + (
         "# Location scope. pp_job_room_open_<class>: the jobs for the class in the open buildings here that nobody fills,\n"
         "# in thousands. pp_job_room_left_<class>: those the start step has not filled yet (the setup's groups come\n"
@@ -280,9 +287,9 @@ def support_files(pop_types: list[str], upper: frozenset[str], groups: list[Setu
         if pop in grouped:
             steps += f"\tremove_variable = pp_job_room_done_{pop}\n"
     effects = HEADER + (
-        "# Location scope, once, a day into a new game (on_action/pp_job_room.txt). When a new game starts the engine fills\n"
-        "# every class up to its room from the peasants, but a production building nobody works in yet gives no room\n"
-        "# (job_room.py), so nothing was made for its jobs. This does that fill: per class, the open jobs of the\n"
+        "# Location scope, once, a day into a new game (on_action/pp_job_room.txt). When a new game starts the engine sizes\n"
+        "# every class to its room while no building has workers yet, and without workers a building gives none of the\n"
+        "# room back that its people take (job_room.py). This does the fill for those jobs: per class, the open jobs of the\n"
         "# location's buildings are filled from its peasants, every peasant pop giving the same share (read one class\n"
         "# after the other, each over the peasants left). Culture and religion as in the engine's own fill: those of the\n"
         "# class's largest pop here; where it has none, the owner's for an upper class, the peasants' own otherwise.\n"
@@ -330,23 +337,28 @@ def support_files(pop_types: list[str], upper: frozenset[str], groups: list[Setu
     return {VALUES: values, EFFECTS: effects, ON_ACTION: on_action}
 
 
-STALE = (Path("main_menu/common/modifier_type_definitions/pp_job_room_modifier_types.txt"),
-         Path("main_menu/common/modifier_icons/pp_job_room_modifier_icons.txt"),
-         Path("main_menu/localization/english/pp_job_room_l_english.yml"))  # the counter of the first start step
+def start_files(config: Config, vanilla_root: Path, mod_root: Path) -> dict[Path, str]:
+    """The generated files of the start step, for the classes of the config (none listed: no files)."""
+    pops = sorted(config.room_per_head)
+    if not pops:
+        return {}
+    return support_files(pops, upper_pop_types(vanilla_root, mod_root), setup_groups(mod_root, pops))
 
 
 def targets(repo: Path, mod_root: Path, project: Path, vanilla_root: Path) -> tuple[dict[str, tuple[str, Decimal]], Result]:
-    """Building key -> (pop type, employment per level) for the buildings that carry the lines, and who was left out."""
+    """Building key -> (pop type, room given back per level = k x jobs) for the buildings that carry the line (every
+    blueprint building that employs a listed class), and who was left out."""
     config = load_config(project)
     owners = bf.owner_blocks(mod_root, vanilla_root)
     vanilla = bf.vanilla_definitions(vanilla_root)
     values = bf.script_values(vanilla_root, mod_root)
-    capped = capped_pop_types(vanilla_root, mod_root)
-    result = Result(pop_types=sorted(capped))
+    result = Result(room_per_head=dict(sorted(config.room_per_head.items())))
     out: dict[str, tuple[str, Decimal]] = {}
     unresolved: list[str] = []
-    for key in bs.producers(repo, mod_root, vanilla_root) if config.enabled else ():
-        block = owners[key]
+    for key in sorted(bs.blueprint_rules(repo)) if config.room_per_head else ():
+        block = owners.get(key)
+        if block is None:
+            continue
         text = bf._read(block.path)
         body = text[block.open + 1: block.close]
         inherited = vanilla.get(key, "") if block.mode in bf._INJECT_MODES else ""
@@ -355,7 +367,7 @@ def targets(repo: Path, mod_root: Path, project: Path, vanilla_root: Path) -> tu
             continue
         tops = bf._depth_zero_text(body) + "\n" + (bf._depth_zero_text(inherited) if inherited else "")
         pop = _POP_RE.search(tops)
-        if not pop or pop.group("pop") not in capped:
+        if not pop or pop.group("pop") not in config.room_per_head:
             result.other_pop.append(key)
             continue
         size = _EMPLOYMENT_RE.search(tops)
@@ -363,10 +375,8 @@ def targets(repo: Path, mod_root: Path, project: Path, vanilla_root: Path) -> tu
         if employment is None or employment <= 0:
             unresolved.append(f"{key}: employment_size {size.group('value') if size else '(none)'}")
             continue
-        if block.mode in bf._INJECT_MODES:
-            unresolved.append(f"{key}: an INJECT cannot add to the vanilla modifier blocks; make the blueprint a REPLACE")
-            continue
-        out[key] = (pop.group("pop"), employment)
+        out[key] = (pop.group("pop"), employment * config.room_per_head[pop.group("pop")])
+    unresolved += pop_type_problems(config, vanilla_root, mod_root)
     if unresolved:
         raise ValueError("job room:\n" + "\n".join(f"- {u}" for u in unresolved))
     result.written = sorted(out)
@@ -379,7 +389,7 @@ def apply(repo: Path, mod_root: Path, project: Path, vanilla_root: Path) -> Resu
     edits: dict[Path, list[tuple[bf.Block, tuple[str, Decimal] | None]]] = {}
     for key, _rule in bs.blueprint_rules(repo).items():
         block = owners.get(key)
-        if block is not None and block.mode not in bf._INJECT_MODES:
+        if block is not None:
             edits.setdefault(block.path, []).append((block, wanted.get(key)))
     for path, items in edits.items():
         original = bf._read(path)
@@ -393,48 +403,48 @@ def apply(repo: Path, mod_root: Path, project: Path, vanilla_root: Path) -> Resu
         if text != original:
             path.write_text(text, encoding="utf-8-sig", newline="\n")
             result.files_changed += 1
-    upper = upper_pop_types(vanilla_root, mod_root)
-    pops = sorted({pop for pop, _employment in wanted.values()})
-    for relative, text in support_files(pops, upper, setup_groups(mod_root, pops)).items():
+    files = start_files(load_config(project), vanilla_root, mod_root)
+    for relative in (VALUES, EFFECTS, ON_ACTION):
         path = mod_root / relative
-        if not path.exists() or path.read_text(encoding="utf-8") != text:
+        text = files.get(relative)
+        if text is None:
+            if path.exists():
+                path.unlink()
+                result.files_changed += 1
+        elif not path.exists() or path.read_text(encoding="utf-8") != text:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(text, encoding="utf-8", newline="\n")
-            result.files_changed += 1
-    for relative in STALE:
-        if (mod_root / relative).exists():
-            (mod_root / relative).unlink()
             result.files_changed += 1
     return result
 
 
 def check(repo: Path, mod_root: Path, project: Path, vanilla_root: Path) -> list[str]:
-    """Buildings whose compiled definition does not carry exactly the two lines it should (run ppc build / sync)."""
+    """Buildings whose compiled definition does not carry exactly the line it should (run ppc build / sync)."""
     wanted, _result = targets(repo, mod_root, project, vanilla_root)
     owners = bf.owner_blocks(mod_root, vanilla_root)
     problems: list[str] = []
     for key, _rule in sorted(bs.blueprint_rules(repo).items()):
         block = owners.get(key)
-        if block is None or block.mode in bf._INJECT_MODES:
+        if block is None:
             continue
         text = bf._read(block.path)
         body = text[block.open + 1: block.close]
         target = wanted.get(key)
         if set_room(body, *(target if target else (None, None))) != body:
-            problems.append(f"{key}: job room lines not written (run ppc build)")
-    upper = upper_pop_types(vanilla_root, mod_root)
-    pops = sorted({pop for pop, _employment in wanted.values()})
-    for relative, text in support_files(pops, upper, setup_groups(mod_root, pops)).items():
+            problems.append(f"{key}: job room line not written (run ppc build)")
+    files = start_files(load_config(project), vanilla_root, mod_root)
+    for relative in (VALUES, EFFECTS, ON_ACTION):
         path = mod_root / relative
-        if not path.exists() or path.read_text(encoding="utf-8") != text:
+        if (path.read_text(encoding="utf-8") if path.exists() else None) != files.get(relative):
             problems.append(f"{relative}: not current (run ppc build)")
     return problems
 
 
 def summary(result: Result) -> str:
+    heads = ", ".join(f"{pop} {fmt(k)}" for pop, k in result.room_per_head.items()) or "none"
     return (
-        f"Job room: {len(result.written)} production buildings give room for their class only as far as they are staffed "
-        f"(classes with an equilibrium: {', '.join(result.pop_types)}; {len(result.other_pop)} buildings of other pop types left out"
+        f"Job room: {len(result.written)} buildings give their workers' room back as far as they are staffed "
+        f"(room each person takes: {heads}; {len(result.other_pop)} buildings of other pop types left out"
         + (f", {len(result.excluded)} excluded by name" if result.excluded else "")
         + f"), {result.files_changed} files changed."
     )

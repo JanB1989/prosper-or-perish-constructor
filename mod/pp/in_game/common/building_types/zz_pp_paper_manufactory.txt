@@ -79,12 +79,11 @@ construction_demand = manufactory_construction
 increase_per_level_cost = 0.16
 price = pp_paper_manufactory_price
 raw_modifier = {
-	local_burghers_desired_pop = -0.25 # job_room
     local_pp_paper_line_levels = 1  # paper rights 2026-11-18: line levels for the town rights
 }
 	can_close = no # building_shutdown
 	modifier = {
-		local_burghers_desired_pop = 0.25 # job_room
+		local_burghers_desired_pop = 1 # job_room
 	}
 ai_construct_weight = {
     value = 0

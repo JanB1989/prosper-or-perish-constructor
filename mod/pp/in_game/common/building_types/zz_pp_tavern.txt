@@ -96,7 +96,6 @@ unique_production_methods = {
 
 
 modifier = {
-	local_nobles_desired_pop = 0.001 # job_room
   # a working Tavern means the province has no surplus to sell: each staffed level takes the Surplus Sales of a
   # Grange in the same location away, so a Grange and a Tavern never pass the same food round in a circle
   # (they could in a country with high production efficiency, where both would pay at the same store)
@@ -108,8 +107,5 @@ modifier = {
   local_supply_limit_modifier = 0.01
 }
 	can_close = no # building_shutdown
-	raw_modifier = {
-		local_nobles_desired_pop = -0.001 # job_room
-	}
 }
 # <<< eu5-building-pipeline:tavern:building

@@ -154,8 +154,8 @@ pp_academy_university_levels = {
 }
 
 # Spare room (2026-11-27, Jan: "the AI will build these in a sensible manner if that type is missing"). Since
-# job_room.py a production building gives room for its workers' class only as far as it is staffed, so a building that
-# is short of workers can only hire from idle people of that class. Location scope, read by the schooling buildings'
+# job_room.py an unfilled job gives little room for its workers' class, so a building that is short of workers
+# can only hire from idle people of that class. Location scope, read by the schooling buildings'
 # ai_construct_weight (added before their income divide): 100 while the location has an open building of that class that
 # is not fully staffed and fewer idle people of the class than the threshold (half a laborer building level's jobs, one
 # guild level's). The cheap test comes first; the building walk runs only where idle people are few.

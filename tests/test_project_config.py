@@ -327,7 +327,7 @@ EDUCATION_DESIRED_POP_MODIFIERS = {
     # buildings hire from (AGENTS.md "Job Room")
     "library": {"local_burghers_desired_pop": 0.25, "local_clergy_desired_pop": 0.1, "local_nobles_desired_pop": 0.05},
     "pp_village_school": {"local_laborers_desired_pop": 0.8, "local_soldiers_desired_pop": 0.1},
-    "pp_trade_school": {"local_burghers_desired_pop": 0.5},
+    "pp_trade_school": {"local_burghers_desired_pop": 0.7},  # 0.5 of its own + 4 x its 0.05 jobs given back (job_room.py)
     "university": {
         "local_laborers_desired_pop": 1.2,
         "local_burghers_desired_pop": 0.6,

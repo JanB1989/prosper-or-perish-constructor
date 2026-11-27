@@ -154,15 +154,14 @@ unique_production_methods = {
 }
 
 raw_modifier = {
-	local_laborers_desired_pop = -0.8 # job_room
 local_pp_staple_levels = 1  # counts toward the province's Cookshop cap like a farm level (a staple food maker)
 }
 
 modifier = {
-	local_laborers_desired_pop = 0.803 # job_room base 0.003
     local_monthly_food = 9
     local_food_capacity = 50
     local_peasants_estate_power = 0.014
+    local_laborers_desired_pop = 0.003
 }
 	can_close = no # building_shutdown
 }

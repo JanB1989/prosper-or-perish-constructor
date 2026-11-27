@@ -77,12 +77,10 @@ unique_production_methods = {
 }
 
 raw_modifier = {
-	local_laborers_desired_pop = -0.8 # job_room
   local_market_access = 0.15
 }
 
 modifier = {
-	local_laborers_desired_pop = 0.8 # job_room
   local_stone_output_modifier = -0.01
   local_marble_output_modifier = -0.01
   local_clay_output_modifier = -0.01

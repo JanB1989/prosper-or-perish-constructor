@@ -3,5 +3,8 @@ INJECT:counting_house = {
 # Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
+	modifier = {
+		local_burghers_desired_pop = 0.4 # job_room
+	}
 }
 # <<< eu5-building-pipeline:counting_house:building

@@ -1,0 +1,169 @@
+﻿# PP: written by `uv run ppc disasters apply` (src/prosper_or_perish_constructor/disaster_growing_pain.py); do not edit.
+# Vanilla's end triggers of the covered disasters with the stability bar lowered (AGENTS.md "Long Disasters: Growing Pain"). A disaster's can_end takes this from 50 years on.
+
+# crisis_of_faith: crisis_of_faith_end_trigger, `stability > 25` -> `stability >= 0`
+pp_disaster_relief_crisis_of_faith_trigger = {
+	OR = {
+		NOT = { government_type = government_type:theocracy }
+		custom_tooltip = {
+			text = crisis_of_faith_schismatic_clergy_won_civil_war_tt
+			has_variable = schismatic_clergy_civil_war_won_variable
+		}
+		AND = {
+			custom_tooltip = {
+				text = schismatic_clergy_not_active_tt
+				NOT = { exists = var:schismatic_clergy_rebel }
+			}
+			devotion >= {
+				value = 60
+				add = {
+					value = stability
+					multiply = -0.15
+					ceiling = yes
+				}
+				max = 99	#High stability makes the disaster slightly easier and low stability makes it slightly harder
+			}
+			stability >= 0
+			in_civil_war = no
+		}
+	}
+}
+
+# decline_of_empire: decline_of_empire_end_trigger, `stability > 0` -> `stability >= -25`
+pp_disaster_relief_decline_of_empire_trigger = {
+	stability >= -25
+	had_disaster_for_years = {
+		disaster_type = disaster_type:decline_of_empire
+		years >= 10
+	}
+	OR = {
+		average_control_in_home_region >= var:average_control_in_home_region_target_variable
+		total_not_tolerated_culture_population < {
+			value = total_population
+			divide = 4
+		}		
+	}
+}
+
+# horde_civil_war: horde_civil_war_end_trigger, `stability > HORDE_CIVIL_WAR_END_STABILITY` -> `stability >= 0`
+pp_disaster_relief_horde_civil_war_trigger = {
+	OR = {
+		NOT = { government_type = government_type:steppe_horde }
+		AND = {
+			has_ruler = yes
+			custom_tooltip = {
+				text = horde_civil_war_end_trigger_no_rebels
+				NOT = { any_rebel = { rebel_category = pretender } }
+			}
+			horde_unity > HORDE_CIVIL_WAR_END_HORDE_UNITY
+			stability >= 0
+			in_civil_war = no
+		}
+	}
+}
+
+# oligarchic_capture: oligarchic_capture_end_trigger, `stability > 25` -> `stability >= 0`
+pp_disaster_relief_oligarchic_capture_trigger = {
+	OR = {
+		NOT = { government_type = government_type:republic }
+		custom_tooltip = {
+			text = oligarchic_capture_faction_won_civil_war_tt
+			has_variable = oligarchic_faction_civil_war_won_variable
+		}
+		AND = {
+			custom_tooltip = {
+				text = oligarchic_faction_not_active_tt
+				NOT = { exists = var:oligarchic_faction_rebel }
+			}
+			republican_tradition >= {
+				value = 60
+				add = {
+					value = stability
+					multiply = -0.15
+					ceiling = yes
+				}
+				max = 99	#High stability makes the disaster slightly easier and low stability makes it slightly harder
+			}
+			stability >= 0
+			in_civil_war = no
+		}
+	}
+}
+
+# peasants_war: peasants_war_end_trigger, `stability > 10` -> `stability >= 0`
+pp_disaster_relief_peasants_war_trigger = {
+	stability >= 0
+	in_civil_war = no
+	OR = {
+		societal_value:serfdom_vs_free_subjects < {
+			value = {
+				add = var:peasants_war_target_ending_variable
+				subtract = 25
+				min = -95
+				max = 0
+			}
+		}
+		AND = {
+			societal_value:serfdom_vs_free_subjects > {
+				value = {
+					add = var:peasants_war_target_ending_variable
+					add = 25
+					min = 0
+					max = 95
+				}
+			}
+		}
+		AND = {
+			estate_satisfaction:peasants_estate > 0.6
+			war_exhaustion_percentage < 0.1 
+		}
+		in_civil_war = yes
+		NOT = { country_has_estate = estate_type:peasants_estate }
+	}
+}
+
+# religious_turmoil: religious_turmoil_end_trigger, `stability > 30` -> `stability >= 0`
+pp_disaster_relief_religious_turmoil_trigger = {
+	OR = {
+		religious_unity > 0.90
+		societal_value:spiritualist_vs_humanist > 90
+		AND = {
+			societal_value:spiritualist_vs_humanist < -60
+			OR = {
+				estate_satisfaction:clergy_estate > 0.6
+				"estate_power(estate_type:clergy_estate)" > 0.20
+			}
+		}
+	}
+	stability >= 0
+}
+
+# succession_crisis: succession_crisis_end_trigger, `stability > 25` -> `stability >= 0`
+pp_disaster_relief_succession_crisis_trigger = {
+	OR = {
+		NOT = { government_type = government_type:monarchy }
+		in_civil_war = yes
+		AND = {
+			NOT = { any_rebel = { rebel_category = pretender } }
+			legitimacy > 60
+			stability >= 0
+		}
+		custom_tooltip = {
+			text = pretender_enforced_claim_tt
+			has_variable = pretender_given_throne_variable
+		}
+		AND = {
+			custom_tooltip = {
+				text = pretender_is_cold_tt
+				NOT = { 
+					any_character = { 
+						has_variable = scope_pretender_var 
+						is_loyal = no 
+					} 
+				}
+				NOT = { has_variable = choosing_new_pretender }
+			}
+			in_civil_war = no
+		}
+	}
+}

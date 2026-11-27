@@ -1,4 +1,4 @@
-﻿# PP: same-path copy of vanilla's disaster, written by `uv run ppc disasters apply` (src/prosper_or_perish_constructor/disaster_breaking_point.py); do not edit.
+﻿# PP: written by `uv run ppc disasters apply` (src/prosper_or_perish_constructor/disaster_growing_pain.py); do not edit.
 religious_turmoil = {
 
 	image = "gfx/interface/illustrations/disaster/religious_turmoil.dds"
@@ -8,7 +8,7 @@ religious_turmoil = {
 
 
 	can_start = {
-		pp_disaster_restart_allowed_trigger = { type = religious_turmoil } # PP: breaking point
+		pp_disaster_restart_allowed_trigger = { type = religious_turmoil } # PP: growing pain
 
 		has_any_active_disaster = no
 		religion.group = religion_group:christian
@@ -34,12 +34,15 @@ religious_turmoil = {
 	}
 	
 
-	can_end = { # PP: breaking point: vanilla's way out, or the breaking point
+	can_end = { # PP: growing pain: vanilla's way out, or from 50 years the same with less stability
 		OR = {
 			AND = {
 		religious_turmoil_end_trigger = yes
 	}
-			pp_disaster_breaking_point_trigger = { type = religious_turmoil }
+			AND = {
+				pp_disaster_relief_due_trigger = { type = religious_turmoil }
+				pp_disaster_relief_religious_turmoil_trigger = yes
+			}
 		}
 	}
 	modifier = {
@@ -49,21 +52,17 @@ religious_turmoil = {
 	on_start = {
 		trigger_event_non_silently = religious_turmoil.1
 	}
-	on_end = { # PP: breaking point: past it without vanilla's way out, vanilla's end without the reward, then the blow
+	on_end = {
+		# PP: growing pain: ended by the relaxed branch: no restart for a while
 		if = {
-			limit = {
-				pp_disaster_breaking_point_trigger = { type = religious_turmoil }
-				NOT = { AND = {
+			limit = { NOT = { AND = {
 		religious_turmoil_end_trigger = yes
-	} }
-			}
-			
-			pp_disaster_breaking_point_effect = { type = religious_turmoil }
+	} } }
+			pp_disaster_restart_block_effect = { type = religious_turmoil }
 		}
-		else = {
 		trigger_event_non_silently = religious_turmoil.2
-	}
-		pp_disaster_escalation_cleanup_effect = { type = religious_turmoil }
+		# PP: growing pain
+		pp_disaster_pain_clear_effect = { type = religious_turmoil }
 	}
 	
 	on_monthly = {
@@ -85,7 +84,8 @@ religious_turmoil = {
 			}
 		}	
 		
-		# PP: breaking point
-		pp_disaster_escalation_effect = { type = religious_turmoil }
+		# PP: growing pain
+		pp_disaster_pain_effect = { type = religious_turmoil }
+		pp_disaster_relief_notice_effect = { type = religious_turmoil }
 	}
 }

@@ -1,11 +1,11 @@
-﻿# PP: same-path copy of vanilla's disaster, written by `uv run ppc disasters apply` (src/prosper_or_perish_constructor/disaster_breaking_point.py); do not edit.
+﻿# PP: written by `uv run ppc disasters apply` (src/prosper_or_perish_constructor/disaster_growing_pain.py); do not edit.
 succession_crisis = {
 
 	image = "gfx/interface/illustrations/disaster/succession_crisis.dds"
 	
 	monthly_spawn_chance = monthly_spawn_chance_very_low
 	can_start = {
-		pp_disaster_restart_allowed_trigger = { type = succession_crisis } # PP: breaking point
+		pp_disaster_restart_allowed_trigger = { type = succession_crisis } # PP: growing pain
 
 		has_any_active_disaster = no
 		government_type = government_type:monarchy
@@ -52,12 +52,15 @@ succession_crisis = {
 		}
 	}
 	
-	can_end = { # PP: breaking point: vanilla's way out, or the breaking point
+	can_end = { # PP: growing pain: vanilla's way out, or from 50 years the same with less stability
 		OR = {
 			AND = {
 		succession_crisis_end_trigger = yes
 	}
-			pp_disaster_breaking_point_trigger = { type = succession_crisis }
+			AND = {
+				pp_disaster_relief_due_trigger = { type = succession_crisis }
+				pp_disaster_relief_succession_crisis_trigger = yes
+			}
 		}
 	}
 	modifier = {
@@ -77,39 +80,14 @@ succession_crisis = {
 		trigger_event_non_silently = succession_crisis.1 
 	}
 	
-	on_end = { # PP: breaking point: past it without vanilla's way out, vanilla's end without the reward, then the blow
+	on_end = {
+		# PP: growing pain: ended by the relaxed branch: no restart for a while
 		if = {
-			limit = {
-				pp_disaster_breaking_point_trigger = { type = succession_crisis }
-				NOT = { AND = {
+			limit = { NOT = { AND = {
 		succession_crisis_end_trigger = yes
-	} }
-			}
-			every_character = {
-			limit = { has_character_modifier = plotting_rebellion_modifier }
-			remove_character_modifier = plotting_rebellion_modifier
+	} } }
+			pp_disaster_restart_block_effect = { type = succession_crisis }
 		}
-		remove_country_modifier = ai_succession_disaster_targets
-		remove_variable = pretender_rebel_character
-		clear_gui_variable = { type = pretender_rebel_character }
-		
-		if = {
-			limit = { exists = var:succession_crisis_pretender_variable }
-			destroy_rebel = var:succession_crisis_pretender_variable
-		}
-		if = {
-			limit = { has_variable = ccw_active }
-			remove_variable = ccw_active
-			
-		}
-		else = {
-			
-		}
-			remove_variable = pretender_given_throne_variable
-			every_character = { limit = { has_character_modifier = ccw_ruler_siblings } remove_character_modifier = ccw_ruler_siblings }
-			pp_disaster_breaking_point_effect = { type = succession_crisis }
-		}
-		else = {
 		every_character = {
 			limit = { has_character_modifier = plotting_rebellion_modifier }
 			remove_character_modifier = plotting_rebellion_modifier
@@ -130,8 +108,8 @@ succession_crisis = {
 		else = {
 			trigger_event_non_silently = succession_crisis.100
 		}
-	}
-		pp_disaster_escalation_cleanup_effect = { type = succession_crisis }
+		# PP: growing pain
+		pp_disaster_pain_clear_effect = { type = succession_crisis }
 	}
 	
 	on_monthly = {
@@ -148,7 +126,8 @@ succession_crisis = {
 				10 = { trigger_event_silently = succession_crisis.5 }
 			}
 		}
-		# PP: breaking point
-		pp_disaster_escalation_effect = { type = succession_crisis }
+		# PP: growing pain
+		pp_disaster_pain_effect = { type = succession_crisis }
+		pp_disaster_relief_notice_effect = { type = succession_crisis }
 	}
 }

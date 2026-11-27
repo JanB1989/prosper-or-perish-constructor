@@ -1,11 +1,11 @@
-﻿# PP: same-path copy of vanilla's disaster, written by `uv run ppc disasters apply` (src/prosper_or_perish_constructor/disaster_breaking_point.py); do not edit.
+﻿# PP: written by `uv run ppc disasters apply` (src/prosper_or_perish_constructor/disaster_growing_pain.py); do not edit.
 horde_civil_war = {
 
 	image = "gfx/interface/illustrations/disaster/horde_civil_war.dds"
 
 	monthly_spawn_chance = monthly_spawn_chance_very_high
 	can_start = {
-		pp_disaster_restart_allowed_trigger = { type = horde_civil_war } # PP: breaking point
+		pp_disaster_restart_allowed_trigger = { type = horde_civil_war } # PP: growing pain
 
 		has_any_active_disaster = no
 		government_type = government_type:steppe_horde
@@ -61,12 +61,15 @@ horde_civil_war = {
 			}
 		}
 	}
-	can_end = { # PP: breaking point: vanilla's way out, or the breaking point
+	can_end = { # PP: growing pain: vanilla's way out, or from 50 years the same with less stability
 		OR = {
 			AND = {
 		horde_civil_war_end_trigger = yes
 	}
-			pp_disaster_breaking_point_trigger = { type = horde_civil_war }
+			AND = {
+				pp_disaster_relief_due_trigger = { type = horde_civil_war }
+				pp_disaster_relief_horde_civil_war_trigger = yes
+			}
 		}
 	}
 	modifier = {
@@ -88,33 +91,14 @@ horde_civil_war = {
 		}
 			trigger_event_non_silently = horde_civil_war.1
 	}
-	on_end = { # PP: breaking point: past it without vanilla's way out, vanilla's end without the reward, then the blow
+	on_end = {
+		# PP: growing pain: ended by the relaxed branch: no restart for a while
 		if = {
-			limit = {
-				pp_disaster_breaking_point_trigger = { type = horde_civil_war }
-				NOT = { AND = {
+			limit = { NOT = { AND = {
 		horde_civil_war_end_trigger = yes
-	} }
-			}
-			every_character = {
-			limit = { has_character_modifier = plotting_rebellion_modifier }
-			remove_character_modifier = plotting_rebellion_modifier
+	} } }
+			pp_disaster_restart_block_effect = { type = horde_civil_war }
 		}
-		if = {
-			limit = { exists = var:pretender_rebel_character }
-			var:pretender_rebel_character = {
-				remove_variable = scope_horde_pretender_var
-			}
-		}
-		if = {
-			limit = { exists = var:horde_civil_war_pretender_variable }
-			destroy_rebel = var:horde_civil_war_pretender_variable
-		}
-		remove_variable = horde_civil_war_pretender_variable
-		remove_variable = pretender_rebel_character
-			pp_disaster_breaking_point_effect = { type = horde_civil_war }
-		}
-		else = {
 		every_character = {
 			limit = { has_character_modifier = plotting_rebellion_modifier }
 			remove_character_modifier = plotting_rebellion_modifier
@@ -132,8 +116,8 @@ horde_civil_war = {
 		remove_variable = horde_civil_war_pretender_variable
 		remove_variable = pretender_rebel_character
 		trigger_event_non_silently = horde_civil_war.100
-	}
-		pp_disaster_escalation_cleanup_effect = { type = horde_civil_war }
+		# PP: growing pain
+		pp_disaster_pain_clear_effect = { type = horde_civil_war }
 	}
 	
 	on_monthly = {
@@ -154,7 +138,8 @@ horde_civil_war = {
 			}
 			trigger_event_non_silently = horde_civil_war.11
 		}
-		# PP: breaking point
-		pp_disaster_escalation_effect = { type = horde_civil_war }
+		# PP: growing pain
+		pp_disaster_pain_effect = { type = horde_civil_war }
+		pp_disaster_relief_notice_effect = { type = horde_civil_war }
 	}
 }

@@ -70,7 +70,8 @@ Examples:
   since 1537. An active disaster fails the readiness check (the check's counter was 1 for England and Brandenburg,
   the two probed powers with an active disaster); this one ends only at stability > 30 plus religious unity
   > 0.9 (or extreme spiritualism/humanism), which England (stability ~4) never reaches. Brandenburg the same since 1544.
-  (Since 2026-11-27 such a disaster breaks after 40 years; see "Open problems" below.)
+  (Since 2026-11-27 such a disaster weakens the country from 25 years and can end with stability 0 from 50; see
+  "Open problems" below.)
 - **Castile**: CB on Girona, estimate 1.0, 662-804 gold against the 845 it needs (1.5 x tax base).
 - **Portugal** vs Morocco: estimate 0.57 (MOR + its ally TLE + TAT) against its threshold 0.6.
 
@@ -124,10 +125,16 @@ balance. Kit: private `~/pp_ai_run/warai`.
 
 - **Stuck disasters** (addressed 2026-11-27, Jan, not tested in game): `religious_turmoil` (England since 1537,
   Brandenburg since 1544) never ended at PP stability levels and blocked every war declaration of the country; observer
-  runs had about 20 disasters running longer than 50 years. Now every disaster vanilla does not end within 25 years
-  comes to a head at 25 years (three bands to 35) and breaks at 40 (`can_end` = vanilla OR 40 years), so no country
-  sits out wars for more than 40 years under one disaster; after a break the same disaster is blocked for 25 years.
-  Constructor AGENTS.md "Disasters Come to a Head".
+  runs had about 20 disasters running longer than 50 years; of 14 `religious_turmoil` cases stuck 50+ years, 13 met
+  every condition except stability. Now the eight general disasters (any country of a broad kind; the national ones stay
+  vanilla) weaken the country from 25 years in five steps to 45 (estates, crown power, government power, rebels,
+  subjects, levies, morale, discipline, a moderate tax loss; nothing the disaster's end asks for), which is what a
+  neighbour's war estimate reads (levies, morale, discipline), and from 50 years `can_end` also holds with vanilla's
+  conditions at stability 0 instead of vanilla's bar. With the bar at 0, about 15-16 of the 46 long-stuck instances
+  of all types in the three runs would end exactly at 50 years and 37 at some point after 25 (measured before the
+  country-specific ones were left out, so the covered share is smaller). No hard end: a country that
+  never qualifies keeps the last step. After a relieved ending the same disaster is blocked for 25 years. Constructor
+  AGENTS.md "Long Disasters: Growing Pain".
 - **Objective tied to the wrong CB**: an AI that plans against a subject gets its fabricated CB against the overlord
   and waits forever (Ottomans -> Muntenia / Hungary). It keeps re-scoring that one target.
 - **CB supply**: parliament agendas (every 59 months) are the main CB source; only ~50 spy networks exist worldwide.

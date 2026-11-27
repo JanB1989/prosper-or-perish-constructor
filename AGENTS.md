@@ -945,55 +945,77 @@
   `test_town_hall_upkeep_a_third_of_vanilla`, `test_members_think_well_of_the_league`,
   `test_kontors_demanded_only_in_the_winners_towns`).
 
-## Disasters Come to a Head (2026-11-27, Jan; not tested in game)
+## Long Disasters: Growing Pain (2026-11-27, Jan; not tested in game)
 
 - Why: a vanilla disaster has no timer, it ends only when `can_end` holds, and while it runs the AI declares no war and
-  (`has_any_active_disaster = no` in nearly every `can_start`) no other disaster starts. Observer runs had about 20
-  disasters longer than 50 years, about 10 longer than a century (Ottomans in `religious_turmoil` 1538-1837, Yuan in
-  `crisis_of_the_chinese_dynasty` from 1441, Nahuatl states in `reform_society` 300-400 years). Jan: "It shouldn't be
-  250 years of disaster. It should at some point either be resolved or accelerated in a manner that has catastrophic
-  consequences"; "I like the 25-year variant, then ramp up ... in the vanilla style".
-- The rule, one for every disaster: years 0-25 vanilla. From 25 years three bands (25, 30, 35), each once, through the
-  disaster's own `on_monthly` (`pp_disaster_escalation_effect`, events `pp_disaster.1-3`, the player sees an event):
-  stability mild / severe / extreme penalty and every estate's satisfaction mild / severe / extreme penalty at the
-  band's start, and a band modifier (`pp_disaster_coming_to_head_1-3`, 6 years, removed when the disaster ends) with
-  `monthly_rebel_growth` 0.005 / 0.01 / 0.02 (vanilla reform_society, crisis_of_the_chinese_dynasty,
-  dissolution_of_delhi), `stability_investment` penalty / large / huge (dissolution_of_delhi, savonarola,
-  revolution_disaster) and target satisfaction small / medium / large (horde_civil_war, crisis_of_faith,
-  court_and_country). At 40 years `can_end` holds (`OR = { AND = { <vanilla> } pp_disaster_breaking_point_trigger }`);
-  `on_end` then takes the breaking point when vanilla's way out does not hold too: vanilla's `on_end` without the reward
-  of a won disaster, then `pp_disaster_breaking_point_effect`: `block_disaster_temporarily_effect` 25 years (vanilla's
-  `blocked_disaster_<type>`, read by `pp_disaster_restart_allowed_trigger` at the top of every copy's `can_start`) and
-  event `pp_disaster.10` with one blow: the least controlled provinces outside the capital's (province average control
-  < 0.25, at most a quarter of the provinces, vanilla succession.100's order) break away as countries of their own
-  (cores, truce, like the enclave release); else, with an estate stronger than the crown (vanilla coup_attempt's start
-  condition), the strongest estate rises with the least controlled third of the provinces in a civil war (vanilla
-  revolution_disaster.1 / succession.100: `create_rebel`, pop allegiance, `start_civil_war` with instant levies); else
-  stability ultimate penalty (-50) and government power ultimate penalty (-25). `rise_of_the_szlachta` ends by
-  outcomes: it gets the band cleanup in each and one more outcome for the breaking point, valid only when no vanilla
-  outcome is. No pulse: nothing on an on_action, the events have no timer.
-- Form: same-path copies `in_game/common/disasters/<vanilla file name>` (a same-path mod file replaces vanilla's whatever
-  the rule; an `INJECT:` cannot do it: an injected trigger section the target already has is dropped, and `can_end`
-  must become an OR). `ppc disasters apply|check|pin` (`disaster_breaking_point.py`, also run by the finalize step of
-  `ppc build`/`sync`) writes them from vanilla's files byte for byte plus the inserted lines (marked `# PP: breaking
-  point`); the shared logic is hand-written: `scripted_triggers/pp_disaster_triggers.txt`,
-  `scripted_effects/pp_disaster_effects.txt`, `events/pp_disaster_events.txt`,
-  `main_menu/common/static_modifiers/pp_disaster_modifiers.txt`, `pp_disasters_l_english.yml` (the rule is also in the
-  vanilla Disaster concept's description, moved to `localization/replace` by the finalize step).
-- Per disaster: `TIMEOUT_RULES` in the module names what goes from vanilla's `on_end` at a breaking point (reward
-  events, inline rewards such as `add_legitimacy = legitimacy_extreme_bonus`) and what cleanup of a dropped event stays,
-  with the review in one line each. Exempt (`EXEMPT`, vanilla ends them within 25 years): aspiration_for_liberty,
-  coup_attempt, court_and_country, english_civil_war, french_wars_religion, revolutionary_chaos, time_of_troubles.
-  Kept whole at a breaking point: crisis_of_the_chinese_dynasty (only penalties), struggle_for_royal_power (cleanup),
-  death_of_hayan_wuruk (vanilla's own 30-year end comes first), hook_and_cod_wars (its cleanup lives in scripted effects
-  local to its event file, so its stability bonus is the one reward left).
-- Game update: `tests/test_disaster_breaking_point.py` fails when a vanilla disaster file changes
-  (`tests/disaster_vanilla_pins.csv`), when one is added without a rule or exemption, or when a copy is not vanilla plus
-  the rule. Review the changed `on_end` for rewards, then `uv run ppc disasters apply` and `uv run ppc disasters pin`.
-  A dropped event that vanilla no longer fires fails `apply`.
-- Not known: whether the console's `disaster` command honours `can_start`; whether every disaster's `on_end` runs when
-  a country is annexed (the breaking point needs the country alive). A save loaded mid-disaster gets the band it is in
-  at once, and every disaster past 40 years breaks within a month.
+  (`has_any_active_disaster = no` in nearly every `can_start`) no other disaster starts. Three observer runs: of 14
+  `religious_turmoil` cases stuck 50+ years, 13 met every condition except stability (Ottomans from year 29: stability
+  about 4, bar 30). Jan: "I want there to be a period of pain. If it's resolved with whatever conditions the game wants
+  to have, then it's fine. If it's not resolved, there's a period of growing bigger pain, but at the end, you can
+  resolve it with lower stability if you survived until then"; "I kind of don't even want something like a hard end";
+  the pain must not lower what the end asks for ("circular"), it should weaken the state "until breakaway factions or
+  other nations feel strong enough to come in", and "it shouldn't always just cause bankruptcy". Replaces the breaking
+  point of the same morning (8424df7b, 9e5e9d24: bands with stability hits, a forced end at 40 years with a breakaway,
+  civil war or collapse, reward withheld), which is gone.
+- Scope (`COVERED` / `VANILLA` / `EXEMPT` in `disaster_growing_pain.py`, every vanilla disaster in exactly one):
+  covered, general (any country of a broad kind): `religious_turmoil` (Christian, not Orthodox / Miaphysite / France,
+  age of reformation), `horde_civil_war` (steppe hordes), `succession_crisis` (monarchies), `crisis_of_faith`
+  (theocracies but the Papacy), `oligarchic_capture` (republics), `decline_of_empire` (empires from age 3),
+  `peasants_war` (monarchies and theocracies, ages 3-4), `revolution_disaster` (age 6 with the Enlightenment). Pure
+  vanilla, no copy (one tag, culture or national story): ambrosian_republic_disaster, byzantine_succession_crisis,
+  castilian_civil_war, ciompi_revolt, crisis_of_the_chinese_dynasty, crisis_of_the_sayfawa_dynasty,
+  curse_of_stefan_uros_iii, death_of_hayan_wuruk, decline_of_majapahit, decline_of_mali, dissolution_of_delhi,
+  fate_of_the_phoenix, hook_and_cod_wars, muscovite_succession_war, reform_society, rise_of_the_szlachta,
+  savonarola_disaster, sinicization_disaster (China's neighbours against China, ends by its own event counters),
+  struggle_for_royal_power, turmoil_in_brandenburg, twilight_of_the_tsardom, war_of_the_aragonese_union_disaster,
+  war_of_the_roses. Exempt (vanilla ends them within 25 years): aspiration_for_liberty, coup_attempt,
+  court_and_country, english_civil_war, french_wars_religion, revolutionary_chaos, time_of_troubles.
+- Years 0-25: vanilla. 25-50: one country modifier per five years (`pp_disaster_pain_<disaster>_1..5` at
+  25/30/35/40/45), swapped by `pp_disaster_pain_effect` from the disaster's own `on_monthly`; notice events
+  `pp_disaster.1` (first step) and `.2` (each later step). The last step stays for as long as the disaster runs: no
+  hard end. Lines at the last step (the core, even steps; `CORE`): estate target satisfaction -0.2 (vanilla's great
+  permanent penalty; small / medium / large / larger / great by step), crown power -0.2 (succession_crisis,
+  horde_civil_war, crisis_of_faith), government power lines -0.3 a month (decline_of_empire's legitimacy -0.3), rebel
+  growth of the disaster's kind 0.015 (vanilla 0.003-0.02), separatism +0.1, subject loyalty -20, levy size -0.3
+  (decline_of_empire's manpower -0.3), land morale and discipline -0.1 each (decline_of_empire), tax efficiency -0.15
+  (between vanilla's large -0.1 and huge -0.2); plus one story line each (`COVERED[...].extra`). Rebels: religious
+  (religious_turmoil), pretender (horde_civil_war, succession_crisis: a rising pretender ends the succession crisis,
+  `in_civil_war = yes` is one of its exits), clergy estate (crisis_of_faith), nobles + burghers estate half each
+  (oligarchic_capture), nationalist (decline_of_empire), peasants estate (peasants_war), burghers estate (the
+  revolution's rebels, revolution_disaster).
+- Nothing the end asks for: `EXIT_NUMBERS` lists every number each covered disaster's vanilla end trigger compares and
+  the modifiers that would push it; those and every stability modifier (`STABILITY`) are never written (so no
+  legitimacy for succession_crisis, no devotion for crisis_of_faith, no republican tradition for oligarchic_capture, no
+  horde unity for horde_civil_war, per-estate satisfaction without the clergy for religious_turmoil and without the
+  peasants for peasants_war, no separatism for decline_of_empire). A test reads every comparison in the end triggers.
+- From 50 years: `can_end` = `OR = { AND = { <vanilla> } AND = { pp_disaster_relief_due_trigger
+  pp_disaster_relief_<disaster>_trigger } }`; the relief trigger is vanilla's end trigger with only the stability bar
+  lowered (generated into `scripted_triggers/pp_disaster_relief_triggers.txt` from vanilla's `disaster_triggers.txt`,
+  `RELIEF` per disaster): `stability > 30` (religious_turmoil), `> 25` (succession_crisis, crisis_of_faith,
+  oligarchic_capture), `> HORDE_CIVIL_WAR_END_STABILITY` = 25 (horde_civil_war), `> 10` (peasants_war) become
+  `stability >= 0`; decline_of_empire's bar is already 0 and goes 25 lower (`>= -25`); revolution_disaster has no
+  stability bar and so no relief (its revolutionaries win or are beaten). Notice `pp_disaster.3` once the relief is
+  open (`pp_disaster_relief_notice_effect`). Vanilla's `on_end` runs unchanged either way (the reward stays); before it,
+  when vanilla's own condition does not hold (the relaxed branch ended it), `block_disaster_temporarily_effect` 25
+  years (`pp_disaster_restart_allowed_trigger` at the top of the copy's `can_start`); after it the step modifiers go
+  (`pp_disaster_pain_clear_effect`). No pulse: nothing on an on_action, the events have no timer or effect.
+- Form: same-path copies `in_game/common/disasters/<vanilla file name>` of the covered disasters only (marked `# PP:
+  growing pain`). `ppc disasters apply|check|pin` (`disaster_growing_pain.py`, also run by the finalize step of
+  `ppc build`/`sync`) writes them byte for byte from vanilla plus the inserted lines, the relief triggers, the step
+  modifiers (`main_menu/common/static_modifiers/pp_disaster_modifiers.txt`) and their text
+  (`pp_disaster_pain_l_english.yml`); stale copies go. Hand-written: `scripted_triggers/pp_disaster_triggers.txt`,
+  `scripted_effects/pp_disaster_effects.txt`, `events/pp_disaster_events.txt`, `pp_disasters_l_english.yml`; the rule
+  is also in the vanilla Disaster concept's description (`localization/replace`).
+- Game update: `tests/test_disaster_growing_pain.py` fails when a vanilla file this pass reads changes
+  (`tests/disaster_vanilla_pins.csv`: the covered disasters and `disaster_triggers.txt`), when a disaster is added
+  without a class, when a copy is not vanilla plus the rule, when an end trigger compares a number `EXIT_NUMBERS` does
+  not list, or when a stability clause in `RELIEF` is not found exactly once. Review, then `uv run ppc disasters apply`
+  and `uv run ppc disasters pin`.
+- Not known: the step sizes' effect on AI wars against a weakened country and on bankruptcy (no run yet); whether a
+  rebel kind's growth reaches the disaster's own rebels (e.g. crisis_of_faith's schismatic clergy, created as clergy
+  estate rebels); whether separatism lowers control (left out of decline_of_empire for that reason). A save loaded
+  mid-disaster gets the step it is in at once; old saves carry the removed `pp_disaster_coming_to_head_*` modifiers
+  and band variables (no save compat).
 
 ## Maghreb Control Gifts (2026-11-27, Jan; not tested in game)
 

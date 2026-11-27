@@ -1,4 +1,4 @@
-﻿# PP: same-path copy of vanilla's disaster, written by `uv run ppc disasters apply` (src/prosper_or_perish_constructor/disaster_breaking_point.py); do not edit.
+﻿# PP: written by `uv run ppc disasters apply` (src/prosper_or_perish_constructor/disaster_growing_pain.py); do not edit.
 crisis_of_faith = {
 
 	image = "gfx/interface/illustrations/disaster/religious_turmoil.dds"
@@ -13,15 +13,18 @@ crisis_of_faith = {
 	}
 
 	can_start = {
-		pp_disaster_restart_allowed_trigger = { type = crisis_of_faith } # PP: breaking point
+		pp_disaster_restart_allowed_trigger = { type = crisis_of_faith } # PP: growing pain
 
 		crisis_of_faith_qualifies_trigger = yes
 	}
 
-	can_end = { # PP: breaking point: vanilla's way out, or the breaking point
+	can_end = { # PP: growing pain: vanilla's way out, or from 50 years the same with less stability
 		OR = {
 			AND = { crisis_of_faith_end_trigger = yes }
-			pp_disaster_breaking_point_trigger = { type = crisis_of_faith }
+			AND = {
+				pp_disaster_relief_due_trigger = { type = crisis_of_faith }
+				pp_disaster_relief_crisis_of_faith_trigger = yes
+			}
 		}
 	}
 
@@ -43,41 +46,12 @@ crisis_of_faith = {
 		trigger_event_non_silently = crisis_of_faith.1
 	}
 
-	on_end = { # PP: breaking point: past it without vanilla's way out, vanilla's end without the reward, then the blow
+	on_end = {
+		# PP: growing pain: ended by the relaxed branch: no restart for a while
 		if = {
-			limit = {
-				pp_disaster_breaking_point_trigger = { type = crisis_of_faith }
-				NOT = { AND = { crisis_of_faith_end_trigger = yes } }
-			}
-			remove_country_modifier = ai_crisis_of_faith_targets
-		if = {
-			limit = { exists = var:schismatic_clergy_rebel }
-			destroy_rebel = var:schismatic_clergy_rebel
-			remove_variable = schismatic_clergy_rebel
+			limit = { NOT = { AND = { crisis_of_faith_end_trigger = yes } } }
+			pp_disaster_restart_block_effect = { type = crisis_of_faith }
 		}
-		if = {
-			limit = {
-				government_type = government_type:theocracy
-				has_variable = schismatic_clergy_civil_war_won_variable
-			}
-			trigger_event_non_silently = crisis_of_faith.101
-		}
-		else_if = {
-			limit = { NOT = { government_type = government_type:theocracy } }
-			trigger_event_non_silently = crisis_of_faith.102
-		}
-		else = {
-			
-			
-		}
-		if = {
-			limit = { has_variable = schismatic_clergy_civil_war_won_variable }
-			remove_variable = schismatic_clergy_civil_war_won_variable
-		}
-			clear_crisis_of_faith_heresiarch_effect = yes
-			pp_disaster_breaking_point_effect = { type = crisis_of_faith }
-		}
-		else = {
 		remove_country_modifier = ai_crisis_of_faith_targets
 		if = {
 			limit = { exists = var:schismatic_clergy_rebel }
@@ -103,8 +77,8 @@ crisis_of_faith = {
 			limit = { has_variable = schismatic_clergy_civil_war_won_variable }
 			remove_variable = schismatic_clergy_civil_war_won_variable
 		}
-	}
-		pp_disaster_escalation_cleanup_effect = { type = crisis_of_faith }
+		# PP: growing pain
+		pp_disaster_pain_clear_effect = { type = crisis_of_faith }
 	}
 
 	on_monthly = {
@@ -131,7 +105,8 @@ crisis_of_faith = {
 				700 = { }
 			}
 		}
-		# PP: breaking point
-		pp_disaster_escalation_effect = { type = crisis_of_faith }
+		# PP: growing pain
+		pp_disaster_pain_effect = { type = crisis_of_faith }
+		pp_disaster_relief_notice_effect = { type = crisis_of_faith }
 	}
 }

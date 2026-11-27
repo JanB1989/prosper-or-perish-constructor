@@ -1,11 +1,10 @@
 ﻿namespace = pp_disaster
 
-# PP (2026-11-27, Jan): disasters come to a head and break (AGENTS.md "Disasters Come to a Head"). Fired by
-# pp_disaster_escalation_effect (a disaster's on_monthly) and pp_disaster_breaking_point_effect (its on_end); no pulse.
-# Magnitudes are vanilla's own disaster values: stability, estate satisfaction, rebel growth, stability investment and
-# target satisfaction as vanilla's disasters and their events use them, rising each band.
+# PP (2026-11-27, Jan): long disasters, growing pain (AGENTS.md "Long Disasters: Growing Pain"). Notices only: the step
+# modifiers are swapped by pp_disaster_pain_effect (a disaster's on_monthly), which fires these; no pulse, no effect of
+# their own.
 
-# The Crisis Comes to a Head (25 years)
+# The first step (25 years)
 pp_disaster.1 = {
 	type = country_event
 	category = disaster_event
@@ -19,18 +18,11 @@ pp_disaster.1 = {
 
 	option = {
 		name = pp_disaster.1.a
-		add_stability = stability_mild_penalty
-		pp_disaster_estates_lose_satisfaction_effect = { value = estate_satisfaction_mild_penalty }
-		pp_disaster_remove_band_modifiers_effect = yes
-		add_country_modifier = {
-			modifier = pp_disaster_coming_to_head_1
-			years = 6
-			mode = replace
-		}
+		custom_tooltip = pp_disaster.1.a_tt
 	}
 }
 
-# The Realm Unravels (30 years)
+# Each later step (30, 35, 40, 45 years)
 pp_disaster.2 = {
 	type = country_event
 	category = disaster_event
@@ -44,18 +36,11 @@ pp_disaster.2 = {
 
 	option = {
 		name = pp_disaster.2.a
-		add_stability = stability_severe_penalty
-		pp_disaster_estates_lose_satisfaction_effect = { value = estate_satisfaction_severe_penalty }
-		pp_disaster_remove_band_modifiers_effect = yes
-		add_country_modifier = {
-			modifier = pp_disaster_coming_to_head_2
-			years = 6
-			mode = replace
-		}
+		custom_tooltip = pp_disaster.2.a_tt
 	}
 }
 
-# On the Brink (35 years)
+# The relaxed end is open (50 years)
 pp_disaster.3 = {
 	type = country_event
 	category = disaster_event
@@ -63,88 +48,11 @@ pp_disaster.3 = {
 	desc = pp_disaster.3.desc
 	outcome = neutral
 	illustration_tags = {
-		10 = angry
-		10 = armed
+		10 = exterior
 	}
 
 	option = {
 		name = pp_disaster.3.a
-		add_stability = stability_extreme_penalty
-		pp_disaster_estates_lose_satisfaction_effect = { value = estate_satisfaction_extreme_penalty }
-		pp_disaster_remove_band_modifiers_effect = yes
-		add_country_modifier = {
-			modifier = pp_disaster_coming_to_head_3
-			years = 6
-			mode = replace
-		}
-	}
-}
-
-# The Breaking Point (40 years): one blow, by what fits the realm. Land it does not hold breaks away; else the
-# strongest estate, stronger than the crown, rises in a civil war; else stability and government power collapse.
-pp_disaster.10 = {
-	type = country_event
-	category = disaster_event
-	title = pp_disaster.10.title
-	desc = {
-		first_valid = {
-			triggered_desc = {
-				trigger = { has_variable = pp_disaster_blow_breakaway }
-				desc = pp_disaster.10.desc.breakaway
-			}
-			triggered_desc = {
-				trigger = { has_variable = pp_disaster_blow_civil_war }
-				desc = pp_disaster.10.desc.civil_war
-			}
-			triggered_desc = {
-				trigger = { always = yes }
-				desc = pp_disaster.10.desc.collapse
-			}
-		}
-	}
-	outcome = neutral
-	major = yes
-	illustration_tags = {
-		10 = armed
-		10 = exterior
-	}
-
-	immediate = {
-		if = {
-			limit = { pp_disaster_breakaway_fits_trigger = yes }
-			pp_disaster_breakaway_effect = yes
-		}
-		else_if = {
-			limit = { pp_disaster_civil_war_fits_trigger = yes }
-			pp_disaster_civil_war_effect = yes
-		}
-	}
-
-	option = {
-		name = pp_disaster.10.a
-		if = {
-			limit = { has_variable = pp_disaster_blow_breakaway }
-			custom_tooltip = pp_disaster.10.breakaway_tt
-		}
-		else_if = {
-			limit = { has_variable = pp_disaster_blow_civil_war }
-			custom_tooltip = pp_disaster.10.civil_war_tt
-		}
-		else = {
-			add_stability = stability_ultimate_penalty
-			add_government_power = government_power_ultimate_penalty
-		}
-		custom_tooltip = pp_disaster.10.no_restart_tt
-	}
-
-	after = {
-		if = {
-			limit = { has_variable = pp_disaster_blow_breakaway }
-			remove_variable = pp_disaster_blow_breakaway
-		}
-		if = {
-			limit = { has_variable = pp_disaster_blow_civil_war }
-			remove_variable = pp_disaster_blow_civil_war
-		}
+		custom_tooltip = pp_disaster.3.a_tt
 	}
 }

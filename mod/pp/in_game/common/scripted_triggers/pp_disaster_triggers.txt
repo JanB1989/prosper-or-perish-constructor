@@ -1,90 +1,17 @@
-﻿# PP (2026-11-27, Jan): disasters come to a head and break (AGENTS.md "Disasters Come to a Head"). Every disaster copy
-# in common/disasters (written by `ppc disasters apply`) calls these with its own type. A disaster vanilla ends within
-# 25 years keeps vanilla's file.
+﻿# PP (2026-11-27, Jan): long disasters, growing pain (AGENTS.md "Long Disasters: Growing Pain"). The copies of the
+# general disasters in common/disasters (written by `ppc disasters apply`) call these with their own type; the relaxed
+# end triggers pp_disaster_relief_<type>_trigger are generated next to this file (pp_disaster_relief_triggers.txt).
 
-# Country scope: the disaster has run long enough to break. Its can_end holds from here on (OR vanilla's), and on_end
-# then takes the breaking point (pp_disaster_breaking_point_effect) unless vanilla's way out holds too.
-pp_disaster_breaking_point_trigger = {
+# Country scope: the disaster has lasted long enough for the relaxed end (vanilla's end with less stability).
+pp_disaster_relief_due_trigger = {
 	had_disaster_for_years = {
 		disaster_type = disaster_type:$type$
-		years >= 40
+		years >= 50
 	}
 }
 
-# Country scope: no restart while the block a breaking point set runs (block_disaster_temporarily_effect, vanilla's
+# Country scope: no restart while the block a relieved ending set runs (block_disaster_temporarily_effect, vanilla's
 # variable blocked_disaster_<type>, which only revolution_disaster reads in vanilla).
 pp_disaster_restart_allowed_trigger = {
 	NOT = { has_blocked_disaster_trigger = { type = $type$ } }
-}
-
-# Country scope: the disaster's pressure band (pp_disaster_escalation_effect) is at least $band$.
-pp_disaster_band_reached_trigger = {
-	has_variable = pp_disaster_band_$type$
-	var:pp_disaster_band_$type$ >= $band$
-}
-
-# Country scope, the breaking point: a realm with land it does not hold. A province outside the capital's whose
-# locations are barely controlled (vanilla succession.100 picks the least controlled provinces the same way).
-pp_disaster_breakaway_fits_trigger = {
-	exists = capital
-	num_provinces >= 4
-	any_province = {
-		NOT = { root.capital.province = this }
-		province_average_control < 0.25
-	}
-}
-
-# Country scope, the breaking point: an estate stronger than the crown (vanilla coup_attempt's start condition).
-pp_disaster_civil_war_fits_trigger = {
-	exists = capital
-	in_civil_war = no
-	num_provinces >= 2
-	any_estate = {
-		estate_type != estate_type:crown_estate
-		power > "root.estate_power(estate_type:crown_estate)"
-	}
-}
-
-# Country scope: this estate is the strongest besides the crown. One trigger per estate: the engine does not put a
-# scripted trigger's argument into a quoted value (tested in game 2026-11-27: "Invalid estate type", the civil war
-# never started).
-pp_disaster_strongest_nobles_trigger = {
-	country_has_estate = estate_type:nobles_estate
-	NOT = {
-		any_estate = {
-			estate_type != estate_type:crown_estate
-			estate_type != estate_type:nobles_estate
-			power > "root.estate_power(estate_type:nobles_estate)"
-		}
-	}
-}
-pp_disaster_strongest_clergy_trigger = {
-	country_has_estate = estate_type:clergy_estate
-	NOT = {
-		any_estate = {
-			estate_type != estate_type:crown_estate
-			estate_type != estate_type:clergy_estate
-			power > "root.estate_power(estate_type:clergy_estate)"
-		}
-	}
-}
-pp_disaster_strongest_burghers_trigger = {
-	country_has_estate = estate_type:burghers_estate
-	NOT = {
-		any_estate = {
-			estate_type != estate_type:crown_estate
-			estate_type != estate_type:burghers_estate
-			power > "root.estate_power(estate_type:burghers_estate)"
-		}
-	}
-}
-pp_disaster_strongest_peasants_trigger = {
-	country_has_estate = estate_type:peasants_estate
-	NOT = {
-		any_estate = {
-			estate_type != estate_type:crown_estate
-			estate_type != estate_type:peasants_estate
-			power > "root.estate_power(estate_type:peasants_estate)"
-		}
-	}
 }

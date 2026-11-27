@@ -1,12 +1,10 @@
-﻿# PP: same-path copy of vanilla's disaster, written by `uv run ppc disasters apply` (src/prosper_or_perish_constructor/disaster_breaking_point.py); do not edit.
+﻿# PP: written by `uv run ppc disasters apply` (src/prosper_or_perish_constructor/disaster_growing_pain.py); do not edit.
 revolution_disaster = {
 
 	image = "gfx/interface/illustrations/disaster/revolution_disaster.dds"
 
 	monthly_spawn_chance = monthly_spawn_chance_very_low
 	can_start = {
-		pp_disaster_restart_allowed_trigger = { type = revolution_disaster } # PP: breaking point
-
 		has_any_active_disaster = no
 		current_age = age_6_revolutions
 		is_revolutionary = no
@@ -68,13 +66,8 @@ revolution_disaster = {
 		}
 	}
 	
-	can_end = { # PP: breaking point: vanilla's way out, or the breaking point
-		OR = {
-			AND = {
+	can_end = {
 		revolution_disaster_end_trigger = yes
-	}
-			pp_disaster_breaking_point_trigger = { type = revolution_disaster }
-		}
 	}
 	modifier = {
 		pop_leave_rebels_threshold = 0.1
@@ -84,22 +77,10 @@ revolution_disaster = {
 	on_start = {
 		trigger_event_non_silently = revolution_disaster.1
 	}
-	on_end = { # PP: breaking point: past it without vanilla's way out, vanilla's end without the reward, then the blow
-		if = {
-			limit = {
-				pp_disaster_breaking_point_trigger = { type = revolution_disaster }
-				NOT = { AND = {
-		revolution_disaster_end_trigger = yes
-	} }
-			}
-			
-			remove_from_revolutionary_list = yes
-			pp_disaster_breaking_point_effect = { type = revolution_disaster }
-		}
-		else = {
+	on_end = {
 		trigger_event_non_silently = revolution_disaster.3
-	}
-		pp_disaster_escalation_cleanup_effect = { type = revolution_disaster }
+		# PP: growing pain
+		pp_disaster_pain_clear_effect = { type = revolution_disaster }
 	}
 	
 	on_monthly = {
@@ -108,7 +89,7 @@ revolution_disaster = {
 			1 = { trigger_event_non_silently = parliaments.28 }
 			99 = { }
 		}
-		# PP: breaking point
-		pp_disaster_escalation_effect = { type = revolution_disaster }
+		# PP: growing pain
+		pp_disaster_pain_effect = { type = revolution_disaster }
 	}
 }

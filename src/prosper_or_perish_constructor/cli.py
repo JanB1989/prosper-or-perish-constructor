@@ -423,17 +423,17 @@ def _build_parser() -> argparse.ArgumentParser:
     disasters = _add_command(
         subcommands,
         "disasters",
-        "Disasters come to a head at 25 years and break at 40: same-path copies of vanilla's disasters "
-        "(in_game/common/disasters, disaster_breaking_point.py).",
+        "Long general disasters: growing pain from 25 years, the end with less stability from 50: same-path copies of "
+        "vanilla's disasters (in_game/common/disasters, disaster_growing_pain.py).",
         _disasters,
     )
     disasters.add_argument(
         "action",
         choices=("apply", "check", "pin"),
-        help="apply writes the copies; check reports whether they are current and vanilla matches the pins; pin records "
-        "the vanilla files reviewed (tests/disaster_vanilla_pins.csv).",
+        help="apply writes the copies, relief triggers, step modifiers and their text; check reports whether they are "
+        "current and vanilla matches the pins; pin records the vanilla files read (tests/disaster_vanilla_pins.csv).",
     )
-    disasters.add_argument("--verbose", action="store_true", help="also print every disaster's timeout review.")
+    disasters.add_argument("--verbose", action="store_true", help="also print every disaster's class and reason.")
     advance_cost = _add_command(
         subcommands,
         "advance-cost",
@@ -1466,19 +1466,22 @@ def _literacy(args: argparse.Namespace, extra: Sequence[str], repo: Path, projec
 def _disasters(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
     if extra:
         raise SystemExit("disasters does not accept extra arguments.")
-    from prosper_or_perish_constructor import disaster_breaking_point as dbp
+    from prosper_or_perish_constructor import disaster_growing_pain as dbp
 
     if args.action == "pin":
         pins = dbp.write_pins(repo, project)
-        print(f"Disaster pins: {len(pins)} vanilla disaster files recorded in {dbp.PINS_PATH}.")
+        print(f"Disaster pins: {len(pins)} vanilla files recorded in {dbp.PINS_PATH}.")
         return 0
     check = args.action == "check"
     result = dbp.apply(repo, project, _project_mod_root(repo, project), write=not check)
     if args.verbose:
+        for key, spec in sorted(dbp.COVERED.items()):
+            relief = f"{spec.relief[0]} -> {spec.relief[1]}" if spec.relief else "no stability bar, no relief"
+            print(f"covered {key}: {spec.kind}; {relief}")
+        for key, why in sorted(dbp.VANILLA.items()):
+            print(f"vanilla {key}: {why}")
         for key, why in sorted(dbp.EXEMPT.items()):
             print(f"exempt {key}: {why}")
-        for key, rule in sorted(dbp.TIMEOUT_RULES.items()):
-            print(f"{key}: {rule.why}")
     print(dbp.summary(result, check=check))
     from prosper_or_perish_constructor.cap_tooltips import game_root
     from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
@@ -1486,8 +1489,8 @@ def _disasters(args: argparse.Namespace, extra: Sequence[str], repo: Path, proje
     pins, now = dbp.read_pins(repo), dbp.current_pins(game_root(vanilla_root(repo, project)))
     moved = sorted(name for name in set(pins) | set(now) if pins.get(name) != now.get(name))
     if moved:
-        print(f"Vanilla disasters changed since the review: {', '.join(moved)} (review their on_end for rewards, "
-              "then ppc disasters apply and ppc disasters pin).")
+        print(f"Vanilla disaster files changed since the review: {', '.join(moved)} (review the class, the can_end and "
+              "EXIT_NUMBERS, then ppc disasters apply and ppc disasters pin).")
     return 1 if check and (result.changed or result.removed or moved) else 0
 
 
@@ -2140,10 +2143,10 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
     from prosper_or_perish_constructor import literacy_sources  # after the ladder and the RGO redirects: it checks theirs
 
     print(literacy_sources.summary(literacy_sources.apply(repo, project, mod_root, vanilla_root(repo, project))), flush=True)
-    from prosper_or_perish_constructor import disaster_breaking_point
+    from prosper_or_perish_constructor import disaster_growing_pain
 
-    print(disaster_breaking_point.summary(
-        disaster_breaking_point.apply(repo, project, mod_root, vanilla_root(repo, project))), flush=True)
+    print(disaster_growing_pain.summary(
+        disaster_growing_pain.apply(repo, project, mod_root, vanilla_root(repo, project))), flush=True)
     from prosper_or_perish_constructor import advance_research_cost  # after the ladder: it reads the ladder's costs
 
     print(advance_research_cost.summary(*advance_research_cost.apply(repo, project, mod_root, vanilla_root(repo, project))),

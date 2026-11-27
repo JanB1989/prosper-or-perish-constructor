@@ -1,32 +1,727 @@
-﻿# PP (2026-11-27, Jan): a disaster comes to a head (AGENTS.md "Disasters Come to a Head"), one modifier per band at 25,
-# 30 and 35 years (events pp_disaster.1-3; removed when the disaster ends). Values are vanilla's disaster values, rising:
-# rebel growth 0.005 / 0.01 / 0.02 (reform_society, crisis_of_the_chinese_dynasty, dissolution_of_delhi), stability
-# investment penalty / large / huge (dissolution_of_delhi, savonarola, revolution_disaster), target satisfaction
-# small / medium / large (horde_civil_war, crisis_of_faith, court_and_country).
+﻿# PP: written by `uv run ppc disasters apply` (src/prosper_or_perish_constructor/disaster_growing_pain.py); do not edit.
+# One modifier per step of a long disaster (25, 30, 35, 40, 45 years), swapped by pp_disaster_pain_effect from the disaster's on_monthly. Lines and anchors: COVERED / CORE in the module.
 
-pp_disaster_coming_to_head_1 = {
+pp_disaster_pain_crisis_of_faith_1 = {
 	game_data = {
 		category = country
 	}
-	monthly_rebel_growth = 0.005
-	stability_investment = stability_investment_penalty
 	global_estate_target_satisfaction = small_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.04
+	monthly_clergy_estate_rebel_growth = 0.003
+	global_separatism = 0.02
+	subject_loyalty = -4
+	global_levy_size_modifier = -0.06
+	land_morale_modifier = -0.02
+	discipline = -0.02
+	tax_income_efficiency = -0.025
+	monthly_religious_influence = -0.04
 }
 
-pp_disaster_coming_to_head_2 = {
+pp_disaster_pain_crisis_of_faith_2 = {
 	game_data = {
 		category = country
 	}
-	monthly_rebel_growth = 0.01
-	stability_investment = large_stability_investment_penalty
 	global_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.08
+	monthly_clergy_estate_rebel_growth = 0.006
+	global_separatism = 0.04
+	subject_loyalty = -8
+	global_levy_size_modifier = -0.12
+	land_morale_modifier = -0.04
+	discipline = -0.04
+	tax_income_efficiency = -0.05
+	monthly_religious_influence = -0.08
 }
 
-pp_disaster_coming_to_head_3 = {
+pp_disaster_pain_crisis_of_faith_3 = {
 	game_data = {
 		category = country
 	}
-	monthly_rebel_growth = 0.02
-	stability_investment = huge_stability_investment_penalty
 	global_estate_target_satisfaction = large_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.12
+	monthly_clergy_estate_rebel_growth = 0.009
+	global_separatism = 0.06
+	subject_loyalty = -12
+	global_levy_size_modifier = -0.18
+	land_morale_modifier = -0.06
+	discipline = -0.06
+	tax_income_efficiency = -0.075
+	monthly_religious_influence = -0.12
+}
+
+pp_disaster_pain_crisis_of_faith_4 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = larger_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.16
+	monthly_clergy_estate_rebel_growth = 0.012
+	global_separatism = 0.08
+	subject_loyalty = -16
+	global_levy_size_modifier = -0.24
+	land_morale_modifier = -0.08
+	discipline = -0.08
+	tax_income_efficiency = -0.1
+	monthly_religious_influence = -0.16
+}
+
+pp_disaster_pain_crisis_of_faith_5 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = great_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.2
+	monthly_clergy_estate_rebel_growth = 0.015
+	global_separatism = 0.1
+	subject_loyalty = -20
+	global_levy_size_modifier = -0.3
+	land_morale_modifier = -0.1
+	discipline = -0.1
+	tax_income_efficiency = -0.15
+	monthly_religious_influence = -0.2
+}
+
+pp_disaster_pain_decline_of_empire_1 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = small_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.04
+	monthly_legitimacy = -0.06
+	monthly_republican_tradition = -0.06
+	monthly_devotion = -0.06
+	monthly_horde_unity = -0.06
+	monthly_tribal_cohesion = -0.06
+	monthly_nationalist_rebel_growth = 0.003
+	subject_loyalty = -4
+	global_levy_size_modifier = -0.06
+	land_morale_modifier = -0.02
+	discipline = -0.02
+	tax_income_efficiency = -0.025
+	monthly_prestige = -0.1
+}
+
+pp_disaster_pain_decline_of_empire_2 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.08
+	monthly_legitimacy = -0.12
+	monthly_republican_tradition = -0.12
+	monthly_devotion = -0.12
+	monthly_horde_unity = -0.12
+	monthly_tribal_cohesion = -0.12
+	monthly_nationalist_rebel_growth = 0.006
+	subject_loyalty = -8
+	global_levy_size_modifier = -0.12
+	land_morale_modifier = -0.04
+	discipline = -0.04
+	tax_income_efficiency = -0.05
+	monthly_prestige = -0.2
+}
+
+pp_disaster_pain_decline_of_empire_3 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = large_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.12
+	monthly_legitimacy = -0.18
+	monthly_republican_tradition = -0.18
+	monthly_devotion = -0.18
+	monthly_horde_unity = -0.18
+	monthly_tribal_cohesion = -0.18
+	monthly_nationalist_rebel_growth = 0.009
+	subject_loyalty = -12
+	global_levy_size_modifier = -0.18
+	land_morale_modifier = -0.06
+	discipline = -0.06
+	tax_income_efficiency = -0.075
+	monthly_prestige = -0.3
+}
+
+pp_disaster_pain_decline_of_empire_4 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = larger_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.16
+	monthly_legitimacy = -0.24
+	monthly_republican_tradition = -0.24
+	monthly_devotion = -0.24
+	monthly_horde_unity = -0.24
+	monthly_tribal_cohesion = -0.24
+	monthly_nationalist_rebel_growth = 0.012
+	subject_loyalty = -16
+	global_levy_size_modifier = -0.24
+	land_morale_modifier = -0.08
+	discipline = -0.08
+	tax_income_efficiency = -0.1
+	monthly_prestige = -0.4
+}
+
+pp_disaster_pain_decline_of_empire_5 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = great_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.2
+	monthly_legitimacy = -0.3
+	monthly_republican_tradition = -0.3
+	monthly_devotion = -0.3
+	monthly_horde_unity = -0.3
+	monthly_tribal_cohesion = -0.3
+	monthly_nationalist_rebel_growth = 0.015
+	subject_loyalty = -20
+	global_levy_size_modifier = -0.3
+	land_morale_modifier = -0.1
+	discipline = -0.1
+	tax_income_efficiency = -0.15
+	monthly_prestige = -0.5
+}
+
+pp_disaster_pain_horde_civil_war_1 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = small_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.04
+	monthly_pretender_rebel_growth = 0.003
+	global_separatism = 0.02
+	subject_loyalty = -4
+	global_levy_size_modifier = -0.06
+	land_morale_modifier = -0.02
+	discipline = -0.02
+	tax_income_efficiency = -0.025
+	global_manpower_modifier = -0.06
+}
+
+pp_disaster_pain_horde_civil_war_2 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.08
+	monthly_pretender_rebel_growth = 0.006
+	global_separatism = 0.04
+	subject_loyalty = -8
+	global_levy_size_modifier = -0.12
+	land_morale_modifier = -0.04
+	discipline = -0.04
+	tax_income_efficiency = -0.05
+	global_manpower_modifier = -0.12
+}
+
+pp_disaster_pain_horde_civil_war_3 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = large_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.12
+	monthly_pretender_rebel_growth = 0.009
+	global_separatism = 0.06
+	subject_loyalty = -12
+	global_levy_size_modifier = -0.18
+	land_morale_modifier = -0.06
+	discipline = -0.06
+	tax_income_efficiency = -0.075
+	global_manpower_modifier = -0.18
+}
+
+pp_disaster_pain_horde_civil_war_4 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = larger_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.16
+	monthly_pretender_rebel_growth = 0.012
+	global_separatism = 0.08
+	subject_loyalty = -16
+	global_levy_size_modifier = -0.24
+	land_morale_modifier = -0.08
+	discipline = -0.08
+	tax_income_efficiency = -0.1
+	global_manpower_modifier = -0.24
+}
+
+pp_disaster_pain_horde_civil_war_5 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = great_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.2
+	monthly_pretender_rebel_growth = 0.015
+	global_separatism = 0.1
+	subject_loyalty = -20
+	global_levy_size_modifier = -0.3
+	land_morale_modifier = -0.1
+	discipline = -0.1
+	tax_income_efficiency = -0.15
+	global_manpower_modifier = -0.3
+}
+
+pp_disaster_pain_oligarchic_capture_1 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = small_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.04
+	monthly_nobles_estate_rebel_growth = 0.0015
+	monthly_burghers_estate_rebel_growth = 0.0015
+	global_separatism = 0.02
+	subject_loyalty = -4
+	global_levy_size_modifier = -0.06
+	land_morale_modifier = -0.02
+	discipline = -0.02
+	tax_income_efficiency = -0.025
+	legislative_efficiency = -0.04
+}
+
+pp_disaster_pain_oligarchic_capture_2 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.08
+	monthly_nobles_estate_rebel_growth = 0.003
+	monthly_burghers_estate_rebel_growth = 0.003
+	global_separatism = 0.04
+	subject_loyalty = -8
+	global_levy_size_modifier = -0.12
+	land_morale_modifier = -0.04
+	discipline = -0.04
+	tax_income_efficiency = -0.05
+	legislative_efficiency = -0.08
+}
+
+pp_disaster_pain_oligarchic_capture_3 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = large_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.12
+	monthly_nobles_estate_rebel_growth = 0.0045
+	monthly_burghers_estate_rebel_growth = 0.0045
+	global_separatism = 0.06
+	subject_loyalty = -12
+	global_levy_size_modifier = -0.18
+	land_morale_modifier = -0.06
+	discipline = -0.06
+	tax_income_efficiency = -0.075
+	legislative_efficiency = -0.12
+}
+
+pp_disaster_pain_oligarchic_capture_4 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = larger_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.16
+	monthly_nobles_estate_rebel_growth = 0.006
+	monthly_burghers_estate_rebel_growth = 0.006
+	global_separatism = 0.08
+	subject_loyalty = -16
+	global_levy_size_modifier = -0.24
+	land_morale_modifier = -0.08
+	discipline = -0.08
+	tax_income_efficiency = -0.1
+	legislative_efficiency = -0.16
+}
+
+pp_disaster_pain_oligarchic_capture_5 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = great_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.2
+	monthly_nobles_estate_rebel_growth = 0.0075
+	monthly_burghers_estate_rebel_growth = 0.0075
+	global_separatism = 0.1
+	subject_loyalty = -20
+	global_levy_size_modifier = -0.3
+	land_morale_modifier = -0.1
+	discipline = -0.1
+	tax_income_efficiency = -0.15
+	legislative_efficiency = -0.2
+}
+
+pp_disaster_pain_peasants_war_1 = {
+	game_data = {
+		category = country
+	}
+	nobles_estate_target_satisfaction = small_permanent_target_satisfaction_penalty
+	clergy_estate_target_satisfaction = small_permanent_target_satisfaction_penalty
+	burghers_estate_target_satisfaction = small_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.04
+	monthly_legitimacy = -0.06
+	monthly_devotion = -0.06
+	monthly_peasants_estate_rebel_growth = 0.003
+	global_separatism = 0.02
+	subject_loyalty = -4
+	global_levy_size_modifier = -0.06
+	land_morale_modifier = -0.02
+	discipline = -0.02
+	tax_income_efficiency = -0.025
+	global_manpower_modifier = -0.06
+}
+
+pp_disaster_pain_peasants_war_2 = {
+	game_data = {
+		category = country
+	}
+	nobles_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	clergy_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	burghers_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.08
+	monthly_legitimacy = -0.12
+	monthly_devotion = -0.12
+	monthly_peasants_estate_rebel_growth = 0.006
+	global_separatism = 0.04
+	subject_loyalty = -8
+	global_levy_size_modifier = -0.12
+	land_morale_modifier = -0.04
+	discipline = -0.04
+	tax_income_efficiency = -0.05
+	global_manpower_modifier = -0.12
+}
+
+pp_disaster_pain_peasants_war_3 = {
+	game_data = {
+		category = country
+	}
+	nobles_estate_target_satisfaction = large_permanent_target_satisfaction_penalty
+	clergy_estate_target_satisfaction = large_permanent_target_satisfaction_penalty
+	burghers_estate_target_satisfaction = large_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.12
+	monthly_legitimacy = -0.18
+	monthly_devotion = -0.18
+	monthly_peasants_estate_rebel_growth = 0.009
+	global_separatism = 0.06
+	subject_loyalty = -12
+	global_levy_size_modifier = -0.18
+	land_morale_modifier = -0.06
+	discipline = -0.06
+	tax_income_efficiency = -0.075
+	global_manpower_modifier = -0.18
+}
+
+pp_disaster_pain_peasants_war_4 = {
+	game_data = {
+		category = country
+	}
+	nobles_estate_target_satisfaction = larger_permanent_target_satisfaction_penalty
+	clergy_estate_target_satisfaction = larger_permanent_target_satisfaction_penalty
+	burghers_estate_target_satisfaction = larger_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.16
+	monthly_legitimacy = -0.24
+	monthly_devotion = -0.24
+	monthly_peasants_estate_rebel_growth = 0.012
+	global_separatism = 0.08
+	subject_loyalty = -16
+	global_levy_size_modifier = -0.24
+	land_morale_modifier = -0.08
+	discipline = -0.08
+	tax_income_efficiency = -0.1
+	global_manpower_modifier = -0.24
+}
+
+pp_disaster_pain_peasants_war_5 = {
+	game_data = {
+		category = country
+	}
+	nobles_estate_target_satisfaction = great_permanent_target_satisfaction_penalty
+	clergy_estate_target_satisfaction = great_permanent_target_satisfaction_penalty
+	burghers_estate_target_satisfaction = great_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.2
+	monthly_legitimacy = -0.3
+	monthly_devotion = -0.3
+	monthly_peasants_estate_rebel_growth = 0.015
+	global_separatism = 0.1
+	subject_loyalty = -20
+	global_levy_size_modifier = -0.3
+	land_morale_modifier = -0.1
+	discipline = -0.1
+	tax_income_efficiency = -0.15
+	global_manpower_modifier = -0.3
+}
+
+pp_disaster_pain_religious_turmoil_1 = {
+	game_data = {
+		category = country
+	}
+	nobles_estate_target_satisfaction = small_permanent_target_satisfaction_penalty
+	burghers_estate_target_satisfaction = small_permanent_target_satisfaction_penalty
+	peasants_estate_target_satisfaction = small_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.04
+	monthly_legitimacy = -0.06
+	monthly_republican_tradition = -0.06
+	monthly_devotion = -0.06
+	monthly_religious_rebel_growth = 0.003
+	global_separatism = 0.02
+	subject_loyalty = -4
+	global_levy_size_modifier = -0.06
+	land_morale_modifier = -0.02
+	discipline = -0.02
+	tax_income_efficiency = -0.025
+	pop_join_rebel_threshold = 0.02
+}
+
+pp_disaster_pain_religious_turmoil_2 = {
+	game_data = {
+		category = country
+	}
+	nobles_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	burghers_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	peasants_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.08
+	monthly_legitimacy = -0.12
+	monthly_republican_tradition = -0.12
+	monthly_devotion = -0.12
+	monthly_religious_rebel_growth = 0.006
+	global_separatism = 0.04
+	subject_loyalty = -8
+	global_levy_size_modifier = -0.12
+	land_morale_modifier = -0.04
+	discipline = -0.04
+	tax_income_efficiency = -0.05
+	pop_join_rebel_threshold = 0.04
+}
+
+pp_disaster_pain_religious_turmoil_3 = {
+	game_data = {
+		category = country
+	}
+	nobles_estate_target_satisfaction = large_permanent_target_satisfaction_penalty
+	burghers_estate_target_satisfaction = large_permanent_target_satisfaction_penalty
+	peasants_estate_target_satisfaction = large_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.12
+	monthly_legitimacy = -0.18
+	monthly_republican_tradition = -0.18
+	monthly_devotion = -0.18
+	monthly_religious_rebel_growth = 0.009
+	global_separatism = 0.06
+	subject_loyalty = -12
+	global_levy_size_modifier = -0.18
+	land_morale_modifier = -0.06
+	discipline = -0.06
+	tax_income_efficiency = -0.075
+	pop_join_rebel_threshold = 0.06
+}
+
+pp_disaster_pain_religious_turmoil_4 = {
+	game_data = {
+		category = country
+	}
+	nobles_estate_target_satisfaction = larger_permanent_target_satisfaction_penalty
+	burghers_estate_target_satisfaction = larger_permanent_target_satisfaction_penalty
+	peasants_estate_target_satisfaction = larger_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.16
+	monthly_legitimacy = -0.24
+	monthly_republican_tradition = -0.24
+	monthly_devotion = -0.24
+	monthly_religious_rebel_growth = 0.012
+	global_separatism = 0.08
+	subject_loyalty = -16
+	global_levy_size_modifier = -0.24
+	land_morale_modifier = -0.08
+	discipline = -0.08
+	tax_income_efficiency = -0.1
+	pop_join_rebel_threshold = 0.08
+}
+
+pp_disaster_pain_religious_turmoil_5 = {
+	game_data = {
+		category = country
+	}
+	nobles_estate_target_satisfaction = great_permanent_target_satisfaction_penalty
+	burghers_estate_target_satisfaction = great_permanent_target_satisfaction_penalty
+	peasants_estate_target_satisfaction = great_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.2
+	monthly_legitimacy = -0.3
+	monthly_republican_tradition = -0.3
+	monthly_devotion = -0.3
+	monthly_religious_rebel_growth = 0.015
+	global_separatism = 0.1
+	subject_loyalty = -20
+	global_levy_size_modifier = -0.3
+	land_morale_modifier = -0.1
+	discipline = -0.1
+	tax_income_efficiency = -0.15
+	pop_join_rebel_threshold = 0.1
+}
+
+pp_disaster_pain_revolution_disaster_1 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = small_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.04
+	monthly_legitimacy = -0.06
+	monthly_republican_tradition = -0.06
+	monthly_devotion = -0.06
+	monthly_burghers_estate_rebel_growth = 0.003
+	global_separatism = 0.02
+	subject_loyalty = -4
+	global_levy_size_modifier = -0.06
+	land_morale_modifier = -0.02
+	discipline = -0.02
+	tax_income_efficiency = -0.025
+	pop_join_rebel_threshold = 0.02
+}
+
+pp_disaster_pain_revolution_disaster_2 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.08
+	monthly_legitimacy = -0.12
+	monthly_republican_tradition = -0.12
+	monthly_devotion = -0.12
+	monthly_burghers_estate_rebel_growth = 0.006
+	global_separatism = 0.04
+	subject_loyalty = -8
+	global_levy_size_modifier = -0.12
+	land_morale_modifier = -0.04
+	discipline = -0.04
+	tax_income_efficiency = -0.05
+	pop_join_rebel_threshold = 0.04
+}
+
+pp_disaster_pain_revolution_disaster_3 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = large_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.12
+	monthly_legitimacy = -0.18
+	monthly_republican_tradition = -0.18
+	monthly_devotion = -0.18
+	monthly_burghers_estate_rebel_growth = 0.009
+	global_separatism = 0.06
+	subject_loyalty = -12
+	global_levy_size_modifier = -0.18
+	land_morale_modifier = -0.06
+	discipline = -0.06
+	tax_income_efficiency = -0.075
+	pop_join_rebel_threshold = 0.06
+}
+
+pp_disaster_pain_revolution_disaster_4 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = larger_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.16
+	monthly_legitimacy = -0.24
+	monthly_republican_tradition = -0.24
+	monthly_devotion = -0.24
+	monthly_burghers_estate_rebel_growth = 0.012
+	global_separatism = 0.08
+	subject_loyalty = -16
+	global_levy_size_modifier = -0.24
+	land_morale_modifier = -0.08
+	discipline = -0.08
+	tax_income_efficiency = -0.1
+	pop_join_rebel_threshold = 0.08
+}
+
+pp_disaster_pain_revolution_disaster_5 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = great_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.2
+	monthly_legitimacy = -0.3
+	monthly_republican_tradition = -0.3
+	monthly_devotion = -0.3
+	monthly_burghers_estate_rebel_growth = 0.015
+	global_separatism = 0.1
+	subject_loyalty = -20
+	global_levy_size_modifier = -0.3
+	land_morale_modifier = -0.1
+	discipline = -0.1
+	tax_income_efficiency = -0.15
+	pop_join_rebel_threshold = 0.1
+}
+
+pp_disaster_pain_succession_crisis_1 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = small_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.04
+	monthly_pretender_rebel_growth = 0.003
+	global_separatism = 0.02
+	subject_loyalty = -4
+	global_levy_size_modifier = -0.06
+	land_morale_modifier = -0.02
+	discipline = -0.02
+	tax_income_efficiency = -0.025
+	country_cabinet_efficiency = -0.04
+}
+
+pp_disaster_pain_succession_crisis_2 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.08
+	monthly_pretender_rebel_growth = 0.006
+	global_separatism = 0.04
+	subject_loyalty = -8
+	global_levy_size_modifier = -0.12
+	land_morale_modifier = -0.04
+	discipline = -0.04
+	tax_income_efficiency = -0.05
+	country_cabinet_efficiency = -0.08
+}
+
+pp_disaster_pain_succession_crisis_3 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = large_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.12
+	monthly_pretender_rebel_growth = 0.009
+	global_separatism = 0.06
+	subject_loyalty = -12
+	global_levy_size_modifier = -0.18
+	land_morale_modifier = -0.06
+	discipline = -0.06
+	tax_income_efficiency = -0.075
+	country_cabinet_efficiency = -0.12
+}
+
+pp_disaster_pain_succession_crisis_4 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = larger_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.16
+	monthly_pretender_rebel_growth = 0.012
+	global_separatism = 0.08
+	subject_loyalty = -16
+	global_levy_size_modifier = -0.24
+	land_morale_modifier = -0.08
+	discipline = -0.08
+	tax_income_efficiency = -0.1
+	country_cabinet_efficiency = -0.16
+}
+
+pp_disaster_pain_succession_crisis_5 = {
+	game_data = {
+		category = country
+	}
+	global_estate_target_satisfaction = great_permanent_target_satisfaction_penalty
+	global_crown_estate_power = -0.2
+	monthly_pretender_rebel_growth = 0.015
+	global_separatism = 0.1
+	subject_loyalty = -20
+	global_levy_size_modifier = -0.3
+	land_morale_modifier = -0.1
+	discipline = -0.1
+	tax_income_efficiency = -0.15
+	country_cabinet_efficiency = -0.2
 }

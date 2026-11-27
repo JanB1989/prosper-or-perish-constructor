@@ -519,6 +519,14 @@
   staffed for the most part ... And the rest should come from promotions"). A foreign trading house's own people
   (the Kontor's `pop_size_created`) come back only at their setup size (Novgorod's Hanseatic burghers 250, control 500).
 - `[job_room] enabled = false` builds the mod without the lines (the control build of that day); it is `true`.
+- Known limit (found and measured in game 2026-11-27, not fixed): a building with nobody at work gives its full room
+  back. The engine scales `raw_modifier` by the building's input fulfilment, and with no workers every slot that needs
+  inputs has none, so the `-jobs` line drops out exactly there while the engine's own job count stays. Measured at
+  month 6 of a new game from each location's summed `local_burghers_desired_pop`: -0.93 per unfilled job in a building
+  with workers, -0.02 per job in a building without. So the lines act while a building is partly staffed (the layoff
+  phase); once it is empty its room is back and can refill by promotion. In run defb89f2, made before the lines,
+  85-88 % of unfilled burgher jobs and about 80 % of unfilled laborer jobs stood in buildings without any worker. No
+  block on a building escapes this scaling.
 - The AI counts both lines in full, so they cancel in its score; it values burgher and laborer room at zero anyway.
 - Expected: the surplus next to laid-off and short-staffed buildings demotes; recovery after layoffs and the staffing
   of new buildings are slower, bounded by the location's spare room and promotion speed. Read from the 1.4.9 code and

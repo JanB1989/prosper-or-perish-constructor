@@ -1089,10 +1089,10 @@ extractive_open = "never"
 # whether they are offered or not, so a building that laid its workers off kept the room and the people sat idle. Per
 # level and for the building's own pop type: raw_modifier local_<pop>_desired_pop = -jobs, modifier
 # local_<pop>_desired_pop = +jobs (the engine scales the second by staffing), so the room is the jobs that are filled.
-# Written into every blueprint building with a goods output and one of these pop types. Left out: food makers
-# (buildings that make a staple food, Province Food or victuals, and the Construction Plan's kitchens, taverns,
-# granaries, granges and yards; Jan: they are supposed to hire and fire with the store) and not_buildings.
-pop_types = ["burghers", "laborers", "clergy"]
+# The size is read from the building's final employment_size at every build, so it follows any change of it. Written
+# into every blueprint building with a goods output whose pop type has an equilibrium (has_cap = yes: nobles, clergy,
+# burghers, laborers, soldiers), food makers included (Jan: "they can still be subsidized. Same logic"). Spare room
+# for new buildings to hire from comes from the location ranks and the school buildings ([spare_room]).
 not_buildings = []
 
 [age_food]

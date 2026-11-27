@@ -31,6 +31,7 @@ pp_village_school = {
 
 	ai_construct_weight = {
 		value = pp_village_school_ai_weight
+		add = pp_spare_room_weight_laborers # spare room (2026-11-27): the place lacks idle laborers its buildings need
 		divide = { value = scope:owner.monthly_income_total add = 10 }
 	}
 
@@ -40,6 +41,11 @@ pp_village_school = {
 		local_soldiers_max_literacy = 10
 		local_monthly_literacy = 0.004 # 0.01 until 2026-11-27 (every literacy speed x0.4)
 		local_pop_promotion_speed = 0.002 # moved from the Library (2026-11-25)
+		# Spare room (2026-11-27, Jan): since job_room.py a production building gives room for its class only as far as
+		# it is staffed, so a new building hires from the spare room the location has. The schooling buildings add
+		# that buffer, each for the classes it teaches: half a laborer building level (0.8) per school level here.
+		local_laborers_desired_pop = 0.4
+		local_soldiers_desired_pop = 0.05
 	}
 
 	possible_production_methods = {
@@ -78,13 +84,14 @@ pp_trade_school = {
 
 	ai_construct_weight = {
 		value = pp_trade_school_ai_weight
+		add = pp_spare_room_weight_burghers # spare room (2026-11-27): the town lacks idle burghers its buildings need
 		divide = { value = scope:owner.monthly_income_total add = 10 }
 	}
 
 	modifier = {
 		local_burghers_max_literacy = 10
 		local_monthly_literacy = 0.004 # 0.01 until 2026-11-27
-		local_burghers_desired_pop = 0.3 # moved from the Library (2026-11-25)
+		local_burghers_desired_pop = 0.3 # moved from the Library (2026-11-25); spare room: a guild level employs 0.25
 	}
 
 	possible_production_methods = {

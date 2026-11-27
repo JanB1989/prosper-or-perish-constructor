@@ -93,23 +93,37 @@ def test_the_compiled_buildings_carry_the_lines(targets, vanilla) -> None:
 
 
 def test_who_carries_the_lines(targets, vanilla) -> None:
+    """Every production building whose workers' class has an equilibrium, food makers included (Jan, 2026-11-27: "they
+    can still be subsidized. Same logic. We can just apply it to everything")."""
     wanted, result = targets
-    config = jr.load_config(PROJECT)
-    assert config.pop_types == {"burghers", "laborers", "clergy"}
+    assert jr.load_config(PROJECT).not_buildings == frozenset()
+    # the classes people promote into: all but peasants, tribesmen and slaves (has_cap in the pop types)
+    assert result.pop_types == ["burghers", "clergy", "laborers", "nobles", "soldiers"]
+    assert jr.capped_pop_types(vanilla, MOD) == set(result.pop_types)
     for key in ("glass_guild", "tannery", "mason", "charcoal_maker", "tar_kiln", "iron_mine", "hired_labor_yard", "scriptorium"):
         assert key in wanted, key
-    # food makers hire and fire with the store (Jan): farms, fisheries, orchards, kitchens, taverns, granges, yards
-    for key in ("wheat_farm", "cattle_farm", "ocean_fishery", "fruit_orchard", "cookshop", "public_kitchen", "tavern",
-                "grange", "victualling_yard", "forest_village"):
-        assert key in result.food and key not in wanted, key
-    # pop types without the lines: peasants and slaves
-    for key in ("market_village", "rural_daywork_yard", "sugar_plantation"):
+    for key in ("cookshop", "public_kitchen", "tavern", "grange", "victualling_yard", "ocean_fishery"):
+        assert key in wanted, key
+    # buildings worked by peasants or slaves have no equilibrium to follow
+    for key in ("wheat_farm", "market_village", "rural_daywork_yard", "sugar_plantation"):
         assert key in result.other_pop and key not in wanted, key
     # only producers, and every producer is in exactly one group
     producers = set(bs.producers(ROOT, MOD, vanilla))
-    groups = [set(wanted), set(result.food), set(result.other_pop), set(result.excluded)]
+    groups = [set(wanted), set(result.other_pop), set(result.excluded)]
     assert set().union(*groups) == producers
     assert sum(len(group) for group in groups) == len(producers)
+    assert len(wanted) > 190
+
+
+def test_the_size_follows_the_buildings_employment(targets, vanilla) -> None:
+    """Nothing is stored: the lines are the building's final employment_size, read at every build, so a change of a
+    building's employment (or of the employment cut) moves them by itself."""
+    wanted, _result = targets
+    sizes = {employment for _pop, employment in wanted.values()}
+    assert len(sizes) > 3  # buildings of different sizes carry different lines
+    assert wanted["glass_guild"] == ("burghers", Decimal("0.25"))  # 0.3 cut to 0.25 ([building_scaling.employment_cut])
+    assert wanted["mason"] == ("laborers", Decimal("0.8"))  # 1.0 cut to 0.8
+    assert jr.set_room("\n\tpop_type = laborers\n", "laborers", Decimal("0.6")).count("0.6 # job_room") == 2
 
 
 def test_no_other_building_carries_a_marked_line(targets, vanilla) -> None:

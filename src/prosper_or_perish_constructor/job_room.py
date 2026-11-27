@@ -20,12 +20,14 @@ lines in full, so they cancel in its score, and it values burgher and laborer ro
 A closed building applies neither block and keeps all its jobs in the equilibrium, which is why production buildings
 cannot be closed any more (building_shutdown.py). Read from the 1.4.9 code and private notes, not tested in game.
 
-Written at finalize, after the employment cut (it reads the final employment_size), into every blueprint building
-with a goods output whose pop type is in ``[job_room] pop_types``, except food makers: buildings that make a staple
-food, Province Food or victuals, and the Construction Plan's kitchens, taverns, granaries, granges and yards (Jan:
-they are supposed to hire and fire with the store), and ``[job_room] not_buildings``. The lines carry a marker comment;
-a building that leaves the set loses them again. A line of the same key the building already has in that block is
-folded into ours (the engine would otherwise see the key twice) and comes back when ours goes.
+Written at finalize, after the employment cut: the size is read from the building's final employment_size at every
+build, so it follows any change of a building's employment by itself. Every blueprint building with a goods output
+carries the lines when its pop type has an equilibrium (``has_cap = yes`` in the pop type: nobles, clergy, burghers,
+laborers, soldiers; peasants, tribesmen and slaves have none), food makers included (Jan, 2026-11-27: "they can
+still be subsidized. Same logic. We can just apply it to everything"; the first version of that day left them out).
+``[job_room] not_buildings`` takes single buildings out. The lines carry a marker comment; a building that leaves the
+set loses them again. A line of the same key the building already has in that block is folded into ours (the engine
+would otherwise see the key twice) and comes back when ours goes.
 """
 
 from __future__ import annotations
@@ -42,7 +44,7 @@ from prosper_or_perish_constructor import building_shutdown as bs
 CONFIG_SECTION = "job_room"
 MARKER = "# job_room"
 BLOCKS = (("raw_modifier", -1), ("modifier", 1))  # block -> sign of the line
-FOOD_GOODS = ("local_food", "victuals")  # beside the staple foods
+POP_TYPES = Path("in_game/common/pop_types")
 
 _POP_RE = re.compile(r"^[ \t]*pop_type\s*=\s*(?P<pop>[A-Za-z_0-9]+)", re.MULTILINE)
 _EMPLOYMENT_RE = re.compile(r"^[ \t]*employment_size\s*=\s*(?P<value>[^\s#{}]+)", re.MULTILINE)
@@ -50,19 +52,18 @@ _MARKED_RE = re.compile(
     r"^(?P<indent>[ \t]*)(?P<key>local_[a-z_0-9]+_desired_pop)\s*=\s*\S+[ \t]*#\s*job_room(?:[ \t]+base[ \t]+(?P<base>-?[0-9.]+))?[^\n]*\n?",
     re.MULTILINE,
 )
-_PRODUCED_GOOD_RE = re.compile(r"(?<![A-Za-z_0-9])produced\s*=\s*(?P<good>[A-Za-z_0-9]+)")
+_HAS_CAP_RE = re.compile(r"^[ \t]*has_cap\s*=\s*(?P<value>yes|no)", re.MULTILINE)
 
 
 @dataclass(frozen=True)
 class Config:
-    pop_types: frozenset[str]
     not_buildings: frozenset[str]
 
 
 @dataclass
 class Result:
     written: list[str] = field(default_factory=list)
-    food: list[str] = field(default_factory=list)
+    pop_types: list[str] = field(default_factory=list)  # the pop types with an equilibrium
     other_pop: list[str] = field(default_factory=list)
     excluded: list[str] = field(default_factory=list)
     files_changed: int = 0
@@ -70,42 +71,30 @@ class Result:
 
 def load_config(project: Path) -> Config:
     raw = tomllib.loads(project.read_text(encoding="utf-8-sig")).get(CONFIG_SECTION)
-    if not isinstance(raw, dict) or not isinstance(raw.get("pop_types"), list):
-        raise ValueError(f"{project}: [{CONFIG_SECTION}] needs pop_types (a list of pop types)")
-    return Config(frozenset(raw["pop_types"]), frozenset(raw.get("not_buildings", [])))
+    if not isinstance(raw, dict) or not isinstance(raw.get("not_buildings"), list):
+        raise ValueError(f"{project}: [{CONFIG_SECTION}] needs not_buildings (a list of building keys, may be empty)")
+    return Config(frozenset(raw["not_buildings"]))
 
 
-def food_goods() -> frozenset[str]:
-    from prosper_or_perish_constructor.staple_foods import staple_foods
-
-    return frozenset(staple_foods()) | frozenset(FOOD_GOODS)
-
-
-def shared_method_goods(vanilla_root: Path, mod_root: Path) -> dict[str, frozenset[str]]:
-    """Shared production method name -> the goods it produces."""
-    out: dict[str, frozenset[str]] = {}
-    for folder in bs.PRODUCTION_METHOD_DIRS:
-        for path in [*bf.vanilla_files(vanilla_root, folder), *sorted((mod_root / folder).glob("*.txt"))]:
-            text = bf._read(path)
-            for block in bf.blocks(path, text):
-                out[block.key] = frozenset(m.group("good") for m in _PRODUCED_GOOD_RE.finditer(text[block.open + 1: block.close]))
-    return out
-
-
-def produced_goods(body: str, shared: dict[str, frozenset[str]]) -> frozenset[str]:
-    goods = {m.group("good") for m in _PRODUCED_GOOD_RE.finditer(body)}
-    for match in bs._METHOD_LIST_RE.finditer(body):
-        for name in re.findall(r"[A-Za-z_0-9]+", match.group("body")):
-            goods |= shared.get(name, frozenset())
-    return frozenset(goods)
-
-
-def plan_food_buildings(project: Path) -> frozenset[str]:
-    """The Construction Plan's kitchens, taverns, granaries, granges and yards."""
-    from prosper_or_perish_constructor import construction_plan as cp
-
-    config = cp.load_config(project)
-    return frozenset(config.kitchens) | frozenset(config.taverns) | frozenset(config.granaries) | frozenset(config.granges) | frozenset(config.yards)
+def capped_pop_types(vanilla_root: Path, mod_root: Path) -> frozenset[str]:
+    """The pop types with an equilibrium (``has_cap = yes``): vanilla's definitions, then the mod's (a REPLACE is the
+    whole definition, an INJECT adds to vanilla's)."""
+    capped: dict[str, bool] = {}
+    for path in bf.vanilla_files(vanilla_root, POP_TYPES):
+        text = bf._read(path)
+        for block in bf.blocks(path, text):
+            match = _HAS_CAP_RE.search(bf._depth_zero_text(text[block.open + 1: block.close]))
+            capped[block.key] = bool(match and match.group("value") == "yes")
+    for path in sorted((mod_root / POP_TYPES).glob("*.txt")):
+        text = bf._read(path)
+        for block in bf.blocks(path, text):
+            match = _HAS_CAP_RE.search(bf._depth_zero_text(text[block.open + 1: block.close]))
+            if block.mode in bf._INJECT_MODES:
+                if match:
+                    capped[block.key] = match.group("value") == "yes"
+            else:
+                capped[block.key] = bool(match and match.group("value") == "yes")
+    return frozenset(name for name, value in capped.items() if value)
 
 
 def fmt(value: Decimal) -> str:
@@ -188,10 +177,8 @@ def targets(repo: Path, mod_root: Path, project: Path, vanilla_root: Path) -> tu
     owners = bf.owner_blocks(mod_root, vanilla_root)
     vanilla = bf.vanilla_definitions(vanilla_root)
     values = bf.script_values(vanilla_root, mod_root)
-    shared = shared_method_goods(vanilla_root, mod_root)
-    food = food_goods()
-    plan_food = plan_food_buildings(project)
-    result = Result()
+    capped = capped_pop_types(vanilla_root, mod_root)
+    result = Result(pop_types=sorted(capped))
     out: dict[str, tuple[str, Decimal]] = {}
     unresolved: list[str] = []
     for key in bs.producers(repo, mod_root, vanilla_root):
@@ -202,12 +189,9 @@ def targets(repo: Path, mod_root: Path, project: Path, vanilla_root: Path) -> tu
         if key in config.not_buildings:
             result.excluded.append(key)
             continue
-        if key in plan_food or produced_goods(body + "\n" + inherited, shared) & food:
-            result.food.append(key)
-            continue
         tops = bf._depth_zero_text(body) + "\n" + (bf._depth_zero_text(inherited) if inherited else "")
         pop = _POP_RE.search(tops)
-        if not pop or pop.group("pop") not in config.pop_types:
+        if not pop or pop.group("pop") not in capped:
             result.other_pop.append(key)
             continue
         size = _EMPLOYMENT_RE.search(tops)
@@ -268,7 +252,7 @@ def check(repo: Path, mod_root: Path, project: Path, vanilla_root: Path) -> list
 def summary(result: Result) -> str:
     return (
         f"Job room: {len(result.written)} production buildings give room for their class only as far as they are staffed "
-        f"({len(result.food)} food makers and {len(result.other_pop)} of other pop types left out"
+        f"(classes with an equilibrium: {', '.join(result.pop_types)}; {len(result.other_pop)} buildings of other pop types left out"
         + (f", {len(result.excluded)} excluded by name" if result.excluded else "")
         + f"), {result.files_changed} files changed."
     )

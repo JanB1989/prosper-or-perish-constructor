@@ -75,6 +75,7 @@ SCHOOL_RULES = {
         "modifier": {
             "local_peasants_max_literacy": 10, "local_laborers_max_literacy": 10, "local_soldiers_max_literacy": 10,
             "local_monthly_literacy": 0.004, "local_pop_promotion_speed": 0.002,
+            "local_laborers_desired_pop": 0.4, "local_soldiers_desired_pop": 0.05,  # spare room (2026-11-27)
         },
         "method": "pp_village_school_maintenance",
         "upkeep": {"beeswax": 0.03, "clay": 0.1, "manual_labor": 0.5},
@@ -200,6 +201,7 @@ def test_library_and_university(vanilla) -> None:
     assert {k: _num(v) for k, v in library.items()} == {
         "local_cultural_influence": 0.1, "local_nobles_max_literacy": 5, "local_burghers_max_literacy": 5,
         "local_clergy_max_literacy": 5, "local_monthly_literacy": 0.008, "local_institution_growth_modifier": 0.25,
+        "local_burghers_desired_pop": 0.1, "local_clergy_desired_pop": 0.05, "local_nobles_desired_pop": 0.025,
     }
     assert "pp_library_ai_weight" in str(_values(culture["REPLACE:library"])["ai_construct_weight"])
     # education pyramid (2026-11-27): Library levels by rank, two of them allow a University
@@ -211,6 +213,50 @@ def test_library_and_university(vanilla) -> None:
     assert {k: _num(v) for k, v in university.items() if "max_literacy" in k} == {
         "local_burghers_max_literacy": 5, "local_nobles_max_literacy": 5}
     assert not [k for k in university if "institution" in k]
+
+
+def test_schooling_buildings_give_spare_room_and_the_ai_builds_them_where_it_is_missing(schools) -> None:
+    """2026-11-27 (Jan): since job_room.py a production building gives room for its class only as far as it is
+    staffed, so new buildings hire from spare room. The schooling buildings add it for the classes they teach (in
+    `modifier`: a school without staff gives none), and their AI weight rises where an open building of that class is
+    short of workers and few people of the class are idle."""
+    culture = _blocks(CULTURE)
+
+    def room(body) -> dict[str, float]:
+        return {k: _num(v) for k, v in _values(_values(body)["modifier"]).items() if k.endswith("_desired_pop")}
+
+    assert room(schools["pp_village_school"]) == {"local_laborers_desired_pop": 0.4, "local_soldiers_desired_pop": 0.05}
+    assert room(schools["pp_trade_school"]) == {"local_burghers_desired_pop": 0.3}
+    assert room(culture["REPLACE:library"]) == {
+        "local_burghers_desired_pop": 0.1, "local_clergy_desired_pop": 0.05, "local_nobles_desired_pop": 0.025}
+    assert room(culture["REPLACE:university"]) == {
+        "local_laborers_desired_pop": 1.2, "local_burghers_desired_pop": 0.6, "local_clergy_desired_pop": 0.3,
+        "local_nobles_desired_pop": 0.2}
+    # none of it in raw_modifier, where staffing would not matter
+    for body in (schools["pp_village_school"], schools["pp_trade_school"], culture["REPLACE:library"], culture["REPLACE:university"]):
+        assert "desired_pop" not in str(_values(body).get("raw_modifier", ""))
+
+    weights = {
+        "pp_village_school": (SCHOOLS, "pp_village_school", ["pp_spare_room_weight_laborers"]),
+        "pp_trade_school": (SCHOOLS, "pp_trade_school", ["pp_spare_room_weight_burghers"]),
+        "library": (CULTURE, "REPLACE:library", ["pp_spare_room_weight_burghers"]),
+        "university": (CULTURE, "REPLACE:university", ["pp_spare_room_weight_burghers", "pp_spare_room_weight_laborers"]),
+    }
+    for name, (path, key, terms) in weights.items():
+        text = _text(path, key)
+        weight = text[text.index("ai_construct_weight = {"):]
+        weight = weight[: weight.index("divide = {")]
+        for term in terms:
+            assert term in weight, (name, term)  # added before the income divide
+    values = VALUES.read_text(encoding="utf-8-sig")
+    for pop, idle in (("laborers", "0.4"), ("burghers", "0.25")):
+        block = values[values.index(f"pp_spare_room_weight_{pop} = {{"):]
+        block = block[: block.index("\n}\n") + 3]
+        flat = " ".join(block.split())
+        # the cheap test first, then the walk over the location's buildings
+        assert flat.index("unemployed_pops_of_pop_type_in_location") < flat.index("any_buildings_in_location")
+        assert f"building_pop_type = {pop} is_opened = yes is_full_capacity = no" in flat
+        assert f'(pop_type:{pop})" < {idle}' in flat and "value = 100" in flat
 
 
 def test_printing_shop_spreads_literacy() -> None:

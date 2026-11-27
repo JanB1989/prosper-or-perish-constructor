@@ -150,10 +150,14 @@ unique_production_methods = {
 
 
 modifier = {
+	local_nobles_desired_pop = 0.001 # job_room
   local_monthly_food = -24.0
   local_nobles_estate_power = 0.05
   local_peasant_enfranchisment = -0.01
 }
 	can_close = no # building_shutdown
+	raw_modifier = {
+		local_nobles_desired_pop = -0.001 # job_room
+	}
 }
 # <<< eu5-building-pipeline:grange:building

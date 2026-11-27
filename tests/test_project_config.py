@@ -323,8 +323,10 @@ EDUCATION_PROMOTION_SPEEDS = {
     "pp_trade_school": None,
 }
 EDUCATION_DESIRED_POP_MODIFIERS = {
-    "library": {},
-    "pp_village_school": {},
+    # spare room (2026-11-27, Jan): the schooling buildings give room for the classes they teach, which new production
+    # buildings hire from (AGENTS.md "Job Room")
+    "library": {"local_burghers_desired_pop": 0.1, "local_clergy_desired_pop": 0.05, "local_nobles_desired_pop": 0.025},
+    "pp_village_school": {"local_laborers_desired_pop": 0.4, "local_soldiers_desired_pop": 0.05},
     "pp_trade_school": {"local_burghers_desired_pop": 0.3},
     "university": {
         "local_laborers_desired_pop": 1.2,

@@ -453,14 +453,27 @@
   and jobs and flat desired pop go into one sum, so the building's room is E x (1 - f + f x staffing): E when full,
   E x staffing when its inputs are supplied, never more than E. A line of the same key the building already has in
   that block is folded into ours (`# job_room base <value>`), so the key never appears twice.
-- A new building opens no room of its own. It hires from the spare room the location already has (the location ranks
-  give burghers and laborers flat room) and brings its room in as it fills; a burgher building in a rural settlement
-  is the case to watch. Libraries, Universities and the like are meant to be the sources of spare room (Jan; not
-  built).
-- Who carries them (`[job_room]` in constructor.toml): every blueprint building with a goods output whose pop type is
-  burghers, laborers or clergy: 178 (laborers 113, burghers 64, the scriptorium). Left out: 54 food makers (they make
-  a staple food, Province Food or victuals, or are the Construction Plan's kitchens, taverns, granaries, granges and
-  yards; Jan: "these are supposed to fluctuate"), 9 buildings of peasants and slaves, and `not_buildings`.
+- A new building opens no room of its own. It hires from the spare room the location already has and brings its room
+  in as it fills; a burgher building in a rural settlement is the case to watch. Spare room comes from the location
+  ranks (flat room for every class: town burghers and laborers 0.2, city 0.5, megalopolis 4) and from the schooling
+  buildings (Jan, same day: "give our schooling buildings ... these increases that allow for spare capacity to exist
+  to then be absorbed if necessary"), each for the classes it teaches, in `modifier` (a school without staff gives
+  none), per level: Village School laborers 0.4 and soldiers 0.05; Trade School burghers 0.3 (it had it); Library
+  burghers 0.1, clergy 0.05, nobles 0.025; University laborers 1.2, burghers 0.6, clergy 0.3, nobles 0.2 (it had
+  them). For scale: a laborer building level employs 0.8, a guild level 0.25. Hand-written in
+  `building_types/pp_school_buildings.txt` and `pp_culture_building_adjustments.txt`.
+- AI: the engine values that room at zero, so the schooling buildings' `ai_construct_weight` adds
+  `pp_spare_room_weight_laborers` (Village School, University) or `pp_spare_room_weight_burghers` (Trade School,
+  University, half of it on the Library) before the income divide (`script_values/pp_school_values.txt`): 100 while
+  the location has an open building of that class that is not fully staffed and fewer idle people of the class than
+  0.4 (laborers) or 0.25 (burghers). The cheap idle test comes first, the walk over the buildings second.
+  `tests/test_schools.py` (`test_schooling_buildings_give_spare_room_...`).
+- Who carries the two lines (`[job_room]` in constructor.toml): every blueprint building with a goods output whose pop
+  type has an equilibrium (`has_cap = yes` in the pop type, read from the pop type files: nobles, clergy, burghers,
+  laborers, soldiers): 199, food makers included (Jan, later the same day: "they can still be subsidized. Same logic.
+  We can just apply it to everything"; the first version left 54 food makers out). Left out: 42 buildings worked by
+  peasants or slaves, who have no equilibrium, and `not_buildings`. The size is the building's final
+  `employment_size`, read at every build, so a change of a building's employment moves the lines by itself.
 - It only works on a building that is never closed (a closed building applies neither block), hence `can_close = no`
   on every production building ("Building Shutdown").
 - The AI counts both lines in full, so they cancel in its score; it values burgher and laborer room at zero anyway.

@@ -324,6 +324,7 @@ price = pp_cookshop_price
 	}
 
 	modifier = {
+		local_laborers_desired_pop = 0.8 # job_room
 		# the kitchen's food (2026-10-03: was 10 plus about 40 Province Food from the recipes): about five farm levels'
 		# food per level, scaled by staffing and by the inputs the kitchen gets
 		local_monthly_food = 15.0
@@ -334,5 +335,8 @@ price = pp_cookshop_price
 		local_migration_attraction = 0.025
 	}
 	can_close = no # building_shutdown
+	raw_modifier = {
+		local_laborers_desired_pop = -0.8 # job_room
+	}
 }
 # <<< eu5-building-pipeline:cookshop:building

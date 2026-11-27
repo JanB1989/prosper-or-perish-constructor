@@ -80,6 +80,9 @@ building:
     				modifier:pp_hanseatic_kontor_steps >= 1
     			}
     		}
+    		# the engine rejects a trigger_else_if without a trigger_else ("trigger_else_if with no trigger_else",
+    		# error.log of a new game, 2026-11-27) and then drops the chain: the first two steps are always open
+    		trigger_else = { always = yes }
     		# no building-country rule here (2026-11-24): the Hanseatic merchant federation, the only builder of the
     		# Kontor (country_potential), is itself a building country in vanilla (HSA, setup and reform)
     		# a new house: one per owner and market, and no more houses than the trade reach allows

@@ -47,11 +47,11 @@ REPLACE:library = {
 		local_clergy_max_literacy = 5
 		local_monthly_literacy = 0.008 # 0.02 until 2026-11-27 (every literacy speed x0.4)
 		local_institution_growth_modifier = 0.25
-		# Spare room (2026-11-27, Jan; see the Village School): a little for the classes the Library teaches, per
-		# level: what a town's rank gives nobles and clergy, half of it for burghers.
-		local_burghers_desired_pop = 0.1
-		local_clergy_desired_pop = 0.05
-		local_nobles_desired_pop = 0.025
+		# Spare room (2026-11-27, Jan; see the Village School): for the classes the Library teaches, per level: one
+		# guild level for burghers, twice what a town's rank gives clergy and nobles.
+		local_burghers_desired_pop = 0.25
+		local_clergy_desired_pop = 0.1
+		local_nobles_desired_pop = 0.05
 	}
 
 	possible_production_methods = {

@@ -458,10 +458,17 @@
   ranks (flat room for every class: town burghers and laborers 0.2, city 0.5, megalopolis 4) and from the schooling
   buildings (Jan, same day: "give our schooling buildings ... these increases that allow for spare capacity to exist
   to then be absorbed if necessary"), each for the classes it teaches, in `modifier` (a school without staff gives
-  none), per level: Village School laborers 0.4 and soldiers 0.05; Trade School burghers 0.3 (it had it); Library
-  burghers 0.1, clergy 0.05, nobles 0.025; University laborers 1.2, burghers 0.6, clergy 0.3, nobles 0.2 (it had
-  them). For scale: a laborer building level employs 0.8, a guild level 0.25. Hand-written in
-  `building_types/pp_school_buildings.txt` and `pp_culture_building_adjustments.txt`.
+  none), per level: Village School laborers 0.8 and soldiers 0.1; Trade School burghers 0.5 (0.3 before); Library
+  burghers 0.25, clergy 0.1, nobles 0.05; University laborers 1.2, burghers 0.6, clergy 0.3, nobles 0.2 (it had
+  them). For scale: a laborer building level employs 0.8, a guild level 0.25; each school level covers at least one
+  building level of its class (Jan: "these things should probably cover at least like a building"; the first values
+  were half that). Hand-written in `building_types/pp_school_buildings.txt` and `pp_culture_building_adjustments.txt`.
+- How fast the room fills (run defb89f2, `location_pop_changes`, people promoting into the class per month where any
+  promote; 1402-1802): burghers about 1 a month in a typical town (top tenth 2-4) and 1-2 in a typical city (top
+  tenth 3-11), so one guild level's room takes 17-24 years in a town and 11-20 in a city; laborers 7-9 a month in a
+  town and 8-11 in a city, so one laborer building level's room takes 7-10 years; nobles and clergy 0.6-0.8 a month,
+  soldiers 4-5. Small countries are faster (cities of countries under 10 locations: burghers 2.7 a month). Jan: "If
+  it takes long enough, it's fine ... we increase these buffers a bit ... promotion into these is an investment".
 - AI: the engine values that room at zero, so the schooling buildings' `ai_construct_weight` adds
   `pp_spare_room_weight_laborers` (Village School, University) or `pp_spare_room_weight_burghers` (Trade School,
   University, half of it on the Library) before the income divide (`script_values/pp_school_values.txt`): 100 while

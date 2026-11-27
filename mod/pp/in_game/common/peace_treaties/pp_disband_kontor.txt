@@ -1,7 +1,8 @@
-﻿# Disband Kontor (2026-11-27, Jan: the Hansa should not always die; AGENTS.md "Hansa Members"): vanilla's disband_kontor
-# copied whole, PP's lines are marked "PP". Vanilla let any winner close every Kontor of the loser, also those standing in
-# neutral third countries, so the landless League lost its whole network in its first lost war (observer runs 5023bdba,
-# 5d232536, defb89f2). Now a winner may close only the Kontors in towns it or its subjects own. Not tested in game.
+﻿# Disband Kontor (2026-11-27, Jan: the Hansa should not always die; AGENTS.md "Hansa Survival"): vanilla's disband_kontor
+# copied whole, PP's lines are marked "PP". One demand closes one Kontor and costs 0.75 x the peace cost of its town.
+# Any winner may still close every Kontor of the loser (Jan: it must stay possible), but a Kontor standing in a town
+# that neither the winner nor one of its subjects owns costs 2 x the town's peace cost, so one lost war no longer
+# takes the League's whole network (observer runs 5023bdba, 5d232536, defb89f2). Not tested in game.
 # Port it on game updates (vanilla pin, tests/vanilla_replace_pins.csv).
 REPLACE:disband_kontor = {
 
@@ -9,7 +10,23 @@ REPLACE:disband_kontor = {
 		add = {
 			desc = "DIPLOREASON_BASE"
 			value = "scope:target.location_peace_cost(scope:loser|scope:winner)"
-			multiply = 0.75
+			# PP: vanilla 0.75 in a town of the winner or of one of its subjects, 2 in any other town
+			if = {
+				limit = {
+					scope:target = {
+						owner ?= {
+							OR = {
+								this = scope:winner
+								is_subject_of = scope:winner
+							}
+						}
+					}
+				}
+				multiply = 0.75
+			}
+			else = {
+				multiply = 2
+			}
 		}
 	}
 
@@ -36,13 +53,6 @@ REPLACE:disband_kontor = {
 				building_type = building_type:hanseatic_kontor
 				value > 0
 				owner = scope:recipient
-			}
-			# PP: only a Kontor in a town of the winner (scope:actor = the taker) or of one of its subjects
-			owner ?= {
-				OR = {
-					this = scope:actor
-					is_subject_of = scope:actor
-				}
 			}
 		}
     }

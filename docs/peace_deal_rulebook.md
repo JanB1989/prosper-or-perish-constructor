@@ -342,9 +342,9 @@ How blocs break (checked in game 2026-10-13, observer game ac43ec8a with the cha
 
 ## Kontors (2026-11-27, Jan)
 
-Vanilla's `disband_kontor` let any winner close every Kontor of the losing Hanseatic League, also those standing in
-neutral third countries, so the landless League lost its whole network in its first lost war. `peace_treaties/
-pp_disband_kontor.txt` (`REPLACE:`, vanilla pin) lets a winner pick only Kontors in towns it or its subjects own
-(`select_trigger` `visible`, `scope:actor` = the taker); its war allies are not counted. Everything else is vanilla.
-Constructor AGENTS.md "Hansa Survival". Not tested in game.
-
+Vanilla's `disband_kontor` is one demand per Kontor at 0.75 x the peace cost of its town, open to any winner for every
+Kontor of the losing Hanseatic League, also those in neutral third countries, so the landless League lost its whole
+network in its first lost war. `peace_treaties/pp_disband_kontor.txt` (`REPLACE:`, vanilla pin) keeps that choice (Jan:
+closing Kontors abroad must stay possible) and charges 2 x the town's peace cost where neither the winner nor one of
+its subjects owns the town; in the winner's own towns it stays 0.75. Everything else is vanilla. Constructor AGENTS.md
+"Hansa Survival". Not tested in game.

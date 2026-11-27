@@ -227,25 +227,26 @@ def test_members_think_well_of_the_league() -> None:
     assert _first(body, "on_monthly") is None
 
 
-def test_kontors_demanded_only_in_the_winners_towns() -> None:
-    """2026-11-27 (Jan): a winner may close only the Kontors standing in towns it or its subjects own, never those in
-    neutral third countries; the rest of vanilla's disband_kontor is kept."""
-    doc = parse_file(MOD / "in_game/common/peace_treaties/pp_disband_kontor.txt")
+def test_kontors_in_third_countries_cost_more_to_disband() -> None:
+    """2026-11-27 (Jan): any winner may still close every Kontor of the loser, one demand per Kontor, but one standing
+    in a town that neither the winner nor one of its subjects owns costs 2 x the town's peace cost (vanilla 0.75
+    everywhere); the rest of vanilla's disband_kontor is kept."""
+    path = MOD / "in_game/common/peace_treaties/pp_disband_kontor.txt"
+    doc = parse_file(path)
     blocks = [e.value for e in doc.entries if e.key == "REPLACE:disband_kontor"]
     assert len(blocks) == 1
-    select = _first(blocks[0], "select_trigger")
-    assert str(_first(select, "source")) == "recipient"
-    visible = _flat(_first(select, "visible"))
-    assert "building_type = building_type:hanseatic_kontor" in visible and "owner = scope:recipient" in visible
-    # the parser does not keep `?=` as one operator, so the winner's side is read from the file's text
-    raw = re.sub(r"#[^\n]*", "", (MOD / "in_game/common/peace_treaties/pp_disband_kontor.txt").read_text(encoding="utf-8-sig"))
-    visible_raw = re.sub(r"\s+", " ", raw.split("visible = {", 1)[1].split("allow = {", 1)[0])
-    assert re.search(r"owner \?= \{ OR = \{ this = scope:actor is_subject_of = scope:actor \} \}", visible_raw), visible_raw
     vanilla = LoadOrderConfig.load(ROOT / "constructor.load_order.toml").vanilla_root
     old = next(e.value for e in parse_file(vanilla / "game/in_game/common/peace_treaties/disband_kontor.txt").entries
                if e.key == "disband_kontor")
-    for key in ("cost", "potential", "effect", "ai_desire", "base_antagonism", "antagonism_type"):
+    for key in ("select_trigger", "potential", "effect", "ai_desire", "base_antagonism", "antagonism_type"):
         assert _flat(_first(blocks[0], key)) == _flat(_first(old, key)), key
+    # the parser does not keep `?=` as one operator, so the cost is read from the file's text
+    raw = re.sub(r"#[^\n]*", "", path.read_text(encoding="utf-8-sig"))
+    cost = re.sub(r"\s+", " ", raw.split("cost = {", 1)[1].split("base_antagonism", 1)[0])
+    assert re.search(
+        r"if = \{ limit = \{ scope:target = \{ owner \?= \{ OR = \{ this = scope:winner is_subject_of = scope:winner \} \} \} \}"
+        r" multiply = 0\.75 \} else = \{ multiply = 2 \}", cost), cost
+    assert cost.count("multiply") == 2
 
 
 def test_hansa_advances_give_levels() -> None:

@@ -925,10 +925,12 @@
   came from them, and the Town Hall (2.3 to 3.4 gold a month, no capacity) drained 1,760 gold into the bankruptcies of
   1547 and 1552. Not tested in game, no run yet.
 - Peace deals: `peace_treaties/pp_disband_kontor.txt` is a `REPLACE:` copy of vanilla (vanilla pin) whose
-  `select_trigger` `visible` also needs the Kontor's town to be owned by the taker (`scope:actor`) or one of its
-  subjects. War allies of the taker are not included: the select trigger's documented scopes are actor, recipient and
-  the targets, `scope:war` is not among them. Cost, antagonism, potential, effect and AI desire stay vanilla. Player
-  text `disband_kontor_desc` (moved to the replace folder by `loc_replace.py`).
+  cost depends on where the Kontor stands. The demand is one per Kontor (vanilla: 0.75 x the peace cost of its town,
+  any Kontor of the loser). Jan, same day: closing Kontors in other countries must stay possible, raise the war cost
+  instead. So every Kontor can still be picked; in a town of the winner (`scope:winner`) or of one of its subjects the
+  cost stays 0.75 x, in any other town it is 2 x the town's peace cost (`if` / `else` inside the cost's `add`).
+  Select trigger, antagonism, potential, effect, AI desire and the player text stay vanilla. A first version that
+  hid Kontors in third countries (f6cc9d2b) was replaced.
 - Members' opinion: `subject_opinions = 50` in the `overlord_modifier` of `pp_hanseatic_member.txt` (the opinion an
   overlord's subjects have of it; vanilla's Livonian reform gives 25), so a member can reach the opinion of 100 that
   the guild and the Burgtor need (`need_good_relation`). No pulse or event. The members' opinion of the League was

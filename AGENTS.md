@@ -1029,10 +1029,11 @@
   limits them, no tax base line and no bonus). The engine credits a candidate road with the full land - road saving at its
   far end even where that end already has a cheaper path (river leg 12 < road 20) or no proximity; 42 % of the AI's new
   roads in run 4b90876a raised nothing.
-- `road_types/pp_road_ai_weights.txt` INJECTs `ai_construct_weight` (root = from, scope:to, scope:builder) from
-  `script_values/pp_road_ai_values.txt`: veto when |proximity(from) - proximity(to)| < the type's step
-  (20 - road proximity) / 1.15 + 2, the same rule for all four types (railroads had a great-centre exception and bonus until 2026-11-02).
-  `tests/test_road_ai_weights.py`. Not tested in game.
+- No AI road weight (removed 2026-11-27, Jan: "the AI should just understand this naturally ... fully remove it"; an
+  AI-only veto or weight on roads changes only the AI's decisions and leaves the player free, which he never wants
+  except as the very last resort). From 2026-10-15 until then `road_types/pp_road_ai_weights.txt` vetoed roads whose
+  two ends had nearly the same proximity. Roads carry vanilla's valuation again; price and benefit, the same for
+  player and AI, are the levers.
 
 ## Colonial Range (Maritime Reach, 2026-11-19, Jan)
 

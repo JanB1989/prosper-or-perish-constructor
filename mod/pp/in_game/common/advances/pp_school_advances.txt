@@ -35,10 +35,10 @@ pp_common_schooling_advance = {
 }
 
 # Scientific Revolution: the Academy of Sciences, the capital's learned society on top of the country's Universities
-# (building_types/pp_school_buildings.txt). Icon: vanilla art (academia_pontaniana) until its own is drawn.
+# (building_types/pp_school_buildings.txt).
 pp_academy_of_sciences_advance = {
 	age = age_5_absolutism
-	icon = academia_pontaniana
+	icon = pp_academy_of_sciences_advance
 	requires = scientific_revolution_advance
 	unlock_building = pp_academy_of_sciences
 	ai_weight = { add = 200 }

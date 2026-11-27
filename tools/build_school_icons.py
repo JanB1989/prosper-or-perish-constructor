@@ -1,6 +1,7 @@
-"""Install the icons of the two schools and their three advances (literacy rework, 2026-11-25).
+"""Install the icons of the two schools and their three advances (literacy rework, 2026-11-25), and of the Academy of
+Sciences and its advance (2026-11-27).
 
-The schools are hand-written buildings (in_game/common/building_types/pp_school_buildings.txt; their blueprints are
+The schools and the academy are hand-written buildings (in_game/common/building_types/pp_school_buildings.txt; their blueprints are
 disabled and carry only the footprint class), so the blueprint pipeline does not render their icons. This tool does:
 it runs the building drawings (assets/icon_drawings/pp_village_school, pp_trade_school) through
 `eu5-building icon build`, keeps the 512 px result as assets/icons/<icon>.png and writes the game icon to
@@ -25,8 +26,9 @@ from eu5_building_pipeline.dds import fit, write_game_dds
 ROOT = Path(__file__).resolve().parents[1]
 PIPELINE = ROOT.parent / "eu5-building-pipeline"
 DRAWINGS = ROOT / "assets/icon_drawings"
-BUILDINGS = ("pp_village_school", "pp_trade_school")
-ADVANCES = ("pp_village_schools_advance", "pp_reckoning_schools_advance", "pp_common_schooling_advance")
+BUILDINGS = ("pp_village_school", "pp_trade_school", "pp_academy_of_sciences")
+ADVANCES = ("pp_village_schools_advance", "pp_reckoning_schools_advance", "pp_common_schooling_advance",
+            "pp_academy_of_sciences_advance")
 BUILDING_ICONS = ROOT / "mod/pp/in_game/gfx/interface/icons/buildings"
 SIZE = 128
 

@@ -163,9 +163,6 @@ REPLACE:laborers = {
 
 	pop_percentage_impact = { # PP (vanilla has none)
 		local_monthly_development = 0.003
-		# PP 2026-11-27 (Jan): every laborer takes 4 laborer room; a laborer building gives it back per filled job, an
-		# RGO per level (rgo_level static modifier). [job_room] room_per_head, job_room.py.
-		local_laborers_desired_pop_scaled = -4
 	}
 
 	# PP: vanilla's local_production_efficiency (medium_production_efficiency_bonus) is gone (2026-11-25, Jan: nothing

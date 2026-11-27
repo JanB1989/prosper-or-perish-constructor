@@ -4,8 +4,5 @@ INJECT:sawmill = {
 	city = yes
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
-	modifier = {
-		local_laborers_desired_pop = 1 # job_room
-	}
 }
 # <<< eu5-building-pipeline:sawmill:building

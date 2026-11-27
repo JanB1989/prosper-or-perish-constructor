@@ -604,7 +604,6 @@ REPLACE:caravan_stop = {
 	}
 	build_time = trade_post_build_time
 	modifier = {
-		local_laborers_desired_pop = 0.4 # job_room
 		local_merchant_power = 0.5
 		local_merchant_capacity = 1
 	}

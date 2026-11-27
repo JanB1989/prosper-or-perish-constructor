@@ -180,10 +180,7 @@ TRY_REPLACE:rgo_level = {
 	game_data = {
 		category = location
 	}
-	# 2026-11-27 (Jan, job room): 1.5 x 5. An RGO level employs 1,000 laborers and the engine counts no jobs for it:
-	# this line is its room. Each laborer takes 4 laborer room, so the level gives 1 + 4 for its workers and the old
-	# spare half place x 5 (flat room counts a fifth). [job_room] room_per_head.
-	local_laborers_desired_pop = 7.5
+	local_laborers_desired_pop = 1.500
 	local_raw_material_output = -0.010
 	# local_food_capacity = 15
 	local_monthly_food = 1.75 # 1.5 until 2026-10-07 (Jan: start food deficits)
@@ -225,9 +222,8 @@ TRY_REPLACE:devastation = {
 	# soldiers 39 %, burghers 50 %, clergy 50 %, nobles 59 %. Laborers lose less than their idle share (28 %), so most jobs stay staffed.
 	# A starving province falls into devastation, so this is also a way out of a famine, and a partial one: the
 	# simulation's famine deaths fall only 1-4 %. tools/devastation_cap_sim.py
-	# laborers x 5 since 2026-11-27 (0.4 and 0.01 before): a cut of their room removes a fifth of it in people now
-	local_laborers_desired_pop = 2.0
-	local_laborers_desired_pop_scaled = 0.05
+	local_laborers_desired_pop = 0.4
+	local_laborers_desired_pop_scaled = 0.01
 	local_soldiers_desired_pop_scaled = 0.001
 	local_clergy_desired_pop_scaled = 0.0025
 	local_nobles_desired_pop_scaled = 0.0016

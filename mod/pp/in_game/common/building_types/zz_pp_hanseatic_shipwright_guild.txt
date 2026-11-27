@@ -50,7 +50,6 @@ construction_demand = port_building_construction
 # (the League paid its wars from a levy on shipped goods); town: harbour and repair as in vanilla, sailors of its
 # own and a little development
 modifier = {
-	local_laborers_desired_pop = 1 # job_room
 	max_ships_built_at_same_time = 1
 	sailors_to_building_owner = 0.01
 	gold_to_building_owner = 0.5

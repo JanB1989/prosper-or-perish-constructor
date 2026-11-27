@@ -97,8 +97,5 @@ ai_construct_weight = {
     add = pp_market_short_fine_cloth
 }
 	can_close = no # building_shutdown
-	modifier = {
-		local_laborers_desired_pop = 4.64 # job_room
-	}
 }
 # <<< eu5-building-pipeline:fine_cloth_mill:building

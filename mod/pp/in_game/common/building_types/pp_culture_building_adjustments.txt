@@ -115,8 +115,8 @@ REPLACE:university = {
 		local_pop_promotion_speed = 0.005
 		# spare room (2026-11-27, Jan; see the Village School): the University's was here before, the largest of the
 		# schooling buildings: one and a half laborer building levels, more than two guild levels
-		local_laborers_desired_pop = 6 # 1.2 x 5 (job room: flat room counts a fifth)
-		local_burghers_desired_pop = 3 # 0.6 x 5
+		local_laborers_desired_pop = 1.2
+		local_burghers_desired_pop = 3 # 0.6 x 5 (job room: flat room counts a fifth)
 		local_clergy_desired_pop = 0.3
 		local_nobles_desired_pop = 0.2
 	}

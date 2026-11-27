@@ -25,8 +25,9 @@ of a place, and so does every flat source of room (ranks, schools, laws).
 Written at finalize, after the employment cut: E is read from the building's final employment_size at every build, so
 it follows any change of a building's employment by itself. Every building that employs a listed class carries the
 line, production building or not: a person at work in a building without it would take room and get none back.
-Laborers also work in RGOs, which are no buildings: the ``rgo_level`` static modifier gives their room and the room
-they take back per RGO level (hand-written, 1.5 x (1 + k); tests/test_job_room.py). A
+Laborers are not listed: they also work in RGOs, which are no buildings; their room there is the ``rgo_level``
+static modifier, and raising it to give the workers' room back made the game's own start pass promote half the
+peasants (AGENTS.md "Job Room"). A
 vanilla building the mod only injects into gets the line in its INJECT (modifier blocks add up). ``not_buildings``
 takes single buildings out. The line carries a marker comment; a building that leaves the set loses it again. A line
 of the same key the building's own block already has is folded into ours (the engine would otherwise see the key

@@ -3,8 +3,5 @@ INJECT:oma_falaj = {
 # Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
-	modifier = {
-		local_laborers_desired_pop = 0.2 # job_room
-	}
 }
 # <<< eu5-building-pipeline:oma_falaj:building

@@ -313,7 +313,6 @@ increase_per_level_cost = 0.10
 	}
 
 	modifier = {
-		local_laborers_desired_pop = 3.2 # job_room
 		# the kitchen's food (2026-10-03: was 15 plus about 43 Province Food from the recipes), scaled by staffing
 		# and by the inputs the kitchen gets
 		local_monthly_food = 18.0

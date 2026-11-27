@@ -102,20 +102,17 @@ def test_who_carries_the_line(targets, vanilla) -> None:
     the line would take room and get none back."""
     wanted, result = targets
     config = jr.load_config(PROJECT)
-    assert config.room_per_head == {"burghers": Decimal(4), "laborers": Decimal(4)} and config.not_buildings == frozenset()
+    assert config.room_per_head == {"burghers": Decimal(4)} and config.not_buildings == frozenset()
     assert result.room_per_head == config.room_per_head
     for key in ("glass_guild", "tannery", "printing_press_shop",  # producers
                 "marketplace", "fondaco", "hanseatic_kontor",      # trade buildings the mod replaces
                 "counting_house", "stock_exchange", "theater",     # vanilla buildings the mod only injects into
                 "pp_trade_school"):
         assert wanted[key][0] == "burghers", key
-    for key in ("mason", "iron_mine", "charcoal_maker", "tar_kiln", "hired_labor_yard", "cookshop", "sawmill"):
-        assert wanted[key][0] == "laborers", key
-    for key in ("wheat_farm", "market_village", "pp_village_school"):  # peasants, clergy: not listed
+    # laborers, peasants, clergy: not listed (laborers were for an evening; see the module's docstring)
+    for key in ("mason", "iron_mine", "sawmill", "wheat_farm", "market_village", "pp_village_school"):
         assert key in result.other_pop and key not in wanted, key
-    # worker-less improvements name a class but nobody works there: nothing to give back
-    assert result.no_jobs == ["bund", "khmer_baray", "polders", "qanats"]
-    assert wanted["mason"] == ("laborers", Decimal("3.2"))             # 4 x 0.8 (1.0 cut to 0.8)
+    assert result.no_jobs == []  # a building of a listed class without jobs would get no line
     assert wanted["glass_guild"] == ("burghers", Decimal("1"))        # 4 x 0.25 (0.3 cut to 0.25)
     assert wanted["counting_house"] == ("burghers", Decimal("0.4"))   # 4 x vanilla's 0.1
     # every blueprint building whose pop type is listed and that has jobs
@@ -142,9 +139,7 @@ def test_the_pop_type_carries_the_per_person_line(vanilla) -> None:
     body = jr.pop_type_bodies(vanilla, MOD)["burghers"]
     _match, open_, close = jr._top_block(body, "pop_percentage_impact")
     assert re.search(r"^\s*local_burghers_desired_pop_scaled = -4\s*$", body[open_ + 1: close], re.MULTILINE)
-    laborers = jr.pop_type_bodies(vanilla, MOD)["laborers"]
-    _match, open_, close = jr._top_block(laborers, "pop_percentage_impact")
-    assert re.search(r"^\s*local_laborers_desired_pop_scaled = -4\s*$", laborers[open_ + 1: close], re.MULTILINE)
+    assert "local_laborers_desired_pop_scaled" not in jr.pop_type_bodies(vanilla, MOD)["laborers"]  # not listed
     other = jr.Config({"burghers": Decimal(5)}, frozenset())
     assert jr.pop_type_problems(other, vanilla, MOD) == [
         "pop type burghers: pop_percentage_impact needs local_burghers_desired_pop_scaled = -5 ([job_room] room_per_head)"]
@@ -166,27 +161,28 @@ def _value(text: str, block: str, key: str) -> Decimal:
 
 
 def test_flat_room_of_a_listed_class_is_its_old_number_times_one_plus_k(vanilla) -> None:
-    """Idle people allowed = (flat room + unfilled jobs) / (1 + k), so every flat room number the mod sets for burghers
-    and laborers is the number it had before x (1 + k): the same idle people fit as before."""
+    """Idle people allowed = (flat room + unfilled jobs) / (1 + k), so every flat room number the mod sets for the
+    burghers is the number it had before x (1 + k): the same idle people fit as before. The laborers are not listed
+    and keep their numbers."""
     config = jr.load_config(PROJECT)
     five = 1 + config.room_per_head["burghers"]
-    assert five == 1 + config.room_per_head["laborers"] == 5
+    assert five == 5 and "laborers" not in config.room_per_head
     statics = (MOD / "main_menu/common/static_modifiers/pp_location_modifier_adjustments.txt").read_text(encoding="utf-8-sig")
-    # an RGO level employs 1,000 laborers and the engine counts no jobs for it: its line is the room of its workers
-    # (1), what they take (k) and the old spare half place x (1 + k)
-    assert _value(statics, "rgo_level", "local_laborers_desired_pop") == Decimal("1.5") * five
+    # an RGO level employs 1,000 laborers and the engine counts no jobs for it: this line is their room. With the
+    # laborers listed it would have to be 1.5 x (1 + k), and the game's own start pass would overfill the class.
+    assert _value(statics, "rgo_level", "local_laborers_desired_pop") == Decimal("1.5")
     # location ranks: vanilla's line plus the mod's inject
     vanilla_ranks = "\n".join(bf._read(path) for path in bf.vanilla_files(vanilla, Path("in_game/common/location_ranks")))
     ranks = (MOD / "in_game/common/location_ranks/pp_location_rank_adjustments.txt").read_text(encoding="utf-8-sig")
     for rank, before in (("megalopolis", Decimal("4")), ("city", Decimal("0.5")), ("town", Decimal("0.2"))):
-        for pop in ("burghers", "laborers"):
-            key = f"local_{pop}_desired_pop"
-            assert _value(vanilla_ranks, rank, key) + _value(ranks, rank, key) == before * five, (rank, pop)
-    # devastation's cut of the laborers (applied at negative strength), and its upper-class multiplier for the burghers:
-    # the multiplier scales the room the workplaces give back too, so a fifth of the old number keeps the old cut
-    assert _value(statics, "devastation", "local_laborers_desired_pop") == Decimal("0.4") * five
-    assert _value(statics, "devastation", "local_laborers_desired_pop_scaled") == Decimal("0.01") * five
+        key = "local_burghers_desired_pop"
+        assert _value(vanilla_ranks, rank, key) + _value(ranks, rank, key) == before * five, rank
+    assert _value(vanilla_ranks, "city", "local_laborers_desired_pop") + _value(ranks, "city", "local_laborers_desired_pop") == Decimal("0.5")
+    # devastation's upper-class multiplier for the burghers: it scales the room the workplaces give back too, so a
+    # fifth of the old number keeps the old cut; its cut of the laborers is as it was
     assert _value(statics, "devastation", "local_upper_class_capacity_modifier") == Decimal("0.5") / five
+    assert _value(statics, "devastation", "local_laborers_desired_pop") == Decimal("0.4")
+    assert _value(statics, "devastation", "local_laborers_desired_pop_scaled") == Decimal("0.01")
 
 
 def test_demotion_follows_the_size_of_the_location(vanilla) -> None:

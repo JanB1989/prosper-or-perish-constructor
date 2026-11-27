@@ -41,3 +41,5 @@ def test_pop_demand_factors_cut_and_leave_staple_foods_alone() -> None:
     factors = raw["stockpile_prices"]["pop_demand"]
     assert factors and all(0 < v < 1 for v in factors.values())
     assert not set(factors) & set(staple_foods())
+    # 2026-11-27 (Jan: fit history): tobacco and sugar raised back toward vanilla, the 2026-11-01 run's shortage is gone
+    assert factors["tobacco"] == 0.65 and factors["sugar"] == 0.8

@@ -69,11 +69,11 @@ TRY_INJECT:silver = { default_market_price = 9.3 } # 6
 TRY_INJECT:slaves_goods = { default_market_price = 4.65 } # 3
 TRY_INJECT:steel = { default_market_price = 7.75 } # 5
 TRY_INJECT:stone = { default_market_price = 1.3175 } # 1 x 0.85
-TRY_INJECT:sugar = { default_market_price = 4.65 demand_multiply = { all = 0.7 } } # 3
+TRY_INJECT:sugar = { default_market_price = 4.65 demand_multiply = { all = 0.8 } } # 3
 TRY_INJECT:tar = { default_market_price = 3.1 } # 2
 TRY_INJECT:tea = { default_market_price = 4.65 demand_multiply = { all = 0.65 } } # 3
 TRY_INJECT:tin = { default_market_price = 2.79 } # 2 x 0.9
-TRY_INJECT:tobacco = { default_market_price = 4.65 demand_multiply = { all = 0.5 } } # 3
+TRY_INJECT:tobacco = { default_market_price = 4.65 demand_multiply = { all = 0.65 } } # 3
 TRY_INJECT:tools = { default_market_price = 5.0375 } # 3.25
 TRY_INJECT:victuals = { default_market_price = 4.65 } # 3
 TRY_INJECT:weaponry = { default_market_price = 5.115 } # 3 x 1.1

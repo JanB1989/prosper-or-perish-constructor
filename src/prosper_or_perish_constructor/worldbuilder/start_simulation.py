@@ -497,6 +497,7 @@ class Simulation:
     food_mult: dict = {}
     rgo_k: dict = {}
     victuals_pop_factors: dict = {}
+    victuals_base: float = 0.0   # victuals base_production (the common good) per 1,000 idle peasants a month
     victuals: dict = {}
     province_food: dict = {}   # building -> Province Food per staffed level (province_food_per_level)
     crop_cfg = None            # crop_allocation.CropConfig; None skips the crop farms
@@ -594,6 +595,11 @@ class Simulation:
         self.yield_k = {}
         self.food_model = fm.FoodModelConfig.from_raw((cfg.raw.get("start") or {}).get("food_model"))
         self.victuals_pop_factors = rules.victuals_pop_factors()
+        # the victuals common good: idle peasants put base_production x their thousands into the market every month
+        # (engine, measured 2026-10-09), so the market's victuals balance counts it beside the Yards
+        victuals_body = rules.goods.get("victuals")
+        self.victuals_base = (float(first(victuals_body, "base_production", 0) or 0)
+                              if isinstance(victuals_body, CList) else 0.0)
         setup_keys = setup_modifier_keys(contract)
         # The engine's province capitals at game start (config/start_province_capitals.txt, read from a start save):
         # the setup files do not name them and no rule reproduces the engine's pick.
@@ -1290,7 +1296,7 @@ class Simulation:
         for group, tags in (
             (g, self.groups[g]) for g in (groups if groups is not None else self.groups)
         ):
-            demand = overpop = jobless = workers = subs = own_food = day0_flat = serve_food = market_food = pop = store = 0.0
+            demand = overpop = jobless = idle_peasants = workers = subs = own_food = day0_flat = serve_food = market_food = pop = store = 0.0
             cookshop = taverns = yards = 0
             packers = Counter()
             cap_rows = []
@@ -1317,6 +1323,8 @@ class Simulation:
                     have = max(0.0, types.get(kind, 0.0))
                     idle = max(0.0, have - employed.get(kind, 0.0))
                     jobless += idle
+                    if kind == "peasants":
+                        idle_peasants += idle
                     workers += have
                     subs += idle * y
                 mult = self.food_mult.get(tag, 1.0)
@@ -1360,6 +1368,7 @@ class Simulation:
                 "overpopulation": overpop,
                 "subsistence": subs,
                 "subsistence_workers_k": jobless,
+                "idle_peasants_k": idle_peasants,
                 "workers_k": workers,
                 "jobs_k": workers - jobless,
                 "building_food": own_food,
@@ -1540,8 +1549,9 @@ class Simulation:
 
     def victuals_v2(self, members, budgets):
         """(supply, demand without the Taverns, Tavern levels) of the market's victuals per month: configured producers
-        (the Victualling Yards' victuals follow their pool's surplus: market_victuals_use; Cookshops make none); the
-        pops' demand (game demand x ``pop_demand_scale``) and other configured consumers."""
+        (the Victualling Yards' victuals follow their pool's surplus: market_victuals_use; Cookshops make none) and the
+        common good (victuals base_production x the idle peasants, in thousands); the pops' demand (game demand x
+        ``pop_demand_scale``) and other configured consumers."""
         v = self.start.victuals
         model = self.food_model
         serve_keys = self.serve_keys()
@@ -1549,6 +1559,7 @@ class Simulation:
         supply = demand = 0.0
         imports = 0
         for group in members:
+            supply += self.victuals_base * float(budgets[group].get("idle_peasants_k", 0.0))
             for tag in self.groups[group]:
                 for key, n in self.staffed[tag].items():
                     if not n:

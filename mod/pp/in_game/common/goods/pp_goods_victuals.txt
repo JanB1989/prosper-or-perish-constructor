@@ -30,5 +30,5 @@
 		peasants = 1.05
 	}
 	development_threshold = 20
-	base_production = 0.003
+	base_production = 0.001 # the common good, per 1,000 idle peasants a month; 0.003 until 2026-11-27 (Jan: it was two thirds of the world's victuals in 1342 and kept 24+ months of stock at a third of the default price until about 1450)
 }

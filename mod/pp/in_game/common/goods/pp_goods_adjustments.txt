@@ -289,9 +289,11 @@ TRY_INJECT:cloves = {
 }
 TRY_INJECT:cocoa = {
 	block_rgo_upgrade = yes
+	transport_cost = 0.5 # 1 (vanilla default); 2026-11-27, Jan: short in Europe while the Americas hold 50-150 months of stock
 }
 TRY_INJECT:coffee = {
 	block_rgo_upgrade = yes
+	transport_cost = 0.5 # 1 (vanilla default); 2026-11-27, Jan: as cocoa (Europe 1.3-1.8x default, about half its demand unmet)
 }
 # Court elephants (2026-11-02, Jan: find uses; run ebdb631e: 230 a month made, 25 wanted, at the price floor wherever they
 # are bred). Vanilla's nobles want 0.1, but only above wealth 2, which almost no estate reaches: pops bought under 0.2 a

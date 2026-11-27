@@ -791,6 +791,7 @@
 - `start_market_stock.csv`: per good the settled price and one engine factor each for pop demand, building inputs, RGO and building outputs (the engine's wealth rules and method choice are not modelled). Demand, recipes, levels and pops move the result at every build without a save. Only a moved settled price or a new good at game start needs `uv run ppc start-stock calibrate --save <day-0 save>` (settled prices from the newest five full runs in `graphs/dataset`). `ppc start-stock check [--save <day-0 save>]` says whether the file is current and how far the targets sit from the settled prices.
 - Only goods a market has (2026-11-08, Jan: chili in Paris, elephants in Venice, lacquerware in Mexico had start stock, so the goods came into those markets): a vanilla good gets stock only where the market produces it at game start (vanilla's `is_produced_in_market`); PP's own goods (victuals) go anywhere. `start_market_goods.csv` (repo root) lists per market the goods it produces in a new game, union of a day-0 save and one a month in (locations change market on the first monthly tick); a save decides because the model's own production misses about a tenth both ways. Rerun `uv run ppc start-stock presence --save <day 0> --save <month 1>` when the start setup changes which goods a market makes; the test fails on a planned market without a row. 4,077 rows, 3.45 M gold (was 6,550, 3.81 M); 2,473 rows dropped.
 - Checked on a day-0 save of the same build: target against settled price, typical miss 31 %, mean +9 % (no added stock 151 %, +132 %; true flows of the save 22 %). Factors from a save of 2026-09-20 still give 31 %, so the table does not go stale with balance edits. Details: `docs/market_rulebook.md` 8e.
+- Victuals (2026-11-27, Jan): the common good cut 0.003 -> 0.001 per 1,000 idle peasants (`pp_goods_victuals.txt`; it was 67 % of world victuals in 1342, 99 % in India, 86 % in China, and kept 24+ months of stock at a third of the default price until about 1450). Settled price 0.396 -> 0.54 (the simulator's victuals price at 1362 against the old value) and the output factor 4.337 -> 2.397 (x 0.553: the common good was two thirds of the day-0 make the factor carries), both by hand until a day-0 save of the new build calibrates them; injection 18,336 -> 5,092 victuals. The start planner and the start validator count the common good in each market's victuals supply (`start_simulation.victuals_v2`, `food_sim`), and `NLocation.SUBSISTENCE_AGRICULTURE` 1.20 -> 1.21 covers part of the Tavern food the cut takes. Simulated (scratch sim on run b18a10d6): world stock 21.6 -> 14.2 months in 1343, about 10 from 1347 on; victuals price +46 % from 1352 to 1830 (was +86 %); world people in 1836 -5 %, India -4 %, China -2 to -5 %. Not tested in game.
 - In game, first version (no ceiling cap, median settled prices), 13 months against the same build without: no errors; stock 27 -> 39 months of supply at once (without 2 -> 6); world price / default 0.67 at month 6, 0.52 at 10, 0.46 at 13 (without 0.87, 0.74); monthly moves 8.9 % falling to 3.8 % (without 4.9 to 3.8); unmet pop demand 7.1 vs 9.5 % at month 10; tax paid -27 %, wanted (Jan: people were making money on inflated prices); food, people and constructions unchanged. Not measured past 13 months: the AI's first-decade building.
 
 ## Ship Upkeep (2026-10-11, Jan)
@@ -1296,7 +1297,16 @@
   (`overlord_exempt_from_subject_import_tariffs`, export rates too); the cut frees every other buyer. Only colonial
   nations that own a market centre had rates (7 of 55 in 1737, 20 of 115 in 1837).
 - Transport cost 0.5 for sugar, cotton and tobacco (`pp_goods_adjustments.txt`; vanilla default 1): half the merchant
-  capacity and maintenance per unit on every route, Old World ones included. Coffee, cocoa and dyes keep 1.
+  capacity and maintenance per unit on every route, Old World ones included. Cocoa and coffee 0.5 too (same day, Jan:
+  coffee 1.3-1.8x default in Europe with about half its demand unmet while American markets hold 50-150 months of
+  cocoa and coffee stock); dyes keep 1.
+- Pop demand (`[stockpile_prices.pop_demand]`, `ppc stockpile apply`): tobacco 0.5 -> 0.65, sugar 0.7 -> 0.8 (Jan: fit
+  history). The 2026-11-01 cut came from a run where demand exceeded supply; now both sit in world balance at 0.5-0.6
+  of default and tobacco carried 38 months of stock after its demand opened around 1640. Tea 0.65, cocoa and coffee 0.4
+  stay. History points the same way: both became goods of ordinary people in Europe after 1650 (English tobacco about a
+  pound a head a year by 1700, sugar about 4 lb in 1700 and 20 lb by 1800), so a half cut on estate demand was low.
+  Start market stock unchanged (rebuilt, same rows): these goods get stock only in their producing markets, where the
+  start make outweighs the pop use, so flow = max(use, make) does not move; settled prices left until a run shows them.
 - Why (run b18a10d6, measured): Europe is not short of these goods (no unmet pop or building demand; sugar 0.58-0.82,
   cotton 0.62-0.73, tobacco 0.36-0.49 of default; coffee is the one short plantation good). 70-85 % of American output
   comes from colonial nations' land, but most of it sits in markets whose centre a native country owns (Mayapan,
@@ -1304,7 +1314,7 @@
   exports on their home capacity; sugar and tobacco earn 0.2-0.3 gold per capacity there, below most of their other
   trades, so 100-160 units a month of exportable sugar and tobacco stay in American stock (4,000-5,700 units each).
 - Tests: `test_building_upgrade_chains.py` (site trigger, owner in allow), `test_project_config.py` (transport costs,
-  colonial nation caps and focus).
+  colonial nation caps and focus), `test_stockpile_prices.py` (tobacco and sugar demand).
 
 ## Slave Trade (2026-11-27, Jan; not tested in game)
 

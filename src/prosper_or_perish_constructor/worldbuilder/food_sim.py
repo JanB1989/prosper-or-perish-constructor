@@ -327,7 +327,8 @@ class Pool:
     start_food: float
     victuals_demand: float      # the pops' and other buildings' victuals demand at start
     victuals_other_supply: float = 0.0
-    harbor_yards: float = 0.0          # staffed harbour Victualling Yard levels (``yards`` counts the Granges)
+    victuals_base_supply: float = 0.0  # the victuals common good at start (base_production x idle peasants k); scales with N
+    harbor_yards: float = 0.0        # staffed harbour Victualling Yard levels (``yards`` counts the Granges)
     overpop: list = field(default_factory=list)   # [(peasants k, pop / capacity)] per location
     overpop_consumption: float = 0.25
     peasant_share: float = 0.6         # share of the demand the peasants eat (the harvest roll moves it)
@@ -516,7 +517,7 @@ def simulate(pools: list[Pool], rules: SimRules) -> list[dict[str, Any]]:
                 p = pools[i]
                 f = N[i] / base[i]
                 supply += (p.yards * s_yard[i] * rules.yard_packed() + p.harbor_yards * s_harbor[i] * rules.harbor_yard_victuals
-                           + p.victuals_other_supply)
+                           + p.victuals_other_supply + p.victuals_base_supply * f)
                 demand += p.victuals_demand * f
                 buy += p.taverns * s_tav[i] * rules.tavern_victuals
             total = demand + buy
@@ -862,6 +863,7 @@ def pools_from_simulation(sim, budgets: Mapping[tuple, Mapping[str, Any]]) -> li
             taverns=taverns, yards=yards, capacity=b["food_capacity"],
             start_food=model.start_food_share * b["food_capacity"], victuals_demand=victuals,
             victuals_other_supply=other_supply, harbor_yards=harbor_yards, overpop=pairs,
+            victuals_base_supply=float(getattr(sim, "victuals_base", 0.0)) * float(b.get("idle_peasants_k", 0.0)),
             overpop_consumption=model.overpopulation_consumption,
             peasant_share=peasant_food / demand0 if demand0 > 1e-9 else 0.0,
             tribesmen_food=tribesmen_food, tribal_fed_share=fed_num / fed_den if fed_den > 1e-9 else 0.0,

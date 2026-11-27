@@ -273,6 +273,14 @@ def test_budget_v2_jobless_laborers_do_not_farm_and_cookshops_serve_their_share(
     assert abs(b["building_food"] - 3 * (1.5 + 0.96)) < 1e-9
     assert abs(b["day0_production"] - (1.4 * jobless + 3 * 1.5 - b["overpopulation"])) < 1e-9   # no Provisioning, no Serve yet
     assert abs(b["R"] - (b["subsistence"] + b["building_food"] + b["serve_food"]) / b["demand"]) < 1e-9
+    # 2026-11-27: the victuals common good (base_production x idle peasants k) counts in the market's victuals supply
+    assert b["idle_peasants_k"] == jobless
+    sim.victuals_pop_factors = {}
+    sim.victuals_base = 0.0
+    supply0, _, _ = sim.victuals_v2([("AAA", "p")], sim.budgets())
+    sim.victuals_base = 0.001
+    supply, _, _ = sim.victuals_v2([("AAA", "p")], sim.budgets())
+    assert abs(supply - supply0 - 0.001 * jobless) < 1e-9
 
 
 def test_linear_engine_promotion_follows_the_rgo_not_the_population():

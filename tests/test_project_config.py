@@ -2527,10 +2527,11 @@ def test_staple_and_victuals_transport_costs() -> None:
     expected |= {"legumes": 1.0, "fruit": 1.0, "wool": 1.25, "victuals": 1.0}
     # 2026-11-27 (Jan): the three plantation crops at half the merchant capacity per unit
     expected |= {"sugar": 0.5, "cotton": 0.5, "tobacco": 0.5}
+    # the same day: cocoa and coffee too (short in Europe, stock piled up in the Americas)
+    expected |= {"cocoa": 0.5, "coffee": 0.5}
     assert {good: float(merged[good]) for good in expected} == expected
     assert "livestock" not in merged
     assert "dyes" in merged and float(merged["dyes"]) == 1.0  # the 2026-10-06 floor stays
-    assert "coffee" not in merged and "cocoa" not in merged
 
 
 def test_staple_and_horse_pop_demand_cut() -> None:

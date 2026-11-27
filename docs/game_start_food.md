@@ -174,7 +174,9 @@ rank (town 521, city 815, megalopolis 1,241), R² 0.968; buildings add their
    stores). Demand is the pops' victuals and what the Taverns will actually buy: a
    Tavern only runs while its pool is short (its Province Food stops paying above
    about 7 stored months at the mean victuals price), so it buys its pool's gap / 30 food per victual, at most 2 per level.
-   Cookshops make no victuals.
+   Cookshops make no victuals. Supply counts the victuals common good too (since 2026-11-27): the goods file's
+   `base_production` x the market's idle peasants in thousands, which the engine puts into the market every month;
+   the validator's market balance counts it the same way, scaled with the pool's people.
 4. Pools that would otherwise collapse (fed below `import_priority_coverage`,
    0.85) get the market's victuals first, cheapest first; the rest by coverage.
 5. What the victuals cannot cover goes to further Cookshops

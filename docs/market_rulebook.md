@@ -654,6 +654,19 @@ slave centres 2.0 (vanilla 1) and enslave 0.3 (0.2), the slave plantations ask 0
 cost kept). The trade engine and the AI's route choice are vanilla; the levers are what each building makes and asks.
 Expected: 25-35 West African units a month land 5-7,000 people while plantations open jobs. Not tested in game.
 
+## 8h. Cash crops across the Atlantic (2026-11-27)
+
+Sugar, cotton, tobacco and dyes sit in world balance at about 0.5-0.6 of default like most goods (runs b18a10d6,
+5d232536, defb89f2). Coffee and cocoa are the exception: Europe pays 1.3-1.8x default for coffee with about half its pop
+demand unmet, while American markets hold 50-150 months of both. The trade per unit of merchant capacity earns too
+little to carry them, as for sugar and tobacco (section on plantations in constructor AGENTS.md), so all five plantation
+crops ship at transport cost 0.5 (vanilla 1); dyes keep 1.
+
+Pop demand factors (`[stockpile_prices.pop_demand]`, 2026-11-01 from run 67859be2, where demand ran above supply):
+tobacco 0.5 -> 0.65 and sugar 0.7 -> 0.8. Tobacco carried 38 months of stock after its demand opened around 1640, so its
+reason was gone; both moved toward vanilla, the direction history gives (mass goods in Europe after 1650). At the same
+prices that is +30 % pop demand for tobacco and +14 % for sugar. Not tested in game.
+
 ## 7. Open
 
 - Treaty flows (per country pair) and the Paris constant (+0.1) in the attraction.

@@ -56,7 +56,7 @@ def test_pp_specific_adjustments_are_present_in_export() -> None:
 
     # default prices x1.55 on branch stockpile-prices (goods/zz_pp_goods_stockpile_prices.txt), dummy goods kept
     assert rows["wheat"] == [1.55, 0.7, 0.0, None]
-    assert rows["victuals"] == [4.65, 1.0, 0.0, 0.003]
+    assert rows["victuals"] == [4.65, 1.0, 0.0, 0.001]  # common good 0.003 -> 0.001 on 2026-11-27 (Jan)
     assert rows["province_food_sales"] == [5.0, 100.0, None, 1.0]
     assert rows["local_food"] == [0.5, 100.0, 1.0, 1000.0]
 

@@ -53,3 +53,169 @@ REPLACE:hun_power_to_magnates = {
 	}
 	years = 2
 }
+
+# Maghreb control gifts (2026-11-27, Jan: "It's fine if their cities have decent control, but inland should be hard";
+# docs/country_finetunes.md). Vanilla blocks with only the control, separatism and rebel lines cut: flat monthly control
+# to a fifth (the size of the 0.0005 base rate), separatism and rebel growth reliefs by a third. Pinned against vanilla
+# in tests/test_maghreb_control.py.
+
+# Tlemcen: the tribes' support gave up to +0.005 control a month above half satisfaction and down to -0.005 below. The
+# good side is a fifth now; the bad side stays at vanilla strength (two modifiers, clamped at half satisfaction). The
+# DLC inject (stability investment) is part of the copy.
+REPLACE:tle_support_of_banu_al_wad = {
+	age = age_1_traditions
+	potential = {
+		has_or_had_tag = TLE
+	}
+	allow = {
+		culture = culture:zenati
+	}
+	locked = {
+		can_revoke_tle_support_banu_al_wad_reform = { scale = 1 }
+	}
+	country_modifier = {
+		tribes_estate_levy_size = 1 #When changing, edit scales_with_tribes_estate_satisfaction
+		monthly_legitimacy = 0.2
+		scale = {
+			value = estate_satisfaction:tribes_estate
+		}
+		pure_tooltip_entry = scales_with_tribes_estate_satisfaction
+	}
+	country_modifier = {
+		global_monthly_control = 0.002 # PP: vanilla 0.01, content tribes
+		scale = {
+			value = estate_satisfaction:tribes_estate
+			subtract = 0.5
+			min = 0
+		}
+		pure_tooltip_entry = monthly_control_with_tribes_satisfaction
+	}
+	country_modifier = {
+		global_monthly_control = 0.01 # vanilla strength, discontent tribes
+		scale = {
+			value = estate_satisfaction:tribes_estate
+			subtract = 0.5
+			max = 0
+		}
+	}
+
+	country_modifier = {
+		global_levy_size_modifier = -0.25
+		wrong_culture_levy_size = -0.1
+		pure_tooltip_entry = disables_tribal_cabinet_action
+	}
+
+	country_modifier = {
+		potential_trigger = {
+			has_dlc = "d009_across_the_pillars"
+			custom_tooltip = {
+				text = tle_empower_banu_al_wad_reform_unlock_tt
+				has_variable = tle_empower_banu_al_wad_reform_var
+			}
+		}
+		# When modifying, modify tle_empower_banu_al_wad_reform string
+		stability_investment = small_stability_investment
+	}
+
+	major = yes
+	years = 2
+}
+
+# Tunis: separatism -0.15 -> -0.10, rebel growth -0.001 -> -0.00067.
+REPLACE:guardians_of_ifriqiya = {
+	unique = yes
+
+	potential = {
+		has_or_had_tag = TUN
+	}
+
+	country_modifier = {
+		global_garrison_size_modifier = 0.1
+		global_separatism = -0.1
+		monthly_rebel_growth = -0.00067
+		monthly_towards_centralization = societal_value_minor_monthly_move
+	}
+
+	years = 2
+}
+
+# Ibadi Majlis (Maghrebi culture decision): monthly control 0.005 -> 0.001.
+REPLACE:maghreb_ibadi_majlis_ammi_said = {
+	unique = yes
+	government = monarchy
+	potential = {
+		religion = religion:ibadi
+		has_unlocked_government_reform_trigger = { type = maghreb_ibadi_majlis_ammi_said }
+	}
+	country_modifier = {
+		government_reform_slots = 1
+		parliament_base_support = 0.15
+		monthly_legitimacy = 0.1
+		global_monthly_control = 0.001
+		allow_ibadi_majlis_ammi_said_council_parliament = yes
+	}
+
+	years = 2
+}
+
+# Across the Pillars: the Kabyle, Tuareg and Mozabite reforms, separatism cut by a third.
+TRY_REPLACE:agraw_federation_reform = {
+	unique = yes
+
+	potential = {
+		has_dlc = "d009_across_the_pillars"
+		culture = culture:kabyle
+		NOT = { has_reform = government_reform:maghrebi_administration }
+	}
+
+	country_modifier = {
+		court_spending_efficiency = 0.1
+		global_separatism = -0.1
+		monthly_towards_decentralization = societal_value_minor_monthly_move
+		peasants_estate_target_satisfaction = small_permanent_target_satisfaction
+		tribes_estate_target_satisfaction = small_permanent_target_satisfaction
+	}
+
+	years = 2
+}
+
+TRY_REPLACE:amenokal_paramountcy_reform = {
+	unique = yes
+
+	potential = {
+		has_dlc = "d009_across_the_pillars"
+		culture = culture:tuareg
+		NOT = { has_reform = government_reform:maghrebi_administration }
+	}
+
+	country_modifier = {
+		diplomatic_range_modifier = 0.25
+		global_separatism = -0.067
+		monthly_army_tradition = 0.1
+		nobles_estate_target_satisfaction = small_permanent_target_satisfaction
+	}
+
+	years = 2
+}
+
+TRY_REPLACE:diwan_of_the_azzaba_reform = {
+	unique = yes
+
+	potential = {
+		has_dlc = "d009_across_the_pillars"
+		culture = culture:mozabite
+		religion = religion:ibadi
+		NOT = { has_reform = government_reform:maghrebi_administration }
+	}
+
+	country_modifier = {
+		clergy_estate_target_satisfaction = small_permanent_target_satisfaction
+		global_separatism = -0.067
+		monthly_devotion = 0.05
+		monthly_legitimacy = 0.05
+		monthly_republican_tradition = 0.05
+		tolerance_own = 1
+	}
+
+	years = 2
+}

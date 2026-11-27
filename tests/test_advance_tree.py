@@ -190,6 +190,14 @@ DELIBERATE_REPLACE_DIFFERENCES: dict[str, tuple[set[str], set[str]]] = {
     ),
     # fur (2026-10-14, Jan): no age-6 fur output, fur output per worker already rose 1.0 -> 1.73 (run a3bd6176)
     "long_rifle": ({"global_fur_output_modifier = 0.3"}, set()),
+    # Maghreb control gifts (2026-11-27, Jan: inland should be hard; tests/test_maghreb_control.py)
+    "mor_atlas_strongholds": (
+        {"hills_proximity_impact = -0.2", "mountains_proximity_impact = -0.33"},
+        {"hills_proximity_impact = -0.1", "mountains_proximity_impact = -0.165"},
+    ),
+    "moroccan_bay_a": ({"global_separatism = -0.05"}, {"global_separatism = -0.033"}),
+    "amazigh_group_agraw_council": ({"global_separatism = -0.05"}, {"global_separatism = -0.033"}),
+    "tun_caliphal_claim": ({"global_separatism = -0.05"}, {"global_separatism = -0.033"}),
 }
 # The mod keeps devastation recovery from these advances small (sticky devastation). EU5 1.4 halved the vanilla
 # bonus to +0.0025, so the injects were re-netted; the merged value must stay positive.

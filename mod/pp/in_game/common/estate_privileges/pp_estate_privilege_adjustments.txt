@@ -76,10 +76,72 @@ TRY_REPLACE:local_tribal_strongholds = {
 	}
 
 	country_modifier = {
-		global_max_rural_control = 0.05
+		global_max_rural_control = 0.025 # vanilla 0.05, halved 2026-11-27 (Jan: inland should be hard; tests/test_maghreb_control.py)
 		global_tribes_estate_power = 1.0
 		tribes_estate_max_tax = -0.075
 		research_speed = -0.075 # every tribes privilege (zz_pp_tribes_privileges_research.txt; an inject misses a replaced block)
+	}
+}
+
+# Desert Power (Maghrebi and Amazigh tribes): vanilla, with the upgrade's monthly control cut to a fifth (0.0025 ->
+# 0.0005, the size of the base rate; 2026-11-27, Jan: inland should be hard; tests/test_maghreb_control.py) and the
+# tribes privileges' research cost written in, since an inject misses a replaced block.
+TRY_REPLACE:desert_power = {
+	estate = tribes_estate
+
+	potential = {
+		OR = {
+			culture = { has_culture_group = culture_group:maghrebi_group }
+			culture = { has_culture_group = culture_group:amazigh_group }
+		}
+	}
+
+	country_modifier = {
+		tribes_estate_target_satisfaction = medium_privilege_target_satisfaction
+		peasants_estate_target_satisfaction = medium_privilege_target_satisfaction
+		global_tribes_estate_power = 0.5
+		monthly_towards_decentralization = societal_value_minor_monthly_move
+		research_speed = -0.075
+	}
+
+	country_modifier = {
+		potential_trigger = {
+			custom_tooltip = {
+				text = maghrebi_culture_masters_of_sahara_country_bonus
+				has_variable = enable_desert_power_upgrade
+			}
+		}
+		global_monthly_development = 0.002
+		global_monthly_control = 0.0005
+	}
+
+	location_modifier = {
+		potential_trigger = {
+			custom_tooltip = {
+				text = maghrebi_culture_masters_of_sahara_desert_location_bonus
+				owner = { has_variable = enable_desert_power_upgrade }
+				vegetation = desert
+			}
+		}
+		local_rgo_build_time = -0.33
+		local_road_building_time = -0.5
+		local_monthly_development_modifier = 0.20
+		local_monthly_food_modifier = monthly_food_productivity_severe_bonus
+		supply_limit = 2.5
+	}
+
+	location_modifier = {
+		potential_trigger = {
+			custom_tooltip = {
+				text = maghrebi_culture_masters_of_sahara_arid_location_bonus
+				owner = { has_variable = enable_desert_power_upgrade }
+				climate = arid
+			}
+		}
+		local_wheat_output_modifier = 0.05
+		local_millet_output_modifier = 0.05
+		local_life_expectancy = 2
+		local_supply_limit_modifier = 0.05
 	}
 }
 

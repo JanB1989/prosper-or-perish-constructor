@@ -2,6 +2,45 @@
 
 Hand-tuned changes for single countries, one entry each: what and why.
 
+- **Maghreb: the control gifts of the base game and Across the Pillars cut** (2026-11-27, Jan, not tested in game).
+  Why: in four observer runs Morocco, Tlemcen and Tunis never declined; their population-weighted control rose from
+  about 0.32 in 1342 to 0.85-0.91 in 1837, inland and desert included, above Western Europe (0.67-0.76) and about 0.2
+  above Castile at equal proximity. Part of it were permanent country and region gifts with no counterweight. Jan: "It's
+  fine if their cities have decent control, but inland should be hard." Rule: flat monthly control to a fifth (the size
+  of the 0.0005 base rate), maximum rural control and the Atlas proximity relief halved, separatism and rebel growth
+  reliefs by a third; every other line, the flavour and a conditional gift's bad side stay vanilla. Objects (mod value,
+  vanilla in brackets):
+  - Makhzan bureaucracy (Morocco, DLC; `bureaucracies/pp_bureaucracy_adjustments.txt`, TRY_REPLACE): neutral monthly
+    control 0.0005 (0.0025); Central Makhzan's +25 % impact on it stays.
+  - Support of the Banu Abd al-Wad (Tlemcen reform; `government_reforms/pp_government_reform_adjustments.txt`,
+    REPLACE with the DLC's stability inject in the copy): monthly control 0.002 x (tribes satisfaction - 0.5) while the
+    tribes are above half satisfaction, at most +0.001 (+0.005); below half 0.01 x as vanilla, down to -0.005. Its
+    tooltip line `monthly_control_with_tribes_satisfaction` named vanilla's range; it reads without numbers now
+    (`localization/replace/english/pp_vanilla_overrides_l_english.yml`).
+  - Desert Power upgrade (Maghrebi and Amazigh tribes privilege; `estate_privileges/pp_estate_privilege_adjustments.txt`,
+    TRY_REPLACE): monthly control 0.0005 (0.0025).
+  - Ibadi Majlis (reform from a Maghrebi culture decision; REPLACE): monthly control 0.001 (0.005).
+  - Local Tribal Strongholds (tribes privilege, capital in the Maghreb; existing TRY_REPLACE): maximum rural control
+    0.025 (0.05). Negotiated Authority (policy of Morocco's Bled al-Makhzen law, DLC; `laws/pp_law_adjustments.txt`,
+    TRY_REPLACE of the whole law): maximum rural control 0.025 (0.05).
+  - Atlas Strongholds (Morocco advance; `advances/pp_country_advances_adjustments.txt`, TRY_REPLACE): hills proximity
+    impact -0.1 (-0.2), mountains -0.165 (-0.33).
+  - Guardians of Ifriqiya (Tunis reform; REPLACE): separatism -0.1 (-0.15), rebel growth -0.00067 (-0.001).
+  - Separatism -0.033 (-0.05): advances Moroccan Bay'a (Moroccan culture), Agraw Council (Amazigh culture group),
+    Caliphal Claim (Tunis). Separatism -0.1 (-0.15) Agraw Federation (Kabyle), -0.067 (-0.1) Amenokal Paramountcy
+    (Tuareg) and Diwan of the Azzaba (Mozabite), DLC reforms (TRY_REPLACE).
+  - Research cost: Across the Pillars' six tribes privileges (Abid al-Bukhari, Gharb War Tribes, Guich Tribes, Masmuda
+    Atlas Pact, Tuareg Imghad Vassalage, Zenati Mounted Levy) now pay the tribes privileges' -0.075 research like the
+    base game's (`zz_pp_tribes_privileges_research.txt`, TRY_INJECT); Desert Power carries it in its replacement.
+  Left alone: pure flavour (Shurfa Status, the Marinid Zenata confederation, Bay'a law, Al-Caid, Morocco's privileges:
+  legitimacy, devotion, prestige, slots, estate power); the advances' stability decay reliefs (-0.00025 each, the
+  common size of country advances everywhere); timed event modifiers (Maghrebi culture events 25 years, the Saharan
+  trade post 100 years, Garrisoned Stronghold 10 years); town rights (Medina Charter +0.05 local max control in towns:
+  cities may keep decent control); maluses (Makhzan's and Diwan al-Gharb's separatism, Ibadi Imamate's max control).
+  `tests/test_maghreb_control.py` pins each value as a ratio of today's vanilla; a game update that moves one fails
+  there. Expect: the Maghreb loses control inland over the centuries (base rate and its proximity only), a little
+  less tax and manpower, more separatism and rebels; players of these countries see the same cut values.
+
 - **Start adjustments: the AI takes them, a player chooses** (2026-11-19, Jan, not tested in game). A country's change to
   the vanilla treasury is one scripted effect, `pp_start_adjustment_<tag>` in
   `scripted_effects/pp_country_start_adjustments.txt` (the numbers live only there): Ottomans +1,500, Byzantium -1,000,

@@ -1,6 +1,6 @@
 ﻿# Every tribes estate privilege costs flat monthly research progress (Jan 2026-10-11): a country that grants its tribes
-# rights pays for them in learning. An inject misses a block a mod replaces, so Local Tribal Strongholds and Pasture
-# Access carry the row in their replacements (pp_estate_privilege_adjustments.txt).
+# rights pays for them in learning. An inject misses a block a mod replaces, so Local Tribal Strongholds, Pasture
+# Access and Desert Power carry the row in their replacements (pp_estate_privilege_adjustments.txt).
 
 TRY_INJECT:tribes_land_rights = {
 	country_modifier = {
@@ -77,7 +77,34 @@ TRY_INJECT:tun_arab_bedouins = {
 		research_speed = -0.075
 	}
 }
-TRY_INJECT:desert_power = {
+# Desert Power carries the row in its replacement (pp_estate_privilege_adjustments.txt) since 2026-11-27.
+# Across the Pillars' tribes privileges (2026-11-27): the same rule; TRY_INJECT skips them without the DLC.
+TRY_INJECT:mor_abid_al_bukhari = {
+	country_modifier = {
+		research_speed = -0.075
+	}
+}
+TRY_INJECT:masmuda_atlas_pact = {
+	country_modifier = {
+		research_speed = -0.075
+	}
+}
+TRY_INJECT:mor_gharb_war_tribes = {
+	country_modifier = {
+		research_speed = -0.075
+	}
+}
+TRY_INJECT:mor_guich_tribes = {
+	country_modifier = {
+		research_speed = -0.075
+	}
+}
+TRY_INJECT:tuareg_imghad_vassalage = {
+	country_modifier = {
+		research_speed = -0.075
+	}
+}
+TRY_INJECT:zenati_mounted_levy = {
 	country_modifier = {
 		research_speed = -0.075
 	}

@@ -888,3 +888,61 @@ TRY_REPLACE:dahsala_system = {
 		years = 2
 	}
 }
+
+# Bled al-Makhzen and Bled as-Siba (Morocco, Across the Pillars): Negotiated Authority's maximum rural control halved,
+# 0.05 -> 0.025 (2026-11-27, Jan: inland should be hard; docs/country_finetunes.md, tests/test_maghreb_control.py).
+TRY_REPLACE:bled_makhzen_siba_law = {
+	unique = yes
+	law_category = administrative
+	law_country_group = MOR
+
+	potential = {
+		has_dlc = "d009_across_the_pillars"
+		has_or_had_tag = MOR
+	}
+
+	centralized_makhzen_policy = {
+		potential = {
+			has_dlc = "d009_across_the_pillars"
+		}
+		country_modifier = {
+			global_crown_estate_power = 0.33
+			monthly_towards_centralization = societal_value_monthly_move
+			tax_income_efficiency = medium_tax_income_efficiency_bonus
+			tribes_estate_target_satisfaction = big_permanent_target_satisfaction_penalty
+		}
+		location_modifier = {
+			potential_trigger = {
+				local_control > 0.5
+				any_pop = {
+					pop_type = pop_type:tribesmen
+				}
+			}
+			local_tribal_promotion = 0.5
+		}
+		estate_preferences = {
+			crown_estate
+			nobles_estate
+		}
+		years = 2
+	}
+
+	negotiated_authority_policy = {
+		potential = {
+			has_dlc = "d009_across_the_pillars"
+		}
+		country_modifier = {
+			global_crown_estate_power = -0.2
+			global_max_rural_control = 0.025
+			global_tribes_estate_power = 0.25
+			monthly_towards_decentralization = societal_value_monthly_move
+			tax_income_efficiency = small_tax_income_efficiency_penalty
+			tribes_estate_target_satisfaction = small_permanent_target_satisfaction
+		}
+		estate_preferences = {
+			peasants_estate
+			tribes_estate
+		}
+		years = 2
+	}
+}

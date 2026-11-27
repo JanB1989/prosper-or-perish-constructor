@@ -1,6 +1,7 @@
 folder,key,vanilla_hash
 in_game/common/advances,advanced_mining,9abd99cfb6a1
 in_game/common/advances,alchemy_advance,d3b19f43f4d9
+in_game/common/advances,amazigh_group_agraw_council,03f8ec1c6aa0
 in_game/common/advances,blast_furnace,cca42cc21a88
 in_game/common/advances,bole_smelting,2d40c0725a29
 in_game/common/advances,castle_advance,1ea0ff413fb4
@@ -37,7 +38,9 @@ in_game/common/advances,lumber_improvements_absolutism,962c32a7fe0b
 in_game/common/advances,lumber_improvements_discovery,3144ad28f4f0
 in_game/common/advances,lumber_improvements_reformation,0e4b77ae7f77
 in_game/common/advances,monarchy_royal_court_advance,54b9af7e5d56
+in_game/common/advances,mor_atlas_strongholds,fd0157c29f88
 in_game/common/advances,more_merchants_age_of_trad,9a4064a7ac97
+in_game/common/advances,moroccan_bay_a,5a034dc54ca7
 in_game/common/advances,new_currency_demands,1225c85c5d78
 in_game/common/advances,new_world_advance,c80d89341a4a
 in_game/common/advances,organized_religion,f705ac470e45
@@ -57,6 +60,7 @@ in_game/common/advances,subjects_advance,7d90d2a283e1
 in_game/common/advances,taxation_advance,bf6af14eb2ea
 in_game/common/advances,trade_advance_age_of_trad,4cb594128abc
 in_game/common/advances,tribal_religious_values_law_advance,24033e6410df
+in_game/common/advances,tun_caliphal_claim,45443cbb777a
 in_game/common/advances,vaccination_advance,981c50f75d5c
 in_game/common/advances,windmills_advance,64ced4ee4258
 in_game/common/advances,written_alphabet,02aed706a5b0
@@ -247,6 +251,7 @@ in_game/common/building_types,weapon_manufactory,bb42c887109c
 in_game/common/building_types,weapon_workshop,f91b95ee1d2a
 in_game/common/building_types,winery,102b2c3f6e80
 in_game/common/building_types,winery_manufactory,11d658cb5cec
+in_game/common/bureaucracies,makhzan_bureaucracy,78d30c73878d
 in_game/common/cabinet_actions,develop_province,db7d49dfc685
 in_game/common/casus_belli,cb_make_tributary,9aeaa725a2c3
 in_game/common/employment_systems,capitalism,371f62603d32
@@ -256,6 +261,7 @@ in_game/common/employment_systems,capitalism_prioritising_infrastructure_trade_a
 in_game/common/employment_systems,equality,1721aebdd959
 in_game/common/employment_systems,first_come_first_serve,6a1382aec3eb
 in_game/common/estate_privileges,building_roads_rights,ce36707b86ee
+in_game/common/estate_privileges,desert_power,221ac17f2aa4
 in_game/common/estate_privileges,freedom_of_interpretation,78576bc4e91a
 in_game/common/estate_privileges,hab_tractatus_incorporalibus,b9a4281e6b99
 in_game/common/estate_privileges,land_owning_farmers,ebf423a1db0f
@@ -268,13 +274,20 @@ in_game/common/generic_actions,embrace_the_reformation,7cd6efb911f9
 in_game/common/generic_actions,move_nw_good_to_new_location,bd3bc9a24d37
 in_game/common/generic_actions,move_ow_good_to_new_location,0f29e5edc34c
 in_game/common/goods_demand,pop_demand,0e4595f4edc4
+in_game/common/government_reforms,agraw_federation_reform,5da98de267da
 in_game/common/government_reforms,agricultural_cultivation,a3c8053d977a
+in_game/common/government_reforms,amenokal_paramountcy_reform,305b89bfe5a9
+in_game/common/government_reforms,diwan_of_the_azzaba_reform,df4047c48392
+in_game/common/government_reforms,guardians_of_ifriqiya,6877e6d217f2
 in_game/common/government_reforms,hun_power_to_magnates,4bf515eb0b9d
+in_game/common/government_reforms,maghreb_ibadi_majlis_ammi_said,7dfd06a681fd
 in_game/common/government_reforms,nautical_education_act,090deed0a1e1
 in_game/common/government_reforms,peasant_labor_rights_reform,2628467f03a6
 in_game/common/government_reforms,the_education_act,a388f64f9ebc
+in_game/common/government_reforms,tle_support_of_banu_al_wad,04563b8805dc+c47614470a47
 in_game/common/government_reforms,visionary_thinkers,23ba94ae280e
 in_game/common/laws,administrative_system,ce3a626ba7ec
+in_game/common/laws,bled_makhzen_siba_law,44af7c68635c
 in_game/common/laws,dahsala_system,220118609687
 in_game/common/laws,divine_cause_law,2a39e2d8ff1b
 in_game/common/laws,education_elites_law,ae555b6fd435+970552680cc0

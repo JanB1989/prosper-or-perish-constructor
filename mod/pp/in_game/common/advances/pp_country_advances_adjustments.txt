@@ -20,3 +20,61 @@ TRY_INJECT:mos_skilled_tax_collectors = {
 	global_max_control = 0.05
 	global_max_rural_control = 0.05
 }
+
+# Maghreb control gifts (2026-11-27, Jan: "It's fine if their cities have decent control, but inland should be hard"):
+# vanilla advances with only these lines cut, pinned against vanilla in tests/test_maghreb_control.py.
+# Morocco's Atlas Strongholds: the hills and mountains proximity relief halved (-0.2 -> -0.1, -0.33 -> -0.165).
+TRY_REPLACE:mor_atlas_strongholds = {
+	age = age_1_traditions
+	icon = mor_atlas_strongholds
+
+	potential = {
+		has_or_had_tag = MOR
+	}
+
+	hills_proximity_impact = -0.1
+	mountains_proximity_impact = -0.165
+
+	requires = alchemy_advance
+}
+# Separatism reliefs by a third (-0.05 -> -0.033): Moroccan Bay'a, the Amazigh Agraw Council, Tunis' Caliphal Claim.
+TRY_REPLACE:moroccan_bay_a = {
+	age = age_2_renaissance
+	icon = legalism_advance
+
+	potential = {
+		culture = culture:moroccan
+	}
+
+	global_separatism = -0.033
+	nobles_estate_target_satisfaction = small_permanent_target_satisfaction
+
+	requires = renaissance_court
+}
+TRY_REPLACE:amazigh_group_agraw_council = {
+	age = age_2_renaissance
+	icon = cultural_traditions_law_advance
+
+	potential = {
+		culture ?= { has_culture_group = culture_group:amazigh_group }
+	}
+
+	global_separatism = -0.033
+	peasants_estate_target_satisfaction = small_permanent_target_satisfaction
+
+	requires = renaissance_court
+}
+TRY_REPLACE:tun_caliphal_claim = {
+	age = age_1_traditions
+	icon = religious_unification
+
+	potential = {
+		has_or_had_tag = TUN
+		original_tag = TUN
+	}
+
+	global_separatism = -0.033
+	tolerance_own = 1
+
+	requires = cultural_traditions_law_advance
+}

@@ -102,6 +102,7 @@
  MODIFIER_TYPE_NAME_local_population_capacity: "Local Arable Land"
  MODIFIER_TYPE_NAME_local_population_capacity_modifier: "Local Arable Land %"
  MODIFIER_TYPE_NAME_total_population_capacity_modifier: "Arable Land"
+ monthly_control_with_tribes_satisfaction: "[ShowModifierTypeName('global_monthly_control')] rises while the [ShowEstateTypeName('tribes_estate')] are content and falls, more steeply, while they are not, with their [estate_satisfaction|e]"
  new_currency_demands: "Currency Metal Demands"
  new_currency_demands_desc: "Expanding coinage and artillery demands encourage better ore dressing in copper and tin lode mines."
  pan_amalgamation_advance_desc: "Mercury amalgamation improves the recovery of precious metals from crushed ore, supporting larger gold stamp mills, expanded quicksilver retorts, and more reliable mercury supply."

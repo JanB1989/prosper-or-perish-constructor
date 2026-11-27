@@ -995,6 +995,19 @@
   a country is annexed (the breaking point needs the country alive). A save loaded mid-disaster gets the band it is in
   at once, and every disaster past 40 years breaks within a month.
 
+## Maghreb Control Gifts (2026-11-27, Jan; not tested in game)
+
+- Morocco, Tlemcen and Tunis held 0.85-0.91 population-weighted control by 1837 in four runs, inland included. Jan: their
+  cities may have decent control, inland should be hard. The country and region control gifts of the base game and
+  Across the Pillars are cut, each object kept with its other lines: flat monthly control to a fifth, maximum rural
+  control and Atlas Strongholds' proximity relief halved, separatism and rebel growth reliefs by a third; Tlemcen's
+  tribes reform keeps vanilla strength below half tribes satisfaction (two modifiers, `scale` with `min`/`max = 0`).
+  Copies: `bureaucracies/pp_bureaucracy_adjustments.txt` (new folder), `pp_government_reform_adjustments.txt`,
+  `pp_law_adjustments.txt`, `pp_country_advances_adjustments.txt`, `pp_estate_privilege_adjustments.txt` (vanilla pins);
+  the list and the left-out objects are in `docs/country_finetunes.md`. `tests/test_maghreb_control.py` checks every
+  value as a ratio of today's vanilla (a game update that changes one fails) and that every tribes privilege, DLC ones
+  included, carries the -0.075 research row exactly once.
+
 ## Vanilla Replace Pins (2026-11-02, Jan)
 
 - A `REPLACE:` or `TRY_REPLACE:` block is a frozen copy of vanilla, and `ppc update-audit` compares vanilla with vanilla

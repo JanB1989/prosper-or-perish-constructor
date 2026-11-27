@@ -96,7 +96,8 @@ pp_trade_school = {
 	ai_forbid_shutdown = yes # building_shutdown
 }
 
-# Academy of Sciences (education pyramid 2026-11-27, Jan): the top of the pyramid, in the capital. One level per three
+# Academy of Sciences (education pyramid 2026-11-27, Jan): the top of the pyramid, in the capital. Shown to the player as the
+# "Society of Sciences" (Jan: vanilla has two event buildings named Academy of Sciences, Russia's and Bavaria's). One level per three
 # Universities of the country (pp_academy_of_sciences_max_level, at most ten); each staffed level gives the whole
 # country research speed (capital_country_modifier: applied for the current capital, scaled by level, staffing and
 # upkeep bought). Unlocked by the advance pp_academy_of_sciences_advance (Scientific Revolution tree).

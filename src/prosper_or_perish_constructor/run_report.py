@@ -2031,6 +2031,7 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
 
 DEFAULT_SITE_REPO = "JanB1989/prosper-or-perish-preview"
 RELEASED_DOCS_URL = "https://janb1989.github.io/prosper-or-perish-constructor/"
+RELEASED_RUNS_URL = "https://janb1989.github.io/prosper-or-perish-preview/runs/"
 
 
 @dataclass
@@ -2098,8 +2099,9 @@ def _pinned_groups(runs: list[dict[str, object]]) -> list[tuple[str, list[dict[s
     return sorted(groups.items(), key=lambda item: natural(item[0]), reverse=True)
 
 
-def _site_index(runs: list[dict[str, object]], title: str) -> str:
+def _site_index(runs: list[dict[str, object]], title: str, latest_url: str | None = None) -> str:
     esc = html.escape
+    latest = f'<p><a href="{esc(latest_url)}">Latest observer run →</a></p>' if latest_url else ""
 
     def grid(group: list[dict[str, object]]) -> str:
         cards = "".join(
@@ -2130,6 +2132,7 @@ h2{{margin:32px 0 0;font-size:20px}}
 .card img{{display:block;width:100%;background:#12161c}} .card div{{padding:10px 14px}} .card span{{color:var(--muted);font-size:13px}}
 </style></head><body><main><p><a href="../">← Work-in-progress docs</a></p><h1>{esc(title)}</h1>
 <p style="color:var(--muted)">Observer runs of the Prosper or Perish mod for Europa Universalis V: map videos and progression charts{order}</p>
+{latest}
 {sections}</main></body></html>
 """
 
@@ -2143,6 +2146,65 @@ def _placeholder_root(site: Path) -> None:
         )
 
 
+def _stage_run(report_dir: Path, target: Path, run_url: str, pinned: str | None = None) -> dict[str, object]:
+    """Copy a built report to its place in a staged site: publish time, pin, noindex, absolute preview image."""
+    report = json.loads((report_dir / "report.json").read_text(encoding="utf-8"))
+    if target.exists():
+        shutil.rmtree(target)
+    shutil.copytree(report_dir, target)
+    report["published_at"] = datetime.now().isoformat(timespec="microseconds")
+    report.pop("pinned", None)
+    if pinned:
+        report["pinned"] = pinned
+    (target / "report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+    # absolute preview image for link unfurls (Discord and other chat apps)
+    page = target / "index.html"
+    page.write_text(
+        _noindex(page.read_text(encoding="utf-8").replace('content="maps/political.png"', f'content="{run_url}maps/political.png"')),
+        encoding="utf-8",
+    )
+    return report
+
+
+# The latest-run site (default JanB1989/prosper-or-perish-latest-run) holds ONE run, the newest, and nothing else, so a
+# publish is quick: no clone (the staged site is a fresh repository made from the report folder), one push of that
+# run, and GitHub Pages rebuilds ~200 MB instead of the preview site's 1.1 GB (3-6 minutes there). The run sits in a
+# folder named after it, so a browser never mixes the cached files of two runs; the site root forwards to it. The
+# preview site keeps the release examples (pinned runs) and is only pushed to for those.
+
+DEFAULT_LATEST_SITE_REPO = "JanB1989/prosper-or-perish-latest-run"
+
+
+def _latest_root(report: dict[str, object], run_id: str, examples_url: str) -> str:
+    esc = html.escape
+    return (
+        '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex">'
+        f'<meta http-equiv="refresh" content="0; url={esc(run_id)}/"><title>Prosper or Perish: latest run</title></head>'
+        f'<body style="font:15px/1.5 system-ui,sans-serif;margin:28px"><p><a href="{esc(run_id)}/">Latest observer run: '
+        f'{esc(str(report["name"]))}</a></p><p><a href="{esc(examples_url)}">Example games of the releases</a></p></body></html>'
+    )
+
+
+def prepare_latest_publish(
+    report_dir: Path, *, site_repo: str, work_root: Path, remote: str | None = None, examples_url: str | None = None
+) -> PublishPlan:
+    """Stage the latest-run site: this run and nothing else, as a fresh repository (no clone); nothing is pushed yet."""
+    owner, name = site_repo.split("/", 1)
+    remote = remote or f"https://github.com/{site_repo}.git"
+    url = f"https://{owner.lower()}.github.io/{name}/"
+    site = work_root / name
+    if site.exists():
+        shutil.rmtree(site)
+    site.mkdir(parents=True)
+    run_id = str(json.loads((report_dir / "report.json").read_text(encoding="utf-8"))["playthrough_id"])
+    report = _stage_run(report_dir, site / run_id, f"{url}{run_id}/")
+    (site / "index.html").write_text(_latest_root(report, run_id, examples_url or RELEASED_RUNS_URL), encoding="utf-8")
+    (site / ".nojekyll").write_text("", encoding="utf-8")
+    _git(site, "init", "--quiet", "-b", "staging")
+    _git(site, "remote", "add", "origin", remote)
+    return PublishPlan(site=site, remote=remote, url=url, runs=[report], added=run_id, dropped=[], message=f"Latest run {run_id}")
+
+
 def prepare_publish(
     report_dir: Path,
     *,
@@ -2153,6 +2215,7 @@ def prepare_publish(
     title: str = "Prosper or Perish runs",
     pin: str | None = None,
     unpin: bool = False,
+    latest_url: str | None = None,
 ) -> PublishPlan:
     """Stage a site checkout with this run added under runs/; nothing is pushed yet.
 
@@ -2167,25 +2230,7 @@ def prepare_publish(
     target = runs_dir / run_id
     site_meta = target / "report.json"
     old_pin = json.loads(site_meta.read_text(encoding="utf-8")).get("pinned") if site_meta.is_file() else None
-    if target.exists():
-        shutil.rmtree(target)
-    shutil.copytree(report_dir, target)
-    report["published_at"] = datetime.now().isoformat(timespec="microseconds")
-    report.pop("pinned", None)
-    pinned = None if unpin else pin or old_pin
-    if pinned:
-        report["pinned"] = pinned
-    (target / "report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
-    # absolute preview image for link unfurls (Discord and other chat apps)
-    page = target / "index.html"
-    page.write_text(
-        _noindex(
-            page.read_text(encoding="utf-8").replace(
-                'content="maps/political.png"', f'content="{url}runs/{run_id}/maps/political.png"'
-            )
-        ),
-        encoding="utf-8",
-    )
+    _stage_run(report_dir, target, f"{url}runs/{run_id}/", None if unpin else pin or old_pin)
     # newest first; the run being published always leads its group; pinned runs first and never dropped
     runs = sorted(_published_runs(runs_dir), key=lambda r: str(r["playthrough_id"]) == run_id, reverse=True)
     unpinned = [r for r in runs if not r.get("pinned")]
@@ -2193,7 +2238,7 @@ def prepare_publish(
     for old in dropped:
         shutil.rmtree(runs_dir / old, ignore_errors=True)
     runs = [r for _, group in _pinned_groups(runs) for r in group] + unpinned[:keep]
-    (runs_dir / "index.html").write_text(_site_index(runs, title), encoding="utf-8")
+    (runs_dir / "index.html").write_text(_site_index(runs, title, latest_url), encoding="utf-8")
     _placeholder_root(site)
     (site / ".nojekyll").write_text("", encoding="utf-8")
     message = f"Publish {len(runs)} run(s), newest {run_id}"

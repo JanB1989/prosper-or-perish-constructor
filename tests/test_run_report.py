@@ -58,6 +58,32 @@ def test_publish_keeps_newest_runs_in_one_commit(tmp_path: Path) -> None:
     assert '<meta name="robots" content="noindex">' in page
 
 
+def test_latest_site_holds_one_run_and_needs_no_clone(tmp_path: Path) -> None:
+    remote = _bare_site(tmp_path)
+    reports = tmp_path / "reports"
+    for playthrough, name in (("run_a", "First run"), ("run_b", "Second run")):
+        plan = rr.prepare_latest_publish(
+            _fake_report(reports, playthrough, name), site_repo="Someone/latest", work_root=tmp_path / "work", remote=remote,
+            examples_url="https://someone.github.io/preview/runs/",
+        )
+        rr.push_publish(plan)
+
+    assert plan.url == "https://someone.github.io/latest/" and plan.added == "run_b"
+    check = tmp_path / "check"
+    subprocess.run(["git", "clone", "-q", remote, str(check)], check=True)
+    log = subprocess.run(["git", "-C", str(check), "log", "--oneline"], capture_output=True, text=True, check=True)
+    assert len(log.stdout.splitlines()) == 1
+    # the earlier run and whatever else the site held are gone: the site is this run and its forwarding root
+    assert sorted(p.name for p in check.iterdir() if p.name != ".git") == [".nojekyll", "index.html", "run_b"]
+    root = (check / "index.html").read_text(encoding="utf-8")
+    assert 'url=run_b/' in root and "Second run" in root and "https://someone.github.io/preview/runs/" in root
+    page = (check / "run_b" / "index.html").read_text(encoding="utf-8")
+    assert 'content="https://someone.github.io/latest/run_b/maps/political.png"' in page
+    assert '<meta name="robots" content="noindex">' in page
+    assert "published_at" in json.loads((check / "run_b" / "report.json").read_text(encoding="utf-8"))
+    assert "published_at" not in json.loads((reports / "run_b" / "report.json").read_text(encoding="utf-8"))
+
+
 def _publish(report: Path, remote: str, work: Path, **options) -> rr.PublishPlan:
     plan = rr.prepare_publish(report, site_repo="Someone/preview", work_root=work, remote=remote, **options)
     rr.push_publish(plan)

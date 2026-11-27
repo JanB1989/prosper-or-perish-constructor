@@ -365,6 +365,13 @@ def _sum_scope(country: pl.DataFrame, estates: pl.DataFrame, sources: pl.DataFra
     return payload
 
 
+def _by_country(frame: pl.DataFrame) -> dict[Any, pl.DataFrame]:
+    """The frame's rows per country, in their order (what a filter on country_id returns)."""
+    if frame.is_empty():
+        return {}
+    return {(key[0] if isinstance(key, tuple) else key): part for key, part in frame.partition_by("country_id", as_dict=True, maintain_order=True).items()}
+
+
 def _load(cache: Path | None, job: tuple[Path, str, str, str | None, int, Path]) -> dict[str, pl.DataFrame] | None:
     dataset, playthrough, snapshot, previous, months, folder = job
     flows = _read_cached(folder) if cache else None
@@ -458,12 +465,15 @@ def build_budget_data(run: RunData, dataset: Path, out: Path, cache: Path, log: 
             scopes[str(scope)] = payload
             note(scope, n, payload)
         wanted = set(saves_top[n])
+        # one split per save: a filter of all four tables per country cost most of the page's time (about 4 s a save)
+        of_country, of_estates, of_sources, of_trade = (_by_country(frame) for frame in (country, estates, sources, trade))
+        none_estates, none_sources, none_trade = estates.clear(), sources.clear(), trade.clear()
         for country_id in known:
-            members = country.filter(pl.col("country_id") == country_id)
-            if members.is_empty():
+            members = of_country.get(country_id)
+            if members is None:
                 continue
-            payload = _sum_scope(members, estates.filter(pl.col("country_id") == country_id), sources.filter(pl.col("country_id") == country_id),
-                                 trade.filter(pl.col("country_id") == country_id), None, index)
+            payload = _sum_scope(members, of_estates.get(country_id, none_estates), of_sources.get(country_id, none_sources),
+                                 of_trade.get(country_id, none_trade), None, index)
             scope = index.of("scope", _scope_key("c", country_id))
             note(scope, n, payload)
             if country_id in wanted:

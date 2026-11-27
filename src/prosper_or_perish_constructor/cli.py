@@ -753,20 +753,27 @@ def _build_parser() -> argparse.ArgumentParser:
     report.add_argument("--width", type=int, default=1920, help="Video and map width in pixels (default 1920).")
     report.add_argument("--fps", type=int, default=6, help="Saves shown per second in the map videos (default 6).")
     report.add_argument("--no-build", action="store_true", help="Reuse the report already in --out instead of building it.")
-    report.add_argument("--publish", action="store_true", help="Stage the report on the GitHub Pages site and show the plan.")
+    report.add_argument(
+        "--publish", action="store_true",
+        help="Stage the report on a GitHub Pages site and show the plan: the latest-run site (this run only, quick), "
+        "or with --pin / --unpin / --keep the preview site that keeps the release examples.",
+    )
     report.add_argument("--yes", action="store_true", help="With --publish: push the staged site (the run becomes public).")
     report.add_argument("--create-site", action="store_true", help="Create the public site repository and enable GitHub Pages.")
-    report.add_argument("--site-repo", default=None, help="owner/name of the preview site repository (default [report] site_repo).")
+    report.add_argument(
+        "--site-repo", default=None,
+        help="owner/name of the site repository (default [report] latest_site_repo, or site_repo for the preview site).",
+    )
     report.add_argument(
         "--keep", type=int, default=None,
-        help="Unpinned runs kept on the site, newest first (default [report] keep, 3); pinned runs always stay.",
+        help="Preview site: unpinned runs kept, newest first (default [report] keep, 0); pinned runs always stay.",
     )
     pinning = report.add_mutually_exclusive_group()
     pinning.add_argument(
         "--pin", default=None, metavar="LABEL",
-        help="With --publish: pin this run under LABEL (e.g. 0.10); it stays online, listed first as an example game.",
+        help="With --publish: put this run on the preview site, pinned under LABEL (e.g. 0.10); it stays online as an example game.",
     )
-    pinning.add_argument("--unpin", action="store_true", help="With --publish: remove this run's pin.")
+    pinning.add_argument("--unpin", action="store_true", help="With --publish: remove this run's pin on the preview site.")
     plan_report = _add_command(
         subcommands,
         "plan-report",
@@ -3966,10 +3973,19 @@ def _report(args: argparse.Namespace, extra: Sequence[str], repo: Path, project:
 
     with project.open("rb") as handle:
         settings = tomllib.load(handle).get("report", {})
-    site_repo = args.site_repo or settings.get("site_repo", run_report.DEFAULT_SITE_REPO)
-    keep = args.keep or int(settings.get("keep", 3))
+    # the latest-run site takes every publish; the preview site only the kept ones (a pin, its removal, a keep count)
+    latest = pin is None and not args.unpin and args.keep is None
+    preview_repo = settings.get("site_repo", run_report.DEFAULT_SITE_REPO)
+    if latest:
+        site_repo = args.site_repo or settings.get("latest_site_repo", run_report.DEFAULT_LATEST_SITE_REPO)
+    else:
+        site_repo = args.site_repo or preview_repo
+    keep = args.keep if args.keep is not None else int(settings.get("keep", 0))
     if args.create_site:
-        run_report.create_site_repo(site_repo)
+        if latest:
+            run_report.create_site_repo(site_repo, description="Prosper or Perish: the latest observer-run report")
+        else:
+            run_report.create_site_repo(site_repo)
         owner, name = site_repo.split("/", 1)
         print(f"created {site_repo}; GitHub Pages will serve https://{owner.lower()}.github.io/{name}/", flush=True)
         if not args.publish:
@@ -3990,8 +4006,24 @@ def _report(args: argparse.Namespace, extra: Sequence[str], repo: Path, project:
     if not args.publish:
         return 0
 
+    work_root = repo / "artifacts" / "report_site"
+    if latest:
+        owner, name = preview_repo.split("/", 1)
+        plan = run_report.prepare_latest_publish(
+            report_dir, site_repo=site_repo, work_root=work_root, examples_url=f"https://{owner.lower()}.github.io/{name}/runs/"
+        )
+        print(f"site {site_repo} -> {plan.url} (this run only)", flush=True)
+        if not args.yes:
+            print("dry run: nothing was pushed. Add --yes to make this public.", flush=True)
+            return 0
+        run_report.push_publish(plan)
+        print(f"published: {plan.url}{plan.added}/ (GitHub Pages needs about a minute)", flush=True)
+        return 0
+    latest_repo = settings.get("latest_site_repo", run_report.DEFAULT_LATEST_SITE_REPO)
+    owner, name = latest_repo.split("/", 1)
     plan = run_report.prepare_publish(
-        report_dir, site_repo=site_repo, work_root=repo / "artifacts" / "report_site", keep=keep, pin=pin, unpin=args.unpin
+        report_dir, site_repo=site_repo, work_root=work_root, keep=keep, pin=pin, unpin=args.unpin,
+        latest_url=f"https://{owner.lower()}.github.io/{name}/",
     )
     print(f"site {site_repo} -> {plan.url}", flush=True)
     for run in plan.runs:

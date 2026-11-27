@@ -420,30 +420,37 @@ and each leading country's investment.
 ### Sharing a run and work-in-progress docs (preview site)
 
 The map videos can be dragged into Discord or a GitHub issue as they are (H.264 MP4 under 10 MB). Whole
-pages go to the preview site https://janb1989.github.io/prosper-or-perish-preview/, a separate public
-repository. The released docs (`main:/docs`, https://janb1989.github.io/prosper-or-perish-constructor/)
-change only when a version merges into main; the preview can be overwritten at will:
+pages go to two public sites, each its own repository:
 
-- site root: a work-in-progress copy of `docs/` from the current branch (uncommitted changes included),
-  with a banner naming branch and commit;
-- `runs/`: the observer-run reports, newest 5 kept, plus the pinned example games.
+- **Latest run**, https://janb1989.github.io/prosper-or-perish-latest-run/: the newest observer-run report and
+  nothing else. This is where `ppc report --publish` goes. It is quick because the site is one run: nothing is
+  cloned, one run is pushed, and GitHub Pages rebuilds about 200 MB. The run sits in a folder named after it; the
+  site root forwards to it. The run published before is gone from the site (its report stays in `graphs/report`).
+- **Preview**, https://janb1989.github.io/prosper-or-perish-preview/: the site root is a work-in-progress copy of
+  `docs/` from the current branch (uncommitted changes included) with a banner naming branch and commit; `runs/`
+  holds the example games of the releases (pinned runs). It is 1.1 GB, so a publish there downloads all of it and
+  Pages takes 3-6 minutes: only for a release example.
+
+The released docs (`main:/docs`, https://janb1989.github.io/prosper-or-perish-constructor/) change only when a
+version merges into main.
 
 ```bash
+uv run ppc report --no-build --publish --yes   # the newest run report to the latest-run site
+uv run ppc report --no-build --publish         # dry run: stages it, pushes nothing
 uv run ppc publish-wip                     # dry run: shows what would go online
 uv run ppc publish-wip --yes               # replace the WIP docs (runs/ stays)
-uv run ppc report --no-build --publish     # dry run for the newest run report
-uv run ppc report --no-build --publish --yes
-uv run ppc report --no-build --publish --playthrough <id> --pin 0.10 --yes   # pin as an example game
-uv run ppc report --no-build --publish --playthrough <id> --unpin --yes      # back to the newest-5 rule
+uv run ppc report --no-build --publish --playthrough <id> --pin 0.10 --yes   # preview site: pin as an example game
+uv run ppc report --no-build --publish --playthrough <id> --unpin --yes      # preview site: remove the pin
 ```
 
-A pinned run never drops off and does not count against `keep`; the runs page lists it first under
-"Example games (0.10)". Re-publishing it keeps the pin; publishing other runs never touches it.
+On the preview site a pinned run never drops off; the runs page lists it first under "Example games (0.10)" and
+links to the latest-run site. Re-publishing it keeps the pin. Unpinned runs are not kept there any more (`keep` 0;
+`--keep N` keeps the newest N).
 
-Each publish replaces only its own part and pushes one fresh commit, so the repository never grows. The
-pages carry `noindex`. `--create-site` (on either command) creates the repository once.
-`[report] site_repo` / `keep` in `constructor.toml` override the defaults
-(`JanB1989/prosper-or-perish-preview`, 5).
+Each publish pushes one fresh commit, so the repositories never grow. The pages carry `noindex`. `--create-site`
+creates the repository of the site the command would publish to. `[report] latest_site_repo`, `site_repo` and
+`keep` in `constructor.toml` override the defaults (`JanB1989/prosper-or-perish-latest-run`,
+`JanB1989/prosper-or-perish-preview`, 0).
 
 Useful options:
 

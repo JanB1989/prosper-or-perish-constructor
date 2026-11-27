@@ -43,6 +43,13 @@ unique_production_methods = {
 # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
 increase_per_level_cost = 0.41
 price = pp_silk_production_guild_price
+	can_close = no # building_shutdown
+	raw_modifier = {
+		local_burghers_desired_pop = -0.25 # job_room
+	}
+	modifier = {
+		local_burghers_desired_pop = 0.25 # job_room
+	}
 ai_construct_weight = {
     value = 0
     add = pp_market_short_silk

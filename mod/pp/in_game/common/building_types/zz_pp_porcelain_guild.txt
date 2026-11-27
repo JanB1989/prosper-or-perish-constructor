@@ -44,11 +44,14 @@ construction_demand = guild_construction
 increase_per_level_cost = 0.56
 price = pp_porcelain_guild_price
 modifier = {
+	local_burghers_desired_pop = 0.25 # job_room
     local_porcelain_output_modifier = -0.005  # manufacturing tiers 2026-10-06: stack malus per staffed level
 }
 raw_modifier = {
+	local_burghers_desired_pop = -0.25 # job_room
     local_pp_porcelain_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
 }
+	can_close = no # building_shutdown
 ai_construct_weight = {
     value = 0
     add = pp_market_short_porcelain

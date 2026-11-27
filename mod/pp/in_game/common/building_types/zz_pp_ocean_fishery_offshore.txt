@@ -32,7 +32,6 @@ construction_demand = workshop_construction
 ai_forbid_shutdown = no
 forbidden_for_estates = no
 important_for_AI = no
-can_close = yes
 
 # upgrade not worse 2026-11-06: own method outputs x1.3, inputs kept; it earned less per level than the
 # Drift Net Fishery it replaces (tests/test_upgrade_not_worse.py)
@@ -124,5 +123,6 @@ modifier = {
     harbor_suitability = 0.006
     local_sailors = 0.002
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:offshore_fishery:building

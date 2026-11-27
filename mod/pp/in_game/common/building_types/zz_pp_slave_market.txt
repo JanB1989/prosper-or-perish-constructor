@@ -53,11 +53,16 @@ unique_production_methods = {
     }
 }
 modifier = {
+	local_burghers_desired_pop = 0.25 # job_room
     building_enslavement_power = 0.1
     local_slave_pop_satisfaction = -0.025
 }
 construction_demand = town_building_construction
 increase_per_level_cost = 0.15
+	can_close = no # building_shutdown
+	raw_modifier = {
+		local_burghers_desired_pop = -0.25 # job_room
+	}
 ai_construct_weight = {
     value = 0
     add = pp_market_short_slaves_goods

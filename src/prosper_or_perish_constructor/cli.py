@@ -1829,9 +1829,9 @@ def _apply_building_shutdown(repo: Path, project: Path, mod_root: Path) -> None:
 
     result = building_shutdown.apply(repo, mod_root, project, vanilla_root(repo, project))
     print(
-        f"Building shutdown: {len(result.locked)} buildings without goods output locked open "
-        f"({result.kept} closable by class, {result.producing_skipped} skipped for their goods output) across "
-        f"{result.files_changed} changed files.",
+        f"Building shutdown: {len(result.locked)} buildings without goods output locked open, "
+        f"{len(result.producers)} production buildings nobody may close (the AI still subsidises them), "
+        f"{result.kept} closable by class, across {result.files_changed} changed files.",
         flush=True,
     )
 
@@ -1844,6 +1844,13 @@ def _apply_employment_cut(repo: Path, project: Path, mod_root: Path) -> None:
     counts = ", ".join(f"{pop} {n}" for pop, n in result.buildings.items())
     print(f"Employment cut ([building_scaling.employment_cut]): {counts} buildings across {result.files_changed} changed files.",
           flush=True)
+
+
+def _apply_job_room(repo: Path, project: Path, mod_root: Path) -> None:
+    from prosper_or_perish_constructor import job_room
+    from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
+
+    print(job_room.summary(job_room.apply(repo, mod_root, project, vanilla_root(repo, project))), flush=True)
 
 
 def _apply_tier_lines(repo: Path, project: Path, mod_root: Path) -> None:
@@ -1970,6 +1977,7 @@ def _finalize_constructor_mod(repo: Path, project: Path) -> None:
     _apply_building_footprint(repo, project, mod_root)
     _apply_building_shutdown(repo, project, mod_root)
     _apply_employment_cut(repo, project, mod_root)
+    _apply_job_room(repo, project, mod_root)  # after the cut: it reads the final employment_size
     _apply_tier_lines(repo, project, mod_root)
     if local_free_building_levels_sheet_csv_path(repo).is_file():
         compile_free_building_level_modifiers(repo, mod_root)

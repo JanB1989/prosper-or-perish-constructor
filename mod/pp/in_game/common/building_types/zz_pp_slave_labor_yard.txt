@@ -27,7 +27,6 @@ remove_if = {
     has_slavery = no
   }
 }
-can_close = yes
 forbidden_for_estates = no
 ai_forbid_shutdown = no
 build_time = plantation_build_time
@@ -77,5 +76,6 @@ unique_production_methods = {
 modifier = {
   local_slave_pop_satisfaction = -0.01
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:slave_labor_yard:building

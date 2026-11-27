@@ -56,6 +56,13 @@ unique_production_methods = {
 }
 
 construction_demand = basic_construction_needs
+	can_close = no # building_shutdown
+	raw_modifier = {
+		local_laborers_desired_pop = -0.8 # job_room
+	}
+	modifier = {
+		local_laborers_desired_pop = 0.8 # job_room
+	}
 ai_construct_weight = {
     value = 0
     add = pp_market_short_sand

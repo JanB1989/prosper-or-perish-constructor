@@ -69,9 +69,11 @@ custom_tags = {
 construction_demand = workshop_construction
 increase_per_level_cost = 0.19
 modifier = {
+	local_burghers_desired_pop = 0.287 # job_room
     local_weaponry_output_modifier = -0.0025  # manufacturing tiers 2026-10-06: stack malus per staffed level
 }
 raw_modifier = {
+	local_burghers_desired_pop = -0.287 # job_room
     local_pp_weaponry_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
 }
 # manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
@@ -82,5 +84,6 @@ ai_construct_weight = {
     divide = { value = scope:owner.monthly_income_total add = 10 }
     add = pp_market_short_weaponry
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:weapon_workshop:building

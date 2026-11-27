@@ -25,7 +25,6 @@ ai_construct_weight = {
 }
 forbidden_for_estates = no # every production building is open to estates (Jan 2026-11-22)
 ai_forbid_shutdown = no
-can_close = yes
 build_time = workshop_build_time
 construction_demand = workshop_construction
 
@@ -165,5 +164,6 @@ modifier = {
     local_laborers_desired_pop = 0.020
     local_soldiers_desired_pop = 0.010
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:net_curing_yard:building

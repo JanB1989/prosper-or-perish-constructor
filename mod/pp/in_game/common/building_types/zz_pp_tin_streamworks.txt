@@ -22,7 +22,6 @@ construction_demand = mercury_patio_construction
 ai_forbid_shutdown = no
 forbidden_for_estates = no
 important_for_AI = no
-can_close = yes
 
 unique_production_methods = {
     pp_tin_streamworks_base_tin = {
@@ -103,10 +102,15 @@ unique_production_methods = {
 
 
 modifier = {
+	local_laborers_desired_pop = 0.8 # job_room
     local_population_growth = -0.00015
     local_migration_attraction = 0.010
     local_tin_output_modifier = 0.01125
 }
+	can_close = no # building_shutdown
+	raw_modifier = {
+		local_laborers_desired_pop = -0.8 # job_room
+	}
 ai_construct_weight = {
     value = 0
     add = pp_market_short_tin

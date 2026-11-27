@@ -15,7 +15,6 @@ megalopolis = yes
 obsolete = millet_rotations
 forbidden_for_estates = no
 ai_forbid_shutdown = no
-can_close = yes
 build_time = workshop_build_time
 construction_demand = workshop_construction
 
@@ -101,5 +100,6 @@ modifier = {
     local_food_capacity = 50
     local_laborers_desired_pop = 0.002
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:millet_model_farm:building

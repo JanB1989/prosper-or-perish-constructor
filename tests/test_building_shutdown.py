@@ -25,6 +25,38 @@ def test_set_flags_does_not_repeat_a_flag_the_definition_or_vanilla_sets() -> No
     assert "can_close" not in injected and "ai_forbid_shutdown = yes # building_shutdown" in injected
 
 
+def test_a_producer_gets_can_close_no_only_and_its_own_line_is_replaced() -> None:
+    """2026-11-27 (Jan: nobody closes a production building): can_close = no alone, so the AI still subsidises."""
+    body = "\n\tcan_close = yes\n\tai_forbid_shutdown = no\n\tmodifier = { can_close = yes }\n"
+    locked = bs.set_flags(body, False, producer=True)
+    assert locked.count("can_close = no # building_shutdown") == 1
+    assert "\tcan_close = yes\n" not in locked and "modifier = { can_close = yes }" in locked
+    assert "ai_forbid_shutdown = yes" not in locked and "ai_forbid_shutdown = no" in locked
+    assert bs.set_flags(locked, False, producer=True) == locked
+
+
+def test_no_production_building_can_be_closed() -> None:
+    """Every blueprint building with a goods output carries can_close = no in the compiled mod, and none of them is
+    taken out of the AI's subsidy pass by this step (ai_forbid_shutdown only where the blueprint sets it itself)."""
+    from prosper_or_perish_constructor import building_footprint as bf
+    from prosper_or_perish_constructor.worldbuilder.stage import vanilla_root
+
+    project = ROOT / "constructor.toml"
+    mod = ROOT / "mod" / "pp"
+    vanilla = vanilla_root(ROOT, project)
+    assert bs.check(ROOT, mod, project, vanilla) == []
+    producers = bs.producers(ROOT, mod, vanilla)
+    assert len(producers) > 200
+    owners = bf.owner_blocks(mod, vanilla)
+    for key in producers:
+        block = owners[key]
+        tops = bf._depth_zero_text(bf._read(block.path)[block.open + 1: block.close])
+        assert bs._ANY_FLAG_RE["can_close"].search(tops).group("value") == "no", key
+        assert "ai_forbid_shutdown = yes # building_shutdown" not in tops, key
+    for key in ("glass_guild", "mason", "tannery", "charcoal_maker", "wheat_farm", "cookshop", "tavern"):
+        assert key in producers, key
+
+
 def test_has_output_reads_unique_and_shared_methods() -> None:
     shared = {"shared_upkeep": False, "shared_goods": True}
     assert not bs.has_output("unique_production_methods = { m = { paper = 1 category = building_maintenance } }", shared)

@@ -63,14 +63,17 @@ unique_production_methods = {
 }
 construction_demand = simple_colony_construction
 modifier = {
+	local_burghers_desired_pop = 0.25 # job_room
     building_enslavement_power = 0.2
     local_slave_pop_satisfaction = -0.05
 }
 # foreign building (2026-10-01): each level supports itself
 raw_modifier = {
+	local_burghers_desired_pop = -0.25 # job_room
     free_building_levels = 1
 }
 increase_per_level_cost = 0.15
+	can_close = no # building_shutdown
 ai_construct_weight = {
     value = 0
     add = pp_market_short_slaves_goods

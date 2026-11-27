@@ -32,7 +32,6 @@ construction_demand = workshop_construction
 ai_forbid_shutdown = no
 forbidden_for_estates = no
 important_for_AI = no
-can_close = yes
 
 unique_production_methods = {
     pp_drift_net_fishery_base_catch = {
@@ -99,5 +98,6 @@ modifier = {
     harbor_suitability = 0.004
     local_sailors = 0.0017
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:drift_net_fishery:building

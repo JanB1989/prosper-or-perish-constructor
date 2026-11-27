@@ -27,7 +27,6 @@ construction_demand = village_construction
 ai_forbid_shutdown = no
 forbidden_for_estates = no
 important_for_AI = no
-can_close = yes
 
 unique_production_methods = {
     pp_ocean_fishery_base_catch = {
@@ -92,5 +91,6 @@ modifier = {
     harbor_suitability = 0.003
     local_sailors = 0.0015
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:ocean_fishery:building

@@ -19,7 +19,6 @@ construction_demand = workshop_construction
 ai_forbid_shutdown = no
 forbidden_for_estates = no
 important_for_AI = no
-can_close = yes
 
 location_potential = {
     pp_fiber_crops_farm_location_potential = yes
@@ -68,9 +67,14 @@ unique_production_methods = {
 }
 
 raw_modifier = {
+	local_laborers_desired_pop = -0.8 # job_room
   pp_levels_fiber_dressing_yard = 1
   local_population_capacity = -5
 }
+	can_close = no # building_shutdown
+	modifier = {
+		local_laborers_desired_pop = 0.8 # job_room
+	}
 ai_construct_weight = {
     value = 0
     add = pp_market_short_fiber_crops

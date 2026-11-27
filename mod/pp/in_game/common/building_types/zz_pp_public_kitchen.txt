@@ -35,7 +35,6 @@ increase_per_level_cost = 0.10
 	forbidden_for_estates = no
 	important_for_AI = yes
 	AI_ignore_available_worker_flag = yes
-	can_close = yes
 	# ==========================================
 	# 1. MAIN DISH (pick ONE)
 	# - a little of the market's staples cooked into meals, sold for offset at margin 1.08; the food itself is the
@@ -324,5 +323,6 @@ increase_per_level_cost = 0.10
 		local_unrest = -0.05
 		local_monthly_prosperity = 0.001
 	}
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:public_kitchen:building

@@ -21,7 +21,6 @@ ai_construct_weight = {
     add = pp_market_short_wool
 }
 ai_forbid_shutdown = no
-can_close = yes
 build_time = workshop_build_time
 construction_demand = workshop_construction
 
@@ -96,5 +95,6 @@ modifier = {
     local_maize_output_modifier = 0.0075
     local_potato_output_modifier = 0.0075
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:enclosed_sheep_walks:building

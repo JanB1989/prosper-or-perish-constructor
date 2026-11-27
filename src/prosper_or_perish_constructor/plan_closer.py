@@ -196,13 +196,17 @@ class Result:
 
 
 def never_types(repo: Path, project: Path, mod_root: Path, vanilla_root: Path, known: set[str]) -> list[str]:
-    """Logistics buildings, improvements (World Builder caps that add capacity) and every tier of the Towns and
-    Buildings group's public buildings."""
+    """Logistics buildings, improvements (World Builder caps that add capacity), every tier of the Towns and
+    Buildings group's public buildings, and every building with a goods output: nobody can close a production building
+    since 2026-11-27 (building_shutdown.py writes can_close = no; the game's close function refuses it), so the rule
+    must not list one."""
     from prosper_or_perish_constructor import arable_land_bar
+    from prosper_or_perish_constructor import building_shutdown
     from prosper_or_perish_constructor import construction_plan as cp
     from prosper_or_perish_constructor import construction_plan_country as cc
 
     names = set(cp.load_config(project).logistics_order)
+    names |= set(building_shutdown.producers(repo, mod_root, vanilla_root))
     names |= {b.key for b in arable_land_bar.model(mod_root, vanilla_root / "game").improvements}
     lines, _, _ = cc.building_lines(cc.database(mod_root, vanilla_root, cc.BUILDING_TYPES),
                                     cc.load_config(project).public_buildings)

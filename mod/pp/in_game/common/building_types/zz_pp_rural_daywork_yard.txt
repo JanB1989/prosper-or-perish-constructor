@@ -12,7 +12,6 @@ rural_settlement = yes
 town = yes
 city = yes
 megalopolis = yes
-can_close = yes
 forbidden_for_estates = no
 ai_forbid_shutdown = no
 build_time = village_build_time
@@ -58,5 +57,6 @@ unique_production_methods = {
     category = building_maintenance
   }
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:rural_daywork_yard:building

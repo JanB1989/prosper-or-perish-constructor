@@ -85,5 +85,6 @@ modifier = {
     cannot_upgrade_location = yes
 }
 increase_per_level_cost = 0.11
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:eng_royal_forest:building

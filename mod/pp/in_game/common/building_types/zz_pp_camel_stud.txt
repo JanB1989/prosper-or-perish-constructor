@@ -21,7 +21,6 @@ megalopolis = yes
 obsolete = camel_herders
 forbidden_for_estates = no # every production building is open to estates (Jan 2026-11-22)
 ai_forbid_shutdown = no
-can_close = yes
 build_time = workshop_build_time
 construction_demand = workshop_construction
 
@@ -99,5 +98,6 @@ raw_modifier = {
   local_pp_staple_levels = 1  # counts toward the province's Cookshop cap like a farm level (a staple food maker)
   local_population_capacity = -2
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:camel_stud:building

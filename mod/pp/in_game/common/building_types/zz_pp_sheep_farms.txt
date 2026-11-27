@@ -89,5 +89,6 @@ REPLACE:sheep_farms = {
     }
     build_time = rural_build_time
     construction_demand = farm_constructions
+    can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:sheep_farms:building

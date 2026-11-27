@@ -89,6 +89,7 @@ unique_production_methods = {
         category = building_maintenance
     }
 }
+	can_close = no # building_shutdown
 ai_construct_weight = {
     value = 0
     add = pp_market_short_tools

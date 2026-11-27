@@ -76,6 +76,7 @@ construction_demand = japanese_clan_building_construction
 # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
 increase_per_level_cost = 0.47
 price = pp_tatara_price
+	can_close = no # building_shutdown
 ai_construct_weight = {
     value = 0
     add = pp_market_short_tools

@@ -157,5 +157,6 @@ REPLACE:fishing_village = {
         local_laborers_desired_pop = 0.020
         local_soldiers_desired_pop = 0.010
     }
+    can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:fishing_village:building

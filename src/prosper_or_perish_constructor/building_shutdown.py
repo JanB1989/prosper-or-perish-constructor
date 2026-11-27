@@ -1,4 +1,4 @@
-"""Building shutdown: which buildings without goods output may be closed.
+"""Building shutdown: which buildings may be closed.
 
 The AI closes buildings without goods output (temples, libraries, universities, marketplaces, docks, ...) when its
 building maintenance passes AI_ALLOWED_BUILDING_MAINTENANCE x AI_BUILDING_MAINTENANCE_LEEWAY of its income and reopens
@@ -8,8 +8,15 @@ them later, so they flipped open and closed many times a game (docs/ai_building_
 
 ``ppc build`` and ``ppc sync`` write ``can_close = no`` (the player) and ``ai_forbid_shutdown = yes`` (the AI's
 maintenance and profit closing) into the block that owns each "never" building in the compiled mod, like the footprint
-step. Buildings with a goods output are never touched: a producer that loses money must stay closable. The lines carry
-a marker comment, so a building switched back to "keep" loses them again.
+step. The lines carry a marker comment, so a building switched back to "keep" loses them again.
+
+Buildings with a goods output (2026-11-27, Jan: nobody closes a production building; a closed building keeps its jobs
+in its class's equilibrium and applies none of its own lines, see job_room.py): every producer gets ``can_close = no``
+and nothing else, whatever its class says and whatever its definition says (an explicit ``can_close = yes`` is
+replaced). ``can_close`` is the engine's last check for the player's button and the AI's close alike, so nobody closes
+it; without ``ai_forbid_shutdown`` the building stays in the AI's close / subsidy pass, so the AI still subsidises it
+(read in the 1.4.9 code, not tested in game). A producer that loses money lays workers off instead. A blueprint's
+``shutdown: keep`` leaves a producer closable.
 """
 
 from __future__ import annotations
@@ -35,6 +42,7 @@ CONFIG_SECTION = "building_shutdown"
 NEVER, KEEP = "never", "keep"
 MARKER = "# building_shutdown"
 FLAGS = (("can_close", "no"), ("ai_forbid_shutdown", "yes"))
+PRODUCER_FLAGS = (("can_close", "no"),)
 PRODUCTION_METHOD_DIRS = (Path("in_game/common/production_methods"),)
 _INJECT = {"INJECT", "TRY_INJECT", "INJECT_OR_CREATE"}
 
@@ -53,8 +61,8 @@ class ShutdownConfig:
 @dataclass
 class ShutdownResult:
     locked: list[str] = field(default_factory=list)
+    producers: list[str] = field(default_factory=list)  # buildings with a goods output: can_close = no only
     kept: int = 0
-    producing_skipped: int = 0
     files_changed: int = 0
     not_in_mod: list[str] = field(default_factory=list)
 
@@ -122,19 +130,33 @@ def has_output(body: str, shared: dict[str, bool]) -> bool:
     return False
 
 
-def set_flags(body: str, lock: bool, inherited: str = "") -> str:
+def _drop_top_level(body: str, key: str) -> str:
+    """The body without its top-level ``key = ...`` lines (nested blocks untouched)."""
+    while True:
+        match = _ANY_FLAG_RE[key].search(_depth_zero_text(body))
+        if not match:
+            return body
+        end = body.find("\n", match.end())
+        body = body[: match.start()] + body[(len(body) if end < 0 else end + 1):]
+
+
+def set_flags(body: str, lock: bool, inherited: str = "", producer: bool = False) -> str:
     """Drop the marked flag lines; when locking, add them as top-level lines at the end of the body. inherited is
-    the vanilla definition an INJECT adds to: a flag it already sets is not repeated (the engine drops INJECT dupes)."""
+    the vanilla definition an INJECT adds to: a flag it already sets is not repeated (the engine drops INJECT dupes).
+    A producer gets ``can_close = no`` only, and its own ``can_close`` line, whatever it says, is replaced."""
     body = _FLAG_LINE_RE.sub("", body)
-    if not lock:
+    if producer:
+        body = _drop_top_level(body, "can_close")
+    if not lock and not producer:
         return body
+    flags = PRODUCER_FLAGS if producer else FLAGS
     tops = _depth_zero_text(body) + "\n" + (_depth_zero_text(inherited) if inherited else "")
     indent = "\t"
     for line in body.splitlines():
         if line.strip() and not line.strip().startswith("#"):
             indent = line[: len(line) - len(line.lstrip())] or "\t"
             break
-    lines = "".join(f"{indent}{key} = {value} {MARKER}\n" for key, value in FLAGS if not _ANY_FLAG_RE[key].search(tops))
+    lines = "".join(f"{indent}{key} = {value} {MARKER}\n" for key, value in flags if not _ANY_FLAG_RE[key].search(tops))
     head = body.rstrip(" \t")
     return head + ("" if head.endswith("\n") or not head else "\n") + lines
 
@@ -148,7 +170,7 @@ def apply(repo: Path, mod_root: Path, project: Path, vanilla_root: Path) -> Shut
     vanilla = vanilla_definitions(vanilla_root)
     owners = owner_blocks(mod_root, vanilla_root)
     result = ShutdownResult()
-    edits: dict[Path, list[tuple[object, bool, str]]] = {}
+    edits: dict[Path, list[tuple[object, bool, str, bool]]] = {}
     for key, (footprint, override, _path) in sorted(blueprint_rules(repo).items()):
         block = owners.get(key)
         if block is None:
@@ -159,29 +181,51 @@ def apply(repo: Path, mod_root: Path, project: Path, vanilla_root: Path) -> Shut
         # an INJECT adds to the vanilla definition: the building's methods are the union
         full = body + ("\n" + vanilla.get(key, "") if block.mode in _INJECT else "")
         lock = rule(config, footprint, override) == NEVER
-        if lock and has_output(full, shared):
-            result.producing_skipped += 1
+        producer = has_output(full, shared) and override != KEEP
+        if producer:
+            result.producers.append(key)
             lock = False
+        elif lock and has_output(full, shared):
+            lock = False
+            result.kept += 1
         elif lock:
             result.locked.append(key)
         else:
             result.kept += 1
         inherited = vanilla.get(key, "") if block.mode in _INJECT else ""
-        edits.setdefault(block.path, []).append((block, lock, inherited))
+        edits.setdefault(block.path, []).append((block, lock, inherited, producer))
     for path, items in edits.items():
         original = _read(path)
         text = original
-        for block, lock, inherited in sorted(items, key=lambda item: -item[0].open):
+        for block, lock, inherited, producer in sorted(items, key=lambda item: -item[0].open):
             body = text[block.open + 1: block.close]
-            text = text[: block.open + 1] + set_flags(body, lock, inherited) + text[block.close:]
+            text = text[: block.open + 1] + set_flags(body, lock, inherited, producer) + text[block.close:]
         if text != original:
             path.write_text(text, encoding="utf-8-sig", newline="\n")
             result.files_changed += 1
     return result
 
 
+def producers(repo: Path, mod_root: Path, vanilla_root: Path) -> list[str]:
+    """The blueprint buildings with a goods output that nobody may close (the ones ``apply`` writes can_close = no into)."""
+    shared = producing_methods(vanilla_root, mod_root)
+    vanilla = vanilla_definitions(vanilla_root)
+    owners = owner_blocks(mod_root, vanilla_root)
+    out: list[str] = []
+    for key, (_footprint, override, _path) in sorted(blueprint_rules(repo).items()):
+        block = owners.get(key)
+        if block is None or override == KEEP:
+            continue
+        text = _read(block.path)
+        full = text[block.open + 1: block.close] + ("\n" + vanilla.get(key, "") if block.mode in _INJECT else "")
+        if has_output(full, shared):
+            out.append(key)
+    return out
+
+
 def check(repo: Path, mod_root: Path, project: Path, vanilla_root: Path) -> list[str]:
-    """Problems: config errors, and locked buildings in the compiled mod without both flags (run ppc build/sync)."""
+    """Problems: config errors, locked buildings in the compiled mod without both flags and producers that can still
+    be closed (run ppc build/sync)."""
     config = load_config(project)
     problems = validate(repo, config)
     if problems:
@@ -191,15 +235,21 @@ def check(repo: Path, mod_root: Path, project: Path, vanilla_root: Path) -> list
     owners = owner_blocks(mod_root, vanilla_root)
     for key, (footprint, override, path) in sorted(blueprint_rules(repo).items()):
         block = owners.get(key)
-        if block is None or rule(config, footprint, override) != NEVER:
+        if block is None:
             continue
         text = _read(block.path)
         body = text[block.open + 1: block.close]
         full = body + ("\n" + vanilla.get(key, "") if block.mode in _INJECT else "")
         if has_output(full, shared):
+            if override == KEEP:
+                continue
+            flags = PRODUCER_FLAGS
+        elif rule(config, footprint, override) == NEVER:
+            flags = FLAGS
+        else:
             continue
         tops = _depth_zero_text(body) + ("\n" + _depth_zero_text(vanilla.get(key, "")) if block.mode in _INJECT else "")
-        missing = [k for k, v in FLAGS if not (m := _ANY_FLAG_RE[k].search(tops)) or m.group("value") != v]
+        missing = [k for k, v in flags if not (m := _ANY_FLAG_RE[k].search(tops)) or m.group("value") != v]
         if missing:
             problems.append(f"{key} ({path.name}): {', '.join(missing)} not written (run ppc build)")
     return problems

@@ -1018,6 +1018,11 @@ depends almost only on the leeway (closures per building per century at 0.2: 11 
 Observer runs 4f95382e and 1eaa2d96 (0.15 x 2.5) measured closed share 40 % -> 24-25 % and 11.4 % -> 5.9 % newly
 closed per 5 years (half, not three quarters).
 
+Since 2026-11-27 no building with a goods output can be closed either: every one carries `can_close = no` (the player
+and the AI alike; the AI still subsidises, because the building stays in its pass), and a producer that loses money
+lays workers off instead. Its room for its workers' class follows its staffing (AGENTS.md "Job Room"). Not tested in
+game. The closing rules above describe the engine and the runs made before that day.
+
 Since 2026-10-05 only military buildings without goods output can close at all: every other one carries
 `can_close = no` and `ai_forbid_shutdown = yes` (the AI never closed a building with `ai_forbid_shutdown`, e.g. 147k
 granary snapshots in run 4f95382e), written by footprint class (`[building_shutdown.classes]`, AGENTS.md "Building

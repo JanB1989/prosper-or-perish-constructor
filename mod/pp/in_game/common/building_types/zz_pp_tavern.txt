@@ -50,7 +50,6 @@ ai_construct_weight = {
 }
 ai_forbid_shutdown = yes
 important_for_AI = yes
-can_close = yes
 forbidden_for_estates = no
 AI_ignore_available_worker_flag = yes
 build_time = 365
@@ -107,5 +106,6 @@ modifier = {
   # inns quartered and fed marching troops
   local_supply_limit_modifier = 0.01
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:tavern:building

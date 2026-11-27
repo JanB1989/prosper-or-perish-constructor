@@ -1049,10 +1049,13 @@ extractive_open = 0           # 0.05 quarries, pits, diggings, salt pans
 
 # Which buildings WITHOUT goods output may be closed (2026-10-05, Jan): "never" writes can_close = no and
 # ai_forbid_shutdown = yes into the building (finalize step, building_shutdown.py; ppc shutdown apply|check), "keep"
-# leaves the engine default. Keyed by footprint class; a blueprint overrides with `shutdown: never | keep`.
-# Buildings with a goods output are never touched (a producer that loses money must stay closable). Why: the AI's
-# maintenance budget closed and reopened temples, libraries, marketplaces ... 5-13 times a game; only military
+# leaves the engine default. Keyed by footprint class; a blueprint overrides with `shutdown: never | keep`. Why: the
+# AI's maintenance budget closed and reopened temples, libraries, marketplaces ... 5-13 times a game; only military
 # buildings are worth mothballing.
+# Buildings WITH a goods output (2026-11-27, Jan; until then never touched): nobody closes them. Each gets
+# can_close = no and nothing else, whatever its class below says, so the player's button and the AI's closing are both
+# gone while the AI still subsidises (no ai_forbid_shutdown). A producer that loses money lays workers off instead, and
+# [job_room] takes its room for the class with them. A blueprint's `shutdown: keep` leaves a producer closable.
 [building_shutdown.classes]
 farm_land = "keep"
 capacity_source = "never"
@@ -1079,6 +1082,18 @@ mining = "never"
 military_grounds = "keep"
 estate_land = "never"
 extractive_open = "never"
+
+[job_room]
+# A production building's room for its workers' class follows its staffing (2026-11-27, Jan: "I want surplus to demote";
+# job_room.py, finalize, after the employment cut). The engine counts a building's jobs in the class's equilibrium
+# whether they are offered or not, so a building that laid its workers off kept the room and the people sat idle. Per
+# level and for the building's own pop type: raw_modifier local_<pop>_desired_pop = -jobs, modifier
+# local_<pop>_desired_pop = +jobs (the engine scales the second by staffing), so the room is the jobs that are filled.
+# Written into every blueprint building with a goods output and one of these pop types. Left out: food makers
+# (buildings that make a staple food, Province Food or victuals, and the Construction Plan's kitchens, taverns,
+# granaries, granges and yards; Jan: they are supposed to hire and fire with the store) and not_buildings.
+pop_types = ["burghers", "laborers", "clergy"]
+not_buildings = []
 
 [age_food]
 # Food relief by age (2026-10-03, Jan: age 2 stays tough, age 3 brings decent relief, later ages keep the progression;

@@ -46,7 +46,6 @@ price = pp_cookshop_price
 	forbidden_for_estates = no
 	important_for_AI = yes
 	AI_ignore_available_worker_flag = yes
-	can_close = yes
 	# ==========================================
 	# 1. MAIN DISH (pick ONE)
 	# - a little of the market's staples cooked into meals, sold for offset at margin 1.08; the food itself is the
@@ -334,5 +333,6 @@ price = pp_cookshop_price
 		# no food capacity (was 400, removed 2026-09-30): the Granary is the capacity building
 		local_migration_attraction = 0.025
 	}
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:cookshop:building

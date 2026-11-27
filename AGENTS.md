@@ -441,6 +441,34 @@
   Never put market access, owner or culture conditions in `location_potential`: the game re-checks it on owner change
   and deletes buildings that fail it.
 
+## Job Room (2026-11-27, Jan)
+
+- Jan: closed and laid-off buildings must not raise the equilibrium ("I want surplus to demote. That's the main reason
+  we are doing this"). The engine counts a building's jobs (employment_size x level) in its pop type's equilibrium
+  whether they are offered or not; run b18a10d6, 1837: 1.5 M burghers and 15.9 M laborers unemployed next to unfilled
+  jobs in open buildings, and closed buildings held 13 % of burgher and 7.5 % of laborer jobs.
+- Two lines per level, both for the building's own pop type and both the size of its jobs E (`job_room.py`, finalize,
+  after the employment cut; marker `# job_room`): `raw_modifier local_<pop>_desired_pop = -E` and `modifier
+  local_<pop>_desired_pop = +E`. The engine scales `raw_modifier` by input fulfilment f and `modifier` by f x staffing,
+  and jobs and flat desired pop go into one sum, so the building's room is E x (1 - f + f x staffing): E when full,
+  E x staffing when its inputs are supplied, never more than E. A line of the same key the building already has in
+  that block is folded into ours (`# job_room base <value>`), so the key never appears twice.
+- A new building opens no room of its own. It hires from the spare room the location already has (the location ranks
+  give burghers and laborers flat room) and brings its room in as it fills; a burgher building in a rural settlement
+  is the case to watch. Libraries, Universities and the like are meant to be the sources of spare room (Jan; not
+  built).
+- Who carries them (`[job_room]` in constructor.toml): every blueprint building with a goods output whose pop type is
+  burghers, laborers or clergy: 178 (laborers 113, burghers 64, the scriptorium). Left out: 54 food makers (they make
+  a staple food, Province Food or victuals, or are the Construction Plan's kitchens, taverns, granaries, granges and
+  yards; Jan: "these are supposed to fluctuate"), 9 buildings of peasants and slaves, and `not_buildings`.
+- It only works on a building that is never closed (a closed building applies neither block), hence `can_close = no`
+  on every production building ("Building Shutdown").
+- The AI counts both lines in full, so they cancel in its score; it values burgher and laborer room at zero anyway.
+- Expected: the surplus next to laid-off and short-staffed buildings demotes; recovery after layoffs and the staffing
+  of new buildings are slower, bounded by the location's spare room and promotion speed. Read from the 1.4.9 code and
+  the private notes (`promotion_ai_149.md`, `building_limit_ai.md`), NOT tested in game, no run.
+- `tests/test_job_room.py`; the build prints the counts.
+
 ## Building Shutdown (2026-10-05, Jan)
 
 - Buildings without goods output may not be closed unless they are military. `[building_shutdown.classes]` in
@@ -448,9 +476,20 @@
   farm_land, technical); a blueprint overrides with a top-level `shutdown: never | keep` (the Kurultai is `never`).
 - The finalize step of `ppc build`/`sync` (`building_shutdown.py`, after the footprint) writes `can_close = no` (the
   player) and `ai_forbid_shutdown = yes` (the AI's maintenance-budget and profit closing) into the block that owns each
-  `never` building, marked `# building_shutdown`; a building switched to `keep` loses them again. Buildings with a goods
-  output are skipped (a losing producer must stay closable). An INJECT never repeats a flag vanilla already sets.
-  `uv run ppc shutdown apply|check` (0 problems; `tests/test_building_shutdown.py`). 306 buildings locked.
+  `never` building, marked `# building_shutdown`; a building switched to `keep` loses them again. An INJECT never
+  repeats a flag vanilla already sets. `uv run ppc shutdown apply|check` (0 problems;
+  `tests/test_building_shutdown.py`). 310 buildings locked.
+- Buildings WITH a goods output (2026-11-27, Jan; until then skipped, "a losing producer must stay closable"): nobody
+  closes a production building. The same step writes `can_close = no` and nothing else into every one (241), whatever
+  its class says; an explicit `can_close = yes` of the definition is replaced. `can_close` is the last check of the
+  player's button and of the AI's close alike, so both are gone; without `ai_forbid_shutdown` the building stays in the
+  AI's close / subsidy pass, so the AI still subsidises it (score above 0) and a negative score does nothing (read in
+  the 1.4.9 code, private `notes/close_destroy_149.md`; the run confirms only that `ai_forbid_shutdown` removes both;
+  not tested in game). A producer that loses money lays workers off, and "Job Room" below takes its room with them. A
+  blueprint's `shutdown: keep` leaves a producer closable (none today). Why: a closed building keeps all its jobs in
+  its class's equilibrium and applies none of its own lines. The Construction Plan's closer lists no production
+  building any more (`plan_closer.never_types`), so its setting "close other businesses for a plan's workers" finds
+  nothing to close among them; what replaces it is not decided.
 - Why: the AI's maintenance budget (docs/ai_building_rulebook.md, "Maintenance budget") closed and reopened temples,
   libraries, marketplaces and docks 5-13 times a game; universities and grand palaces of small countries stayed closed.
   Their maintenance now always counts, so an over-budget AI closes its military buildings first and builds fewer new

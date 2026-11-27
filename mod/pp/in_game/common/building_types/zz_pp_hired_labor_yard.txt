@@ -11,7 +11,6 @@ icon = hired_labor_yard
 town = yes
 city = yes
 megalopolis = yes
-can_close = yes
 forbidden_for_estates = no
 ai_forbid_shutdown = no
 build_time = workshop_build_time
@@ -58,5 +57,12 @@ unique_production_methods = {
     category = building_maintenance
   }
 }
+	can_close = no # building_shutdown
+	raw_modifier = {
+		local_laborers_desired_pop = -2 # job_room
+	}
+	modifier = {
+		local_laborers_desired_pop = 2 # job_room
+	}
 }
 # <<< eu5-building-pipeline:hired_labor_yard:building

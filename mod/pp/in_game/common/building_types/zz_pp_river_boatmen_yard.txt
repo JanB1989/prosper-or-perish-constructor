@@ -12,7 +12,6 @@ rural_settlement = yes
 town = yes
 city = yes
 megalopolis = yes
-can_close = no
 always_add_demands = yes
 AI_ignore_available_worker_flag = yes
 ai_forbid_shutdown = yes
@@ -79,10 +78,12 @@ unique_production_methods = {
 }
 
 raw_modifier = {
+	local_laborers_desired_pop = -0.8 # job_room
   local_market_access = 0.15
 }
 
 modifier = {
+	local_laborers_desired_pop = 0.8 # job_room
   local_stone_output_modifier = -0.005
   local_marble_output_modifier = -0.005
   local_clay_output_modifier = -0.005
@@ -118,5 +119,6 @@ ai_construct_weight = {
   # heavily built locations at low market access first (flat, ppc logistics)
   value = pp_logistics_urgency_weight
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:river_boatmen_yard:building

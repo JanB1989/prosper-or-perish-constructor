@@ -49,9 +49,14 @@ unique_production_methods = {
 obsolete = dyesworks
 construction_demand = manufactory_construction
 raw_modifier = {
+	local_laborers_desired_pop = -0.8 # job_room
     local_burghers_desired_pop = 0.05
 }
 increase_per_level_cost = 0.15
+	can_close = no # building_shutdown
+	modifier = {
+		local_laborers_desired_pop = 0.8 # job_room
+	}
 ai_construct_weight = {
     value = 0
     add = pp_market_short_dyes

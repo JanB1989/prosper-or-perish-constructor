@@ -106,6 +106,7 @@ custom_tags = {
 construction_demand = manufactory_construction
 increase_per_level_cost = 0.19
 raw_modifier = {
+	local_burghers_desired_pop = -0.325 # job_room
     local_pp_firearms_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
 }
 # manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
@@ -116,5 +117,9 @@ ai_construct_weight = {
     divide = { value = scope:owner.monthly_income_total add = 10 }
     add = pp_market_short_firearms
 }
+	can_close = no # building_shutdown
+	modifier = {
+		local_burghers_desired_pop = 0.325 # job_room
+	}
 }
 # <<< eu5-building-pipeline:firearms_manufactory:building

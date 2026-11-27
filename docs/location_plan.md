@@ -276,6 +276,11 @@ guard, so the look costs nothing more at the defaults.
 
 ### Plans free their workers (2026-11-20, Jan; tested in game the same night, see "In-game results")
 
+**2026-11-27 (Jan): nobody can close a production building any more** (`can_close = no` on every building with a goods
+output, AGENTS.md "Building Shutdown" and "Job Room"). The closer therefore lists no production building
+(`plan_closer.never_types`), which leaves it almost nothing to close; the rule, its settings and its states are still
+in the mod. What a plan does when it waits for workers (tear the other businesses down, or nothing) is not decided.
+
 Jan: "You conquer or get a city with a bunch of businesses the AI built, and you want to specialize it ... at some
 point there is a worker shortage. Then, step by step, the other businesses that are not part of the location's plans
 should be turned off in that location, so they release the workers ... automatically, probably by profitability."

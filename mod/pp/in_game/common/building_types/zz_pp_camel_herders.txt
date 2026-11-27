@@ -23,7 +23,6 @@ construction_demand = basic_construction_needs
 ai_forbid_shutdown = no
 forbidden_for_estates = no
 important_for_AI = no
-can_close = yes
 
 location_potential = {
     raw_material = goods:camels
@@ -108,5 +107,6 @@ raw_modifier = {
 modifier = {
     local_monthly_food = 0.25
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:camel_herders:building

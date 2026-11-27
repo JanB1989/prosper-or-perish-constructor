@@ -10,7 +10,6 @@ custom_tags = { pp_logistics pp_rural_logistics_priority }
 icon = pp_yam_station
 rural_settlement = yes
 town = yes
-can_close = no
 always_add_demands = yes
 ai_forbid_shutdown = yes
 build_time = infrastructure_build_time
@@ -75,10 +74,12 @@ unique_production_methods = {
 }
 
 raw_modifier = {
+	local_laborers_desired_pop = -0.8 # job_room
   local_market_access = 0.15
 }
 
 modifier = {
+	local_laborers_desired_pop = 0.8 # job_room
   local_stone_output_modifier = -0.01
   local_marble_output_modifier = -0.01
   local_clay_output_modifier = -0.01
@@ -114,5 +115,6 @@ ai_construct_weight = {
   # heavily built locations at low market access first (flat, ppc logistics)
   value = pp_logistics_urgency_weight
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:pp_yam_station:building

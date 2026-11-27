@@ -24,7 +24,6 @@ construction_demand = basic_construction_needs
 ai_forbid_shutdown = no
 forbidden_for_estates = no
 important_for_AI = no
-can_close = yes
 
 unique_production_methods = {
     pp_managed_pepper_garden_base_pepper = {
@@ -82,13 +81,16 @@ unique_production_methods = {
 }
 
 raw_modifier = {
+	local_laborers_desired_pop = -0.8 # job_room
   pp_levels_managed_pepper_garden = 1
   local_population_capacity = -10
 }
 
 modifier = {
+	local_laborers_desired_pop = 0.8 # job_room
     local_migration_attraction = 0.003
 }
+	can_close = no # building_shutdown
 ai_construct_weight = {
     value = 0
     add = pp_market_short_pepper

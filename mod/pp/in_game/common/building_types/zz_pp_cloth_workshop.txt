@@ -61,10 +61,12 @@ custom_tags = {
     workshop
 }
 modifier = {
+	local_burghers_desired_pop = 0.287 # job_room
     local_cloth_output_modifier = -0.0025  # manufacturing tiers 2026-10-06: stack malus per staffed level
 }
 increase_per_level_cost = 0.14
 raw_modifier = {
+	local_burghers_desired_pop = -0.287 # job_room
     local_pp_cloth_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
 }
 # manufacturing tiers 2026-10-06: the engine scores a replacement with AI_UPGRADE_BUILDING_UTILITY 0.001, so the
@@ -75,5 +77,6 @@ ai_construct_weight = {
     divide = { value = scope:owner.monthly_income_total add = 10 }
     add = pp_market_short_cloth
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:cloth_workshop:building

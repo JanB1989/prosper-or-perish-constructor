@@ -44,6 +44,13 @@ unique_production_methods = {
 build_time = rural_build_time
 construction_demand = guild_construction
 increase_per_level_cost = 0.17
+	can_close = no # building_shutdown
+	raw_modifier = {
+		local_laborers_desired_pop = -0.8 # job_room
+	}
+	modifier = {
+		local_laborers_desired_pop = 0.8 # job_room
+	}
 ai_construct_weight = {
     value = 0
     add = pp_market_short_tar

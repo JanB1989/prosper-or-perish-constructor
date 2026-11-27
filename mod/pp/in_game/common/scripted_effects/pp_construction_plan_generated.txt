@@ -5095,7 +5095,7 @@ pp_cplan_business_pick = {
 		save_temporary_scope_value_as = { name = pp_cplan_r value = pp_cplan_bz_roi_slave_center }
 		if = {
 			limit = { scope:pp_cplan_r > var:pp_cplan_bz_roi }
-			pp_cplan_business_take = { g = slaves_goods out = 1.006 demand = simple_colony_construction }
+			pp_cplan_business_take = { g = slaves_goods out = 2.006 demand = simple_colony_construction }
 		}
 	}
 	if = {
@@ -5111,7 +5111,7 @@ pp_cplan_business_pick = {
 		save_temporary_scope_value_as = { name = pp_cplan_r value = pp_cplan_bz_roi_slave_market }
 		if = {
 			limit = { scope:pp_cplan_r > var:pp_cplan_bz_roi }
-			pp_cplan_business_take = { g = slaves_goods out = 2.006 demand = town_building_construction }
+			pp_cplan_business_take = { g = slaves_goods out = 0.506 demand = town_building_construction }
 		}
 	}
 	if = {
@@ -7223,11 +7223,11 @@ pp_cplan_market_do = {
 		pp_cplan_market_$do$_good = { g = silver out = 1.003 }
 	}
 	else_if = {
-		limit = { OR = { scope:pp_cplan_btype = building_type:slave_center } }
-		pp_cplan_market_$do$_good = { g = slaves_goods out = 1.006 }
+		limit = { OR = { scope:pp_cplan_btype = building_type:slave_market } }
+		pp_cplan_market_$do$_good = { g = slaves_goods out = 0.506 }
 	}
 	else_if = {
-		limit = { OR = { scope:pp_cplan_btype = building_type:slave_market } }
+		limit = { OR = { scope:pp_cplan_btype = building_type:slave_center } }
 		pp_cplan_market_$do$_good = { g = slaves_goods out = 2.006 }
 	}
 	else_if = {
@@ -8204,11 +8204,11 @@ pp_cplan_market_count_building = {
 		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = silver out = 1.003 } }
 	}
 	else_if = {
-		limit = { building_type = building_type:slave_center }
-		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = slaves_goods out = 1.006 } }
+		limit = { building_type = building_type:slave_market }
+		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = slaves_goods out = 0.506 } }
 	}
 	else_if = {
-		limit = { building_type = building_type:slave_market }
+		limit = { building_type = building_type:slave_center }
 		scope:pp_cplan_this_market = { pp_cplan_market_count_add = { g = slaves_goods out = 2.006 } }
 	}
 	else_if = {

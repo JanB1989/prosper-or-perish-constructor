@@ -226,6 +226,7 @@ TRY_INJECT:copper = {
 }
 TRY_INJECT:cotton = {
 	block_rgo_upgrade = yes
+	transport_cost = 0.5 # 1 (vanilla default); 2026-11-27, Jan: plantation crops cross the Atlantic at half the merchant capacity
 }
 TRY_INJECT:goods_gold = {
 	ai_rgo_expansion_priority = 0 # vanilla > 0 skips the AI's profit-margin gate for every producer (2026-10-09)
@@ -270,12 +271,14 @@ TRY_INJECT:silk = {
 }
 TRY_INJECT:sugar = {
 	block_rgo_upgrade = yes
+	transport_cost = 0.5 # 1 (vanilla default); 2026-11-27, Jan
 }
 TRY_INJECT:tin = {
 	block_rgo_upgrade = yes
 }
 TRY_INJECT:tobacco = {
 	block_rgo_upgrade = yes
+	transport_cost = 0.5 # 1 (vanilla default); 2026-11-27, Jan
 }
 TRY_INJECT:amber = {
 	block_rgo_upgrade = yes

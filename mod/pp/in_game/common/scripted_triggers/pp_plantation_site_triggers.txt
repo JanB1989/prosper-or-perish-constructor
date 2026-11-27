@@ -1,0 +1,103 @@
+﻿# Prosper or Perish - where the three slave plantations may stand (2026-11-27, Jan: relax them by climate, well
+# scoped; hand-written). Location scope. Static World Builder classes only (climate, topography, vegetation,
+# fertility, river, coast), never ownership: the owner rule is pp_plantation_owner_allowed, read in allow (the engine
+# re-checks location_potential when a location changes owner and removes the building).
+# A location whose raw material is the crop always qualifies (the old rule). Counts and the historical zones:
+# constructor AGENTS.md "Colonial Plantations and Cash-Crop Trade".
+
+# Sugar cane: frost-free humid tropics on low ground by the sea or a river (mills, boiling houses, shipping);
+# subtropical only on river lowlands (Louisiana, the Nile and Ganges deltas). Rainforest only on the sea coast.
+pp_sugar_plantation_site = {
+	OR = {
+		raw_material = goods:sugar
+		AND = {
+			OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas topography = wetlands }
+			NOR = {
+				vegetation = desert
+				vegetation = sparse
+				vegetation = ha1300_veg_scrubland
+				vegetation = ha1300_veg_tundra
+				has_location_modifier = pp_wb_fertility_very_low
+			}
+			OR = {
+				is_coastal = yes
+				pp_navigation_has_river = yes
+			}
+			OR = {
+				AND = {
+					OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna }
+					OR = {
+						NOT = { vegetation = jungle }
+						pp_is_sea_coast = yes
+					}
+				}
+				AND = {
+					OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon }
+					OR = { topography = ha1300_topo_floodplains topography = ha1300_topo_deltas topography = wetlands }
+					NOT = { vegetation = jungle }
+				}
+			}
+		}
+	}
+}
+
+# Cotton: warm with a dry season (the American South, the Brazilian north-east, Mexico, India, the Levant);
+# arid land only along a river (Egypt, the Peruvian coast, Central Asia's oases).
+pp_cotton_plantation_site = {
+	OR = {
+		raw_material = goods:cotton
+		AND = {
+			NOR = {
+				vegetation = desert
+				vegetation = jungle
+				vegetation = ha1300_veg_coniferous_forest
+				vegetation = ha1300_veg_swamp
+				has_location_modifier = pp_wb_fertility_very_low
+			}
+			OR = {
+				AND = {
+					OR = { climate = subtropical climate = ha1300_climate_subtropical_monsoon climate = ha1300_climate_savanna climate = ha1300_climate_tropical_monsoon climate = hot_semi_arid climate = mediterranean }
+					OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas topography = plateau }
+				}
+				AND = {
+					OR = { climate = arid climate = hot_semi_arid }
+					pp_navigation_has_river = yes
+					OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas }
+				}
+			}
+		}
+	}
+}
+
+# Tobacco: warm, frost-free growing season on good soil, flat land or hills (the Chesapeake, Cuba, Bahia, Macedonia).
+pp_tobacco_plantation_site = {
+	OR = {
+		raw_material = goods:tobacco
+		AND = {
+			OR = { climate = tropical climate = ha1300_climate_tropical_monsoon climate = ha1300_climate_savanna climate = subtropical climate = ha1300_climate_subtropical_monsoon climate = mediterranean }
+			OR = { topography = flatland topography = ha1300_topo_rolling topography = ha1300_topo_valleys topography = ha1300_topo_floodplains topography = ha1300_topo_deltas topography = hills }
+			NOR = {
+				vegetation = desert
+				vegetation = sparse
+				vegetation = ha1300_veg_scrubland
+				vegetation = ha1300_veg_tundra
+				vegetation = ha1300_veg_swamp
+				vegetation = ha1300_veg_marsh
+				vegetation = jungle
+			}
+			OR = {
+				has_location_modifier = pp_wb_fertility_moderate
+				has_location_modifier = pp_wb_fertility_high
+				has_location_modifier = pp_wb_fertility_very_high
+			}
+		}
+	}
+}
+
+# Owner rule (unchanged from the old location_potential): overseas for the owner, or a colonial subject's land.
+pp_plantation_owner_allowed = {
+	OR = {
+		is_overseas_for_owner = yes
+		owner ?= { is_colonial_subject = yes }
+	}
+}

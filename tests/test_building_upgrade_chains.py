@@ -1689,19 +1689,36 @@ def test_target_raw_material_producers_have_no_input_base_methods() -> None:
         assert _material_inputs(row) == []
 
 
-def test_slave_plantation_replacements_keep_colonial_rgo_gate_and_farm_capacity() -> None:
+def test_slave_plantation_replacements_keep_site_trigger_owner_allow_and_farm_capacity() -> None:
+    # 2026-11-27 (Jan): the site is the crop's RGO or its climate gate (scripted trigger), the owner rule sits in allow
+    # (the engine re-checks location_potential on an owner change and would remove the plantation).
     for building, good in SLAVE_PLANTATION_REPLACEMENTS.items():
         blueprint = _load_blueprint(building)
         body = blueprint["building"]["body"]
 
         assert blueprint["building"]["mode"] == "REPLACE"
-        assert f"raw_material = goods:{good}" in body
-        assert "is_overseas_for_owner = yes" in body
-        assert "owner ?= { is_colonial_subject = yes }" in body
+        potential = body.split("location_potential = {", 1)[1].split("\n}", 1)[0]
+        allow = body.split("allow = {", 1)[1].split("\n}", 1)[0]
+        assert potential.strip() == f"pp_{good}_plantation_site = yes"
+        assert allow.strip() == "pp_plantation_owner_allowed = yes"
         assert "pop_type = slaves" in body
         assert "slaves_goods" in body
         assert f"max_levels = farm_capacity_max_{building}" in body
         assert "farm_capacity > 0" not in body
+
+
+def test_plantation_site_triggers_keep_the_rgo_and_carry_no_owner_term() -> None:
+    text = (ROOT / "mod" / "pp" / "in_game" / "common" / "scripted_triggers" / "pp_plantation_site_triggers.txt").read_text(
+        encoding="utf-8-sig"
+    )
+    text = re.sub(r"#[^\n]*", "", text)
+    owner_rule = text.split("pp_plantation_owner_allowed = {", 1)[1]
+    assert "is_overseas_for_owner = yes" in owner_rule and "is_colonial_subject = yes" in owner_rule
+    for good in SLAVE_PLANTATION_REPLACEMENTS.values():
+        site = text.split(f"pp_{good}_plantation_site = {{", 1)[1].split("\npp_", 1)[0]
+        assert f"raw_material = goods:{good}" in site  # every RGO site of the crop stays a site
+        for term in ("owner", "is_overseas_for_owner", "is_colonial_subject", "country", "is_capital"):
+            assert term not in site, (good, term)  # static location classes only
 
 
 def test_non_slave_crop_farms_are_default_rgo_laborer_buildings() -> None:

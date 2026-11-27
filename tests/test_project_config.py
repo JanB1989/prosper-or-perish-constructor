@@ -2525,8 +2525,12 @@ def test_staple_and_victuals_transport_costs() -> None:
                     merged[entry.key.split(":")[-1]] = str(values["transport_cost"])
     expected = {good: 0.7 for good in ("wheat", "rice", "millet", "maize", "potato", "fish", "olives", "wild_game")}
     expected |= {"legumes": 1.0, "fruit": 1.0, "wool": 1.25, "victuals": 1.0}
+    # 2026-11-27 (Jan): the three plantation crops at half the merchant capacity per unit
+    expected |= {"sugar": 0.5, "cotton": 0.5, "tobacco": 0.5}
     assert {good: float(merged[good]) for good in expected} == expected
     assert "livestock" not in merged
+    assert "dyes" in merged and float(merged["dyes"]) == 1.0  # the 2026-10-06 floor stays
+    assert "coffee" not in merged and "cocoa" not in merged
 
 
 def test_staple_and_horse_pop_demand_cut() -> None:
@@ -2602,6 +2606,19 @@ def test_capitals_colonial_nations_and_ville_franche_give_no_population_capacity
     subjects = {entry.key: entry.value for entry in load_merged_directory(profile, "subject_types").entries}
     subject_modifier = _entry_values(subjects["colonial_nation"])["subject_modifier"]
     assert "global_population_capacity_modifier" not in _entry_values(subject_modifier)
+
+
+def test_colonial_nations_set_no_trade_policy_and_focus_plantation_crops() -> None:
+    # 2026-11-27 (Jan): colonial nations may not tariff or subsidise. A rate is held between minus the subvention cap
+    # and the tariff cap, each clamped to 0..1, so each total must stay at or below 0.
+    profile = LoadOrderConfig.load(ROOT / "constructor.load_order.toml").profile("constructor")
+    subjects = {entry.key: entry.value for entry in load_merged_directory(profile, "subject_types").entries}
+    values = _entry_values(_entry_values(subjects["colonial_nation"])["subject_modifier"])
+    assert float(values["max_tariff"]) <= -1.0
+    assert float(values["max_trade_subventions"]) <= -1.0
+    for good in ("sugar", "cotton", "tobacco"):
+        assert float(values[f"global_{good}_output_modifier"]) == 0.5
+    assert float(values["global_cocoa_output_modifier"]) == 0.1
 
 
 def test_land_vs_naval_output_modifiers_are_capped_and_targeted() -> None:

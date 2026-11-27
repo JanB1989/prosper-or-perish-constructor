@@ -636,6 +636,24 @@ PP's start makes some goods vanilla's start does not (leather 67 markets, gold 2
 
 Tested in game from one save of run 4fe06a72, two pairs of 30 months (start 1532 and 1535), one run per arm, 0.5 against 0.25. New bookers at the same price gap halve (0.26 to 0.12 of traders). New trades 503 to 390 a month, country trade flows change 12 instead of 15 % a month. Trade makes about a third of monthly price variance; the part credited to trade falls 16-20 %, total price variance about 7 %, value in months moving over 5 % 10-13 %. Trade value -2.4 %, unmet pop demand +0.1 points. Two 0.5 runs from one save differed by more than the 7 %, so the change in trader behaviour is clear and the price effect alone is within one run's noise. The Kyoto-Akita cannon loop died about a year sooner; from a calm start a new loop grew at Dadu-Kaifeng at 0.5, none at 0.25. Long-run AI reaction not measured.
 
+## 8g. Slaves goods and the people they carry (2026-11-27)
+
+A traded unit of `slaves_goods` is goods to the market and people only sometimes. People per unit = 1,000 x
+`TRADE_SLAVE_FACTOR` (0.2) x min(1, slaves standing at the selling market's slave market and slave centre sites, in
+thousands, / units that market ships that month), shared equally over the buying market's locations with open slave
+jobs (none: nobody moves, the goods still arrive). Making the good removes nobody; people become slaves by building
+enslavement (at most 1 % of the largest eligible pop of the location a month), raids and reproduction.
+
+Measured on runs b18a10d6, 5d232536 and defb89f2: the Americas bought most of their slaves goods from the Maghreb and
+Western Europe, whose sites hold almost no slaves, so 9-33 units a month landed 2-300 people; West Africa held 0.3-3.4 M
+slaves at its slave centres but sold 1-85 units a month, mostly to Europe. In the one save where it sold 58 units to
+Brazil, 4,462 people landed there that month (the formula gave 4,467).
+
+PP since 2026-11-27 (constructor AGENTS.md "Slave Trade"): slave markets make 0.5 a level (vanilla 2.0, margin kept),
+slave centres 2.0 (vanilla 1) and enslave 0.3 (0.2), the slave plantations ask 0.1 a worked level (0.3 before, the input
+cost kept). The trade engine and the AI's route choice are vanilla; the levers are what each building makes and asks.
+Expected: 25-35 West African units a month land 5-7,000 people while plantations open jobs. Not tested in game.
+
 ## 7. Open
 
 - Treaty flows (per country pair) and the Paris constant (+0.1) in the attraction.

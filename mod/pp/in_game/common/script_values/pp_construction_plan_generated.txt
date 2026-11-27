@@ -7090,11 +7090,11 @@ pp_cplan_bs_cotton_plantation_1 = {
 pp_cplan_bm_cotton_plantation_2_1 = {
 	value = 0
 	add = { value = "market.market_price(goods:cotton)" multiply = { value = modifier:local_cotton_output_modifier add = 1 subtract = scope:pp_cplan_hv_cotton min = 0 } multiply = 0.667 }
-	subtract = { value = "market.market_price(goods:leather)" multiply = 0.076 }
-	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.27 }
+	subtract = { value = "market.market_price(goods:leather)" multiply = 0.133 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.471 }
 	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.096 }
-	subtract = { value = "market.market_price(goods:slaves_goods)" multiply = 0.3 }
-	subtract = { value = "market.market_price(goods:tools)" multiply = 0.032 }
+	subtract = { value = "market.market_price(goods:slaves_goods)" multiply = 0.1 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.056 }
 }
 pp_cplan_bs_cotton_plantation_2 = {
 	value = pp_cplan_bm_cotton_plantation_2_1
@@ -14464,7 +14464,7 @@ pp_cplan_bz_roi_simplers_grove = {
 
 pp_cplan_bm_slave_center_1_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:slaves_goods)" multiply = { value = modifier:local_slaves_goods_output_modifier add = 1 min = 0 } multiply = 1 }
+	add = { value = "market.market_price(goods:slaves_goods)" multiply = { value = modifier:local_slaves_goods_output_modifier add = 1 min = 0 } multiply = 2 }
 	subtract = { value = "market.market_price(goods:firearms)" multiply = 0.17 }
 	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.7 }
 	subtract = { value = "market.market_price(goods:paper)" multiply = 0.42 }
@@ -14495,12 +14495,12 @@ pp_cplan_bz_roi_slave_center = {
 
 pp_cplan_bm_slave_market_1_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:slaves_goods)" multiply = { value = modifier:local_slaves_goods_output_modifier add = 1 min = 0 } multiply = 2 }
-	subtract = { value = "market.market_price(goods:leather)" multiply = 0.64 }
-	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 1.4 }
-	subtract = { value = "market.market_price(goods:paper)" multiply = 0.54 }
-	subtract = { value = "market.market_price(goods:tools)" multiply = 0.16 }
-	subtract = { value = "market.market_price(goods:weaponry)" multiply = 0.38 }
+	add = { value = "market.market_price(goods:slaves_goods)" multiply = { value = modifier:local_slaves_goods_output_modifier add = 1 min = 0 } multiply = 0.5 }
+	subtract = { value = "market.market_price(goods:leather)" multiply = 0.16 }
+	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.35 }
+	subtract = { value = "market.market_price(goods:paper)" multiply = 0.135 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.04 }
+	subtract = { value = "market.market_price(goods:weaponry)" multiply = 0.095 }
 }
 pp_cplan_bs_slave_market_1 = {
 	value = pp_cplan_bm_slave_market_1_1
@@ -14718,11 +14718,11 @@ pp_cplan_bs_sugar_plantation_1 = {
 pp_cplan_bm_sugar_plantation_2_1 = {
 	value = 0
 	add = { value = "market.market_price(goods:sugar)" multiply = { value = modifier:local_sugar_output_modifier add = 1 subtract = scope:pp_cplan_hv_sugar min = 0 } multiply = 0.667 }
-	subtract = { value = "market.market_price(goods:coal)" multiply = 0.14 }
-	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.24 }
+	subtract = { value = "market.market_price(goods:coal)" multiply = 0.246 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.422 }
 	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.1 }
-	subtract = { value = "market.market_price(goods:slaves_goods)" multiply = 0.3 }
-	subtract = { value = "market.market_price(goods:tools)" multiply = 0.028 }
+	subtract = { value = "market.market_price(goods:slaves_goods)" multiply = 0.1 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.049 }
 }
 pp_cplan_bs_sugar_plantation_2 = {
 	value = pp_cplan_bm_sugar_plantation_2_1
@@ -15407,11 +15407,11 @@ pp_cplan_bs_tobacco_plantation_1 = {
 pp_cplan_bm_tobacco_plantation_2_1 = {
 	value = 0
 	add = { value = "market.market_price(goods:tobacco)" multiply = { value = modifier:local_tobacco_output_modifier add = 1 subtract = scope:pp_cplan_hv_tobacco min = 0 } multiply = 0.667 }
-	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.33 }
+	subtract = { value = "market.market_price(goods:lumber)" multiply = 0.571 }
 	subtract = { value = "market.market_price(goods:manual_labor)" multiply = 0.11 }
-	subtract = { value = "market.market_price(goods:pottery)" multiply = 0.095 }
-	subtract = { value = "market.market_price(goods:slaves_goods)" multiply = 0.3 }
-	subtract = { value = "market.market_price(goods:tools)" multiply = 0.043 }
+	subtract = { value = "market.market_price(goods:pottery)" multiply = 0.164 }
+	subtract = { value = "market.market_price(goods:slaves_goods)" multiply = 0.1 }
+	subtract = { value = "market.market_price(goods:tools)" multiply = 0.074 }
 }
 pp_cplan_bs_tobacco_plantation_2 = {
 	value = pp_cplan_bm_tobacco_plantation_2_1
@@ -18068,11 +18068,11 @@ pp_cplan_mroom_silver = {
 pp_cplan_uc_here_slaves_goods = {
 	value = 0
 	every_buildings_in_location = {
-		limit = { building_levels_under_construction > 0 building_type = building_type:slave_center }
-		add = { value = building_levels_under_construction multiply = 1.006 }
+		limit = { building_levels_under_construction > 0 building_type = building_type:slave_market }
+		add = { value = building_levels_under_construction multiply = 0.506 }
 	}
 	every_buildings_in_location = {
-		limit = { building_levels_under_construction > 0 building_type = building_type:slave_market }
+		limit = { building_levels_under_construction > 0 building_type = building_type:slave_center }
 		add = { value = building_levels_under_construction multiply = 2.006 }
 	}
 }

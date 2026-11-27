@@ -11,11 +11,10 @@ category = colonial_category
 
 custom_tags = { farming_capacity }
 location_potential = {
-    raw_material = goods:cotton
-    OR = {
-        is_overseas_for_owner = yes
-        owner ?= { is_colonial_subject = yes }
-    }
+    pp_cotton_plantation_site = yes
+}
+allow = {
+    pp_plantation_owner_allowed = yes
 }
 
 rural_settlement = yes
@@ -44,10 +43,12 @@ unique_production_methods = {
     pp_cotton_plantation_gin_house = {
         icon_type = building_type
         icon = cotton_plantation
-        slaves_goods = 0.3 # plantation gangs
-        lumber = 0.27 # drying sheds
-        leather = 0.076 # picking bags
-        tools = 0.032 # ginning rollers
+        # 2026-11-27 (Jan): slaves_goods 0.3 -> 0.1 (demand the West African trade can meet); the other goods carry
+        # the cost (x1.75), so the input cost and the margin stay
+        slaves_goods = 0.1 # plantation gangs
+        lumber = 0.471 # drying sheds (0.27 until 2026-11-27)
+        leather = 0.133 # picking bags (0.076)
+        tools = 0.056 # ginning rollers (0.032)
         manual_labor = 0.096
         produced = cotton
         output = 0.667

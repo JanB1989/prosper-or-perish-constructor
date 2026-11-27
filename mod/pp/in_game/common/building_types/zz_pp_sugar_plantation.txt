@@ -11,11 +11,10 @@ category = colonial_category
 
 custom_tags = { farming_capacity }
 location_potential = {
-    raw_material = goods:sugar
-    OR = {
-        is_overseas_for_owner = yes
-        owner ?= { is_colonial_subject = yes }
-    }
+    pp_sugar_plantation_site = yes
+}
+allow = {
+    pp_plantation_owner_allowed = yes
 }
 
 rural_settlement = yes
@@ -44,10 +43,12 @@ unique_production_methods = {
     pp_sugar_plantation_boiling_house = {
         icon_type = building_type
         icon = sugar_plantation
-        slaves_goods = 0.3 # plantation gangs
-        lumber = 0.24 # cane press frames
-        coal = 0.14 # boiling-house fuel
-        tools = 0.028 # rollers and knives
+        # 2026-11-27 (Jan): slaves_goods 0.3 -> 0.1 (demand the West African trade can meet); the other goods carry
+        # the cost (x1.76), so the input cost and the margin stay
+        slaves_goods = 0.1 # plantation gangs
+        lumber = 0.422 # cane press frames (0.24 until 2026-11-27)
+        coal = 0.246 # boiling-house fuel (0.14)
+        tools = 0.049 # rollers and knives (0.028)
         manual_labor = 0.1
         produced = sugar
         output = 0.667

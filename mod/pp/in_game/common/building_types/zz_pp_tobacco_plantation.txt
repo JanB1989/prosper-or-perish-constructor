@@ -11,11 +11,10 @@ category = colonial_category
 
 custom_tags = { farming_capacity }
 location_potential = {
-    raw_material = goods:tobacco
-    OR = {
-        is_overseas_for_owner = yes
-        owner ?= { is_colonial_subject = yes }
-    }
+    pp_tobacco_plantation_site = yes
+}
+allow = {
+    pp_plantation_owner_allowed = yes
 }
 
 rural_settlement = yes
@@ -44,10 +43,12 @@ unique_production_methods = {
     pp_tobacco_plantation_curing_barns = {
         icon_type = building_type
         icon = tobacco_plantation
-        slaves_goods = 0.3 # plantation gangs
-        lumber = 0.33 # curing barns
-        pottery = 0.095 # sweating and storage jars
-        tools = 0.043 # knives and presses
+        # 2026-11-27 (Jan): slaves_goods 0.3 -> 0.1 (demand the West African trade can meet); the other goods carry
+        # the cost (x1.73), so the input cost and the margin stay
+        slaves_goods = 0.1 # plantation gangs
+        lumber = 0.571 # curing barns (0.33 until 2026-11-27)
+        pottery = 0.164 # sweating and storage jars (0.095)
+        tools = 0.074 # knives and presses (0.043)
         manual_labor = 0.11
         produced = tobacco
         output = 0.667

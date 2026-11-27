@@ -1260,6 +1260,101 @@
 - Watch in the next run: who colonizes overseas by half century, Holland's first colony, native backyard charters
   (Inca, Chimu, Kongo, Kilwa, Mali, Benin), running charters of a country that loses its ports.
 
+## Colonial Plantations and Cash-Crop Trade (2026-11-27, Jan; not tested in game)
+
+- Sites: the sugar, cotton and tobacco plantations stand where `pp_<crop>_plantation_site` holds
+  (`scripted_triggers/pp_plantation_site_triggers.txt`, hand-written): the location's raw material is the crop, or a
+  static climate gate (World Builder classes, fertility modifiers, river, coast; never ownership). Sugar: tropical,
+  tropical monsoon or savanna on low ground by the sea or a river, rainforest only on the sea coast; subtropical only on
+  floodplains, deltas and wetlands. Cotton: subtropical, savanna, tropical monsoon, hot semi-arid or mediterranean on
+  flat land or plateau; arid only along a river. Tobacco: tropical to mediterranean on flat land or hills with
+  moderate or better fertility. The owner rule (overseas for the owner, or a colonial subject's land) is
+  `pp_plantation_owner_allowed` in `allow`, so a conquered or released plantation stays. The free-labour farms keep the
+  RGO-only rule.
+- Colonial sites, b18a10d6 1737 (owner rule applied; RGO only / old placement trigger / this gate): sugar 39 / 983 /
+  481, cotton 68 / 402 / 541, tobacco 29 / 653 / 610. The gate admits the historical zones (Caribbean, Brazil's coast,
+  Guianas, Gulf coast, Louisiana and Florida for sugar; Brazil's north-east, Mexico, the US South for cotton; the
+  Chesapeake, Bahia, Cuba for tobacco). Too much: cotton in the Chesapeake (62 sites) and the Mediterranean; too little:
+  the Atlantic islands (1 colonial sugar site; Madeira and the Canaries are hills).
+- Colonial nations focus the three crops: `global_<crop>_output_modifier` 0.5 (was 0.1) in `pp_colonial_nation.txt`.
+- Colonial nations set no trade policy: `max_tariff = -2`, `max_trade_subventions = -2` in the same subject_modifier.
+  A rate is held between minus the subvention cap and the tariff cap, each clamped to 0..1, so the cap is 0 for the AI
+  and the player alike. The overlord was already exempt from its colonial nation's tariffs
+  (`overlord_exempt_from_subject_import_tariffs`, export rates too); the cut frees every other buyer. Only colonial
+  nations that own a market centre had rates (7 of 55 in 1737, 20 of 115 in 1837).
+- Transport cost 0.5 for sugar, cotton and tobacco (`pp_goods_adjustments.txt`; vanilla default 1): half the merchant
+  capacity and maintenance per unit on every route, Old World ones included. Coffee, cocoa and dyes keep 1.
+- Why (run b18a10d6, measured): Europe is not short of these goods (no unmet pop or building demand; sugar 0.58-0.82,
+  cotton 0.62-0.73, tobacco 0.36-0.49 of default; coffee is the one short plantation good). 70-85 % of American output
+  comes from colonial nations' land, but most of it sits in markets whose centre a native country owns (Mayapan,
+  Azcapotzalco, Canajoharie, Cahokia, Kuskatan), which tax exports at 20-30 %. European importers carry 85-95 % of the
+  exports on their home capacity; sugar and tobacco earn 0.2-0.3 gold per capacity there, below most of their other
+  trades, so 100-160 units a month of exportable sugar and tobacco stay in American stock (4,000-5,700 units each).
+- Tests: `test_building_upgrade_chains.py` (site trigger, owner in allow), `test_project_config.py` (transport costs,
+  colonial nation caps and focus).
+
+## Slave Trade (2026-11-27, Jan; not tested in game)
+
+- How the game moves people (behaviour, checked against three runs' saves): a traded unit of `slaves_goods` moves people
+  only when the market that sold it has slaves standing at its own slave market or slave centre sites. People per unit
+  = 1,000 x `TRADE_SLAVE_FACTOR` (0.2, vanilla, unchanged) x min(1, slaves at the seller's sites in thousands / units the
+  seller ships that month), shared equally over the buyer market's locations with open slave jobs; with no such
+  location the goods are delivered and nobody moves. Producing the good removes nobody. Old World slave markets hold
+  almost no slaves (their towns' people mostly share the owner's religion), so their goods are empty; the West African
+  slave centres hold 0.3-3.4 M slaves. In the runs the Americas bought most of their slaves goods from the Maghreb and
+  Western Europe: 2-300 people landed a month for most of the game, 5,456 in the one save where West Africa sold to
+  Brazil directly (history: about 3,000 a month on average, 6-7,000 at the 1780s peak).
+- Rule (Jan: what things cost or give, for player and AI alike; no AI weights): the empty supply shrinks, the supply
+  that carries people grows, the plantations ask what that supply can meet.
+
+  | | vanilla | PP before | PP now |
+  |---|---|---|---|
+  | slave market slaves goods per level | 2.0 | 2.0 | 0.5 (every input x0.25, margin kept) |
+  | slave centre slaves goods per level | 1.0 | 1.0 | 2.0 (inputs kept) |
+  | slave centre `building_enslavement_power` | 0.20 | 0.20 | 0.30 |
+  | slave market `building_enslavement_power` | 0.10 | 0.10 | 0.10 |
+  | sugar / cotton / tobacco plantation worked method slaves goods | 0.25 (maintenance) | 0.3 | 0.1 (the other goods x1.73-1.76, input cost and margin kept) |
+  | `TRADE_SLAVE_FACTOR` | 0.2 | 0.2 | 0.2 |
+
+- Arithmetic: a West African unit carries 200 people as long as its sites hold more slaves (in thousands) than it
+  ships units, which every save shows by a wide margin (hundreds of thousands against tens of units), so 25-35 units a
+  month from West Africa land 5-7,000 people where plantations have open jobs. A centre at full staffing now makes 2
+  units (break-even at about 0.47 of the default price; West African prices sat at 0.49-0.63, where the old 1-unit
+  recipe lost money and the centres ran at 10-77 % staffing) and refills its site with up to 300 people a month (the
+  engine takes at most 1 % of the largest eligible pop a month). With 20 / 30 / 45 centres (17-43 stood in 1837 in the
+  runs): about 32 / 48 / 72 units and 4.8 / 7.2 / 10.8 thousand enslaved a month at 80 % staffing. American demand at
+  0.1 per worked level, about 80 % of levels worked: 300 levels 24 units, 600 levels 48, 1,000 levels 80. People landed
+  a month at most, while plantations open jobs (filled plantations need only their turnover), with the West African
+  refill in brackets (above it the stock at the sites, 0.3-3.4 M, drains slowly):
+
+  | plantation levels | demand (units) | 20 centres (refill 4.8 k) | 30 centres (7.2 k) | 45 centres (10.8 k) |
+  |---|---|---|---|---|
+  | 300 | 24 | 4.8 k | 4.8 k | 4.8 k |
+  | 600 | 48 | 6.4 k, 16 units from elsewhere | 9.6 k | 9.6 k |
+  | 1,000 | 80 | 6.4 k, 48 units from elsewhere | 9.6 k, 32 from elsewhere | 14.4 k, 8 from elsewhere |
+
+  At the old 0.3 per level the same plantations asked 72 / 144 / 240 units, up to seven times what West Africa can
+  ship, and the rest came from empty Old World goods.
+- Old World: the slave markets (1,077-1,335 levels in 1837, about 10 % staffed, prices 0.5-0.7 of default with
+  2,000-4,000 units in stock world-wide) keep their margin; their capacity at full staffing falls from about 2,670 to
+  670 units a month against 300-450 units of Old World demand (janissary barracks 190-330, slave labour yards 60-190,
+  mamluk, galley and ghilman barracks about 30). Expected: the stock drains for some years, then prices rise towards
+  the slave market's break-even (about 0.92 of default) and more of the standing levels staff up. Janissary barracks
+  maintenance about +7 % at that price (slaves goods are a fifth of it), slave labour yards pay about 1.6 gold more per
+  level. People moved by Old World trades are bounded by the few slaves at their sites (East Africa 0.1-2.2 thousand,
+  Eastern Europe 1-8), not by units, so the Indian Ocean, Black Sea and steppe trades (50-500 people a month in the
+  runs) keep about what they move; Central Asia's slave-market slaves were never exported. American native slave markets
+  (64-166 levels) also make a quarter, which takes the local empty supply out of the American markets.
+- Not changed: `TRADE_SLAVE_FACTOR` (it would scale every slave trade alike, the Old World ones included), slave centre
+  `max_levels` 1 and its sites, slave goods price and transport cost, raids and enslavement rules.
+- Unverified in game: whether American importers switch to West Africa (the AI picks by route profit and does not see
+  which goods carry people), how many centres the AI builds once they pay, how fast the empty stocks drain.
+  Cheapest check: A/B from a 1650-1700 save of run b18a10d6, a few observer years: plantation entries in AI queues and
+  plantation constructions, slaves goods bought by American markets per seller region, `SlaveTrade` arrivals in the
+  Americas per source market, slave centre count and staffing, Old World slaves goods price and janissary staffing.
+- Tests: `tests/test_slave_trade.py` (new values against vanilla, margins and input costs kept, the define untouched).
+  Docs: `docs/market_rulebook.md` 8g.
+
 ## Trade Reach (2026-11-24, Jan)
 
 - Rule (Jan: nations that invest in trade and are built for it get better at it over time; a nation that is not trade

@@ -61,7 +61,7 @@ building:
             paper = 0.42 # factors' ledgers and bills of lading (was 0.19)
             manual_labor = 0.7
             produced = slaves_goods
-            output = 1.0
+            output = 2.0 # vanilla 1; 2026-11-27 (Jan): the sites that hold slaves supply the Atlantic trade
             debug_max_profit = -1
             category = building_maintenance
         }
@@ -76,7 +76,7 @@ building:
     }
     construction_demand = simple_colony_construction
     modifier = {
-        building_enslavement_power = 0.2
+        building_enslavement_power = 0.3 # vanilla 0.20; 2026-11-27 (Jan): the refill keeps up with the larger trade
         local_slave_pop_satisfaction = -0.05
     }
     # foreign building (2026-10-01): each level supports itself

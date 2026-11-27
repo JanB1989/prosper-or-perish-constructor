@@ -46,8 +46,8 @@ unique_production_methods = {
         paper = 0.42 # factors' ledgers and bills of lading (was 0.19)
         manual_labor = 0.7
         produced = slaves_goods
-        output = 1.0
-        debug_max_profit = -1
+        output = 2.0 # vanilla 1; 2026-11-27 (Jan): the sites that hold slaves supply the Atlantic trade
+        debug_max_profit = 0.299
         category = building_maintenance
     }
 }
@@ -64,7 +64,7 @@ unique_production_methods = {
 construction_demand = simple_colony_construction
 modifier = {
 	local_burghers_desired_pop = 0.25 # job_room
-    building_enslavement_power = 0.2
+    building_enslavement_power = 0.3 # vanilla 0.20; 2026-11-27 (Jan): the refill keeps up with the larger trade
     local_slave_pop_satisfaction = -0.05
 }
 # foreign building (2026-10-01): each level supports itself

@@ -36,19 +36,25 @@ factor = 0.4
 minimum = 1
 
 # Speed of literacy: values above `keep_at_or_below` x factor, rounded to `decimals`, at least `minimum`
-# (0.1 -> 0.02, 0.05 -> 0.01, 0.25 -> 0.05, 0.33 -> 0.07, 0.03 -> 0.01, 0.02 -> 0.01). Values of 0.01 or less stay.
+# (0.1 -> 0.008, 0.05 -> 0.004, 0.25 -> 0.02, 0.33 -> 0.026, 0.03 and 0.02 -> 0.004); positive values at or below it
+# x small_factor (0.01 -> 0.004, 0.005 -> 0.002). Zero and negative values stay.
+# 2026-11-27 (Jan, after the measurement on run b18a10d6: a raised cap was nine tenths reached in 15-20 years, a
+# schooled place gained 0.55-0.65 points a year, three to four times a historical country): every speed x0.4 on top
+# of the first cut (factor 0.2 -> 0.08, the small ones kept -> x0.4), the local buildings and the clergy with it, so
+# every source keeps its share. A ten-point rise now takes about 35-40 years.
 [speed]
 keys = ["global_monthly_literacy", "local_monthly_literacy"]
-factor = 0.2
-decimals = 2
-minimum = 0.01
+factor = 0.08
+decimals = 3
+minimum = 0.004
 keep_at_or_below = 0.01
+small_factor = 0.4
 
 # Explicit values, "<folder>.<object>.<key>" = value; they win over the rules above.
-# The base rate (Jan, 2026-11-25: halved). Both are first-age advances of the ladder, which writes them.
+# The base rate (Jan, 2026-11-25: halved; 2026-11-27 x0.4 with every other speed). Both are first-age advances of the ladder, which writes them.
 [base_rate]
-"advances.written_alphabet.global_monthly_literacy" = 0.005
-"advances.educated_bureaucrats.global_monthly_literacy" = 0.005
+"advances.written_alphabet.global_monthly_literacy" = 0.002
+"advances.educated_bureaucrats.global_monthly_literacy" = 0.002
 
 # The estates' start, closer to history (Jan, 2026-11-26): Guilds (burghers) and Improved Religious Organization
 # (clergy), vanilla 5 each. First-age advances of the ladder, which writes them.

@@ -74,7 +74,7 @@ REPLACE:clergy = {
 	literacy_impact = {
 		local_pop_conversion_speed_modifier = 0.25
 		local_pop_assimilation_speed_modifier = 0.25
-		local_monthly_literacy = 0.02 # PP 2026-11-25: literate clergy teach (at full clergy literacy)
+		local_monthly_literacy = 0.008 # PP 2026-11-25: literate clergy teach (at full clergy literacy); 0.02 until 2026-11-27
 		local_pp_clergy_literacy = 1 # PP 2026-11-27: institution spread reads it
 	}
 

@@ -92,7 +92,7 @@ building:
     increase_per_level_cost = 0.21
     modifier = {
         local_books_output_modifier = -0.0025  # manufacturing tiers 2026-10-06: stack malus per staffed level
-        local_monthly_literacy = 0.005  # literacy rework 2026-11-25 (Jan): print shops spread reading where they stand
+        local_monthly_literacy = 0.002  # literacy rework 2026-11-25 (Jan): print shops spread reading where they stand; 0.005 until 2026-11-27
     }
     raw_modifier = {
         local_pp_books_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights

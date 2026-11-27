@@ -116,7 +116,7 @@ REPLACE:jain = {
 	}
 	definition_modifier = {
 		cannot_declare_no_cb_wars = yes
-		global_monthly_literacy = 0.01
+		global_monthly_literacy = 0.004
 		allow_self_control = yes
 		can_have_monasteries = yes
 		number_of_allowed_religious_figures = 1
@@ -225,6 +225,26 @@ REPLACE:orthodox = {
 	tags = { orthodox_gfx eastern_christian_gfx christian_gfx abrahamic_gfx }
 }
 
+REPLACE:paulicianism = {
+	color = color_paulicianism
+	group = christian
+	language = church_slavonic_language
+	enable = 620.1.1
+	religious_aspects = 3
+	has_religious_influence = yes
+	definition_modifier = {
+		global_clergy_estate_power = -0.5
+		global_monthly_literacy = 0.004
+		global_pop_conversion_speed_modifier = 0.10
+		monthly_religious_influence = 0.1
+		maximum_religious_influence = 400
+	}
+	opinions = { }
+	unique_names = { }
+	tags = { eastern_christian_gfx christian_gfx abrahamic_gfx }
+	custom_tags = { church_aspects }
+}
+
 REPLACE:sanjiao = {
 	color = map_chinese
 	group = buddhist
@@ -318,7 +338,7 @@ REPLACE:waldensian = {
 		global_nobles_max_literacy = 5
 		global_clergy_max_literacy = 5
 		global_burghers_max_literacy = 5
-		global_monthly_literacy = 0.01
+		global_monthly_literacy = 0.004
 		monthly_religious_influence = 0.1
 		maximum_religious_influence = 400
 	}

@@ -74,7 +74,7 @@ SCHOOL_RULES = {
         "ranks": {"rural_settlement", "town", "city", "megalopolis"},
         "modifier": {
             "local_peasants_max_literacy": 10, "local_laborers_max_literacy": 10, "local_soldiers_max_literacy": 10,
-            "local_monthly_literacy": 0.01, "local_pop_promotion_speed": 0.002,
+            "local_monthly_literacy": 0.004, "local_pop_promotion_speed": 0.002,
         },
         "method": "pp_village_school_maintenance",
         "upkeep": {"beeswax": 0.03, "clay": 0.1, "manual_labor": 0.5},
@@ -85,7 +85,7 @@ SCHOOL_RULES = {
         "max_levels": "pp_trade_school_max_level",
         "ranks": {"town", "city", "megalopolis"},
         "modifier": {
-            "local_burghers_max_literacy": 10, "local_monthly_literacy": 0.01, "local_burghers_desired_pop": 0.3,
+            "local_burghers_max_literacy": 10, "local_monthly_literacy": 0.004, "local_burghers_desired_pop": 0.3,
         },
         "method": "pp_trade_school_maintenance",
         "upkeep": {"books": 0.15, "beeswax": 0.05, "manual_labor": 0.5},
@@ -199,20 +199,22 @@ def test_library_and_university(vanilla) -> None:
     library = _values(_values(culture["REPLACE:library"])["modifier"])
     assert {k: _num(v) for k, v in library.items()} == {
         "local_cultural_influence": 0.1, "local_nobles_max_literacy": 5, "local_burghers_max_literacy": 5,
-        "local_clergy_max_literacy": 5, "local_monthly_literacy": 0.02, "local_institution_growth_modifier": 0.25,
+        "local_clergy_max_literacy": 5, "local_monthly_literacy": 0.008, "local_institution_growth_modifier": 0.25,
     }
     assert "pp_library_ai_weight" in str(_values(culture["REPLACE:library"])["ai_construct_weight"])
     # education pyramid (2026-11-27): Library levels by rank, two of them allow a University
     assert _values(culture["REPLACE:library"])["max_levels"] == "pp_library_max_level"
     assert "pp_library_levels >= 2" in _text(CULTURE, "REPLACE:university")
     university = _values(_values(culture["REPLACE:university"])["modifier"])
-    assert _num(university["local_monthly_literacy"]) == 0.02
+    # the Library sets how high, the University how fast (2026-11-27): no cap, no institution growth, a big speed
+    assert _num(university["local_monthly_literacy"]) == 0.03
+    assert not [k for k in university if "max_literacy" in k or "institution" in k]
 
 
 def test_printing_shop_spreads_literacy() -> None:
     shop = _blocks(COMMON / "building_types" / "zz_pp_printing_press_shop.txt")
     body = next(v for k, v in shop.items() if k.endswith("printing_press_shop"))
-    assert _num(_values(_values(body)["modifier"])["local_monthly_literacy"]) == 0.005
+    assert _num(_values(_values(body)["modifier"])["local_monthly_literacy"]) == 0.002
 
 
 def test_pop_literacy_impact(vanilla) -> None:
@@ -223,7 +225,7 @@ def test_pop_literacy_impact(vanilla) -> None:
               for k, v in pops.items() if k.startswith("REPLACE:")}
     assert set(impact) == {"clergy", "laborers", "peasants", "nobles", "burghers"}
     assert impact["clergy"] == {"local_pop_conversion_speed_modifier": 0.25,
-                                "local_pop_assimilation_speed_modifier": 0.25, "local_monthly_literacy": 0.02,
+                                "local_pop_assimilation_speed_modifier": 0.25, "local_monthly_literacy": 0.008,
                                 "local_pp_clergy_literacy": 1}
     # nobles and burghers keep vanilla's lines and add the number institution spread reads (2026-11-27)
     assert impact["nobles"] == {"local_cultural_tradition": 0.2, "local_monthly_control": 0.01,

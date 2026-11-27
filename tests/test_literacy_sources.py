@@ -58,8 +58,9 @@ def test_rule_gives_clean_numbers(rule: ls.Rule) -> None:
     assert cut == {"10": "4", "5": "2", "3": "1", "2": "1", "2.5": "1", "1": None, "0": None, "-5": None}
     speed = {v: rule.new_value("laws", "x", "global_monthly_literacy", v)
              for v in ("0.1", "0.05", "0.25", "0.33", "0.03", "0.02", "0.01", "0.005")}
-    assert speed == {"0.1": "0.02", "0.05": "0.01", "0.25": "0.05", "0.33": "0.07", "0.03": "0.01", "0.02": "0.01",
-                     "0.01": None, "0.005": None}
+    assert speed == {"0.1": "0.008", "0.05": "0.004", "0.25": "0.02", "0.33": "0.026", "0.03": "0.004",
+                     "0.02": "0.004", "0.01": "0.004", "0.005": "0.002"}
+    assert rule.new_value("laws", "x", "global_monthly_literacy", "-0.02") is None
     assert rule.new_value("laws", "x", "global_nobles_max_literacy", "10") is None
     assert rule.new_value("laws", "x", "local_max_literacy", "10") is None
 
@@ -90,7 +91,7 @@ def test_written_alphabet_keeps_the_commoners_base(rule: ls.Rule, vanilla: Path)
     body = ls.effective_objects(vanilla, MOD, st.ADVANCES_DIR)["written_alphabet"].body
     lines = {s.key: s.value for s in body if s.key and "literacy" in s.key}
     assert lines == {"global_max_literacy": "2", "global_nobles_max_literacy": "3", "global_clergy_max_literacy": "3",
-                     "global_burghers_max_literacy": "3", "global_monthly_literacy": "0.005"}
+                     "global_burghers_max_literacy": "3", "global_monthly_literacy": "0.002"}
 
 
 def test_estates_start_closer_to_history(rule: ls.Rule, vanilla: Path) -> None:
@@ -121,13 +122,13 @@ def test_local_caps_are_never_touched(rule: ls.Rule, result: ls.Result) -> None:
 
 
 def test_base_rate_is_explicit_and_halved(rule: ls.Rule, vanilla: Path) -> None:
-    """Jan, 2026-11-25: the base rate of literacy (Written Alphabet, Educated Bureaucrats) halved to 0.005 a month."""
+    """Jan, 2026-11-25: the base rate of literacy (Written Alphabet, Educated Bureaucrats) halved to 0.005 a month, then x0.4 with every other speed (2026-11-27)."""
     assert {k: v for k, v in rule.values.items() if k[2] == "global_monthly_literacy"} == {
-        ("advances", "written_alphabet", "global_monthly_literacy"): Decimal("0.005"),
-        ("advances", "educated_bureaucrats", "global_monthly_literacy"): Decimal("0.005")}
+        ("advances", "written_alphabet", "global_monthly_literacy"): Decimal("0.002"),
+        ("advances", "educated_bureaucrats", "global_monthly_literacy"): Decimal("0.002")}
     advances = ls.effective_objects(vanilla, MOD, st.ADVANCES_DIR)
     for key in ("written_alphabet", "educated_bureaucrats"):
-        assert [s.value for s in advances[key].body if s.key == "global_monthly_literacy"] == ["0.005"], key
+        assert [s.value for s in advances[key].body if s.key == "global_monthly_literacy"] == ["0.002"], key
 
 
 def test_no_problems_and_every_file_is_classified(result: ls.Result) -> None:

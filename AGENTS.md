@@ -813,6 +813,23 @@
   nothing in game the rule falls back to all people x the rank factor (rural then far slower than before). Check a
   location's modifiers ("Literacy of the Nobles") in game.
 
+### Literacy speed x0.4, Library against University, Trade School levels (2026-11-27, Jan; not tested in game)
+
+- Measured on run b18a10d6 (`pp_workspace/literacy/rise_speed`): a raised cap was nine tenths reached 15-20 years
+  after a Village School level, about 10 after a Library; a schooled place gained 0.55-0.65 points a year (England and
+  France 0.15-0.2 as countries, the fastest campaigns about 1). Sources there: Village School a third, teaching clergy
+  a quarter, Library a sixth, country-wide a sixth. So every speed x0.4: `[speed]` in `config/literacy_sources.toml`
+  (factor 0.08 from vanilla, the small ones x0.4, base rate 0.002), Village and Trade School 0.004, Library 0.008,
+  clergy `literacy_impact` 0.008, print shop 0.002, gymnasium 0.008. Expected: ten points in about 35-40 years.
+  NOT reached by the cut (still vanilla's size, `artifacts/data/literacy_sources/left_out.csv`, 121 speed lines):
+  religious order callings, the peasant cabinet action, two character traits, the writer artist, four parliament
+  issues, two town rights, Jesuit college and about 30 unique or event buildings, about 40 timed event modifiers. Each
+  is rare or local, but one of them is worth ten to thirty Village School levels now; Jan has not decided on them.
+- Library = how high (estate caps per level, institution growth); University = how fast (`local_monthly_literacy`
+  0.03, about four Library levels; no literacy cap and no institution growth any more), plus what it had (migration,
+  promotion, room for the classes) and its place under the Society of Sciences.
+- Trade School: +2 levels with a specialization town right (3 at most; was +1).
+
 ### Literacy sources (the cut, same day)
 
 - Jan: literacy is earned by local buildings, so the country-wide sources are cut. `config/literacy_sources.toml` +

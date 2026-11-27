@@ -245,7 +245,7 @@ REPLACE:written_alphabet = {
 	global_nobles_max_literacy = 3
 	global_clergy_max_literacy = 3
 	global_burghers_max_literacy = 3
-	global_monthly_literacy = 0.005
+	global_monthly_literacy = 0.002
 	unlock_estate_privilege = clergy_literacy_rights
 	starting_technology_level = 6
 	research_speed = 0.2
@@ -276,7 +276,7 @@ REPLACE:educated_bureaucrats = {
 	age = age_1_traditions
 	icon = scholasticism
 	requires = meritocracy_advance
-	global_monthly_literacy = 0.005
+	global_monthly_literacy = 0.002
 	starting_technology_level = 7
 }
 

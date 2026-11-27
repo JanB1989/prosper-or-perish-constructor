@@ -44,7 +44,7 @@ REPLACE:library = {
 		local_nobles_max_literacy = 5
 		local_burghers_max_literacy = 5
 		local_clergy_max_literacy = 5
-		local_monthly_literacy = 0.02
+		local_monthly_literacy = 0.008 # 0.02 until 2026-11-27 (every literacy speed x0.4)
 		local_institution_growth_modifier = 0.25
 	}
 
@@ -95,13 +95,13 @@ REPLACE:university = {
 	}
 
 	modifier = {
+		# 2026-11-27 (Jan): the Library sets how high the estates' literacy can go and helps institutions take hold; the
+		# University sets how fast literacy rises. So no literacy cap (was burghers and nobles 10) and no institution
+		# growth (was 0.33) here; its speed is about four Library levels' (the Library's is 0.008 a level).
 		local_cultural_influence = 0.5
-		local_burghers_max_literacy = 10
-		local_nobles_max_literacy = 10
-		local_monthly_literacy = 0.02 # literacy rework 2026-11-25 (Jan): 0.1 -> 0.02
+		local_monthly_literacy = 0.03
 		local_migration_attraction = 0.05
 		local_pop_promotion_speed = 0.005
-		local_institution_growth_modifier = 0.33
 		local_laborers_desired_pop = 1.2
 		local_burghers_desired_pop = 0.6
 		local_clergy_desired_pop = 0.3
@@ -170,7 +170,7 @@ REPLACE:gymnasium_building = {
 	modifier = {
 		local_cultural_tradition = 0.5
 		local_nobles_max_literacy = 10
-		local_monthly_literacy = 0.1
+		local_monthly_literacy = 0.008 # vanilla 0.1; 2026-11-27 like the Library
 		local_institution_growth_modifier = 0.33
 	}
 

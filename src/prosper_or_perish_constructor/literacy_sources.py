@@ -96,6 +96,7 @@ class Rule:
     speed_decimals: int
     speed_minimum: Decimal
     speed_keep: Decimal
+    speed_small_factor: Decimal
     values: dict[tuple[str, str, str], Decimal]  # explicit values ([base_rate], [estate_start])
     folders: dict[str, FolderScope]
     exclude_objects: dict[tuple[str, str], str]
@@ -117,10 +118,13 @@ class Rule:
                 return None
             new = max(self.max_minimum, (old * self.max_factor).quantize(Decimal(1), rounding=ROUND_HALF_UP))
         elif key in self.speed_keys:
-            if old <= self.speed_keep:
+            if old <= 0:
                 return None
             step = Decimal(1).scaleb(-self.speed_decimals)
-            new = max(self.speed_minimum, (old * self.speed_factor).quantize(step, rounding=ROUND_HALF_UP))
+            if old <= self.speed_keep:   # the small sources: their own factor, no minimum
+                new = (old * self.speed_small_factor).quantize(step, rounding=ROUND_HALF_UP)
+            else:
+                new = max(self.speed_minimum, (old * self.speed_factor).quantize(step, rounding=ROUND_HALF_UP))
         else:
             return None
         return None if new == old else _number(new)
@@ -165,6 +169,7 @@ def load_rule(repo: Path) -> Rule:
         max_keys=frozenset(m["keys"]), max_factor=Decimal(str(m["factor"])), max_minimum=Decimal(str(m["minimum"])),
         speed_keys=frozenset(s["keys"]), speed_factor=Decimal(str(s["factor"])), speed_decimals=int(s["decimals"]),
         speed_minimum=Decimal(str(s["minimum"])), speed_keep=Decimal(str(s["keep_at_or_below"])),
+        speed_small_factor=Decimal(str(s.get("small_factor", 1))),
         values=values, folders=folders, exclude_objects=excluded,
         left_out_folders={str(k): str(v) for k, v in raw.get("left_out_folders", {}).items()},
     )

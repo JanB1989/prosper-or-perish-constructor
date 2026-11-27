@@ -42,7 +42,8 @@ pp_village_school_education_level = {
 }
 
 # Trade School: 1 level with Reckoning Schools (the advance unlocks the building), +1 where the town holds one of the
-# mod's specialization town rights, charter or rights (scripted trigger pp_has_specialization_town_rights). At most 2.
+# mod's specialization town rights, charter or rights (scripted trigger pp_has_specialization_town_rights): +2 since
+# 2026-11-27 (Jan), +1 before. At most 3.
 pp_trade_school_max_level = {
 	add = {
 		desc = "BUILDING_LEVEL_BASE"
@@ -58,7 +59,7 @@ pp_trade_school_specialization_level = {
 	value = 0
 	if = {
 		limit = { pp_has_specialization_town_rights = yes }
-		value = 1
+		value = 2
 	}
 }
 

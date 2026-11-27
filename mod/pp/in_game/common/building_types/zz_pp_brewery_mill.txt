@@ -104,9 +104,9 @@ ai_construct_weight = {
     divide = { value = scope:owner.monthly_income_total add = 10 }
     add = pp_market_short_beer
 }
+	can_close = no # building_shutdown
 	modifier = {
 		local_laborers_desired_pop = 1.16 # job_room
 	}
-	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:brewery_mill:building

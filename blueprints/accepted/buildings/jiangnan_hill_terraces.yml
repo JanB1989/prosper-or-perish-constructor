@@ -14,10 +14,14 @@ building:
   possible_production_methods: []
   body: |-
     is_foreign = no
+    is_indestructible = yes
+    # Bankruptcy exemption (2026-11-27): the engine's bankruptcy skips building types with a non-empty country_potential;
+    # side effect: estates never pick this type for their own construction.
+    country_potential = { always = yes }
     max_levels = pp_wb_cap_jiangnan_hill_terraces
-    increase_per_level_cost = 0.07
+    increase_per_level_cost = 0.13
     pop_type = peasants
-    employment_size = 0.15
+    employment_size = 0.30
     price = pp_jiangnan_hill_terraces_price
     category = infrastructure_category
     custom_tags = { pp_food_security_priority pp_water_control_priority }
@@ -40,7 +44,7 @@ building:
       }
     }
     raw_modifier = {
-      local_population_capacity = 15
+      local_population_capacity = 30
       pp_wb_levels_jiangnan_hill_terraces = 1
       free_building_levels = 1
     }
@@ -56,7 +60,7 @@ localization:
     pp_jiangnan_hill_terraces_price: '[ShowBuildingTypeName(''jiangnan_hill_terraces'')|e] Price'
 prices:
 - key: pp_jiangnan_hill_terraces_price
-  body: '{gold = 600}'
+  body: '{gold = 1230}'
 icon:
   source_png: ../assets/icons/jiangnan_hill_terraces.png
   output_dds: jiangnan_hill_terraces.dds

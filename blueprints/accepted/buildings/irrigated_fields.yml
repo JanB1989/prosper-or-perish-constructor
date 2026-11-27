@@ -12,8 +12,12 @@ building:
   possible_production_methods: []
   body: |-
     is_foreign = no
+    is_indestructible = yes
+    # Bankruptcy exemption (2026-11-27): the engine's bankruptcy skips building types with a non-empty country_potential;
+    # side effect: estates never pick this type for their own construction.
+    country_potential = { always = yes }
     max_levels = pp_wb_cap_irrigated_fields
-    increase_per_level_cost = 0.07
+    increase_per_level_cost = 0.13
     pop_type = peasants
     employment_size = 0
     price = pp_irrigated_fields_price
@@ -34,7 +38,7 @@ building:
     construction_demand = village_construction
 
     raw_modifier = {
-      local_population_capacity = 5
+      local_population_capacity = 10
       free_building_levels = 0.5
     }
 
@@ -59,7 +63,7 @@ localization:
     pp_irrigated_fields_price: '[ShowBuildingTypeName(''irrigated_fields'')|e] Price'
 prices:
 - key: pp_irrigated_fields_price
-  body: '{gold = 175}'
+  body: '{gold = 360}'
 icon:
   source_png: ../assets/icons/irrigated_fields.png
   output_dds: irrigated_fields.dds

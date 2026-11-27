@@ -307,7 +307,6 @@
  pp_muscovy_gather_russian_lands: "Gather the Russian lands"
  pp_muscovy_conquer_steppe: "Push into the steppe and down the Volga"
  pp_kiev_go_west: "Push west into the Carpathians"
- pp_hungary_go_east: "Push east into Ruthenia"
  pp_england_french_claims: "Hold the Angevin lands in France"
  pp_castile_no_france_conquest: "Leave France to the French"
  pp_castile_spare_portugal: "Leave Portugal to the Portuguese"
@@ -9625,6 +9624,11 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
   pp_rural_glassmaker_forest_glass: "Forest Glass"
   pp_rural_glassmaker_forest_glass_desc: "The glassmakers move a furnace into the woods, burn the trees for heat and their ash for potash, and blow a green forest glass. Only in a [location|e] of [ShowVegetationName('forest')], [ShowVegetationName('ha1300_veg_mixed_forest')] or [ShowVegetationName('woods')] [vegetation|e]."
 # <<< eu5-building-pipeline:rural_glassmaker:localization
+ # pp_russia_decisions_l_english.yml
+ pp_mos_vladimir_patrimony_decision.title: "The Patrimony of Vladimir"
+ pp_mos_vladimir_patrimony_decision.desc: "Our prince also sits on the throne of [GetCountry('VLR').GetNameWithNoTooltip], the old seat of the grand princes, which the Khan's patent has kept in our house. Its court, its towns and its tribute already answer to Moscow in all but name. Let the grand principality be counted among our own lands, to be handed down to our heirs with Moscow itself."
+ pp_mos_vladimir_patrimony_decision.desc.entry: "[GetCountry('VLR').GetNameWithNoTooltip] already shares our prince. Making it our patrimony joins its lands to ours for good."
+ pp_mos_vladimir_patrimony_decision.a: "Vladimir is our patrimony."
  # pp_saffron_croft_l_english.yml
 
 # >>> eu5-building-pipeline:saffron_croft:localization
@@ -12135,6 +12139,7 @@ PP_RGO_CHIP_HELP: "The raw material this [location|e] produces. Its natural [rgo
   BUILDING_LEVEL_WB_FREE_FARMLAND: "Free Arable Land"
   BUILDING_LEVEL_WB_MINIMUM: "Minimum"
   BUILDING_LEVEL_WB_MAXIMUM: "Upper limit"
+  BUILDING_LEVEL_WB_FIRST_LEVEL: "Room for one level"
   BUILDING_LEVEL_WB_QUEUED: "Related [buildings|e] under construction"
   BUILDING_LEVEL_WB_CLIMATE_ARCTIC: "$arctic$ ([climate|e])"
   BUILDING_LEVEL_WB_CLIMATE_ARID: "$arid$ ([climate|e])"

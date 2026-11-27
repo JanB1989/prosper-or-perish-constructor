@@ -88,8 +88,8 @@ def test_new_niches_are_complete_buildings_with_upkeep_and_owned_icons(tmp_path)
         assert data['building']['mode'] == 'CREATE'
         assert data['footprint'] == 'capacity_source'
         # the hill terraces belong to the field management family, which has no upkeep (2026-10-05)
-        upkeep = {"jiangnan_canal_network": "manual_labor = 0.225", "jiangnan_hill_terraces": "manual_labor"}[key]
+        upkeep = {"jiangnan_canal_network": "manual_labor = 0.45", "jiangnan_hill_terraces": "manual_labor"}[key]
         assert (upkeep in data["building"]["body"]) == (key == "jiangnan_canal_network")
-        assert "employment_size = 0.15" in data["building"]["body"]
+        assert "employment_size = 0.30" in data["building"]["body"]   # x2 with the merged levels (2026-11-27)
         assert cfg.niche[key]['strength'] == {'jiangnan_canal_network': 2.5, 'jiangnan_hill_terraces': 3.0}[key]
         assert (ROOT / b.BLUEPRINTS / data['icon']['source_png']).resolve().is_file()

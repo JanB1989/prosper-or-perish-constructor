@@ -530,11 +530,11 @@ pp_cplan_country_upgrade_building = {
 		}
 		else_if = {
 			limit = { building_type = building_type:field_management scope:pp_cplan_country = { can_build_building = building_type:field_management_convertible } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = field_management_convertible demand = village_construction ipl = 0.05 cat = std } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = field_management_convertible demand = village_construction ipl = 0.1 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:field_management_convertible scope:pp_cplan_country = { can_build_building = building_type:field_management_improved } }
-			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = field_management_improved demand = village_construction ipl = 0.05 cat = std } }
+			scope:pp_cplan_up_site = { pp_cplan_country_upgrade_to = { type = field_management_improved demand = village_construction ipl = 0.1 cat = std } }
 		}
 		else_if = {
 			limit = { building_type = building_type:gem_gravel_pit scope:pp_cplan_country = { can_build_building = building_type:gem_sluice } }

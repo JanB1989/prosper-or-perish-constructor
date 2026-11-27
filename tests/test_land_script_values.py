@@ -35,10 +35,12 @@ def sanlorenzo(*, can_build: set[str] | None = None, **buildings: dict) -> dict:
         "game": {"population": POPULATION, "development": 27.42777, "climate": "oceanic", "topography": "hills",
                  "vegetation": "forest", "unemployed_peasants": 0.00001},
         "modifiers": {"local_population_capacity": FLAT, "pp_subsistence_land_size": 0.0,
-                      "pp_levels_cattle_farm": 21, "pp_levels_horse_breeders": 13, "pp_wb_levels_field_management": 4},
+                      "pp_levels_cattle_farm": 21, "pp_levels_horse_breeders": 13, "pp_wb_levels_field_management": 2},
         "location_modifiers": set(),
+        # the probe read 4 Field Management and 1 Land Clearance levels of 5,000 people; in merged levels (10,000 since
+        # 2026-11-27) the nearest is 2 + 1
         "buildings": {"cattle_farm": {"level": 21, "queued": 0}, "horse_breeders": {"level": 13, "queued": 0},
-                      "field_management": {"level": 4, "queued": 0}, "land_clearance": {"level": 1, "queued": 0},
+                      "field_management": {"level": 2, "queued": 0}, "land_clearance": {"level": 1, "queued": 0},
                       "lumber_mill": {"level": 2, "queued": 0}},
         "can_build": set(can_build or set()),
         "owner": {"modifiers": {}, "can_build": set(can_build or set())},
@@ -139,22 +141,34 @@ def test_every_land_farm_cap_is_its_levels_plus_the_free_land_in_its_levels():
 # --- improvement caps and the room on the bar -------------------------------------------------------------------
 
 def test_sanlorenzo_improvement_caps_are_the_ones_the_game_showed():
+    """The game showed 13.822 and 2.411 in World Builder levels (5,000 people); since 2026-11-27 a level holds two of
+    them ([worldbuilder.level_scale] 0.5) and the merged sum carries the rounding offset 0.3."""
     ctx = sanlorenzo()
-    assert EVAL.value("pp_wb_cap_field_management_shared", ctx) == pytest.approx(13.822, abs=1e-3)
-    assert EVAL.value("pp_wb_cap_land_clearance_terms", ctx) == pytest.approx(2.411, abs=1e-3)
+    assert EVAL.value("pp_wb_cap_field_management_shared", ctx) == pytest.approx(13.822 / 2 + 0.3, abs=1e-3)
+    assert EVAL.value("pp_wb_cap_land_clearance_terms", ctx) == pytest.approx(2.411 / 2 + 0.3, abs=1e-3)
+
+
+def test_merged_caps_keep_one_level_where_the_unmerged_cap_held_one():
+    """A World Builder cap of one level (5,000 people) is a merged sum of 0.8: the cap keeps one 10,000-people level."""
+    ctx = sanlorenzo()
+    ctx["game"]["development"] = 0.0
+    ctx["location_modifiers"] = {"pp_wb_fertility_very_low"}                # land clearance: base 2 - 1 = 1 level
+    assert EVAL.value("pp_wb_cap_land_clearance_terms", ctx) == pytest.approx(0.8, abs=1e-3)
+    assert EVAL.value("pp_wb_cap_land_clearance", ctx) == 1
 
 
 def test_sanlorenzo_bar_shows_the_land_the_improvements_could_still_add():
-    """Field Management cap 13 levels (floored) with 4 Marled Fields (5 each) standing, Land Clearance cap 2 with 1."""
-    marled = sanlorenzo(can_build={"field_management", "land_clearance"})
-    assert EVAL.value("pp_land_bar_room", marled) == pytest.approx(13 * 5 - 4 * 5 + 2 * 5 - 1 * 5)
-    # Improved Fields researched (Marled Fields obsolete): the 4 standing levels upgrade, every level gives 10
-    improved = sanlorenzo(can_build={"field_management_improved", "land_clearance"})
-    assert EVAL.value("pp_land_bar_room", improved) == pytest.approx(13 * 10 - 4 * 5 + 5)
+    """Field Management cap 7 merged levels (floored 7.211) with 2 Marled Fields (10 each) standing, Land Clearance
+    cap 1 (floored 1.506) with none."""
+    marled = sanlorenzo(can_build={"field_management", "land_clearance"}, field_management={"level": 2}, land_clearance={"level": 0})
+    assert EVAL.value("pp_land_bar_room", marled) == pytest.approx(7 * 10 - 2 * 10 + 1 * 10)
+    # Improved Fields researched (Marled Fields obsolete): the 2 standing levels upgrade, every level gives 20
+    improved = sanlorenzo(can_build={"field_management_improved", "land_clearance"}, field_management={"level": 2}, land_clearance={"level": 0})
+    assert EVAL.value("pp_land_bar_room", improved) == pytest.approx(7 * 20 - 2 * 10 + 10)
     # the location can build it but its owner has not researched it: no room from that tier
-    unresearched = sanlorenzo(can_build={"field_management_improved", "land_clearance"})
+    unresearched = sanlorenzo(can_build={"field_management_improved", "land_clearance"}, field_management={"level": 2}, land_clearance={"level": 0})
     unresearched["owner"]["can_build"] = {"land_clearance"}
-    assert EVAL.value("pp_land_bar_room", unresearched) == pytest.approx(5)
+    assert EVAL.value("pp_land_bar_room", unresearched) == pytest.approx(10)
     # nothing buildable, or no owner: no room
     assert EVAL.value("pp_land_bar_room", sanlorenzo()) == 0
     ownerless = sanlorenzo(can_build={"field_management"})
@@ -164,20 +178,21 @@ def test_sanlorenzo_bar_shows_the_land_the_improvements_could_still_add():
 
 def test_room_is_zero_when_the_caps_are_full_and_never_negative():
     full = sanlorenzo(can_build={"field_management", "land_clearance"},
-                      field_management={"level": 13}, land_clearance={"level": 2})
+                      field_management={"level": 7}, land_clearance={"level": 1})
     assert EVAL.value("pp_land_bar_room", full) == 0
     over = sanlorenzo(can_build={"field_management", "land_clearance"},
-                      field_management={"level": 15}, land_clearance={"level": 4})
+                      field_management={"level": 8}, land_clearance={"level": 2})
     assert EVAL.value("pp_land_bar_room", over) == 0
 
 
 def test_alexandria_upgrades_count_as_room():
-    """Alexandria 1837 (the other session's case): 7 Marled Fields under a cap of 6, Improved Fields researched."""
-    ctx = sanlorenzo(can_build={"field_management_improved"}, field_management={"level": 7})
-    ctx["modifiers"]["pp_wb_levels_field_management"] = 7
-    ctx["game"]["climate"] = "arid"                                         # -6: cap 6.82 -> 6 levels
-    assert EVAL.value("pp_wb_cap_field_management_shared", ctx) == pytest.approx(6.8228, abs=1e-3)
-    assert EVAL.value("pp_land_bar_room_field_management_shared", ctx) == pytest.approx(6 * 10 - 7 * 5)
+    """Alexandria 1837 (the other session's case, in merged levels): 4 Marled Fields under a cap of 3, Improved Fields
+    researched."""
+    ctx = sanlorenzo(can_build={"field_management_improved"}, field_management={"level": 4})
+    ctx["modifiers"]["pp_wb_levels_field_management"] = 4
+    ctx["game"]["climate"] = "arid"                                         # -6 (-3 merged): cap 3.71 -> 3 levels
+    assert EVAL.value("pp_wb_cap_field_management_shared", ctx) == pytest.approx(6.8228 / 2 + 0.3, abs=1e-3)
+    assert EVAL.value("pp_land_bar_room_field_management_shared", ctx) == pytest.approx(3 * 20 - 4 * 10)
     # without the upgrade researched the cap is full (7 standing levels over a cap of 6): no room
     ctx["can_build"] = ctx["owner"]["can_build"] = {"field_management"}
     assert EVAL.value("pp_land_bar_room_field_management_shared", ctx) == 0
@@ -224,9 +239,9 @@ def test_capacity_bar_is_the_engine_capacity_and_its_parts_fill_one_scale():
     assert v("pp_land_bar_capacity") == pytest.approx(FLAT * multiplier)          # what the engine compares with
     assert v("pp_land_bar_left") == pytest.approx(LAND_LEFT * multiplier)
     assert v("pp_land_bar_farms") == pytest.approx(68 * multiplier)               # 21 x 2 + 13 x 2
-    assert v("pp_land_bar_improvements") == pytest.approx(25 * multiplier)        # 4 x 5 + 1 x 5
-    assert v("pp_land_bar_natural") == pytest.approx((LAND_LEFT + 68 - 25) * multiplier)
-    assert v("pp_land_bar_room") == pytest.approx(50 * multiplier)
+    assert v("pp_land_bar_improvements") == pytest.approx(30 * multiplier)        # 2 x 10 + 1 x 10
+    assert v("pp_land_bar_natural") == pytest.approx((LAND_LEFT + 68 - 30) * multiplier)
+    assert v("pp_land_bar_room") == pytest.approx(50 * multiplier)                # (7 - 2) x 10 + (1 - 1) x 10
     # one scale: townsfolk <= capacity <= capacity + farms <= + room = 1 (the land is longer than the population)
     shares = [v(f"pp_land_bar_f_{p}") for p in ("townsfolk_room", "capacity", "held", "land")]
     assert shares == sorted(shares) and shares[-1] == pytest.approx(1.0)

@@ -112,6 +112,7 @@ sync_geography = true
 apply_on_build = true
 # Improvements (2026-10-05, Jan): every level is worth the World Builder's one unit (5,000 people) and no building has
 # more than 15 levels, so level counts and prices are comparable; caps never clamp the 1337 works (see write_setup).
+# Since 2026-11-27 most improvements merge two of those levels into one ([worldbuilder.level_scale] below).
 level_limit = 15
 
 # Hand-set flavour effects on the shore modifiers (pp_wb_coastal, pp_wb_lake), next to the fitted rows.
@@ -990,6 +991,24 @@ buildings = { wheat = "wheat_farm", rice = "rice_farm", millet = "millet_farm", 
 # multiply levels, divide people per level; 1.0 keeps the World Builder units. Empty since 2026-10-05: the World Builder
 # itself fits every improvement in one 5,000-people unit (was irrigated fields 8, field management 3, land clearance and
 # irrigation systems 2, which let irrigated fields stack to 160 levels).
+# Merged levels since 2026-11-27 (Jan: "twice as big, twice the price, half as many levels"): the AI values a level at
+# its capacity, and a 5,000-people level ranked just below every farm in the queues (China built half its room). 0.5 =
+# one level holds 10,000 people, at most 8 levels; the niche members (the field management tiers, Jiangnan works) follow
+# their family. The water works (irrigation systems, qanats, bunds, drainage, polders and their niches) keep 5,000: two
+# thirds of their caps are one level, and merging would double or delete them. Rounding: [worldbuilder.level_rounding].
+# Blueprint prices x2.05 and increase_per_level_cost 0.13 (0.10 after [building_scaling]) keep the gold per person of a
+# full build-out; employment_size x2 keeps the workers per person.
+land_clearance = 0.5
+field_management = 0.5
+irrigated_fields = 0.5
+paddy_water_control = 0.5
+
+[worldbuilder.level_rounding]
+# Merged levels (level_scale below 1, worldbuilder/buildings.py merge_rounding): offset added to the merged cap sum before
+# the engine floors it (0.3: even caps stay exact, the world's room at game start within 1.5 % per building), and
+# first_level keeps one level where the unmerged cap held one (no location loses a building it had room for).
+offset = 0.3
+first_level = true
 
 [worldbuilder.farm_land]
 # capacity units (1 unit = 1,000 people) a farm level takes from subsistence land, and the land that must stay.

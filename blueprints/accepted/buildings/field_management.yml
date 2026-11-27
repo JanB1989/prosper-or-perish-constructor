@@ -20,10 +20,14 @@ building:
   possible_production_methods: []
   body: |-
     is_foreign = no
+    is_indestructible = yes
+    # Bankruptcy exemption (2026-11-27): the engine's bankruptcy skips building types with a non-empty country_potential;
+    # side effect: estates never pick this type for their own construction.
+    country_potential = { always = yes }
     max_levels = pp_wb_cap_field_management
-    increase_per_level_cost = 0.07
+    increase_per_level_cost = 0.13
     pop_type = peasants
-    employment_size = 0.10
+    employment_size = 0.20
     price = pp_field_management_price
     category = infrastructure_category
     custom_tags = { pp_food_security_priority pp_water_control_priority }
@@ -46,7 +50,7 @@ building:
     }
 
     raw_modifier = {
-      local_population_capacity = 5
+      local_population_capacity = 10
       pp_wb_levels_field_management = 1
       free_building_levels = 1
     }
@@ -66,7 +70,7 @@ localization:
     pp_field_management_price: '[ShowBuildingTypeName(''field_management'')|e] Price'
 prices:
 - key: pp_field_management_price
-  body: '{gold = 130}'
+  body: '{gold = 270}'
 icon:
   source_png: ../assets/icons/field_management.png
   output_dds: field_management.dds

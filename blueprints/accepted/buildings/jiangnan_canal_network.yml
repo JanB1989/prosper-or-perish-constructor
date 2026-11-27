@@ -14,10 +14,14 @@ building:
   possible_production_methods: []
   body: |
     is_foreign = no
+    is_indestructible = yes
+    # Bankruptcy exemption (2026-11-27): the engine's bankruptcy skips building types with a non-empty country_potential;
+    # side effect: estates never pick this type for their own construction.
+    country_potential = { always = yes }
     max_levels = pp_wb_cap_jiangnan_canal_network
-    increase_per_level_cost = 0.07
+    increase_per_level_cost = 0.13
     pop_type = peasants
-    employment_size = 0.15
+    employment_size = 0.30
     price = pp_jiangnan_canal_network_price
     category = infrastructure_category
     custom_tags = { pp_food_security_priority pp_water_control_priority }
@@ -57,13 +61,13 @@ building:
     construction_demand = village_construction
     unique_production_methods = {
       pp_jiangnan_canal_network_maintenance = {
-        manual_labor = 0.225
-        lumber = 0.056
+        manual_labor = 0.45
+        lumber = 0.112
         category = building_maintenance
       }
     }
     raw_modifier = {
-      local_population_capacity = 12.5
+      local_population_capacity = 25
       pp_wb_levels_jiangnan_canal_network = 1
       free_building_levels = 1
     }
@@ -79,7 +83,7 @@ localization:
     pp_jiangnan_canal_network_price: '[ShowBuildingTypeName(''jiangnan_canal_network'')|e] Price'
 prices:
 - key: pp_jiangnan_canal_network_price
-  body: '{gold = 400}'
+  body: '{gold = 820}'
 icon:
   source_png: ../assets/icons/jiangnan_canal_network.png
   output_dds: jiangnan_canal_network.dds

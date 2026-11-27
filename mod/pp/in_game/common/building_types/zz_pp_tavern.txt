@@ -107,9 +107,9 @@ modifier = {
   # inns quartered and fed marching troops
   local_supply_limit_modifier = 0.01
 }
+	can_close = no # building_shutdown
 	raw_modifier = {
 		local_nobles_desired_pop = -0.001 # job_room
 	}
-	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:tavern:building

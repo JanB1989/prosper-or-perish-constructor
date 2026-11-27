@@ -47,6 +47,7 @@ unique_production_methods = {
 
 custom_tags = { guild }
 construction_demand = guild_construction
+	can_close = no # building_shutdown
 	raw_modifier = {
 		local_burghers_desired_pop = -0.1 # job_room
 	}
@@ -57,6 +58,5 @@ ai_construct_weight = {
     value = 0
     add = pp_market_short_saltpeter
 }
-	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:saltpeter_guild:building

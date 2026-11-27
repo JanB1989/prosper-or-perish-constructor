@@ -195,9 +195,15 @@ def test_mod_caps_are_the_handover_caps_at_its_development(built) -> None:
     handover's start development and at development 100 is the handover's cap_at_start / cap_at_reference_development."""
     from prosper_or_perish_constructor.worldbuilder.contract import load_config
 
+    from prosper_or_perish_constructor.worldbuilder import buildings as wb
+
     model, contract = built
     unit_of = dict(model.members.select("building_type", "unit").iter_rows())
-    building_map = load_config(ROOT, ROOT / "constructor.toml").building_map
+    cfg = load_config(ROOT, ROOT / "constructor.toml")
+    building_map = cfg.building_map
+    # merged levels (level_scale below 1): the handover's caps are in World Builder levels, so those classes are
+    # checked against the stage's own evaluation of the same equation (buildings.cap_levels) below
+    merged = {kind for kind, key in building_map.items() if float(cfg.level_scale.get(key, cfg.level_scale.get(kind, 1.0))) < 1}
     kinds = pl.DataFrame({"building": list(building_map), "unit": [unit_of[k] for k in building_map.values()]})
     attributes = contract.location_attributes
     passing = pl.concat([
@@ -207,12 +213,30 @@ def test_mod_caps_are_the_handover_caps_at_its_development(built) -> None:
     rows = (contract.location_buildings.join(passing, on=["location_tag", "building"], how="semi").join(kinds, on="building")
             .join(contract.location_targets.select("location_tag", "development"), on="location_tag"))
     assert rows.height > 100_000
+    rows = rows.filter(~pl.col("building").is_in(sorted(merged)))
     for column, development in (("cap_at_start", pl.col("development")), ("cap_at_reference_development", pl.lit(100.0))):
         frame = rows.select(pl.concat_str("location_tag", "building", separator="|").alias("snapshot_id"),
                             pl.col("location_tag").alias("slug"), development.alias("development"), "unit", column)
         caps = frame.join(ir.location_caps(model, frame.drop("unit", column)), on=["snapshot_id", "slug", "unit"], how="left")
         wrong = caps.filter(pl.col("cap").fill_null(-1.0) != pl.col(column))
         assert wrong.is_empty(), wrong.head(5)
+    if not merged:
+        return
+    by_tag = {r["location_tag"]: r for r in attributes.join(contract.location_targets.select("location_tag", "development"), on="location_tag").iter_rows(named=True)}
+    types = {str(r["building"]): r for r in contract.building_types.iter_rows(named=True)}
+    checked = 0
+    for kind in sorted(merged):
+        key = building_map[kind]
+        scale = float(cfg.level_scale.get(key, cfg.level_scale.get(kind, 1.0)))
+        offset, first_level = wb.merge_rounding(cfg.raw, scale)
+        equation, limit = json.loads(str(types[kind]["cap_equation_json"])), int(round(int(types[kind]["level_limit"]) * scale))
+        rows = passing.filter(pl.col("building") == kind)["location_tag"].to_list()[::7]
+        frame = pl.DataFrame({"snapshot_id": rows, "slug": rows, "development": [float(by_tag[t]["development"] or 0.0) for t in rows]})
+        got = {r["slug"]: r["cap"] for r in ir.location_caps(model, frame, unit_of[key]).iter_rows(named=True)}
+        for tag in rows:
+            assert got.get(tag, 0.0) == wb.cap_levels(equation, by_tag[tag], scale, limit, offset, first_level), (kind, tag)
+            checked += 1
+    assert checked > 1_000
 
 
 def test_mod_caps_and_gates_are_the_games_script_values(built) -> None:
@@ -259,12 +283,18 @@ def test_mod_caps_and_gates_are_the_games_script_values(built) -> None:
         if found:
             cultures[key] = found[1]
     assert {"khmer_baray", "jiangnan_hill_terraces", "jiangnan_canal_network"} <= set(cultures)
+    first_levels = dict(model.locations.filter(pl.col("first_level").is_not_null()).group_by("unit").agg(pl.col("first_level").first()).iter_rows())
     checked = 0
     for tag in sample:
         for development in developments:
             context = ctx(tag, development)
             for unit in model.units:
-                game = max(0, math.floor(min(rules.value(unit.equation, context), unit.limit) + 1e-9))
+                # the equation's own sum, clamped and floored; merged levels keep one level where the unmerged cap held
+                # one (the members' clamp rows, buildings.merge_rounding), which the equation alone does not show
+                equation = rules.value(unit.equation, context)
+                game = max(0, math.floor(min(equation, unit.limit) + 1e-9))
+                if unit.equation in first_levels and equation + 1e-9 >= first_levels[unit.equation]:
+                    game = max(game, 1)
                 may = any((tag, key) in gates for key in unit.members)
                 assert caps.get((f"{tag}@{development}", unit.equation), 0.0) == (game if may else 0), (tag, development, unit)
                 for key in unit.members:

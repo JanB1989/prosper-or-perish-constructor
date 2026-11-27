@@ -4676,30 +4676,30 @@ pp_cplan_imp_field_drainage = {
 	}
 }
 pp_cplan_imp_field_management = {
-	value = 5000
+	value = 10000
 	divide = {
 		value = "location_building_level(building_type:field_management)"
-		multiply = 0.05
+		multiply = 0.1
 		add = 1
 		multiply = building_type:field_management.building_base_cost_in_gold
 		min = 1
 	}
 }
 pp_cplan_imp_field_management_convertible = {
-	value = 7500
+	value = 15000
 	divide = {
 		value = "location_building_level(building_type:field_management_convertible)"
-		multiply = 0.05
+		multiply = 0.1
 		add = 1
 		multiply = building_type:field_management_convertible.building_base_cost_in_gold
 		min = 1
 	}
 }
 pp_cplan_imp_field_management_improved = {
-	value = 10000
+	value = 20000
 	divide = {
 		value = "location_building_level(building_type:field_management_improved)"
-		multiply = 0.05
+		multiply = 0.1
 		add = 1
 		multiply = building_type:field_management_improved.building_base_cost_in_gold
 		min = 1
@@ -4716,10 +4716,10 @@ pp_cplan_imp_incamisana = {
 	}
 }
 pp_cplan_imp_irrigated_fields = {
-	value = 5000
+	value = 10000
 	divide = {
 		value = "location_building_level(building_type:irrigated_fields)"
-		multiply = 0.05
+		multiply = 0.1
 		add = 1
 		multiply = building_type:irrigated_fields.building_base_cost_in_gold
 		min = 1
@@ -4736,20 +4736,20 @@ pp_cplan_imp_irrigation_systems = {
 	}
 }
 pp_cplan_imp_jiangnan_canal_network = {
-	value = 12500
+	value = 25000
 	divide = {
 		value = "location_building_level(building_type:jiangnan_canal_network)"
-		multiply = 0.05
+		multiply = 0.1
 		add = 1
 		multiply = building_type:jiangnan_canal_network.building_base_cost_in_gold
 		min = 1
 	}
 }
 pp_cplan_imp_jiangnan_hill_terraces = {
-	value = 15000
+	value = 30000
 	divide = {
 		value = "location_building_level(building_type:jiangnan_hill_terraces)"
-		multiply = 0.05
+		multiply = 0.1
 		add = 1
 		multiply = building_type:jiangnan_hill_terraces.building_base_cost_in_gold
 		min = 1
@@ -4766,20 +4766,20 @@ pp_cplan_imp_khmer_baray = {
 	}
 }
 pp_cplan_imp_land_clearance = {
-	value = 5000
+	value = 10000
 	divide = {
 		value = "location_building_level(building_type:land_clearance)"
-		multiply = 0.05
+		multiply = 0.1
 		add = 1
 		multiply = building_type:land_clearance.building_base_cost_in_gold
 		min = 1
 	}
 }
 pp_cplan_imp_paddy_water_control = {
-	value = 5000
+	value = 10000
 	divide = {
 		value = "location_building_level(building_type:paddy_water_control)"
-		multiply = 0.05
+		multiply = 0.1
 		add = 1
 		multiply = building_type:paddy_water_control.building_base_cost_in_gold
 		min = 1

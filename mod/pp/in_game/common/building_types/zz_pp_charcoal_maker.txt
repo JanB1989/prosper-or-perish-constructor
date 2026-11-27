@@ -73,6 +73,7 @@ increase_per_level_cost = 0.18
 
     construction_demand = guild_construction
 
+    can_close = no # building_shutdown
     raw_modifier = {
       local_laborers_desired_pop = -0.8 # job_room
     }
@@ -83,6 +84,5 @@ ai_construct_weight = {
     value = 0
     add = pp_market_short_coal
 }
-    can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:charcoal_maker:building

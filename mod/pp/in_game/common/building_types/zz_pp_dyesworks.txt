@@ -48,6 +48,7 @@ unique_production_methods = {
 obsolete = dyes_workshop
 construction_demand = manufactory_construction
 increase_per_level_cost = 0.15
+	can_close = no # building_shutdown
 	raw_modifier = {
 		local_burghers_desired_pop = -0.25 # job_room
 	}
@@ -58,6 +59,5 @@ ai_construct_weight = {
     value = 0
     add = pp_market_short_dyes
 }
-	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:dyesworks:building

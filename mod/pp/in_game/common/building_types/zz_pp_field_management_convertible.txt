@@ -3,10 +3,14 @@ field_management_convertible = {
 # Tier 2 of 3: up-and-down husbandry. Each level built converts one Field Management level and shares its cap.
 audio_tier = 2
 is_foreign = no
+is_indestructible = yes
+# Bankruptcy exemption (2026-11-27): the engine's bankruptcy skips building types with a non-empty country_potential;
+# side effect: estates never pick this type for their own construction.
+country_potential = { always = yes }
 max_levels = pp_wb_cap_field_management_convertible
-increase_per_level_cost = 0.05
+increase_per_level_cost = 0.10
 pop_type = peasants
-employment_size = 0.15
+employment_size = 0.30
 price = pp_field_management_convertible_price
 category = infrastructure_category
 custom_tags = { pp_food_security_priority pp_water_control_priority }
@@ -30,7 +34,7 @@ unique_production_methods = {
 }
 
 raw_modifier = {
-  local_population_capacity = 7.5
+  local_population_capacity = 15
   pp_wb_levels_field_management_convertible = 1
   free_building_levels = 1
 }

@@ -22,10 +22,14 @@ building:
     # Tier 2 of 3: up-and-down husbandry. Each level built converts one Field Management level and shares its cap.
     audio_tier = 2
     is_foreign = no
+    is_indestructible = yes
+    # Bankruptcy exemption (2026-11-27): the engine's bankruptcy skips building types with a non-empty country_potential;
+    # side effect: estates never pick this type for their own construction.
+    country_potential = { always = yes }
     max_levels = pp_wb_cap_field_management_convertible
-    increase_per_level_cost = 0.07
+    increase_per_level_cost = 0.13
     pop_type = peasants
-    employment_size = 0.15
+    employment_size = 0.30
     price = pp_field_management_convertible_price
     category = infrastructure_category
     custom_tags = { pp_food_security_priority pp_water_control_priority }
@@ -47,7 +51,7 @@ building:
     }
 
     raw_modifier = {
-      local_population_capacity = 7.5
+      local_population_capacity = 15
       pp_wb_levels_field_management_convertible = 1
       free_building_levels = 1
     }
@@ -77,7 +81,7 @@ localization:
     pp_field_management_convertible_desc: Alternating arable and ley pasture on the same fields keeps the soil in heart and lets more people live from the land already under the plough.
 prices:
 - key: pp_field_management_convertible_price
-  body: '{gold = 195}'
+  body: '{gold = 400}'
 icon:
   source_png: ../assets/icons/field_management_convertible.png
   output_dds: field_management_convertible.dds

@@ -3,6 +3,10 @@ REPLACE:bund = {
 audio_tier = 4
 is_special = yes
 is_foreign = no
+is_indestructible = yes
+# Bankruptcy exemption (2026-11-27): the engine's bankruptcy skips building types with a non-empty country_potential;
+# side effect: estates never pick this type for their own construction.
+country_potential = { always = yes }
 max_levels = pp_wb_cap_bund
 increase_per_level_cost = 0.05
 pop_type = laborers

@@ -23,10 +23,14 @@ building:
     # level; its cap leaves both lower tiers out, so it can also be built over leftover Field Management levels.
     audio_tier = 3
     is_foreign = no
+    is_indestructible = yes
+    # Bankruptcy exemption (2026-11-27): the engine's bankruptcy skips building types with a non-empty country_potential;
+    # side effect: estates never pick this type for their own construction.
+    country_potential = { always = yes }
     max_levels = pp_wb_cap_field_management_improved
-    increase_per_level_cost = 0.07
+    increase_per_level_cost = 0.13
     pop_type = peasants
-    employment_size = 0.20
+    employment_size = 0.40
     price = pp_field_management_improved_price
     category = infrastructure_category
     custom_tags = { pp_food_security_priority pp_water_control_priority }
@@ -48,7 +52,7 @@ building:
     }
 
     raw_modifier = {
-      local_population_capacity = 10
+      local_population_capacity = 20
       pp_wb_levels_field_management_improved = 1
       free_building_levels = 1
     }
@@ -78,7 +82,7 @@ localization:
     pp_field_management_improved_desc: Fodder crops in place of fallow, drilled seed and planned rotations let the same fields feed far more people than the old open-field routine.
 prices:
 - key: pp_field_management_improved_price
-  body: '{gold = 260}'
+  body: '{gold = 530}'
 icon:
   source_png: ../assets/icons/field_management_improved.png
   output_dds: field_management_improved.dds

@@ -143,15 +143,16 @@ def gate_expr(rules: list[dict[str, list[str]]], columns: set[str]) -> pl.Expr:
     return pl.any_horizontal(ors)
 
 
-def levels_expr(equation: Mapping[str, Any], scale: float, columns: set[str]) -> pl.Expr:
-    """Base + the matching class terms (levels at development 0), rounded as the script writes them (two decimals)."""
+def levels_expr(equation: Mapping[str, Any], scale: float, columns: set[str], offset: float = 0.0) -> pl.Expr:
+    """Base (+ the merge offset, buildings.merge_rounding) + the matching class terms (levels at development 0), rounded
+    as the script writes them (two decimals)."""
     by_attribute: dict[str, dict[str, float]] = {}
     for term in equation["class_terms"]:
         levels = round(float(term["levels"]) * scale, 2)
         if levels:
             values = by_attribute.setdefault(str(term["attribute"]), {})
             values[str(term["value"]).lower()] = values.get(str(term["value"]).lower(), 0.0) + levels
-    expr = pl.lit(round(float(equation["base_levels"]) * scale, 2))
+    expr = pl.lit(round(float(equation["base_levels"]) * scale + offset, 2))
     for attribute, values in by_attribute.items():
         if attribute not in columns:
             raise ValueError(f"cap equation tests {attribute!r}, which the location attributes lack")
@@ -161,11 +162,14 @@ def levels_expr(equation: Mapping[str, Any], scale: float, columns: set[str]) ->
 
 def build_model(bar: arable_land_bar.Model, building_map: Mapping[str, str], niche: Mapping[str, Mapping[str, Any]],
                 building_types: pl.DataFrame, attributes: pl.DataFrame, *, level_scale: Mapping[str, float] | None = None,
-                level_limit: int = 15, restricted: Collection[str] = ()) -> RoomModel:
+                level_limit: int = 15, restricted: Collection[str] = (), raw: Mapping[str, Any] | None = None) -> RoomModel:
     """The caps per location: ``bar`` the improvement units, ``building_map`` World Builder class -> blueprint key,
     ``niche`` the niche members (family, structured gate), ``building_types`` the handover's (building, level_limit,
     gate_json, cap_equation_json), ``attributes`` one row per location (location_tag + attribute classes) and
-    ``restricted`` the members that give their land only where they stand (regional unlocks, culture locks)."""
+    ``restricted`` the members that give their land only where they stand (regional unlocks, culture locks); ``raw``
+    the ``[worldbuilder]`` section (its ``level_rounding`` for merged levels, buildings.merge_rounding)."""
+    from prosper_or_perish_constructor.worldbuilder.buildings import merge_rounding
+
     scale_of = dict(level_scale or {})
     kind_of = {key: kind for kind, key in building_map.items()}
     rows = {str(r["building"]): r for r in building_types.iter_rows(named=True)}
@@ -181,6 +185,7 @@ def build_model(bar: arable_land_bar.Model, building_map: Mapping[str, str], nic
         # a shared cap's equation is its first class's (buildings.write_caps writes the group's terms once)
         kind = kinds[0]
         scale = float(scale_of.get(building_map[kind], scale_of.get(kind, 1.0)))
+        offset, first_level = merge_rounding(raw, scale)
         equation = json.loads(str(rows[kind]["cap_equation_json"]))
         limit = int(round(int(rows[kind].get("level_limit") or level_limit) * scale))
         unit = Unit(bar_unit.equation, limit, tuple(keys))
@@ -198,7 +203,7 @@ def build_model(bar: arable_land_bar.Model, building_map: Mapping[str, str], nic
             gate_columns.append(gate.alias(building.key))
         frame = attributes.select(
             "location_tag",
-            levels_expr(equation, scale, columns).alias("base"),
+            levels_expr(equation, scale, columns, offset).alias("base"),
             pl.lit(round(float(equation["levels_per_development_point"]) * scale, 4)).alias("slope"),
             *gate_columns,
         )
@@ -214,12 +219,13 @@ def build_model(bar: arable_land_bar.Model, building_map: Mapping[str, str], nic
                          .join(passing.select("location_tag").unique(), on="location_tag", how="semi")
                          .join(best, on="location_tag", how="left")
                          .with_columns(pl.col("best_land").fill_null(0.0), pl.lit(unit.equation).alias("unit"),
-                                       pl.lit(float(limit)).alias("limit")))
+                                       pl.lit(float(limit)).alias("limit"),
+                                       pl.lit(first_level, dtype=pl.Float64).alias("first_level")))
     return RoomModel(
         units=units,
         members=pl.DataFrame(members, schema={"building_type": pl.String, "unit": pl.String, "land": pl.Float64}),
         member_gates=pl.concat(member_gates),
-        locations=pl.concat(locations).select("location_tag", "unit", "base", "slope", "limit", "best_land"),
+        locations=pl.concat(locations).select("location_tag", "unit", "base", "slope", "limit", "best_land", "first_level"),
         restricted=frozenset(restricted),
     )
 
@@ -252,7 +258,7 @@ def load_model(repo: Path, project: Path) -> RoomModel:
     keys = {b.key for unit in bar.units for b in unit.members}
     restricted = regional(unlocking_files([game, mod_root], keys)) | culture_locked(cfg.niche)
     return build_model(bar, cfg.building_map, cfg.niche, contract.building_types, attributes,
-                       level_scale=cfg.level_scale, level_limit=cfg.level_limit, restricted=restricted & keys)
+                       level_scale=cfg.level_scale, level_limit=cfg.level_limit, restricted=restricted & keys, raw=cfg.raw)
 
 
 def location_caps(model: RoomModel, locations: pl.DataFrame, unit: str | None = None) -> pl.DataFrame:
@@ -262,9 +268,12 @@ def location_caps(model: RoomModel, locations: pl.DataFrame, unit: str | None = 
     return (
         locations.select("snapshot_id", "slug", "development")
         .join(static, left_on="slug", right_on="location_tag", how="inner")
+        .with_columns((pl.col("base") + pl.col("slope") * pl.col("development").fill_null(0.0)).alias("_sum"))
         .with_columns(
-            (pl.min_horizontal(pl.col("base") + pl.col("slope") * pl.col("development").fill_null(0.0), pl.col("limit"))
-             + EPSILON).floor().clip(lower_bound=0.0).alias("cap"))
+            (pl.min_horizontal(pl.col("_sum"), pl.col("limit")) + EPSILON).floor().clip(lower_bound=0.0).alias("cap"))
+        # merged levels keep one level where the unmerged cap held one (buildings.merge_rounding)
+        .with_columns(pl.when(pl.col("_sum") + EPSILON >= pl.col("first_level")).then(pl.max_horizontal("cap", pl.lit(1.0)))
+                      .otherwise(pl.col("cap")).alias("cap"))
         .select("snapshot_id", "slug", "unit", "cap", "best_land")
     )
 

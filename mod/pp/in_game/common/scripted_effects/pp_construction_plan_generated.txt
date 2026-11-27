@@ -581,7 +581,7 @@ pp_cplan_try_logistics_here = {
 pp_cplan_btype_data = {
 	save_temporary_scope_value_as = { name = pp_cplan_ipl value = 0 }
 	if = {
-		limit = { OR = { scope:pp_cplan_btype = building_type:bund scope:pp_cplan_btype = building_type:field_drainage scope:pp_cplan_btype = building_type:field_management scope:pp_cplan_btype = building_type:field_management_convertible scope:pp_cplan_btype = building_type:field_management_improved scope:pp_cplan_btype = building_type:incamisana scope:pp_cplan_btype = building_type:irrigated_fields scope:pp_cplan_btype = building_type:irrigation_systems scope:pp_cplan_btype = building_type:jiangnan_canal_network scope:pp_cplan_btype = building_type:jiangnan_hill_terraces scope:pp_cplan_btype = building_type:khmer_baray scope:pp_cplan_btype = building_type:land_clearance scope:pp_cplan_btype = building_type:paddy_water_control scope:pp_cplan_btype = building_type:polders scope:pp_cplan_btype = building_type:qanats } }
+		limit = { OR = { scope:pp_cplan_btype = building_type:bund scope:pp_cplan_btype = building_type:field_drainage scope:pp_cplan_btype = building_type:incamisana scope:pp_cplan_btype = building_type:irrigation_systems scope:pp_cplan_btype = building_type:khmer_baray scope:pp_cplan_btype = building_type:polders scope:pp_cplan_btype = building_type:qanats } }
 		save_temporary_scope_value_as = { name = pp_cplan_ipl value = 0.05 }
 	}
 	else_if = {
@@ -597,7 +597,7 @@ pp_cplan_btype_data = {
 		save_temporary_scope_value_as = { name = pp_cplan_ipl value = 0.09 }
 	}
 	else_if = {
-		limit = { OR = { scope:pp_cplan_btype = building_type:clay_pit scope:pp_cplan_btype = building_type:clay_washmill scope:pp_cplan_btype = building_type:cookshop scope:pp_cplan_btype = building_type:forest_village scope:pp_cplan_btype = building_type:marble_quarry scope:pp_cplan_btype = building_type:marble_saw_yard scope:pp_cplan_btype = building_type:public_kitchen scope:pp_cplan_btype = building_type:sand_pit scope:pp_cplan_btype = building_type:sand_washery scope:pp_cplan_btype = building_type:stone_quarry scope:pp_cplan_btype = building_type:stone_quarry_improved } }
+		limit = { OR = { scope:pp_cplan_btype = building_type:clay_pit scope:pp_cplan_btype = building_type:clay_washmill scope:pp_cplan_btype = building_type:cookshop scope:pp_cplan_btype = building_type:field_management scope:pp_cplan_btype = building_type:field_management_convertible scope:pp_cplan_btype = building_type:field_management_improved scope:pp_cplan_btype = building_type:forest_village scope:pp_cplan_btype = building_type:irrigated_fields scope:pp_cplan_btype = building_type:jiangnan_canal_network scope:pp_cplan_btype = building_type:jiangnan_hill_terraces scope:pp_cplan_btype = building_type:land_clearance scope:pp_cplan_btype = building_type:marble_quarry scope:pp_cplan_btype = building_type:marble_saw_yard scope:pp_cplan_btype = building_type:paddy_water_control scope:pp_cplan_btype = building_type:public_kitchen scope:pp_cplan_btype = building_type:sand_pit scope:pp_cplan_btype = building_type:sand_washery scope:pp_cplan_btype = building_type:stone_quarry scope:pp_cplan_btype = building_type:stone_quarry_improved } }
 		save_temporary_scope_value_as = { name = pp_cplan_ipl value = 0.1 }
 	}
 	else_if = {
@@ -1371,15 +1371,15 @@ pp_cplan_try_improve_here = {
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 102.5 var:pp_cplan_pick < 103.5 }
-		pp_cplan_construct_cost = { type = field_management why = 106 ipl = 0.05 demand = village_construction cat = std }
+		pp_cplan_construct_cost = { type = field_management why = 106 ipl = 0.1 demand = village_construction cat = std }
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 103.5 var:pp_cplan_pick < 104.5 }
-		pp_cplan_construct_cost = { type = field_management_convertible why = 106 ipl = 0.05 demand = village_construction cat = std }
+		pp_cplan_construct_cost = { type = field_management_convertible why = 106 ipl = 0.1 demand = village_construction cat = std }
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 104.5 var:pp_cplan_pick < 105.5 }
-		pp_cplan_construct_cost = { type = field_management_improved why = 106 ipl = 0.05 demand = village_construction cat = std }
+		pp_cplan_construct_cost = { type = field_management_improved why = 106 ipl = 0.1 demand = village_construction cat = std }
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 105.5 var:pp_cplan_pick < 106.5 }
@@ -1387,7 +1387,7 @@ pp_cplan_try_improve_here = {
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 106.5 var:pp_cplan_pick < 107.5 }
-		pp_cplan_construct_cost = { type = irrigated_fields why = 106 ipl = 0.05 demand = village_construction cat = std }
+		pp_cplan_construct_cost = { type = irrigated_fields why = 106 ipl = 0.1 demand = village_construction cat = std }
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 107.5 var:pp_cplan_pick < 108.5 }
@@ -1395,11 +1395,11 @@ pp_cplan_try_improve_here = {
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 108.5 var:pp_cplan_pick < 109.5 }
-		pp_cplan_construct_cost = { type = jiangnan_canal_network why = 106 ipl = 0.05 demand = village_construction cat = std }
+		pp_cplan_construct_cost = { type = jiangnan_canal_network why = 106 ipl = 0.1 demand = village_construction cat = std }
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 109.5 var:pp_cplan_pick < 110.5 }
-		pp_cplan_construct_cost = { type = jiangnan_hill_terraces why = 106 ipl = 0.05 demand = village_construction cat = std }
+		pp_cplan_construct_cost = { type = jiangnan_hill_terraces why = 106 ipl = 0.1 demand = village_construction cat = std }
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 110.5 var:pp_cplan_pick < 111.5 }
@@ -1407,11 +1407,11 @@ pp_cplan_try_improve_here = {
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 111.5 var:pp_cplan_pick < 112.5 }
-		pp_cplan_construct_cost = { type = land_clearance why = 106 ipl = 0.05 demand = village_construction cat = std }
+		pp_cplan_construct_cost = { type = land_clearance why = 106 ipl = 0.1 demand = village_construction cat = std }
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 112.5 var:pp_cplan_pick < 113.5 }
-		pp_cplan_construct_cost = { type = paddy_water_control why = 106 ipl = 0.05 demand = village_construction cat = std }
+		pp_cplan_construct_cost = { type = paddy_water_control why = 106 ipl = 0.1 demand = village_construction cat = std }
 	}
 	if = {
 		limit = { var:pp_cplan_pick > 113.5 var:pp_cplan_pick < 114.5 }

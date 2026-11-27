@@ -1,8 +1,12 @@
 ﻿# >>> eu5-building-pipeline:paddy_water_control:building
 paddy_water_control = {
 is_foreign = no
+is_indestructible = yes
+# Bankruptcy exemption (2026-11-27): the engine's bankruptcy skips building types with a non-empty country_potential;
+# side effect: estates never pick this type for their own construction.
+country_potential = { always = yes }
 max_levels = pp_wb_cap_paddy_water_control
-increase_per_level_cost = 0.05
+increase_per_level_cost = 0.10
 pop_type = peasants
 employment_size = 0
 price = pp_paddy_water_control_price
@@ -23,7 +27,7 @@ location_potential = {
 construction_demand = village_construction
 
 raw_modifier = {
-  local_population_capacity = 5
+  local_population_capacity = 10
   pp_wb_levels_paddy_water_control = 1
   free_building_levels = 0.5
 }

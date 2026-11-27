@@ -307,6 +307,35 @@ def test_setup_never_places_more_levels_than_the_cap(tmp_path):
     assert "land_clearance = { tag = SWE level = 3 location = a }" in (tmp_path / wb_buildings.SETUP_PATH).read_text(encoding="utf-8-sig")
 
 
+def test_merged_levels_round_with_the_offset_and_keep_the_first_level(tmp_path):
+    """level_scale 0.5 merges two levels (2026-11-27, Jan): the merged sum carries the offset, a location whose unmerged
+    cap holds one level keeps one merged level, and the 1337 works come from the ledger's people, rounded half up."""
+    import dataclasses
+
+    c = _contract(tmp_path)
+    raw = {"level_rounding": {"offset": 0.3, "first_level": True}}
+    assert wb_buildings.merge_rounding(raw, 1.0) == (0.0, None) and wb_buildings.merge_rounding(raw, 2.0) == (0.0, None)
+    assert wb_buildings.merge_rounding(raw, 0.5) == (0.3, 0.799)       # 0.8, tested a hair lower (float sums)
+    eq = json.loads(c.building_types["cap_equation_json"][0])
+    # unmerged 2 + arid 1 + 0.03 x 20 = 3.6 -> 3 levels; merged 1.8 + 0.3 = 2.1 -> 2 levels
+    a = {"climate": "arid", "fertility": "moderate", "development": 20.0}
+    assert wb_buildings.cap_levels(eq, a, 0.5, 10, 0.3, 0.799) == 2
+    # an unmerged cap of exactly one level is a merged 0.8: one merged level, not none
+    one = {"base_levels": 2, "levels_per_development_point": 0, "class_terms": [{"attribute": "climate", "value": "arid", "levels": -1}]}
+    assert wb_buildings.cap_levels(one, {"climate": "arid", "development": 0.0}, 0.5, 10, 0.3, 0.799) == 1
+    assert wb_buildings.cap_levels(one, {"climate": "arid", "development": 0.0}, 0.5, 10, 0.3) == 0
+    text = wb_buildings.cap_script_value(c, "x", one, 0.5, 20, offset=0.3, first_level=0.799)
+    assert ('\tif = { limit = { pp_wb_cap_x_terms >= 0.799 pp_wb_cap_x_terms < 1 } '
+            'min = { desc = "BUILDING_LEVEL_WB_FIRST_LEVEL" value = 1 } }') in text
+    assert "\t\tvalue = 1.3\n" in text                                     # base 2 x 0.5 + the offset 0.3
+    # setup: a's 1337 works are 15,600 people (3 levels of 5,200): 1.5 merged levels of 10,400 round up to 2
+    c2 = dataclasses.replace(c, location_buildings=c.location_buildings.with_columns(pl.Series("starting_ledger_people", [15600.0, 0.0])))
+    caps = {"land_clearance": {"kind": "clearing", "unit_people": 10400.0, "unit_units": 10.4, "scale": 0.5, "limit": 10,
+                               "offset": 0.3, "first_level": 0.799}}
+    wb_buildings.write_setup(c2, _cfg(tmp_path), caps, {"a": "SWE"}, tmp_path)
+    assert "land_clearance = { tag = SWE level = 2 location = a }" in (tmp_path / wb_buildings.SETUP_PATH).read_text(encoding="utf-8-sig")
+
+
 def test_static_modifiers_cover_reference_classes_and_are_placed_in_the_setup(tmp_path):
     c = _contract(tmp_path)
     vanilla = tmp_path / "vanilla"

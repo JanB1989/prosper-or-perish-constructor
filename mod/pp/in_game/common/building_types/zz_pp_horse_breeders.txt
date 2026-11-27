@@ -96,6 +96,9 @@ raw_modifier = {
   local_population_capacity = -2
 }
 	can_close = no # building_shutdown
+	modifier = {
+		local_laborers_desired_pop = 3.2 # job_room
+	}
 ai_construct_weight = {
     value = 0
     add = pp_market_short_horses

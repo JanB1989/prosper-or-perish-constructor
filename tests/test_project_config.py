@@ -324,13 +324,13 @@ EDUCATION_PROMOTION_SPEEDS = {
 }
 EDUCATION_DESIRED_POP_MODIFIERS = {
     # spare room (2026-11-27, Jan): the schooling buildings give room for the classes they teach, which new production
-    # buildings hire from (AGENTS.md "Job Room")
-    "library": {"local_burghers_desired_pop": 0.25, "local_clergy_desired_pop": 0.1, "local_nobles_desired_pop": 0.05},
-    "pp_village_school": {"local_laborers_desired_pop": 0.8, "local_soldiers_desired_pop": 0.1},
-    "pp_trade_school": {"local_burghers_desired_pop": 0.7},  # 0.5 of its own + 4 x its 0.05 jobs given back (job_room.py)
+    # buildings hire from (AGENTS.md "Job Room"). Burghers and laborers x 5: their flat room counts a fifth.
+    "library": {"local_burghers_desired_pop": 1.25, "local_clergy_desired_pop": 0.1, "local_nobles_desired_pop": 0.05},
+    "pp_village_school": {"local_laborers_desired_pop": 4, "local_soldiers_desired_pop": 0.1},
+    "pp_trade_school": {"local_burghers_desired_pop": 2.7},  # 0.5 x 5 of its own + 4 x its 0.05 jobs given back (job_room.py)
     "university": {
-        "local_laborers_desired_pop": 1.2,
-        "local_burghers_desired_pop": 0.6,
+        "local_laborers_desired_pop": 6,
+        "local_burghers_desired_pop": 3,
         "local_clergy_desired_pop": 0.3,
         "local_nobles_desired_pop": 0.2,
     },

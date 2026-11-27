@@ -144,6 +144,11 @@ TRY_REPLACE:total_population = {
 
 	local_max_rgo_size = 0.0020
 
+	# 2026-11-27 (Jan: slow demotion): a location demotes 1 person a month per 1,000 inhabitants, on top of the 10 of
+	# location_base_values (vanilla: a flat 100 whatever its size). Under the job room rule a demotion removes five
+	# times the true excess, up to this speed, and people at work go with it.
+	local_pop_demotion_speed = 0.001
+
 	# 2026-10-06 (Jan): province food capacity rides on population (~12 months of a food-positive rural province's
 	# consumption with the location base and development terms); a full 24-month store takes Granaries. Was 2.5;
 	# 7 on 2026-10-06 (af413ddc), 10 the same day: start validator world -0.40 % -> +1.02 % over 96 months.
@@ -175,7 +180,10 @@ TRY_REPLACE:rgo_level = {
 	game_data = {
 		category = location
 	}
-	local_laborers_desired_pop = 1.500
+	# 2026-11-27 (Jan, job room): 1.5 x 5. An RGO level employs 1,000 laborers and the engine counts no jobs for it:
+	# this line is its room. Each laborer takes 4 laborer room, so the level gives 1 + 4 for its workers and the old
+	# spare half place x 5 (flat room counts a fifth). [job_room] room_per_head.
+	local_laborers_desired_pop = 7.5
 	local_raw_material_output = -0.010
 	# local_food_capacity = 15
 	local_monthly_food = 1.75 # 1.5 until 2026-10-07 (Jan: start food deficits)
@@ -206,14 +214,20 @@ TRY_REPLACE:devastation = {
 	local_migration_attraction = 1
 	local_life_expectancy = 10
 	local_mercenaries_modifier = -0.5
-	local_upper_class_capacity_modifier = 0.5
+	# 0.1 since 2026-11-27 (was 0.5): the multiplier scales the burghers' flat room, jobs and the room their workplaces
+	# give back, but not the 4 each burgher takes, so the share of jobs that can stay filled falls about five times as
+	# fast as the number says: jobs that can stay filled = (1 - x) / (1 + 4x). 0.1 keeps the old cut at light
+	# devastation and leaves 64 % of the jobs at full devastation (50 % before). Nobles' and clergy's flat room and
+	# jobs get the smaller number too; their own cuts are the scaled lines below.
+	local_upper_class_capacity_modifier = 0.1
 	# Devastation sends people back to the land (2026-11-03, Jan). The strength is negative, so these cut the type's cap; the upper
 	# class modifier above reaches only burghers, whose cap is jobs. At full devastation the median location loses laborers 21 %,
 	# soldiers 39 %, burghers 50 %, clergy 50 %, nobles 59 %. Laborers lose less than their idle share (28 %), so most jobs stay staffed.
 	# A starving province falls into devastation, so this is also a way out of a famine, and a partial one: the
 	# simulation's famine deaths fall only 1-4 %. tools/devastation_cap_sim.py
-	local_laborers_desired_pop = 0.4
-	local_laborers_desired_pop_scaled = 0.01
+	# laborers x 5 since 2026-11-27 (0.4 and 0.01 before): a cut of their room removes a fifth of it in people now
+	local_laborers_desired_pop = 2.0
+	local_laborers_desired_pop_scaled = 0.05
 	local_soldiers_desired_pop_scaled = 0.001
 	local_clergy_desired_pop_scaled = 0.0025
 	local_nobles_desired_pop_scaled = 0.0016

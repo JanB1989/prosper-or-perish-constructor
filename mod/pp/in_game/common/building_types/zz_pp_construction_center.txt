@@ -3,5 +3,8 @@ INJECT:construction_center = {
     rural_settlement = yes
     can_close = no # building_shutdown
     ai_forbid_shutdown = yes # building_shutdown
+    modifier = {
+      local_laborers_desired_pop = 2 # job_room
+    }
 }
 # <<< eu5-building-pipeline:construction_center:building

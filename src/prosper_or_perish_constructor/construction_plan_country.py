@@ -429,16 +429,23 @@ def building_lines(buildings: dict[str, Entry], keys: tuple[str, ...]) -> tuple[
     return lines, missing, duplicates
 
 
+_POP_TYPE_RE = re.compile(r"(?m)^\s*pop_type\s*=\s*(\w+)")
+
+
 def booster_goods(buildings: dict[str, Entry], tiers: tuple[str, ...], goods: set[str]) -> tuple[str, ...]:
     """The goods a booster raises: a building line whose modifier blocks (every tier, the definition and what was
     injected) hold nothing but ``local_<good>_output_modifier`` lines, at least one of them above 0. Empty for every
-    other building: one with any other effect (a canal's reach, a granary's food) has a purpose anywhere."""
+    other building: one with any other effect (a canal's reach, a granary's food) has a purpose anywhere. Room for the
+    building's own workers' class is no such effect: it is the room they take, given back (job_room.py)."""
     found: dict[str, float] = {}
     for tier in tiers:
+        own = {f"local_{pop}_desired_pop" for body in buildings[tier].bodies for pop in _POP_TYPE_RE.findall(body)}
         for body in buildings[tier].bodies:
             for key in MODIFIER_BLOCKS:
                 for block in inner_blocks(body, key):
                     for line, value in re.findall(r"(?m)^\s*([A-Za-z0-9_]+)\s*=\s*(\S+)", cp._strip_comments(block)):
+                        if line in own:
+                            continue
                         match = re.fullmatch(r"local_(\w+)_output_modifier", line)
                         if not match or match.group(1) not in goods:
                             return ()

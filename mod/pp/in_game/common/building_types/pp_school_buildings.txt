@@ -46,7 +46,7 @@ pp_village_school = {
 		# that buffer, each for the classes it teaches: one laborer building level (0.8) per school level here (0.4
 		# at first; Jan the same day: "these things should probably cover at least like a building"). A typical town
 		# promotes 7-10 laborers a month, so one level's room takes 7-10 years to fill (run defb89f2).
-		local_laborers_desired_pop = 0.8
+		local_laborers_desired_pop = 4 # 0.8 x 5 (job room: flat room counts a fifth)
 		local_soldiers_desired_pop = 0.1
 	}
 
@@ -91,7 +91,7 @@ pp_trade_school = {
 	}
 
 	modifier = {
-		local_burghers_desired_pop = 0.7 # job_room base 0.5
+		local_burghers_desired_pop = 2.7 # job_room base 2.5
 		local_burghers_max_literacy = 10
 		local_monthly_literacy = 0.004 # 0.01 until 2026-11-27
 		# spare room (2026-11-27, Jan: at least a building): two guild levels (0.25 each) per school level; 0.3 since

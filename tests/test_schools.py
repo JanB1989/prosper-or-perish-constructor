@@ -75,7 +75,7 @@ SCHOOL_RULES = {
         "modifier": {
             "local_peasants_max_literacy": 10, "local_laborers_max_literacy": 10, "local_soldiers_max_literacy": 10,
             "local_monthly_literacy": 0.004, "local_pop_promotion_speed": 0.002,
-            "local_laborers_desired_pop": 0.8, "local_soldiers_desired_pop": 0.1,  # spare room (2026-11-27)
+            "local_laborers_desired_pop": 4, "local_soldiers_desired_pop": 0.1,  # spare room (2026-11-27; laborers 0.8 x 5)
         },
         "method": "pp_village_school_maintenance",
         "upkeep": {"beeswax": 0.03, "clay": 0.1, "manual_labor": 0.5},
@@ -87,7 +87,7 @@ SCHOOL_RULES = {
         "ranks": {"town", "city", "megalopolis"},
         "modifier": {
             "local_burghers_max_literacy": 10, "local_monthly_literacy": 0.004,
-            "local_burghers_desired_pop": 0.7,  # 0.5 of its own + 4 x its 0.05 jobs given back (job_room.py)
+            "local_burghers_desired_pop": 2.7,  # spare room 0.5 x 5 + 4 x its 0.05 jobs given back (job_room.py)
         },
         "method": "pp_trade_school_maintenance",
         "upkeep": {"books": 0.15, "beeswax": 0.05, "manual_labor": 0.5},
@@ -202,7 +202,7 @@ def test_library_and_university(vanilla) -> None:
     assert {k: _num(v) for k, v in library.items()} == {
         "local_cultural_influence": 0.1, "local_nobles_max_literacy": 5, "local_burghers_max_literacy": 5,
         "local_clergy_max_literacy": 5, "local_monthly_literacy": 0.008, "local_institution_growth_modifier": 0.25,
-        "local_burghers_desired_pop": 0.25, "local_clergy_desired_pop": 0.1, "local_nobles_desired_pop": 0.05,
+        "local_burghers_desired_pop": 1.25, "local_clergy_desired_pop": 0.1, "local_nobles_desired_pop": 0.05,
     }
     assert "pp_library_ai_weight" in str(_values(culture["REPLACE:library"])["ai_construct_weight"])
     # education pyramid (2026-11-27): Library levels by rank, two of them allow a University
@@ -228,12 +228,12 @@ def test_schooling_buildings_give_spare_room_and_the_ai_builds_them_where_it_is_
 
     # each level covers at least one building level of the class it is for (Jan): a laborer building level employs
     # 0.8, a guild level 0.25
-    assert room(schools["pp_village_school"]) == {"local_laborers_desired_pop": 0.8, "local_soldiers_desired_pop": 0.1}
-    assert room(schools["pp_trade_school"]) == {"local_burghers_desired_pop": 0.7}  # 0.5 + 4 x its 0.05 jobs (job_room.py)
-    assert room(culture["REPLACE:library"]) == {
-        "local_burghers_desired_pop": 0.25, "local_clergy_desired_pop": 0.1, "local_nobles_desired_pop": 0.05}
-    assert room(culture["REPLACE:university"]) == {
-        "local_laborers_desired_pop": 1.2, "local_burghers_desired_pop": 0.6, "local_clergy_desired_pop": 0.3,
+    assert room(schools["pp_village_school"]) == {"local_laborers_desired_pop": 4, "local_soldiers_desired_pop": 0.1}
+    assert room(schools["pp_trade_school"]) == {"local_burghers_desired_pop": 2.7}  # 0.5 x 5 + 4 x its 0.05 jobs (job_room.py)
+    assert room(culture["REPLACE:library"]) == {  # burghers 0.25 x 5 (job room: flat room counts a fifth)
+        "local_burghers_desired_pop": 1.25, "local_clergy_desired_pop": 0.1, "local_nobles_desired_pop": 0.05}
+    assert room(culture["REPLACE:university"]) == {  # laborers 1.2 x 5, burghers 0.6 x 5
+        "local_laborers_desired_pop": 6, "local_burghers_desired_pop": 3, "local_clergy_desired_pop": 0.3,
         "local_nobles_desired_pop": 0.2}
     # none of it in raw_modifier, where staffing would not matter
     for body in (schools["pp_village_school"], schools["pp_trade_school"], culture["REPLACE:library"], culture["REPLACE:university"]):

@@ -5,6 +5,9 @@
 # They are better at storing food though.
 TRY_INJECT:megalopolis = {
 	rank_modifier = {
+		# job room (2026-11-27): the rank's flat burgher and laborer room x 5 (vanilla 4 -> 20), flat room counts a fifth
+		local_burghers_desired_pop = 16
+		local_laborers_desired_pop = 16
 		local_population_capacity = -360   # vanilla 400: net +40 (x1,000 people) of housing for the rank
 		local_population_capacity_modifier = -0.5
 		local_trade_center_power = -0.05   # vanilla 0.05: rank gives no market attraction
@@ -20,8 +23,10 @@ TRY_INJECT:megalopolis = {
 }
 TRY_INJECT:city = {
 	rank_modifier = {
-		local_burghers_desired_pop = -0.50
-		local_laborers_desired_pop = -0.50
+		# job room (2026-11-27): burghers and laborers 0.5 x 5 = 2.5 (vanilla 1.0; -0.50 here until then), flat room
+		# counts a fifth
+		local_burghers_desired_pop = 1.5
+		local_laborers_desired_pop = 1.5
 		local_soldiers_desired_pop = -0.05
 		local_nobles_desired_pop = -0.025
 		local_clergy_desired_pop = -0.05
@@ -43,6 +48,9 @@ TRY_INJECT:city = {
 
 TRY_INJECT:town = {
 	rank_modifier = {
+		# job room (2026-11-27): the rank's flat burgher and laborer room x 5 (vanilla 0.2 -> 1.0), flat room counts a fifth
+		local_burghers_desired_pop = 0.8
+		local_laborers_desired_pop = 0.8
 		local_population_growth = -0.003 # The growth gate. Jan, 2026-11-25: a town sits between the two: 0.1 points a year better than a city (-0.004), 0.1 worse than a rural settlement (-0.004 here + vanilla's 0.002)
 
 		local_population_capacity = -10   # vanilla 20: net +10 (x1,000 people) of housing for the rank

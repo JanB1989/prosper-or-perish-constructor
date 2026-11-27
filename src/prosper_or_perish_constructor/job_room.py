@@ -24,7 +24,9 @@ of a place, and so does every flat source of room (ranks, schools, laws).
 
 Written at finalize, after the employment cut: E is read from the building's final employment_size at every build, so
 it follows any change of a building's employment by itself. Every building that employs a listed class carries the
-line, production building or not: a person at work in a building without it would take room and get none back. A
+line, production building or not: a person at work in a building without it would take room and get none back.
+Laborers also work in RGOs, which are no buildings: the ``rgo_level`` static modifier gives their room and the room
+they take back per RGO level (hand-written, 1.5 x (1 + k); tests/test_job_room.py). A
 vanilla building the mod only injects into gets the line in its INJECT (modifier blocks add up). ``not_buildings``
 takes single buildings out. The line carries a marker comment; a building that leaves the set loses it again. A line
 of the same key the building's own block already has is folded into ours (the engine would otherwise see the key
@@ -88,6 +90,7 @@ class Result:
     written: list[str] = field(default_factory=list)
     room_per_head: dict[str, Decimal] = field(default_factory=dict)
     other_pop: list[str] = field(default_factory=list)
+    no_jobs: list[str] = field(default_factory=list)  # of a listed class, but nobody works there (worker-less improvements)
     excluded: list[str] = field(default_factory=list)
     files_changed: int = 0
 
@@ -372,8 +375,11 @@ def targets(repo: Path, mod_root: Path, project: Path, vanilla_root: Path) -> tu
             continue
         size = _EMPLOYMENT_RE.search(tops)
         employment = bf._resolve(size.group("value"), values) if size else None
-        if employment is None or employment <= 0:
+        if employment is None:
             unresolved.append(f"{key}: employment_size {size.group('value') if size else '(none)'}")
+            continue
+        if employment <= 0:
+            result.no_jobs.append(key)
             continue
         out[key] = (pop.group("pop"), employment * config.room_per_head[pop.group("pop")])
     unresolved += pop_type_problems(config, vanilla_root, mod_root)
@@ -444,7 +450,8 @@ def summary(result: Result) -> str:
     heads = ", ".join(f"{pop} {fmt(k)}" for pop, k in result.room_per_head.items()) or "none"
     return (
         f"Job room: {len(result.written)} buildings give their workers' room back as far as they are staffed "
-        f"(room each person takes: {heads}; {len(result.other_pop)} buildings of other pop types left out"
+        f"(room each person takes: {heads}; {len(result.other_pop)} buildings of other pop types and "
+        f"{len(result.no_jobs)} without jobs left out"
         + (f", {len(result.excluded)} excluded by name" if result.excluded else "")
         + f"), {result.files_changed} files changed."
     )

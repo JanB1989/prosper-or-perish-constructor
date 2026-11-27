@@ -23,3 +23,20 @@ pp_job_room_share_burghers = {
 	min = 0
 	max = 0.9
 }
+pp_job_room_open_laborers = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_pop_type = laborers is_opened = yes }
+		add = { value = building_employment_size_amount subtract = building_employed_amount min = 0 }
+	}
+}
+pp_job_room_left_laborers = {
+	value = pp_job_room_open_laborers
+	min = 0
+}
+pp_job_room_share_laborers = {
+	value = pp_job_room_left_laborers
+	divide = { value = num_pop_type:peasants min = 0.001 }
+	min = 0
+	max = 0.9
+}

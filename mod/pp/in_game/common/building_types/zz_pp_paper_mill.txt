@@ -91,6 +91,9 @@ raw_modifier = {
 }
 increase_per_level_cost = 0.16
 	can_close = no # building_shutdown
+	modifier = {
+		local_laborers_desired_pop = 3.2 # job_room
+	}
 ai_construct_weight = {
     value = 0
     add = pp_market_short_paper

@@ -45,6 +45,7 @@ unique_production_methods = {
     }
 }
 modifier = {
+	local_laborers_desired_pop = 3.2 # job_room
     local_silver_output_modifier = 2.0
 }
 construction_demand = basic_construction_needs

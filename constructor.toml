@@ -1111,10 +1111,12 @@ extractive_open = "never"
 # pp_pop_adjustments.txt, checked at every build), and every blueprint building with a goods output and that pop type
 # gives k x its jobs back per level in `modifier` (scaled by staffing; the size follows the building's final
 # employment_size). Idle people of the class allowed = (flat room + unfilled jobs) / (1 + k): an unfilled job and
-# every flat source of room (ranks, schools) count 1 / (1 + k). The same pass writes the one-off start step
+# every flat source of room counts 1 / (1 + k), so the flat room numbers the mod sets for a listed class are its
+# old ones x (1 + k): location ranks, schooling buildings, the RGO level (laborers work there: 1.5 -> 7.5 gives
+# the workers' room back too) and devastation's cut. The same pass writes the one-off start step
 # (pp_job_room_start: a day into a new game it fills the open jobs from the peasants, because the engine sizes the
 # classes before any building has workers). AGENTS.md "Job Room".
-room_per_head = { burghers = 4 }
+room_per_head = { burghers = 4, laborers = 4 }
 not_buildings = []
 
 [age_food]

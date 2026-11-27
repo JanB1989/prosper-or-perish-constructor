@@ -452,8 +452,8 @@
   we are doing this"). The engine counts a building's jobs (employment_size x level) in its pop type's equilibrium
   whether anyone works there or not; run b18a10d6, 1837: 1.5 M burghers and 15.9 M laborers unemployed next to unfilled
   jobs in open buildings.
-- The rule (`job_room.py`, `[job_room] room_per_head` in constructor.toml; burghers at 4 today): **the people of a
-  class take its room, their workplaces give it back.**
+- The rule (`job_room.py`, `[job_room] room_per_head` in constructor.toml; burghers and laborers at 4): **the people
+  of a class take its room, their workplaces give it back.** The lines below name burghers; laborers have the same.
   - Pop type (hand-written in `pop_types/pp_pop_adjustments.txt`, checked at every build):
     `pop_percentage_impact = { local_burghers_desired_pop_scaled = -4 }`. That block is applied at the class's share
     of the location's people and the `_scaled` room modifier is multiplied by the location's people, so it is -4 room
@@ -466,10 +466,38 @@
     at work are always covered. An unfilled job, in an empty building as in a short-staffed one, counts a fifth of a
     place, and so does every flat source of room (ranks, schools, laws).
 - Who carries the building line: every blueprint building that employs a listed class, production building or not
-  (167 for burghers: guilds, marketplaces, trade houses, vanilla's council halls and theatres). A person at work in a
-  building without it would take room and get none back. A vanilla building the mod only injects into gets the line in
+  (324: 167 for burghers, guilds, marketplaces, trade houses, vanilla's council halls and theatres; 157 for
+  laborers). A person at work in a building without it would take room and get none back. Four worker-less
+  improvements that name laborers (bund, khmer_baray, polders, qanats) have no jobs and no line. A vanilla building the mod only injects into gets the line in
   its INJECT (modifier blocks add up). `not_buildings` takes single buildings out. The size follows the building's
   final `employment_size` at every build.
+- Laborers and RGOs (2026-11-27, Jan: "RGO workers can give their stuff back by RGO level"; read in the 1.4.9 code,
+  private `headcount_laborers_149.md`, not tested in game): an RGO is no building and the engine counts no jobs for it.
+  Its room is the `rgo_level` static modifier, applied at the RGO's size (1.0 = 1,000 workers) whether anyone works
+  there or not. Only laborers work in an RGO (slaves first where the owner allows slave demand), the RGO hires before
+  any building and lays nobody off. The line is 7.5 a level (1.5 before): 1 for the workers, 4 they take, and the old
+  spare half place x 5. Idle laborers allowed = (flat room + 2.5 x RGO levels + unfilled building jobs) / 5 + unfilled
+  RGO jobs. In the saves an unfilled RGO job never stands next to an idle laborer, except where slaves do the work
+  (2,239 locations in 1347, 1,041 in 1837): there the RGO's laborer room is spare, as it was before.
+- **Flat room x 5.** Every flat source counts a fifth, so the flat room numbers the mod sets for burghers and laborers
+  are their old ones x 5 and the same idle people fit as before: location ranks (megalopolis 20, city 2.5, town 1.0;
+  vanilla's line plus the inject in `pp_location_rank_adjustments.txt`), schooling buildings (Village School laborers
+  4; Trade School burghers 2.5; Library burghers 1.25; University laborers 6, burghers 3), the RGO level above, and
+  devastation's cut of the laborers (2.0 and 0.05 scaled). Not raised: vanilla's small lines on buildings (burghers
+  0.05, laborers 0.1) and on laws and reforms (`global_burghers_city_desired_pop`). For scale: the RGO's spare half
+  place is by far the largest flat room in the game, 11.7 M idle laborers allowed in 1347.
+  `tests/test_job_room.py::test_flat_room_of_a_listed_class_is_its_old_number_times_one_plus_k`.
+- **Devastation and the upper-class multiplier.** The multiplier (nobles, clergy, burghers) scales flat room, jobs and
+  the give-back, not the 4 each burgher takes, so a negative value pushes people at work over the cap: jobs that can
+  stay filled = (1 - x) / (1 + 4x). Devastation's value is 0.1 (0.5 before): the same cut at light devastation, 64 %
+  of the jobs at full devastation (50 % before; 17 % had it stayed 0.5). Nobles and clergy get the smaller number on
+  their flat room and jobs; their own cuts are devastation's scaled lines. No other source of the multiplier is in
+  use (vanilla's `province_starving` -0.5 is commented out in PP).
+- **Slower demotion (2026-11-27, Jan).** A location demotes 10 people a month plus 1 per 1,000 inhabitants
+  (`location_base_values` -0.09 on vanilla's 0.10; `total_population` `local_pop_demotion_speed = 0.001`), vanilla a
+  flat 100: median location 18-27 a month, a tenth of them 10, a tenth above 58-173, the largest about 1,000. One
+  speed per location and month for every class. Engine: speed = (local + global flat) x max(0, 1 + percentages), x
+  1,000 people per class, at most the largest pop; no per-person term exists.
 - Why the minus sits on the people: nothing on a building can take room away. Every block of a building is scaled by
   its input fulfilment, which is 0 while nobody works there. The first version of that day (`raw_modifier` -jobs and
   `modifier` +jobs on every producer of a capped class) lost its negative line exactly in the empty building; measured
@@ -487,16 +515,14 @@
     (1.87 / 0.96) at the same date, runs before it at 3.65 M (2.05 / 1.61) in 1347;
   - no script error from it.
 - Known costs, from the 1.4.9 code (private `headcount_room_149.md`) and the test:
-  - **Overshoot.** The engine sizes a demotion as (size - cap) for a fixed cap, but every person who leaves lifts the
-    cap by 4, so one correction removes five times the true excess, up to the demotion speed (100 a month per
-    location). People at work go with it and come back only by promotion (a few a month). This is the likely reason
-    for 0.17 M fewer burghers at work than under the pair at year 3; the room swings a little from month to month.
-    A smaller `room_per_head` or a lower demotion speed softens it.
+  - **Swing.** The engine sizes a promotion or demotion for a fixed cap, but every person who moves shifts the room
+    by 5, so the class never settles: it swings by about min(4 x promotion, promotion + demotion speed) people a
+    month (simulated from the engine's rules, private note). People at work are lost only where that swing is larger
+    than the idle allowance, i.e. in a fully staffed location with little flat room. That is the likely reason for
+    0.17 M fewer burghers at work than under the pair in the second test game (town flat room 0.2 then, 40 idle
+    allowed); flat room x 5 and the slower demotion came after that game and have not been run.
   - **Input shortage.** The give-back is scaled by input fulfilment: a building short of inputs gives less back and
     its workers demote. In the 1837 save 99 % of staffed slots had full inputs.
-  - **Upper-class capacity.** Burghers are an upper class: a local or country upper-class capacity modifier scales the
-    flat room, the jobs and the give-back, not the per-person line.
-  - **Flat room counts a fifth.** The ranks' and schools' spare room numbers below have not been raised for it yet.
 - Game start. When a new game starts the engine sizes every class to its room in one pass, while no building has
   workers, so nothing is given back yet and burghers are cut to (flat room + jobs) / 5: day 0 has 1.83-1.93 M burghers
   against 3.88 M in a game without any of this, and without help a million at work after three years (first test
@@ -508,12 +534,12 @@
   (`pp_job_room_open_<pop>`, read from the live buildings) from the peasants, into the class's largest pop there (the
   engine's own rule), else the owner's culture and religion for an upper class. With it: 2.21 M burghers at work after
   a month.
-- Spare room for new buildings comes from the location ranks (town burghers and laborers 0.2, city 0.5, megalopolis
-  4) and from the schooling buildings, each for the classes it teaches, in `modifier`, per level: Village School
-  laborers 0.8 and soldiers 0.1; Trade School burghers 0.5; Library burghers 0.25, clergy 0.1, nobles 0.05; University
-  laborers 1.2, burghers 0.6, clergy 0.3, nobles 0.2 (Jan: "these things should probably cover at least like a
-  building"). Hand-written in `building_types/pp_school_buildings.txt` and `pp_culture_building_adjustments.txt`. For
-  burghers each of these now allows a fifth of its number in idle people.
+- Spare room for new buildings comes from the location ranks and from the schooling buildings, each for the classes
+  it teaches, in `modifier`, per level (burghers and laborers x 5, see above; in idle people allowed: Village School
+  laborers 0.8, Trade School burghers 0.5, Library burghers 0.25, University laborers 1.2 and burghers 0.6); soldiers,
+  clergy and nobles as before: Village School soldiers 0.1; Library clergy 0.1, nobles 0.05; University clergy 0.3,
+  nobles 0.2 (Jan: "these things should probably cover at least like a building"). Hand-written in
+  `building_types/pp_school_buildings.txt` and `pp_culture_building_adjustments.txt`.
 - How fast room fills (run defb89f2, people promoting into the class per month where any promote; 1402-1802):
   burghers about 1 a month in a typical town (top tenth 2-4) and 1-2 in a typical city (top tenth 3-11); laborers 7-9
   and 8-11; nobles and clergy 0.6-0.8; soldiers 4-5. Small countries are faster.
@@ -522,9 +548,14 @@
   `pp_spare_room_weight_burghers` (Trade School, University, half of it on the Library) before the income divide
   (`script_values/pp_school_values.txt`): 100 while the location has an open building of that class that is not fully
   staffed and fewer idle people of the class than 0.4 (laborers) or 0.25 (burghers).
-- Not done: laborers (about 12 M of them work in RGOs and would need their room given back another way), soldiers.
-  Nobles and clergy stay out: almost none of them work in buildings. Those classes are back on the engine's plain
-  count.
+- Not listed: soldiers, clergy, nobles (the engine's plain count). Measured on run defb89f2 (1347 / 1592 / 1837):
+  nobles' jobs are 76-109k for 1.4-6.0 M nobles, 5-13k unfilled; clergy's 0.39-3.1 M for 2.6-14.4 M, 83k / 528k /
+  1.27 M unfilled; soldiers' 0.9-11.3 M for 1.1-11.8 M, 0.18-1.8 M unfilled. For nobles and clergy the room is flat
+  and scaled lines (vanilla: 0.25 % and 0.5 % of a location's people, ranks, laws), which would all need x (1 + k).
+- The Construction Plan's booster test ignores a building's room for its own workers' class
+  (`construction_plan_country.booster_goods`): it is no effect of the building.
+- The burgher rule is tested in game (above). Laborers, flat room x 5, devastation's numbers and the slower demotion
+  are read from the code and checked on saves only: no game since.
 - `tests/test_job_room.py`; the build prints the counts. No full run yet.
 
 ## Building Shutdown (2026-10-05, Jan)

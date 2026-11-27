@@ -250,7 +250,10 @@ def test_town_share_is_stored_by_the_yearly_pulse_and_at_game_start() -> None:
     assert on_action.count("pp_refresh_trade_reach = yes") == 2      # yearly country pulse and game start
     now = VALS["pp_trade_reach_urban_share_now"]
     text = re.sub(r"\s+", " ", re.sub(r"#.*", "", VALUES.read_text(encoding="utf-8-sig")))
-    assert "every_owned_location = { limit = { NOT = { location_rank = location_rank:rural_settlement } } add = population }" in text
+    # `?=`: an owned location can have no rank, and the plain comparison wrote a script error for each one
+    assert ("every_owned_location = { limit = { OR = { location_rank ?= location_rank:town location_rank ?= location_rank:city "
+            "location_rank ?= location_rank:megalopolis } } add = population }") in text
+    assert "location_rank = location_rank:" not in text
     assert now.first("if") is not None
     # nothing else walks the country's locations
     assert text.count("every_owned_location") == 1

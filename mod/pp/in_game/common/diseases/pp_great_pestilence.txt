@@ -299,17 +299,9 @@ TRY_REPLACE:great_pestilence = {
 		value = 0.10
 	}
 
-	# PP: survivors' resistance leaks away (vanilla: none), half measles' rate: a full wave's survivors are open to the
-	# next one after about 40 years. In the Americas only: the Old World's setup resistance (1.0) stays.
-	monthly_resistance_reduction = {
-		if = {
-			limit = { continent = continent:america }
-			value = 0.001
-		}
-		else = {
-			value = 0
-		}
-	}
+	# PP: no monthly_resistance_reduction, as in vanilla. The game reads that value without a location, so it cannot be
+	# limited to the Americas (a continent check there only wrote script errors and read 0), and a leak everywhere would
+	# wear down the Old World's setup resistance (1.0) before contact.
 
 	#general bad effects on locations that have this
 	location_modifier = {

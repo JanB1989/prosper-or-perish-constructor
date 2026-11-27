@@ -1176,35 +1176,35 @@
   value as a ratio of today's vanilla (a game update that changes one fails) and that every tribes privilege, DLC ones
   included, carries the -0.075 research row exactly once.
 
-## Great Pestilence (2026-11-27, Jan; not tested in game)
+## Great Pestilence (2026-11-27, Jan; seen in Jan's observer run bd7d9616, which still had the broken leak)
 
 - Jan: "make it so that the Great Pestilence can spread better. Make it more deadly, make it spread easier ... we want
   it to be harder." Runs: the Americas lost about a third (run 5d232536 by 1567, from the saves' resistance: Mesoamerica
   about half, the Andes a tenth; rough rural Andes untouched), history 80-90 % over a century and a half.
 - `diseases/pp_great_pestilence.txt`, TRY_REPLACE of vanilla `great_pestilence` (pinned): for locations with no road and
   mountains, desert or jungle R0 x0.25 -> x0.75, spread threshold 0.85 -> 0.60 (the flat value), stagnation chance x3 ->
-  x1.5; `mortality_rate` {0.75 0.9} -> {0.9 0.95}; `monthly_resistance_reduction` 0.001 in the Americas, 0 elsewhere
-  (vanilla: no leak; measles 0.002). The migration line of `zz_pp_disease_migration_adjustments.txt` sits in the copy
+  x1.5; `mortality_rate` {0.75 0.9} -> {0.9 0.95}; no `monthly_resistance_reduction`, as in vanilla (the first version
+  had 0.001 in the Americas only; the game reads that value without a location, so the continent check wrote a script
+  error on every read, 10,551 in one observer run, and read 0; removed the same day). The migration line of `zz_pp_disease_migration_adjustments.txt` sits in the copy
   (an inject misses a replaced block); that file no longer injects into great_pestilence.
 - Engine facts (EU5 1.4.9 saves): resistance is stored per location (setup `add_disease_resistance`, with a date) and
   per pop in affected locations (with `stagnated_counter`, 3600 days = `STAGNATION_LENGTH_DAYS`); the leak is linear
   (vanilla bubonic plague's own comment: 0.0001 a month "took 833 years"). The setup gives Europe, Asia and Africa
-  great_pestilence resistance 1.0 from 1337; a leak in the Old World would have it gone before contact, hence the
-  America-only leak (its scope is not documented: if the value has no location root it reads 0, i.e. vanilla's no
-  leak). R0 x0 and stagnation 1.0 outside the Americas stay, so the Old World never grows an outbreak. The pestilence
+  great_pestilence resistance 1.0 from 1337; a leak in the Old World would have it gone before contact, and
+  `monthly_resistance_reduction` has no location in scope (seen in game: "Event target link 'continent' returned an
+  unset scope"), so there is no leak at all. R0 x0 and stagnation 1.0 outside the Americas stay, so the Old World never grows an outbreak. The pestilence
   has no `specific_pop_type_effect`: colonists in America are hit as natives are, in vanilla too.
 - Calculation (scratchpad model `b1_sim.py`: per location the script's R0, stagnation, 10 % fate per calc, spread at the
   threshold to neighbours on a lattice with the regions' rough shares; assumes a stagnated location grows no more, which
   reproduces the saves: vanilla Andes 7-10 %, rough rural 2 %, Mesoamerica 37 %). Deaths in one wave, per location
   class (rough rural / flat rural / town / city): vanilla 2-10 / 15-56 / 15-63 / 69 %, new 55-62 / 68-75 / 78-86 /
   91-93 %; a fully reached location loses about the mortality (vanilla 80 %, new 90-92 %). Over the situation (it lasted
-  11, 88 and 130 years in the runs): Andes / Mesoamerica 68 / 73 % at 30 years, 75 / 86 % at 90, 84 / 88 % at 130 with
-  the 0.001 leak; with measles' 0.002, 88 / 91 % and 91 / 93 % (one wave about every 21 years, so a 99 % risk late),
-  without a leak 68 / 73 % throughout. At 0.001 a full wave's survivors fall below 0.5 resistance (vanilla's respawn
-  and stagnation line) after about 42 years.
-- Ending: the situation ends only in a month with no active outbreak; the leak lets the disease respawn in a location
-  once its resistance is below 0.5 again, so a long situation can see later waves, and each wave leaves its locations
-  closed for about 42 years. Nothing keeps it alive once the other end conditions hold.
+  11, 88 and 130 years in the runs): Andes / Mesoamerica 68 / 73 % throughout, since nothing leaks (a 0.001 leak in the
+  Americas would have given 75 / 86 % at 90 years and 84 / 88 % at 130, measles' 0.002 88 / 91 % and 91 / 93 %; it
+  would need another way than this value). Observer run bd7d9616 without a working leak: the Americas at 18 M people in
+  1562, 27-36 M in the runs before the change.
+- Ending: the situation ends only in a month with no active outbreak; without a leak a location that was hit stays
+  closed, so there are no later waves in the same place.
 - `tests/test_great_pestilence.py` pins every changed number against vanilla's (fails when vanilla's file changes),
   checks the other lines are vanilla's and the Old World shield.
 

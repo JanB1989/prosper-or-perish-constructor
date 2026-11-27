@@ -3,9 +3,10 @@ we want it to be harder").
 
 The mod's copy (diseases/pp_great_pestilence.txt, TRY_REPLACE) keeps every vanilla line except the rough-terrain
 numbers (no road and mountains, desert or jungle: R0 x0.25 -> x0.75, spread threshold 0.85 -> 0.60, stagnation x3 ->
-x1.5), the mortality {0.75 0.9} -> {0.9 0.95}, a resistance leak in the Americas only (vanilla none) and the mod's
-migration line, which an inject would miss in a replaced block. Each vanilla number is pinned here too, so a game update
-that moves one fails and asks for a review (AGENTS.md "Great Pestilence").
+x1.5), the mortality {0.75 0.9} -> {0.9 0.95} and the mod's migration line, which an inject would miss in a replaced
+block. No resistance leak, as in vanilla: the game reads that value without a location, so it cannot be limited to the
+Americas (the first version tried and wrote a script error on every read). Each vanilla number is pinned here too, so a
+game update that moves one fails and asks for a review (AGENTS.md "Great Pestilence").
 """
 
 from __future__ import annotations
@@ -36,9 +37,6 @@ CHANGED = {
     "mortality_rate[0]/item[1]": ("0.9", "0.95"),
 }
 ADDED = {
-    "monthly_resistance_reduction[0]/if[0]/limit[0]/continent[0]": "= continent:america",
-    "monthly_resistance_reduction[0]/if[0]/value[0]": "= 0.001",
-    "monthly_resistance_reduction[0]/else[0]/value[0]": "= 0",
     "location_modifier[0]/local_migration_attraction[0]": "= -1.5",
 }
 
@@ -95,9 +93,10 @@ def test_the_changed_ifs_are_the_rough_terrain_ones() -> None:
 
 
 def test_old_world_stays_shielded() -> None:
-    """Outside the Americas vanilla multiplies R0 by 0 and stagnates at once; the leak is America-only, so the Old
-    World's setup resistance (1.0, setup 19_diseases.txt) stays."""
+    """Outside the Americas vanilla multiplies R0 by 0 and stagnates at once; nothing leaks, so the Old World's setup
+    resistance (1.0, setup 19_diseases.txt) stays."""
     own = _block(MOD / "pp_great_pestilence.txt", "TRY_REPLACE:great_pestilence")
+    assert not own.values("monthly_resistance_reduction")  # read without a location: it cannot be America-only
     r0_last = own.first("r0").values("if")[4]
     assert "continent:america" in render_value(r0_last.first("limit")) and float(r0_last.first("multiply")) == 0
     stag_last = own.first("location_stagnation_chance").values("if")[-1]

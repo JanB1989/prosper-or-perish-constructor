@@ -1094,6 +1094,7 @@ extractive_open = "never"
 # burghers, laborers, soldiers), food makers included (Jan: "they can still be subsidized. Same logic"). Spare room
 # for new buildings to hire from comes from the location ranks and the school buildings ([spare_room]).
 not_buildings = []
+enabled = true
 
 [age_food]
 # Food relief by age (2026-10-03, Jan: age 2 stays tough, age 3 brings decent relief, later ages keep the progression;

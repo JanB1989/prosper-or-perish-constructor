@@ -91,7 +91,6 @@ raw_modifier = {
     local_pp_paper_line_levels = 1  # paper rights 2026-11-18: line levels for the town rights
 }
 increase_per_level_cost = 0.16
-	can_close = no # building_shutdown
 	modifier = {
 		local_laborers_desired_pop = 0.8 # job_room
 	}
@@ -99,5 +98,6 @@ ai_construct_weight = {
     value = 0
     add = pp_market_short_paper
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:paper_mill:building

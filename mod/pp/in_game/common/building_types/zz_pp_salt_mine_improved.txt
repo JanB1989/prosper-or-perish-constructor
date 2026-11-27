@@ -117,7 +117,6 @@ modifier = {
     local_migration_attraction = 0.010
     local_salt_output_modifier = 0.01875
 }
-	can_close = no # building_shutdown
 	raw_modifier = {
 		local_laborers_desired_pop = -0.8 # job_room
 	}
@@ -125,5 +124,6 @@ ai_construct_weight = {
     value = 0
     add = pp_market_short_salt
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:salt_mine_improved:building

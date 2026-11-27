@@ -334,9 +334,9 @@ price = pp_cookshop_price
 		# no food capacity (was 400, removed 2026-09-30): the Granary is the capacity building
 		local_migration_attraction = 0.025
 	}
-	can_close = no # building_shutdown
 	raw_modifier = {
 		local_laborers_desired_pop = -0.8 # job_room
 	}
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:cookshop:building

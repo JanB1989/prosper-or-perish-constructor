@@ -72,10 +72,10 @@ modifier = {
 	local_laborers_desired_pop = 0.8 # job_room
     local_migration_attraction = 0.003
 }
-	can_close = no # building_shutdown
 ai_construct_weight = {
     value = 0
     add = pp_market_short_cocoa
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:cocoa_grove:building

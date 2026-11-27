@@ -483,6 +483,37 @@
   `employment_size`, read at every build, so a change of a building's employment moves the lines by itself.
 - It only works on a building that is never closed (a closed building applies neither block), hence `can_close = no`
   on every production building ("Building Shutdown").
+- Game start (in game 2026-11-27: five test games and a control game, new games as observer, saves at day 0 and
+  month 1, kit `pp_testing\cult_run.ps1`): when a new game starts the engine employs the pops the setup defines and
+  fills every class up to its room from the peasants. The setup defines few of them (2.4 M burghers, 2.0 M laborers);
+  most of day 0 is that fill (control: 3.88 M burghers, 45.3 M laborers). With the two lines a production building
+  nobody works in yet gives no room, so the fill made nothing for it and trimmed the setup's groups there alike: day 0
+  had 1.54 M burghers and 34.0 M laborers, per location either all of the producers' jobs lost or none (675 locations
+  for burghers, 5,328 for laborers), and it does not come back by itself.
+- The start step (`job_room.py` writes it; nothing sits on the buildings for it): one day into a new game
+  `pp_job_room_start` (on_game_start with a delay, `on_action/pp_job_room.txt`) runs once, never from a pulse.
+  (1) Setup groups first: where the setup gives a class several groups in a location (Stockholm's Swedish, Holsatian
+  and Lower Saxon burghers), every group is brought back to its setup size from the peasants, the largest first
+  (`pp_job_room_group`, one generated line per group, 1,916 of them, read from the mod's pops setup at every build).
+  The largest has to be among them: with only the others restored, Stockholm's Holsatians outnumbered its trimmed
+  Swedes and took the rest (fourth test game).
+  (2) Then `pp_job_room_restore` in every owned location fills, per class, the jobs of its open buildings that
+  nobody fills (`pp_job_room_open_<pop>`: employment size minus employed, read from the buildings in the running
+  game; `pp_job_room_left_<pop>` takes off what step 1 used) from the peasants, every peasant pop giving the same
+  share. Culture and religion as the engine's own fill gives them (control game: 98-100 % of the game-made people of
+  a class and location join the class's largest group): those of the class's largest pop there; where the class has
+  none, the owner's for an upper class (`upper = yes`), the peasants' own otherwise. Nothing about job sizes or
+  classes is written by hand: the classes come from the pop type files, the jobs from the live buildings, the groups
+  from the pops setup. Existing saves never had the loss and never run the step.
+- Result (fifth test game against the control, month 1): burghers 3.29 M against 3.82 M (86 %), laborers 39.5 M
+  against 45.2 M (87 %), clergy 96 %, nobles 103 %; people employed in buildings 72.1 M against 71.0 M; no script
+  error. The world's culture mix differs by 4.7 % for burghers and 2.1 % for laborers, the religion mix by 2.3 % and
+  0.9 %; Stockholm has 1,310 Swedish, 740 Holsatian and 440 Lower Saxon burghers (control 2,320 / 740 / 440). What
+  still differs: the step fills jobs, not spare room, so the idle people the control starts with (0.5 M burghers, 13 M
+  laborers) are not made, and the spare room fills by promotion (Jan: "As long as the existing buildings ... are
+  staffed for the most part ... And the rest should come from promotions"). A foreign trading house's own people
+  (the Kontor's `pop_size_created`) come back only at their setup size (Novgorod's Hanseatic burghers 250, control 500).
+- `[job_room] enabled = false` builds the mod without the lines (the control build of that day); it is `true`.
 - The AI counts both lines in full, so they cancel in its score; it values burgher and laborer room at zero anyway.
 - Expected: the surplus next to laid-off and short-staffed buildings demotes; recovery after layoffs and the staffing
   of new buildings are slower, bounded by the location's spare room and promotion speed. Read from the 1.4.9 code and

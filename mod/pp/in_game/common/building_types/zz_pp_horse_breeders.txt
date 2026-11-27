@@ -96,7 +96,6 @@ raw_modifier = {
   pp_levels_horse_breeders = 1
   local_population_capacity = -2
 }
-	can_close = no # building_shutdown
 	modifier = {
 		local_laborers_desired_pop = 0.8 # job_room
 	}
@@ -104,5 +103,6 @@ ai_construct_weight = {
     value = 0
     add = pp_market_short_horses
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:horse_breeders:building

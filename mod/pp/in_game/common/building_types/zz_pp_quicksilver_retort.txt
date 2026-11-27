@@ -88,7 +88,6 @@ modifier = {
     local_migration_attraction = 0.010
     local_mercury_output_modifier = 0.01875
 }
-	can_close = no # building_shutdown
 	raw_modifier = {
 		local_laborers_desired_pop = -0.8 # job_room
 	}
@@ -96,5 +95,6 @@ ai_construct_weight = {
     value = 0
     add = pp_market_short_mercury
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:quicksilver_retort:building

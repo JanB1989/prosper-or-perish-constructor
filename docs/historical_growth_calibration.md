@@ -337,6 +337,7 @@ worth, and everything that makes Province Food answers by itself.
   the Surplus Sales end at 8 months, and without them packing pays only above victuals 10.3 (6.9 at +50 % production
   efficiency). The AI builds a new Grange from 18 months. A staffed Tavern takes 500 % of the Surplus Sales in its
   location per level, and `province_starving` sets victuals output to -200 %: a starving province packs nothing.
+  (Superseded: 2026-10-03 evening 63.53 - 13.85 x price, since 2026-11-27 38.8 - 8 x price; see the end of 6.6.)
 - **No droop and no dead legs**: the per-level droops of Tavern and Grange are gone; the Scarcity Premium good
   (`province_food_purchase`) stays defined for old saves but nothing produces it.
 
@@ -436,6 +437,25 @@ buildings and a population-weighted fit of province growth on stored years. Run 
   1402 -> 1522: 399 -> 891, of it lumber mills 149 -> 235 (Extra Rations), Taverns 43 -> 185, pops 123 -> 202.
   Farm output per level fell about 9 % (no relief from advances). Answer (2026-10-03 evening): the steeper Grange line,
   Yards at every market centre (small inland caps), lumber mill victuals methods only in a glut.
+- **Grange fix (2026-11-27, Jan; not tested in game)**: the steep line 63.53 - 13.85 x victuals price paid only above
+  victuals 2.86. In the full runs only 9-25 % of markets were that dear before 1600 (49 % in 1652), fewer than 7 % of
+  people lived in a province with a staffed Grange before 1650, and the band between the Tavern's fill point and the
+  Grange's line was 14-18 months wide, so a province's store did not follow its market's victuals price. The Grange now
+  breaks even at **38.8 - 8 x price** (Full Stores Surplus Sales +0.225 per year above 12 months, was 0.13; Haulage
+  offset 2.1, was 2.323; Surplus Sales offset 3.83 unchanged), the pivot at 3.35, just under it above that (11.9 at
+  3.5, 11.6 at 4.0); the AI weight vetoes below 39.8 - 8 x price, never below 13 months. Break-even against the
+  Tavern's fill point (`store_lever.py`, floor prices, no production efficiency):
+
+  | Victuals price | 2.0 | 2.2 | 2.5 | 2.7 | 3.2 | 3.5 | 4.0 |
+  | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tavern fills to (months) | 11.6 | 10.0 | 7.5 | 5.9 | 2.9 | 1.0 | 0 |
+  | Grange packs down to | 22.8 | 21.2 | 18.8 | 17.2 | 13.2 | 11.9 | 11.6 |
+  | quiet band | 11.2 | 11.2 | 11.3 | 11.3 | 10.4 | 10.9 | 11.6 |
+
+  In the study's simulator (`f2_sim.py`, run data of the full runs) staffed Grange levels in 1452 rose from about 80 to
+  about 300 and the correlation between a province's stored months and its market's victuals price had the right sign
+  from the start. Production efficiency still moves both points; from about +15 % (was +20 %) a Tavern and a Grange
+  would both pay at one store at victuals 2.0 or below, bounded by the Tavern's cut of the Surplus Sales.
 
 ### 6.7 Farm trade-off: one store curve for every staple good (2026-10-03)
 

@@ -57,8 +57,9 @@ building:
       NOT = { pp_victualling_yard_site = yes }
     }
     # AI (2026-10-03): a new Grange only where it will pay and the food really piles up. Both terms are flat (vetoes):
-    # the store must stand a month above the Grange's break-even at today's victuals price (63.53 - 13.85 x price, the
-    # profit line at slot 2, never below 12 months; with the month: 23 at 3.0, 16 at 3.5, 13 from 3.75 up), and the
+    # the store must stand a month above the Grange's break-even at today's victuals price (38.8 - 8 x price since
+    # 2026-11-27, was 63.53 - 13.85 x price; the profit line at slot 2, never below 12 months; with the month: 23.8 at
+    # 2.0, 18.2 at 2.7, 15.8 at 3.0, 13 from 3.35 up), and the
     # province must gain food each month (production + consumption, which is negative). The second keeps the AI from
     # building Granges everywhere in the first years, when every store starts far above its rest point and is falling.
     # tests/test_store_lever.py ties the numbers.
@@ -66,7 +67,7 @@ building:
       value = 0
       if = {
         limit = { exists = market }
-        subtract = { value = 64.53 subtract = { value = "market.market_price(goods:victuals)" multiply = 13.85 max = 51.53 } subtract = pp_location_stored_months min = 0 max = 1 multiply = 10000 }
+        subtract = { value = 39.8 subtract = { value = "market.market_price(goods:victuals)" multiply = 8.0 max = 26.8 } subtract = pp_location_stored_months min = 0 max = 1 multiply = 10000 }
       }
       if = { limit = { NOT = { exists = market } } subtract = 10000 }
       if = { limit = { pp_location_province_food_balance <= 0 } subtract = 10000 }
@@ -106,13 +107,13 @@ building:
     # victuals, 1:40 against the Tavern's 1:30. 2026-09-30: every input, output and the food modifier scaled x0.4
     # (was 60 food -> 1.5 victuals), together with the Tavern and the Yard, so the victuals balance stays. slot 1: how the store reaches the market. The three methods pack the
     # same amount; the carts and wagons swap labour for animals and gear, so they pay only where labour is dear;
-    # each carries 2.323 offset, the Haulage share of the Grange's fixed cost (see slot 2)
+    # each carries 2.1 offset (2026-11-27, was 2.323), the Haulage share of the Grange's fixed cost (see slot 2)
     # (at default goods prices: Porters below labour 1.3, Ox Carts 1.3 to 1.55, Horse Wagons above).
     unique_production_methods = {
       pp_grange_porters = {
         produced = victuals
         manual_labor = 0.08
-        offset = 2.323
+        offset = 2.1
         output = 0.6
         category = building_maintenance
       }
@@ -120,7 +121,7 @@ building:
         livestock = 0.016
         lumber = 0.016
         manual_labor = 0.04
-        offset = 2.323
+        offset = 2.1
         produced = victuals
         output = 0.6
         category = building_maintenance
@@ -130,23 +131,24 @@ building:
         tools = 0.012
         lumber = 0.008
         manual_labor = 0.016
-        offset = 2.323
+        offset = 2.1
         produced = victuals
         output = 0.6
         category = building_maintenance
       }
     }
     # slot 2: Surplus Sales, the store leg and the AI gate method. Store lever ([stored_food] in constructor.toml):
-    # Surplus Sales output +13 % per stored year above 12 months (Full Stores, which stops growing at 24 months),
+    # Surplus Sales output +22.5 % per stored year above 12 months (Full Stores, which stops growing at 24 months),
     # -300 % per year below (zero at 8 months), and -500 % per staffed Tavern level in the location. The gate margin
-    # 4.0 x output modifier / 3.83 reaches the AI threshold 1.05 at 12.5 months stored, so the AI weight's price line
+    # 4.0 x output modifier / 3.83 reaches the AI threshold 1.05 at 12.3 months stored, so the AI weight's price line
     # (above) decides where a new Grange goes.
-    # Per level at floor prices, f = years above 12 months: profit = 0.6 p - 0.08 + 4.0 x (1 + 0.13 f) - 6.153
-    # (2026-10-03 evening: the line was 37.88 - 5.29 p, which left stores of 14-19 months in dear-victuals markets
-    # untouched; Mini World run 5: farms only answer a store under 14 months, so dear victuals never reached them):
-    # -> it packs down to 63.53 - 13.85 p months: 22 at victuals 3.0 (a store at the 24-month cap still pays), 15 at
-    # 3.5, about 12 from 3.75 up, and below victuals 2.86 never; under 8 months there are no sales at all, so the
-    # lean part of the store stays in the province, and a starving province packs nothing (province_starving).
+    # Per level at floor prices, f = years above 12 months: profit = 0.6 p - 0.08 + 4.0 x (1 + 0.225 f) - 5.93
+    # -> it packs down to 38.8 - 8 p months (2026-11-27, Jan's "Grange fix"): 24 at victuals 1.85, 22.8 at 2.0, 17.2
+    # at 2.7, 14.8 at 3.0, 13.2 at 3.2, the pivot at 3.35, then just under it (11.9 at 3.5, 11.6 at 4.0), about 11
+    # months above the Tavern's fill point at every price. History: 37.88 - 5.29 p (2026-10-03), then 63.53 - 13.85 p
+    # (2026-10-03 evening), which paid only above victuals 2.86 and left a 14-18 month gap to the Tavern, so stores
+    # did not follow the price. Under 8 months there are no sales at all, so the lean part of the store stays in the
+    # province, packing alone pays only above victuals 10, and a starving province packs nothing (province_starving).
     # The AI weight above keeps new Granges to where they will pay: a month above that point at today's price.
     unique_production_methods = {
       pp_grange_surplus_sales = {

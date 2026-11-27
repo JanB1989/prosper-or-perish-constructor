@@ -297,15 +297,20 @@
   always runs (one method, no Sell the Surplus), the Tavern follows the victuals price (Serve Victuals is its only
   slot and its gate). The Tavern must stay on the Province Food good: as flat food it would be a pure price switch.
   The Cookshop line is off the lever since 2026-10-03 (see Cookshop below).
-- The Grange packs a full store and answers the victuals price steeply (2026-10-03 evening; d3091976 had
-  37.88 - 5.29 x price): a working Grange breaks even at 63.53 - 13.85 x victuals price stored months (22 at 3.0,
-  because Full Stores stops growing at 24; 15 at 3.5; about 12 from 3.75 up, the pivot; never below 2.86). Full Stores
-  gives Surplus Sales +0.13 per year (was 0.34), Surplus Sales offset 3.83 (gate opens at 12.5 months), Haulage offset
-  2.323. Its `ai_construct_weight` vetoes (flat) a new Grange below that line + 1 month at today's price (never below
-  13) and where the province does not gain food each month (`pp_location_province_food_balance`);
-  `tests/test_store_lever.py` ties the weight's numbers to the design. Why: in Mini World run 5 the dear-victuals
-  markets sat at 14-19 stored months, above the farms' store bonus (below 14) and below the old Grange line, so no
-  building answered the price. No Granges at game start (`grange_at_start = false`).
+- The Grange packs a full store and follows the victuals price (2026-11-27, Jan's "Grange fix", not tested in game):
+  a working Grange breaks even at 38.8 - 8 x victuals price stored months (24 at 1.85, 22.8 at 2.0, 17.2 at 2.7, 14.8
+  at 3.0, the pivot at 3.35, then just under it: 11.9 at 3.5, 11.6 at 4.0), about 11 months above the Tavern's fill
+  point at every price. Full Stores gives Surplus Sales +0.225 per year, Surplus Sales offset 3.83 (gate opens at 12.3
+  months), Haulage offset 2.1; packing alone pays only above victuals 10. Its `ai_construct_weight` vetoes (flat) a
+  new Grange below that line + 1 month at today's price (39.8 - 8 x price, never below 13) and where the province does
+  not gain food each month (`pp_location_province_food_balance`); `tests/test_store_lever.py` ties the weight's
+  numbers to the design. Why: the line before (2026-10-03 evening, 63.53 - 13.85 x price, Full Stores +0.13, Haulage
+  2.323) paid only above victuals 2.86; before 1600 only 9-25 % of markets were that dear, fewer than 7 % of people
+  lived in a province with a staffed Grange before 1650, and the 14-18 month gap to the Tavern meant stores did not
+  follow the price (study 2026-11-27, `f2_design.py` / `f2_sim.py`: staffed Grange levels in 1452 about 80 -> 300,
+  the store / victuals price correlation right-signed from the start). Earlier still: 37.88 - 5.29 x price (d3091976),
+  which left Mini World run 5's dear-victuals markets at 14-19 months. No Granges at game start
+  (`grange_at_start = false`).
 - The Victualling Yard takes no store food (2026-10-03): it turns 2.33 gold of market staples into 0.932 victuals and
   nothing else (food-neutral, denser for trade): grain, rice, millet, maize, pease, salt fish and, since 2026-10-04,
   salt beef (1.555 livestock; sheep walked to market and stay inland). Harbour sites (cap minimum 2) and, since the evening, every market centre:

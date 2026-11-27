@@ -1697,8 +1697,10 @@ local_defensive = -0.24    # defensiveness: -24 % at an empty store, 2 % per mon
 
 [stored_food.full]
 # Full Stores: per year above the pivot (size 1 at 24 months)
-local_province_food_sales_output_modifier = 0.13    # the Grange's Surplus Sales (2026-10-03 evening, was 0.34: a
-# flatter store term makes the victuals price move the Grange's stop point 13.9 months per gold instead of 5.3)
+local_province_food_sales_output_modifier = 0.225   # the Grange's Surplus Sales (2026-11-27, Jan: "Grange fix";
+# was 0.13 from 2026-10-03 evening, 0.34 before): with the Haulage offset 2.1 the Grange packs down to 38.8 - 8 x the
+# victuals price stored months (8 months per gold; was 63.53 - 13.85 x price, which paid only above victuals 2.86 and
+# left 14-18 months between the Tavern's fill point and the Grange). Now the gap is about 11 months at every price.
 # (Province Food output and the staples: the store curve below; was Province Food -0.75 per year, staples 0)
 local_defensive = 0.24     # defensiveness: +24 % at 24 months, 2 % per month above the pivot (2026-10-05, Jan)
 

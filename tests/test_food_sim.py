@@ -120,11 +120,14 @@ def test_tavern_fills_a_low_store_and_the_grange_packs_a_full_one():
     assert rules.food_modifier(0, starving=True) == pytest.approx(1 / 0.65 + 1)   # starving people pay more
     # the Tavern pays at a low store only, the Grange at a full one only, never both at the same store
     assert rules.tavern_profit(3, False) > 0 > rules.tavern_profit(12, False)
-    # 2026-10-03: only a really full store, and only from about the default victuals price up (never below 2.86)
-    assert rules.yard_profit(24, False) < 0
-    base = fs.SimRules(victuals_price=3.0)
-    assert base.yard_profit(24, False) > 0 > base.yard_profit(12, False)
-    assert fs.SimRules(victuals_price=3.5).yard_profit(16, False) > 0
+    # 2026-11-27: the Grange packs down to 38.8 - 8 x the victuals price stored months (17.2 at the default 2.7),
+    # only a store at the cap below victuals 1.85, just under the pivot when victuals are dear
+    assert rules.yard_profit(18, False) > 0 > rules.yard_profit(16.5, False)
+    cheap = fs.SimRules(victuals_price=2.0)
+    assert cheap.yard_profit(24, False) > 0 > cheap.yard_profit(22, False)
+    assert fs.SimRules(victuals_price=1.8).yard_profit(24, False) < 0
+    dear_grange = fs.SimRules(victuals_price=3.5)
+    assert dear_grange.yard_profit(12.5, False) > 0 > dear_grange.yard_profit(11, False)
     for months in range(25):
         assert not (rules.tavern_profit(months, False) > 0 and rules.yard_profit(months, False) > 0), months
     # a staffed Tavern takes the Grange's Surplus Sales away, and a starving province packs no victuals

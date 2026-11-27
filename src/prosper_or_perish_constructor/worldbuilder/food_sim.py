@@ -37,7 +37,7 @@ Per pool and month (rules calibrated on the pre-plague saves 1337.4 / 1341.3 / 1
   against ``cookshop_cost``, their inputs' share of the revenue at 12 months);
 * Taverns, Granges and Victualling Yards ramp their staffing the same way at the market victuals price (2.7): the
   Tavern serves 24 Province Food (x the modifier) from 0.8 victuals and pays below ~7 stored months; the Grange takes
-  24 food, packs 0.6 victuals and earns Surplus Sales (+0.13 per year above 12 months, -3.0 per year below, -5.0 per
+  24 food, packs 0.6 victuals and earns Surplus Sales (+0.225 per year above 12 months, -3.0 per year below, -5.0 per
   staffed Tavern level), so it pays above ~17 months; the harbour Yard takes 8 food and follows the victuals price
   alone; a starving pool packs no victuals. Taverns only get the victuals their market has (staffed Yards and other
   producers; pops compete); a starving pool loses the noble who staffs its Tavern at 0.09 a year;
@@ -205,13 +205,13 @@ class SimRules:
     # first tick (config/start_markets.csv, predicted from a start save) instead of the nearest-centre proxy
     market_assignment: bool = False
     # Store lever (store_lever.py; SimRules.from_project reads these from constructor.toml, the Tavern and Grange
-    # blueprints and the mod's province_starving, the defaults are the values of 2026-10-03)
+    # blueprints and the mod's province_starving, the defaults are the values of 2026-11-27)
     pivot_months: float = 12.0
     # the store curve ([stored_food.curve]): (stored months, Province Food output as a share of an empty store's),
     # linear between the knots; the output modifier is share / share at the pivot - 1
     food_curve: tuple = ((0.0, 1.0), (6.0, 0.8), (12.0, 0.65), (18.0, 0.5), (24.0, 0.4))
     sales_low: float = -3.0             # Surplus Sales output per year below the pivot
-    sales_full: float = 0.13
+    sales_full: float = 0.225           # 2026-11-27 (was 0.13)
     starving_food: float = 1.0          # province_starving: Province Food output
     starving_victuals: float = -2.0     # province_starving: victuals output (a starving province packs nothing)
     food_price: float = 0.10            # Province Food at its floor
@@ -232,7 +232,7 @@ class SimRules:
     yard_victuals: float = 0.6          # Porters (loose stores)
     yard_packing_victuals: float = 0.0  # a Packing method's extra victuals (what-if; its goods cost is not modelled)
     yard_sales: float = 4.0             # province_food_sales (Surplus Sales, the Grange's leg alone)
-    yard_fixed: float = 6.233           # labour 0.08 + offset 2.323 (Haulage) + 3.83 (Surplus Sales), 2026-10-03 evening
+    yard_fixed: float = 6.01            # labour 0.08 + offset 2.1 (Haulage) + 3.83 (Surplus Sales), 2026-11-27
 
     @classmethod
     def from_raw(cls, raw: Mapping[str, Any] | None) -> "SimRules":

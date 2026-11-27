@@ -1,0 +1,102 @@
+﻿# Prosper or Perish - Russia (docs/country_finetunes.md, "Russia and Lithuania").
+
+# Muscovy takes the city of Vladimir: the Grand Principality of Vladimir starts as a separate country under Muscovy's
+# own ruler (a personal union with Muscovy as senior partner) and stayed separate in every observer run; by 1389 it was
+# Moscow's patrimony. Vanilla has no way to fold a union partner in (no content gives enable_annexation_of_members),
+# and union members cannot declare war on each other, so the aims never reached it. Only while the union stands, only
+# an AI Vladimir; the AI takes it, a player chooses.
+pp_mos_vladimir_patrimony_decision = {
+	decision_category = country_specific_decisions
+	only_once = yes
+
+	tags = { MOS RUS }
+
+	potential = {
+		c:VLR ?= { in_union_with = root }
+	}
+
+	allow = {
+		is_subject = no
+		at_war = no
+		owns = location:moscow
+		c:VLR ?= {
+			is_ai = yes
+			is_junior_partner = yes
+			at_war = no
+		}
+	}
+
+	ai_will_do = {
+		value = 100
+	}
+
+	option = {
+		name = pp_mos_vladimir_patrimony_decision.a
+		ai_chance = { value = 100 }
+		effect = {
+			annex_country = { country = c:VLR }
+		}
+	}
+}
+
+# Vanilla block (decisions/flavor_decisions_rus.txt) with the change marked PP.
+TRY_REPLACE:rus_proclaim_tsardom_decision = {
+	decision_category = country_specific_decisions
+	only_once = yes
+
+	tags = { RUS }
+
+	potential = {
+		current_age_or_later = {
+			age = age_1_traditions
+		}
+	}
+
+	allow = {
+		current_age_or_later = {
+			age = age_2_renaissance
+		}
+		is_subject = no
+		at_war = no
+		has_regent = no
+		government_type = government_type:monarchy
+		religion = religion:orthodox
+		trigger_if = {
+			limit = { exists = international_organization:tatar_yoke }
+			NOT = { is_member_of_international_organization = international_organization:tatar_yoke }
+		}
+		owns = location:moscow
+		# PP: Vladimir and Novgorod count when we, one of our subjects or a country in a union with us holds them
+		# (vanilla: owns each), as for forming Russia (formable_countries/pp_formable_adjustments.txt)
+		location:vladimir = { owner ?= { OR = { this = root is_subject_of = root in_union_with = root } } }
+		location:novgorod = { owner ?= { OR = { this = root is_subject_of = root in_union_with = root } } }
+		prestige > 50
+		total_population > 5000
+	}
+
+	ai_will_do = {
+		value = 100
+	}
+
+	illustration_tags = {
+		10 = happy
+		10 = interior
+	}
+
+	illustration_scope = {
+		capital = { save_scope_as = target_location }
+		ruler ?= { save_scope_as = target_ruler }
+	}
+
+	historical_info = rus_proclaim_tsardom_decision.historical_info
+
+	option = {
+		name = rus_proclaim_tsardom_decision.a
+		ai_chance = { value = 100 }
+		effect = {
+			set_country_rank_effect = { rank = country_rank:rank_empire }
+			add_prestige = prestige_severe_bonus
+			add_reform = government_reform:tsardom
+		}
+	}
+}

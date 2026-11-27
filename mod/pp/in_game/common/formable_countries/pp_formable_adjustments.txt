@@ -50,3 +50,50 @@ TRY_REPLACE:PRU_f = { #Prussia
 		}
 	}
 }
+
+TRY_REPLACE:RUS_f = { #Russia
+	level = 4
+	required_locations_fraction = 0.5
+	capital_required = yes
+	content_priority = 800
+	rule = historical
+
+	potential = {
+		culture = { has_culture_group = culture_group:russian_group }
+	}
+
+	allow = {
+		is_subject = no
+		owns = location:moscow
+		# PP: Novgorod, Tver and Vladimir count when we, one of our subjects or a country in a union with us holds them
+		# (vanilla: owns each; 2026-11-27, Jan: in 13 runs Muscovy had the 50 % in 6 and was stopped by Vladimir, a
+		# separate country under its own ruler, in 5)
+		location:novgorod = { owner ?= { OR = { this = root is_subject_of = root in_union_with = root } } }
+		location:tver = { owner ?= { OR = { this = root is_subject_of = root in_union_with = root } } }
+		location:vladimir = { owner ?= { OR = { this = root is_subject_of = root in_union_with = root } } }
+	}
+
+	name = RUS
+	flag = RUS
+	adjective = RUS_ADJ
+	tag = RUS
+	color = map_RUS
+
+	regions = {
+		russian_region
+	}
+	areas = {
+		severia_area
+		kursk_area
+	}
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank_effect = { rank = country_rank:rank_kingdom }
+		}
+
+	}
+	ai_will_do = {
+		value = 1000
+	}
+}

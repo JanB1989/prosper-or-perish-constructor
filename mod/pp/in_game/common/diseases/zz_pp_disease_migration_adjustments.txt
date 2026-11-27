@@ -1,8 +1,4 @@
-﻿TRY_INJECT:great_pestilence = {
-	location_modifier = {
-		local_migration_attraction = -1.5
-	}
-}
+﻿# great_pestilence carries the line in its replacement (pp_great_pestilence.txt): an inject misses a replaced block.
 
 TRY_INJECT:influenza = {
 	location_modifier = {

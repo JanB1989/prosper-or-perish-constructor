@@ -251,7 +251,8 @@ pp_muscovy_conquer_steppe = {
 	region = ural_region
 }
 
-# Kiev looks west to the Carpathians and Hungary east to Ruthenia, so they meet each other.
+# Kiev looks west to the Carpathians (Hungary's Ruthenia aim, pp_hungary_go_east, is gone since 2026-11-27: Lithuania
+# takes Ruthenia, below).
 pp_kiev_go_west = {
 	preference_type = conquest
 	modifier = 2
@@ -267,9 +268,12 @@ pp_balkans_go_north = {
 	region = carpathia_region
 }
 
-pp_hungary_go_east = {
+# Lithuania (docs/country_finetunes.md): vanilla's Ruthenia aim (setup 25_area_preferences.txt) 5 -> 10 and the
+# Smolensk area added (Lithuania took Kyiv in 1362 and Smolensk in 1404). Re-check after a game update.
+REPLACE:lithuania_conquer_ruthenia = {
 	preference_type = conquest
-	modifier = 2
-
+	modifier = 10
 	region = ruthenia_region
+	area = zaporizhzhia_area
+	area = smolensk_area
 }

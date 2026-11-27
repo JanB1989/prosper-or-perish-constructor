@@ -1,0 +1,19 @@
+﻿# Lithuania takes Ruthenia and Smolensk (docs/country_finetunes.md): Lithuania prefers every country that rules from
+# Ruthenia (Kiev, Halych, Volhynia ...) or the Smolensk area (Lithuania took Kyiv in 1362 and Smolensk in 1404).
+pp_lithuania_ruthenia_focus = {
+	attacker_potential = {
+		tag = LIT
+	}
+	target_trigger = {
+		NOT = { is_subject_of = scope:attacker }
+		capital ?= {
+			OR = {
+				region = region:ruthenia_region
+				area = area:smolensk_area
+			}
+		}
+	}
+	score = {
+		add = 30
+	}
+}

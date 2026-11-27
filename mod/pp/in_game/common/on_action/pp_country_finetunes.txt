@@ -7,6 +7,26 @@ on_game_start = {
 		delay = { days = 1 }
 		pp_colonizer_area_preferences
 		pp_country_start_adjustments
+		pp_russia_conquer_region_trim
+	}
+}
+
+# Vanilla's on_game_start (_hardcoded.txt) gives every country with its capital in the Russian region
+# russia_conquer_region (x26 on Russia, the steppe, the Urals and Severia), so Smolensk, Vladimir, Novgorod, Tver and
+# Ryazan race Muscovy for it. Only Muscovy and Russia keep it; the others keep their home-region aim from the setup
+# (generic_conquer_home_region). It runs a day after the grant.
+pp_russia_conquer_region_trim = {
+	effect = {
+		every_country = {
+			limit = {
+				has_area_preference = russia_conquer_region
+				NOR = {
+					tag = MOS
+					tag = RUS
+				}
+			}
+			remove_area_preference = russia_conquer_region
+		}
 	}
 }
 
@@ -153,12 +173,10 @@ pp_country_finetune_area_preferences = {
 			add_area_preference = pp_muscovy_gather_russian_lands
 			add_area_preference = pp_muscovy_conquer_steppe
 		}
-		# Kiev and Hungary face each other (ai_scripted_expansion_score/target pp_kiev_hungary.txt).
+		# Kiev looks west (ai_scripted_expansion_score/target pp_kiev_hungary.txt); Ruthenia is Lithuania's
+		# (pp_lithuania_ruthenia.txt, vanilla's lithuania_conquer_ruthenia replaced in pp_conquest_preferences.txt).
 		c:KIE ?= {
 			add_area_preference = pp_kiev_go_west
-		}
-		c:HUN ?= {
-			add_area_preference = pp_hungary_go_east
 		}
 		# England: the Angevin lands where it still holds land, not all of France (pp_conquest_preferences.txt).
 		c:ENG ?= {

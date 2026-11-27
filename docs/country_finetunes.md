@@ -2,6 +2,43 @@
 
 Hand-tuned changes for single countries, one entry each: what and why.
 
+- **Russia and Lithuania: Russia can form, Vladimir joins Muscovy, Lithuania takes Ruthenia** (2026-11-27, Jan, not
+  tested in game). Why: in 13 full runs Russia never formed; Muscovy reached the 50 % in 6 and was stopped in 5 by the
+  city of Vladimir alone. Vladimir (VLR) starts with Muscovy's ruler (Ivan Kalita rules MOS, VLR, NOV, NZH, KOS, UGL and GRS
+  in vanilla's setup): a personal union, IO `union`, no senior partner on day 0, Muscovy
+  senior and VLR junior by 1347 (run 5d232536), VLR out of the union by 1492; no location passed between the two in 12
+  of 13 runs. Vanilla content gives no union a way to fold a member in (`enable_annexation_of_members` has no source),
+  and union members cannot declare war on each other, so no aim could reach it. Meanwhile Kyiv ate the Golden Horde
+  (largest East Slavic state 1402-1502 in 5-6 runs) and Hungary ended as Ruthenia's largest owner in 7 runs. Jan: a
+  targeted change, no general rule for union seniors; "the Lithuanian aim makes sense".
+  - Forming Russia (`formable_countries/pp_formable_adjustments.txt`, TRY_REPLACE of vanilla `RUS_f`): Novgorod, Tver
+    and Vladimir count when the former, one of its subjects or a union partner holds them (was: owns each); Moscow,
+    the capital rule, not a subject, 50 % of the Russian region plus Severia and Kursk stay. Forming takes no land:
+    vanilla's `form_effect` only sets the rank, subjects and union partners keep theirs. The same rule for Vladimir and
+    Novgorod in `rus_proclaim_tsardom_decision` (`decisions/pp_russia_decisions.txt`, TRY_REPLACE).
+  - The Patrimony of Vladimir (`pp_mos_vladimir_patrimony_decision`, same file): Muscovy/Russia, while in a union with
+    an AI Vladimir that is the junior side, not a subject, at peace, owning Moscow, annexes it (vanilla's
+    `annex_country`, as Navarre's Normandy decision). The AI takes it at once (ai_will_do 100); a player chooses. Picked
+    over an aim (union members cannot fight each other), a cheaper union integration (vanilla has none to make cheaper)
+    and a setup change (the setup is the World Builder's generated start; removing a country breaks the start ladder
+    tests). Vladimir's own expansion (76-145 locations in 4 runs: Nizhny Novgorod, Kostroma, Suzdal, Murom) ends; that
+    land is Muscovy's to take now, by its Gathering of the Russian Lands aim.
+  - `russia_conquer_region` (vanilla x26 on Russia, the steppe, the Urals and Severia, given at `on_game_start` to every
+    country with its capital in the Russian region): only Muscovy and Russia keep it; `pp_russia_conquer_region_trim`
+    removes it a day after the grant (`on_action/pp_country_finetunes.txt`). Smolensk, Novgorod, Tver, Ryazan and the
+    rest keep the setup's `generic_conquer_home_region`. A gift trimmed, like the Maghreb's control gifts below.
+  - Lithuania (`ai_scripted_expansion_score/target pp_lithuania_ruthenia.txt`): +30 target score on every country
+    ruling from Ruthenia or the Smolensk area, war targets even where they are not neighbours after 36 months of peace
+    (the Ottoman and Brandenburg pattern: a candidate list of every such country, score = tax base x 10 + 30; it opens
+    a planned war only, the peace AI still takes border land by its own rules); vanilla's `lithuania_conquer_ruthenia`
+    (setup preference of LIT) 5 -> 10 with the Smolensk area added (REPLACE in `pp_conquest_preferences.txt`; Lithuania
+    took Kyiv in 1362 and Smolensk in 1404). Lithuania is not a lucky nation: no strength or one-war rule.
+  - Retired: Hungary's Ruthenia aim of 2026-10-09 (`pp_hungary_go_east` x2, `pp_hungary_east_focus` +30,
+    `pp_hungary_east_targets`); Kiev's `pp_kiev_go_west` stays.
+  Only a new game shows: whether the AI takes the decision on the first day (or the first AI decision pass), whether
+  annexing a union partner by script keeps the union's other members (Nizhny Novgorod, Kostroma) in it, Lithuania's
+  wars against Kyiv and Smolensk, and Russia forming. `tests/test_russia_lithuania.py`.
+
 - **Maghreb: the control gifts of the base game and Across the Pillars cut** (2026-11-27, Jan, not tested in game).
   Why: in four observer runs Morocco, Tlemcen and Tunis never declined; their population-weighted control rose from
   about 0.32 in 1342 to 0.85-0.91 in 1837, inland and desert included, above Western Europe (0.67-0.76) and about 0.2
@@ -169,6 +206,7 @@ Hand-tuned changes for single countries, one entry each: what and why.
   Carpathians (Hungary, Wallachia, Moldavia), and targets ruling from the steppe, the Volga or Russia count x0.25; HUN
   +30 on every country ruling from Ruthenia (Kiev, Halych); MOS/RUS +30 on every country ruling from the steppe or the
   Volga (the Golden Horde and its heirs); all of them war targets even if not neighbours (after 36 months of peace).
+  (Hungary's Ruthenia half retired 2026-11-27, top entry.)
   At start the conquest preferences `pp_kiev_go_west` (Carpathians), `pp_hungary_go_east` (Ruthenia) and
   `pp_muscovy_conquer_steppe` (steppe + Volga), x2 each, and Muscovy +500 starting gold
   (`on_action/pp_country_finetunes.txt`; a start adjustment since 2026-11-19, top entry). Why: Kiev grew to 250-1,260 locations in most runs by eating the Golden

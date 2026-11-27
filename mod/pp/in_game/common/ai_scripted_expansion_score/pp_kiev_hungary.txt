@@ -1,4 +1,4 @@
-﻿# Kiev west, Hungary east, Muscovy into the steppe (docs/country_finetunes.md).
+﻿# Kiev west, Muscovy into the steppe (docs/country_finetunes.md).
 
 # Kiev prefers every country that rules from the Carpathians (Hungary, Wallachia, Moldavia).
 pp_kiev_west_focus = {
@@ -33,19 +33,8 @@ pp_kiev_not_east = {
 	}
 }
 
-# Hungary prefers every country that rules from Ruthenia (Kiev, Halych).
-pp_hungary_east_focus = {
-	attacker_potential = {
-		tag = HUN
-	}
-	target_trigger = {
-		NOT = { is_subject_of = scope:attacker }
-		capital ?= { region = region:ruthenia_region }
-	}
-	score = {
-		add = 30
-	}
-}
+# Hungary's Ruthenia aim (pp_hungary_east_focus) is gone since 2026-11-27: Lithuania takes Ruthenia
+# (pp_lithuania_ruthenia.txt).
 
 # Muscovy/Russia prefers every country that rules from the steppe or the Volga (the Golden Horde and its heirs).
 pp_muscovy_steppe_focus = {

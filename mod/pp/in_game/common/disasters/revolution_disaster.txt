@@ -1,0 +1,114 @@
+﻿# PP: same-path copy of vanilla's disaster, written by `uv run ppc disasters apply` (src/prosper_or_perish_constructor/disaster_breaking_point.py); do not edit.
+revolution_disaster = {
+
+	image = "gfx/interface/illustrations/disaster/revolution_disaster.dds"
+
+	monthly_spawn_chance = monthly_spawn_chance_very_low
+	can_start = {
+		pp_disaster_restart_allowed_trigger = { type = revolution_disaster } # PP: breaking point
+
+		has_any_active_disaster = no
+		current_age = age_6_revolutions
+		is_revolutionary = no
+		NOT = { has_blocked_disaster_trigger = { type = revolution_disaster } }
+		in_civil_war = no
+		at_war = no
+		has_embraced_institution = institution:enlightenment
+		OR = {
+			average_country_literacy > 55
+			AND = {
+				is_great_power = yes
+				OR = {
+					"estate_power(estate_type:crown_estate)" >= 0.5
+					societal_value:absolutism_vs_liberalism < 0
+				}
+			}
+		}
+		OR = {
+			is_great_power = yes
+			custom_tooltip = {
+				text = revolution_disaster_tt
+				capital.sub_continent = {
+					any_country_with_capital_in_geography = {
+						this != ROOT
+						OR = {
+							is_revolutionary = yes
+							hidden_trigger = { revolutionary_target ?= this }
+						}
+					}
+				}
+			}
+		}
+		hidden_trigger = {
+			#hidden away as they pollute the tooltip and are rarely relevant for the player
+			NOT = { tag = PAP }	#Theocracies are allowed to go through the revolution, but the Pope should be excluded...
+			NOT = { government_type = government_type:steppe_horde }
+			NOT = { government_type = government_type:tribe }
+			NOR = {
+				country_type = pop
+				country_type = building
+			}
+		}
+		trigger_if = {
+			limit = {
+				OR = {
+					has_variable = easier_rev_disaster
+					has_variable = had_aspiration_for_liberty_disaster_variable
+				}
+			}
+			OR = {
+				estate_satisfaction:peasants_estate < 0.4
+				"estate(estate_type:peasants_estate)" = { estate_tax_rate > 0.55 }
+				"estate(estate_type:burghers_estate)" = { estate_tax_rate > 0.55 }
+			}
+		}
+		trigger_else = {
+			estate_satisfaction:peasants_estate < 0.35
+			estate_satisfaction:burghers_estate < 0.35
+		}
+	}
+	
+	can_end = { # PP: breaking point: vanilla's way out, or the breaking point
+		OR = {
+			AND = {
+		revolution_disaster_end_trigger = yes
+	}
+			pp_disaster_breaking_point_trigger = { type = revolution_disaster }
+		}
+	}
+	modifier = {
+		pop_leave_rebels_threshold = 0.1
+		stability_investment = huge_stability_investment_penalty
+	}
+	
+	on_start = {
+		trigger_event_non_silently = revolution_disaster.1
+	}
+	on_end = { # PP: breaking point: past it without vanilla's way out, vanilla's end without the reward, then the blow
+		if = {
+			limit = {
+				pp_disaster_breaking_point_trigger = { type = revolution_disaster }
+				NOT = { AND = {
+		revolution_disaster_end_trigger = yes
+	} }
+			}
+			
+			remove_from_revolutionary_list = yes
+			pp_disaster_breaking_point_effect = { type = revolution_disaster }
+		}
+		else = {
+		trigger_event_non_silently = revolution_disaster.3
+	}
+		pp_disaster_escalation_cleanup_effect = { type = revolution_disaster }
+	}
+	
+	on_monthly = {
+
+		random_list = {
+			1 = { trigger_event_non_silently = parliaments.28 }
+			99 = { }
+		}
+		# PP: breaking point
+		pp_disaster_escalation_effect = { type = revolution_disaster }
+	}
+}

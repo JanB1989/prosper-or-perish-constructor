@@ -945,6 +945,56 @@
   `test_town_hall_upkeep_a_third_of_vanilla`, `test_members_think_well_of_the_league`,
   `test_kontors_demanded_only_in_the_winners_towns`).
 
+## Disasters Come to a Head (2026-11-27, Jan; not tested in game)
+
+- Why: a vanilla disaster has no timer, it ends only when `can_end` holds, and while it runs the AI declares no war and
+  (`has_any_active_disaster = no` in nearly every `can_start`) no other disaster starts. Observer runs had about 20
+  disasters longer than 50 years, about 10 longer than a century (Ottomans in `religious_turmoil` 1538-1837, Yuan in
+  `crisis_of_the_chinese_dynasty` from 1441, Nahuatl states in `reform_society` 300-400 years). Jan: "It shouldn't be
+  250 years of disaster. It should at some point either be resolved or accelerated in a manner that has catastrophic
+  consequences"; "I like the 25-year variant, then ramp up ... in the vanilla style".
+- The rule, one for every disaster: years 0-25 vanilla. From 25 years three bands (25, 30, 35), each once, through the
+  disaster's own `on_monthly` (`pp_disaster_escalation_effect`, events `pp_disaster.1-3`, the player sees an event):
+  stability mild / severe / extreme penalty and every estate's satisfaction mild / severe / extreme penalty at the
+  band's start, and a band modifier (`pp_disaster_coming_to_head_1-3`, 6 years, removed when the disaster ends) with
+  `monthly_rebel_growth` 0.005 / 0.01 / 0.02 (vanilla reform_society, crisis_of_the_chinese_dynasty,
+  dissolution_of_delhi), `stability_investment` penalty / large / huge (dissolution_of_delhi, savonarola,
+  revolution_disaster) and target satisfaction small / medium / large (horde_civil_war, crisis_of_faith,
+  court_and_country). At 40 years `can_end` holds (`OR = { AND = { <vanilla> } pp_disaster_breaking_point_trigger }`);
+  `on_end` then takes the breaking point when vanilla's way out does not hold too: vanilla's `on_end` without the reward
+  of a won disaster, then `pp_disaster_breaking_point_effect`: `block_disaster_temporarily_effect` 25 years (vanilla's
+  `blocked_disaster_<type>`, read by `pp_disaster_restart_allowed_trigger` at the top of every copy's `can_start`) and
+  event `pp_disaster.10` with one blow: the least controlled provinces outside the capital's (province average control
+  < 0.25, at most a quarter of the provinces, vanilla succession.100's order) break away as countries of their own
+  (cores, truce, like the enclave release); else, with an estate stronger than the crown (vanilla coup_attempt's start
+  condition), the strongest estate rises with the least controlled third of the provinces in a civil war (vanilla
+  revolution_disaster.1 / succession.100: `create_rebel`, pop allegiance, `start_civil_war` with instant levies); else
+  stability ultimate penalty (-50) and government power ultimate penalty (-25). `rise_of_the_szlachta` ends by
+  outcomes: it gets the band cleanup in each and one more outcome for the breaking point, valid only when no vanilla
+  outcome is. No pulse: nothing on an on_action, the events have no timer.
+- Form: same-path copies `in_game/common/disasters/<vanilla file name>` (a same-path mod file replaces vanilla's whatever
+  the rule; an `INJECT:` cannot do it: an injected trigger section the target already has is dropped, and `can_end`
+  must become an OR). `ppc disasters apply|check|pin` (`disaster_breaking_point.py`, also run by the finalize step of
+  `ppc build`/`sync`) writes them from vanilla's files byte for byte plus the inserted lines (marked `# PP: breaking
+  point`); the shared logic is hand-written: `scripted_triggers/pp_disaster_triggers.txt`,
+  `scripted_effects/pp_disaster_effects.txt`, `events/pp_disaster_events.txt`,
+  `main_menu/common/static_modifiers/pp_disaster_modifiers.txt`, `pp_disasters_l_english.yml` (the rule is also in the
+  vanilla Disaster concept's description, moved to `localization/replace` by the finalize step).
+- Per disaster: `TIMEOUT_RULES` in the module names what goes from vanilla's `on_end` at a breaking point (reward
+  events, inline rewards such as `add_legitimacy = legitimacy_extreme_bonus`) and what cleanup of a dropped event stays,
+  with the review in one line each. Exempt (`EXEMPT`, vanilla ends them within 25 years): aspiration_for_liberty,
+  coup_attempt, court_and_country, english_civil_war, french_wars_religion, revolutionary_chaos, time_of_troubles.
+  Kept whole at a breaking point: crisis_of_the_chinese_dynasty (only penalties), struggle_for_royal_power (cleanup),
+  death_of_hayan_wuruk (vanilla's own 30-year end comes first), hook_and_cod_wars (its cleanup lives in scripted effects
+  local to its event file, so its stability bonus is the one reward left).
+- Game update: `tests/test_disaster_breaking_point.py` fails when a vanilla disaster file changes
+  (`tests/disaster_vanilla_pins.csv`), when one is added without a rule or exemption, or when a copy is not vanilla plus
+  the rule. Review the changed `on_end` for rewards, then `uv run ppc disasters apply` and `uv run ppc disasters pin`.
+  A dropped event that vanilla no longer fires fails `apply`.
+- Not known: whether the console's `disaster` command honours `can_start`; whether every disaster's `on_end` runs when
+  a country is annexed (the breaking point needs the country alive). A save loaded mid-disaster gets the band it is in
+  at once, and every disaster past 40 years breaks within a month.
+
 ## Vanilla Replace Pins (2026-11-02, Jan)
 
 - A `REPLACE:` or `TRY_REPLACE:` block is a frozen copy of vanilla, and `ppc update-audit` compares vanilla with vanilla

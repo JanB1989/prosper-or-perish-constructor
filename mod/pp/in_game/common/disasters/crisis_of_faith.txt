@@ -1,0 +1,137 @@
+﻿# PP: same-path copy of vanilla's disaster, written by `uv run ppc disasters apply` (src/prosper_or_perish_constructor/disaster_breaking_point.py); do not edit.
+crisis_of_faith = {
+
+	image = "gfx/interface/illustrations/disaster/religious_turmoil.dds"
+
+	monthly_spawn_chance = {
+		value = monthly_spawn_chance_very_high
+		add = {
+			value = var:crisis_of_faith_months_qualifying
+			multiply = 0.002
+		}
+		max = 0.2
+	}
+
+	can_start = {
+		pp_disaster_restart_allowed_trigger = { type = crisis_of_faith } # PP: breaking point
+
+		crisis_of_faith_qualifies_trigger = yes
+	}
+
+	can_end = { # PP: breaking point: vanilla's way out, or the breaking point
+		OR = {
+			AND = { crisis_of_faith_end_trigger = yes }
+			pp_disaster_breaking_point_trigger = { type = crisis_of_faith }
+		}
+	}
+
+	modifier = {
+		monthly_religious_influence = -0.20
+		global_crown_estate_power = -0.20
+		clergy_estate_target_satisfaction = larger_permanent_target_satisfaction_penalty
+		global_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+		monthly_clergy_estate_rebel_growth = 0.005
+		blocked_from_creating_subjects = yes
+	}
+
+	on_start = {
+		add_country_modifier = {
+			modifier = ai_crisis_of_faith_targets
+			years = -1
+			mode = add_and_extend
+		}
+		trigger_event_non_silently = crisis_of_faith.1
+	}
+
+	on_end = { # PP: breaking point: past it without vanilla's way out, vanilla's end without the reward, then the blow
+		if = {
+			limit = {
+				pp_disaster_breaking_point_trigger = { type = crisis_of_faith }
+				NOT = { AND = { crisis_of_faith_end_trigger = yes } }
+			}
+			remove_country_modifier = ai_crisis_of_faith_targets
+		if = {
+			limit = { exists = var:schismatic_clergy_rebel }
+			destroy_rebel = var:schismatic_clergy_rebel
+			remove_variable = schismatic_clergy_rebel
+		}
+		if = {
+			limit = {
+				government_type = government_type:theocracy
+				has_variable = schismatic_clergy_civil_war_won_variable
+			}
+			trigger_event_non_silently = crisis_of_faith.101
+		}
+		else_if = {
+			limit = { NOT = { government_type = government_type:theocracy } }
+			trigger_event_non_silently = crisis_of_faith.102
+		}
+		else = {
+			
+			
+		}
+		if = {
+			limit = { has_variable = schismatic_clergy_civil_war_won_variable }
+			remove_variable = schismatic_clergy_civil_war_won_variable
+		}
+			clear_crisis_of_faith_heresiarch_effect = yes
+			pp_disaster_breaking_point_effect = { type = crisis_of_faith }
+		}
+		else = {
+		remove_country_modifier = ai_crisis_of_faith_targets
+		if = {
+			limit = { exists = var:schismatic_clergy_rebel }
+			destroy_rebel = var:schismatic_clergy_rebel
+			remove_variable = schismatic_clergy_rebel
+		}
+		if = {
+			limit = {
+				government_type = government_type:theocracy
+				has_variable = schismatic_clergy_civil_war_won_variable
+			}
+			trigger_event_non_silently = crisis_of_faith.101
+		}
+		else_if = {
+			limit = { NOT = { government_type = government_type:theocracy } }
+			trigger_event_non_silently = crisis_of_faith.102
+		}
+		else = {
+			add_devotion = devotion_extreme_bonus
+			trigger_event_non_silently = crisis_of_faith.100
+		}
+		if = {
+			limit = { has_variable = schismatic_clergy_civil_war_won_variable }
+			remove_variable = schismatic_clergy_civil_war_won_variable
+		}
+	}
+		pp_disaster_escalation_cleanup_effect = { type = crisis_of_faith }
+	}
+
+	on_monthly = {
+		random_list = {
+			300 = { custom_tooltip = an_event_occurs_tt }
+			700 = { custom_tooltip = no_event_occurs_tt }
+		}
+		hidden_effect = {
+			if = {
+				limit = {
+					government_type = government_type:theocracy
+					NOT = { exists = var:crisis_of_faith_heresiarch_variable }
+					NOT = { has_variable = crisis_of_faith_heresiarch_denounced_variable }
+				}
+				seed_crisis_of_faith_heresiarch_effect = yes
+			}
+			random_list = {
+				50 = { trigger_event_silently = crisis_of_faith.2 }
+				50 = { trigger_event_silently = crisis_of_faith.3 }
+				50 = { trigger_event_silently = crisis_of_faith.4 }
+				50 = { trigger_event_silently = crisis_of_faith.5 }
+				50 = { trigger_event_silently = crisis_of_faith.12 }
+				50 = { trigger_event_silently = crisis_of_faith.13 }
+				700 = { }
+			}
+		}
+		# PP: breaking point
+		pp_disaster_escalation_effect = { type = crisis_of_faith }
+	}
+}

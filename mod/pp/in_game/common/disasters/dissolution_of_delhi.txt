@@ -1,0 +1,123 @@
+﻿# PP: same-path copy of vanilla's disaster, written by `uv run ppc disasters apply` (src/prosper_or_perish_constructor/disaster_breaking_point.py); do not edit.
+dissolution_of_delhi = {
+
+	image = "gfx/interface/illustrations/situation/fall_of_delhi.dds"
+	
+	monthly_spawn_chance = monthly_spawn_chance_low
+
+	can_start = {
+		pp_disaster_restart_allowed_trigger = { type = dissolution_of_delhi } # PP: breaking point
+
+		has_any_active_disaster = no
+		tag = DLH
+		situation:fall_of_delhi = {
+			situation_is_active = yes
+			exists = "active_resolution(resolution:fall_of_delhi_resolution)"
+			trigger_if = {
+				limit = {
+					situation:fall_of_delhi ?= {
+						resolution_is_active = resolution:fall_of_delhi_resolution
+					}
+				}
+				trigger_if = {
+					limit = {
+						c:DLH = { has_variable = harsher_requirements_for_disaster }
+					}
+					custom_tooltip = {
+						text = opposers_at_least_80_sop_tt
+						situation:fall_of_delhi ?= {
+							votes_for_resolution = {
+								resolution = resolution:fall_of_delhi_resolution
+								outcome = "active_resolution(resolution:fall_of_delhi_resolution).resolution_proposer"
+								value >= 0.8
+							}
+						}
+					}
+				}
+				trigger_else = {
+					custom_tooltip = {
+						text = opposers_at_least_95_sop_tt
+						situation:fall_of_delhi ?= {
+							votes_for_resolution = {
+								resolution = resolution:fall_of_delhi_resolution
+								outcome = "active_resolution(resolution:fall_of_delhi_resolution).resolution_proposer"
+								value >= 0.95
+							}
+						}
+					}
+				}
+			}
+		}
+		stability < 50
+	}
+	
+
+	can_end = { # PP: breaking point: vanilla's way out, or the breaking point
+		OR = {
+			AND = {
+		dissolution_of_delhi_end_trigger = yes
+	}
+			pp_disaster_breaking_point_trigger = { type = dissolution_of_delhi }
+		}
+	}
+
+	modifier = {
+		monthly_rebel_growth = 0.02
+		global_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+		stability_investment = stability_investment_penalty
+		global_manpower_modifier = -0.3
+		regiment_recruit_speed = -0.3
+		discipline = -0.10
+		land_morale_modifier = -0.10
+		global_institution_growth_modifier = -0.5
+		global_mercenaries_modifier = -0.5
+		monthly_prestige = -0.5
+		monthly_legitimacy = -0.3
+		country_cabinet_efficiency = -0.2
+		research_speed_modifier = -0.5
+	}
+	
+	on_start = {
+		c:DLH = { trigger_event_non_silently = dissolution_of_delhi.1 }
+	}
+
+	on_end = { # PP: breaking point: past it without vanilla's way out, vanilla's end without the reward, then the blow
+		if = {
+			limit = {
+				pp_disaster_breaking_point_trigger = { type = dissolution_of_delhi }
+				NOT = { AND = {
+		dissolution_of_delhi_end_trigger = yes
+	} }
+			}
+			c:DLH = { }
+			pp_disaster_breaking_point_effect = { type = dissolution_of_delhi }
+		}
+		else = {
+		c:DLH = { trigger_event_non_silently = dissolution_of_delhi.7 }
+		
+	}
+		pp_disaster_escalation_cleanup_effect = { type = dissolution_of_delhi }
+	}
+	
+	on_monthly = {
+
+		random_list = {
+			19 = { custom_tooltip = an_event_occurs_tt }
+			81 = { custom_tooltip = no_event_occurs_tt }
+		}
+		hidden_effect = {
+			random_list = {
+				3 = { trigger_event_silently = dissolution_of_delhi.2 }
+				3 = { trigger_event_silently = dissolution_of_delhi.3 }
+				3 = { trigger_event_silently = dissolution_of_delhi.4 }
+				3 = { trigger_event_silently = dissolution_of_delhi.5 }
+				3 = { trigger_event_silently = dissolution_of_delhi.6 }
+				3 = { trigger_event_silently = fall_of_delhi.8 }
+				80 = { }
+			}
+		}
+		
+		# PP: breaking point
+		pp_disaster_escalation_effect = { type = dissolution_of_delhi }
+	}
+}

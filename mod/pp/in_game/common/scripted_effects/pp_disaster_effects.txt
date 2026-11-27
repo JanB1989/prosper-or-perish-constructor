@@ -1,0 +1,214 @@
+﻿# PP (2026-11-27, Jan): disasters come to a head and break (AGENTS.md "Disasters Come to a Head"). Jan: "I like the
+# 25-year variant, then ramp up ... in the vanilla style"; "It shouldn't be 250 years of disaster. It should at some
+# point either be resolved or accelerated in a manner that has catastrophic consequences." Vanilla's way out stays open
+# all the time. The disaster copies (`ppc disasters apply`) call these with their own type; no pulse of its own: the
+# bands run from the disaster's on_monthly, the breaking point from its on_end.
+
+# Country scope, the disaster's on_monthly: the pressure bands at 25, 30 and 35 years (events pp_disaster.1-3, each
+# once; a save past a band starts at the band it is in).
+pp_disaster_escalation_effect = {
+	hidden_effect = {
+		if = {
+			limit = {
+				had_disaster_for_years = { disaster_type = disaster_type:$type$ years >= 35 }
+				NOT = { pp_disaster_band_reached_trigger = { type = $type$ band = 3 } }
+			}
+			set_variable = { name = pp_disaster_band_$type$ value = 3 }
+			trigger_event_silently = pp_disaster.3
+		}
+		else_if = {
+			limit = {
+				had_disaster_for_years = { disaster_type = disaster_type:$type$ years >= 30 }
+				NOT = { pp_disaster_band_reached_trigger = { type = $type$ band = 2 } }
+			}
+			set_variable = { name = pp_disaster_band_$type$ value = 2 }
+			trigger_event_silently = pp_disaster.2
+		}
+		else_if = {
+			limit = {
+				had_disaster_for_years = { disaster_type = disaster_type:$type$ years >= 25 }
+				NOT = { pp_disaster_band_reached_trigger = { type = $type$ band = 1 } }
+			}
+			set_variable = { name = pp_disaster_band_$type$ value = 1 }
+			trigger_event_silently = pp_disaster.1
+		}
+	}
+}
+
+# Country scope, the disaster's on_end (every ending): the band is over.
+pp_disaster_escalation_cleanup_effect = {
+	if = {
+		limit = { has_variable = pp_disaster_band_$type$ }
+		remove_variable = pp_disaster_band_$type$
+	}
+	pp_disaster_remove_band_modifiers_effect = yes
+}
+
+pp_disaster_remove_band_modifiers_effect = {
+	if = {
+		limit = { has_country_modifier = pp_disaster_coming_to_head_1 }
+		remove_country_modifier = pp_disaster_coming_to_head_1
+	}
+	if = {
+		limit = { has_country_modifier = pp_disaster_coming_to_head_2 }
+		remove_country_modifier = pp_disaster_coming_to_head_2
+	}
+	if = {
+		limit = { has_country_modifier = pp_disaster_coming_to_head_3 }
+		remove_country_modifier = pp_disaster_coming_to_head_3
+	}
+}
+
+# Country scope, a band event's option: every estate besides the crown loses satisfaction ($value$: vanilla's
+# estate_satisfaction_* values).
+pp_disaster_estates_lose_satisfaction_effect = {
+	if = {
+		limit = { country_has_estate = estate_type:nobles_estate }
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = $value$ }
+	}
+	if = {
+		limit = { country_has_estate = estate_type:clergy_estate }
+		add_estate_satisfaction = { type = estate_type:clergy_estate value = $value$ }
+	}
+	if = {
+		limit = { country_has_estate = estate_type:burghers_estate }
+		add_estate_satisfaction = { type = estate_type:burghers_estate value = $value$ }
+	}
+	if = {
+		limit = { country_has_estate = estate_type:peasants_estate }
+		add_estate_satisfaction = { type = estate_type:peasants_estate value = $value$ }
+	}
+}
+
+# Country scope, the disaster's on_end when it breaks: the same disaster may not start again for 25 years (vanilla's
+# block variable, read by pp_disaster_restart_allowed_trigger in every copy's can_start), then the blow
+# (pp_disaster.10).
+pp_disaster_breaking_point_effect = {
+	block_disaster_temporarily_effect = { type = $type$ years = 25 years_in_days = 9125 }
+	trigger_event_non_silently = pp_disaster.10
+}
+
+# Country scope (pp_disaster.10): the least controlled provinces outside the capital's break away, at most a quarter of
+# the realm's, each as a country of its own with cores on its land and a truce with the old realm (as the enclave
+# release does, pp_enclave_effects.txt). Order and count as in vanilla succession.100.
+pp_disaster_breakaway_effect = {
+	ordered_province = {
+		limit = {
+			NOT = { root.capital.province = this }
+			province_average_control < 0.25
+		}
+		order_by = {
+			value = province_average_control
+			multiply = -1
+		}
+		max = {
+			value = root.num_provinces
+			multiply = 0.25
+			ceiling = yes
+			min = 1
+		}
+		check_range_bounds = no
+		province_capital ?= {
+			save_scope_as = pp_breakaway_seat
+			add_to_list = pp_breakaway_seats
+		}
+		every_location_in_province = {
+			limit = { owner = root }
+			set_variable = { name = pp_breakaway_seat value = scope:pp_breakaway_seat }
+			add_to_list = pp_breakaway_land
+		}
+	}
+	every_in_list = {
+		list = pp_breakaway_seats
+		limit = { owner = root }
+		save_scope_as = pp_breakaway_seat
+		create_country_from_location = {
+			save_scope_as = pp_breakaway_country
+			set_capital = scope:pp_breakaway_seat
+		}
+		if = {
+			limit = {
+				exists = scope:pp_breakaway_country
+				NOT = { scope:pp_breakaway_country = root }
+			}
+			root = {
+				every_in_list = {
+					list = pp_breakaway_land
+					limit = {
+						owner = root
+						has_variable = pp_breakaway_seat
+						var:pp_breakaway_seat = scope:pp_breakaway_seat
+					}
+					change_location_owner = scope:pp_breakaway_country
+				}
+			}
+			scope:pp_breakaway_country = {
+				every_owned_location = { add_core = scope:pp_breakaway_country }
+				add_truce_with = {
+					target = root
+					mutual = yes
+				}
+			}
+		}
+	}
+	every_in_list = {
+		list = pp_breakaway_land
+		remove_variable = pp_breakaway_seat
+	}
+	set_variable = { name = pp_disaster_blow_breakaway days = 30 }
+}
+
+# Country scope (pp_disaster.10): the strongest estate rises with the least controlled third of the realm outside the
+# capital's province and starts a civil war (vanilla revolution_disaster.1 and succession.100: create_rebel, the pops'
+# allegiance, start_civil_war with the levies raised at once).
+pp_disaster_civil_war_effect = {
+	if = {
+		limit = { pp_disaster_strongest_estate_trigger = { estate = nobles_estate } }
+		create_rebel = { category = estate estate = nobles_estate save_scope_as = pp_breaking_rebel }
+	}
+	else_if = {
+		limit = { pp_disaster_strongest_estate_trigger = { estate = clergy_estate } }
+		create_rebel = { category = estate estate = clergy_estate save_scope_as = pp_breaking_rebel }
+	}
+	else_if = {
+		limit = { pp_disaster_strongest_estate_trigger = { estate = burghers_estate } }
+		create_rebel = { category = estate estate = burghers_estate save_scope_as = pp_breaking_rebel }
+	}
+	else_if = {
+		limit = { pp_disaster_strongest_estate_trigger = { estate = peasants_estate } }
+		create_rebel = { category = estate estate = peasants_estate save_scope_as = pp_breaking_rebel }
+	}
+	if = {
+		limit = { exists = scope:pp_breaking_rebel }
+		ordered_province = {
+			limit = { NOT = { root.capital.province = this } }
+			order_by = {
+				value = province_average_control
+				multiply = -1
+			}
+			max = {
+				value = root.num_provinces
+				multiply = 0.33
+				ceiling = yes
+				min = 1
+			}
+			check_range_bounds = no
+			every_location_in_province = {
+				every_pop = {
+					limit = { owner = root }
+					add_pop_satisfaction = pop_satisfaction_ultimate_penalty
+					change_pop_allegiance = scope:pp_breaking_rebel
+				}
+			}
+		}
+		scope:pp_breaking_rebel = {
+			start_civil_war = {
+				raise_all_levies = {
+					type = army
+					instant = yes
+				}
+			}
+		}
+		set_variable = { name = pp_disaster_blow_civil_war days = 30 }
+	}
+}

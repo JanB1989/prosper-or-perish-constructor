@@ -1,0 +1,123 @@
+﻿# PP: same-path copy of vanilla's disaster, written by `uv run ppc disasters apply` (src/prosper_or_perish_constructor/disaster_breaking_point.py); do not edit.
+oligarchic_capture = {
+
+	image = "gfx/interface/illustrations/disaster/coup_attempt.dds"
+
+	monthly_spawn_chance = {
+		value = monthly_spawn_chance_very_high
+		add = {
+			value = var:oligarchic_capture_months_qualifying
+			multiply = 0.002
+		}
+		max = 0.2
+	}
+
+	can_start = {
+		pp_disaster_restart_allowed_trigger = { type = oligarchic_capture } # PP: breaking point
+
+		oligarchic_capture_qualifies_trigger = yes
+	}
+
+	can_end = { # PP: breaking point: vanilla's way out, or the breaking point
+		OR = {
+			AND = { oligarchic_capture_end_trigger = yes }
+			pp_disaster_breaking_point_trigger = { type = oligarchic_capture }
+		}
+	}
+
+	modifier = {
+		legislative_efficiency = -0.20
+		global_crown_estate_power = -0.20
+		global_estate_target_satisfaction = larger_permanent_target_satisfaction_penalty
+		country_cabinet_efficiency = -0.20
+		monthly_nobles_estate_rebel_growth = 0.005
+		monthly_burghers_estate_rebel_growth = 0.005
+		blocked_from_creating_subjects = yes
+	}
+
+	on_start = {
+		add_country_modifier = {
+			modifier = ai_oligarchic_capture_targets
+			years = -1
+			mode = add_and_extend
+		}
+		trigger_event_non_silently = oligarchic_capture.1
+	}
+
+	on_end = { # PP: breaking point: past it without vanilla's way out, vanilla's end without the reward, then the blow
+		if = {
+			limit = {
+				pp_disaster_breaking_point_trigger = { type = oligarchic_capture }
+				NOT = { AND = { oligarchic_capture_end_trigger = yes } }
+			}
+			remove_country_modifier = ai_oligarchic_capture_targets
+		if = {
+			limit = { exists = var:oligarchic_faction_rebel }
+			destroy_rebel = var:oligarchic_faction_rebel
+			remove_variable = oligarchic_faction_rebel
+		}
+		if = {
+			limit = {
+				government_type = government_type:republic
+				has_variable = oligarchic_faction_civil_war_won_variable
+			}
+			trigger_event_non_silently = oligarchic_capture.101
+		}
+		else = {
+			
+			
+		}
+		if = {
+			limit = { has_variable = oligarchic_faction_civil_war_won_variable }
+			remove_variable = oligarchic_faction_civil_war_won_variable
+		}
+			if = { limit = { exists = var:oligarchic_ringleader_variable } remove_variable = oligarchic_ringleader_variable }
+			if = { limit = { has_variable = oligarchic_ringleader_revealed_variable } remove_variable = oligarchic_ringleader_revealed_variable }
+			pp_disaster_breaking_point_effect = { type = oligarchic_capture }
+		}
+		else = {
+		remove_country_modifier = ai_oligarchic_capture_targets
+		if = {
+			limit = { exists = var:oligarchic_faction_rebel }
+			destroy_rebel = var:oligarchic_faction_rebel
+			remove_variable = oligarchic_faction_rebel
+		}
+		if = {
+			limit = {
+				government_type = government_type:republic
+				has_variable = oligarchic_faction_civil_war_won_variable
+			}
+			trigger_event_non_silently = oligarchic_capture.101
+		}
+		else = {
+			add_republican_tradition = republican_tradition_extreme_bonus
+			trigger_event_non_silently = oligarchic_capture.100
+		}
+		if = {
+			limit = { has_variable = oligarchic_faction_civil_war_won_variable }
+			remove_variable = oligarchic_faction_civil_war_won_variable
+		}
+	}
+		pp_disaster_escalation_cleanup_effect = { type = oligarchic_capture }
+	}
+
+	on_monthly = {
+		random_list = {
+			175 = { custom_tooltip = an_event_occurs_tt }
+			825 = { custom_tooltip = no_event_occurs_tt }
+		}
+		hidden_effect = {
+			random_list = {
+				50 = { trigger_event_silently = oligarchic_capture.2 }
+				50 = { trigger_event_silently = oligarchic_capture.3 }
+				50 = { trigger_event_silently = oligarchic_capture.4 }
+				50 = { trigger_event_silently = oligarchic_capture.5 }
+				50 = { trigger_event_silently = oligarchic_capture.12 }
+				50 = { trigger_event_silently = oligarchic_capture.13 }
+				700 = { }
+			}
+		}
+		# PP: breaking point
+		pp_disaster_escalation_effect = { type = oligarchic_capture }
+	}
+}

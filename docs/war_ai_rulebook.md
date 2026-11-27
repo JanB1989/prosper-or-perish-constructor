@@ -70,6 +70,7 @@ Examples:
   since 1537. An active disaster fails the readiness check (the check's counter was 1 for England and Brandenburg,
   the two probed powers with an active disaster); this one ends only at stability > 30 plus religious unity
   > 0.9 (or extreme spiritualism/humanism), which England (stability ~4) never reaches. Brandenburg the same since 1544.
+  (Since 2026-11-27 such a disaster breaks after 40 years; see "Open problems" below.)
 - **Castile**: CB on Girona, estimate 1.0, 662-804 gold against the 845 it needs (1.5 x tax base).
 - **Portugal** vs Morocco: estimate 0.57 (MOR + its ally TLE + TAT) against its threshold 0.6.
 
@@ -121,8 +122,12 @@ balance. Kit: private `~/pp_ai_run/warai`.
 
 ## Open problems no define reaches
 
-- **Stuck disasters**: `religious_turmoil` (England since 1537, Brandenburg since 1544) never ends at PP stability
-  levels and blocks every war declaration of the country. Fix belongs in the disaster's end trigger or in stability.
+- **Stuck disasters** (addressed 2026-11-27, Jan, not tested in game): `religious_turmoil` (England since 1537,
+  Brandenburg since 1544) never ended at PP stability levels and blocked every war declaration of the country; observer
+  runs had about 20 disasters running longer than 50 years. Now every disaster vanilla does not end within 25 years
+  comes to a head at 25 years (three bands to 35) and breaks at 40 (`can_end` = vanilla OR 40 years), so no country
+  sits out wars for more than 40 years under one disaster; after a break the same disaster is blocked for 25 years.
+  Constructor AGENTS.md "Disasters Come to a Head".
 - **Objective tied to the wrong CB**: an AI that plans against a subject gets its fabricated CB against the overlord
   and waits forever (Ottomans -> Muntenia / Hungary). It keeps re-scoring that one target.
 - **CB supply**: parliament agendas (every 59 months) are the main CB source; only ~50 spy networks exist worldwide.

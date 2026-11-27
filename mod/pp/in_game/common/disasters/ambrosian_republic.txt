@@ -1,0 +1,79 @@
+﻿# PP: same-path copy of vanilla's disaster, written by `uv run ppc disasters apply` (src/prosper_or_perish_constructor/disaster_breaking_point.py); do not edit.
+ambrosian_republic_disaster = {
+
+	image = "gfx/interface/illustrations/disaster/ambrosian_republic_disaster.dds"
+	
+	monthly_spawn_chance = monthly_spawn_chance_very_high
+
+	fire_only_once = yes
+
+	can_start = {
+		pp_disaster_restart_allowed_trigger = { type = ambrosian_republic_disaster } # PP: breaking point
+
+		tag = MLO
+		government_type = government_type:monarchy
+
+		OR = {
+			has_regent = yes
+			AND = {
+				has_heir = no 
+				ruler ?= { age_in_years >= 40 }
+			}
+		}
+		legitimacy < 80
+
+		has_any_active_disaster = no
+	}
+	
+
+	can_end = { # PP: breaking point: vanilla's way out, or the breaking point
+		OR = {
+			AND = {
+		ambrosian_republic_disaster_end_trigger = yes
+	}
+			pp_disaster_breaking_point_trigger = { type = ambrosian_republic_disaster }
+		}
+	}
+	modifier = {
+		global_estate_target_satisfaction = large_permanent_target_satisfaction_penalty
+		stability_cost_efficiency = -0.25
+	}
+	
+	on_start = {
+		trigger_event_non_silently = ambrosian_republic_disaster.10
+	}
+	on_end = { # PP: breaking point: past it without vanilla's way out, vanilla's end without the reward, then the blow
+		if = {
+			limit = {
+				pp_disaster_breaking_point_trigger = { type = ambrosian_republic_disaster }
+				NOT = { AND = {
+		ambrosian_republic_disaster_end_trigger = yes
+	} }
+			}
+			
+			pp_disaster_breaking_point_effect = { type = ambrosian_republic_disaster }
+		}
+		else = {
+		trigger_event_non_silently = ambrosian_republic_disaster.1
+	}
+		pp_disaster_escalation_cleanup_effect = { type = ambrosian_republic_disaster }
+	}
+	
+	on_monthly = {
+		
+		random_list = {
+			5 = {custom_tooltip = an_event_occurs_tt}
+			95 = {custom_tooltip = no_event_occurs_tt}
+		}
+		hidden_effect = {
+			random_list = {
+				2 = { trigger_event_silently =  ambrosian_republic_disaster.20 }
+				2 = { trigger_event_silently =  ambrosian_republic_disaster.31 }
+				2 = { trigger_event_silently =  ambrosian_republic_disaster.5 }
+				95 = { }
+			}
+		}
+		# PP: breaking point
+		pp_disaster_escalation_effect = { type = ambrosian_republic_disaster }
+	}
+}

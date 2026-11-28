@@ -1,0 +1,71 @@
+﻿# Vanilla alliance_can_exist (in_game/common/scripted_triggers/country_triggers.txt) plus the PP alliance aim rule
+# (src/prosper_or_perish_constructor/alliance_aim_rule.py): a dominant realm does not ally the far weaker holder of the
+# land it aims at, in either direction. It gates the alliance offer and ends a standing alliance (will_expire_trigger
+# of scripted_relations/pp_alliance_aim_rule_relations.txt). Keep the rest in sync with vanilla (vanilla pin).
+
+REPLACE:alliance_can_exist = {
+	$first$ = {
+		opinion = { target = $second$ value >= 0 }
+		not = { has_blocked_treaties = $second$ }
+		not = { is_subject_of = $second$ }
+		not = { is_rival_of = $second$ }
+		modifier:allowed_alliance = yes
+		NOT = {
+			is_member_of_international_organization_of_type = {
+				type = coalition
+				target = $second$
+			}
+		}
+		NOT = {
+			in_union_with = $second$
+		}
+		is_rebel_country = no
+	}
+	$second$ = {
+		opinion = { target = $first$ value >= 0 }
+		not = { has_blocked_treaties = $first$ }
+		not = { is_subject_of = $first$ }
+		not = { is_rival_of = $first$ }
+		modifier:allowed_alliance = yes
+		NOT = {
+			is_member_of_international_organization_of_type = {
+				type = coalition
+				target = $first$
+			}
+		}
+		is_rebel_country = no
+	}
+	can_create_subject_alliance = {
+		actor = $first$
+		recipient = $second$
+	}
+	trigger_if = {
+		limit = {
+			situation:hussite_wars ?= { situation_is_active = yes }
+		}
+		custom_tooltip = {
+			text = not_on_opposing_hussite_wars_sides_tt
+			NOT = {
+				hussite_wars_on_opposing_sides = {
+					first = $first$
+					second = $second$
+				}
+			}
+		}
+	}
+	NOT = {
+		 AND = {
+			$first$ = {
+				is_hegemon = yes
+			}
+			$second$ = {
+				is_hegemon = yes
+			}
+		}
+	}
+	# PP: alliance aim rule
+	custom_tooltip = {
+		text = pp_alliance_aim_rule_tt
+		NOT = { pp_alliance_aim_rule_bars = { first = $first$ second = $second$ } }
+	}
+}

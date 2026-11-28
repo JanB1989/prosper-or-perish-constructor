@@ -328,10 +328,14 @@ pp_land_bar_townsfolk = { value = pp_land_bar_population subtract = pp_land_bar_
 pp_land_bar_townsfolk_room_flat = { value = pp_land_bar_population subtract = modifier:pp_subsistence_land_size }
 pp_land_bar_left_flat = { value = modifier:local_population_capacity subtract = pp_land_bar_townsfolk_room_flat }
 pp_land_bar_taken_flat = { value = pp_land_bar_farms_flat add = pp_land_bar_reserved_flat }
+# the land the peasants' literacy adds (pop type literacy_impact, 2026-11-28, Jan): the engine gives no script a pop
+# type's share of a modifier, so the same literacy_impact block writes it again into a marker of its own
+pp_land_bar_literacy_flat = { value = modifier:local_pp_literate_peasant_land }
 pp_land_bar_natural_flat = {
 	value = pp_land_bar_left_flat
 	add = pp_land_bar_taken_flat
 	subtract = pp_land_bar_improvements_flat
+	subtract = pp_land_bar_literacy_flat
 	min = 0
 }
 
@@ -342,6 +346,7 @@ pp_land_bar_left_shown = { value = pp_land_bar_left min = 0 }
 pp_land_bar_farms = { value = pp_land_bar_taken_flat multiply = pp_land_bar_multiplier }
 pp_land_bar_natural = { value = pp_land_bar_natural_flat multiply = pp_land_bar_multiplier }
 pp_land_bar_improvements = { value = pp_land_bar_improvements_flat multiply = pp_land_bar_multiplier }
+pp_land_bar_literacy = { value = pp_land_bar_literacy_flat multiply = pp_land_bar_multiplier }
 pp_land_bar_room = { value = pp_land_bar_room_flat multiply = pp_land_bar_multiplier }
 # the land the farms hold, as far as there is land (farms beyond the location's land and improvements hold nothing more)
 pp_land_bar_farms_shown = {
@@ -454,6 +459,7 @@ LOC_TEXT = {
     "PP_LAND_BAR_TT_TOTAL": "Total",
     "PP_LAND_BAR_TT_NATURAL": "[pp_location_potential|e]",
     "PP_LAND_BAR_TT_IMPROVEMENTS": "[pp_land_improvements|e]",
+    "PP_LAND_BAR_TT_LITERACY": "[Concept('literacy', 'Literate Peasants')|e]",
     "PP_LAND_BAR_TT_OVER": f"Over the [{LAND_CAPACITY}|e]",
     # the land states, one line each (2026-10-27, Jan: what it is, how it is defined); the definitions are the chips'
     # own lines (pp_location_status_l_english.yml), so the chip beside the bars and this list say the same
@@ -599,6 +605,8 @@ def tooltip_block() -> str:
         ("PP_LAND_BAR_TOWNSFOLK", "+" + _v("pp_land_bar_townsfolk_room"), "townsfolk"),
         ("PP_LAND_BAR_TT_NATURAL", "+" + _v("pp_land_bar_natural"), "land"),
         ("PP_LAND_BAR_TT_IMPROVEMENTS", "+" + _v("pp_land_bar_improvements"), "land"),
+        # 2026-11-28 (Jan): literate peasants work more land; its own row, else Natural Arable Land would carry it
+        ("PP_LAND_BAR_TT_LITERACY", "+" + _v("pp_land_bar_literacy"), "land"),
         ("PP_LAND_BAR_FARMS", "-" + _v("pp_land_bar_farms"), "farms"),
     ], ("PP_LAND_BAR_TT_TOTAL", _v("pp_land_bar_capacity")), after=" " + room)
     icon = "gfx/interface/icons/modifier_types/total_population_capacity_modifier.dds"

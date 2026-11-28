@@ -92,10 +92,10 @@ modifier = {
     local_migration_attraction = 0.010
     local_iron_output_modifier = 0.01125
 }
-	can_close = no # building_shutdown
 ai_construct_weight = {
     value = 0
     add = pp_market_short_iron
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:iron_mine:building

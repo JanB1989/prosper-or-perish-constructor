@@ -62,10 +62,10 @@ raw_modifier = {
 }
 construction_demand = village_construction
 increase_per_level_cost = 0.12
-	can_close = no # building_shutdown
 ai_construct_weight = {
     value = 0
     add = pp_market_short_ivory
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:elephant_hunting_grounds:building

@@ -1,0 +1,42 @@
+﻿# Alliance aim rule (src/prosper_or_perish_constructor/alliance_aim_rule.py). Read by alliance_can_exist
+# (pp_alliance_can_exist.txt) and by the guarantee relation (scripted_relations/pp_alliance_aim_rule_relations.txt).
+
+# Either of the two countries is a dominant aim holder over the other. Usage:
+# pp_alliance_aim_rule_bars = { first = scope:first second = scope:second }
+pp_alliance_aim_rule_bars = {
+	OR = {
+		pp_alliance_aim_holder_dominates = { holder = $first$ target = $second$ }
+		pp_alliance_aim_holder_dominates = { holder = $second$ target = $first$ }
+	}
+}
+
+# $holder$ has at least three times the locations of $target$ with its subjects and union partners (cheap, first),
+# and an explicit aim of $holder$ covers land of that side in an area or region where $holder$ owns at least a third
+# of the ownable locations (generated: pp_alliance_aim_land_triggers.txt).
+pp_alliance_aim_holder_dominates = {
+	$holder$ = {
+		num_locations >= $target$.pp_alliance_aim_side_locations_x3
+	}
+	pp_alliance_aim_land_dominated = { holder = $holder$ target = $target$ }
+}
+
+# $target$, one of its union partners or one of its direct subjects owns a location in area:$area$ / region:$region$.
+pp_alliance_aim_side_owns_in_area = {
+	$target$ = {
+		OR = {
+			any_owned_location = { area = area:$area$ }
+			any_union_partner = { any_owned_location = { area = area:$area$ } }
+			any_subject = { any_owned_location = { area = area:$area$ } }
+		}
+	}
+}
+
+pp_alliance_aim_side_owns_in_region = {
+	$target$ = {
+		OR = {
+			any_owned_location = { region = region:$region$ }
+			any_union_partner = { any_owned_location = { region = region:$region$ } }
+			any_subject = { any_owned_location = { region = region:$region$ } }
+		}
+	}
+}

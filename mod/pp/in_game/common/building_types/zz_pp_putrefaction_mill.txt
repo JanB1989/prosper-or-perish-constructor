@@ -44,7 +44,6 @@ unique_production_methods = {
 
 custom_tags = { lategame_manufactory }
 construction_demand = mill_construction
-	can_close = no # building_shutdown
 	modifier = {
 		local_laborers_desired_pop = 2 # job_room
 	}
@@ -52,5 +51,6 @@ ai_construct_weight = {
     value = 0
     add = pp_market_short_saltpeter
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:putrefaction_mill:building

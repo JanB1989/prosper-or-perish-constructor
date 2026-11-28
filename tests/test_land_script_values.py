@@ -249,6 +249,24 @@ def test_capacity_bar_is_the_engine_capacity_and_its_parts_fill_one_scale():
     assert v("pp_land_bar_f_land") - v("pp_land_bar_f_held") == pytest.approx(50 * multiplier / v("pp_land_bar_scale"))
 
 
+def test_literate_peasants_land_has_its_own_row_and_the_rows_add_up():
+    """2026-11-28 (Jan): the peasants' literacy_impact adds capacity and writes the same land into a marker; the
+    tooltip shows it as its own row, so Natural Arable Land stays the location's own land and the rows still sum to
+    the capacity the engine compares with."""
+    ctx = sanlorenzo()
+    ctx["modifiers"]["local_population_capacity"] = FLAT + 0.6           # peasants at 6 % literacy: 10 x 0.06
+    ctx["modifiers"]["local_pp_literate_peasant_land"] = 0.6
+    v = lambda name: EVAL.value(name, ctx)  # noqa: E731
+    assert v("pp_land_bar_literacy") == pytest.approx(0.6)
+    assert v("pp_land_bar_natural") == pytest.approx(LAND_LEFT + 68 - 30)  # unchanged by the literacy
+    rows = (v("pp_land_bar_townsfolk_room") + v("pp_land_bar_natural") + v("pp_land_bar_improvements")
+            + v("pp_land_bar_literacy") - v("pp_land_bar_farms"))
+    assert rows == pytest.approx(v("pp_land_bar_capacity")) == pytest.approx(FLAT + 0.6)
+    # the farm caps read the flat total: the literate land is farmland like any other
+    assert farm_max("cattle_farm", ctx) == 25
+    assert EVAL.value("pp_free_farmland_levels_land_2_reserve_0", ctx) == math.floor((LAND_LEFT + 0.6) / 2)
+
+
 def test_farms_beyond_the_land_hold_only_the_land_there_is():
     ctx = sanlorenzo(can_build={"field_management"})
     ctx["modifiers"]["local_population_capacity"] = POPULATION - 3.0

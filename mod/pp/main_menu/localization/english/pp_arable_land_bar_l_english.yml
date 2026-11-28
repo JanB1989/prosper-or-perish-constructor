@@ -11,6 +11,7 @@
   PP_LAND_BAR_TT_TOTAL: "Total"
   PP_LAND_BAR_TT_NATURAL: "[pp_location_potential|e]"
   PP_LAND_BAR_TT_IMPROVEMENTS: "[pp_land_improvements|e]"
+  PP_LAND_BAR_TT_LITERACY: "[Concept('literacy', 'Literate Peasants')|e]"
   PP_LAND_BAR_TT_OVER: "Over the [Concept('population_capacity', 'Land Capacity')|e]"
   PP_LAND_BAR_TT_DEF_ABUNDANT: "[ShowModifier('abundant_free_land')]: $PP_LAND_CHIP_ABUNDANT$"
   PP_LAND_BAR_TT_DEF_AVAILABLE: "[ShowModifier('available_free_land')]: $PP_LAND_CHIP_AVAILABLE$"

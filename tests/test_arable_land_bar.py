@@ -88,9 +88,9 @@ def test_window_has_the_panel_under_the_scene_with_balanced_braces():
     assert text.index("# SCENE") < text.index('name = "pp_arable_land_bar"')
     assert text.count("{") == text.count("}")
     panel = _panel()
-    # 6 bar parts + 5 legend swatches + 2 tooltips x 8 row swatches (the over row's: yellow under the over mark; the
-    # room for improvements row); every one on 0..1 (without min/max: 0..100)
-    assert panel.count("progressbar = {") == 27 == panel.count("min = 0 max = 1 value = ")
+    # 6 bar parts + 5 legend swatches + 2 tooltips x 9 row swatches (the over row's: yellow under the over mark; the
+    # room for improvements row; the literate peasants' land since 2026-11-28); every one on 0..1 (without min/max: 0..100)
+    assert panel.count("progressbar = {") == 29 == panel.count("min = 0 max = 1 value = ")
     assert not re.search(r'value = "\[\(float\)', panel)                               # a literal is no data call
     used = set(re.findall(r"ScriptValue\('(pp_land_bar_\w+)'\)", text + alb.render_localization()))
     defined = set(re.findall(r"(?m)^(pp_land_bar_\w+) = \{", (MOD_ROOT / alb.SCRIPT_VALUES).read_text(encoding="utf-8")))
@@ -180,7 +180,7 @@ def test_every_row_label_is_a_concept_link_with_its_own_entry():
     tooltip = alb.tooltip_block()
     rows = re.findall(r'layoutpolicy_horizontal = expanding align = left\|nobaseline text = "(\w+)"', tooltip)
     labels = [key for key in rows if key != "PP_LAND_BAR_TT_TOTAL"]
-    assert len(labels) == 8   # townsfolk, subsistence, over | townsfolk, land, improvements, farms, room
+    assert len(labels) == 9   # townsfolk, subsistence, over | townsfolk, land, improvements, literate peasants, farms, room
     link = re.compile(r"\[(\w+)\|[eE]\]|\[Concept\('(\w+)', '[^']+'\)\|[eE]\]")
     vanilla = _game()
     known: set[str] = set()   # concept keys and their aliases, the mod's and the game's

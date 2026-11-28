@@ -955,7 +955,8 @@
 - Clergy, laborers and peasants are full `REPLACE:` copies in `pop_types/pp_pop_adjustments.txt` (pinned): whether an
   injected `literacy_impact` replaces vanilla's block or adds to it is not established, and the laborers' vanilla
   production efficiency line could only go in a replace. Clergy literacy teaches (`local_monthly_literacy`), peasant
-  literacy brings peasant estate power. Not tested in game; icons are vanilla placeholders.
+  literacy brings peasant estate power and, since 2026-11-28, land and less food ("Literate Peasants: Land and Food"
+  below). Not tested in game; icons are vanilla placeholders.
 
 ### Education pyramid and institution spread on estate literacy (2026-11-27, Jan; not tested in game)
 
@@ -1039,6 +1040,31 @@
 - Left out on purpose (`artifacts/data/literacy_sources/left_out.csv`): country, culture, religion and region
   advances, country-specific reforms, unique and event buildings, gods, timed event modifiers.
 - Not tested in game (2026-11-25): the mod never replaced religions, religious schools or the societal value before.
+
+### Literate Peasants: Land and Food (2026-11-28, Jan; not tested in game)
+
+- What: the peasants' `literacy_impact` (`pop_types/pp_pop_adjustments.txt`, REPLACE copy) adds
+  `local_population_capacity = 10` (10,000 people of arable land at full literacy, flat like every capacity source) and
+  `local_peasants_food_consumption = -0.3`, plus the marker `local_pp_literate_peasant_land = 10` (the same land;
+  `modifier_type_definitions/pp_school_modifier_types.txt`). Why: schooling should pay off on the land; "a little bit"
+  of land (Jan), the food line carries most of it.
+- Engine rule (private `literacy_ai_149.md` 7.1/7.2, `growth_pass_early_modifiers_144.md`): a pop type's
+  `literacy_impact` goes into the location's own modifier set at strength = that type's size-weighted average literacy
+  there (0..1), not scaled by the type's share or size; the block accepts location modifiers only (both lines are
+  Location in script_docs `modifiers.log`). The growth pass applies it (pop-type loop) before the capacity getter, so the
+  land counts for free land / overpopulation. Caveat from the notes: the literacy update was not seen to mark the
+  location's modifier node dirty, so the strength follows literacy whenever something else rebuilds the node.
+- Sizing (replay model on run 2ae8dd7a): peasant literacy 4.9 % world-wide in 1342, 15.8 % in 1837: on average +0.5 %
+  of capacity in 1342 and +1.6k land per location in 1837; peasant food -1.5 % in 1342, -4.7 % in 1837 (about +45 M
+  people by 1837 from the food line). The land is the same 10 for a tiny location as for a large one, hence small.
+- Land bars: `arable_land_bar.py` reads the marker (`pp_land_bar_literacy`), shows it as its own capacity row
+  ("Literate Peasants", linked to the literacy concept) and takes it out of Natural Arable Land, so the rows still add
+  up to the engine's capacity. The farm caps and `pp_townsfolk_capacity` read only the flat total (nothing to change).
+- Start model: the start simulation and validator do not model pop literacy (pops start at their literacy cap, which
+  comes from country sources the model does not read), so they leave both lines out: about +0.5 % capacity and -1.5 %
+  peasant food at game start.
+- Text: one sentence in the Village School's description. Tests: `tests/test_literate_peasants.py`,
+  `tests/test_land_script_values.py`.
 
 ## Hansa Members (2026-11-25, Jan)
 

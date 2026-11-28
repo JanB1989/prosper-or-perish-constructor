@@ -69,10 +69,10 @@ modifier = {
 	local_laborers_desired_pop = 3.2 # job_room
     local_migration_attraction = 0.003
 }
-	can_close = no # building_shutdown
 ai_construct_weight = {
     value = 0
     add = pp_market_short_saltpeter
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:saltpeter_beds:building

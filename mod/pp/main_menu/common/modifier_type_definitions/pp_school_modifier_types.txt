@@ -67,3 +67,15 @@ local_pp_burghers_share = {
 		category = location
 	}
 }
+
+# Literate peasants (2026-11-28, Jan): the arable land the peasants' literacy adds to the location (thousands of
+# people, the same number as the local_population_capacity line beside it in the peasants' literacy_impact). Read by
+# the location view's land bars (script_values/pp_arable_land_bar.txt), which cannot see a pop type's share otherwise.
+
+local_pp_literate_peasant_land = {
+	color = good
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}

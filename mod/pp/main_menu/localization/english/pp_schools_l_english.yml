@@ -1,6 +1,6 @@
 ﻿l_english:
   pp_village_school: "Village School"
-  pp_village_school_desc: "A schoolroom beside the church where the priest or a hired master teaches the children of the village their letters, their prayers and a little sums. It raises the [literacy|e] of the location's [ShowPopTypeName('peasants')], [ShowPopTypeName('laborers')] and [ShowPopTypeName('soldiers')], and gifted children find a way up into the trades and the church."
+  pp_village_school_desc: "A schoolroom beside the church where the priest or a hired master teaches the children of the village their letters, their prayers and a little sums. It raises the [literacy|e] of the location's [ShowPopTypeName('peasants')], [ShowPopTypeName('laborers')] and [ShowPopTypeName('soldiers')], and gifted children find a way up into the trades and the church. [ShowPopTypeName('peasants')] who can read need less food and work more [population_capacity|e]."
   pp_village_school_maintenance: "[ShowBuildingTypeName('pp_village_school')|e] Upkeep"
   pp_village_school_maintenance_desc: "The school burns candles through the dark months and needs slates and clay tablets for its pupils."
   pp_trade_school: "Trade School"
@@ -38,3 +38,5 @@
   MODIFIER_TYPE_DESC_local_pp_clergy_share: "The share of this location's people who are [ShowPopTypeName('clergy')]."
   MODIFIER_TYPE_NAME_local_pp_burghers_share: "[ShowPopTypeName('burghers')] among the People"
   MODIFIER_TYPE_DESC_local_pp_burghers_share: "The share of this location's people who are [ShowPopTypeName('burghers')]."
+  MODIFIER_TYPE_NAME_local_pp_literate_peasant_land: "Land of Literate [ShowPopTypeName('peasants')]"
+  MODIFIER_TYPE_DESC_local_pp_literate_peasant_land: "The [population_capacity|e] this location gains because its [ShowPopTypeName('peasants')] can read: they work more land and need less food."

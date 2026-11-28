@@ -116,9 +116,9 @@ ai_construct_weight = {
     divide = { value = scope:owner.monthly_income_total add = 10 }
     add = pp_market_short_firearms
 }
-	can_close = no # building_shutdown
 	modifier = {
 		local_burghers_desired_pop = 1.3 # job_room
 	}
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:firearms_manufactory:building

@@ -253,6 +253,13 @@ REPLACE:peasants = {
 		local_wild_game_output_modifier = 0.10
 		local_fur_output_modifier = 0.10
 		local_local_food_output_modifier = 0.10
+		# 2026-11-28 (Jan): literate peasants farm better, at full literacy (strength = the peasants' average literacy in
+		# the location, whatever its size): 10 (thousand people) of arable land, flat like every capacity source, and
+		# 30 % less peasant food. The marker carries the same land for the location view's land bars (arable_land_bar.py);
+		# keep the two equal (tests/test_literate_peasants.py).
+		local_population_capacity = 10
+		local_pp_literate_peasant_land = 10
+		local_peasants_food_consumption = -0.3
 	}
 }
 

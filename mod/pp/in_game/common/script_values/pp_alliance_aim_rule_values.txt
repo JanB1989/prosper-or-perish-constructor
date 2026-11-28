@@ -1,0 +1,10 @@
+﻿# Alliance aim rule (src/prosper_or_perish_constructor/alliance_aim_rule.py): three times the locations of a country,
+# its direct subjects and its union partners. A realm needs at least this many locations of its own before the rule
+# bars it from allying or guaranteeing that country.
+pp_alliance_aim_side_locations_x3 = {
+	value = num_locations_owned_or_owned_by_subjects
+	every_union_partner = {
+		add = num_locations
+	}
+	multiply = 3
+}

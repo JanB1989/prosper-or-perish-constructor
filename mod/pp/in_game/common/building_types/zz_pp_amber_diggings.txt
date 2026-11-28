@@ -92,10 +92,10 @@ modifier = {
 	local_laborers_desired_pop = 3.2 # job_room
     local_migration_attraction = 0.005
 }
-	can_close = no # building_shutdown
 ai_construct_weight = {
     value = 0
     add = pp_market_short_amber
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:amber_diggings:building

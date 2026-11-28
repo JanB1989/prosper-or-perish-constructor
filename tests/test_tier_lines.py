@@ -45,13 +45,14 @@ def test_price_rule_stays_inside_its_bounds() -> None:
 
 
 def test_final_gold_carries_the_rank_efficiency_factor() -> None:
-    """[tier_lines] price_factor 1.30 (2026-11-06): the flat -0.3 rank build efficiency moved into the prices."""
+    """[tier_lines] price_factor: 1.30 from 2026-11-06 (the flat -0.3 rank build efficiency moved into the prices), 1.50
+    since 2026-11-28 (Jan: building prices up 15 %)."""
     config = tier_lines.load_config(PROJECT)
-    assert config.price_factor == Decimal("1.30") and config.final_round_to == 5
-    assert tier_lines.final_gold(75, config) == 100  # 97.5 rounds up
-    assert tier_lines.final_gold(125, config) == 165  # 162.5
-    assert tier_lines.final_gold(225, config) == 295  # 292.5
-    assert tier_lines.final_gold(600, config) == 780
+    assert config.price_factor == Decimal("1.50") and config.final_round_to == 5
+    assert tier_lines.final_gold(75, config) == 115  # 112.5 rounds up
+    assert tier_lines.final_gold(125, config) == 190  # 187.5
+    assert tier_lines.final_gold(225, config) == 340  # 337.5
+    assert tier_lines.final_gold(600, config) == 900
 
 
 def test_price_pass_carries_the_same_factor() -> None:

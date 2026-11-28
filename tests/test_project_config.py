@@ -326,7 +326,7 @@ EDUCATION_DESIRED_POP_MODIFIERS = {
     # spare room (2026-11-27, Jan): the schooling buildings give room for the classes they teach, which new production
     # buildings hire from (AGENTS.md "Job Room"). Burghers and laborers x 5: their flat room counts a fifth.
     "library": {"local_burghers_desired_pop": 1.25, "local_clergy_desired_pop": 0.1, "local_nobles_desired_pop": 0.05},
-    "pp_village_school": {},  # none since 2026-11-28: the RGO's spare half place is the laborers' spare room
+    "pp_village_school": {"local_laborers_desired_pop": 1},  # 0.2 idle laborers x 5 (2026-11-28; 0.8 before, no soldiers)
     "pp_trade_school": {"local_burghers_desired_pop": 2.7},  # 0.5 x 5 of its own + 4 x its 0.05 jobs given back (job_room.py)
     "university": {
         "local_burghers_desired_pop": 3,

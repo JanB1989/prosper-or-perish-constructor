@@ -50,10 +50,10 @@ modifier = {
 }
 construction_demand = basic_construction_needs
 increase_per_level_cost = 0.21
+	can_close = no # building_shutdown
 ai_construct_weight = {
     value = 0
     add = pp_market_short_silver
 }
-	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:schwaz_mine:building

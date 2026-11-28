@@ -107,9 +107,9 @@ REPLACE:colonial_nation = {
 		# reforms add (largest seen in the runs: +0.45).
 		max_tariff = -2
 		max_trade_subventions = -2
-		# PP: a raw-material economy. RGOs at 1.05x full yield (the -0.65 country base value in
-		# auto_modifiers/pp_country_base_values.txt plus this +0.7), cheap rural building, dear towns, weaker workshops.
-		global_raw_material_output = 0.7 # 3x a normal country RGO (Jan, 2026-10-14): 0.5 until then, 1.0 at base -0.5 until 2026-11-03
+		# PP: a raw-material economy. RGOs at 0.75x full yield (the -0.75 country base value in
+		# auto_modifiers/pp_country_base_values.txt plus this +0.5), cheap rural building, dear towns, weaker workshops.
+		global_raw_material_output = 0.5 # 3x a normal country RGO (Jan, 2026-10-14): 1.0 at base -0.5 until 2026-11-03, 0.7 at -0.65 until 2026-11-28
 		global_rural_build_buildings_efficiency = 0.25
 		global_urban_build_buildings_efficiency = -0.25
 		global_production_efficiency = -0.05

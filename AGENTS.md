@@ -578,11 +578,12 @@
   it teaches, in `modifier`, per level (burghers x 5, see above; in idle burghers allowed: Trade School 0.5, Library
   0.25, University 0.6); clergy and nobles as plain room: Library clergy 0.1, nobles 0.05; University clergy 0.3,
   nobles 0.2 (Jan: "these things should probably cover at least like a building"). Hand-written in
-  `building_types/pp_school_buildings.txt` and `pp_culture_building_adjustments.txt`. **No laborer or soldier room
-  on the schools since 2026-11-28** (Jan): the Village School's 0.8 laborers and 0.1 soldiers per level and the
-  University's 1.2 laborers parked 11.9 M idle laborers and 1.5 M soldiers by 1837 (run bd7d9616: 14,875 Village
-  School levels, built for literacy; laborers beyond building jobs + RGO places 11.5 M against 0.3 M in the run
-  before). The laborers' spare room is the RGO's spare half place, which every location has.
+  `building_types/pp_school_buildings.txt` and `pp_culture_building_adjustments.txt`. **Village School: 0.2 idle
+  laborers per level since 2026-11-28** (the line is 1, flat room counts a fifth; Jan: "it's fine if it gives some
+  laborers"), no soldier room, no laborer room on the University: 0.8 laborers and 0.1 soldiers per level and the
+  University's 1.2 parked 11.9 M idle laborers and 1.5 M soldiers by 1837 (run bd7d9616: 14,875 Village School
+  levels, built for literacy; laborers beyond building jobs + RGO places 11.5 M against 0.3 M in the run before).
+  At 0.2 that is about 3 M. The laborers' main spare room is the RGO's spare half place, which every location has.
 - How fast room fills (run defb89f2, people promoting into the class per month where any promote; 1402-1802):
   burghers about 1 a month in a typical town (top tenth 2-4) and 1-2 in a typical city (top tenth 3-11); laborers 7-9
   and 8-11; nobles and clergy 0.6-0.8; soldiers 4-5. Small countries are faster.
@@ -1722,3 +1723,25 @@ names them, read `0.11`.
 - Crop farms are open to estates (`forbidden_for_estates = no` in config/crop_farms.toml); Cookshops and Public
   Kitchens already were. `ESTATE_MAX_PRICE_MULTIPLIER` = 2.0 (a plain multiplier on what an estate pays for its own
   builds, not a cap; was 1.2). Tests: tests/test_employment_cut.py.
+
+## Slower Economy and Growth Set (2026-11-28, Jan, after run bd7d9616; not tested in game)
+
+- Jan: growth after the Black Death is still too fast and the AI catches up too quickly. Three existing numbers:
+  - **Building prices +15 %**: `[tier_lines] price_factor` 1.30 -> 1.50. Every gold price follows: the tier lines
+    (`prices/pp_tier_line_prices.txt`) and `prices/zz_pp_building_price_stockpile.txt` (old value x 1.5 x 1.50, in
+    steps of 5; rewritten by hand from its comments, `tests/test_tier_lines.py` checks every row). First-age price
+    115 (100), merchant house steps 1,845 / 5,535 / 9,225 / 12,915 (1,600 / ...), Hansa buildings 1,155 (1,000).
+  - **RGO output**: `country_base_values` `global_raw_material_output` -0.65 -> -0.75. Additive: with serfdom's net
+    +0.1 the start's RGOs yield about 0.30 of full (0.40 before, a quarter less). Colonial nations +0.7 -> +0.5 (3x
+    a normal RGO stays), start planner lumber per RGO 0.42 -> 0.32, `start_market_stock.csv` `rgo_factor` x 0.75 by
+    hand until `ppc start-stock calibrate` runs on a new day-0 save. Run bd7d9616 used 63 % of the raw goods it made
+    in 1342 and 86 % in 1402, with 84 and 74 months of stock.
+  - **Subsistence**: `NLocation.SUBSISTENCE_AGRICULTURE` 1.21 -> 1.10. Start model: world food supply +8.3 % ->
+    +4.7 % over demand; provinces short before the start buildings 1,692 -> 1,801 (shortfall 26.5k -> 32.6k a month);
+    validator over 96 months: world +2.5 % -> +2.0 %, 13 food pools collapse (14), 2,408 pinned at the storage cap
+    (2,496), 867 starve at some point.
+- Risks told to Jan before he decided: the subsistence cut is uniform, so Delhi, Gujarat and North China (pools that
+  starve at times already) feel it first while half the people live on full stores; fur (15-22 % unmet), tea, horses,
+  fruit and wine are short already; the early tax base was already 6-17 % below earlier runs until 1650.
+- Next run: starving pools by region in the first century, years to regain the pre-plague level (world 1397, Europe
+  1412 in bd7d9616), tax base and building investment by 1500, fur and tea.

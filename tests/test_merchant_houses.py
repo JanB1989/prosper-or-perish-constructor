@@ -157,7 +157,7 @@ def test_hansa_buildings_in_member_towns(key) -> None:
     assert _first(body, "price") == f"pp_{key}_price"
     assert float(_first(body, "increase_per_level_cost")) == pytest.approx(1.0)
     prices = (MOD / "in_game/common/prices/zz_pp_building_price_stockpile.txt").read_text(encoding="utf-8-sig")
-    assert re.search(rf"^TRY_INJECT:pp_{key}_price = \{{ gold = 1000 \}}", prices, re.M)
+    assert re.search(rf"^TRY_INJECT:pp_{key}_price = \{{ gold = 1155 \}}", prices, re.M)  # 1,000 until 2026-11-28 (every building price +15 %)
     # cheap to keep: about a quarter of vanilla's upkeep per level (a third until 2026-11-27, Jan: the League's upkeep
     # a bit lower), on a quarter or half of its staff
     vanilla = LoadOrderConfig.load(ROOT / "constructor.load_order.toml").vanilla_root
@@ -334,6 +334,7 @@ def test_steps_strength_price_and_weight(buildings, key) -> None:
     body = buildings[key]
     assert _first(body, "max_levels") == 4
     # 2026-11-24 (Jan): 1,600 gold for step 1, each further step adds 200 % of it: 1,600 / 4,800 / 8,000 / 11,200
+    # 2026-11-28 (Jan): every building price +15 %, these too: 1,845 / 5,535 / 9,225 / 12,915
     assert float(_first(body, "increase_per_level_cost")) == pytest.approx(2.0)
     assert _first(body, "price") == f"pp_{key}_price"
     modifier = _first(body, "modifier")
@@ -346,7 +347,7 @@ def test_steps_strength_price_and_weight(buildings, key) -> None:
     assert "scope:builder.monthly_income_total" in weight and "has_merchant = scope:builder" in weight
     assert float(_first(_first(body, "raw_modifier"), "free_building_levels")) == 1
     prices = (MOD / "in_game/common/prices/zz_pp_building_price_stockpile.txt").read_text(encoding="utf-8-sig")
-    assert re.search(rf"^TRY_INJECT:pp_{key}_price = \{{ gold = 1600 \}}", prices, re.M)
+    assert re.search(rf"^TRY_INJECT:pp_{key}_price = \{{ gold = 1845 \}}", prices, re.M)
 
 
 def test_site_trigger() -> None:

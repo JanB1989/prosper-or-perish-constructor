@@ -6,9 +6,9 @@ INJECT:village_granary = {
 location_potential = {
   always = no
 }
+	can_close = no # building_shutdown
 	modifier = {
 		local_laborers_desired_pop = 0.2 # job_room
 	}
-	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:village_granary:building

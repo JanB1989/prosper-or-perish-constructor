@@ -75,6 +75,7 @@ SCHOOL_RULES = {
         "modifier": {
             "local_peasants_max_literacy": 10, "local_laborers_max_literacy": 10, "local_soldiers_max_literacy": 10,
             "local_monthly_literacy": 0.004, "local_pop_promotion_speed": 0.002,
+            "local_laborers_desired_pop": 1,  # spare room: 0.2 idle laborers x 5 (2026-11-28)
         },
         "method": "pp_village_school_maintenance",
         "upkeep": {"beeswax": 0.03, "clay": 0.1, "manual_labor": 0.5},
@@ -227,7 +228,7 @@ def test_schooling_buildings_give_spare_room_and_the_ai_builds_them_where_it_is_
 
     # each level covers at least one building level of the class it is for (Jan): a laborer building level employs
     # 0.8, a guild level 0.25
-    assert room(schools["pp_village_school"]) == {}  # none since 2026-11-28: the RGO's spare half place is the laborers' spare room
+    assert room(schools["pp_village_school"]) == {"local_laborers_desired_pop": 1}  # 0.2 idle laborers x 5 (2026-11-28), no soldiers
     assert room(schools["pp_trade_school"]) == {"local_burghers_desired_pop": 2.7}  # 0.5 x 5 + 4 x its 0.05 jobs (job_room.py)
     assert room(culture["REPLACE:library"]) == {  # burghers 0.25 x 5 (job room: flat room counts a fifth)
         "local_burghers_desired_pop": 1.25, "local_clergy_desired_pop": 0.1, "local_nobles_desired_pop": 0.05}

@@ -76,10 +76,10 @@ modifier = {
     local_slave_pop_satisfaction = -0.005
 }
 construction_demand = plantation_construction
+	can_close = no # building_shutdown
 ai_construct_weight = {
     value = 0
     add = pp_market_short_tobacco
 }
-	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:tobacco_plantation:building

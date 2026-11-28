@@ -124,3 +124,19 @@ def test_page_data_per_scope_and_cache(tmp_path: Path) -> None:
     assert "(0 computed, 1 cached)" in logs[0]
     page = knowledge_page_html("Run x", (1337, 1400))
     assert "knowledge/index.js" in page and "knowledge/summary.js" in page and 'name="robots"' in page and "index.html" in page
+
+
+def test_no_element_id_twice_and_every_chart_draws_into_its_own_box() -> None:
+    # 2026-11-28: the Education heading and its chart both had id "schools"; the chart drew into the heading, so the
+    # heading lost its text and "Schools over the run" stayed empty
+    import re
+    from collections import Counter
+
+    from prosper_or_perish_constructor.run_report_knowledge_page import KNOWLEDGE_JS, knowledge_page_html
+
+    html = knowledge_page_html("run", (1342, 1837))
+    ids = Counter(re.findall(r"""<[a-z0-9]+[^<>]*?\bid=["']?([A-Za-z0-9_-]+)""", html))
+    assert [name for name, n in ids.items() if n > 1] == []
+    boxes = set(re.findall(r"""<div id=["']?([A-Za-z0-9_-]+)["']? class=["']?chart""", html))
+    drawn = set(re.findall(r"""\blines\('([a-z_]+)'""", KNOWLEDGE_JS))
+    assert drawn and drawn <= boxes

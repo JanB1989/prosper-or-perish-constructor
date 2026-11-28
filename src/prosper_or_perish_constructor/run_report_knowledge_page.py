@@ -330,7 +330,7 @@ def knowledge_page_html(run_name: str, years: tuple[int, int]) -> str:
   <section class=card><header><h3>Literacy by world region at the chosen save</h3></header><div class=table-wrap id=littable></div>
     <p class=caption>Mean literacy per pop type; the last column is the share of all people at 5 % or less.</p></section>
 
-  <h2 id=schools>Education buildings</h2>
+  <h2 id=education>Education buildings</h2>
   <p class=lead>Levels of the schools and places of learning, and how many owned locations have a Village School.</p>
   <section class=card><header><h3>Schools over the run</h3><div class=views id=schoolviews><button type=button>Levels</button><button type=button>Locations with a Village School</button></div></header>
     <div id=schools class=chart style="height:400px"></div>

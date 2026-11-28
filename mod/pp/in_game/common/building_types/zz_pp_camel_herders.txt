@@ -82,8 +82,8 @@ unique_production_methods = {
         icon = camels
         camels = 0.038
         produced = local_food
-        output = 1.36
-        debug_max_profit = 2.498
+        output = 1.224
+        debug_max_profit = 2.149
         category = building_maintenance
     }
 }
@@ -106,7 +106,7 @@ raw_modifier = {
 
 modifier = {
 	local_laborers_desired_pop = 5 # job_room
-    local_monthly_food = 0.25
+    local_monthly_food = 0.225   # 2026-11-28 (Jan's food set): x0.9, was 0.25
 }
 	can_close = no # building_shutdown
 }

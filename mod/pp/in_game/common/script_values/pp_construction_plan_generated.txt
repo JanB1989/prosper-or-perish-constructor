@@ -1700,7 +1700,7 @@ pp_cplan_fs_wheat_farm_2 = {
 }
 pp_cplan_fm_wheat_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.35 }
 	subtract = { value = "market.market_price(goods:wheat)" multiply = 0.01 }
 }
 pp_cplan_fs_wheat_farm_3 = {
@@ -1744,7 +1744,7 @@ pp_cplan_fs_wheat_farmstead_2 = {
 }
 pp_cplan_fm_wheat_farmstead_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.07 }
 	subtract = { value = "market.market_price(goods:wheat)" multiply = 0.015 }
 }
 pp_cplan_fs_wheat_farmstead_3 = {
@@ -1798,7 +1798,7 @@ pp_cplan_fs_wheat_rotations_2 = {
 }
 pp_cplan_fm_wheat_rotations_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 5.631 }
 	subtract = { value = "market.market_price(goods:wheat)" multiply = 0.016 }
 }
 pp_cplan_fs_wheat_rotations_3 = {
@@ -1842,7 +1842,7 @@ pp_cplan_fs_wheat_model_farm_2 = {
 }
 pp_cplan_fm_wheat_model_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 7.735 }
 	subtract = { value = "market.market_price(goods:wheat)" multiply = 0.024 }
 }
 pp_cplan_fs_wheat_model_farm_3 = {
@@ -1912,7 +1912,7 @@ pp_cplan_fs_rice_farm_2 = {
 }
 pp_cplan_fm_rice_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.35 }
 	subtract = { value = "market.market_price(goods:rice)" multiply = 0.01 }
 }
 pp_cplan_fs_rice_farm_3 = {
@@ -1956,7 +1956,7 @@ pp_cplan_fs_rice_farmstead_2 = {
 }
 pp_cplan_fm_rice_farmstead_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.07 }
 	subtract = { value = "market.market_price(goods:rice)" multiply = 0.015 }
 }
 pp_cplan_fs_rice_farmstead_3 = {
@@ -2010,7 +2010,7 @@ pp_cplan_fs_rice_rotations_2 = {
 }
 pp_cplan_fm_rice_rotations_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 5.631 }
 	subtract = { value = "market.market_price(goods:rice)" multiply = 0.016 }
 }
 pp_cplan_fs_rice_rotations_3 = {
@@ -2054,7 +2054,7 @@ pp_cplan_fs_rice_model_farm_2 = {
 }
 pp_cplan_fm_rice_model_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 7.735 }
 	subtract = { value = "market.market_price(goods:rice)" multiply = 0.024 }
 }
 pp_cplan_fs_rice_model_farm_3 = {
@@ -2126,7 +2126,7 @@ pp_cplan_fs_millet_farm_2 = {
 }
 pp_cplan_fm_millet_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.35 }
 	subtract = { value = "market.market_price(goods:millet)" multiply = 0.01 }
 }
 pp_cplan_fs_millet_farm_3 = {
@@ -2170,7 +2170,7 @@ pp_cplan_fs_millet_farmstead_2 = {
 }
 pp_cplan_fm_millet_farmstead_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.07 }
 	subtract = { value = "market.market_price(goods:millet)" multiply = 0.015 }
 }
 pp_cplan_fs_millet_farmstead_3 = {
@@ -2224,7 +2224,7 @@ pp_cplan_fs_millet_rotations_2 = {
 }
 pp_cplan_fm_millet_rotations_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 5.631 }
 	subtract = { value = "market.market_price(goods:millet)" multiply = 0.016 }
 }
 pp_cplan_fs_millet_rotations_3 = {
@@ -2268,7 +2268,7 @@ pp_cplan_fs_millet_model_farm_2 = {
 }
 pp_cplan_fm_millet_model_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 7.735 }
 	subtract = { value = "market.market_price(goods:millet)" multiply = 0.024 }
 }
 pp_cplan_fs_millet_model_farm_3 = {
@@ -2338,7 +2338,7 @@ pp_cplan_fs_maize_farm_2 = {
 }
 pp_cplan_fm_maize_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.35 }
 	subtract = { value = "market.market_price(goods:maize)" multiply = 0.01 }
 }
 pp_cplan_fs_maize_farm_3 = {
@@ -2382,7 +2382,7 @@ pp_cplan_fs_maize_farmstead_2 = {
 }
 pp_cplan_fm_maize_farmstead_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.07 }
 	subtract = { value = "market.market_price(goods:maize)" multiply = 0.015 }
 }
 pp_cplan_fs_maize_farmstead_3 = {
@@ -2436,7 +2436,7 @@ pp_cplan_fs_maize_rotations_2 = {
 }
 pp_cplan_fm_maize_rotations_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 5.631 }
 	subtract = { value = "market.market_price(goods:maize)" multiply = 0.016 }
 }
 pp_cplan_fs_maize_rotations_3 = {
@@ -2480,7 +2480,7 @@ pp_cplan_fs_maize_model_farm_2 = {
 }
 pp_cplan_fm_maize_model_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 7.735 }
 	subtract = { value = "market.market_price(goods:maize)" multiply = 0.024 }
 }
 pp_cplan_fs_maize_model_farm_3 = {
@@ -2563,7 +2563,7 @@ pp_cplan_fs_legume_farm_3 = {
 }
 pp_cplan_fm_legume_farm_4_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.35 }
 	subtract = { value = "market.market_price(goods:legumes)" multiply = 0.01 }
 }
 pp_cplan_fs_legume_farm_4 = {
@@ -2619,7 +2619,7 @@ pp_cplan_fs_legume_farmstead_3 = {
 }
 pp_cplan_fm_legume_farmstead_4_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.07 }
 	subtract = { value = "market.market_price(goods:legumes)" multiply = 0.015 }
 }
 pp_cplan_fs_legume_farmstead_4 = {
@@ -2687,7 +2687,7 @@ pp_cplan_fs_legume_rotations_3 = {
 }
 pp_cplan_fm_legume_rotations_4_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 5.631 }
 	subtract = { value = "market.market_price(goods:legumes)" multiply = 0.016 }
 }
 pp_cplan_fs_legume_rotations_4 = {
@@ -2732,7 +2732,7 @@ pp_cplan_fs_legume_model_farm_2 = {
 }
 pp_cplan_fm_legume_model_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 7.735 }
 	subtract = { value = "market.market_price(goods:legumes)" multiply = 0.024 }
 }
 pp_cplan_fs_legume_model_farm_3 = {
@@ -2802,7 +2802,7 @@ pp_cplan_fs_potato_farm_2 = {
 }
 pp_cplan_fm_potato_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.35 }
 	subtract = { value = "market.market_price(goods:potato)" multiply = 0.01 }
 }
 pp_cplan_fs_potato_farm_3 = {
@@ -2846,7 +2846,7 @@ pp_cplan_fs_potato_farmstead_2 = {
 }
 pp_cplan_fm_potato_farmstead_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.07 }
 	subtract = { value = "market.market_price(goods:potato)" multiply = 0.015 }
 }
 pp_cplan_fs_potato_farmstead_3 = {
@@ -2900,7 +2900,7 @@ pp_cplan_fs_potato_rotations_2 = {
 }
 pp_cplan_fm_potato_rotations_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 5.631 }
 	subtract = { value = "market.market_price(goods:potato)" multiply = 0.016 }
 }
 pp_cplan_fs_potato_rotations_3 = {
@@ -2944,7 +2944,7 @@ pp_cplan_fs_potato_model_farm_2 = {
 }
 pp_cplan_fm_potato_model_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 7.735 }
 	subtract = { value = "market.market_price(goods:potato)" multiply = 0.024 }
 }
 pp_cplan_fs_potato_model_farm_3 = {
@@ -3014,7 +3014,7 @@ pp_cplan_fs_olive_farm_2 = {
 }
 pp_cplan_fm_olive_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.35 }
 	subtract = { value = "market.market_price(goods:olives)" multiply = 0.01 }
 }
 pp_cplan_fs_olive_farm_3 = {
@@ -3058,7 +3058,7 @@ pp_cplan_fs_olive_farmstead_2 = {
 }
 pp_cplan_fm_olive_farmstead_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.07 }
 	subtract = { value = "market.market_price(goods:olives)" multiply = 0.015 }
 }
 pp_cplan_fs_olive_farmstead_3 = {
@@ -3112,7 +3112,7 @@ pp_cplan_fs_olive_rotations_2 = {
 }
 pp_cplan_fm_olive_rotations_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 5.631 }
 	subtract = { value = "market.market_price(goods:olives)" multiply = 0.016 }
 }
 pp_cplan_fs_olive_rotations_3 = {
@@ -3156,7 +3156,7 @@ pp_cplan_fs_olive_model_farm_2 = {
 }
 pp_cplan_fm_olive_model_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 7.735 }
 	subtract = { value = "market.market_price(goods:olives)" multiply = 0.024 }
 }
 pp_cplan_fs_olive_model_farm_3 = {
@@ -3227,7 +3227,7 @@ pp_cplan_fs_cattle_farm_2 = {
 }
 pp_cplan_fm_cattle_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.35 }
 	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.007 }
 }
 pp_cplan_fs_cattle_farm_3 = {
@@ -3271,7 +3271,7 @@ pp_cplan_fs_cattle_farmstead_2 = {
 }
 pp_cplan_fm_cattle_farmstead_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.07 }
 	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.01 }
 }
 pp_cplan_fs_cattle_farmstead_3 = {
@@ -3325,7 +3325,7 @@ pp_cplan_fs_cattle_rotations_2 = {
 }
 pp_cplan_fm_cattle_rotations_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 5.631 }
 	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.011 }
 }
 pp_cplan_fs_cattle_rotations_3 = {
@@ -3369,7 +3369,7 @@ pp_cplan_fs_cattle_model_farm_2 = {
 }
 pp_cplan_fm_cattle_model_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 7.735 }
 	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.016 }
 }
 pp_cplan_fs_cattle_model_farm_3 = {
@@ -3448,7 +3448,7 @@ pp_cplan_fs_camel_herders_2 = {
 }
 pp_cplan_fm_camel_herders_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.36 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.224 }
 	subtract = { value = "market.market_price(goods:camels)" multiply = 0.038 }
 }
 pp_cplan_fs_camel_herders_3 = {
@@ -3511,7 +3511,7 @@ pp_cplan_fs_camel_stud_2 = {
 }
 pp_cplan_fm_camel_stud_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.36 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.224 }
 	subtract = { value = "market.market_price(goods:camels)" multiply = 0.038 }
 }
 pp_cplan_fs_camel_stud_3 = {
@@ -3566,7 +3566,7 @@ pp_cplan_fs_eng_royal_forest_1 = {
 }
 pp_cplan_fm_eng_royal_forest_2_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.96 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.864 }
 	subtract = { value = "market.market_price(goods:wild_game)" multiply = 0.08 }
 }
 pp_cplan_fs_eng_royal_forest_2 = {
@@ -3663,7 +3663,7 @@ pp_cplan_fs_fishing_village_4 = {
 }
 pp_cplan_fm_fishing_village_5_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.8 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.72 }
 	subtract = { value = "market.market_price(goods:fish)" multiply = 0.067 }
 }
 pp_cplan_fs_fishing_village_5 = {
@@ -3758,7 +3758,7 @@ pp_cplan_fs_net_curing_yard_4 = {
 }
 pp_cplan_fm_net_curing_yard_5_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.12 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.008 }
 	subtract = { value = "market.market_price(goods:fish)" multiply = 0.093 }
 }
 pp_cplan_fs_net_curing_yard_5 = {
@@ -3865,7 +3865,7 @@ pp_cplan_fs_forest_village_2 = {
 }
 pp_cplan_fm_forest_village_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.96 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.864 }
 	subtract = { value = "market.market_price(goods:wild_game)" multiply = 0.08 }
 }
 pp_cplan_fs_forest_village_3 = {
@@ -3966,7 +3966,7 @@ pp_cplan_fs_managed_forest_village_2 = {
 }
 pp_cplan_fm_managed_forest_village_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.16 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.944 }
 	subtract = { value = "market.market_price(goods:wild_game)" multiply = 0.18 }
 }
 pp_cplan_fs_managed_forest_village_3 = {
@@ -4039,7 +4039,7 @@ pp_cplan_fs_fruit_orchard_3 = {
 }
 pp_cplan_fm_fruit_orchard_4_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.96 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.864 }
 	subtract = { value = "market.market_price(goods:fruit)" multiply = 0.08 }
 }
 pp_cplan_fs_fruit_orchard_4 = {
@@ -4104,7 +4104,7 @@ pp_cplan_fs_nursery_orchard_3 = {
 }
 pp_cplan_fm_nursery_orchard_4_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.568 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.411 }
 	subtract = { value = "market.market_price(goods:fruit)" multiply = 0.131 }
 }
 pp_cplan_fs_nursery_orchard_4 = {
@@ -4171,7 +4171,7 @@ pp_cplan_fs_pomological_orchard_3 = {
 }
 pp_cplan_fm_pomological_orchard_4_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.32 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.088 }
 	subtract = { value = "market.market_price(goods:fruit)" multiply = 0.193 }
 }
 pp_cplan_fs_pomological_orchard_4 = {
@@ -4232,7 +4232,7 @@ pp_cplan_fs_maghreb_palm_irrigation_1 = {
 }
 pp_cplan_fm_maghreb_palm_irrigation_2_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.96 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.864 }
 	subtract = { value = "market.market_price(goods:fruit)" multiply = 0.08 }
 }
 pp_cplan_fs_maghreb_palm_irrigation_2 = {
@@ -4290,7 +4290,7 @@ pp_cplan_fs_ocean_fishery_2 = {
 }
 pp_cplan_fm_ocean_fishery_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.44 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.296 }
 	subtract = { value = "market.market_price(goods:fish)" multiply = 0.12 }
 }
 pp_cplan_fs_ocean_fishery_3 = {
@@ -4343,7 +4343,7 @@ pp_cplan_fs_drift_net_fishery_2 = {
 }
 pp_cplan_fm_drift_net_fishery_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.648 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.483 }
 	subtract = { value = "market.market_price(goods:fish)" multiply = 0.137 }
 }
 pp_cplan_fs_drift_net_fishery_3 = {
@@ -4413,7 +4413,7 @@ pp_cplan_fs_offshore_fishery_2 = {
 }
 pp_cplan_fm_offshore_fishery_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.936 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.742 }
 	subtract = { value = "market.market_price(goods:fish)" multiply = 0.161 }
 }
 pp_cplan_fs_offshore_fishery_3 = {
@@ -4480,7 +4480,7 @@ pp_cplan_fs_sheep_farms_2 = {
 }
 pp_cplan_fm_sheep_farms_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.96 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.864 }
 	subtract = { value = "market.market_price(goods:wool)" multiply = 0.032 }
 }
 pp_cplan_fs_sheep_farms_3 = {
@@ -4533,7 +4533,7 @@ pp_cplan_fs_enclosed_sheep_walks_2 = {
 }
 pp_cplan_fm_enclosed_sheep_walks_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.6 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.44 }
 	subtract = { value = "market.market_price(goods:wool)" multiply = 0.053 }
 }
 pp_cplan_fs_enclosed_sheep_walks_3 = {
@@ -4585,7 +4585,7 @@ pp_cplan_fs_hurdled_sheepcotes_2 = {
 }
 pp_cplan_fm_hurdled_sheepcotes_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.44 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.296 }
 	subtract = { value = "market.market_price(goods:wool)" multiply = 0.048 }
 }
 pp_cplan_fs_hurdled_sheepcotes_3 = {
@@ -5558,7 +5558,7 @@ pp_cplan_bs_camel_herders_2 = {
 }
 pp_cplan_bm_camel_herders_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.36 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.224 }
 	subtract = { value = "market.market_price(goods:camels)" multiply = 0.038 }
 }
 pp_cplan_bs_camel_herders_3 = {
@@ -5618,7 +5618,7 @@ pp_cplan_bs_camel_stud_2 = {
 }
 pp_cplan_bm_camel_stud_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.36 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.224 }
 	subtract = { value = "market.market_price(goods:camels)" multiply = 0.038 }
 }
 pp_cplan_bs_camel_stud_3 = {
@@ -5974,7 +5974,7 @@ pp_cplan_bs_cattle_farm_2 = {
 }
 pp_cplan_bm_cattle_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.35 }
 	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.007 }
 }
 pp_cplan_bs_cattle_farm_3 = {
@@ -6015,7 +6015,7 @@ pp_cplan_bs_cattle_farmstead_2 = {
 }
 pp_cplan_bm_cattle_farmstead_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.07 }
 	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.01 }
 }
 pp_cplan_bs_cattle_farmstead_3 = {
@@ -6056,7 +6056,7 @@ pp_cplan_bs_cattle_model_farm_2 = {
 }
 pp_cplan_bm_cattle_model_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 7.735 }
 	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.016 }
 }
 pp_cplan_bs_cattle_model_farm_3 = {
@@ -6107,7 +6107,7 @@ pp_cplan_bs_cattle_rotations_2 = {
 }
 pp_cplan_bm_cattle_rotations_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 5.631 }
 	subtract = { value = "market.market_price(goods:livestock)" multiply = 0.011 }
 }
 pp_cplan_bs_cattle_rotations_3 = {
@@ -7435,7 +7435,7 @@ pp_cplan_bs_drift_net_fishery_2 = {
 }
 pp_cplan_bm_drift_net_fishery_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.648 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.483 }
 	subtract = { value = "market.market_price(goods:fish)" multiply = 0.137 }
 }
 pp_cplan_bs_drift_net_fishery_3 = {
@@ -7739,7 +7739,7 @@ pp_cplan_bs_enclosed_sheep_walks_2 = {
 }
 pp_cplan_bm_enclosed_sheep_walks_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.6 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.44 }
 	subtract = { value = "market.market_price(goods:wool)" multiply = 0.053 }
 }
 pp_cplan_bs_enclosed_sheep_walks_3 = {
@@ -7779,7 +7779,7 @@ pp_cplan_bs_eng_royal_forest_1 = {
 }
 pp_cplan_bm_eng_royal_forest_2_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.96 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.864 }
 	subtract = { value = "market.market_price(goods:wild_game)" multiply = 0.08 }
 }
 pp_cplan_bs_eng_royal_forest_2 = {
@@ -8439,7 +8439,7 @@ pp_cplan_bs_fishing_village_4 = {
 }
 pp_cplan_bm_fishing_village_5_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.8 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.72 }
 	subtract = { value = "market.market_price(goods:fish)" multiply = 0.067 }
 }
 pp_cplan_bs_fishing_village_5 = {
@@ -8531,7 +8531,7 @@ pp_cplan_bs_forest_village_2 = {
 }
 pp_cplan_bm_forest_village_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.96 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.864 }
 	subtract = { value = "market.market_price(goods:wild_game)" multiply = 0.08 }
 }
 pp_cplan_bs_forest_village_3 = {
@@ -8589,7 +8589,7 @@ pp_cplan_bs_fruit_orchard_3 = {
 }
 pp_cplan_bm_fruit_orchard_4_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.96 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.864 }
 	subtract = { value = "market.market_price(goods:fruit)" multiply = 0.08 }
 }
 pp_cplan_bs_fruit_orchard_4 = {
@@ -9453,7 +9453,7 @@ pp_cplan_bs_hurdled_sheepcotes_2 = {
 }
 pp_cplan_bm_hurdled_sheepcotes_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.44 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.296 }
 	subtract = { value = "market.market_price(goods:wool)" multiply = 0.048 }
 }
 pp_cplan_bs_hurdled_sheepcotes_3 = {
@@ -10347,7 +10347,7 @@ pp_cplan_bs_legume_farm_3 = {
 }
 pp_cplan_bm_legume_farm_4_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.35 }
 	subtract = { value = "market.market_price(goods:legumes)" multiply = 0.01 }
 }
 pp_cplan_bs_legume_farm_4 = {
@@ -10400,7 +10400,7 @@ pp_cplan_bs_legume_farmstead_3 = {
 }
 pp_cplan_bm_legume_farmstead_4_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.07 }
 	subtract = { value = "market.market_price(goods:legumes)" multiply = 0.015 }
 }
 pp_cplan_bs_legume_farmstead_4 = {
@@ -10442,7 +10442,7 @@ pp_cplan_bs_legume_model_farm_2 = {
 }
 pp_cplan_bm_legume_model_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 7.735 }
 	subtract = { value = "market.market_price(goods:legumes)" multiply = 0.024 }
 }
 pp_cplan_bs_legume_model_farm_3 = {
@@ -10506,7 +10506,7 @@ pp_cplan_bs_legume_rotations_3 = {
 }
 pp_cplan_bm_legume_rotations_4_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 5.631 }
 	subtract = { value = "market.market_price(goods:legumes)" multiply = 0.016 }
 }
 pp_cplan_bs_legume_rotations_4 = {
@@ -10737,7 +10737,7 @@ pp_cplan_bs_maghreb_palm_irrigation_1 = {
 }
 pp_cplan_bm_maghreb_palm_irrigation_2_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.96 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.864 }
 	subtract = { value = "market.market_price(goods:fruit)" multiply = 0.08 }
 }
 pp_cplan_bs_maghreb_palm_irrigation_2 = {
@@ -10792,7 +10792,7 @@ pp_cplan_bs_maize_farm_2 = {
 }
 pp_cplan_bm_maize_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.35 }
 	subtract = { value = "market.market_price(goods:maize)" multiply = 0.01 }
 }
 pp_cplan_bs_maize_farm_3 = {
@@ -10833,7 +10833,7 @@ pp_cplan_bs_maize_farmstead_2 = {
 }
 pp_cplan_bm_maize_farmstead_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.07 }
 	subtract = { value = "market.market_price(goods:maize)" multiply = 0.015 }
 }
 pp_cplan_bs_maize_farmstead_3 = {
@@ -10874,7 +10874,7 @@ pp_cplan_bs_maize_model_farm_2 = {
 }
 pp_cplan_bm_maize_model_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 7.735 }
 	subtract = { value = "market.market_price(goods:maize)" multiply = 0.024 }
 }
 pp_cplan_bs_maize_model_farm_3 = {
@@ -10925,7 +10925,7 @@ pp_cplan_bs_maize_rotations_2 = {
 }
 pp_cplan_bm_maize_rotations_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 5.631 }
 	subtract = { value = "market.market_price(goods:maize)" multiply = 0.016 }
 }
 pp_cplan_bs_maize_rotations_3 = {
@@ -11065,7 +11065,7 @@ pp_cplan_bs_managed_forest_village_2 = {
 }
 pp_cplan_bm_managed_forest_village_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.16 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.944 }
 	subtract = { value = "market.market_price(goods:wild_game)" multiply = 0.18 }
 }
 pp_cplan_bs_managed_forest_village_3 = {
@@ -11494,7 +11494,7 @@ pp_cplan_bs_millet_farm_2 = {
 }
 pp_cplan_bm_millet_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.35 }
 	subtract = { value = "market.market_price(goods:millet)" multiply = 0.01 }
 }
 pp_cplan_bs_millet_farm_3 = {
@@ -11535,7 +11535,7 @@ pp_cplan_bs_millet_farmstead_2 = {
 }
 pp_cplan_bm_millet_farmstead_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.07 }
 	subtract = { value = "market.market_price(goods:millet)" multiply = 0.015 }
 }
 pp_cplan_bs_millet_farmstead_3 = {
@@ -11576,7 +11576,7 @@ pp_cplan_bs_millet_model_farm_2 = {
 }
 pp_cplan_bm_millet_model_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 7.735 }
 	subtract = { value = "market.market_price(goods:millet)" multiply = 0.024 }
 }
 pp_cplan_bs_millet_model_farm_3 = {
@@ -11627,7 +11627,7 @@ pp_cplan_bs_millet_rotations_2 = {
 }
 pp_cplan_bm_millet_rotations_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 5.631 }
 	subtract = { value = "market.market_price(goods:millet)" multiply = 0.016 }
 }
 pp_cplan_bs_millet_rotations_3 = {
@@ -11832,7 +11832,7 @@ pp_cplan_bs_net_curing_yard_4 = {
 }
 pp_cplan_bm_net_curing_yard_5_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.12 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.008 }
 	subtract = { value = "market.market_price(goods:fish)" multiply = 0.093 }
 }
 pp_cplan_bs_net_curing_yard_5 = {
@@ -11895,7 +11895,7 @@ pp_cplan_bs_nursery_orchard_3 = {
 }
 pp_cplan_bm_nursery_orchard_4_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.568 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.411 }
 	subtract = { value = "market.market_price(goods:fruit)" multiply = 0.131 }
 }
 pp_cplan_bs_nursery_orchard_4 = {
@@ -11944,7 +11944,7 @@ pp_cplan_bs_ocean_fishery_2 = {
 }
 pp_cplan_bm_ocean_fishery_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.44 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.296 }
 	subtract = { value = "market.market_price(goods:fish)" multiply = 0.12 }
 }
 pp_cplan_bs_ocean_fishery_3 = {
@@ -12011,7 +12011,7 @@ pp_cplan_bs_offshore_fishery_2 = {
 }
 pp_cplan_bm_offshore_fishery_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.936 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.742 }
 	subtract = { value = "market.market_price(goods:fish)" multiply = 0.161 }
 }
 pp_cplan_bs_offshore_fishery_3 = {
@@ -12067,7 +12067,7 @@ pp_cplan_bs_olive_farm_2 = {
 }
 pp_cplan_bm_olive_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.35 }
 	subtract = { value = "market.market_price(goods:olives)" multiply = 0.01 }
 }
 pp_cplan_bs_olive_farm_3 = {
@@ -12108,7 +12108,7 @@ pp_cplan_bs_olive_farmstead_2 = {
 }
 pp_cplan_bm_olive_farmstead_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.07 }
 	subtract = { value = "market.market_price(goods:olives)" multiply = 0.015 }
 }
 pp_cplan_bs_olive_farmstead_3 = {
@@ -12149,7 +12149,7 @@ pp_cplan_bs_olive_model_farm_2 = {
 }
 pp_cplan_bm_olive_model_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 7.735 }
 	subtract = { value = "market.market_price(goods:olives)" multiply = 0.024 }
 }
 pp_cplan_bs_olive_model_farm_3 = {
@@ -12200,7 +12200,7 @@ pp_cplan_bs_olive_rotations_2 = {
 }
 pp_cplan_bm_olive_rotations_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 5.631 }
 	subtract = { value = "market.market_price(goods:olives)" multiply = 0.016 }
 }
 pp_cplan_bs_olive_rotations_3 = {
@@ -12572,7 +12572,7 @@ pp_cplan_bs_pomological_orchard_3 = {
 }
 pp_cplan_bm_pomological_orchard_4_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.32 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.088 }
 	subtract = { value = "market.market_price(goods:fruit)" multiply = 0.193 }
 }
 pp_cplan_bs_pomological_orchard_4 = {
@@ -12689,7 +12689,7 @@ pp_cplan_bs_potato_farm_2 = {
 }
 pp_cplan_bm_potato_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.35 }
 	subtract = { value = "market.market_price(goods:potato)" multiply = 0.01 }
 }
 pp_cplan_bs_potato_farm_3 = {
@@ -12730,7 +12730,7 @@ pp_cplan_bs_potato_farmstead_2 = {
 }
 pp_cplan_bm_potato_farmstead_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.07 }
 	subtract = { value = "market.market_price(goods:potato)" multiply = 0.015 }
 }
 pp_cplan_bs_potato_farmstead_3 = {
@@ -12771,7 +12771,7 @@ pp_cplan_bs_potato_model_farm_2 = {
 }
 pp_cplan_bm_potato_model_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 7.735 }
 	subtract = { value = "market.market_price(goods:potato)" multiply = 0.024 }
 }
 pp_cplan_bs_potato_model_farm_3 = {
@@ -12822,7 +12822,7 @@ pp_cplan_bs_potato_rotations_2 = {
 }
 pp_cplan_bm_potato_rotations_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 5.631 }
 	subtract = { value = "market.market_price(goods:potato)" multiply = 0.016 }
 }
 pp_cplan_bs_potato_rotations_3 = {
@@ -13372,7 +13372,7 @@ pp_cplan_bs_rice_farm_2 = {
 }
 pp_cplan_bm_rice_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.35 }
 	subtract = { value = "market.market_price(goods:rice)" multiply = 0.01 }
 }
 pp_cplan_bs_rice_farm_3 = {
@@ -13413,7 +13413,7 @@ pp_cplan_bs_rice_farmstead_2 = {
 }
 pp_cplan_bm_rice_farmstead_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.07 }
 	subtract = { value = "market.market_price(goods:rice)" multiply = 0.015 }
 }
 pp_cplan_bs_rice_farmstead_3 = {
@@ -13454,7 +13454,7 @@ pp_cplan_bs_rice_model_farm_2 = {
 }
 pp_cplan_bm_rice_model_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 7.735 }
 	subtract = { value = "market.market_price(goods:rice)" multiply = 0.024 }
 }
 pp_cplan_bs_rice_model_farm_3 = {
@@ -13505,7 +13505,7 @@ pp_cplan_bs_rice_rotations_2 = {
 }
 pp_cplan_bm_rice_rotations_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 5.631 }
 	subtract = { value = "market.market_price(goods:rice)" multiply = 0.016 }
 }
 pp_cplan_bs_rice_rotations_3 = {
@@ -14167,7 +14167,7 @@ pp_cplan_bs_sheep_farms_2 = {
 }
 pp_cplan_bm_sheep_farms_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.96 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 0.864 }
 	subtract = { value = "market.market_price(goods:wool)" multiply = 0.032 }
 }
 pp_cplan_bs_sheep_farms_3 = {
@@ -15961,7 +15961,7 @@ pp_cplan_bs_wheat_farm_2 = {
 }
 pp_cplan_bm_wheat_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.5 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 1.35 }
 	subtract = { value = "market.market_price(goods:wheat)" multiply = 0.01 }
 }
 pp_cplan_bs_wheat_farm_3 = {
@@ -16002,7 +16002,7 @@ pp_cplan_bs_wheat_farmstead_2 = {
 }
 pp_cplan_bm_wheat_farmstead_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.3 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 2.07 }
 	subtract = { value = "market.market_price(goods:wheat)" multiply = 0.015 }
 }
 pp_cplan_bs_wheat_farmstead_3 = {
@@ -16043,7 +16043,7 @@ pp_cplan_bs_wheat_model_farm_2 = {
 }
 pp_cplan_bm_wheat_model_farm_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 8.594 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 7.735 }
 	subtract = { value = "market.market_price(goods:wheat)" multiply = 0.024 }
 }
 pp_cplan_bs_wheat_model_farm_3 = {
@@ -16094,7 +16094,7 @@ pp_cplan_bs_wheat_rotations_2 = {
 }
 pp_cplan_bm_wheat_rotations_3_1 = {
 	value = 0
-	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 6.256 }
+	add = { value = "market.market_price(goods:local_food)" multiply = { value = modifier:local_local_food_output_modifier add = 1 min = 0 } multiply = 5.631 }
 	subtract = { value = "market.market_price(goods:wheat)" multiply = 0.016 }
 }
 pp_cplan_bs_wheat_rotations_3 = {

@@ -106,7 +106,7 @@ building:
             pp_fruit_orchard_provision = {
                 fruit = 0.08
                 produced = local_food
-                output = 0.96
+                output = 0.864
                 debug_max_profit = 0
                 category = building_maintenance
             }
@@ -128,7 +128,7 @@ building:
         }
 
         modifier = {
-            local_monthly_food = 1.75
+            local_monthly_food = 1.575   # 2026-11-28 (Jan's food set): x0.9, was 1.75
             local_food_capacity = 50
         }
 localization:

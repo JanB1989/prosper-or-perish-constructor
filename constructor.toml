@@ -56,13 +56,13 @@ burgher_building_employment_size = 0.3
 # Provisioning slot of calorie buildings (provisioning.py): per level of a building whose base output equals the
 # reference, the gold of its own good bought back and the Province Food per gold of that good.
 provision_input_per_level = 0.08
-provision_food_per_gold = 12
+provision_food_per_gold = 10.8   # 12 until 2026-11-28 (Jan's food set after run 2ae8dd7a: staple food makers' Province Food x0.9)
 provisioning_reference_base_output = 0.06
 # Crop farms (farm v3, 2026-10-02): Provision takes a token of the crop and makes a fixed Province Food amount per
 # level, so the farm sells nearly all its crop and Provision is its AI gate (open at any crop price); the AI's price
 # response is the farm's ai_construct_weight (config/crop_farms.toml [general.ai_construct_weight]).
 crop_provision_input_gold = 0.01
-crop_provision_food_per_level = 1.5
+crop_provision_food_per_level = 1.35   # 1.5 until 2026-11-28 (Jan's food set: farm food x0.9)
 
 # Fewer workers per level (2026-10-03, Jan): every building of the pop type whose employment_size is the reference gets
 # the new size at finalize (after the footprint, which keeps the reference, so population capacity stays). Output and
@@ -863,7 +863,7 @@ pop_demand_scale = 0.305  # observed pop demand vs the goods file's demand_add x
 # victuals per building level as the market shows them (food-check refits). Cookshops make none since 2026-09-25 (Serve
 # only); the Grange packs 1.5 per level loose, the harbour Victualling Yard makes 3 (20 food + shipped grain) and the
 # Tavern buys 2 (the former 90-food Victualler's measured 1.8 x 2/3).
-producers = { victualling_yard = 0.932, grange = 0.6 }   # 2026-10-03: the Yard ships grain only; the Grange packs 24 food
+producers = { victualling_yard = 0.75, grange = 0.6 }   # 2026-10-03: the Yard ships grain only; the Grange packs 24 food; Yard 0.932 -> 0.75 2026-11-28 (Jan's food set)
 consumers = { tavern = 1.2, lumber_mill = 0.3 }
 [worldbuilder.start.province_food]
 # Province Food (the local_food good, 1 food per unit) one staffed level makes on top of its local_monthly_food, as the
@@ -901,8 +901,8 @@ capacity = { per_development = 2.13, per_population_k = 11.64, per_location = 57
 # 2026-09-30: the three victuals buildings scaled x0.4 (inputs, outputs and food modifier together)
 tavern_victuals_per_level = 0.8    # victuals a staffed Tavern buys per month (24 food, 30 per victual)
 yard_victuals_per_level = 0.6      # victuals a staffed Grange packs per month (24 food, loose stores)
-harbor_yard_victuals_per_level = 0.932   # victuals a staffed harbour Victualling Yard makes (2.33 shipped grain, no store
-                                         # food since 2026-10-03)
+harbor_yard_victuals_per_level = 0.75    # victuals a staffed harbour Victualling Yard makes (2.33 shipped grain, no store
+                                         # food since 2026-10-03); 0.932 until 2026-11-28 (Jan's food set: the Yard weaker)
 grange_at_start = false           # no Granges at game start (2026-10-03): every store starts far above its rest point;
                                   # the AI builds Granges where food really piles up (the Grange's ai_construct_weight)
 # Food deficits (2026-10-03, Jan: farms almost always where they make sense, Taverns only in rare cases): before any
@@ -917,7 +917,7 @@ granary_store_months = 60.0
 # for offset and the food is the flat local_monthly_food only
 cookshop_serve_share = 1.0
 cookshop_drink_food = 0.0          # drink slot Province Food per level (none since 2026-10-03: drinks sell for offset)
-victuals_target = 1.1              # per market: victuals supply >= demand (Taverns + pops) x this
+victuals_target = 1.0              # per market: victuals supply >= demand (Taverns + pops) x this; 1.1 until 2026-11-28 (Jan's food set)
 yard_surplus_share = 0.25          # Yards only in pools that feed themselves by more than +25 %
 yard_min_capacity_months = 20.0    # ... and whose store can reach the Grange's band (20 months)
 harbor_yard_min_capacity_months = 12.0   # the harbour Yard's band starts lower (break-even about 12 months stored)
@@ -1138,11 +1138,13 @@ not_buildings = []
 # 2026-10-07 (Jan, start food deficits): ages 1-2 flat food 1.5 -> 1.75 (the start-tier staple buildings outside this
 # table moved by the same +0.25 by hand: fishing/forest village, orchard, ocean fishery, sheep); later ages unchanged
 # 2026-10-14 (Jan: late growth flat, ~+250 M people short by 1837): ages 4/5 flat food 4.5 / 6.0 -> 9.0 / 12.0
-age_1_traditions = { flat_food = 1.75, throughput = 1.0 }
-age_2_renaissance = { flat_food = 1.75, throughput = 1.0, advance = "food_advance_renaissance", global_food_decay = 0.0 }
-age_3_discovery = { flat_food = 3.5, throughput = 1.15, advance = "new_world_crops", global_food_decay = -0.0008 }
-age_4_reformation = { flat_food = 9.0, throughput = 1.35, advance = "food_advance_reformation", global_food_decay = -0.0005 }
-age_5_absolutism = { flat_food = 12.0, throughput = 1.45, advance = "food_advance_absolutism", global_food_decay = -0.0005 }
+# 2026-11-28 (Jan's food set after run 2ae8dd7a: farm food -10 %, subsistence stronger): every flat_food x0.9, was
+# 1.75 / 1.75 / 3.5 / 9.0 / 12.0 (the hand-set start-tier staple buildings outside this table by the same factor)
+age_1_traditions = { flat_food = 1.575, throughput = 1.0 }
+age_2_renaissance = { flat_food = 1.575, throughput = 1.0, advance = "food_advance_renaissance", global_food_decay = 0.0 }
+age_3_discovery = { flat_food = 3.15, throughput = 1.15, advance = "new_world_crops", global_food_decay = -0.0008 }
+age_4_reformation = { flat_food = 8.1, throughput = 1.35, advance = "food_advance_reformation", global_food_decay = -0.0005 }
+age_5_absolutism = { flat_food = 10.8, throughput = 1.45, advance = "food_advance_absolutism", global_food_decay = -0.0005 }
 # AI weight of a farming upgrade where its predecessor stands (divided by owner income + 10, like the farm weight):
 # the engine gives a replacement no profit gate but only AI_UPGRADE_BUILDING_UTILITY (0.001), so farmsteads stalled at
 # 19 % (run b033350e, 1550)

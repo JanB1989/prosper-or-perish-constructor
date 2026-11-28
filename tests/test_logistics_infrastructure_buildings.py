@@ -241,10 +241,11 @@ def test_victuals_trade_templates_split_export_and_import_flows() -> None:
     for text in yard_texts:
         for gone in ("river_barges", "merchantmen", "armed_convoy"):
             assert f"pp_victualling_yard_{gone}" not in text
-        assert re.search(r"pp_victualling_yard_grain_shipment = \{[^}]*wheat = 2\.332[^}]*output = 0\.932", text, re.S)
-        # every staple shipment shares the grain numbers (1 gold, 12 food each): food-neutral
+        # output 0.932 until the 2026-11-28 food set (Jan: the Yard weaker, same staples)
+        assert re.search(r"pp_victualling_yard_grain_shipment = \{[^}]*wheat = 2\.332[^}]*output = 0\.75\b", text, re.S)
+        # every staple shipment shares the grain numbers (1 gold of the staple each)
         for good in ("rice", "millet", "maize", "legumes", "fish"):
-            assert re.search(rf"pp_victualling_yard_{good}_shipment = \{{[^}}]*{good} = 2\.332[^}}]*output = 0\.932", text, re.S)
+            assert re.search(rf"pp_victualling_yard_{good}_shipment = \{{[^}}]*{good} = 2\.332[^}}]*output = 0\.75\b", text, re.S)
         assert "surplus_sales" not in text and "province_food_sales" not in text
         assert not re.search(r"\bvictuals = -", text)
         assert "export_tally" not in text

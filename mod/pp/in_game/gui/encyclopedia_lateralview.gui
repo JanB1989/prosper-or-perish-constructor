@@ -1436,17 +1436,7 @@
                                                             pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/buildings/hurdled_sheepcotes.dds" } blockoverride "item_link" { raw_text = "[ShowBuildingTypeName('hurdled_sheepcotes')|e]" } }
                                                         }
                                                     }
-                                                    pp_eu_goods_row = {
-                                                        blockoverride "row_label" { text = "PP_EU_GOODS_POPS_ROW" }
-                                                        blockoverride "row_goods" {
-                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/pops/nobles.dds" } blockoverride "item_link" { raw_text = "[ShowPopTypeName('nobles')]" } }
-                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/pops/clergy.dds" } blockoverride "item_link" { raw_text = "[ShowPopTypeName('clergy')]" } }
-                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/pops/burghers.dds" } blockoverride "item_link" { raw_text = "[ShowPopTypeName('burghers')]" } }
-                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/pops/soldiers.dds" } blockoverride "item_link" { raw_text = "[ShowPopTypeName('soldiers')]" } }
-                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/pops/laborers.dds" } blockoverride "item_link" { raw_text = "[ShowPopTypeName('laborers')]" } }
-                                                            pp_eu_item = { blockoverride "item_icon" { texture = "gfx/interface/icons/pops/peasants.dds" } blockoverride "item_link" { raw_text = "[ShowPopTypeName('peasants')]" } }
-                                                        }
-                                                    }
+                                                    # no Pops row since 2026-11-28 (Jan's food set: pops buy no victuals)
                                                 }
                                                 pp_eu_text = { text = "PP_EU_GOODS_USERS_DESC" }
 

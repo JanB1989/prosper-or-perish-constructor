@@ -96,8 +96,8 @@ unique_production_methods = {
         icon = potato
         potato = 0.01
         produced = local_food
-        output = 1.5
-        debug_max_profit = 47.387
+        output = 1.35
+        debug_max_profit = 42.548
         category = building_maintenance
     }
 }
@@ -109,7 +109,7 @@ raw_modifier = {
 }
 
 modifier = {
-    local_monthly_food = 1.75
+    local_monthly_food = 1.575
     local_food_capacity = 50
     local_peasants_estate_power = 0.04
     local_peasant_enfranchisment = 0.002

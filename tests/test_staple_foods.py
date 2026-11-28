@@ -99,7 +99,9 @@ def test_every_staple_food_is_on_the_store_curve() -> None:
     assert "staple_goods" not in raw["stored_food"]["curve"]
 
 
-FARM_MEDIAN_BEFORE_AGE_FOOD_STEP = 0.2659   # Province Food / (12 x output value), median of the 32 crop farms
+# Province Food / (12 x output value), median of the 32 crop farms; x0.9 on 2026-11-28 (was 0.2659): Jan's food set
+# scaled every staple food maker's Province Food by 0.9, so the balance between the goods and their store lines stays
+FARM_MEDIAN_BEFORE_AGE_FOOD_STEP = 0.2659 * 0.9
 
 
 def test_staple_curve_factors_follow_the_crop_farm_balance() -> None:

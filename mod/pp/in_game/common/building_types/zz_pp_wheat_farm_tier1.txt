@@ -83,8 +83,8 @@ unique_production_methods = {
         icon = wheat
         wheat = 0.015
         produced = local_food
-        output = 2.3
-        debug_max_profit = 48.462
+        output = 2.07
+        debug_max_profit = 43.516
         category = building_maintenance
     }
 }
@@ -96,7 +96,7 @@ raw_modifier = {
 }
 
 modifier = {
-    local_monthly_food = 3.5
+    local_monthly_food = 3.15
     local_food_capacity = 50
     local_peasants_estate_power = 0.03
     local_peasant_enfranchisment = 0.002

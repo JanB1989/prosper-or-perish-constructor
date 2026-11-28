@@ -2401,13 +2401,19 @@ def test_normalized_production_sites_use_unit_employment_and_baseline_prices() -
         assert victualling_yard["price_kind"] == "explicit"
 
 
-def test_victuals_pop_demand_uses_scalar_database_value() -> None:
+def test_victuals_have_no_pop_demand() -> None:
+    """No pop demand for victuals since 2026-11-28 (Jan's food set; was victuals = 1 in pop_demand and demand_add /
+    demand_multiply in the goods file): written like vanilla's goods without pop demand."""
     entries = {entry.key: entry.value for entry in parse_file(GOODS_DEMAND).entries}
     pop_demand = entries["REPLACE:pop_demand"]
     assert isinstance(pop_demand, CList)
 
     values = _entry_values(pop_demand)
-    assert values["victuals"] == 1
+    assert "victuals" not in values
+    goods = (ROOT / "mod" / "pp" / "in_game" / "common" / "goods" / "pp_goods_victuals.txt").read_text(encoding="utf-8-sig")
+    body = "\n".join(line.split("#", 1)[0] for line in goods.splitlines())
+    for key in ("demand_add", "demand_multiply", "wealth_impact_threshold", "development_threshold"):
+        assert key not in body
 
 
 def _vanilla_goods_demand_objects() -> dict[str, dict[str, object]]:
@@ -2427,7 +2433,7 @@ def test_pop_demand_replace_keeps_vanilla_content() -> None:
     vanilla = _vanilla_goods_demand_objects()["pop_demand"]
     values = _entry_values({e.key: e.value for e in parse_file(GOODS_DEMAND).entries}["REPLACE:pop_demand"])
     assert set(vanilla) <= set(values)
-    assert set(values) - set(vanilla) == {"victuals", "silk"}
+    assert set(values) - set(vanilla) == {"silk"}   # victuals left on 2026-11-28 (no pop demand, Jan's food set)
     changed = {key for key in vanilla if str(values[key]) != str(vanilla[key])}
     assert changed == {"wheat", "rice", "millet", "maize", "potato", "legumes", "livestock", "fish", "wild_game",
                        "camels", "fruit", "olives", "horses", "salt", "tea", "cocoa"}

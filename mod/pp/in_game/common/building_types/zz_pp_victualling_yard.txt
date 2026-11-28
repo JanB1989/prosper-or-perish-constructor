@@ -38,8 +38,11 @@ location_potential = {
 # market and packs them into victuals. Since 2026-10-03 it takes no food from its own province (the great harbours
 # are short of food themselves, and a Yard draining a hungry port made no sense): the Provisions slot that shipped
 # 8 store food per level (River Barges, Merchantmen, Armed Convoy) is gone, so the Yard turns market staples into
-# victuals and nothing else. Per level: 2.33 staples (12 food each in the farms' Provisioning) -> 0.932 victuals,
-# which a Tavern turns back into 28 food: food-neutral, it only makes the food denser for trade. The raw_modifier's
+# victuals and nothing else. Per level: 2.33 staples (10.8 food each in the farms' Provisioning) -> 0.75 victuals,
+# which a Tavern turns back into about 22.5 food. 2026-11-28 (Jan's food set after run 2ae8dd7a: the Yard weaker,
+# the victuals price tied to the food store): 0.932 -> 0.75 victuals per shipment, inputs unchanged, so the Yard
+# breaks even at victuals 3.11 instead of 2.50 and packing costs about a tenth of the food (it was food-neutral
+# at 0.932 and 12 food per gold). The raw_modifier's
 # +1 % victuals per level (2026-10-06, Jan; +3 % since 2026-10-04, -5 % before) makes a big harbour Yard pay better with every level.
 # slot 0: food shipments, the long-distance staples the harbour receives (already packed, so no packing slot): grain,
 # dried pulses (ship's pease), salt fish (market fish is already cured, the fisheries buy the salt) and, since
@@ -54,7 +57,7 @@ unique_production_methods = {
     icon = victualling_yard
     wheat = 2.332
     produced = victuals
-    output = 0.932
+    output = 0.75
     category = building_maintenance
   }
   pp_victualling_yard_rice_shipment = {
@@ -62,7 +65,7 @@ unique_production_methods = {
     icon = victualling_yard
     rice = 2.332
     produced = victuals
-    output = 0.932
+    output = 0.75
     category = building_maintenance
   }
   pp_victualling_yard_millet_shipment = {
@@ -70,7 +73,7 @@ unique_production_methods = {
     icon = victualling_yard
     millet = 2.332
     produced = victuals
-    output = 0.932
+    output = 0.75
     category = building_maintenance
   }
   pp_victualling_yard_maize_shipment = {
@@ -78,7 +81,7 @@ unique_production_methods = {
     icon = victualling_yard
     maize = 2.332
     produced = victuals
-    output = 0.932
+    output = 0.75
     category = building_maintenance
   }
   pp_victualling_yard_legumes_shipment = {
@@ -86,7 +89,7 @@ unique_production_methods = {
     icon = victualling_yard
     legumes = 2.332
     produced = victuals
-    output = 0.932
+    output = 0.75
     category = building_maintenance
   }
   pp_victualling_yard_fish_shipment = {
@@ -94,7 +97,7 @@ unique_production_methods = {
     icon = victualling_yard
     fish = 2.332
     produced = victuals
-    output = 0.932
+    output = 0.75
     category = building_maintenance
   }
   pp_victualling_yard_salt_beef_shipment = {
@@ -102,7 +105,7 @@ unique_production_methods = {
     icon = victualling_yard
     livestock = 1.555
     produced = victuals
-    output = 0.932
+    output = 0.75
     category = building_maintenance
   }
 }
@@ -118,7 +121,7 @@ unique_production_methods = {
 }
 # No storage leg (2026-09-26; no store food at all since 2026-10-03): the great harbours live on imported grain and
 # are short of food by nature, so the Yard's profit follows only the victuals price against the staple's. Per level
-# at base prices (victuals 3, grain 1): about +0.3 gold at level 1, rising with the +1 % per level. The Market Sales
+# at base prices (victuals 3, grain 1): about -0.08 gold at level 1 since 2026-11-28 (+0.46 at 0.932 victuals), rising with the +1 % per level. The Market Sales
 # gate opens only above victuals 3.15 (level 1), so the AI adds Yards when victuals are dear.
 
 # per Yard level, staffed or not: every level ships a little more (+1 % victuals; 2026-10-06, Jan: was +3 %, -5 % before 2026-10-04), the
@@ -138,10 +141,10 @@ modifier = {
   local_repair_speed = 0.01
   local_sailors = 0.002   # engine cap: 0.0125 sailors per employed (0.2) = 0.0025, three decimals
 }
+	can_close = no # building_shutdown
 ai_construct_weight = {
     value = 0
     add = pp_market_short_victuals
 }
-	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:victualling_yard:building

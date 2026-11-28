@@ -52,7 +52,7 @@ if TYPE_CHECKING:
 
 CACHE_VERSION = "food-5"
 FOOD_GOOD = "local_food"
-SUBSISTENCE_RATE = 1.20  # food per month per 1,000 idle peasants or slaves at SUBSISTENCE_AGRICULTURE 1.21 (2026-11-27; 1.19 at 1.20 from 2026-10-14, 1.487 at 1.50 before, decompiled)
+SUBSISTENCE_RATE = 1.388  # food per month per 1,000 idle peasants or slaves at SUBSISTENCE_AGRICULTURE 1.40 (2026-11-28, Jan's food set: the define x 0.9915, the decompiled ratio of the rates before; 1.20 at 1.21 from 2026-11-27, 1.19 at 1.20 from 2026-10-14, 1.487 at 1.50 before, decompiled)
 FACTOR_LIMITS = (0.25, 4.0)
 POP_TYPES = ("nobles", "clergy", "burghers", "laborers", "soldiers", "peasants", "slaves", "tribesmen")
 # where food comes from (display order): key, label, colour

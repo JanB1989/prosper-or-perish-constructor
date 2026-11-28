@@ -134,8 +134,8 @@ unique_production_methods = {
         icon = fish
         fish = 0.093
         produced = local_food
-        output = 1.12
-        debug_max_profit = 2.885
+        output = 1.008
+        debug_max_profit = 2.496
         category = building_maintenance
     }
 }
@@ -155,7 +155,7 @@ local_pp_staple_levels = 1  # counts toward the province's Cookshop cap like a f
 }
 
 modifier = {
-    local_monthly_food = 1.75
+    local_monthly_food = 1.575
     local_food_capacity = 50
     local_fish_output_modifier = -0.005
     local_merchant_capacity = 0.014

@@ -87,8 +87,8 @@ REPLACE:pop_demand = {
 	fruit = 0.35 # 0.5
 	livestock = 0.7 # 1
 	rice = 0.7 # 1
-	# Victuals: PP's packed food good. Not in vanilla.
-	victuals = 1
+	# Victuals: PP's packed food good, not in vanilla. No pop demand since 2026-11-28 (Jan's food set; was victuals = 1),
+	# see pp_goods_victuals.txt.
 
 	category = pop_needs
 }

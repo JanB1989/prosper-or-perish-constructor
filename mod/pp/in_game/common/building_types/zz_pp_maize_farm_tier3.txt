@@ -89,8 +89,8 @@ unique_production_methods = {
         icon = maize
         maize = 0.024
         produced = local_food
-        output = 8.594
-        debug_max_profit = 114.511
+        output = 7.735
+        debug_max_profit = 102.965
         category = building_maintenance
     }
 }
@@ -103,7 +103,7 @@ raw_modifier = {
 
 modifier = {
 	local_laborers_desired_pop = 3.202 # job_room base 0.002
-    local_monthly_food = 7.031
+    local_monthly_food = 6.328
     local_food_capacity = 50
 }
 	can_close = no # building_shutdown

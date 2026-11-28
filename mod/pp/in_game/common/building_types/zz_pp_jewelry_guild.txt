@@ -123,10 +123,10 @@ modifier = {
 raw_modifier = {
     local_pp_jewelry_line_levels = 1  # manufacturing tiers 2026-10-06: line levels for the town rights
 }
+	can_close = no # building_shutdown
 ai_construct_weight = {
     value = 0
     add = pp_market_short_jewelry
 }
-	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:jewelry_guild:building

@@ -118,7 +118,7 @@ building:
         pp_cattle_rotations_provision = {
             livestock = 0.011
             produced = local_food
-            output = 6.256
+            output = 5.631
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -131,7 +131,7 @@ building:
     }
 
     modifier = {
-        local_monthly_food = 5.119
+        local_monthly_food = 4.607
         local_food_capacity = 50
         local_peasants_estate_power = 0.021
         local_peasant_enfranchisment = 0.002
@@ -151,7 +151,7 @@ localization:
     pp_cattle_rotations_base: Pastures
     pp_cattle_rotations_base_desc: 'The pastures themselves: what the grazing herd yields with plain herding before any improved husbandry.'
     pp_cattle_rotations_no_cultivation: No Cultivation
-    pp_cattle_rotations_no_cultivation_desc: "No improved husbandry is practised here; the land gives what plain work takes from it."
+    pp_cattle_rotations_no_cultivation_desc: No improved husbandry is practised here; the land gives what plain work takes from it.
     pp_cattle_rotations_ley_grazing: Ley Grazing
     pp_cattle_rotations_ley_grazing_desc: Cattle graze sown leys on fields resting from grain.
     pp_cattle_rotations_transhumance: Transhumance Drove

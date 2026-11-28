@@ -77,8 +77,8 @@ unique_production_methods = {
         icon = camels
         camels = 0.038
         produced = local_food
-        output = 1.36
-        debug_max_profit = 2.498
+        output = 1.224
+        debug_max_profit = 2.149
         category = building_maintenance
     }
 }
@@ -98,9 +98,9 @@ raw_modifier = {
   local_pp_staple_levels = 1  # counts toward the province's Cookshop cap like a farm level (a staple food maker)
   local_population_capacity = -2
 }
+	can_close = no # building_shutdown
 	modifier = {
 		local_laborers_desired_pop = 5 # job_room
 	}
-	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:camel_stud:building

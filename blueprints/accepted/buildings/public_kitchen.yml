@@ -317,7 +317,8 @@ building:
     	modifier = {
     		# the kitchen's food (2026-10-03: was 15 plus about 43 Province Food from the recipes), scaled by staffing
     		# and by the inputs the kitchen gets
-    		local_monthly_food = 18.0
+    		# 2026-11-28 (Jan, food set after run 2ae8dd7a): halved, 18.0 -> 9.0
+    		local_monthly_food = 9.0
     		# people eat the perishables: a little less food spoils in store, and the peasants eat a little less
     		local_food_preservation_efficiency_modifier = 0.05
     		local_peasants_food_consumption = -0.01

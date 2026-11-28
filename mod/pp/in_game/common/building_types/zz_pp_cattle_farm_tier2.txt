@@ -96,8 +96,8 @@ unique_production_methods = {
         icon = livestock
         livestock = 0.011
         produced = local_food
-        output = 6.256
-        debug_max_profit = 121.307
+        output = 5.631
+        debug_max_profit = 109.088
         category = building_maintenance
     }
 }
@@ -109,7 +109,7 @@ raw_modifier = {
 }
 
 modifier = {
-    local_monthly_food = 5.119
+    local_monthly_food = 4.607
     local_food_capacity = 50
     local_peasants_estate_power = 0.021
     local_peasant_enfranchisment = 0.002

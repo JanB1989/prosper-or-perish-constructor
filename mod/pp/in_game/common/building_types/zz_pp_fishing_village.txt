@@ -127,8 +127,8 @@ REPLACE:fishing_village = {
             icon = fish
             fish = 0.067
             produced = local_food
-            output = 0.8
-            debug_max_profit = 2.852
+            output = 0.72
+            debug_max_profit = 2.467
             category = building_maintenance
         }
     }
@@ -148,7 +148,7 @@ REPLACE:fishing_village = {
     }
 
     modifier = {
-        local_monthly_food = 1.75
+        local_monthly_food = 1.575   # 2026-11-28 (Jan's food set): x0.9, was 1.75
         local_food_capacity = 50
         local_fish_output_modifier = -0.006
         local_merchant_capacity = 0.010

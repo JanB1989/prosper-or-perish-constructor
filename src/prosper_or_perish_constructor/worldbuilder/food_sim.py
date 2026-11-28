@@ -152,8 +152,8 @@ class SimRules:
     emp_elasticity: float = 0.5
     free_land: float = 0.0              # fitted stand-in (0.4 x the drop below the start size) before the free-land modifiers below
     # free-land modifiers (pp_capacity_pressure_effects.txt), engine-scaled per location (migration.free_land_scales)
-    abundant_peasant_food: float = -0.4     # abundant_free_land local_peasants_food_consumption (-0.5 until 2026-10-28)
-    available_peasant_food: float = -0.25   # available_free_land local_peasants_food_consumption (-0.32 until 2026-10-28)
+    abundant_peasant_food: float = -0.3     # abundant_free_land local_peasants_food_consumption (-0.5 until 2026-10-28, -0.4 until 2026-11-28)
+    available_peasant_food: float = -0.175  # available_free_land local_peasants_food_consumption (-0.32 until 2026-10-28, -0.25 until 2026-11-28)
     abundant_food: float = 1.0              # abundant_free_land local_monthly_food (foraging)
     # prosperity (0..1 per location; the mod's prosperity inject: every settled pop type +40 % food at 100 %), dynamics
     # fitted on the 100-year run 1342-1437 (saves r7bee, 249k location pairs): dP/yr = +0.0181 x stored years
@@ -224,7 +224,7 @@ class SimRules:
     tavern_sales_cut: float = -5.0      # Surplus Sales output per staffed Tavern level in the location
     # harbour Victualling Yard (per level; blueprints/accepted/buildings/victualling_yard.yml): 8 food and shipped
     # grain for 1.2 victuals, no storage leg; its grain is bought at grain_price, the shipping goods cost about 0.32
-    harbor_yard_victuals: float = 0.932 # a Grain Shipment (the Provisions slot is gone since 2026-10-03)
+    harbor_yard_victuals: float = 0.75  # a Grain Shipment (the Provisions slot is gone since 2026-10-03); 0.932 until 2026-11-28 (Jan's food set)
     harbor_yard_grain: float = 2.332
     grain_price: float = 1.0
     harbor_yard_labour: float = 0.0     # the grain shipment has no labour or shipping goods

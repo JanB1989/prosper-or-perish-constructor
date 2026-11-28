@@ -96,7 +96,7 @@ crop location and good the availability, weight, planned and placed levels.
 on the day-0 save of a fresh campaign (`nb.eu5`, 1337.4.1, 4,018 province/owner
 pools; production = `base_food_consumption + cached_structural_food_change`):
 
-- **Subsistence** = define `NLocation.SUBSISTENCE_AGRICULTURE` (1.5) x (1 + the
+- **Subsistence** = define `NLocation.SUBSISTENCE_AGRICULTURE` (1.5 in the fit below; 1.40 since 2026-11-28) x (1 + the
   location's static `local_monthly_food_modifier` stack) x `yield_rank` x
   `yield_climate`, per 1,000 jobless **peasants and slaves**. The stack is read
   from the files the game uses (rank, climate/vegetation/topography classes,
@@ -168,10 +168,11 @@ rank (town 521, city 815, megalopolis 1,241), R² 0.968; buildings add their
    the province; a level once the spare food beyond the reserve fills
    `yard_min_level_share` (0.3) of its 60 food, since the engine staffs levels
    partly; cap `victualling_yard_max_level`), until supply >= demand x
-   `victuals_target` (1.1). Well-connected pools come first: surplus x the pool's
+   `victuals_target` (1.0 since 2026-11-28, 1.1 before). Well-connected pools come first: surplus x the pool's
    best Yard cap, which rewards rivers, coasts, harbours and market centres. A Yard
    packs its pool's surplus / 40 food per victual, at most 1.5 per level (loose
-   stores). Demand is the pops' victuals and what the Taverns will actually buy: a
+   stores). Demand is what the Taverns will actually buy (pops buy no victuals since 2026-11-28; the
+   goods file gives them no demand, so their share reads 0) plus the configured consumers: a
    Tavern only runs while its pool is short (its Province Food stops paying above
    about 7 stored months at the mean victuals price), so it buys its pool's gap / 30 food per victual, at most 2 per level.
    Cookshops make no victuals. Supply counts the victuals common good too (since 2026-11-27): the goods file's

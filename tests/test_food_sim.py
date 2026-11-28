@@ -133,7 +133,12 @@ def test_tavern_fills_a_low_store_and_the_grange_packs_a_full_one():
     # a staffed Tavern takes the Grange's Surplus Sales away, and a starving province packs no victuals
     assert rules.yard_profit(24, False, staffed_taverns=1.0) < 0
     assert rules.yard_profit(0, True) == -rules.yard_fixed
-    assert rules.harbor_yard_profit(False) > 0 > rules.harbor_yard_profit(True)
+    # 2026-11-28 (Jan: a weaker Yard, 0.932 -> 0.75 victuals a shipment): with the staples at their default price the
+    # Yard needs victuals above 3.11 (2.50 before), so at the validator's 2.7 it no longer pays; in the runs it works
+    # because the staples it buys stand at a quarter to a third of their default price
+    assert rules.harbor_yard_profit(False) < 0
+    paying = fs.SimRules(victuals_price=3.2)
+    assert paying.harbor_yard_profit(False) > 0 > paying.harbor_yard_profit(True)
     # a starving province still buys victuals at a price that stops the Tavern at a merely empty store
     dear = fs.SimRules(victuals_price=5.0)
     assert dear.tavern_profit(0, True) > 0 > dear.tavern_profit(0, False)
@@ -273,10 +278,11 @@ def test_free_land_cuts_peasant_food_by_the_engine_scales():
     p = tribal_pool(tribesmen=0.0, pop0=10.0, demand0=10.0, overpop=[(10.0, 0.2, 50.0), (5.0, 0.05, 100.0)])
     rules = fs.SimRules()
     cons, forage = fs.free_land(p, 1.0, rules)
-    # 10k peasants at 20 % of capacity: available land, -0.25 x 0.8; 5k at 5 % of 100k (pop 5k < 10k): abundant, -0.4 x 0.95
-    assert abs(cons - (10.0 * -0.25 * 0.8 + 5.0 * -0.4 * 0.95)) < 1e-9 and abs(forage - 0.95) < 1e-9
+    # 10k peasants at 20 % of capacity: available land, -0.175 x 0.8; 5k at 5 % of 100k (pop 5k < 10k): abundant, -0.3 x 0.95
+    # (-0.25 / -0.4 until the 2026-11-28 food set)
+    assert abs(cons - (10.0 * -0.175 * 0.8 + 5.0 * -0.3 * 0.95)) < 1e-9 and abs(forage - 0.95) < 1e-9
     cons5, forage5 = fs.free_land(p, 5.0, rules)                    # 5x the people: the first location is full,
-    assert abs(cons5 - 25.0 * -0.25 * 0.75) < 1e-9 and forage5 == 0.0  # the second at 25 % (25k): available, x 0.75
+    assert abs(cons5 - 25.0 * -0.175 * 0.75) < 1e-9 and forage5 == 0.0  # the second at 25 % (25k): available, x 0.75
     assert fs.free_land(replace_overpop(p, [(10.0, 0.2)]), 1.0, rules) == (0.0, 0.0)             # no capacity known: no effect
 
 

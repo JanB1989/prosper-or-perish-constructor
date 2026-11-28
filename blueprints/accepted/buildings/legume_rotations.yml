@@ -138,7 +138,7 @@ building:
         pp_legume_rotations_provision = {
             legumes = 0.016
             produced = local_food
-            output = 6.256
+            output = 5.631
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -151,7 +151,7 @@ building:
     }
 
     modifier = {
-        local_monthly_food = 5.119
+        local_monthly_food = 4.607
         local_food_capacity = 50
         local_peasants_estate_power = 0.021
         local_peasant_enfranchisment = 0.002
@@ -172,13 +172,13 @@ localization:
     pp_legume_rotations_base: Fields
     pp_legume_rotations_base_desc: 'The fields themselves: what the sown land yields with plain work before any improved husbandry.'
     pp_legume_rotations_no_cultivation: No Cultivation
-    pp_legume_rotations_no_cultivation_desc: "No improved husbandry is practised here; the land gives what plain work takes from it."
+    pp_legume_rotations_no_cultivation_desc: No improved husbandry is practised here; the land gives what plain work takes from it.
     pp_legume_rotations_pulse_rotation: Pulse Rotation
     pp_legume_rotations_pulse_rotation_desc: Pulses take their turn in the field rotation.
     pp_legume_rotations_vetch_lentil: Vetch and Lentil Fodder
     pp_legume_rotations_vetch_lentil_desc: Vetch and lentils are grown for fodder as well as food.
     pp_legume_rotations_no_beekeeping: No Beekeeping
-    pp_legume_rotations_no_beekeeping_desc: "No hives are kept here; the household leaves the bees to the wild."
+    pp_legume_rotations_no_beekeeping_desc: No hives are kept here; the household leaves the bees to the wild.
     pp_legume_rotations_hedgerow_hives: Hedgerow Hives
     pp_legume_rotations_hedgerow_hives_desc: Cottage hives line hedges and orchard edges, adding wax from the same improved field boundaries.
     pp_legume_rotations_provision: Provision with Legumes

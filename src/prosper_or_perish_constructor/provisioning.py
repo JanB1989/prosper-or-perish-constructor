@@ -154,10 +154,10 @@ _STEP = Decimal("0.001")
 @dataclass(frozen=True)
 class ProvisioningConfig:
     input_per_level: Decimal = Decimal("0.08")
-    food_per_gold: Decimal = Decimal("12")
+    food_per_gold: Decimal = Decimal("10.8")          # 12 until 2026-11-28 (Jan's food set, x0.9)
     reference_base_output: Decimal = Decimal("0.06")
     crop_input_gold: Decimal = Decimal("0.01")
-    crop_food_per_level: Decimal = Decimal("1.5")
+    crop_food_per_level: Decimal = Decimal("1.35")    # 1.5 until 2026-11-28 (Jan's food set, x0.9)
 
 
 @dataclass(frozen=True)

@@ -112,7 +112,7 @@ building:
         pp_potato_farmstead_provision = {
             potato = 0.015
             produced = local_food
-            output = 2.3
+            output = 2.07
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -125,7 +125,7 @@ building:
     }
 
     modifier = {
-        local_monthly_food = 3.5
+        local_monthly_food = 3.15
         local_food_capacity = 50
         local_peasants_estate_power = 0.03
         local_peasant_enfranchisment = 0.002
@@ -141,7 +141,7 @@ localization:
     pp_potato_farmstead_base: Fields
     pp_potato_farmstead_base_desc: 'The fields themselves: what the sown land yields with plain work before any improved husbandry.'
     pp_potato_farmstead_no_cultivation: No Cultivation
-    pp_potato_farmstead_no_cultivation_desc: "No improved husbandry is practised here; the land gives what plain work takes from it."
+    pp_potato_farmstead_no_cultivation_desc: No improved husbandry is practised here; the land gives what plain work takes from it.
     pp_potato_farmstead_manured_ridges: Manured Ridges and Clamps
     pp_potato_farmstead_manured_ridges_desc: Manured ridges grow the crop and earth clamps store it.
     pp_potato_farmstead_provision: Provision with Potatoes

@@ -31,7 +31,7 @@ def test_building_scaling_config_loads_provisioning_constants() -> None:
     provision = provisioning.load_provisioning_config(PROJECT)
 
     assert provision.input_per_level == Decimal("0.08")
-    assert provision.food_per_gold == Decimal("12")
+    assert provision.food_per_gold == Decimal("10.8")   # 12 until 2026-11-28 (Jan's food set)
     assert provision.reference_base_output == Decimal("0.06")
     assert config.increase_per_level_cost_multiplier == Decimal("0.75")
     assert config.burgher_building_employment_size == Decimal("0.3")
@@ -182,12 +182,14 @@ def test_provisioning_feeds_at_least_the_workers() -> None:
             rf"pp_{re.escape(building)}_provision\s*=\s*\{{[^}}]*?output\s*=\s*([0-9.]+)", template.building_body, re.S
         )
         assert provision, building
-        # 0.6 since 2026-10-05: staple food buildings employ 1,250 per level with the same output (fishing village 0.64)
-        assert Decimal(provision.group(1)) >= worker_food * Decimal("0.6"), building
+        # 0.6 since 2026-10-05: staple food buildings employ 1,250 per level with the same output (fishing village 0.64).
+        # 0.54 since 2026-11-28 (Jan's food set: every staple food maker's food x 0.9, so the guard moves with it;
+        # the fishing village covers 0.576 of its workers)
+        assert Decimal(provision.group(1)) >= worker_food * Decimal("0.54"), building
 
     cookshop = load_template(BUILDING_BLUEPRINT_ROOT / "cookshop.yml")
     # since 2026-10-03 (Jan): all of the kitchen's food is the flat modifier food, its dishes sell for offset
-    assert "local_monthly_food = 15.0" in cookshop.building_body
+    assert "local_monthly_food = 7.5" in cookshop.building_body   # 15.0 until the 2026-11-28 food set (Jan)
     assert "produced = victuals" not in cookshop.building_body
     assert "produced = local_food" not in cookshop.building_body
 

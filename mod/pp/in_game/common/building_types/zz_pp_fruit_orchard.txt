@@ -81,8 +81,8 @@ REPLACE:fruit_orchard = {
             icon = fruit
             fruit = 0.08
             produced = local_food
-            output = 0.96
-            debug_max_profit = 2.871
+            output = 0.864
+            debug_max_profit = 2.484
             category = building_maintenance
         }
     }
@@ -105,7 +105,7 @@ REPLACE:fruit_orchard = {
     }
 
     modifier = {
-        local_monthly_food = 1.75
+        local_monthly_food = 1.575   # 2026-11-28 (Jan's food set): x0.9, was 1.75
         local_food_capacity = 50
     }
     can_close = no # building_shutdown

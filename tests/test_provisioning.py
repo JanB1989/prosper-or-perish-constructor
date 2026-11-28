@@ -13,8 +13,9 @@ CONFIG = pv.ProvisioningConfig()
 def test_amounts_scale_with_base_output_and_round_to_three_decimals() -> None:
     amounts = pv.provisioning_amounts("0.05", config=CONFIG)   # fishing village: M = 0.05 / 0.06
 
-    assert amounts == pv.ProvisioningAmounts(input=Decimal("0.067"), output=Decimal("0.800"))
-    assert pv.provisioning_amounts("0.06", config=CONFIG) == pv.ProvisioningAmounts(Decimal("0.080"), Decimal("0.960"))
+    # outputs 0.800 / 0.960 until the 2026-11-28 food set (Jan: 12 -> 10.8 food per gold)
+    assert amounts == pv.ProvisioningAmounts(input=Decimal("0.067"), output=Decimal("0.720"))
+    assert pv.provisioning_amounts("0.06", config=CONFIG) == pv.ProvisioningAmounts(Decimal("0.080"), Decimal("0.864"))
     assert pv.provisioning_amounts("0.065", config=CONFIG).input == Decimal("0.087")   # 0.08667 rounds half up
 
 
@@ -45,7 +46,7 @@ def test_render_slot_holds_provision_alone_without_labour() -> None:
         "        pp_fishing_village_provision = {\n"
         "            fish = 0.067\n"
         "            produced = local_food\n"
-        "            output = 0.8\n"
+        "            output = 0.72\n"   # 0.8 until 2026-11-28 (food set)
         "            debug_max_profit = 0\n"
         "            category = building_maintenance\n"
         "        }\n"

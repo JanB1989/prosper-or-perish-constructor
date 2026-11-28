@@ -327,7 +327,8 @@ price = pp_cookshop_price
 		local_laborers_desired_pop = 3.2 # job_room
 		# the kitchen's food (2026-10-03: was 10 plus about 40 Province Food from the recipes): about five farm levels'
 		# food per level, scaled by staffing and by the inputs the kitchen gets
-		local_monthly_food = 15.0
+		# 2026-11-28 (Jan, food set after run 2ae8dd7a): halved, 15.0 -> 7.5
+		local_monthly_food = 7.5
 		# people eat the perishables: a little less food spoils in store, and the peasants eat a little less
 		local_food_preservation_efficiency_modifier = 0.04
 		local_peasants_food_consumption = -0.01

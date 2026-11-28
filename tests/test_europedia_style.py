@@ -377,8 +377,8 @@ def test_trade_goods_bookkeeping_goods_are_the_dummy_goods():
 
 def test_trade_goods_victuals_users_follow_the_buildings():
     """The victuals rows show every building whose methods buy victuals (the Tavern has its own step): armies and
-    fleets = the military and naval ones, carriers = those making logistics, work crews = the rest. The pops row shows
-    the pops the victuals goods file gives a demand, most per head first."""
+    fleets = the military and naval ones, carriers = those making logistics, work crews = the rest. No pops row:
+    pops buy no victuals since 2026-11-28."""
     users = {k: b for k, b in _building_blocks().items() if re.search(r"(?m)^\s*victuals\s*=\s*[\d.]+", b)}
     military = {k for k, b in users.items() if re.search(r"(?m)^\s*category\s*=\s*(?:military|naval)_category\b", b)}
     carriers = {k for k, b in users.items() if re.search(r"(?m)^\s*produced\s*=\s*logistics\b", b)}
@@ -387,18 +387,11 @@ def test_trade_goods_victuals_users_follow_the_buildings():
     assert military and set(rows["PP_EU_GOODS_MILITARY_ROW"]) == military
     assert carriers and set(rows["PP_EU_GOODS_CARRIERS_ROW"]) == carriers
     assert set(rows["PP_EU_GOODS_CREWS_ROW"]) == set(users) - military - carriers - {"tavern"}
+    # no Pops row since 2026-11-28 (Jan's food set): the victuals goods file gives no pop type a demand
     card = _card("trade_goods")
-    m = re.search(r'blockoverride "row_label" \{ text = "PP_EU_GOODS_POPS_ROW" \}\s*blockoverride "row_goods" \{', card)
-    pops = re.findall(r"ShowPopTypeName\('(\w+)'\)", card[m.end():_block_end(card, m.end())])
     goods = (MOD_ROOT / "in_game/common/goods/pp_goods_victuals.txt").read_text(encoding="utf-8-sig")
-
-    def table(name: str) -> dict[str, float]:
-        body = re.search(rf"{name}\s*=\s*\{{([^}}]*)\}}", goods).group(1)
-        return {pop: float(value) for pop, value in re.findall(r"(\w+)\s*=\s*([\d.]+)", body)}
-
-    assert sorted(pops) == sorted(p for p, v in table("demand_add").items() if v > 0)
-    multiply = table("demand_multiply")
-    assert pops == sorted(pops, key=lambda p: -multiply[p])   # "nobles most"
+    assert "demand_add" not in "\n".join(line.split("#", 1)[0] for line in goods.splitlines())
+    assert "PP_EU_GOODS_POPS_ROW" not in card
 
 
 def test_trade_goods_odd_methods_exist():

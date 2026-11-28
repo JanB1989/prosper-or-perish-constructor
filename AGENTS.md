@@ -51,8 +51,8 @@
   quarries were built against the price. Every producer, iron and lumber included, passes the profit-margin gate. Never gate on a method that
   buys the building's own main good (inverts the AI's price response), except a token amount:
 - Crop farms (farm v3, 2026-10-02): Provision takes a token of the crop (`crop_provision_input_gold` in
-  `[building_scaling]`) and makes a fixed Province Food amount per level, so it is the farm's gate (margin about 15 at
-  base prices, open at any realistic crop price) and the farms have no Market leg. The AI's price response is the
+  `[building_scaling]`) and makes a fixed Province Food amount per level, so it is the farm's gate (margin about 13.5 at
+  base prices since 2026-11-28, 15 before, open at any realistic crop price) and the farms have no Market leg. The AI's price response is the
   farm's `ai_construct_weight` (`[general.ai_construct_weight]` in `config/crop_farms.toml`: slope x ((1 + local crop
   output modifier - the store curve's crop line `pp_stored_food_staple_line`) x market price / default price - 1) /
   (owner monthly income + offset); EU5 1.4 adds it raw at the end of the build score, after the gate). Fisheries,
@@ -311,8 +311,8 @@
   the store / victuals price correlation right-signed from the start). Earlier still: 37.88 - 5.29 x price (d3091976),
   which left Mini World run 5's dear-victuals markets at 14-19 months. No Granges at game start
   (`grange_at_start = false`).
-- The Victualling Yard takes no store food (2026-10-03): it turns 2.33 gold of market staples into 0.932 victuals and
-  nothing else (food-neutral, denser for trade): grain, rice, millet, maize, pease, salt fish and, since 2026-10-04,
+- The Victualling Yard takes no store food (2026-10-03): it turns 2.33 gold of market staples into 0.75 victuals
+  (0.932 and food-neutral until 2026-11-28, see "Food Set 2026-11-28") and nothing else: grain, rice, millet, maize, pease, salt fish and, since 2026-10-04,
   salt beef (1.555 livestock; sheep walked to market and stay inland). Harbour sites (cap minimum 2) and, since the evening, every market centre:
   inland 2 levels with river or sea access (`is_coastal`), 1 without, + 0.025 x development, at most 4
   (`victuals_logistics.json` `inland_market_center`); the start planner places some there too. Low Stores no longer
@@ -334,7 +334,7 @@
   of provinces in a 500-year run), so kitchens left behind keep working and a new capital builds only what is left; no
   cull. Every owner of a split province has its own capital, store and budget. Small recipes (dish about 0.45 gold of staples + labour at margin
   1.08, drink about 0.23 at 1.2; Public Kitchen 0.55 / 0.28) sell their meals for `offset`, so profit is thin and
-  store-independent; the food is the flat `local_monthly_food` (15 / 18 per staffed level, scaled by input
+  store-independent; the food is the flat `local_monthly_food` (7.5 / 9 per staffed level since 2026-11-28, was 15 / 18; scaled by input
   fulfilment), plus `local_food_preservation_efficiency_modifier` +0.04 (Public Kitchen +0.05) and
   `local_peasants_food_consumption` -0.01.
 - Food relief by age (`[age_food]` in constructor.toml, `age_food.py`, 2026-10-03, Jan: age 2 stays tough, age 3
@@ -1736,7 +1736,7 @@ names them, read `0.11`.
     a normal RGO stays), start planner lumber per RGO 0.42 -> 0.32, `start_market_stock.csv` `rgo_factor` x 0.75 by
     hand until `ppc start-stock calibrate` runs on a new day-0 save. Run bd7d9616 used 63 % of the raw goods it made
     in 1342 and 86 % in 1402, with 84 and 74 months of stock.
-  - **Subsistence**: back at 1.21 since the evening of 2026-11-28 (Jan, after run 2ae8dd7a: at 1.10 South Asia grew
+  - **Subsistence**: 1.40 since the food set below (2026-11-28); back at 1.21 the evening before it (Jan, after run 2ae8dd7a: at 1.10 South Asia grew
     0.23 %/yr after the plague instead of 0.39 and East Asia 0.19 instead of 0.29, while Western Europe was back at its
     1342 level in 1417 instead of 1412; the world ended at 931 M instead of 1,148 M). What follows is the 1.10 state the
     run had: `NLocation.SUBSISTENCE_AGRICULTURE` 1.21 -> 1.10. Start model: world food supply +8.3 % ->
@@ -1748,3 +1748,38 @@ names them, read `0.11`.
   fruit and wine are short already; the early tax base was already 6-17 % below earlier runs until 1650.
 - Next run: starving pools by region in the first century, years to regain the pre-plague level (world 1397, Europe
   1412 in bd7d9616), tax base and building investment by 1500, fur and tea.
+
+## Food Set 2026-11-28 (Jan, after run 2ae8dd7a; not tested in game)
+
+- Why: Europe recovered too fast after the Black Death on full stores, and the victuals price did not follow the food
+  store. Jan: weaken the food buildings a little and keep subsistence a bit stronger, so the start planner balances
+  the early game itself.
+- **Subsistence** `NLocation.SUBSISTENCE_AGRICULTURE` 1.21 -> 1.40 (`pp_defines_adjustments.txt`); the run report's
+  `SUBSISTENCE_RATE` 1.20 -> 1.388 (the define x 0.9915, `run_report_food.py`).
+- **Cookshop / Public Kitchen** flat `local_monthly_food` 15 -> 7.5 / 18 -> 9 (blueprints); cap, recipes, preservation
+  and consumption lines unchanged.
+- **Staple food makers x0.9**: `[building_scaling] provision_food_per_gold` 12 -> 10.8 (every buy-back Provision:
+  fisheries, orchards, forest villages, flocks, camels, palm groves, royal forest; rewritten from the config),
+  `crop_provision_food_per_level` 1.5 -> 1.35 (crop farms, `ppc crop-farms --write`; tiers 2-3 keep their 55 % split),
+  `[age_food]` flat food 1.75 / 1.75 / 3.5 / 9 / 12 -> 1.575 / 1.575 / 3.15 / 8.1 / 10.8 (`ppc age-food apply`), the
+  hand-set start tiers by the same factor (fishing / forest village and orchard 1.575, ocean fishery 2.925, sheep and
+  camel herders 0.225, royal forest 1.35). Tavern, Grange and kitchens untouched by this item. The store curve's
+  per-good factors keep their balance (`tests/test_staple_foods.py` scales its pinned farm median by 0.9).
+- **Free-land relief** (`pp_capacity_pressure_effects.txt`): `abundant_free_land` peasant food consumption -0.4 ->
+  -0.3, `available_free_land` -0.25 -> -0.175; the validator's `SimRules` follow.
+- **Victualling Yard** 0.932 -> 0.75 victuals per shipment, inputs unchanged (every variant; start planner
+  `producers` and `harbor_yard_victuals_per_level`, validator `harbor_yard_victuals`). It breaks even at victuals 3.11
+  (2.50 before) and packing now costs about a tenth of the food.
+- **Start planner** `victuals_target` 1.1 -> 1.0.
+- **No pop demand for victuals**: written like vanilla's goods without one (no `demand_add`, `demand_multiply`,
+  `wealth_impact_threshold`, `development_threshold` in `pp_goods_victuals.txt`, no line in `pop_demand`). The start
+  planner, the validator and the start market stock read the goods file, so their pop share is 0 by itself. The
+  Europedia victuals card lost its Pops row. `start_market_stock.csv`'s settled victuals price (0.54) comes from runs
+  with pop demand; it stays until `ppc start-stock calibrate` runs on a day-0 save of this build.
+- Start model (build of 2026-11-28, before -> after): food supply before the start buildings +8.3 % -> +11.7 % over
+  demand; provinces short before the start buildings 1,692 -> 1,778 (shortfall 26.5k -> 26.9k a month); subsistence
+  259k -> 303k, building food 162k -> 129k a month; validator over 96 months: world +2.5 % -> +2.4 %, food pools
+  collapsing 14 -> 12, pinned at the storage cap 2,496 -> 2,331, starving at some point 796 -> 856; start levels
+  Victualling Yards 184 -> 109, Granges 0 -> 0, Cookshops 2,160 -> 2,338, Taverns 1,887 -> 2,085, crop farms 16,567 ->
+  16,067, Granaries 846 -> 812; victuals in the planner's markets: supply 382 -> 281 against demand 780 -> 562 a month,
+  markets covered 17 -> 55 of 130.

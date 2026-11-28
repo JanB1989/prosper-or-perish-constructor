@@ -113,7 +113,7 @@ building:
         pp_wheat_farm_provision = {
             wheat = 0.01
             produced = local_food
-            output = 1.5
+            output = 1.35
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -126,7 +126,7 @@ building:
     }
 
     modifier = {
-        local_monthly_food = 1.75
+        local_monthly_food = 1.575
         local_food_capacity = 50
         local_peasants_estate_power = 0.04
         local_peasant_enfranchisment = 0.002
@@ -151,7 +151,7 @@ localization:
     pp_wheat_farm_base: Fields
     pp_wheat_farm_base_desc: 'The fields themselves: what the sown land yields with plain work before any improved husbandry.'
     pp_wheat_farm_no_cultivation: No Cultivation
-    pp_wheat_farm_no_cultivation_desc: "No improved husbandry is practised here; the land gives what plain work takes from it."
+    pp_wheat_farm_no_cultivation_desc: No improved husbandry is practised here; the land gives what plain work takes from it.
     pp_wheat_farm_ox_ard: Ox-drawn Ard
     pp_wheat_farm_ox_ard_desc: Oxen draw a light ard that scratches the soil open for sowing.
     pp_wheat_farm_heavy_plough: Heavy Plough Team

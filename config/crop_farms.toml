@@ -24,7 +24,8 @@ tier_employment_size = { 0 = 1.25, 1 = 1.25, 2 = 1.0, 3 = 1.0 }
 tier_build_time = { 0 = "village_build_time", 1 = "workshop_build_time", 2 = "workshop_build_time", 3 = "workshop_build_time" }
 tier_construction_demand = { 0 = "village_construction", 1 = "workshop_construction", 2 = "workshop_construction", 3 = "workshop_construction" }
 tier_increase_per_level_cost = { 0 = 0.15, 1 = 0.15, 2 = 0.15, 3 = 0.15 }
-tier_local_monthly_food = { 0 = 1.5, 1 = 1.5, 2 = 1.5, 3 = 3.0 }
+# x0.9 on 2026-11-28 (Jan's food set; was 1.5 / 1.5 / 1.5 / 3.0); the rendered flat food comes from [age_food]
+tier_local_monthly_food = { 0 = 1.35, 1 = 1.35, 2 = 1.35, 3 = 2.7 }
 # icon line in the building body; tier 0 has no icon line today (farming_village uses the vanilla icon by key)
 tier_icon = { 0 = "", 1 = "husbandry_farmstead", 2 = "farming_village_rotations", 3 = "model_farm" }
 tier_can_close = { 0 = false, 1 = true, 2 = true, 3 = true }
@@ -93,7 +94,7 @@ startup_ramp_target = "rural_startup_ramp_target"
 # slot adds 50 province food capacity per staffed level (the AI values it while the province holds < 24 months).
 [general.tier_modifier.0]
 local_pp_farm_levels = 1             # rendered into raw_modifier: counts every standing level (Cookshop caps, the AI's farm spread)
-local_monthly_food = 1.5
+local_monthly_food = 1.35            # fallback, [age_food] sets it; 1.5 until 2026-11-28 (Jan's food set, x0.9)
 local_food_capacity = 50
 local_peasants_estate_power = 0.040
 local_peasant_enfranchisment = 0.002
@@ -102,7 +103,7 @@ local_soldiers_desired_pop = 0
 
 [general.tier_modifier.1]
 local_pp_farm_levels = 1
-local_monthly_food = 1.5
+local_monthly_food = 1.35            # fallback, [age_food] sets it; 1.5 until 2026-11-28 (Jan's food set, x0.9)
 local_food_capacity = 50
 local_peasants_estate_power = 0.030
 local_peasant_enfranchisment = 0.002
@@ -110,7 +111,7 @@ local_laborers_desired_pop = 0
 
 [general.tier_modifier.2]
 local_pp_farm_levels = 1
-local_monthly_food = 1.5
+local_monthly_food = 1.35            # fallback, [age_food] sets it; 1.5 until 2026-11-28 (Jan's food set, x0.9)
 local_food_capacity = 50
 local_peasants_estate_power = 0.021
 local_peasant_enfranchisment = 0.002
@@ -118,7 +119,7 @@ local_laborers_desired_pop = 0
 
 [general.tier_modifier.3]
 local_pp_farm_levels = 1
-local_monthly_food = 3.0
+local_monthly_food = 2.7             # fallback, [age_food] sets it; 3.0 until 2026-11-28 (Jan's food set, x0.9)
 local_food_capacity = 50
 local_laborers_desired_pop = 0.002
 

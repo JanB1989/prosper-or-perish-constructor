@@ -6,10 +6,10 @@ INJECT:colonial_administration = {
 raw_modifier = {
   free_building_levels = 1
 }
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 	modifier = {
 		local_burghers_desired_pop = 0.4 # job_room
 	}
-	can_close = no # building_shutdown
-	ai_forbid_shutdown = yes # building_shutdown
 }
 # <<< eu5-building-pipeline:colonial_administration:building

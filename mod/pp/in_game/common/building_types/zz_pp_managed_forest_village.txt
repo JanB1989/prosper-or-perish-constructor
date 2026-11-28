@@ -137,8 +137,8 @@ unique_production_methods = {
         icon = wild_game
         wild_game = 0.18
         produced = local_food
-        output = 2.16
-        debug_max_profit = 2.871
+        output = 1.944
+        debug_max_profit = 2.484
         category = building_maintenance
     }
 }
@@ -159,7 +159,7 @@ local_pp_staple_levels = 1  # counts toward the province's Cookshop cap like a f
 
 modifier = {
 	local_laborers_desired_pop = 3.203 # job_room base 0.003
-    local_monthly_food = 9
+    local_monthly_food = 8.1
     local_food_capacity = 50
     local_peasants_estate_power = 0.014
 }

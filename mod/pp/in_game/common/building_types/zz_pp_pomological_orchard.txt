@@ -96,8 +96,8 @@ unique_production_methods = {
         icon = fruit
         fruit = 0.193
         produced = local_food
-        output = 2.32
-        debug_max_profit = 2.878
+        output = 2.088
+        debug_max_profit = 2.490
         category = building_maintenance
     }
 }
@@ -120,7 +120,7 @@ raw_modifier = {
 
 modifier = {
 	local_laborers_desired_pop = 3.2 # job_room
-    local_monthly_food = 12
+    local_monthly_food = 10.8
     local_food_capacity = 50
 }
 	can_close = no # building_shutdown

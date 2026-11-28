@@ -124,7 +124,7 @@ building:
         pp_maize_rotations_provision = {
             maize = 0.016
             produced = local_food
-            output = 6.256
+            output = 5.631
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -137,7 +137,7 @@ building:
     }
 
     modifier = {
-        local_monthly_food = 5.119
+        local_monthly_food = 4.607
         local_food_capacity = 50
         local_peasants_estate_power = 0.021
         local_peasant_enfranchisment = 0.002
@@ -153,7 +153,7 @@ localization:
     pp_maize_rotations_base: Fields
     pp_maize_rotations_base_desc: 'The fields themselves: what the sown land yields with plain work before any improved husbandry.'
     pp_maize_rotations_no_cultivation: No Cultivation
-    pp_maize_rotations_no_cultivation_desc: "No improved husbandry is practised here; the land gives what plain work takes from it."
+    pp_maize_rotations_no_cultivation_desc: No improved husbandry is practised here; the land gives what plain work takes from it.
     pp_maize_rotations_ploughed_rows: Ploughed Maize Rows
     pp_maize_rotations_ploughed_rows_desc: Draught animals plough straight rows for the maize.
     pp_maize_rotations_maize_bean_rotation: Maize-Bean Rotation

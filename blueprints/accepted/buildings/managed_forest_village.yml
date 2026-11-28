@@ -160,7 +160,7 @@ building:
         pp_managed_forest_village_provision = {
             wild_game = 0.18
             produced = local_food
-            output = 2.16
+            output = 1.944
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -179,7 +179,7 @@ building:
     }
 
     modifier = {
-        local_monthly_food = 9
+        local_monthly_food = 8.1
         local_food_capacity = 50
         local_peasants_estate_power = 0.014
         local_laborers_desired_pop = 0.003

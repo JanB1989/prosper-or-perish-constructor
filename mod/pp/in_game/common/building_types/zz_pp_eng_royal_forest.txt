@@ -55,8 +55,8 @@ unique_production_methods = {
         icon = wild_game
         wild_game = 0.08
         produced = local_food
-        output = 0.96
-        debug_max_profit = 2.871
+        output = 0.864
+        debug_max_profit = 2.484
         category = building_maintenance
     }
 }
@@ -78,7 +78,7 @@ raw_modifier = {
 }
 
 modifier = {
-    local_monthly_food = 1.5
+    local_monthly_food = 1.35   # 2026-11-28 (Jan's food set): x0.9, was 1.5
     local_crown_estate_power = 0.5
     local_max_control = 0.05
     local_monthly_development_modifier = -0.1

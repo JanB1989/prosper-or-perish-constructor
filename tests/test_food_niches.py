@@ -131,11 +131,13 @@ def test_the_harbour_yard_ships_grain_and_takes_no_store_food() -> None:
     assert "victualling_yard_armed_convoy_advance" not in text and "local_monthly_food" not in text
     shipments = [_method(text, f"pp_victualling_yard_{m}_shipment") for m in ("grain", "rice", "millet")]
     assert [next(g for g in ("wheat", "rice", "millet") if g in m) for m in shipments] == ["wheat", "rice", "millet"]
-    assert all(m["produced"] == "victuals" and m["output"] == 0.932 for m in shipments)
-    # 2.33 staples (12 food each in the farms' Provisioning) for 0.932 victuals, 30 food each at a Tavern; every
-    # further level ships 3 % more (2026-10-04, Jan; was -5 %)
+    # 0.932 until the 2026-11-28 food set (Jan: the Yard weaker, about 20 % fewer victuals from the same staples)
+    assert all(m["produced"] == "victuals" and m["output"] == 0.75 for m in shipments)
+    # 2.33 staples (10.8 food each in the farms' Provisioning since 2026-11-28, 12 before) for 0.75 victuals: 33.6
+    # staple food per victual (30 until 2026-11-28, food-neutral against the Tavern; now packing costs about a tenth);
+    # every further level ships 1 % more
     grain = shipments[0]["wheat"]
-    assert abs(grain * 12.0 / 0.932 - 30.0) < 0.05
+    assert abs(grain * 10.8 / 0.75 - 33.58) < 0.05
     assert "local_victuals_output_modifier = 0.01" in text and "local_victuals_output_modifier = -" not in text
     assert "employment_size = 0.2" in text and "pop_type = burghers" in text
     assert "local_food_capacity" not in text and "local_sailors = 0.002" in text

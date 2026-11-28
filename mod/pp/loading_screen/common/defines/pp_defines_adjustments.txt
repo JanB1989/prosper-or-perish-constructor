@@ -149,7 +149,7 @@ NEconomy = {
 }
 
 NLocation = {
- 	SUBSISTENCE_AGRICULTURE = 1.21 # 1.50 until 2026-10-14 (Jan: the start ran +29 % food surplus, 2/3 of it subsistence; vanilla 0.8); 1.20 until 2026-11-27, 1.21 for a day (the Tavern food the smaller victuals common good took away); 1.10 for run 2ae8dd7a on 2026-11-28 (Jan: growth after the Black Death too fast), back to 1.21 the same day: the cut slowed South and East Asia and left Western Europe's recovery where it was (half the people live on full stores, which subsistence does not reach)
+ 	SUBSISTENCE_AGRICULTURE = 1.40 # 2026-11-28 (Jan, food set after run 2ae8dd7a: subsistence a bit stronger, farm, kitchen and Yard food weaker, so the start planner balances the early game) 1.21 -> 1.40. History: 1.50 until 2026-10-14 (Jan: the start ran +29 % food surplus, 2/3 of it subsistence; vanilla 0.8); 1.20 until 2026-11-27, 1.21 for a day (the Tavern food the smaller victuals common good took away); 1.10 for run 2ae8dd7a on 2026-11-28 (Jan: growth after the Black Death too fast), back to 1.21 the same day: the cut slowed South and East Asia and left Western Europe's recovery where it was (half the people live on full stores, which subsistence does not reach)
 }
 
 

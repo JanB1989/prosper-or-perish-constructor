@@ -18,7 +18,10 @@ writes `graphs/report/<run>/`:
 - `budget.html` + `budget/` - the budget page (`run_report_budget`): per save, world region and large country where the
   money comes from (down to goods), who gets it (estates, state) and where it goes, as a flow chart, tables and over time;
 - `food.html` + `food/` - the food page (`run_report_food`): how food reaches the province stores (subsistence, RGOs,
-  farms, Cookshops by recipe, Taverns) and where it goes (pops, spoilage, Granges), months stored, every province.
+  farms, Cookshops by recipe, Taverns) and where it goes (pops, spoilage, Granges), months stored, every province;
+- `knowledge.html` + `knowledge/` - the knowledge and work page (`run_report_knowledge`): per world region and large
+  country over the run, research points and the share of the advance tree held, literacy by pop type, school levels,
+  and each class's people, idle people, jobs filled and unfilled. The research points map stays among the maps.
 
 Before reading the run, the report brings two derived parts of the dataset up to date: the building investment
 table and the engine-only tables (trade routes, merchants, country economy) of snapshots ingested before the
@@ -1053,7 +1056,6 @@ def render_maps(run: RunData, canvas: MapCanvas, out: Path, *, repo: Path, proje
 # Industry promotions map
 
 PROMOTION_VIDEOS = ("industry_promotions",)
-RESEARCH_VIDEOS = ("research",)  # in the Research section, not among the world maps
 PROMOTION_SHORT = {"paper_goods": "Paper"}  # legend names that would not fit
 
 
@@ -1524,9 +1526,6 @@ SECTIONS = (
     ("population", "Population", "Who lives where, and how many have work."),
     ("institutions", "Institutions", "How far the institutions have spread: a location has an institution once its "
                                      "spread reaches 100 %."),
-    ("research", "Research", "How far technology has come, in research points: a country's points are the research "
-                             "cost of every advance it holds, summed. A location counts its owner's points; only "
-                             "countries that own land count."),
     ("trade", "Trade", "What moved between markets and what did not: the routes and the trade balance of every market "
                        "as videos, then trade per goods group, per good and per market."),
     ("prices", "Prices", "Every good's price against its base price, and whether the world uses more than it makes."),
@@ -1867,7 +1866,7 @@ def write_page(run: RunData, out: Path, maps: list[dict[str, str]], payload: dic
                           f"{float(summary['improvements_first']) * 100:.0f}% in {start}"))  # type: ignore[arg-type]
     tile_html = "".join(f"<div class=tile><div class=label>{esc(a)}</div><div class=value>{esc(b)}</div><div class=sub>{esc(c)}</div></div>"
                         for a, b, c in tiles)
-    section_videos = {"research": RESEARCH_VIDEOS, "trade": TRADE_VIDEOS, "towns": PROMOTION_VIDEOS}
+    section_videos = {"trade": TRADE_VIDEOS, "towns": PROMOTION_VIDEOS}
     in_sections = {key for keys in section_videos.values() for key in keys}
     world_maps = "".join(_video_card(m) for m in maps if m["key"] not in in_sections)
     sections, nav = [], ["<a href='#maps'>Maps</a>"]
@@ -1876,6 +1875,8 @@ def write_page(run: RunData, out: Path, maps: list[dict[str, str]], payload: dic
         goods_link += "<a href='food.html' class=goodslink>Food: stores, sources and eaters →</a>"
     if (out / "budget.html").is_file():
         goods_link += "<a href='budget.html' class=goodslink>Budget: where the money comes from and goes →</a>"
+    if (out / "knowledge.html").is_file():
+        goods_link += "<a href='knowledge.html' class=goodslink>Knowledge and work: technology, literacy, schools, jobs →</a>"
     for key, title, lead in SECTIONS:
         charts = [c for c in payload["charts"] if c["section"] == key]
         tables = [t for t in payload["tables"] if t["section"] == key]
@@ -1994,8 +1995,12 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
                                       good_icon_sources(repo, project), out, log)
     # independent steps side by side: the goods and food pages (from the flows above), the map videos, the trade and
     # promotion maps, and the charts here
-    with ThreadPoolExecutor(5) as pool:
+    from prosper_or_perish_constructor.run_report_knowledge import write_knowledge_page
+
+    with ThreadPoolExecutor(6) as pool:
         budget_page = pool.submit(write_budget_page, run, out, repo=repo, dataset=dataset, cache=budget_cache, log=log)
+        knowledge_page = pool.submit(write_knowledge_page, run, out, repo=repo, project=project, dataset=dataset,
+                                     cache=out_root / ".knowledge_cache" / playthrough, log=log)
         pages = pool.submit(write_goods_page, run, out, repo=repo, project=project, dataset=dataset, cache=goods_cache,
                             canvas=canvas, fps=fps, prepared=prepared, log=log)
         location_maps = pool.submit(render_maps, run, canvas, out / "maps", repo=repo, project=project, fps=fps, log=log)
@@ -2006,6 +2011,7 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
         maps = location_maps.result() + trade_maps.result() + promotion_map.result()
         pages.result()
         budget_page.result()
+        knowledge_page.result()
     page = write_page(run, out, maps, payload)
     (out / "report.json").write_text(json.dumps({
         "playthrough_id": run.playthrough_id, "name": run.name, "years": run.years, "saves": run.snapshots.height,
@@ -2014,6 +2020,7 @@ def build_report(repo: Path, project: Path, *, dataset: Path, out_root: Path, pl
         "goods_page": (out / "goods.html").is_file(),
         "food_page": (out / "food.html").is_file(),
         "budget_page": (out / "budget.html").is_file(),
+        "knowledge_page": (out / "knowledge.html").is_file(),
     }, indent=2), encoding="utf-8")
     log(f"report written to {page} ({page.stat().st_size / 1e6:.1f} MB) in {time.perf_counter() - started:.1f}s")
     return page

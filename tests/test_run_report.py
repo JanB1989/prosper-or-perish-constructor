@@ -542,18 +542,12 @@ def test_research_points_price_held_advances_for_land_owners_and_feed_map_charts
     assert scale.ticks[-1][0] <= scale.high
 
     payload = build_payload(run)
-    charts = {c["key"]: c for c in payload["charts"] if c["section"] == "research"}
-    assert list(charts) == ["research_countries", "research_regions", "research_spread"]
-    leaders = {s["name"]: s["data"][-1][1] for s in charts["research_countries"]["views"][0]["option"]["series"]}
-    assert leaders == {"Fra": 15.0, "Gbr": 10.0}
-    against = {s["name"]: s["data"][-1][1] for s in charts["research_regions"]["views"][1]["option"]["series"]}
-    assert against["British Isles"] == pytest.approx(100 * 10 / 15, rel=1e-3) and "Western Europe" not in against
-    spread = {s["name"]: s["data"][-1][1] for s in charts["research_spread"]["views"][0]["option"]["series"]}
-    # a third of the people (London) at 10 points, the rest (Paris) at 15
-    assert spread["10th percentile"] == 10.0 and spread["25th percentile"] == 10.0 and spread["Median"] == 15.0
-    assert spread["Highest country"] == 15.0
+    # the research charts are on the knowledge page now (run_report_knowledge); the tile and the map stay here
+    assert not [c for c in payload["charts"] if c["section"] == "research"]
+    (tmp_path / "knowledge.html").write_text("", encoding="utf-8")
     page = rr.write_page(run, tmp_path, [], payload).read_text(encoding="utf-8")
-    assert "<h2 id=research>Research</h2>" in page and "Research points per person" in page and "in 1347" in page
+    assert "<h2 id=research>" not in page and "Research points per person" in page and "in 1347" in page
+    assert "href='knowledge.html'" in page
 
     if shutil.which("ffmpeg"):
         index = np.full((20, 40), -1, dtype=np.int32)
@@ -567,10 +561,11 @@ def test_research_points_price_held_advances_for_land_owners_and_feed_map_charts
         spec = next(s for s in rr.default_maps() if s.key == "research")
         (video,) = rr.render_maps(run, canvas, tmp_path / "maps", repo=tmp_path, project=project, fps=2, specs=[spec],
                                   log=logs.append)
-        assert video["key"] in rr.RESEARCH_VIDEOS and (tmp_path / "maps" / "research.mp4").stat().st_size > 0
+        assert video["key"] == "research" and (tmp_path / "maps" / "research.mp4").stat().st_size > 0
         assert logs[0].startswith("map research: 1 frames")  # the save without the table is left out
         page = rr.write_page(run, tmp_path, [video], payload).read_text(encoding="utf-8")
-        assert page.index("maps/research.mp4") > page.index("<h2 id=research>")  # in its section, not among the maps
+        assert page.index("<h2 id=maps>") < page.index("maps/research.mp4")  # among the maps
+        assert "<h2 id=" not in page[page.index("<h2 id=maps>") + 1:page.index("maps/research.mp4")]
 
 
 def test_speed_chart_from_save_times_leaves_pauses_out(tmp_path: Path) -> None:

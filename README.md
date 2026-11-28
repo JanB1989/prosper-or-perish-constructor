@@ -367,6 +367,18 @@ per person, world and world regions, and the share of the world's people living 
 and the "Institutions per person" tile. Snapshots whose save was overwritten before the dataset kept the table have
 no institution data.
 
+Knowledge and work (`knowledge.html`, `src/prosper_or_perish_constructor/run_report_knowledge.py`, linked from the
+report's nav): per save for the world, each world region and the largest countries, (1) research points (the research
+cost of every advance held) and the share of the advance tree held, by points and by count and per age; the tree is
+every general advance of all ages (`start_technology.gate_classes`: free, institution or institution-or-geography),
+advances locked to countries, cultures, religions or governments are left out; world and regions are the mean over
+the owned land's people; plus how evenly the people share it and the leading countries; (2) literacy per pop type,
+size-weighted, and the share of people at 5 % or less; (3) Village School, Trade School, Library, University and
+Society of Sciences levels and the share of owned locations with a Village School; (4) per class its people, idle
+people, jobs (building level x employment size from the built mod, the RGOs' places as laborer jobs), jobs filled and
+unfilled (a closed building's jobs count as unfilled) and its share of all people. Cached per save in
+`graphs/report/.knowledge_cache/<run>/`. The research map stays among the maps; the research charts moved here.
+
 Land improvements (`src/prosper_or_perish_constructor/improvement_room.py`): the Buildings section's chart "Land
 improvements: built and possible" and the "Land improvements built" tile show, world-wide per save, the levels of the
 World Builder capacity buildings that stand, the levels still possible and the two together, in levels (the cost unit),

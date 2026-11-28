@@ -6,10 +6,10 @@ market_center_modifier = {
 }
 # no institution gate (2026-10-19, Jan): a researched building never needs an unrelated institution
 # (test_trade_building_gates); it had Printing Press / Global Trade since 2026-10-06.
-	can_close = no # building_shutdown
-	ai_forbid_shutdown = yes # building_shutdown
 	modifier = {
 		local_burghers_desired_pop = 0.4 # job_room
 	}
+	can_close = no # building_shutdown
+	ai_forbid_shutdown = yes # building_shutdown
 }
 # <<< eu5-building-pipeline:stock_exchange:building

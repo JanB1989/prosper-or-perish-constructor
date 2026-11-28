@@ -86,10 +86,10 @@ modifier = {
 	local_laborers_desired_pop = 3.2 # job_room
     local_monthly_food = 0.0
 }
-	can_close = no # building_shutdown
 ai_construct_weight = {
     value = 0
     add = pp_market_short_horses
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:stud_farm:building

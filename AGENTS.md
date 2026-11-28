@@ -1736,7 +1736,10 @@ names them, read `0.11`.
     a normal RGO stays), start planner lumber per RGO 0.42 -> 0.32, `start_market_stock.csv` `rgo_factor` x 0.75 by
     hand until `ppc start-stock calibrate` runs on a new day-0 save. Run bd7d9616 used 63 % of the raw goods it made
     in 1342 and 86 % in 1402, with 84 and 74 months of stock.
-  - **Subsistence**: `NLocation.SUBSISTENCE_AGRICULTURE` 1.21 -> 1.10. Start model: world food supply +8.3 % ->
+  - **Subsistence**: back at 1.21 since the evening of 2026-11-28 (Jan, after run 2ae8dd7a: at 1.10 South Asia grew
+    0.23 %/yr after the plague instead of 0.39 and East Asia 0.19 instead of 0.29, while Western Europe was back at its
+    1342 level in 1417 instead of 1412; the world ended at 931 M instead of 1,148 M). What follows is the 1.10 state the
+    run had: `NLocation.SUBSISTENCE_AGRICULTURE` 1.21 -> 1.10. Start model: world food supply +8.3 % ->
     +4.7 % over demand; provinces short before the start buildings 1,692 -> 1,801 (shortfall 26.5k -> 32.6k a month);
     validator over 96 months: world +2.5 % -> +2.0 %, 13 food pools collapse (14), 2,408 pinned at the storage cap
     (2,496), 867 starve at some point.

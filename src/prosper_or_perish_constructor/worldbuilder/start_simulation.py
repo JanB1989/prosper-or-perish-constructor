@@ -2415,7 +2415,14 @@ def run(*, repo, project, mod_root, vanilla_root, cfg, contract, caps, locations
     if sim.tech_gate is not None:
         start_technology.write_removed(repo, tech_rows)
     setup_validation = validate_setup(sim, repo, vanilla_root, mod_root)
-    pop_report = sp.write_pops(vanilla_root, mod_root, sim.conversions)
+    # Laborers under the job room rule: the setup holds the laborers outside the buildings (the RGO's), the game's
+    # own start adds the building workers. The planner's conversions stand for the pops it simulates; the file gets
+    # the setup's (job_room.start_laborer_targets, AGENTS.md "Job Room").
+    from prosper_or_perish_constructor import job_room
+
+    laborer_targets = job_room.start_laborer_targets(repo, project, vanilla_root, mod_root)
+    pop_report = sp.write_pops(vanilla_root, mod_root, sp.with_setup_laborers(sp.load_pops(vanilla_root), sim.conversions, laborer_targets))
+    pop_report["setup_laborers_k"] = round(sum(laborer_targets.values()), 1)
     for rel in sp.LEGACY_FILES:
         if rel.endswith("07_cities_and_buildings.txt"):
             continue

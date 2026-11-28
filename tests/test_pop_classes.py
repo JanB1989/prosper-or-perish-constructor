@@ -61,10 +61,11 @@ def test_devastation_hits_higher_pops_harder() -> None:
     text = _text(MOD_ROOT / "main_menu/common/static_modifiers/pp_location_modifier_adjustments.txt")
     lines = _values(next(body for _, body in _blocks(text, "TRY_REPLACE:devastation")))
     people, laborers, soldiers = 14.0, 2.4, 0.035  # 1,000s, median rural location of a 10-year run
-    # job room (2026-11-27): each burgher takes 4 burgher room, and the upper-class multiplier (it scales the room the
-    # workplaces give back too) bites five times as hard on the burghers as its number
+    # job room (2026-11-27): each laborer and burgher takes 4 room of the class, so a cut of the room removes a fifth of
+    # it in people, and the upper-class multiplier (it scales the room the workplaces give back too) bites five times
+    # as hard on the burghers as its number
     ladder = [
-        (lines["local_laborers_desired_pop"] + lines["local_laborers_desired_pop_scaled"] * people) / laborers,
+        (lines["local_laborers_desired_pop"] + lines["local_laborers_desired_pop_scaled"] * people) / 5 / laborers,
         lines["local_soldiers_desired_pop_scaled"] * people / soldiers,
         lines["local_upper_class_capacity_modifier"] * 5,  # burghers: their cap is jobs
         lines["local_clergy_desired_pop_scaled"] / 0.005,  # vanilla location_base_values

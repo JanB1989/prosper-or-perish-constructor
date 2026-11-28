@@ -57,6 +57,8 @@ WORLDBUILDER_CODE_AND_DATA = (
     "src/prosper_or_perish_constructor/free_building_levels.py",
     "src/prosper_or_perish_constructor/goods_categories.py",      # crop_farms (start crop allocation) imports these
     "src/prosper_or_perish_constructor/interface_dds.py",         # the geography sync copies icons in the game format
+    "src/prosper_or_perish_constructor/job_room.py",              # the pops setup holds the laborers outside buildings
+    "src/prosper_or_perish_constructor/building_shutdown.py",     # job_room imports it
     "src/prosper_or_perish_constructor/location_baseline.py",
     "src/prosper_or_perish_constructor/location_methods.py",     # production_gate reads the methods' location gates
     "src/prosper_or_perish_constructor/logistics.py",            # production_labour skips its network methods

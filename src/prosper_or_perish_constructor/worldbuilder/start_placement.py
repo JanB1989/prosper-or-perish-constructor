@@ -704,6 +704,47 @@ def apply_conversions(text: str, conversions: list[PopConversion]) -> str:
     return "".join(out)
 
 
+def with_setup_laborers(pops: Mapping[str, list[Pop]], conversions: list[PopConversion], targets: Mapping[str, float],
+                        max_share: float = 0.98) -> list[PopConversion]:
+    """The conversions with each location's peasants-to-laborers total set to its target (thousands of laborers the
+    setup has to hold, job_room.start_laborer_targets) instead of the planner's own (the workers of the start
+    buildings: the game adds those itself). Taken from the location's peasant groups, the largest first, so the
+    laborers keep the peasants' own cultures and religions; never more than ``max_share`` of a group. Conversions to
+    other classes stay as they are and come first."""
+    if not targets:
+        return list(conversions)
+    kept = [c for c in conversions if not (c.from_type == "peasants" and c.to_type == "laborers")]
+    left: dict[tuple[str, str, str], float] = defaultdict(float)
+    have: dict[str, float] = defaultdict(float)
+    for location, groups in pops.items():
+        for p in groups:
+            if p.type == "peasants":
+                left[location, p.culture, p.religion] += p.size_k * max_share
+            elif p.type == "laborers":
+                have[location] += p.size_k
+    for c in kept:
+        if c.from_type == "peasants":
+            left[c.location, c.culture, c.religion] -= c.size_k
+        if c.to_type == "laborers":
+            have[c.location] += c.size_k
+    by_location: dict[str, list[tuple[float, str, str]]] = defaultdict(list)
+    for (location, culture, religion), size in left.items():
+        if size > 0.0005:
+            by_location[location].append((size, culture, religion))
+    out = list(kept)
+    for location in sorted(targets):
+        needed = targets[location] - have.get(location, 0.0)
+        for size, culture, religion in sorted(by_location.get(location, []), key=lambda g: (-g[0], g[1], g[2])):
+            if needed < 0.0005:
+                break
+            take = round(min(needed, size), 3)
+            if take <= 0:
+                continue
+            out.append(PopConversion(location, "peasants", "laborers", take, culture, religion))
+            needed -= take
+    return out
+
+
 def write_pops(vanilla_root: Path, mod_root: Path, conversions: list[PopConversion]) -> dict[str, Any]:
     source = Path(vanilla_root) / "game" / POPS_SETUP_PATH
     target = mod_root / POPS_SETUP_PATH

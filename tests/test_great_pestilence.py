@@ -2,8 +2,9 @@
 we want it to be harder").
 
 The mod's copy (diseases/pp_great_pestilence.txt, TRY_REPLACE) keeps every vanilla line except the rough-terrain
-numbers (no road and mountains, desert or jungle: R0 x0.25 -> x0.75, spread threshold 0.85 -> 0.60, stagnation x3 ->
-x1.5), the mortality {0.75 0.9} -> {0.9 0.95} and the mod's migration line, which an inject would miss in a replaced
+numbers (no road and mountains, desert or jungle: R0 x0.25 -> x0.5, spread threshold 0.85 -> 0.60, stagnation x3 ->
+x2), the mortality {0.75 0.9} -> {0.85 0.92} (milder since 2026-11-28, Jan; x0.75, x1.5 and {0.9 0.95} the day before
+took the Americas to 12 M, run bd7d9616) and the mod's migration line, which an inject would miss in a replaced
 block. No resistance leak, as in vanilla: the game reads that value without a location, so it cannot be limited to the
 Americas (the first version tried and wrote a script error on every read). Each vanilla number is pinned here too, so a
 game update that moves one fails and asks for a review (AGENTS.md "Great Pestilence").
@@ -30,11 +31,11 @@ FLAT_THRESHOLD = "location_spread_threshold[0]/else[0]/value[0]"
 ROUGH_STAGNATION = "location_stagnation_chance[0]/if[1]/multiply[0]"
 # leaf: (vanilla, mod)
 CHANGED = {
-    ROUGH_R0: ("= 0.25", "= 0.75"),
+    ROUGH_R0: ("= 0.25", "= 0.5"),
     ROUGH_THRESHOLD: ("= 0.85", "= 0.60"),
-    ROUGH_STAGNATION: ("= 3", "= 1.5"),
-    "mortality_rate[0]/item[0]": ("0.75", "0.9"),
-    "mortality_rate[0]/item[1]": ("0.9", "0.95"),
+    ROUGH_STAGNATION: ("= 3", "= 2"),
+    "mortality_rate[0]/item[0]": ("0.75", "0.85"),
+    "mortality_rate[0]/item[1]": ("0.9", "0.92"),
 }
 ADDED = {
     "location_modifier[0]/local_migration_attraction[0]": "= -1.5",

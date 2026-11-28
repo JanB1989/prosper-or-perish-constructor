@@ -75,10 +75,13 @@ unique_production_methods = {
 }
 
 construction_demand = workshop_construction
-	can_close = no # building_shutdown
+	modifier = {
+		local_laborers_desired_pop = 3.2 # job_room
+	}
 ai_construct_weight = {
     value = 0
     add = pp_market_short_iron
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:bog_iron_smelter_blast_furnace:building

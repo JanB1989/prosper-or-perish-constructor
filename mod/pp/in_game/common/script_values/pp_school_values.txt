@@ -157,23 +157,9 @@ pp_academy_university_levels = {
 # job_room.py an unfilled job gives little room for its workers' class, so a building that is short of workers
 # can only hire from idle people of that class. Location scope, read by the schooling buildings'
 # ai_construct_weight (added before their income divide): 100 while the location has an open building of that class that
-# is not fully staffed and fewer idle people of the class than the threshold (half a laborer building level's jobs, one
-# guild level's). The cheap test comes first; the building walk runs only where idle people are few.
-pp_spare_room_weight_laborers = {
-	value = 0
-	if = {
-		limit = {
-			"unemployed_pops_of_pop_type_in_location(pop_type:laborers)" < 0.4
-			any_buildings_in_location = {
-				building_pop_type = laborers
-				is_opened = yes
-				is_full_capacity = no
-			}
-		}
-		value = 100
-	}
-}
-
+# is not fully staffed and fewer idle people of the class than the threshold (one guild level's jobs). The cheap test
+# comes first; the building walk runs only where idle people are few. Burghers only since 2026-11-28: the laborers'
+# spare room is the RGO's spare half place, in every location, and the schools no longer give them any.
 pp_spare_room_weight_burghers = {
 	value = 0
 	if = {

@@ -1,6 +1,9 @@
 ﻿# >>> eu5-building-pipeline:stannary_court:building
 INJECT:stannary_court = {
 # Vanilla building; ppc build fills in raw_modifier local_population_capacity from the footprint class.
+	modifier = {
+		local_laborers_desired_pop = 1 # job_room
+	}
 	ai_forbid_shutdown = yes # building_shutdown
 }
 # <<< eu5-building-pipeline:stannary_court:building

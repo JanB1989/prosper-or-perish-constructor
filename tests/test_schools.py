@@ -75,7 +75,6 @@ SCHOOL_RULES = {
         "modifier": {
             "local_peasants_max_literacy": 10, "local_laborers_max_literacy": 10, "local_soldiers_max_literacy": 10,
             "local_monthly_literacy": 0.004, "local_pop_promotion_speed": 0.002,
-            "local_laborers_desired_pop": 0.8, "local_soldiers_desired_pop": 0.1,  # spare room (2026-11-27)
         },
         "method": "pp_village_school_maintenance",
         "upkeep": {"beeswax": 0.03, "clay": 0.1, "manual_labor": 0.5},
@@ -228,22 +227,22 @@ def test_schooling_buildings_give_spare_room_and_the_ai_builds_them_where_it_is_
 
     # each level covers at least one building level of the class it is for (Jan): a laborer building level employs
     # 0.8, a guild level 0.25
-    assert room(schools["pp_village_school"]) == {"local_laborers_desired_pop": 0.8, "local_soldiers_desired_pop": 0.1}
+    assert room(schools["pp_village_school"]) == {}  # none since 2026-11-28: the RGO's spare half place is the laborers' spare room
     assert room(schools["pp_trade_school"]) == {"local_burghers_desired_pop": 2.7}  # 0.5 x 5 + 4 x its 0.05 jobs (job_room.py)
     assert room(culture["REPLACE:library"]) == {  # burghers 0.25 x 5 (job room: flat room counts a fifth)
         "local_burghers_desired_pop": 1.25, "local_clergy_desired_pop": 0.1, "local_nobles_desired_pop": 0.05}
     assert room(culture["REPLACE:university"]) == {  # burghers 0.6 x 5
-        "local_laborers_desired_pop": 1.2, "local_burghers_desired_pop": 3, "local_clergy_desired_pop": 0.3,
+        "local_burghers_desired_pop": 3, "local_clergy_desired_pop": 0.3,
         "local_nobles_desired_pop": 0.2}
     # none of it in raw_modifier, where staffing would not matter
     for body in (schools["pp_village_school"], schools["pp_trade_school"], culture["REPLACE:library"], culture["REPLACE:university"]):
         assert "desired_pop" not in str(_values(body).get("raw_modifier", ""))
 
     weights = {
-        "pp_village_school": (SCHOOLS, "pp_village_school", ["pp_spare_room_weight_laborers"]),
+        "pp_village_school": (SCHOOLS, "pp_village_school", []),
         "pp_trade_school": (SCHOOLS, "pp_trade_school", ["pp_spare_room_weight_burghers"]),
         "library": (CULTURE, "REPLACE:library", ["pp_spare_room_weight_burghers"]),
-        "university": (CULTURE, "REPLACE:university", ["pp_spare_room_weight_burghers", "pp_spare_room_weight_laborers"]),
+        "university": (CULTURE, "REPLACE:university", ["pp_spare_room_weight_burghers"]),
     }
     for name, (path, key, terms) in weights.items():
         text = _text(path, key)
@@ -252,7 +251,8 @@ def test_schooling_buildings_give_spare_room_and_the_ai_builds_them_where_it_is_
         for term in terms:
             assert term in weight, (name, term)  # added before the income divide
     values = VALUES.read_text(encoding="utf-8-sig")
-    for pop, idle in (("laborers", "0.4"), ("burghers", "0.25")):
+    assert "pp_spare_room_weight_laborers" not in values
+    for pop, idle in (("burghers", "0.25"),):
         block = values[values.index(f"pp_spare_room_weight_{pop} = {{"):]
         block = block[: block.index("\n}\n") + 3]
         flat = " ".join(block.split())
@@ -330,8 +330,10 @@ def test_education_pyramid(schools) -> None:
     assert "allow = { has_building = building_type:pp_village_school }" in _text(SCHOOLS, "pp_trade_school")
     academy = _values(schools["pp_academy_of_sciences"])
     assert academy["max_levels"] == "pp_academy_of_sciences_max_level"
+    # 2026-11-28 (Jan): a small country-wide literacy bonus, half a point per level for every class, five at ten levels
     assert {k: _num(v) for k, v in _values(academy["capital_country_modifier"]).items()} == {
-        "research_speed_modifier": 0.02}
+        "research_speed_modifier": 0.02, **{f"global_{pop}_max_literacy": 0.5 for pop in
+                                            ("nobles", "clergy", "burghers", "peasants", "laborers", "soldiers")}}
     allow = _text(SCHOOLS, "pp_academy_of_sciences")
     assert "is_capital = yes" in allow and "country_has_no_other_copy_of_building" in allow
     assert "remove_if = { is_no_longer_capital = yes }" in allow

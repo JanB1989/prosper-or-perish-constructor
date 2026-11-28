@@ -45,14 +45,15 @@ unique_production_methods = {
     }
 }
 modifier = {
+	local_laborers_desired_pop = 3.2 # job_room
     local_silver_output_modifier = 2.0
 }
 construction_demand = basic_construction_needs
 increase_per_level_cost = 0.21
-	can_close = no # building_shutdown
 ai_construct_weight = {
     value = 0
     add = pp_market_short_silver
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:schwaz_mine:building

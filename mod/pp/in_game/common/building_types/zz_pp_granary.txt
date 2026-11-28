@@ -33,6 +33,7 @@ REPLACE:granary = {
     construction_demand = granary_construction
 
     modifier = {
+      local_laborers_desired_pop = 1 # job_room
         local_food_preservation_efficiency_modifier = 0.03   # 2026-10-03: was 0.0002 (1:1 port slip; vanilla 0.05). Province decay = rate / (1 + summed preservation)
         # 2026-10-06 (Jan): base capacity is ~12 months of consumption now; Granaries take a store to 24 months.
         # The percentage scales the location's whole capacity, so later levels in big (city) locations add most.

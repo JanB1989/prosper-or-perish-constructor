@@ -90,6 +90,7 @@ local_pp_staple_levels = 1  # counts toward the province's Cookshop cap like a f
 }
 
 modifier = {
+	local_laborers_desired_pop = 5 # job_room
     local_monthly_food = 3.5
     local_food_capacity = 50
     local_fish_output_modifier = -0.007

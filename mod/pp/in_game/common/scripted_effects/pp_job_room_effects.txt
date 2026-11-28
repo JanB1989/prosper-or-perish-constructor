@@ -70,3 +70,21 @@ pp_job_room_group = {
 		}
 	}
 }
+
+# Location scope, once: $size$ thousand laborers back to the peasants; never more than the laborers idle
+# here, and never below $keep$ thousand laborers outside the buildings. The pops setup holds the laborers
+# outside the buildings, but not below the people the RGO's own starting size needs; where that leaves the
+# setup short the game's start promotes four times the shortfall too many (job_room.start_laborer_plan),
+# fewer where the peasants ran out. Every laborer pop gives the same share and keeps its culture and religion.
+pp_job_room_trim = {
+	save_temporary_scope_value_as = { name = pp_job_room_spare value = { value = num_pop_type:laborers subtract = pp_job_room_at_work_laborers subtract = $keep$ min = 0 } }
+	save_temporary_scope_value_as = { name = pp_job_room_move value = { value = "unemployed_pops_of_pop_type_in_location(pop_type:laborers)" max = $size$ max = scope:pp_job_room_spare } }
+	if = {
+		limit = { scope:pp_job_room_move > 0.0005 }
+		save_temporary_scope_value_as = { name = pp_job_room_share value = { value = scope:pp_job_room_move divide = { value = num_pop_type:laborers min = 0.001 } max = 0.9 } }
+		every_pop = {
+			limit = { pop_type = pop_type:laborers }
+			split_pop = { fraction = scope:pp_job_room_share type = pop_type:peasants }
+		}
+	}
+}

@@ -23,3 +23,11 @@ pp_job_room_share_burghers = {
 	min = 0
 	max = 0.9
 }
+# Location scope: the laborers at work in the buildings here, in thousands (pp_job_room_trim).
+pp_job_room_at_work_laborers = {
+	value = 0
+	every_buildings_in_location = {
+		limit = { building_pop_type = laborers }
+		add = building_employed_amount
+	}
+}

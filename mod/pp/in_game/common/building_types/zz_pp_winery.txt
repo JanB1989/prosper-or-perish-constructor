@@ -62,7 +62,6 @@ unique_production_methods = {
 # Non-raw producer: double price and triple level cost (2026-09-30, urbanisation brake).
 increase_per_level_cost = 0.56
 price = pp_winery_price
-	can_close = no # building_shutdown
 	modifier = {
 		local_burghers_desired_pop = 1 # job_room
 	}
@@ -70,5 +69,6 @@ ai_construct_weight = {
     value = 0
     add = pp_market_short_wine
 }
+	can_close = no # building_shutdown
 }
 # <<< eu5-building-pipeline:winery:building

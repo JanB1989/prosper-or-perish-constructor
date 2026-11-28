@@ -102,17 +102,20 @@ def test_who_carries_the_line(targets, vanilla) -> None:
     the line would take room and get none back."""
     wanted, result = targets
     config = jr.load_config(PROJECT)
-    assert config.room_per_head == {"burghers": Decimal(4)} and config.not_buildings == frozenset()
+    assert config.room_per_head == {"burghers": Decimal(4), "laborers": Decimal(4)} and config.not_buildings == frozenset()
     assert result.room_per_head == config.room_per_head
     for key in ("glass_guild", "tannery", "printing_press_shop",  # producers
                 "marketplace", "fondaco", "hanseatic_kontor",      # trade buildings the mod replaces
                 "counting_house", "stock_exchange", "theater",     # vanilla buildings the mod only injects into
                 "pp_trade_school"):
         assert wanted[key][0] == "burghers", key
-    # laborers, peasants, clergy: not listed (laborers were for an evening; see the module's docstring)
-    for key in ("mason", "iron_mine", "sawmill", "wheat_farm", "market_village", "pp_village_school"):
+    for key in ("mason", "iron_mine", "charcoal_maker", "tar_kiln", "hired_labor_yard", "cookshop", "sawmill"):
+        assert wanted[key][0] == "laborers", key
+    for key in ("wheat_farm", "market_village", "pp_village_school"):  # peasants, clergy: not listed
         assert key in result.other_pop and key not in wanted, key
-    assert result.no_jobs == []  # a building of a listed class without jobs would get no line
+    # worker-less improvements name a class but nobody works there: nothing to give back
+    assert result.no_jobs == ["bund", "khmer_baray", "polders", "qanats"]
+    assert wanted["mason"] == ("laborers", Decimal("3.2"))             # 4 x 0.8 (1.0 cut to 0.8)
     assert wanted["glass_guild"] == ("burghers", Decimal("1"))        # 4 x 0.25 (0.3 cut to 0.25)
     assert wanted["counting_house"] == ("burghers", Decimal("0.4"))   # 4 x vanilla's 0.1
     # every blueprint building whose pop type is listed and that has jobs
@@ -139,7 +142,9 @@ def test_the_pop_type_carries_the_per_person_line(vanilla) -> None:
     body = jr.pop_type_bodies(vanilla, MOD)["burghers"]
     _match, open_, close = jr._top_block(body, "pop_percentage_impact")
     assert re.search(r"^\s*local_burghers_desired_pop_scaled = -4\s*$", body[open_ + 1: close], re.MULTILINE)
-    assert "local_laborers_desired_pop_scaled" not in jr.pop_type_bodies(vanilla, MOD)["laborers"]  # not listed
+    laborers = jr.pop_type_bodies(vanilla, MOD)["laborers"]
+    _match, open_, close = jr._top_block(laborers, "pop_percentage_impact")
+    assert re.search(r"^\s*local_laborers_desired_pop_scaled = -4\s*$", laborers[open_ + 1: close], re.MULTILINE)
     other = jr.Config({"burghers": Decimal(5)}, frozenset())
     assert jr.pop_type_problems(other, vanilla, MOD) == [
         "pop type burghers: pop_percentage_impact needs local_burghers_desired_pop_scaled = -5 ([job_room] room_per_head)"]
@@ -161,28 +166,27 @@ def _value(text: str, block: str, key: str) -> Decimal:
 
 
 def test_flat_room_of_a_listed_class_is_its_old_number_times_one_plus_k(vanilla) -> None:
-    """Idle people allowed = (flat room + unfilled jobs) / (1 + k), so every flat room number the mod sets for the
-    burghers is the number it had before x (1 + k): the same idle people fit as before. The laborers are not listed
-    and keep their numbers."""
+    """Idle people allowed = (flat room + unfilled jobs) / (1 + k), so every flat room number the mod sets for burghers
+    and laborers is the number it had before x (1 + k): the same idle people fit as before."""
     config = jr.load_config(PROJECT)
     five = 1 + config.room_per_head["burghers"]
-    assert five == 5 and "laborers" not in config.room_per_head
+    assert five == 1 + config.room_per_head["laborers"] == 5
     statics = (MOD / "main_menu/common/static_modifiers/pp_location_modifier_adjustments.txt").read_text(encoding="utf-8-sig")
-    # an RGO level employs 1,000 laborers and the engine counts no jobs for it: this line is their room. With the
-    # laborers listed it would have to be 1.5 x (1 + k), and the game's own start pass would overfill the class.
-    assert _value(statics, "rgo_level", "local_laborers_desired_pop") == Decimal("1.5")
+    # an RGO level employs 1,000 laborers and the engine counts no jobs for it: its line is the room of its workers
+    # (1), what they take (k) and the old spare half place x (1 + k)
+    assert _value(statics, "rgo_level", "local_laborers_desired_pop") == Decimal("1.5") * five
     # location ranks: vanilla's line plus the mod's inject
     vanilla_ranks = "\n".join(bf._read(path) for path in bf.vanilla_files(vanilla, Path("in_game/common/location_ranks")))
     ranks = (MOD / "in_game/common/location_ranks/pp_location_rank_adjustments.txt").read_text(encoding="utf-8-sig")
     for rank, before in (("megalopolis", Decimal("4")), ("city", Decimal("0.5")), ("town", Decimal("0.2"))):
-        key = "local_burghers_desired_pop"
-        assert _value(vanilla_ranks, rank, key) + _value(ranks, rank, key) == before * five, rank
-    assert _value(vanilla_ranks, "city", "local_laborers_desired_pop") + _value(ranks, "city", "local_laborers_desired_pop") == Decimal("0.5")
-    # devastation's upper-class multiplier for the burghers: it scales the room the workplaces give back too, so a
-    # fifth of the old number keeps the old cut; its cut of the laborers is as it was
+        for pop in ("burghers", "laborers"):
+            key = f"local_{pop}_desired_pop"
+            assert _value(vanilla_ranks, rank, key) + _value(ranks, rank, key) == before * five, (rank, pop)
+    # devastation's cut of the laborers (applied at negative strength), and its upper-class multiplier for the burghers:
+    # the multiplier scales the room the workplaces give back too, so a fifth of the old number keeps the old cut
+    assert _value(statics, "devastation", "local_laborers_desired_pop") == Decimal("0.4") * five
+    assert _value(statics, "devastation", "local_laborers_desired_pop_scaled") == Decimal("0.01") * five
     assert _value(statics, "devastation", "local_upper_class_capacity_modifier") == Decimal("0.5") / five
-    assert _value(statics, "devastation", "local_laborers_desired_pop") == Decimal("0.4")
-    assert _value(statics, "devastation", "local_laborers_desired_pop_scaled") == Decimal("0.01")
 
 
 def test_demotion_follows_the_size_of_the_location(vanilla) -> None:
@@ -222,11 +226,14 @@ def test_the_start_step_fills_the_jobs_the_games_own_start_left_empty(vanilla) -
     into a new game fills the open jobs from the peasants, with the culture and religion the engine's own fill gives:
     the class's largest pop in the location, else the owner's for an upper class. Once, no pulse."""
     config = jr.load_config(PROJECT)
-    pops = sorted(config.room_per_head)
+    # laborers are listed but need no start step: the pops setup sizes them (test_the_setup_holds_the_laborers...)
+    pops = sorted(set(config.room_per_head) - jr.SETUP_SIZED)
+    assert pops == ["burghers"] and jr.SETUP_SIZED == {"laborers"}
     upper = jr.upper_pop_types(vanilla, MOD)
     assert {"nobles", "clergy", "burghers"} <= upper and not {"laborers", "soldiers", "peasants"} & upper
     groups = jr.setup_groups(MOD, pops)
-    files = jr.start_files(config, vanilla, MOD)
+    setup, trims = jr.start_laborer_plan(ROOT, PROJECT, vanilla, MOD)
+    files = jr.start_files(config, vanilla, MOD, trims)
     assert set(files) == {jr.VALUES, jr.EFFECTS, jr.ON_ACTION}
     for relative, text in files.items():
         assert (MOD / relative).read_text(encoding="utf-8") == text, f"{relative}: run ppc build (job_room)"
@@ -278,3 +285,85 @@ def test_the_start_step_fills_the_jobs_the_games_own_start_left_empty(vanilla) -
                 continue
             text = path.read_text(encoding="utf-8-sig", errors="replace")
             assert "pp_job_room_restore" not in text and "pp_job_room_start" not in text, path.name
+
+
+def test_the_setup_holds_the_laborers_outside_the_buildings(vanilla) -> None:
+    """The game's start fills a class up to its room as the room reads with the setup's people. Every laborer takes k
+    room and an RGO level gives 1.5 x (1 + k), so a setup with 2 M laborers made 142 M on day 0 (2026-11-27). The pops
+    setup therefore holds, per location, 1.5 x the RGO level plus the rank's flat room in laborers (capped by the
+    laborers the place had outside its buildings without the rule): the game then adds the building workers itself and
+    ends where it did without the rule. Taken from the peasants' own groups, the largest first."""
+    from prosper_or_perish_constructor.worldbuilder import start_placement as sp
+
+    config = jr.load_config(PROJECT)
+    k = config.room_per_head["laborers"]
+    ranks = sp.load_ranks(vanilla, MOD)
+    targets, trims = jr.start_laborer_plan(ROOT, PROJECT, vanilla, MOD)
+    rows = {}
+    with (ROOT / jr.START_LABORERS).open(encoding="utf-8", newline="") as handle:
+        import csv
+        for row in csv.DictReader(handle):
+            rows[row["location"]] = (float(row["rgo_level"]), float(row["free_laborers"]) if float(row["slaves"]) > 0.5 else 1e9)
+    assert len(targets) == len(rows) > 13000
+    flat = {"rural_settlement": 0.0, "town": 0.2, "city": 0.5, "megalopolis": 4.0}  # the ranks' laborer room / (1 + k)
+    for location in ("stockholm", "constantinople", "paris", "patna", "aabenraa"):
+        level, free = rows[location]
+        assert targets[location] == pytest.approx(min(1.5 * level + flat[ranks.get(location, "rural_settlement")], free), abs=0.001)
+    assert targets["patna"] < 0.5 and rows["patna"][0] >= 3  # slaves do the RGO's work there: no laborers to place
+    # no slaves: no cap (the setup's laborers plus what the start step gives back are the full 1.5 x level)
+    assert rows["longxi"][1] == 1e9
+    assert targets["longxi"] + trims.get("longxi", (0.0, 0.0))[0] / float(k) == pytest.approx(1.5 * rows["longxi"][0], abs=0.002)
+    # with the setup at the target the start's room is the old one: 7.5 R + J + 5 f - 4 x (1.5 R + f) = 1.5 R + J + f
+    level, _free = rows["paris"]
+    f = flat[ranks["paris"]]
+    jobs = 10.0
+    assert (1 + k) * Decimal("1.5") * Decimal(str(level)) + Decimal(jobs) + (1 + k) * Decimal(str(f)) - k * Decimal(str(1.5 * level + f))         == Decimal("1.5") * Decimal(str(level)) + Decimal(jobs) + Decimal(str(f))
+    total = sum(targets.values())
+    assert 26000 < total < 31000  # thousands: about 28 M of the 45 M laborers a new game has; the rest work in buildings
+
+    # The RGO's own size at game start follows the setup: one level per 10,000 peasants, slaves and tribesmen (in game
+    # 2026-11-28: 1,132 RGOs came out a level smaller when the setup first held the laborers). So the setup never takes
+    # the lower pops below level x 10,000; the game's start then promotes k x the shortfall too many, and the start
+    # step gives exactly that back to the peasants (pp_job_room_trim).
+    vanilla_pops = sp.load_pops(vanilla)
+    for location, (size, keep) in trims.items():
+        level, free = rows[location]
+        lower = sum(p.size_k for p in vanilla_pops[location] if p.type in jr.LOWER_POPS)
+        # (a few RGOs are larger than their people give: nothing is taken there)
+        assert level >= 2 and lower - targets[location] >= min(lower, jr.RGO_PEOPLE_PER_LEVEL * level) - 1e-6, location
+        want = min(1.5 * level + flat[ranks.get(location, "rural_settlement")], free)
+        assert size == pytest.approx(float(k) * (want - targets[location]), abs=0.002), location
+        assert keep == pytest.approx(want, abs=0.002), location  # the laborers outside buildings it was meant to hold
+    assert 800 < len(trims) < 1500 and targets["thisted"] < 1.0 and trims["thisted"][0] > 9
+    on_action = (MOD / jr.ON_ACTION).read_text(encoding="utf-8")
+    assert on_action.count("pp_job_room_trim = { size = ") == len(trims), "run ppc build (job_room)"
+    effects = " ".join((MOD / jr.EFFECTS).read_text(encoding="utf-8").split())
+    assert ('pp_job_room_trim = { save_temporary_scope_value_as = { name = pp_job_room_spare value = { value = num_pop_type:laborers '
+            'subtract = pp_job_room_at_work_laborers subtract = $keep$ min = 0 } } '
+            'save_temporary_scope_value_as = { name = pp_job_room_move value = { '
+            'value = "unemployed_pops_of_pop_type_in_location(pop_type:laborers)" max = $size$ max = scope:pp_job_room_spare } } '
+            'if = { limit = { scope:pp_job_room_move > 0.0005 } '
+            'save_temporary_scope_value_as = { name = pp_job_room_share value = { value = scope:pp_job_room_move '
+            f'divide = {{ value = num_pop_type:laborers min = 0.001 }} max = {jr.MAX_SHARE} }} }} '
+            'every_pop = { limit = { pop_type = pop_type:laborers } split_pop = { fraction = scope:pp_job_room_share '
+            'type = pop_type:peasants } } } }') in effects
+    assert ("pp_job_room_at_work_laborers = { value = 0 every_buildings_in_location = { limit = { building_pop_type = laborers } "
+            "add = building_employed_amount } }") in " ".join((MOD / jr.VALUES).read_text(encoding="utf-8").split())
+
+    # the conversions: the planner's own laborers are replaced, other classes kept, the peasants' groups largest first
+    pops = {"a": [sp.Pop("peasants", 10.0, "x", "r"), sp.Pop("peasants", 2.0, "y", "r"), sp.Pop("laborers", 0.5, "x", "r")],
+            "b": [sp.Pop("peasants", 1.0, "x", "r")], "c": [sp.Pop("peasants", 5.0, "x", "r")]}
+    planner = [sp.PopConversion("a", "peasants", "laborers", 4.0, "x", "r"), sp.PopConversion("a", "peasants", "burghers", 1.0, "x", "r")]
+    out = sp.with_setup_laborers(pops, planner, {"a": 11.0, "b": 3.0})
+    got = {(c.location, c.to_type, c.culture): c.size_k for c in out}
+    assert got[("a", "burghers", "x")] == 1.0
+    assert got[("a", "laborers", "x")] == pytest.approx(10.0 * 0.98 - 1.0)   # the largest group first, 98 % of it at most
+    assert got[("a", "laborers", "y")] == pytest.approx(11.0 - 0.5 - (10.0 * 0.98 - 1.0))  # then the next; 0.5 were there
+    assert got[("b", "laborers", "x")] == pytest.approx(0.98)                # too few peasants: what there is
+    assert not any(c.location == "c" for c in out)                           # no target: nothing
+    assert sp.with_setup_laborers(pops, planner, {}) == planner              # laborers not listed: the planner's own
+
+    # the written setup holds them
+    written = sp.parse_pops((MOD / sp.POPS_SETUP_PATH).read_text(encoding="utf-8-sig"))
+    setup_total = sum(p.size_k for groups in written.values() for p in groups if p.type == "laborers")
+    assert setup_total == pytest.approx(total, rel=0.01), "run ppc build (the pops setup)"

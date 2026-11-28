@@ -1112,13 +1112,16 @@ extractive_open = "never"
 # gives k x its jobs back per level in `modifier` (scaled by staffing; the size follows the building's final
 # employment_size). Idle people of the class allowed = (flat room + unfilled jobs) / (1 + k): an unfilled job and
 # every flat source of room counts 1 / (1 + k), so the flat room numbers the mod sets for a listed class are its
-# old ones x (1 + k): location ranks, schooling buildings. Laborers are NOT listed: they were for an evening
-# (2026-11-27), with the RGO level at 7.5 as the RGO workers' give-back, and the game's own start pass, which
-# sizes a class once before its people count against it, made 142 M laborers of the peasants on day 0. They
-# need the setup to define the RGO laborers first (AGENTS.md "Job Room"). The same pass writes the one-off start step
+# old ones x (1 + k): location ranks, schooling buildings, the RGO level (laborers work there: 1.5 -> 7.5 gives
+# the workers' room back too) and devastation's cut. The same pass writes the one-off start step for the burghers
 # (pp_job_room_start: a day into a new game it fills the open jobs from the peasants, because the engine sizes the
-# classes before any building has workers). AGENTS.md "Job Room".
-room_per_head = { burghers = 4 }
+# classes before any building has workers). Laborers need no start step but the pops setup (2026-11-28): the game's
+# start fills a class up to its room as the room reads with the setup's people, and the setup held 2 M laborers, so
+# with the RGO level at 7.5 it made 142 M on day 0 (the evening of 11-27, withdrawn then). The World Builder stage
+# now writes the laborers outside the buildings into the pops setup, per location 1.5 x the RGO level plus the
+# rank's flat room, from the peasants' own groups (config/start_laborers.csv, tools/start_laborers.py); the game
+# adds the building workers itself and ends where it did without the rule. AGENTS.md "Job Room".
+room_per_head = { burghers = 4, laborers = 4 }
 not_buildings = []
 
 [age_food]

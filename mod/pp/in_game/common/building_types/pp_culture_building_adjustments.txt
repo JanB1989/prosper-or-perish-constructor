@@ -88,7 +88,6 @@ REPLACE:university = {
 	ai_construct_weight = {
 		value = pp_university_ai_weight
 		add = pp_spare_room_weight_burghers # spare room (2026-11-27): the University gives the most of it
-		add = pp_spare_room_weight_laborers
 		divide = { value = scope:owner.monthly_income_total add = 10 }
 	}
 
@@ -113,10 +112,9 @@ REPLACE:university = {
 		local_monthly_literacy = 0.03
 		local_migration_attraction = 0.05
 		local_pop_promotion_speed = 0.005
-		# spare room (2026-11-27, Jan; see the Village School): the University's was here before, the largest of the
-		# schooling buildings: one and a half laborer building levels, more than two guild levels
-		local_laborers_desired_pop = 1.2
-		local_burghers_desired_pop = 3 # 0.6 x 5 (job room: flat room counts a fifth)
+		# spare room (2026-11-27, Jan): the largest of the schooling buildings, more than two guild levels. No laborer
+		# room since 2026-11-28 (see the Village School): the RGO's spare half place is the laborers' spare room.
+		local_burghers_desired_pop = 3 # 0.6 x 5
 		local_clergy_desired_pop = 0.3
 		local_nobles_desired_pop = 0.2
 	}

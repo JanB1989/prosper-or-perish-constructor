@@ -452,8 +452,8 @@
   we are doing this"). The engine counts a building's jobs (employment_size x level) in its pop type's equilibrium
   whether anyone works there or not; run b18a10d6, 1837: 1.5 M burghers and 15.9 M laborers unemployed next to unfilled
   jobs in open buildings.
-- The rule (`job_room.py`, `[job_room] room_per_head` in constructor.toml; burghers at 4): **the people of a class
-  take its room, their workplaces give it back.**
+- The rule (`job_room.py`, `[job_room] room_per_head` in constructor.toml; burghers and laborers at 4): **the people
+  of a class take its room, their workplaces give it back.** The lines below name burghers; laborers have the same.
   - Pop type (hand-written in `pop_types/pp_pop_adjustments.txt`, checked at every build):
     `pop_percentage_impact = { local_burghers_desired_pop_scaled = -4 }`. That block is applied at the class's share
     of the location's people and the `_scaled` room modifier is multiplied by the location's people, so it is -4 room
@@ -466,39 +466,33 @@
     at work are always covered. An unfilled job, in an empty building as in a short-staffed one, counts a fifth of a
     place, and so does every flat source of room (ranks, schools, laws).
 - Who carries the building line: every blueprint building that employs a listed class, production building or not
-  (167 for burghers: guilds, marketplaces, trade houses, vanilla's council halls and theatres). A person at work in a
-  building without it would take room and get none back. A vanilla building the mod only injects into gets the line in
-  its INJECT (modifier blocks add up). `not_buildings` takes single buildings out; a building of a listed class
-  without jobs gets no line. The size follows the building's final `employment_size` at every build.
-- **Laborers are not listed (tried and withdrawn the same evening, cddf5379 and the commit after it).** Jan: "RGO
-  workers can give their stuff back by RGO level". Built: the laborer pop type line, 157 laborer buildings, and the
-  `rgo_level` static modifier at 7.5 a level (an RGO is no building and the engine counts no jobs for it; that
-  modifier, applied at the RGO's size whether staffed or not, is its laborer room: 1 for the workers, 4 they take, the
-  old spare half place x 5). In Jan's new game it made **141.8 M laborers on day 0, 111 M of them idle, and halved
-  the peasants** (a normal start: about 45 M laborers, 240 M peasants). Cause: the game's own start pass sizes each
-  class once, with the per-person line still at the setup's 2 M laborers, so it saw room for about 180 M (7.5 x 23 M
-  RGO levels) and filled it from the peasants. For burghers the same pass errs the other way (no room is given back
-  before buildings are staffed) and the start step repairs it; for laborers the people are already moved, into each
-  location's largest laborer group, so trimming them back by script would not restore the peasants' cultures.
-  What it needs first: the setup has to define the RGO laborers itself. With L laborers in the setup the pass fills
-  up to room - 4 x L, which is the right size when the setup holds 1.5 x the RGO level in laborers (the pops setup
-  from the World Builder stage, with the peasants' own cultures); the RGO sizes at game start would come from a day-0
-  save. Engine facts for that day (private `headcount_laborers_149.md`): only laborers work in an RGO (slaves first
-  where the owner allows slave demand), the RGO hires before any building and lays nobody off, RGO work never exceeds
-  the RGO's size in the saves, and the RGO's spare half place is by far the largest flat room in the game (11.7 M
-  idle laborers allowed in 1347).
-- **Flat room x 5.** Every flat source counts a fifth, so the flat room numbers the mod sets for burghers are their
-  old ones x 5 and the same idle people fit as before: location ranks (megalopolis 20, city 2.5, town 1.0; vanilla's
-  line plus the inject in `pp_location_rank_adjustments.txt`) and schooling buildings (Trade School 2.5, Library
-  1.25, University 3). Not raised: vanilla's small lines on buildings (burghers 0.05) and on laws and reforms
-  (`global_burghers_city_desired_pop`). At game start the larger rank numbers let the start pass make more burghers
-  than fit (1.13 M idle after a month in Jan's game, 0.5 M in a game without the rule); they demote.
+  (324: 167 for burghers, guilds, marketplaces, trade houses, vanilla's council halls and theatres; 157 for
+  laborers). A person at work in a building without it would take room and get none back. Four worker-less
+  improvements that name laborers (bund, khmer_baray, polders, qanats) have no jobs and no line. A vanilla building the mod only injects into gets the line in
+  its INJECT (modifier blocks add up). `not_buildings` takes single buildings out. The size follows the building's
+  final `employment_size` at every build.
+- Laborers and RGOs (2026-11-27, Jan: "RGO workers can give their stuff back by RGO level"; read in the 1.4.9 code,
+  private `headcount_laborers_149.md`; live since 2026-11-28 with the pops setup below, withdrawn for a day in
+  between): an RGO is no building and the engine counts no jobs for it.
+  Its room is the `rgo_level` static modifier, applied at the RGO's size (1.0 = 1,000 workers) whether anyone works
+  there or not. Only laborers work in an RGO (slaves first where the owner allows slave demand), the RGO hires before
+  any building and lays nobody off. The line is 7.5 a level (1.5 before): 1 for the workers, 4 they take, and the old
+  spare half place x 5. Idle laborers allowed = (flat room + 2.5 x RGO levels + unfilled building jobs) / 5 + unfilled
+  RGO jobs. In the saves an unfilled RGO job never stands next to an idle laborer, except where slaves do the work
+  (2,239 locations in 1347, 1,041 in 1837): there the RGO's laborer room is spare, as it was before.
+- **Flat room x 5.** Every flat source counts a fifth, so the flat room numbers the mod sets for burghers and laborers
+  are their old ones x 5 and the same idle people fit as before: location ranks (megalopolis 20, city 2.5, town 1.0;
+  vanilla's line plus the inject in `pp_location_rank_adjustments.txt`), schooling buildings (Trade School burghers
+  2.5; Library burghers 1.25; University burghers 3), the RGO level above, and
+  devastation's cut of the laborers (2.0 and 0.05 scaled). Not raised: vanilla's small lines on buildings (burghers
+  0.05, laborers 0.1) and on laws and reforms (`global_burghers_city_desired_pop`). For scale: the RGO's spare half
+  place is by far the largest flat room in the game, 11.7 M idle laborers allowed in 1347.
   `tests/test_job_room.py::test_flat_room_of_a_listed_class_is_its_old_number_times_one_plus_k`.
 - **Devastation and the upper-class multiplier.** The multiplier (nobles, clergy, burghers) scales flat room, jobs and
   the give-back, not the 4 each burgher takes, so a negative value pushes people at work over the cap: jobs that can
   stay filled = (1 - x) / (1 + 4x). Devastation's value is 0.1 (0.5 before): the same cut at light devastation, 64 %
   of the jobs at full devastation (50 % before; 17 % had it stayed 0.5). Nobles and clergy get the smaller number on
-  their flat room and jobs; their own cuts, and the laborers', are devastation's own lines, unchanged. No other source of the multiplier is in
+  their flat room and jobs; their own cuts are devastation's scaled lines. No other source of the multiplier is in
   use (vanilla's `province_starving` -0.5 is commented out in PP).
 - **Slower demotion (2026-11-27, Jan).** A location demotes 10 people a month plus 1 per 1,000 inhabitants
   (`location_base_values` -0.09 on vanilla's 0.10; `total_population` `local_pop_demotion_speed = 0.001`), vanilla a
@@ -541,29 +535,70 @@
   (`pp_job_room_open_<pop>`, read from the live buildings) from the peasants, into the class's largest pop there (the
   engine's own rule), else the owner's culture and religion for an upper class. With it: 2.21 M burghers at work after
   a month.
+- **Game start for laborers: the pops setup holds them (2026-11-28, Jan: "Why can't we handle it like the burghers?
+  ... Can't you solve this?"; tested in three new games against the month-1 save of run bd7d9616).** The game's start
+  fills a class once, up to its room as the room reads with the setup's people. The setup held 2 M laborers, so with
+  the RGO level at 7.5 the start saw room for about 180 M and made 142 M (11-27, withdrawn that evening). Now the
+  World Builder stage writes the laborers that work in no building into `06_pops.txt`
+  (`job_room.start_laborer_plan`, `start_placement.with_setup_laborers`, called where the start simulation writes
+  the pops; the planner's own conversions for its start buildings are replaced, the game promotes the building
+  workers itself): per owned location 1.5 x the RGO level + the rank's flat room (megalopolis 4, city 0.5, town 0.2),
+  taken from the peasants' own groups, the largest first, at most 98 % of a group. Then the start's room is the old
+  one: 7.5 R + J + 5 f - 4 x (1.5 R + f) = 1.5 R + J + f. 28.8 M of the 45 M laborers of a new game sit in the setup.
+  - Reference: `config/start_laborers.csv` (`tools/start_laborers.py --save <save a month into a new game without the
+    rule>`; today from Jan's `SP_Observer_1337_05_02_bd7d9616...`): per owned location the RGO's size, the laborers
+    outside buildings and the slaves. Where a location has slaves (0.5k+) the setup's laborers are capped by the
+    laborers it had outside buildings in that game: slaves do the RGO's work first and the start leaves the laborers
+    out. Without slaves no cap (322 locations had no idle laborers in the reference and came out 2-10k too high with
+    one).
+  - **The RGO's own starting size follows the setup**: one level per 10,000 peasants, slaves and tribesmen of the
+    setup, 1 to 5 (fitted on two games: where the candidates differ, total minus laborers was right once, this count
+    100-114 times; about 1,700 RGOs are smaller than it gives, 20 larger; between games of one setup about 80 RGOs
+    differ by a level). Laborers do not count: the first test setup moved peasants into laborers and 1,132 RGOs came
+    out a level smaller, each with 4-8k laborers cut. So the setup never takes a location's lower pops below its RGO
+    level x 10,000. Where that leaves the setup d laborers short (1,167 locations, the ones just above a 10k step)
+    the start promotes 4 d too many: 9 M for one day (54.5 M laborers on day 0).
+  - `pp_job_room_trim` (generated row per such location in `pp_job_room_start`, a day in, once): `size` laborers
+    back to the peasants, never more than the laborers idle then, never below `keep` laborers outside the buildings
+    (where the peasants ran out the start promoted fewer; `pp_job_room_at_work_laborers`). Every laborer pop gives
+    the same share and keeps its culture.
+  - Laborers get no start fill (`SETUP_SIZED`): the start adds the building workers itself.
+  - In game, a month in, against the reference game without the rule: laborers 45.38 M (45.44 M), idle 15.00 M
+    (15.11 M), at work in buildings 10.84 M (10.84 M), in RGOs 22.30 M (22.25 M), peasants 234.3 M (234.2 M),
+    burghers 3.41 M (3.43 M); 99.4 % of locations within 500 laborers, 13 above by 2k+, 1 below; RGO sizes as in the
+    reference (23 of 13,588 one level up); no script error from it. After a year (first test game, the locations with
+    the right RGO size): 38.2 M laborers, idle 12.0 M against 11.4 M allowed by the rule (the RGOs' spare half places
+    11.1 M of that): the idle laborers settle at the rule's number.
+  - Culture: the game puts the laborers its start promotes into the location's largest laborer group whatever the
+    peasants' culture (99.4 % of the laborers of mixed locations are of the majority culture in the reference game
+    too), so the setup's one-culture groups and the trim add no new distortion.
+  - When the start setup changes the RGO sizes (pops per location) or a game update changes the rule: run the tool on
+    a new month-1 save with `--levels-only`, then a new game, and compare laborers per location a month in.
 - Spare room for new buildings comes from the location ranks and from the schooling buildings, each for the classes
   it teaches, in `modifier`, per level (burghers x 5, see above; in idle burghers allowed: Trade School 0.5, Library
-  0.25, University 0.6); the other classes as plain room: Village School laborers 0.8, soldiers 0.1; Library clergy
-  0.1, nobles 0.05; University laborers 1.2, clergy 0.3, nobles 0.2 (Jan: "these things should probably cover at least like a building"). Hand-written in
-  `building_types/pp_school_buildings.txt` and `pp_culture_building_adjustments.txt`.
+  0.25, University 0.6); clergy and nobles as plain room: Library clergy 0.1, nobles 0.05; University clergy 0.3,
+  nobles 0.2 (Jan: "these things should probably cover at least like a building"). Hand-written in
+  `building_types/pp_school_buildings.txt` and `pp_culture_building_adjustments.txt`. **No laborer or soldier room
+  on the schools since 2026-11-28** (Jan): the Village School's 0.8 laborers and 0.1 soldiers per level and the
+  University's 1.2 laborers parked 11.9 M idle laborers and 1.5 M soldiers by 1837 (run bd7d9616: 14,875 Village
+  School levels, built for literacy; laborers beyond building jobs + RGO places 11.5 M against 0.3 M in the run
+  before). The laborers' spare room is the RGO's spare half place, which every location has.
 - How fast room fills (run defb89f2, people promoting into the class per month where any promote; 1402-1802):
   burghers about 1 a month in a typical town (top tenth 2-4) and 1-2 in a typical city (top tenth 3-11); laborers 7-9
   and 8-11; nobles and clergy 0.6-0.8; soldiers 4-5. Small countries are faster.
-- AI: the engine values class room at zero and ignores the `_scaled` line. The schooling buildings'
-  `ai_construct_weight` adds `pp_spare_room_weight_laborers` (Village School, University) or
-  `pp_spare_room_weight_burghers` (Trade School, University, half of it on the Library) before the income divide
-  (`script_values/pp_school_values.txt`): 100 while the location has an open building of that class that is not fully
-  staffed and fewer idle people of the class than 0.4 (laborers) or 0.25 (burghers).
-- Not listed: laborers (above), soldiers, clergy, nobles (the engine's plain count; Jan, 11-27: nobles and clergy do
-  not need it). Measured on run defb89f2 (1347 / 1592 / 1837):
+- AI: the engine values class room at zero and ignores the `_scaled` line. The burgher schooling buildings'
+  `ai_construct_weight` adds `pp_spare_room_weight_burghers` (Trade School, University, half of it on the Library)
+  before the income divide (`script_values/pp_school_values.txt`): 100 while the location has an open burgher
+  building that is not fully staffed and fewer than 0.25 idle burghers. The laborer term went with the schools'
+  laborer room (2026-11-28).
+- Not listed: soldiers, clergy, nobles (the engine's plain count). Measured on run defb89f2 (1347 / 1592 / 1837):
   nobles' jobs are 76-109k for 1.4-6.0 M nobles, 5-13k unfilled; clergy's 0.39-3.1 M for 2.6-14.4 M, 83k / 528k /
   1.27 M unfilled; soldiers' 0.9-11.3 M for 1.1-11.8 M, 0.18-1.8 M unfilled. For nobles and clergy the room is flat
   and scaled lines (vanilla: 0.25 % and 0.5 % of a location's people, ranks, laws), which would all need x (1 + k).
 - The Construction Plan's booster test ignores a building's room for its own workers' class
   (`construction_plan_country.booster_goods`): it is no effect of the building.
-- The burgher rule is tested in game (above). Flat room x 5, devastation's multiplier and the slower demotion were in
-  Jan's month-1 save of 11-27 (burghers 3.42 M, 2.28 M at work, 1.13 M idle, 235k demoting a month; no new script
-  error), not in a longer run.
+- The burgher rule is tested in game (above). Laborers, flat room x 5, devastation's numbers and the slower demotion
+  are read from the code and checked on saves only: no game since.
 - `tests/test_job_room.py`; the build prints the counts. No full run yet.
 
 ## Building Shutdown (2026-10-05, Jan)
@@ -928,7 +963,10 @@
   (`pp_library_levels >= 2` in `allow`, read only when it is built). The **Academy of Sciences**
   (`pp_academy_of_sciences`, `building_types/pp_school_buildings.txt`) stands in the capital: one level per three
   Universities of the country, at most ten (`pp_academy_university_levels`, a walk over the owner's locations that runs
-  for the capital only), research speed per staffed level through `capital_country_modifier`, gone when the capital
+  for the capital only), research speed per staffed level through `capital_country_modifier` and, since 2026-11-28
+  (Jan: a small country-wide bonus, never the country's main source), half a point of maximum literacy for every
+  class per staffed level (`global_<class>_max_literacy = 0.5` for the six classes; five points at ten levels; run
+  bd7d9616: nine countries built it from 1692, six levels at most, 18 in 1837), gone when the capital
   moves (`remove_if`), unlocked by `pp_academy_of_sciences_advance` (Scientific Revolution tree). It uses
   `location_potential = { counts_as_capital = yes }` like vanilla's Chancery (a capital building should go with the
   capital). The University's AI weight (`pp_university_ai_weight`) gets a push once the owner holds that advance; the
@@ -1182,8 +1220,10 @@
   it to be harder." Runs: the Americas lost about a third (run 5d232536 by 1567, from the saves' resistance: Mesoamerica
   about half, the Andes a tenth; rough rural Andes untouched), history 80-90 % over a century and a half.
 - `diseases/pp_great_pestilence.txt`, TRY_REPLACE of vanilla `great_pestilence` (pinned): for locations with no road and
-  mountains, desert or jungle R0 x0.25 -> x0.75, spread threshold 0.85 -> 0.60 (the flat value), stagnation chance x3 ->
-  x1.5; `mortality_rate` {0.75 0.9} -> {0.9 0.95}; no `monthly_resistance_reduction`, as in vanilla (the first version
+  mountains, desert or jungle R0 x0.25 -> x0.5, spread threshold 0.85 -> 0.60 (the flat value), stagnation chance x3 ->
+  x2; `mortality_rate` {0.75 0.9} -> {0.85 0.92} (milder since 2026-11-28, Jan: "a little bit mild"; x0.75, x1.5 and
+  {0.9 0.95} on 11-27 took the Americas from 37 M to 12 M in the 1450s and to 56 M by 1837 in run bd7d9616, earlier
+  runs 24-30 M at the low point and 70-108 M; the new numbers are not modelled or run); no `monthly_resistance_reduction`, as in vanilla (the first version
   had 0.001 in the Americas only; the game reads that value without a location, so the continent check wrote a script
   error on every read, 10,551 in one observer run, and read 0; removed the same day). The migration line of `zz_pp_disease_migration_adjustments.txt` sits in the copy
   (an inject misses a replaced block); that file no longer injects into great_pestilence.

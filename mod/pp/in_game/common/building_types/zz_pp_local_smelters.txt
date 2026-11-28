@@ -2,6 +2,9 @@
 INJECT:local_smelters = {
 	town = yes
 	city = yes
+	modifier = {
+		local_laborers_desired_pop = 1 # job_room
+	}
 	can_close = no # building_shutdown
 	ai_forbid_shutdown = yes # building_shutdown
 }

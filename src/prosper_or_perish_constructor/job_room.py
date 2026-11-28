@@ -25,9 +25,8 @@ of a place, and so does every flat source of room (ranks, schools, laws).
 Written at finalize, after the employment cut: E is read from the building's final employment_size at every build, so
 it follows any change of a building's employment by itself. Every building that employs a listed class carries the
 line, production building or not: a person at work in a building without it would take room and get none back.
-Laborers are not listed: they also work in RGOs, which are no buildings; their room there is the ``rgo_level``
-static modifier, and raising it to give the workers' room back made the game's own start pass promote half the
-peasants (AGENTS.md "Job Room"). A
+Laborers also work in RGOs, which are no buildings: the ``rgo_level`` static modifier gives their room and the room
+they take back per RGO level (hand-written, 1.5 x (1 + k); tests/test_job_room.py). A
 vanilla building the mod only injects into gets the line in its INJECT (modifier blocks add up). ``not_buildings``
 takes single buildings out. The line carries a marker comment; a building that leaves the set loses it again. A line
 of the same key the building's own block already has is folded into ours (the engine would otherwise see the key
@@ -222,6 +221,101 @@ def set_room(body: str, pop: str | None, room: Decimal | None) -> str:
     return body[: open_ + 1] + line + ("" if inner.startswith("\n") else "\n") + inner + body[close:]
 
 
+START_LABORERS = Path("config/start_laborers.csv")  # tools/start_laborers.py
+LOCATION_RANKS = Path("in_game/common/location_ranks")
+STATIC_MODIFIERS = Path("main_menu/common/static_modifiers")
+
+
+def _flat_room(folder_texts: list[str], block_key: str, key: str) -> Decimal:
+    """Sum of ``key`` in the blocks named ``block_key`` (vanilla's and the mod's INJECT add up; a later definition of
+    the whole block replaces the earlier one, as the game reads it)."""
+    total = Decimal(0)
+    for text in folder_texts:
+        for match in re.finditer(rf"^(?P<mode>(?:INJECT|TRY_INJECT|REPLACE|TRY_REPLACE):)?{block_key}\s*=\s*\{{", text, re.MULTILINE):
+            close = bf._brace_pairs(text)[match.end() - 1]
+            body = text[match.end(): close]
+            found = sum((Decimal(v) for v in re.findall(rf"^[ \t]*{key}\s*=\s*(-?[0-9.]+)", body, re.MULTILINE)), Decimal(0))
+            total = total + found if (match.group("mode") or "").startswith(("INJECT", "TRY_INJECT")) else found
+    return total
+
+
+RGO_PEOPLE_PER_LEVEL = 10.0  # thousands of peasants, slaves and tribesmen of the setup per RGO level at game start
+RGO_PEOPLE_MARGIN = 0.02
+LOWER_POPS = ("peasants", "slaves", "tribesmen")
+SLAVES_WORK = 0.5  # thousands of slaves in the reference game from which its free_laborers cap applies
+
+
+def start_laborer_plan(repo: Path, project: Path, vanilla_root: Path, mod_root: Path) -> tuple[dict[str, float], dict[str, tuple[float, float]]]:
+    """(location -> the laborers, in thousands, the pops setup has to hold; location -> the laborers the start step
+    gives back to the peasants), for laborers under the rule; ({}, {}) otherwise.
+
+    The game's start sizes a class once: it fills it up to its room as the room reads with the setup's people. With
+    the rule every laborer takes k room and an RGO level gives 1.5 x (1 + k) (its workers, what they take, the spare
+    half place), so the game ends where it does without the rule exactly when the setup already holds 1.5 x the RGO
+    level plus the rank's flat room: the game then adds the building workers itself, as before. Where the location has
+    slaves the reference file caps that by the laborers it had outside its buildings in a game without the rule: slaves
+    do the RGO's work first and the game's start leaves the laborers out there. Elsewhere the cap would be wrong (322
+    locations had no idle laborers a month into the reference game and came out 2,000-10,000 too high with it).
+
+    The RGO's own size at game start follows the setup too (in game 2026-11-28: one level per 10,000 peasants, slaves
+    and tribesmen of the setup, 1 to 5; laborers do not count, and 1,132 RGOs came out a level smaller when the setup
+    first held them). So the setup never takes a location's lower pops below its RGO level x 10,000. Where that leaves
+    the setup short by d laborers the game's start promotes 4 d too many; that surplus is what the start step gives
+    back (``pp_job_room_trim``, once, never more than the laborers idle then, and never below the laborers the
+    setup was meant to hold plus those at work in buildings: where the peasants ran out the start promoted fewer).
+
+    Returns location -> setup laborers and location -> (trim size, laborers outside buildings to keep)."""
+    config = load_config(project)
+    k = config.room_per_head.get("laborers")
+    path = repo / START_LABORERS
+    if k is None:
+        return {}, {}
+    if not path.is_file():
+        raise ValueError(f"job room: laborers are listed but {START_LABORERS} is missing (tools/start_laborers.py)")
+    import csv
+
+    from prosper_or_perish_constructor.worldbuilder import start_placement as sp
+
+    def texts(relative: Path) -> list[str]:
+        files = list(bf.vanilla_files(vanilla_root, relative)) + sorted((mod_root / relative).glob("*.txt"))
+        return [bf._read(file) for file in files]
+
+    rank_texts, static_texts = texts(LOCATION_RANKS), texts(STATIC_MODIFIERS)
+    per_level = float(_flat_room(static_texts, "rgo_level", "local_laborers_desired_pop") / (1 + k))
+    rank_room = {rank: float(_flat_room(rank_texts, rank, "local_laborers_desired_pop") / (1 + k))
+                 for rank in ("rural_settlement", "town", "city", "megalopolis")}
+    ranks = sp.load_ranks(vanilla_root, mod_root)
+    pops = sp.load_pops(vanilla_root)
+    setup: dict[str, float] = {}
+    trim: dict[str, tuple[float, float]] = {}
+    with path.open(encoding="utf-8", newline="") as handle:
+        for row in csv.DictReader(handle):
+            location, level = row["location"], float(row["rgo_level"])
+            want = per_level * level + rank_room.get(ranks.get(location, "rural_settlement"), 0.0)
+            if float(row["slaves"]) > SLAVES_WORK:
+                want = min(want, float(row["free_laborers"]))
+            groups = pops.get(location, [])
+            have = sum(p.size_k for p in groups if p.type == "laborers")
+            lower = sum(p.size_k for p in groups if p.type in LOWER_POPS)
+            peasants = sum(p.size_k for p in groups if p.type == "peasants")
+            convert = max(0.0, want - have)
+            if level >= 2:  # one level needs no people
+                room = max(0.0, lower - RGO_PEOPLE_PER_LEVEL * level - RGO_PEOPLE_MARGIN)
+                if convert > room and peasants * 0.98 > room:  # the RGO's size, not the peasants, is what stops it
+                    short = convert - room
+                    convert = room
+                    if short * float(k) >= 0.05:
+                        trim[location] = (round(short * float(k), 3), round(have + convert + short, 3))
+            convert = min(convert, peasants * 0.98)  # what the peasants can give (start_placement.with_setup_laborers)
+            setup[location] = round(have + convert, 3)
+    return setup, trim
+
+
+def start_laborer_targets(repo: Path, project: Path, vanilla_root: Path, mod_root: Path, ranks: dict[str, str] | None = None) -> dict[str, float]:
+    """Location -> the laborers (thousands) the pops setup has to hold (``start_laborer_plan``)."""
+    return start_laborer_plan(repo, project, vanilla_root, mod_root)[0]
+
+
 SetupGroup = tuple[str, str, str, str, str]  # location, pop type, culture, religion, size in thousands
 
 
@@ -248,8 +342,12 @@ def setup_groups(mod_root: Path, pop_types: list[str]) -> list[SetupGroup]:
     return out
 
 
-def support_files(pop_types: list[str], upper: frozenset[str], groups: list[SetupGroup] = ()) -> dict[Path, str]:
-    """The one-off start step for the listed classes: script values, effects and on_action."""
+def support_files(pop_types: list[str], upper: frozenset[str], groups: list[SetupGroup] = (),
+                  trims: dict[str, tuple[float, float]] | None = None) -> dict[Path, str]:
+    """The one-off start step for the listed classes: script values, effects and on_action. ``trims``: location ->
+    (laborers, in thousands, the game's start promotes too many; the laborers outside buildings to keep)
+    (``start_laborer_plan``): the surplus goes back to the peasants."""
+    trims = trims or {}
     values = HEADER + (
         "# Location scope. pp_job_room_open_<class>: the jobs for the class in the open buildings here that nobody fills,\n"
         "# in thousands. pp_job_room_left_<class>: those the start step has not filled yet (the setup's groups come\n"
@@ -320,6 +418,32 @@ def support_files(pop_types: list[str], upper: frozenset[str], groups: list[Setu
         "\t\t\telse = {\n\t\t\t\tset_variable = { name = pp_job_room_done_$pop$ value = scope:pp_job_room_move }\n\t\t\t}\n"
         "\t\t}\n\t}\n}\n"
     )
+    if trims:
+        values += (
+            "# Location scope: the laborers at work in the buildings here, in thousands (pp_job_room_trim).\n"
+            "pp_job_room_at_work_laborers = {\n\tvalue = 0\n\tevery_buildings_in_location = {\n"
+            "\t\tlimit = { building_pop_type = laborers }\n\t\tadd = building_employed_amount\n\t}\n}\n"
+        )
+        effects += (
+            "\n# Location scope, once: $size$ thousand laborers back to the peasants; never more than the laborers idle\n"
+            "# here, and never below $keep$ thousand laborers outside the buildings. The pops setup holds the laborers\n"
+            "# outside the buildings, but not below the people the RGO's own starting size needs; where that leaves the\n"
+            "# setup short the game's start promotes four times the shortfall too many (job_room.start_laborer_plan),\n"
+            "# fewer where the peasants ran out. Every laborer pop gives the same share and keeps its culture and religion.\n"
+            "pp_job_room_trim = {\n"
+            "\tsave_temporary_scope_value_as = { name = pp_job_room_spare value = { value = num_pop_type:laborers "
+            "subtract = pp_job_room_at_work_laborers subtract = $keep$ min = 0 } }\n"
+            "\tsave_temporary_scope_value_as = { name = pp_job_room_move value = { "
+            "value = \"unemployed_pops_of_pop_type_in_location(pop_type:laborers)\" max = $size$ max = scope:pp_job_room_spare } }\n"
+            "\tif = {\n\t\tlimit = { scope:pp_job_room_move > 0.0005 }\n"
+            "\t\tsave_temporary_scope_value_as = { name = pp_job_room_share value = { value = scope:pp_job_room_move "
+            f"divide = {{ value = num_pop_type:laborers min = 0.001 }} max = {MAX_SHARE} }} }}\n"
+            "\t\tevery_pop = {\n\t\t\tlimit = { pop_type = pop_type:laborers }\n"
+            "\t\t\tsplit_pop = { fraction = scope:pp_job_room_share type = pop_type:peasants }\n\t\t}\n\t}\n}\n"
+        )
+    trim_rows = "".join(
+        f"\t\tlocation:{location} = {{ pp_job_room_trim = {{ size = {fmt(Decimal(str(size)))} keep = {fmt(Decimal(str(keep)))} }} }}\n"
+        for location, (size, keep) in sorted(trims.items()))
     rows = ""
     by_location: dict[str, list[SetupGroup]] = {}
     for group in groups:
@@ -336,17 +460,25 @@ def support_files(pop_types: list[str], upper: frozenset[str], groups: list[Setu
         "\t\t# where the setup gives a class several groups in a location: each back to its setup size, the largest first\n" + rows +
         "\t\t# then the open jobs left, into the class's largest group\n"
         "\t\tevery_country = {\n\t\t\tevery_owned_location = {\n"
-        "\t\t\t\tpp_job_room_restore = yes\n\t\t\t}\n\t\t}\n\t}\n}\n"
+        "\t\t\t\tpp_job_room_restore = yes\n\t\t\t}\n\t\t}\n"
+        + ("\t\t# laborers the game's start promoted too many, where the setup could not hold them all (the RGO's size)\n"
+           + trim_rows if trim_rows else "")
+        + "\t}\n}\n"
     )
     return {VALUES: values, EFFECTS: effects, ON_ACTION: on_action}
 
 
-def start_files(config: Config, vanilla_root: Path, mod_root: Path) -> dict[Path, str]:
-    """The generated files of the start step, for the classes of the config (none listed: no files)."""
-    pops = sorted(config.room_per_head)
+SETUP_SIZED = frozenset({"laborers"})  # sized by the game's own start from the pops setup: no start fill
+
+
+def start_files(config: Config, vanilla_root: Path, mod_root: Path, trims: dict[str, tuple[float, float]] | None = None) -> dict[Path, str]:
+    """The generated files of the start step, for the classes of the config that need it (none: no files). Laborers
+    need no fill: the pops setup holds their people outside the buildings (``start_laborer_plan``), so the game's own
+    start adds the building workers; only its ``trims`` ride along."""
+    pops = sorted(set(config.room_per_head) - SETUP_SIZED)
     if not pops:
         return {}
-    return support_files(pops, upper_pop_types(vanilla_root, mod_root), setup_groups(mod_root, pops))
+    return support_files(pops, upper_pop_types(vanilla_root, mod_root), setup_groups(mod_root, pops), trims)
 
 
 def targets(repo: Path, mod_root: Path, project: Path, vanilla_root: Path) -> tuple[dict[str, tuple[str, Decimal]], Result]:
@@ -410,7 +542,7 @@ def apply(repo: Path, mod_root: Path, project: Path, vanilla_root: Path) -> Resu
         if text != original:
             path.write_text(text, encoding="utf-8-sig", newline="\n")
             result.files_changed += 1
-    files = start_files(load_config(project), vanilla_root, mod_root)
+    files = start_files(load_config(project), vanilla_root, mod_root, start_laborer_plan(repo, project, vanilla_root, mod_root)[1])
     for relative in (VALUES, EFFECTS, ON_ACTION):
         path = mod_root / relative
         text = files.get(relative)
@@ -439,7 +571,7 @@ def check(repo: Path, mod_root: Path, project: Path, vanilla_root: Path) -> list
         target = wanted.get(key)
         if set_room(body, *(target if target else (None, None))) != body:
             problems.append(f"{key}: job room line not written (run ppc build)")
-    files = start_files(load_config(project), vanilla_root, mod_root)
+    files = start_files(load_config(project), vanilla_root, mod_root, start_laborer_plan(repo, project, vanilla_root, mod_root)[1])
     for relative in (VALUES, EFFECTS, ON_ACTION):
         path = mod_root / relative
         if (path.read_text(encoding="utf-8") if path.exists() else None) != files.get(relative):
